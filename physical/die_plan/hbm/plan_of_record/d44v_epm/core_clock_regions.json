@@ -1,0 +1,2180 @@
+{
+ "schema": "opentallas.hbm_core_clock_regions.v1",
+ "rule": "one clock entry per <= 5000 sinks (OWNER 11-03)",
+ "source": "d44o AUTO-GEOM clock_sinks (latest attempt)",
+ "modules": {
+  "hfd_ep_static": {
+   "sinks": 9981,
+   "entries": 2,
+   "grid": [
+    1,
+    2
+   ],
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4991,
+   "regional_entries": [
+    {
+     "xy_um": [
+      108.0,
+      125.28
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      213.84,
+      246.24
+     ]
+    },
+    {
+     "xy_um": [
+      319.68,
+      125.28
+     ],
+     "region_um": [
+      213.84,
+      0.0,
+      427.68,
+      246.24
+     ]
+    }
+   ]
+  },
+  "hnx_fused_lane_c": {
+   "sinks": 14050,
+   "entries": 3,
+   "grid": [
+    1,
+    3
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ],
+   "instances": 32,
+   "kept_signed": false,
+   "sinks_per_entry": 4684,
+   "regional_entries": [
+    {
+     "xy_um": [
+      34.56,
+      51.84
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      115.2,
+      103.68
+     ]
+    },
+    {
+     "xy_um": [
+      172.8,
+      51.84
+     ],
+     "region_um": [
+      115.2,
+      0.0,
+      230.4,
+      103.68
+     ]
+    },
+    {
+     "xy_um": [
+      289.44,
+      30.24
+     ],
+     "region_um": [
+      230.4,
+      0.0,
+      345.6,
+      103.68
+     ]
+    }
+   ]
+  },
+  "hnx_fused_lane_elp": {
+   "sinks": 17466,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    172.8,
+    198.72
+   ],
+   "instances": 128,
+   "kept_signed": false,
+   "sinks_per_entry": 4367,
+   "regional_entries": [
+    {
+     "xy_um": [
+      43.2,
+      47.52
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      86.4,
+      99.36
+     ]
+    },
+    {
+     "xy_um": [
+      129.6,
+      47.52
+     ],
+     "region_um": [
+      86.4,
+      0.0,
+      172.8,
+      99.36
+     ]
+    },
+    {
+     "xy_um": [
+      43.2,
+      146.88
+     ],
+     "region_um": [
+      0.0,
+      99.36,
+      86.4,
+      198.72
+     ]
+    },
+    {
+     "xy_um": [
+      129.6,
+      146.88
+     ],
+     "region_um": [
+      86.4,
+      99.36,
+      172.8,
+      198.72
+     ]
+    }
+   ]
+  },
+  "hnx_rp3h_gn": {
+   "sinks": 26613,
+   "entries": 6,
+   "grid": [
+    2,
+    3
+   ],
+   "outline_um": [
+    630.72,
+    345.6
+   ],
+   "instances": 64,
+   "kept_signed": false,
+   "sinks_per_entry": 4436,
+   "regional_entries": [
+    {
+     "xy_um": [
+      103.68,
+      86.4
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      210.24,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      315.36,
+      86.4
+     ],
+     "region_um": [
+      210.24,
+      0.0,
+      420.48,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      527.04,
+      86.4
+     ],
+     "region_um": [
+      420.48,
+      0.0,
+      630.72,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      103.68,
+      259.2
+     ],
+     "region_um": [
+      0.0,
+      172.8,
+      210.24,
+      345.6
+     ]
+    },
+    {
+     "xy_um": [
+      315.36,
+      259.2
+     ],
+     "region_um": [
+      210.24,
+      172.8,
+      420.48,
+      345.6
+     ]
+    },
+    {
+     "xy_um": [
+      527.04,
+      259.2
+     ],
+     "region_um": [
+      420.48,
+      172.8,
+      630.72,
+      345.6
+     ]
+    }
+   ]
+  },
+  "hnx_rp3h_gs": {
+   "sinks": 18189,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    630.72,
+    345.6
+   ],
+   "instances": 64,
+   "kept_signed": false,
+   "sinks_per_entry": 4548,
+   "regional_entries": [
+    {
+     "xy_um": [
+      155.52,
+      86.4
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      315.36,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      475.2,
+      86.4
+     ],
+     "region_um": [
+      315.36,
+      0.0,
+      630.72,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      155.52,
+      259.2
+     ],
+     "region_um": [
+      0.0,
+      172.8,
+      315.36,
+      345.6
+     ]
+    },
+    {
+     "xy_um": [
+      475.2,
+      259.2
+     ],
+     "region_um": [
+      315.36,
+      172.8,
+      630.72,
+      345.6
+     ]
+    }
+   ]
+  },
+  "hnx_rp3h_lc": {
+   "sinks": 23788,
+   "entries": 5,
+   "grid": [
+    5,
+    1
+   ],
+   "outline_um": [
+    198.72,
+    216.0
+   ],
+   "instances": 384,
+   "kept_signed": false,
+   "sinks_per_entry": 4758,
+   "regional_entries": [
+    {
+     "xy_um": [
+      99.36,
+      21.6
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      198.72,
+      43.2
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      64.8
+     ],
+     "region_um": [
+      0.0,
+      43.2,
+      198.72,
+      86.4
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      108.0
+     ],
+     "region_um": [
+      0.0,
+      86.4,
+      198.72,
+      129.6
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      151.2
+     ],
+     "region_um": [
+      0.0,
+      129.6,
+      198.72,
+      172.8
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      194.4
+     ],
+     "region_um": [
+      0.0,
+      172.8,
+      198.72,
+      216.0
+     ]
+    }
+   ]
+  },
+  "hnx_rp3h_tl": {
+   "sinks": 8921,
+   "entries": 2,
+   "grid": [
+    2,
+    1
+   ],
+   "outline_um": [
+    95.04,
+    155.52
+   ],
+   "instances": 768,
+   "kept_signed": false,
+   "sinks_per_entry": 4461,
+   "regional_entries": [
+    {
+     "xy_um": [
+      47.52,
+      38.88
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      95.04,
+      77.76
+     ]
+    },
+    {
+     "xy_um": [
+      47.52,
+      116.64
+     ],
+     "region_um": [
+      0.0,
+      77.76,
+      95.04,
+      155.52
+     ]
+    }
+   ]
+  },
+  "hnx_rp3h_xs": {
+   "sinks": 35651,
+   "entries": 8,
+   "grid": [
+    2,
+    4
+   ],
+   "outline_um": [
+    630.72,
+    216.0
+   ],
+   "instances": 128,
+   "kept_signed": false,
+   "sinks_per_entry": 4457,
+   "regional_entries": [
+    {
+     "xy_um": [
+      77.76,
+      51.84
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      157.68,
+      108.0
+     ]
+    },
+    {
+     "xy_um": [
+      237.6,
+      51.84
+     ],
+     "region_um": [
+      157.68,
+      0.0,
+      315.36,
+      108.0
+     ]
+    },
+    {
+     "xy_um": [
+      393.12,
+      51.84
+     ],
+     "region_um": [
+      315.36,
+      0.0,
+      473.04,
+      108.0
+     ]
+    },
+    {
+     "xy_um": [
+      552.96,
+      51.84
+     ],
+     "region_um": [
+      473.04,
+      0.0,
+      630.72,
+      108.0
+     ]
+    },
+    {
+     "xy_um": [
+      77.76,
+      159.84
+     ],
+     "region_um": [
+      0.0,
+      108.0,
+      157.68,
+      216.0
+     ]
+    },
+    {
+     "xy_um": [
+      237.6,
+      159.84
+     ],
+     "region_um": [
+      157.68,
+      108.0,
+      315.36,
+      216.0
+     ]
+    },
+    {
+     "xy_um": [
+      393.12,
+      159.84
+     ],
+     "region_um": [
+      315.36,
+      108.0,
+      473.04,
+      216.0
+     ]
+    },
+    {
+     "xy_um": [
+      552.96,
+      159.84
+     ],
+     "region_um": [
+      473.04,
+      108.0,
+      630.72,
+      216.0
+     ]
+    }
+   ]
+  },
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "sinks": 16743,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "instances": 16,
+   "kept_signed": false,
+   "sinks_per_entry": 4186,
+   "regional_entries": [
+    {
+     "xy_um": [
+      64.8,
+      82.08
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      125.28,
+      133.92
+     ]
+    },
+    {
+     "xy_um": [
+      190.08,
+      82.08
+     ],
+     "region_um": [
+      125.28,
+      0.0,
+      250.56,
+      133.92
+     ]
+    },
+    {
+     "xy_um": [
+      34.56,
+      198.72
+     ],
+     "region_um": [
+      0.0,
+      133.92,
+      125.28,
+      267.84
+     ]
+    },
+    {
+     "xy_um": [
+      220.32,
+      198.72
+     ],
+     "region_um": [
+      125.28,
+      133.92,
+      250.56,
+      267.84
+     ]
+    }
+   ]
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v4f4566": {
+   "sinks": 15174,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 3794,
+   "regional_entries": [
+    {
+     "xy_um": [
+      47.52,
+      51.84
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      91.152,
+      100.656
+     ]
+    },
+    {
+     "xy_um": [
+      138.24,
+      51.84
+     ],
+     "region_um": [
+      91.152,
+      0.0,
+      182.304,
+      100.656
+     ]
+    },
+    {
+     "xy_um": [
+      47.52,
+      151.2
+     ],
+     "region_um": [
+      0.0,
+      100.656,
+      91.152,
+      201.312
+     ]
+    },
+    {
+     "xy_um": [
+      138.24,
+      151.2
+     ],
+     "region_um": [
+      91.152,
+      100.656,
+      182.304,
+      201.312
+     ]
+    }
+   ]
+  },
+  "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": {
+   "sinks": 15174,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    182.304,
+    201.312
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 3794,
+   "regional_entries": [
+    {
+     "xy_um": [
+      47.52,
+      51.84
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      91.152,
+      100.656
+     ]
+    },
+    {
+     "xy_um": [
+      138.24,
+      51.84
+     ],
+     "region_um": [
+      91.152,
+      0.0,
+      182.304,
+      100.656
+     ]
+    },
+    {
+     "xy_um": [
+      47.52,
+      151.2
+     ],
+     "region_um": [
+      0.0,
+      100.656,
+      91.152,
+      201.312
+     ]
+    },
+    {
+     "xy_um": [
+      138.24,
+      151.2
+     ],
+     "region_um": [
+      91.152,
+      100.656,
+      182.304,
+      201.312
+     ]
+    }
+   ]
+  },
+  "ot_hbm_hc_subtree32_core": {
+   "sinks": 18356,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "instances": 8,
+   "kept_signed": false,
+   "sinks_per_entry": 4589,
+   "regional_entries": [
+    {
+     "xy_um": [
+      56.16,
+      56.16
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      110.16,
+      110.16
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      56.16
+     ],
+     "region_um": [
+      110.16,
+      0.0,
+      220.32,
+      110.16
+     ]
+    },
+    {
+     "xy_um": [
+      56.16,
+      164.16
+     ],
+     "region_um": [
+      0.0,
+      110.16,
+      110.16,
+      220.32
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      164.16
+     ],
+     "region_um": [
+      110.16,
+      110.16,
+      220.32,
+      220.32
+     ]
+    }
+   ]
+  },
+  "ot_hbm_host_cp_rxs": {
+   "sinks": 7654,
+   "entries": 2,
+   "grid": [
+    1,
+    2
+   ],
+   "outline_um": [
+    400.248,
+    151.68
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 3827,
+   "regional_entries": [
+    {
+     "xy_um": [
+      99.36,
+      77.76
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      200.124,
+      151.68
+     ]
+    },
+    {
+     "xy_um": [
+      298.08,
+      77.76
+     ],
+     "region_um": [
+      200.124,
+      0.0,
+      400.248,
+      151.68
+     ]
+    }
+   ]
+  },
+  "ot_hbm_idx_query_static": {
+   "sinks": 16331,
+   "entries": 4,
+   "grid": [
+    2,
+    2
+   ],
+   "outline_um": [
+    170.64,
+    164.16
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4083,
+   "regional_entries": [
+    {
+     "xy_um": [
+      43.2,
+      43.2
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      85.32,
+      82.08
+     ]
+    },
+    {
+     "xy_um": [
+      129.6,
+      43.2
+     ],
+     "region_um": [
+      85.32,
+      0.0,
+      170.64,
+      82.08
+     ]
+    },
+    {
+     "xy_um": [
+      43.2,
+      125.28
+     ],
+     "region_um": [
+      0.0,
+      82.08,
+      85.32,
+      164.16
+     ]
+    },
+    {
+     "xy_um": [
+      129.6,
+      125.28
+     ],
+     "region_um": [
+      85.32,
+      82.08,
+      170.64,
+      164.16
+     ]
+    }
+   ]
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "sinks": 21642,
+   "entries": 5,
+   "grid": [
+    1,
+    5
+   ],
+   "outline_um": [
+    475.19999999999993,
+    259.19999999999993
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4329,
+   "regional_entries": [
+    {
+     "xy_um": [
+      47.52,
+      129.6
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      95.04,
+      259.2
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      129.6
+     ],
+     "region_um": [
+      95.04,
+      0.0,
+      190.08,
+      259.2
+     ]
+    },
+    {
+     "xy_um": [
+      237.6,
+      129.6
+     ],
+     "region_um": [
+      190.08,
+      0.0,
+      285.12,
+      259.2
+     ]
+    },
+    {
+     "xy_um": [
+      332.64,
+      129.6
+     ],
+     "region_um": [
+      285.12,
+      0.0,
+      380.16,
+      259.2
+     ]
+    },
+    {
+     "xy_um": [
+      427.68,
+      129.6
+     ],
+     "region_um": [
+      380.16,
+      0.0,
+      475.2,
+      259.2
+     ]
+    }
+   ]
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "sinks": 26328,
+   "entries": 6,
+   "grid": [
+    2,
+    3
+   ],
+   "outline_um": [
+    216.0,
+    138.24
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4388,
+   "regional_entries": [
+    {
+     "xy_um": [
+      34.56,
+      34.56
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      72.0,
+      69.12
+     ]
+    },
+    {
+     "xy_um": [
+      108.0,
+      34.56
+     ],
+     "region_um": [
+      72.0,
+      0.0,
+      144.0,
+      69.12
+     ]
+    },
+    {
+     "xy_um": [
+      181.44,
+      34.56
+     ],
+     "region_um": [
+      144.0,
+      0.0,
+      216.0,
+      69.12
+     ]
+    },
+    {
+     "xy_um": [
+      34.56,
+      103.68
+     ],
+     "region_um": [
+      0.0,
+      69.12,
+      72.0,
+      138.24
+     ]
+    },
+    {
+     "xy_um": [
+      108.0,
+      103.68
+     ],
+     "region_um": [
+      72.0,
+      69.12,
+      144.0,
+      138.24
+     ]
+    },
+    {
+     "xy_um": [
+      181.44,
+      103.68
+     ],
+     "region_um": [
+      144.0,
+      69.12,
+      216.0,
+      138.24
+     ]
+    }
+   ]
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "sinks": 12383,
+   "entries": 3,
+   "grid": [
+    3,
+    1
+   ],
+   "outline_um": [
+    142.56,
+    216.0
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4128,
+   "regional_entries": [
+    {
+     "xy_um": [
+      69.12,
+      12.96
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      142.56,
+      72.0
+     ]
+    },
+    {
+     "xy_um": [
+      69.12,
+      108.0
+     ],
+     "region_um": [
+      0.0,
+      72.0,
+      142.56,
+      144.0
+     ]
+    },
+    {
+     "xy_um": [
+      69.12,
+      181.44
+     ],
+     "region_um": [
+      0.0,
+      144.0,
+      142.56,
+      216.0
+     ]
+    }
+   ]
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "sinks": 13217,
+   "entries": 3,
+   "grid": [
+    3,
+    1
+   ],
+   "outline_um": [
+    250.56,
+    414.72
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4406,
+   "regional_entries": [
+    {
+     "xy_um": [
+      125.28,
+      69.12
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      250.56,
+      138.24
+     ]
+    },
+    {
+     "xy_um": [
+      125.28,
+      207.36
+     ],
+     "region_um": [
+      0.0,
+      138.24,
+      250.56,
+      276.48
+     ]
+    },
+    {
+     "xy_um": [
+      125.28,
+      345.6
+     ],
+     "region_um": [
+      0.0,
+      276.48,
+      250.56,
+      414.72
+     ]
+    }
+   ]
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "sinks": 26208,
+   "entries": 6,
+   "grid": [
+    2,
+    3
+   ],
+   "outline_um": [
+    267.84,
+    250.56
+   ],
+   "instances": 2,
+   "kept_signed": false,
+   "sinks_per_entry": 4368,
+   "regional_entries": [
+    {
+     "xy_um": [
+      43.2,
+      86.4
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      89.28,
+      125.28
+     ]
+    },
+    {
+     "xy_um": [
+      133.92,
+      64.8
+     ],
+     "region_um": [
+      89.28,
+      0.0,
+      178.56,
+      125.28
+     ]
+    },
+    {
+     "xy_um": [
+      224.64,
+      64.8
+     ],
+     "region_um": [
+      178.56,
+      0.0,
+      267.84,
+      125.28
+     ]
+    },
+    {
+     "xy_um": [
+      43.2,
+      185.76
+     ],
+     "region_um": [
+      0.0,
+      125.28,
+      89.28,
+      250.56
+     ]
+    },
+    {
+     "xy_um": [
+      133.92,
+      190.08
+     ],
+     "region_um": [
+      89.28,
+      125.28,
+      178.56,
+      250.56
+     ]
+    },
+    {
+     "xy_um": [
+      224.64,
+      190.08
+     ],
+     "region_um": [
+      178.56,
+      125.28,
+      267.84,
+      250.56
+     ]
+    }
+   ]
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "sinks": 11267,
+   "entries": 3,
+   "grid": [
+    1,
+    3
+   ],
+   "outline_um": [
+    177.98399999999992,
+    177.98399999999992
+   ],
+   "instances": 32,
+   "kept_signed": false,
+   "sinks_per_entry": 3756,
+   "regional_entries": [
+    {
+     "xy_um": [
+      30.24,
+      90.72
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      59.328,
+      177.984
+     ]
+    },
+    {
+     "xy_um": [
+      90.72,
+      90.72
+     ],
+     "region_um": [
+      59.328,
+      0.0,
+      118.656,
+      177.984
+     ]
+    },
+    {
+     "xy_um": [
+      146.88,
+      90.72
+     ],
+     "region_um": [
+      118.656,
+      0.0,
+      177.984,
+      177.984
+     ]
+    }
+   ]
+  },
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "sinks": 22920,
+   "entries": 5,
+   "grid": [
+    1,
+    5
+   ],
+   "outline_um": [
+    233.28000000000003,
+    233.27999999999997
+   ],
+   "instances": 2,
+   "kept_signed": false,
+   "sinks_per_entry": 4584,
+   "regional_entries": [
+    {
+     "xy_um": [
+      21.6,
+      116.64
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      46.656,
+      233.28
+     ]
+    },
+    {
+     "xy_um": [
+      69.12,
+      116.64
+     ],
+     "region_um": [
+      46.656,
+      0.0,
+      93.312,
+      233.28
+     ]
+    },
+    {
+     "xy_um": [
+      116.64,
+      116.64
+     ],
+     "region_um": [
+      93.312,
+      0.0,
+      139.968,
+      233.28
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      116.64
+     ],
+     "region_um": [
+      139.968,
+      0.0,
+      186.624,
+      233.28
+     ]
+    },
+    {
+     "xy_um": [
+      211.68,
+      116.64
+     ],
+     "region_um": [
+      186.624,
+      0.0,
+      233.28,
+      233.28
+     ]
+    }
+   ]
+  },
+  "ot_hfd_coll_q2n2_vm_core": {
+   "sinks": 23943,
+   "entries": 5,
+   "grid": [
+    1,
+    5
+   ],
+   "outline_um": [
+    924.48,
+    509.76
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4789,
+   "regional_entries": [
+    {
+     "xy_um": [
+      90.72,
+      254.88
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      184.896,
+      509.76
+     ]
+    },
+    {
+     "xy_um": [
+      276.48,
+      254.88
+     ],
+     "region_um": [
+      184.896,
+      0.0,
+      369.792,
+      509.76
+     ]
+    },
+    {
+     "xy_um": [
+      462.24,
+      254.88
+     ],
+     "region_um": [
+      369.792,
+      0.0,
+      554.688,
+      509.76
+     ]
+    },
+    {
+     "xy_um": [
+      648.0,
+      254.88
+     ],
+     "region_um": [
+      554.688,
+      0.0,
+      739.584,
+      509.76
+     ]
+    },
+    {
+     "xy_um": [
+      833.76,
+      254.88
+     ],
+     "region_um": [
+      739.584,
+      0.0,
+      924.48,
+      509.76
+     ]
+    }
+   ]
+  },
+  "ot_hfd_coll_q3_body_core": {
+   "sinks": 66247,
+   "entries": 14,
+   "grid": [
+    7,
+    2
+   ],
+   "outline_um": [
+    578.8799999999999,
+    1054.08
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4732,
+   "regional_entries": [
+    {
+     "xy_um": [
+      142.56,
+      73.44
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      289.44,
+      150.583
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      73.44
+     ],
+     "region_um": [
+      289.44,
+      0.0,
+      578.88,
+      150.583
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      224.64
+     ],
+     "region_um": [
+      0.0,
+      150.583,
+      289.44,
+      301.166
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      224.64
+     ],
+     "region_um": [
+      289.44,
+      150.583,
+      578.88,
+      301.166
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      375.84
+     ],
+     "region_um": [
+      0.0,
+      301.166,
+      289.44,
+      451.749
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      375.84
+     ],
+     "region_um": [
+      289.44,
+      301.166,
+      578.88,
+      451.749
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      527.04
+     ],
+     "region_um": [
+      0.0,
+      451.749,
+      289.44,
+      602.331
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      527.04
+     ],
+     "region_um": [
+      289.44,
+      451.749,
+      578.88,
+      602.331
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      678.24
+     ],
+     "region_um": [
+      0.0,
+      602.331,
+      289.44,
+      752.914
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      678.24
+     ],
+     "region_um": [
+      289.44,
+      602.331,
+      578.88,
+      752.914
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      829.44
+     ],
+     "region_um": [
+      0.0,
+      752.914,
+      289.44,
+      903.497
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      829.44
+     ],
+     "region_um": [
+      289.44,
+      752.914,
+      578.88,
+      903.497
+     ]
+    },
+    {
+     "xy_um": [
+      142.56,
+      980.64
+     ],
+     "region_um": [
+      0.0,
+      903.497,
+      289.44,
+      1054.08
+     ]
+    },
+    {
+     "xy_um": [
+      432.0,
+      980.64
+     ],
+     "region_um": [
+      289.44,
+      903.497,
+      578.88,
+      1054.08
+     ]
+    }
+   ]
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "sinks": 29291,
+   "entries": 6,
+   "grid": [
+    6,
+    1
+   ],
+   "outline_um": [
+    276.48,
+    1054.08
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4882,
+   "regional_entries": [
+    {
+     "xy_um": [
+      168.48,
+      21.6
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      276.48,
+      175.68
+     ]
+    },
+    {
+     "xy_um": [
+      168.48,
+      190.08
+     ],
+     "region_um": [
+      0.0,
+      175.68,
+      276.48,
+      351.36
+     ]
+    },
+    {
+     "xy_um": [
+      168.48,
+      522.72
+     ],
+     "region_um": [
+      0.0,
+      351.36,
+      276.48,
+      527.04
+     ]
+    },
+    {
+     "xy_um": [
+      168.48,
+      531.36
+     ],
+     "region_um": [
+      0.0,
+      527.04,
+      276.48,
+      702.72
+     ]
+    },
+    {
+     "xy_um": [
+      168.48,
+      864.0
+     ],
+     "region_um": [
+      0.0,
+      702.72,
+      276.48,
+      878.4
+     ]
+    },
+    {
+     "xy_um": [
+      168.48,
+      1032.48
+     ],
+     "region_um": [
+      0.0,
+      878.4,
+      276.48,
+      1054.08
+     ]
+    }
+   ]
+  },
+  "ot_hfd_coll_q3_vm_core": {
+   "sinks": 22746,
+   "entries": 5,
+   "grid": [
+    5,
+    1
+   ],
+   "outline_um": [
+    328.32,
+    717.12
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4550,
+   "regional_entries": [
+    {
+     "xy_um": [
+      164.16,
+      73.44
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      328.32,
+      143.424
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      216.0
+     ],
+     "region_um": [
+      0.0,
+      143.424,
+      328.32,
+      286.848
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      358.56
+     ],
+     "region_um": [
+      0.0,
+      286.848,
+      328.32,
+      430.272
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      501.12
+     ],
+     "region_um": [
+      0.0,
+      430.272,
+      328.32,
+      573.696
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      643.68
+     ],
+     "region_um": [
+      0.0,
+      573.696,
+      328.32,
+      717.12
+     ]
+    }
+   ]
+  },
+  "ot_hgi_qw_dec": {
+   "sinks": 37348,
+   "entries": 8,
+   "grid": [
+    2,
+    4
+   ],
+   "outline_um": [
+    260.0,
+    173.6
+   ],
+   "instances": 2,
+   "kept_signed": false,
+   "sinks_per_entry": 4669,
+   "regional_entries": [
+    {
+     "xy_um": [
+      34.56,
+      43.2
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      65.0,
+      86.8
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      43.2
+     ],
+     "region_um": [
+      65.0,
+      0.0,
+      130.0,
+      86.8
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      43.2
+     ],
+     "region_um": [
+      130.0,
+      0.0,
+      195.0,
+      86.8
+     ]
+    },
+    {
+     "xy_um": [
+      228.96,
+      43.2
+     ],
+     "region_um": [
+      195.0,
+      0.0,
+      260.0,
+      86.8
+     ]
+    },
+    {
+     "xy_um": [
+      34.56,
+      129.6
+     ],
+     "region_um": [
+      0.0,
+      86.8,
+      65.0,
+      173.6
+     ]
+    },
+    {
+     "xy_um": [
+      99.36,
+      129.6
+     ],
+     "region_um": [
+      65.0,
+      86.8,
+      130.0,
+      173.6
+     ]
+    },
+    {
+     "xy_um": [
+      164.16,
+      129.6
+     ],
+     "region_um": [
+      130.0,
+      86.8,
+      195.0,
+      173.6
+     ]
+    },
+    {
+     "xy_um": [
+      228.96,
+      129.6
+     ],
+     "region_um": [
+      195.0,
+      86.8,
+      260.0,
+      173.6
+     ]
+    }
+   ]
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "sinks": 13885,
+   "entries": 3,
+   "grid": [
+    3,
+    1
+   ],
+   "outline_um": [
+    120.96,
+    216.0
+   ],
+   "instances": 4,
+   "kept_signed": false,
+   "sinks_per_entry": 4629,
+   "regional_entries": [
+    {
+     "xy_um": [
+      60.48,
+      34.56
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      120.96,
+      72.0
+     ]
+    },
+    {
+     "xy_um": [
+      60.48,
+      108.0
+     ],
+     "region_um": [
+      0.0,
+      72.0,
+      120.96,
+      144.0
+     ]
+    },
+    {
+     "xy_um": [
+      60.48,
+      181.44
+     ],
+     "region_um": [
+      0.0,
+      144.0,
+      120.96,
+      216.0
+     ]
+    }
+   ]
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "sinks": 5217,
+   "entries": 2,
+   "grid": [
+    1,
+    2
+   ],
+   "outline_um": [
+    302.4,
+    298.08
+   ],
+   "instances": 16,
+   "kept_signed": false,
+   "sinks_per_entry": 2609,
+   "regional_entries": [
+    {
+     "xy_um": [
+      73.44,
+      120.96
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      151.2,
+      298.08
+     ]
+    },
+    {
+     "xy_um": [
+      224.64,
+      146.88
+     ],
+     "region_um": [
+      151.2,
+      0.0,
+      302.4,
+      298.08
+     ]
+    }
+   ]
+  },
+  "hfd_ep_static_vc2": {
+   "sinks": 9981,
+   "entries": 2,
+   "grid": [
+    1,
+    2
+   ],
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4991,
+   "regional_entries": [
+    {
+     "xy_um": [
+      108.0,
+      125.28
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      213.84,
+      246.24
+     ]
+    },
+    {
+     "xy_um": [
+      319.68,
+      125.28
+     ],
+     "region_um": [
+      213.84,
+      0.0,
+      427.68,
+      246.24
+     ]
+    }
+   ],
+   "note": "EP-MOD-1108: copied from hfd_ep_static (sinks unmeasured for hfd_ep_static_vc2)"
+  },
+  "hfd_ep_host_vc": {
+   "sinks": 9981,
+   "entries": 2,
+   "grid": [
+    1,
+    2
+   ],
+   "outline_um": [
+    427.68,
+    246.24
+   ],
+   "instances": 1,
+   "kept_signed": false,
+   "sinks_per_entry": 4991,
+   "regional_entries": [
+    {
+     "xy_um": [
+      108.0,
+      125.28
+     ],
+     "region_um": [
+      0.0,
+      0.0,
+      213.84,
+      246.24
+     ]
+    },
+    {
+     "xy_um": [
+      319.68,
+      125.28
+     ],
+     "region_um": [
+      213.84,
+      0.0,
+      427.68,
+      246.24
+     ]
+    }
+   ],
+   "note": "EP-MOD-1108: copied from hfd_ep_static (sinks unmeasured for hfd_ep_host_vc)"
+  }
+ },
+ "no_sink_data": [
+  "hfd_hgi_vms_glue_nw_t",
+  "hnx_vms_bank_q0_faces__vecd4ae",
+  "ot_hbm_argmax_static_sw_vm_r2",
+  "ot_hbm_hc_bank128_pair_core",
+  "ot_hbm_hc_root_static__hcp_sys1",
+  "ot_hbm_hc_root_static__tailx_sk_steady",
+  "ot_hbm_hc_root_static__tailx_sk_step0",
+  "ot_hbm_idx_qctl_static",
+  "ot_hbm_idx_score_hcol_h0_ra",
+  "ot_hbm_idx_score_hcol_h0_rb",
+  "ot_hbm_idx_score_hcol_h1",
+  "ot_hbm_idx_selector_static_sel",
+  "ot_hbm_idx_tail_native",
+  "ot_hbm_idx_topk_link_static",
+  "ot_hbm_static_cfg_collar_idx256r",
+  "ot_hbm_su_pcol_h",
+  "ot_hbm_su_pcol_l",
+  "ot_hbm_su_pcol_s",
+  "ot_hbm_su_pg_lane1_core",
+  "ot_hbm_su_pg_lane1p_core",
+  "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+  "ot_hbm_su_static_pgslice_lg__pretree",
+  "ot_hbm_svc_sm_group_rel_id",
+  "ot_hbm_svc_sm_xcal_rel_t",
+  "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+  "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+  "ot_hbm_svc_wb_kport_q",
+  "ot_hbm_xp_aq_tree13_fmt",
+  "ot_hfd_coll_q2_hard_v8g__ring_ag",
+  "ot_hfd_coll_q2n2_body_core",
+  "ot_hgi_coll_gq_issue",
+  "ot_hgi_coll_gq_land",
+  "ot_hgi_coll_inj_idx_join_rg",
+  "ot_hgi_coll_tkm_m_tp192__root",
+  "ot_hgi_dma_back_static_vp4_banks_cp",
+  "ot_hgi_sfu_core_split3__ctl",
+  "ot_hgi_sfu_core_split3__opstore_a",
+  "ot_hgi_sfu_core_split3__opstore_b",
+  "ot_hgi_sfu_programme_store_r10",
+  "ot_hgi_sfu_split3_lane_core_bk",
+  "ot_hgi_sfu_split3_lane_core_ex",
+  "ot_hgi_sfu_split3_lane_core_fr",
+  "ot_hgi_sm_xload_cl2_ctlx",
+  "ot_hnx_fused_hub_n4ext",
+  "ot_pdie_serdes"
+ ],
+ "totals": {
+  "modules": 31,
+  "entries": 143,
+  "slots": 1772,
+  "kept_signed": []
+ }
+}

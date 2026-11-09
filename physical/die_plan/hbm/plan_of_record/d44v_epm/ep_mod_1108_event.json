@@ -1,0 +1,155 @@
+{
+ "event": "EP-MOD-1108",
+ "lane": "DIE-HBM-92-EP",
+ "plan_in": "src_d44v/die_plan.json",
+ "sha_in": "836809c2858da5762969015bf2e88927e50a0ac58ddf0d25dee1b70b7a3ff1ad",
+ "sha_out": "1bbc5fc1328ce42c3c75cdea914b9724b4a8a02437231525d1880f4638d61243",
+ "files_in": {
+  "die_plan.json": "836809c2858da5762969015bf2e88927e50a0ac58ddf0d25dee1b70b7a3ff1ad",
+  "clock_entries.json": "92669babc64eb493cf444d46587d33caf856113e696bcb2763701bbcf1d5eb2a",
+  "core_macros.json": "f5f4003446773bf7d111219839ac6d4d8f486cec8164eb7e5bb2047cbebc4a3f",
+  "core_clock_regions.json": "867ada7ad7c20da94e3da7087e7d95a8e19dfd92ae9fcd3304cbb47ce9e3437c"
+ },
+ "files_out": {
+  "die_plan.json": "1bbc5fc1328ce42c3c75cdea914b9724b4a8a02437231525d1880f4638d61243",
+  "clock_entries.json": "a3f88cb7134e9dbb2e52271c72eed9e61be070a1456cbdbc4e4aa67ad3779efd",
+  "core_macros.json": "8296aaae8a1221752c12713331cd4ab1eced1ccb881dfe1ac5ee7e932a3ff819",
+  "core_clock_regions.json": "57ed431e66721f8eb95afc5cb7fadfdc59a6246990525db8d7adabd1637f8160"
+ },
+ "pins_files": {
+  "cores/hfd_ep_static_vc2__427.68x246.24__epmod1108.json": {
+   "sha256": "6fad65868337dbfff67bca6b555bffc79d25a1599f672cad0b05d34f8044efe4",
+   "pins": 3518,
+   "module": "hfd_ep_static_vc2"
+  },
+  "cores/hfd_ep_host_vc__427.68x246.24__epmod1108.json": {
+   "sha256": "0e6bb13744cfeeb52067f5001cf28e72f2be40eb27703efec2d66dda1acf582e",
+   "pins": 2492,
+   "module": "hfd_ep_host_vc"
+  }
+ },
+ "changed_types": [
+  "NW_io"
+ ],
+ "changed_top_level": [],
+ "changes": [
+  {
+   "type": "NW_io",
+   "kind": "hard_cores",
+   "inst": "u_ep_N0",
+   "before": {
+    "module": "hfd_ep_static",
+    "pins_file": "cores/hfd_ep_static__427.68x246.24__dh21b4r__centry.json"
+   },
+   "after": {
+    "module": "hfd_ep_static_vc2",
+    "pins_file": "cores/hfd_ep_static_vc2__427.68x246.24__epmod1108.json"
+   }
+  },
+  {
+   "type": "NW_io",
+   "kind": "contents",
+   "inst": "u_ep_N0",
+   "before": {
+    "module": "hfd_ep_static",
+    "pins_file": null
+   },
+   "after": {
+    "module": "hfd_ep_static_vc2",
+    "pins_file": null
+   }
+  },
+  {
+   "type": "NW_io",
+   "kind": "hard_cores",
+   "inst": "u_host_ep",
+   "before": {
+    "module": "hfd_ep_static",
+    "pins_file": "cores/hfd_ep_static__427.68x246.24__dh21b4r__centry.json"
+   },
+   "after": {
+    "module": "hfd_ep_host_vc",
+    "pins_file": "cores/hfd_ep_host_vc__427.68x246.24__epmod1108.json"
+   }
+  },
+  {
+   "type": "NW_io",
+   "kind": "contents",
+   "inst": "u_host_ep",
+   "before": {
+    "module": "hfd_ep_static",
+    "pins_file": null
+   },
+   "after": {
+    "module": "hfd_ep_host_vc",
+    "pins_file": null
+   }
+  },
+  {
+   "type": "NW_io",
+   "kind": "clock.taps",
+   "tap": "u_ep_N0",
+   "budget_owner": [
+    "hfd_ep_static",
+    "hfd_ep_static_vc2"
+   ]
+  },
+  {
+   "type": "NW_io",
+   "kind": "clock.taps",
+   "tap": "u_host_ep.clk",
+   "budget_owner": [
+    "hfd_ep_static",
+    "hfd_ep_host_vc"
+   ]
+  }
+ ],
+ "side_changes": [
+  {
+   "file": "clock_entries.json",
+   "key": "NW_io.u_ep_N0.module",
+   "before": "hfd_ep_static",
+   "after": "hfd_ep_static_vc2"
+  },
+  {
+   "file": "clock_entries.json",
+   "key": "NW_io.u_host_ep.module",
+   "before": "hfd_ep_static",
+   "after": "hfd_ep_host_vc"
+  },
+  {
+   "file": "core_macros.json",
+   "key": "cores.hfd_ep_static_vc2",
+   "copied_from": "hfd_ep_static"
+  },
+  {
+   "file": "core_clock_regions.json",
+   "key": "modules.hfd_ep_static_vc2",
+   "copied_from": "hfd_ep_static",
+   "instances": 1
+  },
+  {
+   "file": "core_macros.json",
+   "key": "cores.hfd_ep_host_vc",
+   "copied_from": "hfd_ep_static"
+  },
+  {
+   "file": "core_clock_regions.json",
+   "key": "modules.hfd_ep_host_vc",
+   "copied_from": "hfd_ep_static",
+   "instances": 1
+  },
+  {
+   "file": "core_clock_regions.json",
+   "key": "modules.hfd_ep_static.instances",
+   "after": 4
+  }
+ ],
+ "rtl": {
+  "vc2_and_host": "ep_both.sv",
+  "vc2_sha256": "4b268c60e69a8d8f2d94101ef745e44048f1384389b873a1e0e0c4e1efc6907a",
+  "base": "results/hbm_hfdep_native_0250/selected/hfd_ep_static.sv",
+  "base_sha256": "d905b388a1c20fe47cd51f6b956bebe34313597f603898010380182e9fb873bf"
+ },
+ "note": "as-built modules declared for NW_io u_ep_N0 / u_host_ep; no geometry/bus/station/cycle change; children PROVISIONAL (no signed view of hfd_ep_static_vc2 / hfd_ep_host_vc)"
+}
