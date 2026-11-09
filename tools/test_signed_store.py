@@ -59,6 +59,57 @@ def test_do_not_count_marker():
         assert len(rtp.split_dnc([a], rtp.dnc_rows(f))[0]) == 1
 
 
+def test_late_provenance_once_and_only_without_one():
+    import hashlib
+    with tempfile.TemporaryDirectory() as d:
+        so = '{"verdict": "SIGNED"}'
+        eid = hashlib.sha256(so.encode()).hexdigest()
+        e = entry(eid, ["h1:/k/r/signoff/signoff.json"])
+        e["scan"] = dict(name="n", top="t", generated="g", pins_path="/p")
+        assert ss.write_entry(e, d)
+        scan = dict(name="n", top="t", generated="g", flow_tag="flow-x", src_commit="abc", prov_file="/k/r/PROVENANCE.json", resign=True)
+        assert not ss.late_provenance(eid, dict(scan, prov_file=None), {"kind": "resign"}, "/archive/h1", [], d)   # fresh scan has none
+        assert ss.late_provenance(eid, scan, {"kind": "resign"}, "/archive/h1", [["k/r/PROVENANCE.json", 10, "pp"]], d)
+        assert not ss.late_provenance(eid, dict(scan, flow_tag="flow-y"), {"kind": "resign"}, "/archive/h1", [], d)   # never replaced
+        recs, _ = ss.load_records(d)
+        assert recs[0]["flow_tag"] == "flow-x" and recs[0]["versioned"]
+        e2 = ss.read_manifest(d)[0]
+        assert e2["id"] == eid and e2["flow_tag"] == "flow-x"
+        assert ["k/r/PROVENANCE.json", 10, "pp", "/archive/h1"] in ss.entry_files(e2)
+
+
+def test_late_pass_refuses_changed_unit():
+    try:
+        import signed_store_ingest as si
+    except ImportError:
+        print("SKIP test_late_pass_refuses_changed_unit: signed_store_ingest not beside this file"); return
+    import hashlib
+    so = '{"verdict": "SIGNED"}'
+    eid = hashlib.sha256(so.encode()).hexdigest()
+    e = dict(id=eid, origin="h1:/k/r/signoff/signoff.json", name="n", top="t", generated="g", scan=dict(name="n"),
+             files=[["k/r/signoff/signoff.json", 5, "s1"], ["k/r/x.v", 7, "s2"]])
+    r = dict(scan_host="h1", path="/k/r/signoff/signoff.json", name="n", top="t", generated="g", prov_file="/k/r/PROVENANCE.json", flow_tag="flow-x")
+    assert si.select_late([r], [e]) == [(e, r)]
+    assert si.select_late([dict(r, flow_tag=None)], [e]) == []
+    assert si.select_late([r], [dict(e, provenance_json="x")]) == []
+    unit = dict(files=[["/k/r/signoff/signoff.json", 5], ["/k/r/x.v", 7], ["/k/r/PROVENANCE.json", 3]])
+    calls = []
+    orig = si.ss.late_provenance
+    si.ss.late_provenance = lambda *a, **k: calls.append(a) or True
+    try:
+        coll = lambda h, p: dict(signoff=so, prov='{"kind": "resign"}')
+        good = {"/k/r/signoff/signoff.json": [5, "s1"], "/k/r/x.v": [7, "s2"], "/k/r/PROVENANCE.json": [3, "pp"]}
+        fails = []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=coll) == [eid] and not fails
+        assert calls[0][4] == [["k/r/PROVENANCE.json", 3, "pp"]]
+        bad = dict(good, **{"/k/r/x.v": [7, "CHANGED"]}); fails = []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (bad, {r["path"]: unit}), collect=coll) == [] and "changed" in fails[0][2]
+        fails = []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=lambda h, p: dict(signoff=so + " ", prov="{}")) == []
+        assert "signoff.json changed" in fails[0][2]
+    finally:
+        si.ss.late_provenance = orig
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
