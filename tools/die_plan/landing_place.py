@@ -512,12 +512,71 @@ def collector_instances(ev):
     return {'u_cland_collect_'+safe(n) for n in collector_nodes(ev)[0]}
 
 
-def tcl(P,tn):
+COLLECTOR_GROW_MAX = 32   # landing_placement.tcl cland_put_grow: window x1..x32 about the same centre
+
+
+def _rows_reachable(t, rect, halo=2.17):
+    """True when some area of rect, inside the type outline, lies outside every hard core and its row-cut halo
+    (exact: the rect is cut on every core edge, each cell tested at its centre)."""
+    W, H = (t or {}).get('outline_um', (float('inf'), float('inf')))
+    x0, y0, x1, y1 = max(rect[0], 0.0), max(rect[1], 0.0), min(rect[2], W), min(rect[3], H)
+    if x0 >= x1 or y0 >= y1:
+        return False
+    cores = [(a - halo, b - halo, c + halo, d + halo) for a, b, c, d in _hard_core_rects(t)]
+    xs = sorted({x0, x1} | {v for a, _, c, _ in cores for v in (a, c) if x0 < v < x1})
+    ys = sorted({y0, y1} | {v for _, b, _, d in cores for v in (b, d) if y0 < v < y1})
+    for xa, xb in zip(xs, xs[1:]):
+        for ya, yb in zip(ys, ys[1:]):
+            cx, cy = (xa + xb) / 2, (ya + yb) / 2
+            if not any(a < cx < c and b < cy < d for a, b, c, d in cores):
+                return True
+    return False
+
+
+def _collector_window(tn, t, node, xy):
+    """DIE-S81-85 11-09 (S81 ot_s81sl_leaf__t10 attempt 5, 3_3 'OT_CLAND no legal nonoverlapping row/site in reserved
+    band for u_bound.u_cland_collect_rst_rl_148/_4_ (collector:rst_rl_148)'): a collector / reset raw-copy window is its
+    tree relay xy +-2.16 um, and the collector tree was solved without the type's hard cores, so rst_rl_148
+    (194.32, 859.32) is 73.8 um inside u_lf.u_vsw (224.64 um square): the window has no row, and the runtime grow law
+    (cland_put_grow, x2..x32 = +-69.12 um) never leaves the macro, so global place stops after ~2 min of hooks.
+    A window whose LARGEST grown window still reaches rows (outside every hard core + halo, inside the outline) is
+    returned as is: identical output, the runtime law places it as before.  A window whose grow cannot reach any row
+    moves, by the START / local-reset law (_clear_of_hard_cores), to the nearest 4.32 um window clear of every hard
+    core; when none fits the outline the plan cannot hold the collector and gen fails here, not 3_3."""
+    x, y = xy
+    rect = [x - 2.16, y - 2.16, x + 2.16, y + 2.16]
+    g = 2.16 * COLLECTOR_GROW_MAX
+    if _rows_reachable(t, [x - g, y - g, x + g, y + g]):
+        return rect
+    try:
+        return _clear_of_hard_cores(t, rect)
+    except ValueError:
+        raise ValueError(f'{tn}: landing collector {node} window {rect}: no row within +-{g:.2f} um (inside a hard '
+                         'core) and no 4.32 um window clear of every hard core fits the type outline: the collector '
+                         'band cannot be placed') from None
+
+
+def _moved_type(t, macro_moves):
+    """The type with its hard cores at their kit sites: gen_phys.macro_move_table (OT_MACRO_MOVES) entries {inst, to}
+    replace the plan origin of that core.  No moves: the type itself."""
+    if not macro_moves:
+        return t
+    to = {m['inst']: m['to'] for m in macro_moves.values()}
+    return dict(t, hard_cores=[dict(h, origin_um=list(to[h.get('inst')])) if h.get('inst') in to else h
+                               for h in t.get('hard_cores') or []])
+
+
+def tcl(P,tn,macro_moves=None):
+    """macro_moves (gen_phys.macro_move_table, kit macro sites when OT_MACRO_MOVES is set): the hard cores collector
+    windows are cleared of (_collector_window); None / {} = plan origins."""
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
     ev=collector_event(c)
     groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_origin_home_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=ev['tree'];root=ev['collector_root_node']
-    def near(xy):
-        x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
+    cwin={};tmoved=_moved_type(P.types[tn],macro_moves)
+    def near(xy,node=None):
+        k=(node,tuple(xy))
+        if k not in cwin:cwin[k]=_collector_window(tn,tmoved,node,xy)
+        return cwin[k]
     if c.get('monitor')=='dataflow' or (root and tree is None):
         return _dataflow_tcl(tn,c,P.types[tn])
     for name,band in c.get('bands',{}).items():
@@ -526,12 +585,12 @@ def tcl(P,tn):
     for s in ev.get('local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
-        groups.append(('u_cland_rst_'+s['name'],near(tree['relays'][next(i for i,r in enumerate(tree['relays']) if r['q']==_source_node(s))]['xy']),'raw-copy-optional'))
+        groups.append(('u_cland_rst_'+s['name'],near(tree['relays'][next(i for i,r in enumerate(tree['relays']) if r['q']==_source_node(s))]['xy'],_source_node(s)),'raw-copy-optional'))
     if root:
         active,xy=collector_nodes(ev)
         for n in sorted(active):
-            groups.append(('u_cland_collect_'+safe(n),near(xy[n]),'collector:'+n))
-            if n!='rst_root_n':groups.append(('u_cland_reset_'+safe(n),near(xy[n]),'raw-copy-optional'))
+            groups.append(('u_cland_collect_'+safe(n),near(xy[n],n),'collector:'+n))
+            if n!='rst_root_n':groups.append(('u_cland_reset_'+safe(n),near(xy[n],n),'raw-copy-optional'))
         for s in ev.get('children',[]):
             if s['seam']:
                 x,y=s['xy_um'];i=s['index']
