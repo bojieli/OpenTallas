@@ -2,6 +2,12 @@
 """ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
 
   ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] [--stage PATH ...] -- <command...>
+  ot-run --mem GB --job SPEC.json [--hosts a,b] ... -- <command...>
+                           SEALED JOB (ISOLATE-1, OWNER 2026-11-09 "yes, isolate the jobs. simply delete the finished job
+                           folder"): the command runs through ot-job on the chosen host, in its own job dir with only the
+                           declared inputs of the spec (read-only, from the host store) and its work dir; any other host
+                           path fails. At exit the outputs the spec names are published to the store and the job dir is
+                           deleted. The spec travels inline (base64); no --dir is needed, and SPILL is off.
   ot-run --selftest [HOST]   proves on HOST (default: every host) that a command runs and returns ITS exit status, and
                              that a request that cannot be admitted fails non-zero with NOT RUN (never a silent 0)
   ot-run --status          one line: per host, the largest request it admits now, MemAvailable, load1/cores, waiters;
@@ -1284,6 +1290,27 @@ def held_hosts():
         return {}
 
 
+JOB_BIN = os.environ.get("OT_RUN_JOB_BIN", os.path.expanduser("~/.local/bin/ot-job"))
+JOB_SCHEMA = "opentallas.ot_job.v1"
+JOB_ROOT = "/srv/opentallas-scratch2/claude/ot-jobs"     # ot-job's default job root on every host
+
+
+def job_wrap(cmd, spec_path):
+    """ISOLATE-1: the command as ot-job runs it on the host: ot-job run --spec-b64 <spec> -- <command>"""
+    import base64
+    try:
+        with open(spec_path) as fh:
+            spec = json.load(fh)
+    except (OSError, ValueError) as e:
+        sys.exit(f"ot-run: --job {spec_path}: {e}")
+    if not isinstance(spec, dict) or spec.get("schema", JOB_SCHEMA) != JOB_SCHEMA or not spec.get("name"):
+        sys.exit(f"ot-run: --job {spec_path}: not an {JOB_SCHEMA} spec with a name")
+    if not cmd:
+        sys.exit("ot-run: --job needs a command")
+    b64 = base64.b64encode(json.dumps(spec, sort_keys=True, separators=(",", ":")).encode()).decode()
+    return [JOB_BIN, "run", "--spec-b64", b64, "--"] + list(cmd)
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--selftest"]:
@@ -1297,6 +1324,7 @@ def main():
     if a[:1] == ["--cancel"] and len(a) >= 2:
         sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
+    job = None
     spill = not os.environ.get("OT_RUN_NO_SPILL")
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
@@ -1308,6 +1336,7 @@ def main():
         elif o == "--hosts": hosts = a.pop(0).split(",")
         elif o == "--pick": pick = True
         elif o == "--no-spill": spill = False
+        elif o == "--job": job = a.pop(0)
         elif o == "--stage":
             for x in a.pop(0).split(","):
                 if not x.startswith("/"):
@@ -1325,6 +1354,10 @@ def main():
             os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
     cmd = ro_source_binds(a[1:])
+    if job:
+        cmd = job_wrap(cmd, job)
+        spill = False                      # a sealed job brings its inputs by sha; there is no lane root to copy
+        d = d or JOB_ROOT                  # placement, disk guard and cd use the job root (scratch), never $HOME
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)

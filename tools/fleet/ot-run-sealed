@@ -1,0 +1,178 @@
+#!/usr/bin/python3 -I
+"""ot-run-sealed: drop-in ot-run for the kit wave (kit_wave.json "ot_run") that runs the PLACE stage of pilot rows as a
+SEALED JOB (ISOLATE-1 pilot, OWNER 2026-11-09 "yes, isolate the jobs. simply delete the finished job folder").
+
+Every other call is passed unchanged to the configured backend (the wave's current ot-run).  A call is sealed when
+  - the config is enabled, and the kit dir (--dir, or the first --stage) lies under one of its "dirs" prefixes;
+  - the command is the wave's place command: bash -c "bash <runner> <K> place <mem> <threads>";
+  - the kit and its runner exist on the pilot host (checked over ssh), and the host's ot-job is installed.
+The sealed job: work dir = a private copy of K, seen by the job at K's own path; runner = read-only input;
+everything else on the host invisible.  At exit: run/ is published to the host store (artifact record with
+producer), the whole work dir is copied back to K on the pilot host (so the wave reads K exactly as before), and
+the job dir is deleted.  The client prints ot-run's own "ot-run: RAN on <host>" line, which the wave already parses.
+
+Config (JSON; $OT_RUN_SEALED_CONF, default ~/.local/lib/fleet/isolate-1/sealed.json):
+  {"enabled": true, "host": "epyc7", "dirs": ["/srv/.../runs/qwen_kvsys/"], "backend": "/home/ubuntu/.local/lib/kw23/ot-run",
+   "sealed_backend": "/home/ubuntu/.local/lib/fleet/isolate-1-<sha>/ot-run", "log": "~/.local/lib/fleet/isolate-1/sealed.log"}
+A missing or unreadable config, or "enabled": false, passes everything to the backend.  Revert = kit_wave.json ot_run back.
+"""
+import json
+import os
+import shlex
+import subprocess
+import sys
+import tempfile
+import time
+
+DEFAULT_BACKEND = "/home/ubuntu/.local/lib/kw23/ot-run"
+CONF = os.environ.get("OT_RUN_SEALED_CONF", os.path.expanduser("~/.local/lib/fleet/isolate-1/sealed.json"))
+
+
+def load_conf():
+    try:
+        with open(CONF) as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return {}
+
+
+def parse(argv):
+    """-> (opts dict, flags list, cmd list) of an ot-run argv, or None"""
+    if "--" not in argv:
+        return None
+    pre, cmd = argv[:argv.index("--")], argv[argv.index("--") + 1:]
+    o, flags, i = {"stage": []}, [], 0
+    while i < len(pre):
+        x = pre[i]
+        if x in ("--mem", "--threads", "--dir", "--hosts", "--max-wait", "--disk", "--priority"):
+            o[x[2:]] = pre[i + 1]
+            i += 2
+        elif x == "--stage":
+            o["stage"] += pre[i + 1].split(",")
+            i += 2
+        elif x in ("--crit", "--direct", "--no-spill"):
+            flags.append(x)
+            i += 1
+        else:
+            return None                                  # an option this wrapper does not know: never guess
+    return o, flags, cmd
+
+
+def place_call(cmd):
+    """bash -c "bash <runner> <K> place <mem> <threads>" -> (runner, K, rest) or None"""
+    if len(cmd) != 3 or cmd[:2] != ["bash", "-c"]:
+        return None
+    try:
+        w = shlex.split(cmd[2])
+    except ValueError:
+        return None
+    if len(w) >= 4 and w[0] == "bash" and w[3] == "place" and os.path.isabs(w[1]) and os.path.isabs(w[2]):
+        return w[1], w[2].rstrip("/"), w[3:]
+    return None
+
+
+def spec_for(runner, K, children=()):
+    name = os.path.basename(K) + "-place"
+    inputs = [] if (runner == K or runner.startswith(K + "/")) else [{"path": runner}]
+    inputs += [{"path": c} for c in children]           # KWCHILD signed child records, read-only at their own paths
+    return {"schema": "opentallas.ot_job.v1", "name": name, "inputs": inputs,
+            "work": {"at": K, "seed": [{"path": K}]},
+            "publish": [{"name": f"kit-wave/{os.path.basename(K)}/place-run", "path": "run", "when": "always"}],
+            "return": {"to": K, "paths": ["."]}}
+
+
+# the same selection run_kit.sh's KWCHILD block makes (macros/*.provenance.json -> signed record dir + its lec dir)
+KWCHILD_PY = r"""
+import json, os, sys
+from pathlib import Path
+K = Path(sys.argv[1]); out = set()
+for pf in sorted((K / 'macros').glob('*.provenance.json')):
+    try:
+        prov = json.loads(pf.read_text())
+    except (OSError, ValueError):
+        continue
+    so = (prov.get('export') or {}).get('signoff')
+    if not so:
+        continue
+    if not os.path.isabs(so):
+        so = str((pf.parent / so).resolve())
+    rec = Path(so).parent.parent
+    if rec.is_dir():
+        out.add(str(rec))
+    try:
+        lec = json.loads((rec / 'PROVENANCE.json').read_text()).get('lec')
+    except (OSError, ValueError, AttributeError):
+        lec = None
+    if lec and os.path.isabs(lec) and Path(lec).exists():
+        out.add(str(Path(lec).parent))
+k = os.path.realpath(K)
+for p in sorted(out):
+    r = os.path.realpath(p)
+    if r != k and not r.startswith(k + '/') and ':' not in p:
+        print('CHILD ' + p)
+"""
+
+
+def remote_ok(host, runner, K):
+    """-> (ok, child record dirs) from one ssh to the pilot host"""
+    sh = (f"test -d {shlex.quote(K)} && test -f {shlex.quote(runner)} && test -x $HOME/.local/bin/ot-job "
+          f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(KWCHILD_PY)} {shlex.quote(K)}")
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return False, []
+    kids = [ln[6:] for ln in p.stdout.splitlines() if ln.startswith("CHILD ")]
+    return "SEALED_OK" in p.stdout and p.returncode == 0, kids
+
+
+def log(conf, msg):
+    try:
+        with open(os.path.expanduser(conf.get("log", "~/.local/lib/fleet/isolate-1/sealed.log")), "a") as fh:
+            fh.write(time.strftime("%Y-%m-%d %H:%M:%S %Z ") + msg + "\n")
+    except OSError:
+        pass
+
+
+def decide(argv, conf, check=remote_ok):
+    """-> (argv to exec, why)"""
+    backend = conf.get("backend") or DEFAULT_BACKEND
+    passthru = [backend] + list(argv)
+    if not conf.get("enabled"):
+        return passthru, "disabled"
+    p = parse(argv)
+    if not p:
+        return passthru, "not a plain ot-run call"
+    o, flags, cmd = p
+    pc = place_call(cmd)
+    if not pc or "mem" not in o:
+        return passthru, "not a place call"
+    runner, K, _rest = pc
+    kdir = o.get("dir") or (o["stage"][0] if o["stage"] else "")
+    if kdir.rstrip("/") != K or not any(K.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
+        return passthru, "not a pilot dir"
+    host = conf.get("host", "epyc7")
+    ok, kids = check(host, runner, K)
+    if not ok:
+        return passthru, f"kit/runner/ot-job/bwrap not ready on {host}"
+    fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
+    with os.fdopen(fd, "w") as fh:
+        json.dump(spec_for(runner, K, kids), fh)
+    out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
+    out += [f for f in flags if f != "--no-spill"]
+    if "max-wait" in o:
+        out += ["--max-wait", o["max-wait"]]
+    return out + ["--"] + cmd, f"SEALED on {host}: {K}"
+
+
+def main():
+    conf = load_conf()
+    argv, why = decide(sys.argv[1:], conf)
+    if argv[0] != (conf.get("backend") or DEFAULT_BACKEND):
+        log(conf, f"{why} pid {os.getpid()}")
+        print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
+    os.execv(argv[0], argv)
+
+
+if __name__ == "__main__":
+    main()

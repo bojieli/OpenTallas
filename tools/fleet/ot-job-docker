@@ -1,0 +1,180 @@
+#!/usr/bin/python3 -I
+"""ot-job-docker: the docker CLI as a sealed job sees it (ISOLATE-1).  Bound over /usr/bin/docker inside the job's
+bwrap view.  Every host path a container would mount or copy must be one the job declared (its inputs, read-only;
+its work dir): it is rewritten to the real path inside the job dir, read-only where the input is.  Anything else is
+refused with exit 97 and a line "OT-JOB ISOLATION: ...".  The checked call is passed to the ot-heavy memory shim when
+it exists (so --memory stays enforced), which calls /usr/bin/docker again: the second pass (OT_JOB_SHIM_CHECKED=1)
+execs the real CLI, bound at <job>/.ot-job/docker.real.
+
+Not a security boundary against a hostile job (it could call the real CLI by path); it stops the sloppy cross-job
+reads that make cleanup guesswork.  Map: $OT_JOB_MAP = {"job": J, "maps": [{"at", "real", "ro"}], "allow_ro": [...]}.
+"""
+import json
+import os
+import sys
+
+REFUSE = 97
+HEAVY = "/usr/local/lib/ot-heavy/bin/docker"
+VALUE_OPTS = {"-v", "--volume", "--mount", "-e", "--env", "--env-file", "-w", "--workdir", "-u", "--user", "-p", "--publish",
+              "-l", "--label", "-h", "--hostname", "--name", "--network", "--net", "--entrypoint", "--cpus", "-m", "--memory",
+              "--memory-swap", "--shm-size", "--ulimit", "--ipc", "--pid", "--gpus", "--device", "--add-host", "--cap-add",
+              "--cap-drop", "--security-opt", "--tmpfs", "--cidfile", "--platform", "--runtime", "--log-driver", "--log-opt",
+              "--restart", "--volumes-from", "--cpuset-cpus", "--stop-signal", "--group-add", "--dns", "--expose",
+              "--userns", "--uts", "--cgroupns", "--pull", "--oom-score-adj", "--cpu-shares", "-c", "--sysctl",
+              "--label-file", "--mac-address", "--ip", "--network-alias", "--health-cmd", "--stop-timeout", "--attach", "-a",
+              "--cgroup-parent", "--isolation", "--kernel-memory", "--memory-reservation", "--pids-limit", "--storage-opt"}
+GLOBAL_VALUE = {"--config", "-c", "--context", "-H", "--host", "-l", "--log-level", "--tlscacert", "--tlscert", "--tlskey"}
+REFUSED_FLAGS = {"--privileged", "--volumes-from"}
+REFUSED_GLOBAL = {"-H", "--host", "--context", "-c"}
+REFUSED_SUB = {"build", "buildx", "compose", "builder", "volume"}
+
+
+class Refused(Exception):
+    pass
+
+
+def load_map():
+    p = os.environ.get("OT_JOB_MAP")
+    if not p:
+        raise Refused("OT_JOB_MAP is not set (ot-job-docker runs only inside an ot-job)")
+    with open(p) as fh:
+        m = json.load(fh)
+    maps = sorted(m["maps"], key=lambda x: -len(x["at"]))
+    return m, maps
+
+
+def translate(path, maps, allow_ro=(), want_write=False):
+    """host path as the job names it -> (real host path, ro).  Resolves symlinks in the job's view first, so a link
+    that points out of the declared paths is refused like the path itself."""
+    if not os.path.isabs(path):
+        raise Refused(f"relative or named host source {path!r} (named volumes are not job inputs)")
+    r = os.path.realpath(path)
+    for m in maps:
+        at = m["at"].rstrip("/") or "/"
+        if r == at or r.startswith(at + "/"):
+            if want_write and m["ro"]:
+                raise Refused(f"{path} is a read-only input; a container cannot write to it")
+            return m["real"] + r[len(at):], bool(m["ro"])
+    for a in allow_ro:
+        a = a.rstrip("/")
+        if (r == a or r.startswith(a + "/")) and not want_write:
+            return r, True
+    raise Refused(f"undeclared host path {path}" + (f" (resolves to {r})" if r != path else "")
+                  + ": declare it as an ot-job input")
+
+
+def fix_volume(spec, maps, allow_ro):
+    parts = spec.split(":")
+    if len(parts) == 1:
+        return spec                                     # anonymous volume: no host path
+    src, rest = parts[0], parts[1:]
+    real, ro = translate(src, maps, allow_ro)
+    opts = rest[1].split(",") if len(rest) > 1 else []
+    if ro and "ro" not in opts:
+        opts = [o for o in opts if o != "rw"] + ["ro"]
+    return ":".join([real, rest[0]] + ([",".join(opts)] if opts else []))
+
+
+def fix_mount(spec, maps, allow_ro):
+    kv = []
+    for f in spec.split(","):
+        k, eq, v = f.partition("=")
+        kv.append([k.strip(), v if eq else None])
+    d = {k: v for k, v in kv}
+    typ = d.get("type", "volume")
+    if typ == "tmpfs":
+        return spec
+    src_key = next((k for k in ("source", "src") if k in d), None)
+    if typ != "bind":
+        if src_key:
+            raise Refused(f"--mount {spec}: named volumes are not job inputs")
+        return spec
+    if not src_key:
+        raise Refused(f"--mount {spec}: bind without a source")
+    real, ro = translate(d[src_key], maps, allow_ro)
+    out = []
+    for k, v in kv:
+        if k == src_key:
+            v = real
+        if k in ("readonly", "ro") and ro:
+            continue
+        out.append(k if v is None else f"{k}={v}")
+    if ro:
+        out.append("readonly")
+    return ",".join(out)
+
+
+def check(argv, m, maps):
+    """-> rewritten argv (without the program name) or raise Refused"""
+    allow_ro = m.get("allow_ro", [])
+    a = list(argv)
+    i = 0
+    while i < len(a) and a[i].startswith("-"):           # global options
+        o = a[i].split("=", 1)[0]
+        if o in REFUSED_GLOBAL:
+            raise Refused(f"docker {o} (another daemon/context) is not allowed in a sealed job")
+        i += 2 if (o in GLOBAL_VALUE and "=" not in a[i]) else 1
+    if i >= len(a):
+        return a
+    sub = a[i]
+    j = i + 1
+    if sub == "container" and j < len(a):
+        sub = a[j]
+        j += 1
+    if sub in REFUSED_SUB:
+        raise Refused(f"docker {sub} is not allowed in a sealed job (it reads host paths or named volumes)")
+    if sub == "cp":
+        args = [x for x in a[j:] if not x.startswith("-")]
+        if len(args) == 2:
+            src, dst = args
+            for k, side in ((a.index(src, j), src), (a.index(dst, j), dst)):
+                if ":" in side.split("/", 1)[0] and not side.startswith("/"):
+                    continue                             # CONTAINER:path
+                if side == "-":
+                    continue
+                real, _ro = translate(side, maps, allow_ro, want_write=(side == dst))
+                a[k] = real
+        return a
+    if sub not in ("run", "create"):
+        return a
+    while j < len(a):
+        x = a[j]
+        if not x.startswith("-") or x == "--":
+            break                                        # the image: the container command follows, untouched
+        o, eq, val = x.partition("=")
+        if o in REFUSED_FLAGS:
+            raise Refused(f"docker {sub} {o} is not allowed in a sealed job")
+        if o in ("-v", "--volume", "--mount"):
+            if eq:
+                a[j] = o + "=" + (fix_mount(val, maps, allow_ro) if o == "--mount" else fix_volume(val, maps, allow_ro))
+            else:
+                a[j + 1] = fix_mount(a[j + 1], maps, allow_ro) if o == "--mount" else fix_volume(a[j + 1], maps, allow_ro)
+                j += 1
+        elif o in VALUE_OPTS and not eq:
+            j += 1
+        j += 1
+    return a
+
+
+def main():
+    if os.environ.get("OT_JOB_SHIM_CHECKED") == "1":
+        real = os.path.join(os.environ.get("OT_JOB_DIR", "/nonexistent"), ".ot-job", "docker.real")
+        os.execv(real, [real] + sys.argv[1:])
+    try:
+        m, maps = load_map()
+        argv = check(sys.argv[1:], m, maps)
+    except Refused as e:
+        print(f"OT-JOB ISOLATION: {e}", file=sys.stderr, flush=True)
+        try:
+            with open(os.path.join(os.environ["OT_JOB_DIR"], "tmp", "isolation_refusals.log"), "a") as fh:
+                fh.write(json.dumps({"argv": sys.argv[1:], "why": str(e)}) + "\n")
+        except (OSError, KeyError):
+            pass
+        sys.exit(REFUSE)
+    env = dict(os.environ, OT_JOB_SHIM_CHECKED="1")
+    nxt = m.get("next_docker") or (HEAVY if os.path.exists(HEAVY) else os.path.join(m["job"], ".ot-job", "docker.real"))
+    os.execve(nxt, [nxt] + argv, env)
+
+
+if __name__ == "__main__":
+    main()
