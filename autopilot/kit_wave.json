@@ -321,11 +321,12 @@
     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hroot": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+    "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running",
     "kv3_sys_SD_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
+    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+    "kv3_pv*": "KW-FIX-42 03:11 COORD 03:1x: KV-PLAN-1 transport error (bind5 vport RT bound 63 vs bound round trips 64-71, 3 W-lane pads short); hold every kv3_pv* until KV-PLAN-1 posts its type-local fix"
    },
    "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -3120,7 +3121,8 @@
     "ot_s81sl_kv_leaf__t1": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
     "ot_s81sl_kv_leaf__t3": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
     "ot_s81sl_kv_leaf__t4": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
-    "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit"
+    "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit",
+    "ot_s81sl_leaf__t50": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion; owner (DIE-S81-85) decides the form; no unchanged relaunch"
    },
    "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
    "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
@@ -11177,7 +11179,8 @@
     "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4",
     "q_b011@5",
     "q_b103@10",
-    "q_b103__physical_v1@11"
+    "q_b103__physical_v1@11",
+    "q_su00__physical_v1@4"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -11219,7 +11222,9 @@
     "q_b101_nw": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
     "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
     "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
-    "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views"
+    "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
+    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
+    "q_spu0": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion in FT-reserved bands (as q_spu0__physical_v1); held for HBM-PLAN-1 switch"
    },
    "gen_hosts": [
     "epyc7",
@@ -11481,7 +11486,8 @@
     "root@2": "relaunch on current wave src (a2 GEN_LINT ran kw35/src_812ee; COORD 00:1x)",
     "q_b011@5": "KW-FIX-42 03:00: PDN-0179 M4-column class fix claude/die-hbm-97-pdn-col-1109@20168ea1dfb8 partition_ft_reserve.py md5 2681fbde in kw41/src_h94_pv (real pdngen OK on this DB)",
     "q_b103@10": "KW-FIX-42 03:00: PDN-0179 M4-column class fix claude/die-hbm-97-pdn-col-1109@20168ea1dfb8 partition_ft_reserve.py md5 2681fbde in kw41/src_h94_pv (real pdngen OK on this DB)",
-    "q_b103__physical_v1@11": "KW-FIX-42: COORD NEWFAIL 02:19 (c): INFRA, relaunch ONCE at the stage it reached, gen epyc7"
+    "q_b103__physical_v1@11": "KW-FIX-42: COORD NEWFAIL 02:19 (c): INFRA, relaunch ONCE at the stage it reached, gen epyc7",
+    "q_su00__physical_v1@4": "KW-FIX-42 03:06 COORD NEWFAIL: DPL class (legalize fails 2443 edge-spacing + 71 padding, then detail_place.tcl 46 bad optional access): diamond legalizer per DIE-HBM-93 18:51 class fix (as q_su10/q_su20/q_b002, q_b003pv1 type_args); relaunch ONCE"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -13591,6 +13597,10 @@
     "q_b003__physical_v1": [
      "--dpl-diamond",
      "q_b003__physical_v1"
+    ],
+    "q_su00__physical_v1": [
+     "--dpl-diamond",
+     "q_su00__physical_v1"
     ]
    },
    "retry_prev_kw41_added": [
