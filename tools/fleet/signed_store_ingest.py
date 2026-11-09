@@ -204,15 +204,15 @@ def archive_host(h, cands, fails):
 
 
 def select_late(recs, manifest):
-    """-> [(entry, fresh record)]: a stored record with no provenance whose origin copy now has one (a re-sign that wrote
+    """-> [(entry, fresh record)]: a stored record that is not versioned whose origin copy now has a versioned provenance (a re-sign that wrote
     PROVENANCE.json after an ingest had already taken its signoff.json).  Origin copy only: its unit is the archived one."""
     by = {}
     for e in manifest:
-        if (e.get('scan') or {}).get('prov_file') or e.get('provenance_json'): continue
+        if e.get('flow_tag') and e.get('src_commit'): continue        # versioned already (11-09: not 'has any provenance')
         by[(str(e.get('origin')), (e.get('name'), e.get('top'), str(e.get('generated'))))] = e
     out = []
     for r in recs:
-        if not (r.get('prov_file') and r.get('flow_tag')): continue
+        if not (r.get('prov_file') and r.get('flow_tag') and r.get('src_commit')): continue
         e = by.get(('%s:%s' % (r.get('scan_host'), r.get('path')), identity(r)))
         if e: out.append((e, r))
     return out

@@ -151,13 +151,19 @@ def add_extra(eid, archive, files, note, store=None):
 def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_logs=()):
     """COUNT-ARCHIVE-2 11-09: a re-sign writes PROVENANCE.json (and lec/) after signoff.json; an ingest that ran in between stored
     the record without them, so the counter saw it unversioned (QC NK nk_eco2_resign_fc, 02:08 vs 03:26).  Same sign-off (same id):
-    take the scan fields and provenance once, and the new unit files as an archived extra set.  Only for an entry that has no
-    provenance yet; a provenance already stored is never replaced.  -> True when the entry changed."""
+    take the scan fields and provenance once, and the new unit files as an archived extra set.  Only for an entry that is not
+    versioned yet (no provenance, or an unversioned one); a versioned provenance is never replaced.  -> True when the entry changed."""
     p = entry_path(eid, store)
     with store_lock(store):
         e = read_entry(p)
-        if (e.get("scan") or {}).get("prov_file") or e.get("provenance_json") or not scan.get("prov_file") or not prov_json:
+        # 11-09 07:0x: an entry whose stored provenance is UNVERSIONED (no flow tag + src commit; e.g. the kit's own
+        # i1/PROVENANCE.json taken before the re-sign wrote resign_gj/PROVENANCE.json, HBM rootg1c) also takes the fresh,
+        # versioned one; the old one is kept in late_provenance.replaced.  A versioned provenance is never replaced.
+        if (e.get("flow_tag") and e.get("src_commit")) or not scan.get("prov_file") or not prov_json:
             return False
+        if not (scan.get("flow_tag") and scan.get("src_commit")) or scan.get("prov_file") == e.get("prov_file"):
+            return False
+        replaced = dict(prov_file=e.get("prov_file"), provenance_json=e.get("provenance_json")) if e.get("provenance_json") else None
         e["scan"] = dict(e.get("scan") or {}, **{k: scan[k] for k in SCAN_FIELDS if k in scan})
         for k in ("flow_tag", "src_commit", "prov_file"):
             if scan.get(k) is not None:
@@ -167,7 +173,7 @@ def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_lo
         if files:
             e.setdefault("extra", []).append(dict(archive=archive, files=files, note=note))
         e["late_provenance"] = dict(time=time.strftime("%F %T %Z"), prov_file=scan["prov_file"], files=len(files or []),
-                                    changed_logs_kept_first_version=list(changed_logs))
+                                    changed_logs_kept_first_version=list(changed_logs), replaced=replaced)
         data = gzip.compress((json.dumps(e, sort_keys=True) + "\n").encode(), 9, mtime=0)
         fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".e.")
         with os.fdopen(fd, "wb") as fh:
