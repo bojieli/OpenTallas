@@ -17417,60 +17417,60 @@
      }
     },
     "q_b113": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_b113__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_spu1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_spu1__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_su30": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_su30__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_spb2__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
-     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
     },
     "q_hub_ne__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
@@ -18470,7 +18470,66 @@
     "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
     "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)"
    },
-   "note_kw43_hub": "KW-FIX-43 15:5x: q_hub_ne/+pv1, q_hub_nw__physical_v1 released onto 4a66235b; q_hub_nw stays held (bind_F3b, DIE-HBM-96). Revert: item_inputs/hold_items = *_prev_kw43hub."
+   "note_kw43_hub": "KW-FIX-43 15:5x: q_hub_ne/+pv1, q_hub_nw__physical_v1 released onto 4a66235b; q_hub_nw stays held (bind_F3b, DIE-HBM-96). Revert: item_inputs/hold_items = *_prev_kw43hub.",
+   "item_inputs_prev_kw43p11t": {
+    "q_b113": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_b113__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_spu1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_spu1__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_su30": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_su30__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_spb2__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    }
+   },
+   "note_kw43_p11t": "KW-FIX-43 16:0x: 7 types -> p11t (supersedes p11s); q_b113(+pv1) fresh gen once with p11t opsb pins + reset contract (src) + c12 prefer; the other 5 byte-identical, running kits untouched. Revert: item_inputs[k] = item_inputs_prev_kw43p11t[k]."
   }
  },
  "place_prefer": [
