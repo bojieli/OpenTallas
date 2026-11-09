@@ -31757,3 +31757,12 @@ S81-PLAN-1: the reset wavefront moves fE4_p1/p2/p3_b0 (col_h9 r0 p1/p2/p3) relea
   Scope: the 32 HBM q_b type tops listed in the contract. Their kits now stage the contract (the kit hash changes). Other dies with exact names are unchanged.
   KW-FIX-43: install this into the HBM gen src (kw41/src_hbmf4 on epyc7) after it lands, or now from the branch head under the no-merge-wait rule. Then fresh-gen every q_b row whose LEC failed or that has not reached LEC: q_b102__physical_v1 now, plus any q_b fresh gen still before LEC.
   Kits past LEC with EQUIVALENT keep going. A q_b row that FAILs LEC on the old kit is this class: give it a fresh gen, not a retry.
+- 2026-11-09 12:17 PST RESULT+STOPPED [DIE-HBM-97 -> COORD, HBM-PLAN-1 successor] programme_store_r10 condition (a) FAILED. Overflow is LARGE and spread over the whole core; this goes back to COORD. DO_NOT_COUNT, nothing signed off.
+  ps10_vN1 (epyc2 hbm-open-b/kits/ps10_vN1, r10 outline 574.56x781.92, routing M2-M6): GRT ran 13 h in NDR-disable rounds without converging (61 clock nets NDR-disabled, 4+ rounds of 30 extra iterations).
+  Congestion reports: iteration 5 has 13124 gcells / sum 21017; iteration 10 has 11540 / 15822; iteration 15 has 12494 / 16185.
+  - Mostly vertical: the V list is capped at 10000 entries; H is 1540-3124.
+  - Spread over the core (x 2-549, y 30-695). Hot bins are (300,200), (400,100), (200,0) and (100,100) at 1-1.9k gcells per 100 um bin.
+  - The nets are u_fcore leaf page_data / data_q / calendar.
+  So it is NOT a small M6 count: it is general M3/M5 vertical demand, and the r10 outline plus M6 ceiling do not close it.
+  I STOPPED the container by its exact name, hbmcore-ps10_vN1_-2101099 (a7a9ebf4f868, inherited from HBM-OPEN-B, 13 h, no convergence, 4 h flat rule). The kit and reports stay on epyc2 as evidence.
+  My recommendation (COORD decides): no r10 plan event. ps10 needs a structural re-form: (i) the conservative core form (util 0.40 on a larger outline with an M7 ceiling, if the die stack allows M7 over this core), or (ii) a split of the leaf array (g_leaf[*]) into 2 cores. Since there are 2+ failures, the conservative form comes first.
