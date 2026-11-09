@@ -2663,6 +2663,9 @@ def work_alt_cmd(work, alt_lane):
     alt = alt_lane.rstrip("/") + "/" + os.path.normpath(work)[len(lane_root(work)):].lstrip("/")
     return (f"W={q(work)}; A={q(alt)}; "
             'if [ -L "$W" ]; then echo "KW_WORK_ALT kept existing link $W"; '
+            # KW-FIX-39 11-08: when a parent of W is itself a link to scratch2 (attempt 1's W was the item dir), W and A are the
+            # same path: rmdir W + ln -s A W made a self-link (q_sm0/q_sm3/q_b003 a2: 'mkdir: Already exists')
+            'elif [ "$(readlink -m "$W")" = "$(readlink -m "$A")" ]; then echo "KW_WORK_ALT already on the alternative lane $W"; '
             'elif [ -d "$W" ] && [ -n "$(find "$W" -mindepth 1 -not -path "$W/logs" -print -quit 2>/dev/null)" ]; then '
             'echo "KW_WORK_ALT kept non-empty dir $W"; '
             'else mkdir -p "$A" "$(dirname "$W")" && { rmdir "$W/logs" 2>/dev/null; rmdir "$W" 2>/dev/null; true; } && '

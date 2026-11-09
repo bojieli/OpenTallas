@@ -676,6 +676,27 @@ def test_work_alt_cmd_shell(tmp_path):
         K.lane_root = real
 
 
+def test_work_alt_cmd_parent_already_linked(tmp_path):
+    """attempt 1's W is the item dir and may be the link; attempt 2's W then is the same path as A and must stay a real dir"""
+    import subprocess
+    lane3, lane2 = tmp_path / "s3" / "claude" / "kw26", tmp_path / "s2" / "claude" / "kw26"
+    (lane2 / "runs" / "items" / "i1").mkdir(parents=True)
+    (lane3 / "runs" / "items").mkdir(parents=True)
+    (lane3 / "runs" / "items" / "i1").symlink_to(lane2 / "runs" / "items" / "i1")
+    w = lane3 / "runs" / "items" / "i1" / "attempt_2"
+    real = K.lane_root
+    K.lane_root = lambda p: str(lane3)
+    try:
+        out = subprocess.run(["bash", "-c", K.work_alt_cmd(str(w), str(lane2))], capture_output=True, text=True).stdout
+    finally:
+        K.lane_root = real
+    assert "already on the alternative lane" in out
+    a = lane2 / "runs" / "items" / "i1" / "attempt_2"
+    assert not a.is_symlink()
+    subprocess.run(["mkdir", "-p", str(w / "logs")], check=True)      # the mkdir stage that failed with 'Already exists'
+    assert (a / "logs").is_dir()
+
+
 def test_waiting_row_reports_wait_disk(tmp_path):
     jd = tmp_path / "a1"
     jd.mkdir()
