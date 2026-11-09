@@ -60,6 +60,17 @@ class FaceCrossing(unittest.TestCase):
                 self.assertFalse(_overlap(bands[k]["rect_um"], bands[q]["rect_um"]), (k, q))
         self.assertFalse(CP.FACE_CROSSING)                          # module mode restored
 
+    def test_resize_keeps_ring_place(self):
+        p, side = _plan()
+        bands = p["partition_types"]["hc1"]["clock"]["landing_contract"]["bands"]
+        bands["b_hw_i"]["ring_place"] = "ff"; bands["rs_n1"]["ring_place"] = "ff"
+        new, rep = CP.resize_undersized_bands(p, side, ["hc1"])
+        nb = new["partition_types"]["hc1"]["clock"]["landing_contract"]["bands"]
+        self.assertIn("b_hw_i", [r["bus"] for r in rep])
+        self.assertEqual(nb["b_hw_i"].get("ring_place"), "ff")
+        self.assertEqual(nb["rs_n1"].get("ring_place"), "ff")
+        self.assertNotIn("ring_place", nb["rs_n0"])                # untagged band stays untagged
+
     def test_compose_default_unchanged(self):
         self.assertFalse(CP.FACE_CROSSING)
         t = dict(outline_um=[613.44, 1339.2], hard_cores=[], buses=[], _cland_geom=GEOM,
