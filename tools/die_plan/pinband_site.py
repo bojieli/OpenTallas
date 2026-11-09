@@ -63,11 +63,36 @@ def macro_body(lef_text, master=None):
     return ms[0][1] if len(ms) == 1 else None
 
 
+_PIN_RE = re.compile(r"^\s*PIN\s+(\S+)(.*)$")
+_END_RE = re.compile(r"^\s*END\s+(\S+)\s*$")
+
+
+def pin_blocks(body):
+    """[(name, text)] of the PIN ... END <name> blocks of a LEF MACRO body, in order, in ONE pass over its lines.
+    DIE-HBM-97 11-09: the former re.findall(r"^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", re.S | re.M) never matches
+    'END name[3]' at the line end (no \b after ']'), so it backtracked the name and rescanned the body per pin:
+    40 s for a 1.2 MB LEF and > 2 h of pinband_site in a hub gen (q_hub_ne / q_hub_nw dry, 29 child LEFs)."""
+    out, cur, buf = [], None, []
+    for ln in body.splitlines():
+        if cur is None:
+            m = _PIN_RE.match(ln)
+            if m:
+                cur, buf = m.group(1), [m.group(2)]
+            continue
+        e = _END_RE.match(ln)
+        if e and e.group(1) == cur:
+            out.append((cur, "\n".join(buf) + "\n"))
+            cur, buf = None, []
+            continue
+        buf.append(ln)
+    return out
+
+
 def pin_rows(body):
     """(w, h, m5 rows [(y0, y1, touches the bottom/top edge)], horizontal signal pin layers) of a LEF MACRO body"""
     w, h = map(float, re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", body).groups())
     rows, hl = set(), set()
-    for n, b in re.findall(r"^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", body, re.S | re.M):
+    for n, b in pin_blocks(body):
         if re.search(r"USE\s+(POWER|GROUND)", b):
             continue
         cur = None
