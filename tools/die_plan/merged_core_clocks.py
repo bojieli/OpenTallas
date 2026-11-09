@@ -63,7 +63,9 @@ def pins(P, tn, tap, inst):
                           r'\s*$(.*?)^\s*END\s+' + re.escape(name) + r'\s*$', lef_text, re.S | re.M)
         body = match.group(1) if match else ''
         rect = re.search(r'RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', body)
-        if not re.search(r'DIRECTION\s+INPUT\s*;', body) or not re.search(r'USE\s+CLOCK\s*;', body) or not rect:
+        # Liberty clock : true, checked above for every name, is the clock identity (cores.clock_pins order); a signed
+        # abstract from write_abstract_lef writes USE SIGNAL on a clock port (HCOL-H1 q_b100..103, DIE-HBM-93 11-08).
+        if not re.search(r'DIRECTION\s+INPUT\s*;', body) or not rect:
             raise ValueError(f'{tn}/{inst}/{name}: actual LEF input clock required')
         x0, y0, x1, y1 = map(float, rect.groups())
         point = found[name]
