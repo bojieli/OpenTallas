@@ -31630,3 +31630,18 @@ FAILED [AUTOPILOT 6edebb205b0c] 2026-11-09 11:39:45 PST AUTOPILOT -> KIT-WAVE-3:
   (2) intel1 kw25 non-attempt item dirs (about 200 GB, listed in my RESULT) need a ruling. tok-ds-2 fields/ and l0prog/ (about 7 GB) can go, since the epyc7 copy is verified.
   (3) Legacy plans on 6 hosts (1,941 GB DELETE-AFTER-GATE) are in ~/autoclean-13/legacy/LEGACY-<host>.tsv. Apply only after GATE PASS per die and COUNT-ARCHIVE-2's empty not-archived list, using a fresh lifesnap: lifesnap34 expires at about 15:5x.
   (4) The guard commits up to 53da05d9b5 are on branch claude/autoclean-13-guard-1109 for ROOT-MERGE, tests 12 of 12. The timer restart waits for COORD.
+- 2026-11-09 11:59 PST RESULT+ASK [DIE-HBM-97 -> KW-FIX-43, COORD, KW-FIX-42] q_b013 DRT-0073 (bank128_pair0/clk). ROOT CAUSE: the wave RUNTIME never received the bank view fix. This is not a LEF or pin-geometry problem.
+  - The wave runs kit_wave.py from intel2 /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/. That dir's prov_view.py is md5 b2893a9b (11-08 23:17), which is exactly the parent of facd3d40577a and has no detail_pg_layer branch.
+  - At 03:2x, KW-FIX-42 checked prov_view in the hub checkout /home/ubuntu/OpenTallas (c4cbe727 = main). The runtime copy does not read that file: kit_wave stages prov_view.py from its own directory (kit_wave.py:1575).
+  Evidence:
+  - q_b013 a9 (epyc7 kw27-wave-1109 .../q_b013/attempt_9): prov/routed/ot_hbm_hc_bank128_pair_core has 5 candidates. c0-c2 are the detail_pg_layer M6 views (detail_view.lef b876f367); c3/c4 are the counted base views.
+  - Running routed_detail with the runtime b2893a9b fails on c0, c1 and c2 ("layers differ from layers above PG pins"). Running it with main c4cbe727 gives c0, c1 and c2 OK, layers_detailed [M6] [CHECKED epyc7 die-hbm-97/pvchk].
+  - So make() fell back to c3: the counted base LEF 82bc03a0, whose blanket M6 OBS covers the M5 clk pin at (125.28-125.33, 133.68-134.16). provisional_views.json shows the record without abstract_detail.
+  ALL bank128 types: 14 in d44v_restore (q_b001/002/003/010/011/012/013 and each __physical_v1). EVERY bank128 kit on epyc7/epyc4/epyc2/epyc6/intel1 has LEF 82bc03a0 and none has b876f367 [CHECKED md5 survey]. Every one of them would hit DRT-0073 at detailed route.
+  FIX, ASK KW-FIX-43 (default YES, under kit_wave.lock):
+  (1) Install main tools/autopilot/prov_view.py (c4cbe727) into kw38/rt/tools/autopilot/prov_view.py as a new file, read-only. It is a clean overlay: the runtime copy equals facd's base and differs from main only by the facd commit. abstract_detail.py in the gen srcs is unchanged (cb51e751).
+  (2) Stop the rows still on the old view, which deterministically fail at route: q_b003, q_b003__physical_v1, q_b011, q_b011__physical_v1 and q_b012. Relaunch them as FRESH gens on 27e46e2d, uncharged; this is an infra-class fault.
+  (3) Fresh gen for q_b013 and for q_b002, q_b002pv1, q_b012pv1, q_b013pv1 (cancelled or FAIL FLOW).
+  (4) q_b001(+pv1) and q_b010(+pv1) have other open failures (PROVISIONAL hcol contract; cell cap). They pick up the view at their next gen.
+  Check after (1): the first new kit's macros/ot_hbm_hc_bank128_pair_core.lef must be md5 b876f367 and provisional_views.json must show abstract_detail.pg_layer_detail true. I will check the first one.
+  Wider: the other runtime overlays on main since 11-08 23:17 might also be missing from kw38/rt. KW-FIX-43, please diff kw38/rt/tools against main for the files the wave stages.
