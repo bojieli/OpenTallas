@@ -34,7 +34,7 @@ ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'
 
 PROBE = r'''
 import importlib.util, json, os, sys
-spec = importlib.util.spec_from_file_location('otac', os.path.expanduser('~/.local/share/ot-autoclean-auto/ot-autoclean.py'))
+spec = importlib.util.spec_from_file_location('otac', os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else '~/.local/share/ot-autoclean-auto/ot-autoclean.py'))
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 for p in sys.stdin.read().split('\n'):
     if not p: continue
@@ -151,9 +151,32 @@ def stream(host, base, todo):
     return p1.wait() == 0 and p2.wait() == 0
 
 
+SHIP_TOOL = '~/.cache/ot-signed-store/ot-autoclean.py'
+LOCAL_TOOL = os.path.expanduser(HOST_TOOL)
+
+
+def host_tool(h):
+    """the unit/hash tool on host h: the installed one when its md5 equals localhost's, else a private copy shipped to
+    ~/.cache/ot-signed-store (a host onboarded with autoclean off has none: epyc7 11-09, probe 'no answer')"""
+    import hashlib
+    want = hashlib.md5(open(LOCAL_TOOL, 'rb').read()).hexdigest()
+    r = run(SSH + [h, 'md5sum %s %s 2>/dev/null' % (HOST_TOOL, SHIP_TOOL)], None, 60)
+    have = {ln.split()[1]: ln.split()[0] for ln in r.stdout.splitlines() if len(ln.split()) == 2}
+    for t in (HOST_TOOL, SHIP_TOOL):
+        if have.get(os.path.expanduser(t).replace(os.path.expanduser('~'), '/home/ubuntu')) == want or have.get(t) == want:
+            return t
+    c = run(SSH + [h, 'mkdir -p ~/.cache/ot-signed-store && cat > %s.tmp && mv %s.tmp %s' % (SHIP_TOOL, SHIP_TOOL, SHIP_TOOL)], open(LOCAL_TOOL).read(), 120)
+    if c.returncode: raise RuntimeError('cannot ship the unit tool to %s: %s' % (h, c.stderr[-200:]))
+    return SHIP_TOOL
+
+
 def archive_host(h, cands, fails):
     """-> {path: {file: sha}} for the records whose every file is on the archive and equal to the host copy"""
-    r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(PROBE)], '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
+    try:
+        tool = host_tool(h)
+    except Exception as e:
+        fails.append([h, '*', 'tool', str(e)[:200]]); return {}, {}
+    r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool], '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
     P = {}
     for ln in r.stdout.splitlines():
         o = json.loads(ln); P[o['path']] = o
@@ -173,7 +196,7 @@ def archive_host(h, cands, fails):
     if todo and not stream(h, base, todo):
         fails.append([h, '*', 'stream failed']); return {}, P
     A = json.loads(run(AGI + [hash_], lst, 7200).stdout)
-    H = json.loads(run(SSH + [h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % HOST_TOOL], lst, 7200).stdout)
+    H = json.loads(run(SSH + [h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool], lst, 7200).stdout)
     good = {p: A[p] for p in files if A.get(p) is not None and A.get(p) == H.get(p)}
     bad = [p for p in files if p not in good]
     if bad: say(h, 'hash differs on', len(bad), 'files, first', bad[0])
