@@ -168,7 +168,7 @@ def _depth(t, bus):
     return max(n) if n else None
 
 
-def build(raw, bound, root, skip, only=None, native_base=(), price_existing=False, min_stations=None):
+def build(raw, bound, root, skip, only=None, native_base=(), price_existing=False, min_stations=None, skip_bus=None):
     """Two passes so every lane keeps native_istations' invariant fixed == source stations + destination stations:
     OUT buses first (source stations take the lane's slack: s = max(n_out, fixed - destination need)), then IN buses
     (receiver pad = fixed - source stations; count = max(n_in, pad); fixed = source + count).  Lane latency never
@@ -225,6 +225,9 @@ def build(raw, bound, root, skip, only=None, native_base=(), price_existing=Fals
             n = max(0, math.ceil(a["d"] / STEP) - 1)
             row = dict(type=tn, bus=bus, dir=dirn, d_um=round(a["d"], 1), need=n, ports=sorted(a["ports"]))
             if n == 0:
+                continue
+            if any(re.fullmatch(rt, tn) and re.fullmatch(rb, bus) for rt, rb in (skip_bus or ())):
+                reported.append(dict(row, action="REPORT: excluded by --skip-bus (owner ruling), lane unchanged"))
                 continue
             if f"bus:{bus}" in have_ist:
                 reported.append(dict(row, action="REPORT: bus already has internal_stations (owner's entry kept)"))
@@ -413,6 +416,8 @@ def main(argv=None):
     ap.add_argument("--min-stations", action="append", default=[], metavar="TYPE_REGEX:BUS=N",
                     help="raise a bus to at least N stations, so the buses of one R8 class get equal station depth and "
                          "no pad moves inside a signed grouped core")
+    ap.add_argument("--skip-bus", action="append", default=[], metavar="TYPE_REGEX:BUS_REGEX",
+                    help="never touch these buses (owner ruling on specific lanes); reported, lane fixed_cycles unchanged")
     ap.add_argument("--regen-latency", action="store_true",
                     help="after writing OUT, regenerate plan.latency with gen.py latency --inplace and check that the "
                          "per-lane cycle deltas equal the event's pin cycles (the bind reads lane cycles from that "
@@ -434,7 +439,8 @@ def main(argv=None):
     Q, edits, reported, native_out = build(P0, bound, a.pins_root, skip, only,
                                            {s for s in a.native_types.split(",") if s}, a.price_existing_out,
                                            [(m.rsplit(":", 1)[0], m.rsplit(":", 1)[1].split("=")[0],
-                                             int(m.rsplit("=", 1)[1])) for m in a.min_stations])
+                                             int(m.rsplit("=", 1)[1])) for m in a.min_stations],
+                                           [tuple(m.rsplit(":", 1)) for m in a.skip_bus])
     touched = {e["type"] for e in edits}
     touched_lanes = {lid for e in edits for lid in e["lanes"]}
     for k in P0:
