@@ -120,6 +120,8 @@ halves. The realcalendar lockstep above is the witness that catches it.
   /srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq, which exists with identical bytes on epyc4, epyc2, epyc5,
   epyc6 and intel1.
 - Advisory dry path (run_dry.sh, the kit_wave.py stage commands): kit-rtl PASS (18 files, unbound 0), kit_topology PASS.
-  gen and gen_lint: see RESULT.
+  gen.py phys PASS and the kit was written. GEN_LINT PASS with 0 issues (pins_vs_plan, clock_export_form, macro_tcl,
+  rtl_check, memory_bits). macro_place.tcl has 15 macros and 0 u_fifo. kit_rtl.f reads cpub39_1 c09b67b7.
+  Kit: intel1:/srv/opentallas-scratch2/claude/qct10/ctlm/dry/attempt_d1/gen/tt_ctlm.
 
 Scope: no physical, closure or sign-off claim. The kit has to show the new timing.
