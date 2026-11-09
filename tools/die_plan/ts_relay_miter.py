@@ -16,7 +16,7 @@ unpaired names masked, refined until stable); anything left unpaired stays a rep
 Each stage is one register on the whole bus (data + epoch), so a lane whose only change is k added stages is the old
 lane delayed by exactly k cycles (new == old delayed k), and every other line is identical.
 
-usage: ts_relay_miter.py NEW_PLAN.json EVENT.json OLD_RTL_DIR NEW_RTL_DIR [OUT.json] -> exit 0 PASS / 1 FAIL"""
+usage: ts_relay_miter.py NEW_PLAN.json EVENT.json OLD_RTL_DIR NEW_RTL_DIR [OUT.json] [--r8 EXTRA.json] -> exit 0 PASS / 1 FAIL"""
 import json
 import re
 import sys
@@ -25,6 +25,33 @@ from pathlib import Path
 
 
 SRC_NAME = re.compile(r"src_[0-9a-f]{20}")
+
+
+PAD_INST = re.compile(r"^ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_pd\d+_(\w+)_(\d+) \(\.clk\(clk\), \.d\((\w+)_q\[(\d+)\]\), "
+                      r"\.q\(pd\d+_\w+\)\);$")
+PAD_WIRE = re.compile(r"^wire \[0:0\] pd\d+_\w+;$")
+PAD_NET = re.compile(r"\bpd\d+_(\w+)_(\d+)\[0\]")
+
+
+Q_RANGE = re.compile(r"\b(\w+_q)\[(\d+):(\d+)\]")
+
+
+def _expand_range(m):
+    hi, lo = int(m.group(2)), int(m.group(3))
+    return ", ".join(f"{m.group(1)}[{i}]" for i in range(hi, lo - 1, -1))
+
+
+def split_r8_pads(lines):
+    """R8 per-bit landing pads out of the lines: -> (other lines with a pad output read as the bit it delays, {(bus, bit): D})"""
+    depth, rest = {}, []
+    for ln in lines:
+        m = PAD_INST.match(ln)
+        if m and m.group(2) == m.group(4) and m.group(3) == m.group(5):
+            depth[(m.group(2), int(m.group(3)))] = int(m.group(1))
+        elif not PAD_WIRE.match(ln):
+            ln = PAD_NET.sub(lambda x: f"{x.group(1)}_q[{x.group(2)}]", ln)
+            rest.append(Q_RANGE.sub(_expand_range, ln))
+    return rest, depth
 
 
 def norm(txt):
@@ -87,8 +114,17 @@ def rename_src_names(A, B):
 
 
 def main(argv):
+    # --r8 EXTRA.json: the die's R8 table was re-derived: a per-bit pad may give back a stage of its bus one for one (landed
+    # unchanged); a pad that grows is accepted only if listed in EXTRA.json = [{"type":, "bus":, "delta":}, ...]
+    argv = list(argv)
+    r8_extra = None
+    if "--r8" in argv:
+        i = argv.index("--r8")
+        r8_extra = {(x["type"], x["bus"]): x["delta"] for x in json.load(open(argv[i + 1]))}
+        del argv[i:i + 2]
     plan_f, ev_f, old_d, new_d = argv[1:5]
     out_f = argv[5] if len(argv) > 5 else None
+    r8_moves = defaultdict(int)
     P = json.load(open(plan_f))
     ev = json.load(open(ev_f))
     ports = {p["id"]: p for p in P["ports"]}
@@ -127,8 +163,13 @@ def main(argv):
         tn = stem_type.get(nf.stem, nf.stem[5:] if nf.stem.startswith("s81p_") else nf.stem)
         buses = {b for (t, b) in tb if t == tn}
         A = rename_src_names(A, B)
+        pads = None
+        if r8_extra is not None:
+            A, pad_a = split_r8_pads(A)
+            B, pad_b = split_r8_pads(B)
+            pads = {k: (pad_a.get(k, 0), pad_b.get(k, 0)) for k in set(pad_a) | set(pad_b) if pad_a.get(k, 0) != pad_b.get(k, 0)}
         ca, cb = Counter(A), Counter(B)
-        if ca == cb:
+        if ca == cb and not pads:
             continue
         files += 1
         delta = defaultdict(int)
@@ -149,6 +190,13 @@ def main(argv):
                                                    for b in buses):
                     continue
                 bad.append(f"{nf.name}: {'+' if sign > 0 else '-'} {ln[:180]}")
+        for (bus, bit), (d0, d1) in sorted((pads or {}).items()):
+            give = -delta.get(bus, 0)
+            kind = "trade" if delta.get(bus, 0) and d1 - d0 == give else "extra" if r8_extra.get((tn, bus)) == d1 - d0 else None
+            if kind:
+                r8_moves[f"{tn}.{bus} {kind} {d1 - d0:+d}"] += 1
+            else:
+                bad.append(f"{nf.name}: R8 pad {bus}[{bit}] {d0}->{d1}, stages {delta.get(bus, 0):+d}")
         for b, d in delta.items():
             for lid in tb[(tn, b)]:
                 realised[lid] += d
@@ -157,7 +205,7 @@ def main(argv):
     ok = not bad and not mism
     rec = dict(verdict="PASS" if ok else "FAIL", lanes=len(declared), files_changed=files,
                lanes_matching=len(declared) - len(mism), mismatch=dict(list(mism.items())[:60]), n_mismatch=len(mism),
-               undeclared_changes=bad[:60], n_undeclared=len(bad))
+               undeclared_changes=bad[:60], n_undeclared=len(bad), r8_moves=dict(sorted(r8_moves.items())))
     if out_f:
         Path(out_f).write_text(json.dumps(dict(rec, realised=realised, declared=declared), indent=1) + "\n")
     print(json.dumps(rec, indent=1)[:4000])

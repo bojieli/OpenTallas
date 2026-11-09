@@ -142,3 +142,24 @@ def test_miter_src_hash_with_changed_wiring_stays_different():
     sys.path.insert(0, str(HERE))
     import ts_relay_miter as M
     assert sorted(M.rename_src_names(A, B)) != sorted(B)
+
+
+def test_r8_pad_split_reads_pad_output_as_the_delayed_bit():
+    sys.path.insert(0, str(HERE))
+    import ts_relay_miter as M
+    lines = ["wire [0:0] pd7_x_i_0;", "ot_dp_dly #(.W(1), .D(7)) u_pd7_x_i_0 (.clk(clk), .d(x_i_q[0]), .q(pd7_x_i_0));",
+             ".a({pd7_x_i_0[0], y});"]
+    assert M.split_r8_pads(lines) == ([".a({x_i_q[0], y});"], {("x_i", 0): 7})
+
+
+def test_r8_pad_on_a_different_bit_is_not_a_pad():
+    sys.path.insert(0, str(HERE))
+    import ts_relay_miter as M
+    line = "ot_dp_dly #(.W(1), .D(7)) u_pd7_x_i_0 (.clk(clk), .d(x_i_q[1]), .q(pd7_x_i_0));"
+    assert M.split_r8_pads([line])[1] == {}
+
+
+def test_r8_pad_split_expands_a_bus_range_like_its_bit_list():
+    sys.path.insert(0, str(HERE))
+    import ts_relay_miter as M
+    assert M.split_r8_pads([".d({x_q[1:0], y});"])[0] == M.split_r8_pads([".d({x_q[1], x_q[0], y});"])[0]
