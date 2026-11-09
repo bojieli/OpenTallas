@@ -1,0 +1,32 @@
+# (d) variants, 2026-11-09T18:04:28Z: old = 7960f12fb4c (rtl) / as bound (portfix178), new = + OT_IDX_RG3_PRIME hunk
+## rtl dsdv_idx_rg3_nq_native: verilator -E -P old 1013 / new 1013 lines
+PP_IDENTICAL (old == new without OT_IDX_RG3_PRIME)
+## rtl dsdv_idx_rg3_nq_native +define+OT_IDX_RG3_PRIME: old vs prime
+133a134,139
+>     localparam [2:0] PRIME = 3'd6;
+>     reg  [2:0] pk;
+>     reg        pr_f;
+>     always @(posedge ck or negedge rl[0])
+>         if (!rl[0]) begin pk <= 3'd0; pr_f <= 1'b0; end
+>         else begin if (pk != PRIME) pk <= pk + 3'd1; pr_f <= hdr_job && pk < PRIME; end
+1003a1010
+>             if (pr_f) fc_set[5] <= 1'b1;                        
+## rtl dsdv_idx_rg3_br: verilator -E -P old 897 / new 897 lines
+PP_IDENTICAL (old == new without OT_IDX_RG3_PRIME)
+## rtl dsdv_idx_rg3_br +define+OT_IDX_RG3_PRIME: old vs prime
+96a97,102
+>     localparam [2:0] PRIME = 3'd6;
+>     reg  [2:0] pk;
+>     reg        pr_f;
+>     always @(posedge ck or negedge rl[0])
+>         if (!rl[0]) begin pk <= 3'd0; pr_f <= 1'b0; end
+>         else begin if (pk != PRIME) pk <= pk + 3'd1; pr_f <= hdr_job && pk < PRIME; end
+887a894
+>             if (pr_f) fc_set[5] <= 1'b1;                        
+## bound portfix178 dsdv_idx_rg3 + dsdv_idx_rg3.prime.patch: verilator -E -P old 1007 / new 1007 lines
+PP_IDENTICAL (as bound == patched without OT_IDX_RG3_PRIME)
+## bound portfix178 dsdv_idx_rg3_nq_native + dsdv_idx_rg3_nq_native.prime.patch: verilator -E -P old 1014 / new 1014 lines
+PP_IDENTICAL (as bound == patched without OT_IDX_RG3_PRIME)
+## lint (verilator --lint-only, define on, rg2 + relay in scope)
+dsdv_idx_rg3_nq_native rc=0 errors=0
+dsdv_idx_rg3_br rc=0 errors=0

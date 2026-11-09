@@ -1,0 +1,40 @@
+--- a/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv
++++ b/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv
+@@ -188,6 +188,27 @@
+     wire       hdr_job = is_h && (q_d[511:508] == 4'd4 || q_d[511:508] == 4'd8);
+     wire       pay_job = is_p && isj;
+     wire       end_w = pay_job && left == 12'd1;
++`ifdef OT_IDX_RG3_PRIME
++    // prime counter (fail-closed detection, die-s81-85 11-09; default netlist unchanged).  All rl[] leaves release on
++    // the same edge E.  The chunk columns (rst_n = rl[26 + gc]) open their slice-0 q pins only for ql_v >= E + 6 at
++    // the chunk port; a job header in qr at E + D gives ql_v (head 0) at E + D + 3 + KR, so D <= 2 (KR 0) / D <= 1
++    // (KR 1) drops head 0 in BOTH chunk forms with no fault (stale head-0 query, fail-open).  pk counts edges since E
++    // on qr's own leaf rl[0] (pk == D while qr holds a header taken at E + D) and saturates at PRIME = 6 (safe D >= 3
++    // measured, + 3 edges margin = the coordinator's "header >= 6 edges after release").  A header with pk < PRIME
++    // pulses pr_f -> fc_set[5] (header protocol cause, as hbad1) -> sticky fc -> fault / st / gather p1_f until reset.
++    // The stream is not stalled or changed.  MUT: PRIME 3 edges short.
++    // portfix178 (bound b178): fault path fc -> fc_any -> 1-b fault port / p1_f.
++`ifdef OT_IDX_RG3_PRIME_MUT
++    localparam [2:0] PRIME = 3'd3;
++`else
++    localparam [2:0] PRIME = 3'd6;
++`endif
++    reg  [2:0] pk;
++    reg        pr_f;
++    always @(posedge ck or negedge rl[0])
++        if (!rl[0]) begin pk <= 3'd0; pr_f <= 1'b0; end
++        else begin if (pk != PRIME) pk <= pk + 3'd1; pr_f <= hdr_job && pk < PRIME; end
++`endif
+     reg        wdone_p;
+     // a new job's header: qo holds it one edge after qr; kept copies latch its fields (+1), derived values (+2), start (+3)
+     (* keep = "true" *) reg [14:0] hen;
+@@ -1173,6 +1194,9 @@
+             if (slot_r && tk_r && bf[!epk[3]]) fc_set[3] <= 1'b1;
+             if (k_v && (ql_v || qst != 0)) fc_set[4] <= 1'b1;
+             if (hbad1) fc_set[5] <= 1'b1;
++`ifdef OT_IDX_RG3_PRIME
++            if (pr_f) fc_set[5] <= 1'b1;                       // job header before the prime count (early load)
++`endif
+             if (hj4[0] && (spec_bad || (gat ? hlen != 12'(64 + nlw) : hlen != 12'd64))) fc_set[6] <= 1'b1;
+             if (pay_job && pw < 12'd64 && pw[0] && !qoi[0]) fc_set[6] <= 1'b1;   // query word pair not contiguous
+             if (ended && !wdone && ew == nw && !slot_r && !p1_r && !p1_d) begin

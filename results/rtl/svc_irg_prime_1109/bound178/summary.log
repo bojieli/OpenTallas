@@ -1,0 +1,205 @@
+# irg PRIME bound-b178 bench 2026-11-09T18:09:30Z devoted-wren src: dd5695c1e6c0f37a7739966735ba73a8a8e28b91d7a911d7dc3611cc0dc3f51c physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv;038ef90e3733abb853f3c78a74d9bd646c9158e88e9910ca56e2c48aac3e984c physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv;d8c5274a813cc2a67c49f0bb7f168b73d7c5d27dc865842cc040c1d27182fd99 src/chk_fp.sv;8e31f01ef88d87040c13e0d952e612dc4f81071e17021b7a32f852604a099958 src/chk_ref.sv;8da7c571725c9603d9661736257d83fe28480ee5e6f7198fff3c5d1d4196c098 src/p_dsdv_idx_rg3.sv;4bc6d6c56ebce1cd2a0a724221fa06b40a676793a5a6b8dc4f9434d7df0b03c0 src/p_dsdv_idx_rg3_nq_native.sv;b1d2b09511eeec80f1515855b348e4f6066f8fba931a8a318f2431af703f7fb7 src/ref_dsdv_idx_rg3.sv;642870596c16c79284975d68eb6104e686560bc0754432c8290787dee4018ba4 src/ref_dsdv_idx_rg3_nq_native.sv;
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34800 qbad_ep_ref 20 qbad_ep_fp 20
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 30
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] out_diff_all 10560 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[mut dsdv_idx_rg3 MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34800 qbad_ep_ref 50 qbad_ep_fp 50
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 4383 fail_open_fp_p 4383 pf_wrong 30
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] fail_open_ref_p5 5743 fail_open_fp_p5 5743 fc_seen_u 00000100
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] out_diff_all 10560 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[mut dsdv_idx_rg3 MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34800 qbad_ep_ref 20 qbad_ep_fp 20
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 30
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] out_diff_all 10560 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[mut dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34800 qbad_ep_ref 50 qbad_ep_fp 50
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 4383 fail_open_fp_p 4383 pf_wrong 30
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] fail_open_ref_p5 5743 fail_open_fp_p5 5743 fc_seen_u 00000100
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] out_diff_all 10560 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[mut dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22560 qbad_ep_ref 20 qbad_ep_fp 20
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 2934 fail_open_fp_p 2934 pf_wrong 50
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] fail_open_ref_p5 3840 fail_open_fp_p5 3840 fc_seen_u 00000100
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[noprime dsdv_idx_rg3 MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22560 qbad_ep_ref 50 qbad_ep_fp 50
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 7317 fail_open_fp_p 7317 pf_wrong 50
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] fail_open_ref_p5 9583 fail_open_fp_p5 9583 fc_seen_u 00000100
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[noprime dsdv_idx_rg3 MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22560 qbad_ep_ref 20 qbad_ep_fp 20
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 2934 fail_open_fp_p 2934 pf_wrong 50
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] fail_open_ref_p5 3840 fail_open_fp_p5 3840 fc_seen_u 00000100
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[noprime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22560 qbad_ep_ref 50 qbad_ep_fp 50
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 7317 fail_open_fp_p 7317 pf_wrong 50
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] fail_open_ref_p5 9583 fail_open_fp_p5 9583 fc_seen_u 00000100
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[noprime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 53160 qbad_ep_ref 20 qbad_ep_fp 20
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] out_diff_all 26400 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[prime dsdv_idx_rg3 MUTK0SEED1NEP120] PASS irg_prime kr 0 mutk 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 53160 qbad_ep_ref 50 qbad_ep_fp 50
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] out_diff_all 26400 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[prime dsdv_idx_rg3 MUTK3SEED1NEP120] PASS irg_prime kr 0 mutk 3
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] kr 0 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 53160 qbad_ep_ref 20 qbad_ep_fp 20
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] mismatch 0 fail_open_ref 3840 fail_open_fp 3840 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] out_diff_all 26400 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[prime dsdv_idx_rg3_nq_native MUTK0SEED1NEP120] PASS irg_prime kr 0 mutk 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 5 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] kr 0 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 53160 qbad_ep_ref 50 qbad_ep_fp 50
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] mismatch 0 fail_open_ref 9583 fail_open_fp 9583 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] out_diff_all 26400 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[prime dsdv_idx_rg3_nq_native MUTK3SEED1NEP120] PASS irg_prime kr 0 mutk 3

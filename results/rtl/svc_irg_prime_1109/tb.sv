@@ -25,10 +25,20 @@ module tb;
     reg [512:0] qi = '0;
     wire [512:0] qo; wire [275:0] so; wire [183:0] rqo; wire [9:0] st;
     wire [512:0] qo_p; wire [275:0] so_p; wire [183:0] rqo_p; wire [9:0] st_p;
+`ifdef PF178
+    // bound portfix178 sources (run178.sh): 1-b fault port; st / st_p rebuilt as {fc, act, fault} from the reader
+    wire flt, flt_p;
+    rg3_ref_m #(.SRAM_MACRO(1'b0), .KR(KR), .OH(2), .RH(2), .IH(0)) u (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
+        .qo(qo), .si(276'd0), .so(so), .rqo(rqo), .rri(1088'd0), .fault(flt));
+    rg3_p_m #(.SRAM_MACRO(1'b0), .KR(KR), .OH(2), .RH(2), .IH(0)) up (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
+        .qo(qo_p), .si(276'd0), .so(so_p), .rqo(rqo_p), .rri(1088'd0), .fault(flt_p));
+    assign st = {u.fc, u.act, flt}; assign st_p = {up.fc, up.act, flt_p};
+`else
     dsdv_idx_rg3 #(.SRAM_MACRO(1'b0), .KR(KR), .OH(2), .RH(2), .IH(0)) u (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
         .qo(qo), .si(276'd0), .so(so), .rqo(rqo), .rri(1088'd0), .st(st));
     dsdv_idx_rg3_p #(.SRAM_MACRO(1'b0), .KR(KR), .OH(2), .RH(2), .IH(0)) up (.ck(ck), .rst(rst), .sid(4'd0), .qi(qi),
         .qo(qo_p), .si(276'd0), .so(so_p), .rqo(rqo_p), .rri(1088'd0), .st(st_p));
+`endif
     integer MUTK, DM, NEP, SEED, DFIX;
     initial begin
         if (!$value$plusargs("MUTK=%d", MUTK)) MUTK = 0;
