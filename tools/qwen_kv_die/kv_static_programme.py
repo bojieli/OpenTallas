@@ -598,7 +598,9 @@ def profile(kind, ages=None):
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
                 f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
-                pv_floor=PV_FLOOR)
+                pv_floor=PV_FLOOR,
+                # DIE-KV-97 11-09: the bound ZB_ADD of qkd_kvs_attn_fl (bind param_regen.json; run_mu833.sh exports it)
+                astk_zb_add=int(os.environ.get('OT_KV_ASTK_ZB_ADD', '0')))
     if CONTROLLER_CORE:
         # One clock tree; no reset-relative beat origin. SAME_CLOCK RTL retains
         # the transport pipeline, with its first destination edge one cycle later.
@@ -655,6 +657,15 @@ def attention_calendar(T, pr, service_end=None):
                      ('HUB_RECIP', 'dZ'), ('HUB_PUB', 'dZ')):
             c[f] += law[k]
         d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
+    zb = pr.get('astk_zb_add') or 0
+    if zb:
+        # DIE-KV-97 / KV-TRANSPORT-FIX 11-09: qkd_attn_cal_gen_r17 ZB_ADD (bind hook kv_ep_offset_regen.py, the bound ASTK
+        # chain) moves the generator's Z base by zb; this model already carries law dZ above the generator, so Z and the hub
+        # ages that follow it move by zb - dZ (LMAX / EXP unchanged)
+        if not isinstance(zb, int) or zb < 0:
+            raise ValueError(f'astk_zb_add must be a nonnegative integer, not {zb!r}')
+        for f in ('Z', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
+            c[f] += zb - (law['dZ'] if law else 0)
     po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
     if pr.get('pv_floor'):
         # KV-FLOOR1: ctl_tbf ends FEED / publishes out_age on pair 0's issue count for both pairs (pv_floor_bench: P1 = P0
