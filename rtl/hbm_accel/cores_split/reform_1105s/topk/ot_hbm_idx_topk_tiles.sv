@@ -9,7 +9,7 @@
 // MUT 6 (piped selects rotated one bank).
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0, WPIPE=0)(
+module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0, WPIPE=0, NQ=0)(
  input wire clk,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[7:0]rank,gbase,
@@ -40,14 +40,27 @@ module ot_hbm_idx_topk_ingest #(parameter integer MUT=0, FILL_GROUPS=0, WPIPE=0)
  assign c_count=total;
  wire[63:0]mask;
  wire[4095:0]words,compacted;
- wire[6:0]count;
+ wire[6:0]count,count_nx;
  for(genvar j=0;j<64;j=j+1)begin:record_in
   assign mask[j]=ingest_r&&line_r[j*37]&&!(MUT==3&&j==63);
   wire[63:0]normal_word={12'd0,line_r[j*37+17+:20],line_r[j*37+1+:16],16'd0};
   assign words[j*64+:64]=(MUT==1)?{normal_word[31:0],normal_word[63:32]}:normal_word;
  end
- ot_hbm_idx_compact_tree_p #(.N(64),.W(64),.PREG(7'b1101000)) compact(.clk(clk),.mask(mask),.words(words),.packed_words(compacted),.count(count));
- wire[6:0]n=7'(fill)+count;
+ ot_hbm_idx_compact_tree_p #(.N(64),.W(64),.PREG(7'b1101000)) compact(.clk(clk),.mask(mask),.words(words),.packed_words(compacted),.count(count),.count_nx(count_nx));
+ // HBM-HARD-6-TOPK NQ=1 (11-08): n = fill + count is registered one edge early (n_q <= fill's next value + the tree's top
+ // count before its register), so the count -> add -> nf decode chain leaves the nf -> carry/write-select cycle (vD routed
+ // TT -122 ps over 413 carry ends, 440 of 608 setup ends start at compact.count). n_q == fill + count after every edge;
+ // NQ=0 = the old form bit for bit. MUT 10: n_q ignores clear; MUT 11: n_q adds the registered count (one edge late).
+ wire[6:0]n;
+ generate if(NQ==0)begin:g_nsum
+  assign n=7'(fill)+count;
+ end else begin:g_nq
+  reg[6:0]n_q;
+  wire[2:0]fill_nx=!rst_core_n?3'd0:ingest_p?n_q[2:0]:(clear_p&&MUT!=10)?3'd0:fill;
+  always @(posedge clk)n_q<=7'(fill_nx)+((MUT==11)?count:count_nx);
+  // while rst_core_n is low fill is 0 (async), so n = count exactly, also in the part cycle after an async reset edge
+  assign n=rst_core_n?n_q:count;
+ end endgenerate
  wire[3:0]nf=n[6:3];
  reg[447:0]live_carry;
  always @*begin
@@ -212,9 +225,11 @@ endmodule
 module ot_hbm_idx_compact_tree_p #(parameter integer N=64,W=64,parameter [6:0] PREG=7'b0)(
  input wire clk,input wire[N-1:0]mask,input wire[N*W-1:0]words,
  output wire[N*W-1:0]packed_words,
- output wire[$clog2(N+1)-1:0]count
+ output wire[$clog2(N+1)-1:0]count,
+ output wire[$clog2(N+1)-1:0]count_nx  // the count before this level's register (= count when PREG[log2 N] is 0)
 );
  wire[N*W-1:0]pw;wire[$clog2(N+1)-1:0]c;
+ assign count_nx=c;
  generate if(N==1)begin:leaf
   assign pw=mask[0]?words:{W{1'b0}};
   assign c=mask[0];

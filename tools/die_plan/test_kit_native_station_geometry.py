@@ -18,7 +18,8 @@ class NativeGeometry(unittest.TestCase):
             source.mkdir(parents=True)
             text = 'is_place {*u_ist_o_0[./]*} 100 200 ist:o\n'
             (source / 'istations.tcl').write_text(text)
-            receipt = dict(entries=[dict(stations=['u_ist_o_0'])])
+            receipt = dict(entries=[dict(stations=['u_ist_o_0']),
+                                    dict(cell='u_macro', site=[100, 200])])
             (source / 'receipt.json').write_text(json.dumps(receipt))
             (source / 'plan.json').write_text(json.dumps(dict(partition_types={})))
             kit = root / 'kit'; kit.mkdir()
@@ -42,6 +43,10 @@ class NativeGeometry(unittest.TestCase):
             for names in ([], ['u_ist_o_0', 'u_ist_o_1'], ['u_ist_o_0', 'u_ist_o_0']):
                 (source / 'receipt.json').write_text(json.dumps(dict(entries=[dict(stations=names)])))
                 with self.assertRaisesRegex(bind.BindError, 'mismatch'):
+                    bind.kit_native_station_geometry(root, 't', self.RTL, kit)
+            for row in (dict(conn='bus:o'), dict(cell='u_macro')):
+                (source / 'receipt.json').write_text(json.dumps(dict(entries=[row])))
+                with self.assertRaisesRegex(bind.BindError, 'invalid native station'):
                     bind.kit_native_station_geometry(root, 't', self.RTL, kit)
             (source / 'receipt.json').write_text(json.dumps(dict(entries=[dict(stations=['u_ist_o_0'])])))
             (source / 'istations.tcl').write_text('# u_ist_o_0: no placement operation\n')

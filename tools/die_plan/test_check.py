@@ -759,10 +759,12 @@ def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
     seen = []
     real = check.S.Plan
 
-    def spy(raw, path=None):
-        P = real(raw, path)
-        seen.append(P)
-        return P
+    # A subclass, not a function: since 54687a1eed check_hops reaches gen_phys.type_pins, which calls the unbound
+    # S.Plan.rect(P, inst) (duck-typed plans), so the patched S.Plan must keep the class attributes.
+    class spy(real):
+        def __init__(self, raw, path=None):
+            super().__init__(raw, path)
+            seen.append(self)
     monkeypatch.setattr(check.S, "Plan", spy)
     check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
     P = seen[-1]  # schema.validate builds its own path-free structural Plan first

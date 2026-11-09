@@ -853,6 +853,8 @@ class Job:
             return "gitlocked " + g
         for a in [k] + ancestors(k):
             if os.path.exists(os.path.join(a, ".keep")):
+                if getattr(self, "_trim_cls", "") == "c" and a != k and self.old_keep_finished(k, a):
+                    continue
                 return "keep " + a
         for kp in self.found["keep"]:
             if kp.startswith(k + "/"):
@@ -898,7 +900,40 @@ class Job:
             if r:
                 return r, kit, files
         qn_ok = cls == "c" and bool(getattr(self.a, "queuename_skip_trim_c", False))
-        return self.common_why(kit, files, qn_ok=qn_ok), kit, files
+        self._trim_cls = cls
+        try:
+            return self.common_why(kit, files, qn_ok=qn_ok), kit, files
+        finally:
+            self._trim_cls = ""
+
+    def old_keep_finished(self, k, a):
+        """--c-old-keep-h H (COORD 11-08 08:0x / 09:2x, DISK-URGENT-1): an ANCESTOR .keep older than H hours does not
+        stop the class c trim of kit k when k is finished or superseded: k holds a 6_final.odb (> 1 KB) or a
+        signoff.json, or k lies in attempt_N of an item that has a later attempt_M.  A .keep younger than H, a .keep
+        inside k (or the results dir) and every other guard still protect."""
+        h = float(getattr(self.a, "c_old_keep_h", 0) or 0)
+        if h <= 0:
+            return False
+        try:
+            if self.now - os.lstat(os.path.join(a, ".keep")).st_mtime < h * 3600:
+                return False
+        except OSError:
+            return False
+        for dp, dn, fn in os.walk(k):
+            if "6_final.odb" in fn and self._reg(os.path.join(dp, "6_final.odb"), MIN_BYTES + 1):
+                return True
+            if "signoff.json" in fn:
+                return True
+        m = ATTEMPT_RE.match(k)
+        if m:
+            try:
+                for n in os.listdir(m.group(1)):
+                    mm = re.fullmatch(r"attempt_(\d+)", n)
+                    if mm and int(mm.group(1)) > int(m.group(2)):
+                        return True
+            except OSError:
+                pass
+        return False
 
     def resume_hold(self, d):
         """COORD 11-08 04:4x: the kit wave resumes a FAIL row from its last valid stage, so class c never trims inside a
@@ -1602,6 +1637,9 @@ def main(argv=None):
     r.add_argument("--queuename-skip-trim-c", action="store_true",
                    help="class c only: a bare queue-post name does not block the 2_x/3_x intermediate trim (a queue PATH "
                         "still does); COORD ruling")
+    r.add_argument("--c-old-keep-h", type=float, default=0.0,
+                   help="class c only: an ancestor .keep older than this many hours does not block the trim of a finished "
+                        "or superseded kit (6_final.odb, signoff.json or a later attempt); 0 = off (COORD 11-08)")
     r.add_argument("--wt-reaper-idle-h", type=float, default=6.0, help="worktree idle hours before the reaper may remove it (fleet 6 h rule)")
     ls = sub.add_parser("list-signed")
     ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)

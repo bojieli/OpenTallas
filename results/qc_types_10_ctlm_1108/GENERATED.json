@@ -1,0 +1,18 @@
+{
+  "1": {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "source": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+    "sha256": "c09b67b7cc1ce904a5b956730d427d38832670eff839dfd2ccc38875bb974dbb",
+    "publisher_stages": 1,
+    "gi_to_output_core_edges": 1,
+    "calendar_to_output_core_edges": 2
+  },
+  "2": {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2",
+    "source": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+    "sha256": "01c85b5a2fe2cd00b7e224c59ae379f338db665b086ebf44f151cac5d7995eb3",
+    "publisher_stages": 2,
+    "gi_to_output_core_edges": 2,
+    "calendar_to_output_core_edges": 3
+  }
+}

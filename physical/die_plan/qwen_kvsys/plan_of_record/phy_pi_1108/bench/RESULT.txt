@@ -1,0 +1,12 @@
+# 2026-11-08 18:41 UTC bench on epyc4: plan ev_phy/plan_kvr8p/plan_c.json sha256 2fb267c17f273ad8, OLD = bind_kvr8 rtl (plan_kvr8 strict bind 10:12)
+kv3_phy mutant=none start=early expect=PASS -> BENCH PASS errs 0 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy mutant=none start=late expect=PASS -> BENCH PASS errs 0 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy mutant=d3_depth2 start=early expect=FAIL -> BENCH FAIL errs 487 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy mutant=d3_depth2 start=late expect=FAIL -> BENCH FAIL errs 466 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy mutant=relay_on_bout start=early expect=FAIL -> BENCH FAIL errs 6 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy mutant=relay_on_bout start=late expect=FAIL -> BENCH FAIL errs 6 host_eq_probe 5 up_ready_old 0 new 0 [OK]
+kv3_phy_v1 mutant=none start=early expect=PASS -> BENCH PASS errs 0 host_eq_probe 0 up_ready_old 0 new 0 [OK]
+kv3_phy_v1 mutant=none start=late expect=PASS -> BENCH PASS errs 0 host_eq_probe 0 up_ready_old 0 new 0 [OK]
+kv3_phy_v1 mutant=d3_depth2 start=early expect=FAIL -> BENCH FAIL errs 680 host_eq_probe 0 up_ready_old 0 new 0 [OK]
+kv3_phy_v1 mutant=d3_depth2 start=late expect=FAIL -> BENCH FAIL errs 680 host_eq_probe 0 up_ready_old 0 new 0 [OK]
+# host-eq probe (kv3_phy): differs only at cycles 11 12 301 308 309 (startup X, reset edges); the epoch is unread

@@ -480,6 +480,48 @@ class TestSkips(Base):
         self.assertSkip(b6, "lane")
         self.assertSkip(b7, "tool tree")
 
+    def test_c_old_keep_finished_only(self):
+        # COORD 11-08 08:0x / 09:2x (DISK-URGENT-1): an ancestor .keep older than --c-old-keep-h does not stop the
+        # class c trim of a FINISHED or SUPERSEDED kit; young .keep, .keep inside the kit, unfinished kits and every
+        # other guard still protect
+        day3 = time.time() - 72 * 3600
+        touch(os.path.join(self.root, "ok/.keep"), n=0, mtime=day3)
+        touch(os.path.join(self.root, "yk/.keep"), n=0, mtime=time.time() - 10 * 3600)
+        fin, bfin = self.kit_c("ok/fin")
+        touch(os.path.join(bfin, "6_final.odb"))
+        sig, bsig = self.kit_c("ok/sig")
+        touch(os.path.join(sig, "signoff/signoff.json"), n=10)
+        unf, bunf = self.kit_c("ok/unf")
+        inner, binner = self.kit_c("ok/inner")
+        touch(os.path.join(binner, "6_final.odb"))
+        touch(os.path.join(inner, "sub/.keep"), n=0)
+        young, byoung = self.kit_c("yk/fin")
+        touch(os.path.join(byoung, "6_final.odb"))
+        prot, bprot = self.kit_c("ok/prot")
+        touch(os.path.join(bprot, "6_final.odb"))
+        self.prot.append((prot, "test protected"))
+        a1 = os.path.join(self.root, "ok/kit-wave/hbm/ev1/items/it/attempt_1")
+        _, ba1 = self.kit_c(os.path.relpath(os.path.join(a1, "gen/it"), self.root))
+        os.makedirs(os.path.join(self.root, "ok/kit-wave/hbm/ev1/items/it/attempt_2"))
+        age_tree(os.path.join(self.root, "ok/kit-wave"), mtime=time.time() - 30 * 3600)
+        self.run_job("--queuename-skip-trim-c", "--classes", "c")          # negative control: flag off
+        for b in (bfin, ba1):
+            self.assertEqual(self.row(b)[3], "SKIP", self.row(b)); self.assertTrue(self.row(b)[4].startswith("keep"), self.row(b))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+        self.run_job("--queuename-skip-trim-c", "--classes", "c", "--c-old-keep-h", "48")
+        self.assertTrue(self.row(bsig)[4].startswith("counted"), self.row(bsig))   # a signed kit stays counted
+        for b in (bfin, ba1):
+            self.assertEqual(self.row(b)[3], "DELETED", self.row(b))
+            self.assertFalse(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_place.odb")))
+            self.assertTrue(os.path.exists(os.path.join(b, "2_floorplan.odb")))
+        for b in (bunf, binner, byoung):
+            self.assertEqual(self.row(b)[3], "SKIP", self.row(b)); self.assertTrue(self.row(b)[4].startswith("keep"), self.row(b))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+        self.assertEqual(self.row(bprot)[3], "SKIP", self.row(bprot))   # positive control: protected still wins
+        self.assertTrue(self.row(bprot)[4].startswith("protected"), self.row(bprot))
+        self.assertTrue(os.path.exists(os.path.join(bprot, "3_3_place_gp.odb")))
+
     def test_alternates_target(self):
         k, b = self.kit_b("lalt/objsrc")
         repo = os.path.join(self.root, "lalt2/repo/.git/objects/info")

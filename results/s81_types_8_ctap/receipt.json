@@ -1,0 +1,10 @@
+{"lane": "S81-TYPES-8 (takes over S81-TYPES-7-CTAP, COORD 07:2x)", "event": "CORE-TAP-LATE leaf early core taps + bind tap budget by moves",
+ "base_main": "d17c355a04 (S81 plan = c303af45e5b plan 85a66847b6ad, unchanged since)",
+ "main_plan_out": "physical/die_plan/s81/plan_h2_2249.json sha 25aee3990496 (splice.py: only 75 leaf types rewritten)",
+ "main_run": {"leaf_types": 75, "taps_added": 1500, "types_baked": 63, "core_taps_resited": 230, "added_taps_budget_moved": 0},
+ "wave_plan_out": "intel1 /srv/opentallas-scratch2/claude/s81-types-8/ctap/wave_out_v4.json sha 153ffcc4ce90 = wave ba6292b0c502 + LEAFB + CTAP (--skip-bake t1,t5,t30,t31,t36,t37,t54__cl501e5681,t69,t72 --ref wave)",
+ "wave_run": {"leaf_types": 75, "taps_added": 1500, "types_baked": 54, "core_taps_resited": 238, "added_taps_resited": 14, "added_taps_budget_moved": 4},
+ "budget_moves_wave": {"t1 clk_t36": [[448.152,630.72],[430.872,630.72]], "t30 clk_t22": [[275.544,289.44],[215.064,289.44]], "t72 clk_t27": [[691.2,399.56],[743.04,399.56]], "t72 clk_t71": [[1026.702,17.28],[1035.342,25.92]]},
+ "budgetcheck_wave_v4": "0 failing leaf types (taps.grid_explicit_taps on all grid+explicit leaf types)",
+ "combined_plan": "plan_h2_2249_comb2.json sha d97b338c0ea4 = wave + this wave_out_v4 + colh 4e2f79c8bed7 + ts1 key (pcomb2.py)",
+ "tests": "tools/die_plan/test_early_core_taps_leg.py 3/3 PASS"}

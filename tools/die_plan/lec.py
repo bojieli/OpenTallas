@@ -6022,6 +6022,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     early_compare_tried = False
     late_merged = 0
+    late_replica = False
     for rnd in range(rounds + 1000):
         # LEC-REFINE-BUDGET-RAW (DIE-KV-65/LEC 11-03, KV ctl): raw base sweep time is not refine time.  ctl paid the whole
         # budget in 6 raw prefix walls (5400 s of 7059 s), expired at the first check (round 64), and the monotone finish
@@ -6379,6 +6380,17 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             sig = hashlib.sha1(repr(sorted((repr(hk), repr(h)) for hk, h in L.hyp.items())).encode()).hexdigest()
             seen_proved[sig] += 1
             if seen_proved[sig] >= 3:
+                # Q2NF: a merged replica's gate representative can spend both
+                # early attempts while its feedback neighbours are still free.
+                # Retry once against the settled proved set; every new relation
+                # still passes reset filtering and the next joint induction.
+                if not late_replica:
+                    late_replica = True
+                    if replica_cohort_closure(L, log, collections.Counter()):
+                        noreset_filter(L, log, tried, work, conflicts)
+                        if L.hyp != snap:
+                            log.append("late replica cohort: re-proposed against the settled proved set")
+                            continue
                 log.append(f"correspondence round {rnd}: the same proved set ({len(L.hyp)} hypotheses) recurred "
                            f"{seen_proved[sig]}x with no surviving closure change; fixpoint, returned")
                 return
@@ -7285,6 +7297,14 @@ def reset_contract_gate(kit, top, environ=None):
         if top not in c.get("modules", []):
             return refuse(f"reset contract does not list {top}")
         if not rcpt.is_file() or hashlib.sha256(rcpt.read_bytes()).hexdigest() != pr.get("receipt_sha256"):
+            # KW-FIX-35-RC 11-08: the kit carries a contract that LISTS this top but lost (or changed) its receipt, e.g.
+            # a kit copy that took reset_contract.json and not reset_contract/receipt.txt (S81 bksel vJ/vK: 30 m_ra
+            # false differences at 4 edges).  That is a broken kit, not a design verdict: check() stops as a FLOW
+            # ERROR instead of proving at the 4-edge default.  Repair: kit_reset_contract.py repair KIT.
+            rep["flow_error"] = (f"FLOW reset contract receipt {'sha256 mismatch' if rcpt.is_file() else 'missing'}: "
+                                 f"{path} lists {top} ({int(c['edges'])} edges) but {pr['receipt']} "
+                                 f"{'differs' if rcpt.is_file() else 'is not'} beside it; refusing the 4-edge fallback "
+                                 f"(stage the receipt: tools/die_plan/kit_reset_contract.py repair KIT)")
             return refuse("reset contract receipt missing or sha256 mismatch")
         proven = min(int(c["edges"]), int(pr["assert_edges"]))
     except (OSError, ValueError, KeyError, TypeError) as e:
@@ -7308,6 +7328,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
         rec["reset_contract"] = reset_contract_gate(kit, top)
+        if rec["reset_contract"].get("flow_error"):
+            print("LEC FLOW ERROR: " + rec["reset_contract"]["flow_error"], file=sys.stderr)
+            raise LecError(rec["reset_contract"]["flow_error"])
         netlist = netlist or find_netlist(kit)
         gate_fe = env.get("SYNTH_HDL_FRONTEND", "") or "verilog"
         gold_fe = gold_frontend or ("verilog" if gate_fe == "slang" else "slang")
@@ -7631,6 +7654,9 @@ def via_docker(args, image, mem):
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}", "-e", f"OT_LEC_CONE_S={os.environ.get('OT_LEC_CONE_S', str(CONE_S_DEFAULT))}"]
+    if "OT_LEC_PARITY_TERMS" in os.environ:
+        # Exact GF(2) normalization capacity, not a model or timing constraint.
+        cmd += ["-e", f"OT_LEC_PARITY_TERMS={max(2, int(os.environ['OT_LEC_PARITY_TERMS']))}"]
     if "OT_LEC_SLANG_UNROLL_LIMIT" in os.environ:
         value = slang_unroll_args({})[0].split("=", 1)[1]
         cmd += ["-e", f"OT_LEC_SLANG_UNROLL_LIMIT={value}"]
@@ -7785,7 +7811,7 @@ def _provenance(kit=None):
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
                  "OT_LEC_ENABLE_FILL_GUARD", "OT_LEC_REPLICA_MATCH",
-                 "OT_LEC_MEM_LANES")
+                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS")
 
 
 def nowiden_retry(r, out, run):

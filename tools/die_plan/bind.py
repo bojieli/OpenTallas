@@ -863,6 +863,10 @@ class Binder:
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
+        if self.ab.get("substitute_composed_inst"):
+            # A native composition creates leaves absent from the elaboration.
+            # Exact full-ABI source variants run here, before graph/param_regen.
+            self.substitute_inst(self.base, self.ab["substitute_composed_inst"], full_abi=True)
         if self.ab.get("structural_bridges"):
             # Composition may create native cut leaves absent from the original
             # elaboration. Expand their exact full-ABI source bridges before
@@ -1037,7 +1041,7 @@ class Binder:
             st[cl + " dropped"] = dropped
         self.rewire_stats = dict(st)
 
-    def substitute_inst(self, base):
+    def substitute_inst(self, base, rules=None, *, full_abi=False):
         """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
         a leaf instance takes a plan variant of its master (e.g. a chain-head form without the chain inputs).  The
         variant's ports must be a subset of the master's: dropped input bits are recorded (variant_removed_bits), never
@@ -1049,9 +1053,10 @@ class Binder:
         idx = E.module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []), base)
         prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
         iface = {}
-        self.variant_removed = defaultdict(int)
-        self.variant_required_constants = []
-        for r in ab["substitute_inst"]:
+        if not hasattr(self, "variant_removed"):
+            self.variant_removed = defaultdict(int)
+            self.variant_required_constants = []
+        for r in ab["substitute_inst"] if rules is None else rules:
             rx = re.compile(r["inst"])
             m = r["module"]
             if m not in iface:
@@ -1072,6 +1077,17 @@ class Binder:
                 if c.kind != "leaf" or not rx.fullmatch(c.path):
                     continue
                 n += 1
+                if full_abi:
+                    if not r.get("master") or c.module != r["master"]:
+                        self.errors.append(f"VARIANT_COMPOSE_MASTER {c.path}: expected {r.get('master')}, found {c.module}")
+                        continue
+                    try:
+                        if set(c.ports) != set(vm.ports) or any(c.dirs[p] != vm.ports[p][0] for p in c.ports):
+                            raise BindError("native cut port names/directions differ")
+                        variant_port_bits(c.ports, vm, c.params, {})
+                    except BindError as exc:
+                        self.errors.append(f"VARIANT_COMPOSE_ABI {c.path}: {exc}")
+                        continue
                 new_ports = [p for p in vm.ports if p not in c.ports]
                 outs_new = [p for p in new_ports if vm.ports[p][0] == "output"]
                 declared_bump_inputs = variant_bump_inputs(self.plan, self.R, c, vm)
@@ -2353,7 +2369,7 @@ class Binder:
         except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
             return
-        changed = []
+        changed, derived = [], []
         for path, ps in r["params"].items():
             ci = self.cell_index().get(path)
             if ci is None:
@@ -2366,10 +2382,16 @@ class Binder:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
                 old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
+                row = dict(inst=path, param=k, asbuilt=old, bound=v)
+                derived.append(row)
                 if old != str(v):
-                    changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
+                    changed.append(row)
                 c.params[k] = str(v)
-        self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+        self.param_regen = dict(file=str(spec["file"]), changed=changed, derived=derived, record=r.get("record", {}))
+        # DIE-HBM-92-LCHK: the hook's declared fixed-latency contracts (latency_consumers.py checks every instance)
+        lc = r.get("latency_contracts") or getattr(mod, "LATENCY_CONTRACTS", None)
+        if lc:
+            self.param_regen["latency_contracts"] = list(lc)
 
     def bus_groups(self):
         """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
@@ -3098,6 +3120,16 @@ class Binder:
                 except reset_consumers.ResetConsumerError as exc:
                     raise BindError(f"control reset localization {tn}: {exc}") from exc
                 self.__dict__.setdefault("_reset_consumer_changes", {})[tn] = receipt
+            port_relays = t.get("reset", {}).get("port_relays")
+            if port_relays:
+                # KV-TYPES-5 11-08 (COORD 10:0x kv3_phy@7R): opt-in synchronous reset relays from the delivered reset
+                # to far face registers of a native hard wrapper (tools/die_plan/reset_port_relays.py)
+                import reset_port_relays
+                try:
+                    txt, receipt = reset_port_relays.apply(txt, port_relays)
+                except reset_port_relays.PortRelayError as exc:
+                    raise BindError(f"reset port relays {tn}: {exc}") from exc
+                self.__dict__.setdefault("_reset_port_relays", {})[tn] = receipt
             self.pnames[tn] = pnames
             f = out / f"{t['module']}.sv"
             f.write_text(txt)
@@ -4459,6 +4491,14 @@ def cmd_bind(a):
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
+    # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)
+    import latency_consumers as LC
+    lc = LC.check(LC.binder_leaves(B, yjs), bg, B.param_regen, B.ab, raw, LC.r8_options(B.ab, B.base))
+    (out / "bind_latency_consumers.json").write_text(json.dumps(lc, indent=1, default=str) + "\n")
+    rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
+                                    advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
+    B.errors.extend(lc["errors"])
+    rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     if not B.errors:
@@ -5157,7 +5197,11 @@ def kit_native_station_geometry(out, bound_type, bound_text, kit):
         raise BindError(f"kit-rtl {bound_type}: native station RTL requires {source}/istations.tcl and receipt.json")
     try:
         evidence = json.loads(receipt.read_text())
-        declared = [name for row in evidence["entries"] for name in row["stations"]]
+        # kit_istations also records fixed macro/cell sites in this list.
+        # They carry no RTL station; malformed station rows must still fail.
+        declared = [name for row in evidence["entries"]
+                    if not ("cell" in row and "site" in row and "stations" not in row)
+                    for name in row["stations"]]
     except (ValueError, KeyError, TypeError) as exc:
         raise BindError(f"kit-rtl {bound_type}: invalid native station placement receipt: {exc}") from exc
     if len(declared) != len(set(declared)) or set(declared) != stations:

@@ -1,0 +1,17 @@
+types same True 119
+type_modules same True
+plan_designs same True pin rows same True designs 31
+G0C FAIL 29 -> FAIL 29 clean 114 -> 114
+G0C findings identical False 581 581
+bad types same True
+NEW {"check": "geom_clock_reach", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_reach 311.63 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_rst_rec_rx_s2_i (244.6, 246.3)", "type": "coll_core"}
+NEW {"check": "geom_clock_reach", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_reach 313.28 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_rst_fltk_i (466.0, 400.6)", "type": "coll_ft
+NEW {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_ftc: plan-time AUTO-GEOM clock_tap_sinks 1884.2 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19", "type": "coll_ftc"}
+NEW {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type native59: plan-time AUTO-GEOM clock_tap_sinks 3811.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t1", "type": "native59"}
+NEW {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type slw_fw_v1__clf51c11d8__cl592e3d37: plan-time AUTO-GEOM clock_tap_sinks 1582.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t58", "type": "slw_fw_v1__clf51c11d8__cl592e3d37"}
+GONE {"check": "geom_clock_reach", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_core: plan-time AUTO-GEOM clock_reach 287.27 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_35 (4.3, 902.9)", "type": "coll_core"}
+GONE {"check": "geom_clock_reach", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_ft__cl78c7b300: plan-time AUTO-GEOM clock_reach 288.38 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan_land_out (4.5, 784.2)", "type": "coll_ft__cl78c7b300"}
+GONE {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type coll_ftc: plan-time AUTO-GEOM clock_tap_sinks 1886.2 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19", "type": "coll_ftc"}
+GONE {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type native59: plan-time AUTO-GEOM clock_tap_sinks 3830.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t1", "type": "native59"}
+GONE {"check": "geom_tap_sinks", "g0c": true, "level": "WARN", "msg": "[G0C-GEOM] type slw_fw_v1__clf51c11d8__cl592e3d37: plan-time AUTO-GEOM clock_tap_sinks 1581.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t58", "type": "slw_fw_v1__clf51c11d8__cl592e3d37"}
+CMP rc 0

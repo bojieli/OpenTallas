@@ -1,0 +1,13 @@
+{
+ "qfd_qc_tt_ctlm_part.sv": {
+  "changed": 4,
+  "other": 4,
+  "sample": [
+   "-    assign cland_start_raw = rst_n_t0;",
+   "+    assign cland_start_raw = rst_n_t35;",
+   "-        .clk(clk), .rst_raw_n(rst_n_t0), .p_start(cland_tstart_in), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start), .start_d(cland_start_d));",
+   "+        .clk(clk), .rst_raw_n(rst_n_t35), .p_start(cland_tstart_in), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start), .start_d(cland_start_d));"
+  ]
+ }
+}
+changed sv 97 nonsv 116

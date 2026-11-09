@@ -119,11 +119,15 @@ def ring_taps(plan, tn):
     S81-RINGTAP-1 (11-08, slice_station__t45 G2 setup -199 ps): tap_mode "grid" / "grid+explicit" ALSO uses the
     reset tree's taps when the type carries an explicit clock.taps list: reset_tree._taps never reads that list in
     these modes, so numbering rst_n_t<i> over it picks a relay on another grid tap (t45 ft1_i ring at the W face took
-    rst_n_t2, placed 1267 um away, instead of rst_n_t4 at 239 um: a 37-buffer sync-reset wire, TT -199 ps).  Other
-    modes (density / glue lists, no mode) keep their existing behaviour."""
+    rst_n_t2, placed 1267 um away, instead of rst_n_t4 at 239 um: a 37-buffer sync-reset wire, TT -199 ps).
+    QC-TYPES-10/CLAND (11-08): tap_mode "density" is the same case (reset_tree._taps = schema.tap_grid, which never
+    reads clock.taps there): every QC soft type carries a 2-entry 'glue' clock.taps list, so every ring took
+    rst_n_t0/t1 (slw_fe_v1 E-face rings on rst_rl_77, 897 um away; 680 ring raw copies >405 um in 80 QC types).
+    Types without a mode keep their existing behaviour."""
     ck = plan["partition_types"][tn].get("clock", {})
     taps = ck.get("taps", [])
-    generated_grid = (not taps and ("tap_um" in ck or "tap_mode" in ck)) or ck.get("tap_mode") in ("grid", "grid+explicit")
+    generated_grid = (not taps and ("tap_um" in ck or "tap_mode" in ck)) or \
+        ck.get("tap_mode") in ("grid", "grid+explicit", "density")
     if not generated_grid and not any(x.get("kind") == "core" for x in taps):
         return [tuple(x["xy"]) for x in taps]
     import schema

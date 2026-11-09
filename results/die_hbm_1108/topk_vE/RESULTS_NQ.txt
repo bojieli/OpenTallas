@@ -1,0 +1,16 @@
+# HBM-HARD-6-TOPK NQ bench 2026-11-08: iverilog -g2012 -s tb -DMUTN=<m> tb_nq.sv rtl/.../topk/ot_hbm_idx_topk_tiles.sv sram_stub.v; vvp +seed=<s> +ncyc=<n>
+# gold = ingest NQ=0 (vD form), test = NQ=1 (MUT m); FILL_GROUPS=8 WPIPE=1; every output (fault, selected_count, wo_we, wo_wa, wo_wd) compared every cycle from cycle 20
+BENCH MUT=0 seed=-804656190 cycles=4000 errs=0 we_cycles=2217 clears=118 reset_cycles=16
+BENCH MUT=0 seed=-1626298969 cycles=4000 errs=0 we_cycles=2900 clears=100 reset_cycles=15
+BENCH MUT=0 seed=1622937508 cycles=4000 errs=0 we_cycles=2806 clears=133 reset_cycles=19
+BENCH MUT=0 seed=577206689 cycles=4000 errs=0 we_cycles=2398 clears=120 reset_cycles=17
+BENCH MUT=0 seed=-1850387009 cycles=4000 errs=0 we_cycles=2762 clears=123 reset_cycles=17
+BENCH MUT=0 seed=1398849468 cycles=4000 errs=0 we_cycles=2603 clears=107 reset_cycles=17
+BENCH MUT=0 seed=353118649 cycles=4000 errs=0 we_cycles=2862 clears=132 reset_cycles=19
+BENCH MUT=0 seed=-692612170 cycles=4000 errs=0 we_cycles=2583 clears=134 reset_cycles=15
+BENCH MUT=0 seed=-1738342989 cycles=4000 errs=0 we_cycles=2652 clears=130 reset_cycles=18
+BENCH MUT=0 seed=1510893488 cycles=4000 errs=0 we_cycles=2892 clears=129 reset_cycles=19
+BENCH MUT=0 seed=465162669 cycles=4000 errs=0 we_cycles=2917 clears=125 reset_cycles=17
+BENCH MUT=0 seed=-580568150 cycles=4000 errs=0 we_cycles=2183 clears=117 reset_cycles=16
+BENCH MUT=10 seed=-581889750 cycles=1000 errs=259 we_cycles=431 clears=30 reset_cycles=13
+BENCH MUT=11 seed=-581889750 cycles=1000 errs=591 we_cycles=431 clears=30 reset_cycles=13

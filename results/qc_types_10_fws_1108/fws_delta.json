@@ -1,0 +1,237 @@
+{
+ "schema": "qc_types_10.fws_delta/1",
+ "base_plan_sha256": "e5dc7eacb745be6f6efabdae31990370230cf0264be0d54b728409bae28e9fdc",
+ "plan_sha256": "e2e1be455b50123417b755e106e4493fd98e542b2599318a85dab18f220ec989",
+ "type": "sle_fw_v3",
+ "apply": "partition_types.sle_fw_v3.clock: add landing_writer_start.branches.{cws0_o,x_st_a_fe_o} (depth stays 3) and set landing_local_resets; nothing else",
+ "landing_writer_start_add": {
+  "cws0_o": {
+   "stages": [
+    {
+     "xy_um": [
+      534.6,
+      631.8
+     ],
+     "raw_reset": "rst_rl_102"
+    },
+    {
+     "xy_um": [
+      534.6,
+      421.2
+     ],
+     "raw_reset": "rst_rl_15"
+    },
+    {
+     "xy_um": [
+      534.6,
+      210.6
+     ],
+     "raw_reset": "rst_rl_18"
+    }
+   ]
+  },
+  "x_st_a_fe_o": {
+   "stages": [
+    {
+     "xy_um": [
+      469.8,
+      631.8
+     ],
+     "raw_reset": "rst_rl_102"
+    },
+    {
+     "xy_um": [
+      469.8,
+      421.2
+     ],
+     "raw_reset": "rst_rl_15"
+    },
+    {
+     "xy_um": [
+      469.8,
+      210.6
+     ],
+     "raw_reset": "rst_rl_18"
+    }
+   ]
+  }
+ },
+ "landing_local_resets": [
+  {
+   "name": "fstart_ag_eo",
+   "raw": "rst_rl_37",
+   "xy_um": [
+    9.952,
+    30.784
+   ],
+   "consumers": [
+    "u_cland_fstart_ag_eo"
+   ]
+  },
+  {
+   "name": "fstart_ard_eo",
+   "raw": "rst_rl_37",
+   "xy_um": [
+    9.952,
+    53.888
+   ],
+   "consumers": [
+    "u_cland_fstart_ard_eo"
+   ]
+  },
+  {
+   "name": "fstart_arl_eo",
+   "raw": "rst_rl_48",
+   "xy_um": [
+    20.256,
+    94.208
+   ],
+   "consumers": [
+    "u_cland_fstart_arl_eo"
+   ]
+  },
+  {
+   "name": "fstart_arm_eo",
+   "raw": "rst_rl_48",
+   "xy_um": [
+    20.256,
+    94.72
+   ],
+   "consumers": [
+    "u_cland_fstart_arm_eo"
+   ]
+  },
+  {
+   "name": "fstart_art_eo",
+   "raw": "rst_rl_48",
+   "xy_um": [
+    20.256,
+    96.864
+   ],
+   "consumers": [
+    "u_cland_fstart_art_eo"
+   ]
+  },
+  {
+   "name": "fstart_arv_eo",
+   "raw": "rst_rl_48",
+   "xy_um": [
+    20.256,
+    98.816
+   ],
+   "consumers": [
+    "u_cland_fstart_arv_eo"
+   ]
+  },
+  {
+   "name": "fstart_cws0_o",
+   "raw": "rst_rl_18",
+   "xy_um": [
+    424.928,
+    81.248
+   ],
+   "consumers": [
+    "u_cland_fstart_cws0_o"
+   ]
+  },
+  {
+   "name": "fstart_dd_eo",
+   "raw": "rst_rl_29",
+   "xy_um": [
+    15.936,
+    228.64
+   ],
+   "consumers": [
+    "u_cland_fstart_dd_eo"
+   ]
+  },
+  {
+   "name": "fstart_flt_wo",
+   "raw": "rst_rl_35",
+   "xy_um": [
+    12.128,
+    307.04
+   ],
+   "consumers": [
+    "u_cland_fstart_flt_wo"
+   ]
+  },
+  {
+   "name": "fstart_l9_eo_l9_wi_o",
+   "raw": "rst_rl_79",
+   "xy_um": [
+    12.128,
+    447.456
+   ],
+   "consumers": [
+    "u_cland_fstart_l9_eo_l9_wi_o"
+   ]
+  },
+  {
+   "name": "fstart_rsf_o",
+   "raw": "rst_rl_173",
+   "xy_um": [
+    149.76,
+    1329.248
+   ],
+   "consumers": [
+    "u_cland_fstart_rsf_o"
+   ]
+  },
+  {
+   "name": "fstart_rsn_o",
+   "raw": "rst_rl_176",
+   "xy_um": [
+    237.888,
+    1329.248
+   ],
+   "consumers": [
+    "u_cland_fstart_rsn_o"
+   ]
+  },
+  {
+   "name": "fstart_sc_eo",
+   "raw": "rst_rl_26",
+   "xy_um": [
+    9.952,
+    615.264
+   ],
+   "consumers": [
+    "u_cland_fstart_sc_eo"
+   ]
+  },
+  {
+   "name": "fstart_st_eo",
+   "raw": "rst_rl_70",
+   "xy_um": [
+    9.952,
+    721.12
+   ],
+   "consumers": [
+    "u_cland_fstart_st_eo"
+   ]
+  },
+  {
+   "name": "fstart_x_ctl_o",
+   "raw": "rst_rl_176",
+   "xy_um": [
+    383.904,
+    1329.248
+   ],
+   "consumers": [
+    "u_cland_fstart_x_ctl_o"
+   ]
+  },
+  {
+   "name": "fstart_x_st_a_fe_o",
+   "raw": "rst_rl_18",
+   "xy_um": [
+    391.04,
+    81.248
+   ],
+   "consumers": [
+    "u_cland_fstart_x_st_a_fe_o"
+   ]
+  }
+ ]
+}

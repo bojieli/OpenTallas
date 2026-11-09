@@ -3484,6 +3484,28 @@ def defines_landing_ring(rtl_dir):
     return any(_LANDING_MOD.search(f.read_text(errors="replace")) for f in sorted(Path(rtl_dir).glob("*.sv")))
 
 
+# DIE-HEAD-85/HSPLIT 11-07 (generator class fix, LEC): RTL state registers that yosys `fsm` re-encodes so the kit LEC
+# cannot pair them.  The s81 link gearbox RX hunt FSM (ot_s81ph_link_gbx* reg hunt[1:0], states 0/1/2) became gate
+# u_gb.hunt[0..2] one-hot (hunt[0] reset 1) in the HSPLIT kits hd_host_e/hd_host_w; lec.py refused the gold state
+# constraint ("allowed states do not cover the native ternary reset-base cube") and the f_rx_v cone stayed 78
+# differs (kitsF hd_host_e lec.json).  The S81 coll_e recipe of this same gearbox already pins OT_FSM_NONE_WIRES=hunt.
+# gen phys now exports it for every kit whose RTL defines such a module (ot_keep_regs.tcl: fsm_encoding "none" on
+# those wires; function unchanged, LEC pairs the RTL bits by name).  The per-item env opt-in still adds names.
+_FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M), ("hunt",)),)
+
+
+def fsm_none_wires(rtl_dir, extra=None):
+    """Wire base names for OT_FSM_NONE_WIRES: the _FSM_NONE_BY_MODULE wires of every module the kit RTL defines,
+    then the per-item env names (commas or spaces), de-duplicated in order."""
+    names = []
+    texts = [f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv"))]
+    for rx, wires in _FSM_NONE_BY_MODULE:
+        if any(rx.search(t) for t in texts):
+            names.extend(wires)
+    names.extend((extra or "").replace(",", " ").split())
+    return list(dict.fromkeys(names))
+
+
 _LANDING_BODY = re.compile(r"^\s*module\s+ot_dp_clk_landing\b(.*?)^\s*endmodule\b", re.M | re.S)
 _RING_DEPTH = re.compile(r"\bot_meso_ring\s*#\s*\([^;]*?\.DEPTH\s*\(\s*(\d+)\s*\)", re.S)
 _PLAIN_RING = re.compile(r"\bot_dp_clk_landing\s*#\s*\((?:[^()]|\([^()]*\))*\)\s*(u_cland_\w+)\s*\((.*?)\)\s*;", re.S)
@@ -4005,6 +4027,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
+    fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -4252,7 +4275,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
-           *([f"export OT_FSM_NONE_WIRES = {os.environ['OT_FSM_NONE_WIRES'].replace(',', ' ')}"] if os.environ.get("OT_FSM_NONE_WIRES") else []),
+           # DIE-HEAD-85/HSPLIT 11-07: plus the module-defined FSM wires (fsm_none_wires, e.g. the s81 gearbox hunt)
+           *([f"export OT_FSM_NONE_WIRES = {' '.join(fsm_wires)}"] if fsm_wires else []),
            # KW-FIX-13 11-05: opt-in per item (item_env, commas for spaces), e.g. -noshare where yosys share does not finish
            *([f"export SYNTH_ARGS = {os.environ['OT_SYNTH_ARGS'].replace(',', ' ')}"] if os.environ.get("OT_SYNTH_ARGS") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
@@ -4364,7 +4388,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
@@ -5778,9 +5802,15 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         out.mkdir(parents=True, exist_ok=True)
         files = []
     else:
+        # A native physical kit with an explicit type selection consumes only
+        # those wrappers/cells. The whole-die top and its reset-open pad map
+        # are not inputs to any selected kit. Landed, bound/mixed and full-die
+        # callers retain their existing emission paths and validation.
+        native_selected_only = bool(types) and not kit_rtl and landing is None
         files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                                   landing=None if land_decl_only else landing,
-                                  emit_die_top=not (land_decl_only and gtypes == []))
+                                  emit_die_top=not (native_selected_only or
+                                                    (land_decl_only and gtypes == [])))
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)

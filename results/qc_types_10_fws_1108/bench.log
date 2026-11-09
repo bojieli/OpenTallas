@@ -1,0 +1,10 @@
+cones: old 69 cells, new 106 cells, 16 faces
+  cws0_o: stage resets ['rst_rl_102', 'rst_rl_15', 'rst_rl_18'], face reset cland_lrst_fstart_cws0_o
+  x_st_a_fe_o: stage resets ['rst_rl_102', 'rst_rl_15', 'rst_rl_18'], face reset cland_lrst_fstart_x_st_a_fe_o
+equiv: PASS PASS 39940 cycles, 16 faces
+bypass_cws0_o_s1: MUTANT CAUGHT FATAL: bench/tb.sv:14: S face cws0_o mismatch cycle 61 new 0 old+3 1
+shallow_phase_cws0_o_s2: MUTANT CAUGHT FATAL: bench/tb.sv:14: S face cws0_o mismatch cycle 144 new 0 old+3 1
+deep_phase_x_st_a_fe_o_s0: MUTANT CAUGHT FATAL: bench/tb.sv:14: S face x_st_a_fe_o mismatch cycle 85 new 0 old+3 1
+leaf_short_cws0_o: MUTANT CAUGHT FATAL: bench/tb.sv:14: S face cws0_o mismatch cycle 144 new 0 old+3 1
+leaf_deep_ag_eo: MUTANT CAUGHT FATAL: bench/tb.sv:15: face ag_eo mismatch cycle 85
+leaf_deep_x_ctl_o: MUTANT CAUGHT FATAL: bench/tb.sv:15: face x_ctl_o mismatch cycle 85
