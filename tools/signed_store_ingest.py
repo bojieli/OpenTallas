@@ -30,7 +30,7 @@ LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
 LAST = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest_last.json'
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
 AGI = SSH + ['-i', os.path.expanduser('~/.ssh/agidock_ot'), 'ubuntu@155.103.253.53']
-ORDER = ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2')   # hosts that go away first come first
+ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
 import importlib.util, json, os, sys
@@ -180,6 +180,50 @@ def archive_host(h, cands, fails):
     return good, P
 
 
+def select_late(recs, manifest):
+    """-> [(entry, fresh record)]: a stored record with no provenance whose origin copy now has one (a re-sign that wrote
+    PROVENANCE.json after an ingest had already taken its signoff.json).  Origin copy only: its unit is the archived one."""
+    by = {}
+    for e in manifest:
+        if (e.get('scan') or {}).get('prov_file') or e.get('provenance_json'): continue
+        by[(str(e.get('origin')), (e.get('name'), e.get('top'), str(e.get('generated'))))] = e
+    out = []
+    for r in recs:
+        if not (r.get('prov_file') and r.get('flow_tag')): continue
+        e = by.get(('%s:%s' % (r.get('scan_host'), r.get('path')), identity(r)))
+        if e: out.append((e, r))
+    return out
+
+
+def late_pass(late, fails, archive=None, collect=None):
+    """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
+    archive = archive or archive_host
+    collect = collect or (lambda h, p: json.loads(run(SSH + [h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)], p + '\n', 300).stdout)[p])
+    done = []
+    byh = collections.defaultdict(list)
+    for e, r in late: byh[r['scan_host']].append((e, r))
+    for h, items in byh.items():
+        good, P = archive(h, [[r] for e, r in items], fails)
+        for e, r in items:
+            unit = [f[0] for f in (P.get(r['path']) or {}).get('files', [])]
+            old = {'/' + f[0]: f[2] for f in e.get('files') or []}
+            changed = [p for p, s in old.items() if p not in good or good[p][1] != s]
+            newf = [p for p in unit if p not in old]
+            if changed:
+                fails.append([h, r['path'], 'late: %d stored files changed or unverified, first %s' % (len(changed), changed[0])]); continue
+            if any(p not in good for p in newf):
+                fails.append([h, r['path'], 'late: new files unverified']); continue
+            t = collect(h, r['path'])
+            if not t.get('prov'):
+                fails.append([h, r['path'], 'late: no PROVENANCE text']); continue
+            if ss.hashlib.sha256(t['signoff'].encode()).hexdigest() != e['id']:
+                fails.append([h, r['path'], 'late: signoff.json changed']); continue
+            if ss.late_provenance(e['id'], r, json.loads(t['prov']), ss.ARCHIVE_ROOT + '/' + h,
+                                  [[p.lstrip('/'), good[p][0], good[p][1]] for p in sorted(newf)]):
+                done.append(e['id']); say('LATE PROVENANCE', e['id'][:12], r['path'])
+    return done
+
+
 def main():
     LOCK.parent.mkdir(parents=True, exist_ok=True)
     lock = open(LOCK, 'w')
@@ -233,8 +277,17 @@ def main():
                 if c.returncode: fails.append(['coord', h, 'store commit rc %d' % c.returncode])
                 else: committed = len(new)
             say(h, 'ingested so far', len(new), 'fails', len(fails))
+    late = select_late(recs, ss.read_manifest())
+    say('late provenance candidates', len(late), [e['id'][:12] for e, r in late])
+    lated = []
+    if not dry:
+        lated = late_pass(late, fails)
+        if lated:
+            rel = [str(pathlib.Path(ss.entry_path(i)).relative_to(COORD)) for i in lated]
+            c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: late provenance on %d entries' % len(rel)] + rel, None, 280)
+            if c.returncode: fails.append(['coord', '*', 'late commit rc %d' % c.returncode])
     holds = [] if dry else marker_sweep(fails)
-    res = dict(holds=holds, time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
+    res = dict(holds=holds, late=lated, late_candidates=[e['id'] for e, r in late], time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
     say('DONE new', len(new), 'fails', len(fails), 'unreachable', unreachable, 'commit rc', commit, '%d s' % res['secs'])
