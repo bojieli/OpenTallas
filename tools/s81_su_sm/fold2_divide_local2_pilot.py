@@ -87,7 +87,7 @@ def main():
                                        reach_um=405, period_ps=833),
                                clock=dict(common_latency_ps=250, insertion_ps=250, insertion_tol_ps=40),
                                partition_types={}, partitions=[], ports=[], lanes=[]))
-    view = MODULE + '@pilot_local2_vA'
+    view = MODULE + '@pilot_local2_vB'
     put('views.json', dict(plan=str(inputs / 'candidate.json'), view_list=[dict(
         view=view, module=MODULE, outline_um=[SIDE, SIDE], pins_file='pins.json',
         pins_sha256=hashlib.sha256((inputs / 'pins.json').read_bytes()).hexdigest(),
