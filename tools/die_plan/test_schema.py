@@ -204,3 +204,12 @@ def test_turn_slot_legacy_layer_fallback_is_preserved():
     assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')
     slot['in_layers'] = ['M5', 'M7']
     assert model._type_geom('pm1', 'fx_o')[2:] == (['M4', 'M6'], 'lsb_high')
+
+
+def test_param_class_split_provenance_keys_allowed():
+    # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): __pv clones from param_class_split.py carry these two keys
+    P = schema.SCHEMA['properties']['partition_types']['additionalProperties']['properties']
+    assert P['param_base_type']['type'] == 'string'
+    assert P['param_set']['type'] == 'object'
+    on_disk = json.loads((HERE / 'die_plan.schema.json').read_text())
+    assert 'param_set' in on_disk['properties']['partition_types']['additionalProperties']['properties']
