@@ -729,6 +729,8 @@ class Plan:
                 p = os.path.join(dp, f)
                 if f in KEEP_NAMES or f.endswith((".lef", ".lib", ".lib.gz", ".signoff.json")) or f.startswith("6_final"):
                     continue
+                if f == "5_route.odb" and "6_final.odb" not in fn:      # signoff.py ROUTED_DBS: the routed DB of a GOAL=route kit
+                    continue
                 victim = False
                 if in_results and re.match(r"(1_\d|2_\d|3_\d|4_\d|5_\d|6_1|route\.guide)", f) and not f.startswith(("2_floorplan", "3_place", "4_cts")):
                     victim = f.endswith(".odb") or f == "route.guide" or f == "5_2_route_rcx.spef"
