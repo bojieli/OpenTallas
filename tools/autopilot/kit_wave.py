@@ -668,7 +668,9 @@ def select(rows, cfg, die, state, plan_types=None):
         rows = list(rows)
         known = {r["item"] for r in rows if r["die"] == die}
         for item in (d.get("only_items") or []) if d.get("plan_items_from_allowlist") else []:
-            if item in known or item not in plan_types:
+            # Existing parent rows already expand into these plan classes,
+            # including their live-job claims; do not synthesize a second owner.
+            if item in known or item not in plan_types or any(item.startswith(k + "__") for k in known):
                 continue
             rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
                              owner="KIT-WAVE", live_job="none", last_activity="",
@@ -794,6 +796,18 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault(why, []).append(r["item"])
             continue
         picked.append(dict(r, block_sha=blk(r["item"])) if blk(r["item"]) else r)
+
+    # An allowlist class may also be expanded from its OWNERS parent. Both
+    # rows name one producer, not parallel forms; retain its first eligible row.
+    unique, seen = [], set()
+    for row in picked:
+        key = item_key(die, ev, row["item"], row.get("block_sha"))
+        if key in seen:
+            skip.setdefault("same plan item already selected this tick", []).append(row["item"])
+            continue
+        seen.add(key)
+        unique.append(row)
+    picked = unique
 
     # Optional exact plan-class allowlist: enable safe canaries while other
     # classes await their die-owned hard views.  Never infer parameter variants.
@@ -3476,6 +3490,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
+    # A stale/repeated launch list must never replace a live producer claim.
+    if prev.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
+        AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: active producer {prev.get('unit', '')}")
+        return None
     # The attempt dir is per item and event, not per plan block: number across every block's records, or a new block's
     # attempt N lands in an older block's attempt_N, whose results make "make place" a no-op (t14@4, t17@5, COORD 11-04).
     event = cfg["dies"][die]["event"]

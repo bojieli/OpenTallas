@@ -29,6 +29,10 @@ class RetryOutput(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             ap=FakeAP(td,"");c=cfg();st={"items":{}};r=dict(item="kv3_hg_v1",kind="type",block_sha="abc",replicas=2)
             a=KW.launch(ap,c,st,"qwen_kvsys",r,"intel2");sp1=json.loads((Path(a["dir"])/"spec.json").read_text())
+            # a live producer is never replaced (LAUNCH-KEEP); attempt 2 follows a finished attempt
+            self.assertIsNone(KW.launch(ap,c,st,"qwen_kvsys",r,"intel2"))
+            self.assertEqual(len(st["items"]),1)
+            for rec in st["items"].values():rec["status"]="FAIL"
             b=KW.launch(ap,c,st,"qwen_kvsys",r,"intel2");sp2=json.loads((Path(b["dir"])/"spec.json").read_text())
             self.assertNotEqual(sp1["work"],sp2["work"]);self.assertTrue(sp2["work"].endswith("/attempt_2"))
             self.assertEqual(json.loads((Path(a["dir"])/"spec.json").read_text()),sp1)
