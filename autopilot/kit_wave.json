@@ -1960,7 +1960,22 @@
    "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
    "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43",
    "queue_src_prev_kw43kv": "claude/die-kv-97-zbadd-1109@e273bd37e4ee",
-   "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv."
+   "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv.",
+   "item_inputs": {
+    "kv3_sys_SD": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvsdpg/plan_c.json",
+     "note": "KW-FIX-43 12:4x COORD 12:35 (2): KV SD-PG-FOLLOW plan md5 82916683 (KV-PLAN-2 12:34; = plan_c 1035a005 with die.pg.domains SW/SE serdes rects following the moved PHY boxes). Dir kw43/kvsdpg = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_sys_SD_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvsdpg/plan_c.json",
+     "note": "KW-FIX-43 12:4x COORD 12:35 (2): KV SD-PG-FOLLOW plan md5 82916683 (KV-PLAN-2 12:34; = plan_c 1035a005 with die.pg.domains SW/SE serdes rects following the moved PHY boxes). Dir kw43/kvsdpg = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    }
+   },
+   "item_inputs_prev_kw43sd": {
+    "kv3_sys_SD": null,
+    "kv3_sys_SD_v1": null
+   },
+   "note_kw43_kvsd": "KW-FIX-43 12:4x: (a) lockq ab58fcd7445 overlaid on dkv97/src_zb epyc2+epyc7 (gen_phys a2f0fd8f -> 2c5da7c1, test_bound_native_reset 882f8a6c -> 5315be8f; old in kw43/kvlockq/old) for kv3_hub_C; (b) item_inputs kv3_sys_SD/_v1 -> kw43/kvsdpg plan 82916683. Revert: item_inputs[k] = item_inputs_prev_kw43sd[k] (None = delete); restore kvlockq/old."
   },
   "s81": {
    "enabled": true,
@@ -14871,7 +14886,8 @@
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "q_hub_ne": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
     "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)"
+    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
+    "q_b*": "KW-FIX-43 12:4x TEMP: hold new q_b launches until the HBM reset-die-key overlay (c027d3fb392a) is on src_hbmf4; removed right after."
    },
    "gen_hosts": [
     "epyc2",
