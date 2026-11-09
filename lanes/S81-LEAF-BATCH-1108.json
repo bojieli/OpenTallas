@@ -13,11 +13,6 @@
    "t30",
    "t69"
   ],
-  "needs geometry re-form first (estimator cannot open the channel)": [
-   "t12 u_vsw|u_ve.u_m 6.02",
-   "t46 u_vn.u_b|LN5 1.61",
-   "t70 LN7|u_vn.u_b 1.32"
-  ],
   "S81-TYPES-10-COLH": "16 col_h rows"
  },
  "rows": {
@@ -152,6 +147,30 @@
    "model_worst_after": 0.9,
    "bus_cost_rise_pct": 0.1,
    "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t70": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t70@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:717.12:846.72:R0,u_lf.u_vn.u_a:371.52:466.56:R0,u_lf.u_vn.u_b:345.6:1010.88:R0,u_lf.u_vp.g_ln[7].u_l:190.08:941.376:R0,u_lf.u_vq:656.64:648:R0,u_lf.u_vs:855.36:604.8:R0,u_lf.u_vsw:829.44:371.52:R0"
+   },
+   "note": "tool moves + hand LN7 -17.28; model 0.83; long S-edge bus runs not modelled"
+  },
+  "ot_s81sl_leaf__t46": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t46@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.98:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.7:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0"
+   },
+   "note": "tool moves + hand LN5/LN6 +8.64; model 1.18, above the 1.15 pass reference: marginal"
+  },
+  "ot_s81sl_leaf__t12": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t12@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:336.96:665.28:R0,u_lf.u_vn.u_b:362.88:846.72:R0,u_lf.u_vp.g_ln[12].u_l:181.44:794.496:R0,u_lf.u_vp.g_ln[13].u_l:181.44:664.896:R0,u_lf.u_vp.g_ln[14].u_l:51.84:664.896:R0,u_lf.u_vq:1149.12:648:R0,u_lf.u_vs:941.76:648:MY,u_lf.u_vsw:708.48:604.8:R0"
+   },
+   "note": "model 6.02 stays on u_vsw|u_ve.u_m (34.5-um overlap, model counts whole faces; tap clk_t24 blocks ve_m); other channels <=0.83; tool moves only"
   }
  }
 }
