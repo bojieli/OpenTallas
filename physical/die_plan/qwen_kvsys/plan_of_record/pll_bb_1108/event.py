@@ -16,7 +16,7 @@ from pathlib import Path
 
 TYPE = "kv3_hub_C"
 MODULE = "qkd_pll_analog_model"
-ORIGIN = [1319.76, 900.18]        # placement site / row grid
+ORIGIN = [1306.8, 900.18]        # placement site / row grid
 SIZE = [172.8, 172.8]
 
 
