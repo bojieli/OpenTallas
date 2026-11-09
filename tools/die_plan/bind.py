@@ -191,6 +191,15 @@ def short_id(s, n=60):
     return s[: n - 9] + "_" + hashlib.sha1(s.encode()).hexdigest()[:8]
 
 
+def bound_instance_params(out, die_name, bmod):
+    """{instance: '#(...)' or ''}: the per-instance parameter (strap) string the bound top passes each instance of the
+    bound module bmod.  One hardened kit = one value set: kit-rtl takes its parameters from here, and
+    param_class_split.py (DIE-QC-97 11-09) splits a plan type whose instances carry different LOGIC value sets."""
+    top = (Path(out) / "rtl" / f"{sv_id(die_name)}_bound_top.sv").read_text()
+    return {m.group(2): (m.group(1) or "").strip() for m in
+            re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+
+
 # ------------------------------------------------------------------------------------------------ rules
 def variant_bump_inputs(plan, R, cell, variant):
     """New variant inputs may be exclusively the exact line-side pins the plan explicitly exports as bumps.
@@ -5488,16 +5497,17 @@ def cmd_kit_rtl(a):
         # binding. Do not borrow another cohort's (possibly incomplete) top.
         pinst = {component_report["instance"]: ""}
     else:
-        top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
-        pinst = {m.group(2): (m.group(1) or "").strip() for m in
-                 re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+        pinst = bound_instance_params(out, raw["die"]["name"], bmod)
     if a.instance:
         if a.instance not in pinst:
             raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
         pset = pinst[a.instance]
     elif len(set(pinst.values())) > 1:
+        # DIE-QC-97 11-09: a LOGIC value-set difference is a plan fix: tools/die_plan/param_class_split.py splits the
+        # plan type into one type per value set (+ sidecar), then rebind -> every split type kits here generically
         raise BindError(f"kit-rtl {tn}: instances of {bmod} carry different parameters {sorted(set(pinst.values()))[:3]}: "
-                        "pass --instance (one kit per value set)")
+                        "pass --instance (one kit per value set) or split the plan type per value set "
+                        "(tools/die_plan/param_class_split.py) and rebind")
     else:
         pset = next(iter(pinst.values()), "")
     mod = t["module"]

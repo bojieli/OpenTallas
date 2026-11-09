@@ -67,7 +67,9 @@ class Reasons(unittest.TestCase):
         self.assertNotIn("sidx", why)                 # equal across instances: not part of the diff
         logic = [x.replace("tile_id", "mode") for x in sets]
         t2 = f"bind: ERROR kit-rtl c: instances of c carry different parameters {logic}: pass --instance (one kit per value set)"
-        self.assertEqual(KW.classify("kit_rtl", t2)[0], "FLOW")
+        cls2, why2 = KW.classify("kit_rtl", t2)
+        self.assertEqual(cls2, "PLAN")                 # DIE-QC-97: LOGIC value sets -> plan split per value set
+        self.assertIn("param_class_split.py", why2)
 
     def test_head_cohort_drift_is_plan(self):
         t = TB + "ValueError: bootstrap HEAD RTL differs from published source cohort"
