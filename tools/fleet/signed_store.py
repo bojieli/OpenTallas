@@ -122,11 +122,30 @@ def load_records(store=None):
 
 
 def entry_files(e, classes=None):
-    fl = e.get("files") or []
+    """[[rel, size, sha, archive base]]: the unit's files, then the extra archived sets (routed views found outside the unit)"""
+    fl = [list(f[:3]) + [e["archive"]] for f in e.get("files") or []]
+    for x in e.get("extra") or []:
+        fl += [list(f[:3]) + [x["archive"]] for f in x["files"]]
     if classes:
-        suf = tuple(x for c in classes for x in CLASS_SUFFIX[c])
+        suf = tuple(y for c in classes for y in CLASS_SUFFIX[c])
         fl = [f for f in fl if f[0].endswith(suf)]
     return fl
+
+
+def add_extra(eid, archive, files, note, store=None):
+    """add an archived file set to an entry (the record itself stays immutable: only 'extra' grows); an extra with the same note is not added twice"""
+    p = entry_path(eid, store)
+    with store_lock(store):
+        e = read_entry(p)
+        if any(x.get("note") == note for x in e.get("extra") or []):
+            return False
+        e.setdefault("extra", []).append(dict(archive=archive, files=files, note=note))
+        data = gzip.compress((json.dumps(e, sort_keys=True) + "\n").encode(), 9, mtime=0)
+        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".e.")
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        os.replace(tmp, p)
+    return True
 
 
 def find_entries(die, keys=None, entries=None):
@@ -182,7 +201,7 @@ def netlist_of(rec, shas):
     return c[0][1] if len(c) == 1 else None
 
 
-def ingest(host, shas, archive_base, runner=None, store=None, rtp=None):
+def ingest(host, shas, archive_base, runner=None, store=None, rtp=None, aliases=None):
     """called by the auto-archive after a verified copy (shas = {abs path: [size, sha256]} of the archived unit).  One store entry per
     SIGNED record in the unit, using the counter's own scan and pin code on the host.  Unsigned records and known ids are skipped."""
     rtp = rtp or _rtp()
@@ -215,7 +234,7 @@ def ingest(host, shas, archive_base, runner=None, store=None, rtp=None):
             e = dict(schema=SCHEMA, id=hashlib.sha256(t["signoff"].encode()).hexdigest(), origin="%s:%s" % (host, x["path"]), rows=[],
                      verdict=d.get("verdict"), local_verdict=d.get("local_verdict"), flow_tag=x.get("flow_tag"), src_commit=x.get("src_commit"),
                      generated=x.get("generated"), name=x.get("name"), top=x.get("top"), scan={k: x[k] for k in SCAN_FIELDS if k in x},
-                     aliases=["%s:%s" % (host, x["path"])], archive=archive_base,
+                     aliases=sorted(set((aliases or {}).get(x["path"], []) + ["%s:%s" % (host, x["path"])])), archive=archive_base,
                      files=[[f.lstrip("/"), v[0], v[1]] for f, v in sorted(shas.items())], bytes=sum(v[0] for v in shas.values()),
                      netlist_sha=netlist_of(x, shas), pins=dict(p, shapes={k: [list(q) for q in v] for k, v in p["shapes"].items()}) if p and p.get("shapes") else p,
                      signoff_json=blob(d), provenance_json=blob(json.loads(t["prov"])) if t.get("prov") else None, prov_file=t.get("prov_file"),
@@ -230,8 +249,8 @@ def host_argv(host):
 
 
 def stream_files(entry, host, destdir, files, rename=None, throttle="", timeout=7200):
-    """archive -> localhost -> host:destdir, verified by sha256 on the host.  files = [[rel, size, sha]]; rename {rel: name}"""
-    base = entry["archive"]
+    """archive -> localhost -> host:destdir, verified by sha256 on the host.  files = [[rel, size, sha, archive base]], one base; rename {rel: name}"""
+    base = files[0][3] if files and len(files[0]) > 3 else entry["archive"]
     rels = [f[0] for f in files]
     src = (f"set -o pipefail; cd {shlex.quote(base)} && tar --null -T - -cf - ")
     dst = f"mkdir -p {shlex.quote(destdir)} && tar -C {shlex.quote(destdir)} -xf -"
@@ -242,7 +261,7 @@ def stream_files(entry, host, destdir, files, rename=None, throttle="", timeout=
     out, err = p2.communicate(timeout=timeout)
     if p1.wait(60) or p2.returncode:
         raise RuntimeError(f"stream {base} -> {host}:{destdir} failed: {err.decode(errors='replace')[-200:]}")
-    want = {os.path.join(destdir, (rename or {}).get(r, r)): sha for r, _, sha in files}
+    want = {os.path.join(destdir, (rename or {}).get(f[0], f[0])): f[2] for f in files}
     if rename:
         mv = "; ".join(f"mv -f {shlex.quote(os.path.join(destdir, r))} {shlex.quote(os.path.join(destdir, n))}" for r, n in rename.items())
         subprocess.run(host_argv(host) + [f"mkdir -p {shlex.quote(destdir)} && {mv}"], check=True, timeout=120)
@@ -266,19 +285,22 @@ def stage(args):
         fl = entry_files(e, classes)
         if args.layout == "die_ci":
             names = {}
-            for r_, _, _ in fl:
-                b = os.path.basename(r_)
-                if b in DIE_CI_NAMES:
-                    names[r_] = b
+            for f in fl:
+                b = os.path.basename(f[0])
+                if b in DIE_CI_NAMES and b not in names.values():
+                    names[f[0]] = b
             fl = [f for f in fl if f[0] in names]
             for k in keys:
                 d = os.path.join(args.dest, args.die, k)
-                stream_files(e, args.host, d, fl, names)
+                for base in {f[3] for f in fl}:
+                    sub = [f for f in fl if f[3] == base]
+                    stream_files(e, args.host, d, sub, {f[0]: names[f[0]] for f in sub})
                 done += 1
         else:
             for k in keys:
                 d = os.path.join(args.dest, k)
-                stream_files(e, args.host, d, fl)
+                for base in {f[3] for f in fl}:
+                    stream_files(e, args.host, d, [f for f in fl if f[3] == base])
                 done += 1
     print(f"stage: {done} rows to {args.host}:{args.dest}")
     return 0
@@ -293,13 +315,18 @@ def verify(args):
     bad = 0
     n = 0
     for e in entries:
-        chk = "\n".join(f"{f[2]}  {f[0]}" for f in e.get("files") or []) + "\n"
-        r = subprocess.run(AGIDOCK + [f"cd {shlex.quote(e['archive'])} && nice -n 15 sha256sum --quiet -c -"], input=chk,
-                           capture_output=True, text=True, timeout=7200)
-        n += len(e.get("files") or [])
-        if r.returncode:
+        fl = entry_files(e)
+        n += len(fl)
+        fail = ""
+        for base in sorted({f[3] for f in fl}):
+            chk = "\n".join(f"{f[2]}  {f[0]}" for f in fl if f[3] == base) + "\n"
+            r = subprocess.run(AGIDOCK + [f"cd {shlex.quote(base)} && nice -n 15 sha256sum --quiet -c -"], input=chk,
+                               capture_output=True, text=True, timeout=7200)
+            if r.returncode:
+                fail += f" {base}: {r.stdout[:300]}{r.stderr[:200]}"
+        if fail:
             bad += 1
-            print(f"MISMATCH {e['id']} {e['archive']}: {r.stdout[:300]}{r.stderr[:200]}")
+            print(f"MISMATCH {e['id']}{fail}")
     print(f"verify: {len(entries)} entries, {n} files, {bad} entries with mismatches")
     return 1 if bad else 0
 
