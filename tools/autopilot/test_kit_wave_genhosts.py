@@ -690,3 +690,15 @@ def test_waiting_row_reports_wait_disk(tmp_path):
     h = rows[0].split("\t")
     v = dict(zip(h, rows[1].split("\t")))
     assert v["status"] == "WAIT-DISK" and "KW12_DISK_WAIT" in v["reason"]
+
+
+def test_item_inputs_override_plan_and_bind_for_listed_items_only():
+    c = cfg(gen_host="epyc5", gen_hosts=["epyc5"], work_root=WR)
+    d = c["dies"]["s81"]
+    d.update(plan="/p/final2.json", src="/s", event="e", kit_rtl={"bind_out": "/b/vJ", "asbuilt": "/a/vJ", "script": "/x"},
+             item_inputs={"t1": {"plan": "/p/final3.json", "kit_rtl": {"bind_out": "/b/F3", "asbuilt": "/a/vK"}}})
+    sp = K.spec_for(c, "s81", "t1", "hub")
+    assert sp["plan"] == "/p/final3.json" and sp["kit_rtl"] == {"bind_out": "/b/F3", "asbuilt": "/a/vK", "script": "/x"}
+    other = K.spec_for(c, "s81", "t2", "hub")
+    assert other["plan"] == "/p/final2.json" and other["kit_rtl"] == {"bind_out": "/b/vJ", "asbuilt": "/a/vJ", "script": "/x"}
+    assert d["kit_rtl"]["bind_out"] == "/b/vJ"                                    # die entry not mutated
