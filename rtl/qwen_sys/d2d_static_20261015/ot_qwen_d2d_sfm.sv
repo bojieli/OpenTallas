@@ -930,7 +930,11 @@ module qkd_d2d_static_core_sfm #(parameter integer MUT = 0, parameter integer NL
     assign fault = endf | s_f | kvn_f;
 endmodule
 
-module qkd_d2d_static_sfm #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, parameter integer SAFE_RC = 1, parameter integer MUTFO = 0, parameter integer SRAMV = 1, parameter integer FEG = 1, parameter integer PR = 1, parameter integer OBS1_COMPAT = 0, parameter [31:0] TXDP = 32'd0) (
+module qkd_d2d_static_sfm #(parameter integer MUT = 0, parameter integer NL = 2, parameter integer NTX = 4, parameter integer SAFE_RC = 1, parameter integer MUTFO = 0, parameter integer SRAMV = 1, parameter integer FEG = 1, parameter integer PR = 1, parameter integer OBS1_COMPAT = 0, parameter [31:0] TXDP = 32'd0,
+    // KV-PLAN-2 11-09 (K5 abort corner): KV_RTT > 0 = KV drained is reported only after KV_RTT quiet edges of kvn_word_valid
+    // (no word sent for KV_RTT edges), KV_RTT >= the bound kvn word -> writer -> PC intake -> drain guard -> kvs_ctl oobs ->
+    // sys_c round trip; 0 (default) = unchanged netlist.
+    parameter integer KV_RTT = 0) (
     input  wire ck,
     input  wire por_n,
     input  wire rst_n,
@@ -1223,7 +1227,23 @@ module qkd_d2d_static_sfm #(parameter integer MUT = 0, parameter integer NL = 2,
     wire c_kv_drained_local;
     reg q_kv_drained_local;
     always @(posedge ck) q_kv_drained_local <= kv_drained_local;
-    assign c_kv_drained_local = PR ? q_kv_drained_local : kv_drained_local;
+    // KV-PLAN-2 11-09: words still in flight to the KV die (sent < KV_RTT edges ago) are not yet seen by the KV die's drained
+    // level, which returns over the same bound relays; without this window an abort right after a token's first words (or
+    // after a quiet gap) reads the stale pre-token "drained" (bind9: up to 238 edges).  Reset 0: no word is in flight after reset.
+    wire kv_rtt_quiet;
+    generate if (KV_RTT > 0) begin : g_kv_rtt
+        if (KV_RTT > 1023) begin : g_bad
+            KV_RTT_OUTSIDE_1_1023 u_bad ();
+        end
+        reg [9:0] kv_rtt_cnt;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) kv_rtt_cnt <= 10'd0;
+            else kv_rtt_cnt <= kvn_word_valid ? KV_RTT[9:0] : (kv_rtt_cnt != 10'd0) ? kv_rtt_cnt - 10'd1 : 10'd0;
+        assign kv_rtt_quiet = (kv_rtt_cnt == 10'd0) && !kvn_word_valid;
+    end else begin : g_no_kv_rtt
+        assign kv_rtt_quiet = 1'b1;
+    end endgenerate
+    assign c_kv_drained_local = (PR ? q_kv_drained_local : kv_drained_local) && kv_rtt_quiet;
     wire c_kv_flush_local;
     reg q_kv_flush_local;
     always @(posedge ck) q_kv_flush_local <= kv_flush_local;
