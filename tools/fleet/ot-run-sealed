@@ -142,6 +142,47 @@ def log(conf, msg):
         pass
 
 
+def status_rows(backend):
+    """-> {host: {"admit", "waiting_gb", "load", "ncpu", "capped", "held"}} from one ot-run --status, or None"""
+    try:
+        p = subprocess.run([backend, "--status"], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    out = {}
+    for seg in (p.stdout or "").replace("ot-run status: ", "", 1).split(" | "):
+        f = seg.split()
+        if not f:
+            continue
+        h = f[0]
+        if len(f) > 1 and f[1] in ("HELD", "REFUSED", "unreachable"):
+            out[h] = dict(admit=0, waiting_gb=0.0, load=0.0, ncpu=1, capped=False, held=True)
+            continue
+        m = re.match(r"\S+ admits (-?\d+) GB", seg)
+        if not m:
+            continue
+        ld = re.search(r" load (\d+(?:\.\d+)?)/(\d+)", seg)
+        w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
+        out[h] = dict(admit=int(m.group(1)), waiting_gb=float(w.group(1)) if w else 0.0,
+                      load=float(ld.group(1)) if ld else 0.0, ncpu=max(int(ld.group(2)), 1) if ld else 1,
+                      capped=" LOADCAP" in seg, held=False)
+    return out
+
+
+def row_admits(r, mem):
+    return bool(r) and not r["held"] and not r["capped"] and r["admit"] - r["waiting_gb"] >= int(float(mem))
+
+
+def pick_host(rows, oks, mem):
+    """among the hosts that hold the inputs (oks: host -> kids), those that admit MEM now; the lowest load/cores,
+    then the most memory left after the queued waiters.  -> host or None"""
+    fit = [h for h in oks if row_admits((rows or {}).get(h if h != os.environ.get("OT_HUB_NAME", "intel2") else "localhost"), mem)]
+    if not fit:
+        return None
+    key = lambda h: (lambda r: (round(r["load"] / r["ncpu"], 2), -(r["admit"] - r["waiting_gb"])))(
+        rows[h if h != os.environ.get("OT_HUB_NAME", "intel2") else "localhost"])
+    return min(fit, key=key)
+
+
 def admits(backend, host, mem):
     """True when ot-run --status says HOST admits >= MEM GB now (unknown -> True, the pilot behaviour)"""
     try:
@@ -152,8 +193,16 @@ def admits(backend, host, mem):
     m = re.search(r"(?:^|\| )" + re.escape(h) + r" admits (-?\d+) GB", p.stdout or "")
     if not m:
         return not re.search(r"(?:^|\| )" + re.escape(h) + r" (?:REFUSED|HELD)", p.stdout or "")
+    # REHOST-1 11-09 (COORD 09:2x): "admits N GB" is memory only.  A sealed job is pinned (--hosts, no spill, no
+    # re-place), so it must not be pinned to a host whose ot-heavy holds it on the load cap (status says LOADCAP) or
+    # whose queued waiters already claim that memory (epyc7 09:2x: admits 104, waiters 45:1950 GB, load 186/96 ->
+    # 12 sealed PLACE jobs pinned behind the queue).  Such a call runs unsealed, so ot-run can spill it.
+    seg = (p.stdout or "")[m.start():].split(" | ", 1)[0]
+    if " LOADCAP" in seg:
+        return False
+    w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
     try:
-        return int(m.group(1)) >= int(float(mem))
+        return int(m.group(1)) - (float(w.group(1)) if w else 0.0) >= int(float(mem))
     except ValueError:
         return True
 
@@ -176,15 +225,24 @@ def decide(argv, conf, check=remote_ok):
     if kdir.rstrip("/") != K or not any(K.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
         return passthru, "not a pilot dir"
     hosts = conf.get("hosts") or [conf.get("host", "epyc7")]
-    host, ok, kids = None, False, []
-    for h in hosts:                                      # the first host that holds K + runner and has ot-job/bwrap
-        ok, kids = check(h, runner, K)
-        if ok:
-            host = h
-            break
-    if not ok:
+    # REHOST-1 11-09: every sealed host that holds K + runner + ot-job/bwrap (parallel checks), not only the first
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(len(hosts), 1)) as ex:
+        res = dict(zip(hosts, ex.map(lambda h: check(h, runner, K), hosts)))
+    oks = {h: kd for h, (okh, kd) in res.items() if okh}
+    if not oks:
         return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
-    if conf.get("capacity_passthru", True) and not admits(backend, host, o["mem"]):
+    host = next(h for h in hosts if h in oks)
+    kids = oks[host]
+    rows = None
+    if conf.get("capacity_passthru", True):
+        rows = status_rows(backend)
+        if rows is not None:
+            best = pick_host(rows, oks, o["mem"])
+            if best is None:
+                return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (spill unsealed)"
+            host, kids = best, oks[best]
+    if conf.get("capacity_passthru", True) and rows is None and not admits(backend, host, o["mem"]):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
