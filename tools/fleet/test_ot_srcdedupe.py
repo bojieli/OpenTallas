@@ -4,6 +4,8 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 spec = importlib.util.spec_from_file_location("srcdedupe", Path(__file__).with_name("ot-srcdedupe.py"))
 D = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(D)
@@ -22,6 +24,11 @@ def tree(p, files):
 
 
 BODY = b"x" * 20000
+
+
+@pytest.fixture(autouse=True)
+def no_docker(monkeypatch):
+    monkeypatch.setattr(D, "container_mounts", lambda: set())
 
 
 def setup(tmp_path):
@@ -62,7 +69,6 @@ def test_apply_links_and_keeps_bytes(tmp_path, capsys):
 
 def test_apply_needs_manifest(tmp_path):
     a, b, lst = setup(tmp_path)
-    import pytest
     with pytest.raises(SystemExit):
         D.main(["--trees", str(lst), "--apply"])
 
@@ -128,3 +134,149 @@ def test_inode_with_outside_link_frees_nothing():
     rows, freed, out = D.plan(g, D.MAX_NLINK)
     assert len(rows) == 2
     assert freed[1] == 50 and out[1] == 100
+
+
+def test_container_mount_refused(tmp_path, capsys, monkeypatch):
+    a, b, lst = setup(tmp_path)
+    monkeypatch.setattr(D, "container_mounts", lambda: {str(a / "big")})
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")
+    assert r["refused_by"] == {"container-mount": 1} and r["rows"] == 0
+
+
+def test_tree_under_a_mount_refused(tmp_path, capsys, monkeypatch):
+    a, b, lst = setup(tmp_path)
+    monkeypatch.setattr(D, "container_mounts", lambda: {str(tmp_path)})
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")
+    assert r["refused"] == 2
+
+
+def test_unreadable_docker_refuses_all(tmp_path, capsys, monkeypatch):
+    a, b, lst = setup(tmp_path)
+    monkeypatch.setattr(D, "container_mounts", lambda: None)
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")
+    assert r["refused_by"] == {"docker-unreadable": 2}
+
+
+@pytest.mark.parametrize("sub", ["kits/x", "items/y", "work/run/results", "a/6_final.odb"])
+def test_kit_or_run_under_tree_refused(tmp_path, capsys, sub):
+    a, b, lst = setup(tmp_path)
+    if sub.endswith(".odb"):
+        (a / sub).parent.mkdir(parents=True)
+        (a / sub).write_bytes(b"x")
+    else:
+        (a / sub).mkdir(parents=True)
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")
+    assert r["refused_by"] == {"kit-or-run": 1}
+
+
+def test_git_lock_refused(tmp_path, capsys):
+    a, b, lst = setup(tmp_path)
+    (a / ".git/index.lock").write_text("")
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")
+    assert r["refused_by"] == {"git-lock": 1}
+
+
+def test_wave_src_refused():
+    assert D.WAVE_SRC.search("/srv/opentallas-scratch2/claude/kw35/src_e2rd_lf")
+    assert D.WAVE_SRC.search("/srv/opentallas-scratch3/claude/kw-fix-8/src_q")
+    assert D.WAVE_SRC.search("/srv/opentallas-scratch3/claude/codex-wave-1105/src_7da_ad")
+    assert not D.WAVE_SRC.search("/srv/opentallas-scratch2/claude/die-hbm-92/wt")
+
+
+def test_mentioned_tree_refused(tmp_path, capsys):
+    a, b, lst = setup(tmp_path)
+    m = tmp_path / "mentions"
+    m.write_text(f"{a}/big/f.bin\n")
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--mentions", str(m))
+    assert r["refused_by"] == {"mentioned": 1}
+
+
+def test_lane_mention_holds_trees_below(tmp_path):
+    assert D.lane_held({"/srv/s2/claude/lane"}, {"/srv/s2/claude/lane/wt"}) == {"/srv/s2/claude/lane/wt"}
+    assert D.lane_held({"/srv/s2/claude"}, {"/srv/s2/claude/lane/wt"}) == set()
+
+
+def test_exclude_keeps_the_file_out_on_both_sides(tmp_path, capsys):
+    a, b, lst = setup(tmp_path)
+    ex = tmp_path / "union"
+    ex.write_text(f"h\t{a}/big\tprotected: x\n")
+    before = ino(b / "big/f.bin")
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--exclude", str(ex),
+            "--apply", "--manifest", str(tmp_path / "m"))
+    assert ino(b / "big/f.bin") == before and ino(a / "big/f.bin") != before
+    assert r["applied"] == 1                     # tools/run.sh only
+
+
+def test_record_files_never_linked(tmp_path, capsys):
+    a = tree(tmp_path / "a", {"signoff/signoff.json": BODY, "x.signoff.json": BODY, "views/PROVENANCE.json": BODY})
+    b = tree(tmp_path / "b", {"signoff/signoff.json": BODY, "x.signoff.json": BODY, "views/PROVENANCE.json": BODY})
+    lst = tmp_path / "t"
+    lst.write_text(f"{a}\n{b}\n")
+    assert run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1")["rows"] == 0
+
+
+def test_only_tree_limits_links(tmp_path, capsys):
+    a, b, lst = setup(tmp_path)
+    assert run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--only-tree", str(a))["rows"] == 0  # a holds the kept files
+    m = tmp_path / "m2"
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--only-tree", str(b), "--manifest", str(m))
+    rows = [l.split("\t") for l in m.read_text().splitlines()[1:]]
+    assert r["rows"] == 2 and all(x[4].startswith(str(b)) for x in rows)
+
+
+def test_kept_file_with_wrong_sha_not_linked(tmp_path, capsys):
+    # both copies carry the same wrong bytes with the index stat restored: cmp passes, only the blob sha catches it
+    a, b, lst = setup(tmp_path)
+    for t in (a, b):
+        f = t / "big/f.bin"
+        st = os.stat(f)
+        f.write_bytes(b"q" * len(BODY))
+        os.utime(f, ns=(st.st_atime_ns, st.st_mtime_ns))
+    r = run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--apply", "--manifest", str(tmp_path / "m"))
+    assert r["skipped"].get("kept-sha-mismatch") == 1
+    assert ino(a / "big/f.bin") != ino(b / "big/f.bin")
+
+
+def test_verify_detects_a_write_through_a_link(tmp_path, capsys):
+    a, b, lst = setup(tmp_path)
+    m, alert = tmp_path / "m", tmp_path / "ALERT"
+    run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--apply", "--manifest", str(m))
+    assert D.main(["--verify", str(m), "--alert-file", str(alert)]) == 0
+    assert not alert.exists()
+    f = a / "big/f.bin"
+    os.chmod(f, 0o644)                           # what root in a container effectively does
+    f.write_bytes(b"w" * len(BODY))
+    assert D.main(["--verify", str(m), "--alert-file", str(alert)]) == 3
+    txt = alert.read_text()
+    assert "ALERT" in txt and "f.bin" in txt
+    assert (b / "big/f.bin").read_bytes() == b"w" * len(BODY)     # the write did reach the other tree: why detection exists
+
+
+def test_verify_ignores_a_legally_deleted_tree(tmp_path, capsys):
+    import shutil
+    a, b, lst = setup(tmp_path)
+    m = tmp_path / "m"
+    run(capsys, "--trees", str(lst), "--min-idle-h", "0", "--min-size", "1", "--apply", "--manifest", str(m))
+    shutil.rmtree(a, ignore_errors=True)
+    shutil.rmtree(b, ignore_errors=True)
+    assert D.main(["--verify", str(m)]) == 0
+
+
+def test_own_argv_is_not_a_live_process(tmp_path):
+    # the control tree is named by the tool's own --only-tree: it must not refuse itself
+    code = ("import importlib.util, sys;"
+            f"s = importlib.util.spec_from_file_location('d', {str(Path(__file__).with_name('ot-srcdedupe.py'))!r});"
+            "m = importlib.util.module_from_spec(s); s.loader.exec_module(m);"
+            "print(sys.argv[1] in m.live_paths())")
+    out = subprocess.run(["python3", "-I", "-c", code, str(tmp_path)], capture_output=True, text=True, check=True).stdout
+    assert out.strip() == "False"
+
+
+def test_other_process_naming_the_tree_is_live(tmp_path):
+    p = subprocess.Popen(["python3", "-I", "-c", "print(1, flush=True); import time; time.sleep(30)", str(tmp_path)], stdout=subprocess.PIPE)
+    try:
+        p.stdout.readline()      # started
+        assert str(tmp_path) in D.live_paths()
+    finally:
+        p.kill()
+        p.wait()
