@@ -390,6 +390,9 @@ def _incident_fleet(W):
         write(f"{R3}/s81-t51-recut/{f}", 64)
     write(f"{R2}/dead-mp/sub/keepme/a.bin", 64)
     write(f"{R2}/dead-mp/other/b.bin", 64)
+    write(f"{R2}/dead-iso/job1/out/r.bin", 64)                                      # ISOLATE-1 job root: ot-run deletes it, never this tool
+    write(f"{R2}/dead-iso/job1/.ot-isolated.json", 2)
+    write(f"{R2}/dead-iso/legacy/x.bin", 64)
     # cause 2 (AUTOCLEAN-12 02:13): an older attempt under a live wave work root, named by a kit record elsewhere
     WR = f"{R2}/kw26w/runs/s81"
     kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_1/gen/it5")
@@ -455,6 +458,8 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     assert rows.get(t51, ("", ""))[0] == "KEEP-lane-mention", rows.get(t51)
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p.startswith(f"{R2}/dead-mp/sub/keepme") or f"{R2}/dead-mp/sub/keepme".startswith(p + "/"))]
     assert rows.get(f"{R2}/dead-mp/other", ("", ""))[1] == "DELETE", "negative control: the unnamed part of a lane goes"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == f"{R2}/dead-iso" or p.startswith(f"{R2}/dead-iso/job1"))], "isolated job left to ot-run"
+    assert rows.get(f"{R2}/dead-iso/legacy", ("", ""))[1] == "DELETE", "legacy dir beside an isolated job is still this tool's"
     WR = f"{R2}/kw26w/runs/s81/kit-wave/s81/p/items"
     nb = WR + "/it5/attempt_1/rtl_bindov"
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == nb or nb.startswith(p + "/") or p.startswith(nb + "/"))], \

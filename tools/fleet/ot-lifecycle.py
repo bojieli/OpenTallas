@@ -169,6 +169,23 @@ def merge_kitscans(files, hosts, now=None):
     return (None, missing) if missing else (sorted(out), [])
 
 
+ISOLATED_MARKERS = (".ot-isolated.json", ".ot-isolated")   # ISOLATE-1 job roots (OWNER 03:39): ot-run owns their deletion, this tool never does
+
+
+def isolated_roots(roots):
+    out = set()
+    for r in roots:
+        names = []
+        for x in ISOLATED_MARKERS:
+            names += ["-name", x, "-o"]
+        q = subprocess.run(["timeout", "900", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "14", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
+                            "(", *names[:-1], ")", "-print"], capture_output=True, text=True)
+        if q.returncode not in (0, 1):
+            raise SystemExit(f"isolated-job scan failed under {r}: rc {q.returncode}")
+        out |= {os.path.dirname(x) for x in q.stdout.split("\n") if x}
+    return out
+
+
 MENTION_TOK = re.compile(r"[A-Za-z0-9_.+~/{},-]+")
 
 
@@ -406,6 +423,9 @@ class Plan:
         if "lane_mentions24" not in self.life or "mention_paths24" not in self.life:
             raise SystemExit("lifesnap has no lane_mentions24/mention_paths24 (LANE-DIR HOLD, COORD 03:34); refusing")
         self.mnames = set(self.life["lane_mentions24"])
+        iso = isolated_roots(J.roots)
+        self.iso = m.PathSet([(q, "isolated job (ot-run owns it)") for x in iso for q in {x, os.path.realpath(x)}], canon=J.paths.canon)
+        print(f"isolated job roots: {len(iso)} (left to ot-run)", flush=True)
         self.mpaths = m.PathSet([(os.path.join(r, t), "mentioned path") for r in J.roots for t in self.life["mention_paths24"]
                                  if t and not t.startswith(("/", ".."))], canon=J.paths.canon)
         self.keepdirs = {}
@@ -557,6 +577,10 @@ class Plan:
         lm = self.lane_mention_hit(d)
         if lm:
             return lm
+        for f in set(J.paths.forms(d)) | {os.path.realpath(d)}:
+            ih = self.iso.hit(f)
+            if ih:
+                return ("KEEP-isolated-job", ih, ih.startswith("holds "))
         for f in J.paths.forms(d):
             wh = self.wave.hit(f)
             if wh:
@@ -1368,6 +1392,10 @@ class Apply:
         lm = P.lane_mention_hit(path)
         if lm:
             return "SKIP", lm[1]
+        for f in {path, real}:
+            ih = P.iso.hit(f)
+            if ih or any(os.path.exists(os.path.join(a, x)) for a in [f] + P.m.ancestors(f) for x in ISOLATED_MARKERS):
+                return "SKIP", "isolated job (ot-run owns it)"
         for f in {path, real} | set(J.paths.forms(path)):        # kit records re-read at apply start: one written after the plan holds too
             kh = P.kit.hit(f)
             if kh:
