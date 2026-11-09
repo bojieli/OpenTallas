@@ -1,0 +1,10 @@
+EQ new_0 PROVEN
+Proved 0 previously unproven $equiv cells.
+  Of those cells 10904 are proven and 0 are unproven.
+EQ new_1 PROVEN
+Proved 0 previously unproven $equiv cells.
+  Of those cells 10902 are proven and 0 are unproven.
+EQ mut_1 NOT_PROVEN
+Found 512 unproven $equiv cells in module eq:
+ERROR: No SAT model available for cell u_pad.u_c (ot_sram_1r1w2c_32x64_m1).
+DONE
