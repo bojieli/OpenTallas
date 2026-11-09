@@ -1,5 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+# SUPERSEDED by S81-TRANSPORT-FIX 11-08: this bench compares against the pre-credit reference and drives a refusing k_rdy,
+# which is no longer part of the PHY face contract.  Gate is run_ctrl_pcr_transport.sh.
+echo 'CTRL_PCR_MIN SUPERSEDED: use run_ctrl_pcr_transport.sh'; exit 3
 D=${1:?output}; IMPL=${2:-sram}; MUT=${3:-none};mkdir -p "$D"
 defs=();[ "$IMPL" != sram ] || defs+=(-DS81CTRL_SRAM_FIFO)
 [ "$MUT" = none ] || defs+=("-D$(if [ "$MUT" = PACK ];then echo S81PH_MUT_PACK;else echo S81CTRL_MUT_$MUT;fi)")
