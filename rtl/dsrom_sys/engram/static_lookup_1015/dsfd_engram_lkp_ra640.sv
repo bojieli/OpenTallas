@@ -48,7 +48,7 @@ module dsfd_engram_lkp_ra640 #(
     parameter integer ROWSTRIPE  = 0,
     parameter integer NSLOT      = 8,
     parameter integer SLW        = 3,
-    parameter integer RETURN_AGE = 640
+    parameter integer RETURN_AGE = 1536
 ) (
     input  wire                  ck,
     input  wire                  ck_seed,

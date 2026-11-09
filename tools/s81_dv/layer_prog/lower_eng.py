@@ -23,7 +23,9 @@ OPS = [r'^eng\.(lead_flit|hash|hbm_read)$']
 UNIT = 'dsdv_eng_rr (window former + dsfd_engram_lkp_static14 + head + XQ join) + dsdv_eng_tap x16 on the reader links'
 INSTS = ['u_eng (dsdv_eng_rr)'] + [f'u_etap_{k:02d} (dsdv_eng_tap{"_w" if k == 0 else ""})' for k in range(16)]
 BENCH = 'results/rtl/s81_rtlgap_eng_1021'
-LAT = dict(win=4, first_request=26, return_age=512, first_fragment=556, last_fragment=651, ii=576)
+RETURN_AGE = 1536  # default of dsdv_eng_rr_e; measured first/last fragment and lookup II are RETURN_AGE + 44 / 139 / 64
+LAT = dict(win=4, first_request=26, return_age=RETURN_AGE, first_fragment=RETURN_AGE + 44, last_fragment=RETURN_AGE + 139,
+           ii=RETURN_AGE + 64)
 
 
 def lower(die, op, ctx):

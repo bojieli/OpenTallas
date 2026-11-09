@@ -786,7 +786,7 @@ module dsfd_engram_lkp_ra640_hx #(
     parameter integer ROWSTRIPE  = 0,
     parameter integer NSLOT      = 8,
     parameter integer SLW        = 3,
-    parameter integer RETURN_AGE = 640,
+    parameter integer RETURN_AGE = 1536,
     parameter integer HXL        = 0          // RF-G landing stage (see u_e)
 ) (
     input  wire                  ck,

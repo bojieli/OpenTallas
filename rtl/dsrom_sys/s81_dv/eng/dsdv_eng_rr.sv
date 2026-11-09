@@ -631,7 +631,7 @@ endmodule
 // The closed element keeps its 17 clock pins; in the cluster they are branches of ck (its CTS roots, 0 cycles).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_eng_rr_c #(
-    parameter integer RETURN_AGE = 640,
+    parameter integer RETURN_AGE = 1536,
     parameter [29:0] PCBASE = 30'd0,
     parameter integer XQ_MUT = 0
 ) (
