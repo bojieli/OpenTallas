@@ -102,8 +102,8 @@ def qup(x):
 #   attn      attention service variant (S81-SVCFIT: attw time-multiplexed groups): attn.scores / attn.pv node cycles
 #             G16 289 / 596 (composer), G8 449 / 756, G4 769 / 1,076 (release die72 = co-located G4 svc_full slot).
 #   idx       TOK.DS.BENCH.4.4 / L5B-G7: index readers placed by the HBM PHY -> + IDX_LAT cycles a idx.score job.
-#   eng       Source d5e45464e (functional only; ra640a/b physical FAIL): lookup RETURN_AGE640 / II704;
-#             eng.hbm_read = 640 and a
+#   eng       lookup RETURN_AGE / II from layer_prog/lower_eng.LAT (1536 / 1600 since S81-TRANSPORT-FIX 3b; was 640 / 704);
+#             eng.hbm_read = RETURN_AGE and a
 #             per-stage Engram resource window of ENG_II a position (x 6 a MTP step) in the brute force.
 #   host      S81.HOST option (b) (owner 07:10 10-21): stage dies start jobs from their local calendar (no per-job
 #             host / KS frame on the stage circuits); this remains MODEL until the actual HOST descriptor programme
@@ -111,7 +111,11 @@ def qup(x):
 REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0,
            mtp_law='stretch')
 REL0 = dict(REL)
-REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704,
+# Engram lookup dates come from the compiler's table, so they follow RETURN_AGE (S81-TRANSPORT-FIX 3b: 640 -> 1536, II 1600)
+_eng_spec = importlib.util.spec_from_file_location('lower_eng', ROOT / 'tools/s81_dv/layer_prog/lower_eng.py')
+_eng = importlib.util.module_from_spec(_eng_spec); _eng_spec.loader.exec_module(_eng)
+REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40,
+              eng_age=_eng.LAT['return_age'], eng_ii=_eng.LAT['ii'],
               mtp_law='pipeline')   # STEWARD-TOK 10-21: causal six-position pipeline (overlap424 repair)
 HOPLAT = ROOT / 'results/arch/release_rack_1021/hop_latency.json'
 SWITCHED = 453
