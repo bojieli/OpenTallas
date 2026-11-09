@@ -1,0 +1,19 @@
+read_verilog -sv -DSYNTHESIS /eq/old/ot_hbm_accel_cdc_fifo.sv /eq/old/ot_hbm_face_reg.sv /eq/old/ot_hbm_svc_pc_ctrl_leaf.sv /eq/old/ot_reset_sync.sv /eq/old/ot_wbq_split.sv /eq/old/ot_wbq_sw__fshell.sv
+hierarchy -top ot_wbq_sw
+proc; flatten; opt_clean
+rename ot_wbq_sw gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /eq/new/ot_hbm_accel_cdc_fifo.sv /eq/new/ot_hbm_face_reg.sv /eq/new/ot_hbm_svc_pc_ctrl_leaf.sv /eq/new/ot_reset_sync.sv /eq/new/ot_wbq_split.sv /eq/new/ot_wbq_sw__fshell.sv
+hierarchy -top ot_wbq_sw
+proc; flatten; opt_clean
+rename ot_wbq_sw gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+memory_map
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert

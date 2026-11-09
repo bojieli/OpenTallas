@@ -400,6 +400,13 @@ module ot_wbq_sw__fcore #(parameter integer KMUT=0, parameter integer WOPEN=0, p
  assign ack_re=srst&&!ack_empty&&!blk_fault;
  ot_hbm_accel_cdc_fifo #(.W(29),.AW(2)) u_ack(.wclk(hbm_clk),.wrst_n(hrst),.we(ack_we),.wdata(meta_q),.full(ack_full),.rd_freed(),
   .rclk(stream_clk),.rrst_n(srst),.re(ack_re),.rdata(ack_data),.empty(ack_empty));
+ // HBM-OPEN-B 11-08 H9 (H8+ECO routed TT -7.19/1 at stream_sticky: fill_bank -> base[] mux -> 32-bit add -> compare): the two per-bank
+ // expected addresses are compared before the fill_bank select, so the bank mux is a late 2:1 on one bit. Same function, combinational.
+ wire [7:0] wc_bad0,wc_bad1;genvar gws;
+ generate for(gws=0;gws<8;gws=gws+1)begin:g_wc_cmp
+  assign wc_bad0[gws]=wc_l[33*gws+:32]!=(base[0]+ordinal+gws);
+  assign wc_bad1[gws]=wc_l[33*gws+:32]!=(base[1]+ordinal+gws);
+ end endgenerate
  reg fill_done,done_v,done_bank;reg [15:0] done_epoch;reg [11:0] done_sectors;
  integer s;
  always @(posedge stream_clk or negedge srst)begin
@@ -420,7 +427,7 @@ module ot_wbq_sw__fcore #(parameter integer KMUT=0, parameter integer WOPEN=0, p
    if(filling&&!blk_fault)begin
     for(s=0;s<8;s=s+1)begin
      if(ordinal+s<total[fill_bank])begin
-      if(!wc_l[33*s+32]||wc_l[33*s+:32]!=(base[fill_bank]+ordinal+s))stream_sticky<=1;
+      if(!wc_l[33*s+32]||(fill_bank?wc_bad1[s]:wc_bad0[s]))stream_sticky<=1;
      end else if(wc_l[33*s+32])stream_sticky<=1;
     end
     if(ordinal+8>=total[fill_bank])begin filling<=0;committed[fill_bank]<=total[fill_bank];fill_done<=1;end

@@ -1,0 +1,5 @@
+HBM-HARD-6 2026-11-08 wbq_sw H8 = HBM-HARD-5 H7 + (1) RTL: fault_g drops the !hrst_d term (reset no longer a data term; exact, see RTL comment) + (2) set_max_fanout 32 (was 64).
+Why: H7 routed TT -22.99/27 (26 ends from hrst_d via the u_meta round trip ~640 um), DRV 241 slews (fo-49 BUFx6f mux-select nets, 388 ps).
+Estimate: setup +150..250 ps on those ends; slew load -35% -> ~280 ps < 320. PIN CYCLES 0. Old/new RTL formal equivalence: hbm-hard-6/wsw_eq_h8 (yosys equiv_induct -seq 4).
+PROOF 2026-11-08 06:44:21: H7 vs H8 RTL yosys equiv_simple -seq 4 + equiv_induct -seq 4, fault_g blacklisted from name matching, face_reg keep_hierarchy dropped in the proof copy only: 91381/91381 proven, 0 unproven [intel1 /srv/opentallas-scratch2/claude/hbm-hard-6/wsw_eq_h8/eq.log]
+2026-11-08 08:56:57 H8 PLACE: dp worst -27.86 (1 end, krst reset_pipe -> pc_pin[12] rd_c; H7 dp was -57.52), design area 22705 um2 29%, LEC EQ 43531/43531. No render hook in the H7-derived kit: added layout_render_{hook.sh,.tcl} + layout_smells.py, place+grt render at GRT. Released to finish.
