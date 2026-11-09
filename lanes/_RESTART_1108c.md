@@ -8,7 +8,7 @@ All lanes stopped between about 20:30 and 21:30 on the 5-hour limit, which reset
 1. `cd /` first in every shell. Read lanes/_BRIEF_COMMON_1107.md and lanes/_CORE_LANE_RULES.md, then this file, then your predecessor's posts in lanes/COORD-REVIEW-QUEUE.md since 17:12, ending at its last post.
 2. COLLECT first: predecessor jobs in your scope are yours. Never duplicate or stop a CPU-active job. Many have results nobody has read.
 3. First STATE within 30 min. Heavy jobs via ot-run. Put new work on the host with most free scratch; none on epyc6 or epyc5 until they recover. Reclaim your own finished scratch as you go.
-4. Never run git in intel2:/home/ubuntu/OpenTallas or localhost /home/ubuntu/OpenTallas, including as a clone source or fetch remote. Your worktree is your own, never a scratchpad directory you did not create. Queue posts via ~/coord/bin/coord-commit.sh, verified on origin/coord/state. Say "signed off".
+4. Never run git commands inside the working tree of intel2:/home/ubuntu/OpenTallas or localhost /home/ubuntu/OpenTallas. Cloning from, fetching from and pushing your branches to the central repo intel2:/home/ubuntu/OpenTallas are the normal path (_CORE_LANE_RULES line 7). Your worktree is your own, never a scratchpad directory you did not create. Queue posts via ~/coord/bin/coord-commit.sh, verified on origin/coord/state. Say "signed off".
 5. Standing owner rules: only sign-off blocks; targets not gates; no retries of an unchanged form; two strikes -> conservative re-form; small fix and structural form in parallel; one over-limit ECO with --owner-override citing OWNER RULING 17:5x, never ask; pin cycles cheap; no new restrictive rules; closure first, tok/s loss accepted.
 
 ## COORD rulings 22:0x (owner may veto)
