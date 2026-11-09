@@ -58,7 +58,7 @@ def pin_table():
                 pins.append(dict(name=bus if width == 1 else f'{bus}[{bit}]', x=x, y=y,
                                  layer='M4' if face in 'WE' else 'M5'))
     pins.extend([dict(name='clk', x=77.784, y=77.76, layer='M5'),
-                 dict(name='rst_in', x=75.624, y=77.76, layer='M5')])
+                 dict(name='rst_in', x=77.304, y=77.76, layer='M5')])
     return pins
 
 
