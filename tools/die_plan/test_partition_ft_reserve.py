@@ -353,3 +353,26 @@ def test_sliver_close_tcl_emitted():
     t = F.tcl(r)
     assert 'm6_sliver_close' in t and 'round(0.384*$ot_ft_dbu)' in t
     assert t.index('dbObstruction_create $ot_ft_blk $ot_ft_layer') < t.index('m6_sliver_close')
+
+
+def test_m4_m6_reservations_are_disjoint_rows_and_exact_complements():
+    """DIE-HBM-97 11-09: a band on both H layers reserves M4 and M6 in different parts of each gcell row (no row of
+    the partition loses both), each layer still the exact complement of the die obstructions."""
+    P,typ=plan()
+    P.types[typ]['die_ft_bands'][0]['layers']=['M4','M6']
+    P=schema.Plan(P.raw)
+    from tools.die_plan import die_trial as D
+    _,regs=D.band_region_adjust(P,.75)
+    rows=F.reservation(P,typ)['rectangles_um']
+    own={L:[r for r in rows if r['layer']==L] for L in ('M4','M6')}
+    blocked={L:[dict(rect=list(rect)) for layer,*rect in D.band_share_obs(P,regs) if layer==L] for L in ('M4','M6')}
+    ys=[i*0.27+0.135 for i in range(80)]
+    for L in ('M4','M6'):
+        for x in (20,50,100):
+            for y in ys:
+                assert inside(own[L],x,y)==(not inside(blocked[L],x,y))
+    for x in (20,50,100):
+        assert not any(inside(own['M4'],x,y) and inside(own['M6'],x,y) for y in ys)
+    a4=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M4'])
+    a6=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M6'])
+    assert a4==pytest.approx(a6)
