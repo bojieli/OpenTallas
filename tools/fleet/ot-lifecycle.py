@@ -1209,6 +1209,9 @@ def tick_main(a):
         with open(alert_f, "w") as fh:
             fh.write("recheck hit a counted/protected/kit-wave path; see last APPLY log\n")
         return _fail("ALERT at recheck")
+    for pre in ("PLAN-", "APPLY-"):                     # a plan is ~33 MB and ticks are hourly: the cleaner must not fill the disk itself
+        for f in sorted(x for x in os.listdir(a.out) if x.startswith(pre))[:-48]:
+            os.unlink(os.path.join(a.out, f))
     # pressure stage: tiers only when a filesystem is under its trigger, oldest first, until back at its target
     freed_press = {}
     if a.apply and P.press:
