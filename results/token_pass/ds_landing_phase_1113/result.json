@@ -1,0 +1,83 @@
+{
+  "status": "PASS_CONDITIONAL_SOURCE_LAW_ONLY",
+  "period_fs": 833000,
+  "rows": [
+    {
+      "phase_fs": 0,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 3332000,
+      "age_max_fs": 3332000,
+      "wrongedge_mismatches": 0,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 1000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 2500000,
+      "age_max_fs": 2500000,
+      "wrongedge_mismatches": 1105,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 208000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 2707000,
+      "age_max_fs": 2707000,
+      "wrongedge_mismatches": 1105,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 416500,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 2915500,
+      "age_max_fs": 2915500,
+      "wrongedge_mismatches": 1105,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 625000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 3124000,
+      "age_max_fs": 3124000,
+      "wrongedge_mismatches": 0,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 750000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 3249000,
+      "age_max_fs": 3249000,
+      "wrongedge_mismatches": 0,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 83000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 2582000,
+      "age_max_fs": 2582000,
+      "wrongedge_mismatches": 1105,
+      "wrongphase_mismatches": 1105
+    },
+    {
+      "phase_fs": 832000,
+      "checks": 1105,
+      "errors": 0,
+      "age_min_fs": 3331000,
+      "age_max_fs": 3331000,
+      "wrongedge_mismatches": 0,
+      "wrongphase_mismatches": 1105
+    }
+  ],
+  "source": "E4 src_28fc7 captured bind.f providers",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-ds-epochs-1113/landing_phase",
+  "unit": "oth-ubuntu-2565417-1794168602",
+  "exit_code": 0,
+  "production_phase_qualified": false
+}

@@ -1,0 +1,35 @@
+{
+  "status": "PASS_COMPONENT_EVENT_TIMING_AND_COMPILER_BOOKING_ONLY",
+  "starts": 94,
+  "hardware_slots": 47,
+  "configured_events": 8,
+  "TX_windows": 376,
+  "enabled_replays": 188,
+  "numerical_oracle_errors": 0,
+  "native_fault": 0,
+  "copy_mutant_errors": 188,
+  "replay_enable_mutant_errors": 188,
+  "stale_RX_fault": 1,
+  "RX_accepted_sampling_offsets": [
+    1,
+    299
+  ],
+  "RX_rejected_sampling_offsets": [
+    0,
+    300
+  ],
+  "RL": 300,
+  "slot_gap": 64,
+  "sampling_to_output": "N+D+1",
+  "clock_period_fs": 833000,
+  "RTL_pin_cycles_added": 0,
+  "production_qualified": false,
+  "global_HOST_KS_reset_booked": false,
+  "source": {
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "host": "intel1",
+  "path": "/srv/opentallas-scratch2/claude/codex-ds-epochs-1113/hwin_rx_bounds",
+  "unit": "oth-ubuntu-1403117-1794166326"
+}

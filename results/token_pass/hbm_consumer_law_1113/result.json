@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.hbm.absolute_sfu_consumer_gate.v1",
+  "status": "PRIVATE_UNADOPTED_SOURCE_LAW_PASS",
+  "rows": [
+    {
+      "consumer": "sfucore_NW.__cut_ctl",
+      "variant": "LG0",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NW.__cut_ctl",
+      "variant": "LG1",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NW.__cut_ctl",
+      "variant": "LG2",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NW.__cut_ctl",
+      "variant": "LG3",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NE.__cut_ctl",
+      "variant": "LG0",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NE.__cut_ctl",
+      "variant": "LG1",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NE.__cut_ctl",
+      "variant": "LG2",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    },
+    {
+      "consumer": "sfucore_NE.__cut_ctl",
+      "variant": "LG3",
+      "external_read": 125,
+      "external_write": 122,
+      "native_read": 2,
+      "native_write": 2,
+      "absolute_read": 127,
+      "absolute_write": 124
+    }
+  ],
+  "pad_cost": {
+    "members": 9467,
+    "classes": 4061,
+    "replica_links": 0,
+    "padded_members": 1859,
+    "padded_bits": 271287,
+    "pad_flops": 1872747,
+    "max_pad": 97,
+    "max_depth_before": 96,
+    "max_depth_after": 99,
+    "max_offset_before": 96,
+    "max_offset_after": 99,
+    "binder_landed_max": 96,
+    "loop_rounds": 2,
+    "split_members": {
+      "cal": 48
+    }
+  },
+  "max_pad_is_token_delta": false,
+  "final_LAT_integrated": false,
+  "FRRDX": {
+    "native_operand_loop": 91,
+    "parts": [
+      2,
+      41,
+      48
+    ],
+    "final_LAT_join": "OPEN_SEPARATE_OPERAND_LOOP"
+  },
+  "controls": {
+    "old145_142": "REJECTED: stale absolute SFU bridge parameters",
+    "blanket_maxpad97": "REJECTED: stale absolute SFU bridge parameters"
+  }
+}

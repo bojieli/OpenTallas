@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.qwen.calr-table-producer.v1",
+ "mode": "rel",
+ "source_dw0": "43414c52000003f1",
+ "decode_first": 68,
+ "decode_count_in": 406,
+ "t_first_in": 26,
+ "decode_count_out": 407,
+ "t_rel": 8,
+ "consumer_gap": 94,
+ "t_first_out": 102,
+ "shift_edges": 76,
+ "loads_per_user": 36,
+ "table_word": "e0000000000000000000000000409",
+ "nent": 1009,
+ "nent_max": 1023,
+ "verdict": "PASS",
+ "fails": [],
+ "sha256": {
+  "calendar_m0.viamap.hex": "a92eb548c1c99608188c3dbce2e2e29410f8a867152c589835091be3c56789a9",
+  "calendar_m1.viamap.hex": "97dbd0906a538a4fccc0fb30c3e70bcadbbeddef3441d853333eafbc4425c2fd",
+  "dw.hex": "326b6ed8dc3d909c58ea6d1c1647caa2bbfd2790c986a77f2271639f468a192a"
+ }
+}

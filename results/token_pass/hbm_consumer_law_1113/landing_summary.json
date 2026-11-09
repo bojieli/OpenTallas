@@ -1,0 +1,302 @@
+{
+  "schema": "opentallas.die_plan.r8_landing.v1",
+  "contract": "hbm_lat_1108",
+  "summary": {
+    "members": 9467,
+    "classes": 4061,
+    "replica_links": 0,
+    "padded_members": 1859,
+    "padded_bits": 271287,
+    "pad_flops": 1872747,
+    "max_pad": 97,
+    "max_depth_before": 96,
+    "max_depth_after": 99,
+    "max_offset_before": 96,
+    "max_offset_after": 99,
+    "binder_landed_max": 96,
+    "loop_rounds": 2,
+    "split_members": {
+      "cal": 48
+    }
+  },
+  "loops": [
+    {
+      "family": "SFU_VM_NW",
+      "consumer": "sfucore_NW.__cut_ctl (ot_hgi_sfu_vm_static_bridge)",
+      "params": [
+        "READ_RETURN",
+        "WRITE_RETURN"
+      ],
+      "rt_added": [
+        110
+      ],
+      "loops": [
+        {
+          "name": "LG0",
+          "legs": {
+            "C_rq_NW0": 30,
+            "N_rq_NW0": 18,
+            "N_rr_NW0": 52,
+            "C_rr_NW0": 10
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG1",
+          "legs": {
+            "C_rq_NW1": 30,
+            "N_rq_NW1": 2,
+            "N_rr_NW1": 2,
+            "C_rr_NW1": 76
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG2",
+          "legs": {
+            "C_rq_NW2": 30,
+            "N_rq_NW2": 29,
+            "N_rr_NW2": 25,
+            "C_rr_NW2": 26
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG3",
+          "legs": {
+            "C_rq_NW3": 30,
+            "N_rq_NW3": 2,
+            "N_rr_NW3": 2,
+            "C_rr_NW3": 76
+          },
+          "rt_added": 110
+        }
+      ]
+    },
+    {
+      "family": "SFU_VM_NE",
+      "consumer": "sfucore_NE.__cut_ctl (ot_hgi_sfu_vm_static_bridge)",
+      "params": [
+        "READ_RETURN",
+        "WRITE_RETURN"
+      ],
+      "rt_added": [
+        110
+      ],
+      "loops": [
+        {
+          "name": "LG0",
+          "legs": {
+            "C_rq_NE0": 26,
+            "N_rq_NE0": 27,
+            "N_rr_NE0": 55,
+            "C_rr_NE0": 2
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG1",
+          "legs": {
+            "C_rq_NE1": 26,
+            "N_rq_NE1": 2,
+            "N_rr_NE1": 2,
+            "C_rr_NE1": 80
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG2",
+          "legs": {
+            "C_rq_NE2": 26,
+            "N_rq_NE2": 27,
+            "N_rr_NE2": 36,
+            "C_rr_NE2": 21
+          },
+          "rt_added": 110
+        },
+        {
+          "name": "LG3",
+          "legs": {
+            "C_rq_NE3": 26,
+            "N_rq_NE3": 2,
+            "N_rr_NE3": 2,
+            "C_rr_NE3": 80
+          },
+          "rt_added": 110
+        }
+      ]
+    },
+    {
+      "family": "HC_Q_NW",
+      "consumer": "hc_NW.u_q (ot_hbm_hc_q_static)",
+      "params": [
+        "RD_CAPTURE",
+        "GATHER_PHASE",
+        "DONE_LAT"
+      ],
+      "rt_added": [
+        132
+      ],
+      "loops": [
+        {
+          "name": "LG0",
+          "legs": {
+            "H_rq_NW0": 30,
+            "N_rq_NW0": 18,
+            "N_rr_NW0": 52,
+            "H_rr_NW0": 32
+          },
+          "rt_added": 132
+        },
+        {
+          "name": "LG1",
+          "legs": {
+            "H_rq_NW1": 30,
+            "N_rq_NW1": 2,
+            "N_rr_NW1": 2,
+            "H_rr_NW1": 98
+          },
+          "rt_added": 132
+        },
+        {
+          "name": "LG2",
+          "legs": {
+            "H_rq_NW2": 30,
+            "N_rq_NW2": 29,
+            "N_rr_NW2": 25,
+            "H_rr_NW2": 48
+          },
+          "rt_added": 132
+        },
+        {
+          "name": "LG3",
+          "legs": {
+            "H_rq_NW3": 30,
+            "N_rq_NW3": 2,
+            "N_rr_NW3": 2,
+            "H_rr_NW3": 98
+          },
+          "rt_added": 132
+        }
+      ]
+    },
+    {
+      "family": "HC_Q_NE",
+      "consumer": "hc_NE.u_q (ot_hbm_hc_q_static)",
+      "params": [
+        "RD_CAPTURE",
+        "GATHER_PHASE",
+        "DONE_LAT"
+      ],
+      "rt_added": [
+        129
+      ],
+      "loops": [
+        {
+          "name": "LG0",
+          "legs": {
+            "H_rq_NE0": 26,
+            "N_rq_NE0": 27,
+            "N_rr_NE0": 55,
+            "H_rr_NE0": 21
+          },
+          "rt_added": 129
+        },
+        {
+          "name": "LG1",
+          "legs": {
+            "H_rq_NE1": 26,
+            "N_rq_NE1": 2,
+            "N_rr_NE1": 2,
+            "H_rr_NE1": 99
+          },
+          "rt_added": 129
+        },
+        {
+          "name": "LG2",
+          "legs": {
+            "H_rq_NE2": 26,
+            "N_rq_NE2": 27,
+            "N_rr_NE2": 36,
+            "H_rr_NE2": 40
+          },
+          "rt_added": 129
+        },
+        {
+          "name": "LG3",
+          "legs": {
+            "H_rq_NE3": 26,
+            "N_rq_NE3": 2,
+            "N_rr_NE3": 2,
+            "H_rr_NE3": 99
+          },
+          "rt_added": 129
+        }
+      ]
+    }
+  ],
+  "legs": {
+    "N_rq_NW0": 18,
+    "N_rq_NW1": 2,
+    "N_rq_NW2": 29,
+    "N_rq_NW3": 2,
+    "N_rq_NE0": 27,
+    "N_rq_NE1": 2,
+    "N_rq_NE2": 27,
+    "N_rq_NE3": 2,
+    "N_rr_NW0": 52,
+    "N_rr_NW1": 2,
+    "N_rr_NW2": 25,
+    "N_rr_NW3": 2,
+    "N_rr_NE0": 55,
+    "N_rr_NE1": 2,
+    "N_rr_NE2": 36,
+    "N_rr_NE3": 2,
+    "C_rq_NW0": 30,
+    "C_rq_NW1": 30,
+    "C_rq_NW2": 30,
+    "C_rq_NW3": 30,
+    "C_rq_NE0": 26,
+    "C_rq_NE1": 26,
+    "C_rq_NE2": 26,
+    "C_rq_NE3": 26,
+    "C_rr_NW0": 10,
+    "C_rr_NW1": 76,
+    "C_rr_NW2": 26,
+    "C_rr_NW3": 76,
+    "C_rr_NE0": 2,
+    "C_rr_NE1": 80,
+    "C_rr_NE2": 21,
+    "C_rr_NE3": 80,
+    "H_rq_NW0": 30,
+    "H_rq_NW1": 30,
+    "H_rq_NW2": 30,
+    "H_rq_NW3": 30,
+    "H_rq_NE0": 26,
+    "H_rq_NE1": 26,
+    "H_rq_NE2": 26,
+    "H_rq_NE3": 26,
+    "H_rr_NW0": 32,
+    "H_rr_NW1": 98,
+    "H_rr_NW2": 48,
+    "H_rr_NW3": 98,
+    "H_rr_NE0": 21,
+    "H_rr_NE1": 99,
+    "H_rr_NE2": 40,
+    "H_rr_NE3": 99,
+    "CAL_NW": 30,
+    "CAL_NE": 26,
+    "IDX_rq4": 2,
+    "IDX_rr4": 2,
+    "IDX_cq": 9,
+    "IDX_cr": 2,
+    "IDXQ_rq": 2,
+    "IDXQ_rr": 14,
+    "HCR_xrd": 2,
+    "HCR_xru": 2,
+    "RTR_run": 31
+  },
+  "errors": [],
+  "source_path": "/srv/opentallas-scratch3/claude/codex-hbm-lat-1113/r8_vB/hbm_arch_B2o_r8_landing.json",
+  "source_sha256": "82162fa394321ddc711e5df4c4e3fdb2022dad0a117d5b7e9f53e5d478b5e2de"
+}

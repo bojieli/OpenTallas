@@ -83,6 +83,7 @@ def bind_contract(contract,root):
         selected_params=dict(HOSTB_ENABLE=0,STATIC_KS6=0,STATIC_KS_SPAN=0,STATIC_KS_GRAPH_TAG=0,FMUT=0),source_pinned=True,
         clock_reset_identity=contract['clock_reset_identity'],initialization_last_seq_capture=last,first_KS_seq_capture=first,
         period=sum(expanded),slot_offsets=offsets,slot_gaps=expanded,return_latency=config['return_latency'],required_KIT_issue=kit,
+        hwin_events=config['events'],hwin_source_sha256=timing['source_sha256'].get('rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv'),
         KS_sampling_to_KIT_return_fixed_edges=offset,initialization_HOST_words=len(words),
         scope='selected local source/actual CSR bytes/fixed return and slot compatibility only; no global admission or memory retirement assertion')
 
