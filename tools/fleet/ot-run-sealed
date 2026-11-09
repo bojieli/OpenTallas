@@ -71,24 +71,59 @@ def place_call(cmd):
     return None
 
 
-def spec_for(runner, K):
+def spec_for(runner, K, children=()):
     name = os.path.basename(K) + "-place"
     inputs = [] if (runner == K or runner.startswith(K + "/")) else [{"path": runner}]
+    inputs += [{"path": c} for c in children]           # KWCHILD signed child records, read-only at their own paths
     return {"schema": "opentallas.ot_job.v1", "name": name, "inputs": inputs,
             "work": {"at": K, "seed": [{"path": K}]},
             "publish": [{"name": f"kit-wave/{os.path.basename(K)}/place-run", "path": "run", "when": "always"}],
             "return": {"to": K, "paths": ["."]}}
 
 
+# the same selection run_kit.sh's KWCHILD block makes (macros/*.provenance.json -> signed record dir + its lec dir)
+KWCHILD_PY = r"""
+import json, os, sys
+from pathlib import Path
+K = Path(sys.argv[1]); out = set()
+for pf in sorted((K / 'macros').glob('*.provenance.json')):
+    try:
+        prov = json.loads(pf.read_text())
+    except (OSError, ValueError):
+        continue
+    so = (prov.get('export') or {}).get('signoff')
+    if not so:
+        continue
+    if not os.path.isabs(so):
+        so = str((pf.parent / so).resolve())
+    rec = Path(so).parent.parent
+    if rec.is_dir():
+        out.add(str(rec))
+    try:
+        lec = json.loads((rec / 'PROVENANCE.json').read_text()).get('lec')
+    except (OSError, ValueError, AttributeError):
+        lec = None
+    if lec and os.path.isabs(lec) and Path(lec).exists():
+        out.add(str(Path(lec).parent))
+k = os.path.realpath(K)
+for p in sorted(out):
+    r = os.path.realpath(p)
+    if r != k and not r.startswith(k + '/') and ':' not in p:
+        print('CHILD ' + p)
+"""
+
+
 def remote_ok(host, runner, K):
+    """-> (ok, child record dirs) from one ssh to the pilot host"""
     sh = (f"test -d {shlex.quote(K)} && test -f {shlex.quote(runner)} && test -x $HOME/.local/bin/ot-job "
-          f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK")
+          f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(KWCHILD_PY)} {shlex.quote(K)}")
     try:
         p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
                            capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
-        return False
-    return "SEALED_OK" in p.stdout
+        return False, []
+    kids = [ln[6:] for ln in p.stdout.splitlines() if ln.startswith("CHILD ")]
+    return "SEALED_OK" in p.stdout and p.returncode == 0, kids
 
 
 def log(conf, msg):
@@ -117,11 +152,12 @@ def decide(argv, conf, check=remote_ok):
     if kdir.rstrip("/") != K or not any(K.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
         return passthru, "not a pilot dir"
     host = conf.get("host", "epyc7")
-    if not check(host, runner, K):
+    ok, kids = check(host, runner, K)
+    if not ok:
         return passthru, f"kit/runner/ot-job/bwrap not ready on {host}"
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
-        json.dump(spec_for(runner, K), fh)
+        json.dump(spec_for(runner, K, kids), fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
     out += [f for f in flags if f != "--no-spill"]
     if "max-wait" in o:

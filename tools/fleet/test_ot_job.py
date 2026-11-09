@@ -244,16 +244,16 @@ class Sealer(Tmp):
     def test_sync_and_async_place_sealed(self):
         for pre in (["--mem", "48", "--threads", "16", "--dir", self.K, "--hosts", "epyc4,epyc7", "--crit"],
                     ["--mem", "48", "--threads", "16", "--dir", self.K, "--stage", self.K, "--stage", self.R]):
-            argv, why = self.w.decide(pre + self.cmd, self.conf, check=lambda h, r, k: True)
+            argv, why = self.w.decide(pre + self.cmd, self.conf, check=lambda h, r, k: (True, ["/srv/opentallas-scratch2/claude/die-kv-9/signed/kv_leaf"]))
             self.assertEqual(argv[:9], ["/s/ot-run", "--mem", "48", "--threads", "16", "--hosts", "epyc7", "--job", argv[8]], why)
             self.assertEqual(argv[-4:], self.cmd)
             spec = json.load(open(argv[8]))
             self.assertEqual(spec["work"], {"at": self.K, "seed": [{"path": self.K}]})
-            self.assertEqual(spec["inputs"], [{"path": self.R}])
+            self.assertEqual(spec["inputs"], [{"path": self.R}, {"path": "/srv/opentallas-scratch2/claude/die-kv-9/signed/kv_leaf"}])
             self.assertEqual(spec["return"], {"to": self.K, "paths": ["."]})
 
     def test_passthrough(self):
-        ok = lambda h, r, k: True
+        ok = lambda h, r, k: (True, [])
         base = ["--mem", "48", "--dir", self.K]
         cases = [(dict(self.conf, enabled=False), base + self.cmd, ok),
                  (self.conf, ["--status"], ok),
@@ -261,7 +261,7 @@ class Sealer(Tmp):
                  (self.conf, ["--mem", "48", "--dir", "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/x"]
                   + ["--", "bash", "-c", "bash /srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/r.sh /srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/x place 4 4"], ok),
                  (self.conf, base + ["--pick"] + self.cmd, ok),
-                 (self.conf, base + self.cmd, lambda h, r, k: False)]
+                 (self.conf, base + self.cmd, lambda h, r, k: (False, []))]
         for conf, argv, chk in cases:
             out, why = self.w.decide(argv, conf, check=chk)
             self.assertEqual(out, ["/b/ot-run"] + argv, why)
