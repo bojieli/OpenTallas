@@ -1985,7 +1985,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-63)",
    "lane": "KIT-WAVE-3",
@@ -3208,7 +3208,8 @@
     "ot_s81sl_vn_b": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "ot_s81sl_vq": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "ot_s81sl_vs": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild"
+    "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "dsdv_slice_kv512_C__t1": "KW-FIX-43 11:5x COORD: left to DIE-S81-85 structural fix; the gen_args sidecar change must not auto-relaunch it. DIE-S81-85 / COORD releases."
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave",
@@ -7021,7 +7022,16 @@
     "epyc7"
    ],
    "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave",
-   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43",
+   "gen_args_prev_kw43cl": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "100",
+    "--clock-landing",
+    "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+   ],
+   "note_kw43_cland": "KW-FIX-43 2026-11-09 11:5x COORD 11:5x class (DIE-S81-85 11:21/11:45): --clock-landing -> src_s81f sidecar (sha256-16 5f4cff5ee0ed84dd on epyc7+epyc2; the sidecar of the bound plan 65648816/bind6) for new + relaunched rows; running rows untouched. Revert: gen_args = gen_args_prev_kw43cl; drop hold_items dsdv_slice_kv512_C__t1."
   },
   "s81_head": {
    "enabled": true,
