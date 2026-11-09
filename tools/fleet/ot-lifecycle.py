@@ -55,6 +55,83 @@ def wave_config_paths(cfg):
     return out
 
 
+KIT_RECORD_NAMES = ("kit_rtl.json", "bind_report.json", "kit_rtl.f")
+KIT_RECORD_DAYS = 7
+KIT_READ_SUFFIX = (".sh", ".json", ".f", ".txt", ".tcl", ".mk", ".py", ".tsv", ".yaml", ".yml")
+KIT_ATTEMPT = re.compile(r"^(.*/items/[^/]+/attempt_\d+)(?:/|$)")
+
+
+def kit_ref_re(roots):
+    """absolute paths under a scratch root, plus the short scratchN/claude/... form used in configs"""
+    known = [re.escape(r.rstrip("/") + "/") for r in roots]
+    known += [r"/srv/opentallas-scratch\d*/claude/", r"/home/ubuntu/scratch-root/claude/", r"(?<![\w./-])scratch\d*/claude/"]
+    return re.compile("(?:" + "|".join(known) + r""")[^\s"'<>|;,()\[\]{}`*?$\\]+""")
+
+
+def text_refs(s, pat):
+    out = set()
+    for m in pat.finditer(s):
+        p = m.group(0).rstrip(""".:,;'")]}/""")
+        if p.startswith("scratch"):
+            p = "/srv/opentallas-" + p
+        if "<" not in p:
+            out.add(os.path.normpath(p))
+    return out
+
+
+def read_small(p):
+    try:
+        if os.path.getsize(p) > (32 << 20):
+            return None
+        with open(p, errors="replace") as fh:
+            return fh.read()
+    except OSError:
+        return None
+
+
+def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
+    """every path a live kit reads that the wave config does not name directly.  Sources: kit_rtl.json, bind_report.json and kit_rtl.f modified
+    within days, and the files the wave config names (kit_rtl script, asbuilt: the bind of record), two hops.  A record's references into its
+    own attempt (or own directory) do not hold it: deleting the attempt removes the record too.  Returns (refs, records_read)."""
+    pat = kit_ref_re(roots)
+    refs, n = set(), 0
+    seen_roots = set()
+    for r in roots:
+        k = os.path.realpath(r)
+        if k in seen_roots or not os.path.isdir(r):
+            continue
+        seen_roots.add(k)
+        names = []
+        for x in KIT_RECORD_NAMES:
+            names += ["-name", x, "-o"]
+        q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "11", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
+                            "-type", "f", "(", *names[:-1], ")", "-mtime", f"-{int(days)}", "-print"], capture_output=True, text=True)
+        if q.returncode not in (0, 1):
+            raise SystemExit(f"kit record scan failed under {r}: rc {q.returncode}")
+        for p in q.stdout.split("\n"):
+            s = read_small(p) if p else None
+            if s is None:
+                continue
+            n += 1
+            m = KIT_ATTEMPT.match(p)
+            unit = m.group(1) if m else os.path.dirname(p)
+            refs |= {x for x in text_refs(s, pat) if x != unit and not x.startswith(unit + "/")}
+    frontier = set(wave_paths)
+    done = set()
+    for _ in range(2):
+        nxt = set()
+        for p in frontier - done:
+            done.add(p)
+            if p.endswith(KIT_READ_SUFFIX) and os.path.isfile(p):
+                s = read_small(p)
+                if s is not None:
+                    n += 1
+                    nxt |= text_refs(s, pat)
+        refs |= nxt
+        frontier = nxt
+    return refs, n
+
+
 def load_tool(path):
     spec = importlib.util.spec_from_file_location("otac", path)
     m = importlib.util.module_from_spec(spec)
@@ -194,6 +271,19 @@ class Plan:
         if ch is None:
             raise SystemExit("lifesnap has no coord_holds; refusing")
         self.coord = m.PathSet([(os.path.join(r, c["pattern"]), f"COORD hold: {c['why']}") for r in J.roots for c in ch], canon=J.paths.canon)
+        kr, kn = live_kit_inputs(J.roots, wp)
+        if not kr or not kn:
+            raise SystemExit("no live kit record or kit input found; refusing")     # a guard matching nothing must refuse
+        rows = []
+        for p in sorted(kr):
+            for q in {p, os.path.realpath(p)}:
+                rows.append((q, "named by a live kit record"))
+                d = os.path.dirname(q)
+                if "." in os.path.basename(q) and "/" in d.split("/claude/", 1)[-1]:     # readers open siblings of a named file
+                    rows.append((d, "directory of a file named by a live kit record"))
+        self.kit = m.PathSet(rows, canon=J.paths.canon)
+        self.kit_refs = kr
+        print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths", flush=True)
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
             raise SystemExit("lifesnap has no protected_full rows")
@@ -354,6 +444,9 @@ class Plan:
             ch = self.coord.hit(f)
             if ch:
                 return ("KEEP-coord-hold", ch, ch.startswith("holds "))
+            kh = self.kit.hit(f)
+            if kh:
+                return ("KEEP-kit-input", kh, kh.startswith("holds "))
         oh = self.holds.hit(d)
         if oh:
             return ("KEEP-ot-hold", oh, oh.startswith("holds "))
@@ -933,9 +1026,20 @@ class Plan:
                     break
         if not wave_seen:
             return "control: no path named by the live wave config exists on this host"
+        kit_seen = 0
+        for p in sorted(self.kit_refs):
+            if os.path.exists(p):
+                h = self.hold(p, False)
+                if not (h and h[0].startswith("KEEP-")):
+                    return f"control: live kit input {p} not held ({h})"
+                kit_seen += 1
+                if kit_seen >= 25:
+                    break
+        if not kit_seen:
+            return "control: no path named by a live kit record exists on this host"
         if got["counted"] == 0 and got["protected"] == 0:
             return "control: no existing counted or protected path found on this host"
-        print(f"controls: positive PASS (counted {got['counted']} protected {got['protected']})", flush=True)
+        print(f"controls: positive PASS (counted {got['counted']} protected {got['protected']} kit inputs {kit_seen})", flush=True)
         return None
 
     def verify_rows(self):
@@ -950,6 +1054,11 @@ class Plan:
                 bad.append((path, ih))
             if os.path.isdir(path) and self.signed_inside(path):
                 bad.append((path, "signed record inside"))
+            for q in {path, os.path.realpath(path)}:
+                kh = self.kit.hit(q)
+                if kh:
+                    bad.append((path, "live kit input: " + kh))
+                    break
         return bad
 
     # --- main

@@ -52,6 +52,22 @@ def run_fixture(W):
     kit(f"{ROOT}/dead-mm.old-kw37-1/kit11")          # a renamed tree is skipped whole (holds are keyed by path)
     kit(f"{ROOT}/dead-gg/kit-wave/s81/p/items/it/attempt_1/gen/it")
     write(f"{ROOT}/dead-hh/loose/file.bin", 4096)
+    # incident 11-09: a bind tree reached only through the wave's kit_rtl script and a symlink (bind of record), and one only through a kit record
+    write(f"{ROOT}/dead-bt/emit/bind/rtl/top.sv", 64)
+    write(f"{ROOT}/dead-bt/emit/bind/rtl/sib.sv", 64)
+    os.makedirs(f"{ROOT}/dead-lk/kvov")
+    os.symlink(f"{ROOT}/dead-bt/emit/bind", f"{ROOT}/dead-lk/kvov/bind")
+    write(f"{ROOT}/dead-sc/kit_rtl_x.sh", 1)
+    with open(f"{ROOT}/dead-sc/kit_rtl_x.sh", "w") as fh:
+        fh.write(f"python3 bind.py kit-rtl --bind-out {ROOT}/dead-lk/kvov/bind\n")
+    os.utime(f"{ROOT}/dead-sc/kit_rtl_x.sh", (OLD, OLD))
+    write(f"{ROOT}/dead-nr/src/a.sv", 64)
+    write(f"{ROOT}/dead-nr/src/b.sv", 64)
+    write(f"{ROOT}/dead-kr/u/rtl/kit_rtl.json", 1)
+    with open(f"{ROOT}/dead-kr/u/rtl/kit_rtl.json", "w") as fh:
+        json.dump({"sources": [f"{ROOT}/dead-nr/src/a.sv"]}, fh)
+    os.utime(f"{ROOT}/dead-kr/u/rtl/kit_rtl.json", (OLD, OLD))
+    write(f"{ROOT}/dead-unref/tree/f.bin", 4096)
     # older attempt cited by a signed record elsewhere: whole attempt stays even though it is not the latest
     kit(f"{ROOT}/dead-jj/kit-wave/s81/p/items/it2/attempt_1/gen/it2")
     kit(f"{ROOT}/dead-jj/kit-wave/s81/p/items/it2/attempt_3/gen/it2")
@@ -104,7 +120,7 @@ def run_fixture(W):
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
             "coord_holds": [{"pattern": "dead-hh2/tkm", "lane": "X", "why": "open"}],
-            "wave_paths": [f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
+            "wave_paths": [f"{ROOT}/dead-sc/kit_rtl_x.sh", f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
     r = subprocess.run([sys.executable, "-I", LC, "plan", "--tool", TOOL, "--host", "fix", "--lifesnap", f"{W}/life.json", "--out", out,
@@ -165,6 +181,10 @@ def run_fixture(W):
         if rows.get(k, ("", ""))[1] != "KEEP":
             print("MISMATCH cited or record-name file must stay", k, rows.get(k))
             bad += 1
+    assert not [k for k in rows if k.startswith("dead-bt") and rows[k][1] == "DELETE"], "bind of record tree must survive"
+    assert not [k for k in rows if k.startswith("dead-nr") and rows[k][1] == "DELETE"], "kit-record input must survive"
+    assert any(v[0] == "KEEP-kit-input" for k, v in rows.items() if k.startswith(("dead-bt", "dead-lk", "dead-nr"))), "guard must have held them"
+    assert [k for k in rows if k.startswith("dead-unref") and rows[k][1] == "DELETE"], "negative control: an unnamed tree still goes"
     sg = [k for k in rows if k.startswith("dead-ee/kit5/") and rows[k][1] == "DELETE"]
     print("signed trim rows:", sg)
     if sg:                      # signed trim is report-only until the stub is defined by readers and tested
@@ -311,3 +331,22 @@ def test_git_all_refs(tmp_path):
     bare = tmp_path / "b.git"
     g("clone", "-q", "--bare", str(src), str(bare))                      # a bare clone has no remote-tracking refs
     assert lc.Git().check(str(bare)).startswith("git-head-unpushed")
+
+
+def test_live_kit_inputs(tmp_path):
+    lc, ac = _lc()
+    root = tmp_path / "s" / "claude"
+    att = root / "w" / "kit-wave" / "p" / "items" / "it" / "attempt_2"
+    (att / "rtl").mkdir(parents=True)
+    (root / "b" / "bind").mkdir(parents=True)
+    (att / "rtl" / "kit_rtl.json").write_text(json.dumps({"own": f"{att}/rtl/x.sv", "other": f"{root}/b/bind/y.sv"}))
+    (root / "sc").mkdir()
+    (root / "sc" / "k.sh").write_text(f"run {root}/sc2/next.json\n")
+    (root / "sc2").mkdir()
+    (root / "sc2" / "next.json").write_text(json.dumps({"bind": f"{root}/b2/bind"}))
+    refs, n = lc.live_kit_inputs([str(root)], [f"{root}/sc/k.sh"])
+    assert f"{root}/b/bind/y.sv" in refs                                  # another tree named by a kit record
+    assert f"{att}/rtl/x.sv" not in refs                                  # a record does not hold its own attempt
+    assert f"{root}/sc2/next.json" in refs and f"{root}/b2/bind" in refs  # two hops through wave-named files
+    assert lc.live_kit_inputs([str(tmp_path / "none")], []) == (set(), 0)
+
