@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenTallas lifecycle tick after a job end (debounced to one per 10 min inside the tool)
+
+[Service]
+Type=oneshot
+Environment=OT_LIFECYCLE_ARGS=
+EnvironmentFile=-%h/.config/ot-lifecycle/env
+ExecStart=/usr/bin/python3 -I %h/.local/share/ot-lifecycle/ot-lifecycle.py tick --reason jobend $OT_LIFECYCLE_ARGS
+TimeoutStartSec=6h
+Nice=15
+IOSchedulingClass=idle

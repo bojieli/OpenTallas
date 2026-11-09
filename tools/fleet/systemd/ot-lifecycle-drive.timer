@@ -1,0 +1,9 @@
+[Unit]
+Description=Run the OpenTallas lifecycle localhost driver every 15 minutes
+
+[Timer]
+OnCalendar=*:7/15
+Persistent=true
+
+[Install]
+WantedBy=timers.target
