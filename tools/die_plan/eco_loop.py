@@ -74,7 +74,7 @@ IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_freeze_check.sh",
                   "kit_modes_eco.tcl", "pg_connect.tcl")
 FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_route_drv/prd_hook.tcl",
-              "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl", "post_route_drv/prd_autofo.tcl",
+              "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_grt_pre.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl", "post_route_drv/prd_autofo.tcl",
               "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
               "post_route_drv/prd_spef_insts.py", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")

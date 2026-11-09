@@ -1,0 +1,14 @@
+ECO-PREROUTED-CLK / KW-FIX-35-ECO, 2026-11-08 11:43 PST
+Base d28cf565d0. PRD-only helper; no normal kit runner, timing corner, clock-freeze code or audit changed.
+
+Fix: chain original PRE_GLOBAL_ROUTE_TCL, then wrap pin_access. Existing non-PG dbWire objects are detached only during FlexPA. Restore the SAME objects in finally, discard transient wire objects created by FlexPA, preserve original pin_access result/error and arguments. Restore failures remain fatal. The existing PRD lock and clk_freeze_check still block altered clocks.
+
+Tests: 5 focused Tcl tests PASS (success, original pin-access error, FlexPA temporary wire replacement, original prehook, detach error). Existing post_route_drv suite: 47 PASS, one deselected existing-base failure test_eco_drt_pre_hook_contract (it forbids write_db, already present in unchanged eco_drt_pre.tcl); the failing test/file are unchanged by this branch. Generated PRD fixture stages helper, retains original prehook chain, and runs signoff bundle successfully. Bash syntax PASS.
+
+Actual installed OpenROAD 26Q3-1510-g6cb3f2b704 probes, originals mounted read-only:
+- vecd4ae vXLK E6 /srv/opentallas-scratch2/claude/codex-eco-prerouted-1113/a2/probe.log: pin_access COMPLETE; 65995 existing wire objects and every raw opcode/data token identical afterward; ACTUAL_PRD_PIN_ACCESS_PASS. Input 6_final.odb. Initial GRT probe had no detailed wires and is retained separately as a rejected test vehicle, not a physical failure.
+- t51 E5 /srv/opentallas-scratch3/claude/codex-eco-prerouted-1113/probe.log: full pin_access COMPLETE past prior DRT-0415; 121148 originals restored. This exposed legitimate transient wire creation by FlexPA; initial diagnostic rejected it AFTER restoration. Corrected helper discards transient objects and preserves originals; focused test covers this case. A reduced actual offending-clk vehicle is queued under E5 .../a2 (normal admission), so its original failed diagnostic remains intact.
+
+No ECO has been launched by this lane. S81 owns t51's unused one-ECO allowance; HBM owns vecd's. No override, rerun of a healthy proof, merge/tag/POR edit or live source mutation.
+
+Corrected native t51 reduced actual-clk probe PASS: E5 .../a2/probe.log, pin_access1s,754MB, original clk dbWire and raw opcode/data tokens exact; one FlexPA transient wire discarded. This closes the pending confirmation noted above.

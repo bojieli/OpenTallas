@@ -89,7 +89,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
@@ -132,6 +132,14 @@ cat >> $OUT/config.mk <<CFG
 # OT_PRD post-route drive repair (tools/die_plan/post_route_drv, variant $V)
 override export POST_GLOBAL_ROUTE_TCL = /work/eco_post.tcl
 CFG
+# A routed native clock is already wired in the seed. Preserve every original
+# wire around FlexPA pin access, while retaining the kit pre-GRT hook and the
+# existing clock-freeze check after the ECO route.
+KGRTPRE=$(sed -n 's/^\(override \)\{0,1\}export PRE_GLOBAL_ROUTE_TCL *?\{0,1\}= *//p' $OUT/config.mk | tail -n 1)
+if [ -n "$KGRTPRE" ] && [ "$KGRTPRE" != /work/eco_grt_pre.tcl ]; then
+  echo "override export OT_ECO_GRT_PRE_CHAIN = $KGRTPRE" >> $OUT/config.mk
+fi
+echo 'override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl' >> $OUT/config.mk
 # FLOW-9 10-30: DRT of the ECO'd GRT DB clears stale special-net guides / a mixed pin-access catalog (no-op otherwise);
 # a kit's own PRE_DETAIL_ROUTE hook still runs after it (OT_ECO_DRT_PRE_CHAIN).
 KPRE=$(sed -n 's/^\(override \)\{0,1\}export PRE_DETAIL_ROUTE_TCL *?\{0,1\}= *//p' $OUT/config.mk | tail -n 1)
