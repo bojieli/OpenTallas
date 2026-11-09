@@ -45,6 +45,23 @@ class Programme(unittest.TestCase):
             self.assertEqual(b['P1'], a['P0'])
             self.assertEqual({k: v for k, v in b.items() if k != 'P1'}, {k: v for k, v in a.items() if k != 'P1'})
 
+    def test_astk_zb_add_moves_z_by_zb_minus_dz(self):
+        # DIE-KV-97 11-09: ZB_ADD 83 (bound ASTK chain) moves Z / HUB_Z / HUB_RECIP / HUB_PUB by 83 - dZ; LMAX, EXP and the
+        # pair outputs stay; 0 = the calendar unchanged; a negative value is refused
+        pr = C.profile('die', json.loads((ROOT / C.AGES).read_text()))
+        self.assertEqual(pr['astk_zb_add'], 0)
+        dz = pr['astk_law']['dZ'] if pr.get('astk_law') else 0
+        for T in (1, 1000, 2048, 3000, 5000, 6144, 7000, 8192):
+            a, b = C.attention_calendar(T, pr), C.attention_calendar(T, dict(pr, astk_zb_add=83))
+            self.assertEqual(C.attention_calendar(T, dict(pr, astk_zb_add=0)), a)
+            for f in ('Z', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
+                self.assertEqual(b[f] - a[f], 83 - dz, (T, f))
+            for f in ('LMAX', 'EXP', 'HUB_LMAX', 'P0', 'P1'):
+                self.assertEqual(b[f], a[f], (T, f))
+            self.assertGreaterEqual(b['PV_START'], a['PV_START'])
+        with self.assertRaises(ValueError):
+            C.attention_calendar(8192, dict(pr, astk_zb_add=-1))
+
     def test_attention_words_follow_the_link_slot(self):
         for r in (self.comp, self.die):
             a = r['attention']
