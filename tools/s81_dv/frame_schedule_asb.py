@@ -501,7 +501,8 @@ def validate(meas_v, lp_sched):
 
 def plan_lanes(master):
     """die plan frame_int lane latencies of this master's frames: {(src band, dst band): sorted set of cycles}"""
-    d = json.loads((ROOT / 'physical/die_plan/s81/die_plan.json').read_text())
+    # OT_S81_FRAME_PLAN: the plan being compiled, when it is not die_plan.json (a relay/hold event moves fi_* cycles)
+    d = json.loads(Path(os.environ.get('OT_S81_FRAME_PLAN', ROOT / 'physical/die_plan/s81/die_plan.json')).read_text())
     ptype = {p['name']: p['type'] for p in d['partitions']}
     ports = {p['id']: p for p in d['ports']} if isinstance(d['ports'], list) else d['ports']
     lat = d['latency']['lanes']
