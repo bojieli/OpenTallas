@@ -1,0 +1,50 @@
+{
+  "scope": "Two component proofs: actual P producer plus unchanged numerical SX tree. Not a full slice qualification.",
+  "fix": "All16 dimension tiles retain P valid; inactive half contributes zero and does not require P buffer rows.",
+  "pin_cycles": 0,
+  "calendar_cycle_delta": 0,
+  "producer": {
+    "host": "epyc4",
+    "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-1113/producer_ready2",
+    "unit": "oth-ubuntu-3202875-1794166178",
+    "cases": 1024,
+    "base_errors": 0,
+    "old_valid_gating_mutant_errors": 760,
+    "features": [
+      "two GO launches",
+      "hb_p changes at second GO",
+      "all16 tiles",
+      "32 P beats perpass at T128",
+      "active missing-row sentinel",
+      "inactive rows_ready zero"
+    ]
+  },
+  "sx": {
+    "host": "epyc4",
+    "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-1113/passes",
+    "unit": "oth-ubuntu-2530078-1794165639",
+    "base": {
+      "root": 64,
+      "taps": 1024,
+      "root_errors": 0,
+      "tap_errors": 0,
+      "fault": 0
+    },
+    "old_valid_gating_mutant": {
+      "root": 32,
+      "taps": 512,
+      "fault": "0000001000000000",
+      "verdict": "FAIL"
+    },
+    "numerical_scope": "64 sparseP beats across both globalheadhalves vs golden balanced16dim reduction"
+  },
+  "failed_harness": {
+    "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-1113/producer_cut",
+    "cause": "First extracted-cut harness packed 32bit constants into16bit buffer lanes and omitted finish; source verdict invalid. Exact own vvp2963839 stopped, replaced by actual production helper bench."
+  },
+  "remaining": [
+    "Joined slice completion/calendar not yet qualified",
+    "H8_CALIBRATED false",
+    "No physical fit/signoff claim for new glue"
+  ]
+}

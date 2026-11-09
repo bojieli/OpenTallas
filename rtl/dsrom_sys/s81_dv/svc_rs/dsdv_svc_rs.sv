@@ -324,9 +324,16 @@ module dsdv_svc_rs_c #(
     // (2) P beats into the score exchange from PIO, one every 2 cycles (aligned like the engine's score beats: gd)
     reg [7:0] pk;
     wire [9:0] nbt = (tjob + 10'd3) >> 2;
-    wire pfire = pon && hsel && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
     wire [9:0] prow = {pk, 2'b00};
     wire [255:0] prw = pbuf[pk[7:2]];
+`ifdef OT_SVC_H8
+    wire pfire, p_missing; wire [LW-1:0] pl_next;
+    dsdv_svc_p_source #(.H(H)) u_p_source (.pon(pon), .hsel(hsel), .pk(pk), .tile(tile),
+        .tjob(tjob), .jcs(jcs), .pio(pio), .prw(prw), .rows_ready(pb_n),
+        .fire(pfire), .missing(p_missing), .beat(pl_next));
+    always @(posedge ck) pl_d <= pl_next;
+`else
+    wire pfire = pon && hsel && 10'(pk) < nbt && jcs == pio + {7'd0, pk, 1'b0};
     always @(posedge ck) begin
         pl_d <= '0;
         pl_d[LW-1 -: 16] <= 16'(prow);
@@ -335,6 +342,7 @@ module dsdv_svc_rs_c #(
             pl_d[4*H + (H*i + 32'(tile) % H)*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
         end
     end
+`endif
     // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
     // pbeat: the beat's 4 rows x H heads BF16, row r head h at 16 (H r + h) (H 16: words A = rows 0 / 1, B = rows 2 / 3;
     // H 8: ONE word = the engine's p word of R = 4 rows)
@@ -356,7 +364,11 @@ module dsdv_svc_rs_c #(
             if (w_v && sek && pb_n == 6'd40) p_f <= 1'b1;                          // more e rows than pbuf holds
             pl_v <= pfire;
             if (go) pk <= 8'd0; else if (pfire) pk <= pk + 1'b1;
-            if (pfire && {2'b00, pb_n} <= {2'b00, pk[7:2]}) p_f <= 1'b1;             // the beat's e row is not in pbuf yet
+`ifdef OT_SVC_H8
+            if (p_missing) p_f <= 1'b1;
+`else
+            if (pfire && hsel && {2'b00, pb_n} <= {2'b00, pk[7:2]}) p_f <= 1'b1;             // the beat's e row is not in pbuf yet
+`endif
             if (pl_v && l_v) p_f <= 1'b1;                                           // a P beat on an engine score beat
             pp_v <= 1'b0;
             if (go) begin pph <= 2'd0; phd <= 1'b0; pwc <= 10'd0; end
@@ -733,4 +745,25 @@ module dsdv_svc_selq #(parameter integer MUT = 0) (
             if (pend && !p1) fault <= 1'b1;                                     // part 1 not on the next edge
             if (p0 && (a[15:11] == 5'd0 || a[15:11] > 5'd16)) fault <= 1'b1;
         end
+endmodule
+
+// Soft combinational P producer. All dimension tiles retain the fixed gather valid;
+// inactive head halves supply zero. Existing parent registers/counter are unchanged.
+module dsdv_svc_p_source #(parameter integer H=8) (
+ input wire pon,hsel, input wire [7:0]pk, input wire [3:0]tile,
+ input wire [9:0]tjob, input wire [15:0]jcs,pio, input wire [255:0]prw,
+ input wire [5:0]rows_ready, output wire fire,missing, output reg [H*132+19:0]beat
+);
+ localparam integer LW=H*132+20;
+ wire [9:0]nbt=(tjob+10'd3)>>2;
+ wire [9:0]prow={pk,2'b00};
+ assign fire=pon && 10'(pk)<nbt && jcs==pio+{7'd0,pk,1'b0};
+ assign missing=fire && hsel && {2'b00,rows_ready}<={2'b00,pk[7:2]};
+ always @* begin
+  beat='0; beat[LW-1-:16]=16'(prow);
+  for(integer i=0;i<4;i=i+1)if(32'(prow)+i<32'(tjob))begin
+   beat[LW-20+i]=1'b1;
+   beat[4*H+(H*i+32'(tile)%H)*32+:32]=hsel?{prw[16*(4*pk[1:0]+i)+:16],16'h0000}:32'd0;
+  end
+ end
 endmodule
