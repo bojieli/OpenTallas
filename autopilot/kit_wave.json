@@ -8568,7 +8568,8 @@
     "sle_su_c@14",
     "glue@8",
     "cbx_q10__cl94a12200@19",
-    "cbx_q10__cl89936551@19"
+    "cbx_q10__cl89936551@19",
+    "cbx_q10__cl89936551@20"
    ],
    "queue_src": "claude/qc-transport-fix-4-1109@5333b7dca834",
    "type_args": {
@@ -9179,7 +9180,9 @@
     "slw_fw_v3@10": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
     "slw_fw_v2__cl8f84514c@4": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
     "slw_fw_v1__clf51c11d8__clc7ddab13@13": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
-    "slw_fw_v2__cl8537f156@5": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)"
+    "slw_fw_v2__cl8537f156@5": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
+    "cbx_q10__cl94a12200@20": "REDESIGN: KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv",
+    "cbx_q10__cl89936551@20": "REDESIGN: KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv"
    },
    "gen_hosts": [
     "epyc2",
@@ -9380,7 +9383,7 @@
     "cbx_q10__cl89936551": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW43_FIX": "6d92d957ea6d"
+     "OT_KW43_FIX": "pvnlck-b1de436a870a"
     },
     "slw_fe_v2__clf110fab2": {
      "OT_CONS_KIT": "1"
@@ -9498,7 +9501,7 @@
     },
     "cbx_q10__cl94a12200": {
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW43_FIX": "6d92d957ea6d"
+     "OT_KW43_FIX": "pvnlck-b1de436a870a"
     },
     "slw_stm_v2__cl1ca9c415": {
      "OT_KW41_CLAND": "0b305f2395",
@@ -11978,12 +11981,12 @@
      "note": "KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec + 073656d7febf + e1731efe515e (gen_phys) + 42d265cdb636"
     },
     "cbx_q10__cl94a12200": {
-     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
-     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/plan_pv_nlck/plan_qc53v4nS_mem9_vml_pv_nlck.json",
+     "note": "KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv"
     },
     "cbx_q10__cl89936551": {
-     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
-     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/plan_pv_nlck/plan_qc53v4nS_mem9_vml_pv_nlck.json",
+     "note": "KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv"
     },
     "slw_fw_v3": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand7.json",
@@ -13455,7 +13458,17 @@
    },
    "note_kw43_extras": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: QC class-fix relaunches (BN on main): tap-cap ccf792c10b63 cbn_q00__cldbcda913/slw_su_c__cl19bb38ef/sle_su_c (hold lifted); sle_hc0__cl929603c0__cl38badc56 and slw_stm_v2__cl1ca9c415 RUNNING, skipped; cbx_q10 x2 on nlck item plan; glue fresh kit with lec.py 64db1baf83bf. src_qcsw2 epyc7+epyc2 overlay qctap. Revert: *_prev_kw43x, hold_items_released_kw43.",
    "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave",
-   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43",
+   "item_inputs_prev_kw43c": {
+    "cbx_q10__cl94a12200": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+    },
+    "cbx_q10__cl89936551": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+    }
+   }
   },
   "hbm": {
    "enabled": true,
