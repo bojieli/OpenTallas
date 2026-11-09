@@ -1,0 +1,349 @@
+{
+ "name": "hbm_lat_1108",
+ "note": "DIE-HBM-92-LAT 11-08: HBM fixed-latency loops (pads: hbm_lat_pads.py; params: hbm_param_regen.py). Selectors: sink leaf / sink port / source leaf, fullmatch regexes on bus_groups members. q = hub quadrant, k = local group (LG) 0..3, b0/b1 = its VM bank pair.",
+ "legs": [
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "N_rq_{q}{k}",
+   "why": "SU LG tap -> its VM bank pair (rq0 + wq0)",
+   "sel": {
+    "sink": "vmb_{q}({b0}|{b1})",
+    "port": "rq0|wq0",
+    "src": "su_{q}{k}\\.g_tap_r8b\\.u_tap"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "N_rr_{q}{k}",
+   "why": "VM bank pair -> SU LG tap (rr0 + wq_done0)",
+   "sel": {
+    "sink": "su_{q}{k}\\.g_tap_r8b\\.u_tap",
+    "port": "near_rr|near_w_done",
+    "src": "vmb_{q}({b0}|{b1})"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "C_rq_{q}{k}",
+   "why": "SFU ctl (VM bridge) -> SFU LG tap",
+   "sel": {
+    "sink": "sfu_{q}{k}",
+    "port": "c_rq|c_wq",
+    "src": "sfucore_{q}\\.__cut_ctl"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "C_rr_{q}{k}",
+   "why": "SFU LG tap -> SFU ctl (VM bridge)",
+   "sel": {
+    "sink": "sfucore_{q}\\.__cut_ctl",
+    "port": "u_core_procdff_669(26|31)__D",
+    "src": "sfu_{q}{k}"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "H_rq_{q}{k}",
+   "why": "hc_q -> HC LG term tap",
+   "sel": {
+    "sink": "hc_{q}{k}",
+    "port": "c_rq|c_wq",
+    "src": "hc_{q}\\.u_q"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ],
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "name": "H_rr_{q}{k}",
+   "why": "HC LG term tap -> hc_q",
+   "sel": {
+    "sink": "hc_{q}\\.u_q",
+    "port": "lg_rr|lg_w_done",
+    "src": "hc_{q}{k}"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ]
+   },
+   "name": "CAL_{q}",
+   "why": "calendar lg_local_read/write -> every LG tap of the quadrant (one calendar word)",
+   "sel": {
+    "sink": "(su_{q}\\d\\.g_tap_r8b\\.u_tap|sfu_{q}\\d|hc_{q}\\d)",
+    "port": "local_read|local_write",
+    "src": "calendar_{q}"
+   }
+  },
+  {
+   "name": "IDX_rq4",
+   "why": "rootctl VM requests to the 8 SW banks",
+   "sel": {
+    "sink": "vmb_SW[0-7]",
+    "port": "rq4",
+    "src": "hb_idx__ctl"
+   }
+  },
+  {
+   "name": "IDX_rr4",
+   "why": "8 SW banks -> rootctl vm_rr",
+   "sel": {
+    "sink": "hb_idx__ctl",
+    "port": "vm_rr",
+    "src": "vmb_SW[0-7]"
+   }
+  },
+  {
+   "name": "IDX_cq",
+   "why": "rootctl / argmax cq -> hb_vms_SW",
+   "sel": {
+    "sink": "hb_vms_SW",
+    "port": "cq",
+    "src": "hb_idx__ctl|hb_argmax"
+   }
+  },
+  {
+   "name": "IDX_cr",
+   "why": "hb_vms_SW cr -> rootctl / argmax",
+   "sel": {
+    "sink": "hb_idx__ctl|hb_argmax",
+    "port": "cr",
+    "src": "hb_vms_SW"
+   }
+  },
+  {
+   "name": "IDXQ_rq",
+   "why": "idx operand reader SW -> rootctl share (index_rq)",
+   "sel": {
+    "sink": "hb_idx__ctl",
+    "port": "index_rq",
+    "src": "hb_idx__op_SW"
+   }
+  },
+  {
+   "name": "IDXQ_rr",
+   "why": "rootctl share -> idx operand reader SW (vm_rr)",
+   "sel": {
+    "sink": "hb_idx__op_SW",
+    "port": "vm_rr",
+    "src": "hb_idx__ctl"
+   }
+  },
+  {
+   "name": "HCR_xrd",
+   "why": "hc_eng -> hc_N*.u_cen qd_*/qi_* (XRD, both quadrants)",
+   "sel": {
+    "sink": "hc_N[EW]\\.u_cen\\..*",
+    "port": "D",
+    "src": "hc_eng"
+   }
+  },
+  {
+   "name": "HCR_xru",
+   "why": "hc_N*.u_cen -> hc_eng qps/qps_v/qps_f/q_fault (XRU, both quadrants)",
+   "sel": {
+    "sink": "hc_eng",
+    "port": "qps|qps_v|qps_f|q_fault",
+    "src": "hc_N[EW]\\.u_cen\\..*"
+   }
+  },
+  {
+   "name": "RTR_run",
+   "why": "router_ids run_v/run_layer and run1_v/run1_layer must land on one edge",
+   "sel": [
+    {
+     "sink": "hb_router_ids",
+     "port": "run_v|run_layer",
+     "src": "cp_svg_NW0"
+    },
+    {
+     "sink": "hb_router_ids",
+     "port": "run1_v|run1_layer",
+     "src": "cp_svg_NW4"
+    }
+   ]
+  }
+ ],
+ "joins": [
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ]
+   },
+   "name": "LGREQ_{q}",
+   "why": "one LG request timeline per quadrant: calendar legs land with every client's request into the taps (as built: all on one edge), SFU / HC tap align contracts [c_rq, local_read] [c_wq, local_write]",
+   "members": [
+    "CAL_{q}",
+    "C_rq_{q}0",
+    "C_rq_{q}1",
+    "C_rq_{q}2",
+    "C_rq_{q}3",
+    "H_rq_{q}0",
+    "H_rq_{q}1",
+    "H_rq_{q}2",
+    "H_rq_{q}3"
+   ]
+  },
+  {
+   "name": "HCR_x",
+   "why": "hc_eng XRD / XRU are one scalar per direction for both quadrants",
+   "members": [
+    "HCR_xrd"
+   ]
+  }
+ ],
+ "families": [
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ]
+   },
+   "name": "SFU_VM_{q}",
+   "consumer": "sfucore_{q}.__cut_ctl (ot_hgi_sfu_vm_static_bridge)",
+   "params": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "loops_for": {
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "env": {
+    "q": "{q}"
+   },
+   "loop": {
+    "name": "LG{k}",
+    "legs": [
+     "C_rq_{q}{k}",
+     "N_rq_{q}{k}",
+     "N_rr_{q}{k}",
+     "C_rr_{q}{k}"
+    ],
+    "pad": "C_rr_{q}{k}"
+   }
+  },
+  {
+   "for": {
+    "q": [
+     "NW",
+     "NE"
+    ]
+   },
+   "name": "HC_Q_{q}",
+   "consumer": "hc_{q}.u_q (ot_hbm_hc_q_static)",
+   "params": [
+    "RD_CAPTURE",
+    "GATHER_PHASE",
+    "DONE_LAT"
+   ],
+   "loops_for": {
+    "k": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "env": {
+    "q": "{q}"
+   },
+   "loop": {
+    "name": "LG{k}",
+    "legs": [
+     "H_rq_{q}{k}",
+     "N_rq_{q}{k}",
+     "N_rr_{q}{k}",
+     "H_rr_{q}{k}"
+    ],
+    "pad": "H_rr_{q}{k}"
+   }
+  }
+ ],
+ "splits": [
+  {
+   "name": "cal",
+   "why": "calendar lg_local_read/write is its own as-built bus (one calendar word), not part of the hub's VM return / request buses into the same tap",
+   "sel": {
+    "sink": ".*",
+    "port": ".*",
+    "src": "calendar_N[EW]"
+   }
+  }
+ ]
+}
