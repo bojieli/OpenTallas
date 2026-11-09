@@ -27,6 +27,17 @@
 //   one stage later.  Every stage after ch moves one cycle (pp t_k + 3, wb t_k + 4, rem t_k + 5, par t_9 + 6) and the
 //   beat delay line grows by one (d6), so PMA word w is in p_d at t_k + 7: port -> p_d latency 7 -> 8 cycles, the
 //   stream is otherwise identical (bench: p_v / p_d equal one cycle later, fault equal on the same cycle).
+// OT_S81_KP4_ENC_LA (opt-in define, DIE-S81-85 11-09; undefined = the forms above, netlist unchanged): EVALUATION-
+//   DOMAIN state.  g(x) = prod (x - alpha^j), so the evaluation map Q: R -> (R(alpha^j))_j=0..29 diagonalises the
+//   chunk advance A (Q A = D Q, D = 30 constant GF(2^10) multipliers by alpha^(52 j): block diagonal, rows <= 8
+//   inputs).  rem_q then holds S = Q R: rem_q <= (f0w ? 0 : D rem_q) ^ wb with wb = (Q P) ch (same pipeline, same
+//   masks shape; ot_s81_kp4_enc_la_mat[_q4].svh, tools/s81_link/gen_kp4_enc_la.py).  The 300 x 300 dense work moves
+//   out of the loop: parity = Q^-1 S_9 read from rem_s (a kept same-D copy of rem_q, so the loop flops only feed
+//   their own D block) as four registered 75-column partials pi0..3 (<= 51 inputs each, free-
+//   running) XORed into the word-9 select in place of par.  pi holds Q^-1 S_9 in exactly the cycle par did, so
+//   p_v / p_d / fault are cycle-identical to the define-off module: NO extra latency (pin cycles +0).
+//   Bench tb_kp4_enc_la.sv (lock-step vs the define-off copy); mutants: OT_S81_KP4_ENC_LA_MUTPOW (D = alpha^(51 j)),
+//   RCKRF_MUT_LA_LANE (S_0 lane fed from S_1's D row).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0, parameter integer H0_SEQ_ONLY = 0,
     parameter integer PPCYC = 0) (
@@ -103,8 +114,22 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     end endgenerate
     // ---------------- parity: window parts registered (wb), state loop rem
     wire [299:0] e_ar, e_p0, e_p1;
+`ifdef OT_S81_KP4_ENC_LA
+    // rem_q and its copy rem_s share one D: both kept (ot_keep_regs.tcl) so opt_merge cannot fold them back
+    (* keep = 1, dont_touch = 1 *) reg [299:0] rem_q;
+    reg  [299:0] pp0, pp1, wb, par;
+    wire [299:0] e_pi0, e_pi1, e_pi2, e_pi3;
+    (* keep = 1, dont_touch = 1 *) reg [299:0] rem_s; // copy of rem_q (same D): the only Q^-1 load, so the loop
+                                                      // flops drive just their <= 10 D rows (no shared XOR nodes)
+`ifdef OT_S81_KP4_ENC_LA_MUTPOW
+`include "ot_s81_kp4_enc_la_mat_mut.svh"
+`else
+`include "ot_s81_kp4_enc_la_mat.svh"
+`endif
+`else
     reg  [299:0] rem_q, pp0, pp1, wb, par;
 `include "ot_s81_kp4_enc_mat.svh"
+`endif
     // control pipeline: chunk-0 / chunk-9 flags at the ch, (pq,) pp, wb and rem stages
     reg  [4:0] f0, f9;                   // [0] = ch stage, [1+P] = pp stage, [2+P] = wb stage, [3+P] = rem (par load)
     (* keep *) reg [3:0] f0w;            // chunk-0 flag at the wb stage, 4 copies (75 rem bits each)
@@ -115,7 +140,15 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     generate if (PPCYC != 0) begin : g_ppc
         // +1 pin cycle: four registered partial products, one per 130-bit ch_q select copy
         wire [299:0] e_q0, e_q1, e_q2, e_q3;
+`ifdef OT_S81_KP4_ENC_LA
+`ifdef OT_S81_KP4_ENC_LA_MUTPOW
+`include "ot_s81_kp4_enc_la_mat_mut_q4.svh"
+`else
+`include "ot_s81_kp4_enc_la_mat_q4.svh"
+`endif
+`else
 `include "ot_s81_kp4_enc_mat_q4.svh"
+`endif
         reg  [299:0] pq0, pq1, pq2, pq3;
         always @(posedge clk) begin
             pq0 <= e_q0; pq1 <= e_q1; pq2 <= e_q2; pq3 <= e_q3;
@@ -137,7 +170,14 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
         end
     genvar gr;
     generate for (gr = 0; gr < 300; gr = gr + 1) begin : g_rem
+`ifdef RCKRF_MUT_LA_LANE
+        always @(posedge clk) rem_q[gr] <= (f0w[gr / 75] ? 1'b0 : e_ar[gr < 10 ? gr + 10 : gr]) ^ wb[gr];
+`else
         always @(posedge clk) rem_q[gr] <= (f0w[gr / 75] ? 1'b0 : e_ar[gr]) ^ wb[gr];
+`endif
+`ifdef OT_S81_KP4_ENC_LA
+        always @(posedge clk) rem_s[gr] <= (f0w[gr / 75] ? 1'b0 : e_ar[gr]) ^ wb[gr];
+`endif
     end endgenerate
     // parity of the frame: rem after chunk 9, rem[0] (rem_q[9:0], the x^29 side) transmitted first (MUT 1: symbol 7
     // inverted)
@@ -145,8 +185,21 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
     generate for (gr = 0; gr < NP; gr = gr + 1) begin : g_ptx
         assign rem_tx[299 - 10 * gr -: 10] = rem_q[10 * gr +: 10] ^ ((MUT == 1 && gr == 7) ? 10'h3FF : 10'h000);
     end endgenerate
+`ifdef OT_S81_KP4_ENC_LA
+    // parity = Q^-1 S_9 (rem_tx order): four free-running registered partials, valid in the cycle after rem_q holds
+    // S_9 -- the cycle the define-off par is read by the word-9 select -- and XORed there (par is unused)
+    reg  [299:0] pi0, pi1, pi2, pi3;
+    always @(posedge clk) begin pi0 <= e_pi0; pi1 <= e_pi1; pi2 <= e_pi2; pi3 <= e_pi3; end
+    wire [299:0] par_o;
+    generate for (gr = 0; gr < NP; gr = gr + 1) begin : g_pla
+        assign par_o[299 - 10 * gr -: 10] = pi0[299 - 10 * gr -: 10] ^ pi1[299 - 10 * gr -: 10] ^
+            pi2[299 - 10 * gr -: 10] ^ pi3[299 - 10 * gr -: 10] ^ ((MUT == 1 && gr == 7) ? 10'h3FF : 10'h000);
+    end endgenerate
+`else
     always @(posedge clk)
         if (f9[3 + PPCYC]) par <= rem_tx;
+    wire [299:0] par_o = par;
+`endif
     // ---------------- PMA words: word w = {d5, d4} at a fixed offset (cycle t_w + 5; d5 = beat w, d4 = beat w + 1)
     reg  [9:0] so [0:5];                 // one-hot beat index delayed 1..6 (so[4] = index of d5, so[5] = of d6)
     (* keep *) reg [9:0] sw [0:NRO-1];   // so[3] delayed once more: the word select at the d5 stage, NRO copies
@@ -171,7 +224,7 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT =
         if (gk == 0) begin : g0
             assign wsrc[gk] = {h0, dA, dB[511:500]};
         end else if (gk == 9) begin : g9
-            assign wsrc[gk] = {dA[243:0], par};
+            assign wsrc[gk] = {dA[243:0], par_o};
         end else begin : gn
             assign wsrc[gk] = wo[1043 - 32 * gk -: 544];
         end
