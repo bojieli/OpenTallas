@@ -135,6 +135,9 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
     return refs, n
 
 
+NEVER_TOUCH = ("/home/ubuntu/OpenTallas/.git",)   # COORD 11-09 13:2x: live wave srcs borrow objects from it on every host
+
+
 def alternates_targets_under(root):
     """object stores that any git repo under root borrows from (objects/info/alternates, COORD 11-09 13:1x): deleting a dir that is, holds
     or sits inside one breaks every repo that borrows from it (codex-wave-1105/{src,src_2c705}: 409 repos).  The targets go into this
@@ -1250,8 +1253,13 @@ class Plan:
         return None
 
     def kit_hit(self, paths):
-        """a live kit input is, contains or encloses one of paths: canonical (realpath) set first, then the literal alias set"""
+        """a live kit input is, contains or encloses one of paths: canonical (realpath) set first, then the literal alias set.
+        NEVER_TOUCH (COORD 11-09: the main repo's object store, the alternates store of live wave srcs) is refused on every host."""
         for f in paths:
+            for n in NEVER_TOUCH:
+                f2 = os.path.normpath(f)
+                if f2 == n or f2.startswith(n + "/") or n.startswith(f2.rstrip("/") + "/"):
+                    return f"never-touch {n}"
             kh = self.kit.hit(f) or self.kit_lit.hit(f)
             if kh:
                 return kh

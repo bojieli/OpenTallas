@@ -621,3 +621,13 @@ def test_alternates_targets_guarded(tmp_path):
     finally:
         lc.alternates_targets_under = saved
     assert f"{root}/cw/src/.git/objects" not in refs2
+
+
+def test_never_touch_main_git():
+    """COORD 11-09: /home/ubuntu/OpenTallas/.git is the alternates store of live wave srcs on every host; no row is, holds or sits inside it"""
+    lc, ac = _lc()
+    class P: pass
+    p = P(); p.kit = p.kit_lit = type("E", (), {"hit": staticmethod(lambda f: None)})()
+    kh = lambda ps: lc.Plan.kit_hit(p, ps)
+    assert kh(["/home/ubuntu/OpenTallas/.git/objects/pack"]) and kh(["/home/ubuntu/OpenTallas/.git"]) and kh(["/home/ubuntu/OpenTallas"])
+    assert kh(["/home/ubuntu/OpenTallas-x/.git"]) is None and kh(["/srv/opentallas-scratch2/claude/x"]) is None
