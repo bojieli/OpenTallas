@@ -1,0 +1,8 @@
+{"schema":"s81_svc_7.place_review.v1","module":"ot_s81_su_smd_fold2_local2","rtl_sha256":"0f5b23b46bfd3fa8b0f840e7bf75692bbd51da78f467543f1bd2538aa3bd2313","outline_um":[155.52,155.52],
+"qualification":"PLACE ONLY, DO_NOT_COUNT, HOLD_ROUTE, no die plan adoption; no CTS, GRT, route, sign-off or physical LEC run",
+"pilot_pin_cycles":{"rx":1,"tx":1,"adopted":false},
+"forms":{"vC_predecessor":{"cells":54750,"area_um2":6191.56,"fanout_spread_max_um":131.2,"offenders_over_100um":7,"worst_fanouts":[131,129,48,48,48]},
+"vA":{"commit":"43a9139fc0 tree of pilot generator 194f4eba05","cells":54870,"area_um2":6197.61,"util":0.2873,"fanout_spread_max_um":116.0,"offenders_over_100um":3,"offender_fanouts":[6,3,3],"local_density_max":0.453,"clock_entry_um":5.364},
+"vB":{"commit":"b16b1271d1","change":"cos reset consumers left to the placer","cells":54879,"area_um2":6198.51,"util":0.2873,"fanout_spread_max_um":108.8,"offenders_over_100um":10,"offender_fanouts":"8 RoPE control nets fanout48 at 100.2..108.8; 2 csn nets fanout3","local_density_max":0.466,"clock_entry_um":5.663}},
+"verdict":"local2 removes both ~130-fanout nets and the fault-status spread. RoPE g_l5 control fanout48 is NOT fixed by local2 (unchanged FPU source): it sits at about 100 um, under the advisory limit in vA and over it in vB, so it is placement noise around the threshold. vA is the better form. Thresholds are advisory.",
+"not_measured":"estimate.json envelope 7160 um2 was not reached: placed area 6197.6 um2 at PLACE, before CTS and repair"}
