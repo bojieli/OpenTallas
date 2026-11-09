@@ -3487,3 +3487,4 @@ COORD: 2026-11-08 22:33 PST hourly: count 240 flat since 19:59 (forced 22:0x). Q
 COORD: 2026-11-09 00:00 PST hourly: count 241 on store counter (HEAD +1). HBM 72/107: EP host and vc2 expected to make it 74, being checked. Hub scratch2 hit 0 GB 23:49 from per-row git lazy fetch; cleared; fix 9f6cf3f1369 in progress.
 COORD: 2026-11-09 00:51 PST hourly: count 243 store lower bound. Main 093994d559b. S81 switch febfb NOT launched: no ROM split, TYPE-SAFE-4 recomposing. AUTOCLEAN applies stopped 00:37, loss report owed, no apply until COORD rules. epyc7 (1058886) building; existing-host ssh additions wait on owner; drain clock not started.
 - 11-09 01:54 COORD: count 244; restart _RESTART_1109 lanes spawned (14 + HBM-HARD-9 holds HBM-CORES-A); disk refusals epyc2/hub.
+- 11-09 03:07 COORD: count 244 (03:05 live); 5 HOLD rows owe re-signs on main RTL; main 8cbe1928c22; plan census -> 5 new plan lanes.
