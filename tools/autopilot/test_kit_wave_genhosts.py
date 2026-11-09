@@ -587,3 +587,119 @@ def test_fallback_not_used_while_a_host_has_room():
     c = _fb_cfg(dict(a=80, b=120))
     c["_workroot_low"] = {"a": {"s81": 80}}
     assert K.pick_gen_host(c, "s81") == "b" and not c.get("_gen_fallback_taken")
+
+
+# ---- KW-FIX-38 11-08: root-fs lanes on a bind mount, scratch2 alternative, waiting rows
+def _df8(rows):
+    """h -> (lane free, mount target, lane dev, root dev, scratch2 free, scratch2 dev)"""
+    def run(h, cmd):
+        return 0, "W /srv/opentallas-scratch3/claude/kw26-wave-1106 %s %s %s %s %s %s\n" % rows[h]
+    return run
+
+
+def test_bind_mounted_root_lane_keeps_owner_floor():
+    c = _e6cfg()
+    c["gen_disk_min_gb"] = 100
+    got = K.workroot_low(FakeAP(), c, run=_df8({"epyc5": (160, "/srv/opentallas-scratch3", "9", "9", "40", "7"),
+                                                 "epyc6": (260, "/srv/opentallas-scratch3", "9", "9", "40", "7")}))
+    assert got == {"epyc5": {"s81": 160}} and c["_workroot_alt"] == {}          # 160 < 150 + 40; separate-disk lane absent here
+
+
+def test_root_lane_full_moves_to_scratch2_with_room():
+    c = _e6cfg()
+    c["gen_disk_min_gb"] = 100
+    got = K.workroot_low(FakeAP(), c, run=_df8({"epyc5": (120, "/srv/opentallas-scratch3", "9", "9", "150", "7"),
+                                                 "epyc6": (120, "/srv/opentallas-scratch3", "9", "9", "90", "7")}))
+    assert got == {"epyc6": {"s81": 120}}                                        # epyc6 scratch2 90 < 100 + 20 stays low
+    assert c["_workroot_alt"] == {"epyc5": {"s81": "/srv/opentallas-scratch2/claude/kw26-wave-1106"}}
+    assert c["_workroot_free"]["epyc5"]["s81"] == 150
+    c["_workroot_low"] = got
+    assert K.pick_gen_host(c, "s81", take=48) == "epyc5"
+
+
+def test_alt_requires_another_disk_and_a_scratch3_lane():
+    c = _e6cfg()
+    c["gen_disk_min_gb"] = 100
+    row = (120, "/srv/opentallas-scratch3", "9", "9", "500", "9")              # scratch2 on the root fs too: no alternative
+    got = K.workroot_low(FakeAP(), c, run=_df8({"epyc5": row, "epyc6": row}))
+    assert set(got) == {"epyc5", "epyc6"} and not c["_workroot_alt"]
+    c["workroot_alt"] = False
+    row = (120, "/srv/opentallas-scratch3", "9", "9", "500", "7")
+    got = K.workroot_low(FakeAP(), c, run=_df8({"epyc5": row, "epyc6": row}))
+    assert set(got) == {"epyc5", "epyc6"} and not c["_workroot_alt"]              # option off
+
+
+def test_alt_charge_stops_the_tick_burst():
+    c = _e6cfg()
+    c["gen_disk_min_gb"], c["gen_alt_charge_gb"] = 100, 6
+    c["_workroot_alt"], c["_workroot_free"], c["_workroot_low"] = {"e": {"s81": "/x"}}, {"e": {"s81": 112}}, {}
+    K.alt_charge(c, "e")
+    assert c["_workroot_alt"]["e"] == {"s81": "/x"} and c["_workroot_free"]["e"]["s81"] == 106
+    K.alt_charge(c, "e")                                                         # 100 < 106: off for the tick, reported low
+    assert not c["_workroot_alt"]["e"] and c["_workroot_low"]["e"]["s81"] == 100
+    assert "s81" in c["_alt_spent"]["e"]                                         # launch defers instead of starting behind the floor
+
+
+def test_work_alt_cmd_shell(tmp_path):
+    import subprocess
+    lane3, lane2 = tmp_path / "s3" / "claude" / "kw26", tmp_path / "s2" / "claude" / "kw26"
+    fresh = lane3 / "runs" / "items" / "a1"
+    (fresh / "logs").mkdir(parents=True)
+    full = lane3 / "runs" / "items" / "a2"
+    (full / "gen").mkdir(parents=True)
+    (full / "gen" / "x").write_text("y")
+    busy = lane3 / "runs" / "items" / "a3"
+    (busy / "logs").mkdir(parents=True)
+    (busy / "logs" / "l").write_text("y")
+    alt2 = str(tmp_path / "s2" / "claude" / "kw26")
+
+    def cmd(w):
+        return K.work_alt_cmd(str(w), alt2).replace(str(lane3), str(lane3))
+
+    def runit(w):
+        # lane_root() reads the path shape /srv/...; here patch the prefix by hand
+        alt = str(w).replace(str(lane3), alt2)
+        c = K.work_alt_cmd(str(w), alt2)
+        return subprocess.run(["bash", "-c", c], capture_output=True, text=True).stdout
+    # lane_root keys on /srv/opentallas-scratch*/claude/<lane>: tmp paths need the monkey form
+    real = K.lane_root
+    K.lane_root = lambda p: str(lane3)
+    try:
+        out = runit(fresh)
+        assert "->" in out and (fresh).is_symlink() and (fresh).resolve() == (lane2 / "runs" / "items" / "a1").resolve()
+        assert "kept non-empty" in runit(full) and not full.is_symlink()
+        out = runit(busy)
+        assert "kept" in out and not busy.is_symlink() and (busy / "logs" / "l").exists()
+        again = runit(fresh)
+        assert "kept existing link" in again
+    finally:
+        K.lane_root = real
+
+
+def test_waiting_row_reports_wait_disk(tmp_path):
+    jd = tmp_path / "a1"
+    jd.mkdir()
+    log = jd / "kit_rtl.live.log"
+    log.write_text("KW_STAGE kit_rtl\nKW12_DISK_WAIT 19:04 refused intel1: second scratch root ... floor\n")
+    assert "KW12_DISK_WAIT" in K.stage_disk_wait(log)
+    log.write_text("KW12_DISK_WAIT 19:04 refused\nstarted making rtl\n")
+    assert K.stage_disk_wait(log) == ""
+    assert K.stage_disk_wait(jd / "absent.live.log") == ""
+    st = {"items": {"k": {"die": "s81", "item": "t1", "status": "RUNNING", "stage": "kit_rtl", "disk_wait": "KW12_DISK_WAIT x", "attempt": 1}}}
+    K.write_stages(st, tmp_path, cfg=None)
+    rows = (tmp_path / K.STAGES_FILE).read_text().splitlines()
+    h = rows[0].split("\t")
+    v = dict(zip(h, rows[1].split("\t")))
+    assert v["status"] == "WAIT-DISK" and "KW12_DISK_WAIT" in v["reason"]
+
+
+def test_item_inputs_override_plan_and_bind_for_listed_items_only():
+    c = cfg(gen_host="epyc5", gen_hosts=["epyc5"], work_root=WR)
+    d = c["dies"]["s81"]
+    d.update(plan="/p/final2.json", src="/s", event="e", kit_rtl={"bind_out": "/b/vJ", "asbuilt": "/a/vJ", "script": "/x"},
+             item_inputs={"t1": {"plan": "/p/final3.json", "kit_rtl": {"bind_out": "/b/F3", "asbuilt": "/a/vK"}}})
+    sp = K.spec_for(c, "s81", "t1", "hub")
+    assert sp["plan"] == "/p/final3.json" and sp["kit_rtl"] == {"bind_out": "/b/F3", "asbuilt": "/a/vK", "script": "/x"}
+    other = K.spec_for(c, "s81", "t2", "hub")
+    assert other["plan"] == "/p/final2.json" and other["kit_rtl"] == {"bind_out": "/b/vJ", "asbuilt": "/a/vJ", "script": "/x"}
+    assert d["kit_rtl"]["bind_out"] == "/b/vJ"                                    # die entry not mutated
