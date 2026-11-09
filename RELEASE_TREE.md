@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 00:51 PST COUNT 243 (forced 00:3x, store counter; HBM EP host/vc2 now included; may still lag until COUNT-ARCHIVE-1's row-by-row proof): S81 60/62 + 28/205t, HEAD 4/4 + 18/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 74/107 + 0/81t. Cleanup stopped 00:37 after epyc5 bind-tree deletion (restored). loved-redfish building, waits on owner for ssh additions.
+> 2026-11-09 01:5x PST COUNT 244 (store counter 01:28, DO_NOT_COUNT honoured, h9b revoked; store = host walk 245=245 at 01:10 before revoke): S81 60/62 + 29/205t, HEAD 4/4 + 18/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 74/107 + 0/81t. All lanes died on the 01:45 limit; 14 fresh successors + HBM-HARD-9 from lanes/_RESTART_1109.md. Disk binding: epyc2+hub scratch2 REFUSED, cleanup off since 00:37, AUTOCLEAN-13 on it. epyc7 onboarding (owner approved ssh 01:4x).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
