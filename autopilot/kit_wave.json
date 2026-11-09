@@ -8571,7 +8571,9 @@
     "glue@8",
     "cbx_q10__cl94a12200@19",
     "cbx_q10__cl89936551@19",
-    "cbx_q10__cl89936551@20"
+    "cbx_q10__cl89936551@20",
+    "cbx_q10__cl89936551@21",
+    "slw_st_a_v1__clb036e152@7"
    ],
    "queue_src": "claude/qc-transport-fix-4-1109@5333b7dca834",
    "type_args": {
@@ -9184,7 +9186,9 @@
     "slw_fw_v1__clf51c11d8__clc7ddab13@13": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
     "slw_fw_v2__cl8537f156@5": "REDESIGN: plan event cand7 dba131fafa77 on plan_pv (cland strip rows 2 on the N-face ring_ff band, FW-ROWS-1 class, COORD 09:1x(5)/09:5x(4), DIE-QC-97 09:12/09:51/09:56) + gen_phys e1731efe515e (KW-FIX-43 relaunch)",
     "cbx_q10__cl94a12200@20": "REDESIGN: KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv",
-    "cbx_q10__cl89936551@20": "REDESIGN: KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv"
+    "cbx_q10__cl89936551@20": "REDESIGN: KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c858d8e + ONLY the DIE-QC-97 NL ck pin event (qfd_tile_nl_a0c pins_file -> cores/a0_nl_pins_ck1107.json b95ce593), sha b1de436a870a, so stage/reset realization = plan_pv = canonical bind_pv",
+    "cbx_q10__cl89936551@21": "REDESIGN: KW-FIX-43 11:1x PV-SCHEMA-1 0409748de8de overlaid into src_qcsw2 (epyc7, epyc2): schema accepts param_base_type/param_set; plan_pv/cand7/pv_nlck validate 0 errors",
+    "slw_st_a_v1__clb036e152@7": "REDESIGN: KW-FIX-43 11:1x PV-SCHEMA-1 0409748de8de overlaid into src_qcsw2 (epyc7, epyc2): schema accepts param_base_type/param_set; plan_pv/cand7/pv_nlck validate 0 errors"
    },
    "gen_hosts": [
     "epyc2",
@@ -9385,7 +9389,7 @@
     "cbx_q10__cl89936551": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW43_FIX": "pvnlck-b1de436a870a"
+     "OT_KW43_FIX": "pvschema-0409748de8de"
     },
     "slw_fe_v2__clf110fab2": {
      "OT_CONS_KIT": "1"
@@ -9538,6 +9542,9 @@
     },
     "sle_su_c": {
      "OT_KW43_FIX": "ccf792c10b63"
+    },
+    "slw_st_a_v1__clb036e152": {
+     "OT_KW43_FIX": "pvschema-0409748de8de"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
