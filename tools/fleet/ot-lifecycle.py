@@ -106,7 +106,7 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
         names = []
         for x in KIT_RECORD_NAMES:
             names += ["-name", x, "-o"]
-        q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "16", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
+        q = subprocess.run(["timeout", SCAN_TIMEOUT, "nice", "-n", "10", "find", "-P", r, "-maxdepth", "16", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
                             "-type", "f", "(", *names[:-1], ")", "-mtime", f"-{int(days)}", "-print"], capture_output=True, text=True)
         if q.returncode not in (0, 1):
             raise SystemExit(f"kit record scan failed under {r}: rc {q.returncode}")
@@ -135,6 +135,7 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
     return refs, n
 
 
+SCAN_TIMEOUT = os.environ.get("OT_LIFECYCLE_SCAN_TIMEOUT", "1800")   # s; 600 timed out on loaded epyc4 scratch3/scratch-root (11-09); a timeout fails closed
 NEVER_TOUCH = ("/home/ubuntu/OpenTallas/.git",)   # COORD 11-09 13:2x: live wave srcs borrow objects from it on every host
 
 
@@ -142,7 +143,7 @@ def alternates_targets_under(root):
     """object stores that any git repo under root borrows from (objects/info/alternates, COORD 11-09 13:1x): deleting a dir that is, holds
     or sits inside one breaks every repo that borrows from it (codex-wave-1105/{src,src_2c705}: 409 repos).  The targets go into this
     host's kitscan, so the fleet kit_union refuses them on every host, also where the borrowing repo lives on another host."""
-    q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", root, "-maxdepth", "18", "-type", "f", "-name", "alternates",
+    q = subprocess.run(["timeout", SCAN_TIMEOUT, "nice", "-n", "10", "find", "-P", root, "-maxdepth", "18", "-type", "f", "-name", "alternates",
                         "-path", "*/objects/info/alternates", "-print"], capture_output=True, text=True)
     if q.returncode not in (0, 1):
         raise SystemExit(f"alternates scan failed under {root}: rc {q.returncode}")
