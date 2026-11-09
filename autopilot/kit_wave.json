@@ -25,7 +25,7 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kv-types-5/ev/plan_kvr8/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_e2rd_lf",
+      "src": "/srv/opentallas-scratch2/claude/kw37/src_e2rd_lg",
       "src_sha": "5178ea7aa2797689caf8c40e546e0c89fb7808e1",
       "kit_rtl": {
         "mode": "bind",
@@ -258,7 +258,8 @@
         "kv3_pc_v1__cl4ea58a5c@13",
         "kv3_pc_v1__cl7f648944@17",
         "kv3_pc_v3@7",
-        "kv3_sys_SD_v1@13"
+        "kv3_sys_SD_v1@13",
+        "kv3_hub_Ei@16"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -532,7 +533,8 @@
         "kv3_io_ft_v1@17": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
         "kv3_io_cor@6": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
         "kv3_io_cor_v1@7": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
-        "kv3_sys_SD_v1@13": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 8 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]"
+        "kv3_sys_SD_v1@13": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 8 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "kv3_hub_Ei@16": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -116.76 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
       },
       "only_items": [
         "kv3_astk",
@@ -1621,7 +1623,12 @@
           "OT_HOLD_STOP_PS": "-200"
         }
       },
-      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b"
+      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b",
+      "src_prev_kw37lg": "/srv/opentallas-scratch2/claude/kw35/src_e2rd_lf",
+      "note_src_kw37lg": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): src = old src + legacy_gate.py G2-advisory (branch claude/kw-fix-37-g2-advisory-1108); no other file differs; revert src_prev_kw37lg",
+      "retry_prev_kw37lg_added": [
+        "kv3_hub_Ei@16"
+      ]
     },
     "s81": {
       "enabled": true,
@@ -1634,7 +1641,7 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p_lf",
+      "src": "/srv/opentallas-scratch2/claude/kw37/src_c303p_lg",
       "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "script",
@@ -2783,7 +2790,8 @@
         "dsdv_slice_c1x_C__t8@21",
         "dsdv_slice_lepw_mus_C__t1@20",
         "dsdv_slice_kv512_C__t1@13",
-        "dsdv_slice_iq_C__t1@13"
+        "dsdv_slice_iq_C__t1@13",
+        "iqf__t1@10"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3765,7 +3773,8 @@
         "dsdv_slice_c1x_C__t8@21": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
         "dsdv_slice_lepw_mus_C__t1@20": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
         "dsdv_slice_kv512_C__t1@13": "KW-FIX-37 18:5x: REDESIGN: stale bound leaf source (S81-TYPES-9-LEC J2/J3): kit_rtl.f carried src_28fc7 xs4/rstopt_xo/xs_ctl, real logic change; a stopped attempt, fresh kit on leaf-follow bind (config src_c303p_lf)",
-        "dsdv_slice_iq_C__t1@13": "KW-FIX-37 19:1x INFRA no design change: no host qualifies at kit_rtl (epyc4 disk 49 < 60), COORD 18:49 infra rows retry"
+        "dsdv_slice_iq_C__t1@13": "KW-FIX-37 19:1x INFRA no design change: no host qualifies at kit_rtl (epyc4 disk 49 < 60), COORD 18:49 infra rows retry",
+        "iqf__t1@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -95.13 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5781,6 +5790,11 @@
       "note_kw37c": "KW-FIX-37 batch C: stale-source rows relaunched fresh on leaf-follow; revert via retry_prev_kw37c_added",
       "retry_prev_kw37d_added": [
         "dsdv_slice_iq_C__t1@13"
+      ],
+      "src_prev_kw37lg": "/srv/opentallas-scratch2/claude/kw35/src_c303p_lf",
+      "note_src_kw37lg": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): src = old src + legacy_gate.py G2-advisory (branch claude/kw-fix-37-g2-advisory-1108); no other file differs; revert src_prev_kw37lg",
+      "retry_prev_kw37lg_added": [
+        "iqf__t1@10"
       ]
     },
     "s81_head": {
@@ -5794,7 +5808,7 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw23/prep_l48ui/source_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_95df6h",
+      "src": "/srv/opentallas-scratch2/claude/kw37/src_95df6h_lg",
       "src_sha": "95df6810481ecec08c774fcced6c223c8d408131",
       "kit_rtl": {
         "mode": "script",
@@ -5932,7 +5946,8 @@
         "hd_host@11",
         "hd_lep0N@14",
         "hd_serdes@12",
-        "hd_ctl_n@14"
+        "hd_ctl_n@14",
+        "hd_host@12"
       ],
       "pilot_max": 2,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -6044,7 +6059,8 @@
         "hd_host@11": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
         "hd_lep0N@14": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
         "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
-        "hd_ctl_n@14": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA"
+        "hd_ctl_n@14": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA",
+        "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
       },
       "gen_hosts": [
         "epyc6",
@@ -6500,6 +6516,11 @@
       ],
       "retry_prev_kw37d_added": [
         "hd_ctl_n@14"
+      ],
+      "src_prev_kw37lg": "/srv/opentallas-scratch2/claude/kw35/src_95df6h",
+      "note_src_kw37lg": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): src = old src + legacy_gate.py G2-advisory (branch claude/kw-fix-37-g2-advisory-1108); no other file differs; revert src_prev_kw37lg",
+      "retry_prev_kw37lg_added": [
+        "hd_host@12"
       ]
     },
     "qwen_compute": {
@@ -6514,7 +6535,7 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/qct10/ctlm/plan/plan_qc53v4w_ctlmfq.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq_lf",
+      "src": "/srv/opentallas-scratch2/claude/kw37/src_ctlmfq_lg",
       "src_sha": "7e2f6c9af85ec33de031f45aea6fe6d103a3f61b",
       "kit_rtl": {
         "mode": "bind",
@@ -7007,7 +7028,10 @@
         "sle_fw_v1__clf58b4dfb@6",
         "slw_fw_v1__cl51d45468@8",
         "slw_fw_v1__clf51c11d8__cl592e3d37@9",
-        "cbx_q10__cl94a12200@12"
+        "cbx_q10__cl94a12200@12",
+        "coll_ftc@4",
+        "coll_ft__cl78c7b300@9",
+        "coll_ft__cla4a25d77@10"
       ],
       "queue_src": "claude/kw-fix-35p-wave-ctlm-1108@7e2f6c9af85",
       "type_args": {
@@ -7579,7 +7603,10 @@
         "sle_fw_v1__clf58b4dfb@6": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 6 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
         "slw_fw_v1__cl51d45468@8": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 12 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
         "slw_fw_v1__clf51c11d8__cl592e3d37@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 43 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
-        "cbx_q10__cl94a12200@12": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA"
+        "cbx_q10__cl94a12200@12": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA",
+        "coll_ftc@4": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -141.3 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
+        "coll_ft__cl78c7b300@9": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -86.69 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
+        "coll_ft__cla4a25d77@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -87.0 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
       },
       "gen_hosts": [
         "intel1",
@@ -8926,6 +8953,13 @@
       "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b",
       "retry_prev_kw37d_added": [
         "cbx_q10__cl94a12200@12"
+      ],
+      "src_prev_kw37lg": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq_lf",
+      "note_src_kw37lg": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): src = old src + legacy_gate.py G2-advisory (branch claude/kw-fix-37-g2-advisory-1108); no other file differs; revert src_prev_kw37lg",
+      "retry_prev_kw37lg_added": [
+        "coll_ftc@4",
+        "coll_ft__cl78c7b300@9",
+        "coll_ft__cla4a25d77@10"
       ]
     },
     "hbm": {
@@ -9776,7 +9810,8 @@
         "q_b102@2",
         "q_b102__physical_v1@2",
         "q_b103@2",
-        "q_b103__physical_v1@2"
+        "q_b103__physical_v1@2",
+        "vsN2@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -10038,7 +10073,8 @@
         "q_b102@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
         "q_b102__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
         "q_b103@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
-        "q_b103__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit"
+        "q_b103__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "vsN2@2": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -54.94 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -11868,7 +11904,10 @@
         "q_b103@2",
         "q_b103__physical_v1@2"
       ],
-      "note_kw37h": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): HBM switch; q_sm0 and q_hub_ne join when their dry runs pass"
+      "note_kw37h": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): HBM switch; q_sm0 and q_hub_ne join when their dry runs pass",
+      "retry_prev_kw37lg_added": [
+        "vsN2@2"
+      ]
     }
   },
   "place_prefer": [
