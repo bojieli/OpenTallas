@@ -1,0 +1,5210 @@
+[
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      647.877,
+      315.396,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      647.888,
+      315.451,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      647.628,
+      315.44,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/5/xy",
+  "value": [
+   544.224,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/5/xy",
+  "value": [
+   315.424,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      647.877,
+      920.148,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      647.888,
+      920.159,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      647.628,
+      920.112,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/6/xy",
+  "value": [
+   691.296,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/6/xy",
+  "value": [
+   920.096,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q11/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      647.877,
+      306.756,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      647.888,
+      306.811,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      647.628,
+      306.8,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/5/xy",
+  "value": [
+   535.584,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/5/xy",
+  "value": [
+   306.784,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q11/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      647.877,
+      928.788,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      647.888,
+      928.799,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      647.628,
+      928.752,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/6/xy",
+  "value": [
+   699.936,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/6/xy",
+  "value": [
+   928.736,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q11/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      1883.397,
+      306.756,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      1883.408,
+      306.811,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      1883.148,
+      306.8,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/7/xy",
+  "value": [
+   535.584,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/7/xy",
+  "value": [
+   306.784,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q11/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      1883.397,
+      928.788,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      1883.408,
+      928.799,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      1883.148,
+      928.752,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/8/xy",
+  "value": [
+   699.936,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/8/xy",
+  "value": [
+   928.736,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q11/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q11/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      647.877,
+      315.396,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      647.888,
+      315.451,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      647.628,
+      315.44,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/xy",
+  "value": [
+   544.224,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/xy",
+  "value": [
+   315.424,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      647.877,
+      920.148,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      647.888,
+      920.159,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      647.628,
+      920.112,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/xy",
+  "value": [
+   691.296,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/xy",
+  "value": [
+   920.096,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q01_s2/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q01_s2/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00_s2/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00_s2/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      656.517,
+      306.756,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      656.528,
+      306.811,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      656.268,
+      306.8,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/xy",
+  "value": [
+   535.584,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/xy",
+  "value": [
+   306.784,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      1883.397,
+      306.756,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      1883.408,
+      306.811,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      1883.148,
+      306.8,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/xy",
+  "value": [
+   535.584,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/xy",
+  "value": [
+   306.784,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl94a12200/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      1883.397,
+      928.788,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      1883.408,
+      928.799,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      1883.148,
+      928.752,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/xy",
+  "value": [
+   699.936,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/xy",
+  "value": [
+   928.736,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl94a12200/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      656.517,
+      306.756,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      656.528,
+      306.811,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      656.268,
+      306.8,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/xy",
+  "value": [
+   535.584,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/xy",
+  "value": [
+   306.784,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      1883.397,
+      306.756,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      1883.408,
+      306.811,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      1883.148,
+      306.8,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/xy",
+  "value": [
+   535.584,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/xy",
+  "value": [
+   306.784,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbx_q10__cl89936551/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      1883.397,
+      928.788,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      1883.408,
+      928.799,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      1883.148,
+      928.752,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/xy",
+  "value": [
+   699.936,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/xy",
+  "value": [
+   928.736,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbx_q10__cl89936551/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cld7bf7197/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cld7bf7197/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cl622f65d2/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cl622f65d2/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q00__cldbcda913/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q00__cldbcda913/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      647.877,
+      315.396,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      647.888,
+      315.451,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      647.628,
+      315.44,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/xy",
+  "value": [
+   544.224,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/xy",
+  "value": [
+   315.424,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      647.877,
+      920.148,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      647.888,
+      920.159,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      647.628,
+      920.112,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/xy",
+  "value": [
+   691.296,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/xy",
+  "value": [
+   920.096,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cldd6ea846/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cldd6ea846/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      647.877,
+      315.396,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      647.888,
+      315.451,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      647.628,
+      315.44,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/xy",
+  "value": [
+   544.224,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/xy",
+  "value": [
+   315.424,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      647.877,
+      920.148,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      647.888,
+      920.159,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      647.628,
+      920.112,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/xy",
+  "value": [
+   691.296,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/xy",
+  "value": [
+   920.096,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__clab6e67f2/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__clab6e67f2/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      647.877,
+      315.396,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      647.888,
+      315.451,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      647.628,
+      315.44,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/xy",
+  "value": [
+   544.224,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/xy",
+  "value": [
+   315.424,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      647.877,
+      920.148,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      647.888,
+      920.159,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      647.628,
+      920.112,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/xy",
+  "value": [
+   691.296,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/xy",
+  "value": [
+   920.096,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q01__cld9ff4c40/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      647.877,
+      306.756,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      647.888,
+      306.811,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      647.628,
+      306.8,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/xy",
+  "value": [
+   535.584,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/xy",
+  "value": [
+   306.784,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      647.877,
+      928.788,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      647.888,
+      928.799,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      647.628,
+      928.752,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/xy",
+  "value": [
+   699.936,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/xy",
+  "value": [
+   928.736,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      1883.397,
+      306.756,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      1883.408,
+      306.811,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      1883.148,
+      306.8,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/xy",
+  "value": [
+   535.584,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/xy",
+  "value": [
+   306.784,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      1883.397,
+      928.788,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      1883.408,
+      928.799,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      1883.148,
+      928.752,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/xy",
+  "value": [
+   699.936,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/xy",
+  "value": [
+   928.736,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl5cc92dfe/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      647.877,
+      306.756,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      647.888,
+      306.811,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      647.628,
+      306.8,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/xy",
+  "value": [
+   535.584,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/xy",
+  "value": [
+   306.784,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      647.877,
+      928.788,
+      648.036
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      647.888,
+      928.799,
+      647.92
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      647.628,
+      928.752,
+      648.396
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/xy",
+  "value": [
+   699.936,
+   737.208
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/xy",
+  "value": [
+   928.736,
+   648.012
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      306.732,
+      1883.397,
+      306.756,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      306.721,
+      1883.408,
+      306.811,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      306.768,
+      1883.148,
+      306.8,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/xy",
+  "value": [
+   535.584,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/xy",
+  "value": [
+   306.784,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbn_q11__cl49ae4555/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      928.764,
+      1883.397,
+      928.788,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      928.709,
+      1883.408,
+      928.799,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      928.72,
+      1883.148,
+      928.752,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/xy",
+  "value": [
+   699.936,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/xy",
+  "value": [
+   928.736,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbn_q11__cl49ae4555/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl1b5a6458/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/0/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/0/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      656.517,
+      315.396,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      656.528,
+      315.451,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      656.268,
+      315.44,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/xy",
+  "value": [
+   544.224,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/xy",
+  "value": [
+   315.424,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/5/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/1/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/1/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      656.517,
+      920.148,
+      656.676
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      656.528,
+      920.159,
+      656.56
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      656.268,
+      920.112,
+      657.036
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/xy",
+  "value": [
+   691.296,
+   745.848
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/xy",
+  "value": [
+   920.096,
+   656.652
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/6/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/2/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/2/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      315.372,
+      1883.397,
+      315.396,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      315.361,
+      1883.408,
+      315.451,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      315.408,
+      1883.148,
+      315.44,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/xy",
+  "value": [
+   544.224,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/xy",
+  "value": [
+   315.424,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/7/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins.json"
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/3/pins_file",
+  "value": "cores/a0_nk_pins_ck1109.json"
+ },
+ {
+  "op": "add",
+  "path": "/partition_types/cbf_q00__cl870de686/hard_cores/3/clock_entry_access",
+  "value": {
+   "pin": "ck",
+   "footprints_um": {
+    "M5": [
+     [
+      920.124,
+      1883.397,
+      920.148,
+      1883.556
+     ]
+    ],
+    "M6": [
+     [
+      920.069,
+      1883.408,
+      920.159,
+      1883.44
+     ]
+    ],
+    "M7": [
+     [
+      920.08,
+      1883.148,
+      920.112,
+      1883.916
+     ]
+    ]
+   }
+  }
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/xy",
+  "value": [
+   691.296,
+   1972.728
+  ]
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/xy",
+  "value": [
+   920.096,
+   1883.532
+  ]
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/insertion_ps",
+  "value": 665.8
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/insertion_ps",
+  "value": 733.25
+ },
+ {
+  "op": "test",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/insertion_ff_ps",
+  "value": 576.5
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/insertion_ff_ps",
+  "value": 586.0
+ },
+ {
+  "op": "replace",
+  "path": "/partition_types/cbf_q00__cl870de686/clock/taps/8/budget_owner",
+  "value": "DIE-QC-97 11-09 NK clock-pin event: signed NK vR7 eco2 re-sign pin-flop mean TT 733.25 / FF 586.0 (n 2584) at the real M5 ck pin via clock_entry_access; parent STA unqualified"
+ }
+]

@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.plan_check_compare.v1",
+ "tool": "tools/die_plan/check.py at c/main 42e9cd1810a + the one-key memory_read_extra schema hunk from dq97/mem9-schema-1109 (base needs it; main schema alone stops at 36 [schema] errors on both plans)",
+ "host": "epyc7",
+ "base": {
+  "plan": "plan_qc53v4nS_mem9_vml.json",
+  "sha256": "282ca18ef6cc7923775d54c0a039613637e4d39bb9ae1d4e360d46243a8f1f77",
+  "errors": 9,
+  "warnings": 191,
+  "core_pins_off_track": 0,
+  "core_pins_access_footprint": 0
+ },
+ "event": {
+  "plan": "plan_qc53v4nS_mem9_vml_nkck.json",
+  "sha256": "5839af7fc4c82a219f5f3ee597716a9f111031273e0fba125386cf77d41ceb2f",
+  "errors": 9,
+  "warnings": 191,
+  "core_pins_off_track": 0,
+  "core_pins_access_footprint": 62
+ },
+ "error_warning_lines_identical": true,
+ "errors": [
+  "ERROR [geometry] type cbn_q00__cl622f65d2 slot rsf: 515 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro cl_rsf_i)",
+  "ERROR [geometry] type cbn_q00__cldbcda913 slot rsf: 515 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro cl_rsf_i)",
+  "ERROR [geometry] type slw_su_l1__clcc9d0155 slot cws0: 63 actual-bit station cells/sites intersect physical macros (stage 4, bit 172, macro cl_rsf_i)",
+  "ERROR [geometry] type slw_su_l1__clcc9d0155 slot rsf: 63 actual-bit station cells/sites intersect physical macros (stage 1, bit 172, macro cl_rsf_i)",
+  "ERROR [geometry] type slw_su_l1__cla2a78701 slot cws0: 63 actual-bit station cells/sites intersect physical macros (stage 4, bit 172, macro cl_rsf_i)",
+  "ERROR [geometry] type slw_su_l1__cla2a78701 slot rsf: 63 actual-bit station cells/sites intersect physical macros (stage 1, bit 172, macro cl_rsf_i)",
+  "ERROR [hard_pinreg] type phy_serdes: registered_pins lib physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib not found",
+  "ERROR [hard_pinreg] type phy_serdes_b: registered_pins lib physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib not found",
+  "ERROR [hard_pinreg] type phy_ucie_kv: registered_pins lib physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib not found"
+ ],
+ "verdict": "no new error or warning; the 9 G0 errors are pre-existing in the base (station/macro overlap in cbn_q00/slw_su_l1, missing PHY libs); all 62 NK ck pins are proven on track via clock_entry_access"
+}
