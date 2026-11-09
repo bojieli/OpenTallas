@@ -1,0 +1,46 @@
+{
+ "schema": "s81_leaf_batch_1108b",
+ "lane": "S81-TYPES-11",
+ "note": "Replaces OT_MACRO_MOVES on these 6 rows only; OT_NATIVE_RESET_SCOPE and other item_env keys unchanged. resume at floorplan (macro_place only).",
+ "rows": {
+  "ot_s81sl_leaf__t15": {
+   "retry_key": "ot_s81sl_leaf__t15@2",
+   "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:34.56:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:192.24:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+   "model_worst_after": 1.15,
+   "retry_fix": "REDESIGN: macro moves re-solved with landing bands as keep-outs (LN12 no longer covers ft1_i, 75% covered); vn_b +5.76, LN2 -6.48 open LN2|vn_b. Model 1.15.",
+   "class": "BAND"
+  },
+  "ot_s81sl_leaf__t59": {
+   "retry_key": "ot_s81sl_leaf__t59@2",
+   "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:40.32:MX,u_lf.u_vp.g_ln[10].u_l:43.2:302.016:MX,u_lf.u_vp.g_ln[12].u_l:51.84:42.816:MX,u_lf.u_vp.g_ln[14].u_l:190.08:172.416:MX,u_lf.u_vp.g_ln[2].u_l:181.44:42.816:MX,u_lf.u_vp.g_ln[9].u_l:60.48:172.416:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+   "model_worst_after": 1.07,
+   "retry_fix": "REDESIGN: macro moves re-solved with landing bands as keep-outs (vn_b no longer covers leafdn_i0 82%; LN12/LN9 clear of ft1_i/ft2_i); vn_b +5.76 x, +5.76 y. Model 1.07.",
+   "class": "BAND"
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "retry_key": "ot_s81sl_leaf__t40__clf8bbdae1@10",
+   "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:34.56:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:192.24:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+   "model_worst_after": 1.15,
+   "retry_fix": "REDESIGN: same band-aware form as t15 (LN12 no longer covers ft1_i 75%). Model 1.15.",
+   "class": "BAND"
+  },
+  "ot_s81sl_leaf__t36": {
+   "retry_key": "ot_s81sl_leaf__t36@2",
+   "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.336:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.336:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0",
+   "retry_fix": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model.",
+   "class": "GRID"
+  },
+  "ot_s81sl_leaf__t46": {
+   "retry_key": null,
+   "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.976:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.696:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0",
+   "retry_fix": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model.",
+   "class": "GRID"
+  },
+  "ot_s81sl_leaf__t65": {
+   "retry_key": null,
+   "OT_MACRO_MOVES": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.976:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.976:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0",
+   "retry_fix": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model.",
+   "class": "GRID"
+  }
+ }
+}
