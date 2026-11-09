@@ -51,8 +51,9 @@ PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),         
         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52n.json', ()),  # QC qc52n = qc52 + NL clock-pin event (DIE-QC-91, COORD 11-07 17:07 (5) / 18:00 (1); main a6b4cd1c5d3 in 18ed159e6b8): dry run 24 -> 25 designs (NL gained), 0 lost, G0C findings identical
          # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
-         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v/die_plan.json.gz',   # d44v = HBM RE-FORM batch, FROZEN (COORD 11-03 11:01)
-          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v')))]
+         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v_epm/die_plan.json.gz',   # d44v_epm = d44v + EP-MOD-1108/1108d: NW_io u_ep_N0, u_host_ep -> as-built EP modules (HBM-HARD-8 11-08; COORD ruling, DIE-HBM-94 CONFIRM 22:24, main 76c9a4e6e02)
+          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v', 'd44v_epm')))]
+         # was: ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v/die_plan.json.gz', tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v')))   # d44v = HBM RE-FORM batch, FROZEN (COORD 11-03 11:01)
 # PIN ALIASES (FLOW-15 2026-10-31, SIGNOFF-SPRINT-10 ASK (b)): a plan built in a lane tree may name a plan-relative pins
 # file that is not on main under that name; its byte-identical main copy elsewhere is laid at the plan-relative path
 # before the designs are read (sha256 checked: a different file is an error, never a silent substitute).  This wins
