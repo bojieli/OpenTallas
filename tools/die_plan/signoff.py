@@ -907,14 +907,18 @@ if {[sta::endpoint_violation_count min] > 0} {
   # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
   # this, since port-start hold is the parent's.  Each find_timing_paths result is read before the next call: a later
   # call frees the earlier PathEnds, and reading them crashes OpenROAD, which no catch stops.
+  # KW-FIX-36 11-08 (COORD R4): core_n / core_wns = the same census without output-port endpoints, which sign-off
+  # assigns to the parent (oport above).  eco_loop.near_miss scores core_*; n / wns stay what the ECO's nonport scope repairs.
   catch {
-    set so_np [dict create]; set so_np_all 0; set so_np_reg 0
+    set so_np [dict create]; set so_np_core [dict create]; set so_np_all 0; set so_np_reg 0
     foreach so_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
       incr so_np_all
       set so_sl [get_property $so_pe slack]
       set so_sp [get_property $so_pe startpoint]
       if {$so_sl < 0 && !([$so_sp is_top_level_port] && [get_full_name $so_sp] ni $so_ck_ports)} {
-        dict set so_np [get_full_name [get_property $so_pe endpoint]] $so_sl
+        set so_eo [get_property $so_pe endpoint]
+        dict set so_np [get_full_name $so_eo] $so_sl
+        if {![$so_eo is_top_level_port]} { dict set so_np_core [get_full_name $so_eo] $so_sl }
       }
     }
     if {[llength [all_registers -clock_pins]]} {
@@ -922,14 +926,17 @@ if {[sta::endpoint_violation_count min] > 0} {
         incr so_np_reg
         set so_sl [get_property $so_pe slack]
         if {$so_sl >= 0} continue
-        set so_ep [get_full_name [get_property $so_pe endpoint]]
+        set so_eo [get_property $so_pe endpoint]
+        set so_ep [get_full_name $so_eo]
         if {![dict exists $so_np $so_ep] || $so_sl < [dict get $so_np $so_ep]} { dict set so_np $so_ep $so_sl }
+        if {![$so_eo is_top_level_port] && (![dict exists $so_np_core $so_ep] || $so_sl < [dict get $so_np_core $so_ep])} { dict set so_np_core $so_ep $so_sl }
       }
     }
     if {$so_np_all < 100000 && $so_np_reg < 100000} {
-      set so_np_w 0.0
+      set so_np_w 0.0; set so_np_cw 0.0
       dict for {so_ep so_sl} $so_np { if {$so_sl < $so_np_w} { set so_np_w $so_sl } }
-      so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w]
+      dict for {so_ep so_sl} $so_np_core { if {$so_sl < $so_np_cw} { set so_np_cw $so_sl } }
+      so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w] core_n [dict size $so_np_core] core_wns [format %.2f $so_np_cw]
     }
   }
 }
@@ -1536,6 +1543,8 @@ def corner_result(parsed):
         if "STD_MIN_NONPORT" in kv:                 # DIE-KV-88 11-07: report only, read by eco_loop.near_miss
             d = _kvlist(kv["STD_MIN_NONPORT"])
             out["std_min_start"].update(nonport_n=_f(d.get("n")), nonport_wns=_f(d.get("wns")))
+            if d.get("core_n") is not None:         # KW-FIX-36 R4: the census without output-port endpoints
+                out["std_min_start"].update(core_n=_f(d.get("core_n")), core_wns=_f(d.get("core_wns")))
     out["slew_viol"] = _f(kv.get("SLEW_VIOL"))
     out["cap_viol"] = _f(kv.get("CAP_VIOL"))
     fo = (kv.get("FANOUT_MAX") or "").split()

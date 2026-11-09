@@ -269,11 +269,35 @@ def nonport_hold(signoff_path):
     return w, n
 
 
+def core_hold(signoff_path):
+    """KW-FIX-36 11-08 (COORD R4): (wns_ps, endpoints, exact) of the FF hold violators neither started at an input port
+    nor ending at an output port, the two sets sign-off assigns to the parent (signoff.port_only_hold, census oport).
+    None when the split cannot be read, as nonport_hold.  A record older than core_n has one bound only: endpoints =
+    min(nonport_n, other + reg); wns stays the unsplit non-port wns (it may be set by an output endpoint), so the
+    alignment gives an older record no easier number than the census it holds; re-sign for the exact split."""
+    try:
+        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start") or {}
+    except (OSError, ValueError, AttributeError):
+        return None
+    if s.get("err") != 0 or s.get("trunc") != 0:
+        return None
+    if s.get("core_n") is not None and s.get("core_wns") is not None:
+        return float(s["core_wns"]), int(s["core_n"]), True
+    split = nonport_hold(signoff_path)
+    if split is None:
+        return None
+    w, n = split
+    if not (s.get("oport") or 0):
+        return w, int(n), True                  # no output-port endpoints: the non-port census is already exact
+    return w, int(min(n, (s.get("other") or 0) + (s.get("reg") or 0))), False
+
+
 def near_miss(rec, signoff_path=None):
     """-> (near, [what is beyond the numbers], [advisories]).  Only FAIL gates count: port-only hold is PASS in a current
     record, and an older record's FF census gives the same answer; it goes to the parent, not to an ECO.  A mixed record
-    scores hold on its non-port endpoints only (port-start hold is the parent's); with no readable split it scores the
-    whole number."""
+    scores hold on the endpoints sign-off leaves to the core (KW-FIX-36 R4: without input-port starts and output-port
+    endpoints, core_hold); with no readable split it scores the whole number.  Same numbers as ever: one iteration,
+    NEAR_WNS_PS, NEAR_ENDPOINTS of the remaining endpoints."""
     c = rec.get("checks") or {}
     far, warn = [], []
     for key, name in (("setup_tt", "setup"), ("hold_ff", "hold")):
@@ -284,10 +308,11 @@ def near_miss(rec, signoff_path=None):
             warn.append("hold is port-only: the parent's, no ECO for it")
             continue
         w, n = g.get("wns_ps"), g.get("violators") or 0
-        split = nonport_hold(signoff_path) if key == "hold_ff" and signoff_path else None
+        split = core_hold(signoff_path) if key == "hold_ff" and signoff_path else None
         if split:
-            w, n = split
-            warn.append(f"hold scored on non-port only: {int(n)} endpoint(s) at {w} ps; the rest start at ports, the parent's")
+            w, n, exact = split
+            warn.append(f"hold scored on core-owned only: {int(n)} endpoint(s) at {w} ps; the rest start at input ports or end "
+                        f"at output ports, the parent's" + ("" if exact else " (older census: count bounded, wns unsplit; re-sign for the exact split)"))
         if w is not None and w < -NEAR_WNS_PS:
             far.append(f"{name} WNS {w} ps worse than -{NEAR_WNS_PS:g}")
         if n > NEAR_ENDPOINTS:

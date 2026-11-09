@@ -893,6 +893,37 @@ def test_mixed_hold_scores_nonport_only(tmp_path):
     assert ok and not beyond and any("1 endpoint(s) at -0.49" in x for x in warn)
 
 
+def test_mixed_hold_core_split_excludes_output_endpoints(tmp_path):
+    """COORD R4: output-port endpoints are the parent's in the sign-off census, so they leave the near-miss count"""
+    c = dict(MIXED, oport=2000.0, nonport_n=2010.0, nonport_wns=-34.0, core_n=10.0, core_wns=-8.0)
+    r, b = _mixed_hold_record(tmp_path, c)
+    ok, beyond, warn = E.near_miss(r, b)
+    assert ok and not beyond and any("10 endpoint(s) at -8.0" in x and "output ports" in x for x in warn)
+
+
+def test_core_split_large_still_far(tmp_path):
+    """the alignment is not an allowance: the same numbers on the remaining endpoints"""
+    c = dict(MIXED, oport=2000.0, nonport_n=2200.0, nonport_wns=-34.0, core_n=200.0, core_wns=-31.0)
+    r, b = _mixed_hold_record(tmp_path, c)
+    ok, beyond, _ = E.near_miss(r, b)
+    assert not ok and "hold WNS -31.0" in beyond[0] and "200 endpoints" in beyond[1]
+
+
+def test_older_census_bounds_count_keeps_unsplit_wns(tmp_path):
+    """no core_n: count bounded by other + reg, wns the unsplit non-port wns (the older census cannot split it)"""
+    c = dict(MIXED, other=20.0, reg=20.0, oport=2000.0, nonport_n=2030.0, nonport_wns=-34.0)
+    r, b = _mixed_hold_record(tmp_path, c)
+    ok, beyond, warn = E.near_miss(r, b)
+    assert not ok and "hold WNS -34.0" in beyond[0] and not any("endpoints" in x for x in beyond)
+    assert any("older census" in x for x in warn)
+
+
+def test_older_census_no_oport_is_exact(tmp_path):
+    r, b = _mixed_hold_record(tmp_path, dict(MIXED, nonport_n=1.0, nonport_wns=-0.49, oport=0.0))
+    ok, _, warn = E.near_miss(r, b)
+    assert ok and not any("older census" in x for x in warn)
+
+
 def test_mixed_hold_large_nonport_still_far(tmp_path):
     r, b = _mixed_hold_record(tmp_path, dict(MIXED, nonport_n=101.0, nonport_wns=-31.0))
     ok, beyond, _ = E.near_miss(r, b)
