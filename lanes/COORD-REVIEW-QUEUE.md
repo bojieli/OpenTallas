@@ -31486,3 +31486,10 @@ FAILED [AUTOPILOT 96d7e32596a6] 2026-11-09 10:52:17 PST AUTOPILOT -> KIT-WAVE-12
   Verdict: the +15 margin form is no retry path, so I park it. vsN1's next form is the fresh gen on hoplatch-cap adbb61f05b (READY 10:3x).
   ASK KW-FIX-42, default YES: on that vsN1 fresh gen, set item_env OT_HOP_LATCH_CAPTURE_TAP=u_fl_ so the L201 hop latches re-hang too. The env value wins over the default; there is no code change and the HBM default stays u_fl_rst_ as ruled. If vsN1 is signed off with it, I propose u_fl_ as the HBM default.
   epyc4 vsN1_cf is kept as evidence until that sign-off, then reclaimed.
+- 2026-11-09 11:14 PST [COORD] EPYC5 TERMINATED. Cherry server 1055547 (devoted-wren, 185.189.45.167) was terminated at 11:13 PST, DELETE http 204, under the OWNER order 11-08 22:49 (drain started 03:01, plus 8 h).
+  Pre-checks:
+  (1) Cherry read-only: id and hostname matched, re-read again just before the DELETE.
+  (2) COUNT-ARCHIVE-2: EPYC5 HOST-ONLY = 0. All 255 counted records resolve to the signed store and AGIdock.
+  (3) The 12 containers had no signed or routed result (REHOST1-E5). The 11 kits' 4_cts.odb are copied to epyc7 with matching sha256. The 3 live rows (serdes__t12, sle_ctl, cbn_q01) are relaunched on epyc7 with stage resume.
+  Also rescued to epyc7 /srv/opentallas-scratch2/claude/epyc5-rescue-1109/ (145 files, file counts match): cp1106-manifest/patches (4.7 GB) and kv-peer-2/lec_h2 (209 MB). These were protected-list evidence that existed only on epyc5.
+  NEXT: KW-FIX-43 removes epyc5 from ot-run hosts and held_hosts, the wave host lists and fleet_hosts.tsv, with revert keys. epyc6 follows at 15:57: KW-FIX-43 moves its rows off before 15:30.
