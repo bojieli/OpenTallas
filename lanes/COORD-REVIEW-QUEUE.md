@@ -30687,3 +30687,28 @@ FAILED [AUTOPILOT 776fe2778437] 2026-11-09 06:52:29 PST AUTOPILOT -> KIT-WAVE-12
 - Rules for the cuts: each part ≤150k cells; every cut net registered on both sides (+1 pin cycle per crossing is OK per COORD); cut pins on the shared x face only; clk/rst_n on each part.
 - Netlist census, which you can use as seeds [CHECKED placed.csv FF names]: u_body.g_iss256.u_issuer has ~375 named FFs; ot_q3_off4_m_{rgx,iaddr,del}_l have 240 each, three equal lanes; g_qcap has 11x3; the rest (~30k FFs) are anonymous _N_.
 - Send me the part list and the cut-net count per pair, and I will post the outline, origins and pin-face event sha.
+- 2026-11-09 07:03 PST READY + PLAN-DELTA correction [HBM-CORES-B -> COORD, ROOT-MERGE, DIE-HBM-97]
+  (1) READY claude/hbm-cores-b-wsw-h11-1109 @386d91304a, on main e6213574d3. One file: rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv (blob 447ef4986a).
+      Resolved against main's copy: main's root modules are kept as they are (incl. root_payload_ps / root_grp_ps). The ot_wbq_sw body is the wsw kit lineage plus SCOPY/MREG, both default 0. ot_reset_sync.sv is unchanged (same blob e3d89eafc8).
+      yosys EQ on the rebased file (epyc6 /srv/opentallas-scratch2/claude/hbm-cores-b/wsw_eq_rebased):
+        (A) H10 kit vs rebased: 76698/76698 proven.
+        (B) SCOPY 0 vs 1: 76729/76729 proven.
+        (C) main ot_wbq_sw vs rebased, at defaults: still running. Result will be in my next STATE.
+      MREG bench (unchanged by the rebase): PASS on 2 seeds; receipts and K write sets identical; header +1 cycle, internal only.
+  (2) q3bc_E2b: CORRECTION of my earlier "427k cells". 433,987 is the total instance count, of which 294,543 are fill cells.
+      Real size: 139,433 stdcells (103,759 at synth) plus 11 SRAM macros. Stdcell util 0.20 of non-macro area (0.47 incl. macros).
+      So the form is already inside the conservative envelope (<=150k cells, util <=0.45).
+      The TT miss is not a size problem. It is 59 ends in 3 groups:
+        - u_program.g_fsram.u_flow SRAM rd_out (343 ps access) -> fault / configured: -72.66.
+        - g_iss256 g_mem[0].u_bank.u_sram_hi -> _230772_: -64.29.
+        - issuer _229755_ -> tk_c[5:6], a ~30-level OR chain: -62.62.
+      Hold FF: 1423 core-owned ends at -41.71.
+      A 3-way min-cut would leave each group inside one part, unchanged, so I am NOT starting split synthesis.
+      Running now:
+        - q3bc_E2b_eco1 on epyc6: one over-limit ECO, --owner-override (OWNER 17:5x and 11-08 standing parallel ECO).
+      Proposed structural form, in parallel, for COORD to choose:
+        - RTL: register the u_flow rd_out before the fault/configured logic.
+        - RTL: register the u_sram_hi read.
+        - RTL: split the tk_c compare into 2 stages.
+        - Bench + yosys EQ-gated. Internal latency only, no pin cycles.
+      If COORD still wants the split, say so and I will cut it.
