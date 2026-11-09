@@ -18,7 +18,19 @@ A missing or unreadable config, or "enabled": false, passes everything to the ba
 KW-FIX-42 11-09 (OWNER 08:2x all dies / all stages): conf "stages" (runner stage words sealed, default ["place"]),
 "hosts" (the first that holds K + runner + ot-job/bwrap), and the fallback: a sealed job that fails on a missing input
 outside the job dir is logged to conf "gaps" (ISOLATE-GAPS.tsv: time die type stage path tool) and rerun ONCE unsealed.
+KW-FIX-44 11-09 (COORD KW44-5, OWNER legacy-delete goal: no job reads another job's files): the stages AFTER place.
+autopilot submit() runs route / finish (signoff_chain.py: route, sign-off, the late ECO, the routed LEC) as
+  ot-run --mem M --threads T --dir K --stage K [--stage R] [--priority die --crit] -- python3 -c <ADMISSION_BOOTSTRAP>
+         <b64 meta> [--no-late-eco] R K <goal> M T
+Such a call is sealed when conf "ap_goals" names the goal (opt-in; absent = every autopilot call passes through as
+before) and, while conf "ap_pilot" is a non-empty list, K contains one of its strings.  Declared inputs: the runner (when
+outside K), the admission tool bundle pinned by sha (meta dir; BUNDLE.json sha256 must equal meta sha256 on the host,
+else the bundle is fetched from the hub into the job's store and the bootstrap's own sha check still gates it), and the
+KWCHILD records.  Work = a private copy of K (the sealed place output that was returned to K).  run/ and signoff*/ go
+to the store; the work dir is returned to K, so autopilot classifies K exactly as before.  $OT_RUN_SEALED_BACKEND
+overrides conf "backend" for the passthrough, so autopilot keeps its own ot-run (kw10) for every call not sealed.
 """
+import base64
 import json
 import os
 import re
@@ -30,6 +42,11 @@ import tempfile
 import time
 
 DEFAULT_BACKEND = "/home/ubuntu/.local/lib/kw23/ot-run"
+
+
+def backend_of(conf):
+    """the passthrough ot-run: $OT_RUN_SEALED_BACKEND (autopilot's own), else conf "backend" (the wave's)"""
+    return os.environ.get("OT_RUN_SEALED_BACKEND") or conf.get("backend") or DEFAULT_BACKEND
 CONF = os.environ.get("OT_RUN_SEALED_CONF", os.path.expanduser("~/.local/lib/fleet/isolate-1/sealed.json"))
 
 
@@ -79,6 +96,49 @@ def place_call(cmd, stages=None):
     return None
 
 
+AP_MARK = "ADMISSION_TOOLS READY"     # a line only autopilot's ADMISSION_BOOTSTRAP prints
+
+
+def ap_call(cmd, goals=()):
+    """autopilot's bootstrap command -> (runner, K, goal, meta) when its goal is in `goals`, else None"""
+    if len(cmd) < 9 or cmd[0] not in ("python3", "/usr/bin/python3") or cmd[1] != "-c" or AP_MARK not in cmd[2]:
+        return None
+    try:
+        meta = json.loads(base64.b64decode(cmd[3]))
+    except (ValueError, TypeError):
+        return None
+    rest = cmd[4:]
+    while rest and rest[0].startswith("--"):            # chain flags before the runner (--no-late-eco)
+        rest = rest[1:]
+    if len(rest) != 5 or not isinstance(meta, dict) or not meta.get("dir") or not meta.get("sha256"):
+        return None
+    runner, K, goal = rest[0], rest[1].rstrip("/"), rest[2]
+    if goal not in goals or not (os.path.isabs(runner) and os.path.isabs(K) and os.path.isabs(meta["dir"])):
+        return None
+    return runner, K, goal, meta
+
+
+def sealed_target(cmd, conf):
+    """(K, stage) of a call this wrapper seals (place or autopilot), else None"""
+    pc = place_call(cmd, conf.get("stages"))
+    if pc:
+        return pc[1], pc[2][0]
+    ac = ap_call(cmd, conf.get("ap_goals") or ())
+    return (ac[1], ac[2]) if ac else None
+
+
+def ap_spec(runner, K, goal, meta, children=(), bundle_ok=True):
+    """route/finish job: work = K; inputs = runner (outside K), the sha-pinned tool bundle, child records"""
+    s = spec_for(runner, K, children, goal)
+    b = {"path": meta["dir"].rstrip("/"), "at": meta["dir"].rstrip("/")}
+    if not bundle_ok:           # not (or not this sha) on the host: fetched from the hub into the job store
+        b["host"] = meta.get("source_host") or "hub"
+    s["inputs"].insert(0, b)
+    s["publish"].append({"name": f"kit-wave/{os.path.basename(K)}/{goal}-signoff", "path": "signoff", "when": "always"})
+    s["tools_sha256"] = meta["sha256"]
+    return s
+
+
 def spec_for(runner, K, children=(), stage="place"):
     name = os.path.basename(K) + "-" + stage
     inputs = [] if (runner == K or runner.startswith(K + "/")) else [{"path": runner}]
@@ -121,16 +181,31 @@ for p in sorted(out):
 """
 
 
-def remote_ok(host, runner, K):
-    """-> (ok, child record dirs) from one ssh to the pilot host"""
+BUNDLE_PY = r"""
+import json, sys
+try:
+    ok = json.load(open(sys.argv[1] + '/BUNDLE.json'))['sha256'] == sys.argv[2]
+except (OSError, ValueError, KeyError, TypeError):
+    ok = False
+print('BUNDLE_OK' if ok else 'BUNDLE_MISSING')
+"""
+
+
+def remote_ok(host, runner, K, bundle=None):
+    """-> (ok, child record dirs) from one ssh to the pilot host; bundle=(dir, sha): a 'BUNDLE_OK' child entry says the
+    sha-pinned tool bundle is on the host already"""
     sh = (f"test -d {shlex.quote(K)} && test -f {shlex.quote(runner)} && test -x $HOME/.local/bin/ot-job "
           f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(KWCHILD_PY)} {shlex.quote(K)}")
+    if bundle:
+        sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
     try:
         p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
                            capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
         return False, []
     kids = [ln[6:] for ln in p.stdout.splitlines() if ln.startswith("CHILD ")]
+    if bundle and "BUNDLE_OK" in p.stdout.split():
+        kids.append("BUNDLE_OK")
     return "SEALED_OK" in p.stdout and p.returncode == 0, kids
 
 
@@ -209,7 +284,7 @@ def admits(backend, host, mem):
 
 def decide(argv, conf, check=remote_ok):
     """-> (argv to exec, why)"""
-    backend = conf.get("backend") or DEFAULT_BACKEND
+    backend = backend_of(conf)
     passthru = [backend] + list(argv)
     if not conf.get("enabled"):
         return passthru, "disabled"
@@ -218,17 +293,28 @@ def decide(argv, conf, check=remote_ok):
         return passthru, "not a plain ot-run call"
     o, flags, cmd = p
     pc = place_call(cmd, conf.get("stages"))
-    if not pc or "mem" not in o:
+    ac = None if pc else ap_call(cmd, conf.get("ap_goals") or ())
+    if not (pc or ac) or "mem" not in o:
         return passthru, "not a place call"
-    runner, K, rest = pc
+    if ac:
+        runner, K, goal, meta = ac
+        rest = [goal]
+        if conf.get("ap_pilot") and not any(s in K for s in conf["ap_pilot"]):
+            return passthru, "not an ap pilot kit"
+        if o["stage"] and o["stage"][0].rstrip("/") != K:
+            return passthru, "not a pilot dir"
+    else:
+        runner, K, rest = pc
     kdir = o.get("dir") or (o["stage"][0] if o["stage"] else "")
     if kdir.rstrip("/") != K or not any(K.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
         return passthru, "not a pilot dir"
     hosts = conf.get("hosts") or [conf.get("host", "epyc7")]
     # REHOST-1 11-09: every sealed host that holds K + runner + ot-job/bwrap (parallel checks), not only the first
     import concurrent.futures as cf
+    bundle = (meta["dir"].rstrip("/"), meta["sha256"]) if ac else None
+    chk = (lambda h: check(h, runner, K, bundle)) if ac else (lambda h: check(h, runner, K))
     with cf.ThreadPoolExecutor(max(len(hosts), 1)) as ex:
-        res = dict(zip(hosts, ex.map(lambda h: check(h, runner, K), hosts)))
+        res = dict(zip(hosts, ex.map(chk, hosts)))
     oks = {h: kd for h, (okh, kd) in res.items() if okh}
     if not oks:
         return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
@@ -248,9 +334,15 @@ def decide(argv, conf, check=remote_ok):
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
-        json.dump(spec_for(runner, K, kids, rest[0]), fh)
+        if ac:
+            bok = "BUNDLE_OK" in kids
+            json.dump(ap_spec(runner, K, rest[0], meta, [k for k in kids if k != "BUNDLE_OK"], bok), fh)
+        else:
+            json.dump(spec_for(runner, K, kids, rest[0]), fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
     out += [f for f in flags if f != "--no-spill"]
+    if "priority" in o:
+        out += ["--priority", o["priority"]]
     if "max-wait" in o:
         out += ["--max-wait", o["max-wait"]]
     return out + ["--"] + cmd, f"SEALED on {host}: {K}"
@@ -304,26 +396,26 @@ def run_sealed(argv, conf, orig):
     if rc == 0 or not conf.get("fallback_unsealed", True):
         return rc
     po = parse(orig)
-    pc = place_call(po[2], conf.get("stages")) if po else None
-    if not pc:
+    tg = sealed_target(po[2], conf) if po else None
+    if not tg:
         return rc
-    _r, K, rest = pc
+    K, stage = tg
     gaps = gaps_in("".join(buf), K)
     if not gaps:
         return rc
     for path, tool in gaps:
-        gap_row(conf, K, rest[0], path, tool)
-    log(conf, f"GAP {len(gaps)} {K} {rest[0]}: rerun unsealed once ({gaps[0][0]})")
+        gap_row(conf, K, stage, path, tool)
+    log(conf, f"GAP {len(gaps)} {K} {stage}: rerun unsealed once ({gaps[0][0]})")
     print(f"ot-run-sealed: ISOLATE-GAP {len(gaps)} path(s) outside the job (first {gaps[0][0]}); rerun UNSEALED once",
           file=sys.stderr, flush=True)
-    backend = conf.get("backend") or DEFAULT_BACKEND
+    backend = backend_of(conf)
     return subprocess.call([backend] + list(orig))
 
 
 def main():
     conf = load_conf()
     argv, why = decide(sys.argv[1:], conf)
-    if argv[0] != (conf.get("backend") or DEFAULT_BACKEND):
+    if argv[0] != backend_of(conf):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
         sys.exit(run_sealed(argv, conf, sys.argv[1:]))
