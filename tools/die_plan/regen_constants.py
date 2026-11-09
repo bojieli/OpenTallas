@@ -437,6 +437,33 @@ def qc_treq(o):
     o.add("TREQ_HOPS", rows, "compiler", "per hop table", group="treq")
 
 
+def qc_embed(o):
+    # QC-TRANSPORT-FIX 11-08: embedding read tag ring (tools/qwen_split/embed_transport_params.py, the bind's value law).
+    # EMB_RT_CODE / EMB_RT_SCALE are RTL parameters of native59; the compiler needs the same EMB_RT_CODE as the added
+    # dr_o age (the embedding landing t0 and ROPE ARM of stage 0).
+    B = o.B
+    legs = {}
+    for name, src, sink, port in (("code_re", r"native59\.emb_code_re$", r"embed_prov$", r"^embed_code_re$"),
+                                  ("code_q", r"embed_prov\.embed_code_q$", r"native59$", r"^emb_code_q$"),
+                                  ("scale_re", r"native59\.emb_scale_re$", r"embed_prov$", r"^embed_scale_re$"),
+                                  ("scale_q", r"embed_prov\.embed_scale_q$", r"native59$", r"^emb_scale_q$")):
+        ms = B.members(src, sink, port)
+        if not ms:
+            o.pending("EMB_RT", "compiler", f"no {name} member on this bind", group="embed")
+            return
+        legs[name] = sorted({m["landed"] for m in ms})
+        if len(legs[name]) != 1:
+            raise RuleError(f"embed {name}: members land at {legs[name]} (one depth per port required)")
+    rc = legs["code_re"][0] + legs["code_q"][0]
+    rs = legs["scale_re"][0] + legs["scale_q"][0]
+    o.add("EMB_RT_CODE", rc, "compiler", "landed embed_code_re + landed embed_code_q (RTL parameter of native59, bind hook embed_transport_params)",
+          dict(re=legs["code_re"][0], q=legs["code_q"][0]), group="embed")
+    o.add("EMB_RT_SCALE", rs, "compiler", "landed embed_scale_re + landed embed_scale_q (RTL parameter of native59)",
+          dict(re=legs["scale_re"][0], q=legs["scale_q"][0]), group="embed")
+    o.add("EMB_DRO_ADDED_EDGES", rc, "compiler", "group-1 dr words leave native59 EMB_RT_CODE edges later than the zero-transport ring (+ the stage-0 embedding landing t0 / ROPE ARM)",
+          dict(EMB_RT_CODE=rc), group="embed")
+
+
 def qc_xfill(o):
     """QC-TOK 10-24 (xt1 on bound_r8: FAULT heads, x leaf q_bad = an x element read before it was written): the x-slice
     arm / go (hr: u_fdn.hr_q -> u_tap.hr_q) and the x fill stream (u_fdn.sw_q -> u_stm.sw_i, then u_stm.xt_* -> u_tap)
@@ -1328,6 +1355,7 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None, kv_image=None):
         o.rule("coll", qc_coll, src_root)
         o.rule("treq", qc_treq)
         o.rule("xfill", qc_xfill)
+        o.rule("embed", qc_embed)
         o.rule("xdie", qc_seam)
     elif die == "qwen_kvsys":
         o.rule("ectl", kv_ectl)

@@ -15,7 +15,7 @@
 // loads.  Regions: 0 preload face (4 flops, E face), 1 core store (100 flops: row-filled map / resident identity /
 // fault, beside the row SRAM).  Release is 3 edges after the port, the same edge in both regions (initialisation only;
 // every production event is anchored to fill_begin / the preload slots / core_start, never to the reset edge).
-module qfd_embedding_word_provider #(parameter integer ROPE = 0) (
+module qfd_embedding_word_provider #(parameter integer ROPE = 0, parameter integer ROPE_FF = 0) (
     input  wire         ck, rst_n,
     input  wire         word_v,
     input  wire [511:0] word_data,
@@ -111,11 +111,22 @@ module qfd_embedding_word_provider #(parameter integer ROPE = 0) (
                 if (core_start && (!(&filled) || core_token != resident_token || core_epoch != resident_epoch)) bad <= 1;
                 if (rd_rope && (!(&filled) || rope_addr >= 24'd1215488 || rope_addr[20:3] != resident_token || word_v || fill_begin)) bad <= 1;
             end
-        // Reuse the closed row SRAM primitive; only addresses 0..7 are used.
-        ot_sram_1r1w_64x512_m1_r2c2 ropes (
-            .clk(ck), .r_ce_in(rd_rope), .r_addr_in({3'd0,rope_addr[2:0]}), .rd_out(rope_q),
-            .w_ce_in(word_v && wr_rope && valid_word), .w_addr_in(write_addr), .wd_in(word_data),
-            .w_mask_in({512{1'b1}}), .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        // ROPE_FF 0: reuse the closed row SRAM primitive; only addresses 0..7 are used.  ROPE_FF 1 (bound QC glue,
+        // QC-TRANSPORT-FIX 11-08): the same 8 x 512 words in flops, same one-edge read port, no hard macro and no plan row.
+        if (ROPE_FF) begin : g_rope_ff
+            reg [511:0] mem [0:7];
+            reg [511:0] rq;
+            always @(posedge ck) begin
+                if (word_v && wr_rope && valid_word) mem[write_addr[2:0]] <= word_data;
+                if (rd_rope) rq <= mem[rope_addr[2:0]];
+            end
+            assign rope_q = rq;
+        end else begin : g_rope_sram
+            ot_sram_1r1w_64x512_m1_r2c2 ropes (
+                .clk(ck), .r_ce_in(rd_rope), .r_addr_in({3'd0,rope_addr[2:0]}), .rd_out(rope_q),
+                .w_ce_in(word_v && wr_rope && valid_word), .w_addr_in(write_addr), .wd_in(word_data),
+                .w_mask_in({512{1'b1}}), .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        end
         assign embed_code_q = selected ? rope_q : code_q;
         assign rf = bad;
     end else begin : g_no_rope

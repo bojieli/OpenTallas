@@ -86,6 +86,13 @@ def regen(ctx):
     head_params, head_profile = HP.regen(ctx)
     for path, values in head_params.items():
         params.setdefault(path, {}).update(values)
+    embed_record = None
+    if head_profile is not None:
+        # QC-TRANSPORT-FIX 11-08: the embedding read tag ring and provider RoPE (bound-plan transport, not as-built)
+        import embed_transport_params as ET
+        embed_params, embed_record = ET.regen(ctx)
+        for path, values in embed_params.items():
+            params.setdefault(path, {}).update(values)
     if head_profile is not None:
         import head_record_timing as HT
         head_timing = HT.derive(ctx)
@@ -108,6 +115,8 @@ def regen(ctx):
                                        f"{RX[0]} {RX[1]} {RX[2]} --lx {LX[0]} {LX[1]} {LX[2]}", ucie_face_params=f2))
     if head_profile is not None:
         result['record']['qwen_head_prepare_profile'] = head_profile
+    if embed_record is not None:
+        result['record']['embed_transport'] = embed_record
     if hc_record:
         result['record']['plan_hard_core_params'] = hc_record
     return result

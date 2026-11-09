@@ -8,7 +8,7 @@
 // the bank, 2..6 -> the service), QB_MUT = split-only bank mutants; both 0 in every kit.
 module qfd_native59_dv_headprep_obs1 #(
  parameter integer SMUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer ROPE=0,USER_BIND=1,HEAD_PREP=1,NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,SVC_RECV=0,SVC_RECV_MUT=0,SVC_LOCAL32=0,SVC_LOCAL_MUT=0
+ parameter integer ROPE=0,USER_BIND=1,HEAD_PREP=1,NU=4,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=1,EMB_RELAY=1,EMB_RT_CODE=0,EMB_RT_SCALE=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,SVC_RECV=0,SVC_RECV_MUT=0,SVC_LOCAL32=0,SVC_LOCAL_MUT=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -54,7 +54,7 @@ module qfd_native59_dv_headprep_obs1 #(
   .q_slot(q_slot),.q_slot_beat(q_slot_beat),.dd_o(rl_dd),.lcv_o(rl_lcv),.stage_o(rl_stage),
   .qb_v(qb_v),.qb_beat(qb_beat),.qb_row(qb_row),.qb_full(qb_full),.qb_committed(qb_committed),.qb_bad(qb_bad));
  qfd_native59_svc_obs1 #(.LOCAL32(SVC_LOCAL32),.LOCAL_MUT(SVC_LOCAL_MUT),.RECV_INPUTS(SVC_RECV),.RECV_MUT(SVC_RECV_MUT),.MUT((SMUT>=2&&SMUT<=6)?SMUT:0),.CODEC_MUT(CODEC_MUT),.NATIVE_PROFILE(NATIVE_PROFILE),.LAND_QUALIFIED(LAND_QUALIFIED),
-  .LAND_EDGES(LAND_EDGES),.ROPE(ROPE),.USER_BIND(USER_BIND),.HEAD_PREP(HEAD_PREP),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMB_RELAY)) u_svc(
+  .LAND_EDGES(LAND_EDGES),.ROPE(ROPE),.USER_BIND(USER_BIND),.HEAD_PREP(HEAD_PREP),.NU(NU),.MU_SEQ0(MU_SEQ0),.MCTX(MCTX),.EMB_RELAY(EMB_RELAY),.EMB_RT_CODE(EMB_RT_CODE),.EMB_RT_SCALE(EMB_RT_SCALE)) u_svc(
   .ck(ck),.rst_n(rst_n),
   .host_epoch_valid(host_epoch_valid),.host_fused_capability(host_fused_capability),.host_epoch(host_epoch),
   .host_tag(host_tag),.host_generation(host_generation),.layer_context_v(rl_lcv),.command_stage(rl_stage),
