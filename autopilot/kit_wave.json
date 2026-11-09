@@ -9064,7 +9064,24 @@
         "q_su00",
         "q_su00__physical_v1",
         "q_su10",
-        "q_su10__physical_v1"
+        "q_su10__physical_v1",
+        "q_b003",
+        "q_b010",
+        "q_b011",
+        "q_b012",
+        "q_b111",
+        "q_b112",
+        "q_b003__physical_v1",
+        "q_b010__physical_v1",
+        "q_b011__physical_v1",
+        "q_b012__physical_v1",
+        "q_b111__physical_v1",
+        "q_b112__physical_v1",
+        "q_hub_nw",
+        "q_spb2",
+        "q_spb2__physical_v1",
+        "q_spt0",
+        "q_spt0__physical_v1"
       ],
       "place_prefer": [
         "intel1",
@@ -9075,10 +9092,10 @@
       ],
       "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-      "plan": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
+      "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final2/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9z_lf",
-      "src_sha": "9d0db1edc35f64a860d40366854e2418a864bf06",
+      "src": "/srv/opentallas-scratch2/claude/kw37/src_1dea_lf",
+      "src_sha": "1dea56cb15b523315da3c2b4a0cb20cfb270e5c6",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -9716,12 +9733,40 @@
         "q_b102__physical_v1@1",
         "q_b103@1",
         "q_b103__physical_v1@1",
-        "q_b013@3"
+        "q_b013@3",
+        "vsN4@1",
+        "vsN5@1",
+        "vsN6@1",
+        "q_spt1@1",
+        "q_spt2@1",
+        "q_su00@1",
+        "q_su00__physical_v1@1",
+        "q_su10@1",
+        "q_su10__physical_v1@1",
+        "q_su11@6",
+        "q_su20@3",
+        "q_su20__physical_v1@3",
+        "q_b002@2",
+        "q_b002__physical_v1@2",
+        "q_b013__physical_v1@3",
+        "q_su21@3",
+        "q_su21__physical_v1@3",
+        "q_su30@3",
+        "q_su30__physical_v1@4",
+        "q_su31@5",
+        "q_su31__physical_v1@5",
+        "q_b100@2",
+        "q_b100__physical_v1@2",
+        "q_b101@2",
+        "q_b102@2",
+        "q_b102__physical_v1@2",
+        "q_b103@2",
+        "q_b103__physical_v1@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2",
+      "queue_src": "claude/die-hbm-93-int-1108@1dea56cb15b",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -9749,8 +9794,13 @@
         "q_spb0__physical_v1": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "vsN0": "KW-FIX-35 2026-11-08 07:18 PST (DIE-HBM-92 HOLD-ASK 07:1x, COORD fail_watch 07:08): no new attempts until signed views exist for ot_pdie_serdes_rx_bm3_rest (HBM-HARD-6); running attempts finish as measurements only (PROVISIONAL children cannot count)",
         "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d",
-        "vsN4": "KW-FIX-35 2026-11-08 10:25 PST DIE-HBM-92: hold until TYPE-SAFE-2 Fix A plan dir READY (matched taps + lockup latch >25 ps on LAT EQ-gated event); d44v sign-off FAIL structural FT-cross-tap hold FF -231.78 ps x16349 (70f074f8547e), no ECO, no d44v rerun; then a2 fresh kit from that dir",
-        "vsN5": "KW-FIX-35 2026-11-08 11:02 PST DIE-HBM-92: hold with vsN4 for TYPE-SAFE-2 Fix A plan dir READY; d44v sign-off FAIL TT -10.9 / FF -194.4 x13031 (1b8256e8ed82), no d44v rerun; then a2 fresh kit from TS2 dir"
+        "q_b000": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+        "q_b000__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+        "q_b001": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+        "q_b001__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+        "q_sm3": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): SM-ASBUILT rows join when their dry passes (COORD 18:5x q_sm0 rule)",
+        "q_b113": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
+        "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open"
       },
       "gen_hosts": [
         "epyc6",
@@ -9945,7 +9995,35 @@
         "q_b102@1": "REDESIGN: KW-FIX-35-B 2026-11-08 10:03 PST: STAGING class fix - bind_x2/bind_e0 bind.f names 5 composed_rtl sources under hbm-bind-6/tip2/.../d44v/inputs/composed_rtl that existed only on epyc4; gens ran on epyc6 ('preferred HDL source missing'). Staged + content-sha checked on epyc6/epyc5/intel1 09:58-10:00 (bind.f missing=0 on epyc4/5/6, intel1); fresh kit, same inputs",
         "q_b102__physical_v1@1": "REDESIGN: KW-FIX-35-B 2026-11-08 10:03 PST: STAGING class fix - bind_x2/bind_e0 bind.f names 5 composed_rtl sources under hbm-bind-6/tip2/.../d44v/inputs/composed_rtl that existed only on epyc4; gens ran on epyc6 ('preferred HDL source missing'). Staged + content-sha checked on epyc6/epyc5/intel1 09:58-10:00 (bind.f missing=0 on epyc4/5/6, intel1); fresh kit, same inputs",
         "q_b103@1": "REDESIGN: KW-FIX-35-B 2026-11-08 10:03 PST: STAGING class fix - bind_x2/bind_e0 bind.f names 5 composed_rtl sources under hbm-bind-6/tip2/.../d44v/inputs/composed_rtl that existed only on epyc4; gens ran on epyc6 ('preferred HDL source missing'). Staged + content-sha checked on epyc6/epyc5/intel1 09:58-10:00 (bind.f missing=0 on epyc4/5/6, intel1); fresh kit, same inputs",
-        "q_b103__physical_v1@1": "REDESIGN: KW-FIX-35-B 2026-11-08 10:03 PST: STAGING class fix - bind_x2/bind_e0 bind.f names 5 composed_rtl sources under hbm-bind-6/tip2/.../d44v/inputs/composed_rtl that existed only on epyc4; gens ran on epyc6 ('preferred HDL source missing'). Staged + content-sha checked on epyc6/epyc5/intel1 09:58-10:00 (bind.f missing=0 on epyc4/5/6, intel1); fresh kit, same inputs"
+        "q_b103__physical_v1@1": "REDESIGN: KW-FIX-35-B 2026-11-08 10:03 PST: STAGING class fix - bind_x2/bind_e0 bind.f names 5 composed_rtl sources under hbm-bind-6/tip2/.../d44v/inputs/composed_rtl that existed only on epyc4; gens ran on epyc6 ('preferred HDL source missing'). Staged + content-sha checked on epyc6/epyc5/intel1 09:58-10:00 (bind.f missing=0 on epyc4/5/6, intel1); fresh kit, same inputs",
+        "vsN4@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+        "vsN5@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+        "vsN6@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+        "q_spt1@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+        "q_spt2@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+        "q_su00@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): face guard 224a127d48; on plan_final2 + bind vJ, fresh kit",
+        "q_su00__physical_v1@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): face guard 224a127d48; on plan_final2 + bind vJ, fresh kit",
+        "q_su10@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): diamond legalizer via plan budgets.dpl_legalizer_types; on plan_final2 + bind vJ, fresh kit",
+        "q_su10__physical_v1@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): diamond legalizer via plan budgets.dpl_legalizer_types; on plan_final2 + bind vJ, fresh kit",
+        "q_su11@6": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): diamond legalizer via plan budgets.dpl_legalizer_types; on plan_final2 + bind vJ, fresh kit",
+        "q_su20@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): diamond legalizer via plan budgets.dpl_legalizer_types; on plan_final2 + bind vJ, fresh kit",
+        "q_su20__physical_v1@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): diamond legalizer via plan budgets.dpl_legalizer_types; on plan_final2 + bind vJ, fresh kit",
+        "q_b002@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_b002__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_b013__physical_v1@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su21@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su21__physical_v1@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su30@3": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su30__physical_v1@4": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su31@5": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_su31__physical_v1@5": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 fix 5d79919b42e; on plan_final2 + bind vJ, fresh kit",
+        "q_b100@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b100__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b101@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b102@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b102__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b103@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit",
+        "q_b103__physical_v1@2": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): LEF clock class: HCOL-H1 clk_pair[0] pin metadata; on plan_final2 + bind vJ, fresh kit"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -10558,9 +10636,9 @@
       "kit_rtl_prev_kw32": null,
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-su/ab/asbuilt_p37su5.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-su/exp/bind_e0",
-        "note": "KW-FIX-35-B 2026-11-08 10:58 PST: EXP0-KIND1-1108 plan event (DIE-HBM-92 approved): plan_exp0 (30eb7bb390c1) = plan_hbm_1108d + only q_su00/q_su10 (+pv1) type blocks (checked: partition_types diff = those 4, no other key); kit_rtl die-hbm-92-su/exp/bind_e0 (4f6fb0659fd8; vs bind_x2 only the 4 q_su00/q_su10 .sv + bind.f differ) + asbuilt_p37su5 (4f8f0a89d966 = p37su4 + lane_exp0); src kw35/src_cad9z = src_cad9y + claude/die-hbm-92-su-1108@9d0db1edc3 (2 tool files), read-only, sha-verified epyc6/4/5/intel1/epyc2; running rows keep their spec (their plan blocks are unchanged -> no supersede); revert *_prev_kw35m"
+        "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vJ.json",
+        "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_lat_vJ",
+        "note": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
       },
       "gen_hosts_prev_kw32g": [
         "intel1",
@@ -11672,7 +11750,110 @@
       "queue_src_exact": {
         "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b"
       },
-      "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p."
+      "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p.",
+      "plan_prev_kw37h": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
+      "src_prev_kw37h": "/srv/opentallas-scratch2/claude/kw35/src_cad9z_lf",
+      "src_sha_prev_kw37h": "9d0db1edc35f64a860d40366854e2418a864bf06",
+      "kit_rtl_prev_kw37h": {
+        "mode": "bind",
+        "asbuilt": "/srv/opentallas-scratch2/claude/die-hbm-92-su/ab/asbuilt_p37su5.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-92-su/exp/bind_e0",
+        "note": "KW-FIX-35-B 2026-11-08 10:58 PST: EXP0-KIND1-1108 plan event (DIE-HBM-92 approved): plan_exp0 (30eb7bb390c1) = plan_hbm_1108d + only q_su00/q_su10 (+pv1) type blocks (checked: partition_types diff = those 4, no other key); kit_rtl die-hbm-92-su/exp/bind_e0 (4f6fb0659fd8; vs bind_x2 only the 4 q_su00/q_su10 .sv + bind.f differ) + asbuilt_p37su5 (4f8f0a89d966 = p37su4 + lane_exp0); src kw35/src_cad9z = src_cad9y + claude/die-hbm-92-su-1108@9d0db1edc3 (2 tool files), read-only, sha-verified epyc6/4/5/intel1/epyc2; running rows keep their spec (their plan blocks are unchanged -> no supersede); revert *_prev_kw35m"
+      },
+      "queue_src_prev_kw37h": "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2",
+      "note_src_kw37h": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): src = 1dea56cb15b + bind.py LeafFollow fea7df0c0a6 merged (hash-checked against git on all 4 gen hosts, only bind.py differs); revert *_prev_kw37h",
+      "hold_items_released_kw37h": {
+        "vsN4": "KW-FIX-35 2026-11-08 10:25 PST DIE-HBM-92: hold until TYPE-SAFE-2 Fix A plan dir READY (matched taps + lockup latch >25 ps on LAT EQ-gated event); d44v sign-off FAIL structural FT-cross-tap hold FF -231.78 ps x16349 (70f074f8547e), no ECO, no d44v rerun; then a2 fresh kit from that dir",
+        "vsN5": "KW-FIX-35 2026-11-08 11:02 PST DIE-HBM-92: hold with vsN4 for TYPE-SAFE-2 Fix A plan dir READY; d44v sign-off FAIL TT -10.9 / FF -194.4 x13031 (1b8256e8ed82), no d44v rerun; then a2 fresh kit from TS2 dir"
+      },
+      "hold_items_added_kw37h": [
+        "q_b000",
+        "q_b000__physical_v1",
+        "q_b001",
+        "q_b001__physical_v1",
+        "q_sm3",
+        "q_b113",
+        "q_b113__physical_v1"
+      ],
+      "only_items_prev_kw37h_added": [
+        "q_b003",
+        "q_b010",
+        "q_b011",
+        "q_b012",
+        "q_b111",
+        "q_b112",
+        "q_b003__physical_v1",
+        "q_b010__physical_v1",
+        "q_b011__physical_v1",
+        "q_b012__physical_v1",
+        "q_b111__physical_v1",
+        "q_b112__physical_v1",
+        "q_hub_nw",
+        "q_spb2",
+        "q_spb2__physical_v1",
+        "q_spt0",
+        "q_spt0__physical_v1"
+      ],
+      "item_env_prev_kw37h": {
+        "vsN4": null,
+        "vsN5": null,
+        "vsN6": null,
+        "q_spt1": null,
+        "q_spt2": null
+      },
+      "item_env": {
+        "vsN4": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        },
+        "vsN5": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        },
+        "vsN6": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        },
+        "q_spt1": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        },
+        "q_spt2": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        }
+      },
+      "retry_prev_kw37h_added": [
+        "vsN4@1",
+        "vsN5@1",
+        "vsN6@1",
+        "q_spt1@1",
+        "q_spt2@1",
+        "q_su00@1",
+        "q_su00__physical_v1@1",
+        "q_su10@1",
+        "q_su10__physical_v1@1",
+        "q_su11@6",
+        "q_su20@3",
+        "q_su20__physical_v1@3",
+        "q_b002@2",
+        "q_b002__physical_v1@2",
+        "q_b013__physical_v1@3",
+        "q_su21@3",
+        "q_su21__physical_v1@3",
+        "q_su30@3",
+        "q_su30__physical_v1@4",
+        "q_su31@5",
+        "q_su31__physical_v1@5",
+        "q_b100@2",
+        "q_b100__physical_v1@2",
+        "q_b101@2",
+        "q_b102@2",
+        "q_b102__physical_v1@2",
+        "q_b103@2",
+        "q_b103__physical_v1@2"
+      ],
+      "note_kw37h": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): HBM switch; q_sm0 and q_hub_ne join when their dry runs pass"
     }
   },
   "place_prefer": [
