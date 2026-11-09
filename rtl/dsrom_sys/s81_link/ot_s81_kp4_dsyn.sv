@@ -160,6 +160,18 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     wire         u_any [0:NBM-1];
     wire [3:0]   u_dn  [0:NBM-1];
 `ifdef OT_S81_KP4_SYN_LOCAL
+`ifdef OT_S81_KP4_BM_PREL
+    // S81-TYPES-10-RCK (RXS vF): each RiBM unit preloads from S_q with ldr one cycle earlier (ot_s81_kp4_bm PREL): no per-unit
+    // S copy, no ld2 PE copies; one per-unit ld copy keeps the control timing.  PIN CYCLES +0.
+    (* keep *) reg [NBM-1:0] ld2p;
+    always @(posedge clk)
+        if (!rs_n[1]) ld2p <= {NBM{1'b0}};
+        else for (i = 0; i < NBM; i = i + 1) ld2p[i] <= ldr[i][0];
+    generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
+        ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC), .PREL(1)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld({NGB{ld2p[gu]}}), .S(300'd0),
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp(ldr[gu]), .Sp(S_q));
+    end endgenerate
+`else
     (* keep *) reg [299:0]    Sl  [0:NBM-1];   // per-unit S copy (valid in the ld2 cycle)
     (* keep *) reg [NGB-1:0]  ld2 [0:NBM-1];   // per-unit load copies, one cycle after ldr
     always @(posedge clk) for (i = 0; i < NBM; i = i + 1) Sl[i] <= S_q;
@@ -172,12 +184,13 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
 `endif
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
         ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ld2[gu]), .S(Sl[gu]),
-            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]));
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp({NGB{1'b0}}), .Sp(300'd0));
     end endgenerate
+`endif
 `else
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
         ot_s81_kp4_bm #(.NG(4), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
-            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]));
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp(4'd0), .Sp(300'd0));
     end endgenerate
 `endif
     // ================= result of the unit that is done (to the back tile)
