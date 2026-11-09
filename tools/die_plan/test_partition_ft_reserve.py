@@ -166,7 +166,7 @@ def test_wide_m7_band_keeps_every_second_strap_from_the_band_edge():
     r = _wide_m7_receipt()
     w = F.pdn_windows_v(r)
     off, wd, sp, pitch = F.PDN_WIN_STRIPES_V['M7']
-    starts = [lo + F.PDN_WIN_MARGIN for _, lo, _, _ in w]
+    starts = [lo + F.PDN_WIN_MARGIN + F._pair_shift(wd) for _, lo, _, _ in w]    # first strap centre on the stripe grid
     for s in starts:
         assert ((s - 4.32 - off) / pitch) == pytest.approx(round((s - 4.32 - off) / pitch), abs=1e-6)
     assert starts[0] == pytest.approx(4.32 + off)                 # first strap inside the band: the edge channel

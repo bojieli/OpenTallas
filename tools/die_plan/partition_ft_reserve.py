@@ -108,6 +108,16 @@ BRIDGE_M4 = dict(width=0.12, spacing=0.072, pitch=4.32, offset=2.16)     # ASAP7
 PDN_WIN_MIN = 8.64
 PDN_WIN_EVERY = 5
 PDN_WIN_MARGIN = 0.15                         # > the stripe spacing (0.072 M4, 0.096 M6) on each side of the pair
+
+
+def _pair_shift(width):
+    # DIE-HBM-94 11-08 (q_b011 + pv1 PDN-0179, M6 VSS only): pdngen's stripe offset is the CENTRE of the first strap and the first
+    # strap is VSS, so the pair spans [s - w/2, s - w/2 + 2w + spacing].  For the 288-nm M6/M7 straps the old window [s, s + 2w + sp]
+    # left only 6 nm on the VSS side, the VSS strap was cut and only VDD survived (measured on q_b011: M7 VDD full height at x 25.968,
+    # VSS only 32-nm stubs).  Shift the M7 windows by w/2 (real pdngen on the failing DB: PDN-0179 gone).  Only the vertical M7 windows
+    # are shifted; M6 horizontal windows and M4/M5 keep their positions (unchanged kits, not re-probed here).
+    return width / 2
+
 PDN_WIN_STRIPES = {'M4': (2.16, 0.12, 0.072, 4.32),      # offset, width, spacing, pitch = BRIDGE_M4
                    'M6': (1.968, 0.288, 0.096, 4.32)}    # = gen_phys PG_M6 / the top-grid M6 stripe
 
@@ -143,6 +153,7 @@ def pdn_windows_v(receipt, core_x0=4.32):
         while True:
             s = core_x0 + off + k * pitch
             k += 1
+            s -= _pair_shift(wd)
             lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
             if lo < x0 + PDN_WIN_MARGIN:
                 continue
