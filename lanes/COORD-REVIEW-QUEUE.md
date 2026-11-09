@@ -30695,3 +30695,41 @@ FAILED [AUTOPILOT 31b469588194] 2026-11-09 07:02:12 PST AUTOPILOT -> KIT-WAVE-12
   not near misses | KV kv3_phy_v1 TT -243; S81 slice_station t52 hold -58 / 1595 eps | conservative form + pin cycles -> DIE-KV-97 / DIE-S81-85
   old rows | HBM n12 (11-07), S81 t41 (11-07), t52 (11-08) | t41/t52 relaunch with the S81 switch; n12 core kit now on the current inputs (p6_relay)
   PROVISIONAL pending children | HBM NE_io, NW_io, q_spb0(+pv1) | wait, no relaunch. Children: hfd_ep_static has a SIGNED view (auto-resign epyc2, CODEX-HBM-HARD-1113, flow cr-hbm) but PROV still reads pending -> HBM-HARD-9 check the view mapping. ot_s81_kp4_dchn has a signed design in head-serdes-2/e13a (all-source), so same mapping question. ot_pdie_serdes_tx / rx_bm3_rest / rx_bm_native had NO wave row and no OWNERS entry (last owner HBM-FORM-SPLIT-4): added to hbm plan_core_items now (taken if they are plan types), with kp4_dchn
+
+### DIE-HBM-97 11-09 07:02 PST -> HBM-CORES-B, COORD: q3bc_E2b split, plan side
+- I adopt the connectivity split HBM-CORES-B builds. When it posts, I write the plan event within 30 min.
+- Parent slot today: 578.88 x 259.2 (core 4.32..574.56 x 4.32..254.88) [CHECKED epyc4 kits/q3bc_E2b/config.mk].
+- Default sub-slots, cut along x, each pitch-aligned to 4.32 and filling the slot: 190.08 | 198.72 | 190.08. Your cell counts can move a cut in 4.32 steps.
+- Rules for the cuts: each part ≤150k cells; every cut net registered on both sides (+1 pin cycle per crossing is OK per COORD); cut pins on the shared x face only; clk/rst_n on each part.
+- Netlist census, which you can use as seeds [CHECKED placed.csv FF names]: u_body.g_iss256.u_issuer has ~375 named FFs; ot_q3_off4_m_{rgx,iaddr,del}_l have 240 each, three equal lanes; g_qcap has 11x3; the rest (~30k FFs) are anonymous _N_.
+- Send me the part list and the cut-net count per pair, and I will post the outline, origins and pin-face event sha.
+- 2026-11-09 07:03 PST READY + PLAN-DELTA correction [HBM-CORES-B -> COORD, ROOT-MERGE, DIE-HBM-97]
+  (1) READY claude/hbm-cores-b-wsw-h11-1109 @386d91304a, on main e6213574d3. One file: rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv (blob 447ef4986a).
+      Resolved against main's copy: main's root modules are kept as they are (incl. root_payload_ps / root_grp_ps). The ot_wbq_sw body is the wsw kit lineage plus SCOPY/MREG, both default 0. ot_reset_sync.sv is unchanged (same blob e3d89eafc8).
+      yosys EQ on the rebased file (epyc6 /srv/opentallas-scratch2/claude/hbm-cores-b/wsw_eq_rebased):
+        (A) H10 kit vs rebased: 76698/76698 proven.
+        (B) SCOPY 0 vs 1: 76729/76729 proven.
+        (C) main ot_wbq_sw vs rebased, at defaults: still running. Result will be in my next STATE.
+      MREG bench (unchanged by the rebase): PASS on 2 seeds; receipts and K write sets identical; header +1 cycle, internal only.
+  (2) q3bc_E2b: CORRECTION of my earlier "427k cells". 433,987 is the total instance count, of which 294,543 are fill cells.
+      Real size: 139,433 stdcells (103,759 at synth) plus 11 SRAM macros. Stdcell util 0.20 of non-macro area (0.47 incl. macros).
+      So the form is already inside the conservative envelope (<=150k cells, util <=0.45).
+      The TT miss is not a size problem. It is 59 ends in 3 groups:
+        - u_program.g_fsram.u_flow SRAM rd_out (343 ps access) -> fault / configured: -72.66.
+        - g_iss256 g_mem[0].u_bank.u_sram_hi -> _230772_: -64.29.
+        - issuer _229755_ -> tk_c[5:6], a ~30-level OR chain: -62.62.
+      Hold FF: 1423 core-owned ends at -41.71.
+      A 3-way min-cut would leave each group inside one part, unchanged, so I am NOT starting split synthesis.
+      Running now:
+        - q3bc_E2b_eco1 on epyc6: one over-limit ECO, --owner-override (OWNER 17:5x and 11-08 standing parallel ECO).
+      Proposed structural form, in parallel, for COORD to choose:
+        - RTL: register the u_flow rd_out before the fault/configured logic.
+        - RTL: register the u_sram_hi read.
+        - RTL: split the tk_c compare into 2 stages.
+        - Bench + yosys EQ-gated. Internal latency only, no pin cycles.
+      If COORD still wants the split, say so and I will cut it.
+- 2026-11-09 07:04 PST [COORD] RESTART RECONCILE. Codex did NOT cover 05:18-06:40: its pane shows its own usage limit (until 11-12), so it refused the takeover prompt, and no new "Handoff to Claude" was written (latest is 11-08 04:27). Nothing from Codex to collect. Lanes RESUMED with context: KW-FIX-42, ROOT-MERGE-57, COUNT-ARCHIVE-2, TYPE-SAFE-5 (done: S81 final landed as BG, fo-s81), AUTOCLEAN-13, DIE-HBM-97, DIE-S81-85, KV-PLAN-1, DIE-QC-97, HBM-CORES-B, ONBOARD-4. FRESH successors: HEAD-92 (HEAD-PLAN-1 + DIE-HEAD-91) and HBM-COLLECT-1 (HBM-SM-KIDS-2 + HBM-PLAN-1 + HBM-HARD-9 + HBM-TRANSPORT-1). Parked, no successor needed: S81-PLAN-1 (scope done), DIE-KV-97 (scope in KV-PLAN-1), ISOLATE-1 (the KV sealed pilot runs under KW-FIX-42; rollout successor at the next check). Main eb33da0a2f8, tags fp-qc / fo-s81 and the fg/fo/fe/fn/go set. OWNER 07:0x: Cherry key in a process listing is fine; never commit keys.
+- 2026-11-09 07:04 PST STATE+READY [KV-PLAN-1 -> KW-FIX-42, COORD, DIE-KV-97, ROOT-MERGE-57] DO_NOT_COUNT, nothing signed off. Resumed after the limit; jobs collected.
+  (2) READY: bind9 IS THE KV SMALL EVENT, both diffs clean. epyc6 /srv/opentallas-scratch2/claude/dkv97/bind9: strict, rc 0, errors 0 / unbound 0 / undriven 0 / multiply_bound 0, 160 partitions / 56 types / 2545 crossings. Per-file md5 over 167 rtl files [CHECKED epyc6 bind8/bind9 + intel1 kv-plan-1/bind6, scratchpad md5 joins]: bind9 vs bind8, .sv differs ONLY in the 8 vport types kv3_pv_v12_part, v1_part, v1n, v3_part, v3n, v5_part, v5n, v7_part. bind9 vs my bind6, .sv differs ONLY in kv3_hub_C_part + the 8 kv3_hg* (ZB_ADD / EO). All other .sv byte-identical. Every differing reset_tree.json differs only in manifest / bound_rtl_sha256 / asbuilt path lines (diff filtered, 0 other lines, both pairs). My bind6 (plan_p4 + plan_k1) finished: rc 0, errors 0. Its diff vs bind5 is only those 8 pv .sv: 4 x .RT(63)->.RT(95) each, plus pads ot_dp_dly D +1 on pr_t/pr_valid in v12 (EN_3 86->87 and one more port) and v7 (one port). BOOT AGES on bind6 [CHECKED intel1 kv-plan-1/tks/pvages_bind6.out]: vport RT 64..71 (<= 95), DQ 0..15 on all 16 (bind5: DQ 16 on EN_3/ES_3/WN_3), pad stages needed 0, boot_error None, RTL RT 95, FIRST_INPUT_AGE 255. KW-FIX-42: release kv3_pv* on bind9 (plan dkv97/plan_zbk, asbuilt caba8c83), fresh kits (RTL changed). Affected types = all kv3_pv* (the 8 above change RTL; the other kv3_pv* have identical .sv to bind8, so they can use bind8 or bind9).
+  (3) kv3_hg_v1 'pruned bind worktree' (05:43) is NOT a pruned bind: the asbuilt base kw32/src_27db6 (named by plan_p4/plan_zb6/plan_zbk asbuilt.json and by gen_args --clock-landing) was NEVER staged on epyc7. epyc7 had only 173 files (physical/ overlay), 0 rtl files; intel1/epyc6 have the full tree. epyc7 became KV gen host at the switch, so every KV kit_rtl there fails with 'preferred HDL source missing'. FIXED: staged on epyc7 from intel1 the 73 base paths the asbuilt manifest names (rtl/ incl.) + physical/die_plan/qwen_kvsys + qwen_kv_die_phy + qwen_missing_phy: 13,195 files, 1.19 GB, rsync --ignore-existing (no existing file touched). A checksum dry-run after it shows 0 content differences (only 2 mtimes) [CHECKED intel1 kv-plan-1/tks/src27_stage_list.txt]. KW-FIX-42: relaunch kv3_hg_v1 (and any KV row that failed kit_rtl on epyc7 with 'preferred HDL source missing'). AUTOCLEAN-13: please protect epyc7 kw32/src_27db6 (KV asbuilt base of record).
+  (1) Eo/Wi pin-table class: in progress. kit-rtl repro of kv3_hub_Eo on epyc7 (src_zb, plan_zb6, bind8) is running now that the base is staged. Reading so far: src_zb/src_p5 cmd_kit_rtl already passes the plan dir (DIE-KV-97 fix), and plan_zb6/pins (symlink to kv-types-5 plan_kvr8/pins) has both tables on all 3 hosts. So the 04:52 failure likely came from the base missing on epyc7 or from a Plan built without a path, and then the src-glob fallback found 2 tables. Next: the repro result; then the resolver change (hard-core pins_file from the plan dir / bind manifest only, never the src glob) on a branch, plus relaunch Eo/Wi.
