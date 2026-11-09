@@ -2011,6 +2011,10 @@ def workroot_low(AP, cfg, run=None):
     rfloor = int(cfg.get("root_floor_gb", 150)) + int(cfg.get("root_gen_room_gb", 40))
     free_map = cfg.setdefault("_workroot_free", {}) if isinstance(cfg, dict) else {}
     free_map.clear()
+    alt_map = cfg.setdefault("_workroot_alt", {}) if isinstance(cfg, dict) else {}
+    alt_map.clear()
+    alt_on = cfg.get("workroot_alt") is not False
+    alt_lim = floor + int(cfg.get("gen_need_gb", GEN_NEED_GB))
     if cfg.get("workroot_probe") is False or floor <= 0:
         return {}
     hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
@@ -2037,7 +2041,12 @@ def workroot_low(AP, cfg, run=None):
     for h, lanes in sorted(need.items()):
         cmd = "; ".join(f"d={q(l)}; while [ ! -e \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
                         f"echo W {q(l)} $(df -BG --output=avail \"$d/\" 2>/dev/null | tail -1 | tr -dc 0-9) "
-                        f"$(df --output=target \"$d/\" 2>/dev/null | tail -1 | tr -d \" \")"
+                        f"$(df --output=target \"$d/\" 2>/dev/null | tail -1 | tr -d \" \") "
+                        # KW-FIX-38 11-08: scratch3 is a separate mount of the root fs on the fleet, so df's target is
+                        # never '/': compare devices as ot-run does; and measure scratch2 for the alternative below
+                        f"$(stat -Lc %d \"$d/\" 2>/dev/null) $(stat -Lc %d / 2>/dev/null) "
+                        f"$(df -BG --output=avail {SCRATCH2_ROOT}/ 2>/dev/null | tail -1 | tr -dc 0-9) "
+                        f"$(stat -Lc %d {SCRATCH2_ROOT}/ 2>/dev/null)"
                         for l in sorted(lanes))
         try:
             rc, o = run(h, cmd + "; true")
@@ -2047,17 +2056,29 @@ def workroot_low(AP, cfg, run=None):
             continue
         for ln in (o or "").splitlines():
             f = ln.split()
-            if len(f) in (3, 4) and f[0] == "W" and f[2].isdigit() and f[1] in lanes:
-                lim = rfloor if len(f) == 4 and f[3] == "/" else floor
-                hard = int(cfg.get("root_floor_gb", 150)) if len(f) == 4 and f[3] == "/" else GEN_SCRATCH_HARD_FLOOR_GB
+            if len(f) >= 3 and f[0] == "W" and f[2].isdigit() and f[1] in lanes:
+                on_root = len(f) >= 4 and (f[3] == "/" or (len(f) >= 6 and f[4] == f[5]))
+                lim = rfloor if on_root else floor
+                hard = int(cfg.get("root_floor_gb", 150)) if on_root else GEN_SCRATCH_HARD_FLOOR_GB
+                gb = int(f[2])
+                # KW-FIX-38 11-08 (COORD: 52 rows at kit_rtl behind a root floor): the lane sits on the root fs with no
+                # room but this host's scratch2 is another disk with room: the attempt starts there (work_alt in
+                # run_item: attempt dir = symlink to the scratch2 path); option workroot_alt false turns it off
+                alt = ""
+                if on_root and gb < lim and alt_on and len(f) >= 8 and f[6].isdigit() and f[7] != f[5] \
+                        and int(f[6]) >= alt_lim and f[1].startswith(SCRATCH3_ROOT + "/"):
+                    alt, gb, hard = SCRATCH2_ROOT + f[1][len(SCRATCH3_ROOT):], int(f[6]), GEN_SCRATCH_HARD_FLOOR_GB
                 for die in lanes[f[1]]:
-                    free_map.setdefault(h, {})[die] = int(f[2])
+                    free_map.setdefault(h, {})[die] = gb
                     cfg.setdefault("_workroot_hard", {}).setdefault(h, {})[die] = hard
-                    if int(f[2]) < lim:
-                        out.setdefault(h, {})[die] = int(f[2])
+                    if alt:
+                        alt_map.setdefault(h, {})[die] = alt
+                    elif gb < lim:
+                        out.setdefault(h, {})[die] = gb
     return out
 
 
+SCRATCH2_ROOT, SCRATCH3_ROOT = "/srv/opentallas-scratch2", "/srv/opentallas-scratch3"
 SPILL_MARK = ".ot-run-spill-copy"                  # ot-run SPILL copy marker (ot-run v14 mark_ancestors)
 LANE_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
@@ -2216,9 +2237,25 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
                 else max(room or hs, key=lambda h: (sc(h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
+    alt_charge(cfg, best)
     if key(best) is not None and threads:
         key(best)["load"] = float(key(best).get("load", 0)) + threads
     return best
+
+
+def alt_charge(cfg, h):
+    """KW-FIX-38 11-08: one new attempt booked on host h's scratch2 alternative (gen_need_gb); below room it is off for
+    the rest of the tick, so one tick cannot send more kits to the alternative disk than it holds"""
+    alt = (cfg.get("_workroot_alt") or {}).get(h) or {}
+    if not alt:
+        return
+    need, free = int(cfg.get("gen_need_gb", GEN_NEED_GB)), cfg.setdefault("_workroot_free", {}).get(h) or {}
+    lim = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB)) + need
+    for die in list(alt):
+        free[die] = int(free.get(die, lim)) - need
+        if free[die] < lim:
+            del alt[die]
+            cfg.setdefault("_workroot_low", {}).setdefault(h, {})[die] = free[die]
 
 
 def charge(v, gb):
@@ -2609,6 +2646,21 @@ def region_guide_cmd(sp, core):
             f"echo \"KW_REGION_GUIDE ${{RG:-none}}\"; "), " $RG"
 
 
+def work_alt_cmd(work, alt_lane):
+    """KW-FIX-38 11-08: shell that makes a FRESH attempt dir a symlink to the same path on the host's scratch2 (the form of
+    KW-FIX-37's 19:46 re-link, realpath-safe for autoclean).  An existing link or any content other than an empty logs/
+    keeps the dir as it is; the attempt then runs on the lane where it stands."""
+    q = shlex.quote
+    alt = alt_lane.rstrip("/") + "/" + os.path.normpath(work)[len(lane_root(work)):].lstrip("/")
+    return (f"W={q(work)}; A={q(alt)}; "
+            'if [ -L "$W" ]; then echo "KW_WORK_ALT kept existing link $W"; '
+            'elif [ -d "$W" ] && [ -n "$(find "$W" -mindepth 1 -not -path "$W/logs" -print -quit 2>/dev/null)" ]; then '
+            'echo "KW_WORK_ALT kept non-empty dir $W"; '
+            'else mkdir -p "$A" "$(dirname "$W")" && { rmdir "$W/logs" 2>/dev/null; rmdir "$W" 2>/dev/null; true; } && '
+            'if [ -e "$W" ]; then echo "KW_WORK_ALT kept dir $W"; else ln -s "$A" "$W" && echo "KW_WORK_ALT $W -> $A"; fi; '
+            'fi; true')
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -2805,6 +2857,8 @@ def run_item(spec_path):
             return after_place(svc["kit"], rc, txt)
         finally:
             run("resume_release", remote(kr_cmd(f"release {q(svc['kit'])}")), idempotent=True)
+    if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
+        run("work_alt", idempotent=True, argv=remote(work_alt_cmd(W, sp["work_alt_lane"])))
     rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
     if rc:
         return fail("mkdir", txt)
@@ -3547,6 +3601,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
     bind_restage(cfg, die, prev, sp)
+    alt = ((cfg.get("_workroot_alt") or {}).get(sp["gen_host"]) or {}).get(die)
+    if alt:                                        # KW-FIX-38: this host starts the attempt on its scratch2
+        sp["work_alt_lane"] = alt
     d = cfg["dies"][die]
     if (r.get("kind") or "type") == "type" and prov_item(d, r["item"]):
         # KW-PROV-1 (COORD 17:50 (C)): a type whose child views are unsigned launches on PROVISIONAL child views
@@ -3630,6 +3687,19 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     return rec
 
 
+def stage_disk_wait(live_log):
+    """KW-FIX-38 11-08: the stage client's KW12_DISK_WAIT line while it is the last line of the stage log (the wrapper
+    sits behind a disk floor and nothing started), else ''"""
+    try:
+        with open(live_log, "rb") as f:
+            f.seek(0, os.SEEK_END)
+            f.seek(max(0, f.tell() - 800))
+            lines = [x for x in f.read().decode("utf-8", "replace").splitlines() if x.strip()]
+    except OSError:
+        return ""
+    return lines[-1][:200] if lines and "KW12_DISK_WAIT" in lines[-1] else ""
+
+
 def collect(AP, cfg, st, notices):
     for key, rec in st["items"].items():
         if rec.get("status") != "RUNNING" or AP.unit_active(rec["unit"]):
@@ -3638,6 +3708,7 @@ def collect(AP, cfg, st, notices):
                     tail = (Path(rec["dir"]) / "unit.log").read_text().splitlines()
                     stg = [ln.split()[1] for ln in tail if ln.startswith("KW_STAGE ")]
                     rec["stage"] = stg[-1] if stg else "start"
+                    rec["disk_wait"] = stage_disk_wait(Path(rec["dir"]) / f"{rec['stage']}.live.log")
                 except OSError:
                     pass
             continue
@@ -4249,6 +4320,9 @@ def _step(AP, ap_dir):
                    + f" GB < {GEN_DISK_MIN_GB} (not a gen host for those dies while another has room; KW-FIX-30)")
     except Exception as e:                      # a diagnostic probe never stops the tick
         AP.log(f"KIT-WAVE work_root disk probe skipped: {e}")
+    if cfg.get("_workroot_alt"):
+        AP.log("KIT-WAVE WORKROOT-ALT root-fs lane full, scratch2 has room: " + "; ".join(
+            f"{h}: {' '.join(sorted(a))}" for h, a in sorted(cfg["_workroot_alt"].items()) if a))
     try:
         cfg["_spill_marked"] = spill_marked(AP, cfg)
         for h, rs in cfg["_spill_marked"].items():
@@ -4478,6 +4552,8 @@ def write_stages(st, ap_dir, cfg=None):
                  reason=(r.get("reason") or "")[:240])
         if is_wait_dep(r):
             v["status"] = "PENDING-DEP"
+        if r.get("status") == "RUNNING" and r.get("disk_wait"):      # KW-FIX-38: admitted to nothing yet; behind a disk floor
+            v["status"], v["reason"] = "WAIT-DISK", str(r["disk_wait"])[:240]
         if r.get("status") == "ENQUEUED" and r.get("q_stage"):
             # past GEOM: the autopilot queue job of this kit (follow_queue); evidence = its job id
             v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
