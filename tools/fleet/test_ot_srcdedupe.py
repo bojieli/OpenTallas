@@ -273,8 +273,9 @@ def test_own_argv_is_not_a_live_process(tmp_path):
 
 
 def test_other_process_naming_the_tree_is_live(tmp_path):
-    p = subprocess.Popen(["sleep", "30", str(tmp_path)])
+    p = subprocess.Popen(["python3", "-I", "-c", "print(1, flush=True); import time; time.sleep(30)", str(tmp_path)], stdout=subprocess.PIPE)
     try:
+        p.stdout.readline()      # started
         assert str(tmp_path) in D.live_paths()
     finally:
         p.kill()
