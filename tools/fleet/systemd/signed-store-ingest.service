@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenTallas: hourly ingest of new signed records into ~/coord/signed-store, no agent, independent of ot-autoclean (COUNT-ARCHIVE-1, COORD 11-09)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/
+ExecStart=/usr/bin/python3 -I %h/coord/tools/signed_store_ingest.py
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=4G
+TimeoutStartSec=3000

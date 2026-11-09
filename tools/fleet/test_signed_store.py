@@ -40,6 +40,25 @@ def test_netlist_of_prefers_routed_db_dir():
     assert ss.netlist_of(dict(path="/k/signoff/signoff.json"), shas) == "n2"
 
 
+def test_do_not_count_marker():
+    import release_tree_plan as rtp
+    a = dict(scan_host="h1", path="/k/so/signoff/signoff.json", name="n", top="t", generated="g1")
+    a2 = dict(a, scan_host="h2", path="/copy/signoff/signoff.json")
+    b = dict(scan_host="h1", path="/other/signoff/signoff.json", name="n", top="t", generated="g2")
+    with tempfile.TemporaryDirectory() as d:
+        f = os.path.join(d, "dnc.tsv")
+        for state, want in (("HOLD", ["g2"]), ("PENDING", ["g1", "g1", "g2"]), ("CLEARED", ["g1", "g1", "g2"])):
+            open(f, "w").write("# c\nh1:/k/so\t%s\tno main RTL\t2026-11-09\n" % state)
+            kept, held = rtp.split_dnc([a, a2, b], rtp.dnc_rows(f))
+            assert [r["generated"] for r in kept] == want, (state, kept)
+            assert len(held) == (2 if state == "HOLD" else 0)
+        kept, held = rtp.split_dnc([a, b], rtp.dnc_rows(os.path.join(d, "absent.tsv")))
+        assert len(kept) == 2 and not held
+        # a marker on a directory that is only a name prefix of the record's directory does not match
+        open(f, "w").write("h1:/k/s\tHOLD\tx\td\n")
+        assert len(rtp.split_dnc([a], rtp.dnc_rows(f))[0]) == 1
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
