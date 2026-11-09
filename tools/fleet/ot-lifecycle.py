@@ -393,6 +393,8 @@ class Plan:
                 if st.st_uid != me and notmine is None:
                     notmine = e.path
                 if stat.S_ISDIR(st.st_mode):
+                    if not st.st_mode & 0o200 and notmine is None:      # shared src trees are chmod a-w (08:12 rule); rm -rf would stop half way
+                        notmine = e.path + " (read-only dir)"
                     stack.append(e.path)
                     continue
                 if st.st_mtime > newest:
@@ -967,9 +969,16 @@ class Apply:
         if oh:
             return "SKIP", "ot-hold " + oh
         lane = P.lane_of(path + "/x" if os.path.isdir(path) else path)
-        dk = P.dotkeep_hit(path, bool(P.owner_live(lane)))
+        live_now = P.owner_live(lane)
+        if live_now and cat.startswith("DEL-L4"):               # dead-lane classes only: a successor may have picked the tree up since the plan
+            return "SKIP", f"lane live now: {live_now}"
+        dk = P.dotkeep_hit(path, bool(live_now))
         if dk:
             return "SKIP", dk[1]
+        if cat == "DEL-L4-GIT":
+            g = self.git_now(path)
+            if g:
+                return "SKIP", g
         if cat == "DEL-L2-LATEST-TRIM":
             r = J.resume_hold(os.path.dirname(path))
             if r:
@@ -988,6 +997,19 @@ class Apply:
         if P.link_into(path):
             return "SKIP", "symlink into"
         return None, None
+
+    def git_now(self, path):
+        """git state of the tree holding path, as of apply time (member rows too).  Cached per tree: once a member row has removed .git
+        the tree no longer resolves, and the check made before that first removal stands."""
+        P = self.P
+        for x in [path] + self.m.ancestors(path):
+            if x.count("/") < 4:
+                return None
+            if x.endswith("/.git"):
+                continue
+            if P.is_git(x):
+                return P.git.check(x)
+        return None
 
     def run(self):
         J, a = self.J, self.a
@@ -1027,7 +1049,7 @@ class Apply:
                         if p.stdout.strip():
                             fh.write(f"{time.strftime('%F %T')}\t{path}\t{cat}\tSKIP\tyoung {p.stdout.strip()}\t{b}\n")
                             continue
-                        p = subprocess.run(["find", path, "-xdev", "!", "-user", str(os.getuid()), "-print", "-quit"],
+                        p = subprocess.run(["find", path, "-xdev", "(", "!", "-user", str(os.getuid()), "-o", "-type", "d", "!", "-writable", ")", "-print", "-quit"],
                                            capture_output=True, text=True, timeout=1800)
                         if p.returncode not in (0, 1) or p.stdout.strip():
                             fh.write(f"{time.strftime('%F %T')}\t{path}\t{cat}\tSKIP\tnot fully deletable {p.stdout.strip()[:150]}\t{b}\n")
@@ -1496,7 +1518,7 @@ def main():
         p.add_argument("--host", required=True)
         p.add_argument("--lifesnap", required=True)
         p.add_argument("--out", required=True)
-        p.add_argument("--state", default=os.path.expanduser("~/autoclean-11/state"))
+        p.add_argument("--state", default=os.path.expanduser("~/autoclean-12/state"))
         p.add_argument("--roots", nargs="*", default=None)
         p.add_argument("--refs", default="")
         p.add_argument("--snapshot", default=os.path.expanduser("~/.local/state/ot-autoclean-auto/snapshot"))

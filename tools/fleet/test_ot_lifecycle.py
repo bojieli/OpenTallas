@@ -59,6 +59,9 @@ def run_fixture(W):
     with open(f"{ROOT}/dead-kk/rec/signoff/signoff.json", "w") as fh:
         json.dump({"verdict": "SIGNED", "inputs": {"odb": f"{ROOT}/dead-jj/kit-wave/s81/p/items/it2/attempt_1/gen/it2/run/results/asap7/d/base/6_final.odb"}}, fh)
     write(f"{ROOT}/dead-ii/kit9/keepme.txt", 20)
+    kit(f"{ROOT}/dead-nn/kit12")                     # read-only dir inside: rm -rf would stop half way, so the folder is not started
+    os.chmod(f"{ROOT}/dead-nn/kit12/run/objects", 0o555)
+    kit(f"{ROOT}/dead-oo/kit13")                     # lane goes live between plan and apply: recheck must skip the row
     # snapshot
     snap = os.path.join(W, "snap")
     os.makedirs(snap)
@@ -88,6 +91,8 @@ def run_fixture(W):
         print(f"{k:50s} {v[0]:26s} {v[1]}")
     expect = {
         "dead-mm.old-kw37-1": ("KEEP-excluded", "KEEP"),
+        "dead-nn/kit12": ("KEEP-not-deletable", "KEEP"),
+        "dead-oo/kit13": ("DEL-L4-KIT", "DELETE"),
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-jj/kit-wave/s81/p/items/it2/attempt_1": ("KEEP-cited-unit", "KEEP"),   # older attempt cited by a signed record
         "dead-aa/kit1": ("DEL-L4-KIT", "DELETE"),          # expired .keep (72 h, dead lane) released
@@ -119,6 +124,9 @@ def run_fixture(W):
     print(r.stdout[-800:], r.stderr[-800:], "rc", r.returncode)
     assert r.returncode == 3, "added-protected must ALERT and stop"
     assert os.path.exists(f"{ROOT}/dead-aa/kit1/config.mk"), "alerted row must not be deleted"
+    life2 = json.load(open(f"{W}/life.json"))           # dead-oo has a live owner after the plan
+    life2["live"] = life2["live"] + ["DEAD-OO"]
+    json.dump(life2, open(f"{W}/life.json", "w"))
     # remove the fake row, apply really
     lines = open(f"{snap}/protected.tsv").read().splitlines()
     open(f"{snap}/protected.tsv", "w").write("\n".join(lines[:-1]) + "\n")
@@ -128,6 +136,8 @@ def run_fixture(W):
     print(r.stdout[-400:], r.stderr[-800:], "rc", r.returncode)
     assert r.returncode == 0 and not os.path.exists(f"{ROOT}/dead-aa/kit1"), "apply must delete the row"
     assert os.path.exists(f"{ROOT}/dead-cc/kit3") and os.path.exists(f"{ROOT}/dead-bb/kit2"), "protected/.keep untouched"
+    assert os.path.exists(f"{ROOT}/dead-oo/kit13/config.mk"), "lane live at apply time: row skipped"
+    os.chmod(f"{ROOT}/dead-nn/kit12/run/objects", 0o755)     # so pytest can clean up
     print("APPLY CONTROLS PASS")
     assert not bad
 
