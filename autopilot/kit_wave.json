@@ -14886,8 +14886,7 @@
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "q_hub_ne": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
     "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_b*": "KW-FIX-43 12:4x TEMP: hold new q_b launches until the HBM reset-die-key overlay (c027d3fb392a) is on src_hbmf4; removed right after."
+    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)"
    },
    "gen_hosts": [
     "epyc2",
@@ -18065,7 +18064,10 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v92a40292efa2",
     "hnx_vms_bank_q0_faces__vecd4ae__vc0fea76ca7fc"
    ],
-   "note_kw43_hbmrl": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (4): DIE-HBM-97 12:00 READY-LIST, two-strikes CONSERVATIVE form for HBM cores = core_kit item_args --util 0.40 --face-reset-relay 2 --face-lockup .* --clock-regions p6_relay (0b99eaec = plan_r2_restore copy), the form of the other HBM conservative cores (OT_CONS_KIT is a gen_phys type switch, not read by gen_core_kit_hbm). 7 no-row cores added to only_items + the 2 mu1s3 vecd rows relaunched. Module-keyed: vecd __v07a1612040a5 also gets it at its next launch. Revert: remove only_items_prev_kw43hl_added from only_items; core_kit.item_args[m] = core_kit.item_args_prev_kw43hl[m] (None = delete)."
+   "note_kw43_hbmrl": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (4): DIE-HBM-97 12:00 READY-LIST, two-strikes CONSERVATIVE form for HBM cores = core_kit item_args --util 0.40 --face-reset-relay 2 --face-lockup .* --clock-regions p6_relay (0b99eaec = plan_r2_restore copy), the form of the other HBM conservative cores (OT_CONS_KIT is a gen_phys type switch, not read by gen_core_kit_hbm). 7 no-row cores added to only_items + the 2 mu1s3 vecd rows relaunched. Module-keyed: vecd __v07a1612040a5 also gets it at its next launch. Revert: remove only_items_prev_kw43hl_added from only_items; core_kit.item_args[m] = core_kit.item_args_prev_kw43hl[m] (None = delete).",
+   "hold_items_prev_kw43qb": {
+    "q_b*": "KW-FIX-43 12:4x TEMP: hold new q_b launches until the HBM reset-die-key overlay (c027d3fb392a) is on src_hbmf4; removed right after."
+   }
   }
  },
  "place_prefer": [
