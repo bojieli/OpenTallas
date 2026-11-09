@@ -144,11 +144,11 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         if tile_mode == 'measured':                      # tiles: first rs word / last final word measured from hr go
             m = tile_meas[name]
             tf = m['first_rs'] + m['far']
-            done = go_w5(at) + m['last_final'] + m['far'] + rv[own[name]['level']]
+            done = go_w5(at) + m['last_final'] + m['far'] + rv[own[name]['level']] + M.stn_result_shift_max()
         for _ in range(2):
             ch = M.Chain(smap)
             low = M.lower_matvec(name, go_w5(at) + tf, ages, ch, own=own)
-            land = max(d['far'][-1] for d in low['deliveries']) + rv[own[name]['level']]
+            land = max(d['far'][-1] + M.stn_result_shift(d['slice']) for d in low['deliveries']) + rv[own[name]['level']]
             if land >= done or tile_mode == 'first':
                 break
             tf += done - land
@@ -159,13 +159,13 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     def mv_ar(name, at, done):
         tf = tile_first
         if tile_mode == 'priced':                        # the last AR word leaves W5 no earlier than the priced ME done
-            tf = max(tf, done - 255 - go_w5(at) - ages['l8_ar'] - 2 * (N - 1))
+            tf = max(tf, done - 255 - go_w5(at) - ages['l8_ar'] - M.stn_result_shift_max() - 2 * (N - 1))
         elif tile_mode == 'measured':                    # first AR word after the first measured final word, last after the last
             m = tile_meas[name]
             tf = max(m['first_final'] + m['far'], m['last_final'] + m['far'] - 255)
         tile_note.append(dict(matvec=name, tile_first_eff=tf, priced_done=done, go_w5=go_w5(at)))
         ch = M.Chain(smap)
-        t0 = go_w5(at) + tf + ages['l8_ar'] + 2 * (N - 1)
+        t0 = go_w5(at) + tf + ages['l8_ar'] + M.stn_result_shift_max() + 2 * (N - 1)
         x = M.lower_xc(ch, ages, t0, 4096 // 16, 0)
         low = M.lower_matvec(name, t0, ages, ch, own=own)
         coll = M.ar_collisions(low, ages)

@@ -344,6 +344,32 @@ def emb_dro_added():
     return int(value)
 
 
+_STN_TRANSPORT = {}
+
+
+def stn_transport():
+    """Per-slice station transport of the bound plan (QC-TRANSPORT-FIX-4 11-09), or None (as-built ages, byte-identical
+    lowering).  DV_STN_TRANSPORT=<json of tools/qwen_layerbench/stn_transport_params.py>: a list in slice_map order of
+    dict(result = edges the station result reaches ctl later than l8_ar assumes, cfg = edges every stream word reaches
+    its station later, so an STN config may move by it, busy = edges the last region output of the station itself is
+    later: the next STN config waits for it)."""
+    path = os.environ.get('DV_STN_TRANSPORT', '')
+    if not path:
+        return None
+    if path not in _STN_TRANSPORT:
+        d = json.loads(Path(path).read_text())
+        if d.get('schema') != 'opentallas.qwen.dv-stn-transport.v1':
+            raise LowerError(f'DV_STN_TRANSPORT {path}: schema {d.get("schema")!r}')
+        out = []
+        for n in slice_map()['names']:
+            v = d['slices'].get(n[len('dvs_'):])
+            if v is None or not all(isinstance(v.get(k), int) and v[k] >= 0 for k in ('result', 'cfg', 'busy')):
+                raise LowerError(f'DV_STN_TRANSPORT {path}: {n} needs non-negative int result / cfg / busy')
+            out.append(dict(result=v['result'], cfg=v['cfg'], busy=v['busy']))
+        _STN_TRANSPORT[path] = out
+    return _STN_TRANSPORT[path]
+
+
 def memory_profile():
     """The exact memory switches passed to the calibration RTL build."""
     defines = set()
