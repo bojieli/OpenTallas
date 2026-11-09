@@ -2747,7 +2747,10 @@ module ot_hbm_accel_smh_leaf #(
     // ---- E4 ----
     // HBM-SM-KIDS-2: ifirst/ilast/itag kept like their E copies (else synthesis merges them into the copies)
     reg              iv_b, iv_f, ifp4;
-    (* keep *) reg   ifirst, ilast;
+    // ifirst/ilast: kregk port flops (a kept scalar reg leaves a BUF on the port net: face_guard shared)
+    wire             ifirst, ilast;
+    ot_hbm_accel_smh_kregk #(.W(1)) u_ifirst (.clk(clk), .rst_n(rst_n), .d(c3bd[CW-3]), .q(ifirst));
+    ot_hbm_accel_smh_kregk #(.W(1)) u_ilast (.clk(clk), .rst_n(rst_n), .d(c3bd[CW-4]), .q(ilast));
     (* keep *) reg [TAGW-1:0] itag;
     reg [WSW-1:0]    iw;
     reg [SLW-1:0]    ix;
@@ -2756,7 +2759,7 @@ module ot_hbm_accel_smh_leaf #(
         else begin iv_b <= c3bv[1]; iv_f <= c3bv[0]; end
     end
     always @(posedge clk) begin
-        ifirst <= c3bd[CW-3]; ilast <= c3bd[CW-4]; ifp4 <= c3bd[CW-5]; itag <= c3bd[TAGW-1:0];
+        ifp4 <= c3bd[CW-5]; itag <= c3bd[TAGW-1:0];
         iw <= w3b;
         ix <= xrd[SLW-1:0];
     end
@@ -2769,9 +2772,11 @@ module ot_hbm_accel_smh_leaf #(
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
     // kept E-face copies (same D as ifirst / ilast / itag: equal every cycle, 0 cycles)
-    (* keep *) reg ifirst_e, ilast_e;
+    wire ifirst_e, ilast_e;
+    ot_hbm_accel_smh_kregk #(.W(1)) u_ifirst_e (.clk(clk), .rst_n(rst_n), .d(c3bd[CW-3]), .q(ifirst_e));
+    ot_hbm_accel_smh_kregk #(.W(1)) u_ilast_e (.clk(clk), .rst_n(rst_n), .d(c3bd[CW-4]), .q(ilast_e));
     (* keep *) reg [TAGW-1:0] itag_e;
-    always @(posedge clk) begin ifirst_e <= c3bd[CW-3]; ilast_e <= c3bd[CW-4]; itag_e <= c3bd[TAGW-1:0]; end
+    always @(posedge clk) itag_e <= c3bd[TAGW-1:0];
     assign o_ifirst_e = ifirst_e; assign o_ilast_e = ilast_e; assign o_itag_e = itag_e;
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;

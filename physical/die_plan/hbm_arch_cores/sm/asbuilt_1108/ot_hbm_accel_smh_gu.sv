@@ -209,10 +209,16 @@ module ot_hbm_accel_smh_tcl_gu #(parameter integer L = 8, parameter integer IL =
     // takes a kept copy with the same reset and next state (equal every cycle), so the port flop drives only the port.
     // both flops kept: synthesis merges a non-kept twin into the kept copy (xs/static_front 11-09 face_guard)
     (* keep *) reg lane_fault;
-    (* keep *) reg lane_fault_o;
+    wire lane_fault_o;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
-    always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault_o <= 1'b0; else lane_fault_o <= lane_fault | (|lf);
+    ot_hbm_accel_smh_gu_kq u_lfo (.clk(clk), .rst_n(rst_n), .d(lane_fault | (|lf)), .q(lane_fault_o));
     assign sum_o = sum_q;
     assign lfault = lane_fault_o;
 endmodule
 `default_nettype wire
+// HBM-SM-KIDS-2 11-09: kept port-flop copy (async reset to 0)
+module ot_hbm_accel_smh_gu_kq (input wire clk, input wire rst_n, input wire d, output wire q);
+    (* keep *) reg r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= d;
+    assign q = r;
+endmodule
