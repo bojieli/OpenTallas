@@ -362,6 +362,16 @@ class Sealed(Tmp):
         self.assertEqual(len(left), 1)
         self.assertTrue(os.path.isfile(os.path.join(self.root, left[0], ".ot-job/result.json")))
 
+    def test_root_owned_output_still_deleted(self):
+        if subprocess.run(["docker", "image", "inspect", "alpine:latest"], capture_output=True).returncode:
+            self.skipTest("needs docker + alpine")
+        env = dict(self.env)
+        env.pop("OT_JOB_NEXT_DOCKER", None)
+        self.env = env
+        r = self.job(f"docker run --rm -v $OT_JOB_DIR/work:/w alpine sh -c 'mkdir -p /w/r && touch /w/r/x && chmod 700 /w/r'")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(self.jobs_left(), [])
+
     def test_bad_input_cleans_up(self):
         r = self.job("true", inputs=[{"path": os.path.join(self.base, "nope")}])
         self.assertEqual(r.returncode, JOB.SPEC_FAIL)

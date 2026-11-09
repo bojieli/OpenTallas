@@ -27,6 +27,7 @@ Spec (JSON, schema opentallas.ot_job.v1):
    "publish": [{"name": "place-run", "path": "run", "when": "ok"|"always", "required": false}],
    "return": {"to": "/abs/caller/dir", "paths": ["run/logs", "result.json"]},
    "allow_ro": ["/abs/host/prefix"],                                       optional, read-only system paths
+   "replicate": ["epyc4"],                                                optional: push published objects there too
    "keep": false}                                                          true keeps J (pilot debugging only)
 An input is found by sha in the local store, else at its path on this host, else fetched from "host" (by sha from
 that host's store, else as a tar stream of the path).  Paths in publish/return are relative to the work dir.
@@ -188,17 +189,28 @@ def copy_out(src, dst):
             _copy_file(os.path.join(dp, n), os.path.join(od, n))
 
 
-def remove_job(J):
-    marker = os.path.join(J, ".ot-job", "job.json")
-    if not os.path.isfile(marker):
-        raise JobError(f"{J} has no ot-job marker: not deleting")
+def _writable(J):
     for dp, dns, _fns in os.walk(J):
         for d in dns:
             p = os.path.join(dp, d)
             if not os.path.islink(p):
                 os.chmod(p, 0o755)
     os.chmod(J, 0o755)
-    shutil.rmtree(J)
+
+
+def remove_job(J):
+    marker = os.path.join(J, ".ot-job", "job.json")
+    if not os.path.isfile(marker):
+        raise JobError(f"{J} has no ot-job marker: not deleting")
+    try:
+        _writable(J)
+        shutil.rmtree(J)
+    except PermissionError:
+        # files a container wrote as root (a killed run never reached run_kit.sh's chown): chown through docker, retry
+        subprocess.run(["/usr/bin/docker", "run", "--rm", "-v", f"{J}:/j", os.environ.get("OT_JOB_CHOWN_IMAGE", "alpine:latest"),
+                        "chown", "-R", f"{os.getuid()}:{os.getgid()}", "/j"], capture_output=True, timeout=600)
+        _writable(J)
+        shutil.rmtree(J)
 
 
 def run(spec, tag, cmd, bwrap=True):
@@ -300,6 +312,12 @@ def finish(spec, meta, J, store, tag, rc):
         bad = S.verify(store, r["sha"])
         if bad:
             errors.append(f"verify {r['name']}: {bad[:3]}")
+    for h in spec.get("replicate", []):          # hosts are volatile: a second copy of what a live form will read
+        for r in pub:
+            try:
+                S.push(store, r["sha"], h)
+            except S.StoreError as e:
+                errors.append(f"replicate {r['name']} to {h}: {e}")
     result = {"rc": rc, "published": [{k: r[k] for k in ("id", "name", "kind", "sha")} for r in pub], "errors": errors,
               "store": store, "host": meta["host"], "J": J, "ended": time.time()}
     ret = spec.get("return") or {}
