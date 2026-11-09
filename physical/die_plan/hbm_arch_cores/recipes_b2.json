@@ -1621,7 +1621,11 @@
     "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
     "view_kind": "SYNTH",
     "view_port_bits": 7343,
-    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88"
+    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88",
+    "orfs_vars": {
+      "OT_KEEP_WIRES": "reset_pipe"
+    },
+    "orfs_vars_why": "DIE-HBM-97/KSHARE 11-09: yosys opt_merge folded the 16 ot_reset_sync instances (4 lane u_fill, u_cmd, u_wcmd, fault_cdc; same clock, same async input) into one hbm-side and one stream-side 2-flop sync, so lane[0].u_fill.u_wr_reset.reset_pipe[1] drove 104 RESETN + every lane FIFO wr_ready (HBM-HARD-9 vK TT worst -40.21: lane[0] reset_pipe[1] -> lane[3].u_fill.mem; v700685 vK 100 TT endpoints).  keep on every reset_pipe flop (ot_keep_regs.tcl) leaves each FIFO its own sync: cycle-exact, no RTL change (ot_reset_sync.sv / ot_hbm_svc_async_fifo.sv stay byte-identical to their async_gray_fifo fingerprints).  EQ: physical/die_plan/hbm_arch_cores/kshare_keep_reset_eq/."
   },
   "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
     "top": "ot_hbm_svc_vm_kshare_splitstrap",
@@ -1643,7 +1647,11 @@
     "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
     "view_kind": "SYNTH",
     "view_port_bits": 7343,
-    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88"
+    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88",
+    "orfs_vars": {
+      "OT_KEEP_WIRES": "reset_pipe"
+    },
+    "orfs_vars_why": "DIE-HBM-97/KSHARE 11-09: yosys opt_merge folded the 16 ot_reset_sync instances (4 lane u_fill, u_cmd, u_wcmd, fault_cdc; same clock, same async input) into one hbm-side and one stream-side 2-flop sync, so lane[0].u_fill.u_wr_reset.reset_pipe[1] drove 104 RESETN + every lane FIFO wr_ready (HBM-HARD-9 vK TT worst -40.21: lane[0] reset_pipe[1] -> lane[3].u_fill.mem; v700685 vK 100 TT endpoints).  keep on every reset_pipe flop (ot_keep_regs.tcl) leaves each FIFO its own sync: cycle-exact, no RTL change (ot_reset_sync.sv / ot_hbm_svc_async_fifo.sv stay byte-identical to their async_gray_fifo fingerprints).  EQ: physical/die_plan/hbm_arch_cores/kshare_keep_reset_eq/."
   },
   "ot_hnx_idxn_keybuf_slice": {
     "top": "ot_hnx_idxn_keybuf_slice",
