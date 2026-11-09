@@ -1023,6 +1023,8 @@ def main():
     ap.add_argument("--cx-contract", type=Path)
     ap.add_argument("--cx-l12", type=Path)
     ap.add_argument("--cx-coll-transport", type=Path, help="coll_transport.py profile: die lane timing for COLL gathers (TOKg 10-23)")
+    ap.add_argument("--su-transport", type=Path, help="su_transport.py profile of the strict bind: SU epoch start guard / tail "
+                    "from the bound VM lane-group depths (HBM-TRANSPORT-1 11-09; default = as built 33 / 64)")
     ap.add_argument("--cx-checkpoint", type=Path)
     ap.add_argument("--cx-hc-source-profile", choices=["safe2_phase40_qchx12"], help="default-off bounded SAFE2 HC candidate, requires matching contract and k31 A64/O72 scope")
     ap.add_argument("--cx-chapters", default="", help="priced records starting a new VM chapter (quarter VM reset; "
@@ -1330,6 +1332,9 @@ def main():
     busy_until, shift, written_at = 3, 0, {}
     cx_ev, cx_comp_place, cx_epochs = [], [], []
     cx_state = dict(t=3, ep=None)
+    su_guard, su_tail = (CX.su_epoch_terms(None if getattr(a, "su_transport", None) is None else
+                                           __import__("hbm_layer_vehicle.su_transport", fromlist=["load"]).load(a.su_transport))
+                         if cx is not None else (None, None))
 
     def cx_close_epoch():
         ep = cx_state["ep"]
@@ -1337,7 +1342,7 @@ def main():
             return
         last = max([CX.stream_of(e["cyc"]) if e["dom"] == "serial" else e["cyc"] for e in events[ep["start"]:]
                     if e["k"] != "M"] or [ep["launch"]])
-        ev_, launch_, end_ = CX.epoch_calendar(ep["t_install"], last)
+        ev_, launch_, end_ = CX.epoch_calendar(ep["t_install"], last, tail=su_tail)
         cx_ev.extend(ev_)
         cx_epochs.append(dict(t_install=ep["t_install"], launch=launch_, end=end_, last_su_stream=last,
                               programmes=ep["progs"]))
@@ -1361,7 +1366,7 @@ def main():
             cx_place_comps(cx_before.get(k, []))
             launch_ = CX.epoch_launch(cx_state["t"])
             cx_state["ep"] = dict(t_install=cx_state["t"], launch=launch_, start=len(events), progs=[])
-            min_s = -(-3 * (launch_ + CX.SU_START_GUARD) // 4) + 1
+            min_s = -(-3 * (launch_ + su_guard) // 4) + 1
             if t0 + P["base"] + shift - START_ADVANCE < min_s:
                 shift += min_s - (t0 + P["base"] + shift - START_ADVANCE)
         if cx is not None:
