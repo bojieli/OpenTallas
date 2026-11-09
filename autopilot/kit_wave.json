@@ -7309,7 +7309,8 @@
      "OT_IO_HOLD": "sender_min"
     },
     "hd_lep0N": {
-     "OT_IO_HOLD": "sender_min"
+     "OT_IO_HOLD": "sender_min",
+     "OT_KW43_FIX": "lep-7c45adfab1d"
     },
     "hd_mesh": {
      "OT_IO_HOLD": "sender_min"
@@ -7992,7 +7993,12 @@
    ],
    "gen_host_prev_kw43": "epyc7",
    "note_kw43_gen": "KW-FIX-43 2026-11-09 10:34 PST COORD option (b): HEAD gen on epyc7 only (epyc4 kw27 HEAD run dir resolves to scratch3 on its root fs: 8 l48hp1 a1 died 'no host qualifies'). Revert: gen_hosts <- gen_hosts_prev_kw43, gen_host <- gen_host_prev_kw43.",
-   "note_gen_hosts_kw43b": "KW-FIX-43 11:0x: epyc4 back as 2nd HEAD gen host now that ot-run kw43-rootreal authorizes its kw27 lane (symlink -> scratch3, floor 150); epyc7 load-capped held 4 of 8 l48hp1 rows. Revert: gen_hosts [epyc7]"
+   "note_gen_hosts_kw43b": "KW-FIX-43 11:0x: epyc4 back as 2nd HEAD gen host now that ot-run kw43-rootreal authorizes its kw27 lane (symlink -> scratch3, floor 150); epyc7 load-capped held 4 of 8 l48hp1 rows. Revert: gen_hosts [epyc7]",
+   "item_env_prev_kw43lep": {
+    "hd_lep0N": {
+     "OT_IO_HOLD": "sender_min"
+    }
+   }
   },
   "qwen_compute": {
    "enabled": true,
