@@ -7,6 +7,8 @@
 # flop pairs 212 ps apart).
 # env: OT_DTAP_TARGET (max sinks per tap, default 1250), OT_DTAP_DMAX_UM (max tap region side, robust 2-98%, default 80;
 #      ASAP7 placement-RC wire delay grows ~quadratically, so long strips are split), OT_DTAP_MIN (no split below 2x, default 150),
+#      OT_DTAP_BOUNDED_F4 (opt-in 1: preserve TARGET through stray/F4 moves and bound F4 capture-to-tap distance),
+#      OT_DTAP_OUTLIER_LEAVES (opt-in 1 with BOUNDED_F4: extra local leaves for unplanned sinks beyond DMAX),
 #      OT_DTAP_CELL (default BUFx24_ASAP7_75t_R), OT_DTAP_PORT (default clk), OT_DTAP_OUT (optional report file)
 uplevel #0 {
 set dt_blk [ord::get_db_block]
@@ -160,12 +162,64 @@ foreach S $dt_sets {
   lappend dt_med [list [lindex $best 0] [lindex $best 1]]
 }
 }
+# Optional local leaves address the sparse outliers deliberately ignored by
+# robust splitting. Keep the reviewed normal medoids and native root intact.
+# Hard extents for these extra leaves ensure every member is within DMAX of
+# any chosen member medoid, even when the set contains fewer than 16 sinks.
+proc dt_local_outlier_sets {pts cap dmax} {
+  set n [llength $pts]
+  if {!$n} {return {}}
+  set xs [lsort -integer [lmap p $pts {lindex $p 0}]]
+  set ys [lsort -integer [lmap p $pts {lindex $p 1}]]
+  set w [expr {[lindex $xs end]-[lindex $xs 0]}]
+  set h [expr {[lindex $ys end]-[lindex $ys 0]}]
+  if {$n <= $cap && $w+$h <= $dmax} {return [list $pts]}
+  set axis [expr {$w >= $h ? 0 : 1}]
+  set ordered [lsort -integer -index $axis $pts]; set mid [expr {$n/2}]
+  return [concat [dt_local_outlier_sets [lrange $ordered 0 [expr {$mid-1}]] $cap $dmax] [dt_local_outlier_sets [lrange $ordered $mid end] $cap $dmax]]
+}
+if {[info exists ::env(OT_DTAP_OUTLIER_LEAVES)] && $::env(OT_DTAP_OUTLIER_LEAVES)} {
+  if {![info exists ::env(OT_DTAP_BOUNDED_F4)] || !$::env(OT_DTAP_BOUNDED_F4)} {error "OUTLIER_LEAVES requires bounded F4 reassignment"}
+  if {$dt_planned_active} {error "OUTLIER_LEAVES cannot revise planned clock anchors"}
+  set dt_local_rest {}; set dt_local_outliers {}; set k 0
+  foreach S $dt_sets {
+    lassign [lindex $dt_med $k] mx my
+    set keep {}
+    foreach p $S {
+      if {abs([lindex $p 0]-$mx)+abs([lindex $p 1]-$my) > $dt_dmax} {
+        lappend dt_local_outliers $p
+      } else {lappend keep $p}
+    }
+    lappend dt_local_rest $keep
+    incr k
+  }
+  set dt_sets $dt_local_rest
+  set dt_local_extra [dt_local_outlier_sets $dt_local_outliers $dt_target $dt_dmax]
+  foreach S $dt_local_extra {
+    set cx 0.0; set cy 0.0
+    foreach p $S {set cx [expr {$cx+[lindex $p 0]}]; set cy [expr {$cy+[lindex $p 1]}]}
+    set cx [expr {$cx/[llength $S]}]; set cy [expr {$cy/[llength $S]}]
+    set best {}; set bd 1e30
+    foreach p $S {
+      set d [expr {abs([lindex $p 0]-$cx)+abs([lindex $p 1]-$cy)}]
+      if {$d<$bd} {set bd $d; set best $p}
+    }
+    lappend dt_sets $S
+    lappend dt_med [lrange $best 0 1]
+  }
+  puts "OT_DTAP_OUTLIER_LEAVES sinks [llength $dt_local_outliers] extra_groups [llength $dt_local_extra]"
+}
 set dt_regular_count [llength $dt_sets]
 set dt_sets [concat $dt_sets $dt_atomic_sets]
 set dt_med [concat $dt_med $dt_atomic_med]
 if {[llength $dt_atomic_sets]} {puts "OT_DTAP_ATOMIC groups [llength $dt_atomic_sets] pinned [dict size $dt_atomic_pinned]"}
 # stray sinks (the robust split ignores the outer 2%): a sink farther than DMAX from its own tap joins the nearest tap
 set dt_moved 0
+# Optional bounded form: preserve the original density partition budget during
+# reassignment as well as during splitting. Legacy/planned recipes stay pinned.
+set dt_bounded_f4 [expr {[info exists ::env(OT_DTAP_BOUNDED_F4)] && $::env(OT_DTAP_BOUNDED_F4)}]
+array unset dt_stray_load
+for {set k 0} {$k < [llength $dt_sets]} {incr k} {set dt_stray_load($k) [llength [lindex $dt_sets $k]]}
 # DIE-HEAD-86: the stray/planned-split pass reads the atomic pin set and the regular tap count; defaults when
 # no atomic plan ran (the block is also sourced stand-alone by test_planned_group_caps)
 if {![info exists dt_atomic_pinned]} {set dt_atomic_pinned {}}
@@ -185,9 +239,13 @@ foreach S $dt_sets {
       for {set j 0} {$j < $dt_regular_count} {incr j} {
         lassign [lindex $dt_med $j] qx qy
         set d [expr {abs([lindex $p 0] - $qx) + abs([lindex $p 1] - $qy)}]
+        if {$dt_bounded_f4 && $j != $k && $dt_stray_load($j) >= $dt_target} continue
         if {$d < $bd} { set bd $d; set t $j }
       }
-      if {$t != $k} { incr dt_moved }
+      if {$t != $k} {
+        incr dt_moved
+        incr dt_stray_load($k) -1; incr dt_stray_load($t)
+      }
     }
     lappend dt_asg($t) $p
   }
@@ -217,10 +275,16 @@ proc dt_d_sinks {net depth} {
 set dt_f4 0
 array unset dt_load
 for {set k 0} {$k < [llength $dt_sets]} {incr k} {set dt_load($k) [llength $dt_asg($k)]}
-proc dt_f4_group_move {mapping loads capture target cap planned} {
+proc dt_f4_group_move {mapping loads capture target cap planned {bounded 0} {capture_xy {}} {target_xy {}} {dmax 0}} {
   upvar 1 $mapping groups $loads count
   set prior [dict get $groups $capture]
-  if {$planned && $count($target) >= $cap} {return 0}
+  if {($planned || $bounded) && $count($target) >= $cap} {return 0}
+  # Pairwise proximity alone permits a chain to walk far from its tap. Check
+  # the final capture against the fixed target medoid before changing state.
+  if {$bounded} {
+    if {[llength $capture_xy] < 2 || [llength $target_xy] != 2 || $dmax <= 0} {error "bounded F4 needs capture, medoid and positive DMAX"}
+    if {abs([lindex $capture_xy 0]-[lindex $target_xy 0]) + abs([lindex $capture_xy 1]-[lindex $target_xy 1]) > $dmax} {return 0}
+  }
   dict set groups $capture $target
   incr count($prior) -1; incr count($target)
   return 1
@@ -236,7 +300,7 @@ dict for {nm p} $dt_pt {
       if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t} continue
       set q [dict get $dt_pt $c]
       if {abs([lindex $q 0] - [lindex $p 0]) + abs([lindex $q 1] - [lindex $p 1]) > $dt_dmax / 2} continue
-      if {[dt_f4_group_move dt_tp dt_load $c $t $dt_target $dt_planned_active]} {incr dt_f4}
+      if {[dt_f4_group_move dt_tp dt_load $c $t $dt_target $dt_planned_active $dt_bounded_f4 $q [lindex $dt_med $t] $dt_dmax]} {incr dt_f4}
     }
   }
 }

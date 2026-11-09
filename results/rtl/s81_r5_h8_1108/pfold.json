@@ -1,0 +1,23 @@
+{
+  "status": "FOLD_COMPONENT_PASS",
+  "host": "epyc4",
+  "unit": "oth-ubuntu-452106-1794135664",
+  "path": "/srv/opentallas-scratch3/claude/codex-svc-rtl-0222/pfold2",
+  "source": "Native dsdv_svc_rs_c fold functions/state machine cut; unrelated SM/start collision inputs held idle",
+  "shape": {
+    "T": 128,
+    "H": 8,
+    "input_beats": 32,
+    "input_interval": 2
+  },
+  "first_input_edge": 20,
+  "header_edge": 21,
+  "first_payload_edge": 22,
+  "last_payload_edge": 84,
+  "payload_words": 32,
+  "payload_interval": 2,
+  "errors": 0,
+  "fault": 0,
+  "bit_flip_control_errors": 1,
+  "limitation": "No SX-tree/return-tree/owner-parser or SM timing qualification; this isolates actual fold bit packing and edge cadence."
+}

@@ -1,0 +1,45 @@
+{
+  "verdict": "FAIL_HOLD_BEFORE_CTS",
+  "images_viewed": [
+    "place_layout.png",
+    "place_density.png"
+  ],
+  "stage": "PLACE",
+  "source_candidate": "codex/svc-sm-0222@2dd5fd1035",
+  "cell_area_um2": 6182,
+  "core_util": 0.29,
+  "clock_sinks": 7854,
+  "clock_entry_to_centroid_um": 2.981,
+  "pin_track_use": 0.084,
+  "peak_density": 0.435,
+  "smells": [
+    {
+      "number": 5,
+      "driver": "u_fcore.rr1",
+      "fanout": 308,
+      "spread_um": 273.5
+    },
+    {
+      "number": 5,
+      "driver": "u_fcore.g_dv[0].u_d.fq[26]",
+      "fanout": 51,
+      "spread_um": 139.8
+    },
+    {
+      "number": 5,
+      "driver": "u_fcore.pending",
+      "fanout": 130,
+      "spread_um": 106.2
+    }
+  ],
+  "findings": [
+    "Placement is compact with no macro wall or density hotspot above0.7; pins are sparse and ordered on four faces.",
+    "Clock entry is centered on the actual sink centroid; a real CTS tree is not yet present.",
+    "Reset and two control drivers span too much of the leaf; buffer fanout caps did not remove the source-driver spread."
+  ],
+  "redesign": "New local variant: six same-edge reset second stages plus compact reset-consumer bands; retained 16-bit serializer phase copies; private NR0 divider quotient-MSB copies for exponent and mantissa groups.",
+  "fix_branch": "codex/svc-sm-local-0222@0ceecce490",
+  "added_mission_cycles": 0,
+  "reset_release_edges": 2,
+  "release": "None: HOLD_ROUTE and DO_NOT_COUNT stay. No CTS, GRT, route or unchanged P&R retry."
+}

@@ -1,0 +1,6 @@
+H8_PVSO_CAUGHT mut3 fc080
+- tools/s81_dv/pv_so_assembly_1021/tb_pv_so_h8.sv:74: Verilog $finish
+[1169000] %Fatal: tb_pv_so_h8.sv:75: Assertion failed in tb_pv_so_h8: H8_NOT_READY ready0 fc080 join1
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.005 s; speed 258.270 us/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

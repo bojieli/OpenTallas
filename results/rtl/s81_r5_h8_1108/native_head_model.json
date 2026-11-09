@@ -1,0 +1,64 @@
+{
+  "status": "NATIVE_ELAB_AND_HEAD_COMPONENT_PASS_NOT_PHYSICAL_CLOSURE",
+  "source_rule": "hgrp_s passes only TD to hdp_s; hdp_s instantiates TD bmul lanes per head, independent H/RT",
+  "H16": {
+    "tiles": 4,
+    "heads_per_tile": 16,
+    "TD": 32,
+    "multipliers": 2048,
+    "RT": 2,
+    "pcols_per_head_bits": 64
+  },
+  "H8": {
+    "tiles": 4,
+    "heads_per_tile": 8,
+    "TD": 32,
+    "multipliers": 1024,
+    "RT": 4,
+    "pcols_per_head_bits": 128
+  },
+  "delta": {
+    "total_MACs": -1024,
+    "head_P_input_bits": 64,
+    "added_pin_cycles": 0
+  },
+  "scope": "RT4 is wider load mapping/front-registers, not twice arithmetic; fresh native view required. Area/closure not yet measured; no plan adoption.",
+  "prior_engine_probe_scope": "Closing latency parameters with real behavioral TILE_S arithmetic, not OT_ATTN_HCORE native wrapper. Native CTLA timing calibration still open.",
+  "measured_synth": {
+    "host": "epyc4",
+    "H16": {
+      "cells": 201265,
+      "area_um2": 23262.4629,
+      "seq_um2": 8417.09232,
+      "memory_bits": 0,
+      "unit": "oth-ubuntu-1070717-1794137091"
+    },
+    "H8": {
+      "cells": 200970,
+      "area_um2": 23207.29218,
+      "seq_um2": 8431.08912,
+      "memory_bits": 0,
+      "unit": "oth-ubuntu-1070880-1794137091"
+    },
+    "same_defines": [
+      "SYNTHESIS",
+      "OT_S81C_HCORE_CTLA",
+      "OT_S81C_HCORE_RST_TIMED"
+    ],
+    "total_attention_area_ratio": 0.4988141685547836,
+    "conservative_target": "Both heads exceed150k cells. No new P&R/closure claim; consider signed-RT2 reuse shim or smaller child cut if target required."
+  },
+  "native_elab": {
+    "host": "intel1",
+    "unit": "oth-ubuntu-1510207-1794137209",
+    "top": "ot_hdc_v41x_attn_tile_s",
+    "parameters": "H8 TD32 NBANK5 BW3 PWORDS2 FPL4 FML6 F121",
+    "defines": [
+      "OT_ATTN_HCORE",
+      "OT_SVC_H8",
+      "OT_S81C_HCORE_CTLA",
+      "OT_S81C_HCORE_RST_TIMED"
+    ],
+    "result": "PASS SELRANGE gate, historical WIDTH warnings separate"
+  }
+}

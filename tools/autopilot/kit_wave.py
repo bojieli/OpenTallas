@@ -445,13 +445,111 @@ def count_signed_modules(d, die):
     return hit[1].get(die, set())
 
 
+def has_counted_view(d, m):
+    """a prov_view_sources candidate of m (die config or the auto-views overlay) is the counted signed view"""
+    v = (d.get("prov_view_sources") or {}).get(m)
+    return any(prov_counted(c) for c in (v if isinstance(v, list) else [v] if v else []) if isinstance(c, dict))
+
+
+def count_noview(d, counted):
+    """KW-FIX-35-CV 11-08: sorted child modules that prelint reports SIGNED IN COUNT BUT NO WAVE VIEW (children of the
+    WAIT types -- same flag rule as prelint -- signed in the count with no counted view in prov_view_sources)"""
+    if not counted:
+        return []
+    out = set()
+    for t, f in (d.get("_plan_flags") or {}).items():
+        if f in ("planned", "noview") and not (f == "planned" and d.get("planned_core_flat")):
+            out |= {m for m in (d.get("_plan_deps") or {}).get(t, []) if m in counted and not has_counted_view(d, m)}
+    return sorted(out)
+
+
+# KW-FIX-35-CV 11-08 (DIE-HBM-92 10:2x: types built on PROVISIONAL child views although every child was signed in the
+# count; counted_child_views.py was manual, and its --apply wrote the hub's kit_wave.json, which the tick does not read).
+# The tick now runs the export itself, at most hourly per die and only for the SIGNED IN COUNT BUT NO WAVE VIEW
+# modules, in a detached unit; the unit publishes the complete counted views to this hub sidecar, and every tick merges
+# the sidecar into dies.<die>.prov_view_sources at read time (candidates first; the committed config is never written).
+# Die/global option auto_child_views false turns both the export and the overlay off.
+AUTO_VIEWS_FILE = "prov_view_sources_auto.json"
+AUTO_VIEWS_PERIOD_S = 3600
+
+
+def merge_auto_views(cfg, ap_dir, log=None):
+    """overlay the sidecar's counted views FIRST into each die's prov_view_sources (in memory) -> {die: [modules]}"""
+    p = Path(ap_dir or AP_DIR) / AUTO_VIEWS_FILE
+    try:
+        side = json.loads(p.read_text())
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for die, ent in ((side or {}).get("dies") or {}).items():
+        d = (cfg.get("dies") or {}).get(die)
+        if not isinstance(d, dict) or opt(cfg, die, "auto_child_views") is False:
+            continue
+        pvs = dict(d.get("prov_view_sources") or {})
+        for m, cands in sorted(((ent or {}).get("modules") or {}).items()):
+            new = [dict(c, counted=True) for c in cands or [] if isinstance(c, dict) and c.get("host") and c.get("dir")]
+            if not new:
+                continue
+            old = pvs.get(m) or []
+            old = old if isinstance(old, list) else [old]
+            dirs = {c["dir"] for c in new}
+            pvs[m] = new + [c for c in old if not (isinstance(c, dict) and c.get("dir") in dirs)]
+            out.setdefault(die, []).append(m)
+        if die in out:
+            d["prov_view_sources"] = pvs
+            d["_auto_views"] = out[die]
+    if out and log:
+        log("KIT-WAVE AUTO-VIEWS overlay: " + " ".join(f"{k}={len(v)}" for k, v in sorted(out.items())))
+    return out
+
+
+def auto_views_step(AP, cfg, st, ap_dir, now=None):
+    """launch counted_child_views.py --export --publish for each die whose plan probe has SIGNED IN COUNT BUT NO WAVE
+    VIEW children; at most once per AUTO_VIEWS_PERIOD_S per die and never while the die's previous unit is active.
+    -> {die: unit}"""
+    now = time.time() if now is None else now
+    ap_dir = Path(ap_dir or AP_DIR)
+    runs = st.setdefault("auto_views", {})
+    tool = Path(__file__).resolve().with_name("counted_child_views.py")
+    out = {}
+    for die, d in sorted((cfg.get("dies") or {}).items()):
+        if not isinstance(d, dict) or "_plan_flags" not in d or opt(cfg, die, "auto_child_views") is False:
+            continue
+        nv = count_noview(d, count_signed_modules(d, die))
+        if not nv:
+            continue
+        last = runs.get(die) or {}
+        if now - float(last.get("t") or 0) < float(opt(cfg, die, "auto_views_period_s") or AUTO_VIEWS_PERIOD_S):
+            continue
+        if last.get("unit") and hasattr(AP, "unit_active") and AP.unit_active(last["unit"]):
+            continue
+        unit = f"kw-av-{re.sub(r'[^A-Za-z0-9]', '', die)[:16]}-{int(now) % 100000}"
+        jd = ap_dir / "auto_views" / die
+        dc = {k: d.get(k) for k in ("gen_host", "plan", "event")}
+        argv = ["python3", "-I", str(tool), "--die", die, "--export", "--manifest", str(jd / "manifest.json"),
+                "--config", str(jd / "config.json"), "--state", str(ap_dir / STATE_FILE),
+                "--counter", str(Path(d.get("count_cache") or COUNT_CACHE)), "--publish", str(ap_dir / AUTO_VIEWS_FILE),
+                "--only", *nv]
+        if getattr(AP, "DRY", False):
+            AP.log(f"KIT-WAVE would AUTO-VIEWS {die}: export {len(nv)} counted children ({' '.join(nv[:6])})")
+            continue
+        jd.mkdir(parents=True, exist_ok=True)
+        (jd / "config.json").write_text(json.dumps({"dies": {die: dc}}, indent=1))
+        ok = AP.launch_unit(unit, jd / "unit.log", argv)
+        runs[die] = {"t": now, "unit": unit if ok else None, "modules": nv, "ok": bool(ok)}
+        AP.log(f"KIT-WAVE AUTO-VIEWS {die}: {'launched ' + unit if ok else 'launch FAILED'} for {len(nv)} counted "
+               f"children without a wave view ({' '.join(nv[:6])}{' ...' if len(nv) > 6 else ''})")
+        if ok:
+            out[die] = unit
+    return out
+
+
 def count_view_note(d, deps, counted):
     """'' or '; count: ...' -- per child: signed in the count AND a counted signed view in prov_view_sources (the kit
     is built on it and is FINAL), signed in the count but NO wave view (export it: counted_child_views.py), unsigned"""
     if counted is None or not deps:
         return ""
-    pvs = d.get("prov_view_sources") or {}
-    has = lambda m: any(prov_counted(c) for c in (pvs.get(m) if isinstance(pvs.get(m), list) else [pvs.get(m)] if pvs.get(m) else []))
+    has = lambda m: has_counted_view(d, m)
     sv = [m for m in deps if m in counted and has(m)]
     nv = [m for m in deps if m in counted and not has(m)]
     un = [m for m in deps if m not in counted]
@@ -3988,6 +4086,7 @@ def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    merge_auto_views(cfg, ap_dir, AP.log)                # KW-FIX-35-CV: counted child views overlay (hub sidecar)
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
@@ -4087,6 +4186,10 @@ def _step(AP, ap_dir):
         save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     res, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
+    try:                                                 # KW-FIX-35-CV: export counted child views (hourly per die)
+        auto_views_step(AP, cfg, st, ap_dir)
+    except Exception as e:                               # an export launch never stops the wave
+        AP.log(f"KIT-WAVE AUTO-VIEWS skipped: {type(e).__name__}: {e}")
     if cfg.get("hold_unchanged"):
         try:
             write_redesign(cfg, st, ap_dir)
@@ -5036,6 +5139,7 @@ def main(argv=None):
         return 0
     AP.DRY = True
     cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+    merge_auto_views(cfg, AP_DIR)                # KW-FIX-35-CV: the plan reads the views the pass reads
     owners = parse_owners(Path(a.owners or AP_DIR / "OWNERS.tsv").read_text())
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")

@@ -1,0 +1,35 @@
+{
+  "status": "NATIVE_HEAD_COMPONENT_PASS",
+  "host": "intel2",
+  "unit": "oth-ubuntu-1007689-1794137643",
+  "path": "/srv/opentallas-scratch2/claude/codex-svc-rtl-0222/native_head",
+  "scope": "One native H8/RT4 head PCOLP1 versus H8/RT4 behavioral HG1 PCOLP0. Actual CTLA sender, private timed reset,32MAC reduction preserved; not full tile timing or physical closure.",
+  "source": "d05e71351e native variant; benchmark committed with this record",
+  "runs": [
+    {
+      "head": 0,
+      "seed": 1,
+      "cycles": 8000,
+      "mismatches": 0,
+      "valid_outputs": 5615,
+      "nonzero": 5614
+    },
+    {
+      "head": 7,
+      "seed": 1,
+      "cycles": 8000,
+      "mismatches": 0,
+      "valid_outputs": 5615,
+      "nonzero": 5608
+    }
+  ],
+  "control": {
+    "kind": "wrong head column of second P word",
+    "mismatches": 3178
+  },
+  "remaining": [
+    "corrected SX oracle/tree proof",
+    "native engine/calendar composition",
+    "new native physical view or signed RT2 reuse construction"
+  ]
+}

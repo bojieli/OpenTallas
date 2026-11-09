@@ -136,7 +136,14 @@ module dsdv_svc_att #(
     parameter bit SRAM_MACRO = 0,
     parameter integer PV_IDENTITY = 0,
     parameter integer ROWX = 0,                   // S81-ROWX held-row export + PK2 ingress (0 = pre-ROWX share)
-    parameter integer XN = 128                    // held-row list capacity (ranks of this die / stack per job)
+    parameter integer XN = 128,                   // held-row list capacity (ranks of this die / stack per job)
+    // S81-SVCRS R5 (11-08): heads per engine pass.  16 = today's slice (byte-identical).  8 = the half-width slice: one
+    // 16-head attention op = ONE landing (WIN_LOAD / SEL_IDS / ROWS once) + TWO passes; pass j = heads 8 j .. 8 j + 7.
+    //   ATTN_Q (type 1)  one frame per pass, spec[448] = j (latched as the pass head base hb); word r = local head r / 16
+    //   GO (type 13)     spec[48] MORE: 1 = another pass follows on the same landing (job stays open, done not raised)
+    //   SMJ SE (kind 4) follows ATTN_Q: only slices with tile[3] == hb_h take it; final SO broadcasts to all heads
+    // Faults: 9 = fewer than H q words at a pass's GO.  Everything else (p feed, P.V drain, pvs windows) per pass as today.
+    parameter integer H = 16
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -164,7 +171,7 @@ module dsdv_svc_att #(
     input  wire [2*4-1:0]       qr_beat,
     // score beat -> score exchange leaf
     output wire                 l_v,
-    output wire [2131:0]        l_d,
+    output wire [H*132+19:0]    l_d,              // {row 16, mask 4, NL x H FP32 scores, NL x H flags}
     // P.V words (owner slices): word 0 {1, 0, pv_c 8, flags 64}, words 1..4 tile j's 16 heads x FP32
     output reg                  pv_ov,
     output reg  [512:0]         pv_od,
@@ -195,8 +202,10 @@ module dsdv_svc_att #(
 `ifdef OT_SVC_ALLQ
     , output wire               allq_o             // CFG [54] (RTLGAP-SO): all-quarter P.V ownership of the job
 `endif
+    , output wire               hb_o               // R5 (H < 16): the pass head base (ATTN_Q spec[448]); 0 at H = 16
 );
-    localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
+    localparam integer D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
+    localparam bit P2 = H < 16;                    // R5 two-pass build
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
     localparam bit RX = ROWX != 0;                 // S81-ROWX build
@@ -426,6 +435,19 @@ module dsdv_svc_att #(
     reg dr_arm, dr_on; reg [2:0] dbeat;
     reg [9:0] rc; reg run;                           // program cycle
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
+    // ------------------------------------------------------------------ R5 pass state (H < 16 only; constant at H = 16)
+    // more_h / hb_h: GO spec[48] / ATTN_Q spec[448] as they arrive; more_p / hb_p: the values of the running pass,
+    // taken at its start (go), so a later pass's frames may arrive while this pass still runs.
+    reg more_h, more_p, hb_h, hb_p;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin more_h <= 1'b0; more_p <= 1'b0; hb_h <= 1'b0; hb_p <= 1'b0; end
+        else if (P2) begin
+            if (hdr_mine && h_type == 4'd13) more_h <= q_d[48];
+            if (hdr_mine && h_type == 4'd1) hb_h <= q_d[448];
+            if (go) begin more_p <= more_h; hb_p <= hb_h; end
+        end
+    assign hb_o = P2 ? hb_p : 1'b0;
+
     // engine ports
     reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
     wire ej_ready, eq_ready, kv_ready;
@@ -493,7 +515,10 @@ module dsdv_svc_att #(
 `else
     wire pvown = tile[3:2] == st_r;
 `endif
-    wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
+    // H8 packs 4 rows/word: two PWORDS load one 32-row block in 4 steps,
+    // while its fixed issue schedule takes DPT=8 cycles. Alternate-cycle feed
+    // preserves the bounded-ahead bank/skid budget without runtime backpressure.
+    wire ep_v = job_active && p_left != 0 && jc >= po && (!P2 || jc[0] == po[0]);
     wire ep_ready;
 `ifdef RTLGAP_MUT_ALLQ_NOP
     // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
@@ -538,8 +563,11 @@ module dsdv_svc_att #(
         xhalf = v ? {88'd0, b[127:89], 9'd0, b[88:0], b[143:128], r, t, 1'b1} : 256'd0;
     endfunction
     wire [9:0] x_q0 = (MUT == 6) ? x_r0 ^ 10'd1 : x_r0, x_q1 = (MUT == 6) ? x_r1 ^ 10'd1 : x_r1;
+    // H8 native collector identity: bit32 is pass head base; 63:33 stay zero.
+    // H16 retains all64 logical flag bits and its original header bytes.
+    wire [63:0] pv_header_flags = P2 ? {31'd0, hb_p, 32'(pb[NT*H-1:0])} : 64'(pb[NT*H-1:0]);
     always @(posedge clk) if (dr_on)
-        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pv_header_flags} : {1'b0, 512'(pb[NT*H + 32'(p_i - 1)*H*32 +: H*32])};
         else if (RX && x_em)
         pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
 
@@ -549,7 +577,7 @@ module dsdv_svc_att #(
         // write FIFO pushes
         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
         // q store
-        if (q_word) qmem[{f_hdr[448], f_idx[6:4]}] <= q_d;
+        if (q_word) qmem[P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}] <= q_d;
         // p store
         if (pay_mine && f_type == 4'd5) pmem[pw[PFW-1:0]] <= q_d;
         // landing writes: PC responses, ROWS
@@ -673,6 +701,7 @@ module dsdv_svc_att #(
                 sc_n[0] <= 2'd2; sc_n[1] <= 2'd2;
             end
             if (q_word && !start) q_have <= q_have + 1'b1;
+            if (P2 && go) q_have <= 5'd0;                                     // R5: the next pass loads its own q
             // ---- S81-ROWX export job (type 11): ROWX + gd = share-aligned start, words at XO + pvs + 1 + i
             if (RX) begin
                 if (hdr_mine && h_type == 4'd11) begin
@@ -728,12 +757,12 @@ module dsdv_svc_att #(
                 dr_arm <= pvown;
                 if(pv_identity_bad) fc[23]<=1'b1;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
-                if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
+                if (q_have != 5'(H)) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
-                eq_v <= rc <= 10'd16;
+                eq_v <= rc <= 10'(H);
                 ekv_v <= rc <= nbeat;
                 if (rc <= nbeat && |rel_bad) fc[10] <= 1'b1;                  // a row not landed at its release cycle
-                if (rc >= 10'd16 && rc >= nbeat) run <= 1'b0;
+                if (rc >= 10'(H) && rc >= nbeat) run <= 1'b0;
                 rc <= rc + 1'b1;
             end
             if (ej_v && !ej_ready) fc[11] <= 1'b1;
@@ -754,7 +783,7 @@ module dsdv_svc_att #(
             if (RX && x_em) pv_ov <= 1'b1;
             if (pv_v) begin
                 pv_n <= pv_n + 1'b1;
-                if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
+                if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= more_p; done <= !pvown && !more_p; end   // owners: at drain end
             end
             if (pvown) begin
                 if (pv_v) begin pvw <= pvw + 1'b1; if ((PA+1)'(pvw - pvr) >= (PA+1)'(PVQ)) fc[15] <= 1'b1; end
@@ -766,16 +795,16 @@ module dsdv_svc_att #(
                     p_i <= (p_i == 3'd4) ? 3'd0 : p_i + 1'b1;
                     if (p_i == 3'd4) begin
                         pvr <= pvr + 1'b1; dbeat <= dbeat + 1'b1;
-                        if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= 1'b1; end
+                        if (dbeat == 3'd7) begin dr_on <= 1'b0; done <= !more_p; end
                     end
                 end
             end
             // ---- SMJ frames -> SM head
             sm_st <= 1'b0; sm_rv <= 1'b0;
-            if (hdr_mine && h_type == 4'd9) begin
+            if (hdr_mine && h_type == 4'd9 && (!P2 || q_d[4:1] != 4'd4 || hb_h == tile[3])) begin
                 sm_st <= q_d[0]; sm_kind <= q_d[4:1]; sm_jid <= q_d[12:5];
             end
-            if (pay_mine && f_type == 4'd9) begin
+            if (pay_mine && f_type == 4'd9 && (!P2 || f_hdr[4:1] != 4'd4 || hb_h == tile[3])) begin
                 sm_rv <= !f_hdr[13] || f_hdr[14 + tile];
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end

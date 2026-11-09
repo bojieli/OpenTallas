@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS_CONDITIONAL_PLACE_ONLY",
+  "image": "preplace.png",
+  "image_viewed": true,
+  "source": "actual generated kit pins.json and PDN geometry",
+  "kit": "/srv/opentallas-scratch2/claude/codex-svc-sm-0222/pilot_divide_vA2/ot_s81_su_smd_fold2_pilot_vA",
+  "outline_um": [
+    155.52,
+    155.52
+  ],
+  "pins": 303,
+  "registered_face_flops": 301,
+  "pin_cycles": {
+    "rx": 1,
+    "tx": 1
+  },
+  "findings": [
+    "Wide operand bus W to result E: longest full-core Manhattan span311.04um below405 reach; two logical pairs remain adjacent in pin order",
+    "M4/M5 face pitch0.576um =12tracks: local pin track use8.3percent, below50percent; four disjoint faces",
+    "No macros or narrow macro channels;4.32um cell margin and155.52square outline sized from actualmappedarea plus15percentclock/channelreserve",
+    "Clockentry77.784,77.76 nearcentroid; resetentry75.624,77.76 separate by2.16um, both onM5 tracks",
+    "M5PDNstripes4.32pitchcrosscore continuously; actualconnectivity still tested byfloorplan",
+    "No unregisteredfeedthrough over450um; corediagonal219.9um",
+    "Actual density/clocktree/fanoutspread/logic-to-pin distances are unmeasured and mustbeviewedafterPLACE"
+  ],
+  "smells": "none in declared pin/core geometry; placed logic/clock smells NOT YET MEASURED",
+  "release": "ONE standalone pairedSMD PLACE pilot; HOLD_ROUTE andDO_NOT_COUNT remain, noCTS/GRT/route orparentR5release"
+}

@@ -5354,6 +5354,7 @@ def cmd_kit_rtl(a):
     ports.append(("input  wire arst_n", "die reset"))
     conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
     seen = {"clk", "arst_n"}
+    unbound_inputs = []
     for tap in taps:
         seen.add(tap)  # already declared in the plan wrapper above
         if tap in bmap:
@@ -5364,6 +5365,8 @@ def cmd_kit_rtl(a):
         ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
         if n not in bmap:
             missing.append(n)
+            if d == "input":
+                unbound_inputs.append(dict(port=n,width=W))
             if d == "output":
                 body.append(f"    assign {n} = {W}'d0;  // plan bus with no bound bit (spare lane)")
                 spare.append(dict(port=n, bits=W))
@@ -5452,7 +5455,8 @@ def cmd_kit_rtl(a):
     # spare station chain reads are structurally unconnected in this wrapper: declared proven-dead (kit dead_inputs.json
     # via gen_phys, face_guard dead_declared = 0 loads + 0 drivers, any load still FAILs class dead).
     chained = {gen_rtl.sv_id(x["slot"] + "_i") for x in spare_pass}
-    dead_in = [f"{x['port']}[{i}]" for x in narrow if x["port"] not in chained and bmap[x["port"]][0] == "input"
+    unbound_inputs = [x for x in unbound_inputs if x['port'] not in chained]
+    dead_in = [f"{x['port']}[{i}]" for x in unbound_inputs for i in range(x['width'])] + [f"{x['port']}[{i}]" for x in narrow if x["port"] not in chained and bmap[x["port"]][0] == "input"
                for i in range(x["bound"], x["plan"])]
     extra = []
     for d, w, n in bports:
@@ -5488,6 +5492,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
+    native_bound_source, native_bound_module = bfile, bmod
     if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
@@ -5504,6 +5509,18 @@ def cmd_kit_rtl(a):
             verdict="PASS", method=KIT_DEAD_METHOD,
             receipt=dict(wrapper=str(kd / f"{mod}.sv"), sha256=hashlib.sha256(txt.encode()).hexdigest(),
                          narrow_buses=[x for x in narrow if bmap[x["port"]][0] == "input"])))
+        if unbound_inputs:
+            import kit_dead_inputs as KDI
+            receipt=dead_doc['proof']['receipt']
+            receipt['unbound_input_buses']=unbound_inputs
+            try:
+                receipt['unbound_source_proof']=KDI.unbound_receipt(unbound_inputs,missing,
+                    out/'bind_report.json',native_bound_source,native_bound_module)
+                dead_doc['proof']['method'] += '; complete unbound ports re-proved as literal unread declarations'
+                KDI.refresh(dict(dead_inputs=dead_doc,narrow_buses=narrow,unbound_input_buses=unbound_inputs,
+                                 plan_buses_unbound=missing),kd/f'{mod}.sv')
+            except (ValueError,OSError) as exc:
+                raise BindError(f'kit-rtl {tn}: whole-unbound input proof: {exc}') from exc
     if kit_core_clock_rows or kit_core_swaps or kit_core_adapters or kit_param_wraps:
         (kd / "kit_core_clocks.json").write_text(json.dumps(dict(rows=kit_core_clock_rows, cycles_changed=0,
                                                                  **({"native_core_swaps": kit_core_swaps} if kit_core_swaps else {}),
@@ -5599,7 +5616,8 @@ def cmd_kit_rtl(a):
                asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
-               plan_buses_unbound=missing, bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
+               plan_buses_unbound=missing, **(dict(unbound_input_buses=unbound_inputs) if unbound_inputs else {}),
+               bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
