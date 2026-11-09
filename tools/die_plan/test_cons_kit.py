@@ -143,4 +143,6 @@ def test_strip_rows_only_in_cons_kits():
     src = Path(__file__).with_name("gen_phys.py").read_text()
     body = src[src.index("def cons_kit_apply"):]
     assert 'export OT_CLAND_STRIP_ROWS' in body        # exported by the conservative re-kit only
-    assert src.count('export OT_CLAND_STRIP_ROWS') == 1
+    # DIE-QC-97 11-09: plus the opt-in plan knob budgets.cland_strip_rows(_types) (absent = no export)
+    assert src.count('export OT_CLAND_STRIP_ROWS') == 2
+    assert 'if _cland_strip_rows(P.budgets, tn) else []' in src

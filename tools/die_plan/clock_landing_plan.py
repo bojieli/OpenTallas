@@ -50,6 +50,19 @@ def _bus_geom(t, bus):
     raise ValueError(f"landing bus geometry missing: {bus}")
 
 
+def face_crossing(t,bus,box,width):
+    """DIE-QC-97: (demand, capacity) of along-face crossing tracks for a face band box of a <width>-bit bus: demand =
+    bits whose pins lie outside the box's along-face span (uniform pin spread over the window); capacity = parallel
+    tracks in the strip between the face and the box's near edge x FACE_CROSSING_TARGET."""
+    b=_bus_geom(t,bus);lo,hi=b["window_um"];w,h=t["outline_um"];f=b["face"]
+    a0,a1=(box[1],box[3]) if f in "EW" else (box[0],box[2])
+    L=max(hi-lo,1e-6);out=max(0.0,min(hi,a0)-lo)+max(0.0,hi-max(lo,a1))
+    demand=width*min(out,L)/L
+    strip={"W":box[0],"E":w-box[2],"S":box[1],"N":h-box[3]}[f]
+    cap=strip*sum(1/p for p in PARALLEL_PITCH_UM["v" if f in "EW" else "h"])*FACE_CROSSING_TARGET
+    return demand,cap
+
+
 def _bus_xy(t,bus):
     b=_bus_geom(t,bus);at=sum(b["window_um"])/2;w,h=t["outline_um"]
     return [0 if b["face"]=="W" else w,at] if b["face"] in "EW" else [at,0 if b["face"]=="S" else h]
@@ -232,6 +245,15 @@ BAND_SPREAD=1.0
 # that fills the band, leaving the ring logic to global placement (DIE-HEAD-12 probe B: -97 % GRT overflow on hd_tile vs
 # the ring FIRM in netlist order). Default "all" keeps every band byte-identical.
 BAND_RING="all"
+# DIE-QC-97 11-09 (opt-in FACE_CROSSING, on in resize_undersized_bands; compose default off = byte-identical): a face
+# band slid ALONG its face away from its own pin window makes every bit outside the band's along-face span run parallel
+# to the face in the strip between the face and the band.  sle_hc1__cl22c1ff36 b_hw_i (1573 bits, S pins x 4.3..276.3):
+# DIE-KV-32 resize moved the band to x 108.5..380.5 (the deeper rect hit the not-yet-resized rs_n1 band), ~600 bits
+# over a 17.28-um strip, GRT-0116 with 18833 overflow all in y 0..40 / x 100..360.  The crossing demand must fit the
+# parallel tracks of that strip at FACE_CROSSING_TARGET (the ft_track_use target); candidates that do are taken first.
+FACE_CROSSING=False
+FACE_CROSSING_TARGET=0.5
+PARALLEL_PITCH_UM={"h":(0.039,0.048,0.064),"v":(0.036,0.048,0.064)}   # ASAP7 M2/M4/M6 (h), M3/M5/M7 (v)
 
 
 def _rect_overlap(a,o):
@@ -378,7 +400,12 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     if not candidates and scale==1.0:
         candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
     if candidates:
-        box=min(candidates,key=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3])))
+        hop=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3]))
+        if FACE_CROSSING:
+            def over(b):
+                dm,cp=face_crossing(t,bus,b,width);return max(0.0,dm-cp)
+            box=min(candidates,key=lambda b:(over(b)>0,over(b),hop(b)))
+        else:box=min(candidates,key=hop)
         if (box[2]-box[0])*(box[3]-box[1])+1e-6<area:
             raise ValueError(f"clock landing band area undersized for {bus}")
         return dict(rect_um=[round(x,6) for x in box],width=width,ring_width=rw,
@@ -1190,7 +1217,9 @@ def resize_undersized_bands(plan,sidecar,types):
     global BAND_RESERVE,BAND_SPREAD,BAND_RING
     geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
     saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING)
-    BAND_RESERVE,BAND_SPREAD,BAND_RING="ring_ff",1.0,"all"
+    global FACE_CROSSING
+    saved_fc=FACE_CROSSING
+    BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING="ring_ff",1.0,"all",True
     # DIE-KV-42: the PHY supply regions (pdn.tcl hard blockages) need the die frame; a bare types-only plan has none
     P=S.Plan(out) if (out.get("die") or {}).get("pg",{}).get("domains") and out.get("partitions") else None
     try:
@@ -1199,6 +1228,11 @@ def resize_undersized_bands(plan,sidecar,types):
             phy=phy_supply_rects(P,tn) if P is not None else []
             resets=_reset_sites_for_type(out,tn,geoms[tn].get("tree"),t["clock"]["landing_contract"].get("base_type"))
             tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
+            # DIE-QC-97 11-09: decide EVERY band to resize first.  A band being resized is no obstacle to the others
+            # until it has its new rect (its old rect is about to move), and the widest bus goes first so it keeps the
+            # rect on its own pin window (sle_hc1 b_hw_i 1573 bits was pushed 104 um along its face by rs_n1's OLD
+            # rect, which was then itself moved).  Bands that meet the reserve stay byte-identical obstacles.
+            todo={}
             for bus in sorted(bands):
                 b=bands[bus]
                 if bus.startswith("monitor_") or not b.get("rect_um"):continue
@@ -1206,7 +1240,12 @@ def resize_undersized_bands(plan,sidecar,types):
                 inphy=any(_rect_overlap(b["rect_um"],o) for o in phy)   # DIE-KV-42: inside a hard PHY supply region
                 inrst=any(_rect_overlap(b["rect_um"],o) for o in resets)   # FLOW-7: over a reset relay/collector site
                 if (x1-x0)*(y1-y0)+1e-6>=need and not inphy and not inrst:continue
-                used=[list(o["rect_um"]) for k,o in bands.items() if k!=bus and o.get("rect_um")]
+                todo[bus]=(need,inphy,inrst)
+            done=set()
+            for bus in sorted(todo,key=lambda k:(-int(bands[k]["width"]),k)):
+                b=bands[bus];x0,y0,x1,y1=b["rect_um"];need,inphy,inrst=todo[bus]
+                used=[list(o["rect_um"]) for k,o in bands.items()
+                      if k!=bus and o.get("rect_um") and (k not in todo or k in done)]
                 nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
                           resize="DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)" if inphy else
@@ -1214,9 +1253,9 @@ def resize_undersized_bands(plan,sidecar,types):
                           "DIE-KV-32 ring_ff reserve (undersized for the CA ring)")
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
                                    new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
-                bands[bus]=nb
+                bands[bus]=nb;done.add(bus)
     finally:
-        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved
+        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc
     return out,report
 
 

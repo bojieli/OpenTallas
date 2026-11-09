@@ -1157,6 +1157,12 @@ SCHEMA = {
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
             cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-QC-97 11-09 (opt-in, absent = unchanged kits): OT_CLAND_STRIP_ROWS for the N/S-face ring_ff column
+            # strip (landing_placement.tcl, clamped to what the band depth fits).  cland_strip_rows = plan-wide rows;
+            # cland_strip_rows_types = {type or unsplit base name: rows}, which wins.  rows 1 packs every strip row
+            # (100 % FIRM at the pin-facing band edge: sle_fw_v2 GRT-0116, 3 overflow edges in that top gcell row).
+            cland_strip_rows={"type": "integer", "minimum": 1},
+            cland_strip_rows_types={"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
             # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
             # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
             id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},

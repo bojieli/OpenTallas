@@ -6198,6 +6198,17 @@
       "minLength": 1
      }
     },
+    "cland_strip_rows": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "cland_strip_rows_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "integer",
+      "minimum": 1
+     }
+    },
     "id_straps_in_type_types": {
      "type": "array",
      "uniqueItems": true,
