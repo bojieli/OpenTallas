@@ -1,0 +1,62 @@
+{
+ "event": "ENG-CTAP-1109",
+ "taps": [
+  {
+   "type": "eng__t1",
+   "tap": "u_eng.u_e.ck",
+   "module": "dsdv_eng_rr_e",
+   "xy": [
+    1028.376,
+    717.372
+   ],
+   "insertion_ps": 848.98,
+   "insertion_ff_ps": 671.43,
+   "early_tt_ps": 598.98,
+   "early_ff_ps": 468.93,
+   "basis": "selected view dsdv_eng_rr_e_{tt,ff}.lib max_clock_tree_path rise (ETM; no measured mean in the view)",
+   "core_taps_was": null,
+   "predicted_effective_tt_ps": [
+    262.0,
+    284.0
+   ]
+  },
+  {
+   "type": "eng__t1",
+   "tap": "u_eng.u_h0.ck",
+   "module": "dsdv_eng_rr_h0",
+   "xy": [
+    937.56,
+    565.932
+   ],
+   "insertion_ps": 270.23,
+   "insertion_ff_ps": 226.63,
+   "early_tt_ps": 20.23,
+   "early_ff_ps": 24.13,
+   "basis": "physical/die_plan/s81/cores/views/holdeco_b10_1030/dsdv_eng_rr_h0 {tt,ff}.lib max_clock_tree_path rise (ETM)",
+   "core_taps_was": null,
+   "predicted_effective_tt_ps": [
+    262.0,
+    284.0
+   ]
+  },
+  {
+   "type": "eng__t1",
+   "tap": "u_eng.u_h1.ck",
+   "module": "dsdv_eng_rr_h1",
+   "xy": [
+    1037.004,
+    565.944
+   ],
+   "insertion_ps": 263.18,
+   "insertion_ff_ps": 211.69,
+   "early_tt_ps": 13.18,
+   "early_ff_ps": 9.19,
+   "basis": "pin_register_mean physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/insertion.json (boundary mean)",
+   "core_taps_was": null,
+   "predicted_effective_tt_ps": [
+    262.0,
+    284.0
+   ]
+  }
+ ]
+}
