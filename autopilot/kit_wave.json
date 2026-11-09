@@ -15120,7 +15120,9 @@
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "q_hub_ne": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
     "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)"
+    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
+    "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
+    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0"
    },
    "gen_hosts": [
     "epyc2",
@@ -18433,7 +18435,11 @@
     "q_su30__physical_v1",
     "q_spb2__physical_v1"
    ],
-   "note_kw43_c12": "KW-FIX-43 15:4x COORD loopgap-153x KW43-12 ASK2 YES: HBM kit manifest = vK5c + canonical rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv (md5 b9c5cc78) at the FRONT of prefer (kw43/hbm_c12, epyc7/epyc2/intel1). Die kit_rtl.asbuilt + item_inputs listed in item_inputs_asbuilt_kw43c12. Revert: asbuilt back to kit_rtl_asbuilt_prev_kw43c12 in both places."
+   "note_kw43_c12": "KW-FIX-43 15:4x COORD loopgap-153x KW43-12 ASK2 YES: HBM kit manifest = vK5c + canonical rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv (md5 b9c5cc78) at the FRONT of prefer (kw43/hbm_c12, epyc7/epyc2/intel1). Die kit_rtl.asbuilt + item_inputs listed in item_inputs_asbuilt_kw43c12. Revert: asbuilt back to kit_rtl_asbuilt_prev_kw43c12 in both places.",
+   "hold_items_kw43spu0_added": [
+    "q_spu0",
+    "q_spu0__physical_v1"
+   ]
   }
  },
  "place_prefer": [
