@@ -45,6 +45,24 @@ def test_mismatch_when_the_bind_adds_cycles_and_no_hook():
     assert any(e.startswith("FIXED_LATENCY_MISMATCH su0.u_tap") and "needs 18" in e for e in r["errors"])
 
 
+def fixed_age_die(rq, rr):
+    leaves = {"h.u_lrly0": dict(module="qfd_dv_s5_lrly", params={}), "m": dict(module="mem", params={})}
+    bg = bg_of([("m", "pm", "pl", [mem("d", "h.u_lrly0.va_addr", 0, rq)]), ("h.u_lrly0", "pl", "pm", [mem("va_q", "m.q", 0, rr)])])
+    return leaves, bg
+
+
+def test_advisory_contract_reports_but_is_never_an_error():
+    r = LC.check(*fixed_age_die(5, 4))
+    row = next(x for x in r["contracts"] if x["param"] == "ML")
+    assert (row["verdict"], row["added"]) == ("ADVISORY_MISMATCH", 9)
+    assert r["errors"] == []
+
+
+def test_advisory_contract_silent_at_zero_delta():
+    r = LC.check(*fixed_age_die(0, 0))
+    assert not [x for x in r["contracts"] if x["param"] == "ML"] and r["errors"] == []
+
+
 def test_hook_regenerated_param_is_not_an_error():
     leaves, bg = tap_die(rq=5, rr=3)
     pr = dict(file="hook.py", changed=[dict(inst="su0.u_tap", param="READ_RETURN", asbuilt="10", bound=18)])
