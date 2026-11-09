@@ -2354,6 +2354,12 @@ class Binder:
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
             return
         changed = []
+        # DIE-KV-97 11-09: asbuilt.param_regen.declare {RTL master: {param: default}} names parameters the as-built netlist
+        # cannot show: those of a per-instance substitute master (substitute_inst, e.g. KV qkd_astk_ep_s_e EO_E / EO_RL;
+        # param_defaults deliberately keys them apart from the predecessor) and a parameter added to the master after the
+        # as-built elaboration with a default that keeps the as-built behaviour (KV qkd_kvs_attn_fl ZB_ADD 0).  Keyed by the
+        # RTL master (c.module); absent = unchanged behaviour.
+        declare = spec.get("declare") or {}
         for path, ps in r["params"].items():
             ci = self.cell_index().get(path)
             if ci is None:
@@ -2362,10 +2368,11 @@ class Binder:
             c = self.F.cells[ci]
             for k, v in ps.items():
                 defaults = self.param_defaults.get((c.ytype, c.module), {})
-                if k not in c.params and k not in defaults:
+                decl = declare.get(c.module) or {}
+                if k not in c.params and k not in defaults and k not in decl:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
-                old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
+                old = str(c.params[k] if k in c.params else defaults[k] if k in defaults else decl[k]).strip('"')
                 if old != str(v):
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)

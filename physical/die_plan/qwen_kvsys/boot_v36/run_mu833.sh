@@ -25,6 +25,13 @@ HRT=${HRT:-$(python3 "$H/kst.py" --host-rt "$BG")}; echo "HRT $HRT"
 # KV-FN-7 10-31: the embedding provider relay of THIS bind (kvs_emb row_tx across lanes) -> TXD K[2] + earlier K port-2 slots
 EMBRT=${EMBRT:-$(python3 "$H/kst.py" --emb-rt "$BG")}; echo "EMBRT $EMBRT"
 T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
+# DIE-KV-97 11-09: the bind's own ZB_ADD (param_regen.json of BIND_DIR, kv_ep_offset_regen.py) -> the compiler's Z model; a bind
+# without it leaves OT_KV_ASTK_ZB_ADD as given (unset = 0 = the as-built Z)
+if [ -z "${OT_KV_ASTK_ZB_ADD:-}" ] && [ -f "$B/param_regen.json" ]; then
+  ZB=$(python3 -c "import json,sys; r=json.load(open(sys.argv[1])); print(max([int(c['bound']) for c in r.get('changed', []) if c['param'] == 'ZB_ADD'] or [0]))" "$B/param_regen.json")
+  [ "$ZB" = 0 ] || export OT_KV_ASTK_ZB_ADD=$ZB
+fi
+echo "ZB_ADD ${OT_KV_ASTK_ZB_ADD:-0}"
 set -a; . "$AS/kv_flags.env"; set +a
 [ -z "$task_compute_record_txd" ] || export OT_KV_COMPUTE_RECORD_TXD=$task_compute_record_txd
 [ -z "$task_cal_ofs" ] || export OT_KV_CAL_OFS=$task_cal_ofs
