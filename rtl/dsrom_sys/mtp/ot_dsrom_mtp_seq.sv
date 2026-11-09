@@ -444,7 +444,13 @@ module ot_dsrom_mtp_seq_fan #(
     // position is read as its HDR_POS slice) and the token queue tq are cleared by the control reset (rst_c) like st / tq_n.  Each is read only after the
     // event / push that loads it (ef / ep_ from S_SEL of a result event, tq[i] while tq_n counts it), so flits, faults
     // and timing are identical; bits that only ever load a structural constant hold it from reset instead of X.
-    parameter integer DATA_RST = 0
+    parameter integer DATA_RST = 0,
+    // DIE-HEAD-83 11-07 (hd_ctl vF, 0 cycles): opt-in, default 0 = unchanged.  1: the draft compare dsel == et_ is computed
+    // in S_PRE from the same ep_e, r_b, r_d, et_ that x_i / r_d / et_ hold in S_EX (x_i[2:0] = (ep_e - r_b)[2:0]) and
+    // registered as x_deq, so S_EX starts e_acc from a flop.  e_acc / e_close / e_push_d are only read in S_EX, where
+    // x_deq == (dsel == et_) every time; flits, faults and timing are identical.  Fixes vE GRT -94.74: x_i -> 5:1 mux ->
+    // 21-bit compare -> e_close -> 48 w_hw enables in one cycle.
+    parameter integer EX_PRE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -649,13 +655,29 @@ module ot_dsrom_mtp_seq_fan #(
             if (x_i[2:0] == s2[2:0]) dsel = r_d[s2 * NW +: NW];
 `endif
     end
+    // EX_PRE: the same select on S_PRE values (x_i is loaded from ep_e - r_b at the end of S_PRE)
+    wire [2:0] xi3_p = ep_e[2:0] - r_b[2:0];
+    reg [NW-1:0] dsel_p;
+    integer s3;
+    always @(*) begin
+        dsel_p = 0;
+        for (s3 = 0; s3 < G; s3 = s3 + 1)
+`ifdef OT_MTPSEQ_MUT_OFF1
+            if (xi3_p == s3[2:0] && s3 > 0) dsel_p = r_d[(s3 - 1) * NW +: NW];
+`else
+            if (xi3_p == s3[2:0]) dsel_p = r_d[s3 * NW +: NW];
+`endif
+    end
+    reg x_deq;
+    always @(posedge clk) if (st == S_PRE) x_deq <= dsel_p == et_;
+    wire e_deq = (EX_PRE != 0) ? x_deq : (dsel == et_);
     wire [HW-1:0] e_h   = {ep_e, et_, ef[HDR_VAL +: 32]};
     wire e_run   = ek == E_RES && r_ph == P_RUN;
     wire e_sq    = ek == E_RES && r_ph != P_RUN;                       // squashed (held)
     wire e_fwd0  = e_run && (r_fin || (x_lo && r_pf));                 // prompt result / finished user
     wire e_bad   = e_run && !e_fwd0 && (x_lo || x_i > r_g);
     wire e_ver   = e_run && !e_fwd0 && !e_bad;
-    wire e_acc   = e_ver && (x_i < r_g) && dsel == et_;
+    wire e_acc   = e_ver && (x_i < r_g) && e_deq;
     wire e_close = e_ver && !e_acc;
     wire e_rej   = x_i < r_g;                                          // the closing is a rejection
     wire [3:0] e_nep =
