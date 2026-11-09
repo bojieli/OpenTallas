@@ -74,6 +74,11 @@ def run_fixture(W):
     kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_1/gen/it3")
     kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_3/gen/it3")
     write(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/bind_a", 4096)
+    for d in ("dead-lo/sub/repo.git", "dead-lp/repo.git"):         # repos without a .git entry
+        os.makedirs(f"{ROOT}/{d}/objects"); os.makedirs(f"{ROOT}/{d}/refs")
+        write(f"{ROOT}/{d}/HEAD", 40)
+    write(f"{ROOT}/dead-lo/sub/other.bin", 4096)
+    kit(f"{ROOT}/dead-hh2/tkm")                      # standing COORD hold
     kit(f"{ROOT}/dead-pp/unit1")                     # archived cited unit: only cited files and record names stay
     with open(f"{ROOT}/dead-pp/unit1/ARCHIVED.json", "w") as fh:
         json.dump({"archive": "/archive/x", "verify": "sha256 ok"}, fh)
@@ -98,6 +103,7 @@ def run_fixture(W):
     life = {"created": time.time(), "live": ["DIE-S81-81"], "lane_last": {},
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
+            "coord_holds": [{"pattern": "dead-hh2/tkm", "lane": "X", "why": "open"}],
             "wave_paths": [f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
@@ -119,6 +125,9 @@ def run_fixture(W):
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-rr/dead-word-unit": ("DEL-L4-KIT", "DELETE"),
         "dead-tt/tools": ("KEEP-excluded", "KEEP"),
+        "dead-lo/sub": ("KEEP-git-inside", "KEEP"),                         # a loose dir holding a repo is not a LOOSE delete
+        "dead-lp/repo.git": ("KEEP-git-error", "KEEP"),                     # a bare repo gets the git check, not a LOOSE row
+        "dead-hh2/tkm": ("KEEP-coord-hold", "KEEP"),
         "dead-xy/sub": ("KEEP-wave-config", "KEEP"),
         "dead-xz/a.json": ("KEEP-wave-config", "KEEP"),
         "dead-xz/b.bin": ("DEL-L4-FILE", "DELETE"),
@@ -252,3 +261,53 @@ def test_wave_config_paths():
               "/srv/opentallas-scratch3/claude/kw35/t45ov/bind"):
         assert p in got, p
     assert "/srv/opentallas-scratch2/claude/gone/a" not in got and "/srv/opentallas-scratch2/claude/old/src" not in got
+
+
+def _lc():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("lc", LC)
+    lc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(lc)
+    sp2 = importlib.util.spec_from_file_location("ac", TOOL)
+    ac = importlib.util.module_from_spec(sp2)
+    sp2.loader.exec_module(ac)
+    return lc, ac
+
+
+def test_kept_link_into(tmp_path):
+    lc, ac = _lc()
+    ap = lc.Apply.__new__(lc.Apply)
+    ap.m = ac
+    item = tmp_path / "items" / "it"
+    (item / "attempt_1" / "gen").mkdir(parents=True)
+    (item / "attempt_2" / "gen").mkdir(parents=True)
+    (item / "attempt_3" / "gen").mkdir(parents=True)
+    (item / "attempt_3" / "gen" / "lnk").symlink_to(item / "attempt_1" / "gen")
+    assert "symlink from" in ap.kept_link_into(str(item / "attempt_1"))  # a kept sibling points into it
+    assert ap.kept_link_into(str(item / "attempt_2")) is None            # nobody points here
+    assert "symlink from" in ap.kept_link_into(str(item / "attempt_1" / "gen"))   # member rows too
+
+
+def test_git_all_refs(tmp_path):
+    lc, ac = _lc()
+    env = dict(os.environ, GIT_AUTHOR_NAME="a", GIT_AUTHOR_EMAIL="a@a", GIT_COMMITTER_NAME="a", GIT_COMMITTER_EMAIL="a@a")
+    def g(*a, cwd=None):
+        subprocess.run(["git", *a], check=True, cwd=cwd, env=env, capture_output=True)
+    src = tmp_path / "src"
+    g("init", "-q", "-b", "main", str(src))
+    (src / "f").write_text("x")
+    g("add", "f", cwd=src)
+    g("commit", "-q", "-m", "one", cwd=src)
+    cl = tmp_path / "cl"
+    g("clone", "-q", str(src), str(cl))
+    G = lc.Git()
+    assert G.check(str(cl)) is None                                      # everything on the remote
+    g("checkout", "-q", "-b", "side", cwd=cl)
+    (cl / "g").write_text("y")
+    g("add", "g", cwd=cl)
+    g("commit", "-q", "-m", "local", cwd=cl)
+    g("checkout", "-q", "main", cwd=cl)                                  # HEAD is clean and on the remote, a branch is not
+    assert lc.Git().check(str(cl)).startswith("git-head-unpushed")
+    bare = tmp_path / "b.git"
+    g("clone", "-q", "--bare", str(src), str(bare))                      # a bare clone has no remote-tracking refs
+    assert lc.Git().check(str(bare)).startswith("git-head-unpushed")

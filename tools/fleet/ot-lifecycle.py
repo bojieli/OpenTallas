@@ -67,6 +67,7 @@ TRANS = [(r"^dkv(\d+)", r"DIEKV\1"), (r"^dq(\d+)", r"DIEQC\1"), (r"^dh(\d+)", r"
          (r"^rm(\d+)", r"ROOTMERGE\1"), (r"^ss(\d+)", r"SIGNOFFSPRINT\1"), (r"^kvt(\d+)", r"KVTYPES\1"), (r"^s81t(\d+)", r"S81TYPES\1")]
 WRAPPERS = {"wt", "moved", "relocated-1106", "relocated-1106b"}
 EXCL_PRE = ("tok-", "kv-fn-")
+GIT_CHECKED_CATS = ("DEL-L4-GIT", "DEL-L1-CITED", "PEND-L1-CITED")   # the tree's own git state was checked before these rows were made
 KW_ROOT_CATS = ("KEEP-kw-protect", "KEEP-wave-config")   # root-level holds that keep latest attempts and non-attempt content, not older attempts
 RENAMED = re.compile(r"[.](old|bak|orig|moved|aside)([-._]|$)")   # COORD 19:2x: holds are keyed by path, so a renamed tree is skipped whole
 
@@ -136,7 +137,7 @@ class Git:
             if os.path.exists(os.path.join(gd, "locked")):
                 return "git-locked"
         else:
-            wtd = os.path.join(gf, "worktrees")
+            wtd = os.path.join(wt if not os.path.lexists(gf) else gf, "worktrees")
             if os.path.isdir(wtd):
                 for w in os.listdir(wtd):
                     try:
@@ -148,11 +149,16 @@ class Git:
                         if not rp.startswith(os.path.realpath(wt) + "/"):
                             return f"git-outside-worktree {gp}"
         try:
-            ls = self.g(wt, "rev-list", "-n1", "HEAD", "--not", "--remotes")
+            bare = not os.path.lexists(gf)
+            # a repo owns its refs, so all must be reachable from what it fetched (COORD 23:3x); a linked worktree owns only its HEAD
+            scope = ["--all", "HEAD"] if bare or os.path.isdir(gf) else ["HEAD"]
+            ls = self.g(wt, "rev-list", "-n1", *scope, "--not", "--remotes")
             if ls.returncode != 0:
                 return "git-error " + ls.stderr.strip()[:60]
             if ls.stdout.strip():
                 return "git-head-unpushed " + ls.stdout.strip()[:12]
+            if bare:
+                return None
             st = self.g(wt, "status", "--porcelain", "--untracked-files=no")
             if st.returncode != 0:
                 return "git-error"
@@ -184,6 +190,10 @@ class Plan:
             if "." in os.path.basename(p) and "/" in d.split("/claude/", 1)[-1]:     # a named file holds its directory (readers open siblings), not a lane root
                 rows.append((d, "directory of a file named by the live wave config"))
         self.wave = m.PathSet(rows, canon=J.paths.canon)
+        ch = self.life.get("coord_holds")
+        if ch is None:
+            raise SystemExit("lifesnap has no coord_holds; refusing")
+        self.coord = m.PathSet([(os.path.join(r, c["pattern"]), f"COORD hold: {c['why']}") for r in J.roots for c in ch], canon=J.paths.canon)
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
             raise SystemExit("lifesnap has no protected_full rows")
@@ -341,6 +351,9 @@ class Plan:
             wh = self.wave.hit(f)
             if wh:
                 return ("KEEP-wave-config", wh, wh.startswith("holds "))
+            ch = self.coord.hit(f)
+            if ch:
+                return ("KEEP-coord-hold", ch, ch.startswith("holds "))
         oh = self.holds.hit(d)
         if oh:
             return ("KEEP-ot-hold", oh, oh.startswith("holds "))
@@ -436,6 +449,7 @@ class Plan:
         newest = 0.0
         young = None
         notmine = None
+        repo = None
         me = os.getuid()
         stack = [d]
         while stack:
@@ -451,6 +465,8 @@ class Plan:
                     continue
                 if e.is_symlink():
                     continue
+                if repo is None and (e.name == ".git" or (e.name == "HEAD" and "/.git/" not in x + "/" and self.is_bare(x))):
+                    repo = e.path
                 if st.st_uid != me and notmine is None:
                     notmine = e.path
                 if stat.S_ISDIR(st.st_mode):
@@ -471,11 +487,15 @@ class Plan:
                 files += 1
                 if self.now - st.st_mtime < 6 * 3600:
                     young = e.path
-        return dict(bytes=total, files=files, newest=newest, young=young, notmine=notmine)
+        return dict(bytes=total, files=files, newest=newest, young=young, notmine=notmine, repo=repo)
 
     # --- units
+    def is_bare(self, d):
+        return os.path.basename(d) != ".git" and os.path.isfile(os.path.join(d, "HEAD")) and os.path.isdir(os.path.join(d, "objects")) \
+            and os.path.isdir(os.path.join(d, "refs"))
+
     def is_git(self, d):
-        return os.path.lexists(os.path.join(d, ".git"))
+        return os.path.lexists(os.path.join(d, ".git")) or self.is_bare(d)
 
     def kit_like(self, d):
         return os.path.isdir(os.path.join(d, "run/results")) or (os.path.isdir(os.path.join(d, "results")) and os.path.isdir(os.path.join(d, "logs")))
@@ -671,6 +691,9 @@ class Plan:
         if st["young"]:
             self.record(d, "KEEP-lt6h", "KEEP", st["young"], st)
             return
+        if st.get("repo") and cat not in GIT_CHECKED_CATS:
+            self.record(d, "KEEP-git-inside", "KEEP", "repo inside: " + st["repo"], st)
+            return
         if partial or self.signed_inside(d):
             # member-level: descend, files individually
             self.descend_members(d, lane, live, cat, why)
@@ -743,6 +766,9 @@ class Plan:
         st = self.walk_stats(d, track=True)
         if st["young"]:
             self.descend_members(d, lane, live, cat, why)
+            return
+        if st.get("repo") and cat not in GIT_CHECKED_CATS:
+            self.record(d, "KEEP-git-inside", "KEEP", "repo inside: " + st["repo"], st)
             return
         if st["notmine"]:
             self.record(d, "KEEP-not-deletable", "KEEP", "not owned by this user: " + st["notmine"], st)
@@ -1087,6 +1113,9 @@ class Apply:
             wh = P.wave.hit(f)
             if wh and not P.kw_old(path):
                 return "SKIP", "live wave config: " + wh
+            ch = P.coord.hit(f)
+            if ch:
+                return "SKIP", ch
         h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]
@@ -1123,7 +1152,58 @@ class Apply:
             return "SKIP", "referenced: " + rh
         if P.link_into(path):
             return "SKIP", "symlink into"
+        if cat == "DEL-L2-ATTEMPT":
+            k = self.kept_link_into(path)
+            if k:
+                return "SKIP", k
+        if cat not in GIT_CHECKED_CATS and os.path.isdir(path) and not os.path.islink(path):
+            r = self.repo_inside(path)
+            if r:
+                return "SKIP", r
         return None, None
+
+    def repo_inside(self, path):
+        """a repo below a row that no git check covered"""
+        try:
+            p = subprocess.run(["find", path, "-xdev", "(", "-name", ".git", "-o", "(", "-name", "HEAD", "-type", "f", ")", ")", "-not", "-path", "*/.git/*"],
+                               capture_output=True, text=True, timeout=1800, errors="replace")
+        except subprocess.TimeoutExpired:
+            return "repo scan timeout"
+        if p.returncode not in (0, 1):
+            return "repo scan failed"
+        for q in p.stdout.splitlines():
+            if os.path.basename(q) == ".git" or self.P.is_bare(os.path.dirname(q)):
+                return "repo inside: " + q
+        return None
+
+    def kept_link_into(self, path):
+        """any other attempt of the same item holds a symlink into this attempt (COORD 23:3x).  Scanned once per item per run; a scan that fails holds the row."""
+        mm = self.m.ATTEMPT_RE.match(path)
+        if not mm:
+            return "not an attempt path"
+        item, att = mm.group(1), mm.group(0)
+        cache = self.__dict__.setdefault("item_links", {})
+        if item not in cache:
+            rows = []
+            try:
+                for e in os.scandir(item):
+                    if e.is_dir(follow_symlinks=False) and re.fullmatch(r"attempt_\d+", e.name):
+                        p = subprocess.run(["find", e.path, "-xdev", "-type", "l"], capture_output=True, text=True, timeout=1800, errors="replace")
+                        if p.returncode not in (0, 1):
+                            raise OSError("find failed")
+                        rows += [(e.path, q, os.path.realpath(q)) for q in p.stdout.splitlines()]
+            except (OSError, subprocess.TimeoutExpired) as ex:
+                rows = None
+                cache[item] = rows
+                return f"item symlink scan failed: {ex}"
+            cache[item] = rows
+        if cache[item] is None:
+            return "item symlink scan failed"
+        real = os.path.realpath(att)
+        for owner, q, t in cache[item]:
+            if owner != att and (t == real or t.startswith(real + "/")):
+                return f"symlink from {q}"
+        return None
 
     def git_now(self, path):
         """git state of the tree holding path, as of apply time (member rows too).  Cached per tree: once a member row has removed .git
@@ -1447,6 +1527,26 @@ def strict_protected():
     return rows
 
 
+def coord_holds(live, now):
+    """lanes/AUTOCLEAN-HOLDS.tsv: pattern, owner lane, date, why.  A row holds while its owner lane is live or for 24 h after its date.
+    A missing or empty file refuses: the hourly tick would otherwise delete what a manifest exclusion only kept once."""
+    f = os.path.expanduser("~/coord/lanes/AUTOCLEAN-HOLDS.tsv")
+    out = []
+    n = 0
+    for ln in open(f, errors="strict"):
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        c = ln.rstrip("\n").split("\t")
+        if len(c) != 4 or c[0].startswith("/") or ".." in c[0]:
+            raise ValueError(f"malformed hold row: {ln[:120]!r}")
+        n += 1
+        if c[1] in live or now - time.mktime(time.strptime(c[2], "%Y-%m-%d %H:%M")) < 24 * 3600:
+            out.append({"pattern": c[0], "lane": c[1], "why": c[3]})
+    if not n:
+        raise ValueError("AUTOCLEAN-HOLDS.tsv has no rows")
+    return out
+
+
 def build_lifesnap(out):
 
     Q = os.path.expanduser("~/coord/lanes/COORD-REVIEW-QUEUE.md")
@@ -1516,7 +1616,8 @@ def build_lifesnap(out):
             words48.setdefault(w.rstrip("."), p["t"])
     json.dump({"created": now, "created_h": time.strftime("%F %T %Z"), "live": sorted(live),
                "lane_last": {k: int(v) for k, v in lane_last.items()},
-               "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave}, open(out, "w"))
+               "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave,
+               "coord_holds": coord_holds(live, now)}, open(out, "w"))
     print("live lanes", len(live), sorted(live)[:80])
     print("posts", len(posts), "paths48", len(paths48), "words48", len(words48), "agents", len(agents_all))
 
