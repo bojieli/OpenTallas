@@ -1011,6 +1011,18 @@ class Apply:
                 return P.git.check(x)
         return None
 
+    def watch_set(self):
+        """counted and protected paths that exist now: the count check of this run (the release-tree cache can be 50 min stale)"""
+        return {p for ps in (self.J.counted, self.J.protected) for p in ps.m if os.path.lexists(p)}
+
+    def lost(self, watch, deleted):
+        """watched paths gone AND at or under a path this run removed (a lane removing its own file is not this tool's loss)"""
+        out = []
+        for p in watch:
+            if not os.path.lexists(p) and (p in deleted or any(x in deleted for x in self.m.ancestors(p))):
+                out.append(p)
+        return out
+
     def run(self):
         J, a = self.J, self.a
         rows = self.rows()
@@ -1024,6 +1036,12 @@ class Apply:
         os.makedirs(a.out, exist_ok=True)
         outp = os.path.join(a.out, f"APPLY-{a.host}-{time.strftime('%Y%m%d-%H%M%S')}.tsv")
         print("apply rows", len(rows), "cats", a.cats, "manifest", a.manifest, "log", outp, flush=True)
+        watch = self.watch_set()
+        if not watch:                       # a guard matching zero paths must refuse
+            print("ALERT count check matches zero existing paths; refusing to delete", flush=True)
+            return 3
+        print("count check: watching", len(watch), "existing counted/protected paths", flush=True)
+        deleted = set()
         freed = 0
         n_del = 0
         with open(outp, "w") as fh:
@@ -1032,6 +1050,13 @@ class Apply:
                 path, cat, b = c[0], c[1], int(c[4])
                 if i % 40 == 0:
                     J.live.refresh()
+                if i % 200 == 0 and deleted:
+                    gone = self.lost(watch, deleted)
+                    if gone:
+                        fh.write(f"{time.strftime('%F %T')}\t{gone[0]}\tCOUNT-CHECK\tALERT\t{len(gone)} watched paths lost\t0\n")
+                        fh.flush()
+                        print("ALERT count check lost", len(gone), gone[:5], flush=True)
+                        return 3
                 v, why = self.recheck(path, cat)
                 if v == "ALERT":
                     fh.write(f"{time.strftime('%F %T')}\t{path}\t{cat}\tALERT\t{why}\t{b}\n")
@@ -1070,6 +1095,8 @@ class Apply:
                             res = "DELETED"
                 except OSError as e:
                     res = "ERROR " + str(e)[:150]
+                if res.startswith("DELETED"):
+                    deleted.add(path)
                 if res.startswith(("DELETED", "WOULD")):
                     freed += b
                     n_del += 1
@@ -1078,6 +1105,12 @@ class Apply:
                 if i % 20 == 0:
                     fh.flush()
                     print(f"{i}/{len(rows)} freed {freed / 1e9:.1f} GB", flush=True)
+            gone = self.lost(watch, deleted)
+            if gone:
+                fh.write(f"{time.strftime('%F %T')}\t{gone[0]}\tCOUNT-CHECK\tALERT\t{len(gone)} watched paths lost\t0\n")
+                print("ALERT count check lost", len(gone), gone[:5], flush=True)
+                return 3
+            print("count check: PASS, watched paths lost 0 of", len(watch), flush=True)
         print("FINISHED rows", n_del, "bytes freed (non-hardlink)", round(freed / 1e9, 1), "GB; log", outp, flush=True)
         return 0
 

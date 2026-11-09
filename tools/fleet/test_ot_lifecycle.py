@@ -144,3 +144,20 @@ def run_fixture(W):
 
 def test_lifecycle_fixture(tmp_path):
     run_fixture(str(tmp_path))
+
+
+def test_count_check_lost(tmp_path):
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("lc", LC)
+    lc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(lc)
+    sp2 = importlib.util.spec_from_file_location("ac", TOOL)
+    ac = importlib.util.module_from_spec(sp2)
+    sp2.loader.exec_module(ac)
+    ap = lc.Apply.__new__(lc.Apply)
+    ap.m = ac
+    root = str(tmp_path)
+    kept, ours, theirs = f"{root}/a/keep", f"{root}/b/sub/rec", f"{root}/c/rec"
+    assert ap.lost({kept}, {f"{root}/b"}) == []                          # still there
+    assert ap.lost({ours}, {f"{root}/b"}) == [ours]                      # gone under a removed path: loss
+    assert ap.lost({theirs}, {f"{root}/b"}) == []                        # gone but not under anything this run removed
