@@ -1048,6 +1048,75 @@ def instantiated(body: str):
     return out
 
 
+def instance_param_overrides(body: str):
+    """parameter overrides of the instances in a module body: [(master, inst, named [names], positional count)] for
+    every 'NAME #(...) INST [range] (' at a statement boundary (same scan as instantiated()).  Named overrides are
+    the depth-1 '.P(' tokens of the #(...) list; anything else at depth 1 counts as one positional value."""
+    masked = _unlabel(_lexical_mask(body, strings=True))
+    out = []
+    for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\bendgenerate\b|\belse\b|\)|:)\s*([A-Za-z_]\w*)\s*', masked, re.M):
+        name = m.group(1)
+        i = m.end()
+        if name in _SV_KW or not masked.startswith('#', i):
+            continue
+        j = masked.find('(', i)
+        if j < 0 or masked[i + 1:j].strip():
+            continue
+        try:
+            k = _closing_paren_masked(masked, j)
+        except ValueError:
+            continue
+        im = re.match(r'\s*([A-Za-z_]\w*|\\\S+)\s*(\[[^\]]*\]\s*)*\(', masked[k + 1:])
+        if not im or im.group(1) in _SV_KW:
+            continue
+        inner, depth, items, cur = masked[j + 1:k], 0, [], ''
+        for ch in inner:
+            if ch in '([{':
+                depth += 1
+            elif ch in ')]}':
+                depth -= 1
+            if ch == ',' and depth == 0:
+                items.append(cur); cur = ''
+            else:
+                cur += ch
+        items.append(cur)
+        named, npos = [], 0
+        for it in items:
+            if not it.strip():
+                continue
+            nm = re.match(r'\s*\.\s*([A-Za-z_]\w*)\s*\(', it)
+            if nm:
+                named.append(nm.group(1))
+            else:
+                npos += 1
+        out.append((name, im.group(1), named, npos))
+    return out
+
+
+def instance_param_errors(mod, idx):
+    """HEAD-92 11-09 (hd_lep0N l48hp1 GEN_LINT 'Can't find object for defparam COL0'): the die-top check compared only the
+    die.v / sidecar overrides of the MASTERS with their RTL; an instance INSIDE a master (a generated wrapper's
+    'core #(.COL0(2)) u_core') could name a parameter its RTL module does not declare, and the bind passed while every
+    elaboration of that master fails.  Returns ['parent/inst -> child: reason [names]'] for named overrides that the child
+    does not declare (or declares as localparam) and for more positional overrides than it has overridable parameters."""
+    errs = []
+    for c, inst, named, npos in instance_param_overrides(mod.body):
+        cm = idx.get(c)
+        if cm is None or Path(cm.path).name.endswith('_bb.v'):
+            continue
+        lp = getattr(cm, 'localparams', set())
+        unk = sorted(set(p for p in named if p not in cm.params))
+        loc = sorted(set(p for p in named if p in lp))
+        if unk:
+            errs.append(f'{mod.name}/{inst} -> {c}: not declared {unk}')
+        if loc:
+            errs.append(f'{mod.name}/{inst} -> {c}: localparam override {loc}')
+        nover = len([p for p in cm.params if p not in lp])
+        if npos > nover:
+            errs.append(f'{mod.name}/{inst} -> {c}: {npos} positional overrides, {nover} parameters')
+    return errs
+
+
 def _is_trap(body, name):
     """`NAME u_trap ();` -- an elaboration trap: an undefined, port-less module instantiated inside a generate-if that
     only elaborates on an illegal parameter combination (ot_hdc_fp32_add_lat_CUTS_must_match_LAT); every instance of
@@ -1056,10 +1125,11 @@ def _is_trap(body, name):
     return bool(insts) and all(not x.strip() for x in insts)
 
 
-def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None):
+def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None, param_errs_out=None):
     """walk every die master's RTL hierarchy: (unresolved {child: [parents]}, models {child: [parents]}, modules seen);
     seen_out (a set) receives the module names of the closure, traps_out (a dict) the elaboration traps {name: [parents]}
-    (port-less undefined instances, _is_trap), which are not unresolved children"""
+    (port-less undefined instances, _is_trap), which are not unresolved children; param_errs_out (a list) receives the
+    instance-level parameter override errors of every module of the closure (instance_param_errors)"""
     unres, models, seen, todo = defaultdict(set), defaultdict(set), set(), sorted(t for t in tops if t in idx)
     if seen_out is not None:
         seen = seen_out
@@ -1069,6 +1139,8 @@ def child_closure(idx, tops, allow_model, seen_out=None, traps_out=None):
             continue
         seen.add(n)
         mod = idx[n]
+        if param_errs_out is not None:
+            param_errs_out.extend(instance_param_errors(mod, idx))
         for c in sorted(instantiated(mod.body) - {n}):
             if c not in idx:
                 if _is_trap(mod.body, c):
@@ -1344,8 +1416,8 @@ def main(argv=None):
                                       remaining_unread_bits=rec['summary']['unread_net_bits'])
     if not a.no_child_closure:
         # full RTL child closure (Q-STUB 10-17): every module instantiated anywhere under a die master must resolve
-        cseen, traps = set(), {}
-        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model), cseen, traps)
+        cseen, traps, perrs = set(), {}, []
+        unres, models, nmods = child_closure(idx, set(rec['masters']), set(a.allow_model), cseen, traps, perrs)
         # S81-LBGAP G6/G7 (10-18): a module of the closure defined more than once resolves by rule (--prefer / -f /
         # --rtl-file > --prefer-list > --ref-tile-prefer specs > macro dir > first); differing definitions are recorded,
         # and a FIRST pick among definitions with different PORTS or PARAMETERS (no rule names one) fails: it binds
@@ -1356,8 +1428,15 @@ def main(argv=None):
         rec['child_closure'] = dict(modules=nmods, unresolved_children=unres, model_children=models,
                                     variant_children=var, ambiguous_children=amb_c,
                                     elab_traps={k: sorted(v) for k, v in sorted(traps.items())},
-                                    prefer_lists=a.prefer_list, ref_tile_specs_used=spec_used)
+                                    prefer_lists=a.prefer_list, ref_tile_specs_used=spec_used,
+                                    instance_params_not_in_rtl=sorted(set(perrs))[:80])
         rec['summary']['unresolved_children'] = len(unres)
+        rec['summary']['instance_params_not_in_rtl'] = len(set(perrs))
+        if perrs:
+            rec['verdict'] = 'FAIL'
+            rec['failing'].append('instance_params_not_in_rtl')
+            for e in sorted(set(perrs))[:20]:
+                print(f"FAIL instance parameter {e}")
         rec['summary']['ambiguous_children'] = len(amb_c)
         rec['summary']['variant_children'] = len(var)
         if amb_c:

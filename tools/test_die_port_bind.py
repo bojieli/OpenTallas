@@ -452,6 +452,57 @@ class ManifestOnly(unittest.TestCase):
         self.assertIn('--manifest-only', so)
 
 
+# HEAD-92 11-09: the l48hp1 hd_lep0N shape.  The generated wrapper (a die master, no die-level overrides) sets leg-stage
+# parameters on its core that the core RTL in the source tree does not declare; yosys stops with "Can't find object for
+# defparam COL0" while the bind used to PASS (it checked die-level master overrides only).
+INST_CORE_OLD = ("module lepcore #(parameter [3:0] CH_B = 4'b1111, parameter integer PAIR = 0) (input wire ck, "
+                 "input wire [3:0] i, output reg [3:0] o);\n  localparam integer L = 2;\n  always @(posedge ck) o <= i;\nendmodule\n")
+INST_CORE_NEW = ("module lepcore #(parameter [3:0] CH_B = 4'b1111, parameter integer PAIR = 0, parameter [15:0] KTX = 16'h0,\n"
+                 " parameter integer COL0 = 0) (input wire ck, input wire [3:0] i, output reg [3:0] o);\n"
+                 "  localparam integer L = 2;\n  always @(posedge ck) o <= i;\nendmodule\n")
+
+
+def run_inst(core, wrap_params):
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'core.sv').write_text(core)
+        (d / 'w.sv').write_text("module lepw (input wire ck, input wire [3:0] i, output wire [3:0] o);\n"
+                                f"  generate if (1) begin : g_c\n  lepcore #({wrap_params}) u_core (.ck(ck), .i(i), .o(o));\n"
+                                "  end endgenerate\nendmodule\n")
+        (d / 'm.f').write_text(f"{d / 'w.sv'}\n{d / 'core.sv'}\n")
+        (d / 'd.v').write_text("module die (ck, i, o);\n  input ck;\n  input [3:0] i;\n  output [3:0] o;\n"
+                               "  lepw u_w (.ck(ck), .i(i), .o(o));\nendmodule\n")
+        out = d / 'o.json'
+        p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                            '--manifest-only', '--out', str(out)], capture_output=True, text=True)
+        return p.returncode, json.loads(out.read_text()), p.stdout
+
+
+class InstParams(unittest.TestCase):
+    def test_hd_lep0N_wrapper_param_not_in_core_fails(self):
+        rc, rec, so = run_inst(INST_CORE_OLD, ".CH_B(4'b1111), .PAIR(1), .KTX(16'h0000), .COL0(2)")
+        self.assertEqual(rc, 1, so)
+        self.assertIn('instance_params_not_in_rtl', rec['failing'])
+        errs = rec['child_closure']['instance_params_not_in_rtl']
+        self.assertEqual(errs, ["lepw/u_core -> lepcore: not declared ['COL0', 'KTX']"])
+        self.assertEqual(rec['summary']['params_not_in_rtl'], 0)      # the die-level master check alone saw nothing
+
+    def test_core_with_params_passes(self):
+        rc, rec, so = run_inst(INST_CORE_NEW, ".CH_B(4'b1111), .PAIR(1), .KTX(16'h0000), .COL0(2)")
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(rec['summary']['instance_params_not_in_rtl'], 0)
+
+    def test_localparam_and_positional_overrides_fail(self):
+        rc, rec, so = run_inst(INST_CORE_OLD, ".L(3)")
+        self.assertEqual(rc, 1, so)
+        self.assertEqual(rec['child_closure']['instance_params_not_in_rtl'], ["lepw/u_core -> lepcore: localparam override ['L']"])
+        rc, rec, so = run_inst(INST_CORE_OLD, "4'b1111, 1, 7")
+        self.assertEqual(rc, 1, so)
+        self.assertEqual(rec['child_closure']['instance_params_not_in_rtl'], ['lepw/u_core -> lepcore: 3 positional overrides, 2 parameters'])
+        rc, rec, so = run_inst(INST_CORE_OLD, "4'b1111, (1 + 0)")
+        self.assertEqual(rc, 0, so)
+
+
 
 def test_ansi_header_ports_are_die_nets(tmp_path):
     """DIE-HEAD-3: an ANSI die-top header declares nets (gen_rtl native tops): no UNPARSED .clk(clk), full widths."""
