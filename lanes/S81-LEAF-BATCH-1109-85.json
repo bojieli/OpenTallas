@@ -187,6 +187,19 @@
    "residual": "OUTLINE|u_vp.g_ln[2].u_l y w=34.21 pins=907 r=1.04",
    "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
    "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t69.json"
+  },
+  "ot_s81sl_leaf__t65": {
+   "failed_block": "1c4513f5d80e",
+   "attempt": 6,
+   "retry_key": "ot_s81sl_leaf__t65@6",
+   "item_env_add": {
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the 1108b escape-open string attempt_6 ran) and every other key unchanged",
+   "model_worst_before": 0.84,
+   "model_worst_after": 0.84,
+   "form": "GPL routability form, not a macro form: the macro channels already pass (model 0.84, no further move helps). GRT 90,362 (M6 88,634); 860 of the 872 congestion.rpt violations sit at x 200-300 / y 600-930. The nets there are the ft4 station-2 cluster (u_ft_ft4_o_2, 2,015 net refs; station site 216,889.92) and the vs->ve buses (aval/rk/ah/rw, ~1,400). 3_3_place_gp.log: 'OT_GPL_SPARSE movable util 0.714 % < 2.000 %: routability-driven GPL off', so those cells were packed at density 0.5 around the station. OT_GPL_SPARSE_UTIL=0 keeps routability-driven GPL on (face_flops.tcl FALLBACK still covers divergence). Resume at floorplan, synth reused.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/in/ot_s81sl_leaf__t65/{congestion.rpt,5_1_grt.log}, mp85/ot_s81sl_leaf__t65.json"
   }
  }
 }
