@@ -90,8 +90,9 @@ def index_file(tree):
 def live_paths():
     """every path a process of ours holds: cwd, root, open fds, absolute argv words"""
     out = set()
+    me = str(os.getpid())        # our own argv names the control tree through --only-tree
     for pid in os.listdir("/proc"):
-        if not pid.isdigit():
+        if not pid.isdigit() or pid == me:
             continue
         for link in ("cwd", "root"):
             try:

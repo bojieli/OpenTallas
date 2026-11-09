@@ -260,3 +260,22 @@ def test_verify_ignores_a_legally_deleted_tree(tmp_path, capsys):
     shutil.rmtree(a, ignore_errors=True)
     shutil.rmtree(b, ignore_errors=True)
     assert D.main(["--verify", str(m)]) == 0
+
+
+def test_own_argv_is_not_a_live_process(tmp_path):
+    # the control tree is named by the tool's own --only-tree: it must not refuse itself
+    code = ("import importlib.util, sys;"
+            f"s = importlib.util.spec_from_file_location('d', {str(Path(__file__).with_name('ot-srcdedupe.py'))!r});"
+            "m = importlib.util.module_from_spec(s); s.loader.exec_module(m);"
+            "print(sys.argv[1] in m.live_paths())")
+    out = subprocess.run(["python3", "-I", "-c", code, str(tmp_path)], capture_output=True, text=True, check=True).stdout
+    assert out.strip() == "False"
+
+
+def test_other_process_naming_the_tree_is_live(tmp_path):
+    p = subprocess.Popen(["sleep", "30", str(tmp_path)])
+    try:
+        assert str(tmp_path) in D.live_paths()
+    finally:
+        p.kill()
+        p.wait()
