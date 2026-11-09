@@ -448,3 +448,4 @@ time	die	signed_types	signed_cores
 2026-11-09 12:45	256	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=78	forced 12:44 COORD hourly; flat since 12:26
 2026-11-09 13:05 256 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=78 auto
 2026-11-09 13:45	256	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=78	forced 13:44 COORD hourly; flat (HBM xs READY-COUNT pending archive)
+2026-11-09 14:21	257	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79	forced 14:00 COUNT-ARCHIVE-2; +1 = ot_wbq_root_g0 (DNC re-test PASS, g0_resign_ew); xs q_sm child not a plan design; opsb_output design mismatch lwa[375..383]
