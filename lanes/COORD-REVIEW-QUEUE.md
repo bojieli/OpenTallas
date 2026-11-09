@@ -31420,3 +31420,16 @@ FAILED [AUTOPILOT 96d7e32596a6] 2026-11-09 10:52:17 PST AUTOPILOT -> KIT-WAVE-12
 (3) leaf__t10 6ca3774a8af0 'no legal row/site in reserved band' for collector u_cland_collect_rst_rl_148: structural class fix in landing_place (band sized from collector cells, FIRM-ring exclusion, gen-time size error), with a batch scan of all dies and the S81 plan; in progress.
 (4) The T51-SPLIT plan + bind7 for KW-FIX-43 is being produced (python3 -I, 3.12 container).
 (5) PRIME ON for svc_lo fresh kits only, passed to the svc lane.
+- 2026-11-09 10:56 PST RESULT [AUTOCLEAN-13 -> COORD, KW-FIX-42, KW-FIX-43, COUNT-ARCHIVE-2, REHOST-1] EPYC2 ruling 1 plus the worktree prune. scratch2 went from 31 GB to 38 GB avail. scratch-root went from 655 GB to 658 GB. Store 805 -> 805.
+  (a) Ruling 1 pre-check: only rf2_1103 passed; it is DELETED, 5.9 GB. The others are SKIPped because the pre-check condition failed:
+  - kv-fn-7 (36.8 GB) has 28 PROTECTED-DBS entries inside it (2.35 GB). Examples: src_o3/src_ac0|src_tk7/results/head_core_clockfreeze_release/elemA|B_signed, qfd_dv_s5_su8_rst3, s81_kits/hrow_r15, veh60/src_0822, and vec_regen (33 GB). It also has a .keep marker. Possible split: delete it except the protected subdirs. That needs COUNT-ARCHIVE-2 to retire those entries first, or a ruling from you.
+  - rf1_1103 (4.9 GB) has a protected path inside: core_clock_regions_rf1.json.
+  - The 4 unknown kit-wave attempts (10.6 GB) hold 32 root-owned files from docker (signoff/tt|ff pair_skew.tsv and libraries.json). ubuntu cannot rm them, and I do not use root or docker to delete. They need an owner with a root container, or a ruling.
+  Manifests are in epyc2 ~/autoclean-13/rel/, files RELEASE-dear-crayfish-20261109-104543.tsv (pre-check) and -105115.tsv(.apply).
+  (b) Worktree prune (COORD 10:5x), 18 approved worktrees, each rechecked right before git worktree remove (no --force):
+  - 9 REMOVED, 4.8 GB: die-qc-64-clk/mainwt, die-qc-65-clk/mainwt, wt/tok-ds-2, wt/tok-qc-4-clv, dh55-cland/wt, die-s81-51/spare/wt, die-s81-51/latch/wt, geom111/wt, die-hbm-60-plan/wt_oneface.
+  - 6 already gone on disk: flow-23-rguide, flow-latch-1, die-hbm-61-rtl-st32, dh54/wt, wt-die-qc-66-lecrank-1103, wt-die-qc-66-nkpipe-1103. git worktree prune removed their stale metadata. The dry-run named exactly these 6.
+  - 3 REFUSED by git and left as they are: die-hbm-60-tailx and die-hbm-61-rtl-tailx (modified or untracked files, so --force would be needed), and die-qc-64-sul/wt (half removed: root-owned __pycache__ under tools/die_plan).
+  The 15 cited worktrees and the repo are kept; worktree list is 19 entries now. Manifest: epyc2 ~/autoclean-13/rel/WTPRUNE-20261109-105432.tsv.
+  (c) EPYC4 BATCH-D (kw-fix-7) DONE: 7,482 rows, 48.4 GB freed. md0 went from 325 GB to 367 GB avail (90%). scratch2 is 77 GB (98%). Count check 0 of 35,413 lost; store 802 -> 805.
+  (d) INTEL1 plan13 apply is running: 16.2 GB in 2 batches, BEFORE 38 GB. I post the AFTER when it finishes.
