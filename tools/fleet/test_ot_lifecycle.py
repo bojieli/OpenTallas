@@ -596,3 +596,28 @@ def test_mention_posts_skip_cleanup_tables():
              {"t": now - 25 * 3600, "auth": "DIE-KV-97", "text": "old dkv66"}]
     got = [p["text"] for p in lc.mention_posts(posts, now)]
     assert got == ["rerun in die-hbm-63/eco", "KIT-WAVE launched kw44"], got     # cleanup tables and >24 h posts do not hold
+
+
+def test_alternates_targets_guarded(tmp_path):
+    """COORD 11-09 13:1x: the store a repo borrows from (objects/info/alternates) is a live kit input on every host, so no plan deletes it.
+    Incident: codex-wave-1105/{src,src_2c705} went missing and 409 wave src repos lost objects."""
+    lc, ac = _lc()
+    root = tmp_path / "s" / "claude"
+    (root / "cw" / "src" / ".git" / "objects" / "pack").mkdir(parents=True)
+    (root / "cw" / "src_2c705" / ".git" / "objects").mkdir(parents=True)
+    info = root / "kw41" / "src_hbmf4" / ".git" / "objects" / "info"
+    info.mkdir(parents=True)
+    (info / "alternates").write_text(f"{root}/cw/src/.git/objects\n../../../../cw/src_2c705/.git/objects\n# note\n")
+    refs, n = lc.live_kit_inputs([str(root)], [])
+    assert f"{root}/cw/src/.git/objects" in refs                               # absolute entry
+    assert f"{root}/cw/src_2c705/.git/objects" in refs                         # relative entry resolves against the borrowing objects dir
+    tails = lc.kit_tails(refs)
+    assert "cw/src/.git/objects" in tails and "cw/src_2c705/.git/objects" in tails    # tails reach the fleet kit_union, any host
+    # mutant: a scan without the alternates step loses both targets (the test sees the gap)
+    saved = lc.alternates_targets_under
+    lc.alternates_targets_under = lambda r: set()
+    try:
+        refs2, _ = lc.live_kit_inputs([str(root)], [])
+    finally:
+        lc.alternates_targets_under = saved
+    assert f"{root}/cw/src/.git/objects" not in refs2

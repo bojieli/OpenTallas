@@ -118,6 +118,7 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
             m = KIT_ATTEMPT.match(p)
             unit = m.group(1) if m else os.path.dirname(p)
             refs |= {x for x in text_refs(s, pat) if x != unit and not x.startswith(unit + "/")}
+        refs |= alternates_targets_under(r)
     frontier = set(wave_paths)
     done = set()
     for _ in range(2):
@@ -132,6 +133,27 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
         refs |= nxt
         frontier = nxt
     return refs, n
+
+
+def alternates_targets_under(root):
+    """object stores that any git repo under root borrows from (objects/info/alternates, COORD 11-09 13:1x): deleting a dir that is, holds
+    or sits inside one breaks every repo that borrows from it (codex-wave-1105/{src,src_2c705}: 409 repos).  The targets go into this
+    host's kitscan, so the fleet kit_union refuses them on every host, also where the borrowing repo lives on another host."""
+    q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", root, "-maxdepth", "18", "-type", "f", "-name", "alternates",
+                        "-path", "*/objects/info/alternates", "-print"], capture_output=True, text=True)
+    if q.returncode not in (0, 1):
+        raise SystemExit(f"alternates scan failed under {root}: rc {q.returncode}")
+    out = set()
+    for f in q.stdout.split("\n"):
+        s = read_small(f) if f else None
+        if s is None:
+            continue
+        base = os.path.dirname(os.path.dirname(f))          # the borrowing repo's objects dir: relative entries resolve against it
+        for ln in s.splitlines():
+            t = ln.strip()
+            if t and not t.startswith("#"):
+                out.add(os.path.normpath(os.path.join(base, t)))
+    return out
 
 
 def kit_tails(paths):
