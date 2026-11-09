@@ -191,6 +191,13 @@ def _gutter_block_min_span_um(budgets):
     return float(v) if v and float(v) > 0 else None
 
 
+# FW-ROWS-1 11-09 (DIE-QC-97, COORD class: sle_fw_v2, slw_fw_v3, slw_fw_v2, slw_fw_v1 all GRT-0116 in the N-face
+# x_ctl_i / cws0_i ring_ff column strip): every sle_fw* / slw_fw* type takes every 2nd strip row by default.  A plan
+# cland_strip_rows_types entry (type or base) still wins, and 1 opts a type out; other families are unchanged.
+CLAND_STRIP_ROWS_FAMILY_RE = re.compile(r"^(sle|slw)_fw_")
+CLAND_STRIP_ROWS_FAMILY_DEFAULT = 2
+
+
 def _cland_strip_rows(budgets, tn):
     """DIE-QC-97 11-09 opt-in: the OT_CLAND_STRIP_ROWS of type tn from budgets.cland_strip_rows_types (type, then its
     unsplit base name) else budgets.cland_strip_rows; None (absent or 1) = unchanged kit.  landing_placement.tcl takes
@@ -199,6 +206,8 @@ def _cland_strip_rows(budgets, tn):
     GRT-0116 with its 3 overflow edges in that strip's top gcell row)."""
     per = budgets.get("cland_strip_rows_types") or {}
     v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
+    if v is None and tn is not None and CLAND_STRIP_ROWS_FAMILY_RE.match(tn):
+        v = CLAND_STRIP_ROWS_FAMILY_DEFAULT
     if v is None:
         v = budgets.get("cland_strip_rows")
     return int(v) if v and int(v) > 1 else None
