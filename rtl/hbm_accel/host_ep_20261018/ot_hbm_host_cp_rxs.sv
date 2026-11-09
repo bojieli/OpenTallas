@@ -28,8 +28,15 @@
 // spacings exceed the one-frame pingpong recycle of 8 receiver edges.
 // MUT (bench only): 1..3 = ot_hbm_host_link_seq MUT, 4 = rx word bit 40 flipped into the landing, 5 = saturating link
 // counters (COLL behaviour).
+// Bound transport (DIE-HBM-94 11-08, R5): this tile sits in the root partition and hfd_ep_host_vc in NW_io, over die lanes
+// L8008 root->NW_io 47 stages, L8007 NW_io->root 48 stages. RXLAT = 6 + 47 + 48 = 101 (slot_v out -> rx_pin_v back). RSTLAT = 70
+// extra reset stages so the sequencer starts on the NW_io endpoint's release (root release 18, NW_io release 88: bind_reset), or
+// bank 0's fixed arm reaches an endpoint still in reset. TXLAT stays 9: hfd_ep_host_vc TX enters ep_N0's elastic VC queue, no
+// gearbox slot to hit. Host obligation changes: frames >= 110 edges apart at the die receiver (pingpong recycle 8 + 47 + 48
+// edges); configuration path only. These parameters follow the plan's lane depths; a plan change re-derives them.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_hbm_host_cp_rxs #(parameter integer TXLAT=9, parameter integer RXLAT=6, parameter integer TXGAP=12,
+module ot_hbm_host_cp_rxs #(parameter integer TXLAT=9, parameter integer RXLAT=101, parameter integer TXGAP=12,
+ parameter integer RSTLAT=70,
  parameter integer MUT=0
 )(
  input wire clk,rst_n,
@@ -52,7 +59,7 @@ module ot_hbm_host_cp_rxs #(parameter integer TXLAT=9, parameter integer RXLAT=6
  output wire land_fault,protocol_fault,output reg link_fault,output wire seq_fault
 );
  wire [0:0] rr;
- ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1+RSTLAT)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
  reg [7:0] ses_q;
  always @(posedge clk)ses_q<=session;
  // ---------------- sequencer + link

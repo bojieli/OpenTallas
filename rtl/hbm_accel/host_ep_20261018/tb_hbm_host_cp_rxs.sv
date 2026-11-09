@@ -49,7 +49,7 @@ module tb_hbm_host_cp_rxs;
  wire [511:0] sdt,sdr; wire [1:0] sds; wire [512:0] pma_d,pma_h; wire tck_d,tck_h;
  wire awv,wv,br,arv,rr; wire [11:0] awa,ara; wire [31:0] wd,rd; wire [3:0] ws; wire awr,wr,bv,arr,rv; wire [1:0] bresp;
  wire lf,pf,kf,sf;
- ot_hbm_host_cp_rxs #(.MUT(MUT)) dut(.clk(ca),.rst_n(rst),.session(SES),
+ ot_hbm_host_cp_rxs #(.RXLAT(6),.RSTLAT(0),.MUT(MUT)) dut(.clk(ca),.rst_n(rst),.session(SES),
   .ep_tx_v(tx_v),.ep_tx_frame(tx_f),.ep_rx_arm_v(arm_v),.ep_rx_arm_bank(arm_b),.ep_rx_block_words(words),
   .ep_rx_release_v(rel_v),.ep_rx_release_bank(rel_b),.ep_rx_slot_v(slot_v),.ep_rx_slot_bank(slot_b),.ep_rx_slot_index(slot_i),
   .ep_rx_pin_v(rx_pv),.ep_rx_pin_flit(rx_pf),.ep_rx_block_ready(bready),.ep_phy_up(up),
