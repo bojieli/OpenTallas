@@ -1,0 +1,19 @@
+# CODEX LEF clock class — 11:13 takeover
+
+Source class review-ready: canonical hub codex/lef-clock-export-1113@8923346cd54; evidence tip63eac1a75be, base d28cf565d0. tools/autopilot/prov_view.py corrects ONLY private staged signed LEF USE SIGNAL to CLOCK where exact frozen kit.clocks equals both signed TT+FF Liberty input clock sets. Strict merged_core_clocks gate stays unchanged. Original signed files, timing libraries, names and geometry untouched. Derivation pins and hashes recorded in marker. Five focused tests PASS including negative corner/input/data controls and idempotence.
+
+Actual signed hcol_h1 declares clk_pair[0/1] in freeze and both ETMs; LEF wrong USE SIGNAL. q_b103 real staging succeeds, only those2 clock uses corrected: source LEF dc71009de0928876c0b46498e151178a91436795f84c1443f2c8f5658ba12192 -> private9f6a20e386be57bfb3d447d2135326c7b3b7b828e24d7e6d7a0a5bba2c6d82b7. hcol_h1 stays counted/final; whole type correctly PROVISIONAL for other children.
+
+Private capture19exact RTL files269342bytes + routed views. E4 work /srv/opentallas-scratch3/claude/codex-lef-clock-1113/q_b103_a1 and q_b103_a2; canonical hub logs ~/coord/autopilot/codex-lef-clock-1113/{gen.log,gen_a2.log}. a1 failed pre-CAD own hashed wrapper basename; preserved. a2 keeps original basenames under SHA dirs. Canonical ot-run E4unit2861366-1794165893 exit1 (servicecodex-lef-clock-gen-a2-1113). No physical job launched.
+
+SECOND REAL BLOCKER: a2 passes USE check then fails strict native clock geometry. Plan cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon__codex_g21__mpisl.json bit0=(107.928,95.04) M5, actualsignedLEF center=(107.976,95.04), delta+.048x; bit1 matches(108.024,187.248). HBM parent owns surgical PRIVATE actual-clock-map event. No tolerance waiver/signedview move by me. Old plan has18 potential h1 type variants; queued8may share it.
+
+PLACE HOLD: actual unchanged q_b103 plan PNG VIEWED, artifact results/geom_review/hcol_clock_1113/q_b103_plan_1113.png. 25macros78.276%outline,3densecolumns,~6um ra/rb gaps,3332-bit Ebus. FT centroid paths crossmacros but actualperbit sites mayreroute; centroidcrossing alone is not actualviolation. HBM explicitly holdsPLACE for exactchannel/Ebuscut budget; functionalR8plan also pending. No P&R/STA run by this lane. Next: privatecorrectclockmap GEN/lint/preflight, then only an alreadyreviewed vehicle can proceedPLACE.
+
+No merge/tag/POR/deletion/otherjobstop/newcount. OwnI2S2 codecheckout codex-lef-clock-1113; initial local networkclone /srv/opentallas-scratch/claude/codex-lef-clock-1113 retained without edits. Full review/failure details in branch artifact63eac1a75be.
+
+
+## 11:39 follow-up
+HBM parent supplied surgical private clk0 map under /tmp/codex-hbm-hcolpin-1113 (source event owned by HBM, no POR). Fresh E4 q_b103_a3/input_plan references a new private pin filename, original plan/pin file untouched; only actual clk0x107.928->107.976. a3 canonicalotrun unit3766658-1794166633 admitted, servicecodex-lef-clock-gen-a3-1113, log~/coord/autopilot/codex-lef-clock-1113/gen_a3.log. GEN-only; PLACE remains explicitHOLD. Metadata helper is frozen8923346cd54 copy in own canary; sourcecad9y unchanged.
+
+Separate shared export class adapter: codex/signed-exact-lef-1113@131333670f1 on d28cf565d0. New export_view.py opt-in CLI --abstract-lef + --abstract-odb; native export input ODB fullSHA must equal signed base6_final.odb, exactallPINsections inclPG andSIZE identical, outsideOBS content identical (whitespace/comments normalized). Records old/new LEF and ODB hashes, original qualification/libs untouched; no automatic export, PG waiver, default rollout or newSTA. Eight focused tests PASS. KVtypes owns actual208MB pcc_h -bloat_factor0 export + PDN-onlypilot, has adapter API; no duplicate PCpilot from this lane. Current codecheckout switched to this adapter branch; hcol source branch remains published and frozen in canary.

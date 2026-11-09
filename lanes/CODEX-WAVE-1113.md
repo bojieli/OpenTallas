@@ -1,0 +1,18 @@
+# CODEX shared wave takeover 11:13
+
+STATE: collected KW-FIX35 current chains; no newphysical launches yet. Main d28cf565d0/count238. Hub46GBrefused, no policyoverride/live moves/deletion. Sharedowners: wave leadsame-tickKVPC producerclaims+offhubfutureworkroots; source_stale child existingUSfea7df0c+dieintegration collection; lef_clock child hcol_h1 metadata class; lec_eco child sharedECOprewiredclock/LEC collection. Existinghealthyjobs preserved.
+
+Failures: KVPC5types eachpickedtwice11:01, first+secondsameblockspec andsecondresume_fromfirst, stateonlytrackssecond. Diagnosingexactlaunchclaims; nostops. HBM8types GENclock USESIGNAL class evidenceclocktrue inbothLiberties+frozenclockset, private-normalizationfix planned preservingoriginals. RESTAGEa19f9 alreadylanded/23rowsrelaunched, noduplicate.
+
+Next: protectfutureoneproducerclaims; supportedoffhubnew-specplacement withfleet; pilotexistingUSbranch andhcolmetadataoneGEN/PLACE afterrenders. OwnerquestionsplainCODEXLOGonly.
+
+2026-11-08 11:37 PST milestones:
+- READY codex/wave-claims-1113@5382e2a0ad0 exact allowlist+parent duplicate producer fix; 4tests PASS, actual PC prelaunch snapshot11->6 picks. Existing11 PC units retained, inventory ~/coord/autopilot/codex-wave-1113/kv_pc_11claims.json; KV collects both twins.
+- Geometry-only continuation eae9efcc701 on same branch: exact original spec SHA+earned PLACE, allsource/settings unchanged, new explicit S3 output/ot-run dir; old K/checkpoint/proof read-only. Normal collector result, no invented PASS. 4tests PASS. Fleet adopted io_cor a7 after exact queued-only cancellation; unit codex-geom-kv3iocor-1794166428, E5 payload2101149-1794166438 admitted1s. New AP request codex-wave-1113/geom/kv3_io_cor/a7, E5S3 output codex-wave-1113/geom/kv3_io_cor_a7. Other2 oldwaiters preserved until pilotcollection.
+- QOUT exact countedprovider published coord/state a4852e968d9235ad5134ebc22e54c2aaeb880e11; originreadback PASS. Entry points I2S2 codex-hbm-open-1113/qout_export/ot_q2nf_qout, previousmodule backup only, finalconfigdiff10lines. Own tinycoordclone /tmp/codex-wave-1113/coord-publish avoids dirty sharedcoord; original local400aa5c344 retained.
+- US existingfea7df0/sourceintegration6e207 real private serdest3 pilot E6S3/codex-source-stale-1113/us_serdes_t3/a1: KITRTL+topology PASS, GEN active; source helper owner source_stale. QC31missing hubsidecars restored exactmissingonly; E5 historicalfailure was alreadyrestaged there, new CBN/CBX prov probes PASS, no false attribution. Originalfailures retained.
+- READY kit_gen_lint invalidvehicle only codex/kit-gen-vehicle-1113@7cb02e70902513a06129ee20139341f7d570a732,14tests PASS; _rtl nowFAIL, legitimateconfig/no-freeze unchanged.
+- hcolLEFmetadata helper codex/lef-clock-export-1113@8923346cd54, strict staging advances; second real clk_pair0 signedLEFcenter/nativeplan mismatch+.048um exposed, HBM owns nativeclockmap/R8 and q_b103geometry6umchannels. PLACEheld, no gatewaiver. Shared PC exactLEFexport adapter next with KVtypes PDN-only pilot.
+- ECOprewiredclock helper owner lec_eco read-onlyt51+vecd probes, no actualECO consumption bywave; S81owns t51 ONEECO afterREADY. TKM loadedstate gapsowner. RC pairs otherdies read-only, S81 T51 median routed/GRTwireC0.872/p901.304 doesnotjustify wholesaleHBM1.32 extension; no table/gate change.
+- Root F4 optin sharedREADY codex/clock-density-f4-1113@554a4f366f5,4tests; HBM owns next private clock-map/pilot; currenthealthyvD untouched.
+- Operational workroots: canonical newgen alreadyoffhub; root authorizes own newsubmissions excludingintel2 only, no globalpolicy/configchange or live moves. Fleet handles queued-only resites, no deletions.

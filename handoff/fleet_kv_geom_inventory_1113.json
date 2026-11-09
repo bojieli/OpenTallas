@@ -1,0 +1,79 @@
+{
+  "collected": 1794165953.1084926,
+  "rows": [
+    {
+      "item": "kv3_io_cor",
+      "attempt": 7,
+      "spec": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_io_cor_b817517ba2672/a7/spec.json",
+      "spec_sha256": "f1ace2ef6f4a81e3df5157f21d18628115896aeecdfb41db6c7a10e40278aeb1",
+      "parent_pid": 2908119,
+      "child_pid": 983633,
+      "parent_live": true,
+      "child_live": true,
+      "work": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7",
+      "kit": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7/gen/kv3_io_cor",
+      "gen_host": "epyc5",
+      "source": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "geom_mem_gb": 24,
+      "unit_place_rc": [
+        "KW_STAGE_RC place 0 (physical receipt /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7/gen/kv3_io_cor/physical_completion/dpkit-kv3_io_cor-1068749.json; proof owner dpkit-kv3_io_cor-1068749 pending)"
+      ],
+      "place_completion_lines": [
+        "KW_PLACE_RECEIPT {\"path\": \"/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7/gen/kv3_io_cor/physical_completion/dpkit-kv3_io_cor-1068749.json\", \"run_id\": \"dpkit-kv3_io_cor-1068749\", \"checkpoint\": {\"path\": \"run/results/asap7/dp_kv3_io_cor/base/3_place.odb\", \"size\": 289348238, \"mtime_ns\": 1794157320574163428}, \"host\": \"devoted-wren\", \"proof_owner\": \"dpkit-kv3_io_cor-1068749\", \"proof_id\": \"f88d68b4946161bb126f2289c3438e0a8979b1ac9b3364cbe29e5fda210a422f\", \"proof_pending\": true}"
+      ],
+      "geom_log_tail": "KW12_DISK_WAIT 09:02:38 ot-run: refused: no host qualifies (epyc5: scratch disk /srv/opentallas-scratch has 96 GB free < floor 100 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB over\n",
+      "current_checkpoint_and_check": "289348238 1794157320 /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7/gen/kv3_io_cor/run/results/asap7/dp_kv3_io_cor/base/3_place.odb\n{\"id\": \"kw-kv3-io-cor\", \"odb\": \"/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor/attempt_7/gen/kv3_io_cor/run/results/asap7/dp_kv3_io_cor/base/3_place.odb\", \"image\": \"openroad/orfs:asap7lock\", \"mem_gb\": 24, \"grt\": true, \"grt_wall_s\": 600, \"rules_args\": [\"--all-kits\", \"--outline\", \"1278.72x1036.8\", \"--title\", \"kv3_io_cor KIT-WAVE event28w_c 3_place\"]}\n",
+      "checkpoint_probe_rc": 0
+    },
+    {
+      "item": "kv3_io_cor_v1",
+      "attempt": 8,
+      "spec": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_io_cor_v1_ba153596ec462/a8/spec.json",
+      "spec_sha256": "ef8fc98da703e1616ac36d7516def4ae4f35cff6bc6cf2e92be326ac715b9e7a",
+      "parent_pid": 2908605,
+      "child_pid": 1475582,
+      "parent_live": true,
+      "child_live": true,
+      "work": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8",
+      "kit": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8/gen/kv3_io_cor_v1",
+      "gen_host": "epyc5",
+      "source": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "geom_mem_gb": 24,
+      "unit_place_rc": [
+        "KW_STAGE_RC place 0 (physical receipt /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8/gen/kv3_io_cor_v1/physical_completion/dpkit-kv3_io_cor_v1-1143483.json; proof owner dpkit-kv3_io_cor_v1-1143483 pending)"
+      ],
+      "place_completion_lines": [
+        "KW_PLACE_RECEIPT {\"path\": \"/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8/gen/kv3_io_cor_v1/physical_completion/dpkit-kv3_io_cor_v1-1143483.json\", \"run_id\": \"dpkit-kv3_io_cor_v1-1143483\", \"checkpoint\": {\"path\": \"run/results/asap7/dp_kv3_io_cor_v1/base/3_place.odb\", \"size\": 288908174, \"mtime_ns\": 1794157714591608423}, \"host\": \"devoted-wren\", \"proof_owner\": \"dpkit-kv3_io_cor_v1-1143483\", \"proof_id\": \"a3e61594661f3dff509365bca28dc0b438818b2da7843f988e1ba018c5940256\", \"proof_pending\": true}"
+      ],
+      "geom_log_tail": "KW12_DISK_WAIT 11:05:22 ot-run: refused: no host qualifies (epyc5: scratch disk /srv/opentallas-scratch has 50 GB free < floor 100 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB over\n",
+      "current_checkpoint_and_check": "288908174 1794157714 /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8/gen/kv3_io_cor_v1/run/results/asap7/dp_kv3_io_cor_v1/base/3_place.odb\n{\"id\": \"kw-kv3-io-cor-v1\", \"odb\": \"/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_8/gen/kv3_io_cor_v1/run/results/asap7/dp_kv3_io_cor_v1/base/3_place.odb\", \"image\": \"openroad/orfs:asap7lock\", \"mem_gb\": 24, \"grt\": true, \"grt_wall_s\": 600, \"rules_args\": [\"--all-kits\", \"--outline\", \"1278.72x1036.8\", \"--title\", \"kv3_io_cor_v1 KIT-WAVE event28w_c 3_place\"]}\n",
+      "checkpoint_probe_rc": 0
+    },
+    {
+      "item": "kv3_io_ft_v1",
+      "attempt": 18,
+      "spec": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_io_ft_v1_b207b0f248dd1/a18/spec.json",
+      "spec_sha256": "6258e54f49ae073ff194f3a674f7e5c1bb40e6f6785f77f059f41e5c98b455a6",
+      "parent_pid": 2908826,
+      "child_pid": 2225855,
+      "parent_live": true,
+      "child_live": true,
+      "work": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_ft_v1/attempt_18",
+      "kit": "/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_ft_v1/attempt_18/gen/kv3_io_ft_v1",
+      "gen_host": "epyc5",
+      "source": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "geom_mem_gb": 24,
+      "unit_place_rc": [
+        "KW_STAGE_RC place 0 (client ended)"
+      ],
+      "place_completion_lines": [
+        "LEC_ASYNC 2026-11-08 09:13:25 LEC exit 0",
+        "ot-run: RAN on localhost (unit oth-ubuntu-1121326-1794157524): exit 0",
+        "ot-run: SPILL: outputs copied back localhost -> epyc5; RAN on localhost: exit 0"
+      ],
+      "geom_log_tail": "KW12_DISK_WAIT 09:31:07 ot-run: refused: no host qualifies (epyc5: scratch disk /srv/opentallas-scratch has 65 GB free < floor 100 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB over\n",
+      "current_checkpoint_and_check": "243832115 1794158989 /srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_ft_v1/attempt_18/gen/kv3_io_ft_v1/run/results/asap7/dp_kv3_io_ft_v1/base/3_place.odb\n{\"id\": \"kw-kv3-io-ft-v1\", \"odb\": \"/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_ft_v1/attempt_18/gen/kv3_io_ft_v1/run/results/asap7/dp_kv3_io_ft_v1/base/3_place.odb\", \"image\": \"openroad/orfs:asap7lock\", \"mem_gb\": 24, \"grt\": true, \"grt_wall_s\": 600, \"rules_args\": [\"--all-kits\", \"--outline\", \"1278.72x1036.8\", \"--title\", \"kv3_io_ft_v1 KIT-WAVE event28w_c 3_place\"]}\n",
+      "checkpoint_probe_rc": 0
+    }
+  ]
+}
