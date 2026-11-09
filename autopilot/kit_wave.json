@@ -862,7 +862,7 @@
     "intel1",
     "intel2"
    ],
-   "gen_host_base": "epyc5",
+   "gen_host_base": "epyc7",
    "counted_items": [
     "kv3_astk",
     "kv3_head_eighth_e0",
@@ -4932,7 +4932,7 @@
    "gen_hosts_base": [
     "epyc2"
    ],
-   "gen_host_base": "epyc5",
+   "gen_host_base": "epyc7",
    "leafslew_items": {
     "slice_station__*": {
      "OT_CLK_LEAF_SLEW_PS": 60,
@@ -7488,7 +7488,7 @@
     "epyc4",
     "epyc2"
    ],
-   "gen_host_base": "epyc5",
+   "gen_host_base": "epyc7",
    "only_items_l48uf": [
     "hd_ctl",
     "hd_ctl_n",
@@ -15108,7 +15108,7 @@
     "intel2",
     "epyc4"
    ],
-   "gen_host_base": "epyc5",
+   "gen_host_base": "epyc7",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
    "src_prev_kw24": "/srv/opentallas-scratch2/claude/kw21/src_c926f",
@@ -17956,7 +17956,6 @@
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
-  "epyc5",
   "epyc6",
   "epyc2",
   "intel1",
@@ -18501,5 +18500,28 @@
  ],
  "note_e4_kw42": "KW-FIX-42 2026-11-09 08:0x COORD 07:4x(3)/07:5x(2): epyc4 (9754, owner multi-core host) first in place_prefer/hosts; gen_hosts unchanged (src not staged on epyc4, scratch2 76 GB). Revert *_prev_kw42e4.",
  "ot_run_prev_kw43": "/home/ubuntu/.local/lib/fleet/isolate-1-kw42a/ot-run-sealed",
- "ot_run_note_kw43": "KW-FIX-43 2026-11-09 10:30 PST COORD 10:04 (2): ot_run -> REHOST-1 Fix 2 (md5 c2bb64bc = main 44f185d1ae4, CH): refuses LOADCAP / memory-claimed hosts, picks lowest load among sealed hosts holding K, else unsealed so ot-run spills. Revert: ot_run <- ot_run_prev_kw43 (isolate-1-kw42a, md5 ebe686ee = ccf9bd6616f)."
+ "ot_run_note_kw43": "KW-FIX-43 2026-11-09 10:30 PST COORD 10:04 (2): ot_run -> REHOST-1 Fix 2 (md5 c2bb64bc = main 44f185d1ae4, CH): refuses LOADCAP / memory-claimed hosts, picks lowest load among sealed hosts holding K, else unsealed so ot-run spills. Revert: ot_run <- ot_run_prev_kw43 (isolate-1-kw42a, md5 ebe686ee = ccf9bd6616f).",
+ "e5gone_prev_kw43": {
+  "_kw17_ok": [
+   "epyc5",
+   "epyc6",
+   "epyc2",
+   "intel1",
+   "intel2",
+   "epyc4"
+  ],
+  "qwen_kvsys": {
+   "gen_host_base": "epyc5"
+  },
+  "s81": {
+   "gen_host_base": "epyc5"
+  },
+  "s81_head": {
+   "gen_host_base": "epyc5"
+  },
+  "hbm": {
+   "gen_host_base": "epyc5"
+  }
+ },
+ "note_e5gone_kw43": "KW-FIX-43 11:1x COORD: epyc5 terminated 11:13 (Cherry DELETE 204); removed from live host keys; history *_prev_* keys kept. Revert: e5gone_prev_kw43"
 }
