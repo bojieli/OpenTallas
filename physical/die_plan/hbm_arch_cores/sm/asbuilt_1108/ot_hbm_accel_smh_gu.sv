@@ -207,7 +207,8 @@ module ot_hbm_accel_smh_tcl_gu #(parameter integer L = 8, parameter integer IL =
     end endgenerate
     // HBM-SM-KIDS-2 11-09 (registered face, 0 cycles): the sticky lane fault keeps its feedback flop; the lfault pin
     // takes a kept copy with the same reset and next state (equal every cycle), so the port flop drives only the port.
-    reg lane_fault;
+    // both flops kept: synthesis merges a non-kept twin into the kept copy (xs/static_front 11-09 face_guard)
+    (* keep *) reg lane_fault;
     (* keep *) reg lane_fault_o;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault_o <= 1'b0; else lane_fault_o <= lane_fault | (|lf);

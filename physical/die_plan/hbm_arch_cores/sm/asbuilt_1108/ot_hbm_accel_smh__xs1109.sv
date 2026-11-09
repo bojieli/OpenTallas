@@ -2745,8 +2745,10 @@ module ot_hbm_accel_smh_leaf #(
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // ---- E4 ----
-    reg              iv_b, iv_f, ifirst, ilast, ifp4;
-    reg [TAGW-1:0]   itag;
+    // HBM-SM-KIDS-2: ifirst/ilast/itag kept like their E copies (else synthesis merges them into the copies)
+    reg              iv_b, iv_f, ifp4;
+    (* keep *) reg   ifirst, ilast;
+    (* keep *) reg [TAGW-1:0] itag;
     reg [WSW-1:0]    iw;
     reg [SLW-1:0]    ix;
     always @(posedge clk or negedge rst_n) begin

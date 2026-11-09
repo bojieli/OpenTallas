@@ -20,7 +20,7 @@ module ot_smh_static_feed #(parameter integer MUT=0)(
  reg [42:0] er_in;
  reg c29_q,pv_q;
  reg [9:0] ctag_q,ptag_q;
- reg fault_r;
+ (* keep *) reg fault_r;
  (* keep *) reg fault_o;
  assign fault=fault_o;
  wire cmp_f=(pv_q!=c29_q) || (c29_q && ptag_q!=ctag_q) || (s1_c[25] && !c29_q);
