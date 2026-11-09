@@ -6,6 +6,8 @@ import clock_landing_plan as C
 class LandingBandOrder(unittest.TestCase):
     def setUp(self):
         with gzip.open(Path(__file__).parent/'testdata/s81_landing_order_t3.json.gz','rt')as f:self.fixture=json.load(f)
+        # The fixture keeps only hard-core geometry; schema.placed_macro_boxes keys cores by instance name.
+        for i,c in enumerate(self.fixture['type'].get('hard_cores',[])):c.setdefault('inst',f'hc{i}')
 
     def allocate(self,largest):
         f=self.fixture; used=copy.deepcopy(f['fixed_rectangles']);rings=list(f['rings']);out=[]
