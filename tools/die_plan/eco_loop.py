@@ -1049,11 +1049,26 @@ def summary(res):
             + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
 
-def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
+def lec_tool_of(kit, lec_tool=None, tools=HERE):
+    """KW-FIX-44 11-09 (COORD; HBM-CORES-B own_RF4T eco1b met every sign-off number and ended LEC_FAIL only because the
+    kit had no lec.py): --lec-tool, else the kit's own lec.py, else the current tools' lec.py.  -> Path or None"""
+    for p in ([Path(lec_tool)] if lec_tool else []) + [Path(kit) / "lec.py", Path(tools) / "lec.py"]:
+        if p.is_file():
+            return p
+    return None
+
+
+def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call, tools=HERE):
     """Prove the actual ECO capsule; expose the fresh receipt for resign.py --lec."""
     best = res.get("best") or {}
     netlist = Path(best.get("base") or "") / "6_final.v"
-    tool = Path(lec_tool) if lec_tool else Path(kit) / "lec.py"
+    tool = lec_tool_of(kit, lec_tool, tools)
+    if tool is None:
+        res["lec"] = dict(tool=None, netlist=str(netlist), exit=None, verdict="NO_LEC_TOOL",
+                          reason=f"no lec.py: --lec-tool {lec_tool or '-'}, kit {kit}, tools {tools} (a tool gap, not a design verdict)")
+        Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+        print("ECO_LOOP LEC_TOOL_MISSING: " + res["lec"]["reason"], file=sys.stderr, flush=True)
+        return False
     candidate = Path(best["dir"]).resolve()
     out = Path(tempfile.mkdtemp(prefix="lec_postroute_", dir=candidate))
     rc = run([sys.executable, str(tool), str(candidate), "--netlist", str(netlist), "--out", str(out), "--mem", str(mem),
@@ -1111,7 +1126,9 @@ def main():
                    repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override,
                    strict_one_pass=a.strict_one_pass)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
-        res["verdict"] = "LEC_FAIL"
+        # NO_LEC_TOOL: the routed DB is untouched and signed; only the proof is missing -> re-sign uncharged with a tool
+        res["verdict"] = "LEC_TOOL_MISSING" if (res.get("lec") or {}).get("verdict") == "NO_LEC_TOOL" else "LEC_FAIL"
+        Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))
     print("ECO_LOOP record " + str(Path(res["root"]) / "eco_loop.json"))
     return 0 if res["verdict"] == "PASS" else 1

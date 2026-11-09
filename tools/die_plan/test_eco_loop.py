@@ -1253,3 +1253,37 @@ def test_run_loop_errors_before_any_route_when_no_copy_supports_the_scope(tmp_pa
     r = E.run_loop(k, base_rec(k, rec(-5, -2)), tmp_path / "eco", run=fake, tools=tools)
     assert r["verdict"] == "ERROR" and "no iteration used" in r["reason"] and not r["iterations"]
     assert not [c for c, _ in fake.calls if c[0] == "bash"]
+
+
+def test_postroute_lec_falls_back_to_the_tools_lec_py(tmp_path):
+    """KW-FIX-44 11-09 (own_RF4T eco1b): a kit without lec.py runs the current tools' lec.py; a kit copy or --lec-tool wins"""
+    k = kit(tmp_path)
+    assert E.lec_tool_of(k) == E.HERE / "lec.py"
+    (k / "lec.py").write_text("# kit lec\n")
+    assert E.lec_tool_of(k) == k / "lec.py"
+    t = tmp_path / "mine_lec.py"
+    t.write_text("#\n")
+    assert E.lec_tool_of(k, str(t)) == t
+    d = tmp_path / "eco"
+    (d / "base").mkdir(parents=True)
+    res = {"root": str(d), "best": {"dir": str(d), "base": str(d / "base")}}
+    (k / "lec.py").unlink()
+    seen = []
+    def passed(cmd, **kw):
+        seen.append(cmd[1])
+        (Path(cmd[cmd.index("--out") + 1]) / "lec.json").write_text(json.dumps({"verdict": "EQUIVALENT"}))
+        return 0
+    assert E.run_lec(k, res, 8, 2, run=passed) and seen == [str(E.HERE / "lec.py")]
+
+
+def test_postroute_lec_without_any_lec_py_is_a_named_tool_gap(tmp_path):
+    k = kit(tmp_path)
+    empty = tmp_path / "tools"
+    empty.mkdir()
+    d = tmp_path / "eco"
+    d.mkdir()
+    res = {"root": str(d), "best": {"dir": str(d), "base": str(d)}}
+    ran = []
+    assert not E.run_lec(k, res, 8, 2, run=lambda *a, **k: ran.append(a) or 0, tools=empty)
+    assert not ran and res["lec"]["verdict"] == "NO_LEC_TOOL" and "not a design verdict" in res["lec"]["reason"]
+    assert json.loads((d / "eco_loop.json").read_text())["lec"]["verdict"] == "NO_LEC_TOOL"
