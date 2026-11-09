@@ -437,3 +437,4 @@ time	die	signed_types	signed_cores
 2026-11-09 08:44	251	s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=75	forced 08:44 COORD hourly; HEAD tx + t51 vE pending COUNT-ARCHIVE-2 forced run (expect 253)
 2026-11-09 09:05 251 s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=75 auto
 2026-11-09 09:44	251	s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=75	forced 09:44 COORD hourly; counter overlay d44v_gqi_cp1109 landed dd6cd631e68, COUNT-ARCHIVE-2 repoint+forced run pending (expect 253 + qc l7)
+2026-11-09 09:56	253	s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=77	forced 09:35 COUNT-ARCHIVE-2; HBM plan d44v_gqi_cp1109 (main dd6cd631e6): +ot_wbq_root_g1 (rootg1c_vC5), +ot_svgr_own (own_vRF4T)
