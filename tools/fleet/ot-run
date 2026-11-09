@@ -192,7 +192,7 @@ def probe(host, d, spill_ok=False):
     # for the exact working directory; SCRATCH2 may place NEW mkdir output dirs later.
     test = f"test -d {q} || {{ echo NODIR; exit 0; }}; t={q}; "
     cmd = test + ("" if spill_ok else f"for m in {marks}; do test -e $m && {{ echo NODIR; exit 0; }}; done; ") + SCRATCH_FREE_SH \
-        + "/usr/local/bin/ot-heavy-reconcile --free $t"
+        + LOADCAP_SH + "/usr/local/bin/ot-heavy-reconcile --free $t"
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                            text=True, timeout=40)
@@ -204,6 +204,9 @@ def probe(host, d, spill_ok=False):
         if not lines:
             return host, {"error": "SSH probe returned no admission JSON"}
         row = json.loads(lines[-1])
+        lc = loadcap_of(r.stdout)
+        if lc is not None and isinstance(row, dict):
+            row["load_cap_factor"] = lc
         return host, scratch_disk(row, d, r.stdout, host)
     except Exception as e:
         return host, {"error": str(e)[:80]}
@@ -393,6 +396,33 @@ LOAD_SPILL_NEG = os.path.expanduser("~/.local/state/ot-run/loadspill_no")
 # queue.  Nothing new is held: ot-heavy already holds these jobs there, placement only stops sending them to that wait.
 # (2) spill_run waited on the spill host with no bound; the spilled waiter is now re-placed after REQUEUE_S like any other.
 LOAD_CAP_FACTOR = float(os.environ.get("OT_RUN_LOAD_CAP_FACTOR", "1.5"))   # = ot-heavy LOAD_CAP_FACTOR (default 1.5; 0 = off)
+# REHOST-1 11-09 (COORD 09:2x: epyc7 44 waiters / 1.9 TB at load 186/96 while intel1/epyc4 admitted 600+ GB): epyc7's
+# ot-heavy holds non-crit jobs at LOAD_CAP_FACTOR=1.1 (/etc/ot-heavy.conf, KW-FIX-42 02:3x), but placement assumed 1.5 for
+# every host, so between load 105 and 144 epyc7 "admitted now": SPILL never ran and REBALANCE re-placed onto epyc7 again.
+# The probe now reads each host's own factor (OT_LOADCAP line); OT_RUN_LOAD_CAP_FACTOR stays the fallback for old probes.
+# Placement only: nothing new is held (ot-heavy already holds these jobs there).  Revert: frontend exec back to the
+# un-patched backend (see the REHOST-1 overlay note in the frontend).
+LOADCAP_SH = ("echo OT_LOADCAP $(sed -n 's/^[[:space:]]*LOAD_CAP_FACTOR=\\([0-9.]*\\).*/\\1/p' /etc/ot-heavy.conf 2>/dev/null"
+              " | tail -1); ")
+
+
+def loadcap_of(out):
+    """-> the host's ot-heavy LOAD_CAP_FACTOR from the probe's OT_LOADCAP line, or None (no line / no value)"""
+    for ln in (out or "").splitlines():
+        if ln.startswith("OT_LOADCAP"):
+            v = ln.split()[1:2]
+            try:
+                return float(v[0]) if v else None
+            except ValueError:
+                return None
+    return None
+
+
+def host_load_cap(r):
+    f = r.get("load_cap_factor") if isinstance(r, dict) else None
+    return LOAD_CAP_FACTOR if f is None else float(f)
+
+
 SHORT_MAX_GB, SHORT_MAX_THREADS = 10, 2                                     # = ot-heavy short pool (bypasses the cap)
 SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10: die lanes spill too (incremental copy)
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
@@ -672,10 +702,11 @@ def reserved(h, r):
 def load_capped(r, mem, threads):
     """QUEUE-BAL-1: ot-heavy on this host would hold this job on its load cap now (LOADCAP_1101): load1 >=
     LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool"""
-    if LOAD_CAP_FACTOR <= 0 or crit_job() or (mem <= SHORT_MAX_GB and threads <= SHORT_MAX_THREADS):
+    f = host_load_cap(r)
+    if f <= 0 or crit_job() or (mem <= SHORT_MAX_GB and threads <= SHORT_MAX_THREADS):
         return False
     n = (r.get("ncpu") or 0) + (r.get("reserve_threads") or 0)
-    return n > 0 and int(load1(r)) >= int(LOAD_CAP_FACTOR * n)
+    return n > 0 and int(load1(r)) >= int(f * n)
 
 
 DIRECT_HEADROOM_GB = 32   # = ot-heavy DIRECT_1107: real MemAvailable must stay this far above the job's --mem
@@ -755,6 +786,9 @@ def choose_selftest():
         ("localhost when no server admits the request now", {"localhost": row(700, 10, 256), "epyc2": row(20, 10)}, 300, 16, "localhost"),
         ("localhost 16 GB reserve: 40 GB free admits no 32 GB job", {"localhost": row(40, 10, 256), "epyc2": row(60, 100)}, 32, 16, "epyc2"),
         ("localhost 8-thread reserve: 245/256 load counts as 245/248", {"localhost": row(700, 245, 256), "epyc2": row(300, 100)}, 8, 16, "epyc2"),
+        # REHOST-1 11-09: per-host load cap (epyc7 ot-heavy 1.1): 130/96 is capped there, not on a 1.5 host
+        ("host at its OWN load cap (1.1 x 96) does not admit now: the other host", {"epyc7": dict(row(900, 130, 96), load_cap_factor=1.1), "epyc4": row(300, 60, 256)}, 48, 16, "epyc4"),
+        ("same load on a 1.5-cap host still admits", {"epyc7": dict(row(900, 130, 96), load_cap_factor=1.5), "epyc4": row(30, 60, 256)}, 48, 16, "epyc7"),
     ]
     cases = [c if len(c) == 6 else c + (False,) for c in cases]
     bad = [f"{n}: got {choose(r, m, t, dj)[0]}, want {w}" for n, r, m, t, w, dj in cases if choose(r, m, t, dj)[0] != w]
@@ -837,7 +871,8 @@ def status(hosts):
             continue
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
-                   + f" run {r['running']}" + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
+                   + f" run {r['running']}" + (" LOADCAP" if load_capped(r, 32, 16) else "")
+                   + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
                    + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else ""))
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
             and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r)}
