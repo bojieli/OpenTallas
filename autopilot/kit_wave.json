@@ -257,7 +257,8 @@
         "kv3_pc_v1__cl23f6a148@17",
         "kv3_pc_v1__cl4ea58a5c@13",
         "kv3_pc_v1__cl7f648944@17",
-        "kv3_pc_v3@7"
+        "kv3_pc_v3@7",
+        "kv3_sys_SD_v1@13"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -530,7 +531,8 @@
         "kv3_hroot@10": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
         "kv3_io_ft_v1@17": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
         "kv3_io_cor@6": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
-        "kv3_io_cor_v1@7": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change"
+        "kv3_io_cor_v1@7": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
+        "kv3_sys_SD_v1@13": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 8 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]"
       },
       "only_items": [
         "kv3_astk",
@@ -824,7 +826,8 @@
           "OT_HOLD_STOP_PS": "-200"
         },
         "kv3_sys_SD_v1": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_GRT_ALLOW_CONGESTION": "1"
         },
         "kv3_sys_c": {
           "OT_HOLD_STOP_PS": "-200"
@@ -1609,7 +1612,16 @@
       "queue_src_exact": {
         "claude/kv-types-4-ringdens-1108@5178ea7aa2 + codex/kv-phy-deadclock-0222@e210d04c83": "claude/kw-fix-36-kv-e2rd-exact-1108@040a4567fb5f9d8087ae1bf732d4a11717b595c4"
       },
-      "note_kw36_qsrc": "KW-FIX-36 (e): composed queue_src -> exact commit 5178ea7+e210d04 (merge tree; its 12 changed paths equal src_e2rd by blob hash on epyc6)."
+      "note_kw36_qsrc": "KW-FIX-36 (e): composed queue_src -> exact commit 5178ea7+e210d04 (merge tree; its 12 changed paths equal src_e2rd by blob hash on epyc6).",
+      "retry_prev_kw37b_added": [
+        "kv3_sys_SD_v1@13"
+      ],
+      "item_env_prev_kw37b": {
+        "kv3_sys_SD_v1": {
+          "OT_HOLD_STOP_PS": "-200"
+        }
+      },
+      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b"
     },
     "s81": {
       "enabled": true,
@@ -6961,7 +6973,12 @@
         "sle_hc2__clcc5e3e61@10",
         "slw_hc0__cl1bc59e1c@10",
         "slw_hc1__cl68f9248e__cle683a076@13",
-        "slw_hc2__cla3497502__cl16607c7a@14"
+        "slw_hc2__cla3497502__cl16607c7a@14",
+        "coll_s@9",
+        "slw_st_a_v1__clfc5867a6@9",
+        "sle_fw_v1__clf58b4dfb@6",
+        "slw_fw_v1__cl51d45468@8",
+        "slw_fw_v1__clf51c11d8__cl592e3d37@9"
       ],
       "queue_src": "claude/kw-fix-35p-wave-ctlm-1108@7e2f6c9af85",
       "type_args": {
@@ -7527,7 +7544,12 @@
         "slw_su_l0__cl1a1c1f8f@13": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
         "slw_su_l0__cl1e5219ea@10": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
         "slw_su_l0__cl76fb247e@4": "KW-FIX-35-P 2026-11-08 08:05 PST: SRC-POLLUTION (COORD 07:2x): attempt ran kit gen/preflight while shared kw33/src_d95ec held newer main tools (CTAP bind symlink write, epyc4 05:38-07:0x / epyc2 06:46-07:0x), src_sha claim false, COUNT-REVOKED DO_NOT_COUNT; live attempt stopped by exact unit; FRESH kit on current QC config (src_c303p, plan v4w, bind_v4w), stage_resume off for this batch",
-        "tt_ctlm@9": "KW-FIX-35-P 2026-11-08 10:33 PST: REDESIGN: changed RTL. QC-TYPES-10/CTLM 09:26 READY tt_ctlm DEPTH (G2 TT -278.65, FIFO SRAM rd_out -> FIREDQ 25 levels): u_gi.u_cal CALREG[0] FQREG ring + registered nx_q, claude/qc-types-10-ctlm-1108@220fd3ce9a0 (COORD 09:4x train ZE): fresh kit on plan_qc53v4w_ctlmfq + bind_ctlmfq"
+        "tt_ctlm@9": "KW-FIX-35-P 2026-11-08 10:33 PST: REDESIGN: changed RTL. QC-TYPES-10/CTLM 09:26 READY tt_ctlm DEPTH (G2 TT -278.65, FIFO SRAM rd_out -> FIREDQ 25 levels): u_gi.u_cal CALREG[0] FQREG ring + registered nx_q, claude/qc-types-10-ctlm-1108@220fd3ce9a0 (COORD 09:4x train ZE): fresh kit on plan_qc53v4w_ctlmfq + bind_ctlmfq",
+        "coll_s@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 2 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "slw_st_a_v1__clfc5867a6@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 1 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "sle_fw_v1__clf58b4dfb@6": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 6 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "slw_fw_v1__cl51d45468@8": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 12 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
+        "slw_fw_v1__clf51c11d8__cl592e3d37@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 43 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]"
       },
       "gen_hosts": [
         "intel1",
@@ -7739,6 +7761,21 @@
         },
         "glue": {
           "OT_FSM_NONE_WIRES": "st"
+        },
+        "coll_s": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "slw_st_a_v1__clfc5867a6": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "sle_fw_v1__clf58b4dfb": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "slw_fw_v1__cl51d45468": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "slw_fw_v1__clf51c11d8__cl592e3d37": {
+          "OT_GRT_ALLOW_CONGESTION": "1"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -8841,7 +8878,22 @@
         "slw_hc0__cl1bc59e1c": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
         "slw_hc1__cl68f9248e__cle683a076": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike.",
         "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-35-E6 2026-11-08 09:45 PST: PLACE of this attempt resubmitted by hand (intel2 unit kwp-*-e6r, same kit + argv, spills to epyc6 root) after my 09:35 cancel; hold = no duplicate wave relaunch while it runs. Lifted with a retry item@attempt once the place receipt is back (resume from place). Not a design strike."
-      }
+      },
+      "retry_prev_kw37b_added": [
+        "coll_s@9",
+        "slw_st_a_v1__clfc5867a6@9",
+        "sle_fw_v1__clf58b4dfb@6",
+        "slw_fw_v1__cl51d45468@8",
+        "slw_fw_v1__clf51c11d8__cl592e3d37@9"
+      ],
+      "item_env_prev_kw37b": {
+        "coll_s": null,
+        "slw_st_a_v1__clfc5867a6": null,
+        "sle_fw_v1__clf58b4dfb": null,
+        "slw_fw_v1__cl51d45468": null,
+        "slw_fw_v1__clf51c11d8__cl592e3d37": null
+      },
+      "note_kw37b": "KW-FIX-37 batch B: GRT near miss <=100 overflow, same class form as QC-TYPES-9 (B); revert via retry_prev_kw37b_added, item_env_prev_kw37b"
     },
     "hbm": {
       "enabled": true,
