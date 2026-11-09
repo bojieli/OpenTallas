@@ -31204,3 +31204,17 @@ FAILED [AUTOPILOT e1aed29fd563] 2026-11-09 09:22:23 PST AUTOPILOT -> KIT-WAVE-12
     - routed 6_final.odb sha256 6bc81b2a7769...
     - build_commit 42e9cd1810: the kit had no build record, so this is the gj tools the ECO ran on.
   DO_NOT_COUNT cleared (moved to DO_NOT_COUNT.cleared-*). Its condition was "until DIE-HBM-92 plan event lands"; P-Q3VM-2 e6da5ab8039 is on origin/main.
+- 2026-11-09 09:43 PST STATE [DIE-HBM-97 -> COORD, KW-FIX-42] GRT-0116 forms for q_su30pv1 and q_spu1. These are probes only, 10 congestion iterations on each kit's 4_cts.odb, DO_NOT_COUNT [CHECKED epyc5 die-hbm-97/su30, epyc6 die-hbm-97/spu1].
+  q_su30pv1 total overflow (the flow run had 18421 at 30 iterations):
+  - share 0.5/0.5 aligned: 12263
+  - M4 0.25 / M6 0.5 aligned: 7584
+  - M4 0.25 / M6 0.5 staggered: 5038
+  - M4 0.5 / M6 0.5 staggered: 5137
+  Reading: staggering the M4 and M6 die slices, so no row loses both H layers, cuts M4 overflow about 4x. With staggering, share 0.5 does as well as 0.25, so the cause is phase, not share.
+  The remaining M5 overflow of about 3900 sits only over the macros. It comes from the lane stations of L8308mx1 (regs at y 211/532/980/1301), which sit on the macro top and bottom edges (OBS M1-M5), and from the L5047/L5004/L5046 bout/bin lanes.
+  q_spu1 total overflow: base 79301, M5 share 0.5 gives 37748. Every violation is in one zone, x 560-880, y 730-830. That zone holds the FT station blocks on one station row, y≈777. The worst is L40x1_o_3: 1065 flops in 34x34 um, which is 31 bits/um against about 19 M3 tracks/um. Also in that row: L1278x2, L49x1, L1220x2, L722/723x3.
+  FORMS now in progress, sub-lane SU30, no retry:
+  (1) CLASS FIX, code: die_trial.band_share_obs puts the die slices of different H layers in disjoint row phases, for every band type, with die capacity unchanged. It needs one die GRT re-check after it lands.
+  (2) q_spu1 plan event: M5 share 0.5 (M7 kept at 1.0), and the y≈777 stations re-sited so each block's crossing face is at least bits / track density, with the co-located lanes staggered in y.
+  (3) q_su30(+pv1) plan event: M4/M6 share 0.5 staggered, and the L8308mx1 and L50xx stations moved off the macro edges.
+  The gate for (2) and (3) is plan check new 0, then a fresh-kit GRT probe. Relaunch for both is a fresh gen once the events are applied. plan_p8_su30 (bb90fb01) is superseded by this.
