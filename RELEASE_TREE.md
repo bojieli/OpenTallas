@@ -1,20 +1,20 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 09:57 PST COUNT 253 (COUNT-ARCHIVE-2 forced, cache 09:35; HBM counter overlay d44v_gqi_cp1109): S81 60/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 77/107 + 0/81t. Main dd6cd631e68. Final plans building: QC (04:41), HBM d44v_final4, S81 65648816 (fo-s81, 06:58), KV bind9 (kv3_pv released 07:3x); HEAD l48hp1 strict bind running. ~14 READY-COUNT pending ingest into the plan count.
+> 2026-11-09 10:44 PST COUNT 253 (COORD forced 10:44; HBM counter overlay d44v_gqi_cp1109, q3vm repoint + recount by COUNT-ARCHIVE-2 pending, expect 255): S81 60/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 77/107 + 0/81t. Main 7d28eaeeefe (CJ gy-hbm, CN fy-s81+gz-hbm landed; CM2 hoplatch+HBM default in full suite). HEAD l48hp1 8 rows relaunching on epyc7 gen + fm-head; S81 t51-split rebind + HBM corepins/bind_F5c adoption requested; epyc5 cut 11:02 (no counted data, kits copied to epyc7).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-09 09:30 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-09 10:30 PST)
 - [ ] FAIL.S81.CORES 60/62 signed · open: no kit-wave row 1 (dsdv_gunit_l1f_bf) · running, no result 1 (dsdv_bksel_q)
-- [ ] FAIL.S81.TYPES 34/205 signed · kit rows: no host 43 (col_h10_r0_p1__t1__cl574cc59d, +42) · running 36 · cancelled (superseded) 22 (s81sl_kv_leaf__t1, +21) · other flow error 11 (gunit__t1, +10) · timing after route 9 (slice_station__t24__cleece78ec, +8) · infra (relaunch queued) 8 (col_h10_r0_p4__t1, +7) · reg_fanout preflight 5 (svc_hi_dsdv_svc_pvso_entry__t1, +4) · LEC 2 (serdes__t15__cla2127225, +1) · kit_rtl 1 (svc_hi_dsdv_svc_rs__t6) · congestion 1 (serdes__t4) · synth stopped (OOM/kill) 1 (s81sl_kv_leaf__t2)
+- [ ] FAIL.S81.TYPES 34/205 signed · kit rows: no host 44 (col_h10_r0_p1__t1__cl574cc59d, +43) · running 37 · cancelled (superseded) 22 (s81sl_kv_leaf__t1, +21) · other flow error 11 (gunit__t1, +10) · timing after route 10 (iqf__t1, +9) · infra (relaunch queued) 8 (col_h10_r0_p4__t1, +7) · reg_fanout preflight 5 (svc_hi_dsdv_svc_pvso_entry__t1, +4) · LEC 2 (serdes__t15__cla2127225, +1) · kit_rtl 1 (svc_hi_dsdv_svc_rs__t6) · congestion 1 (serdes__t4) · synth stopped (OOM/kill) 1 (s81sl_kv_leaf__t2)
 - [ ] FAIL.HEAD.CORES 4/4 signed · open: none
-- [ ] FAIL.HEAD.TYPES 19/25 signed · kit rows: cancelled (superseded) 24 (hd_ctl, +23)
+- [ ] FAIL.HEAD.TYPES 19/25 signed · kit rows: no host 8 (hd_ctl, +7) · cancelled (superseded) 7 (hd_ctl_e, +6)
 - [ ] FAIL.QC.CORES 25/26 signed · open: running, no result 1 (qfd_tile_nk_a0c)
-- [ ] FAIL.QC.TYPES 1/119 signed · kit rows: running 61 · no host 19 (cbf_q00_s2, +18) · other flow error 8 (cbn_q00__cldbcda913, +7) · cancelled (superseded) 7 (cbf_q01, +6) · timing after route 4 (coll_ft__cl78c7b300, +3) · kit_rtl 4 (sle_st_b_v1, +3) · infra (relaunch queued) 2 (sle_sc_v2, +1) · congestion 2 (slw_fw_v2__cl8f84514c, +1) · CLAND ring band 2 (cbn_q01__cld9ff4c40, +1) · SETUP-AT-GRT 1 (coll_ucie) · LEC 1 (glue) · waits on child core 1
+- [ ] FAIL.QC.TYPES 1/119 signed · kit rows: running 60 · no host 19 (cbf_q00_s2, +18) · other flow error 8 (cbn_q00__cldbcda913, +7) · cancelled (superseded) 7 (cbf_q01, +6) · timing after route 4 (coll_ft__cl78c7b300, +3) · congestion 4 (slw_fw_v1__clf51c11d8__clc7ddab13, +3) · infra (relaunch queued) 2 (sle_sc_v2, +1) · SETUP-AT-GRT 1 (coll_ucie) · LEC 1 (glue) · CLAND ring band 1 (cbn_q01__cldd6ea846) · waits on child core 1
 - [ ] FAIL.KV.CORES 32/32 signed · open: none
-- [ ] FAIL.KV.TYPES 1/56 signed · kit rows: running 17 · cancelled (superseded) 15 (kv3_hgi_v6, +14) · no host 7 (kv3_hg, +6) · other flow error 3 (kv3_io_cor, +2) · infra (relaunch queued) 3 (kv3_hg_v1, +2) · kit_rtl 1 (kv3_sys_SD)
-- [ ] FAIL.HBM.CORES 75/107 signed · open: no kit-wave row 19 (hfd_coll_q3_body_ctl, hgi_sfu_opsa_group0, hgi_sfu_opsa_group1, +12) · running, no result 12 (hfd_coll_q2n2_vm_core, hfd_coll_q3_vm_core, hfd_hgi_vms_glue_nw_t, +9) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
-- [ ] FAIL.HBM.TYPES 0/81 signed · kit rows: running 34 · waits on child core 15 · other flow error 11 (NE_io, +10) · cancelled (superseded) 9 (q_b002, +8) · over 400k cells 3 (q_b001__physical_v1, +2) · timing after route 2 (vsN1, +1) · congestion 2 (q_spu1, +1) · detail_place 1 (q_b101)
+- [ ] FAIL.KV.TYPES 1/56 signed · kit rows: running 18 · cancelled (superseded) 15 (kv3_hgi_v6, +14) · no host 6 (kv3_hg, +5) · other flow error 3 (kv3_io_cor, +2) · infra (relaunch queued) 3 (kv3_hg_v1, +2) · kit_rtl 1 (kv3_sys_SD)
+- [ ] FAIL.HBM.CORES 77/107 signed · open: no kit-wave row 17 (hfd_coll_q3_body_ctl, hgi_sfu_opsa_group0, hgi_sfu_opsa_group1, +10) · running, no result 12 (hfd_coll_q2n2_vm_core, hfd_coll_q3_vm_core, hfd_hgi_vms_glue_nw_t, +9) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
+- [ ] FAIL.HBM.TYPES 0/81 signed · kit rows: running 32 · waits on child core 15 · other flow error 11 (NE_io, +10) · cancelled (superseded) 9 (q_b002, +8) · over 400k cells 3 (q_b001__physical_v1, +2) · detail_place 3 (q_b011, +2) · timing after route 2 (vsN1, +1) · congestion 2 (q_spu1, +1)
 <!-- BREAKDOWN END -->
 
 ## EDIT · rules
