@@ -2816,7 +2816,8 @@
         "ot_s81sl_leaf__t59@2",
         "ot_s81sl_leaf__t40__clf8bbdae1@10",
         "ot_s81sl_leaf__t36@2",
-        "ot_s81sl_leaf__t65@4"
+        "ot_s81sl_leaf__t65@4",
+        "ot_s81sl_leaf__t47@1"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3807,7 +3808,8 @@
         "ot_s81sl_leaf__t59@2": "REDESIGN: macro moves re-solved with landing bands as keep-outs (vn_b no longer covers leafdn_i0 82%; LN12/LN9 clear of ft1_i/ft2_i); vn_b +5.76 x, +5.76 y. Model 1.07. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
         "ot_s81sl_leaf__t40__clf8bbdae1@10": "REDESIGN: same band-aware form as t15 (LN12 no longer covers ft1_i 75%). Model 1.15. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
         "ot_s81sl_leaf__t36@2": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
-        "ot_s81sl_leaf__t65@4": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11)."
+        "ot_s81sl_leaf__t65@4": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
+        "ot_s81sl_leaf__t47@1": "REDESIGN: macros moved, not a retry. Escape-open, band-aware form of the leaf GRT-0116 batch (eo_band.py + mk3b.py, S81-TYPES-12): 16 macros; model worst 3.58 -> 1.81 (u_ve.u_m|u_vsw, above the 1.15 pass reference, so GRT decides). Attempt 1 ran on main@714dd1ea120 for 3 days, GRT-0116 339,319 overflow (M6 223,042), never in the 11-08 batches because it was still running."
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4360,7 +4362,8 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t47": {
-          "OT_NATIVE_RESET_SCOPE": "selected"
+          "OT_NATIVE_RESET_SCOPE": "selected",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:622.08:259.2:R180,u_lf.u_vn.u_b:630.72:77.76:R180,u_lf.u_vp.g_ln[10].u_l:1296:423.36:MX,u_lf.u_vp.g_ln[11].u_l:1149.12:25.92:MX,u_lf.u_vp.g_ln[13].u_l:1028.16:190.08:MX,u_lf.u_vp.g_ln[14].u_l:1296:293.76:MX,u_lf.u_vp.g_ln[15].u_l:1140.48:449.28:MX,u_lf.u_vp.g_ln[1].u_l:993.6:734.4:MX,u_lf.u_vp.g_ln[2].u_l:1166.4:302.4:MX,u_lf.u_vp.g_ln[3].u_l:1036.8:319.68:MX,u_lf.u_vp.g_ln[5].u_l:1278.72:34.56:MX,u_lf.u_vp.g_ln[6].u_l:993.6:596.16:MX,u_lf.u_vp.g_ln[7].u_l:1019.52:43.2:MX,u_lf.u_vp.g_ln[8].u_l:1002.24:457.92:MX,u_lf.u_vp.u_b0:794.88:492.48:MX,u_lf.u_vq:449.28:95.04:R180"
         },
         "ot_s81sl_leaf__t52": {
           "OT_NATIVE_RESET_SCOPE": "selected"
@@ -8335,6 +8338,27 @@
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/b65e2e9b19fb/qfd_dv_s5_sc2_leaf_dn0",
             "job": "COUNTED qfd_dv_s5_sc2_leaf_dn0 epyc4:/srv/opentallas-scratch3/claude/dq92/resign_ed/qfd_dv_s5_sc2_leaf_dn0/signoff/signoff.json (KW-FIX-32 export_view)"
           }
+        ],
+        "qfd_dv_s8x_prog": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/qct13/views/qfd_dv_s8x_prog",
+            "job": "COUNTED qfd_dv_s8x_prog dq92 resign_ed QC-TYPES-13 export_view"
+          }
+        ],
+        "qfd_dv_s8x_btab": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/qct13/views/qfd_dv_s8x_btab",
+            "job": "COUNTED qfd_dv_s8x_btab dq92 resign_ed QC-TYPES-13 export_view"
+          }
+        ],
+        "qfd_dv_s5_su8_rst3": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_views/qfd_dv_s5_su8_rst3",
+            "job": "qfd_dv_s5_su8_rst3 dq93 export_view"
+          }
         ]
       },
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
@@ -9141,6 +9165,11 @@
         "sl?_hc[0-3]*",
         "sl?_st_a*",
         "sl?_st_b*"
+      ],
+      "prov_view_sources_prev_kw40_added": [
+        "qfd_dv_s8x_prog",
+        "qfd_dv_s8x_btab",
+        "qfd_dv_s5_su8_rst3"
       ]
     },
     "hbm": {
@@ -9324,8 +9353,8 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final2/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/die-hbm-93/src_mclk",
-      "src_sha": "adc4b6a6fa44f02f0a5cb2a4699bf9ef4ead8949",
+      "src": "/srv/opentallas-scratch2/claude/kw40/src_mclk_h94",
+      "src_sha": "a714b9cf4646ed1e0338099005e97a4bd78827f2",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
@@ -10010,12 +10039,21 @@
         "q_sm0@2",
         "q_sm3@2",
         "q_spt0@1",
-        "NW_io@4"
+        "NW_io@4",
+        "NE_io@8",
+        "vsN0@7",
+        "q_spb0@8",
+        "q_spb0__physical_v1@8",
+        "q_b011@1",
+        "q_b011__physical_v1@1",
+        "q_b012__physical_v1@1",
+        "q_b013__physical_v1@4",
+        "q_spb1@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
       "pilot_mode": "queue",
-      "queue_src": "claude/die-hbm-93-mclk-1108@adc4b6a6fa44",
+      "queue_src": "claude/kw-fix-40-hbm-src-1108@a714b9cf4646",
       "hold_items": {
         "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
         "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -10279,7 +10317,17 @@
         "q_b102@3": "REDESIGN: KW-FIX-38 2026-11-08 20:11 PST: merged_core_clocks tool fix adc4b6a6fa44 (Liberty clock identity, no USE keyword needed): gen check on signed LEFs, no plan or view change; no P&R ran (DIE-HBM-93 19:58 BATCH B)",
         "q_b102__physical_v1@3": "REDESIGN: KW-FIX-38 2026-11-08 20:11 PST: merged_core_clocks tool fix adc4b6a6fa44 (Liberty clock identity, no USE keyword needed): gen check on signed LEFs, no plan or view change; no P&R ran (DIE-HBM-93 19:58 BATCH B)",
         "q_b103@3": "REDESIGN: KW-FIX-38 2026-11-08 20:11 PST: merged_core_clocks tool fix adc4b6a6fa44 (Liberty clock identity, no USE keyword needed): gen check on signed LEFs, no plan or view change; no P&R ran (DIE-HBM-93 19:58 BATCH B)",
-        "q_b103__physical_v1@3": "REDESIGN: KW-FIX-38 2026-11-08 20:11 PST: merged_core_clocks tool fix adc4b6a6fa44 (Liberty clock identity, no USE keyword needed): gen check on signed LEFs, no plan or view change; no P&R ran (DIE-HBM-93 19:58 BATCH B)"
+        "q_b103__physical_v1@3": "REDESIGN: KW-FIX-38 2026-11-08 20:11 PST: merged_core_clocks tool fix adc4b6a6fa44 (Liberty clock identity, no USE keyword needed): gen check on signed LEFs, no plan or view change; no P&R ran (DIE-HBM-93 19:58 BATCH B)",
+        "NE_io@8": "kit-rtl include search (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
+        "vsN0@7": "kit-rtl include search (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
+        "q_spb0@8": "kit-rtl include search (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
+        "q_spb0__physical_v1@8": "kit-rtl include search (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
+        "q_b011@1": "REDESIGN: M7 PDN strap windows centred on the real pdngen strap pair, PDN-0179 (DIE-HBM-94 ee38ee88f048, wave src a714b9cf46)",
+        "q_b011__physical_v1@1": "REDESIGN: M7 PDN strap windows centred on the real pdngen strap pair, PDN-0179 (DIE-HBM-94 ee38ee88f048, wave src a714b9cf46)",
+        "q_b012__physical_v1@1": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall (DIE-HBM-94 22:51)",
+        "q_b013__physical_v1@4": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall (DIE-HBM-94 22:51)",
+        "q_spb1@2": "REDESIGN: RE-FORM R6, OT_FT_POLARITY_LOCAL 1 + OT_MAXWIRE_UM 80, repeat long hops and keep FT inverters at the launch station (DIE-HBM-94 22:51), fresh kit",
+        "q_spt0@1": "kit_istations compares the resolved kit dir, moved kit (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -11992,7 +12040,9 @@
         "--cap-margin",
         "35",
         "--native-cell-cap",
-        "517000"
+        "517000",
+        "--dpl-diamond",
+        "q_b012__physical_v1,q_b013__physical_v1"
       ],
       "gen_env": {
         "OT_HOLD_REPAIR_SCOPE": "reg2reg"
@@ -12076,6 +12126,10 @@
           "OT_MAXWIRE_UM": "80"
         },
         "q_spt2": {
+          "OT_FT_POLARITY_LOCAL": "1",
+          "OT_MAXWIRE_UM": "80"
+        },
+        "q_spb1": {
           "OT_FT_POLARITY_LOCAL": "1",
           "OT_MAXWIRE_UM": "80"
         }
@@ -12257,7 +12311,31 @@
         "q_sm3@2"
       ],
       "note_kw39sl": "KW-FIX-39: q_b003, q_sm0, q_sm3 a2 FAIL mkdir 'Already exists' was a self-link from work_alt (attempt 1's W = item dir was itself the scratch2 link; fix c78f5970ba5 on the overlay); retry only, no design change; the 3 self-links removed by hand",
-      "note_kw39mv": "KW-FIX-39: q_spt0 a1 FAIL kit_istations 'not a kit-local copy' was caused by my epyc4 scratch3->scratch2 move (kit_rtl.json held scratch3 paths; check compares resolved kit dir). kit_rtl.json rewritten for moved rows; retry only, no design change"
+      "note_kw39mv": "KW-FIX-39: q_spt0 a1 FAIL kit_istations 'not a kit-local copy' was caused by my epyc4 scratch3->scratch2 move (kit_rtl.json held scratch3 paths; check compares resolved kit dir). kit_rtl.json rewritten for moved rows; retry only, no design change",
+      "src_prev_kw40": "/srv/opentallas-scratch2/claude/die-hbm-93/src_mclk",
+      "src_sha_prev_kw40": "adc4b6a6fa44f02f0a5cb2a4699bf9ef4ead8949",
+      "queue_src_prev_kw40": "claude/die-hbm-93-mclk-1108@adc4b6a6fa44",
+      "gen_args_prev_kw40": [
+        "--slew-margin",
+        "35",
+        "--cap-margin",
+        "35",
+        "--native-cell-cap",
+        "517000"
+      ],
+      "item_env_prev_kw40_q_spb1": null,
+      "retry_prev_kw40_added": [
+        "NE_io@8",
+        "vsN0@7",
+        "q_spb0@8",
+        "q_spb0__physical_v1@8",
+        "q_b011@1",
+        "q_b011__physical_v1@1",
+        "q_b012__physical_v1@1",
+        "q_b013__physical_v1@4",
+        "q_spb1@2"
+      ],
+      "note_src_kw40": "KW-FIX-40 2026-11-08 22:58 PST (DIE-HBM-94 22:51 READY): src = mclk adc4b6a6fa44 + bind.py/kit_istations.py 7428ba78a88b + partition_ft_reserve.py ee38ee88f048, composition branch claude/kw-fix-40-hbm-src-1108 a714b9cf46, md5 equal on epyc4/intel1/epyc5; revert *_prev_kw40"
     }
   },
   "place_prefer": [
