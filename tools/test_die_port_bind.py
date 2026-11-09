@@ -518,3 +518,91 @@ def test_ansi_header_ports_are_die_nets(tmp_path):
     q.write_text("module old (clk, y);\n    input clk;\n    output [1:0] y;\nendmodule\n")
     n2, ti2, to2, _ = D.parse_die(str(q), "old")
     assert n2 == {"clk": (1, 0), "y": (2, 0)} and ti2 == {"clk"} and to2 == {"y"}
+
+
+# DIE-HBM-97 11-09 (HEAD-92 strict bind of HBM d44v_restore_1109, bind_F5c: 6 instance_params_not_in_rtl + 2 unresolved).
+# (a) KITPARAM parity: the as-built prefer list names an OLDER copy of a child (r18h5_bundle replicated_bank without WCOPY)
+# while the instantiator sets that parameter; bind.kit_closure already builds from the definition that declares it, the
+# strict bind failed on the stale preferred copy.  (b) --alt-file: a hard core's newer leaves (LDCS, enc_la) that the
+# as-built base lacks, indexed as alternates only.
+KP_OLD = "module rbank #(parameter integer READERS = 6) (input wire ck, output wire q);\n  assign q = ck;\nendmodule\n"
+KP_NEW = ("module rbank #(parameter integer READERS = 6, parameter integer WCOPY = 0) (input wire ck, output wire q);\n"
+          "  assign q = ck;\nendmodule\n")
+KP_NEW2 = ("module rbank #(parameter integer READERS = 6, parameter integer WCOPY = 0) (input wire ck, output wire q);\n"
+           "  assign q = ~ck;\nendmodule\n")
+KP_WRAP = ("module pbank (input wire ck, output wire q);\n  rbank #(.READERS(6), .WCOPY(1)) u_data (.ck(ck), .q(q));\n"
+           "endmodule\n")
+KP_DIE = "module die (ck, q);\n  input ck;\n  output q;\n  pbank u_p (.ck(ck), .q(q));\nendmodule\n"
+
+
+def run_kp(files, prefer=(), alt=(), wrap=KP_WRAP):
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'rtl').mkdir()
+        (d / 'w.sv').write_text(wrap)
+        for name, text in files.items():
+            (d / name).parent.mkdir(parents=True, exist_ok=True)
+            (d / name).write_text(text)
+        (d / 'd.v').write_text(KP_DIE)
+        out = d / 'o.json'
+        cmd = [sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '--rtl-root', str(d / 'rtl'),
+               '--rtl-file', str(d / 'w.sv'), '--no-macro-dirs', '--out', str(out)]
+        for f in prefer:
+            cmd += ['--prefer', str(d / f)]
+        for f in alt:
+            cmd += ['--alt-file', str(d / f)]
+        p = subprocess.run(cmd, capture_output=True, text=True)
+        return p.returncode, json.loads(out.read_text()), p.stdout
+
+
+class KitParam(unittest.TestCase):
+    def test_stale_preferred_copy_resolves_to_declaring_definition(self):
+        rc, rec, so = run_kp({'rtl/bundle/data_store.sv': KP_OLD, 'rtl/ds/data_store.sv': KP_NEW},
+                             prefer=['rtl/bundle/data_store.sv'])
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(rec['summary']['instance_params_not_in_rtl'], 0)
+        kp = rec['child_closure']['kitparam_resolved']
+        self.assertEqual([(r['instance'], r['child'], r['params']) for r in kp], [('pbank/u_data', 'rbank', ['WCOPY'])])
+        self.assertTrue(kp[0]['used'].endswith('rtl/ds/data_store.sv') and kp[0]['chosen'].endswith('bundle/data_store.sv'))
+
+    def test_no_declaring_definition_still_fails(self):
+        rc, rec, so = run_kp({'rtl/bundle/data_store.sv': KP_OLD}, prefer=['rtl/bundle/data_store.sv'])
+        self.assertEqual(rc, 1, so)
+        self.assertEqual(rec['child_closure']['instance_params_not_in_rtl'], ["pbank/u_data -> rbank: not declared ['WCOPY']"])
+
+    def test_differing_declaring_definitions_fail_unless_one_is_preferred(self):
+        files = {'rtl/bundle/data_store.sv': KP_OLD, 'rtl/a/data_store.sv': KP_NEW, 'rtl/b/data_store.sv': KP_NEW2}
+        rc, rec, so = run_kp(files, prefer=['rtl/bundle/data_store.sv'])
+        self.assertEqual(rc, 1, so)
+        self.assertIn('none preferred', rec['child_closure']['instance_params_not_in_rtl'][0])
+        # the canonical copy named at the LOWEST prefer rank: the default pick stays the bundle file, the KITPARAM uses b
+        rc, rec, so = run_kp(files, prefer=['rtl/b/data_store.sv', 'rtl/bundle/data_store.sv'])
+        self.assertEqual(rc, 0, so)
+        self.assertTrue(rec['child_closure']['kitparam_resolved'][0]['used'].endswith('rtl/b/data_store.sv'))
+
+    def test_alt_file_newer_leaf_and_missing_child(self):
+        # hard-core overlay sets LDCS on a leaf the as-built base lacks; the leaf passes LDCS on to its own child, and
+        # also instantiates a module (enc_la) that exists only in the newer tree
+        lane_old = "module lane #(parameter integer MLAT = 3) (input wire ck, output wire q);\n  assign q = ck;\nendmodule\n"
+        lane_new = ("module lane #(parameter integer MLAT = 3, parameter integer LDCS = 0) (input wire ck, output wire q);\n"
+                    "  assign q = ck;\nendmodule\n")
+        pin_old = ("module rbank #(parameter integer MLAT = 3) (input wire ck, output wire q);\n"
+                   "  lane #(.MLAT(MLAT)) u_lane (.ck(ck), .q(q));\nendmodule\n")
+        pin_new = ("module rbank #(parameter integer MLAT = 3, parameter integer LDCS = 0, parameter integer WCOPY = 0) "
+                   "(input wire ck, output wire q);\n  wire t;\n  lane #(.MLAT(MLAT), .LDCS(LDCS)) u_lane (.ck(ck), .q(t));\n"
+                   "  enc_la u_e (.d(t), .q(q));\nendmodule\n")
+        enc = "module enc_la (input wire d, output wire q);\n  assign q = d;\nendmodule\n"
+        base = {'rtl/lane.sv': lane_old, 'rtl/pin.sv': pin_old, 'new/lane.sv': lane_new, 'new/pin.sv': pin_new,
+                'new/enc_la.sv': enc}
+        wrap = ("module pbank (input wire ck, output wire q);\n  rbank #(.LDCS(1), .WCOPY(0)) u_data (.ck(ck), .q(q));\n"
+                "endmodule\n")
+        rc, rec, so = run_kp(base, wrap=wrap)
+        self.assertEqual(rc, 1, so)                          # main: the as-built base only
+        self.assertIn("pbank/u_data -> rbank: not declared ['LDCS', 'WCOPY']",
+                      rec['child_closure']['instance_params_not_in_rtl'])
+        rc, rec, so = run_kp(base, wrap=wrap, alt=['new/lane.sv', 'new/pin.sv', 'new/enc_la.sv'])
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(rec['summary']['unresolved_children'], 0)
+        self.assertEqual(sorted(r['instance'] for r in rec['child_closure']['kitparam_resolved']),
+                         ['pbank/u_data', 'rbank/u_lane'])
+        self.assertEqual(rec['summary']['ambiguous_children'], 0)   # alternates never make a default pick ambiguous
