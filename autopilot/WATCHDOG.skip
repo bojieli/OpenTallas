@@ -15,3 +15,5 @@ stop-only /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f
 # DIE-HEAD-89 2026-11-09 00:37: report-only until the kit LEC verdict; both are yosys at ~100% CPU with a flat log (SPN vH re-run after -9 at 56 GB; LEP kit LEC). Remove when collected.
 /srv/opentallas-scratch2/claude/head-forms-5/hd_spn_vH_wench
 /srv/opentallas-scratch2/claude/dh88/lep/gen2/hd_lep0N
+# DIE-HEAD-89 2026-11-09 01:27: report-only until collected; hd_host_vD_D inline LEC (yosys, CPU-active, flat log before CTS). Remove with the two rows above.
+/srv/opentallas-scratch2/claude/dh88/hd_host_vD_D
