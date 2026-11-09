@@ -599,8 +599,9 @@ def main(argv=None):
         if not a.act:
             continue
         rc, msg = ssh_sh(r['host'], stop_script(unit, conts))
-        append(logf, '%s STOP %s %s %s idle %s lane %s kit %s rc %s' % (ts, r['host'], step, r['id'], stall_watch.hm(r['idle_s']),
-                                                                      r['lane'], key, rc))
+        # KW-FIX-44 11-09: the reason goes on the line (autopilot classify names it for the 137/143 the stop causes)
+        append(logf, '%s STOP %s %s %s idle %s lane %s kit %s rc %s why %s' % (ts, r['host'], step, r['id'], stall_watch.hm(r['idle_s']),
+                                                                             r['lane'], key, rc, ' '.join(str(reason).split())[:240]))
         if verdict == 'STOP':
             lf = os.path.join(a.coord, 'lanes', '%s.md' % r['lane'])
             if r['lane'] not in ('?', 'CODEX') and os.path.isfile(lf):

@@ -1013,6 +1013,11 @@ def classify(c, client):
         return "CRASH", "infra-lost", client.get("msg", "ot-run NOT COMPLETED")
     if c.get("oom"):
         return "CRASH", "infra-oom", c["oom"]
+    if client.get("exit") in (137, 143) and client.get("watchdog"):
+        w = client["watchdog"]
+        why = w.split(" why ", 1)[1] if " why " in w else "reason not logged (WATCHDOG.txt of that tick)"
+        kind = "watchdog-superseded" if why.startswith("SUPERSEDED") else "watchdog-stopped"
+        return "CRASH", kind, f"exit {client['exit']}: stopped by the hub WATCHDOG ({w[:16]}): {why}"[:600]
     if client.get("exit") in (137, 143):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
         # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
@@ -1051,9 +1056,11 @@ def parse_client_log(text):
             if line.startswith(prefix):
                 o[key] = "\n".join(lines[index:index+6])[:600]
                 break
-    m = re.findall(r"ot-run: RAN on ([^\s:(]+)(?: \(unit [^)]*\))?:? exit (\d+)", text)
+    m = re.findall(r"ot-run: RAN on ([^\s:(]+)(?: \(unit ([^)]*)\))?:? exit (\d+)", text)
     if m:
-        o["ran_on"], o["exit"] = m[-1][0], int(m[-1][1])
+        o["ran_on"], o["exit"] = m[-1][0], int(m[-1][2])
+        if m[-1][1]:
+            o["unit"] = m[-1][1].strip()
     if "ot-run: NOT RUN" in text and "ran_on" not in o:
         o["not_run"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT RUN" in l][-1][:300]
@@ -1076,6 +1083,33 @@ def parse_client_log(text):
     if m:
         o["cancelled"] = m[-1][:300]
     return o
+
+
+# KW-FIX-44 11-09 (exit-143 class): the hub WATCHDOG (tools/autopilot/watchdog.py --act, watchdog.timer) stops a job's exact
+# systemd scope when it is hung or SUPERSEDED (an older attempt than a live one on the current plan, a CANCELLED row, ...).
+# The client then ends 137/143 with no OOM line, which classify called "stopped from outside" with no sender; 11-09 had 12
+# such QC/HBM rows, every one a WATCHDOG STOP of its unit.  The STOP line names the unit, so the record now says who and why.
+WATCHDOG_LOG = Path(os.environ.get("AP_WATCHDOG_LOG", str(COORD / "autopilot" / "WATCHDOG.log")))
+
+
+def watchdog_stop(unit, since=0.0):
+    """the WATCHDOG.log STOP line of this ot-heavy unit (oth-...) at or after `since`, or None"""
+    if not unit:
+        return None
+    try:
+        lines = WATCHDOG_LOG.read_text(errors="replace").splitlines()
+    except OSError:
+        return None
+    for line in reversed(lines):
+        if " STOP " not in line or (f" {unit}.scope" not in line and f" {unit} " not in line):
+            continue
+        try:
+            t = datetime.datetime.strptime(" ".join(line.split(" ")[:2]), "%Y-%m-%d %H:%M").timestamp()
+        except ValueError:
+            continue
+        if t >= since - 120:
+            return line[:400]
+    return None
 
 
 def signals_cancel(j):
@@ -2423,6 +2457,10 @@ def poll_running(st):
 
 
 def finish(st, j, c, client):
+    if client.get("exit") in (137, 143) and client.get("unit") and not c.get("oom"):
+        w = watchdog_stop(client["unit"], j.get("started", 0))
+        if w:
+            client = dict(client, watchdog=w)
     cls, kind, reasons = classify(c, client)
     if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
         chain = c.get("chain") or {}
