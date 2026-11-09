@@ -2455,7 +2455,10 @@ def restage_waiters(AP, cfg, st, notices):
             # KW-FIX-28 11-07: a spillable async PLACE client is already host-mobile: ot-run re-places it every 120 s and spills it
             # to any host that admits.  Stopping it only redoes kit_rtl and gen on the target (181 of 267 moves on 11-07, none of
             # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
-            mobile = spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
+            # KW-FIX-40 11-08 (COORD 23:06): a kit under a path only the root disk of the other hosts has (scratch3) cannot spill past
+            # their root floors, so restage_place_waiters makes such waiters movable from mkdir like an earlier stage.
+            mobile = (spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
+                      and not cfg.get("restage_place_waiters"))
             if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die, item=r.get("item"))       # KW-FIX-35-RD: a target with its inputs
                 v = row(best) or {}
