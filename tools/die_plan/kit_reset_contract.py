@@ -8,7 +8,8 @@ tops listed in the HBM contract (hnx r12 NOT EQUIVALENT 34 at 4 edges -> r13 EQU
 
 stage(kd, module, source, required_source=False):
   * required_source=True refuses a missing canonical file; it grants no module/reset authority;
-  * otherwise no contract file, or `module` not listed in it -> None, the kit is untouched (4-edge LEC as before);
+  * otherwise no contract file, or `module` not listed in it (exact, or RESET-KEY 11-09: a landing clone
+    <type>__cl<hex> through its base type's entry, lec.reset_contract_member) -> None, the kit is untouched (4-edge LEC as before);
   * listed -> the contract must pass the SAME consumer kit LEC runs (lec.reset_contract_gate: schema, PASS proof with a
     CAUGHT mutant, receipt sha256, module listed); a refusal is a generation error (fail closed, nothing staged);
   * then reset_contract.json + its relative receipt are byte-copied into the kit -> {edges, module, sha256s} for
@@ -55,11 +56,15 @@ def stage(kd, module, source, *, required_source=False):
         c = json.loads(source.read_text())
     except (OSError, ValueError) as e:
         raise SystemExit(f"{module}: unreadable die reset contract {source}: {e}")
-    if module not in c.get("modules", []):
-        return None
     if str(TOOL) not in sys.path:
         sys.path.insert(0, str(TOOL))
     import lec
+    try:                                # RESET-KEY 11-09: a landing clone resolves to its base type's entry
+        entry, how = lec.reset_contract_member(module, c.get("modules", []))
+    except ValueError as e:
+        raise SystemExit(f"{module}: {e}")
+    if entry is None:
+        return None
     report = lec.reset_contract_gate(source.parent, module, environ={"OT_LEC_RESET_CONTRACT": str(source)})
     if report.get("refused"):
         raise SystemExit(f"{module}: die reset contract {source} refused: {report['refused']}")
@@ -71,7 +76,8 @@ def stage(kd, module, source, *, required_source=False):
     shutil.copyfile(source.parent / receipt, kd / receipt)
     shutil.copyfile(source, kd / "reset_contract.json")
     verify_staged(kd, module, edges=report["used"])
-    return dict(edges=report["used"], module=module, die=c.get("die"), contract=str(source),
+    return dict(edges=report["used"], module=module, **({"listed_as": entry} if how == "clone_base" else {}),
+                die=c.get("die"), contract=str(source),
                 contract_sha256=_sha(source), receipt_sha256=_sha(source.parent / receipt))
 
 
@@ -126,24 +132,80 @@ def repair(kd, source=None):
         sys.path.insert(0, str(TOOL))
     import lec
     top = lec.parse_config(str(kd))["DESIGN_NAME"] if (kd / "config.mk").is_file() else None
-    rep = verify_staged(kd, top) if top in kc.get("modules", []) else None
+    rep = verify_staged(kd, top) if lec.reset_contract_member(top, kc.get("modules", []))[0] else None
     return dict(kit=str(kd), top=top, source=str(source), receipt=str(dst), receipt_sha256=want,
                 copied=before != want, contract_sha256=_sha(kc_path), source_contract_sha256=_sha(source),
                 contract_byte_equal=_sha(kc_path) == _sha(source), used=rep["used"] if rep else None)
 
 
+def _lec_used(kd):
+    """-> (window, lec.json path) of the kit's newest LEC record, (None, None) when the kit has no LEC record."""
+    recs = sorted(Path(kd).glob("**/lec.json"), key=lambda p: p.stat().st_mtime)
+    for r in reversed(recs):
+        try:
+            rc = json.loads(r.read_text()).get("reset_contract") or {}
+        except (OSError, ValueError):
+            continue
+        if "used" in rc:
+            return int(rc["used"]), str(r)
+    return None, None
+
+
+def audit(kd, dies=None):
+    """RESET-KEY 11-09: does the kit's top resolve in a die contract (exact or clone base) while its LEC ran at the
+    default (or the kit holds no contract)?  -> report dict; miss=True is a kit to re-stage and re-LEC."""
+    kd = Path(kd)
+    if str(TOOL) not in sys.path:
+        sys.path.insert(0, str(TOOL))
+    import lec
+    top = lec.parse_config(str(kd))["DESIGN_NAME"]
+    rep = dict(kit=str(kd), top=top, die=None, entry=None, how=None)
+    for d in (dies or DIE_CONTRACT):
+        src = DIE_CONTRACT.get(d)
+        if not (src and src.is_file()):
+            continue
+        entry, how = lec.reset_contract_member(top, json.loads(src.read_text()).get("modules", []))
+        if entry:
+            rep.update(die=d, entry=entry, how=how, edges=int(json.loads(src.read_text())["edges"]))
+            break
+    rep["kit_contract"] = (kd / "reset_contract.json").is_file()
+    rep["lec_used"], rep["lec_json"] = _lec_used(kd)
+    rep["miss"] = bool(rep["entry"]) and (not rep["kit_contract"] or (rep["lec_used"] is not None
+                                                                      and rep["lec_used"] < rep["edges"]))
+    return rep
+
+
+def restage(kd, die):
+    """Stage the die contract into an existing kit whose top it covers (no rebuild; RTL/netlist untouched), then verify
+    through kit LEC's own gate.  For kits generated before RESET-KEY: re-run LEC only, on the existing views."""
+    if str(TOOL) not in sys.path:
+        sys.path.insert(0, str(TOOL))
+    import lec
+    top = lec.parse_config(str(kd))["DESIGN_NAME"]
+    got = stage(kd, top, DIE_CONTRACT[die], required_source=True)
+    if got is None:
+        raise SystemExit(f"{kd}: {die} reset contract does not cover {top}")
+    return got
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(description="repair: re-stage a kit's reset contract receipt (KW-FIX-35-RC)")
-    ap.add_argument("cmd", choices=("repair", "verify"))
-    ap.add_argument("kit")
+    ap.add_argument("cmd", choices=("repair", "verify", "audit", "restage"))
+    ap.add_argument("kit", nargs="+")
+    ap.add_argument("--die", help="restage/audit: die key of DIE_CONTRACT")
     ap.add_argument("--source", help="die reset_contract.json (default: the canonical one for the kit contract's die)")
     a = ap.parse_args()
-    if a.cmd == "repair":
-        print(json.dumps(repair(a.kit, a.source)))
-    else:
-        if str(TOOL) not in sys.path:
-            sys.path.insert(0, str(TOOL))
-        import lec
-        top = lec.parse_config(a.kit)["DESIGN_NAME"]
-        print(json.dumps(verify_staged(a.kit, top)))
+    for kit in a.kit:
+        if a.cmd == "repair":
+            print(json.dumps(repair(kit, a.source)))
+        elif a.cmd == "audit":
+            print(json.dumps(audit(kit, [a.die] if a.die else None)))
+        elif a.cmd == "restage":
+            print(json.dumps(restage(kit, a.die)))
+        else:
+            if str(TOOL) not in sys.path:
+                sys.path.insert(0, str(TOOL))
+            import lec
+            top = lec.parse_config(kit)["DESIGN_NAME"]
+            print(json.dumps(verify_staged(kit, top)))

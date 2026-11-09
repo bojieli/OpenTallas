@@ -7752,6 +7752,34 @@ RESET_DEFAULT = 4
 DEBUG_ENV = ("OT_LEC_RAW_BASE_STEPS",)
 
 
+# DIE-S81-85 11-09 RESET-KEY (COORD LOOP-GAP 12:5x; HBM reset-die-key class): a landing clone of a partition type is
+# bound as <type>__cl<8 hex>[__sid..] while the die contract lists the base type's module (S81: s81p_<type>; clones
+# drop the s81p_ prefix), so `top in modules` missed and the clone kit was staged with no contract -> LEC at the 4-edge
+# default.  Membership resolves the clone to its base entry: exact name first; else the clone suffix is stripped and
+# the base must equal one entry or be one entry minus a single die-prefix token (s81p_, hbm_arch_, ...).  Two
+# candidates are a contract error, never a guess.
+_RESET_CLONE_SUFFIX = re.compile(r"(__cl[0-9a-f]{8})(__sid\w+)?$")
+_RESET_DIE_PREFIX = re.compile(r"^[a-z0-9]+(_[a-z0-9]+)?_$")
+
+
+def reset_contract_member(top, modules):
+    """-> (entry, how): how 'exact' | 'clone_base' | None (entry None = top not covered).  ValueError on ambiguity."""
+    modules = list(modules or [])
+    if top in modules:
+        return top, "exact"
+    base = _RESET_CLONE_SUFFIX.sub("", top or "")
+    if not top or base == top:
+        return None, None
+    hits = sorted({m for m in modules if m == base or (m.endswith(base) and _RESET_DIE_PREFIX.match(m[:-len(base)]))})
+    if len(hits) > 1:
+        raise ValueError(f"reset contract lists several base entries for clone {top}: {hits}")
+    near = sorted(m for m in modules if not hits and (m.endswith(base) or base.endswith(m)))
+    if near:                            # a base-name entry exists but does not resolve: a miss is an error, not 4 edges
+        raise ValueError(f"reset contract entry {near} names the base of clone {top} but does not resolve "
+                         f"(expected {base} or <die prefix>_{base})")
+    return (hits[0], "clone_base") if hits else (None, None)
+
+
 def reset_contract_gate(kit, top, environ=None):
     """The reset window of the no-reset constant base cases (OT_LEC_RESET_CYCLES) beyond the default 4 edges is a
     DECLARED die reset length (COORD 10-27): used only when KIT/reset_contract.json (or OT_LEC_RESET_CONTRACT)
@@ -7790,8 +7818,15 @@ def reset_contract_gate(kit, top, environ=None):
             return refuse("reset contract schema")
         if pr.get("verdict") != "PASS" or pr.get("mutant") != "CAUGHT":
             return refuse("reset contract proof not PASS with a CAUGHT mutant control")
-        if top not in c.get("modules", []):
+        try:
+            entry, how = reset_contract_member(top, c.get("modules", []))
+        except ValueError as e:
+            rep["flow_error"] = f"FLOW reset contract key: {path}: {e}"
+            return refuse(str(e))
+        if entry is None:
             return refuse(f"reset contract does not list {top}")
+        if how == "clone_base":
+            rep["contract"]["listed_as"] = entry
         if not rcpt.is_file() or hashlib.sha256(rcpt.read_bytes()).hexdigest() != pr.get("receipt_sha256"):
             # KW-FIX-35-RC 11-08: the kit carries a contract that LISTS this top but lost (or changed) its receipt, e.g.
             # a kit copy that took reset_contract.json and not reset_contract/receipt.txt (S81 bksel vJ/vK: 30 m_ra
