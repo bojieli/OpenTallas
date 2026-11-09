@@ -5982,3 +5982,15 @@ QCcbf_q01a10 and KVsys_SD_v1a12 actualPNGsVIEWED; review/results at results/geom
   - The two macro columns at x≈510-710 carry 60-85% vertical slivers between the stacked macros, with CK/FO markers at the top-left column.
   - There is no channel at or above 100%.
   - Condition: watch the inter-macro gaps in DRT. If they fail, add macro halo or spacing in Y on the left column only.
+
+## 2026-11-09 11:43 PST COORD hourly GEOM (2 renders)
+- QC cbf_q00__cl870de686 a17 GRT congestion (intel2 kw26 wave): FAIL, which confirms DIE-QC-97's cause.
+  - Four child blocks (u_bound.u_c00/01/10/11) fill most of the outline. The routing is confined to the channels around them.
+  - The NW corner (top-left, above u_c01) is HOT/red, which is where the na_i00 landing band sat.
+  - The left edge channel (x≈50-95) is also 70-90% for almost the whole height. The centre street and right channel are 40-60%.
+  - cand8_class (band moved onto its pin window) is the right fix. Watch the left channel in the cand8 run. If it is still red, the next form widens the west channel and does not move more logic into it.
+- HBM q_spb2__physical_v1 a4 GRT congestion (epyc7 kw27 d44v): FAIL, with two distinct hot spots.
+  - (a) A narrow snake corridor from the west edge at y≈1190 up to x≈440, y≈160 is solid red. It looks like a relay or feedthrough line confined to a thin soft region or a chain of relay cells. The rest of the field is 40-55%.
+  - (b) There is a hot fan at the top edge between the two macros u_x_02 and u_x_03 (x≈880-1190, y≈45-170). A top-face port window funnels into the gap between the macros.
+  - FORM: (a) widen the corridor, or spread the line (relay placement at 1/3 and 2/3 by intent, as PTW-C did, with a wider region); (b) move or spread the top port window off the inter-macro gap, or open the macro spacing.
+  - This is a structural fix, so no retry. Sent to DIE-HBM-97.
