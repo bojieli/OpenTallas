@@ -68,6 +68,11 @@ for f in sorted(set(paths),key=str):
 print(h.hexdigest())
 PYID
 }
+# Atomic: a reader must never see the file present but empty while identity is still hashing.
+write_identity() {
+  identity "$1" > "$1/lec_async.identity.tmp.$$"
+  mv -f "$1/lec_async.identity.tmp.$$" "$1/lec_async.identity"
+}
 bootstrap() {
   python3 - "$1" "$2" "$(identity "$1" source)" <<'PYBOOT'
 import datetime,hashlib,json,os,re,shlex,subprocess,sys,time
@@ -220,7 +225,7 @@ import-completed)
   exec 9> "$K/lec_async.lock"; flock 9
   python3 "$(dirname "$0")/lec_completed_transfer.py" "$ORIGINAL" "$K" || exit $?
   identity "$K" source > "$K/lec_async.source_identity"
-  identity "$K" > "$K/lec_async.identity"
+  write_identity "$K"
   echo completed-transfer > "$K/lec_async.owner"
   touch "$K/lec_async.done"
   exit 0
@@ -263,7 +268,7 @@ start)
   if [ -f "$K/lec_async.ready" ] && [ ! -s "$K/lec_async.identity" ]; then
     bootstrap "$K" "$DK" || exit $?
     identity "$K" source > "$K/lec_async.source_identity"
-    identity "$K" > "$K/lec_async.identity"
+    write_identity "$K"
   fi
   if [ -f "$K/lec_async.ready" ]; then
     OLD=$(cat "$K/lec_async.identity" 2>/dev/null || true)
@@ -301,7 +306,7 @@ watch)
   [ -f "$K/lec_async.ready" ] || { echo "LEC_ASYNC aborted: the flow ended before its LEC step"; exit 0; }
   sleep 1
   POL=$(sed -n 1p "$K/lec_async.ready"); RUN=$(sed -n '2,$p' "$K/lec_async.ready")
-  identity "$K" > "$K/lec_async.identity"
+  write_identity "$K"
   echo "LEC_ASYNC $(date '+%F %T') start ($POL): $RUN"
   LOG0=$(stat -c %s "$K/lec_async.log" 2>/dev/null || echo 0)
   OOMC=$NAME; NOV=
