@@ -354,7 +354,7 @@ class Classify(unittest.TestCase):
             ("bind", '{"errors": 0, "unbound": 0, "undriven": 0, "multiply_bound": 0}\nBIND errors 2', "PLAN"),
             ("gen", "Traceback (most recent call last):\ncore_clock_contract.ContractError: x: internal core CTS requires explicit SIGNED TT/FF mean metadata", "PLAN"),
             ("bind", "Terminated                 python3 tools/die_plan/bind.py", "INFRA"),
-            ("kit_rtl", "bind: ERROR kit-rtl col_h9: instances of col_h9 carry different parameters ['#(.P_u_c5_0_INSTANCE(", "FLOW"),
+            ("kit_rtl", "bind: ERROR kit-rtl col_h9: instances of col_h9 carry different parameters ['#(.P_u_c5_0_INSTANCE(", "PLAN"),
             ("place", "something odd happened", "FLOW"),
             # AUTOBUILD-PIPE-4 10-31: KV core kits ingest_eng (no static SRAM sites) / core_order (unregistered faces)
             ("preflight", "KIT_PREFLIGHT FAIL issues 3\n  - macro_channels: 1 macro master(s) but no staged "
