@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 10:44 PST COUNT 253 (COORD forced 10:44; HBM counter overlay d44v_gqi_cp1109, q3vm repoint + recount by COUNT-ARCHIVE-2 pending, expect 255): S81 60/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 77/107 + 0/81t. Main 7d28eaeeefe (CJ gy-hbm, CN fy-s81+gz-hbm landed; CM2 hoplatch+HBM default in full suite). HEAD l48hp1 8 rows relaunching on epyc7 gen + fm-head; S81 t51-split rebind + HBM corepins/bind_F5c adoption requested; epyc5 cut 11:02 (no counted data, kits copied to epyc7).
+> 2026-11-09 10:58 PST COUNT 255 (COUNT-ARCHIVE-2 forced, cache 10:36; HBM counter d44v_gqi_cp1109_q3vm): S81 61/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 78/107 + 0/81t. +HBM q3vm_vF, +S81 t51 native_e (t51-split). Main 7d28eaeeefe; CM2/CO/CP/CORE-MAXWIRE/n4c in merge queue. HEAD l48hp1 rows relaunching (epyc7 gen, fm-head); HBM wave adopts d44v_restore_1109 + bind_F5c; epyc5 cut 11:02 (no counted data).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
