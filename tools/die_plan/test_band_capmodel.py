@@ -107,3 +107,40 @@ def test_strips_cover_cores_no_halo_and_band_keeps_all():
 
 def test_grid_count_is_integer_dbu():
     assert T._ngrid(216.0) == 20 and T._ngrid(215.99) == 19 and T._ngrid(28399.68) == 2629
+
+
+def _kept(out, L, vert, k, lo=0.0):
+    """die-kept interval of gcell row/column k on layer L = the gcell minus its obstruction (one piece each)."""
+    obs = [(r[1], r[3]) if vert else (r[2], r[4]) for r in out if r[0] == L
+           and abs(((r[1] + r[3]) / 2 if vert else (r[2] + r[4]) / 2) // g - k) < 1e-9]
+    assert len(obs) == 1
+    a, b = obs[0]
+    return (b, (k + 1) * g) if abs(a - k * g) < 1e-6 else (k * g, a)
+
+
+def test_band_layers_of_one_direction_alternate_row_phase():
+    """DIE-HBM-97 11-09 (q_su30__physical_v1 GRT-0116): M4 and M6 die slices (= the partition reservation) sit in
+    disjoint parts of each gcell row, M5 and M7 likewise per column; the obstructed length per gcell is unchanged."""
+    assert T.band_phase_flip(_Pempty, {"M4", "M5", "M6", "M7"}) == {"M6", "M7"}
+    assert T.band_phase_flip(_Pempty, {"M6", "M7"}) == set()          # one layer per direction: unchanged phase
+    for a4, a6 in ((0.25, 0.25), (0.5, 0.5), (0.25, 0.5), (0.25, 0.75)):
+        regs = [("M4", 0.0, 2 * g, 43.19, 3 * g - 0.01, a4), ("M6", 0.0, 2 * g, 43.19, 3 * g - 0.01, a6),
+                ("M5", 2 * g, 0.0, 3 * g - 0.01, 43.19, a4), ("M7", 2 * g, 0.0, 3 * g - 0.01, 43.19, a6)]
+        out = T.band_share_obs(_Pempty, regs)
+        for L, vert, a in (("M4", False, a4), ("M6", False, a6), ("M5", True, a4), ("M7", True, a6)):
+            r = next(r for r in out if r[0] == L)
+            span = (r[3] - r[1]) if vert else (r[4] - r[2])
+            assert abs(span - (1 - a) * g) < 1e-6                     # same obstructed length (die capacity)
+        for lo_l, hi_l, vert in (("M4", "M6", False), ("M5", "M7", True)):
+            k0 = _kept(out, lo_l, vert, 2); k1 = _kept(out, hi_l, vert, 2)
+            assert k0[0] == 2 * g and abs(k1[1] - 3 * g) < 1e-6        # keep-bottom / keep-top
+            assert k0[1] <= k1[0] + 1e-6                               # disjoint die slices
+
+
+def test_flipped_layer_keeps_transition_compensation():
+    regs = [("M4", 0.0, 8 * g, round(19 * g - 0.01, 3), round(9 * g - 0.01, 3), 0.25),
+            ("M6", 0.0, 8 * g, round(19 * g - 0.01, 3), round(9 * g - 0.01, 3), 0.25)]
+    out = [r for r in T.band_share_obs(_P, regs) if r[0] == "M6"]
+    keep = [round(((y1 - y0) / g), 6) for _, _, y0, _, y1 in out]
+    assert keep == [0.75, 0.375, 0.75]
+    assert all(abs(y0 - 8 * g) < 1e-9 for _, _, y0, _, _ in out)      # M6 now obstructs the bottom of the row
