@@ -121,3 +121,8 @@ dkv95	DIE-KV-95	2026-11-09 00:57	KV launch plan_p4 inputs, not yet switched (bin
 dkv95_src_p4	DIE-KV-95	2026-11-09 00:57	KV launch plan_p4 inputs, not yet switched (bind5 strict 0)
 kv-types-6/pv	DIE-KV-95	2026-11-09 00:57	KV launch plan_p4 inputs, not yet switched (bind5 strict 0)
 kw37/src_e2rd_lg	DIE-KV-95	2026-11-09 00:57	KV launch plan_p4 inputs, not yet switched (bind5 strict 0)
+dkv95	DIE-KV-97	2026-11-09 02:10	KV switch inputs plan_p4 + bind5 + src_p4 (intel1/epyc4/epyc6), successor hold
+dkv95_src_p4	DIE-KV-97	2026-11-09 02:10	KV src_p4 (epyc4 realpath of dkv95/src_p4), successor hold
+dkv97	DIE-KV-97	2026-11-09 02:10	KV switch dry/boot/zb evidence + src_p5 staging
+dkv97_src_p5	DIE-KV-97	2026-11-09 02:10	KV switch src_p5 = src_p4 + kit-rtl Plan path fix (queue_src faeb1ac9)
+dkv96	DIE-KV-97	2026-11-09 02:10	DIE-KV-96 staging manifests + repo_files (evidence)
