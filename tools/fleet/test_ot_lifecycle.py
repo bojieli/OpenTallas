@@ -45,6 +45,10 @@ def run_fixture(W):
     kit(f"{ROOT}/dead-ff/kit6")
     write(f"{ROOT}/dead-ff/kit6/run/logs/young.log", 10, old=False)
     kit(f"{ROOT}/die-s81-81/kit7")
+    with open(f"{ROOT}/die-s81-81/kit7/config.mk", "w") as fh:      # a live lane file names a dead lane's kit
+        fh.write(f"export X = {ROOT}/dead-ll/kit10/run\n")
+    os.utime(f"{ROOT}/die-s81-81/kit7/config.mk", (OLD, OLD))
+    kit(f"{ROOT}/dead-ll/kit10")
     kit(f"{ROOT}/dead-gg/kit-wave/s81/p/items/it/attempt_1/gen/it")
     write(f"{ROOT}/dead-hh/loose/file.bin", 4096)
     # older attempt cited by a signed record elsewhere: whole attempt stays even though it is not the latest
@@ -82,6 +86,7 @@ def run_fixture(W):
     for k, v in sorted(rows.items()):
         print(f"{k:50s} {v[0]:26s} {v[1]}")
     expect = {
+        "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-jj/kit-wave/s81/p/items/it2/attempt_1": ("KEEP-cited-unit", "KEEP"),   # older attempt cited by a signed record
         "dead-aa/kit1": ("DEL-L4-KIT", "DELETE"),          # expired .keep (72 h, dead lane) released
         "dead-bb": ("KEEP-dotkeep", "KEEP"),               # young .keep at the lane root holds its tree

@@ -229,14 +229,20 @@ class Plan:
                 n += 1
         tf.write(os.path.expanduser("~/.local/state") + "\0")
         tf.close()
-        cmd = ("xargs -0 -a %s -I{} find {} -xdev -type f ( -name '*.sh' -o -name '*.mk' -o -name '*.tcl' -o -name '*.json' -o -name '*.f' "
-               "-o -name '*.otrun' -o -name '*.env' -o -name '*.txt' ) -size -5M -print0 2>/dev/null "
-               "| nice -n 15 xargs -0 -r -P 32 -n 200 grep -aohE '(/srv/opentallas-scratch[0-9]*|/home/ubuntu/scratch-root)/claude/[A-Za-z0-9_./+-]+' 2>/dev/null "
-               "| sort -u") % tf.name
+        names = ["*.sh", "*.mk", "*.tcl", "*.json", "*.f", "*.otrun", "*.env", "*.txt"]
+        expr = " -o ".join(f"-name '{n}'" for n in names)
+        alts = [r"/srv/opentallas-scratch[0-9]*", os.path.expanduser("~/scratch-root")]
+        alts += [r[:-len("/claude")].replace(".", "[.]") for r in J.roots if r.endswith("/claude")]
+        pat = "(" + "|".join(sorted(set(alts))) + r")/claude/[A-Za-z0-9_./+-]+"
+        cmd = (f"xargs -0 -a {tf.name} -I{{}} find {{}} -xdev -type f \\( {expr} \\) -size -5M -print0 2>/dev/null "
+               f"| nice -n 15 xargs -0 -r -P 32 -n 200 grep -aohE '{pat}' 2>/dev/null | sort -u")
         print("refs: scanning", n, "lane trees", flush=True)
-        out = subprocess.run(["bash", "-c", cmd.replace("(", "\\(").replace(")", "\\)")], capture_output=True, text=True, errors="replace", timeout=2400)
+        out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, errors="replace", timeout=2400)
         rows = [(p.rstrip("."), "referenced by live lane/tool file") for p in out.stdout.splitlines() if p.count("/") >= 4]
         print("refs: paths", len(rows), flush=True)
+        # positive control (11-07 class: a retention filter that matches nothing fails silently)
+        if n and not rows and not getattr(self.a, "allow_empty_refs", False):
+            raise SystemExit("reference scan matched nothing over %d lane trees; refusing to plan" % n)
         os.unlink(tf.name)
         self.refset = self.m.PathSet(rows, deep=J.deep, canon=J.paths.canon)
 
@@ -463,6 +469,10 @@ class Plan:
             self.record(d, "KEEP-cited-unit", "KEEP", "cited by a counted/signed record (whole unit stays until the stub is proven)", self.walk_stats(d))
             return
         v = self.attempt_verdict(d)
+        # a live reference or queue path into a unit keeps the whole unit: readers open siblings of the named path
+        if h and h[2] and h[0] in ("KEEP-referenced", "KEEP-queue48") and d.count("/") >= 5 and (v or self.is_git(d) or self.kit_like(d)):
+            self.record(d, h[0], "KEEP", h[1] + " (whole unit)", self.walk_stats(d))
+            return
         if v in ("signed", "active"):
             self.record(d, "KEEP-kitwave-" + v, "KEEP", v, self.walk_stats(d))
             return
@@ -642,12 +652,14 @@ class Plan:
         if n in ("signoff.json", "PROVENANCE.json", "ARCHIVED.json", ".keep", "6_final.odb", "config.mk") or n.endswith(".signoff.json"):
             self.record(p, "KEEP-name", "KEEP", n, info)
             return
-        for name, ps in (("counted", J.counted), ("protected", J.protected), ("kitwave-keep", J.kwkeep)):
-            for f in J.paths.forms(p):
-                h = ps.hit(f)
-                if h:
-                    self.record(p, "KEEP-" + name, "KEEP", h, info)
-                    return
+        h = self.hold(p, False)                 # counted/protected/kit-wave, ot-hold, local keep, live, refs, queue
+        if h:
+            self.record(p, h[0], "KEEP", h[1], info)
+            return
+        dk = self.dotkeep_hit(p, False)
+        if dk:
+            self.record(p, dk[0], "KEEP", dk[1], info)
+            return
         if self.now - st.st_mtime < 6 * 3600:
             self.record(p, "KEEP-lt6h", "KEEP", "young", info)
             return
@@ -677,17 +689,13 @@ class Plan:
                 if self.now - st.st_mtime < 6 * 3600:
                     self.record(p, "KEEP-lt6h", "KEEP", "young", info)
                     continue
-                h = None
-                for name, ps in (("counted", J.counted), ("protected", J.protected), ("kitwave-keep", J.kwkeep)):
-                    for ff in J.paths.forms(p):
-                        x = ps.hit(ff)
-                        if x:
-                            h = (name, x)
-                            break
-                    if h:
-                        break
+                h = self.hold(p, bool(live)) or self.dotkeep_hit(p, bool(live))
                 if h:
-                    self.record(p, "KEEP-" + h[0], "KEEP", h[1], info)
+                    self.record(p, h[0], "KEEP", h[1], info)
+                    continue
+                r = J.resume_hold(dp)                # COORD 11-08 04:4x: a FAIL row < 24 h resumes from its last valid stage
+                if r:
+                    self.record(p, "KEEP-resume-pending", "KEEP", r, info)
                     continue
                 self.record(p, "DEL-L2-LATEST-TRIM", "DELETE", "intermediate of latest attempt", info)
 
@@ -942,6 +950,17 @@ class Apply:
         h = P.localkeep_hit(path)
         if h:
             return "SKIP", h[1]
+        oh = P.holds.hit(path)
+        if oh:
+            return "SKIP", "ot-hold " + oh
+        lane = P.lane_of(path + "/x" if os.path.isdir(path) else path)
+        dk = P.dotkeep_hit(path, bool(P.owner_live(lane)))
+        if dk:
+            return "SKIP", dk[1]
+        if cat == "DEL-L2-LATEST-TRIM":
+            r = J.resume_hold(os.path.dirname(path))
+            if r:
+                return "SKIP", r
         w = J.live.why(J.paths.forms(path))
         if w:
             return "SKIP", w
