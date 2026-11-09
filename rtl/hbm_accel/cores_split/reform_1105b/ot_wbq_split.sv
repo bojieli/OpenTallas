@@ -6,7 +6,7 @@
 // STRUCTURE
 //  ot_wbq_root (8 lanes, 8 macros, 8 lane FIFOs, 2 lane groups): fill and copy state run locally. The fill control comes straight from the
 //    parent pins, so the wd data needs no delay stages to line up with it: pin +1 face = the same cycle the flat block saw on +2 (wd_q).
-//  ot_wbq_sw: reservation and copy control, the kport_q wrapper (receipts, wa, wb_ready, window command), K ports.
+//  ot_wbq_sw__fcore: reservation and copy control, the kport_q wrapper (receipts, wa, wb_ready, window command), K ports.
 // LANE GROUPS: 4 consecutive ordinals share a PC, since PC = o[5:2]^o[9:6]^o[14:11] does not read o[1:0]. So a root offers 2 sectors per edge,
 //    one per group (lowest non-empty lane), and the K switch is 16 x 8:1 instead of 16 x 32:1. Steady rate: a row of 32 lanes is 8 groups on
 //    8 PCs, so on one row the flat block also drains 8 per edge. Across rows the flat block peaks at 16 per edge, this form stays at 8 per edge,
@@ -212,7 +212,7 @@ module ot_wbq_root_g1 #(parameter integer CRED=4, parameter integer MUT=0)(
  output wire root_ready,
  output wire g_v,output wire [285:0] g_d
 );
- ot_wbq_root_grp_ps #(.G(1),.CRED(CRED),.MUT(MUT)) u_grp(.*);
+ ot_wbq_root_grp #(.G(1),.CRED(CRED),.MUT(MUT)) u_grp(.*);
 endmodule
 
 // composition of the two groups = the plan glue of each ot_wbq_root slot (u_rK = ot_wbq_root_g2: u_g0 + u_g1), the pin list of
@@ -242,6 +242,38 @@ module ot_wbq_root_g2 #(parameter integer CRED=4, parameter integer MUT=0)(
   .root_ready(rr1),.g_v(g_v[1]),.g_d(g_d[571:286]));
 endmodule
 
+// HREG=3 per-PC K store: grant at t, in_data at t+1, write edge at the end of t+1. 2 entries, written and read through per-slice pointer flops.
+// room(t) = (held(t) + inflight(t) <= 1); held and inflight count only flops, so a grant never needs out_r in its cone.
+module ot_wbq_kstore #(parameter integer WIDTH=286,parameter integer KMUT=0,parameter integer ASPLIT=0)(
+ input wire clk,rst_n,grant,output wire room,
+ input wire [WIDTH-1:0] in_data,output wire out_v,input wire out_r,output wire [WIDTH-1:0] out_data);
+ reg inflight;reg [1:0] held;reg room_r;reg wp,rp;reg v_r;
+ wire push=inflight;wire pop=v_r&&out_r;
+ wire [1:0] held_n=held+2'(push)-2'(pop);
+ wire wp_n=wp^push;wire rp_n=rp^pop;
+ assign room=room_r;assign out_v=v_r;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin inflight<=0;held<=0;room_r<=1;wp<=0;rp<=0;v_r<=0;end
+  else begin
+   inflight<=grant;held<=held_n;wp<=wp_n;rp<=rp_n;v_r<=held_n!=0;
+   room_r<=(KMUT==1)?(held_n<=2'd1):(held_n+2'(grant)<=2'd1);
+  end
+ end
+ genvar s;
+ // ASPLIT=1 (HREG>=4): the address bits (W-256..) get their own slice and pointer copies; the data bits of the old slice 5 keep theirs.
+ generate for(s=0;s<(ASPLIT!=0?7:6);s=s+1)begin:g_s
+  localparam integer LO=(ASPLIT!=0&&s==6)?256:48*s,W=(ASPLIT!=0)?((s==6)?WIDTH-256:(s==5)?16:48):((s==5)?WIDTH-240:48);
+  (* keep = "true" *) reg [1:0] we_c;(* keep = "true" *) reg [1:0] rd_c;
+  reg [W-1:0] e0,e1;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin we_c<=0;rd_c<=2'b01;end
+   else begin we_c<=grant?(wp_n?2'b10:2'b01):2'b00;rd_c<=(KMUT==6&&s==6)?(rp?2'b10:2'b01):(rp_n?2'b10:2'b01);end
+  end
+  always @(posedge clk)begin if(we_c[0])e0<=in_data[LO+:W];if(we_c[1])e1<=in_data[LO+:W];end
+  assign out_data[LO+:W]=({W{rd_c[0]}}&e0)|({W{rd_c[1]}}&e1);
+ end endgenerate
+endmodule
+
 // HREG (sw only, default 0 = the form above unchanged). HREG=1 is a cycle-exact restructure of the K-port cone (HBM-GAPS-3, 11-05):
 //  - each group keeps its queue head and the head's PC (one-hot) in flops, loaded with the exact next state qm'[qr'] (write-into-empty,
 //    pop, write behind a pop), so the pick starts from flops, not from qr -> qm read -> sector_pc;
@@ -252,7 +284,23 @@ endmodule
 //    add-then-compare. Same pins, same edge for every K write, ack and fault.
 // HREG=2 = HREG=1 plus (still cycle-exact): the fault / meta_active gates are registered copies (replicated per PC), loaded with
 // their next state; the ack count comes as two registered half popcounts and is checked with one 7-bit difference (g_f2).
-module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0)(
+// HREG=3 (HBM-HARD-1 11-07, opt-in; PIN CYCLES +2 g_d/g_v -> w_k_*, +1 w_k_wr_done -> wa/done; K handshake contract at the pins unchanged; NOT edge-identical):
+//  K data runs one edge behind K control, and control sees a new word one edge after it is stored.
+//  Control: per-PC grant = pick_r gated by flops only (fault gate, outstanding, a room flop), so a grant always completes: no held request, no k_rdy in
+//  the pick, pop comes from a few local gates. Per-entry PC flops in the group queue, so no g_d -> pick path and no read of the 286-bit store.
+//  Data: head_d(t+1) = store(t)[qr(t)], reloaded every edge from one-hot read pointer copies, so pop does not fan out to 286 load enables; sel_q(t+1) =
+//  grant(t), replicated per slice, selects the K switch at t+1; its output is written into a 2-entry per-PC store through per-slice write enables and
+//  read through per-slice read pointers, so out_r does not fan out either. Ack bound/equal results are registered before they gate kg/sa copies.
+//  Measured problem (vAR census, 4710 TT ends): req_valid -> sel -> 286-bit fanout across the strip -> out_data/tail_data 3104 ends, -300.6;
+//  pick_r -> head_r -158.9; g_d -> pick_r -147.5; as0 -> kg_c -112.1; g_v -> qm -43.7.
+//  Rate: at most 2 grants per 3 edges per PC with K always ready (the old skid: 1 per edge). The stream fill rate is 8 sectors per edge over 16 PCs.
+// HREG=4 (HBM-HARD-2-WSW 11-07, opt-in; PIN CYCLES +1 root_ready, nothing else moves: every K write, grant, credit edge as HREG=3):
+//  vH3b measured: 37 of 39 TT ends root_ready -> epoch; pop -> qn adder -> pick_r -0.2; slice 5 mixed 16 data bits (W face) and 30 addr bits (N face) under one pointer copy, 308 um.
+//  root_ready gets one stage; hvn drops the 3-bit add; slice 5 is split so addr and data pointers/selects sit at their own face, in the K store, K switch and group store.
+//  KMUT 5 = hvn ignores pop, 6 = addr slice read pointer one edge late, 7 = addr sel_q of PC 5 one edge late, 8 = root_ready never seen.
+// KMUT (bench only, HREG=3): 1 = room ignores the in-flight word (store overflow), 2 = sel_q slice 2 of PC 5 takes the grant one edge late,
+//  3 = head_d read pointer copy slice 1 stays one edge late, 4 = control sees the word on the edge it is stored (stale entry PC).
+module ot_wbq_sw__fcore #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0, parameter integer RSYNC=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -285,8 +333,14 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
   rb_q<=wb_reserve_bank;fb_q<=wb_fill_bank;re_q<=wb_reserve_epoch;fe_q<=wb_fill_epoch;rt_q<=wb_reserve_sectors;
   rbase_q<=wb_reserve_base;wc_q<=wd_c;stk_q<=stk;q_s<=quad;
  end
- always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin rv_q<=0;fs_q<=0;end else begin rv_q<=wb_reserve_v;fs_q<=wb_fill_start;end
+ // RSYNC (HBM-HARD-3 11-07, default 0 = unchanged): the stream-side blocks that took the raw stream_rst_n port take a
+ // synchronised copy (async assert, release 2 stream_clk edges later, as u_krst does for hbm_rst_n). vH4/vH5 placed: one
+ // flop on the raw port net (wspan[1][9]) was pulled to the reset pin, 100 um from its 47 siblings: the -81 ps TT loop.
+ wire srn;
+ generate if(RSYNC!=0)begin:g_srn ot_reset_sync u_srn(.clk(stream_clk),.async_rst_n(stream_rst_n),.sync_rst_n(srn));end
+ else begin:g_srn0 assign srn=stream_rst_n;end endgenerate
+ always @(posedge stream_clk or negedge srn)
+  if(!srn)begin rv_q<=0;fs_q<=0;end else begin rv_q<=wb_reserve_v;fs_q<=wb_fill_start;end
  reg [263:0] wc_l;reg wd_stk_bad;integer t;
  always @*begin
   wc_l=wc_q;wd_stk_bad=0;
@@ -299,9 +353,22 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  // ---- block control, as ot_hbm_svc_wb_cutthrough_cdc without the lanes
  localparam [32:0] SPACE_END=33'h020000000;
  wire reset_both=stream_rst_n&&hbm_rst_n;
- wire srst,hrst;wire roots_ready=&root_ready;
+ wire srst,hrst;wire roots_ready;
+ // HREG>=4: PIN CYCLE +1 on root_ready. root_ready is the root's reset status; it only rises after reset, long before the first reserve. Vs vH3b: 37 of 39 TT ends, -28 ps, 200 um of wire.
+ generate if(HREG>=4)begin:g_rr
+  reg rr_q;always @(posedge stream_clk or negedge srst)if(!srst)rr_q<=1'b0;else rr_q<=(KMUT==8)?1'b0:&root_ready;
+  assign roots_ready=rr_q;
+ end else begin:g_rr0
+  assign roots_ready=&root_ready;
+ end endgenerate
  ot_reset_sync u_stream_reset(.clk(stream_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
  ot_reset_sync u_hbm_reset(.clk(hbm_clk),.async_rst_n(reset_both),.sync_rst_n(hrst));
+ // HBM-HARD-5 11-08 (H6 routed TT -77.80/33, every path from u_hbm_reset.reset_pipe[1]: hrst is the reset of ~3400 flops over
+ // 580 um AND a data term of hbm_fault / fault_g): the data terms read their own 2-stage copy of the same synchroniser
+ // (same clk, same async reset, same D), so they equal hrst on every edge and the reset tree no longer sits in the data path.
+ (* keep = "true", async_reg = "true" *) reg [1:0] hrst_d_pipe;
+ always @(posedge hbm_clk or negedge reset_both) if(!reset_both) hrst_d_pipe<=2'b00; else hrst_d_pipe<={hrst_d_pipe[0],1'b1};
+ wire hrst_d=hrst_d_pipe[1];
  reg [1:0] allocated,started,staged;reg [15:0] epoch[0:1];reg [31:0] base[0:1];reg [11:0] total[0:1];reg [11:0] committed[0:1];
  reg filling,fill_bank,copy_active,copy_bank;reg [11:0] ordinal;
  reg stream_sticky,hbm_sticky;(* async_reg = "true" *) reg hf1,hf2,sf1,sf2;
@@ -309,11 +376,14 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  reg meta_active,ack_pending;reg [28:0] meta_q;reg [11:0] ack_count;
  reg [15:0] req_valid;reg [6:0] outstanding[0:15];reg [2:0] req_g[0:15];
  reg [15:0] pick_v;reg [2:0] pick_g[0:15];reg [7:0] pop;reg [2:0] selected_g[0:15];
- integer pc,l,acks;wire hbm_fault=hbm_sticky||sf2||!hrst;
+ integer pc,l,acks;wire hbm_fault=hbm_sticky||sf2||!hrst_d;
  // HREG>=2 (g_f2): registered, replicated copies of the fault / meta gates, exact on every edge while hrst is high. While hrst is low
  // every flop they gate is held in reset, so the !hrst term of hbm_fault is not needed there (h_stop keeps hbm_fault).
  wire fg_w;wire [15:0] mah_w,kg_w;wire ma0_w;wire [3:0] as0_w,as1_w;
- wire fault_g=(HREG>=2)?(fg_w||!hrst):hbm_fault;   // meta_re pops the FIFO, so it keeps the !hrst term
+ // HBM-HARD-6 11-08 H8 (H7 routed TT -22.99/27, 26 ends launch at hrst_d (100,338) -> meta_re at u_meta (y~70) -> g_f2 copies
+ // (y~430)): reset is no longer a data term of fault_g. Exact on every edge: hrst_d==hrst (same synchroniser), and while hrst is
+ // low the u_meta read side is in reset (empty=1, so meta_re=0) and ack_pending is in reset (so ack_we=0); h_stop keeps hbm_fault.
+ wire fault_g=(HREG>=2)?fg_w:hbm_fault;
  wire blk_fault=stream_sticky||hf2;wire [1:0] owned=allocated;
  assign s_stop=blk_fault;assign h_stop=hbm_fault;assign copy_on=copy_active;assign copy_sel=copy_bank;
  wire [31:0] reserve_base={2'b00,rbase_q[29:0]};
@@ -390,16 +460,49 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  generate for(g=0;g<8;g=g+1)begin:g_q
   reg [285:0] qm[0:CRED-1];
   assign head_v[g]=qn[g]!=0;assign head[g]=qm[qr[g]];assign head_pc[g]=sector_pc(head[g][285:256]);
-  always @(posedge hbm_clk)if(g_vq[g])qm[qw[g]]<=g_dq[286*g+:286];
+  if(HREG<3)begin:g_qmw always @(posedge hbm_clk)if(g_vq[g])qm[qw[g]]<=g_dq[286*g+:286];end
+  reg gv_c3;wire gv_ctl=(HREG>=3)?((KMUT==4)?g_vq[g]:gv_c3):g_vq[g];
+  always @(posedge hbm_clk or negedge hrst)if(!hrst)gv_c3<=1'b0;else gv_c3<=g_vq[g];
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)begin qw[g]<=0;qr[g]<=0;qn[g]<=0;end
    else begin
     if(g_vq[g])qw[g]<=qw[g]+1'b1;
     if(pop_u[g])qr[g]<=qr[g]+1'b1;
-    qn[g]<=qn[g]+3'(g_vq[g])-3'(pop_u[g]);
+    qn[g]<=qn[g]+3'(gv_ctl)-3'(pop_u[g]);
    end
   end
-  if(HREG!=0)begin:g_hr
+  if(HREG>=3)begin:g_hr3
+   wire [285:0] gd=g_dq[286*g+:286];
+   reg [3:0] qpc[0:3];reg [15:0] hpc_r;
+   wire [1:0] qr_n=qr[g]+2'(pop_u[g]);wire [1:0] qw_n=qw[g]+2'(g_vq[g]);
+   wire [3:0] pc_w=gd[261:258]^gd[265:262]^gd[270:267];
+   always @(posedge hbm_clk)if(g_vq[g])qpc[qw[g]]<=pc_w;
+   wire [15:0] hpc_n=16'd1<<qpc[qr_n];
+   wire [2:0] qn_n=qn[g]+3'(gv_ctl)-3'(pop_u[g]);
+   always @(posedge hbm_clk)hpc_r<=hpc_n;
+   // HREG>=4: same value as qn_n!=0 (a pop implies qn>=1), no 3-bit add in the pop -> pick cone (vH3b -0.2 end, 91 ends under +120)
+   wire hv_f=(KMUT==5)?(gv_ctl||(qn[g]!=0)):(gv_ctl||(pop_u[g]?(qn[g]>=3'd2):(qn[g]!=0)));
+   assign hpc_all[16*g+:16]=hpc_r;assign hpcn_all[16*g+:16]=hpc_n;assign hvn[g]=(HREG>=4)?hv_f:(qn_n!=0);
+   // store(t) holds every write up to t-1, so head_d(t+1)=store(t)[qr(t)] needs no bypass and no load enable
+   genvar ds;
+   for(ds=0;ds<((HREG>=4)?7:6);ds=ds+1)begin:g_d
+    localparam integer LO=(HREG>=4&&ds==6)?256:48*ds,W=(HREG>=4)?((ds==6)?30:(ds==5)?16:48):((ds==5)?286-240:48);
+    (* keep = "true" *) reg [3:0] rd_c;(* keep = "true" *) reg [3:0] wp_c;
+    reg [W-1:0] m0,m1,m2,m3;reg [W-1:0] head_d;
+    always @(posedge hbm_clk or negedge hrst)begin
+     if(!hrst)begin rd_c<=4'b0001;wp_c<=4'b0001;end
+     else begin rd_c<=(KMUT==3&&ds==1)?(4'd1<<qr[g]):(4'd1<<qr_n);wp_c<=4'd1<<qw_n;end
+    end
+    always @(posedge hbm_clk)begin
+     if(g_vq[g]&&wp_c[0])m0<=gd[LO+:W];
+     if(g_vq[g]&&wp_c[1])m1<=gd[LO+:W];
+     if(g_vq[g]&&wp_c[2])m2<=gd[LO+:W];
+     if(g_vq[g]&&wp_c[3])m3<=gd[LO+:W];
+     head_d<=({W{rd_c[0]}}&m0)|({W{rd_c[1]}}&m1)|({W{rd_c[2]}}&m2)|({W{rd_c[3]}}&m3);
+    end
+    assign hd_all[286*g+LO+:W]=head_d;
+   end
+  end else if(HREG!=0)begin:g_hr
    // head_r = qm[qr] whenever qn!=0: next state is qm'[qr'] (pop -> entry qr+1, or the incoming word if it lands there; no pop -> the
    // incoming word if it lands on qr, i.e. write into empty; else hold)
    reg [285:0] head_r;reg [15:0] hpc_r;
@@ -442,7 +545,51 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  // ---- K ports, as the flat block with groups in place of lanes
  reg [15:0] k_v;reg [479:0] k_addr;reg [4095:0] k_wdata;wire [15:0] k_rdy;reg [15:0] ack_now,ack_q;integer ack_i;
  wire [15:0] k_wr_done_q;
- generate if(HREG!=0)begin:g_k1
+ wire [15:0] k3_room;
+ generate if(HREG>=3)begin:g_k3
+  // control at t: grant from flops only. data at t+1: sel_q (per slice) selects head_d into the store, see pc_pin.
+  reg [7:0] pick_r[0:15];reg [7:0] pick_n[0:15];reg [7:0] m;reg seen;
+  reg [15:0] kv1,an1;reg [7:0] pop1;integer i,j;
+  always @*begin
+   for(i=0;i<16;i=i+1)begin
+    seen=0;
+    for(j=0;j<8;j=j+1)begin m[j]=hvn[j]&&hpcn_all[16*j+i];pick_n[i][j]=m[j]&&!seen;seen=seen||m[j];end
+   end
+  end
+  always @*begin
+   pop1=0;kv1=0;an1=0;
+   for(i=0;i<16;i=i+1)begin
+    kv1[i]=kg_w[i]&&k3_room[i]&&(|pick_r[i])&&(outstanding[i]<64||k_wr_done_q[i]);
+    for(j=0;j<8;j=j+1)if(kv1[i]&&pick_r[i][j])pop1[j]=1;
+    an1[i]=k_wr_done_q[i]&&(outstanding[i]!=0||kv1[i]);
+   end
+  end
+  integer r;
+  always @(posedge hbm_clk or negedge hrst)begin
+   if(!hrst)begin for(r=0;r<16;r=r+1)pick_r[r]<=0;end
+   else for(r=0;r<16;r=r+1)pick_r[r]<=pick_n[r];
+  end
+  // per-PC select, one flop set per 48-bit slice of the 286-bit word
+  genvar pi,ps;
+  for(pi=0;pi<16;pi=pi+1)begin:g_pc
+   wire [7:0] grant={8{kv1[pi]}}&pick_r[pi];
+   wire [285:0] kw;
+   // SEL16 (HBM-HARD-3 11-07, default 0 = unchanged): one sel_q set per 16-bit slice, so each select flop drives
+   // at most 16 AND legs (vH4 routed: 54 slew nets, all one sel_q bit through one buffer to 48 legs). Same cycle.
+   for(ps=0;ps<((SEL16!=0)?18:(HREG>=4)?7:6);ps=ps+1)begin:g_s
+    localparam integer LO=(SEL16!=0)?16*ps:(HREG>=4&&ps==6)?256:48*ps,
+                       W=(SEL16!=0)?((ps==17)?14:16):(HREG>=4)?((ps==6)?30:(ps==5)?16:48):((ps==5)?286-240:48);
+    (* keep = "true" *) reg [7:0] sel_q;
+    reg [7:0] sel_q2;
+    always @(posedge hbm_clk or negedge hrst)if(!hrst)begin sel_q<=0;sel_q2<=0;end else begin sel_q2<=grant;sel_q<=((KMUT==2&&pi==5&&ps==2)||(KMUT==7&&pi==5&&ps==6)||(KMUT==9&&pi==5&&ps==11))?sel_q2:grant;end
+    wire [W-1:0] o=({W{sel_q[0]}}&hd_all[286*0+LO+:W])|({W{sel_q[1]}}&hd_all[286*1+LO+:W])|({W{sel_q[2]}}&hd_all[286*2+LO+:W])|({W{sel_q[3]}}&hd_all[286*3+LO+:W])
+                  |({W{sel_q[4]}}&hd_all[286*4+LO+:W])|({W{sel_q[5]}}&hd_all[286*5+LO+:W])|({W{sel_q[6]}}&hd_all[286*6+LO+:W])|({W{sel_q[7]}}&hd_all[286*7+LO+:W]);
+    assign kw[LO+:W]=o;
+   end
+   assign ka_u[30*pi+:30]=kw[285:256];assign kd_u[256*pi+:256]=kw[255:0];
+  end
+  assign pop_u=pop1;assign kv_u=kv1;assign an_u=an1;
+ end else if(HREG!=0)begin:g_k1
   // one-hot pick (lowest group whose head is on this PC), held request one-hot, AND-OR switch from the head flops.
   // pick_r is the pick of this edge, registered: loaded with the pick of the next-state heads (hvn, hpcn_all), so
   // pick_r == pick(head_v, hpc_r) on every edge (both 0 out of reset, qn=0). The wide switch and pop start from flops.
@@ -511,16 +658,20 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  wire ack_any_g=(HREG>=2)?(|{as0_w,as1_w}):(HREG!=0)?ack_any:(acks!=0);
  wire ack_gt=(HREG>=2)?(ack_hi0&&ack_dif[6]):(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t>ack_rem[4:0]):(13'(ack_count)+13'(acks)>13'(meta_q[11:0]));
  wire ack_eq=(HREG>=2)?(ack_hi0&&ack_dif==7'd0):(HREG!=0)?(ack_rem[11:5]==7'd0&&acks_t==ack_rem[4:0]):(13'(ack_count)+13'(acks)==13'(meta_q[11:0]));
+ reg ack_gt_q,ack_eq_q;
+ wire ack_gt_s=(HREG>=3)?ack_gt_q:(ack_any_g&&ack_gt);
+ wire ack_eq_s=(HREG>=3)?ack_eq_q:(ack_any_g&&ack_eq);
  wire [11:0] ack_rem_n=(HREG>=2)?{ack_dif[6]?ack_hi_m1:ack_rem[11:5],ack_dif[4:0]}:(ack_rem-12'(acks_t));
  wire [15:0] mah_g=(HREG>=2)?mah_w:{16{meta_active&&!hbm_fault}};
  wire ma0_g=(HREG>=2)?ma0_w:(meta_active&&!hbm_fault);
  integer h;
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
-   sf1<=0;sf2<=0;hbm_sticky<=0;meta_active<=0;meta_q<=0;ack_pending<=0;ack_count<=0;ack_rem<=0;req_valid<=0;
+   ack_gt_q<=0;ack_eq_q<=0;sf1<=0;sf2<=0;hbm_sticky<=0;meta_active<=0;meta_q<=0;ack_pending<=0;ack_count<=0;ack_rem<=0;req_valid<=0;
    for(h=0;h<16;h=h+1)begin req_g[h]<=0;outstanding[h]<=0;end
   end else begin
    sf1<=stream_sticky;sf2<=sf1;
+   ack_gt_q<=ma0_g&&ack_any_g&&ack_gt;ack_eq_q<=ma0_g&&ack_any_g&&ack_eq;
    if(meta_re)begin meta_active<=1;meta_q<=meta_data;ack_count<=0;ack_rem<=meta_data[11:0];ack_pending<=0;end
    for(h=0;h<16;h=h+1)if(mah_g[h])begin
      if(kv_u[h]&&!k_rdy[h])begin req_valid[h]<=1;req_g[h]<=selected_g[h];end
@@ -535,9 +686,9 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
    if(ma0_g)begin
     if(ack_any_g)begin
      ack_count<=ack_count+12'(acks);ack_rem<=ack_rem_n;
-     if(ack_gt)hbm_sticky<=1;
-     if(ack_eq)ack_pending<=1;
     end
+    if(ack_gt_s)hbm_sticky<=1;
+    if(ack_eq_s)ack_pending<=1;
    end else if(|k_wr_done_q)hbm_sticky<=1;
    if(ack_we)begin ack_pending<=0;meta_active<=0;end
   end
@@ -557,10 +708,10 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
   reg setH;integer z;
   always @*begin setH=0;for(z=0;z<16;z=z+1)if(k_wr_done_q[z]&&!(outstanding[z]!=0||(kv_u[z]&&k_rdy[z])))setH=1;end
   wire setO=ma0_w?setH:(|k_wr_done_q);
-  wire setA=ma0_w&&ack_any_g&&ack_gt;
+  wire setA=ma0_w&&ack_gt_s;
   wire fo_n=hbm_sticky||setO||sf1;
   wire ma_n=(meta_active||meta_re)&&!ack_we&&!fo_n;
-  wire ap_n=!ack_we&&!meta_re&&(ack_pending||(ma0_w&&ack_any_g&&ack_eq));
+  wire ap_n=!ack_we&&!meta_re&&(ack_pending||(ma0_w&&ack_eq_s));
   wire kg_n=ma_n&&!ap_n;
   genvar c;
   for(c=0;c<16;c=c+1)begin:g_c
@@ -589,8 +740,8 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  end endgenerate
  // ---- real window of a reservation, receipts, wb_ready, wa, window command: as ot_hbm_svc_wb_kport_q
  reg rv1,rb1,rv2,rb2;reg [28:0] ob1,oe1;reg [29:0] sb2,se2;reg rq1;
- always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin rv1<=0;rv2<=0;end else begin rv1<=rv_q&&reserve_ready;rv2<=rv1;end
+ always @(posedge stream_clk or negedge srn)
+  if(!srn)begin rv1<=0;rv2<=0;end else begin rv1<=rv_q&&reserve_ready;rv2<=rv1;end
  always @(posedge stream_clk)begin
   rb1<=rb_q;ob1<=rbase_q[28:0];oe1<=rbase_q[28:0]+29'(rt_q)-29'd1;rq1<=q_s;
   rb2<=rb1;sb2<=fold(ob1,rq1);se2<=fold(oe1,rq1);
@@ -601,8 +752,8 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  wire block_ready=accepted[fb_q]&&aepoch[fb_q]==fe_q&&owned[fb_q];
  wire win_go=(WOPEN==0)?fs_q:fill_done;
  wire win_bank=(WOPEN==0)?fb_q:fsb_q;
- always @(posedge stream_clk or negedge stream_rst_n)begin
-  if(!stream_rst_n)begin
+ always @(posedge stream_clk or negedge srn)begin
+  if(!srn)begin
    accepted<=0;rfault<=0;wb_ready<=0;wa<=0;wbw_v<=0;wbw_base<=0;wbw_total<=0;fault<=0;fsb_q<=0;
    aepoch[0]<=0;aepoch[1]<=0;atotal[0]<=0;atotal[1]<=0;wbase[0]<=0;wbase[1]<=0;wspan[0]<=0;wspan[1]<=0;
   end else begin
@@ -628,113 +779,24 @@ module ot_wbq_sw #(parameter integer WOPEN=0, parameter integer CRED=4, paramete
  always @(posedge hbm_clk or negedge hbm_rst_n)if(!hbm_rst_n)wr_done_q<=0;else wr_done_q<=w_k_wr_done;
  assign k_wr_done_q=wr_done_q;
  genvar p;
- wire [15:0] k_rdy_w;assign k_rdy=k_rdy_w;
+ wire [15:0] k_rdy_w;assign k_rdy=(HREG>=3)?16'hFFFF:k_rdy_w;
  generate for(p=0;p<16;p=p+1)begin:pc_pin
   // HREG>=2: the skid takes its own synchronised copy of hbm_rst_n (async assert, release 2 edges later). Same pins: in those
   // edges the skid is empty either way and in_v=0 (the core is still in reset: hrst releases no earlier than krst)
   wire krst;
   if(HREG>=2)begin:g_kr ot_reset_sync u_krst(.clk(hbm_clk),.async_rst_n(hbm_rst_n),.sync_rst_n(krst));end
   else begin:g_kr0 assign krst=hbm_rst_n;end
-  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(krst),.in_v(kv_u[p]),.in_r(k_rdy_w[p]),
-   .in_data({fold(ka_u[30*p+:29],q_h),kd_u[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
-   .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
- end endgenerate
-endmodule
-// DIE-HBM-92-OPEN/ROOTG1C 11-08 (DIE-HBM-92 ruling (c)): ot_wbq_root_g1 payload width split. Each lane payload of 128 words x 256
-// bits is two ot_sram_1r1w_128x128_m1_r0c0_g128 halves (lo = bits 127:0, hi = bits 255:128) on the same clock, address, read and
-// write enables and mask: the same words, the same one-cycle registered read, the same read-before-write as the 128x256 master.
-// Physical reason: the 91.8-um master has no routable orientation in the 216 x 129.6 slot (tower: one port behind the tower,
-// GRT M6 157 %; R90: all M4 edge pins on one row, DRT-0073); two facing 53.16-um towers with a central write channel fit.
-// ot_wbq_root_grp_ps is ot_wbq_root_grp with only the payload instance changed (ot_wbq_root_g0 / ot_wbq_root_grp untouched).
-module ot_wbq_root_payload_ps(
- input wire clk,
- input wire r_ce_in,input wire [6:0] r_addr_in,output wire [255:0] rd_out,
- input wire w_ce_in,input wire [6:0] w_addr_in,input wire [255:0] wd_in,input wire w_mask_in
-);
- ot_sram_1r1w_128x128_m1_r0c0_g128 u_lo(
-  .clk(clk),.r_ce_in(r_ce_in),.r_addr_in(r_addr_in),.rd_out(rd_out[127:0]),
-  .w_ce_in(w_ce_in),.w_addr_in(w_addr_in),.wd_in(wd_in[127:0]),.w_mask_in(w_mask_in));
- ot_sram_1r1w_128x128_m1_r0c0_g128 u_hi(
-  .clk(clk),.r_ce_in(r_ce_in),.r_addr_in(r_addr_in),.rd_out(rd_out[255:128]),
-  .w_ce_in(w_ce_in),.w_addr_in(w_addr_in),.wd_in(wd_in[255:128]),.w_mask_in(w_mask_in));
-endmodule
-
-module ot_wbq_root_grp_ps #(parameter integer G=0, parameter integer CRED=4, parameter integer MUT=0)(
- input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
- input wire [1:0] root_id,
- input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
- input wire fill_start,fill_start_bank,
- input wire [255:0] wd0,wd1,wd2,wd3,input wire [3:0] wd_v,
- input wire copy_on,copy_bank,s_stop,h_stop,
- input wire g_credit,
- output wire root_ready,
- output wire g_v,output wire [285:0] g_d
-);
- wire reset_both=stream_rst_n&&hbm_rst_n;
- wire srst,hrst;
- ot_reset_sync u_root_reset(.clk(fifo_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
- ot_reset_sync u_hbm_reset(.clk(hbm_clk),.async_rst_n(reset_both),.sync_rst_n(hrst));
- assign root_ready=srst;
- wire [255:0] wd[0:3];
- assign wd[0]=wd0;assign wd[1]=wd1;assign wd[2]=wd2;assign wd[3]=wd3;
- reg [31:0] base[0:1];reg [11:0] total[0:1];reg [11:0] committed[0:1];
- reg filling,fill_bank;reg [11:0] ordinal;
- reg copy_q;reg [6:0] copy_row[0:3];reg [5:0] pending_row[0:3];reg [3:0] read_pending;
- wire [3:0] fifo_full,fifo_empty,fifo_we,fifo_re,mem_read;
- wire [287:0] fifo_head[0:3];wire [255:0] mem_data[0:3];
- genvar g;
- generate for(g=0;g<4;g=g+1)begin:g_lane
-  localparam integer GL=4*G+g;
-  wire [4:0] lane={root_id,3'(GL)};
-  wire [6:0] row=copy_row[g];
-  wire [31:0] sector=base[copy_bank]+{pending_row[g],5'b0}+lane;
-  assign fifo_we[g]=copy_q&&read_pending[g]&&!fifo_full[g]&&!s_stop;
-  assign mem_read[g]=copy_q&&(!read_pending[g]||fifo_we[g])&&row*32+int'(lane)<committed[copy_bank]&&!s_stop;
-  ot_hbm_accel_cdc_fifo #(.W(288),.AW(2)) u_fifo(
-   .wclk(fifo_clk),.wrst_n(srst),.we(fifo_we[g]),.wdata({sector,mem_data[g]}),.full(fifo_full[g]),.rd_freed(),
-   .rclk(hbm_clk),.rrst_n(hrst),.re(fifo_re[g]),.rdata(fifo_head[g]),.empty(fifo_empty[g]));
-  ot_wbq_root_payload_ps u_payload(
-   .clk(fifo_clk),.r_ce_in(mem_read[g]),.r_addr_in({copy_bank,row[5:0]}),.rd_out(mem_data[g]),
-   .w_ce_in(filling&&!s_stop&&ordinal+GL<total[fill_bank]&&ordinal[4:3]==root_id&&wd_v[g]),
-   .w_addr_in({fill_bank,ordinal[10:5]}),.wd_in(wd[g]),.w_mask_in(1'b1));
- end endgenerate
- integer s;
- always @(posedge fifo_clk or negedge srst)begin
-  if(!srst)begin
-   filling<=0;fill_bank<=0;ordinal<=0;copy_q<=0;read_pending<=0;
-   for(s=0;s<2;s=s+1)begin base[s]<=0;total[s]<=0;committed[s]<=0;end
-   for(s=0;s<4;s=s+1)begin copy_row[s]<=0;pending_row[s]<=0;end
-  end else begin
-   if(reserve_v)begin base[reserve_bank]<={2'b00,reserve_base};total[reserve_bank]<=reserve_total;committed[reserve_bank]<=0;end
-   if(fill_start)begin filling<=1;fill_bank<=fill_start_bank;ordinal<=0;end
-   if(filling&&!s_stop)begin
-    if(ordinal+8>=total[fill_bank])begin filling<=0;committed[fill_bank]<=total[fill_bank];end
-    else begin ordinal<=ordinal+8;committed[fill_bank]<=((ordinal+12'd8)>>5)<<5;end
-   end
-   copy_q<=copy_on;
-   if(copy_on&&!copy_q)begin
-    read_pending<=0;
-    for(s=0;s<4;s=s+1)begin copy_row[s]<=0;pending_row[s]<=0;end
-   end else begin
-    for(s=0;s<4;s=s+1)begin
-     if(fifo_we[s])read_pending[s]<=0;
-     if(mem_read[s])begin read_pending[s]<=1;pending_row[s]<=copy_row[s][5:0];copy_row[s]<=copy_row[s]+1'b1;end
-    end
-   end
+  if(HREG>=3)begin:g_s3
+   assign k_rdy_w[p]=1'b1;
+   ot_wbq_kstore #(.WIDTH(286),.KMUT(KMUT),.ASPLIT((HREG>=4)?1:0)) u_k(.clk(hbm_clk),.rst_n(krst),.grant(kv_u[p]),.room(k3_room[p]),
+    .in_data({fold(ka_u[30*p+:29],q_h),kd_u[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
+    .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
+  end else begin:g_s0
+   assign k3_room[p]=1'b0;
+   ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_k(.clk(hbm_clk),.rst_n(krst),.in_v(kv_u[p]),.in_r(k_rdy_w[p]),
+    .in_data({fold(ka_u[30*p+:29],q_h),kd_u[256*p+:256]}),.out_v(w_k_v[p]),.out_r(w_k_rdy[p]),
+    .out_data({w_k_addr[30*p+:30],w_k_wdata[256*p+:256]}));
   end
- end
- reg [2:0] credit;integer mc;
- wire [3:0] ne=~fifo_empty;
- wire [1:0] sel=ne[0]?2'd0:ne[1]?2'd1:ne[2]?2'd2:2'd3;
- wire send=(|ne)&&credit!=0&&!h_stop&&hrst;
- assign g_v=send;
- assign g_d=fifo_head[sel][285:0];
- assign fifo_re=send?(4'b1<<sel):4'b0;
- always @(posedge hbm_clk or negedge hrst)begin
-  if(!hrst)credit<=(MUT==2)?3'(CRED+1):3'(CRED);
-  else credit<=credit-3'(send)+3'(g_credit&&!(MUT==1&&G==1&&mc>=9));
- end
- always @(posedge hbm_clk or negedge hrst)if(!hrst)mc<=0;else if(G==1&&MUT==1&&g_v)mc<=mc+1;
+ end endgenerate
 endmodule
-
 `default_nettype wire
