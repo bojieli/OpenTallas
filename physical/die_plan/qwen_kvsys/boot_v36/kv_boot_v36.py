@@ -34,8 +34,9 @@ KVS13L4 = ROOT / 'results/arch/qwen_kv_static_programme_1017/kvs13l4_plan_ages_s
 # ---------------------------------------------------------------------------------------------------------------- depths
 class Groups:
     """Crossing and explicit changed INNER timing members indexed by sink leaf"""
-    def __init__(self, path):
+    def __init__(self, path, splits=None):
         g = json.load(gzip.open(path)) if str(path).endswith('.gz') else json.load(open(path))
+        self.alias = split_aliases(splits)
         self.by_sink = {}
         for x in g['landing']:
             for m in x['members']:
@@ -49,12 +50,28 @@ class Groups:
             if m.get('kind') != 'intra':
                 raise ValueError('internal timing member must be an intra edge')
             sl, sp = m['source'].rsplit('.', 1)
-            row = dict(sink=m['sink'], sink_port=m['sink_port'], src=sl, src_port=sp,
+            sink, sink_port = self.unsplit(m['sink'], m['sink_port'], m['id'])
+            sl, sp = self.unsplit(sl, sp, m['id'])
+            row = dict(sink=sink, sink_port=sink_port, src=sl, src_port=sp,
                        asb=m['asbuilt_stages'], bnd=m['landed_stages'], lane=m['lane'], inner_id=m['id'])
             if row['inner_id'] in self.inner:
                 raise ValueError('duplicate internal timing edge')
             self.inner[row['inner_id']] = row
             self.by_sink.setdefault(row['sink'], []).append(row)
+
+    def unsplit(self, leaf, port, eid):
+        """DIE-KV-97 11-09: a core-split half (asbuilt.core_splits: PCC keeps the leaf path, PCF is <path>_f; each split bus
+        becomes <port>_c / <port>_f) -> the as-built leaf.port the relay tables and the static model name.  Both halves of one
+        as-built bus then price that bus together (bound_value takes the max); nothing else is renamed."""
+        a = self.alias.get(port)
+        if a is None:
+            return leaf, port
+        base, half, sfx = a
+        if half == 'pcf':
+            if not leaf.endswith(sfx):
+                raise ValueError(f'{eid}: core-split PCF port {port} on leaf {leaf} without the {sfx} suffix')
+            leaf = leaf[:-len(sfx)]
+        return leaf, base
 
     def find(self, sink_re, port_re, src_re, src_port_re='.*'):
         out = []
@@ -69,6 +86,29 @@ class Groups:
         missing = sorted(k for k, m in self.inner.items() if m['asb'] != m['bnd'] and k not in self.inner_consumed)
         if missing:
             raise ValueError(f'Unpriced changed INNER edges: {missing[:12]}')
+
+
+def split_aliases(splits):
+    """asbuilt.core_splits specs (or None) -> {split port: (as-built port, 'pcc'|'pcf', PCF leaf suffix)}"""
+    out = {}
+    for sp in splits or []:
+        for port, d in (sp.get('split') or {}).items():
+            for half in ('pcc', 'pcf'):
+                n = d.get(f'{half}_port')
+                if not n:
+                    raise ValueError(f'core_splits {sp.get("from")}: split port {port} has no {half}_port')
+                if n in out and out[n][0] != port:
+                    raise ValueError(f'core_splits: split port {n} names two as-built ports')
+                out[n] = (port, half, '_f')
+    return out
+
+
+def load_splits(path):
+    """--core-splits FILE: a plan asbuilt (its core_splits) or a bare core_splits list"""
+    if not path:
+        return None
+    j = json.loads(Path(path).read_text())
+    return j.get('core_splits', []) if isinstance(j, dict) else j
 
 
 def bound_value(asb_value, members, key):
@@ -197,7 +237,7 @@ def boot_words(sched, qk):
 def prep(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    G = Groups(a.groups)
+    G = Groups(a.groups, load_splits(a.core_splits))
     rs = json.loads(Path(a.rs).read_text())
     sm = json.loads(Path(a.model).read_text())
     P_asb = sm['static_schedule']['paths']
@@ -337,6 +377,8 @@ if __name__ == '__main__':
     p.add_argument('--rs', required=True)
     p.add_argument('--model', required=True)
     p.add_argument('--groups', required=True)
+    p.add_argument('--core-splits', type=Path, help='asbuilt.core_splits (plan asbuilt or bare list): price INNER rows of split '
+                   'PCC/PCF halves on their as-built bus')
     p.add_argument('--out', required=True)
     p.add_argument('--pv-result-calendar', type=Path, help='explicit landed result-trunk calendar; input ages stay unchanged')
     c = sp.add_parser('compile')
