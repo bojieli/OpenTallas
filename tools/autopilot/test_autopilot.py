@@ -35,6 +35,7 @@ class Base(unittest.TestCase):
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
         os.environ["AP_RELEASE_CACHE"] = str(Path(self.tmp.name) / "release_cache.json")
         os.environ["AP_OT_RUN_SIGNALS"] = str(Path(self.tmp.name) / "no_signals.log")   # never the host's real log
+        os.environ["AP_WATCHDOG_LOG"] = str(Path(self.tmp.name) / "no_watchdog.log")    # never the hub's real log
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
         self.ap = importlib.reload(autopilot)
@@ -45,7 +46,8 @@ class Base(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_OT_RUN_SIGNALS"):
+        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_OT_RUN_SIGNALS",
+                  "AP_WATCHDOG_LOG"):
             os.environ.pop(k, None)
 
     def queue(self, *rows):
@@ -701,6 +703,33 @@ class TestTick(TickBase):
             self.assertEqual(C({}, {"exit": rc}), ("CRASH", "infra-stopped"))
             self.assertNotIn("infra-stopped", self.ap.INFRA_KINDS)
             self.assertEqual(C({"oom": "make: *** [x] Error 137"}, {"exit": rc}), ("CRASH", "infra-oom"))
+
+    def test_watchdog_stop_names_the_sender_of_143(self):
+        """KW-FIX-44 11-09: e1aed29fd563 (slw_su_l1, 09:22) ended 143 "stopped from outside"; the hub WATCHDOG had
+        stopped its unit at 09:13 as SUPERSEDED.  The unit from the client log finds the STOP line."""
+        txt = "ot-run: RAN on localhost (unit oth-ubuntu-3999380-1794228726): exit 143\nAP_RC=143\n"
+        cl = self.ap.parse_client_log(txt)
+        self.assertEqual((cl["ran_on"], cl["exit"], cl["unit"]), ("localhost", 143, "oth-ubuntu-3999380-1794228726"))
+        self.assertNotIn("unit", self.ap.parse_client_log("ot-run: RAN on epyc2: exit 143\nAP_RC=143\n"))
+        now = datetime.datetime.now()
+        ts = lambda dt: dt.strftime("%Y-%m-%d %H:%M PST")
+        log = Path(os.environ["AP_WATCHDOG_LOG"])
+        log.write_text(f"{ts(now)} STOP intel2 None oth-ubuntu-1-2.scope [dpkit-x] idle 2m lane ? kit k rc 0 why SUPERSEDED: other\n"
+                       f"{ts(now)} STOP intel2 None oth-ubuntu-3999380-1794228726.scope [dpkit-slw_su_l1-4001845] idle 2h53 "
+                       f"lane ? kit k rc 0 why SUPERSEDED: qwen_compute/slw_su_l1@12 row efdb36e864@12: older than live "
+                       f"attempt_14 on the current plan\n{ts(now)} TICK 0 ACT 0 FIX 1 STOP 25 REPORT\n")
+        self.ap.WATCHDOG_LOG = log
+        w = self.ap.watchdog_stop("oth-ubuntu-3999380-1794228726", time.time() - 3600)
+        self.assertIn("dpkit-slw_su_l1", w)
+        self.assertIsNone(self.ap.watchdog_stop("oth-ubuntu-3999380-1794228726", time.time() + 3600))  # older stop
+        self.assertIsNone(self.ap.watchdog_stop("oth-ubuntu-9-9", 0))
+        cls, kind, why = self.ap.classify({}, dict(cl, watchdog=w))
+        self.assertEqual((cls, kind), ("CRASH", "watchdog-superseded"))
+        self.assertIn("older than live attempt_14", why)
+        self.assertNotIn(kind, self.ap.INFRA_KINDS)                                # no retry, as before
+        old = w.split(" why ")[0]                                                  # a line from before this change
+        self.assertEqual(self.ap.classify({}, dict(cl, watchdog=old))[1], "watchdog-stopped")
+        self.assertEqual(self.ap.classify({}, cl)[1], "infra-stopped")             # no STOP line: unchanged
 
     def test_signoff_bundle_gap_rejected_before_route(self):
         self.f.kits["/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"] = {"signoff_missing": ["pair_skew.tcl"]}
