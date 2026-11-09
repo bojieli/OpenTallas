@@ -22,4 +22,4 @@ Co-changes that ride this switch:
 - Host frame gap: HGAP >= 15 + L8008 + L8007 = 154 edges (hard minimum 148), from HBM-TRANSPORT-1's 11-09 04:06 bench. A gap of 110 FAILS on this plan.
 - Compiler: VMLG SU-face shift, SEL_ADV = D_CAL - D_CMD and OWN_LAG = D_CMD + 2 + D_REQ per su_N tap, read from bind_F5b/bind_latency.json (HBM-TRANSPORT-1 11-09 03:02). This is a token-build obligation.
 
-Not in this plan, each with its blocker: E4 q_b010(+pv1) split, E7 rx_bm3_rest M6, E8 programme_store_r10, E9 Q2NF outline, and the VMLG SU-face compiler shift (HBM-TRANSPORT-1 11-09 03:02).
+Not in this plan, each with its blocker: E4 q_b010(+pv1) split, E7 rx_bm3_rest M6, E8 programme_store_r10, and E9 Q2NF outline.
