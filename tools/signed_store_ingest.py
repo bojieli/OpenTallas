@@ -8,11 +8,13 @@ timers (COORD 11-09 01:1x).  Runs on localhost only: the AGIdock key never leave
   archive  the record's unit to AGIdock, host -> localhost -> archive, throttled; existing archive files are never rewritten
   verify   sha256 of every file, archive against a fresh hash on the host
   ingest   signed_store.ingest, then commit the new entries through coord-commit.sh
+  sweep    a new DO_NOT_COUNT marker in a counted record's own sign-off / routed-DB dirs becomes a HOLD row in
+           lanes/COUNT-DO-NOT-COUNT.tsv, which the counter reads (a dir already listed keeps its state)
 
 A record that fails any step is logged and picked up again next run.  Exit 1 when anything failed.
 Host paths appear here only as the source of a copy: the counter reads the store and never a host.
 """
-import collections, fcntl, json, os, pathlib, shlex, subprocess, sys, time
+import collections, fcntl, json, os, pathlib, re, shlex, subprocess, sys, time
 
 os.environ['OT_COUNT_SOURCE'] = 'hosts'     # this tool's scan uses the counter's ssh; the counter itself stays on the store
 TOOLS = str(pathlib.Path(__file__).resolve().parent)
@@ -64,6 +66,66 @@ def select(recs, have, now, window_h=WINDOW_H):
         if t is None or now - t > window_h * 3600: continue
         out[k].append(r)
     return dict(out)
+
+
+MARKER_PY = r'''
+import json, os, sys, time
+o = {}
+for d in sys.stdin.read().split('\n'):
+    if not d: continue
+    try:
+        p = os.path.join(d, 'DO_NOT_COUNT')
+        if os.path.isfile(p): o[d] = [open(p, errors='replace').read(160), time.strftime('%Y-%m-%d', time.localtime(os.path.getmtime(p)))]
+    except Exception: pass
+print(json.dumps(o))
+'''
+STOP = re.compile(r'/srv/opentallas-scratch\d*(/claude)?|/home/ubuntu(/scratch-root)?(/claude)?|/mnt.*')
+
+
+def ancestors(p):
+    out, d = [], os.path.dirname(p)
+    while d and d != '/' and not STOP.fullmatch(d):
+        out.append(d); d = os.path.dirname(d)
+    return out
+
+
+def marker_sweep(fails, cache=None):
+    """-> new HOLD rows written.  Own dirs only: a marker on another copy of the view says nothing about this record."""
+    cache = json.load(open(cache or rtp.CACHE))
+    by_alias = {}
+    for e in ss.read_manifest():
+        for a in [e.get('origin')] + (e.get('aliases') or []):
+            if a: by_alias[a] = e
+    need = collections.defaultdict(set)
+    for v in cache['plans'].values():
+        for kind in ('signed_designs', 'signed_types', 'signed_cores'):
+            for refs in (v.get(kind) or {}).values():
+                for ref in refs:
+                    m = re.match(r'(\S+?):(\S+signoff\.json)', ref if isinstance(ref, str) else '')
+                    e = by_alias.get('%s:%s' % m.groups()) if m else None
+                    if not e or str(e.get('origin', '')).startswith('origin/'): continue
+                    h, p = e['origin'].split(':', 1)
+                    need[h].update(ancestors(p))
+                    db = (e.get('scan') or {}).get('routed_db')
+                    if db: need[h].update(ancestors(db))
+    known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
+    add = []
+    for h, ds in sorted(need.items()):
+        try:
+            r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(MARKER_PY)], '\n'.join(sorted(ds)) + '\n', 600)
+            found = json.loads(r.stdout)
+        except Exception as e:
+            fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
+        for d, (text, date) in found.items():
+            if '%s:%s' % (h, d) not in known:
+                add.append('%s:%s\tHOLD\t%s\t%s' % (h, d, text.replace('\n', ' ').replace('\t', ' ')[:180], date))
+    if add:
+        with open(rtp.COUNT_DNC, 'a') as f:
+            f.write('\n'.join(add) + '\n')
+        c = run([str(COORD / 'bin/coord-commit.sh'), 'COUNT-DO-NOT-COUNT: %d new marker holds' % len(add), 'lanes/COUNT-DO-NOT-COUNT.tsv'], None, 280)
+        if c.returncode: fails.append(['coord', '*', 'marker commit rc %d' % c.returncode])
+        for a in add: say('HOLD', a[:160])
+    return add
 
 
 def run(cmd, inp=None, timeout=3600):
@@ -125,8 +187,13 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
         say('another ingest is running'); return 0
+    if '--sweep-only' in sys.argv:
+        fails = []
+        add = marker_sweep(fails)
+        say('marker sweep: new holds', len(add), 'fails', fails)
+        return 1 if fails else 0
     dry = '--dry' in sys.argv
-    t0 = time.time(); fails = []; new = []; unreachable = []
+    t0 = time.time(); fails = []; new = []; unreachable = []; committed = 0; commit = None
     recs = []
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(len(ORDER)) as ex:
@@ -156,13 +223,18 @@ def main():
                                      aliases={r['path']: ['%s:%s' % (x['scan_host'], x['path']) for x in v]})
                 except Exception as e:
                     fails.append([h, r['path'], 'ingest', str(e)[:200]])
+            # COUNT-ARCHIVE-2 11-09: commit after every host, so a pass stopped at its time cap keeps what it ingested
+            # (the 01:23 pass was killed at 40 min with 84 entries written and none committed)
+            fresh = new[committed:]
+            if fresh:
+                rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in fresh]
+                c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: hourly ingest %s, %d new entries' % (h, len(rel))] + rel, None, 280)
+                commit = max(commit or 0, c.returncode)
+                if c.returncode: fails.append(['coord', h, 'store commit rc %d' % c.returncode])
+                else: committed = len(new)
             say(h, 'ingested so far', len(new), 'fails', len(fails))
-    commit = None
-    if new:
-        rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in new]
-        c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: hourly ingest, %d new entries' % len(rel)] + rel, None, 280)
-        commit = c.returncode
-    res = dict(time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
+    holds = [] if dry else marker_sweep(fails)
+    res = dict(holds=holds, time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
     say('DONE new', len(new), 'fails', len(fails), 'unreachable', unreachable, 'commit rc', commit, '%d s' % res['secs'])
