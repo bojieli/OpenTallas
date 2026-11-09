@@ -553,6 +553,10 @@ def link_plan(old_ck, start, run_files):
     last = STEPS[IDX[start] - 1]
     t_end = old_ck["steps"][last]["end"]
     boundary = {os.path.join(old_ck["base"], n) for n in STEP_OUT[last]}
+    # KW-FIX-40 11-08 (hd_host a13): ORFS closes a step's log about 2 s after write_db, so the last reused step's log was over
+    # the 1 s mtime limit below and dropped, and legacy_gate's GRT layer check stopped on 'no 5_1_grt.log'.  checkpoint()
+    # already reads exactly these logs to pass the step, so they belong to the reused run whatever their mtime.
+    step_logs = {os.path.join(old_ck["base"].replace("results" + os.sep, "logs" + os.sep, 1), n) for n in STEP_LOGS[last]}
 
     def step_of(name):
         m = re.match(r"^(\d)_(\d+)?", name)
@@ -569,7 +573,7 @@ def link_plan(old_ck, start, run_files):
         s = step_of(os.path.basename(rel))
         if s is not None and IDX[s] >= IDX[start]:
             continue
-        if mtime > t_end + 1:
+        if mtime > t_end + 1 and rel not in step_logs:
             continue
         # hardlink only the numbered step outputs (written once by their step); reports / objects / unnumbered files
         # (a later step may rewrite them in place) and the boundary checkpoint the next step reads are copied
