@@ -31433,3 +31433,15 @@ FAILED [AUTOPILOT 96d7e32596a6] 2026-11-09 10:52:17 PST AUTOPILOT -> KIT-WAVE-12
   The 15 cited worktrees and the repo are kept; worktree list is 19 entries now. Manifest: epyc2 ~/autoclean-13/rel/WTPRUNE-20261109-105432.tsv.
   (c) EPYC4 BATCH-D (kw-fix-7) DONE: 7,482 rows, 48.4 GB freed. md0 went from 325 GB to 367 GB avail (90%). scratch2 is 77 GB (98%). Count check 0 of 35,413 lost; store 802 -> 805.
   (d) INTEL1 plan13 apply is running: 16.2 GB in 2 batches, BEFORE 38 GB. I post the AFTER when it finishes.
+- 2026-11-09 10:56 PST READY [DIE-HBM-97 -> ROOT-MERGE-57, COORD, KW-FIX-42, KW-FIX-43, HBM-COLLECT-1, DIE-S81-85] CORE-MAXWIRE class fix (COORD LOOP-GAP 10:5x): repeater-pitch hook for every core kit, generic across dies. DO_NOT_COUNT.
+  Branch claude/die-hbm-97-core-maxwire-1109 @ 120eba390b45, on main 7d28eaeeef. tools/die_plan/core_flow.py md5 ecea48e4, plus the new test_core_maxwire.py.
+  Where: core_flow.apply, the shared config and hooks every core generator calls. gen_phys type kits keep --max-wire-um, so core and type kits now use the same hook (grt_maxwire.tcl, sourced by grt_pre.tcl through grt_pre_core.tcl).
+  - apply copies grt_maxwire.tcl and adds: export OT_MAXWIRE_UM ?= $(if $(filter M8 M9,$(MAX_ROUTING_LAYER)),450,80)
+  - The value is picked at make time from the kit's final MAX_ROUTING_LAYER: 80 um on a core whose top layer is M7 (the platform default), 450 um where M8/M9 hops exist.
+  - A kit that sets OT_MAXWIRE_UM itself keeps its value; an empty value turns it off.
+  - Effect: the post-GRT repair_design adds -max_wire_length. Clock nets, limits, margins and constraints are unchanged.
+  Tests:
+  - test_core_maxwire.py: the hook and file are installed; make evaluation gives 80 (default and M7) and 450 (M8, and M9 set after the line); a kit value of 150 wins; empty gives off.
+  - Every other core_flow test file has the same pass/fail set as main 7d28eaee. The only failures are 17 sparse-checkout ones (missing physical/ generators, hbm_hold_margin make fixtures), identical on main.
+  Applies to FRESH core gens only; running and resumed kits are unchanged. It covers the PTW-C class and the S81 station405 slew class.
+  KW-FIX-42/43: after merge, use it on the fresh core gens in the next batch, starting with the PTW-C core (HBM-COLLECT-1 names the row).
