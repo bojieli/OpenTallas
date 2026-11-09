@@ -13333,7 +13333,11 @@
    ],
    "cancel_superseded": false,
    "plan_core_items": [
-    "hnx_rp3h_xs"
+    "hnx_rp3h_xs",
+    "ot_pdie_serdes_rx_bm3_rest",
+    "ot_pdie_serdes_rx_bm_native",
+    "ot_pdie_serdes_tx",
+    "ot_s81_kp4_dchn"
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -15613,7 +15617,11 @@
     "epyc2",
     "epyc6",
     "epyc7"
-   ]
+   ],
+   "plan_core_items_prev_kw42kids": [
+    "hnx_rp3h_xs"
+   ],
+   "note_plan_core_items_kw42kids": "KW-FIX-42 2026-11-09 07:01 PST COORD 07:0x (3): PROVISIONAL-pending children of NE_io/NW_io/q_spb0(+pv1) with no wave row get a core row (allowlist; taken only if a plan type). Revert: plan_core_items <- plan_core_items_prev_kw42kids."
   }
  },
  "place_prefer": [
