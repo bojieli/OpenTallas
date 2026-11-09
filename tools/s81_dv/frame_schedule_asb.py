@@ -35,7 +35,14 @@ Consistency check (the plan side): every frame link latency is compared with the
 x_i0_to_xo_o0, every fint seam crossing = 2 boundary flops (plan wrapper ot_dp_st x 2), and every link that changed
 vs the LP frame must be named by a plan_map entry (plus_one / x / reset); an unexplained change FAILS.
 
-  frame_schedule_asb.py --master col_h10 --var x --out DIR [--keep-json]
+Bound plan (S81-PLAN-1 11-09, relay/type-safe events): --bound-plan PLAN traces the frame at that plan's bound
+seam depths.  The plan's fi_* lanes of this master must give ONE depth per band crossing r_i -> r_j over every frame
+instance (else refused: one schedule per master cannot carry them); a seam whose depth D exceeds the as-built 2 is
+traced as the s81b_fint seam plus D - 2 whole-bus register stages on its q (exactly what the bind emits for the event's
+stations, proven per lane by tools/die_plan/ts_relay_miter.py: new == old delayed by k), and the plan check reads the
+same plan (OT_S81_FRAME_PLAN).  The schedule and check record the plan sha256 and the seam depths.
+
+  frame_schedule_asb.py --master col_h10 --var x --out DIR [--keep-json] [--bound-plan PLAN.json]
 """
 import argparse
 import collections
@@ -58,7 +65,7 @@ LP_SCHED = 'results/arch/s81_dv_1016/frame_l4_cluster/compiler/{m}_schedule.json
 # RTL realises crossings as epoch-addressed landing memories, which a structural trace cannot time)
 LP_TWIN = 'rtl/dsrom_sys/s81_dv/frame_lp/vgcs/{m}_l4_lp_rf3r.sv'
 PLAN_MAP = 'rtl/dsrom_sys/s81_dv/frame_lp/plan/{m}_l4_lp_plan_map.json'
-ENDPOINT_RE = re.compile(r'^(ot_v41_rom_elem_q_qxpq_w10(?:_gb)?|dsfd_bf_col|dsfd_bf_front_roots|dsfd_node_\w+|dsfd_cfifo_crs4|'
+ENDPOINT_RE = re.compile(r'^(ot_v41_rom_elem_q_qxpq_w10(?:_gb(?:_split)?)?|dsfd_bf_col|dsfd_bf_front_roots|dsfd_node_\w+|dsfd_cfifo_crs4|'
                          r'ot_s81_cfg7_seq\w*|ot_rom_\w+)$')
 FF = {'$dff', '$dffe', '$adff', '$adffe', '$sdff', '$sdffe', '$sdffce', '$dffsr', '$dffsre', '$aldff', '$aldffe',
       '$_DFF_P_', '$_DFF_N_'}
@@ -66,6 +73,11 @@ BITWISE = {'$and', '$or', '$xor', '$xnor', '$not', '$pos', '$buf', '$_AND_', '$_
 CAP = 96          # depth cap: a data path deeper than this is a loop (reported)
 
 
+# the PQ element end points; _gb_split (DIE-S81-65 romq split, two NB = 1 halves, 0 added cycles, the _gb ports) is
+# traced as the _gb element it replaces
+ELEMS = ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb', 'ot_v41_rom_elem_q_qxpq_w10_gb_split')
+BOUND_EXTRA = {}  # --bound-plan: plan-derived stages per seam (never perturbed by a control); expectation side
+SEAM_EXTRA = {}  # --bound-plan: as-built seam instance (u_s01, ...) -> register stages added after its 2 flops
 SRC = [ROOT]     # RTL source root: the work tree, or (validation) an archive of the LP schedule's own revision
 
 
@@ -238,8 +250,45 @@ def module_of(cell_type):
     return t if t.startswith('$') else t.split('$')[0]
 
 
-def trace(yjs, top):
+def seam_extra_bits(mod, extra):
+    """bits of each top-level seam's q net -> the stages the bound plan adds after that seam"""
+    out = {}
+    for seam, k in extra.items():
+        net = mod['netnames'].get(f'{seam}.q')
+        if net is None:
+            raise ValueError(f'bound plan seam {seam} has no {seam}.q net in the traced frame')
+        for b in net['bits']:
+            if isinstance(b, int):
+                out[b] = k
+    return out
+
+
+def bound_seam_depths(plan, master):
+    """{'u_s01': D, ...}: the plan's fi lane depth per band crossing of this master, one value over all instances"""
+    ptype = {p['name']: p['type'] for p in plan['partitions']}
+    ports = {p['id']: p for p in plan['ports']} if isinstance(plan['ports'], list) else plan['ports']
+    lat = plan['latency']['lanes']
+    by = collections.defaultdict(set)
+    for ln in plan['lanes']:
+        if not ln['id'].startswith('fi_'):
+            continue
+        st, dt = ptype[ports[ln['ports'][0]]['src']['part']], ptype[ports[ln['ports'][-1]]['dst']['part']]
+        if not st.startswith(master + '_r'):
+            continue
+        i, j = re.match(master + r'_r(\d)', st).group(1), re.match(master + r'_r(\d)', dt).group(1)
+        by[f'u_s{i}{j}'].add(lat[ln['id']]['cycles'])
+    bad = {k: sorted(v) for k, v in by.items() if len(v) != 1}
+    if bad:
+        raise ValueError(f'bound plan: {master} fi depths differ between frame instances {bad}; one schedule per '
+                         'master cannot carry them (equalise them in the plan event)')
+    if not by:
+        raise ValueError(f'bound plan has no fi lanes of {master}')
+    return {k: v.pop() for k, v in sorted(by.items())}
+
+
+def trace(yjs, top, seam_extra=None):
     mod = yjs['modules'][top]
+    xbits = seam_extra_bits(mod, seam_extra) if seam_extra else {}
     fanout = collections.defaultdict(list)       # bit -> [(cell, port, index)]
     cells = mod['cells']
     dirs = {}
@@ -280,7 +329,7 @@ def trace(yjs, top):
                 if dirs[cn].get(port) != 'output' or m.startswith('ot_s81_cfg7_seq'):
                     continue
                 for k, b in enumerate(bits):
-                    if m in ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
+                    if m in ELEMS:
                         # frame_schedule.py: an element return word is two rows, MSB half r1, LSB half r0 (Yosys bit
                         # index 0 = LSB); odd-width outputs are not return words
                         w = len(bits)
@@ -300,7 +349,8 @@ def trace(yjs, top):
             con = c['connections']
             if t in FF:
                 if port == 'D':
-                    put(con['Q'][k], (lab, dep + 1))
+                    q = con['Q'][k]
+                    put(q, (lab, dep + 1 + xbits.get(q, 0)))
                 continue
             elif t in ('$mux', '$_MUX_'):
                 if port in ('A', 'B'):
@@ -351,22 +401,22 @@ def pin_labels(cells, labels, cn, port, which=None):
     return out
 
 
-def measure(yjs, top):
-    mod, cells, kind, labels = trace(yjs, top)
+def measure(yjs, top, seam_extra=None):
+    mod, cells, kind, labels = trace(yjs, top, seam_extra)
     by = collections.defaultdict(list)
     for cn, m in kind.items():
         by[m.split('$')[0]].append(cn)
     res = dict(stations={}, nodes={}, root=None, links={})
     for cn, m in kind.items():
         inst = inst_name(cn)
-        if m in ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
+        if m in ELEMS:
             ins = {}
             for port in cells[cn]['connections']:
                 if port.startswith('xs_'):
                     ins[port] = sorted(pin_labels(cells, labels, cn, port))
             ctl = {p: sorted(pin_labels(cells, labels, cn, p, -1)) for p in ('go', 'cfg_v')}
             res['stations'][inst] = dict(inputs=ins, control=ctl)
-            if m.endswith('_gb'):
+            if m.endswith(('_gb', '_gb_split')):
                 res['stations'][inst]['go_boundary_edges'] = 1
         elif m.startswith('dsfd_node'):
             res['nodes'][inst] = {p: sorted(pin_labels(cells, labels, cn, p)) for p in ('a', 'b')
@@ -610,8 +660,12 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
                  'physical/die_plan/s81/die_plan.json latency.lanes fi_* cycles (boundary + stations + fixed_cycles)')
         mm = re.fullmatch(r'seam lpl_(\d+) (u_r\d)->(r\d)', k)
         if mm:
+            seam = f'u_s{mm.group(2)[3:]}{mm.group(3)[1:]}'
+            ext = BOUND_EXTRA.get(seam, 0)
             prow(f'seam lpl_{mm.group(1)} {mm.group(2)[2:]}->{mm.group(3)} (writer data to reader station)', v,
-                 [le['seam_K_plus_1']], f'{PLAN_MAP.format(m=master)} latency_edges.seam_K_plus_1')
+                 [le['seam_K_plus_1'] + ext], f'{PLAN_MAP.format(m=master)} latency_edges.seam_K_plus_1'
+                 + (f' + {ext} bound-plan stages on {seam} (frame compiler must schedule this read {ext} later)'
+                    if ext else ''))
     sched = dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=src_sha,
                  landing_lk=meas_ab.get('landing_lk'),
                  spec=lp_sched['spec'], added_edges_per_crossing=lp_sched['added_edges_per_crossing'],
@@ -644,6 +698,11 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--work', type=Path)
     ap.add_argument('--mem-gb', type=int, default=24)
+    ap.add_argument('--bound-plan', type=Path, default=None,
+                    help='trace at this plan\'s bound fint seam depths and check against it (relay/type-safe event)')
+    ap.add_argument('--control-seam-offset', action='append', default=[], metavar='SEAM=N',
+                    help='FAILING CONTROL only: trace seam SEAM (u_s01 ...) N stages off the bound plan; the plan check '
+                         'must then FAIL (the receipt is marked control and is never a schedule of record)')
     ap.add_argument('--manifest', default=MANIFEST,
                     help='selected source manifest within this source root; canonical default unchanged')
     a = ap.parse_args()
@@ -657,6 +716,27 @@ def main():
     lp_sched = json.loads((ROOT / LP_SCHED.format(m=m)).read_text())
     plan_map = json.loads((ROOT / PLAN_MAP.format(m=m)).read_text())
     lp_files = list(lp_sched['source_sha256']) + [LP_TWIN.format(m=m)]
+    bound = None
+    if a.bound_plan is not None:
+        braw = a.bound_plan.read_bytes()
+        depths = bound_seam_depths(json.loads(braw), m)
+        short = {k: d for k, d in depths.items() if d < 2}
+        if short:
+            raise ValueError(f'bound plan seam shallower than the as-built 2 flops: {short}')
+        SEAM_EXTRA.clear()
+        SEAM_EXTRA.update({k: d - 2 for k, d in depths.items() if d > 2})
+        BOUND_EXTRA.clear()
+        BOUND_EXTRA.update(SEAM_EXTRA)
+        for kv in a.control_seam_offset:
+            s, n = kv.split('=')
+            SEAM_EXTRA[s] = SEAM_EXTRA.get(s, 0) + int(n)
+            if SEAM_EXTRA[s] < 0:
+                raise ValueError('control offset below the as-built seam')
+        os.environ['OT_S81_FRAME_PLAN'] = str(a.bound_plan.resolve())
+        bound = dict(plan=str(a.bound_plan), plan_sha256=hashlib.sha256(braw).hexdigest(), seam_depths=depths,
+                     seam_extra_stages=dict(SEAM_EXTRA), control_seam_offset=a.control_seam_offset or None,
+                     basis='as-built s81b_fint seam + (plan depth - 2) whole-bus stages on its q '
+                           '(tools/die_plan/ts_relay_miter.py: bound lane == as-built lane delayed by k)')
     # (1) validation: tracer on the LP seam twin at the LP schedule's own revision (all its source hashes match)
     rev = subprocess.run(['git', '-C', str(ROOT), 'log', '-1', '--format=%H', '--', LP_SCHED.format(m=m)],
                          capture_output=True, text=True, check=True).stdout.strip()
@@ -679,7 +759,7 @@ def main():
     die_text = '\n'.join((ROOT / f).read_text() for f in netlists)
     selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS())
     (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
-    meas_ab = measure(selected_json, ab_top)
+    meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None)
     assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
@@ -698,17 +778,22 @@ def main():
     fails = ['VALIDATION ' + f for f in vfails if '.xs_' in f]
     sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src)
     sched['selected_station_variants'] = selected_variants
+    if bound is not None:
+        sched['bound_plan'] = bound
     fails += pf
     sp = a.out / f'{ab_top}_schedule.json'
     sp.write_text(json.dumps(sched, indent=1) + '\n')
     ssha = hashlib.sha256(sp.read_bytes()).hexdigest()
     changed = [r for r in rows if r['asbuilt'] != r['lp_schedule']]
     verdict = 'FAIL' if fails else 'PASS'
+    if a.control_seam_offset:
+        verdict = 'CONTROL_' + verdict
     (a.out / f'{ab_top}_check.json').write_text(json.dumps(dict(
         schema='opentallas.s81.frame_schedule_asb_check.v1', master=ab_top, verdict=verdict, schedule_sha256=ssha,
         fails=fails, validation=dict(rev=rev, twin=LP_TWIN.format(m=m), links=len(vrows), fails=vfails, rows=vrows,
                                 role='station baselines must match; return links come directly from current RTL'),
-        lp_schedule_stale_sources_at_head=stale, plan_consistency=plan, links=rows, changed_vs_lp_schedule=changed),
+        lp_schedule_stale_sources_at_head=stale, plan_consistency=plan, links=rows, changed_vs_lp_schedule=changed,
+        bound_plan=bound),
         indent=1) + '\n')
     print(f'FRAME_SCHEDULE_ASB {ab_top} {verdict} validation {len(vrows) - len(vfails)}/{len(vrows)} links '
           f'changed_vs_lp={len(changed)} plan_rows={len(plan)} plan_fails={sum(r["verdict"] == "FAIL" for r in plan)}')
