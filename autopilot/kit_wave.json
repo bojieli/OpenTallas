@@ -676,8 +676,8 @@
     "epyc7"
    ],
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "item_env": {
@@ -2039,7 +2039,13 @@
     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
    },
    "note_kw43_k9c2": "KW-FIX-43 15:1x: kv3_sys_c ONLY -> bind9c2 + plan_zbr2 asbuilt, released from hold; every other KV row keeps bind9. Revert: item_inputs[kv3_sys_c] = item_inputs_prev_kw43k9c2[kv3_sys_c] (None = delete); hold_items = hold_items_prev_kw43k9c2.",
-   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43k9c2 edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict."
+   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43k9c2 edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict.",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
   },
   "s81": {
    "enabled": true,
@@ -4283,8 +4289,8 @@
     ]
    },
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
@@ -7178,7 +7184,13 @@
     "eng__t1": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry."
    },
    "note_kw43_ctap": "KW-FIX-43 15:0x: eng__t1 -> ENG-CTAP plan+bind9_ctap via item_inputs, released from EARLY-CORE-TAP hold. Revert: item_inputs[eng__t1] = item_inputs_prev_kw43ctap[eng__t1] (None = delete); hold_items = hold_items_prev_kw43ctap.",
-   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43ctap edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict."
+   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43ctap edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict.",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
   },
   "s81_head": {
    "enabled": true,
@@ -9367,8 +9379,8 @@
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "cancel_superseded": false,
@@ -13719,7 +13731,13 @@
      "OT_CONS_KIT": "1"
     }
    },
-   "note_kw43_c5b": "KW-FIX-43 15:0x: slw_su_l0__cl76fb247e CONS-OVERMACRO-1 -> cand9 + OT_CONS_KIT=1 OT_CONS_MAX_LAYER=M7; slw_sc_v1__cl63e5a7a2 = E-CHANNEL, waits for DIE-QC-97 cand10. Revert: item_inputs/item_env = *_prev_kw43c5b[k] (None = delete)."
+   "note_kw43_c5b": "KW-FIX-43 15:0x: slw_su_l0__cl76fb247e CONS-OVERMACRO-1 -> cand9 + OT_CONS_KIT=1 OT_CONS_MAX_LAYER=M7; slw_sc_v1__cl63e5a7a2 = E-CHANNEL, waits for DIE-QC-97 cand10. Revert: item_inputs/item_env = *_prev_kw43c5b[k] (None = delete).",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
   },
   "hbm": {
    "enabled": true,
