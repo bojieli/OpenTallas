@@ -7172,7 +7172,8 @@
         "coll_ft__cla4a25d77@10",
         "cbn_q00__cl622f65d2@13",
         "cbn_q00__cldbcda913@18",
-        "slw_su_l1__clcc9d0155@9"
+        "slw_su_l1__clcc9d0155@9",
+        "slw_su_l1__cla2a78701@8"
       ],
       "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
       "type_args": {
@@ -7750,7 +7751,8 @@
         "coll_ft__cla4a25d77@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -87.0 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
         "cbn_q00__cl622f65d2@13": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
         "cbn_q00__cldbcda913@18": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
-        "slw_su_l1__clcc9d0155@9": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json"
+        "slw_su_l1__clcc9d0155@9": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
+        "slw_su_l1__cla2a78701@8": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json"
       },
       "gen_hosts": [
         "intel1",
@@ -8227,103 +8229,121 @@
         "sle_cland_w2_e_200": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/f8ddb7e7b970/sle_cland_w2_e_200",
-            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/f8ddb7e7b970/sle_cland_w2_e_200",
+            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/f8ddb7e7b970/sle_cland_w2_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9db40b975f3e/sle_cland_w2_e_200",
-            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/9db40b975f3e/sle_cland_w2_e_200",
+            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9db40b975f3e/sle_cland_w2_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/69048e5fea89/sle_cland_w2_e_200",
-            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/69048e5fea89/sle_cland_w2_e_200",
+            "job": "COUNTED sle_cland_w2_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/69048e5fea89/sle_cland_w2_e_200"
           }
         ],
         "sle_cland_w515_s_200": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/b51a052363ed/sle_cland_w515_s_200",
-            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/b51a052363ed/sle_cland_w515_s_200",
+            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/b51a052363ed/sle_cland_w515_s_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/fb73ac0b6d33/sle_cland_w515_s_200",
-            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/fb73ac0b6d33/sle_cland_w515_s_200",
+            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/fb73ac0b6d33/sle_cland_w515_s_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9377bd802f28/sle_cland_w515_s_200",
-            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/9377bd802f28/sle_cland_w515_s_200",
+            "job": "COUNTED sle_cland_w515_s_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9377bd802f28/sle_cland_w515_s_200"
           }
         ],
         "sle_cland_w515_s_201": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/aa83de0f7b0f/sle_cland_w515_s_201",
-            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/aa83de0f7b0f/sle_cland_w515_s_201",
+            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/aa83de0f7b0f/sle_cland_w515_s_201"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/505609d3b801/sle_cland_w515_s_201",
-            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/505609d3b801/sle_cland_w515_s_201",
+            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/505609d3b801/sle_cland_w515_s_201"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/39decabc0b2b/sle_cland_w515_s_201",
-            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/39decabc0b2b/sle_cland_w515_s_201",
+            "job": "COUNTED sle_cland_w515_s_201 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/39decabc0b2b/sle_cland_w515_s_201"
           }
         ],
         "sle_cland_w517_n_200": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/fdd5bdfda330/sle_cland_w517_n_200",
-            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/fdd5bdfda330/sle_cland_w517_n_200",
+            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/fdd5bdfda330/sle_cland_w517_n_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9663fb2f3b31/sle_cland_w517_n_200",
-            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/9663fb2f3b31/sle_cland_w517_n_200",
+            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/9663fb2f3b31/sle_cland_w517_n_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/6b7a5ab76bb0/sle_cland_w517_n_200",
-            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/6b7a5ab76bb0/sle_cland_w517_n_200",
+            "job": "COUNTED sle_cland_w517_n_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/6b7a5ab76bb0/sle_cland_w517_n_200"
           }
         ],
         "sle_cland_w765_e_200": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/72583c996d8a/sle_cland_w765_e_200",
-            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/72583c996d8a/sle_cland_w765_e_200",
+            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/72583c996d8a/sle_cland_w765_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/dd858356fcc5/sle_cland_w765_e_200",
-            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/dd858356fcc5/sle_cland_w765_e_200",
+            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/dd858356fcc5/sle_cland_w765_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/ebb98a0436ff/sle_cland_w765_e_200",
-            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/ebb98a0436ff/sle_cland_w765_e_200",
+            "job": "COUNTED sle_cland_w765_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/ebb98a0436ff/sle_cland_w765_e_200"
           }
         ],
         "sle_cland_w767_e_200": [
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/e74200543ac4/sle_cland_w767_e_200",
-            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/e74200543ac4/sle_cland_w767_e_200",
+            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_9d13c/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/e74200543ac4/sle_cland_w767_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/647595814994/sle_cland_w767_e_200",
-            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/647595814994/sle_cland_w767_e_200",
+            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/kw35/src_cf269/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/647595814994/sle_cland_w767_e_200"
           },
           {
             "host": "intel1",
-            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/bdfed4461495/sle_cland_w767_e_200",
-            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)"
+            "dir": "/srv/opentallas-scratch3/claude/kw40/views_ev/bdfed4461495/sle_cland_w767_e_200",
+            "job": "COUNTED sle_cland_w767_e_200 intel1:/srv/opentallas-scratch2/claude/type-cons-2/tree/src_w/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/landing_evidence/signoff.json (KW-FIX-32 export_view)",
+            "dir_prev_kw40": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/bdfed4461495/sle_cland_w767_e_200"
           }
         ],
         "sle_cland_w515_n": [
@@ -9228,7 +9248,8 @@
         "cbn_q00__cl622f65d2@13",
         "cbn_q00__cldbcda913@18",
         "slw_su_l1__clcc9d0155@9"
-      ]
+      ],
+      "note_kw40_views": "KW-FIX-40 23:3x COORD 23:30: FileNotFoundError provenance.json @gen is NOT the epyc4 move: staged views lacked landing_evidence (QC-TYPES-10 class N). Overlay dd955394dd0 carries it from attempts started after 23:17; the 18 kw32-views copies of 6 sle_cland *_200/_201 masters had none, so kw40/views_ev copies (hard links + landing_evidence from ref_tile, same LEF sha) replace them in prov_view_sources; dir_prev_kw40 = rollback."
     },
     "hbm": {
       "enabled": true,
