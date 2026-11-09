@@ -30,7 +30,7 @@ LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
 LAST = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest_last.json'
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
 AGI = SSH + ['-i', os.path.expanduser('~/.ssh/agidock_ot'), 'ubuntu@155.103.253.53']
-ORDER = ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2')   # hosts that go away first come first
+ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
 import importlib.util, json, os, sys
