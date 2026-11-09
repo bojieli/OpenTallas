@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 00:00 PST COUNT 241 (forced 23:5x, first count on the durable store counter): S81 60/62 + 28/205t, HEAD 4/4 + 18/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 72/107 + 0/81t. 287 GB freed by first cleanup pass; second pass running.
+> 2026-11-09 00:00 PST COUNT 241 (forced 23:5x, store counter; LOWER BOUND, store lags: at least 243 once HBM EP host/vc2 are ingested): S81 60/62 + 28/205t, HEAD 4/4 + 18/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 72/107 + 0/81t. 287 GB freed by first cleanup pass; second pass running.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
