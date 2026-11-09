@@ -1550,9 +1550,12 @@ def stage_reset_contract(kd, module, source=None):
         c = json.loads(source.read_text())
     except (OSError, ValueError) as e:
         raise SystemExit(f"{module}: unreadable die reset contract: {e}")
-    if module not in c.get("modules", []):
-        return None
     import lec
+    try:                                # RESET-KEY 11-09: a landing clone resolves to its base type's entry
+        if lec.reset_contract_member(module, c.get("modules", []))[0] is None:
+            return None
+    except ValueError as e:
+        raise SystemExit(f"{module}: {e}")
     report = lec.reset_contract_gate(source.parent, module,
                                      environ={"OT_LEC_RESET_CONTRACT": str(source)})
     if report.get("refused"):
