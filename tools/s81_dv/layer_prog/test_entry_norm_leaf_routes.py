@@ -160,3 +160,28 @@ def test_engram_reduce_splits_by_round_trip_group(tmp_path, monkeypatch):
     ctx = dict(ctx, line_avoid={'S': frozenset({1005})})
     r = LV.lower_eng(LvDie(), op, ctx, 'u_s_0S', 0)
     assert [x['issue'] for x in r['rows'] if 'REDUCE' in x['what']] == [1001, 1006]
+
+
+def offsets_table():
+    return dict(plan='p', tool='t', slices=LT.summary(report()), norm_blocked=[])
+
+
+def test_offsets_table_becomes_a_report_that_compiles():
+    off = json.loads(json.dumps(offsets_table()))       # as read from the JSON file: tuples are lists
+    rep = LT.report_from_offsets(off, 'top', 'view')
+    assert LT.slices(rep) == LT.slices(report())
+    assert rep['derived_from_plan_offsets']['plan'] == 'p' and rep['norm_producer_qualified'] is False
+    die, prog = base_entry()
+    p = BC.retime_norm(prog, die, deskew_by_slice=die.deskew, leaf_routes=rep)
+    assert SEL.check_control(p, die, rep)['normr_count'] == 80
+
+
+def test_offsets_table_from_another_formula_is_refused():
+    off = json.loads(json.dumps(offsets_table()))
+    off['slices']['u_s_0S']['norm_issue'][0] += 1
+    with pytest.raises(ValueError, match='disagrees with leaf_transport on u_s_0S norm_issue'):
+        LT.report_from_offsets(off, 'top')
+    off = json.loads(json.dumps(offsets_table()))
+    off['slices']['u_s_0S']['dn'][1] += 1
+    with pytest.raises(ValueError, match='disagrees'):
+        LT.report_from_offsets(off, 'top')

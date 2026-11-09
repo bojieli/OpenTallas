@@ -69,10 +69,50 @@ def summary(report):
     return tab
 
 
+def report_from_offsets(offsets, top_sha256, view_sha256=None):
+    """emitted_leaf_routes report from a per-plan offsets table (the dn/up/pdsk that a plan event moved, e.g.
+    lanes/TYPE-SAFE-4-S81-LEAF-OFFSETS.json), bound to the emitted top it will compile against.  The derived columns of
+    the table must equal what this module computes from its dn/up/pdsk, so a table from another formula is refused."""
+    rows = []
+    for name, s in sorted(offsets['slices'].items()):
+        for leaf in range(5):
+            rows.append(dict(slice=name, sid=s['sid'], leaf=leaf, xr_command_to_leaf_boundary_edges=s['dn'][leaf],
+                             vn_b_partial_to_xr_input_edges=s['up'][leaf], pdsk_edges=s['pdsk'][leaf],
+                             crossing_plus_pdsk_edges=s['dn'][leaf] + s['up'][leaf] + s['pdsk'][leaf]))
+    report = dict(schema='opentallas.s81.emitted_leaf_boundary_routes.v1', verdict='PASS_SELECTED_BOUNDARY_WIRING',
+                  source_top_sha256=top_sha256, source_view_sha256=view_sha256, leaves=rows,
+                  derived_from_plan_offsets=dict(plan=offsets.get('plan'), tool=offsets.get('tool')),
+                  scope='plan offsets table, not a trace of the emitted top', norm_producer_qualified=False,
+                  go_readiness_qualified=False, full_token=False, added_rtl_cycles=0)
+    for name, row in summary(report).items():
+        for key in ('lo_after_ctl', 'eng_ctls', 'norm_issue', 'norm_clash'):
+            if key in offsets['slices'][name] and json.loads(json.dumps(row[key])) != offsets['slices'][name][key]:
+                raise ValueError(f'offsets table disagrees with leaf_transport on {name} {key}')
+    return report
+
+
 if __name__ == '__main__':
     import argparse
+    import hashlib
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('routes')
+    ap.add_argument('--from-offsets', action='store_true', help='routes is a per-plan offsets table; write a report to --out')
+    ap.add_argument('--top', help='with --from-offsets: the emitted die top the compile will use (BoundDie die_sha is its sha256)')
+    ap.add_argument('--view-sha', default=None)
+    ap.add_argument('--out')
     a = ap.parse_args()
+    if a.from_offsets:
+        if not (a.top and a.out):
+            ap.error('--from-offsets needs --top and --out')
+        with open(a.top, 'rb') as f:
+            sha = hashlib.sha256(f.read()).hexdigest()
+        with open(a.routes) as f:
+            rep = report_from_offsets(json.load(f), sha, a.view_sha)
+        with open(a.out, 'w') as f:
+            json.dump(rep, f, indent=1)
+            f.write('\n')
+        print(json.dumps(dict(out=a.out, source_top_sha256=sha, plan=rep['derived_from_plan_offsets']['plan'],
+                              norm_blocked=[n for n, v in summary(rep).items() if v['norm_clash']])))
+        raise SystemExit(0)
     t = summary(load(a.routes))
     print(json.dumps(dict(slices=t, norm_blocked=[n for n, v in t.items() if v['norm_clash']]), indent=1))
