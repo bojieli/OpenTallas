@@ -251,7 +251,13 @@
         "kv3_hroot@10",
         "kv3_io_ft_v1@17",
         "kv3_io_cor@6",
-        "kv3_io_cor_v1@7"
+        "kv3_io_cor_v1@7",
+        "kv3_pc__cl254f2e73@18",
+        "kv3_pc__cl5a95b461@18",
+        "kv3_pc_v1__cl23f6a148@17",
+        "kv3_pc_v1__cl4ea58a5c@13",
+        "kv3_pc_v1__cl7f648944@17",
+        "kv3_pc_v3@7"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -740,22 +746,28 @@
           "OT_HOLD_STOP_PS": "-200"
         },
         "kv3_pc__cl254f2e73": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_pc__cl5a95b461": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_pc_v1__cl23f6a148": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_pc_v1__cl4ea58a5c": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_pc_v1__cl7f648944": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_pc_v3": {
-          "OT_HOLD_STOP_PS": "-200"
+          "OT_HOLD_STOP_PS": "-200",
+          "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0"
         },
         "kv3_phy_v1": {
           "OT_HOLD_STOP_PS": "-200"
@@ -991,12 +1003,28 @@
         ],
         "qkd_kvs_pcc": [
           {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc",
+            "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+            "detailed_lef": "detail_view.lef",
+            "detailed_receipt": "detail_receipt.json",
+            "detail_bloat_factor": 0
+          },
+          {
             "host": "epyc2",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/a0e9f5c3fe3e/qkd_kvs_pcc",
             "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view)"
           }
         ],
         "qkd_kvs_pcc_h_head_p": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc_h_head_p",
+            "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+            "detailed_lef": "detail_view.lef",
+            "detailed_receipt": "detail_receipt.json",
+            "detail_bloat_factor": 0
+          },
           {
             "host": "epyc4",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/df3060246f1f/qkd_kvs_pcc_h_head_p",
@@ -1005,12 +1033,28 @@
         ],
         "qkd_kvs_pcf": [
           {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
+            "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+            "detailed_lef": "detail_view.lef",
+            "detailed_receipt": "detail_receipt.json",
+            "detail_bloat_factor": 0
+          },
+          {
             "host": "epyc4",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
             "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
           }
         ],
         "qkd_kvs_pcf_h_head_p": [
+          {
+            "host": "intel2",
+            "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf_h_head_p",
+            "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+            "detailed_lef": "detail_view.lef",
+            "detailed_receipt": "detail_receipt.json",
+            "detail_bloat_factor": 0
+          },
           {
             "host": "epyc2",
             "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
@@ -1510,7 +1554,62 @@
         "kv3_io_ft_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release"
       },
       "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
-      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us."
+      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us.",
+      "prov_view_sources_prev_kw36pc": {
+        "qkd_kvs_pcc": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/a0e9f5c3fe3e/qkd_kvs_pcc",
+            "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcc_h_head_p": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/df3060246f1f/qkd_kvs_pcc_h_head_p",
+            "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf": [
+          {
+            "host": "epyc4",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
+            "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ],
+        "qkd_kvs_pcf_h_head_p": [
+          {
+            "host": "epyc2",
+            "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
+            "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
+          }
+        ]
+      },
+      "note_kw36_pc": "KW-FIX-36 COORD 17:29 (3): KV-TYPES-6 PDN-0006 class fix, 6 kv3_pc rows; counted child LEF re-spliced with exact native M6/M7 OBS (abstract_detail); view input changed, not a retry of an unchanged form. Revert prov_view_sources_prev_kw36pc + drop the 6 retry rows.",
+      "item_env_prev_kw36pc": {
+        "kv3_pc__cl254f2e73": {
+          "OT_HOLD_STOP_PS": "-200"
+        },
+        "kv3_pc__cl5a95b461": {
+          "OT_HOLD_STOP_PS": "-200"
+        },
+        "kv3_pc_v1__cl23f6a148": {
+          "OT_HOLD_STOP_PS": "-200"
+        },
+        "kv3_pc_v1__cl4ea58a5c": {
+          "OT_HOLD_STOP_PS": "-200"
+        },
+        "kv3_pc_v1__cl7f648944": {
+          "OT_HOLD_STOP_PS": "-200"
+        },
+        "kv3_pc_v3": {
+          "OT_HOLD_STOP_PS": "-200"
+        }
+      },
+      "queue_src_exact": {
+        "claude/kv-types-4-ringdens-1108@5178ea7aa2 + codex/kv-phy-deadclock-0222@e210d04c83": "claude/kw-fix-36-kv-e2rd-exact-1108@040a4567fb5f9d8087ae1bf732d4a11717b595c4"
+      },
+      "note_kw36_qsrc": "KW-FIX-36 (e): composed queue_src -> exact commit 5178ea7+e210d04 (merge tree; its 12 changed paths equal src_e2rd by blob hash on epyc6)."
     },
     "s81": {
       "enabled": true,
