@@ -1,0 +1,326 @@
+hbm	NE_io	12	ENQUEUED	geom	[('2026-11-08 22:29', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-09 01:22', None, 'FLOW', '[ERROR DRT-0073]')]	False
+hbm	NW_io	8	ENQUEUED	geom	[('2026-11-08 02:38', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-08 07:09', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / ')]	False
+hbm	hfd_ep_static	7	ENQUEUED	geom	[('2026-11-04 05:57', None, 'TIMING', 'hold'), ('2026-11-04 08:41', None, 'TIMING', 'hold')]	True
+hbm	hfd_hgi_vms_glue_nw_t	11	ENQUEUED	geom	[('2026-11-06 23:50', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-07 01:28', None, 'FLOW', 'unclassified failure @gen (see log')]	False
+hbm	hnx_fused_lane	10	FAIL	unit	[('2026-11-03 07:34', None, 'PLAN', 'plan geometry / site @geom: AP_AUTO_GEOM AUTO'), ('2026-11-04 06:43', None, 'PLAN', 'core view has no recipe / unambiguous port ma')]	False
+hbm	hnx_rp3h_xs	8	FAIL	place	[('2026-11-07 02:09', None, 'FLOW', 'unclassified failure @gen (see log'), ('2026-11-07 11:48', '8', 'PLAN', 'plan geometry / site @place: Error: detail_pl')]	False
+hbm	hnx_rp3lp3h_s	7	FAIL	unit	[('2026-11-03 10:00', None, 'FLOW', 'queue row rejected: '), ('2026-11-04 06:43', None, 'PLAN', 'core view has no recipe / unambiguous port ma')]	False
+hbm	hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f	6	FAIL	gen	[('2026-11-03 22:17', None, 'FLOW', '[ERROR DRT-0074]'), ('2026-11-07 18:06', None, 'FLOW', 'unclassified failure @gen (see log')]	False
+hbm	ot_hbm_hc_bank128_pair_core__v9bf80cdae38d	6	ENQUEUED	geom	[('2026-11-03 17:22', None, 'ROUTING', 'grt-overflow')]	False
+hbm	ot_hbm_hc_root_static__tailx_rest__v6bc7f2	6	ENQUEUED	geom	[('2026-11-03 16:32', None, 'RTL', 'RTL hierarchy / undriven / multi-driven at ge'), ('2026-11-03 22:32', None, 'TIMING', 'routed-not-signed: TT 33.3 FF -15.51 ps late-')]	False
+hbm	ot_hbm_hc_subtree32_core	6	FAIL	gen	[('2026-11-04 02:57', None, 'TIMING', 'routed: TT 272.1 FF -5.32 ps late-ECO exhaust'), ('2026-11-07 00:18', '6', 'FLOW', 'tool / Tcl error @gen: AssertionError: ot_hbm')]	False
+hbm	ot_hbm_host_cp_rxs	10	CANCELLED	gen	[('2026-11-03 18:32', '3', 'FLOW', 'tool / Tcl error @place: Error: macro_place.t'), ('2026-11-04 00:43', None, 'TIMING', 'hold')]	False
+hbm	ot_hbm_idx_rootctl_static_am	17	ENQUEUED	geom	[('2026-11-07 02:09', None, 'FLOW', 'unclassified failure @gen (see log'), ('2026-11-07 14:28', None, 'FLOW', 'queue row rejected: ')]	False
+hbm	ot_hbm_idx_topk_link_static	11	FAIL	place	[('2026-11-05 02:55', None, 'RTL', 'LEC not equivalent'), ('2026-11-07 19:39', None, 'FLOW', 'unclassified failure @place (see log')]	False
+hbm	ot_hbm_idx_vm_query_static_n12	10	ENQUEUED	geom	[('2026-11-02 19:21', None, 'FLOW', 'hold'), ('2026-11-05 17:43', None, 'FLOW', 'unclassified failure @gen (see log')]	False
+hbm	ot_hbm_su_static_cxport_ij_q	7	FAIL	gen	[('2026-11-03 17:09', None, 'FLOW', 'hold'), ('2026-11-07 02:09', None, 'FLOW', 'unclassified failure @gen (see log')]	False
+hbm	ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77	6	ENQUEUED	geom	[('2026-11-03 18:19', None, 'TIMING', 'hold'), ('2026-11-04 03:24', None, 'TIMING', 'hold')]	True
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	7	RUNNING	place	[('2026-11-03 15:14', None, 'RTL', 'LEC not equivalent'), ('2026-11-04 09:34', None, 'RTL', 'LEC not equivalent')]	True
+hbm	ot_hbm_svc_vmdel_lane_n	14	FAIL	gen	[('2026-11-03 22:45', None, 'TIMING', 'routed: TT -3.68 FF -28.84 ps late-ECO exhaus'), ('2026-11-07 03:29', None, 'FLOW', 'unclassified failure @gen (see log')]	False
+hbm	ot_hfd_coll_q2n2_body_core	7	ENQUEUED	geom	[('2026-11-04 12:54', None, 'RTL', 'LEC not equivalent'), ('2026-11-04 21:47', None, 'FLOW', 'queue row rejected: ')]	False
+hbm	ot_hfd_coll_q3_vm_core	9	ENQUEUED	geom	[('2026-11-03 20:07', None, 'FLOW', 'hold'), ('2026-11-07 19:39', None, 'TIMING', 'setup')]	False
+hbm	ot_hgi_coll_tkm_m_tp192__root	12	ENQUEUED	geom	[('2026-11-06 23:33', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-07 13:09', None, 'FLOW', 'queue row rejected: ')]	False
+hbm	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	6	ENQUEUED	geom	[('2026-11-02 20:19', None, 'PLAN', 'plan geometry / site @geom: AP_AUTO_GEOM AUTO'), ('2026-11-04 14:17', None, 'TIMING', 'routed: TT -27.01 FF -13.86 ps late-ECO exhau')]	False
+hbm	ot_hgi_qw_dec	10	CANCELLED	views	[('2026-11-03 23:14', None, 'FLOW', 'hold'), ('2026-11-05 05:01', None, 'TIMING', 'routed: TT 38.42 FF -6.53 ps late-ECO exhaust')]	False
+hbm	ot_hgi_sfu_programme_store_r10	8	ENQUEUED	geom	[('2026-11-05 21:45', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-08 15:26', None, 'ROUTING', 'grt-overflow')]	False
+hbm	ot_hgi_sm_xload_cl2_bfqg	6	ENQUEUED	geom	[('2026-11-04 08:59', None, 'ROUTING', 'grt-overflow'), ('2026-11-07 14:07', None, 'ROUTING', 'grt-overflow')]	True
+hbm	ot_hnx_fused_hub_n4ext	16	ENQUEUED	geom	[('2026-11-06 23:33', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-07 14:17', None, 'FLOW', 'queue row rejected: ')]	False
+hbm	q_b003	6	RUNNING	place	[('2026-11-08 21:37', None, 'FLOW', 'unclassified failure @mkdir (see log')]	False
+hbm	q_b011__physical_v1	6	RUNNING	place	[('2026-11-08 19:57', None, 'PLAN', 'PDN-0179')]	False
+hbm	q_b013	8	ENQUEUED	geom	[('2026-11-08 02:48', None, 'RTL', 'LEC not equivalent'), ('2026-11-08 18:26', '4', 'PLAN', 'PDN-0179')]	False
+hbm	q_b013__physical_v1	7	RUNNING	geom	[('2026-11-08 02:48', None, 'RTL', 'LEC not equivalent'), ('2026-11-08 22:40', '4', 'PLAN', 'plan geometry / site @place: Error: detail_pl')]	False
+hbm	q_b100	6	RUNNING	place	[('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b100/u_h'), ('2026-11-09 00:02', None, 'FLOW', 'unclassified failure @place (see log')]	False
+hbm	q_b101	11	FAIL	place	[('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b101/u_h'), ('2026-11-09 00:41', '11', 'PLAN', 'PDN-0179')]	False
+hbm	q_b101_nw	10	FAIL	place	[('2026-11-08 11:01', '2', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b101_nw/'), ('2026-11-09 01:34', '10', 'PLAN', 'PDN-0179')]	False
+hbm	q_b102	10	FAIL	place	[('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b102/u_h'), ('2026-11-09 00:53', None, 'RTL', 'LEC not equivalent')]	False
+hbm	q_b102__physical_v1	7	FAIL	place	[('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b102__ph'), ('2026-11-08 23:04', None, 'PLAN', '[ERROR MPL-0034]')]	False
+hbm	q_b103	10	FAIL	place	[('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b103/u_h'), ('2026-11-09 00:41', '10', 'PLAN', 'PDN-0179')]	False
+hbm	q_b103__physical_v1	11	RUNNING	place	[('2026-11-08 11:01', '2', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b103__ph'), ('2026-11-08 19:37', '3', 'FLOW', 'tool / Tcl error @gen: ValueError: q_b103__ph')]	True
+hbm	q_sm3	6	RUNNING	place	[('2026-11-08 21:27', None, 'FLOW', 'unclassified failure @mkdir (see log')]	False
+hbm	q_spb0	11	ENQUEUED	geom	[('2026-11-08 22:29', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-09 01:22', None, 'FLOW', '[ERROR DRT-0073]')]	False
+hbm	q_spb0__physical_v1	12	ENQUEUED	geom	[('2026-11-08 18:46', None, 'PLAN', 'port bind (plan pins'), ('2026-11-08 22:29', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	False
+hbm	q_su01	6	ENQUEUED	geom	[('2026-11-08 06:03', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / '), ('2026-11-08 07:42', '4', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI')]	False
+hbm	q_su01__physical_v1	6	ENQUEUED	geom	[('2026-11-08 06:03', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / '), ('2026-11-08 07:42', '4', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI')]	False
+hbm	q_su11	9	ENQUEUED	geom	[('2026-11-08 07:42', '4', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI'), ('2026-11-08 11:21', '6', 'PLAN', 'plan geometry / site @place: Error: detail_pl')]	False
+hbm	q_su20	6	RUNNING	place	[('2026-11-08 06:03', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI'), ('2026-11-08 12:08', '3', 'FLOW', 'tool / Tcl error @place: Error: detail_place.')]	False
+hbm	q_su20__physical_v1	6	ENQUEUED	geom	[('2026-11-08 06:36', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI')]	False
+hbm	q_su21	6	RUNNING	place	[('2026-11-08 06:03', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI'), ('2026-11-08 09:23', '3', 'PLAN', 'PDN-0179')]	False
+hbm	q_su21__physical_v1	6	ENQUEUED	geom	[('2026-11-08 06:25', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI')]	False
+hbm	q_su30	6	RUNNING	place	[('2026-11-08 06:03', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI'), ('2026-11-08 09:34', '3', 'PLAN', 'PDN-0179')]	False
+hbm	q_su30__physical_v1	8	ENQUEUED	geom	[('2026-11-08 06:03', '2', 'FLOW', 'kit recipe / preflight @preflight: KIT_PREFLI'), ('2026-11-08 10:41', '4', 'PLAN', '[ERROR PDN-0179]')]	False
+hbm	q_su31	7	ENQUEUED	geom	[('2026-11-08 00:27', None, 'RTL', 'RTL hierarchy / undriven / multi-driven at ge'), ('2026-11-08 09:45', '5', 'PLAN', 'PDN-0179')]	False
+hbm	q_su31__physical_v1	11	ENQUEUED	geom	[('2026-11-07 22:48', None, 'FLOW', 'unclassified failure @kit_topology (see log'), ('2026-11-08 00:27', None, 'RTL', 'RTL hierarchy / undriven / multi-driven at ge')]	False
+hbm	vsN0	10	ENQUEUED	geom	[('2026-11-08 22:40', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-09 01:46', None, 'FLOW', '[ERROR DRT-0073]')]	False
+hbm	vsN2	8	ENQUEUED	geom	[('2026-11-08 03:28', None, 'TIMING', 'hold'), ('2026-11-08 19:07', None, 'TIMING', 'hold')]	True
+qwen_compute	cbf_q00__cl1b5a6458	15	RUNNING	place	[('2026-11-08 06:03', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / '), ('2026-11-08 23:41', '12', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	cbf_q00__cl870de686	16	RUNNING	place	[('2026-11-06 18:17', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 23:41', '12', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	cbf_q00_s2	16	FAIL	place	[('2026-11-08 01:37', '11', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-09 01:57', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbf_q01	10	ENQUEUED	geom	[('2026-11-06 11:18', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 07:55', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	cbf_q01_s2	8	ENQUEUED	geom	[('2026-11-07 05:38', '7', 'FLOW', 'OT_CLAND'), ('2026-11-08 13:46', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	cbf_q11	14	FAIL	place	[('2026-11-08 03:17', None, 'FLOW', '[ERROR DPL-0033]'), ('2026-11-09 01:22', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbn_q00__cl622f65d2	14	FAIL	place	[('2026-11-08 23:17', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-09 01:46', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbn_q00__cld7bf7197	17	RUNNING	place	[('2026-11-08 21:17', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 23:29', '13', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	cbn_q00__cldbcda913	22	RUNNING	place	[('2026-11-08 07:30', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / '), ('2026-11-08 23:17', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+qwen_compute	cbn_q01__clab6e67f2	21	FAIL	place	[('2026-11-08 23:41', None, 'FLOW', 'clock-landing'), ('2026-11-09 01:57', None, 'FLOW', 'clock-landing')]	True
+qwen_compute	cbn_q01__cld9ff4c40	8	RETRY-INFRA	gen	[('2026-11-05 10:41', None, 'TIMING', 'hold'), ('2026-11-09 00:27', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbn_q01__cldd6ea846	15	RUNNING	place	[('2026-11-07 01:28', None, 'TIMING', 'hold'), ('2026-11-08 23:29', '11', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	cbn_q11__cl49ae4555	8	FAIL	place	[('2026-11-08 23:29', None, 'FLOW', 'clock-landing'), ('2026-11-09 00:53', None, 'FLOW', 'clock-landing')]	True
+qwen_compute	cbn_q11__cl5cc92dfe	7	RETRY-INFRA	gen	[('2026-11-07 02:09', '4', 'FLOW', 'tool / Tcl error @kit_topology: ValueError: c'), ('2026-11-08 23:29', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbx_q10__cl89936551	16	FAIL	place	[('2026-11-08 23:41', '15', 'FLOW', 'OT_CLAND'), ('2026-11-09 01:07', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	cbx_q10__cl94a12200	17	FAIL	place	[('2026-11-08 20:57', None, 'FLOW', '[ERROR DRT-0073]'), ('2026-11-09 01:22', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	coll_ft__cl78c7b300	13	ENQUEUED	geom	[('2026-11-08 10:51', None, 'TIMING', 'hold'), ('2026-11-08 23:41', '12', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	coll_ft__cla4a25d77	15	ENQUEUED	geom	[('2026-11-08 05:40', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 10:51', None, 'TIMING', 'hold')]	False
+qwen_compute	coll_ftm	9	ENQUEUED	geom	[('2026-11-06 00:47', None, 'TIMING', 'hold'), ('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2')]	False
+qwen_compute	coll_n	6	ENQUEUED	geom	[('2026-11-05 21:45', None, 'TIMING', 'hold'), ('2026-11-06 19:37', None, 'TIMING', 'routed-not-signed: TT -167.37 FF -160.67 ps l')]	False
+qwen_compute	coll_s	14	FAIL	place	[('2026-11-09 00:02', None, 'FLOW', 'clock-landing'), ('2026-11-09 00:53', None, 'FLOW', 'clock-landing')]	True
+qwen_compute	coll_ucie	10	ENQUEUED	geom	[('2026-11-04 15:02', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-06 19:56', None, 'TIMING', 'hold')]	False
+qwen_compute	glue	8	ENQUEUED	geom	[('2026-11-06 19:37', None, 'FLOW', 'queue row rejected: '), ('2026-11-08 17:16', None, 'RTL', 'LEC not equivalent')]	False
+qwen_compute	native59	6	ENQUEUED	geom	[('2026-11-06 21:37', None, 'FLOW', 'queue row rejected: '), ('2026-11-08 04:28', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_ctl__cl67434795	12	RETRY-INFRA	kit_topology	[('2026-11-08 06:36', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-09 00:15', '11', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	sle_ctl__cla4f6f12f	9	RETRY-INFRA	place	[('2026-11-06 15:28', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_fe_v1__cl1cbb7497	9	RUNNING	geom	[('2026-11-07 05:58', '5', 'FLOW', 'OT_CLAND'), ('2026-11-08 12:08', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_fe_v1__cl8210183c	9	RUNNING	geom	[('2026-11-07 05:38', '5', 'FLOW', 'OT_CLAND'), ('2026-11-08 07:55', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_fe_v2	6	ENQUEUED	geom	[('2026-11-07 02:19', None, 'FLOW', 'unclassified failure @kit_topology (see log'), ('2026-11-07 06:38', None, 'FLOW', 'unclassified failure @kit_topology (see log')]	True
+qwen_compute	sle_fw_v1__cl9d029624	15	RETRY-INFRA	place	[('2026-11-07 05:48', '6', 'FLOW', 'OT_CLAND'), ('2026-11-08 10:41', None, 'FLOW', '[ERROR DPL-0033]')]	False
+qwen_compute	sle_fw_v1__clf58b4dfb	10	RUNNING	geom	[('2026-11-06 20:47', None, 'TIMING', 'hold'), ('2026-11-08 18:07', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	sle_fw_v2__cl6740750e	10	RUNNING	geom	[('2026-11-07 12:39', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 19:37', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	sle_fw_v2__cl69f5e854	10	ENQUEUED	geom	[('2026-11-02 23:34', None, 'PLAN', 'plan geometry / site @geom: AP_AUTO_GEOM AUTO'), ('2026-11-07 14:28', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_fw_v3	35	RETRY-INFRA	place	[('2026-11-08 16:16', None, 'TIMING', 'hold'), ('2026-11-09 00:02', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	sle_hc0__cl929603c0__cl38badc56	19	ENQUEUED	geom	[('2026-11-07 14:36', None, 'TIMING', 'hold'), ('2026-11-08 01:47', '15', 'PLAN', 'native source stage/reset realization differs')]	False
+qwen_compute	sle_hc1__cl22c1ff36	29	ENQUEUED	geom	[('2026-11-08 01:37', '26', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 14:46', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	sle_hc1__cl7d360508	13	ENQUEUED	geom	[('2026-11-08 01:47', '11', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 03:47', None, 'FLOW', '[ERROR DPL-0033]')]	False
+qwen_compute	sle_hc2__cl9c4c4509__cl3edce1b8	10	ENQUEUED	geom	[('2026-11-06 07:18', None, 'TIMING', 'hold'), ('2026-11-08 01:37', '8', 'PLAN', 'native source stage/reset realization differs')]	False
+qwen_compute	sle_hc2__cl9c4c4509__clf60c5152	6	ENQUEUED	geom	[('2026-11-08 01:47', '3', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 07:30', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	sle_hc2__clcc5e3e61	12	CANCELLED	geom	[('2026-11-08 01:37', '8', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:45', None, 'FLOW', 'unclassified failure @place (see log')]	False
+qwen_compute	sle_sc_v1__cl115da35f	9	RETRY-INFRA	gen	[('2026-11-07 03:49', '6', 'FLOW', 'OT_CLAND'), ('2026-11-08 10:51', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	sle_sc_v1__cl7479a5ec	12	FAIL	place	[('2026-11-06 14:58', None, 'ROUTING', 'grt-overflow'), ('2026-11-09 00:27', '12', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	sle_sc_v2	25	RETRY-INFRA	place	[('2026-11-08 04:28', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 23:17', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	sle_sc_v3	23	RETRY-INFRA	place	[('2026-11-07 09:28', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 08:23', None, 'PLAN', 'plan geometry / site @unit: KW_STAGE outline ')]	False
+qwen_compute	sle_st_a_v1__cl67389ecd	10	ENQUEUED	geom	[('2026-11-06 07:48', None, 'TIMING', 'hold'), ('2026-11-07 06:19', '9', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	sle_st_a_v1__cl989804f6__cl18eece69	10	ENQUEUED	geom	[('2026-11-08 00:57', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 08:23', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	sle_st_a_v1__cl989804f6__cled3c1d7b	12	CANCELLED	place	[('2026-11-04 18:32', None, 'PLAN', 'face guard (plan pins / landing'), ('2026-11-06 19:07', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_st_a_v2	16	FAIL	unit	[('2026-11-04 23:26', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-06 02:50', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	sle_stm_v1__cl27746664	15	RUNNING	place	[('2026-11-06 20:06', None, 'FLOW', 'flow-error: exit 127'), ('2026-11-08 19:27', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_stm_v1__clbe630b9c	18	RUNNING	place	[('2026-11-06 17:47', None, 'TIMING', 'hold'), ('2026-11-08 05:09', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	sle_stm_v2__cl55be2264	12	FAIL	place	[('2026-11-06 02:25', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-09 01:22', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	sle_stm_v2__cl7b3062fa	11	FAIL	place	[('2026-11-07 06:19', '6', 'FLOW', 'OT_CLAND'), ('2026-11-09 01:57', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	sle_stm_v3	14	RUNNING	place	[('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2'), ('2026-11-08 13:46', None, 'TIMING', 'hold')]	False
+qwen_compute	sle_su_c	14	RUNNING	place	[('2026-11-06 19:27', None, 'TIMING', 'hold'), ('2026-11-08 01:37', '8', 'PLAN', 'native source stage/reset realization differs')]	False
+qwen_compute	sle_su_l0__cl086d85ba	14	FAIL	place	[('2026-11-07 09:08', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 10:31', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	sle_su_l0__cl7a55c676	15	ENQUEUED	geom	[('2026-11-05 06:50', None, 'FLOW', '[ERROR DRT-0073]'), ('2026-11-06 04:08', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	sle_su_l1__cl5ea486db	12	FAIL	place	[('2026-11-08 12:08', None, 'ROUTING', 'grt-overflow'), ('2026-11-09 01:34', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	sle_su_l1__clc6d66f5b	16	FAIL	place	[('2026-11-08 16:26', None, 'TIMING', 'hold'), ('2026-11-09 01:22', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	slw_fe_v1__cl95cd1d0c	20	RUNNING	place	[('2026-11-07 06:08', '15', 'FLOW', 'OT_CLAND'), ('2026-11-08 07:42', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_fe_v1__clfe325744__cl08d14f0d	6	RUNNING	place	[('2026-11-06 04:08', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_fe_v1__clfe325744__cldb4efe33	10	ENQUEUED	geom	[('2026-11-06 07:28', None, 'TIMING', 'hold'), ('2026-11-07 03:08', '6', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	slw_fe_v2__cle312294d	11	RETRY-INFRA	place	[('2026-11-07 03:18', '6', 'FLOW', 'OT_CLAND'), ('2026-11-08 06:13', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_fe_v2__clf110fab2	9	ENQUEUED	geom	[('2026-11-06 04:47', None, 'FLOW', '[ERROR GRT-0183]'), ('2026-11-08 15:46', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_fw_v1__cl51d45468	14	RUNNING	place	[('2026-11-07 05:58', '7', 'FLOW', 'OT_CLAND'), ('2026-11-08 07:42', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	slw_fw_v1__clf51c11d8__cl592e3d37	15	RUNNING	place	[('2026-11-03 09:30', None, 'PLAN', 'relay-bay pre-build hop table below +10% (sta'), ('2026-11-06 11:47', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	13	RUNNING	place	[('2026-11-06 18:47', None, 'TIMING', 'hold'), ('2026-11-07 05:38', '7', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	slw_fw_v3	10	RUNNING	place	[('2026-11-04 00:28', None, 'FLOW', 'clock-landing'), ('2026-11-04 23:10', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+qwen_compute	slw_hc0__cl1bc59e1c	11	ENQUEUED	geom	[('2026-11-08 01:47', '8', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:45', None, 'FLOW', 'unclassified failure @place (see log')]	False
+qwen_compute	slw_hc1__cl68f9248e__cl144ee7b3	15	ENQUEUED	geom	[('2026-11-08 01:47', '12', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 23:04', None, 'TIMING', 'setup')]	False
+qwen_compute	slw_hc1__cl68f9248e__cle683a076	16	CANCELLED	gen	[('2026-11-08 07:09', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-08 09:45', None, 'FLOW', 'unclassified failure @place (see log')]	False
+qwen_compute	slw_hc2__cl6bcaba89	11	ENQUEUED	geom	[('2026-11-04 10:29', None, 'FLOW', 'queue row rejected: '), ('2026-11-08 06:13', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_hc2__cla3497502__cl16607c7a	17	CANCELLED	kit_topology	[('2026-11-03 20:21', '5', 'FLOW', 'tool / Tcl error @gen: ModuleNotFoundError: N'), ('2026-11-06 13:48', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_hc2__cla3497502__cldc737267	13	ENQUEUED	geom	[('2026-11-06 14:08', None, 'TIMING', 'hold'), ('2026-11-08 15:56', None, 'TIMING', 'hold')]	True
+qwen_compute	slw_hc3__clccfc3e6b	7	ENQUEUED	geom	[('2026-11-04 18:32', None, 'PLAN', 'face guard (plan pins / landing'), ('2026-11-06 04:57', None, 'TIMING', 'routed-not-signed: TT -57.3 FF -37.99 ps late')]	False
+qwen_compute	slw_hc3__cld86a7ad4	8	ENQUEUED	geom	[('2026-11-03 18:44', None, 'TIMING', 'hold'), ('2026-11-07 20:06', None, 'TIMING', 'routed-not-signed: TT -119.94 FF -38.09 ps la')]	False
+qwen_compute	slw_sc_v1__cl63e5a7a2	7	RUNNING	place	[('2026-11-05 05:44', None, 'PLAN', 'signed child parameter override not provable '), ('2026-11-05 06:16', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	10	RETRY-INFRA	place	[('2026-11-06 02:25', None, 'ROUTING', 'grt-overflow'), ('2026-11-07 05:48', '5', 'FLOW', 'OT_CLAND')]	False
+qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	13	RETRY-INFRA	place	[('2026-11-06 08:37', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 03:47', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	slw_sc_v2	12	RETRY-INFRA	place	[('2026-11-06 09:18', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 08:23', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	slw_sc_v3	16	RUNNING	place	[('2026-11-07 09:18', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 08:23', None, 'PLAN', 'plan geometry / site @unit: KW_STAGE outline ')]	False
+qwen_compute	slw_st_a_v1__clfc5867a6	10	ENQUEUED	geom	[('2026-11-06 11:57', None, 'TIMING', 'hold'), ('2026-11-08 12:08', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	slw_st_a_v2__cl9f076a5c	11	ENQUEUED	geom	[('2026-11-08 05:51', None, 'TIMING', 'hold'), ('2026-11-08 17:16', None, 'ROUTING', 'grt-overflow')]	False
+qwen_compute	slw_st_a_v2__clf4365a62	10	ENQUEUED	geom	[('2026-11-07 05:48', '9', 'FLOW', 'OT_CLAND'), ('2026-11-08 13:26', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	11	FAIL	place	[('2026-11-08 02:20', None, 'TIMING', 'hold'), ('2026-11-09 02:08', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	20	FAIL	place	[('2026-11-08 08:23', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-09 01:07', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	slw_stm_v1__cle34a73c3	19	RUNNING	place	[('2026-11-07 01:09', None, 'TIMING', 'hold'), ('2026-11-08 05:09', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	slw_stm_v2__cl1ca9c415	13	FAIL	place	[('2026-11-08 08:23', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-09 01:46', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	slw_stm_v2__cl9beb65e6	15	ENQUEUED	geom	[('2026-11-04 18:18', None, 'PLAN', 'face guard (plan pins / landing'), ('2026-11-08 02:09', None, 'TIMING', 'hold')]	False
+qwen_compute	slw_stm_v3	14	RUNNING	place	[('2026-11-06 05:27', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-06 05:47', '7', 'FLOW', 'captured source cohort lacks canonical topolo')]	False
+qwen_compute	slw_su_c__cl19bb38ef	17	RUNNING	place	[('2026-11-07 19:39', None, 'TIMING', 'hold'), ('2026-11-08 06:13', None, 'PLAN', 'PROVISIONAL child view: no routed abstract / ')]	False
+qwen_compute	slw_su_c__cl92142dac	29	RUNNING	gen	[('2026-11-08 04:28', None, 'FLOW', '[ERROR DPL-0033]'), ('2026-11-08 06:46', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+qwen_compute	slw_su_l0__cl1a1c1f8f	17	RUNNING	place	[('2026-11-07 09:18', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 08:23', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_compute	slw_su_l0__cl1e5219ea	12	ENQUEUED	geom	[('2026-11-07 07:07', None, 'ROUTING', 'grt-overflow'), ('2026-11-09 01:22', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	slw_su_l0__cl76fb247e	7	RUNNING	place	[('2026-11-06 15:17', None, 'ROUTING', 'grt-overflow'), ('2026-11-09 01:34', None, 'ROUTING', 'grt-overflow')]	True
+qwen_compute	slw_su_l1__cla2a78701	10	RUNNING	place	[('2026-11-05 00:32', None, 'FLOW', 'clock-landing'), ('2026-11-08 23:29', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+qwen_compute	slw_su_l1__clcc9d0155	10	FAIL	place	[('2026-11-08 23:17', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-09 01:34', None, 'FLOW', 'clock-landing')]	False
+qwen_compute	tt_ctlm	11	ENQUEUED	geom	[('2026-11-03 22:17', None, 'FLOW', '[ERROR GRT-0080]'), ('2026-11-07 12:08', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hg_v1	9	FAIL	kit_rtl	[]	False
+qwen_kvsys	kv3_hgi	7	ENQUEUED	geom	[('2026-11-04 11:30', None, 'TIMING', 'hold'), ('2026-11-05 11:22', None, 'TIMING', 'hold')]	True
+qwen_kvsys	kv3_hgi_v3	6	ENQUEUED	geom	[('2026-11-04 07:16', None, 'FLOW', 'unclassified failure @sync_hub (see log'), ('2026-11-04 11:30', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hgi_v4	8	ENQUEUED	geom	[('2026-11-04 07:16', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-04 11:09', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hgi_v5	6	ENQUEUED	geom	[('2026-11-04 07:00', None, 'FLOW', 'unclassified failure @sync_hub (see log'), ('2026-11-04 12:23', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hgi_v6	8	ENQUEUED	geom	[('2026-11-04 12:06', None, 'TIMING', 'hold'), ('2026-11-04 18:18', None, 'TIMING', 'hold')]	True
+qwen_kvsys	kv3_hgi_v7	7	ENQUEUED	geom	[('2026-11-04 11:30', None, 'TIMING', 'hold'), ('2026-11-05 21:12', None, 'PLAN', 'plan geometry / site @unit: KW_STAGE outline ')]	False
+qwen_kvsys	kv3_hgi_v8	17	RETRY-INFRA	kit_rtl	[('2026-11-06 18:47', None, 'FLOW', 'tool input file missing (stale path / pruned '), ('2026-11-06 19:17', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+qwen_kvsys	kv3_hroot	11	ENQUEUED	geom	[('2026-11-07 02:49', None, 'RTL', 'RTL hierarchy / undriven / multi-driven at ge'), ('2026-11-07 23:36', None, 'ROUTING', 'grt-overflow')]	False
+qwen_kvsys	kv3_hub_Ei	19	RETRY-INFRA	gen	[('2026-11-07 01:18', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-08 04:58', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hub_Eo	19	ENQUEUED	geom	[('2026-11-06 19:56', None, 'FLOW', 'die-prep bind recipe input missing @bind: Fil'), ('2026-11-07 13:38', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_hub_Wo	14	ENQUEUED	geom	[('2026-11-07 15:47', '13', 'RTL', 'RTL elaboration / lint @geom_run: /home/ubunt'), ('2026-11-08 21:07', None, 'FLOW', '[ERROR DPL-0033]')]	False
+qwen_kvsys	kv3_io_cor	7	ROUTE-HELD	geom	[('2026-11-03 07:03', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-06 05:57', None, 'ROUTING', 'grt-overflow')]	False
+qwen_kvsys	kv3_io_cor_v1	8	ROUTE-HELD	geom	[('2026-11-04 09:54', None, 'TIMING', 'hold'), ('2026-11-06 04:38', None, 'ROUTING', 'grt-overflow')]	False
+qwen_kvsys	kv3_io_ft	6	FAIL	kit_topology	[('2026-11-05 02:41', None, 'FLOW', '[ERROR GRT-0183]'), ('2026-11-06 14:08', '6', 'FLOW', 'captured source cohort lacks canonical topolo')]	False
+qwen_kvsys	kv3_io_ft_v1	18	ROUTE-HELD	geom	[('2026-11-07 01:18', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-07 13:09', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pc__cl254f2e73	19	ENQUEUED	geom	[('2026-11-08 11:31', '18', 'PLAN', 'PDN-0006'), ('2026-11-08 20:17', None, 'PLAN', 'LEC NOT EQUIVALENT')]	False
+qwen_kvsys	kv3_pc__cl5a95b461	19	ENQUEUED	geom	[('2026-11-08 11:40', '18', 'PLAN', 'PDN-0006'), ('2026-11-08 20:07', None, 'PLAN', 'LEC NOT EQUIVALENT')]	False
+qwen_kvsys	kv3_pc_v1__cl23f6a148	18	ENQUEUED	geom	[('2026-11-08 11:40', '17', 'PLAN', 'PDN-0006'), ('2026-11-09 00:27', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+qwen_kvsys	kv3_pc_v1__cl4ea58a5c	14	ENQUEUED	geom	[('2026-11-08 11:59', '13', 'PLAN', 'PDN-0006'), ('2026-11-09 00:15', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+qwen_kvsys	kv3_pc_v1__cl7f648944	18	FAIL	place	[('2026-11-08 11:49', '17', 'PLAN', 'PDN-0006'), ('2026-11-08 19:07', None, 'FLOW', 'clock-landing')]	False
+qwen_kvsys	kv3_pc_v3	8	ENQUEUED	geom	[('2026-11-08 11:59', '7', 'PLAN', 'PDN-0006'), ('2026-11-09 00:27', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+qwen_kvsys	kv3_phy	7	CANCELLED	geom	[('2026-11-04 13:08', None, 'TIMING', 'hold'), ('2026-11-04 19:50', None, 'TIMING', 'hold')]	True
+qwen_kvsys	kv3_pv	6	ENQUEUED	geom	[('2026-11-03 18:04', None, 'FLOW', 'clock-landing'), ('2026-11-04 21:31', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v1	6	ENQUEUED	geom	[('2026-11-04 07:51', None, 'PLAN', 'port bind (plan pins'), ('2026-11-04 20:23', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v12	19	RETRY-INFRA	kit_rtl	[('2026-11-06 07:18', '13', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-06 18:47', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+qwen_kvsys	kv3_pv_v1n	6	ENQUEUED	geom	[('2026-11-04 08:08', None, 'PLAN', 'port bind (plan pins'), ('2026-11-04 21:14', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v2	6	ENQUEUED	geom	[('2026-11-04 07:51', None, 'PLAN', 'port bind (plan pins'), ('2026-11-04 22:04', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v2n	8	ENQUEUED	geom	[('2026-11-04 22:04', None, 'TIMING', 'hold'), ('2026-11-05 21:12', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_kvsys	kv3_pv_v3	9	ENQUEUED	geom	[('2026-11-04 23:26', None, 'TIMING', 'hold'), ('2026-11-05 21:12', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_kvsys	kv3_pv_v3n	6	ENQUEUED	geom	[('2026-11-04 22:53', None, 'TIMING', 'hold'), ('2026-11-06 03:28', None, 'TIMING', 'gate: OT_HOLD_GATE FAIL FF wns_ps -360.25 end')]	False
+qwen_kvsys	kv3_pv_v4	6	ENQUEUED	geom	[('2026-11-04 07:00', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-05 01:53', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v4n	8	ENQUEUED	geom	[('2026-11-04 22:04', None, 'TIMING', 'hold'), ('2026-11-05 21:12', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_kvsys	kv3_pv_v5	9	FAIL	geom_run	[('2026-11-03 18:32', '4', 'PLAN', 'actual native standard-cell count above the 4'), ('2026-11-05 01:19', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v5n	7	ENQUEUED	geom	[('2026-11-04 22:53', None, 'TIMING', 'hold'), ('2026-11-05 21:45', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_kvsys	kv3_pv_v6	12	RETRY-INFRA	kit_rtl	[('2026-11-05 00:16', None, 'TIMING', 'hold'), ('2026-11-06 18:47', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+qwen_kvsys	kv3_pv_v6n	12	ENQUEUED	geom	[('2026-11-06 19:56', None, 'FLOW', 'die-prep bind recipe input missing @bind: Fil'), ('2026-11-07 04:41', None, 'TIMING', 'hold')]	False
+qwen_kvsys	kv3_pv_v7	14	RETRY-INFRA	kit_rtl	[('2026-11-06 05:47', '9', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-06 18:47', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+qwen_kvsys	kv3_pv_v8	10	ENQUEUED	geom	[('2026-11-05 12:38', None, 'TIMING', 'hold'), ('2026-11-05 21:12', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+qwen_kvsys	kv3_sys_SD	7	ENQUEUED	geom	[('2026-11-05 02:10', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 04:58', None, 'ROUTING', 'grt-overflow')]	True
+qwen_kvsys	kv3_sys_SD_v1	14	ENQUEUED	geom	[('2026-11-07 13:38', None, 'TIMING', 'hold'), ('2026-11-08 03:08', None, 'ROUTING', 'grt-overflow')]	False
+s81	bk_sel__t2	34	ENQUEUED	geom	[('2026-11-08 03:47', '32', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 06:25', '33', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	col_h10_r0_p1__t1__cl574cc59d	15	ENQUEUED	geom	[('2026-11-08 03:58', '13', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 06:03', '14', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	col_h10_r0_p1__t1__cl911743eb	15	ENQUEUED	geom	[('2026-11-06 07:18', '12', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-06 09:28', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat')]	False
+s81	col_h10_r0_p4__t1	12	ENQUEUED	geom	[('2026-11-06 08:58', None, 'ROUTING', 'grt-overflow'), ('2026-11-07 00:18', '11', 'PLAN', 'plan geometry / site @kit_topology: kit_istat')]	False
+s81	col_h10_r1__t1__cl95b37463	11	ENQUEUED	geom	[('2026-11-05 20:21', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-05 20:38', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	True
+s81	col_h10_r2__t1__cl1f5d6c2a	15	ENQUEUED	geom	[('2026-11-06 03:28', None, 'ROUTING', 'grt-overflow'), ('2026-11-07 09:59', None, 'ROUTING', 'grt-overflow')]	True
+s81	col_h10_r2__t1__cl8b686b3e	18	ENQUEUED	geom	[('2026-11-05 20:38', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-08 04:08', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h10_r2__t1__cl99efd374	19	ENQUEUED	geom	[('2026-11-08 05:19', '16', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:34', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	col_h10_r2__t1__clac068e56	15	ENQUEUED	geom	[('2026-11-07 02:39', '13', 'FLOW', 'OT_CLAND'), ('2026-11-07 22:07', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p1__t1	23	RUNNING	preflight	[('2026-11-07 15:27', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-08 18:57', '14', 'FLOW', 'tool / Tcl error @gen: ValueError: type col_h')]	False
+s81	col_h9_r0_p2__t1__cl0045af7b	15	ENQUEUED	geom	[('2026-11-07 00:29', '13', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 08:36', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p2__t1__cl9f71e63d	12	ENQUEUED	geom	[('2026-11-07 00:18', '10', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 01:58', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p3__t1__cl0cd90c0e	16	ENQUEUED	geom	[('2026-11-07 00:59', '11', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 04:18', '15', 'PLAN', 'native source stage/reset realization differs')]	False
+s81	col_h9_r0_p3__t1__cl31d0dc4b	12	ENQUEUED	geom	[('2026-11-07 00:59', '10', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 16:06', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p3__t1__cl8ce97bcb	11	ENQUEUED	geom	[('2026-11-07 00:59', '9', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 06:36', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p4__t1__cl8ef405e8	11	ENQUEUED	geom	[('2026-11-07 00:29', '9', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 02:48', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p4__t1__clcb2fbfe8	17	ENQUEUED	geom	[('2026-11-08 06:03', '16', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 11:59', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p5__t1	16	ENQUEUED	geom	[('2026-11-07 00:38', '14', 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 12:08', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r0_p6__t1	13	ENQUEUED	geom	[('2026-11-06 04:47', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 03:28', None, 'ROUTING', 'grt-overflow')]	True
+s81	col_h9_r1__t1__cl49d7a23e	14	ENQUEUED	geom	[('2026-11-03 17:22', '18', 'FLOW', 'tool / Tcl error @place: Error: global_place.'), ('2026-11-07 00:29', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat')]	False
+s81	col_h9_r1__t1__clf32cde8d	13	ENQUEUED	geom	[('2026-11-07 00:38', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 00:57', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r2__t1__cl774acf45	6	CANCELLED	gen_lint	[('2026-11-04 15:02', None, 'ROUTING', 'grt-overflow'), ('2026-11-06 03:28', None, 'ROUTING', 'grt-overflow')]	True
+s81	col_h9_r2__t1__clb8d86cd5	6	CANCELLED	kit_rtl	[('2026-11-03 10:42', '3', 'FLOW', 'tool / Tcl error @place: Error: global_place.'), ('2026-11-04 19:03', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r2__t1__clc9ad8f7e	6	CANCELLED	place	[('2026-11-03 13:20', '7', 'FLOW', 'tool / Tcl error @place: Error: global_place.'), ('2026-11-04 20:06', None, 'ROUTING', 'grt-overflow')]	False
+s81	col_h9_r2__t1__clce45cab5	24	ENQUEUED	geom	[('2026-11-06 02:25', None, 'ROUTING', 'grt-overflow'), ('2026-11-07 08:07', None, 'ROUTING', 'grt-overflow')]	True
+s81	dsdv_slice_c1x_C__t1	21	RUNNING	place	[('2026-11-08 05:30', '17', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:34', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	dsdv_slice_c1x_C__t10	9	ENQUEUED	geom	[('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2'), ('2026-11-08 04:38', '8', 'PLAN', 'native source stage/reset realization differs')]	False
+s81	dsdv_slice_c1x_C__t3	16	ENQUEUED	geom	[('2026-11-06 14:27', '8', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 03:17', None, 'FLOW', '[ERROR DPL-0033]')]	False
+s81	dsdv_slice_c1x_C__t4	27	RUNNING	place	[('2026-11-08 05:30', '23', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:34', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	dsdv_slice_c1x_C__t5	12	FAIL	kit_topology	[('2026-11-08 01:58', None, 'FLOW', '[ERROR DRT-0073]'), ('2026-11-08 02:29', '12', 'PLAN', 'native source stage/reset realization differs')]	False
+s81	dsdv_slice_c1x_C__t6	22	RUNNING	place	[('2026-11-08 06:03', '19', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 15:46', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+s81	dsdv_slice_c1x_C__t7	18	RUNNING	place	[('2026-11-08 06:13', '14', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 19:27', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+s81	dsdv_slice_c1x_C__t8	22	RUNNING	place	[('2026-11-08 05:30', '18', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 09:34', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	dsdv_slice_c1x_C__t9	8	ENQUEUED	geom	[('2026-11-06 20:06', None, 'FLOW', 'tool-segfault: Signal 11 received'), ('2026-11-08 03:17', None, 'FLOW', '[ERROR DRT-0073]')]	False
+s81	dsdv_slice_c3x_C__t1	13	CANCELLED	kit_rtl	[('2026-11-04 17:16', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-08 00:06', None, 'FLOW', '[ERROR DRT-0073]')]	False
+s81	dsdv_slice_iq_C__t1	14	RETRY-INFRA	kit_rtl	[('2026-11-04 20:39', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-07 01:18', '7', 'FLOW', 'OT_CLAND')]	False
+s81	dsdv_slice_kv512_C__t1	20	RUNNING	place	[('2026-11-07 01:39', '7', 'FLOW', 'OT_CLAND'), ('2026-11-07 14:28', None, 'RTL', 'LEC not equivalent')]	False
+s81	dsdv_slice_lepe_mu_C__t1	17	RUNNING	place	[('2026-11-06 14:27', None, 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 15:46', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+s81	dsdv_slice_lepe_nh_mus_C__t1	11	ENQUEUED	geom	[('2026-11-07 16:18', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-08 05:30', '10', 'PLAN', 'native source stage/reset realization differs')]	False
+s81	dsdv_slice_lepw_mu_C__t1	13	RUNNING	place	[('2026-11-06 14:08', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-07 16:18', None, 'PLAN', 'preflight: FAIL_PREFLOOR FAIL_PREFLOOR rtl_li')]	False
+s81	dsdv_slice_lepw_mus_C__t1	21	RUNNING	place	[('2026-11-07 16:18', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-08 09:34', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	eng__t1	6	ENQUEUED	geom	[('2026-11-07 00:38', None, 'FLOW', 'unclassified failure @kit_topology (see log'), ('2026-11-08 08:23', None, 'TIMING', 'hold')]	False
+s81	gunit__t1	12	FAIL	place	[('2026-11-06 14:17', '7', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-07 18:26', '12', 'PLAN', 'actual native standard-cell count above the k')]	False
+s81	iqf__t1	11	ENQUEUED	geom	[('2026-11-04 15:02', None, 'TIMING', 'hold'), ('2026-11-06 11:57', None, 'TIMING', 'hold')]	True
+s81	ot_s81sl_kv_leaf__t2	9	RUNNING	place	[('2026-11-06 17:47', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-07 08:58', None, 'FLOW', 'unclassified failure @place (see log')]	True
+s81	ot_s81sl_leaf__t11	15	ENQUEUED	geom	[('2026-11-04 15:47', None, 'ROUTING', 'grt-overflow'), ('2026-11-06 23:02', None, 'FLOW', 'unclassified failure @kit_topology (see log')]	False
+s81	ot_s81sl_leaf__t17	11	ENQUEUED	geom	[('2026-11-05 21:12', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-06 23:02', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat')]	False
+s81	ot_s81sl_leaf__t21	17	RUNNING	place	[('2026-11-08 23:04', None, 'ROUTING', 'grt-overflow'), ('2026-11-09 00:27', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+s81	ot_s81sl_leaf__t26	19	ENQUEUED	geom	[('2026-11-04 16:02', None, 'ROUTING', 'grt-overflow'), ('2026-11-06 23:02', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat')]	False
+s81	ot_s81sl_leaf__t27	7	ENQUEUED	geom	[('2026-11-07 00:29', None, 'FLOW', 'unclassified failure @kit_topology (see log'), ('2026-11-08 03:47', None, 'TIMING', 'hold')]	False
+s81	ot_s81sl_leaf__t29	10	ENQUEUED	geom	[('2026-11-06 23:14', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 06:25', None, 'ROUTING', 'grt-overflow')]	False
+s81	ot_s81sl_leaf__t3	8	ENQUEUED	geom	[('2026-11-04 03:24', None, 'FLOW', 'tool-segfault: Signal 11 received'), ('2026-11-08 20:07', None, 'ROUTING', 'grt-overflow')]	False
+s81	ot_s81sl_leaf__t31	10	ENQUEUED	geom	[('2026-11-06 23:02', None, 'PLAN', 'plan geometry / site @kit_topology: kit_istat'), ('2026-11-08 01:07', None, 'ROUTING', 'grt-overflow')]	False
+s81	ot_s81sl_leaf__t39	10	ENQUEUED	geom	[('2026-11-05 07:32', None, 'ROUTING', 'grt-overflow'), ('2026-11-06 23:14', None, 'FLOW', 'unclassified failure @kit_topology (see log')]	False
+s81	ot_s81sl_leaf__t4	8	ENQUEUED	geom	[('2026-11-08 05:19', '6', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 05:40', '7', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	ot_s81sl_leaf__t40__cl86ea32b3	7	ENQUEUED	geom	[('2026-11-07 00:38', None, 'FLOW', 'unclassified failure @kit_topology (see log'), ('2026-11-08 04:38', None, 'ROUTING', 'grt-overflow')]	False
+s81	ot_s81sl_leaf__t40__clf8bbdae1	14	RUNNING	place	[('2026-11-08 20:57', None, 'FLOW', 'clock-landing'), ('2026-11-09 00:27', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	False
+s81	ot_s81sl_leaf__t42	10	ENQUEUED	geom	[('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2'), ('2026-11-09 00:15', None, 'TIMING', 'hold')]	False
+s81	ot_s81sl_leaf__t44__clf4ea6d4b	6	ENQUEUED	geom	[('2026-11-04 14:17', None, 'ROUTING', 'grt-overflow'), ('2026-11-06 23:14', None, 'FLOW', 'unclassified failure @kit_topology (see log')]	False
+s81	ot_s81sl_leaf__t46	6	RUNNING	geom	[('2026-11-08 16:06', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 22:40', None, 'FLOW', '[ERROR DRT-0073]')]	False
+s81	ot_s81sl_leaf__t50	10	ENQUEUED	geom	[('2026-11-08 05:19', '8', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 05:40', '9', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	ot_s81sl_leaf__t53__cl958451dd	9	ENQUEUED	geom	[('2026-11-03 12:16', None, 'PLAN', 'face guard (plan pins / landing')]	False
+s81	ot_s81sl_leaf__t54__cl706d9749	6	ENQUEUED	geom	[('2026-11-06 20:06', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 09:45', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	ot_s81sl_leaf__t56	13	RUNNING	place	[('2026-11-08 10:51', None, 'FLOW', 'kit-RTL bind of record names HDL sources that'), ('2026-11-09 00:27', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	False
+s81	ot_s81sl_leaf__t57	6	ENQUEUED	geom	[('2026-11-04 01:39', None, 'FLOW', 'tool-segfault: Signal 11 received'), ('2026-11-08 09:45', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	ot_s81sl_leaf__t65	6	ENQUEUED	geom	[('2026-11-08 10:19', None, 'ROUTING', 'grt-overflow'), ('2026-11-08 22:40', None, 'FLOW', '[ERROR DRT-0073]')]	False
+s81	ot_s81sl_leaf__t67	6	ENQUEUED	geom	[('2026-11-08 05:19', '4', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 05:40', '5', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	ot_s81sl_leaf__t72	7	ENQUEUED	geom	[('2026-11-03 15:52', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-08 03:17', None, 'FLOW', '[ERROR GRT-0229]')]	False
+s81	ot_s81sl_leaf__t74	7	ENQUEUED	geom	[('2026-11-07 16:06', None, 'FLOW', 'clock-landing'), ('2026-11-08 09:45', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	ot_s81sl_leaf__t8	6	ENQUEUED	geom	[('2026-11-03 23:14', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-04 05:57', None, 'PLAN', 'cell-cap: 404423 std cells > 400000')]	False
+s81	seqhost__t1	7	ENQUEUED	geom	[('2026-11-03 17:50', '5', 'FLOW', 'tool / Tcl error @place: Error: macro_place.t'), ('2026-11-03 19:48', '7', 'FLOW', 'tool / Tcl error @place: Error: macro_place.t')]	True
+s81	serdes__t12	14	ENQUEUED	geom	[('2026-11-06 15:37', None, 'TIMING', 'hold'), ('2026-11-08 20:07', None, 'PLAN', 'LEC NOT EQUIVALENT')]	False
+s81	serdes__t13	22	ENQUEUED	geom	[('2026-11-05 16:33', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-06 20:06', None, 'FLOW', 'queue row rejected: ')]	False
+s81	serdes__t14	11	ENQUEUED	geom	[('2026-11-05 09:48', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-05 16:33', None, 'PLAN', 'plan macro inst is not the bound netlist path')]	True
+s81	serdes__t15__cla2127225	22	ENQUEUED	geom	[('2026-11-05 16:33', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-06 15:17', None, 'FLOW', 'queue row rejected: ')]	False
+s81	serdes__t16	12	ENQUEUED	geom	[('2026-11-06 08:28', '7', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-08 09:56', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	serdes__t1__clb45db5be	13	ENQUEUED	geom	[('2026-11-06 20:37', None, 'FLOW', 'queue row rejected: '), ('2026-11-08 09:56', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81	serdes__t1__clfe1f0815	14	ENQUEUED	geom	[('2026-11-05 15:16', None, 'PLAN', 'plan macro inst is not the bound netlist path'), ('2026-11-08 10:08', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	False
+s81	serdes__t2	21	RUNNING	geom	[('2026-11-07 21:26', None, 'TIMING', 'hold'), ('2026-11-08 10:51', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+s81	serdes__t3	18	ENQUEUED	geom	[('2026-11-06 09:48', None, 'PLAN', 'port bind (plan pins'), ('2026-11-08 10:51', None, 'FLOW', 'kit-RTL bind of record names HDL sources that')]	False
+s81	serdes__t4	12	RUNNING	place	[('2026-11-06 07:58', None, 'TIMING', 'hold'), ('2026-11-08 23:29', None, 'RTL', 'LEC NOT EQUIVALENT')]	False
+s81	slice_station__t14	13	ENQUEUED	geom	[('2026-11-08 02:57', '11', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 06:03', '12', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	slice_station__t17	14	ENQUEUED	geom	[('2026-11-02 20:30', None, 'TIMING', 'hold'), ('2026-11-04 10:49', None, 'FLOW', 'unclassified failure @place (see log')]	False
+s81	slice_station__t18	14	ENQUEUED	geom	[('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2')]	False
+s81	slice_station__t21	15	ENQUEUED	geom	[('2026-11-03 18:44', None, 'TIMING', 'hold'), ('2026-11-04 03:24', None, 'TIMING', 'hold')]	True
+s81	slice_station__t22	12	ENQUEUED	geom	[('2026-11-07 21:57', None, 'TIMING', 'hold'), ('2026-11-08 02:57', '11', 'PLAN', 'native source stage/reset realization differs')]	False
+s81	slice_station__t24__cl64811a5d	14	ENQUEUED	geom	[('2026-11-08 10:08', None, 'TIMING', 'hold')]	False
+s81	slice_station__t24__cl66b71008	8	ENQUEUED	geom	[('2026-11-03 18:44', None, 'TIMING', 'hold'), ('2026-11-05 00:32', None, 'TIMING', 'routed-not-signed: TT 80.62 FF -57.04 ps late')]	False
+s81	slice_station__t24__cleece78ec	14	ENQUEUED	geom	[('2026-11-08 06:03', '13', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 14:26', None, 'TIMING', 'hold')]	False
+s81	slice_station__t26	8	ENQUEUED	geom	[('2026-11-01 10:16', None, 'PLAN', 'plan geometry / site @geom: AP_AUTO_GEOM AUTO'), ('2026-11-06 17:37', None, 'TIMING', 'routed-not-signed: TT 79.8 FF -58.38 ps late-')]	False
+s81	slice_station__t28	11	ENQUEUED	geom	[]	False
+s81	slice_station__t29__cl2e5c855a	11	ENQUEUED	geom	[('2026-11-03 12:16', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-06 04:08', None, 'TIMING', 'routed-not-signed: TT 49.49 FF -55.97 ps late')]	False
+s81	slice_station__t29__clc7772371	14	ENQUEUED	geom	[('2026-11-08 02:57', '12', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 17:27', None, 'TIMING', 'hold')]	False
+s81	slice_station__t30__cl1653104c	16	ENQUEUED	geom	[('2026-11-03 00:59', None, 'TIMING', 'hold'), ('2026-11-05 05:15', None, 'TIMING', 'routed: TT 95.52 FF -12.7 ps late-ECO exhaust')]	False
+s81	slice_station__t30__cl6a190133	18	ENQUEUED	geom	[('2026-11-01 02:58', None, 'FLOW', 'setup')]	False
+s81	slice_station__t30__clcedefe91	17	ENQUEUED	geom	[]	False
+s81	slice_station__t38	6	ENQUEUED	geom	[('2026-11-06 17:17', None, 'TIMING', 'routed-not-signed: TT 130.5 FF -102.03 ps lat'), ('2026-11-07 23:27', None, 'TIMING', 'routed-not-signed: TT 138.97 FF -59.16 ps lat')]	False
+s81	slice_station__t40__cl1ea9de02	7	ENQUEUED	geom	[('2026-11-06 21:27', None, 'TIMING', 'routed-not-signed: TT 154.07 FF -66.1 ps late')]	False
+s81	slice_station__t40__clc8fb2c8c	15	ENQUEUED	geom	[('2026-11-04 13:35', None, 'TIMING', 'hold')]	False
+s81	slice_station__t42__cl4bd1432c	10	ENQUEUED	geom	[('2026-11-06 00:23', None, 'TIMING', 'routed-not-signed: TT 18.0 FF -65.87 ps late-')]	False
+s81	slice_station__t42__clcf44e680	9	ENQUEUED	geom	[('2026-11-08 06:36', None, 'TIMING', 'hold')]	False
+s81	slice_station__t44	8	ENQUEUED	geom	[('2026-11-08 02:57', '6', 'PLAN', 'native source stage/reset realization differs'), ('2026-11-08 06:25', '7', 'PLAN', 'native source stage/reset realization differs')]	True
+s81	slice_station__t45	12	ENQUEUED	geom	[('2026-11-06 02:25', None, 'TIMING', 'hold'), ('2026-11-08 01:17', None, 'TIMING', 'hold')]	True
+s81	slice_station__t47	20	ENQUEUED	geom	[('2026-11-06 06:07', '12', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-07 20:57', None, 'TIMING', 'routed-not-signed: TT 109.21 FF -42.16 ps lat')]	False
+s81	slice_station__t50__cld84c9e24	12	ENQUEUED	geom	[('2026-11-04 05:57', None, 'TIMING', 'hold'), ('2026-11-06 17:17', None, 'TIMING', 'routed-not-signed: TT -1.55 FF -70.82 ps late')]	False
+s81	slice_station__t52	18	ENQUEUED	geom	[('2026-11-06 12:37', None, 'FLOW', 'tool / Tcl error @place: Error: global_place.'), ('2026-11-07 15:07', None, 'FLOW', 'flow-error: exit 2')]	False
+s81	slice_station__t6__cl0755c26e	17	ENQUEUED	geom	[('2026-11-08 06:25', None, 'TIMING', 'hold')]	False
+s81	slice_station__t6__cl54a9ceeb	14	ENQUEUED	geom	[]	False
+s81	slice_station__t7__cl503f4913	19	ENQUEUED	geom	[('2026-11-03 18:56', None, 'FLOW', 'relaunch refused: every kit input, config var'), ('2026-11-03 19:35', None, 'FLOW', 'unclassified failure @kit_rtl (see log')]	False
+s81	slice_station__t8	12	ENQUEUED	geom	[('2026-11-06 06:07', '7', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-06 12:47', None, 'FLOW', 'tool / Tcl error @place: Error: global_place.')]	False
+s81	svc_hi_dsdv_svc_pvso_entry__t1	6	FAIL	place	[('2026-11-04 00:43', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM'), ('2026-11-08 17:27', None, 'FLOW', 'unclassified failure @place (see log')]	False
+s81	svc_hi_dsdv_svc_pvso_entry__t2	6	FAIL	place	[('2026-11-03 21:37', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM'), ('2026-11-08 04:18', None, 'FLOW', 'unclassified failure @place (see log')]	False
+s81	svc_hi_dsdv_svc_rs__t1	11	FAIL	unit	[('2026-11-06 08:47', '6', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_hi_dsdv_svc_rs__t3	12	FAIL	unit	[('2026-11-06 07:28', '7', 'FLOW', 'captured source cohort lacks canonical topolo'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_hi_dsdv_svc_rs__t6	8	FAIL	unit	[('2026-11-07 16:06', None, 'FLOW', 'unclassified failure @place (see log'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_lo_dsdv_svc_rs__t1	6	FAIL	unit	[('2026-11-03 05:03', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_lo_dsdv_svc_rs__t2	8	FAIL	unit	[('2026-11-03 19:35', None, 'FLOW', 'unclassified failure @kit_rtl (see log'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_lo_dsdv_svc_rs__t4	8	FAIL	unit	[('2026-11-04 14:17', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM'), ('2026-11-08 00:27', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81	svc_lo_dsdv_svc_rs_w__t1	9	FAIL	place	[('2026-11-03 05:25', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM'), ('2026-11-03 22:45', None, 'FLOW', 'kit recipe at gen: memory bits over SYNTH_MEM')]	True
+s81_head	hd_ctl_n	14	ENQUEUED	geom	[('2026-11-06 15:57', None, 'TIMING', 'routed-not-signed: TT -50.52 FF -29.34 ps lat'), ('2026-11-06 18:57', None, 'FLOW', 'tool input file missing (stale path / pruned ')]	False
+s81_head	hd_host	13	ENQUEUED	geom	[('2026-11-08 16:26', None, 'TIMING', 'hold'), ('2026-11-08 22:52', None, 'TIMING', 'hold')]	True
+s81_head	hd_lep0N	16	ENQUEUED	geom	[('2026-11-07 05:28', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-08 11:31', None, 'TIMING', 'hold')]	False
+s81_head	hd_serdes	14	ENQUEUED	geom	[('2026-11-07 05:28', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-08 12:37', None, 'TIMING', 'hold')]	False
+s81_head	hd_spn_end	10	ENQUEUED	geom	[('2026-11-05 23:36', None, 'TIMING', 'hold'), ('2026-11-07 13:29', None, 'TIMING', 'hold')]	True
+s81_head	hd_spn_eshim_rx	8	ENQUEUED	geom	[('2026-11-05 10:05', None, 'TIMING', 'hold'), ('2026-11-07 11:08', None, 'TIMING', 'routed: TT -2.08 FF -6.38 ps late-ECO exhaust')]	False
+s81_head	hd_spn_wshim_rx	18	ENQUEUED	geom	[('2026-11-06 10:18', None, 'FLOW', 'unclassified failure @unit (see log'), ('2026-11-06 10:37', '9', 'PLAN', 'native source stage/reset realization differs')]	False
+s81_head	hd_spn_wshim_tx	15	CANCELLED	kit_rtl	[('2026-11-05 15:16', None, 'TIMING', 'routed: TT 152.67 FF -3.83 ps late-ECO exhaus'), ('2026-11-06 10:57', None, 'TIMING', 'routed: TT 152.75 FF -3.86 ps late-ECO exhaus')]	False
+s81_head	hd_st_n3_transit	13	FAIL	unit	[('2026-11-03 22:59', None, 'TIMING', 'routed: TT 43.17 FF 2.88 ps late-ECO exhauste'), ('2026-11-07 05:28', None, 'PLAN', 'plan geometry / site @unit: KW_STAGE outline ')]	False
+s81_head	hd_st_n3_turn	16	CANCELLED	kit_rtl	[('2026-11-03 11:11', None, 'TIMING', 'hold'), ('2026-11-03 20:37', None, 'ROUTING', 'routed: drc 3 late-ECO exhausted (2 it, 8188.')]	False
+s81_head	hd_st_n4	11	FAIL	unit	[('2026-11-05 23:36', None, 'TIMING', 'hold'), ('2026-11-07 04:32', None, 'FLOW', 'unclassified failure @unit (see log')]	False
+s81_head	hd_st_str	9	ENQUEUED	geom	[('2026-11-03 22:32', None, 'TIMING', 'routed: TT 82.13 FF -9.48 ps late-ECO exhaust'), ('2026-11-07 08:17', None, 'TIMING', 'routed: TT 84.86 FF -12.29 ps late-ECO exhaus')]	False
+s81_head	hd_st_turn	11	CANCELLED	kit_rtl	[('2026-11-03 22:17', None, 'TIMING', 'routed: TT 66.08 FF -13.37 ps late-ECO exhaus'), ('2026-11-05 08:53', None, 'TIMING', 'routed: TT 70.94 FF -16.09 ps late-ECO exhaus')]	False
+s81_head	hd_tile	6	ENQUEUED	geom	[('2026-11-06 04:18', None, 'TIMING', 'hold'), ('2026-11-07 01:39', None, 'TIMING', 'routed-not-signed: TT -65.56 FF -41.84 ps lat')]	False
+s81_head	hd_turn_a	6	ENQUEUED	geom	[('2026-11-04 22:21', None, 'TIMING', 'routed: TT 96.61 FF 3.09 ps late-ECO exhauste'), ('2026-11-07 03:39', None, 'TIMING', 'routed: TT 90.46 FF 4.95 ps late-ECO exhauste')]	False
