@@ -2656,7 +2656,11 @@
         "ot_s81sl_leaf__t24__cl81374cd8@1",
         "ot_s81sl_leaf__t32@4",
         "ot_s81sl_leaf__t70@3",
-        "ot_s81sl_leaf__t46@3"
+        "ot_s81sl_leaf__t46@3",
+        "dsdv_slice_c1x_C__t6@21",
+        "dsdv_slice_lepe_mu_C__t1@16",
+        "col_h10_r1__t1__cl95b37463@10",
+        "ot_s81sl_leaf__t26@18"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2726,7 +2730,6 @@
         "ot_s81sl_leaf__t2": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t23": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t24__cl2456157b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t26": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t30": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t34": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -3780,11 +3783,13 @@
         },
         "dsdv_slice_lepe_mu_C__t1": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
-          "OT_NATIVE_RESET_SCOPE": "selected"
+          "OT_NATIVE_RESET_SCOPE": "selected",
+          "OT_LEAF_FOLLOW": "fea7df0c0a6"
         },
         "dsdv_slice_c1x_C__t6": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
-          "OT_NATIVE_RESET_SCOPE": "selected"
+          "OT_NATIVE_RESET_SCOPE": "selected",
+          "OT_LEAF_FOLLOW": "fea7df0c0a6"
         },
         "dsdv_slice_lepw_mus_C__t1": {
           "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
@@ -5609,8 +5614,20 @@
         "ot_s81sl_leaf__t14": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t38": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t44__clf4ea6d4b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t6": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
-      }
+        "ot_s81sl_leaf__t6": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t26": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
+      },
+      "item_env_prev_kw36us": {
+        "dsdv_slice_c1x_C__t6": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "dsdv_slice_lepe_mu_C__t1": {
+          "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        }
+      },
+      "note_kw36us_batch": "KW-FIX-36 UNINDEXED-SRC-STALE batch from the 17:58 rescan: S-stale rows whose failure class the source fix can change (RTL) or an INFRA stop."
     },
     "s81_head": {
       "enabled": true,
