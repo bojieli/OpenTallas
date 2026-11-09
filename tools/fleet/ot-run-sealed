@@ -171,6 +171,11 @@ def main():
     if argv[0] != (conf.get("backend") or DEFAULT_BACKEND):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
+    elif why in ("not a pilot dir",) or why.startswith("kit/runner"):
+        p = parse(sys.argv[1:])
+        k = (p[0].get("dir") or "?") if p else "?"
+        if why.startswith("kit/runner") or any(k.startswith(d) for d in conf.get("dirs", [])) or "/runs/qwen_kvsys/" in k:
+            log(conf, f"PASS place {k}: {why}")             # a pilot-die place call that ran unsealed, and why
     os.execv(argv[0], argv)
 
 
