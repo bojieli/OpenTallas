@@ -388,6 +388,71 @@ if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) 
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_pair_affinity.tcl]
 }
+# S81-TYPES-13 11-09 (default off, OT_RRL_WIRE_FOLLOW=1).  A wire-kind reset relay u_rrl_<k> has no reset consumer of its
+# own, only the next relay; the nearest-tap split can leave it on a tap that also carries a hard macro, where CTS delays
+# the tap's register subtree to the macro's internal latency.  S81 leaf t16: u_rrl_104 on clk_t36 (macro u_vs + 13 regs)
+# launched at 401 ps into u_rrl_109 at 224 ps on clk_t31, TT -221.91 on a half-cycle lockup hop.  Such a relay takes the
+# tap of its destination relay, deepest relays first so a chain resolves; a destination tap that carries a macro is
+# replaced by the nearest macro-free tap with sinks.  Tap relays and pads (relays with any non-relay consumer) stay.
+if {[llength $ct_taps] >= 2 && [info exists ::env(OT_RRL_WIRE_FOLLOW)] && $::env(OT_RRL_WIRE_FOLLOW) eq "1"} {
+  set ct_rr {}
+  foreach ct_i [$ct_blk getInsts] {
+    if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} [$ct_i getName] -> ct_rk] && [ct_clk_iterm $ct_i] ne ""} { dict lappend ct_rr $ct_rk $ct_i }
+  }
+  set ct_mt {}
+  foreach tp $ct_taps {
+    foreach ct_it [[lindex $tp 1] getITerms] {
+      if {[[$ct_it getMTerm] getIoType] ne "INPUT"} continue
+      if {![catch {[[$ct_it getInst] getMaster] isBlock} ct_b] && $ct_b eq "1"} { dict set ct_mt [lindex $tp 0] 1; break }
+    }
+  }
+  set ct_rn 0; set ct_rm 0; set ct_rx 0
+  foreach ct_rk [lsort -integer -decreasing [dict keys $ct_rr]] {
+    set ct_votes {}; set ct_other 0; set ct_seen {}; set ct_todo {}
+    foreach ct_i [dict get $ct_rr $ct_rk] {
+      foreach ct_it [$ct_i getITerms] {
+        if {[[$ct_it getMTerm] getIoType] eq "OUTPUT" && [$ct_it getNet] ne "NULL" && [$ct_it getNet] ne ""} { lappend ct_todo [$ct_it getNet] }
+      }
+    }
+    while {[llength $ct_todo]} {
+      set ct_n [lindex $ct_todo 0]; set ct_todo [lrange $ct_todo 1 end]
+      if {[dict exists $ct_seen [$ct_n getName]]} continue
+      dict set ct_seen [$ct_n getName] 1
+      foreach ct_it [$ct_n getITerms] {
+        if {[[$ct_it getMTerm] getIoType] ne "INPUT"} continue
+        set ct_li [$ct_it getInst]
+        if {[regexp {^(BUF|INV|HB)} [[$ct_li getMaster] getName]]} {
+          foreach ct_o [$ct_li getITerms] { if {[[$ct_o getMTerm] getIoType] eq "OUTPUT" && [$ct_o getNet] ne "NULL" && [$ct_o getNet] ne ""} { lappend ct_todo [$ct_o getNet] } }
+          continue
+        }
+        if {![regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} [$ct_li getName] -> ct_dk]} { incr ct_other; continue }
+        if {$ct_dk eq $ct_rk} continue
+        set ct_dc [ct_clk_iterm $ct_li]
+        if {$ct_dc ne ""} { dict incr ct_votes [[$ct_dc getNet] getName] } else { incr ct_other }
+      }
+    }
+    if {$ct_other || ![dict size $ct_votes]} continue
+    incr ct_rn
+    set ct_win ""; set ct_wv -1
+    dict for {ct_n2 ct_v} $ct_votes { if {$ct_v > $ct_wv} { set ct_win $ct_n2; set ct_wv $ct_v } }
+    set ct_tp [dict get [ct_tapnets] $ct_win]
+    if {[dict exists $ct_mt [lindex $ct_tp 0]]} {
+      lassign [[lindex [dict get $ct_rr $ct_rk] 0] getLocation] ct_x ct_y
+      set ct_tp ""; set ct_bd 0
+      foreach tp $ct_taps {
+        if {[dict exists $ct_mt [lindex $tp 0]] || ![llength [[lindex $tp 1] getITerms]]} continue
+        set ct_d [expr {abs($ct_x - [lindex $tp 2]) + abs($ct_y - [lindex $tp 3])}]
+        if {$ct_tp eq "" || $ct_d < $ct_bd} { set ct_tp $tp; set ct_bd $ct_d }
+      }
+      if {$ct_tp eq ""} { incr ct_rx; continue }
+    }
+    foreach ct_i [dict get $ct_rr $ct_rk] {
+      set ct_cit [ct_clk_iterm $ct_i]
+      if {$ct_cit ne "" && [$ct_cit getNet] ne [lindex $ct_tp 1]} { $ct_cit disconnect; $ct_cit connect [lindex $ct_tp 1]; incr ct_rm }
+    }
+  }
+  puts "OT_CLOCK_TAPS RRL_WIRE_FOLLOW $ct_rn wire relays, $ct_rm clock pins re-hung, $ct_rx kept (no macro-free tap), macro taps [dict size $ct_mt]"
+}
 # TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap

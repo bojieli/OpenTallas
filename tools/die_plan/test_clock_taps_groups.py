@@ -216,3 +216,56 @@ def test_core_tap_finds_escaped_generate_instance(tmp_path):
     assert 'missing' not in out, out
     assert 'core tap clk_c0 <- u_core.u.g_pp[0].u_pair/clk: 1 clock pin(s)' in out, out
     assert 'NET ckp' not in out or 'NET ckp nc0' in out
+
+
+# S81-TYPES-13 11-09: OT_RRL_WIRE_FOLLOW.  u_rrl_1 (wire relay at x 900, nearest clk_t1) feeds u_rrl_2 (at x 100, clk).
+RRL_CHAIN = r"""
+proc bufm {m} {if {$m eq "isBlock"} {return 0}; return BUFx4}
+mkflop u_rrl_1/q 900
+mkflop u_rrl_2/state 100
+foreach {it net} {q_u_rrl_1/q n12 d_u_rrl_2/state n12} {set NET($it) $net}
+proc n12 {m args} "netproc n12 \$m {*}\$args"
+proc q_u_rrl_1/q {m args} {switch $m {getMTerm {return outp} getInst {return u_rrl_1/q} getNet {return n12}}}
+proc d_u_rrl_2/state {m args} {switch $m {getMTerm {return rin} getInst {return u_rrl_2/state} getNet {return n12}}}
+"""
+RRL_ON = 'set ::env(OT_RRL_WIRE_FOLLOW) 1'
+
+
+def test_rrl_wire_follow_default_off(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, RRL_CHAIN + fill)
+    assert p.returncode == 0, p.stderr
+    assert 'RRL_WIRE_FOLLOW' not in p.stdout
+    assert 'NET ck_u_rrl_1/q nt1' in p.stdout
+
+
+def test_rrl_wire_relay_takes_destination_tap(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, RRL_CHAIN + fill, env=RRL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'NET ck_u_rrl_1/q nclk' in p.stdout, p.stdout
+    assert 'RRL_WIRE_FOLLOW 1 wire relays, 1 clock pins re-hung, 0 kept' in p.stdout
+
+
+def test_rrl_relay_with_real_consumer_stays(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    extra = 'mkflop cons 900\nset NET(d_cons) n12\nproc d_cons {m args} {switch $m {getMTerm {return rin} getInst {return cons} getNet {return n12}}}\n'
+    p = run(tmp_path, RRL_CHAIN + extra + fill, env=RRL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'NET ck_u_rrl_1/q nt1' in p.stdout, p.stdout
+    assert 'RRL_WIRE_FOLLOW 0 wire relays' in p.stdout
+
+
+def test_rrl_destination_macro_tap_uses_macro_free_tap(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    macro = r"""
+proc blkm {m} {if {$m eq "isBlock"} {return 1}; return PHY}
+lappend INSTS u_mac; set NET(ck_u_mac) nclk
+proc u_mac {m args} {switch $m {getName {return u_mac} getLocation {return {0 0}} getMaster {return blkm} getITerms {return ck_u_mac}}}
+proc ck_u_mac {m args} {global NET; switch $m {getMTerm {return inp} getInst {return u_mac} getNet {return $NET(ck_u_mac)} getAvgXY {return {0}}
+   disconnect {set NET(ck_u_mac) NULL} connect {set NET(ck_u_mac) [lindex $args 0]}}}
+"""
+    p = run(tmp_path, RRL_CHAIN + macro + fill, env=RRL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'NET ck_u_rrl_1/q nt1' in p.stdout, p.stdout          # destination clk carries the macro: nearest macro-free tap
+    assert 'macro taps 1' in p.stdout
