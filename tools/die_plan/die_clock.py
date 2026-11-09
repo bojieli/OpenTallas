@@ -964,7 +964,9 @@ def cmd_build(a):
     NDR_MODE = getattr(a, "ndr", NDR_MODE)
     WIDE_LEVELS = getattr(a, "wide_levels", WIDE_LEVELS)
     raw = S.load(a.plan)
-    P = S.Plan(raw)
+    # DIE-KV-93 11-08: the plan path resolves plan-relative hard-core pin tables (reset_tree.core_reset_targets);
+    # without it a grid+explicit type with hard cores (KV hub_Eo astk) fell back to a repo-wide glob and refused
+    P = S.Plan(raw, Path(a.plan).resolve())
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -1280,7 +1282,7 @@ def pctl(v, q):
 
 def cmd_report(a):
     d = Path(a.dir)
-    P = S.Plan(S.load(a.plan))
+    P = S.Plan(S.load(a.plan), Path(a.plan).resolve())
     tree = json.loads((d / "tree.json").read_text())
     taps = tree["taps"]
     by_port = {t["port"]: t for t in taps}
@@ -1406,7 +1408,7 @@ def cmd_render(a):
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
     d = Path(a.dir)
-    P = S.Plan(S.load(a.plan))
+    P = S.Plan(S.load(a.plan), Path(a.plan).resolve())
     cells = json.loads((d / "place.json").read_text())
     tree = json.loads((d / "tree.json").read_text())
     rep = json.loads((d / "clock_report.json").read_text()) if (d / "clock_report.json").is_file() else None
