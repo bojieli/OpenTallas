@@ -318,14 +318,24 @@ module dsdv_svc_rs_c #(
 `endif
         bf16 = y[31:16];
     endfunction
+`ifdef OT_SVC_ATT_MEM_MACRO
+    reg sek; reg [5:0] pb_n; reg p_f;                 // pbuf: u_pbuf_mem (DIE-S81-85 form A (3))
+`else
     reg sek; reg [5:0] pb_n; reg [255:0] pbuf [0:39]; reg p_f;
+`endif
     wire pb_w = w_v && sek && pb_n != 6'd40;
+`ifndef OT_SVC_ATT_MEM_MACRO
     always @(posedge ck) if (pb_w) for (int i = 0; i < 16; i++) pbuf[pb_n][16*i +: 16] <= bf16(w_d[32*i +: 32]);
+`endif
     // (2) P beats into the score exchange from PIO, one every 2 cycles (aligned like the engine's score beats: gd)
     reg [7:0] pk;
     wire [9:0] nbt = (tjob + 10'd3) >> 2;
     wire [9:0] prow = {pk, 2'b00};
+`ifdef OT_SVC_ATT_MEM_MACRO
+    wire [255:0] prw;
+`else
     wire [255:0] prw = pbuf[pk[7:2]];
+`endif
 `ifdef OT_SVC_H8
     wire pfire, p_missing; wire [LW-1:0] pl_next;
     dsdv_svc_p_source #(.H(H)) u_p_source (.pon(pon), .hsel(hsel), .pk(pk), .tile(tile),
@@ -342,6 +352,21 @@ module dsdv_svc_rs_c #(
             pl_d[4*H + (H*i + 32'(tile) % H)*32 +: 32] <= {prw[16*(4*pk[1:0] + i) +: 16], 16'h0000};
         end
     end
+`endif
+`ifdef OT_SVC_ATT_MEM_MACRO
+    // DIE-S81-85 form A (3): pbuf (40 x 256) as one ot_sram_1r1w_160x256_m1_r0c0, read at pk's D input (0 cycle delta)
+`ifdef OT_SVC_ATT_MEM_MACRO_MUT
+    localparam integer MEM_MUT = 2;                  // bench negative control: macro read one cycle late
+`else
+    localparam integer MEM_MUT = 0;
+`endif
+    wire [255:0] pb_wd;
+    for (genvar gi = 0; gi < 16; gi++) begin : g_pbw
+        assign pb_wd[16*gi +: 16] = bf16(w_d[32*gi +: 32]);
+    end
+    wire [7:0] pk_n = go ? 8'd0 : pfire ? pk + 1'b1 : pk;
+    dsdv_svc_mem_ar #(.W(256), .DEPTH(40), .AW(6), .MACRO(1), .MUT(MEM_MUT)) u_pbuf_mem (
+        .clk(ck), .ra_n(pk_n[7:2]), .we(pb_w), .wa(pb_n), .wd(pb_wd), .rd(prw));
 `endif
     // (3) fold root: rt P beats -> PV frame words (header, then A = rows 0 / 1, B = rows 2 / 3 of each beat)
     // pbeat: the beat's 4 rows x H heads BF16, row r head h at 16 (H r + h) (H 16: words A = rows 0 / 1, B = rows 2 / 3;

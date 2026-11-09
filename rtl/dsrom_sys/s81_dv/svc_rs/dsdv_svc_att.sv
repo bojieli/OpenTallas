@@ -282,7 +282,11 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ write FIFOs per PC: OWN_ROW codes / scales, host
     // depth 8 each (OWN_ROW: 1 code + 1 scale write per 17-word frame; host: <= 8 words in flight on the 8 host credits)
+`ifdef OT_SVC_ATT_MEM_MACRO
+    wire [340:0] wq_hd [0:2][0:1];                   // FIFO heads: g_wqm[c].g_pc[p].u_wq_mem
+`else
     reg [340:0] wq [0:2][0:1][0:7];
+`endif
     reg [3:0] wq_w [0:2][0:1], wq_r [0:2][0:1];
     reg [2:0] wpush; reg [340:0] wpush_d [0:2]; reg [2:0] wpush_pc;   // registered pushes (one per FIFO class)
     reg [6:0] ow_slot; reg [9:0] ow_user;
@@ -335,7 +339,10 @@ module dsdv_svc_att #(
 
     // ------------------------------------------------------------------ SEL_IDS -> per-rank stack table + own-row fetch
     reg [9:0] s_first; reg [9:0] s_cnt;
-    reg [511:0] sw [0:31]; reg [9:0] sw_base [0:31]; reg [4:0] sw_n [0:31];
+`ifndef OT_SVC_ATT_MEM_MACRO
+    reg [511:0] sw [0:31];
+`endif
+    reg [9:0] sw_base [0:31]; reg [4:0] sw_n [0:31];
     reg [5:0] sw_w, sw_r; reg [4:0] sw_i;
     always @(posedge clk) if (hdr_mine && h_type == 4'd7) begin s_first <= q_d[9:0]; s_cnt <= q_d[19:10]; end
     wire sel_pay = pay_mine && f_type == 4'd7;
@@ -343,7 +350,11 @@ module dsdv_svc_att #(
     reg [511:0] x_own;                               // S81-ROWX2: rank -> the row is held by this die / stack (RO export)
     // fetch FIFOs per PC {k 4, rank 10, block 12}
     reg [25:0] fq [0:1][0:15]; reg [4:0] fq_w [0:1], fq_r [0:1];
+`ifdef OT_SVC_ATT_MEM_MACRO
+    wire [511:0] swd;                                // u_sw_mem below (DIE-S81-85 form A (3))
+`else
     wire [511:0] swd = sw[sw_r[4:0]];
+`endif
     wire [31:0] sid_g = swd[32*sw_i +: 32];
     wire [9:0] s_rank = sw_base[sw_r[4:0]] + 10'(sw_i);
     wire sw_have = sw_w != sw_r;
@@ -357,7 +368,10 @@ module dsdv_svc_att #(
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
     always @(posedge clk) if (sel_pay) begin
-        sw[sw_w[4:0]] <= q_d; sw_base[sw_w[4:0]] <= 10'(s_first) + 10'(f_idx[5:0]) * 10'd16;
+`ifndef OT_SVC_ATT_MEM_MACRO
+        sw[sw_w[4:0]] <= q_d;
+`endif
+        sw_base[sw_w[4:0]] <= 10'(s_first) + 10'(f_idx[5:0]) * 10'd16;
         sw_n[sw_w[4:0]] <= (32'(s_cnt) - 32'(f_idx) * 16 >= 16) ? 5'd16 : 5'(32'(s_cnt) - 32'(f_idx) * 16);
     end
 
@@ -376,9 +390,15 @@ module dsdv_svc_att #(
         for (p = 0; p < 2; p = p + 1) begin
             nreq[p] = '0; nv[p] = 1'b0; npop[p] = 3'd7; nwin[p] = 1'b0; nsc[p] = 1'b0; nf[p] = 1'b0;
             if (cr[p] != 0) begin
+`ifdef OT_SVC_ATT_MEM_MACRO
+                if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = wq_hd[2][p]; npop[p] = 3'd2; end
+                else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = wq_hd[0][p]; npop[p] = 3'd0; end
+                else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = wq_hd[1][p]; npop[p] = 3'd1; end
+`else
                 if (wq_w[2][p] != wq_r[2][p]) begin nv[p] = 1; nreq[p] = wq[2][p][wq_r[2][p][2:0]]; npop[p] = 3'd2; end
                 else if (wq_w[0][p] != wq_r[0][p]) begin nv[p] = 1; nreq[p] = wq[0][p][wq_r[0][p][2:0]]; npop[p] = 3'd0; end
                 else if (wq_w[1][p] != wq_r[1][p]) begin nv[p] = 1; nreq[p] = wq[1][p][wq_r[1][p][2:0]]; npop[p] = 3'd1; end
+`endif
                 else if (wr_on[p]) begin
                     nv[p] = 1; nwin[p] = 1;
                     nreq[p] = rd_req(ring + 30'(7'(wfirst[6:0] + 7'(wr_r[p])) >> 1), 4'd1, {2'd0, 7'd0, wr_r[p]});
@@ -424,7 +444,9 @@ module dsdv_svc_att #(
     wire [143:0] rw_bits = rk_v ? rk_bits : rows_bits;
 
     // ------------------------------------------------------------------ q store
+`ifndef OT_SVC_ATT_MEM_MACRO
     reg [D*16-1:0] qmem [0:H-1];
+`endif
     reg [4:0] q_have;
     wire [3:0] qt = (MUT == 3) ? tile + 4'd1 : tile;
     wire q_word = pay_mine && f_type == 4'd1 && f_idx[3:0] == qt;
@@ -449,7 +471,13 @@ module dsdv_svc_att #(
     assign hb_o = P2 ? hb_p : 1'b0;
 
     // engine ports
-    reg ej_v; reg eq_v; reg [D*16-1:0] eq_w; reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
+    reg ej_v; reg eq_v;
+`ifdef OT_SVC_ATT_MEM_MACRO
+    wire [D*16-1:0] eq_w;                            // u_qmem_mem (SYNC: = eq_w <= qmem[rc - 1])
+`else
+    reg [D*16-1:0] eq_w;
+`endif
+    reg ekv_v; reg [NL-1:0] ekv_m, kc_m; reg [NL*265-1:0] ekv_w, kc_w;
     wire ej_ready, eq_ready, kv_ready;
     reg [NL-1:0] rel_bad;
     // row word at release
@@ -571,13 +599,45 @@ module dsdv_svc_att #(
         else if (RX && x_em)
         pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
 
+`ifdef OT_SVC_ATT_MEM_MACRO
+    // ------------------------------------------------------------------ DIE-S81-85 form A (3) (11-09): sw / wq / qmem as
+    // generated 1R1W macros (ot_sram_1r1w_32x128_m1_r0c0), cycle-exact (dsdv_svc_mem_ar / _la; tb_svc_mem_ar + svc_rs lock-step):
+    // each read pointer's D input addresses the macro, so the combinational flop-array reads keep their cycles (0 delta).
+    // No reset term in the address cones: every pointer enable is false while the async-reset state is held (sw_have,
+    // cr / wq_w, dr_on, pio = 0), so the D input already equals the reset pointer (keeps the reset tree off the address).
+`ifdef OT_SVC_ATT_MEM_MACRO_MUT
+    localparam integer MEM_MUT = 2;                  // bench negative control: macro read one cycle late
+`else
+    localparam integer MEM_MUT = 0;
+`endif
+    // sw: the scanner advance depends on the word read (g_own / f_full -> sw_step), so the two-bank lookahead form
+    // (dsdv_svc_mem_la: macro address from the sw_r flop only; TT pre-route of the ar form was -107 ps at 833 ps)
+    dsdv_svc_mem_la #(.W(512), .AW(5), .MUT(MEM_MUT)) u_sw_mem (
+        .clk(clk), .rp(sw_r[4:0]), .we(sel_pay), .wa(sw_w[4:0]), .wd(q_d), .rd(swd));
+    genvar gwc, gwp;
+    for (gwc = 0; gwc < 3; gwc = gwc + 1) begin : g_wqm
+        for (gwp = 0; gwp < 2; gwp = gwp + 1) begin : g_pc
+            wire [2:0] ra_n = (nv[gwp] && npop[gwp] == 3'(gwc)) ? wq_r[gwc][gwp][2:0] + 3'd1 : wq_r[gwc][gwp][2:0];
+            dsdv_svc_mem_ar #(.W(341), .DEPTH(8), .AW(3), .MUT(MEM_MUT)) u_wq_mem (
+                .clk(clk), .ra_n(ra_n), .we(wpush[gwc] && wpush_pc[gwc] == 1'(gwp)), .wa(wq_w[gwc][gwp][2:0]),
+                .wd(wpush_d[gwc]), .rd(wq_hd[gwc][gwp]));
+        end
+    end
+    // pvq is NOT converted here: the as-built bound flow already maps it to 32x128 macros (ot_t7_pvq_capture_v2).
+    dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(1)) u_qmem_mem (
+        .clk(clk), .ra_n(4'(rc - 10'd1)), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+`endif
     // ------------------------------------------------------------------ sequential
     integer k;
     always @(posedge clk) begin
         // write FIFO pushes
+`ifndef OT_SVC_ATT_MEM_MACRO
         for (k = 0; k < 3; k = k + 1) if (wpush[k]) wq[k][wpush_pc[k]][wq_w[k][wpush_pc[k]][2:0]] <= wpush_d[k];
+`endif
         // q store
+`ifndef OT_SVC_ATT_MEM_MACRO
         if (q_word) qmem[P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}] <= q_d;
+`endif
         // p store
         if (pay_mine && f_type == 4'd5) pmem[pw[PFW-1:0]] <= q_d;
         // landing writes: PC responses, ROWS
@@ -608,7 +668,9 @@ module dsdv_svc_att #(
             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
         // SEL words
         // engine program inputs
+`ifndef OT_SVC_ATT_MEM_MACRO
         eq_w <= qmem[4'(rc - 10'd1)];
+`endif
         ekv_w <= kc_w; ekv_m <= kc_m;
         // PC request flops
         for (k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
