@@ -40,6 +40,7 @@ TRANS = [(r"^dkv(\d+)", r"DIEKV\1"), (r"^dq(\d+)", r"DIEQC\1"), (r"^dh(\d+)", r"
          (r"^rm(\d+)", r"ROOTMERGE\1"), (r"^ss(\d+)", r"SIGNOFFSPRINT\1"), (r"^kvt(\d+)", r"KVTYPES\1"), (r"^s81t(\d+)", r"S81TYPES\1")]
 WRAPPERS = {"wt", "moved", "relocated-1106", "relocated-1106b"}
 EXCL_PRE = ("tok-", "kv-fn-")
+RENAMED = re.compile(r"[.](old|bak|orig|moved|aside)([-._]|$)")   # COORD 19:2x: holds are keyed by path, so a renamed tree is skipped whole
 
 
 def norm(n):
@@ -274,7 +275,7 @@ class Plan:
     def excluded_tree(self, p):
         rest = p.split("/claude/", 1)[1].split("/")
         for c in rest:
-            if c.startswith(EXCL_PRE) or "tool" in c:
+            if c.startswith(EXCL_PRE) or c.startswith("from-") or "tool" in c or RENAMED.search(c):
                 return True
         return False
 
@@ -373,6 +374,8 @@ class Plan:
         total = files = 0
         newest = 0.0
         young = None
+        notmine = None
+        me = os.getuid()
         stack = [d]
         while stack:
             x = stack.pop()
@@ -387,6 +390,8 @@ class Plan:
                     continue
                 if e.is_symlink():
                     continue
+                if st.st_uid != me and notmine is None:
+                    notmine = e.path
                 if stat.S_ISDIR(st.st_mode):
                     stack.append(e.path)
                     continue
@@ -403,7 +408,7 @@ class Plan:
                 files += 1
                 if self.now - st.st_mtime < 6 * 3600:
                     young = e.path
-        return dict(bytes=total, files=files, newest=newest, young=young)
+        return dict(bytes=total, files=files, newest=newest, young=young, notmine=notmine)
 
     # --- units
     def is_git(self, d):
@@ -440,7 +445,7 @@ class Plan:
         J = self.J
         lane = self.lane_of(lane_dir + "/x")
         if self.excluded_tree(lane_dir):
-            self.record(lane_dir, "KEEP-excluded", "KEEP", "tok/kv-fn/tool tree", self.walk_stats(lane_dir))
+            self.record(lane_dir, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree", self.walk_stats(lane_dir))
             return
         live = self.owner_live(lane)
         self.visit(lane_dir, lane, live, top=True)
@@ -595,6 +600,9 @@ class Plan:
             # member-level: descend, files individually
             self.descend_members(d, lane, live, cat, why)
             return
+        if st["notmine"]:                        # COORD 19:2x: a folder that cannot be fully deleted is not started
+            self.record(d, "KEEP-not-deletable", "KEEP", "not owned by this user: " + st["notmine"], st)
+            return
         self.record(d, cat, "DELETE", why, st)
 
     def descend_members(self, d, lane, live, cat, why):
@@ -635,6 +643,9 @@ class Plan:
         st = self.walk_stats(d, track=True)
         if st["young"]:
             self.descend_members(d, lane, live, cat, why)
+            return
+        if st["notmine"]:
+            self.record(d, "KEEP-not-deletable", "KEEP", "not owned by this user: " + st["notmine"], st)
             return
         self.record(d, cat, "DELETE", why + " (member)", st)
 
@@ -1013,6 +1024,11 @@ class Apply:
                                            capture_output=True, text=True, timeout=1800)
                         if p.stdout.strip():
                             fh.write(f"{time.strftime('%F %T')}\t{path}\t{cat}\tSKIP\tyoung {p.stdout.strip()}\t{b}\n")
+                            continue
+                        p = subprocess.run(["find", path, "-xdev", "!", "-user", str(os.getuid()), "-print", "-quit"],
+                                           capture_output=True, text=True, timeout=1800)
+                        if p.returncode not in (0, 1) or p.stdout.strip():
+                            fh.write(f"{time.strftime('%F %T')}\t{path}\t{cat}\tSKIP\tnot fully deletable {p.stdout.strip()[:150]}\t{b}\n")
                             continue
                         if a.dry:
                             res = "WOULD"
