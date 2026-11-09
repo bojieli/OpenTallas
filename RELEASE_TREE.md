@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 11:55 PST COUNT 255 (COORD forced 11:55): S81 61/64 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 78/107 + 0/81t. Main a8835d14236 (today: CJ..CS landed incl. CORE-MAXWIRE all dies, hoplatch HBM default, PV-SCHEMA, cbf-grt band search). In test: CV eco_loop, CW S81 taps (all dies), CT collector-band, CU ROM-CGR8, CX HBM wsw15, CY watchdog, CZ HEAD lep. epyc5 terminated 11:13; epyc6 15:57. 11:30-11:40 limit stop, lanes resumed. Legacy delete gated on full sealed iteration (KW-FIX-44 KW44-5).
+> 2026-11-09 12:2x PST COUNT 256 (COUNT-ARCHIVE-2 forced 12:05; +QC coll_ft__cla4a25d77): S81 61/64 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 2/119t, KV 32/32 + 1/56t, HBM 78/107 + 0/81t. Main cbcda185357 (CU ROM-CGR8, CX HBM wsw15, CY watchdog landed after a8835d14236). In test: CV2 eco_loop+lectool, CW S81 taps (all dies), CT collector-band, CZ HEAD lep, DB sealed route, DC ROMQ-GB, DE HOPLATCH-HOLD; queued bind-instparams, wavekeys. epyc5 terminated 11:13; epyc6 15:57 (HOST-ONLY 0). Legacy delete gated on full sealed iteration (KW44-5 pilot).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
