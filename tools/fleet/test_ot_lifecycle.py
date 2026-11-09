@@ -400,6 +400,9 @@ def _incident_fleet(W):
     kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_3/gen/it5")
     kit(f"{WR}/kit-wave/s81/p/items/it6/attempt_1/gen/it6")      # negative control: older attempt nobody names still goes
     kit(f"{WR}/kit-wave/s81/p/items/it6/attempt_2/gen/it6")
+    kit(f"{WR}/kit-wave/s81/p/items/it7/attempt_1/gen/it7")      # older attempt whose path a post names: stays
+    kit(f"{WR}/kit-wave/s81/p/items/it7/attempt_2/gen/it7")
+    write(f"{R2}/kw26w/notes/n.txt", 64)                          # non-attempt content of a named wave lane: stays
     os.makedirs(f"{R2}/kwz2/u/rtl")
     with open(f"{R2}/kwz2/u/rtl/kit_rtl.json", "w") as fh:
         json.dump({"overlay": f"{WR}/kit-wave/s81/p/items/it5/attempt_1/rtl_bindov/b.sv"}, fh)
@@ -418,13 +421,14 @@ def _incident_fleet(W):
             fh.write(f"/srv/none/claude/lane/x{i}\tpad\n")
     json.dump({"created": time.time(), "created_h": "now"}, open(f"{snap}/meta.json", "w"))
     json.dump({"paths": [], "words": []}, open(f"{snap}/queue.json", "w"))
-    json.dump({"attempts": {}, "latest": {f"fix:{WR}/kit-wave/s81/p/items/it5": 3, f"fix:{WR}/kit-wave/s81/p/items/it6": 2}, "keep": [], "current_di": {},
+    json.dump({"attempts": {}, "latest": {f"fix:{WR}/kit-wave/s81/p/items/it5": 3, f"fix:{WR}/kit-wave/s81/p/items/it6": 2, f"fix:{WR}/kit-wave/s81/p/items/it7": 2}, "keep": [], "current_di": {},
                "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
                "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv",      # named only by a record on another host
                              "dkv72/pvb/view/rtl/common/c.sv"],              # named through an interior symlink
-               "lane_mentions24": ["s81-t51-recut", "pg", "fc10"], "mention_paths24": ["dead-mp/sub/keepme"],   # LANE-DIR HOLD cases
+               "lane_mentions24": ["s81-t51-recut", "pg", "fc10", "kw26w"],
+               "mention_paths24": ["dead-mp/sub/keepme", "kw26w/runs/s81/kit-wave/s81/p/items/it7/attempt_1"],   # LANE-DIR HOLD cases
                "wave_paths": [f"{R2}/dead-wv/wave/w.json", WR]}, open(f"{W}/life.json", "w"))
     return R2, R3, B, snap
 
@@ -477,7 +481,9 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == nb or nb.startswith(p + "/") or p.startswith(nb + "/"))], \
         "kit input check must run before the work-root release of older attempts"
     assert os.path.exists(nb + "/b.sv")
-    assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "negative control: an unnamed older attempt is still released"
+    assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "finished superseded attempt of a NAMED wave lane is released (07:2x)"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p.startswith(WR + "/it6/attempt_2") or p.startswith(WR + "/it7/attempt_1")
+                or p.startswith(f"{R2}/kw26w/notes") or (WR + "/it6/attempt_2").startswith(p + "/"))], "latest, path-named and non-attempt content stay"
     for n in named:
         assert os.path.exists(n)
     # mutant L: an empty mention list releases s81-t51-recut (the test sees the incident); a missing list refuses

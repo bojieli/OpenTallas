@@ -653,7 +653,11 @@ class Plan:
                 continue
             k = 1 if (rest[0] in WRAPPERS or rest[0].startswith(("moved-", "from-", "relocated"))) else 0
             if len(rest) > k and rest[k] in self.mnames:
-                return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", False)
+                # COORD 07:2x (finished-job disk is reclaimed unless an ECO/fix uses it): a named wave lane keeps its latest, active
+                # and signed attempts (decided earlier/later by the kit-wave state), but a finished superseded attempt is the wave's
+                # call, not the lane name's.  A post naming that attempt's path still holds it (mpaths below).
+                if not self.kw_old(d):
+                    return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", d in getattr(self, "attempt_anc", ()))
             if len(rest) <= k:                       # a wrapper dir itself (wt, moved-*): hold it if any dir below it is a mentioned lane
                 try:
                     if any(e in self.mnames for e in os.listdir(d)):
