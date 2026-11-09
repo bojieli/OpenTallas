@@ -24,7 +24,7 @@
 // is pin-registered: READY-LATENCY-1 contract, a beat transfers at t when kr_v(t) && kr_rdy(t-1) (consumers keep a
 // 1-entry slot). Rings move no data on pop. All other logic is H9 verbatim. RMUT (bench): 1 K ring slice skew, 2 KR
 // pops on the unregistered kr_rdy (ready-latency-0), 3 k_rdy credit off by one (allows 3 in flight -> overflow fault).
-module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
+module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
     parameter integer OREG=1,
     parameter integer KREG=1,
     parameter integer KRREG=1,
@@ -52,6 +52,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // state==RUN, unposted!=0 and read_reserved<32 are flops loaded from their exact next values. EREG=0 = previous.
     parameter integer EREG=1,
     parameter integer RMUT=0,
+    // STKREG=1 (HBM-FORM-TIMING-11-H9B 2026-11-06, routed TT -28.21 / 124: ofs -> |ofs -> enqueue -> controller
+    // per-slot wq_bank/wq_col enables): sticky is a flop loaded with its exact next value (sticky | any fault class
+    // set this edge, cleared with ofs), so the traffic kills start from a flop instead of a 6-bit OR. ENQREG=1 (needs
+    // EREG=1, QREG=1, STKREG=1): enqueue itself is a flop loaded from the exact next values of its terms. Same edges,
+    // same decisions (yosys equiv_induct gold vs new). STKREG=0 / ENQREG=0 = previous form exactly.
+    parameter integer STKREG=1,
+    parameter integer ENQREG=1,
     // Default OFF. Conservative local-R14-model 833ps profile; same clock/CDC.
     // Paired PC row/column phase alignment and bootreload144..252 are required.
     // This is not licensed PHY timing signoff.
@@ -108,7 +115,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     always @(posedge clk) pc_id_qq<=pc_id_q;
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
-    reg[1:0]state;wire sticky=|ofs;reg[18:0]active_row;reg[31:0]observed_open;
+    reg[1:0]state;wire sticky;reg sticky_q;wire[5:0]ofs_set;reg[18:0]active_row;reg[31:0]observed_open;
     reg[4:0]wp,rp,ep;reg[5:0]count,unposted;
     reg[63:0]queue[0:31];          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
     wire[255:0]head_wdata;
@@ -133,7 +140,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     wire[319:0]head={(QREG!=0)?head_q:queue[rp],head_wdata},push={(QREG!=0)?push_q:queue[ep],256'b0};
     wire push_read=!push[319];
     wire enq_run,enq_unp,enq_rr;   // EREG: == state==RUN, unposted!=0, read_reserved<32 on every edge
-    wire enqueue=enq_run && enq_unp && (!push_read || enq_rr) && !sticky;
+    wire enqueue_c=enq_run && enq_unp && (!push_read || enq_rr) && !sticky;
+    wire enqueue;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
     wire posted_read=posted&&push_read;
     wire column_read=cv&&!cwe;
@@ -171,12 +179,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     assign j_v=head_valid&&!sticky&&!pc_fault_i;
     // ---- KR pin boundary (H9b): kr_rdy pin-registered (ready-latency-1); the H9 per-64b skid keeps every KR output
     // pin on a flop (flop-first); its pop is kr_v && kr_rdy_q, so no pin reaches the 277-bit select.
-    reg kr_rdy_q; wire krq_fault=1'b0;
+    reg kr_rdy_q; wire krq_fault=1'b0; wire[3:0]kr_beat_low;
     always @(posedge clk) if(!reset_regions[5]) kr_rdy_q<=1'b0; else kr_rdy_q<=kr_rdy;
     ot_hbm_svc_pin_skid2_h9 #(.WIDTH(277)) u_skid_kr(
         .clk(clk),.rst_n(reset_regions[5]),.in_v(j_v),.in_r(j_rdy),
         .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-        .out_v(kr_v),.out_r((RMUT==2)?kr_rdy:kr_rdy_q),.out_data({kr_tag,kr_beat,kr_data}));
+        .out_v(kr_v),.out_r((RMUT==2)?kr_rdy:kr_rdy_q),.out_data({kr_tag,kr_beat_low,kr_data}));
+    assign kr_beat={2'b00,kr_beat_low[1:0]};
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
     generate if(OREG!=0)begin:g_oreg
         reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
@@ -271,6 +280,26 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
             if(!reset_regions[3])begin q_run<=1'b0;q_unp<=1'b0;q_rr<=1'b1;end
             else begin q_run<=state_n==RUN;q_unp<=unposted_n!=0;q_rr<=read_reserved_n<32;end
         assign enq_run=q_run; assign enq_unp=q_unp; assign enq_rr=q_rr;
+    end
+    // STKREG: the fault class set conditions of the main block, one wire each (the main block still loads ofs).
+    assign ofs_set[0]=i_v&&!legal;
+    assign ofs_set[1]=cv&&(state!=RUN || count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq));
+    assign ofs_set[2]=cv&&(WPAY!=0 && cwe && fresh_v && fresh_slot==rp);
+    assign ofs_set[3]=(cv&&!cwe&&pending_count>=32)||(ret_v&&(pending_count==0 || (response_count>=32&&!response_take)));
+    assign ofs_set[4]=response_take&&(read_reserved==0||response_count==0);
+    assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||kq_fault||krq_fault;
+    wire sticky_n=sticky||(|ofs_set);
+    always @(posedge clk) if(!reset_regions[3]) sticky_q<=1'b0; else sticky_q<=sticky_n;
+    assign sticky=(STKREG!=0)?sticky_q:(|ofs);
+    if(ENQREG!=0 && EREG!=0 && QREG!=0)begin:g_enqreg
+        wire[63:0]push_nx=lrst_n?push_n:queue[0];
+        reg enq_q;
+        always @(posedge clk)
+            if(!reset_regions[3]) enq_q<=1'b0;
+            else enq_q<=(g_ereg.state_n==RUN)&&(g_ereg.unposted_n!=0)&&(push_nx[63]||(g_ereg.read_reserved_n<32))&&!sticky_n;
+        assign enqueue=enq_q;
+    end else begin:g_enqcomb
+        assign enqueue=enqueue_c;
     end
     // H8: pending_wp is a FREE slot whenever pending_count<32. Refresh it
     // unconditionally from the registered command head; a column-read edge
