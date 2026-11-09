@@ -194,7 +194,9 @@ def gen(args):
         text = mutate_wrapper(args.mutant, tn, text)
         (out / src.name).write_text(text)
         files.append(out / src.name)
-    top = (rtl / 's81_head_top.sv').read_text()
+    # --top: the COMPLETED die top (gen top + head_start_sources.complete_top + START stages), the die as built;
+    # the bare gen.py top leaves pst_* START inputs open and is not a valid transport model.
+    top = read_any(args.top) if args.top else (rtl / 's81_head_top.sv').read_text()
     for p in parts:
         mod = emitted.get(p['type'], pt[p['type']]['module'])
         top, n = re.subn(r'^(    %s) (%s) \(' % (re.escape(mod), re.escape(p['name'])),
@@ -207,6 +209,9 @@ def gen(args):
     (out / 'stubs.sv').write_text('\n'.join(stubs))
     files.append(out / 'stubs.sv')
     files.append(rtl / 'ot_dp_cells.sv')
+    for i, x in enumerate(args.extra or []):
+        dst = out / ('extra%d_%s' % (i, Path(x).name.replace('.gz', '')))
+        dst.write_text(read_any(x)); files.append(dst)
     # library cells the generated RTL instantiates
     for f in ('rtl/common/ot_dp_clk_landing.sv', 'rtl/common/ot_dp_clk_landing_ca.sv', 'rtl/common/ot_meso_fifo.sv'):
         files.append(Path(args.repo) / f)
@@ -243,6 +248,12 @@ def gen(args):
                                                      mutant=args.mutant, wmax=wmax), indent=1))
     (out / 'run.sh').write_text(RUN_SH)
     print('GEN', out, 'lanes', len(lanes), 'schema_mismatch', len(mism), 'mutant', args.mutant)
+
+
+def read_any(p):
+    import gzip
+    p = Path(p)
+    return gzip.open(p, 'rt').read() if p.suffix == '.gz' else p.read_text()
 
 
 def mutate_wrapper(mut, tn, text):
@@ -316,6 +327,7 @@ export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 O=$D/obj; rm -rf "$O"; mkdir -p "$O"
 verilator --binary --timing -j ${BUILD_THREADS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
   -Wno-WIDTH -Wno-PINMISSING -Wno-UNDRIVEN -Wno-IMPLICIT --x-assign 0 --x-initial 0 --top-module tb -Mdir "$O" -o sim \
+  --output-split 4000 --output-split-cfuncs 1000 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" \
   -f "$D/files.f" > "$O/build.log" 2>&1
 rc=$?
 if [ $rc -ne 0 ]; then echo "BUILD_FAIL rc=$rc"; grep -m20 -E "%Error" "$O/build.log"; exit 2; fi
@@ -361,6 +373,8 @@ def main():
     g = sp.add_parser('gen'); g.add_argument('plan'); g.add_argument('rtl_dir'); g.add_argument('repo'); g.add_argument('out')
     g.add_argument('--mutant', default='none', choices=['none', 'st_bypass', 'st_double', 'k_plus1', 'bit_swap', 'oracle'])
     g.add_argument('--cycles', type=int, default=4000)
+    g.add_argument('--top', help='completed die top (.sv or .sv.gz) instead of RTL_DIR/s81_head_top.sv')
+    g.add_argument('--extra', action='append', help='extra RTL (e.g. start_stages.sv[.gz]), repeatable')
     r = sp.add_parser('report'); r.add_argument('plan'); r.add_argument('out'); r.add_argument('run_log')
     a = ap.parse_args()
     gen(a) if a.cmd == 'gen' else report(a)
