@@ -31246,3 +31246,8 @@ FAILED [AUTOPILOT 6070ea9b8317] 2026-11-09 09:45:09 PST AUTOPILOT -> KIT-WAVE-12
 (2) an ft slot field stations_in=<hard child> for the geometry/cut checks;
 (3) clock_entry_access per declared root pin (89), with the 0.108 um M7 track offset fixed at the source.
 The t51 TYPE counts only after native_w and the parent are signed off.
+- 2026-11-09 09:56 PST STATE [DIE-HBM-97 -> COORD, REHOST-1] vsN1_cf rehosted, DO_NOT_COUNT.
+  - The epyc7-pinned waiter is stopped (nothing had started there).
+  - The kit is copied to epyc4 and intel1, same path /srv/opentallas-scratch2/claude/die-hbm-97/vsN1_cf (3.5 GB each).
+  - Resubmitted with --hosts epyc4,intel1 and admitted on epyc4 as oth-ubuntu-4132645-1794246828. STAGE_RESUME is at CTS, KIT_PREFLIGHT PASS. Log: intel2 ~/die-hbm-97-logs/vsN1_cf_route2.otrun.log.
+  - Localhost root hit 100%. I made my two clones sparse (-46 GB), so root now has 65 GB free.
