@@ -375,6 +375,16 @@ def _incident_fleet(W):
     with open(f"{R2}/kwz/u/kit_rtl.f", "w") as fh:
         fh.write(f"+incdir+{B}/kv_sys_phy/bind/inc\n-v {B}/kv_sys_phy/bind/x.sv\n")
     kit(f"{R2}/dead-pc/kit1")                                                       # protected, for the plan's own control
+    # cause 2 (AUTOCLEAN-12 02:13): an older attempt under a live wave work root, named by a kit record elsewhere
+    WR = f"{R2}/kw26w/runs/s81"
+    kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_1/gen/it5")
+    write(f"{WR}/kit-wave/s81/p/items/it5/attempt_1/rtl_bindov/b.sv", 64)
+    kit(f"{WR}/kit-wave/s81/p/items/it5/attempt_3/gen/it5")
+    kit(f"{WR}/kit-wave/s81/p/items/it6/attempt_1/gen/it6")      # negative control: older attempt nobody names still goes
+    kit(f"{WR}/kit-wave/s81/p/items/it6/attempt_2/gen/it6")
+    os.makedirs(f"{R2}/kwz2/u/rtl")
+    with open(f"{R2}/kwz2/u/rtl/kit_rtl.json", "w") as fh:
+        json.dump({"overlay": f"{WR}/kit-wave/s81/p/items/it5/attempt_1/rtl_bindov/b.sv"}, fh)
     write(f"{R2}/dead-wv/wave/w.json", 64)
     snap = os.path.join(W, "snap")
     os.makedirs(snap)
@@ -384,11 +394,12 @@ def _incident_fleet(W):
             fh.write(f"/srv/none/claude/lane/x{i}\tpad\n")
     json.dump({"created": time.time(), "created_h": "now"}, open(f"{snap}/meta.json", "w"))
     json.dump({"paths": [], "words": []}, open(f"{snap}/queue.json", "w"))
-    json.dump({"attempts": {}, "latest": {}, "keep": [], "current_di": {}, "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
+    json.dump({"attempts": {}, "latest": {f"fix:{WR}/kit-wave/s81/p/items/it5": 3, f"fix:{WR}/kit-wave/s81/p/items/it6": 2}, "keep": [], "current_di": {},
+               "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
     json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
                "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
                "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv"],     # named only by a record on another host
-               "wave_paths": [f"{R2}/dead-wv/wave/w.json"]}, open(f"{W}/life.json", "w"))
+               "wave_paths": [f"{R2}/dead-wv/wave/w.json", WR]}, open(f"{W}/life.json", "w"))
     return R2, R3, B, snap
 
 
@@ -423,6 +434,12 @@ def test_incident_0014_live_kit_inputs(tmp_path):
             assert not [n for n in named if n == p or n.startswith(p + "/") or p.startswith(os.path.dirname(n) + "/")], (p, cat)
     assert rows.get(f"{B}/unnamed", ("", ""))[1] == "DELETE", "negative control: an unnamed dir of the dead lane still goes"
     assert any(v[0] == "KEEP-kit-input" for v in rows.values()), "the guard, not some other hold, kept them"
+    WR = f"{R2}/kw26w/runs/s81/kit-wave/s81/p/items"
+    nb = WR + "/it5/attempt_1/rtl_bindov"
+    assert not [p for p, v in rows.items() if v[1] == "DELETE" and (p == nb or nb.startswith(p + "/") or p.startswith(nb + "/"))], \
+        "kit input check must run before the work-root release of older attempts"
+    assert os.path.exists(nb + "/b.sv")
+    assert rows.get(WR + "/it6/attempt_1", ("", ""))[1] == "DELETE", "negative control: an unnamed older attempt is still released"
     for n in named:
         assert os.path.exists(n)
     # mutant 0: without the fleet list the plan refuses
@@ -454,3 +471,15 @@ def test_incident_0014_live_kit_inputs(tmp_path):
     out = open(sorted(os.path.join(f"{W}/out", f) for f in os.listdir(f"{W}/out") if f.startswith("APPLY-"))[-1]).read()
     print(r.stdout[-800:], r.stderr[-800:], out)
     assert r.returncode == 0 and "live kit input" in out and os.path.exists(f"{B}/late/g.bin"), "recheck must hold a record written after the plan"
+
+
+def test_kit_union_merge(tmp_path):
+    lc, ac = _lc()
+    a, b = tmp_path / "a.json", tmp_path / "b.json"
+    lc.write_kitscan(str(a), {"/srv/opentallas-scratch3/claude/x/bind/y.sv"}, 1)
+    lc.write_kitscan(str(b), {"/srv/opentallas-scratch2/claude/z/k.sh"}, 1)
+    ku, miss = lc.merge_kitscans({"h1": str(a), "h2": str(b)}, ["h1", "h2"])
+    assert ku == ["x/bind/y.sv", "z/k.sh"] and miss == []
+    assert lc.merge_kitscans({"h1": str(a)}, ["h1", "h2"]) == (None, ["h2"])           # a host without a scan: no union, hosts refuse
+    d = json.load(open(b)); d["created"] -= 25 * 3600; json.dump(d, open(b, "w"))
+    assert lc.merge_kitscans({"h1": str(a), "h2": str(b)}, ["h1", "h2"]) == (None, ["h2"])   # stale scan counts as missing

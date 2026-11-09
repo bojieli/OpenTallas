@@ -132,6 +132,42 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
     return refs, n
 
 
+def kit_tails(paths):
+    return sorted({p.split("/claude/", 1)[1] for p in paths if "/claude/" in p and p.split("/claude/", 1)[1]})
+
+
+def write_kitscan(out, refs, n):
+    """this host's live kit inputs as tails below /claude/; the localhost drive merges every host's file into lifesnap kit_union"""
+    try:
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out + ".tmp", "w") as fh:
+            json.dump({"host": os.uname().nodename, "created": time.time(), "records": n, "tails": kit_tails(refs)}, fh)
+        os.replace(out + ".tmp", out)
+    except OSError as e:
+        print(f"kitscan write failed: {e!r}", flush=True)
+
+
+KITSCAN_MAX_AGE_H = 24
+
+
+def merge_kitscans(files, hosts, now=None):
+    """union of per-host kitscan files.  None (lifesnap gets no kit_union, so every host refuses) when a host has no file or one older
+    than KITSCAN_MAX_AGE_H: a path named only on that host would be unseen."""
+    now = now or time.time()
+    out, have = set(), set()
+    for h, f in files.items():
+        try:
+            d = json.load(open(f))
+        except (OSError, ValueError):
+            continue
+        if now - d.get("created", 0) > KITSCAN_MAX_AGE_H * 3600:
+            continue
+        out.update(d.get("tails", []))
+        have.add(h)
+    missing = [h for h in hosts if h not in have]
+    return (None, missing) if missing else (sorted(out), [])
+
+
 def load_tool(path):
     spec = importlib.util.spec_from_file_location("otac", path)
     m = importlib.util.module_from_spec(spec)
@@ -299,6 +335,7 @@ class Plan:
                         rows.append((d, "directory of a file named by a live kit record on the fleet"))
         self.kit = m.PathSet(rows, canon=J.paths.canon)
         self.kit_refs = kr
+        write_kitscan(os.path.join(a.state, "kitscan.json"), kr, kn)
         print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths, fleet union {len(ku)}", flush=True)
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
@@ -453,6 +490,10 @@ class Plan:
                 h = ps.hit(f)
                 if h:
                     return ("KEEP-" + name, h, h.startswith("holds "))
+        for f in J.paths.forms(d):          # kit inputs first: a wave work-root hold is released for older attempts (kw_release), a kit hold never
+            kh = self.kit.hit(f)
+            if kh:
+                return ("KEEP-kit-input", kh, kh.startswith("holds "))
         for f in J.paths.forms(d):
             wh = self.wave.hit(f)
             if wh:
@@ -460,9 +501,6 @@ class Plan:
             ch = self.coord.hit(f)
             if ch:
                 return ("KEEP-coord-hold", ch, ch.startswith("holds "))
-            kh = self.kit.hit(f)
-            if kh:
-                return ("KEEP-kit-input", kh, kh.startswith("holds "))
         oh = self.holds.hit(d)
         if oh:
             return ("KEEP-ot-hold", oh, oh.startswith("holds "))
@@ -1676,7 +1714,7 @@ def coord_holds(live, now):
     return out
 
 
-def build_lifesnap(out):
+def build_lifesnap(out, kit_union=None):
 
     Q = os.path.expanduser("~/coord/lanes/COORD-REVIEW-QUEUE.md")
     AGENTS = os.path.expanduser("~/.claude/jobs/b7f906df/tmp/agent_ids.tsv")
@@ -1746,7 +1784,7 @@ def build_lifesnap(out):
     json.dump({"created": now, "created_h": time.strftime("%F %T %Z"), "live": sorted(live),
                "lane_last": {k: int(v) for k, v in lane_last.items()},
                "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave,
-               "coord_holds": coord_holds(live, now)}, open(out, "w"))
+               "coord_holds": coord_holds(live, now), **({"kit_union": kit_union} if kit_union is not None else {})}, open(out, "w"))
     print("live lanes", len(live), sorted(live)[:80])
     print("posts", len(posts), "paths48", len(paths48), "words48", len(words48), "agents", len(agents_all))
 
@@ -1777,8 +1815,21 @@ def drive_main(a):
     os.makedirs(STATE_DIR, exist_ok=True)
     # 1. lifesnap to every host (atomic); a host that misses it stops itself when the snapshot ages out
     snap = os.path.join(STATE_DIR, "lifesnap.json")
+    files = {}
+    for h in a.hosts:
+        f = os.path.join(STATE_DIR, f"kitscan-{h}.json")
+        r = subprocess.run(SSH + [h, "cat ~/.local/state/ot-lifecycle/guards/kitscan.json"], capture_output=True, timeout=120)
+        if r.returncode == 0 and r.stdout:
+            with open(f + ".tmp", "wb") as fh:
+                fh.write(r.stdout)
+            os.replace(f + ".tmp", f)
+        if os.path.exists(f):
+            files[h] = f
+    ku, missing = merge_kitscans(files, a.hosts)
+    if missing:
+        _log(f"alert kit_union: no kitscan under {KITSCAN_MAX_AGE_H} h from {','.join(missing)}; lifesnap carries no kit_union, every host refuses to plan")
     try:
-        build_lifesnap(snap)
+        build_lifesnap(snap, ku)
     except Exception as e:
         _log(f"alert lifesnap build failed: {e!r}")
         return 2
@@ -1903,6 +1954,10 @@ def main():
     t.add_argument("--docker", default=None)
     dv = sub.add_parser("drive", help="localhost: lifesnap push, tick-line collection into autopilot/log.txt, count guard")
     dv.add_argument("--hosts", default=",".join(HOSTS))
+    ks = sub.add_parser("kitscan", help="this host's live kit inputs (kit records + wave files, 2 hops) as tails, for the drive's kit_union")
+    ks.add_argument("--lifesnap", required=True)
+    ks.add_argument("--out", default=os.path.join(STATE_DIR, "guards", "kitscan.json"))
+    ks.add_argument("--roots", nargs="*", default=None)
     hp = sub.add_parser("hold", help="create or renew an expiring hold on a directory")
     hp.add_argument("path")
     hp.add_argument("--hours", default="24")
@@ -1927,6 +1982,14 @@ def main():
     a = ap.parse_args()
     if a.cmd == "hold":
         sys.exit(hold_main(a))
+    if a.cmd == "kitscan":
+        roots = a.roots or [r for r in ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude", "/srv/opentallas-scratch/claude",
+                                        "/home/ubuntu/scratch-root/claude") if os.path.isdir(r)]
+        life = json.load(open(a.lifesnap))
+        kr, kn = live_kit_inputs(roots, set(life.get("wave_paths", [])))
+        write_kitscan(a.out, kr, kn)
+        print(f"kitscan: {kn} records and wave files, {len(kr)} paths -> {a.out}")
+        sys.exit(0 if kn else 2)
     if a.cmd == "drive":
         a.hosts = [h for h in a.hosts.split(",") if h]
         sys.exit(drive_main(a))
