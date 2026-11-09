@@ -356,5 +356,22 @@ class FcapDontTouchLift(unittest.TestCase):
                     self.assertNotIn("OT_TAP_TARGET_PS", kv)
 
 
+
+class GdsAllowEmpty(unittest.TestCase):
+    """QC-GDS-EMPTY 11-09: abstract-only SRAM/ROM views (no GDS in asap7_memory_macros_v2) are declared in
+    GDS_ALLOW_EMPTY, so the ORFS 6_1 GDS merge after the route does not fail (su_lane l3s, ot_sram_1r1w2c_128x64_m1)"""
+
+    def test_staged_macro_without_gds_is_declared_empty(self):
+        src = (HERE / "gen_core_kit_qc.py").read_text()
+        self.assertIn("no_gds.append(master)", src)
+        self.assertIn('"export GDS_ALLOW_EMPTY = ^(" + "|".join(["fakeram.*", *(re.escape(m) for m in no_gds)]) + ")$"', src)
+        vd = HERE.parents[4] / "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+        if vd.is_dir():
+            self.assertFalse((vd / "ot_sram_1r1w2c_128x64_m1.gds").exists())
+        pat = "^(" + "|".join(["fakeram.*", re.escape("ot_sram_1r1w2c_128x64_m1")]) + ")$"
+        self.assertRegex("ot_sram_1r1w2c_128x64_m1", pat)
+        self.assertNotRegex("ot_sram_1r1w2c_128x64_m1x", pat)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1121,7 +1121,7 @@ def main():
             raise SystemExit(f"{mod}: {len(pd_err)} plan pin dir/port mismatches vs RTL: {pd_err[:5]}")
     # macros: the closed kit's views; sites from the recipe, default spec "at" (lower-left core-frame um) snapped onto
     # the M4 track phase of the macro pins
-    lefs, libs, mplace = [], [], {}
+    lefs, libs, mplace, no_gds = [], [], {}, []
     sites = rec.get("macro_sites", {})
     for m in spec.get("macros", []):
         md = REPO / m["view"]
@@ -1134,6 +1134,11 @@ def main():
         if f"/work/macros/{master}.lef" not in lefs:
             lefs.append(f"/work/macros/{master}.lef")
             libs.append(f"/work/macros/{master}_tt.lib")
+            # QC-GDS-EMPTY 11-09 (DIE-QC-97, COORD class; same rule as s81 gen_core_kit_legacy.py): ASAP7 generated SRAM
+            # views are abstract-only (no GDS), so the ORFS GDS merge in 'make finish' must declare them empty, or
+            # 6_1_merged.gds fails after the route ('LEF Cell ot_sram_1r1w2c_128x64_m1 has no matching GDS', su_lane l3s)
+            if not (md / f"{master}.gds").is_file() and not (md / f"{master}.gds.gz").is_file():
+                no_gds.append(master)
         bb = md / f"{master}_bb.v"
         if bb.name not in bbs:
             shutil.copyfile(bb, kd / "rtl" / bb.name)
@@ -1480,7 +1485,9 @@ def main():
            *([f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
               "export MACRO_PLACE_HALO = 4.32 4.32", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
               f"export MACRO_ROWS_HALO_X = {rec.get('macro_rows_halo', 4.32):g}",
-              f"export MACRO_ROWS_HALO_Y = {rec.get('macro_rows_halo', 4.32):g}"]
+              f"export MACRO_ROWS_HALO_Y = {rec.get('macro_rows_halo', 4.32):g}",
+              *(["export GDS_ALLOW_EMPTY = ^(" + "|".join(["fakeram.*", *(re.escape(m) for m in no_gds)]) + ")$"]
+                if no_gds else [])]
              if mplace or hcb else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
