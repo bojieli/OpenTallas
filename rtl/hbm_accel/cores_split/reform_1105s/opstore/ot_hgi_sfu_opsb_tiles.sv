@@ -43,7 +43,16 @@ module ot_hgi_sfu_opsb_output (
     always @(posedge clk) begin q_sv <= sr_v; q_sa <= sr_addr; q_lw <= lw; q_la <= lwa; q_ld <= lwd; end
 `ifdef OT_OPSB_WP    // HBM-FORM-SPLIT-14-OPSB opt-in: write-pipelined, placement-local form (ot_hgi_su_lgroup2_wp.sv): sr_d /
                      // sr_rv +(2 + WP) edges, flt +WP edges vs this text without defines
-    ot_hgi_su_lgroup2_wp #(.WP(`OT_OPSB_WP)) u_g (.clk(clk), .rst_n(rst_n), .sr_v(q_sv), .sr_addr(q_sa), .sr_d(sr_d), .sr_rv(sr_rv),
+`ifdef OT_OPSB_PRESELECT
+`ifdef OT_OPSB_PRESELECT_COL
+    ot_hgi_su_lgroup2_wp #(.WP(`OT_OPSB_WP),.PRESELECT(1),.LOCAL_COL(`OT_OPSB_PRESELECT_COL)) u_g (
+`else
+    ot_hgi_su_lgroup2_wp #(.WP(`OT_OPSB_WP),.PRESELECT(1)) u_g (
+`endif
+`else
+    ot_hgi_su_lgroup2_wp #(.WP(`OT_OPSB_WP)) u_g (
+`endif
+        .clk(clk), .rst_n(rst_n), .sr_v(q_sv), .sr_addr(q_sa), .sr_d(sr_d), .sr_rv(sr_rv),
         .lw(q_lw), .lwa(q_la), .lwd(q_ld), .flt(flt));
 `else
 `ifdef OT_OPSB_RREG   // HBM-FORM-SPLIT-13-OPSB opt-in: bank-local read registers (RREG 1: sr_d / sr_rv +1 edge, 2: +2)

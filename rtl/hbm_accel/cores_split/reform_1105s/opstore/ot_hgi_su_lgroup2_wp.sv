@@ -35,7 +35,10 @@
 `default_nettype none
 module ot_hgi_su_lgroup2_wp #(
     parameter integer WP = 1,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PRESELECT = 0,
+    parameter integer LOCAL_COL = -1,
+    parameter integer LOCAL_MUT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -81,6 +84,8 @@ module ot_hgi_su_lgroup2_wp #(
     // ---- stage W1 (WP = 2): the decoded write record + the sector-read request, one register stage
     wire [N-1:0] a_lw; wire [N*N-1:0] a_oh; wire [N*LN-1:0] a_bk; wire [N*RB-1:0] a_rw; wire [511:0] a_d;
     wire [NP-1:0] a_ne; wire [N-1:0] a_bad; wire [1:0] a_sv; wire [29:0] a_sa;
+    wire [N*RB-1:0] a_rw_hi;
+    wire [511:0] d_wd_hi;
     wire [511:0] d_wd;   // lwd after the two g_wd delay registers (WP >= 3)
     wire [N*N-1:0] i_oh; wire [N*N-1:0] i_win; wire [N*LN-1:0] i_bkv; wire [N*RB-1:0] i_rwv;
     for (genvar g = 0; g < N; g = g + 1) begin : g_iv
@@ -117,8 +122,43 @@ module ot_hgi_su_lgroup2_wp #(
         (* keep *) reg [511:0] q_d0; (* keep *) reg [511:0] q_d1;
         always @(posedge clk) begin q_d0 <= lwd; q_d1 <= q_d0; end
         assign d_wd = q_d1;
+        if (PRESELECT) begin : g_hi
+            (* keep *) reg [511:0] q_d1;
+            always @(posedge clk) q_d1 <= q_d0;
+            assign d_wd_hi = q_d1;
+        end else begin : g_same assign d_wd_hi = q_d1; end
     end else begin : g_wdn
-        assign d_wd = {512{1'b0}};
+        assign d_wd = {512{1'b0}}; assign d_wd_hi = {512{1'b0}};
+    end
+    // Same-edge row-record copy limits each row bit to eight bank selectors. Disabled path is identical.
+    if (PRESELECT && (LOCAL_COL >= 0 || LOCAL_COL == -2) && WP >= 3) begin : g_rowhi
+        (* keep *) reg [N*RB-1:0] q_rw;
+        always @(posedge clk) q_rw <= i_rwv;
+        assign a_rw_hi=q_rw;
+    end else begin : g_rowsame assign a_rw_hi=a_rw; end
+    // PRESELECT (WP3): retime the pure winning-lane write mux before the column register.
+    // Previously every 512-bit word bus crossed the block before selecting 32 bits per bank.
+    // Now each column carries only four selected {we,row,data} records. Edge dates and faults are unchanged.
+    // Two equal WD copies feed banks 0..7 / 8..15 in the central selection region.
+    wire [N-1:0] pre_we;
+    wire [RB-1:0] pre_wa [0:N-1]; wire [31:0] pre_wd [0:N-1];
+    for(genvar psb=0;psb<N;psb=psb+1) begin : g_preselect
+        wire [N-1:0] h;
+        wire [511:0] data_in = psb < 8 ? d_wd : d_wd_hi;
+        wire [N*RB-1:0] rows_in = psb < 8 ? a_rw : a_rw_hi;
+        for(genvar psl=0;psl<N;psl=psl+1) begin : g_h
+            assign h[psl] = a_lw[psl] && a_oh[psl*N+psb];
+        end
+        reg [RB-1:0] row; reg [31:0] data;
+        always @* begin : choose
+            integer j;
+            row=0;data=0;
+            for(j=0;j<N;j=j+1) begin
+                row=row|({RB{h[j]}}&rows_in[j*RB+:RB]);
+                data=data|({32{h[j]}}&data_in[j*32+:32]);
+            end
+        end
+        assign pre_we[psb]=|h;assign pre_wa[psb]=row;assign pre_wd[psb]=data;
     end
     // ---- g_col[c]: per-column kept copy (register-to-register haul, no logic); WP 2 copies the column's 4 one-hot
     // bank bits per lane, WP 1 the raw 4-bit lane bank (decoded after the copy)
@@ -132,7 +172,36 @@ module ot_hgi_su_lgroup2_wp #(
         end
         (* keep *) reg [N-1:0] q_lw; (* keep *) reg [N*4-1:0] q_x; (* keep *) reg [N*RB-1:0] q_rw; (* keep *) reg [511:0] q_d;
         (* keep *) reg [1:0] q_sv; (* keep *) reg [29:0] q_sa;
-        always @(posedge clk) begin q_lw <= a_lw; q_x <= x_in; q_rw <= a_rw; q_d <= a_d; q_sv <= a_sv; q_sa <= a_sa; end
+        if(PRESELECT) begin : g_selected
+            wire [4*RB-1:0] rows; wire [127:0] words;
+            for(genvar k=0;k<4;k=k+1) begin : pack
+                assign rows[k*RB+:RB]=pre_wa[4*gc+k];
+                assign words[k*32+:32]=pre_wd[4*gc+k];
+            end
+            if (WP >= 3 && (LOCAL_COL == gc || LOCAL_COL == -2)) begin : g_local
+                wire [3:0] we; wire [4*RB-1:0] wa; wire [127:0] wd;
+                for(genvar j=0;j<4;j=j+1) begin : g_bank
+                    wire [N-1:0] wins;
+                    for(genvar lane=0;lane<N;lane=lane+1) begin : g_wins
+                        // WP3 i_win already includes the lane valid before its W1 register.
+                        assign wins[lane]=a_oh[lane*N+gc*4+j];
+                    end
+                    (* keep_hierarchy = "yes" *) ot_hgi_opsb_selpipe #(.N(N),.RB(RB),.MUT((gc==3 && j==0)?LOCAL_MUT:0)) u_pipe(
+                        .clk(clk),.sel(wins),.rows(gc<2?a_rw:a_rw_hi),.data(gc<2?d_wd:d_wd_hi),
+                        .we(we[j]),.wa(wa[j*RB+:RB]),.wd(wd[j*32+:32]));
+                end
+                always @* begin q_lw={{(N-4){1'b0}},we};q_x=0;q_rw={{((N-4)*RB){1'b0}},wa};q_d={384'd0,wd};end
+                always @(posedge clk) begin q_sv<=a_sv;q_sa<=a_sa;end
+            end else begin : g_original
+            always @(posedge clk) begin
+                q_lw <= {{(N-4){1'b0}},pre_we[gc*4+:4]};q_x<=0;
+                q_rw <= {{((N-4)*RB){1'b0}},rows};q_d <= {384'd0,words};
+                q_sv<=a_sv;q_sa<=a_sa;
+            end
+            end
+        end else begin : g_full
+            always @(posedge clk) begin q_lw <= a_lw; q_x <= x_in; q_rw <= a_rw; q_d <= a_d; q_sv <= a_sv; q_sa <= a_sa; end
+        end
         assign c_lw[gc] = q_lw; assign c_x[gc] = q_x; assign c_rw[gc] = q_rw; assign c_d[gc] = q_d;
         assign c_sv[gc] = q_sv; assign c_sa[gc] = q_sa;
     end
@@ -153,9 +222,14 @@ module ot_hgi_su_lgroup2_wp #(
         always @* begin : wao
             integer i_;
             wrow = {RB{1'b0}}; wdat = 32'd0;
-            for (i_ = 0; i_ < N; i_ = i_ + 1) begin
-                wrow = wrow | ({RB{oh[i_]}} & c_rw[C][i_*RB +: RB]);
-                wdat = wdat | ({32{oh[i_]}} & ((MUT == 1 && gb == 5) ? a_d[32*i_ +: 32] : c_d[C][32*i_ +: 32]));
+            if(PRESELECT) begin
+                wrow=c_rw[C][J*RB+:RB];
+                wdat=(MUT==1 && gb==5)?pre_wd[gb]:c_d[C][J*32+:32];
+            end else begin
+                for (i_ = 0; i_ < N; i_ = i_ + 1) begin
+                    wrow = wrow | ({RB{oh[i_]}} & c_rw[C][i_*RB +: RB]);
+                    wdat = wdat | ({32{oh[i_]}} & ((MUT == 1 && gb == 5) ? a_d[32*i_ +: 32] : c_d[C][32*i_ +: 32]));
+                end
             end
         end
         // sector reads: bank gb takes word off = gb - addr[LN-1:0] (off < 8) of each lane; the HIGHEST lane wins (g_srs)
@@ -176,7 +250,7 @@ module ot_hgi_su_lgroup2_wp #(
         end
         // BREG: no reset (the uncut bank takes every op issued before a reset edge, so the delayed op must land too)
         reg q_re, q_we; reg [RB-1:0] q_ra, q_wa; reg [31:0] q_wd;
-        always @(posedge clk) begin q_re <= |sh; q_ra <= rrow; q_we <= |h; q_wa <= wrow; q_wd <= wdat; end
+        always @(posedge clk) begin q_re <= |sh; q_ra <= rrow; q_we <= PRESELECT?c_lw[C][J]:|h; q_wa <= wrow; q_wd <= wdat; end
         wire [31:0] b_rd;
         ot_hgi_su_lbank_n32 #(.RB(RB), .MACRO(1), .LAT(0)) u_b (.clk(clk), .re(q_re), .ra(q_ra), .rd(b_rd),
             .we(q_we), .wa(q_wa), .wd(q_wd));
@@ -269,4 +343,36 @@ module ot_hgi_su_lgroup2_wp #(
         end
     end
 endmodule
+
+// LOCAL_COL: retain the select gates WITH their existing column register edge, not in a naked combinational fence.
+// HBM-HARD-6 11-08 (PS2d): LOCAL_COL = -2 = every column local (each bank gets its own selpipe next to its macro;
+// PS2c GRT-0116: 23844 overflow at the col-2 central select between banks 9/10, col 3 local showed none). Same edges.
+// Select is an already-valid-qualified WP3 winner. Each select bit sees <=7 child logic legs.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_opsb_selpipe #(parameter integer N=16,RB=11,MUT=0)(
+ input wire clk,input wire [N-1:0] sel,input wire [N*RB-1:0] rows,input wire [N*32-1:0] data,
+ output wire we,output wire [RB-1:0] wa,output wire [31:0] wd);
+ (* keep *) reg q_we;always @(posedge clk) q_we<=|sel;assign we=q_we;
+ for(genvar seg=0;seg<4;seg=seg+1)begin:g_data
+  wire [N*8-1:0] v;
+  for(genvar lane=0;lane<N;lane=lane+1)begin:g_in
+   assign v[lane*8+:8]=data[((MUT!=0)?(lane^1):lane)*32+seg*8+:8];
+  end
+  (* keep_hierarchy = "yes" *) ot_hgi_opsb_selreg8 #(.N(N),.W(8)) u_slice(.clk(clk),.sel(sel),.data(v),.q(wd[seg*8+:8]));
+ end
+ for(genvar seg=0;seg<(RB+7)/8;seg=seg+1)begin:g_row
+  localparam integer W=(RB-seg*8>=8)?8:RB-seg*8;
+  wire [N*W-1:0] v;
+  for(genvar lane=0;lane<N;lane=lane+1)begin:g_in assign v[lane*W+:W]=rows[lane*RB+seg*8+:W];end
+  (* keep_hierarchy = "yes" *) ot_hgi_opsb_selreg8 #(.N(N),.W(W)) u_slice(.clk(clk),.sel(sel),.data(v),.q(wa[seg*8+:W]));
+ end
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hgi_opsb_selreg8 #(parameter integer N=16,W=8)(
+ input wire clk,input wire [N-1:0] sel,input wire [N*W-1:0] data,output wire [W-1:0] q);
+ reg [W-1:0] v;integer i;
+ always @*begin v=0;for(i=0;i<N;i=i+1)v=v|({W{sel[i]}}&data[i*W+:W]);end
+ (* keep *)reg[W-1:0] q_data;always @(posedge clk)q_data<=v;assign q=q_data;
+endmodule
+
 `default_nettype wire
