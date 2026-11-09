@@ -431,3 +431,4 @@ time	die	signed_types	signed_cores
 2026-11-09 04:54	248	s81=94 head=22 qc=26 kv=33 hbm=73	COUNT-ARCHIVE-2 04:3x; +10 READY-COUNT pending (hidx_s3_q, wbq_root_g0, 7 HBM kids, HEAD hd_tile)
 2026-11-09 06:05 249 s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=73 auto
 2026-11-09 07:05 250 s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=74 auto
+2026-11-09 07:39	250	s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=74	forced 07:39 (store 50556); +2 = HEAD hd_tile + 1 HBM; ~14 READY-COUNT (HBM q_sm kids, idx, rootg1c, own_vRF4T, h9b) not yet in the plan count, asked COUNT-ARCHIVE-2
