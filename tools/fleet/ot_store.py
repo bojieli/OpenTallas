@@ -87,6 +87,10 @@ def sha_file(p):
 def _tmp(store):
     d = os.path.join(store, "tmp")
     os.makedirs(d, exist_ok=True)
+    m = os.path.join(store, ".ot-isolated.json")          # AUTOCLEAN-13: legacy cleanup never touches the store
+    if not os.path.exists(m):
+        with open(m, "w") as fh:
+            json.dump({"schema": "opentallas.ot_isolated.v1", "kind": "ot-store", "written": time.time()}, fh)
     return d
 
 
@@ -296,6 +300,7 @@ def _ref_path(store, name):
 
 
 def ref(store, name, shas, note=""):
+    _tmp(store)                                            # store dirs + its isolation marker
     p = _ref_path(store, name)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".r.")

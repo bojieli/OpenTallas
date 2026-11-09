@@ -295,7 +295,7 @@ class Sealed(Tmp):
                               env=self.env, capture_output=True, text=True, timeout=120)
 
     def jobs_left(self):
-        return os.listdir(self.root)
+        return [x for x in os.listdir(self.root) if x != JOB.MARKER]
 
     def test_declared_input_read_publish_return_delete(self):
         r = self.job(f"cat {self.src}/f.txt > out.txt && mkdir -p run && echo db > run/6_final.odb",
@@ -360,6 +360,8 @@ class Sealed(Tmp):
         self.assertEqual(r.returncode, JOB.PUBLISH_FAIL)
         left = self.jobs_left()
         self.assertEqual(len(left), 1)
+        self.assertTrue(os.path.isfile(os.path.join(self.root, left[0], JOB.MARKER)), "AUTOCLEAN-13 marker at the job root")
+        self.assertTrue(os.path.isfile(os.path.join(self.store, JOB.MARKER)))
         self.assertTrue(os.path.isfile(os.path.join(self.root, left[0], ".ot-job/result.json")))
 
     def test_root_owned_output_still_deleted(self):

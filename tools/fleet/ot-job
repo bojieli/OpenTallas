@@ -198,9 +198,19 @@ def _writable(J):
     os.chmod(J, 0o755)
 
 
+MARKER = ".ot-isolated.json"
+
+
+def mark(d, what):
+    p = os.path.join(d, MARKER)
+    if not os.path.exists(p):
+        with open(p, "w") as fh:
+            json.dump(dict(what, schema="opentallas.ot_isolated.v1", written=time.time()), fh)
+
+
 def remove_job(J):
     marker = os.path.join(J, ".ot-job", "job.json")
-    if not os.path.isfile(marker):
+    if not (os.path.isfile(marker) and os.path.isfile(os.path.join(J, MARKER))):
         raise JobError(f"{J} has no ot-job marker: not deleting")
     try:
         _writable(J)
@@ -219,6 +229,8 @@ def run(spec, tag, cmd, bwrap=True):
     J = os.path.join(os.path.realpath(root), f"{spec['name']}-{tag}")
     store = S.default_store(J)
     os.makedirs(J)
+    mark(J, {"kind": "ot-job", "tag": tag, "host": host})       # AUTOCLEAN-13: legacy cleanup never owns a marked folder
+    mark(os.path.dirname(J), {"kind": "ot-jobs-root"})
     for d in ("in", "work", "tmp", ".ot-job"):
         os.makedirs(os.path.join(J, d))
     meta = {"schema": SCHEMA, "spec": spec, "tag": tag, "host": host, "J": J, "store": store, "cmd": cmd,
