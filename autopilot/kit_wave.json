@@ -312,13 +312,10 @@
     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running",
-    "kv3_sys_SD_v1": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (4) held out of the first KV switch; waits for the macro-origin form",
     "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_pv*": "KW-FIX-42 03:11 COORD 03:1x: KV-PLAN-1 transport error (bind5 vport RT bound 63 vs bound round trips 64-71, 3 W-lane pads short); hold every kv3_pv* until KV-PLAN-1 posts its type-local fix",
-    "kv3_sys_SD": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (4) held out of the first KV switch; waits for the macro-origin form"
+    "kv3_pv*": "KW-FIX-42 03:11 COORD 03:1x: KV-PLAN-1 transport error (bind5 vport RT bound 63 vs bound round trips 64-71, 3 W-lane pads short); hold every kv3_pv* until KV-PLAN-1 posts its type-local fix"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -656,8 +653,8 @@
     "kv3_hub_Ei": "KW-FIX-8 15:4x COORD 14:16/14:53: I48 ftwreg, I49 hubsys; was: KW-FIX-6 06:0x: KV take_states += REVIEW only to reach kv3_io_ft_v1 (COORD ft li",
     "kv3_pv_v12": "CODEX canonical topology infrastructure recovery: original captured source/manifest path or legacy native receipt stale; proper new canonical bind/context required. Preserve failed evidence and live older jobs; no blind repeat. | RELEASED KW-FIX-24: canonical context now = bind_out kw23/bind_kv_q + asbuilt_kv_7da (DIE-KV-84: bind errors 0, 160 partitions; cfg e3a4e50aeb3); one batch with kv3_hgi_v8@11 / kv3_hub_Eo@10",
     "kv3_pv_v7": "CODEX06:00 topology preparation recovery hold: actuallatestkitRTLpassed, explicitasbuilt relativebase resolved againstwrongplanpath (S81/QC) or canonicalnativeBIND_STALE(KV). Sharedkit_assembly ownsfix; releaseoneclassbatch onlyaftercorrectactualcontext, no designstrike. Existinghealthyjobscontinue. | RELEASED KW-FIX-24: canonical context now = bind_out kw23/bind_kv_q + asbuilt_kv_7da (DIE-KV-84: bind errors 0, 160 partitions; cfg e3a4e50aeb3); one batch with kv3_hgi_v8@11 / kv3_hub_Eo@10",
-    "kv3_sys_SD": "CODEX parked old unstarted KW10 disk waiter; reviewed current-context recovery owned KV/wave; preserve all outputs/proofs. No design strike/no blind retry.",
-    "kv3_sys_SD_v1": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: KV-TYPES-3 relaunches it privately from main's plan (21:15); wave must not double-launch",
+    "kv3_sys_SD": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (4) held out of the first KV switch; waits for the macro-origin form | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x",
+    "kv3_sys_SD_v1": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (4) held out of the first KV switch; waits for the macro-origin form | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x",
     "kv3_pv*": "KW-FIX-42 03:00 KV switch fresh kit (DIE-KV-97 02:24): KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): PV family: class C4 START-in-macro fix still owed (KV-",
     "kv3_phy": "KW-FIX-42 03:00 KV switch fresh kit (DIE-KV-97 02:24): KW-FIX-35-K 2026-11-08 10:36 PST: private KW-RESUME-1 resume kw35k-phyR-a7 (intel2 ~/coord/autopilot",
     "kv3_phy_v1": "KW-FIX-42 03:00 KV switch fresh kit (DIE-KV-97 02:24): KW-FIX-35-K 2026-11-08 10:36 PST: private KW-RESUME-1 resume kw35k-phyv1R-a4 running (intel2 ~/coord",
@@ -670,7 +667,8 @@
     "kv3_hg_v1p3": "KW-FIX-42 03:00: DIE-KV-97 02:24 / COORD 02:33: EP type, ZB_ADD not built yet (would build twice); lands later as a type-local event | RELEASED KW-FIX-42 11-09 04:37: bind8 ZB_ADD (COORD 04:4x)",
     "kv3_hg_v1p4": "KW-FIX-42 03:00: DIE-KV-97 02:24 / COORD 02:33: EP type, ZB_ADD not built yet (would build twice); lands later as a type-local event | RELEASED KW-FIX-42 11-09 04:37: bind8 ZB_ADD (COORD 04:4x)",
     "kv3_hg_v1p5": "KW-FIX-42 03:00: DIE-KV-97 02:24 / COORD 02:33: EP type, ZB_ADD not built yet (would build twice); lands later as a type-local event | RELEASED KW-FIX-42 11-09 04:37: bind8 ZB_ADD (COORD 04:4x)",
-    "kv3_hg_v1p6": "KW-FIX-42 03:00: DIE-KV-97 02:24 / COORD 02:33: EP type, ZB_ADD not built yet (would build twice); lands later as a type-local event | RELEASED KW-FIX-42 11-09 04:37: bind8 ZB_ADD (COORD 04:4x)"
+    "kv3_hg_v1p6": "KW-FIX-42 03:00: DIE-KV-97 02:24 / COORD 02:33: EP type, ZB_ADD not built yet (would build twice); lands later as a type-local event | RELEASED KW-FIX-42 11-09 04:37: bind8 ZB_ADD (COORD 04:4x)",
+    "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x"
    },
    "hosts": [
     "intel2",
