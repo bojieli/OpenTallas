@@ -442,3 +442,4 @@ time	die	signed_types	signed_cores
 2026-11-09 10:44	253	s81=60+34t head=4+19t qc=25+1t kv=32+1t hbm=77	forced 10:44 COORD; CJ (gy-hbm) + CN (fy-s81/gz-hbm) landed; COUNT-ARCHIVE-2 recount on d44v_gqi_cp1109_q3vm pending (expect 255)
 2026-11-09 10:57	255	s81=61+34t head=4+19t qc=25+1t kv=32+1t hbm=78	forced 10:36 COUNT-ARCHIVE-2; HBM plan d44v_gqi_cp1109_q3vm (main f7d7c81e19): +ot_hfd_coll_q3_vm_core (q3vm_vF); S81 plan_h2_2249 t51-split: +s81p_slice_station__t51_ot_s81_station_t51_native_e
 2026-11-09 11:05 255 s81=61+34t head=4+19t qc=25+1t kv=32+1t hbm=78 auto
+2026-11-09 11:55	255	s81=61+34t head=4+19t qc=25+1t kv=32+1t hbm=78	forced 11:55 COORD; main a8835d14236 (CR fz-qc, CQ2 all-die, CP ga-s81, CS gb-qc landed); 7 trains in test; coll_ft + l7 PROVENANCE ingest pending
