@@ -135,4 +135,102 @@ class ParentSource(unittest.TestCase):
         for bad in (text.replace('u_t30','u_other'),text+text,result):
             with self.assertRaises(ValueError): P.explicit_idle(bad)
 
+ROOT=Path(__file__).resolve().parents[3]
+ADO=ROOT/'results/physical/qc_nl_clock_adoption_1551/access_v4'
+BLANKET=fixture().replace('RECT 0 0 4 10','RECT 0 0 10 10').replace('RECT 6 0 10 10','RECT 0 0 10 10')
+ACCESS={'pin':'ck','footprints_um':{f'M{k}':v for k,v in Access.footprints.items()}}
+
+
+def plan_ns(core, contents=()):
+    return SimpleNamespace(types={'type':{'hard_cores':[core],'contents':list(contents)}},
+        layer_budget={'partition_signal_max':'M7'},
+        layers={'M6':{'dir':'H','pitch_um':.064},'M7':{'dir':'V','width_um':.04,'pitch_um':.064}})
+
+
+class DerivedAccessLef(unittest.TestCase):
+    """DIE-QC-97 11-09: cbx_q10 NL DRT-0073; the kit staged the signed blanket-OBS LEF (sha c324040b)."""
+    def test_reviewed_access_lef_by_construction(self):
+        acc=(ADO/'qfd_tile_nl_a0c.access.lef').read_text(); ad=json.loads((ADO/'adoption.json').read_text())
+        lines=acc.splitlines(keepends=True); out=[]; i=0
+        while i<len(lines):
+            if lines[i].startswith('      RECT '):
+                while i<len(lines) and lines[i].startswith('      RECT '): i+=1
+                out.append('     RECT  0 4.297 457.92 1153.463 ;\n')
+            else: out.append(lines[i]); i+=1
+        blanket=''.join(out)
+        import hashlib
+        self.assertEqual(hashlib.sha256(blanket.encode()).hexdigest(),ad['original_lef_sha256'])
+        access={'pin':'ck','footprints_um':{f'M{k}':v for k,v in ad['parent_conductor_footprints'].items()}}
+        new,cuts=A.G.derive_access_lef(blanket,'qfd_tile_nl_a0c',access,7,tuple(ad['parent_site']),{6:.064,7:.064})
+        self.assertEqual((new,cuts),(acc,2))
+        self.assertEqual(A.G.derive_access_lef(new,'qfd_tile_nl_a0c',access,7,tuple(ad['parent_site']),{6:.064,7:.064}),(acc,0))
+    def test_blanket_fixture_opens_only_the_window(self):
+        new,cuts=A.G.derive_access_lef(BLANKET,'core',ACCESS,7,(0,0,'MY'),{6:.064,7:.064})
+        self.assertEqual(cuts,2)
+        b,t,_=A.G.geometry(new,'core','ck',7,(0,0,'MY'))
+        self.assertTrue(A.G.entry_clear(Access.footprints,b,t,7))
+        b,t,_=A.G.geometry(BLANKET,'core','ck',7,(0,0,'MY'))
+        self.assertFalse(A.G.entry_clear(Access.footprints,b,t,7))
+    def test_pg_metal_in_window_still_blocks(self):
+        pg='PIN VDD\n PORT\n LAYER M6 ;\n RECT 4.99 4.99 5.01 5.01 ;\n END\nEND VDD'
+        text=BLANKET.replace(' OBS',pg+'\n OBS',1)
+        new,_=A.G.derive_access_lef(text,'core',ACCESS,7,(0,0,'MY'),{6:.064,7:.064})
+        b,t,_=A.G.geometry(new,'core','ck',7,(0,0,'MY'))
+        self.assertFalse(A.G.entry_clear(Access.footprints,b,t,7))
+    def test_gen_stages_access_lef_hard_core_over_shadowing_contents(self):
+        with tempfile.TemporaryDirectory() as td:
+            kd=Path(td)/'kit'; (kd/'macros').mkdir(parents=True)
+            lef=Path(td)/'core.lef'; lef.write_text(BLANKET); (kd/'macros/core.lef').write_text(BLANKET)
+            core={'inst':'u_core','module':'core','outline_um':[10,10],'orient':'MY','clock_entry_access':ACCESS}
+            shadow={'inst':'u_core','module':'core_romleaf','outline_um':[10,10],'origin_um':[0,0]}
+            p=plan_ns(core,[shadow])
+            macro=('u_core','core',str(lef),None,0,0,'MY')
+            with patch.object(GP,'type_macros',return_value=[macro]), patch.object(GP,'core_tap_rows',return_value=[('clk_c0','u_core','ck',0,0)]):
+                # the hard core wins over the same-name contents entry; judged on the derived abstract
+                self.assertEqual(GP.entry_block_boxes(p,'type',root=td,port='clk_c0',entry_xy=(5,5)),[])
+                rows=GP.stage_clock_entry_lefs(p,'type',kd,[macro],Path)
+            self.assertEqual(len(rows),1); self.assertEqual(rows[0]['obs_cuts'],2)
+            staged=(kd/'macros/core.lef').read_text()
+            self.assertEqual(staged,A.G.derive_access_lef(BLANKET,'core',ACCESS,7,(0,0,'MY'),{6:.064,7:.064})[0])
+            rec=json.loads((kd/'clock_entry_lef.json').read_text())
+            self.assertEqual(rec['schema'],'opentallas.clock_entry_lef.v1')
+            # idempotent restage; a type without access writes nothing
+            GP.stage_clock_entry_lefs(p,'type',kd,[macro],Path)
+            self.assertEqual((kd/'macros/core.lef').read_text(),staged)
+            core.pop('clock_entry_access'); (kd/'clock_entry_lef.json').unlink(); (kd/'macros/core.lef').write_text(BLANKET)
+            self.assertEqual(GP.stage_clock_entry_lefs(p,'type',kd,[macro],Path),[])
+            self.assertEqual((kd/'macros/core.lef').read_text(),BLANKET)
+            self.assertFalse((kd/'clock_entry_lef.json').exists())
+    def test_shared_lef_without_access_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            kd=Path(td)/'kit'; (kd/'macros').mkdir(parents=True)
+            lef=Path(td)/'core.lef'; lef.write_text(BLANKET); (kd/'macros/core.lef').write_text(BLANKET)
+            core={'inst':'u_core','module':'core','outline_um':[10,10],'orient':'MY','clock_entry_access':ACCESS}
+            twin={'inst':'u_twin','module':'core','outline_um':[10,10],'orient':'MY'}
+            p=plan_ns(core); p.types['type']['hard_cores'].append(twin)
+            ms=[('u_core','core',str(lef),None,0,0,'MY'),('u_twin','core',str(lef),None,20,0,'MY')]
+            with self.assertRaises(ValueError): GP.stage_clock_entry_lefs(p,'type',kd,ms,Path)
+
+    def test_preflight_judges_hard_core_over_shadowing_contents(self):
+        with tempfile.TemporaryDirectory() as td:
+            kd=Path(td); (kd/'macros').mkdir()
+            (kd/'macros/core.lef').write_text(fixture())
+            core={'inst':'u_core','module':'core','outline_um':[10,10],'origin_um':[0,0],'orient':'MY','clock_entry_access':ACCESS}
+            shadow={'inst':'u_core','module':'core_romleaf','outline_um':[10,10],'origin_um':[0,0]}
+            (kd/'die_plan.json').write_text(json.dumps({'partition_types':{'type':{'hard_cores':[core],'contents':[shadow]}}}))
+            (kd/'budget.json').write_text(json.dumps({'type':'type'}))
+            self.assertEqual(K._plan_contents(kd,kd)['u_core']['module'],'core_romleaf')   # default order unchanged
+            self.assertEqual(K._plan_contents(kd,kd,prefer_hard=True)['u_core']['module'],'core')
+
+
+class ReapplyEvent(unittest.TestCase):
+    def test_qc52_reapply_equals_reviewed_qc52n(self):
+        spec=importlib.util.spec_from_file_location('reapply_event',Path(__file__).with_name('reapply_event.py'))
+        R=importlib.util.module_from_spec(spec); spec.loader.exec_module(R)
+        por=ROOT/'physical/die_plan/qwen_compute/plan_of_record'
+        base=json.loads((por/'plan_qc52.json').read_text())
+        ops=json.loads((ADO/'proposed_event.patch.json').read_text())
+        self.assertEqual(R.apply(base,ops),json.loads((por/'plan_qc52n.json').read_text()))
+        with self.assertRaises(ValueError): R.apply(R.apply(base,ops),ops)   # already applied: test op fails
+
 if __name__=='__main__': unittest.main()

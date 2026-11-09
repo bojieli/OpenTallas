@@ -126,3 +126,78 @@ def validate_access(text, master, access, top, site, entry_box):
     if not entry_clear(footprints,blocks,target,top):
         raise ValueError('clock entry conductor witness blocked or not on real pin')
     return True
+
+
+def _subtract(a, b):
+    x0, y0, x1, y1 = a
+    u0, v0, u1, v1 = max(x0, b[0]), max(y0, b[1]), min(x1, b[2]), min(y1, b[3])
+    if u0 >= u1 or v0 >= v1:
+        return [a]
+    return [r for r in [(x0, y0, u0, y1), (u1, y0, x1, y1), (u0, y0, u1, v0), (u0, v1, u1, y1)]
+            if r[0] < r[2] and r[1] < r[3]]
+
+
+def access_windows(text, master, access, top, site, margins):
+    """{layer: [macro-frame box]}: each M(top-1)/M(top) conductor footprint of the plan's clock_entry_access mapped
+    back into the macro frame (R0/MY/MX/R180 are involutions) and grown by that layer's spacing margin (one routing
+    pitch, the access_v4 review windows), rounded to the 1-nm LEF grid."""
+    m = re.search(r'^\s*MACRO\s+'+re.escape(master)+r'\s*$(.*?)^\s*END\s+'+re.escape(master)+r'\s*$', text, re.M|re.S)
+    if not m:
+        raise ValueError('missing exact LEF master '+master)
+    sm = re.search(r'\bSIZE\s+('+_NUM+r')\s+BY\s+('+_NUM+r')\s*;', m.group(1))
+    if not sm:
+        raise ValueError('missing LEF SIZE')
+    size = tuple(map(float, sm.groups()))
+    x, y, orient = site
+    out = {}
+    for layer in (top-1, top):
+        g = float(margins[layer])
+        out[layer] = []
+        for r in access['footprints_um'][f'M{layer}']:
+            a = transform((r[0]-x, r[1]-y, r[2]-x, r[3]-y), size, (0.0, 0.0, orient))
+            out[layer].append(tuple(round(v, 6) for v in (a[0]-g, a[1]-g, a[2]+g, a[3]+g)))
+    return out
+
+
+def derive_access_lef(text, master, access, top, site, margins):
+    """DIE-QC-97 11-09: the parent-side access abstract of a signed view, by construction.
+
+    Every M(top-1)/M(top) OBS RECT of `master` that overlaps an access window is replaced by its pieces outside the
+    window (same pieces and format as the access_v4 review LEF); every other byte, all PIN blocks and the Liberty stay
+    as signed.  -> (text, cuts).  The result must pass validate_access, so a window that would not clear (PG PIN or
+    other metal in it, wrong pin) still fails closed; a view that is already open is returned unchanged (cuts 0)."""
+    wins = access_windows(text, master, access, top, site, margins)
+    m = re.search(r'^\s*MACRO\s+'+re.escape(master)+r'\s*$.*?^\s*END\s+'+re.escape(master)+r'\s*$', text, re.M|re.S)
+    head, body, tail = text[:m.start()], text[m.start():m.end()], text[m.end():]
+    out, inobs, layer, cuts = [], False, None, 0
+    for line in body.splitlines(keepends=True):
+        s = line.split('#', 1)[0].strip()
+        if s == 'OBS':
+            inobs, layer = True, None
+        elif inobs and s.startswith('END'):
+            inobs = False
+        elif inobs:
+            lm = re.fullmatch(r'LAYER\s+M(\d+)\s*;', s)
+            if lm:
+                layer = int(lm.group(1))
+            elif s.startswith('LAYER'):
+                layer = None
+            elif layer in wins and s.startswith('RECT'):
+                rm = re.fullmatch(r'RECT\s+('+_NUM+r')\s+('+_NUM+r')\s+('+_NUM+r')\s+('+_NUM+r')\s*;', s)
+                if not rm:
+                    raise ValueError('unsupported OBS RECT: '+s)
+                a = tuple(map(float, rm.groups()))
+                pieces = [a]
+                for w in wins[layer]:
+                    pieces = [q for p in pieces for q in _subtract(p, w)]
+                if pieces != [a]:
+                    cuts += 1
+                    out.extend('      RECT '+' '.join(f'{v:.6f}' for v in r)+' ;\n' for r in pieces)
+                    continue
+        out.append(line)
+    result = head+''.join(out)+tail
+    pins = lambda t: re.findall(r'^[ \t]*PIN[ \t]+(\S+).*?^[ \t]*END[ \t]+\1[ \t]*$', t, re.M|re.S)
+    blocks = lambda t: [b.group(0) for b in re.finditer(r'^[ \t]*PIN[ \t]+(\S+).*?^[ \t]*END[ \t]+\1[ \t]*$', t, re.M|re.S)]
+    if not pins(text) or blocks(text) != blocks(result):
+        raise ValueError('PIN mutation forbidden')
+    return result, cuts
