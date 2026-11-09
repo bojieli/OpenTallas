@@ -8362,7 +8362,8 @@
     "slw_stm_v3@15",
     "slw_su_c__cl92142dac@29",
     "slw_su_l1__cla2a78701@11",
-    "slw_su_l1__clcc9d0155@11"
+    "slw_su_l1__clcc9d0155@11",
+    "cbf_q11@17"
    ],
    "queue_src": "claude/qc-transport-fix-4-1109@5333b7dca834",
    "type_args": {
@@ -8579,6 +8580,10 @@
     "sle_stm_v2__cl55be2264": [
      "--gpl-plain",
      "sle_stm_v2__cl55be2264"
+    ],
+    "cbf_q11": [
+     "--dpl-diamond",
+     "cbf_q11"
     ]
    },
    "retry_fix": {
@@ -8963,7 +8968,8 @@
     "slw_stm_v3@15": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class + kit on reverted grow tcl bd435405 (suspect)",
     "slw_su_c__cl92142dac@29": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
     "slw_su_l1__cla2a78701@11": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class",
-    "slw_su_l1__clcc9d0155@11": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class + kit on reverted grow tcl bd435405 (suspect)"
+    "slw_su_l1__clcc9d0155@11": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class + kit on reverted grow tcl bd435405 (suspect)",
+    "cbf_q11@17": "KW-FIX-42 2026-11-09 06:59 PST COORD 06:5x (b): GPL-0307 known class -> --dpl-diamond legalizer, retry ONCE on the same inputs"
    },
    "gen_hosts": [
     "epyc2",
@@ -11931,6 +11937,330 @@
     "item_args": {
      "hfd_ep_static": [
       "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*",
+      "--rw-recipe-delta",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/mem_recipe_delta.json"
+     ],
+     "hfd_hgi_vm_calendar_f20": [
+      "--face-lockup",
+      ".*"
+     ],
+     "hnx_fused_lane": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "hnx_rp3lp3h_n": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "hnx_rp3lp3h_s": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_hc_bank128_pair_first_core": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_hc_root_static__tailx_rest__v4f4566": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_hc_root_static__tailx_rest__v6bc7f2": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_hc_subtree32_core": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hbm_host_cp_rxs": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json",
+      "--rw-recipe-delta",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/mem_recipe_delta.json"
+     ],
+     "ot_hbm_idx_query_static": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_idx_rootctl_static_am": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_idx_score_hcol_h0": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_idx_vm_query_static_n12": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_sm_vm_wr_q_t_lanes4": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_programme_pslice_c5": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_static_cxport_ij_q": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_static_pgslice_lg__lanes8_11": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hbm_su_static_qcore_r13": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_su_static_sfustore_hw": [
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_svc_vmdel_lane_n": [
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_xp_aq_tree13_fmt": [
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hfd_coll_q2_hard_v8g__reduce": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hfd_coll_q2n2_vm_core": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hfd_coll_q3_body_core": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hfd_coll_q3_edge_core": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hfd_coll_q3_vm_core": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_qw_dec": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_sfu_split3_lane_core__idpin": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_sm_xload_cl2_bdring": [
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hgi_sm_xload_cl2_bfqg": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/kit-wave/hbm/rf1_1103/core_clock_regions_rf1.json"
+     ],
+     "ot_hnx_idxn_keybuf_slice": [
+      "--face-lockup",
+      ".*",
+      "--rw-recipe-delta",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/mem_recipe_delta.json"
+     ],
+     "ot_hgi_dma_back_static_vp4_banks_cp": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*"
+     ],
+     "ot_hbm_idx_score_hcol_h0_ra": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hbm_idx_score_hcol_h0_rb": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hbm_su_pg_lane1_core": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hgi_sfu_split3_lane_core_bk": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hgi_sfu_split3_lane_core_ex": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ],
+     "ot_hgi_sfu_split3_lane_core_fr": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ]
+    },
+    "args": [
+     "--slew-margin",
+     "35",
+     "--orfs-var",
+     "OT_HOLD_REPAIR_SCOPE=reg2reg"
+    ],
+    "item_args_prev_kw42cx": {
+     "hfd_ep_static": [
+      "--clock-regions",
       "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json",
       "--face-lockup",
       ".*",
@@ -12246,12 +12576,7 @@
       "/srv/opentallas-scratch2/claude/codex-hbm-wave/d44v35/core_clock_regions.json"
      ]
     },
-    "args": [
-     "--slew-margin",
-     "35",
-     "--orfs-var",
-     "OT_HOLD_REPAIR_SCOPE=reg2reg"
-    ]
+    "note_item_args_kw42cx": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x codex-path class: codex-hbm-wave/d44v35 is pruned on every gen host; core_clock_regions.json + mem_recipe_delta.json now from the current HBM plan stage hbm-plan-1/stage/p6_relay (mem_recipe_delta byte-equal 398492af; core_clock_regions = current plan 10b13882, was d8e86748). Revert: item_args <- item_args_prev_kw42cx."
    },
    "take_states": [
     "NEEDS-KIT",
@@ -12647,7 +12972,9 @@
     "q_b101@11",
     "q_b101_nw@10",
     "q_b100@6",
-    "q_b100__physical_v1@5"
+    "q_b100__physical_v1@5",
+    "q_b003@6",
+    "q_su00@4"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -12681,7 +13008,8 @@
     "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
     "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
     "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
-    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views"
+    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path"
    },
    "gen_hosts": [
     "epyc2",
@@ -12951,7 +13279,9 @@
     "q_b101@11": "PDN-0179 M5 strip class fix: partition_ft_reserve 0591baed (DIE-HBM-97 075832317c, COORD APPROVED 03:29); kit PDN input changed, not a P&R retry (KW-FIX-42)",
     "q_b101_nw@10": "PDN-0179 M5 strip class fix: partition_ft_reserve 0591baed (DIE-HBM-97 075832317c, COORD APPROVED 03:29); kit PDN input changed, not a P&R retry (KW-FIX-42)",
     "q_b100@6": "PDN-0179 M5 strip class fix: partition_ft_reserve 0591baed (DIE-HBM-97 075832317c, COORD APPROVED 03:29); kit PDN input changed, not a P&R retry (KW-FIX-42)",
-    "q_b100__physical_v1@5": "PDN-0179 M5 strip class fix: partition_ft_reserve 0591baed (DIE-HBM-97 075832317c, COORD APPROVED 03:29); kit PDN input changed, not a P&R retry (KW-FIX-42)"
+    "q_b100__physical_v1@5": "PDN-0179 M5 strip class fix: partition_ft_reserve 0591baed (DIE-HBM-97 075832317c, COORD APPROVED 03:29); kit PDN input changed, not a P&R retry (KW-FIX-42)",
+    "q_b003@6": "KW-FIX-42 2026-11-09 06:59 PST COORD 06:5x (b): DPL bad optional access known class -> --dpl-diamond legalizer, retry ONCE on the same inputs",
+    "q_su00@4": "KW-FIX-42 2026-11-09 06:59 PST COORD 06:5x (b): DPL bad optional access known class -> --dpl-diamond legalizer, retry ONCE on the same inputs"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -15102,6 +15432,14 @@
     "q_b011__physical_v1": [
      "--dpl-diamond",
      "q_b011__physical_v1"
+    ],
+    "q_b003": [
+     "--dpl-diamond",
+     "q_b003"
+    ],
+    "q_su00": [
+     "--dpl-diamond",
+     "q_su00"
     ]
    },
    "retry_prev_kw41_added": [
