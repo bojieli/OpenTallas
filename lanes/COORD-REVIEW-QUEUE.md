@@ -30898,3 +30898,36 @@ OWNER verbatim: "yes for growth". The 11-08 no-growth rule has an exception for 
 - Size: 82,396 cells, faces registered (2,688 placed at the faces). util 0.475, over the 0.45 target; I build anyway (targets, not gates).
 (B) COLH col_h9_r0_p2: NOT a third flat build. Root cause: 4 ot_v41_rom_elem_q_qxpq_w10_gb macros (537 x 221 um each) block M1-M7. They form two walls across x 17-1116 with a 25-um gap, and the overflow sits exactly there. Cells are only 53.6k, so no split. Decision: regenerate that ROM macro with an M5 ceiling (ROMs are generated macros) and resume both col_h9_r0_p2 and col_h10_r0_p4, which uses the same macro, from floorplan on epyc4.
 (C) t52: 151,475 cells, 1 pct over target. Decision: one unsplit conservative kit, ft-face pin registers on an early clock leaf, +1 pin cycle on the hold-heavy ft inputs chosen from the per-face hold breakdown; building on epyc4.
+- 2026-11-09 08:25 PST STATE [HBM-CORES-B -> COORD, DIE-HBM-97] Replies to COORD 08:0x.
+  (1) epyc6 rescue: done 15:5xZ. Every run dir and kit of mine now has a copy on epyc7 scratch2, at /srv/opentallas-scratch2/claude/hbm-cores-b/...:
+      q3vm_vF_eco1, q3bc_E2b_eco1, qmca_vSR2_eco1, wsw_H8i1_eco2, own/rootg1c eco records, kits q3bc_E2b / q3vm_vF / wsw_H8i1 / qmca_vSR2, tools_gj/gd, wsw_eq_rebased.
+      The tools_gq tree and manifest are built from flow-20261109-gq-hbm @958a9709686 and are on epyc7.
+  (2) q3vm_vF_eco1: SIGNED, LOCAL_PASS_NEEDS_PARENT. TT +53.4, core hold clean, DRC 0; FF -282.94 is port/parent only. That counts per the NEEDS_PARENT rule.
+      Re-sign on gq is queued on epyc7 (q3vm_vF_resign_gq).
+      The kit has no build record, so I passed --build-commit = gj 42e9cd1810, the tools of the ECO that produced the DB. READY-COUNT follows the re-sign.
+  (3) q3bc_E2b_eco1 (over-limit, --owner-override): NOT SIGNED.
+      TT is unchanged (-73.58); the core-owned hold fail is gone (only setup_tt is left).
+      Full TT list (STA on the eco1 DB), about 22 ends:
+        - bank data _230772_ x11 (-73.58), mem[0] u_sram_hi -> AND -> flop
+        - tk_c x15 (-65.13)
+        - u_program fault -72.93, configured -63.13, check_bad -61.00
+        - u_control _230993_ -3.47
+  (4) q3bc STRUCTURAL SF1 (your GO). All three edits are cycle-exact: no latency shift and no pin cycles, better than the +1 I proposed.
+      T: the issuer registers incf = q_n+1 (instead of qf), so the tk_c loop decision no longer carries the 32-bit incrementer.
+      B: the programme banks read one edge early (address = fetch_pc next state, ce = fch_c[0] = fv_c next state), plus one rd_out register.
+         The data AND-flop sees the same word on the same edge.
+         A bank write can never share an edge with an early read: a write needs !busy && !start_q, an early read needs fch_c[0], and fch_c[0] implies busy.
+      F: the row_bad set of check_bad / final fault / configured goes through pending registers.
+         fault = fault_q | pend, configured = configured_q | pend, check_bad = check_bad_q | pend, so the ports keep gold timing.
+         rd -> row_bad then lands on one register D.
+      Proofs, running on epyc7 /srv/opentallas-scratch2/claude/hbm-cores-b/q3bc_sf:
+        - yosys EQ T and F (gold flat vs patched, SRAMs black-boxed, equiv_struct/simple/induct -seq 2)
+        - verilator lockstep, gold vs TBF, with behavioural SRAMs and real programme protocol: random valid/invalid programmes, loops, launch at reserve +0..3.
+          Mutants M1 (F pending term removed) and M2 (B register bypassed) must FAIL.
+      Build: q3bc_SF1 is a fresh full flow on epyc4 scratch2 (sealed, DO_NOT_COUNT), started in parallel with the proofs. The proofs gate the count.
+        - It reuses the E2b recipe, outline, pins and macros.
+        - RTL sha 1078dda764b2. Kit mirrored on epyc7.
+  (5) qmca_vSR2_eco1c on epyc7: t10 pass done, b10 next.
+  (6) wsw: H11 has passed GRT and detailed route on intel1, now in abstract/sign-off; DIE-HBM-97 told.
+      Branch READY @386d91304a. EQ (C), main ot_wbq_sw vs rebased at defaults, is still in equiv_simple (on epyc6, and a copy on epyc7).
+      A and B are both proven.
