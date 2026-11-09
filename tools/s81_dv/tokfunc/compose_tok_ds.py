@@ -347,7 +347,10 @@ ATTN = {'G16': None, 'G8': {'attn.scores': 449.0, 'attn.pv': 756.0}, 'G4': {'att
 TP_X = {'attn.a_allgather': 1, 'attn.out_allreduce': 2, 'ffn.router_allgather': 1, 'ffn.combine_allreduce': 2,
         'attn.idx.topk_merge': 1, 'attn.rows_allgather': 1, 'attn.cand.merge': 1, 'head.argmax_merge': 1}
 HOP_X = {'substage_hop0': 1, 'substage_hop1': 1, 'unplaced_hops': 62, 'hop_in': 1, 'wave.hop': 1}
-IDX_LAT, ENG_AGE = 40, 640
+# Engram RETURN_AGE comes from the compiler's table (S81-TRANSPORT-FIX 3b: 640 -> 1536)
+_eng_spec = importlib.util.spec_from_file_location('lower_eng', ROOT / 'tools/s81_dv/layer_prog/lower_eng.py')
+_eng = importlib.util.module_from_spec(_eng_spec); _eng_spec.loader.exec_module(_eng)
+IDX_LAT, ENG_AGE = 40, _eng.LAT['return_age']
 
 # ladder gaps (results/token_pass/tokfunc3_s81_1021/ladder.json) that block a re-measurement on the current die
 BLOCKERS = [
@@ -565,7 +568,7 @@ def transform_release(dag, comps, log, attn='G4'):
         elif op == 'eng.hbm_read':
             c = sum(x['c'] for x in cl)
             if c < ENG_AGE:
-                cl.append(comp(ENG_AGE - c, PRICED, 'logic', 'Engram RETURN_AGE 640 (REL241 eng_age)'))
+                cl.append(comp(ENG_AGE - c, PRICED, 'logic', f'Engram RETURN_AGE {ENG_AGE} (REL241 eng_age)'))
                 log['release'][op] += (ENG_AGE - c) * bool(n.get('critical'))
 
 
