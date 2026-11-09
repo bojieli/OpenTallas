@@ -17,6 +17,8 @@ such child, so type-level place / route failures surface early.  Still a hard vi
             (0 or 1). The receipt comes from abstract_detail.py splice, adds its actual export bloat_factor, and
             must hash both the captured base and corrected output with matching-export pins/check_ok. The generator
             rechecks exact pins/PG/lower OBS using the selected --src helper. No export or P&R is run here.
+            detail_pg_layer: true (explicit, bloat 1 only) details the PG pin layer itself, for a core with PG
+            pins on its top OBS layer (nothing above PG to detail); see pg_layer_detail_layers.
             contract  blackbox LEF from the plan outline + pins_file (pin directions: pins_file dir, plan LEF, child
                       RTL header) with OBS M1..obs_max (default M5 = 12.1a ceiling; M7 gave PDN-0006 on M5 PG) less pin windows, VDD/VSS
                       stripes; budget lib (TT/FF) from the plan arrival contracts: both faces registered, IO_BUDGET x T
@@ -661,14 +663,52 @@ def routed_detail(cdir, module, meta, source_root):
     before = open(base).read().splitlines(keepends=True)
     after = open(detail).read().splitlines(keepends=True)
     layers = tool.default_layers(before)
+    pg_layer = meta.get("detail_pg_layer") is True
+    if pg_layer:
+        layers = pg_layer_detail_layers(tool, before, after, bloat)
     if not layers or receipt.get("layers_detailed") != layers:
         raise ValueError("detailed abstract layers differ from layers above PG pins")
     ok, problems = tool.check(before, after, layers)
     if not ok:
         raise ValueError("detailed abstract changed protected geometry: " + "; ".join(problems))
-    return detail, dict(base_sha256=receipt["base_sha256"], out_sha256=receipt["out_sha256"],
-                        bloat_factor=bloat, layers_detailed=layers, check_ok=True,
-                        detail_pins_equal_base=True, helper_sha256=sha256(helper))
+    out = dict(base_sha256=receipt["base_sha256"], out_sha256=receipt["out_sha256"],
+               bloat_factor=bloat, layers_detailed=layers, check_ok=True,
+               detail_pins_equal_base=True, helper_sha256=sha256(helper))
+    if pg_layer:
+        out["pg_layer_detail"] = True
+    return detail, out
+
+
+def pg_layer_detail_layers(tool, before, after, bloat):
+    """DIE-HBM-97 11-09 (COORD 01:4x, DRT-0073 class, ot_hbm_hc_bank128_pair_core): a narrow second form of the detailed
+    abstract for a core whose PG pins sit on its TOP OBS layer, so there is no layer above PG for the normal form.  The
+    centre clk pin under that layer's blanket OBS has no access point (single-macro probe: DRT-0073 on the base view,
+    PA_OK with the same signed ODB's detail on that one layer).  Allowed only when ALL hold, else ValueError:
+      - the wave entry opts in explicitly (detail_pg_layer: true); without it nothing here runs;
+      - the normal form has nothing to detail (no OBS layer above the highest PG pin layer);
+      - exactly that one layer is detailed, it is the highest PG pin layer, and the base has blanket OBS there;
+      - bloat factor 1 (one-pitch merge, never the exact-shape 0 form for this case);
+      - the detail still carries OBS on that layer (a refinement, not a removal).
+    PG pins, all other pins, header and lower OBS stay identical (tool.check, run by the caller)."""
+    if tool.default_layers(before):
+        raise ValueError("detail_pg_layer only for a core with no OBS layer above its PG pins")
+    pg = tool.pg_pin_layers(before)
+    order = tool.LAYER_ORDER
+    tops = {l for ls in pg.values() for l in ls if l in order}
+    if not tops:
+        raise ValueError("detail_pg_layer needs PG pins on a routing layer")
+    top = max(tops, key=order.index)
+    _, bb, _ = tool._split(before)
+    _, nb, _ = tool._split(after)
+    base_layers = [l for l, _ in tool._obs_by_layer(bb) if l in order]
+    if not base_layers or max(base_layers, key=order.index) != top:
+        raise ValueError("detail_pg_layer: the PG pin layer is not the base view's top OBS layer")
+    if bloat != 1:
+        raise ValueError("detail_pg_layer needs bloat factor 1")
+    new_geo = [g for l, g in tool._obs_by_layer(nb) if l == top]
+    if not any(ln.strip().startswith("RECT") for g in new_geo for ln in g):
+        raise ValueError("detail_pg_layer: the detail has no OBS left on the PG pin layer")
+    return [top]
 
 
 def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_override=None):
