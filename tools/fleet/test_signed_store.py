@@ -104,6 +104,10 @@ def test_late_pass_refuses_changed_unit():
         assert calls[0][4] == [["k/r/PROVENANCE.json", 3, "pp"]]
         bad = dict(good, **{"/k/r/x.v": [7, "CHANGED"]}); fails = []
         assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (bad, {r["path"]: unit}), collect=coll) == [] and "changed" in fails[0][2]
+        e3 = dict(e, files=e["files"] + [["k/r/lec.log", 0, "s0"]]); unit3 = dict(files=unit["files"] + [["/k/r/lec.log", 9]])
+        g3 = dict(good); fails = []; calls.clear()   # archive keeps the first lec.log, so it is not in good
+        assert si.late_pass([(e3, r)], fails, archive=lambda h, c, f: (g3, {r["path"]: unit3}), collect=coll) == [eid] and not fails
+        assert calls and True
         fails = []
         assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=lambda h, p: dict(signoff=so + " ", prov="{}")) == []
         assert "signoff.json changed" in fails[0][2]

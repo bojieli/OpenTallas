@@ -208,6 +208,10 @@ def late_pass(late, fails, archive=None, collect=None):
             unit = [f[0] for f in (P.get(r['path']) or {}).get('files', [])]
             old = {'/' + f[0]: f[2] for f in e.get('files') or []}
             changed = [p for p, s in old.items() if p not in good or good[p][1] != s]
+            # a re-sign's own log (lec.log, signoff.log) is rewritten after the first copy; the archive keeps the first version
+            # (never rewritten) and the change is recorded.  Any other stored file that changed refuses.
+            logs = [p for p in changed if p.endswith('.log')]
+            changed = [p for p in changed if p not in logs]
             newf = [p for p in unit if p not in old]
             if changed:
                 fails.append([h, r['path'], 'late: %d stored files changed or unverified, first %s' % (len(changed), changed[0])]); continue
@@ -219,7 +223,7 @@ def late_pass(late, fails, archive=None, collect=None):
             if ss.hashlib.sha256(t['signoff'].encode()).hexdigest() != e['id']:
                 fails.append([h, r['path'], 'late: signoff.json changed']); continue
             if ss.late_provenance(e['id'], r, json.loads(t['prov']), ss.ARCHIVE_ROOT + '/' + h,
-                                  [[p.lstrip('/'), good[p][0], good[p][1]] for p in sorted(newf)]):
+                                  [[p.lstrip('/'), good[p][0], good[p][1]] for p in sorted(newf)], changed_logs=sorted(logs)):
                 done.append(e['id']); say('LATE PROVENANCE', e['id'][:12], r['path'])
     return done
 
