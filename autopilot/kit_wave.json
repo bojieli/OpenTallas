@@ -9466,15 +9466,18 @@
     "sle_su_l0__cl086d85ba": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "aa8acb1988e",
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_CONS_MAX_LAYER": "M7"
     },
     "sle_su_l0__cl7a55c676": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_CONS_MAX_LAYER": "M7"
     },
     "sle_su_l1__cl5ea486db": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_CONS_MAX_LAYER": "M7"
     },
     "slw_su_l0__cl1a1c1f8f": {
      "OT_CONS_KIT": "1"
@@ -12127,6 +12130,22 @@
     "cbn_q00__cld7bf7197": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
      "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    },
+    "sle_su_l0__cl7a55c676": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
+     "note": "KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1c=2; supersedes cand8_class. Staged epyc7/epyc2/intel1 dq97/cls2."
+    },
+    "sle_su_l0__cl086d85ba": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
+     "note": "KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1c=2; supersedes cand8_class. Staged epyc7/epyc2/intel1 dq97/cls2."
+    },
+    "sle_su_l1__cl5ea486db": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
+     "note": "KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1c=2; supersedes cand8_class. Staged epyc7/epyc2/intel1 dq97/cls2."
+    },
+    "sle_ctl__cl372cea1c": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
+     "note": "KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1c=2; supersedes cand8_class. Staged epyc7/epyc2/intel1 dq97/cls2."
     }
    },
    "notes_kw42": {
@@ -13602,7 +13621,29 @@
     "epyc2",
     "epyc7"
    ],
-   "gen_hosts_note_kw43i1": "KW-FIX-43 13:3x COORD LOOP-GAP 12:5x (3): QC inputs staged on intel1 + intel2 at the same paths (src_qcsw2 delta incl QC-GDS-EMPTY d7784e4e, plan_pv md5 2dc5bd8bd1, bind_pv report 5ae25f9940); intel1 added. intel2 NOT added: scratch2 85 GB free < 100 GB floor (waiters would sit in disk wait). Revert gen_hosts = gen_hosts_prev_kw43i1."
+   "gen_hosts_note_kw43i1": "KW-FIX-43 13:3x COORD LOOP-GAP 12:5x (3): QC inputs staged on intel1 + intel2 at the same paths (src_qcsw2 delta incl QC-GDS-EMPTY d7784e4e, plan_pv md5 2dc5bd8bd1, bind_pv report 5ae25f9940); intel1 added. intel2 NOT added: scratch2 85 GB free < 100 GB floor (waiters would sit in disk wait). Revert gen_hosts = gen_hosts_prev_kw43i1.",
+   "item_inputs_prev_kw43c9": {
+    "sle_su_l0__cl7a55c676": null,
+    "sle_su_l0__cl086d85ba": null,
+    "sle_su_l1__cl5ea486db": null,
+    "sle_ctl__cl372cea1c": null
+   },
+   "item_env_prev_kw43c9": {
+    "sle_su_l0__cl7a55c676": {
+     "OT_CONS_KIT": "1"
+    },
+    "sle_su_l0__cl086d85ba": {
+     "OT_CONS_KIT": "1",
+     "OT_KW41_CLAND": "aa8acb1988e",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    },
+    "sle_su_l1__cl5ea486db": {
+     "OT_CONS_KIT": "1",
+     "OT_KW41_CLAND": "0b305f2395",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    }
+   },
+   "note_kw43_c9": "KW-FIX-43 14:3x: CONS-OVERMACRO-1 (cons-kit ceiling >= macro blockage + 2) via item_env OT_CONS_MAX_LAYER=M7 on the 3 su lanes (= branch 82af67af8f26 kit on current main, no merge wait) + cand9 plan; sle_ctl__cl372cea1c on cand9, no cons switch; slw_sc_v3 untouched until the DIE-QC-97 what-if. Revert: item_inputs/item_env = *_prev_kw43c9[k] (None = delete)."
   },
   "hbm": {
    "enabled": true,
