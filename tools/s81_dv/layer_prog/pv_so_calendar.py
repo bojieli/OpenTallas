@@ -31,6 +31,38 @@ def plan_halves(east_earliest, west_earliest, route_ages, cfg_capture_edge, para
                   'beforeSE with actual write/read/retire edges; prove actual composed numerical programme')
 
 
+def bound_route_ages(bind_latency, east, west, local_age_east, local_age_west, family='attn'):
+    """S81-PLAN-1: the four route/landing ages plan_halves needs, cross-half ages read from the BOUND bind.
+
+    bind_latency = physical/die_plan/s81/bind bind_latency.json (dict with 'buses'), east / west = the two svc slices
+    holding the halves (e.g. 'svc_11', 'svc_5').  E_W = the east half's records reaching the west join = bound_stages of
+    <family>__<east>__<west>; W_E the reverse.  E_E / W_W are the local landing ages (same slice, not a die lane); they
+    are given by the caller from the measured local book.  Fails closed on a missing, unbound or mismatched lane: the
+    booked age must be the bound depth, never the as-built one (attn svc_5<->svc_11: as-built 26, bound 20 on c72370).
+    """
+    by = {b.get('lane'): b for b in bind_latency.get('buses', [])}
+    ages = dict(E_E=local_age_east, W_W=local_age_west)
+    for key, (a, b) in (('E_W', (east, west)), ('W_E', (west, east))):
+        lane = f'{family}__{a}__{b}'
+        bus = by.get(lane)
+        if bus is None:
+            raise ValueError('bind has no lane ' + lane)
+        st, pc = bus.get('bound_stages'), bus.get('plan_cycles')
+        if type(st) is not int or st != pc:
+            raise ValueError(f'{lane}: bound_stages {st} != plan_cycles {pc}')
+        ages[key] = st
+    return ages
+
+
+def plan_halves_bound(bind_latency, east, west, local_age_east, local_age_west, east_earliest, west_earliest,
+                      cfg_capture_edge, parameter_last_pin_edge, gap=1, family='attn'):
+    """plan_halves with route ages from the bound bind (the caller the P.V lowering uses)."""
+    ages = bound_route_ages(bind_latency, east, west, local_age_east, local_age_west, family)
+    r = plan_halves(east_earliest, west_earliest, ages, cfg_capture_edge, parameter_last_pin_edge, gap)
+    r['route_age_source'] = dict(bind=bind_latency.get('die'), east=east, west=west, family=family)
+    return r
+
+
 def control_frames(owner,position,se_jid,so_jid,local_first,peer_first,parameters):
     """Return privateCFG15, PARAM15 and LAUNCH15 words for actual entry q.
 

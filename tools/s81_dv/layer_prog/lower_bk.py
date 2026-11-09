@@ -442,6 +442,29 @@ def job_topk_final(fx, t0=100, tag=0x22, boot_done=False, mut=None, k_dies=1, in
 # is scheduled at that edge.  The root die's selection is the rank's topk_local (fixture) -- the shard closure.
 READER_P, READER_T0 = 3, 511       # dsdv_idx_rg P = 3 (S81-IDXRD sweep_1019: 87,382 keys 16,895 / 43,691 keys 8,702)
 LEG = 729                          # S81 cross-die idx_topk_merge leg (measured, S81-SCAND scand.json legs)
+# S81-PLAN-1 11-09: LEG 729 was measured with the on-die tree lanes at as-built depth 0.  On the bound die the child's
+# tree beat also crosses tl (bk_sel -> s_0N lep) at the child and ca / cb (s_0N lep -> bk_sel) at the parent, which carry
+# plan stations (c72370: tl 58, ca 59, cb 58 = +117 / +116).  The TX grid slack TX_SM - stream is only 48 edges for the
+# worst stream, so the leg must be compiled at the bound depth, never absorbed by slack.
+TREE_LANES = dict(tl='tl__bk_sel__s_0N_LP', ca='ca__s_0N_LP__bk_sel', cb='cb__s_0N_LP__bk_sel')
+
+
+def tree_legs_from_bind(bind_latency, link_core=LEG):
+    """{child lane: leg} from the BOUND bind (bind_latency.json): link core + tl + (ca for lane 2, cb for lane 3).
+    Fails closed when a lane is missing or its bound stages differ from the plan cycles."""
+    by = {b.get('lane'): b for b in bind_latency.get('buses', [])}
+    st = {}
+    for k, lane in TREE_LANES.items():
+        b = by.get(lane)
+        if b is None or type(b.get('bound_stages')) is not int or b['bound_stages'] != b.get('plan_cycles'):
+            raise ValueError('bound tree lane missing or not bound to the plan: ' + lane)
+        st[k] = b['bound_stages']
+    return {2: link_core + st['tl'] + st['ca'], 3: link_core + st['tl'] + st['cb']}
+
+
+def tree_leg_bound(bind_latency, link_core=LEG):
+    """one compiled leg for the static tree = the longest bound child leg (a shorter child lands early, inside its grid)"""
+    return max(tree_legs_from_bind(bind_latency, link_core).values())
 
 
 def reader_cycles(n, p=READER_P):
@@ -1097,6 +1120,7 @@ def main(argv=None):
     t.add_argument('--k-dies', type=int, default=6)
     t.add_argument('--t0', type=int, default=200)
     t.add_argument('--leg', type=int, default=LEG)
+    t.add_argument('--bind-latency', default=None, help='S81-PLAN-1: compile the leg from the bound bind (overrides --leg)')
     t.add_argument('--mutant', default=None, choices=(None, 'corrupt'))
     tc = sub.add_parser('tree-rd-check')
     tc.add_argument('--run', required=True)
@@ -1106,7 +1130,8 @@ def main(argv=None):
     c.add_argument('--dir', required=True)
     a = ap.parse_args(argv)
     if a.cmd == 'tree-rd':
-        print(json.dumps(write_tree_bench(a.fixtures, a.out, a.k_dies, t_q=a.t0, leg=a.leg, mutant=a.mutant)))
+        leg = tree_leg_bound(json.loads(Path(a.bind_latency).read_text())) if a.bind_latency else a.leg
+        print(json.dumps(write_tree_bench(a.fixtures, a.out, a.k_dies, t_q=a.t0, leg=leg, mutant=a.mutant)))
         return
     if a.cmd == 'tree-rd-check':
         r = check_tree_bench(a.run, a.dir)
