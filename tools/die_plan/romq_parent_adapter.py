@@ -14,7 +14,20 @@ from kit_assembly import _instance_type_spans, _named_overrides, _masked_rtl, _l
 
 MASTER = 'ot_v41_rom_elem_q_qxpq_w10_gb'
 SHELL = MASTER + '_shell'
-FIXED = dict(CGR=0, EARLY=1, FAST=1, FRONT_PAR=0, MTP=1, NB=2,
+def recipe_cgr():
+    """CGR of the ROM-element hard core = the legacy recipe params over its spec (gen_core_kit_legacy.py order)."""
+    root = Path(__file__).resolve().parents[2] / 'physical/die_plan/s81/cores/legacy'
+    rec = json.loads((root / 'recipes.json').read_text())['ot_v41_rom_elem_q_qxpq_w10']
+    spec = json.loads((root.parents[4] / rec['ref_tile'] / 'spec.json').read_text()) if rec.get('ref_tile') else {}
+    return int(dict((spec.get('params') or {}), **(rec.get('params') or {})).get('CGR', 0))
+
+
+RECIPE_CGR = recipe_cgr()
+# CGR 0 stays accepted only for parents already sealed with it (the signed _he / _hw halves, S81-ROMQ-B4 11-06);
+# a new contract selects the recipe value so the shell matches the CGR the child is built with.
+LEGACY_CGR = 0
+ALLOWED_CGR = {LEGACY_CGR, RECIPE_CGR}
+FIXED = dict(CGR=RECIPE_CGR, EARLY=1, FAST=1, FRONT_PAR=0, MTP=1, NB=2,
              PP=1, PQ=1, QM=5, QPIPE=1, QP_CAP=0, QP_CSAM=10,
              QP_P1=1, QP_XS=1, QS=5, QTIMING_FIX=1, QW=0,
              QX=10, QY=1, QZ=1, QZ_NE=4, QZ_NS=8, RSTP=1,
@@ -74,10 +87,19 @@ def adapt(text, contracts):
                 continue
             if name == 'OLAT' and _literal_integer(value) in (0, 1):
                 continue  # The accepted OLAT1 phase event is explicit below.
+            if name == 'CGR':
+                if _literal_integer(value) not in ALLOWED_CGR:
+                    raise ValueError(instance + ': unsupported parameter CGR=' + value)
+                continue  # the sealed child value is the contract's selected CGR below
             if name not in FIXED or _literal_integer(value) != FIXED[name]:
                 raise ValueError(instance + ': unsupported parameter ' + name + '=' + value)
         new = {k:v for k,v in old.items() if k != 'NB'}
         new.update(SELECTED)
+        if 'CGR' in contract['selected_params']:
+            sel = contract['selected_params']['CGR']
+            if _literal_integer(sel) not in ALLOWED_CGR:
+                raise ValueError(instance + ': selected CGR=' + sel + ' is neither the recipe value nor the legacy seal')
+            new['CGR'] = sel
         stages = (contract.get('input_stages', 1), contract.get('output_stages', 1))
         pair = contract.get('input_pair', 0)
         profile = stages + (pair,)
