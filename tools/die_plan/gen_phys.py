@@ -3596,6 +3596,11 @@ DECLARED_FLOP_MEMORIES = {
     # dsdv_svc_att.sv sw[]; the head row is read asynchronously at sw_r into the same-cycle consumer (bound 191_Y), so a
     # synchronous macro would add a read cycle.  Content-hashed glue name: a re-bind with other content no longer matches.
     "ot_bind_native_bfac540d36e9ad5c410d0d97": 32 * 512,
+    # KV kv3_hub_C qkd_pv_fin_s sbuf (KV-PLAN-2 11-09, hub_C a7 gen_lint): 32 x 512 per-command sum store
+    # (rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv).  Written at SUM_AGE + b, read ASYNCHRONOUSLY at MUL_AGE + b
+    # (saved_sum = sbuf[rptr]) straight into the multipliers, and MUL_AGE = SUM_AGE + 1 on the R <= LASTP timeline, so
+    # a synchronous macro would add a read cycle to the static calendar.  Flip-flops by design.
+    "qkd_pv_fin_s": 32 * 512,
 }
 
 
