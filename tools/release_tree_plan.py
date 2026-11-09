@@ -29,8 +29,16 @@ Run alone: python3 tools/release_tree_plan.py [--force] [--print]
 """
 import argparse, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
 
-REPO = pathlib.Path('/home/ubuntu/OpenTallas')
-CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_plan_cache.json'
+REPO = pathlib.Path(os.environ.get('OT_COUNT_REPO') or '/home/ubuntu/OpenTallas')
+NO_FETCH = bool(os.environ.get('OT_COUNT_NO_FETCH'))   # private proof runs: never fetch in the repo (tags come from OT_COUNT_TAGS)
+TAGS_FILE = os.environ.get('OT_COUNT_TAGS')            # json {first_ts, tags {tag: commit}}, private proof runs
+CACHE = pathlib.Path(os.environ.get('OT_COUNT_CACHE') or pathlib.Path.home() / '.local/state/fleet-viz/release_tree_plan_cache.json')
+# COUNT-ARCHIVE-1 (OWNER 2026-11-08 22:3x: "the hosts are volatile and we cannot point anything from a counted record to
+# inside the directory"): SIGNED records come from the durable store (signed_store.py, ~/coord/signed-store + AGIdock), not from
+# a walk of the fleet.  OT_COUNT_SOURCE=hosts is the old walk; 'store' reads no host and any ssh raises (NoHostAccess).
+SIGNED_SOURCE = os.environ.get('OT_COUNT_SOURCE', 'store')   # live since 2026-11-08: count from the store; OT_COUNT_SOURCE=hosts is the old walk
+SKIP_G0C = bool(os.environ.get('OT_COUNT_SKIP_G0C'))   # private proof runs only: no G0C, signed matching only
+STORE_PINS = {}
 REFRESH_S = 50 * 60
 # release-tree die key -> (plan dir under physical/die_plan, plan-of-record file relative to the repo root).
 # COUNT-REP (COORD 20:13 10-30, FLOW-12): count against the PLAN OF RECORD, not the stale <dir>/die_plan.json.
@@ -269,6 +277,7 @@ def revoked_rows(path=None):
 
 def rec_netlist_sha(r):
     """sha256 of the record's routed 6_final.v on its scan host; None when it cannot be read"""
+    if SIGNED_SOURCE == 'store': return r.get('netlist_sha')
     h = r.get('scan_host')
     if h == 'origin/main' or not r.get('path'): return None
     if r.get('routed_db'): g = shlex_quote(os.path.dirname(r['routed_db'])) + '/6_final.v'
@@ -463,11 +472,16 @@ def sh(cmd, timeout, **kw):
 SSH_RETRY_BACKOFF_S = (5, 15, 45)   # FLOW-21 COORD 11-01 09:2x: sshd resets under load (intel1 load 545) are not a down host
 
 
+class NoHostAccess(RuntimeError):
+    pass
+
+
 def sh_ssh(cmd, timeout, retry_timeout=True, **kw):
     """sh() for an ssh command: an ssh transport failure (rc 255, or a timeout, with no output: kex reset / banner
     timeout) is retried 3 times with backoff before the caller may mark the host unreachable.  retry_timeout=False: a
     timeout raises at once (a scan that used its whole budget would use it again, 4 x 300 s on epyc4)."""
     import time
+    if SIGNED_SOURCE == 'store': raise NoHostAccess('store-mode counter tried ssh: %s' % ' '.join(cmd)[:200])
     for i, wait in enumerate((0,) + SSH_RETRY_BACKOFF_S):
         if wait:
             print('ssh %s: transport failure, retry %d/%d in %d s' % (cmd[cmd.index('ControlPath=none') + 1] if 'ControlPath=none' in cmd else '?', i, len(SSH_RETRY_BACKOFF_S), wait), file=sys.stderr)
@@ -536,6 +550,7 @@ def shlex_quote(s):
 
 def first_flow_tag_ts():
     """unix time of the oldest flow-* tag on origin, or None when no flow release exists yet (GRANDFATHER cutoff)."""
+    if TAGS_FILE: return json.load(open(TAGS_FILE))['first_ts']
     sh(['git', '-C', str(REPO), 'fetch', '-q', '--tags', 'origin'], 180)
     r = sh(['git', '-C', str(REPO), 'for-each-ref', '--sort=creatordate', '--format=%(creatordate:unix)', 'refs/tags/flow-*'], 30)
     ts = [int(x) for x in r.stdout.split() if x.strip().isdigit()]
@@ -543,6 +558,7 @@ def first_flow_tag_ts():
 
 
 def tag_commit(tag):
+    if TAGS_FILE: return (json.load(open(TAGS_FILE))['tags'].get(tag) or '')
     r = sh(['git', '-C', str(REPO), 'rev-parse', '-q', '--verify', 'refs/tags/%s^{commit}' % tag], 30)
     return r.stdout.strip() if r.returncode == 0 else ''
 
@@ -1039,6 +1055,12 @@ def fetch_rec_pins(recs, log=lambda *a: None):
     # name fleet kit paths of unknown host; a kit pins file may sit on another host than the record that names it)
     by = {}; want = []
     out = {}
+    if SIGNED_SOURCE == 'store':
+        for r_ in recs:
+            k = (r_.get('scan_host'), r_.get('pins_path'))
+            if r_.get('scan_host') == 'origin/main' and r_.get('path') in MAIN_PINS: out[('origin/main', r_.get('pins_path'))] = MAIN_PINS[r_['path']]
+            elif k in STORE_PINS: out[k] = STORE_PINS[k]
+        return out
     for r_ in recs:
         if r_.get('scan_host') == 'origin/main' and r_.get('path') in MAIN_PINS:
             out[('origin/main', r_.get('pins_path'))] = MAIN_PINS[r_['path']]; continue
@@ -1237,7 +1259,7 @@ def refresh(log=lambda *a: None, old=None):
     UNREACHABLE.clear(); PARTIAL.clear()
     res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
     sha = None
-    r = sh(['git', '-C', str(REPO), 'fetch', '-q', 'origin', 'main'], 180)
+    r = sh(['git', '-C', str(REPO), 'fetch', '-q', 'origin', 'main'] if not NO_FETCH else ['true'], 180)
     if r.returncode: errs.append('git fetch origin main failed: %s' % r.stderr.strip()[-200:])
     sha = sh(['git', '-C', str(REPO), 'rev-parse', '--short=10', 'origin/main'], 30).stdout.strip()
     res['origin_main'] = sha
@@ -1252,7 +1274,7 @@ def refresh(log=lambda *a: None, old=None):
         design_rows = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
-            futs = {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
+            futs = {} if SIGNED_SOURCE == 'store' else {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
             g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(PLANS)), []
             for key, pdir, src, ovl in PLANS:
                 d = plan_label(src)
@@ -1272,7 +1294,7 @@ def refresh(log=lambda *a: None, old=None):
                     # RTP-PAR-1102 (FLOW-22): the five G0C checks run in parallel (sequential 12.8 min > the render
                     # unit's 600 s start timeout since 11-01 21:40, so the cache froze at a0f8f0ad60); materialization
                     # above stays sequential (shared tmp tree)
-                    g0c_jobs.append((d, ent, list(T), out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
+                    if not SKIP_G0C: g0c_jobs.append((d, ent, list(T), out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
                 except Exception as e:
                     errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
                 res['plans'][d] = dict(ent, die=key)
@@ -1292,6 +1314,15 @@ def refresh(log=lambda *a: None, old=None):
             g0c_ex.shutdown(wait=True)
             recs = main_records(tmp)
             scanned = ['origin/main']
+            if SIGNED_SOURCE == 'store':
+                sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+                import signed_store
+                srecs, pins = signed_store.load_records()
+                if not srecs: raise RuntimeError('signed-store empty or unreadable: %s' % signed_store.STORE)   # keeps the last good cache
+                for k, v in pins.items():
+                    STORE_PINS[k] = dict(v, shapes={a: [tuple(x) for x in b] for a, b in v['shapes'].items()}) if v.get('shapes') else v
+                recs += srecs; scanned.append('signed-store')
+                log('signed-store: %d records, %d pin tables' % (len(srecs), len(pins)))
             for f, h in futs.items():
                 try:
                     recs += f.result(timeout=SCAN_SSH_S + 60); scanned.append(h)
