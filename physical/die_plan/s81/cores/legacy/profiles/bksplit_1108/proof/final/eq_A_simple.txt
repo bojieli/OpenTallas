@@ -1,0 +1,9 @@
+
+7. Executing EQUIV_STATUS pass.
+Found 221908 $equiv cells in eq:
+  Of those cells 221904 are proven and 4 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$266983: \c3_fl_pl_gold [0] \c3_fl_pl_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$254528: \g_c3c[0].f_gold \g_c3c[0].f_gate
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$234188: \u_ps.i_fl_gold [0] \u_ps.i_fl_gate [0]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$150245: \u_ps.g_pl[0].u_p.i_fl_gold \u_ps.g_pl[0].u_p.i_fl_gate
+Found a total of 4 unproven $equiv cells.

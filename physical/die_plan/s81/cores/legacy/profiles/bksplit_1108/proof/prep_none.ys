@@ -1,0 +1,13 @@
+read_verilog -sv -DSYNTHESIS -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_HB_PINCOPY -DOT_S81PH_PACK_Z0FOLD -DOT_BKQ_RCP=16 -DOT_BKQ_GBREG -DOT_BKQ_GBREG2 -DOT_BKQ_BSTG -DOT_BKQ_FO8 -DOT_BKQ_ORT /r/ot_s81ph_native_sel_hist_bank_bb.v /r/ot_hdc_prefix.sv /r/ot_s81ph_native_sel_lib.sv /r/ot_rst_relay.sv /r/ot_s81ph_hq_parts.sv /r/ot_sram_showahead_1r1w.sv /r/ot_s81ph_queue_store.sv /r/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v /r/ot_sram_1r1w_32x128_m1_p192_rc_bb.v /r/ot_s81ph_hq_slice.sv
+hierarchy -check -top ot_s81ph_hq_slice
+proc; flatten; async2sync; opt_clean
+rename ot_s81ph_hq_slice gold
+write_rtlil /o/gold.il
+design -reset
+read_verilog -sv -DSYNTHESIS -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_HB_PINCOPY -DOT_S81PH_PACK_Z0FOLD -DOT_BKQ_RCP=16 -DOT_BKQ_GBREG -DOT_BKQ_GBREG2 -DOT_BKQ_BSTG -DOT_BKQ_FO8 -DOT_BKQ_ORT -DOT_BKQ_SPLIT  /r/ot_s81ph_native_sel_hist_bank_bb.v /r/ot_hdc_prefix.sv /r/ot_s81ph_native_sel_lib.sv /r/ot_rst_relay.sv /r/ot_s81ph_hq_parts.sv /r/ot_sram_showahead_1r1w.sv /r/ot_s81ph_queue_store.sv /r/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v /r/ot_sram_1r1w_32x128_m1_p192_rc_bb.v /n/ot_s81ph_hq_slice.sv /n/ot_s81ph_hq_pk2.sv
+hierarchy -check -top ot_s81ph_hq_slice
+proc; flatten; async2sync; opt_clean
+rename ot_s81ph_hq_slice gate
+write_rtlil /o/gate_none.il
+tee -q -o /o/gate_none_wires.txt select -list gate/w:u_pk.*
+tee -q -o /o/gate_none_all.txt select -list gate/w:*

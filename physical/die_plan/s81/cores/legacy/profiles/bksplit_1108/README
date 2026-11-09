@@ -1,0 +1,23 @@
+bksplit_1108 -- DIE-S81-80 2026-11-08, dsdv_bksel_q SPLIT (COORD ruling 11-08: "bksel SPLIT APPROVED", conservative form)
+
+WHY: vI (routed, signoff TT -51.95 / FF hold -27.96) fails on clock depth over one 648 x 648 core (TT insertion 692-989 ps)
+and on long u_fq SRAM -> m_wd0 wires; vL (plain TritonCTS tree) probe still 642-867 ps.  The packers u_pi / u_ps are
+~101k of the 164.5k hier cells (hsyn 05:14) and sit in the middle of the core.
+
+WHAT (RTL, 0 added edges, opt-in OT_BKQ_SPLIT):
+  rtl/ot_s81ph_hq_pk2.sv   new hard LOGIC CHILD P = u_pi + u_ps + their input registers (i1_p <= i0_lane, c3_p <= c2_p) +
+                           the kept per-plane select/valid copies (g_i1c, g_c3c), moved verbatim from the slice.  Every P
+                           input lands in one of those existing flops; every P output is a packer output register.
+  rtl/ot_s81ph_hq_slice.sv vI slice (rf7_bk_1107 + vI ORT) with the moved statements under `ifndef OT_BKQ_SPLIT and the
+                           u_pk instance under `ifdef (no parameters under OT_HARD_CHILDREN, as the hist_bank children).
+  rtl/{ot_s81ph_hq_parts,ot_s81ph_hq_tile,dsdv_bksel_c}.sv = the vI kit copies (unchanged), for a self-contained source.
+PROOF: proof/ (yosys equiv_make + equiv_simple -seq 2 + equiv_induct, vI slice vs split slice + P, flattened, moved
+  names mapped by ren.py): EQUIVALENT 221,908 / 221,908.  Mutants A (plane-0 flush copy D = c2_v) and B (plane-2 select
+  copy D = c3_sel_d) must stay unproven.
+PHYSICAL: P is a hard child of dsdv_bksel_q (OT_HARD_CHILDREN, SYNTH_BLACKBOXES), like the 16 hist_bank ETMs, so the
+  S81 plan slot (648 x 648 x 4 in bk_sel__t2), pins and parent are unchanged.
+  views/ot_s81ph_hq_pk2/ot_s81ph_hq_pk2.lef = the child contract (tools/mk_contract.py: 194.4 x 194.4, 1221 inputs on
+  W M4, 1232 outputs on E M4, clk M5 0.024 x 0.084 at the S centre); spec_pk2 / spec_q / recipes.json drive
+  gen_core_kit_legacy.py --module ot_s81ph_hq_pk2 --recipes profiles/bksplit_1108/recipes.json (child_of path).
+  macro_place_vS.tcl = the parent (vI kit + P macro) placement: P at (172.8, 201.96) in the middle band, u_fq compact
+  top right beside mem2 / the lane pins, u_ofq stacked in the W column beside t_o; hist banks and mem2 as vI.
