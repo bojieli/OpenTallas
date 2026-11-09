@@ -9512,7 +9512,7 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final2/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw40/src_mclk_h94",
+      "src": "/srv/opentallas-scratch2/claude/kw41/src_h94_pv",
       "src_sha": "a714b9cf4646ed1e0338099005e97a4bd78827f2",
       "gate": {
         "g0c": "PASS",
@@ -10209,7 +10209,18 @@
         "q_b013__physical_v1@4",
         "q_spb1@2",
         "q_b012@1",
-        "q_b013@4"
+        "q_b013@4",
+        "q_b102@9",
+        "q_b102__physical_v1@7",
+        "q_b111@1",
+        "q_b111__physical_v1@1",
+        "q_spb1@4",
+        "q_sm0@3",
+        "q_sm1@1",
+        "q_sm2@2",
+        "q_sm3@5",
+        "q_b100__physical_v1@4",
+        "root@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -10242,7 +10253,9 @@
         "q_b001": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
         "q_b001__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
         "q_b113": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
-        "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open"
+        "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
+        "q_hub_nw": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
+        "q_hub_ne": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases"
       },
       "gen_hosts": [
         "epyc4",
@@ -10491,7 +10504,18 @@
         "q_spb1@2": "REDESIGN: RE-FORM R6, OT_FT_POLARITY_LOCAL 1 + OT_MAXWIRE_UM 80, repeat long hops and keep FT inverters at the launch station (DIE-HBM-94 22:51), fresh kit",
         "q_spt0@1": "kit_istations compares the resolved kit dir, moved kit (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
         "q_b012@1": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall, same class as q_b012pv1 (DIE-HBM-94 22:51, q_b012 failed 22:51 after that post)",
-        "q_b013@4": "REDESIGN: M7 PDN strap windows centred on the real pdngen strap pair, PDN-0179 class (DIE-HBM-94 ee38ee88f048), diamond DPL"
+        "q_b013@4": "REDESIGN: M7 PDN strap windows centred on the real pdngen strap pair, PDN-0179 class (DIE-HBM-94 ee38ee88f048), diamond DPL",
+        "q_b102@9": "macros into core margin (DIE-HBM-95 00:12 ruling, kit-local OT_MACRO_MOVES)",
+        "q_b102__physical_v1@7": "macros into core margin (DIE-HBM-95 00:12 ruling, kit-local OT_MACRO_MOVES)",
+        "q_b111@1": "macros into core margin (DIE-HBM-95 00:12 ruling, kit-local OT_MACRO_MOVES)",
+        "q_b111__physical_v1@1": "macros into core margin (DIE-HBM-95 00:12 ruling, kit-local OT_MACRO_MOVES)",
+        "q_spb1@4": "R6 re-form actually passes --max-wire-um 80 (DIE-HBM-95 00:16; a4 ran without it)",
+        "q_sm0@3": "pv_merge spec.json PUBLISH 1 in the wave src overlay (DIE-HBM-95 00:14 D)",
+        "q_sm1@1": "pv_merge spec.json PUBLISH 1 in the wave src overlay (DIE-HBM-95 00:14 D)",
+        "q_sm2@2": "pv_merge spec.json PUBLISH 1 in the wave src overlay (DIE-HBM-95 00:14 D)",
+        "q_sm3@5": "pv_merge spec.json PUBLISH 1 in the wave src overlay (DIE-HBM-95 00:14 D)",
+        "q_b100__physical_v1@4": "relaunch on current wave src (a4 ran old die-hbm-93/src_mclk; DIE-HBM-95 00:14 A)",
+        "root@2": "relaunch on current wave src (a2 GEN_LINT ran kw35/src_812ee; COORD 00:1x)"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -12297,6 +12321,36 @@
         "q_spb1": {
           "OT_FT_POLARITY_LOCAL": "1",
           "OT_MAXWIRE_UM": "80"
+        },
+        "q_b102": {
+          "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08"
+        },
+        "q_b102__physical_v1": {
+          "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08"
+        },
+        "q_b111": {
+          "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+        },
+        "q_b111__physical_v1": {
+          "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+        },
+        "q_sm0": {
+          "OT_KW41_PVMERGE": "732789ce39"
+        },
+        "q_sm1": {
+          "OT_KW41_PVMERGE": "732789ce39"
+        },
+        "q_sm2": {
+          "OT_KW41_PVMERGE": "732789ce39"
+        },
+        "q_sm3": {
+          "OT_KW41_PVMERGE": "732789ce39"
+        },
+        "q_b100__physical_v1": {
+          "OT_KW41_CURSRC": "src_h94_pv"
+        },
+        "root": {
+          "OT_KW41_CURSRC": "src_h94_pv"
         }
       },
       "retry_prev_kw37h_added": [
@@ -12516,7 +12570,49 @@
         "q_sm1",
         "q_sm2"
       ],
-      "note_kw40_qsm": "KW-FIX-40 (DIE-HBM-94 22:20 READY, dry_F3C all stages 0): q_sm1 q_sm2 join plan_final3 keys, item_inputs already present; revert only_items_kw40_added"
+      "note_kw40_qsm": "KW-FIX-40 (DIE-HBM-94 22:20 READY, dry_F3C all stages 0): q_sm1 q_sm2 join plan_final3 keys, item_inputs already present; revert only_items_kw40_added",
+      "src_prev_kw41": "/srv/opentallas-scratch2/claude/kw40/src_mclk_h94",
+      "note_src_kw41": "KW-FIX-41 2026-11-09 00:2x PST (DIE-HBM-95 00:14 (D), COORD 00:1x): src = kw40/src_mclk_h94 + physical/die_plan/hbm/cores/legacy/specs/ot_hbm_sm_pv_merge/spec.json from claude/die-hbm-95-1108@732789ce39 (new file only; hard-link tree on epyc4/5/6, intel1; epyc4 real under scratch3/claude/kw41src, symlinked); src_sha/queue_src unchanged. Revert src_prev_kw41.",
+      "type_args": {
+        "q_spb1": [
+          "--max-wire-um",
+          "80"
+        ],
+        "vsN4": [
+          "--max-wire-um",
+          "80"
+        ],
+        "vsN5": [
+          "--max-wire-um",
+          "80"
+        ],
+        "vsN6": [
+          "--max-wire-um",
+          "80"
+        ],
+        "q_spt1": [
+          "--max-wire-um",
+          "80"
+        ],
+        "q_spt2": [
+          "--max-wire-um",
+          "80"
+        ]
+      },
+      "retry_prev_kw41_added": [
+        "q_b102@9",
+        "q_b102__physical_v1@7",
+        "q_b111@1",
+        "q_b111__physical_v1@1",
+        "q_spb1@4",
+        "q_sm0@3",
+        "q_sm1@1",
+        "q_sm2@2",
+        "q_sm3@5",
+        "q_b100__physical_v1@4",
+        "root@2"
+      ],
+      "note_kw41_hbm": "KW-FIX-41: OT_KW41_PVMERGE / OT_KW41_CURSRC are no-op markers so HOLD_UNCHANGED releases these rows."
     }
   },
   "place_prefer": [
