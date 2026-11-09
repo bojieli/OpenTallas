@@ -31655,3 +31655,23 @@ FAILED [AUTOPILOT 6edebb205b0c] 2026-11-09 11:39:45 PST AUTOPILOT -> KIT-WAVE-3:
   - dkv80dbg/dkv69 (341 MB, PRUNE-AUDIT-1: inputs for the KV-08 c47 dieslice rebuild, build.sh/vdir/vimg/c47fc): this one exists ONLY on epyc6. DIE-KV-97 or KV-PLAN-1, copy it before 15:30 if the rebuild still needs it, or tell me to archive it to AGIdock.
   For the 4 epyc7 names I checked only that the name exists, not the content.
   (1) HEAD ot_s81hd_sc_tx hm10ff (tx_eco1c resign_fg): it is in the store and on AGIdock as id 3cbd7fd14f71, versioned (fg-head e6213574d34e, late provenance 08:21). It is NOT one of the 255, because ot_s81hd_sc_tx is an SC child of hd_serdes and not a HEAD plan type (the l48uo types are hd_tile ... hd_mesh_e). It counts through hd_serdes. The store copy is the record, so epyc6's termination does not touch it.
+- 2026-11-09 12:00 PST READY-LIST [DIE-HBM-97 -> KW-FIX-43, COORD, HBM-COLLECT-1, HBM-CORES-B, COUNT-ARCHIVE-2] The 17 HBM no-row cores (COORD 11:3x (3)), checked against d44v_restore_1109 27e46e2d (sub-lane NOROW). Wave item names are module__v<sha256[:12] of the restore pins_file>.
+  TOOL GAP: failure_breakdown.py:138 keys designs module#outline/<pins16>, but the wave keys them module__v<sha12>. So the existing vecd rows read as "no row". Also, the restore plan renames 4 vecd views (the rst_n tables), so the old __v39c3/__v5d40/__v796f/__vb64b only_items no longer exist.
+  LAUNCH, two-strikes CONSERVATIVE form (item_env OT_CONS_KIT=1, OT_CONS_UTIL=0.40, as hd_serdes 10:20). Add each to only_items:
+  1 ot_hgi_sfu_opsa_group0 (3+ fails: vB GRT, P2g TT -129, P2g_bal TT -123.58)
+  2 ot_hgi_sfu_opsa_group1 (3: vB, P2f, P3 GRT-0116)
+  3 ot_hbm_su_pg_lane1p_core (4+: C1, C2+ECO, D1 LEC, D2 TT -151.51)
+  4 ot_svgr_top (vM1 TT -151.89, vM2 GRT-0116). If it is over the 400k native cap the floorplan gate stops it; then it needs a split.
+  5 hnx_vms_bank_q0_faces__vecd4ae__v70b44c0ffdf2 (fr15 o_R0)
+  6 hnx_vms_bank_q0_faces__vecd4ae__v92a40292efa2 (fr15 o_MX)
+  7 hnx_vms_bank_q0_faces__vecd4ae__vc0fea76ca7fc (fr15 o_MY; the module has 6+ fails)
+  8 hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a (mu1s3) and __v512b2172bf16 (mu1s3 o_R0): relabel their FAIL rows and relaunch as conservative. RULING on DIE-HBM-93-OPEN's S-pin spread ask (11-08 17:42): no plan event now; the conservative form comes first.
+  NO ROW:
+  - ot_hgi_sfu_opsb_group: C2q is live, HBM-CORES-B on epyc2. If it ends GRT-0116, it becomes conservative row ot_hgi_sfu_opsb_group.
+  - ot_hgi_sfu_opsb_output and ot_wbq_root_g0: both are signed off (READY-COUNT 04:37 / 04:43). COUNT-ARCHIVE-2: re-test their DNC rows on 27e46e2d. opsb_output's routed DEF lacks 9 plan pins (lwa[375..383]); a DESIGN-MATCH dry run settles it.
+  - ot_wbq_sw: wsw_H12 is live (HBM-CORES-B); it belongs to 4a66235b.
+  - ot_q2nf_rest: vFg is live (HBM-Q2NF-RF); it needs its outline event first.
+  - ot_hfd_coll_q3_body_ctl: SF1 is live (HBM-CORES-B).
+  - ot_hbm_su_pg_lane_full_x_core: absent from the plan.
+  - ot_hgi_sfu_split3_ctl_rest_1c: DECISION (a), revert restjC_1108 to the d44v 427.68x453.6 form. The signed rest_1c record matches that form, and the restjC change is what blocks the opsarest_c2 replay. Both go to the RESTORE sub-lane as a plan event on 27e46e2d, gated on plan check new 0. No row until it lands.
+  POSTS OWED (results are in logs but not in the queue): HBM-COLLECT-1 for opsa0 P2g_bal, opsa1 P3 and lane1p D2. I post svgr vM2 and the vecd vXLK results myself.
