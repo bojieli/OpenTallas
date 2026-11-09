@@ -843,15 +843,81 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
+def _placed_entries(t):
+    """{placed inst name: plan entry} for type_macros rows.  DIE-QC-97 11-09: a declared hard core wins over a
+    contents[] entry of the same instance name (QC cbx_q10 u_t30: contents qfd_tile_nl_romleaf_rpf, no orient, no
+    clock_entry_access, shadowed hard core qfd_tile_nl_a0c MY with the access, so the M7 entry met a solid macro)."""
+    ents = {}
+    for c in (t.get("hard_cores", []) or []) + (t.get("contents", []) or []):
+        ents.setdefault(c.get("physical_inst") or c["inst"], c)
+        ents.setdefault(c["inst"], c)
+    return ents
+
+
+def _access_margins(P, top):
+    """one routing pitch per access layer (ASAP7 M6/M7 0.064 um = the access_v4 review windows)"""
+    dflt = {L["name"]: L for L in S.ASAP7_LAYERS}
+    return {k: float((P.layers.get(f"M{k}") or {}).get("pitch_um") or dflt[f"M{k}"]["pitch_um"]) for k in (top - 1, top)}
+
+
+def clock_entry_lef(P, tn, core, mod, text, x, y, o):
+    """DIE-QC-97 11-09: (LEF text, cuts) the kit stages for a hard core with clock_entry_access: the signed view LEF
+    with its M(top-1)/M(top) OBS opened only at the access footprints (lef_clock_entry.derive_access_lef).  The pins
+    and the Liberty are the signed view's, so the abstract stays paired with the signed lib; the derivation is
+    recorded in clock_entry_lef.json.  Without clock_entry_access the text is returned unchanged."""
+    access = core.get("clock_entry_access")
+    if not access:
+        return text, 0
+    from lef_clock_entry import derive_access_lef
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    return derive_access_lef(text, mod, access, top, (float(x), float(y), o), _access_margins(P, top))
+
+
+def stage_clock_entry_lefs(P, tn, kd, macros, resolve):
+    """after macro staging: rewrite kd/macros/<lef> of every hard core with clock_entry_access to its access abstract
+    and write the receipt clock_entry_lef.json.  No access in the type: nothing written (byte-identical kits).  A LEF
+    shared by instances whose access windows differ is refused (one staged file per LEF name)."""
+    ents = _placed_entries(P.types[tn])
+    rows, by_file = [], {}
+    for inst, mod, lef, lib, x, y, o in macros:
+        c = ents.get(inst) or {}
+        if not lef or not c.get("clock_entry_access"):
+            continue
+        staged = Path(kd) / "macros" / resolve(lef).name
+        # the staged copy (after view_lef's advisory prune) is the source; re-staging the same file stays idempotent
+        src = staged.read_text()
+        new, cuts = clock_entry_lef(P, tn, c, mod, src, x, y, o)
+        if by_file.setdefault(staged.name, new) != new:
+            raise ValueError(f"type {tn}: {staged.name} staged for instances with different clock entry windows")
+        staged.write_text(new)
+        sha = lambda b: _hashlib.sha256(b.encode() if isinstance(b, str) else b).hexdigest()
+        top = int(P.layer_budget["partition_signal_max"][1:])
+        from lef_clock_entry import access_windows
+        rows.append(dict(inst=inst, module=mod, pin=c["clock_entry_access"]["pin"], lef=str(lef),
+                         staged=f"macros/{staged.name}", source_lef_sha256=sha(src), staged_lef_sha256=sha(new),
+                         lib=str(lib) if lib else None,
+                         lib_sha256=sha(resolve(lib).read_bytes()) if lib and resolve(lib).is_file() else None,
+                         obs_cuts=cuts, site=[float(x), float(y), o],
+                         windows_um={f"M{k}": [list(w) for w in v] for k, v in access_windows(
+                             src, mod, c["clock_entry_access"], top, (float(x), float(y), o), _access_margins(P, top)).items()}))
+    # instances of a re-staged LEF that carry no access share the opened abstract: they must be absent
+    for inst, mod, lef, *_ in macros:
+        if lef and resolve(lef).name in by_file and not (ents.get(inst) or {}).get("clock_entry_access"):
+            raise ValueError(f"type {tn}: {inst} shares {resolve(lef).name} with a clock entry core but has no access")
+    if rows:
+        (Path(kd) / "clock_entry_lef.json").write_text(json.dumps(dict(
+            schema="opentallas.clock_entry_lef.v1", type=tn, rows=rows,
+            rule="derived parent abstract: signed view LEF, OBS opened only at clock_entry_access footprints grown one "
+                 "pitch; PIN blocks and Liberty unchanged (DIE-QC-97 11-09)"), indent=1) + "\n")
+    return rows
+
+
 def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
     top = int(P.layer_budget["partition_signal_max"][1:])
-    ents = {}
-    for c in (t.get("contents", []) or []) + (t.get("hard_cores", []) or []):
-        ents.setdefault(c.get("physical_inst") or c["inst"], c)
-        ents.setdefault(c["inst"], c)
+    ents = _placed_entries(t)
     base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
     out = []
     for inst, mod, lef, lib, x, y, o in type_macros(P, tn):
@@ -873,8 +939,9 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
                        if n == port and i == c["inst"] and pin == access["pin"]]
             if matched:
                 from lef_clock_entry import validate_access
-                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
-                                _pin_box(P, tn, port, *entry_xy))
+                # DIE-QC-97: judged on the access abstract the kit stages (stage_clock_entry_lefs), not the blanket
+                validate_access(clock_entry_lef(P, tn, c, mod, f.read_text(), x, y, o)[0], mod, access, top,
+                                (float(x), float(y), o), _pin_box(P, tn, port, *entry_xy))
                 continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
@@ -4036,6 +4103,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
         _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
+        # DIE-QC-97 11-09: a hard core with clock_entry_access gets its access abstract by construction (cbx_q10 NL
+        # DRT-0073: the signed blanket-OBS LEF was staged, the M5 ck had no access point)
+        stage_clock_entry_lefs(P, tn, kd, macros, lambda q: _CR.resolve(q, base))
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
