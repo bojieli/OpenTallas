@@ -60,6 +60,8 @@ def run_fixture(W):
         json.dump({"verdict": "SIGNED", "inputs": {"odb": f"{ROOT}/dead-jj/kit-wave/s81/p/items/it2/attempt_1/gen/it2/run/results/asap7/d/base/6_final.odb"}}, fh)
     write(f"{ROOT}/dead-ii/kit9/keepme.txt", 20)
     kit(f"{ROOT}/dead-rr/dead-word-unit")            # a bare name mention of a dead lane's kit holds nothing
+    kit(f"{ROOT}/dead-tt/sub/kit15")
+    write(f"{ROOT}/dead-tt/tools/flow.py", 4096)     # tool tree below lane level: stays, as the apply recheck demands
     kit(f"{ROOT}/dead-pp/unit1")                     # archived cited unit: only cited files and record names stay
     with open(f"{ROOT}/dead-pp/unit1/ARCHIVED.json", "w") as fh:
         json.dump({"archive": "/archive/x", "verify": "sha256 ok"}, fh)
@@ -103,6 +105,7 @@ def run_fixture(W):
         "dead-oo/kit13": ("DEL-L4-KIT", "DELETE"),
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-rr/dead-word-unit": ("DEL-L4-KIT", "DELETE"),
+        "dead-tt/tools": ("KEEP-excluded", "KEEP"),
         "dead-aa/kit1": ("DEL-L4-KIT", "DELETE"),          # expired .keep (72 h, dead lane) released
         "dead-bb": ("KEEP-dotkeep", "KEEP"),               # young .keep at the lane root holds its tree
         "dead-cc/kit3": ("KEEP-protected", "KEEP"),

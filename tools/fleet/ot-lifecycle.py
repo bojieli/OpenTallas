@@ -476,6 +476,9 @@ class Plan:
         if os.path.islink(d):
             self.record(d, "KEEP-symlink", "KEEP", "symlink not followed", dict(bytes=0, files=1))
             return
+        if self.excluded_tree(d):
+            self.record(d, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree below lane level", self.walk_stats(d))
+            return
         h = self.kw_release(self.hold(d, bool(live)), d)
         if h and not h[2] and h[0] == "KEEP-kw-protect" and d in self.attempt_anc:      # a root line above attempts: decide per attempt
             h = (h[0], h[1], True)
@@ -585,6 +588,9 @@ class Plan:
         except OSError:
             return
         info = dict(bytes=st.st_blocks * 512 if st.st_nlink == 1 else 0, files=1)
+        if self.excluded_tree(p):
+            self.record(p, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree below lane level", info)
+            return
         name = os.path.basename(p)
         if name in ("signoff.json", "PROVENANCE.json", "ARCHIVED.json", ".keep", "6_final.odb") or name.endswith(".signoff.json"):
             self.record(p, "KEEP-name", "KEEP", name, info)
@@ -661,6 +667,9 @@ class Plan:
 
     def visit_member(self, d, lane, live, cat, why):
         J = self.J
+        if self.excluded_tree(d):
+            self.record(d, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree below lane level", self.walk_stats(d))
+            return
         h = self.kw_release(self.hold(d, bool(live)), d)
         if h and not h[2]:
             self.record(d, h[0], "KEEP", h[1], self.walk_stats(d))
@@ -703,6 +712,9 @@ class Plan:
         except OSError:
             return
         info = dict(bytes=st.st_blocks * 512 if st.st_nlink == 1 else 0, files=1)
+        if self.excluded_tree(p):
+            self.record(p, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree below lane level", info)
+            return
         n = os.path.basename(p)
         if n in ("signoff.json", "PROVENANCE.json", "ARCHIVED.json", ".keep", "6_final.odb", "config.mk") or n.endswith(".signoff.json"):
             self.record(p, "KEEP-name", "KEEP", n, info)
