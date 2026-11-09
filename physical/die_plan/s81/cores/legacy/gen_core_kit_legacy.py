@@ -1053,6 +1053,12 @@ def resolve_plan(explicit, rec, module):
     module = rec.get("plan_module", module)
     if rec.get("child_of") or rec.get("lef_contract") or plan_has_module(DEFAULT_PLAN, module):
         return DEFAULT_PLAN, f"KIT PLAN: {DEFAULT_PLAN.name} (plan of record, default)"
+    if rec.get("superseded_by"):
+        # DIE-S81-85 11-09: a recipe whose module a plan event replaced (ROMQ-SPLIT-1106: the unsplit rom_q _gb core ->
+        # its _hw/_he halves) must not fall back to die_plan.json: that plan still holds the pre-event slot (510.84
+        # wide vs the 536.76 master LEF), so the old refusal named an outline mismatch instead of the real reason.
+        raise SystemExit(f"{module}: superseded on {DEFAULT_PLAN.name} by {rec['superseded_by']} "
+                         f"({rec.get('_superseded', 'plan event')}); build those, or name --plan explicitly")
     return STALE_PLAN, (f"WARNING KIT PLAN STALE: {module} is not a hard core of {DEFAULT_PLAN.name}; falling back to "
                         f"{STALE_PLAN.name}; name --plan or the recipe 'plan' if this is not what you want")
 

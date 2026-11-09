@@ -25,6 +25,15 @@ def main():
     assert str(p) == "/x/plan.json" and not note.startswith("WARNING"), note
     p, note = G.resolve_plan("/x/plan.json", {"plan": "a/b.json"}, "m")
     assert p == G.REPO / "a/b.json" and "recipe" in note, note
+    # a superseded recipe module never falls back to the stale plan (ROMQ-SPLIT-1106); explicit --plan still honoured
+    sup = {"superseded_by": ["a_hw", "a_he"]}
+    try:
+        G.resolve_plan(None, sup, "ot_v41_rom_elem_q_qxpq_w10")
+        raise AssertionError("superseded module fell back")
+    except SystemExit as e:
+        assert "superseded" in str(e) and "a_hw" in str(e), e
+    p, _ = G.resolve_plan(str(G.STALE_PLAN), sup, "ot_v41_rom_elem_q_qxpq_w10")
+    assert p == G.STALE_PLAN
     # slice default: only the recipe's own slice file
     rec = {"ref_tile": "physical/die_plan/s81/h2_2249/coll_e"}
     assert G.default_master_slice(rec, "dsfd_coll_lane_e_safe8_ntf")

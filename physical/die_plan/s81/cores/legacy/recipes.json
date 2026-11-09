@@ -210,6 +210,8 @@
   "macro_if_flops": true
  },
  "ot_v41_rom_elem_q_qxpq_w10": {
+  "superseded_by": ["ot_v41_rom_elem_q_qxpq_w10_gb_hw", "ot_v41_rom_elem_q_qxpq_w10_gb_he"],
+  "_superseded": "ROMQ-SPLIT-1106 plan event 3a92e86c4c (DIE-S81-70, COORD 13:0x (1) A): the 104 unsplit _gb cores of plan_h2_2249 (536.76 x 221.4 since ROMQ-SLOT-1105 1d04d4b596) are the signed halves _hw + _he (268.38 x 221.4 each, S81-ROMQ-B4); final switch 65648816 SWITCH.tsv: _gb GONE. die_plan.json still has the pre-event 510.84 slot.",
   "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_elem_q_qxpq_w10",
   "util": 0.6,
   "macro_sites": {
