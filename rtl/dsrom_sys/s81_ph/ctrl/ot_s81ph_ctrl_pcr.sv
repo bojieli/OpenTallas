@@ -3,25 +3,32 @@
 // unchanged: the closed S81-PH dsfd_ctrl_pc view binds it).  Same ports, same stream-side behaviour (rq pin register,
 // credits rk, response rv/r_data/r_tag/r_beat, wd, status chain, sticky overflow), same PHY K/KR protocol.
 // What changed (owner safe-design checklist 10-19; c1/c2 routes missed TT -6.38 in->reg on k_rdy, FF -6.55):
-//  (1) PINS: k_rdy is captured in a FLOP AT THE PHY FACE (krq, plus kept copies krq_c per data group).  Nothing
+//  (1) PINS: k_rdy is captured in a FLOP AT THE PHY FACE (krq; since S81-TRANSPORT-FIX it is only a check).  Nothing
 //      combinational follows a PHY-face input any more: kr_v / kr_tag / kr_beat / kr_data land in plain pin flops every
 //      cycle (no input-gated enable; the valid flop kr_q qualifies them).
-//      Consequence for the PHY valid/ready (unchanged contract: a request transfers on an edge where k_v && k_rdy):
-//      the controller learns whether a presented word was taken one cycle later, so a word is presented for ONE cycle
-//      (k_v = 1), then k_v = 0 for one decision cycle (pend): taken (krq) -> the next word loads; not taken -> the SAME
-//      word is presented again.  No word is ever presented twice after it was taken, no order change: issue rate is at
+//      A word is presented for ONE cycle (k_v = 1), then k_v = 0 for one decision cycle.  Since S81-TRANSPORT-FIX (note
+//      below) a presented word is taken by construction and the next word loads if a credit is held.  Issue rate is at
 //      most one request per 2 ckh cycles per PC (priced: the S81 request mix is read-heavy with len 1-4 beats and the
 //      response bus carries 1 beat a cycle; the measured bench latency is recorded in the receipt).
 //  (3) FANOUT: the hold register's load enable is built per 32-bit group from KEPT copies of the issue state
-//      (kv_c, pv_c, krq_c: one set per group, each driving <= 32 data enables + the group's FIFO read select copy).
+//      (kv_c, cr_c: one set per group, each driving <= 32 data enables + the group's FIFO read select copy).
 //      The request FIFO (ot_s81ph_afifo_g) reads each group through its own kept one-hot select, and the response FIFO
 //      the same way; the response output register loads every cycle (rv qualifies it: no 277-load enable on `empty`).
-// Latency: request rq pin -> k_v = 1 cks + FIFO crossing (2 ckh sync) + 1 ckh (unchanged); a PHY refusal costs 2 ckh
-// per retry instead of 1; response kr -> rd = 1 ckh pin reg + 1 ckh write + 2 cks sync + 1 cks out reg (unchanged).
+// S81-TRANSPORT-FIX 11-08 (TRANSPORT-2 path 3a): the die binds pipeline stages on k_* / k_rdy (DN controller->PHY, UP
+// PHY->controller, plan values 2/2 .. 15/12), so k_rdy at this edge says nothing about the word presented at this edge
+// (present-then-decide lost or duplicated words whenever the PHY queue refused).  Issue is now END-TO-END CREDIT, safe
+// at any depth: a word is presented only while requests presented minus requests completed (o) is below PQD, the PHY's
+// queue depth; a read completes on its last response beat (length queue lq, reads are in order), a write on wr_done.
+// Every word in the PHY queue is outstanding, so the queue holds at most PQD - 1 when a new word lands: q_rdy is 1 on
+// every arrival, there is no refusal, no retry and no stale k_rdy decision.  Cost: a read keeps its credit until data
+// returns (+ tCL + transport), so a PC's peak is PQD requests per loop.  k_rdy stays a pin (checked: it must read 1
+// while nothing is outstanding; sticky k_bad joins the overflow fault).  MUT S81CTRL_MUT_CREDIT: limit PQD + 1.
+// Latency: request rq pin -> k_v = 1 cks + FIFO crossing (2 ckh sync) + 1 ckh (unchanged); response kr -> rd = 1 ckh pin reg + 1 ckh write + 2 cks sync + 1 cks out reg (unchanged).
 `default_nettype none
 module ot_s81ph_ctrl_pcr #(
     parameter integer DQ = 8,
     parameter integer DR = 8,
+    parameter integer PQD = 8,    // PHY request queue depth (ot_s81_hbm_pcc QD): the end-to-end credit limit
     parameter integer AW = 30,
     parameter integer TW = 17
 ) (
@@ -71,10 +78,10 @@ module ot_s81ph_ctrl_pcr #(
 `else
     wire [7:0] srl = {8{srst_n}}, hrl = {8{hrst_n}};
 `endif
-    wire h_live;
+    wire h_live, k_bad_s;
     ot_s81ph_sync u_hl (.clk(cks), .rst_n(srl[0]), .d(hrl[0]), .q(h_live));
     always @(posedge cks or negedge srl[0])
-        if (!srl[0]) co <= 2'b00; else co <= {ci[1] | s_ovf, ci[0] & h_live};
+        if (!srl[0]) co <= 2'b00; else co <= {ci[1] | s_ovf | k_bad_s, ci[0] & h_live};
     // ---- stream side: request pin register -> request FIFO (unchanged)
     reg         rq_v_q;
     reg [339:0] rq_d_q;
@@ -94,21 +101,35 @@ module ot_s81ph_ctrl_pcr #(
         .W(QW), .DEPTH(DQ), .AF(1), .G(G)) u_q (
         .wclk(cks), .wrst_n(srl[1]), .w_v(rq_v_q), .w_d(rq_d_q), .w_rdy(q_rdy_unused), .w_credit(rk), .w_ovf(s_ovf),
         .rclk(ckh), .rrst_n(hrl[1]), .r_v(q_v), .r_pop(h_pop), .r_pop_g(h_pop_g), .r_d(q_d));
-    // ---- HBM side: registered k_rdy, present-then-decide issue (master state)
-    reg pend;                 // the previous cycle presented a word (k_v was 1)
-    reg krq;                  // k_rdy at the PHY face, registered: the word presented last cycle was taken
-    wire ld = !k_v && !(pend && !krq);          // hold register free: idle, or the last presentation was taken
-    assign h_pop = ld;                          // the FIFO ignores a pop while empty
-    always @(posedge ckh or negedge hrl[0])
-        if (!hrl[0]) begin k_v <= 1'b0; pend <= 1'b0; krq <= 1'b0; end
-        else begin
-            pend <= k_v;
-            krq  <= k_rdy;
-`ifdef S81CTRL_MUT_KRDY
-            k_v  <= k_v ? 1'b0 : ld ? q_v : 1'b0;          // mutant: a refused word is never presented again
+    // ---- HBM side: end-to-end credit issue (master state); see the S81-TRANSPORT-FIX note in the header
+`ifdef S81CTRL_MUT_CREDIT
+    localparam integer CRED = PQD + 1;          // mutant: one word too many (the PHY queue can refuse)
 `else
-            k_v  <= k_v ? 1'b0 : ld ? q_v : 1'b1;          // refused (pend && !krq): present the same word again
+    localparam integer CRED = PQD;
 `endif
+    wire          kr_qv;                        // a response beat landed this edge (kr_q below)
+    wire  [3:0]   kr_qbeat;
+    reg           wd_cr;                        // completed write (k_wr_done pin flop)
+    reg  [3:0]    lq [0:(1 << $clog2(CRED)) - 1];    // read length - 1, per outstanding read, issue order
+    reg  [$clog2(CRED)-1:0] lqw, lqr;
+    wire          r_cpl = kr_qv && (kr_qbeat == lq[lqr]);    // last beat of the oldest outstanding read
+    reg  [4:0]    o;                            // presented, not yet seen complete
+    reg           r_cpl_q;                      // one edge late: a later credit release only widens the margin
+    wire [4:0]    o_n = o + 5'(k_v) - 5'(r_cpl_q) - 5'(wd_cr);
+    reg           cr_ok;                        // registered o_n < CRED: the next decision may present
+    wire          ld = !k_v && cr_ok;           // hold register free and a credit is held
+    assign h_pop = ld;                          // the FIFO ignores a pop while empty
+    reg krq, k_arm, k_bad;                      // k_rdy pin flop; armed by the first word; sticky: k_rdy low while nothing is outstanding
+    always @(posedge ckh or negedge hrl[0])
+        if (!hrl[0]) begin
+            k_v <= 1'b0; krq <= 1'b0; k_arm <= 1'b0; k_bad <= 1'b0; o <= 5'd0; cr_ok <= 1'b1; lqw <= '0; lqr <= '0; wd_cr <= 1'b0; r_cpl_q <= 1'b0;
+        end else begin
+            krq <= k_rdy; k_arm <= k_arm | k_v; k_bad <= k_bad | (k_arm && (o == 5'd0) && !krq);
+            k_v <= k_v ? 1'b0 : ld ? q_v : 1'b0;
+            o <= o_n; cr_ok <= o_n < 5'(CRED);
+            wd_cr <= k_wr_done; r_cpl_q <= r_cpl;
+            if (k_v && !k_we) begin lq[lqw] <= k_len - 4'd1; lqw <= lqw + 1'b1; end
+            if (r_cpl) lqr <= lqr + 1'b1;
         end
     // ---- hold register, per 32-bit group with kept copies of the issue state (each copy: <= 32 data enables)
     reg [QW-1:0] h;
@@ -116,19 +137,14 @@ module ot_s81ph_ctrl_pcr #(
     generate for (gq = 0; gq < NGQ; gq = gq + 1) begin : g_h
         localparam integer LO = gq * G;
         localparam integer WG = (gq == NGQ - 1) ? QW - LO : G;
-        (* keep *) reg kv_c, pv_c, krq_c;
+        (* keep *) reg kv_c, cr_c;
         always @(posedge ckh or negedge hrl[2 + gq%6])
-            if (!hrl[2 + gq%6]) begin kv_c <= 1'b0; pv_c <= 1'b0; krq_c <= 1'b0; end
+            if (!hrl[2 + gq%6]) begin kv_c <= 1'b0; cr_c <= 1'b1; end
             else begin
-                pv_c  <= kv_c;
-                krq_c <= k_rdy;
-`ifdef S81CTRL_MUT_KRDY
-                kv_c  <= kv_c ? 1'b0 : (!kv_c && !(pv_c && !krq_c)) ? q_v : 1'b0;
-`else
-                kv_c  <= kv_c ? 1'b0 : (!kv_c && !(pv_c && !krq_c)) ? q_v : 1'b1;
-`endif
+                kv_c <= kv_c ? 1'b0 : (!kv_c && cr_c) ? q_v : 1'b0;
+                cr_c <= o_n < 5'(CRED);
             end
-        wire ld_g = !kv_c && !(pv_c && !krq_c);
+        wire ld_g = !kv_c && cr_c;
         assign h_pop_g[gq] = ld_g;
         always @(posedge ckh) if (ld_g) h[LO +: WG] <= q_d[LO +: WG];
     end endgenerate
@@ -137,6 +153,7 @@ module ot_s81ph_ctrl_pcr #(
 `else
     assign {k_wdata, k_wstrb, k_tag, k_len, k_addr, k_we} = h;
 `endif
+    ot_s81ph_sync u_kbs (.clk(cks), .rst_n(srl[0]), .d(k_bad), .q(k_bad_s));
     // ---- HBM side: response pin registers (plain flops, no input-gated enable) -> landing FIFO
     // kr_v lands in a plain pin flop (kr_vq); the ready this controller showed the PHY in that cycle (l_rdy, a register)
     // is captured beside it (kr_rq): the transfer was kr_v && kr_rdy at that edge, so the FIFO write valid is
@@ -149,6 +166,8 @@ module ot_s81ph_ctrl_pcr #(
         if (!hrl[0]) begin kr_vq <= 1'b0; kr_rq <= 1'b0; end else begin kr_vq <= kr_v; kr_rq <= l_rdy; end
     wire          kr_q = kr_vq && kr_rq;
     always @(posedge ckh) krd_q <= {kr_data, kr_tag, kr_beat};
+    assign kr_qv = kr_q;
+    assign kr_qbeat = krd_q[3:0];
     wire          l_v;
     wire [RW-1:0] l_d;
     wire          l_ovf, l_cr;

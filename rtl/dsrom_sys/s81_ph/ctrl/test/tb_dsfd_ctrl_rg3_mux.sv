@@ -71,7 +71,7 @@ module tb_dsfd_ctrl_rg3_mux;
         for (gp = 0; gp < 2; gp = gp + 1) begin : g_pc
             ent_t q[$];
             reg [3:0] bt = 0; reg rv = 0; reg [16:0] rtg = 0; reg [3:0] rbt = 0; reg [255:0] rdat = 0; reg wdn = 0;
-            assign krdy[gi][gp] = rst && (slow ? (mix(64'h5200_0000 + hcyc * 2 + gp) % 8 == 0) : (mix(64'h5200_0000 + hcyc * 2 + gp) % 4 != 0));
+            assign krdy[gi][gp] = rst;   // S81-TRANSPORT-FIX: the PC never presents to a full PHY queue, so this model never refuses
             assign krv[gi][gp] = rv; assign krt[gi][17 * gp +: 17] = rtg; assign krb[gi][4 * gp +: 4] = rbt;
             assign krd[gi][256 * gp +: 256] = rdat; assign kwd[gi][gp] = wdn;
             always @(posedge ckh) begin
