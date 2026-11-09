@@ -48,6 +48,7 @@ SCHEMA = "opentallas.ot_job.v1"
 DEFAULT_ROOT = "/srv/opentallas-scratch2/claude/ot-jobs"
 HIDE = ("/srv", "/mnt", "/media", "/archive", "/tmp", "/var/tmp")
 HOME_ALLOW = (".local", "bin", ".docker", ".gitconfig", "opentallas-tools")
+SYSTEM_RW = ("/var/tmp/ot-heavy",)       # fleet admission state: a nested ot-heavy (lec_async LEC unit) must see it
 PUBLISH_FAIL = 98
 SPEC_FAIL = 99
 
@@ -135,6 +136,9 @@ def bwrap_argv(J, maps, work_at, cmd, home):
             p = os.path.join(home, x)
             if os.path.exists(p):
                 a += ["--ro-bind", p, p]
+    for p in SYSTEM_RW:
+        if os.path.isdir(p):
+            a += ["--bind", p, p]
     a += ["--bind", J, J, "--ro-bind", J + "/in", J + "/in", "--ro-bind", J + "/.ot-job", J + "/.ot-job",
           "--bind", J + "/tmp", "/tmp"]
     for m in sorted(maps, key=lambda m: len(m["at"])):
@@ -147,14 +151,41 @@ def bwrap_argv(J, maps, work_at, cmd, home):
     return a + list(cmd)
 
 
+def _copy_file(src, dst):
+    """copy one file or link to dst; an existing dst is unlinked first (never written through: it may be a hardlink
+    into another tree), and an identical one is left alone"""
+    if os.path.islink(src):
+        if os.path.lexists(dst):
+            os.unlink(dst)
+        os.symlink(os.readlink(src), dst)
+        return
+    if os.path.isfile(dst) and not os.path.islink(dst) and os.path.getsize(dst) == os.path.getsize(src) \
+            and S.sha_file(dst) == S.sha_file(src):
+        return
+    if os.path.lexists(dst):
+        os.unlink(dst)
+    shutil.copyfile(src, dst)
+    shutil.copymode(src, dst)
+
+
 def copy_out(src, dst):
-    if os.path.isdir(src) and not os.path.islink(src):
-        shutil.copytree(src, dst, symlinks=True, dirs_exist_ok=True, copy_function=shutil.copyfile)
-    else:
+    """return copy of a work path to the caller dir (files and trees)"""
+    if not (os.path.isdir(src) and not os.path.islink(src)):
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        if os.path.lexists(dst) and not os.path.isdir(dst):
-            os.unlink(dst)                          # never write through an existing (possibly shared) inode
-        shutil.copyfile(src, dst, follow_symlinks=False) if not os.path.islink(src) else os.symlink(os.readlink(src), dst)
+        _copy_file(src, dst)
+        return
+    for dp, dns, fns in os.walk(src):
+        rd = os.path.relpath(dp, src)
+        od = os.path.normpath(os.path.join(dst, rd))
+        if os.path.islink(od) or (os.path.lexists(od) and not os.path.isdir(od)):
+            os.unlink(od)
+        os.makedirs(od, exist_ok=True)
+        for n in list(dns):
+            if os.path.islink(os.path.join(dp, n)):
+                dns.remove(n)
+                fns.append(n)
+        for n in fns:
+            _copy_file(os.path.join(dp, n), os.path.join(od, n))
 
 
 def remove_job(J):

@@ -229,6 +229,44 @@ class OtRun(Tmp):
             m.job_wrap(["true"], bad)
 
 
+class Sealer(Tmp):
+    """ot-run-sealed: only the wave's place call under a pilot dir is sealed; everything else passes unchanged"""
+
+    def setUp(self):
+        super().setUp()
+        self.w = load("ot_run_sealed", "ot-run-sealed")
+        self.K = "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/kit-wave/qwen_kvsys/e/items/kv3_phy/attempt_8/gen/kv3_phy"
+        self.R = os.path.dirname(self.K) + "/run_kit.sh"
+        self.conf = {"enabled": True, "host": "epyc7", "dirs": ["/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/"],
+                     "backend": "/b/ot-run", "sealed_backend": "/s/ot-run", "spec_dir": self.t}
+        self.cmd = ["--", "bash", "-c", f"bash {self.R} {self.K} place 48 16"]
+
+    def test_sync_and_async_place_sealed(self):
+        for pre in (["--mem", "48", "--threads", "16", "--dir", self.K, "--hosts", "epyc4,epyc7", "--crit"],
+                    ["--mem", "48", "--threads", "16", "--dir", self.K, "--stage", self.K, "--stage", self.R]):
+            argv, why = self.w.decide(pre + self.cmd, self.conf, check=lambda h, r, k: True)
+            self.assertEqual(argv[:9], ["/s/ot-run", "--mem", "48", "--threads", "16", "--hosts", "epyc7", "--job", argv[8]], why)
+            self.assertEqual(argv[-4:], self.cmd)
+            spec = json.load(open(argv[8]))
+            self.assertEqual(spec["work"], {"at": self.K, "seed": [{"path": self.K}]})
+            self.assertEqual(spec["inputs"], [{"path": self.R}])
+            self.assertEqual(spec["return"], {"to": self.K, "paths": ["."]})
+
+    def test_passthrough(self):
+        ok = lambda h, r, k: True
+        base = ["--mem", "48", "--dir", self.K]
+        cases = [(dict(self.conf, enabled=False), base + self.cmd, ok),
+                 (self.conf, ["--status"], ok),
+                 (self.conf, base + ["--", "bash", "-c", f"bash {self.R} {self.K} route 48 16"], ok),
+                 (self.conf, ["--mem", "48", "--dir", "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/x"]
+                  + ["--", "bash", "-c", "bash /srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/r.sh /srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/x place 4 4"], ok),
+                 (self.conf, base + ["--pick"] + self.cmd, ok),
+                 (self.conf, base + self.cmd, lambda h, r, k: False)]
+        for conf, argv, chk in cases:
+            out, why = self.w.decide(argv, conf, check=chk)
+            self.assertEqual(out, ["/b/ot-run"] + argv, why)
+
+
 @unittest.skipUnless(bwrap_ok() and _test_base(), "needs bwrap and a writable /srv/opentallas-scratch* test base")
 class Sealed(Tmp):
     """end to end: bwrap view, docker shim, publish, return, delete"""
@@ -273,6 +311,15 @@ class Sealed(Tmp):
         self.assertEqual(S.refs(self.store), {}, "the live-input ref is dropped at job end")
         res = json.load(open([os.path.join(self.ret, f) for f in os.listdir(self.ret) if f.startswith(".ot-job-")][0]))
         self.assertEqual(res["published"][0]["sha"], recs[0]["sha"])
+
+    def test_return_never_writes_through_a_hardlink(self):
+        os.makedirs(self.ret)
+        shared = self.mk("shared/x.txt", "shared", root=self.base)
+        os.link(shared, os.path.join(self.ret, "x.txt"))             # the caller's file is a link into another tree
+        r = self.job("echo mine > x.txt", ret=["x.txt"])
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(open(os.path.join(self.ret, "x.txt")).read(), "mine\n")
+        self.assertEqual(open(shared).read(), "shared")
 
     def test_undeclared_path_fails(self):
         """POSITIVE CONTROL: reading another job's dir without declaring it fails; declared, the same read passes"""
