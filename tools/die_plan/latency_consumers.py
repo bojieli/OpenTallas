@@ -15,6 +15,9 @@ groups (landed - as-built cycles per crossing member) and the die hook's param_r
       added != 0 and the hook did not regenerate (inst, PARAM) -> FIXED_LATENCY_MISMATCH inst/param/as-built/needed.
       An align contract (ports sampled on one edge) whose ports land with different deltas -> FIXED_LATENCY_MISALIGNED.
       advisory=True on a contract: reported as ADVISORY_MISMATCH, never an error (fixed-age consumers with no parameter).
+      design_loop=N on a contract: the consumer was designed for N crossing stages round trip, so the report also gives
+      required = landed loop - N (the "added" field stays landed minus as-built and understates it when the as-built
+      depths were already outside the design).
       Port lists are regexes (fullmatch).  A loop through several leaves is checked at the consumer leaf only; its
       inner hops are covered by (1).
   (3) Advisory census: undeclared latency-named parameters (*RETURN*, *_LAT, *_RT, *DELAY*) of leaves whose crossings
@@ -48,10 +51,12 @@ CONTRACTS = {
     # TRANSPORT-1 11-08: QC fixed-age readers with no parameter to regenerate (param = a label, not an RTL parameter).
     # advisory=True reports a landed delta on the loop as ADVISORY_MISMATCH and is never a bind error.
     # qfd_dv_s5_lrly: SU memory delay ML in the lane head; qfd_native59_*: the e1/e2/e3 ring of the embedding read.
-    "qfd_dv_s5_lrly": [dict(param="ML", req=["v[abc]_(addr|re)"], resp=["v[abc]_q"], advisory=True),
-                       dict(param="CROM_ML", req=["crom_(addr|re)"], resp=["cr_q"], advisory=True)],
-    "qfd_native59_dv_headprep_obs1": [dict(param="EMB_CODE_RING", req=["emb_code_(addr|re)"], resp=["emb_code_q"], advisory=True),
-                                      dict(param="EMB_SCALE_RING", req=["emb_scale_(addr|re)"], resp=["emb_scale_q"], advisory=True)],
+    # TRANSPORT-2 11-08: design_loop = crossing stages (request + response) the consumer's ring was designed for.  These
+    # rings assume a same-edge loop, so the as-built stages are already an error and "required" counts every landed stage.
+    "qfd_dv_s5_lrly": [dict(param="ML", req=["v[abc]_(addr|re)"], resp=["v[abc]_q"], advisory=True, design_loop=0),
+                       dict(param="CROM_ML", req=["crom_(addr|re)"], resp=["cr_q"], advisory=True, design_loop=0)],
+    "qfd_native59_dv_headprep_obs1": [dict(param="EMB_CODE_RING", req=["emb_code_(addr|re)"], resp=["emb_code_q"], advisory=True, design_loop=0),
+                                      dict(param="EMB_SCALE_RING", req=["emb_scale_(addr|re)"], resp=["emb_scale_q"], advisory=True, design_loop=0)],
 }
 LAT_NAME = re.compile(r"RETURN|_LAT$|(^|_)RT$|DELAY")
 _INT = re.compile(r"\s*(\d*)'[sS]?([bdhBDH])([0-9a-fA-F_]+)\s*")
@@ -114,6 +119,9 @@ def yosys_leaves(yjs, top=None):
     """as-built leaf map from the Yosys JSON: {path: dict(module, params, src, attrs)} for every instance"""
     mods = yjs["modules"]
     top = top or next(m for m, v in mods.items() if v.get("attributes", {}).get("top"))
+    # bind_elab_keep is the elaboration wrapper (u_die + variant keeps); bus_groups paths start at the die itself
+    if top == "bind_elab_keep" and mods[top].get("cells", {}).get("u_die", {}).get("type") in mods:
+        top = mods[top]["cells"]["u_die"]["type"]
     name = lambda m: mods[m].get("attributes", {}).get("hdlname") or _mname(m)
     out, st = {}, [(top, "")]
     while st:
@@ -150,11 +158,12 @@ def binder_leaves(B, yjs):
     return out
 
 
-def _deltas(bg):
+def _deltas(bg, absolute=False):
+    """{leaf: {port: {added cycles}}} on the sink and source side; absolute=True gives landed stages instead of landed - as-built"""
     ins, outs = defaultdict(lambda: defaultdict(set)), defaultdict(lambda: defaultdict(set))
     for g in bg["landing"]:
         for m in g["members"]:
-            d = m.get("landed_stages", m["bound_stages"]) - m["asbuilt_stages"]
+            d = m.get("landed_stages", m["bound_stages"]) - (0 if absolute else m["asbuilt_stages"])
             ins[g["sink"]][m["sink_port"]].add(d)
             s, pn = m["source"].rsplit(".", 1)
             outs[s][pn].add(d)
@@ -199,6 +208,7 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
         if a and v["module"] not in table:
             table[v["module"]] += parse_attr(a)
     ins, outs = _deltas(bg)
+    ins_abs, outs_abs = _deltas(bg, absolute=True)
     errors, rows = [], []
     for path, v in sorted(leaves.items()):
         seen = set()
@@ -225,9 +235,13 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
             asb = v["params"].get(c["param"])
             row = dict(inst=path, module=v["module"], param=c["param"], asbuilt=asb, added=added, req=dq, resp=dr,
                        torn=len(dq) > 1 or len(dr) > 1, src=c["src"])
+            if c.get("design_loop") is not None:
+                lq = sorted({d for x in _pick(outs_abs.get(path, {}), c["req"]).values() for d in x}) or [0]
+                lr = sorted({d for x in _pick(ins_abs.get(path, {}), c["resp"]).values() for d in x}) or [0]
+                row.update(landed_loop=lq[-1] + lr[-1], design_loop=c["design_loop"], required=lq[-1] + lr[-1] - c["design_loop"])
             if isinstance(asb, int):
-                row["needed"] = asb + added
-            if added == 0:
+                row["needed"] = asb + row.get("required", added)
+            if added == 0 and row.get("required", 0) == 0:
                 row["verdict"] = "MATCH"
             elif (path, c["param"]) in regen:
                 row.update(verdict="REGEN", bound=regen[(path, c["param"])]["bound"])
@@ -348,7 +362,8 @@ def main(argv=None):
     for r in res["contracts"]:
         if r["verdict"] == "ADVISORY_MISMATCH":
             print(f"ADVISORY_MISMATCH {r['inst']} ({r['module']}) {r['param']}: the bind adds {r['added']} cycles on a fixed-age "
-                  f"loop (request {r['req']} + response {r['resp']}{', TORN' if r['torn'] else ''})")
+                  f"loop (request {r['req']} + response {r['resp']}{', TORN' if r['torn'] else ''})"
+                  + (f"; landed loop {r['landed_loop']}, required +{r['required']} over design {r['design_loop']}" if "required" in r else ""))
     for r in res["advisory"]:
         print(f"ADVISORY {r['module']} n={r['n']} max_added={r['max_added']} {json.dumps(r['params'])[:160]} e.g. {r['eg']}")
     print(f"LATENCY_CONSUMERS {'FAIL' if res['errors'] else 'PASS'} {json.dumps(res['stats'])} r8={res['r8'].get('verdict')} "
