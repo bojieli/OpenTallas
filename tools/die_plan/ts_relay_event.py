@@ -167,7 +167,7 @@ def _depth(t, bus):
     return max(n) if n else None
 
 
-def build(raw, bound, root, skip, only=None, native_base=()):
+def build(raw, bound, root, skip, only=None, native_base=(), price_existing=False):
     """Two passes so every lane keeps native_istations' invariant fixed == source stations + destination stations:
     OUT buses first (source stations take the lane's slack: s = max(n_out, fixed - destination need)), then IN buses
     (receiver pad = fixed - source stations; count = max(n_in, pad); fixed = source + count).  Lane latency never
@@ -331,6 +331,22 @@ def build(raw, bound, root, skip, only=None, native_base=()):
                             f"{a['d']:.0f} um, {n} needed, {count} receiver pad stages sited")
         t.setdefault("internal_stations", []).append(ent)
         touched.append((row, count, lns))
+    if price_existing:
+        # native_istations is per TYPE: once a type goes native-OUT, its older kit OUT stations must be priced as well
+        # (fixed == source + destination).  They are existing hardware, so 0 new stations; the delta is a model catch-up.
+        done = {(r["type"], r["bus"]) for r, _, _ in touched}
+        for tn in sorted(native_out):
+            t = Q["partition_types"][tn]
+            for b in t.get("buses", []):
+                if b["dir"] != "out" or (tn, b["name"]) in done or _entry(t, b["name"]) is None:
+                    continue
+                lns = [lid for lid, _ in lanes_of(Q, tn, b["name"], "out")
+                       if int(lane_by_id[lid].get("fixed_cycles", 0)) < src_count(lid) + dest_need(lid)]
+                for lid in lns:
+                    lane_by_id[lid]["fixed_cycles"] = src_count(lid) + dest_need(lid)
+                if lns:
+                    touched.append((dict(type=tn, bus=b["name"], dir="out", kind="price-existing", d_um=0, need=0,
+                                         ports=[]), 0, lns))
     for row, count, lns in touched:
         lat = {lid: P0.lane_latency(lid) for lid in lns}
         edits.append(dict(row, count=count, lanes={lid: dict(cycles=lat[lid]["cycles"],
@@ -386,6 +402,9 @@ def main(argv=None):
     ap.add_argument("--bound-list")
     ap.add_argument("--skip-types", default="")
     ap.add_argument("--only-types", default="")
+    ap.add_argument("--price-existing-out", action="store_true",
+                    help="a type that goes native-OUT also prices its older kit OUT stations (+fixed_cycles, 0 new "
+                         "hardware, edits kind price-existing); default off: the native invariant raises instead")
     ap.add_argument("--regen-latency", action="store_true",
                     help="after writing OUT, regenerate plan.latency with gen.py latency --inplace and check that the "
                          "per-lane cycle deltas equal the event's pin cycles (the bind reads lane cycles from that "
@@ -405,7 +424,7 @@ def main(argv=None):
     skip = {s for s in a.skip_types.split(",") if s}
     only = {s for s in a.only_types.split(",") if s} or None
     Q, edits, reported, native_out = build(P0, bound, a.pins_root, skip, only,
-                                           {s for s in a.native_types.split(",") if s})
+                                           {s for s in a.native_types.split(",") if s}, a.price_existing_out)
     touched = {e["type"] for e in edits}
     touched_lanes = {lid for e in edits for lid in e["lanes"]}
     for k in P0:
