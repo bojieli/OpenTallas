@@ -314,7 +314,7 @@
     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -1956,7 +1956,9 @@
    "hosts_prev_kw42e4": [
     "epyc2",
     "epyc7"
-   ]
+   ],
+   "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
   },
   "s81": {
    "enabled": true,
@@ -3209,7 +3211,7 @@
     "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild"
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
-   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -7017,7 +7019,9 @@
    "hosts_prev_kw42e4": [
     "epyc2",
     "epyc7"
-   ]
+   ],
+   "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave",
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
   },
   "s81_head": {
    "enabled": true,
@@ -8037,7 +8041,7 @@
     "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_st_a_v1__cl67389ecd@1",
@@ -13449,7 +13453,9 @@
    "hold_items_released_kw43": {
     "sle_su_c": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (6) CTS OT_TAP_PAIR initial tap capacity invalid (03:15): QC owner class fix; no unchanged relaunch"
    },
-   "note_kw43_extras": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: QC class-fix relaunches (BN on main): tap-cap ccf792c10b63 cbn_q00__cldbcda913/slw_su_c__cl19bb38ef/sle_su_c (hold lifted); sle_hc0__cl929603c0__cl38badc56 and slw_stm_v2__cl1ca9c415 RUNNING, skipped; cbx_q10 x2 on nlck item plan; glue fresh kit with lec.py 64db1baf83bf. src_qcsw2 epyc7+epyc2 overlay qctap. Revert: *_prev_kw43x, hold_items_released_kw43."
+   "note_kw43_extras": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: QC class-fix relaunches (BN on main): tap-cap ccf792c10b63 cbn_q00__cldbcda913/slw_su_c__cl19bb38ef/sle_su_c (hold lifted); sle_hc0__cl929603c0__cl38badc56 and slw_stm_v2__cl1ca9c415 RUNNING, skipped; cbx_q10 x2 on nlck item plan; glue fresh kit with lec.py 64db1baf83bf. src_qcsw2 epyc7+epyc2 overlay qctap. Revert: *_prev_kw43x, hold_items_released_kw43.",
+   "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave",
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
   },
   "hbm": {
    "enabled": true,
@@ -15058,7 +15064,7 @@
     "ot_pdie_serdes_tx",
     "ot_s81_kp4_dchn"
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
    "hosts_base": [
     "epyc2",
@@ -17886,7 +17892,9 @@
     "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path"
    },
-   "note_kw43_dpl": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x + 09:5x(2): HBM DPL bad-optional-access sweep: dpl-ftres 3b19164ed1 and qb-reset 9d276616a3 are in kw41/src_hbmf4 (KW-FIX-42 hbmqd overlay 08:52, epyc7 = only HBM gen host with that src). Fresh gens uncharged: q_b101, q_b101_nw, q_b011, q_b100, q_b100__physical_v1, q_b102. Running places untouched. Revert: *_prev_kw43x."
+   "note_kw43_dpl": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x + 09:5x(2): HBM DPL bad-optional-access sweep: dpl-ftres 3b19164ed1 and qb-reset 9d276616a3 are in kw41/src_hbmf4 (KW-FIX-42 hbmqd overlay 08:52, epyc7 = only HBM gen host with that src). Fresh gens uncharged: q_b101, q_b101_nw, q_b011, q_b100, q_b100__physical_v1, q_b102. Running places untouched. Revert: *_prev_kw43x.",
+   "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave",
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
   }
  },
  "place_prefer": [
