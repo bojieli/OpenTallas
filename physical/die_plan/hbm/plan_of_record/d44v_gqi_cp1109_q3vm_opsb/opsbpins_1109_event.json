@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "opsbpins_1109",
+ "plan": "d44v_opsbpins_1109 (plan_p12_opsbpins)",
+ "base": "p11 = d44v_restjrev_1109 + SU30/SPU1 (2bd45422144211955d0cee482ae7865e0b09db64bc78a863b2a2dc5b08dce5b2)",
+ "lane": "DIE-HBM-97/COUNT",
+ "date": "2026-11-09",
+ "kind": "pin table drop of proven-unread input bits (same kind as part60 coll_inj 31 pins and gqi8 4 pins)",
+ "module": "ot_hgi_sfu_opsb_output",
+ "instances": [
+  "q_b113.u_sfucore_Q_opstore_b__o",
+  "q_b113__physical_v1.u_sfucore_Q_opstore_b__o"
+ ],
+ "changes": {
+  "pins_file": 2,
+  "note": 2,
+  "top_note": 1
+ },
+ "table_old": "cores/ot_hgi_sfu_opsb_output__760.32x280.8__ev74_tall.json",
+ "table_old_sha256": "3379bbf2f6a796ee39596655a345f7d97b387d352be0e345177c3317ceb19f63",
+ "table_new": "cores/ot_hgi_sfu_opsb_output__760.32x280.8__ev74_tall__lwa375.json",
+ "table_new_sha256": "68eaa7f152b1f25d83bb2ea0437c448bab399a02122e75c9f692fd35c04ef33a",
+ "rows": [
+  1461,
+  1452
+ ],
+ "pins_removed": [
+  "lwa[375]",
+  "lwa[376]",
+  "lwa[377]",
+  "lwa[378]",
+  "lwa[379]",
+  "lwa[380]",
+  "lwa[381]",
+  "lwa[382]",
+  "lwa[383]"
+ ],
+ "removed_rows": "M4, x 760.224, y 173.736..174.504 (E face); every other row is identical and in the same order",
+ "evidence": {
+  "core_side": "The signed kit's face shell drops them: epyc4 /srv/opentallas-scratch2/claude/hbm-cores-b/opsb_PS2f_eco1/i1/face_shell.json (sha256 9974cae67a274a79) dropped = lwa[375..383], keep lwa 375. rtl/ot_hgi_sfu_opsb_output__fshell.sv (16fbd57f9156) declares input [374:0] lwa and drives the core port .lwa({9'd0, lwa__i0}). The core RTL ot_hgi_su_lgroup2_wp.sv (OT_OPSB_WP=3) reads lwa only as lwa[g*24 +: 15].",
+  "routed": "Routed DEF epyc4 .../opsb_PS2f_eco1/i1/run/results/asap7/hbc_ot_hgi_sfu_opsb_output/base/6_final.def (sha256 f8a09525c33d1d4c) has lwa[0..374] only. Kit plan_pins.json: 1452 pins without the 9. Record resign_gd signoff.json fd43ebd7684b (flow-20261109-gd-hbm, LOCAL_PASS_NEEDS_PARENT, LEC EQUIVALENT).",
+  "parent_side": "bind_F5c (epyc7 /srv/opentallas-scratch2/claude/hbm-collect-1/f5c/bind_F5c) hbm_arch_q_b113.sv (e38439a578de) and hbm_arch_q_b113__physical_v1.sv (f3456b7d314f): the as-built u_output port lwa = w_u_sfucore_Q_opstore_b_cmd3_Q[383:0], driven by the store_b cmd3 register (lane15 vm_waddr[23:15] for these 9 bits). The parent ALSO reads cmd3_Q[383:375] itself: |cmd3_Q[383:375] && cmd6_Q[15] (ot_hgi_sfu_static_operand_store.sv:67, a parent fault term). That load stays in the parent. Dropping the 9 core pins removes only the unread core-input load from those nets.",
+  "plan_side": "No lanes entry and no core_conns entry names lw/lwa/lwd of u_sfucore_Q_opstore_b__o (core_conns lists only clk/flt/rst_n/sr_addr/sr_v). The bits are type-internal nets, so no lane, station or crossing changes."
+ },
+ "not_changed": "outline, origin, orient, obs_max, clock taps/entries, core_macros, ft_slots, stations, partitions, ports, lanes, every other type",
+ "gate": "plan check (--completeness --plan-geom report) vs chk_plan_p11 g0_report.json: new-only must be 0 (result in README)",
+ "separate_from": "plan_p12_spu0 (q_spu0 e13 event, in flight). This event is on p11 alone; the two touch different types (q_b113 vs q_spu0) and stack without conflict."
+}
