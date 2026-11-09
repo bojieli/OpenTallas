@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.pending_view.v1",
+ "module": "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+ "state": "PENDING",
+ "why": "native_w is not signed off: epyc2 rc51a 11-06 signoff.json NOT SIGNED (setup_tt FAIL WNS -45.78 ps 84 ep; hold_ff FAIL WNS -7.40 ps 94 ep; drv FAIL TT slew 3229 / FF 2378; io_hold_parent NEEDS_PARENT). A sealed native_w build is running on epyc4 (other lane).",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-t51-recut/kits/s81p_slice_station__t51_ot_s81_station_t51_native_w_rc51a",
+ "lef": "unsigned abstract of that kit (run/results/asap7/kl_s81p_slice_station__t51_ot_s81_station_t51_native_w_rc51a/base/*.lef, generate_abstract 2026-11-06 22:19); plan pending-view form = LEF, no lib",
+ "lef_sha256": "aaac286136d00f24cbd8fc399625c39398140a214c0012e4d121bbfea467bbe4",
+ "pins_json_sha256": "1ae4bb25bcb3b46ce4e062016d6c842212fe2e05d41a39a5411baabbaab737a9",
+ "replace_with": "the signed native_w view (cores/views/<module>_signed_<date>/) once its build signs off; the plan pins_file must stay = its kit pins.json",
+ "event": "T51-SPLIT-1109 DIE-S81-85"
+}

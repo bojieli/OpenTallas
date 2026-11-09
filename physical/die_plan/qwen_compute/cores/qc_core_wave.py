@@ -46,7 +46,7 @@ SU_LANE_SOURCES = [
     "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
     "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_sfu_q.sv", "rtl/hdc/ot_hdc_vreduce.sv",
-    "rtl/hdc/ot_hdc_vstream_sfu_t.sv", "{lane}", "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "rtl/hdc/ot_hdc_vstream_sfu_t.sv", "{lane}", "rtl/physical/qfd_dv_lane_h_su_mem9.sv", "rtl/qwen_dv/qfd_dv_head_safe1.sv",
     "rtl/qwen_dv/qfd_dv_reset_tree.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv", "rtl/qwen_dv/qfd_dv_slice_tload.sv",
     "rtl/qwen_dv/qfd_dv_stream_rsafe.sv", "rtl/qwen_dv/qfd_dv_table_rom_loader.sv", "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv"]
@@ -180,6 +180,13 @@ def plan_core_tap_insertion(plan, module):
     return sorted(vals)[0] if vals else None
 
 
+# SU-HM10 11-09 (DIE-QC-97, COORD 08:0x class): every su_lane kit (l0/l1/l3/l7 of kits_e9) built with the shared
+# core_flow default FF GRT hold repair margin 0 ended at FF hold -7.2..-12.4 ps over 116-257 endpoints.  The su_lane
+# recipe now asks the GRT/route hold repair for +10 ps.  This is a REPAIR TARGET only: the sign-off hold gate stays
+# FF slack >= 0 (OWNER 11-02, core_flow.HOLD_FF_MARGIN_DEFAULT unchanged for every other family).
+SU_LANE_HOLD_FF_MARGIN = 10.0
+
+
 def su_lane_recipe(e, out, plan=None):
     m = e["module"]
     spec = dict(top=m, sources=[f.format(lane=e["rtl"]) for f in SU_LANE_SOURCES], clock_port="clk",
@@ -189,7 +196,7 @@ def su_lane_recipe(e, out, plan=None):
     sd.mkdir(parents=True, exist_ok=True)
     (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
     rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="w" + e["view"].split("@")[1][:6],
-               rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True,
+               rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True, hold_ff_margin=SU_LANE_HOLD_FF_MARGIN,
                macro_sites={Path(SRAM).name: [[190.08, 99.744, "R0"], [190.08, 138.144, "R0"]]},
                lec_hints=su_lane_lec_hints(m),
                _why=f"qc_core_wave su_lane view {e['view']} (DIE-QC-57b): plan pin table {e['pins_file']}")

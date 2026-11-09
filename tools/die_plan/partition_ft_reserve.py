@@ -4,6 +4,7 @@ Only types explicitly declaring die_ft_bands opt in. The same global map is
 transformed back through every instance; one hardened type must have one map.
 """
 import hashlib
+import math
 import json
 
 
@@ -72,6 +73,7 @@ def tcl(receipt):
         lines.append(f'set ot_ft_layer [[ord::get_db_tech] findLayer {layer}]')
         lines.append('odb::dbObstruction_create $ot_ft_blk $ot_ft_layer '+' '.join(
             f'[expr {{round({v:.3f}*$ot_ft_dbu)}}]' for v in rect))
+    lines += SLIVER_TCL.splitlines()
     wins=pdn_windows(receipt)
     if wins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows={len(wins)}"')
@@ -81,8 +83,40 @@ def tcl(receipt):
     cwins=pdn_windows_comb(receipt)
     if cwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_comb={len(cwins)}"')
+    colwins=pdn_windows_col(receipt)
+    if colwins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_col={len(colwins)} col_fill_m6={len(pdn_col_fill(receipt))}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
+
+
+# DIE-HBM-97 11-09 (q_b102__physical_v1 PDN-0179, 12 PDN-0178 M6 channels at x 578.952 along two gap columns): the
+# receipt is in plan coordinates, but the placed macros can sit a site off them (gap rows end at 578.88, macro u_ra
+# starts at 579.012).  The 0.132-um M6 sliver left between the reservation and the macro edge holds strap ends that
+# have no M5/M7 landing.  After the reservation is built, every M6 FT obstruction whose x edge lies less than one strap
+# pair + spacing (0.384 um) from a placed block's edge is closed up to that edge over their common height.  Probed
+# (real pdngen, 2_3 tapcell DB): 13 -> 1 channel on q_b102__physical_v1 (272 slivers closed), and with the column rule's
+# covering own rows -> PDNGEN OK; q_b011/b100/b100a6/b100pv1/b101/b101_nw/b103 PDNGEN OK, 0 slivers there.
+SLIVER_TCL = """set ot_ft_m6 [[ord::get_db_tech] findLayer M6]
+set ot_ft_sl [expr {round(0.384*$ot_ft_dbu)}]
+set ot_ft_mac {}
+foreach ot_i [$ot_ft_blk getInsts] { if {[[$ot_i getMaster] isBlock]} { lappend ot_ft_mac [$ot_i getBBox] } }
+set ot_ft_add {}
+foreach ot_o [$ot_ft_blk getObstructions] {
+  set ot_b [$ot_o getBBox]
+  if {[$ot_b getTechLayer] ne $ot_ft_m6} { continue }
+  set ox0 [$ot_b xMin]; set oy0 [$ot_b yMin]; set ox1 [$ot_b xMax]; set oy1 [$ot_b yMax]
+  foreach ot_m $ot_ft_mac {
+    set ya [expr {max($oy0, [$ot_m yMin])}]; set yb [expr {min($oy1, [$ot_m yMax])}]
+    if {$yb <= $ya} { continue }
+    set g [expr {[$ot_m xMin] - $ox1}]
+    if {$g > 0 && $g < $ot_ft_sl} { lappend ot_ft_add [list $ox1 $ya [$ot_m xMin] $yb] }
+    set g [expr {$ox0 - [$ot_m xMax]}]
+    if {$g > 0 && $g < $ot_ft_sl} { lappend ot_ft_add [list [$ot_m xMax] $ya $ox0 $yb] }
+  }
+}
+foreach ot_r $ot_ft_add { odb::dbObstruction_create $ot_ft_blk $ot_ft_m6 {*}$ot_r }
+puts "OT_PARTITION_FT_RESERVE m6_sliver_close=[llength $ot_ft_add]\""""
 
 
 # DIE-HBM-90 11-07 (HBM transit types q_spu0 / q_spu1 2_4_floorplan_pdn [ERROR PDN-0179] "Unable to repair all
@@ -203,16 +237,103 @@ def pdn_windows_comb(receipt, core_x0=4.32):
     return out
 
 
+# DIE-HBM-96/97 11-09 (q_b011 a5, q_b103 a10 PDN-0179, 2-3 PDN-0178 M4 channels each about 6 x 9 um inside ONE column):
+# the die reserves a tall narrow M5 column (q_b011 x 123.552-129.6, 6.048 um) together with M4 rows of exactly the same
+# x extent every 10.8 um.  Each 8.1-um pocket between two of those M4 rows has M4 straps but M5 reserved over its whole
+# width, so it gets no M4-M5 via (real pdngen on the 2_3 tapcell DB: dropping the column's 83 M4 rects -> worse; dropping
+# its 4 M5 rects -> all 3 M4 channels gone).  Such a column (M5, no wider than PDN_WIN_MIN, taller than 2 * PDN_WIN_MIN,
+# with at least PDN_WIN_COL_ROWS M4 rects of its own x extent inside its height) keeps one M5 strap-pair window at each
+# M5 strap position that fits, through its full height and on through the M5 rects stacked on its ends (the street rows
+# that close it), and the column's M6 is reserved whole (pdn_col_fill).  Plain FT columns (no own M4 rows, e.g. the
+# 2.7-um columns) are unchanged.  Cost: about 0.612 um of M5 per window in that column and its end rows; the gap's M6.
+# Real pdngen, q_b011 a5 2_3: window only -> 1 M6 VDD channel; window + M6 fill without the end rows -> 3 M5 channels;
+# window through the end rows + M6 fill -> PDNGEN OK.
+PDN_WIN_COL_ROWS = 2
+
+
+def _gap_columns(rects):
+    """[(layer, rect)] tall narrow M5 columns with at least PDN_WIN_COL_ROWS M4 rects of their own x extent inside."""
+    out = []
+    for layer, rect in rects:
+        if layer not in PDN_WIN_COMB:
+            continue
+        x0, y0, x1, y1 = rect
+        if x1 - x0 > PDN_WIN_MIN + 1e-6 or y1 - y0 <= 2 * PDN_WIN_MIN + 1e-6:
+            continue
+        # own rows: the column's x extent, or (q_b102__physical_v1 572.832-578.88 rows over the 574.29-578.88 column) a row
+        # that covers it and is at most twice its width; wider rows (q_b101 0-8.64 over the 2.7-um 5.94-8.64) are streets
+        own = sum(1 for L, q in rects if L == 'M4' and q[0] <= x0 + 1e-3 and q[2] >= x1 - 1e-3
+                  and q[2] - q[0] <= 2 * (x1 - x0) + 1e-6
+                  and q[1] >= y0 - 1e-6 and q[3] <= y1 + 1e-6)
+        if own >= PDN_WIN_COL_ROWS:
+            out.append((layer, rect))
+    return out
+
+
+def pdn_windows_col(receipt, core_x0=4.32):
+    """[(layer, x0, x1, rect)] M5 strap windows through tall narrow M5 columns that carry their own M4 rows."""
+    if receipt is None:
+        return []
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    out = []
+    for layer, rect in _gap_columns(rects):
+        x0, y0, x1, y1 = rect
+        off, wd, sp, pitch = PDN_WIN_COMB[layer]
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < x0 + PDN_WIN_MARGIN:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN:
+                break
+            out.append((layer, round(lo, 3), round(hi, 3), rect))
+            # the strap must leave the column: carry the same window through every M5 rect stacked on its ends
+            # (q_b011: street rows 124.74-246.24 close both ends; without this the window strap is an island, its M6
+            # VDD in the pocket has no M7 landing, and 1 M6 channel stays)
+            for up in (True, False):
+                edge, seen = (y1 if up else y0), {rect}
+                while True:
+                    nxt = [q for L, q in rects if L == layer and q not in seen and q[0] < hi and q[2] > lo
+                           and abs((q[1] if up else q[3]) - edge) < 1e-6]
+                    if not nxt:
+                        break
+                    for q in nxt:
+                        seen.add(q)
+                        out.append((layer, round(max(lo, q[0]), 3), round(min(hi, q[2]), 3), q))
+                    edge = max(q[3] for q in nxt) if up else min(q[1] for q in nxt)
+    return out
+
+
+def pdn_col_fill(receipt):
+    """[(layer, rect)] M6 fill over each column that got a pdn_windows_col window: the column sits in the gap between two
+    macros whose OBS reach M6, so an M6 strap piece in it has no M7 landing on the 8.64-um M7 grid (q_b011: the VDD strap
+    of the pair over the gap edge lands on the macro; 1 M6 VDD channel).  With the gap's M6 reserved the pocket feeds
+    through the M5 window strap instead.  The partition cannot use that M6 (macro OBS on both sides)."""
+    if receipt is None:
+        return []
+    cols = {rr for _, _, _, rr in pdn_windows_col(receipt)}
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    return [('M6', list(rect)) for _, rect in _gap_columns(rects) if rect in cols]
+
+
 # DIE-HBM-92-SU 11-08 (q_su30__physical_v1, 2 PDN-0178 M5 channels over the pretree macro): the die can reserve a tall
 # M6 block as a stack of abutting rows (8.1 / 2.7 um, alternately ending at x 2062.8 and 2064.96 of a 2064.96 outline).
 # Each row alone is thin and not exactly full-width, so the tall-band rule never fired.  Rows that reach both outline
 # edges within PDN_WIN_FULL_TOL count as full width, and abutting full rows of one layer merge into one band.
 PDN_WIN_FULL_TOL = 4.32
+PDN_WIN_PARTIAL_MIN_UM = 100.0
 
 
 def _full(row, width):
     x0, y0, x1, y1 = row['rect']
-    return row['layer'] in PDN_WIN_STRIPES and x0 <= PDN_WIN_FULL_TOL and x1 >= width - PDN_WIN_FULL_TOL
+    if row['layer'] not in PDN_WIN_STRIPES:
+        return False
+    if x0 <= PDN_WIN_FULL_TOL and x1 >= width - PDN_WIN_FULL_TOL:
+        return True
+    # DIE-HBM-97 11-09: a TALL band bounded by macros (q_b100__physical_v1 M6 0-259.2 x 423-527 of a 734.4 outline) is a band too
+    return y1 - y0 > PDN_WIN_MIN + 1e-6 and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM
 
 
 def _bands(receipt, width):
@@ -237,7 +358,8 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
         return []
     width = _width(receipt, width)
     out = []
-    for L, y0, y1 in _bands(receipt, width):
+    bands = _bands(receipt, width)
+    for L, y0, y1 in bands:
         if y1 - y0 <= PDN_WIN_MIN:
             continue
         off, wd, sp, pitch = PDN_WIN_STRIPES[L]
@@ -255,26 +377,136 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
     return out
 
 
+# DIE-HBM-97 11-09 (q_b100__physical_v1 / q_b101 / q_b101_nw PDN-0179, M5 channels in a strip): a tall macro-bounded
+# M6 band (pdn_windows above) can end in a narrow STRIP between two macro rows (q_b100__physical_v1 y 515.4-527.0 between
+# ot_hbm_idx_score_hcol_h1 and u_ra/u_rb, all OBS to M6) where the die reserves M4 and M6 across the band and M5 as
+# columns + teeth.  The M5 strap pieces under the teeth reach neither M4, M6 nor the macros: islands.  One M6 strap-pair
+# window at the lowest strap position inside the strip's M4 reservation joins them (bisect: removing the band's M6
+# clears the strip; a window near the band edge above the teeth does not).
+def _m4_strips(rows):
+    """[(x0, y0, x1, y1)] wide M4 rows, with abutting rows of one stack (q_b101_nw y 1302.048 / 1303.02 / 1311.12, each
+    alone thinner than a strap pair or not holding the M5 teeth) merged into one strip of at most 2 * PDN_WIN_MIN."""
+    return _thin_runs(rows, 'M4')
+
+
+def _thin_runs(rows, layer):
+    m4 = sorted(tuple(r['rect']) for r in rows if r['layer'] == layer and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM
+                and r['rect'][3] - r['rect'][1] <= 2 * PDN_WIN_MIN)
+    m4.sort(key=lambda b: (b[1], b[0]))
+    runs = []
+    for b in m4:
+        for run in runs:
+            if abs(run[3] - b[1]) < 1e-6 and min(run[2], b[2]) - max(run[0], b[0]) >= 0.9 * min(run[2] - run[0], b[2] - b[0]) \
+                    and b[3] - run[1] <= 2 * PDN_WIN_MIN + 1e-6:
+                run[:] = [min(run[0], b[0]), run[1], max(run[2], b[2]), b[3]]
+                break
+        else:
+            runs.append(list(b))
+    return [tuple(r) for r in runs]
+
+
+def pdn_windows_strip(receipt, width=None, core_y0=4.32, strips=None):
+    """[(layer, y0, y1)] one M6 window per narrow (<= 2 * PDN_WIN_MIN), wide M4 strip lying wholly under wide M6."""
+    if receipt is None:
+        return []
+    width = _width(receipt, width)
+    off, wd, sp, pitch = PDN_WIN_STRIPES['M6']
+    rows = receipt['rectangles_um']
+    out = []
+    m6s = [r['rect'] for r in rows if r['layer'] == 'M6' and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM]
+    # DIE-HBM-97 11-09 (q_b102__physical_v1 y 4.32-11.07 core bottom, y 1116.72-1123.2 teeth): a thin stack of wide M6
+    # rows with no M4 under it blocks every M6 strap position of its span just the same
+    m6w = [tuple(r) for r in m6s]
+    m6runs = [b for b in _thin_runs(rows, 'M6') if b[3] - b[1] <= 2 * PDN_WIN_MIN + 1e-6
+              and not any(q[0] < b[2] and q[2] > b[0] and (abs(q[1] - b[3]) < 1e-6 or abs(q[3] - b[1]) < 1e-6)
+                          for q in m6w)]   # an isolated stack only; a taller stack is pdn_windows' tall band
+    m4s = _m4_strips(rows)
+    done = []                              # M4 strips that got a window: an M6 run over one adds nothing
+    for x0, y0, x1, y1 in m4s + [b for b in m6runs if b not in m4s]:
+        if (x0, y0, x1, y1) not in m4s and any(q[0] < x1 and q[2] > x0 and q[1] < y1 and q[3] > y0 for q in done):
+            continue
+        # the strip's whole height is under cuttable (band) M6 over at least 90 % of its width
+        cov = sorted((max(r[1], y0), min(r[3], y1)) for r in m6s
+                     if r[1] < y1 and r[3] > y0 and min(r[2], x1) - max(r[0], x0) >= 0.9 * (x1 - x0))
+        cur = y0
+        for a_, b_ in cov:
+            if a_ > cur + 1e-6:
+                break
+            cur = max(cur, b_)
+        if cur < y1 - 1e-6 and (x0, y0, x1, y1) in m4s:   # an M6 run is its own cover
+            continue
+        k = math.ceil((y0 + 2 * PDN_WIN_MARGIN - core_y0 - off) / pitch - 1e-9)
+        s = core_y0 + off + k * pitch
+        lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+        if hi <= y1 - PDN_WIN_MARGIN:
+            w = ('M6', round(lo, 3), round(hi, 3))
+            if w not in out:
+                out.append(w)
+            done.append((x0, y0, x1, y1))
+            if strips is not None:
+                strips.append((x0, y0, x1, y1))
+    return out
+
+
+def pdn_windows_strip_m5(receipt, width=None, core_x0=4.32):
+    """[(layer, x0, x1, rect)] M5 strap windows through the M5 columns/teeth inside a pdn_windows_strip strip, so the strap
+    pieces under them (between the lower macro and the column, q_b101 y 1301.7-1302.0) reach the strip's M6 window."""
+    if receipt is None:
+        return []
+    strips = []
+    pdn_windows_strip(receipt, width, strips=strips)
+    off, wd, sp, pitch = PDN_WIN_COMB['M5']
+    out = []
+    for r in receipt['rectangles_um']:
+        if r['layer'] != 'M5':
+            continue
+        x0, y0, x1, y1 = r['rect']
+        # inside the strip, or mostly so (q_b101_nw x 358.56 y 295.92-306.72: a column piece entering the strip from below
+        # holds the strap between the tooth above and the strip's M6 window)
+        if x1 - x0 > PDN_WIN_MIN + 1e-6 or not any(min(y1, sy1) - max(y0, sy0) >= 0.5 * (y1 - y0) - 1e-6
+                                                   and sx0 <= x0 and x1 <= sx1 for sx0, sy0, sx1, sy1 in strips):
+            continue
+        k = max(0, int((x0 - core_x0 - off) // pitch) - 1)
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if hi <= x0:
+                continue
+            if lo >= x1:
+                break
+            # a strap pair over the column edge is clipped to the column (the piece under it must escape too)
+            out.append(('M5', round(max(lo, x0), 3), round(min(hi, x1), 3), tuple(r['rect'])))
+    return out
+
+
 def obstruction_rows(receipt, width=None, core_y0=4.32):
     """[(layer, rect)] the obstructions to create: the receipt rectangles, tall full-width M4/M6 bands split at
     pdn_windows."""
     width = _width(receipt, width)
-    wins = pdn_windows(receipt, width, core_y0)
-    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt)
+    swins = pdn_windows_strip(receipt, width, core_y0)
+    wins = pdn_windows(receipt, width, core_y0) + swins
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
-        vmine = sorted((a, b) for L, a, b, rr in vwins if L == r['layer'] and rr == tuple(r['rect']))
+        vmine = sorted({(a, b) for L, a, b, rr in vwins if L == r['layer'] and rr == tuple(r['rect'])})
         if vmine:
             cur = x0
             for a, b in vmine:
-                out.append((r['layer'], [cur, y0, a, y1]))
-                cur = b
-            out.append((r['layer'], [cur, y0, x1, y1]))
+                if a > cur + 1e-9:
+                    out.append((r['layer'], [cur, y0, a, y1]))
+                cur = max(cur, b)
+            if x1 > cur + 1e-9:
+                out.append((r['layer'], [cur, y0, x1, y1]))
             continue
         # a window of a merged band may straddle the rows it is made of: cut the overlap out of every row
-        mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins
-                      if L == r['layer'] and a < y1 and b > y0) if _full(r, width) else []
+        if _full(r, width):
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins if L == r['layer'] and a < y1 and b > y0)
+        elif r['layer'] == 'M6' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # strip windows cut the wide partial M6 rows too
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in swins if L == 'M6' and a < y1 and b > y0)
+        else:
+            mine = []
         cur = y0
         for a, b in mine:
             if a > cur + 1e-9:
@@ -282,7 +514,7 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
             cur = max(cur, b)
         if y1 > cur + 1e-9:
             out.append((r['layer'], [x0, cur, x1, y1]))
-    return out
+    return out + pdn_col_fill(receipt)
 
 
 def blocks_rows(receipt, width):

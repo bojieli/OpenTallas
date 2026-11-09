@@ -1069,6 +1069,9 @@ endmodule
 // dsdv_idx_rg2_chunk: ot_hdc_v41x_idx_chunk_el (NB 4, NKT 1, FPL 7, FML 5, QL 5) for the paired reader: the same input
 // registers and the same 8 systolic hardened slices, WITHOUT the key-valid delay line (the reader's metadata ring carries
 // validity at the fixed engine latency) -- the 2 x 104-flop reset line of the record chunk is gone.
+// Opt-in OT_IDX_HSLICE_FASTPAD (die-s81-85 11-09): the slices are ot_hdc_v41x_idx_hslice_fp (IRG fastpad: Q / key pass
+// 2 edges a hop, term padded 7 x hid[2:0]); c_sum / c_fault keep the same age; ky / q terminal outputs (unused) are 56
+// edges earlier.  Without the define the netlist is unchanged.
 // =====================================================================================================================
 module dsdv_idx_rg2_chunk (
     input  wire          clk,
@@ -1084,8 +1087,21 @@ module dsdv_idx_rg2_chunk (
     output reg           c_fault
 );
     localparam integer NB = 4, FPL = 7, FML = 5, QL = 5, HC = 8, KW = NB * 136;
+`ifdef OT_IDX_HSLICE_FASTPAD
+    // early-load guard (fail-closed, die-s81-85 11-09): the slices' q pin opens 4 edges after rr (slice relay 2 + 1,
+    // then rn_p), i.e. for ql_v at this port >= 6 edges after rst_n rises; a load beat taken by rql_v (rr high) before
+    // then is dropped at slice 0's pin.  sl_ok (3-flop line off rr[2]) marks the open pin; a beat at ql_v while rr is
+    // high and sl_ok[2] low sets q_early, which faults every c_sum of this chunk until the next reset.
+    wire [2:0] rr;
+    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    reg [2:0] sl_ok; reg q_early;
+    always @(posedge clk or negedge rr[2])
+        if (!rr[2]) begin sl_ok <= 3'b000; q_early <= 1'b0; end
+        else begin sl_ok <= {sl_ok[1:0], 1'b1}; if (ql_v && !sl_ok[2]) q_early <= 1'b1; end
+`else
     wire [1:0] rr;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+`endif
     reg rql_v; reg [7:0] rql_head; reg [NB*128-1:0] rql_codes; reg [NB*8-1:0] rql_sc; reg [15:0] rql_w;
     reg [KW-1:0] rkey; reg [7:0] hb_p; reg [7:0] hid [0:HC-1];
     integer i;
@@ -1100,7 +1116,13 @@ module dsdv_idx_rg2_chunk (
     assign ky[0] = rkey; assign cs[0] = 32'd0; assign cf[0] = 1'b0;
     genvar h;
     generate for (h = 0; h < HC; h = h + 1) begin : g_s
-`ifdef OT_IDX_HSLICE_HARD
+`ifdef OT_IDX_HSLICE_FASTPAD
+ `ifdef OT_IDX_HSLICE_HARD
+        ot_hdc_v41x_idx_hslice_fp u_s (.clk(clk),
+ `else
+        ot_hdc_v41x_idx_hslice_fp #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL)) u_s (.clk(clk),
+ `endif
+`elsif OT_IDX_HSLICE_HARD
         ot_hdc_v41x_idx_hslice u_s (.clk(clk),
 `else
         ot_hdc_v41x_idx_hslice #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL)) u_s (.clk(clk),
@@ -1110,7 +1132,11 @@ module dsdv_idx_rg2_chunk (
             .qo_v(qv[h+1]), .qo_head(qh[h+1]), .qo_codes(qc[h+1]), .qo_sc(qs[h+1]), .qo_w(qw[h+1]),
             .k_key(ky[h]), .ko_key(ky[h+1]), .cs_in(cs[h]), .cf_in(cf[h]), .cs_out(cs[h+1]), .cf_out(cf[h+1]));
     end endgenerate
+`ifdef OT_IDX_HSLICE_FASTPAD
+    always @(posedge clk) begin c_sum <= cs[HC]; c_fault <= cf[HC] || q_early; end
+`else
     always @(posedge clk) begin c_sum <= cs[HC]; c_fault <= cf[HC]; end
+`endif
 endmodule
 
 // =====================================================================================================================

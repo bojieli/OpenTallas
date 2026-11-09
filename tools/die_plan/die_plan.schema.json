@@ -3632,6 +3632,10 @@
             1
            ]
           },
+          "memory_read_extra": {
+           "minimum": 0,
+           "type": "integer"
+          },
           "reset_pin": {
            "const": "rst_n"
           }
@@ -4880,6 +4884,21 @@
          ]
         }
        }
+      }
+     },
+     "param_base_type": {
+      "type": "string",
+      "minLength": 1
+     },
+     "param_set": {
+      "type": "object",
+      "additionalProperties": {
+       "type": [
+        "integer",
+        "string",
+        "boolean",
+        "number"
+       ]
       }
      },
      "macro_cross": {
@@ -6192,6 +6211,17 @@
      "items": {
       "type": "string",
       "minLength": 1
+     }
+    },
+    "cland_strip_rows": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "cland_strip_rows_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "integer",
+      "minimum": 1
      }
     },
     "id_straps_in_type_types": {

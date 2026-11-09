@@ -1,0 +1,50 @@
+[
+ {
+  "type": "q_b100__physical_v1",
+  "bus": "L8000_i",
+  "delta": 2,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "q_hub_nw",
+  "bus": "L1237_i",
+  "delta": -3,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "q_hub_nw",
+  "bus": "L171_i",
+  "delta": 3,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "q_hub_nw",
+  "bus": "L62_i",
+  "delta": 3,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "root",
+  "bus": "L118_i",
+  "delta": 2,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "root",
+  "bus": "L141_i",
+  "delta": 2,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "root",
+  "bus": "L156_i",
+  "delta": 9,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ },
+ {
+  "type": "root",
+  "bus": "L89m_i",
+  "delta": 9,
+  "source": "R8 table F4d->F5a (hbm_lat_pads.py re-derivation)"
+ }
+]

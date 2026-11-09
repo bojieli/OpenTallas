@@ -148,6 +148,20 @@ class TestPinbandSite(unittest.TestCase):
             self.assertEqual(spec_macro["at"][1], rep["moved"][0]["y_new"])
             self.assertTrue((Path(d) / "pinband_sites.json").is_file())
 
+    def test_pin_blocks_bracket_names_linear(self):
+        # DIE-HBM-97 11-09: 'END d[3]' has no word boundary after ']' (old regex backtracked); same rows, one pass
+        body = "".join(f"  PIN d[{i}]\n    DIRECTION INPUT ;\n    PORT\n      LAYER M5 ;\n        RECT 1.0 {i}.5 1.024 {i}.6 ;\n"
+                       f"    END\n  END d[{i}]\n" for i in range(3)) + "  PIN d[1]x\n    PORT\n    END\n  END d[1]x\n"
+        body = "  SIZE 20 BY 10 ;\n" + body
+        self.assertEqual([n for n, _ in PB.pin_blocks(body)], ["d[0]", "d[1]", "d[2]", "d[1]x"])
+        self.assertEqual(PB.pin_rows(body)[2], [(0.5, 0.6, False), (1.5, 1.6, False), (2.5, 2.6, False)])
+        big = "  SIZE 20 BY 10 ;\n" + "".join(f"  PIN b[{i}]\n    PORT\n      LAYER M4 ;\n        RECT 0 1 0.1 1.1 ;\n"
+                                              f"    END\n  END b[{i}]\n" for i in range(20000))
+        import time
+        t0 = time.time()
+        self.assertEqual(len(PB.pin_blocks(big)), 20000)
+        self.assertLess(time.time() - t0, 5.0)
+
 
 if __name__ == "__main__":
     unittest.main()

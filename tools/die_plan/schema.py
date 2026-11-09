@@ -1157,6 +1157,12 @@ SCHEMA = {
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
             cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-QC-97 11-09 (opt-in, absent = unchanged kits): OT_CLAND_STRIP_ROWS for the N/S-face ring_ff column
+            # strip (landing_placement.tcl, clamped to what the band depth fits).  cland_strip_rows = plan-wide rows;
+            # cland_strip_rows_types = {type or unsplit base name: rows}, which wins.  rows 1 packs every strip row
+            # (100 % FIRM at the pin-facing band edge: sle_fw_v2 GRT-0116, 3 overflow edges in that top gcell row).
+            cland_strip_rows={"type": "integer", "minimum": 1},
+            cland_strip_rows_types={"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
             # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
             # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
             id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},
@@ -1381,6 +1387,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                             'type': 'array'},
                 'memory_alignment': {'minimum': 0, 'type': 'integer'},
                 'kv_wr_pipe': {'enum': [0, 1]},
+                'memory_read_extra': {'minimum': 0, 'type': 'integer'},
                 'reset_pin': {'const': 'rst_n'}},
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
@@ -1420,6 +1427,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+# DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
+# parameter values each clone binds; provenance only, gen ignores them.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_base_type"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_set"] = {"type": "object", "additionalProperties": {"type": ["integer", "string", "boolean", "number"]}}
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}

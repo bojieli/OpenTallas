@@ -1,0 +1,496 @@
+{
+ "event": "T51-SPLIT-1109 DIE-S81-85 (COORD GO 11-09)",
+ "type": "slice_station__t51",
+ "children": {
+  "w": {
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+   "origin": [
+    8.64,
+    8.64
+   ],
+   "outline": [
+    613.44,
+    1209.6
+   ],
+   "pins": 11070,
+   "pins_file": "inputs/core_pins/s81p_slice_station__t51_ot_s81_station_t51_native_w.json",
+   "pins_kit_sha256": "1ae4bb25bcb3b46ce4e062016d6c842212fe2e05d41a39a5411baabbaab737a9",
+   "lef": "physical/die_plan/s81/cores/legacy/lef/t51w_rc51a_1106/s81p_slice_station__t51_ot_s81_station_t51_native_w.lef",
+   "lib": null,
+   "view": "PENDING",
+   "clock_roots": 46,
+   "reset_ports": [
+    "p00000",
+    "p00001",
+    "p02183",
+    "p02184",
+    "p02185",
+    "p02186",
+    "p02187",
+    "p02188",
+    "p02189",
+    "p02191",
+    "p02192",
+    "p02193",
+    "p02194",
+    "p02195",
+    "p11046",
+    "p11050",
+    "p11054",
+    "p11061",
+    "p11068"
+   ],
+   "reset_ports_internal": true,
+   "insertion": [
+    250.0,
+    202.5
+   ]
+  },
+  "e": {
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+   "origin": [
+    639.36,
+    8.64
+   ],
+   "outline": [
+    794.88,
+    1209.6
+   ],
+   "pins": 11145,
+   "pins_file": "inputs/core_pins/s81p_slice_station__t51_ot_s81_station_t51_native_e.json",
+   "pins_kit_sha256": "9a8733ebc34c351995bf43c323419917257dd918efcc902b8ca59e00f0b55b8f",
+   "lef": "physical/die_plan/s81/cores/views/s81p_slice_station__t51_ot_s81_station_t51_native_e_signed_1109/s81p_slice_station__t51_ot_s81_station_t51_native_e.lef",
+   "lib": "physical/die_plan/s81/cores/views/s81p_slice_station__t51_ot_s81_station_t51_native_e_signed_1109/s81p_slice_station__t51_ot_s81_station_t51_native_e_tt.lib",
+   "view": "signed",
+   "clock_roots": 43,
+   "reset_ports": [
+    "p01099",
+    "p01102",
+    "p01103",
+    "p01104",
+    "p01105",
+    "p01107",
+    "p01109",
+    "p01110",
+    "p01111",
+    "p01113",
+    "p01115",
+    "p01116",
+    "p01118",
+    "p01121",
+    "p01123",
+    "p06279",
+    "p07680",
+    "p07681",
+    "p07682",
+    "p07683",
+    "p07684",
+    "p08200",
+    "p08201",
+    "p08202",
+    "p08203",
+    "p08204",
+    "p11119"
+   ],
+   "reset_ports_internal": true,
+   "insertion": [
+    256.22,
+    196.02
+   ]
+  }
+ },
+ "parent_netlist": {
+  "path": "physical/die_plan/s81/station_split_1106/t51_parent_split.v.gz",
+  "content_sha256": "1ab8a4717eb33279788cef6bc8a5f2d8cdf171a3ba77214a7c297fbf97d907a8",
+  "top_ports": 137
+ },
+ "cycles_added": 0,
+ "core_taps": [
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t1",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t13",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t14",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t16",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t18",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t19",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t2",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t21",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t22",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t23",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t24",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t25",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t33",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t34",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t36",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t37",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t38",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t43",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t44",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t46",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t47",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t51",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t52",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t54",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t56",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t57",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t58",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t59",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t60",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t61",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t62",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t69",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t7",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t70",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.clk_t8",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_cland_dn_0",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft13_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft14_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft15_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft16_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft17_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft18_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft2_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft3_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft4_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_w.fclk_in_ft5_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t10",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t11",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t12",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t15",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t17",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t19",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t2",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t20",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t26",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t27",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t28",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t29",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t3",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t30",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t31",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t32",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t35",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t39",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t4",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t40",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t41",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t42",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t45",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t48",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t49",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t5",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t50",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t53",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t55",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t6",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t62",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t63",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t64",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t65",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t66",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t67",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t68",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t71",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t72",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.clk_t9",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.fclk_in_ft6_i",
+  "s81p_slice_station__t51_ot_s81_station_t51_native_e.fclk_in_ft7_i"
+ ],
+ "plan_sha256_before": "25aee3990496506055a02c11f73d4e273243cd21beeefe14c75a8e6dce20db9f",
+ "plan_sha256_after": "ff97f217758b93a1341230d38bfa081142062dd36dd8e40d7379ea04195f141d",
+ "g0c": {
+  "base": {
+   "errors": 147,
+   "warnings": 1814,
+   "clean": 47,
+   "t51": {
+    "geom_pin_reg": 2
+   }
+  },
+  "cand": {
+   "errors": 10,
+   "findings": [
+    "type serdes__t16: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t3: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t2: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t4: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t12: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t13: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t15__cla2127225: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t15__cla3d02796: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t1__clfe1f0815: slice_station__t51: explicit tap clk violates outline/halo/tap spacing",
+    "type serdes__t1__clb45db5be: slice_station__t51: explicit tap clk violates outline/halo/tap spacing"
+   ]
+  },
+  "diag": {
+   "note": "diagnostic only, not committed: the 73 explicit type taps moved to the seam line x=630.828 so G0C runs past the die-level schema stop",
+   "errors": 186,
+   "warnings": 1814,
+   "clean": 47,
+   "t51": {
+    "hard_cores": 12
+   },
+   "new": [
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 19250: s_7N_x13 segment carries 4932 bits on 315 tracks = 15.66 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 19500: s_7N_x13 segment carries 4932 bits on 315 tracks = 15.66 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 19750: s_7N_x13 segment carries 4932 bits on 315 tracks = 15.66 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 20000: s_7N_x13 segment carries 4932 bits on 315 tracks = 15.66 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 20250: s_7N_x13 segment carries 4932 bits on 315 tracks = 15.66 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "vertical cut at 22000: s_7N_x13 segment carries 3654 bits on 157 tracks = 23.20 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "vertical cut at 22250: s_7N_x13 segment carries 3654 bits on 157 tracks = 23.20 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "vertical cut at 22500: s_7N_x13 segment carries 3656 bits on 157 tracks = 23.21 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "vertical cut at 22750: s_7N_x13 segment carries 3140 bits on 157 tracks = 19.94 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "vertical cut at 23000: s_7N_x13 segment carries 3142 bits on 157 tracks = 19.95 > 0.6"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft0: 3277 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft10: 831 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft11: 1539 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft12: 1539 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft13: 213 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft14: 213 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft15: 213 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft16: 213 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft17: 213 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft18: 183 actual-bit station cells/sites intersect physical macros (stage 1, bit 10, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft1: 3315 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft2: 1533 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft3: 1545 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft4: 762 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft5: 1509 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft6: 2022 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft7: 831 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_e)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft8: 1539 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "geometry",
+     "type slice_station__t51 slot ft9: 1539 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro s81p_slice_station__t51_ot_s81_station_t51_native_w)"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e pin clk M7: x 725.1320 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e pin clk_t10 M7: x 722.0600 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e pin clk_t11 M7: x 1425.2280 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e pin clk_t12 M7: x 1425.2280 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e pin clk_t15 M7: x 756.7480 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_e: 43 pins off the plan tracks"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w pin clk_t1 M7: x 238.2200 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w pin clk_t13 M7: x 57.2920 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w pin clk_t14 M7: x 238.2200 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w pin clk_t16 M7: x 114.2520 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w pin clk_t18 M7: x 549.2600 off the plan track (offset 0.032, pitch 0.064) in the type frame"
+    ],
+    [
+     "ERROR",
+     "hard_cores",
+     "type slice_station__t51 core s81p_slice_station__t51_ot_s81_station_t51_native_w: 46 pins off the plan tracks"
+    ],
+    [
+     "WARN",
+     "core_faces",
+     "type slice_station__t51: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them"
+    ],
+    [
+     "WARN",
+     "geom_clock_reach",
+     "type slice_station__t51: plan geometry not evaluable (ValueError: slice_station__t51: explicit tap clk_t1 load=1950/1500, radius=818.212/150.0, empty=False)"
+    ],
+    [
+     "WARN",
+     "street_die_leg",
+     "... 149 more street_die_leg findings (g0_report summary.streets)"
+    ]
+   ],
+   "gone": [
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 19250: s_4N_L1 segment carries 4347 bits on 4064 tracks = 1.07 > 0.6"
+    ],
+    [
+     "ERROR",
+     "cuts",
+     "horizontal cut at 19500: s_4N_L1 segment carries 4347 bits on 4964 tracks = 0.88 > 0.6"
+    ],
+    [
+     "WARN",
+     "geom_pin_reg",
+     "[G0C-GEOM] type slice_station__t51: plan-time AUTO-GEOM pin_reg_max 276.2 (limit <=150.0; layout_review.py 150 backstop) 276.2 ft2_i[513]"
+    ],
+    [
+     "WARN",
+     "geom_pin_reg",
+     "[G0C-GEOM] type slice_station__t51: plan-time AUTO-GEOM pin_reg_p90 149.15 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 276.2 ft2_i[513], 276.1 ft2_i[514]"
+    ],
+    [
+     "WARN",
+     "street_die_leg",
+     "... 91 more street_die_leg findings (g0_report summary.streets)"
+    ]
+   ]
+  }
+ },
+ "counter_dry_run": {
+  "native_e": "DESIGN-MATCH pins [pins from routed_def] (11145 pins, outline 794880x1209600 nm)",
+  "type_matches": [],
+  "dnc": "no HOLD row in lanes/COUNT-DO-NOT-COUNT.tsv for the t51 re-sign dir; COUNT-DNC-RTL-1109 row 52 FROZEN-INPUT (ruling b-prime: counts after own sign-off)"
+ },
+ "not_ready": [
+  "parent clock: 73 explicit type taps inside the children (taps.explicit_tap_sites)",
+  "ft stations owned by hard children: check.py geometry + cuts have no class for it",
+  "89 native M7 root pins off the plan M7 track (clock_entry_access is one pin per core)",
+  "native_w view pending (not signed)",
+  "parent type kit must take t51_parent_split.v.gz"
+ ]
+}

@@ -34,7 +34,13 @@
   "qkd_kvs_pcc",
   "qkd_kvs_pcc_h_head_p",
   "qkd_kvs_pcf",
-  "qkd_kvs_pcf_h_head_p"
+  "qkd_kvs_pcf_h_head_p",
+  "kv3_pc__cl254f2e73",
+  "kv3_pc__cl5a95b461",
+  "kv3_pc_v1__cl23f6a148",
+  "kv3_pc_v1__cl4ea58a5c",
+  "kv3_pc_v1__cl7f648944",
+  "kv3_pc_v3"
  ],
  "proof": {
   "verdict": "PASS",
@@ -49,5 +55,6 @@
  "modules_basis": "every hard-core module of KV plan event26/event26a (30 modules at event26; PC -> PCC + PCF split per pc_split_basis, incl. kv3_astk); a kit LEC may use OT_LEC_RESET_CYCLES <= 16",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file",
  "scope": "mid-run reset re-assertion follows the same contract (bench: 8 por_n pulses 0.05..1.94 ns at 8 phases + lock loss inside a reset). A lock loss AFTER release does not re-arm the die reset (ot_dp_lockq sticky, HOST status) and is not a reset event.",
- "pc_split_basis": "DIE-KV-67 11-04, COORD ruling (b): qkd_kvs_pc / qkd_kvs_pc_h_head_p left this list, their rst_n and hrst_n came from a reset-less data lane the DIE-KV-26 proof does not cover. The PC split parents drive every PCC / PCF rst_n and hrst_n through ot_dp_rgate (q <= lane & wavefront tap, bind core_splits reset_gate, rst_n_t relay nearest the core): q stays low while the tap is low, so each pin holds reset at least the proven root window whatever the lane does. By construction from the rgate source; no new bench was run."
+ "pc_split_basis": "DIE-KV-67 11-04, COORD ruling (b): qkd_kvs_pc / qkd_kvs_pc_h_head_p left this list, their rst_n and hrst_n came from a reset-less data lane the DIE-KV-26 proof does not cover. The PC split parents drive every PCC / PCF rst_n and hrst_n through ot_dp_rgate (q <= lane & wavefront tap, bind core_splits reset_gate, rst_n_t relay nearest the core): q stays low while the tap is low, so each pin holds reset at least the proven root window whatever the lane does. By construction from the rgate source; no new bench was run.",
+ "pc_rgate_soft_note": "DIE-KV-95 11-08: the 6 kv3_pc* partition types are listed because their 9 soft-leaf reset pins go through ot_dp_rgate (reset_gate_bindings, lane AND wavefront tap), the same by-construction argument as pc_split_basis; pilot cl254f2e73 at 16 edges 457 -> 43 differ, 236 missing -> 0"
 }

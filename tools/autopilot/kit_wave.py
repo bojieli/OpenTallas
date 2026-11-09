@@ -1038,10 +1038,15 @@ RULES = [
      "plan type has unbound buses and the kit took the plan wrapper: the die needs kit_rtl (bound partition RTL)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
-    # parent, bind.py emit_type promotes them); any other parameter difference stays the die kit-recipe case below
+    # parent, bind.py emit_type promotes them); any other parameter difference is the LOGIC value-set case below
     ("PLAN", r"^kit_rtl$", lambda s: id_only_param_diff(s),
      "per-instance ID parameters differ: plan declares parent_id_straps on those leaf ports (OWNER 10-25 B), rebind"),
-    ("FLOW", r"^kit_rtl$", r"carry different parameters", "generic kit-rtl cannot kit a per-instance parameterised type (die kit recipe needed)"),
+    # DIE-QC-97 11-09 (QC sle_st_b_v1 / slw_st_b_v2 / slw_st_b_v1__cl6357f1cc: regenerated HI_PAD latency pads 30/29,
+    # 29/28 per slice): instances that differ in a LOGIC parameter are different hardware, so no kit recipe can take one
+    # value set for all of them.  The plan fix by construction: tools/die_plan/param_class_split.py splits the type into
+    # one plan type per value set (T__pv<hash>, + clock-landing sidecar), rebind; generic kit-rtl then kits each.
+    ("PLAN", r"^kit_rtl$", r"carry different parameters",
+     "per-instance LOGIC parameters differ: split the plan type per value set (tools/die_plan/param_class_split.py), rebind"),
     # KIT-TRIAGE-1/G26 11-01 (9 S81 slice_station kit_rtl 'unclassified'): the strict bind of record names absolute HDL
     # sources in a lane worktree that was pruned / moved on; the kit_rtl script must point at the current bind
     ("FLOW", None, r"preferred HDL source missing",

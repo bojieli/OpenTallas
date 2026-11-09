@@ -1,0 +1,12 @@
+export DESIGN_NICKNAME = ot_hdc_v41x_idx_hslice
+export DESIGN_NAME = ot_hdc_v41x_idx_hslice
+export PLATFORM = asap7
+export VERILOG_FILES = /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /work/repo/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /work/repo/rtl/hdc/ot_hdc_prefix.sv /work/repo/rtl/hdc/ot_hdc_fastfp.sv /work/repo/rtl/hdc/ot_hdc_fp32_add_lat.sv /work/repo/rtl/hdc/ot_hdc_delay.sv /work/repo/rtl/lib/ot_rst_relay.sv /work/repo/rtl/lib/ot_reset_sync.sv
+export VERILOG_DEFINES = -DSYNTHESIS
+export SDC_FILE = /work/base/c.sdc
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_MEMORY_MAX_BITS = 16384
+export CORNER = TC
+export CORNERS = tc
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)

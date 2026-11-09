@@ -542,6 +542,13 @@ def test_kit_rtl(tmp_path):
     assert man["plan_module"] == t["module"] and man["params"]
 
 
+def _rewrite(path, text):
+    """New inode: a test tree copied from a read-only checkout keeps the read-only mode (copytree), so write by
+    unlinking first instead of opening the old file for writing."""
+    path.unlink()
+    path.write_text(text)
+
+
 def test_param_regen_declared_default_and_unknown(tmp_path):
     """A default-only leaf must accept its declared parameter, and reject a typo.
 
@@ -551,7 +558,7 @@ def test_param_regen_declared_default_and_unknown(tmp_path):
     src = tmp_path / "src"
     shutil.copytree(EX, src)
     leaf = src / "leaves.sv"
-    leaf.write_text(leaf.read_text().replace("module lf_sink (",
+    _rewrite(leaf, leaf.read_text().replace("module lf_sink (",
         "module lf_sink #(parameter integer DELTA = 0) (").replace(
         "q <= {flt, d0 ^ d1};", "q <= {flt, d0 ^ d1} + DELTA;"))
     hook = tmp_path / "regen_default.py"
@@ -576,7 +583,7 @@ def test_param_regen_variant_own_default(tmp_path):
     src=tmp_path/'src';shutil.copytree(EX,src)
     leaf=src/'leaves.sv';text=leaf.read_text();start=text.index('module lf_sink (');end=text.index('endmodule',start)+9
     variant=text[start:end].replace('module lf_sink (','module lf_sink_bo1 #(parameter integer ORDER = 0) (').replace('q <= {flt, d0 ^ d1};','q <= {flt, d0 ^ d1} + ORDER;')
-    leaf.write_text(text.replace('module lf_sink (','module lf_sink #(parameter integer OLD_ONLY = 0) (')+'\n'+variant+'\n')
+    _rewrite(leaf, text.replace('module lf_sink (','module lf_sink #(parameter integer OLD_ONLY = 0) (')+'\n'+variant+'\n')
     hook=tmp_path/'regen.py';hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'ORDER': 1}})\n")
     p=json.loads((EX/'die_plan_lanes.json').read_text());p['asbuilt']['base']=str(src)
     p['asbuilt']['substitute_inst']=[dict(inst='snk',module='lf_sink_bo1')];p['asbuilt']['param_regen']=dict(file=str(hook))
@@ -587,6 +594,39 @@ def test_param_regen_variant_own_default(tmp_path):
     hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'OLD_ONLY': 1}})\n")
     assert bind.main(['bind',str(pp),'--out',str(out),'--strict'])!=0
     assert any('OLD_ONLY: not a parameter' in e for e in report(out)['errors'])
+
+
+def test_param_regen_declare_param_after_asbuilt(tmp_path):
+    """DIE-KV-97 11-09: asbuilt.param_regen.declare names a parameter the cached as-built netlist cannot show (added to the
+    RTL master after the as-built elaboration, KV qkd_kvs_attn_fl ZB_ADD; or a substitute master's own, KV EO_E / EO_RL).
+    Without the declaration the bind refuses it, with it the bound RTL carries the value; a typo stays illegal."""
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    plan = json.loads((EX / "die_plan_lanes.json").read_text())
+    plan["asbuilt"]["base"] = str(src)
+    pp = tmp_path / "plan.json"
+    pp.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pp, out, "elab") == 0                    # as-built netlist WITHOUT the parameter
+    leaf = src / "leaves.sv"
+    _rewrite(leaf, leaf.read_text().replace("module lf_sink (",
+        "module lf_sink #(parameter integer ZB = 0) (").replace(
+        "q <= {flt, d0 ^ d1};", "q <= {flt, d0 ^ d1} + ZB;"))
+    hook = tmp_path / "regen_zb.py"
+    hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'ZB': 83}})\n")
+    plan["asbuilt"]["param_regen"] = {"file": str(hook)}
+    pp.write_text(json.dumps(plan))
+    assert bind.main(["bind", str(pp), "--out", str(out), "--strict"]) != 0
+    assert any("snk.ZB: not a parameter" in e for e in report(out)["errors"])
+    plan["asbuilt"]["param_regen"] = {"file": str(hook), "declare": {"lf_sink": {"ZB": 0}}}
+    pp.write_text(json.dumps(plan))
+    assert run(pp, out, "bind") == 0
+    pr = json.loads((out / "param_regen.json").read_text())
+    assert pr["changed"] == [dict(inst="snk", param="ZB", asbuilt="0", bound=83)]
+    assert ".ZB(83)" in "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'ZB_TYPO': 83}})\n")
+    assert bind.main(["bind", str(pp), "--out", str(out), "--strict"]) != 0
+    assert any("ZB_TYPO: not a parameter" in e for e in report(out)["errors"])
 
 
 def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):

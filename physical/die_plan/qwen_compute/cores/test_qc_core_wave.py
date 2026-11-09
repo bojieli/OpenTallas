@@ -92,3 +92,14 @@ def test_su_lane_recipe_follows_plan_early_tap(tmp_path):
     del plan["partition_types"]["b"]
     plan["partition_types"]["a"]["clock"]["core_taps"] = None
     assert "insertion_ps" not in W.su_lane_recipe(e, tmp_path, plan)
+
+
+def test_su_lane_recipe_hold_repair_margin_10(tmp_path):
+    """SU-HM10: su_lane kits repair FF hold to +10 ps (repair target); the shared default (gate) stays 0."""
+    sys.path.insert(0, str(HERE.parents[3] / "tools" / "die_plan"))
+    import core_flow  # noqa: E402
+    m = "qfd_qc_su_lane_w_l0"
+    e = dict(module=m, view=f"{m}@0123456789ab", rtl=f"rtl/physical/{m}.sv", pins_file="x")
+    rec = W.su_lane_recipe(e, tmp_path, None)
+    assert rec["hold_ff_margin"] == 10.0
+    assert core_flow.HOLD_FF_MARGIN_DEFAULT == 0.0

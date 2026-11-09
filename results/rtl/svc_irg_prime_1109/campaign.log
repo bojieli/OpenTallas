@@ -1,0 +1,12 @@
+[mut kr0 MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[mut kr0 MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[mut kr1 MUTK0SEED1NEP120] FAIL irg_prime kr 1 mutk 0
+[mut kr1 MUTK3SEED1NEP120] FAIL irg_prime kr 1 mutk 3
+[noprime kr0 MUTK0SEED1NEP120] FAIL irg_prime kr 0 mutk 0
+[noprime kr0 MUTK3SEED1NEP120] FAIL irg_prime kr 0 mutk 3
+[noprime kr1 MUTK0SEED1NEP120] FAIL irg_prime kr 1 mutk 0
+[noprime kr1 MUTK3SEED1NEP120] FAIL irg_prime kr 1 mutk 3
+[prime kr0 MUTK0SEED1NEP120] PASS irg_prime kr 0 mutk 0
+[prime kr0 MUTK3SEED1NEP120] PASS irg_prime kr 0 mutk 3
+[prime kr1 MUTK0SEED1NEP120] PASS irg_prime kr 1 mutk 0
+[prime kr1 MUTK3SEED1NEP120] PASS irg_prime kr 1 mutk 3

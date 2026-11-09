@@ -117,6 +117,11 @@ def _dpl_args(budgets, tn=None, diamond=False, landing=False, outline=None):
     within 27 um (largest gap 0.918 um) -> DPL-0034/0036 (slw_st_b_v2 13, sle_hc1 61 cells), and the negotiation
     legalizer stalls on the same blocks (DPL-0033).  Diamond places nearest-first, so a cell that finds a site inside the
     default window lands on the same site; the wider window only reaches past a full block.
+    DIE-HBM-97 11-09 (COORD NEWFAIL q_b100__physical_v1 197e741898c1, 3_5 'DPL-0312 257 edge spacing + 15 padding
+    violations', DPL-0201, then detail_place.tcl:46 'bad optional access'; the same class on q_b002, q_b002pv1, q_b003pv1,
+    q_b011pv1, q_su00pv1, q_su10, q_su20, each fixed one by one with --dpl-diamond / dpl_legalizer_types): a kit whose
+    type carries a partition FT reservation (FT station flops and repair buffers between macro walls and reserved
+    tracks) counts like a landing kit (landing=True), so every fresh gen of such a type gets the diamond legalizer.
     budgets.dpl_legalizer_off_types keeps the ORFS default for named types."""
     v=budgets.get("dpl_legalizer")
     if v is None and tn is not None:
@@ -184,6 +189,28 @@ def _gutter_block_min_span_um(budgets):
     ROM/relay gaps, whose logic must stay in place (COLH-1 vS2: blocking every gap < 45 um doubled the wire)."""
     v = os.environ.get("OT_GUTTER_BLOCK_MIN_SPAN_UM") or budgets.get("gutter_block_min_span_um")
     return float(v) if v and float(v) > 0 else None
+
+
+# FW-ROWS-1 11-09 (DIE-QC-97, COORD class: sle_fw_v2, slw_fw_v3, slw_fw_v2, slw_fw_v1 all GRT-0116 in the N-face
+# x_ctl_i / cws0_i ring_ff column strip): every sle_fw* / slw_fw* type takes every 2nd strip row by default.  A plan
+# cland_strip_rows_types entry (type or base) still wins, and 1 opts a type out; other families are unchanged.
+CLAND_STRIP_ROWS_FAMILY_RE = re.compile(r"^(sle|slw)_fw_")
+CLAND_STRIP_ROWS_FAMILY_DEFAULT = 2
+
+
+def _cland_strip_rows(budgets, tn):
+    """DIE-QC-97 11-09 opt-in: the OT_CLAND_STRIP_ROWS of type tn from budgets.cland_strip_rows_types (type, then its
+    unsplit base name) else budgets.cland_strip_rows; None (absent or 1) = unchanged kit.  landing_placement.tcl takes
+    every n-th row of the N/S ring_ff column strip, clamped to what the band depth fits, so the pin-facing band edge
+    is 1/n FIRM instead of 100 % (sle_fw_v2__cl69f5e854 x_ctl_i / cws0_i: 3304 / 2721 flops in an 11.61-um strip,
+    GRT-0116 with its 3 overflow edges in that strip's top gcell row)."""
+    per = budgets.get("cland_strip_rows_types") or {}
+    v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
+    if v is None and tn is not None and CLAND_STRIP_ROWS_FAMILY_RE.match(tn):
+        v = CLAND_STRIP_ROWS_FAMILY_DEFAULT
+    if v is None:
+        v = budgets.get("cland_strip_rows")
+    return int(v) if v and int(v) > 1 else None
 
 
 def _cland_pinslot_dense(budgets, tn):
@@ -843,15 +870,81 @@ def _lef_metal_top(lef_text):
     return max([int(v) for v in re.findall(r"\bLAYER\s+M(\d+)\b", lef_text)] or [0])
 
 
+def _placed_entries(t):
+    """{placed inst name: plan entry} for type_macros rows.  DIE-QC-97 11-09: a declared hard core wins over a
+    contents[] entry of the same instance name (QC cbx_q10 u_t30: contents qfd_tile_nl_romleaf_rpf, no orient, no
+    clock_entry_access, shadowed hard core qfd_tile_nl_a0c MY with the access, so the M7 entry met a solid macro)."""
+    ents = {}
+    for c in (t.get("hard_cores", []) or []) + (t.get("contents", []) or []):
+        ents.setdefault(c.get("physical_inst") or c["inst"], c)
+        ents.setdefault(c["inst"], c)
+    return ents
+
+
+def _access_margins(P, top):
+    """one routing pitch per access layer (ASAP7 M6/M7 0.064 um = the access_v4 review windows)"""
+    dflt = {L["name"]: L for L in S.ASAP7_LAYERS}
+    return {k: float((P.layers.get(f"M{k}") or {}).get("pitch_um") or dflt[f"M{k}"]["pitch_um"]) for k in (top - 1, top)}
+
+
+def clock_entry_lef(P, tn, core, mod, text, x, y, o):
+    """DIE-QC-97 11-09: (LEF text, cuts) the kit stages for a hard core with clock_entry_access: the signed view LEF
+    with its M(top-1)/M(top) OBS opened only at the access footprints (lef_clock_entry.derive_access_lef).  The pins
+    and the Liberty are the signed view's, so the abstract stays paired with the signed lib; the derivation is
+    recorded in clock_entry_lef.json.  Without clock_entry_access the text is returned unchanged."""
+    access = core.get("clock_entry_access")
+    if not access:
+        return text, 0
+    from lef_clock_entry import derive_access_lef
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    return derive_access_lef(text, mod, access, top, (float(x), float(y), o), _access_margins(P, top))
+
+
+def stage_clock_entry_lefs(P, tn, kd, macros, resolve):
+    """after macro staging: rewrite kd/macros/<lef> of every hard core with clock_entry_access to its access abstract
+    and write the receipt clock_entry_lef.json.  No access in the type: nothing written (byte-identical kits).  A LEF
+    shared by instances whose access windows differ is refused (one staged file per LEF name)."""
+    ents = _placed_entries(P.types[tn])
+    rows, by_file = [], {}
+    for inst, mod, lef, lib, x, y, o in macros:
+        c = ents.get(inst) or {}
+        if not lef or not c.get("clock_entry_access"):
+            continue
+        staged = Path(kd) / "macros" / resolve(lef).name
+        # the staged copy (after view_lef's advisory prune) is the source; re-staging the same file stays idempotent
+        src = staged.read_text()
+        new, cuts = clock_entry_lef(P, tn, c, mod, src, x, y, o)
+        if by_file.setdefault(staged.name, new) != new:
+            raise ValueError(f"type {tn}: {staged.name} staged for instances with different clock entry windows")
+        staged.write_text(new)
+        sha = lambda b: _hashlib.sha256(b.encode() if isinstance(b, str) else b).hexdigest()
+        top = int(P.layer_budget["partition_signal_max"][1:])
+        from lef_clock_entry import access_windows
+        rows.append(dict(inst=inst, module=mod, pin=c["clock_entry_access"]["pin"], lef=str(lef),
+                         staged=f"macros/{staged.name}", source_lef_sha256=sha(src), staged_lef_sha256=sha(new),
+                         lib=str(lib) if lib else None,
+                         lib_sha256=sha(resolve(lib).read_bytes()) if lib and resolve(lib).is_file() else None,
+                         obs_cuts=cuts, site=[float(x), float(y), o],
+                         windows_um={f"M{k}": [list(w) for w in v] for k, v in access_windows(
+                             src, mod, c["clock_entry_access"], top, (float(x), float(y), o), _access_margins(P, top)).items()}))
+    # instances of a re-staged LEF that carry no access share the opened abstract: they must be absent
+    for inst, mod, lef, *_ in macros:
+        if lef and resolve(lef).name in by_file and not (ents.get(inst) or {}).get("clock_entry_access"):
+            raise ValueError(f"type {tn}: {inst} shares {resolve(lef).name} with a clock entry core but has no access")
+    if rows:
+        (Path(kd) / "clock_entry_lef.json").write_text(json.dumps(dict(
+            schema="opentallas.clock_entry_lef.v1", type=tn, rows=rows,
+            rule="derived parent abstract: signed view LEF, OBS opened only at clock_entry_access footprints grown one "
+                 "pitch; PIN blocks and Liberty unchanged (DIE-QC-97 11-09)"), indent=1) + "\n")
+    return rows
+
+
 def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     """[(x0, y0, x1, y1)] type-frame boxes of the placed macros (type_macros) whose metal reaches the partition entry
     layer (layer_budget partition_signal_max) or the via layer below it: LEF OBS/PIN layers, else plan obs_max."""
     t = P.types[tn]
     top = int(P.layer_budget["partition_signal_max"][1:])
-    ents = {}
-    for c in (t.get("contents", []) or []) + (t.get("hard_cores", []) or []):
-        ents.setdefault(c.get("physical_inst") or c["inst"], c)
-        ents.setdefault(c["inst"], c)
+    ents = _placed_entries(t)
     base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
     out = []
     for inst, mod, lef, lib, x, y, o in type_macros(P, tn):
@@ -873,8 +966,9 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
                        if n == port and i == c["inst"] and pin == access["pin"]]
             if matched:
                 from lef_clock_entry import validate_access
-                validate_access(f.read_text(), mod, access, top, (float(x), float(y), o),
-                                _pin_box(P, tn, port, *entry_xy))
+                # DIE-QC-97: judged on the access abstract the kit stages (stage_clock_entry_lefs), not the blanket
+                validate_access(clock_entry_lef(P, tn, c, mod, f.read_text(), x, y, o)[0], mod, access, top,
+                                (float(x), float(y), o), _pin_box(P, tn, port, *entry_xy))
                 continue  # only this named utility pin; every other port retains the solid macro
         if mtop < top - 1:
             continue
@@ -2404,6 +2498,26 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_MERGE = {merge}",
             f"export OT_TAP_PAIR_UM = {pair_um:g}",
             f"export OT_TAP_PAIR_DEPTH = {depth}"]
+
+
+# COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
+# default (clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP).  Only a latch whose capture tap differs moves; RTL unchanged.
+# Other dies stay opt-in until the first HBM sign-off with it.
+HOP_LATCH_CAPTURE_TAP_DEFAULT = {"hbm": "u_fl_rst_"}
+
+
+def _hop_latch_capture_tap(P):
+    """OT_HOP_LATCH_CAPTURE_TAP value (space-separated regexes) or None.  GEN env OT_HOP_LATCH_CAPTURE_TAP (wave
+    item_env, commas for spaces) wins; "0" or "off" = no line.  Else the die default (HBM dies: u_fl_rst_)."""
+    env = os.environ.get("OT_HOP_LATCH_CAPTURE_TAP")
+    if env is not None:
+        v = " ".join(env.replace(",", " ").split())
+        return None if v in ("", "0", "off") else v
+    name = str(P.die.get("name") or "").lower()
+    for pre, v in HOP_LATCH_CAPTURE_TAP_DEFAULT.items():
+        if name.startswith(pre):
+            return v
+    return None
 
 
 def _tap_cap(t):
@@ -4036,6 +4150,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
         _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
+        # DIE-QC-97 11-09: a hard core with clock_entry_access gets its access abstract by construction (cbx_q10 NL
+        # DRT-0073: the signed blanket-OBS LEF was staged, the M5 ck had no access point)
+        stage_clock_entry_lefs(P, tn, kd, macros, lambda q: _CR.resolve(q, base))
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
@@ -4232,13 +4349,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets, tn, dpl_diamond, landing=bool(t.get("clock", {}).get("landing_contract")),
-                      outline=t["outline_um"]),
+           # DIE-HBM-97 11-09 (DPL class default-on for FT-reserved types too): see _dpl_args
+           *_dpl_args(P.budgets, tn, dpl_diamond, landing=bool(t.get("clock", {}).get("landing_contract"))
+                      or bool(ft_reservation), outline=t["outline_um"]),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
            # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
            *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
+           # DIE-QC-97 11-09 opt-in budgets.cland_strip_rows(_types): thin the N/S ring_ff face strip (conservative kit wins)
+           *([f"export OT_CLAND_STRIP_ROWS = {_cland_strip_rows(P.budgets, tn)}"] if _cland_strip_rows(P.budgets, tn) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -4286,6 +4406,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P)}"] if _hop_latch_capture_tap(P) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then

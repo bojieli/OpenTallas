@@ -234,3 +234,145 @@ def test_tall_column_never_windowed():
     r = {'rectangles_um': [dict(layer='M5', rect=[18.9, 0.0, 21.6, 2903.04])]}
     assert F.pdn_windows_comb(r) == []
 
+
+
+def _gap_receipt(own_rows=True):
+    """q_b011 shape: 6.048-um M5 column between two macros with its own M4 rows, closed by M5 street rows on both ends,
+    plus a plain 2.7-um FT column with no own rows."""
+    R = [dict(layer='M5', rect=[123.552, 2989.44, 129.6, 3276.72]),
+         dict(layer='M5', rect=[124.74, 3276.72, 129.6, 3279.744]),
+         dict(layer='M5', rect=[124.74, 3279.744, 246.24, 3287.52]),
+         dict(layer='M5', rect=[124.74, 2978.208, 246.24, 2985.12]),
+         dict(layer='M5', rect=[120.69, 2985.12, 246.24, 2989.44]),
+         dict(layer='M5', rect=[5.94, 0.0, 8.64, 4320.0])]
+    if own_rows:
+        R += [dict(layer='M4', rect=[123.552, 3000.0 + 10.8 * k, 129.6, 3002.7 + 10.8 * k]) for k in range(5)]
+    return dict(rectangles_um=R)
+
+
+def test_gap_column_gets_m5_window_through_end_rows_and_m6_fill():
+    r = _gap_receipt()
+    w = F.pdn_windows_col(r)
+    assert {(a, b) for _, a, b, _ in w} == {(127.194, 127.806)}
+    hit = {rr for _, _, _, rr in w}
+    assert (123.552, 2989.44, 129.6, 3276.72) in hit and (124.74, 3279.744, 246.24, 3287.52) in hit
+    assert (120.69, 2985.12, 246.24, 2989.44) in hit and (5.94, 0.0, 8.64, 4320.0) not in hit
+    assert F.pdn_col_fill(r) == [('M6', [123.552, 2989.44, 129.6, 3276.72])]
+    rows = F.obstruction_rows(r)
+    assert ('M6', [123.552, 2989.44, 129.6, 3276.72]) in rows
+    assert not any(L == 'M5' and q[0] < 127.5 < q[2] and q[1] < 3100 < q[3] for L, q in rows)
+    assert any(L == 'M5' and q == [123.552, 2989.44, 127.194, 3276.72] for L, q in rows)
+    assert all(q[2] > q[0] for _, q in rows)
+    assert 'pdn_windows_col=5 col_fill_m6=1' in F.tcl(r)
+
+
+def test_plain_columns_without_own_rows_unchanged():
+    r = _gap_receipt(own_rows=False)
+    assert F.pdn_windows_col(r) == [] and F.pdn_col_fill(r) == []
+    assert F.obstruction_rows(r) == [(x['layer'], x['rect']) for x in r['rectangles_um']]
+    assert 'pdn_windows_col' not in F.tcl(r)
+
+
+def test_tall_macro_bounded_band_is_windowed():
+    # q_b100__physical_v1: M6 band 0-259.2 x 423-527 of a 734.4 outline (bounded by macros, not full width)
+    r = {'rectangles_um': [dict(layer='M6', rect=[0.0, 423.0, 259.2, 527.0])]}
+    w = F.pdn_windows(r, 734.4)
+    assert w and all(L == 'M6' and 423.0 + 4.32 <= a and b <= 527.0 - 4.32 for L, a, b in w)
+    thin = {'rectangles_um': [dict(layer='M6', rect=[0.0, 423.0, 259.2, 430.0])]}      # not tall: unchanged
+    assert F.pdn_windows(thin, 734.4) == []
+    narrow = {'rectangles_um': [dict(layer='M6', rect=[0.0, 423.0, 60.0, 527.0])]}     # < PDN_WIN_PARTIAL_MIN_UM
+    assert F.pdn_windows(narrow, 734.4) == []
+
+
+def _strip_receipt():
+    """q_b101_nw y 298.9-311.0: a strip of three stacked wide M4 rows under partial-width M6 rows, M5 teeth inside it and
+    one M5 column piece entering it from below."""
+    R = [dict(layer='M4', rect=[2.16, 298.944, 492.48, 306.72]),
+         dict(layer='M4', rect=[0.0, 306.72, 492.48, 309.42]),
+         dict(layer='M4', rect=[2.16, 309.42, 492.48, 311.04]),
+         dict(layer='M6', rect=[2.16, 290.0, 492.48, 306.72]),
+         dict(layer='M6', rect=[0.0, 306.72, 492.48, 309.42]),
+         dict(layer='M6', rect=[2.16, 309.42, 492.48, 328.32]),
+         dict(layer='M5', rect=[347.76, 298.944, 350.46, 306.72]),
+         dict(layer='M5', rect=[358.56, 295.92, 361.26, 306.72]),
+         dict(layer='M5', rect=[358.56, 306.72, 365.31, 311.04]),
+         dict(layer='M5', rect=[358.56, 8.64, 362.88, 295.92])]
+    return dict(rectangles_um=R)
+
+
+def test_stacked_m4_strip_gets_one_m6_window_and_m5_windows():
+    r = _strip_receipt()
+    st = []
+    assert F.pdn_windows_strip(r, 734.4, strips=st) == [('M6', 299.898, 300.87)]
+    assert st == [(0.0, 298.944, 492.48, 311.04)]                  # the three rows merged into one strip
+    m5 = F.pdn_windows_strip_m5(r, 734.4)
+    hit = {rr for *_, rr in m5}
+    assert (358.56, 295.92, 361.26, 306.72) in hit                 # mostly inside the strip
+    assert (358.56, 306.72, 365.31, 311.04) in hit and (347.76, 298.944, 350.46, 306.72) in hit
+    assert (358.56, 8.64, 362.88, 295.92) not in hit               # the column below is untouched
+    assert ('M5', 360.474, 361.086, (358.56, 295.92, 361.26, 306.72)) in m5
+    rows = F.obstruction_rows(r, 734.4)
+    assert ('M5', [358.56, 8.64, 362.88, 295.92]) in rows
+    m6 = [q for L, q in rows if L == 'M6']
+    assert not any(q[1] < 300.87 - 1e-9 and q[3] > 299.898 + 1e-9 for q in m6)       # the partial M6 row is cut
+    assert all(q[2] > q[0] and q[3] > q[1] for _, q in rows)
+
+
+def test_strip_not_under_m6_unchanged():
+    r = {'rectangles_um': [dict(layer='M4', rect=[2.16, 298.944, 492.48, 306.72]),
+                           dict(layer='M5', rect=[347.76, 298.944, 350.46, 306.72])]}
+    assert F.pdn_windows_strip(r, 734.4) == [] and F.pdn_windows_strip_m5(r, 734.4) == []
+    assert F.obstruction_rows(r, 734.4) == [(x['layer'], x['rect']) for x in r['rectangles_um']]
+
+
+def test_isolated_m6_stack_without_m4_gets_strip_window():
+    # q_b102__physical_v1 core bottom: two abutting wide M6 rows, no M4 under them
+    r = {'rectangles_um': [dict(layer='M6', rect=[0.0, 4.32, 466.56, 7.02]),
+                           dict(layer='M6', rect=[19.44, 7.02, 246.24, 11.07])]}
+    assert F.pdn_windows_strip(r, 708.48) == [('M6', 6.138, 7.11)]
+
+
+def test_m6_stack_part_of_taller_stack_gets_no_strip_window():
+    r = {'rectangles_um': [dict(layer='M6', rect=[0.0, 4.32, 466.56, 7.02]),
+                           dict(layer='M6', rect=[0.0, 7.02, 466.56, 11.07]),
+                           dict(layer='M6', rect=[0.0, 11.07, 466.56, 30.0])]}
+    assert F.pdn_windows_strip(r, 708.48) == []
+
+
+def test_column_with_slightly_wider_own_rows_gets_windows():
+    R = [dict(layer='M5', rect=[574.29, 0.0, 578.88, 290.304])]
+    R += [dict(layer='M4', rect=[572.832, y, 578.88, y + 2.7]) for y in (58.32, 69.12, 79.92)]
+    assert [w[:3] for w in F.pdn_windows_col({'rectangles_um': R})] == [('M5', 576.474, 577.086)]
+    R2 = [dict(layer='M5', rect=[5.94, 0.0, 8.64, 290.304])]       # street rows, 3.2x the column width
+    R2 += [dict(layer='M4', rect=[0.0, y, 8.64, y + 2.7]) for y in (58.32, 69.12, 79.92)]
+    assert F.pdn_windows_col({'rectangles_um': R2}) == []
+
+
+def test_sliver_close_tcl_emitted():
+    r = {'rectangles_um': [dict(layer='M6', rect=[572.832, 58.32, 578.88, 65.07])]}
+    t = F.tcl(r)
+    assert 'm6_sliver_close' in t and 'round(0.384*$ot_ft_dbu)' in t
+    assert t.index('dbObstruction_create $ot_ft_blk $ot_ft_layer') < t.index('m6_sliver_close')
+
+
+def test_m4_m6_reservations_are_disjoint_rows_and_exact_complements():
+    """DIE-HBM-97 11-09: a band on both H layers reserves M4 and M6 in different parts of each gcell row (no row of
+    the partition loses both), each layer still the exact complement of the die obstructions."""
+    P,typ=plan()
+    P.types[typ]['die_ft_bands'][0]['layers']=['M4','M6']
+    P=schema.Plan(P.raw)
+    from tools.die_plan import die_trial as D
+    _,regs=D.band_region_adjust(P,.75)
+    rows=F.reservation(P,typ)['rectangles_um']
+    own={L:[r for r in rows if r['layer']==L] for L in ('M4','M6')}
+    blocked={L:[dict(rect=list(rect)) for layer,*rect in D.band_share_obs(P,regs) if layer==L] for L in ('M4','M6')}
+    ys=[i*0.27+0.135 for i in range(80)]
+    for L in ('M4','M6'):
+        for x in (20,50,100):
+            for y in ys:
+                assert inside(own[L],x,y)==(not inside(blocked[L],x,y))
+    for x in (20,50,100):
+        assert not any(inside(own['M4'],x,y) and inside(own['M6'],x,y) for y in ys)
+    a4=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M4'])
+    a6=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M6'])
+    assert a4==pytest.approx(a6)

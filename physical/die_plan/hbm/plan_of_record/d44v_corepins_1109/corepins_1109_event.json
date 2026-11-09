@@ -1,0 +1,105 @@
+{
+ "schema": "opentallas.plan_core_pin_table_event.v1",
+ "event": "corepins_1109",
+ "by": "DIE-HBM-97",
+ "ruling": "COORD 11-09 04:4x to DIE-HBM-97: adopt HBM-CORES-B pin tables for rootg1c_vC5 and own_vRF4T as type-local events on the final HBM plan (replaces the WAIT default)",
+ "base_plan": "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay",
+ "base_plan_sha256": "77bbddd873546ac358181f4dd2ea927115d2c9958cd4406fbbb7997134e1f76b",
+ "changes": [
+  {
+   "module": "ot_wbq_root_g1",
+   "form": "HBM-CORES-B rootg1c_vC5 (S M5 pins re-pitched 0.192, order kept), LOCAL_PASS_NEEDS_PARENT epyc4 hbm-cores-b/rootg1c_vC5_eco1/i1",
+   "kit_pins": "/srv/opentallas-scratch2/claude/die-hbm-97/corepins_in/rootg1c_vC5.pins.json",
+   "kit_pins_sha256": "57716eb4c8b8cb03da63e6eca07108144e5c474b52e4ad5716f31365510e011c",
+   "old_table": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new_table": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new_table_sha256": "d30c289f282de8fbed4bed9d8cd577d4d0f5f28863a60bfce5438609362dda69",
+   "pins": 1373,
+   "pins_moved": 1075,
+   "pins_unchanged": 298,
+   "moved_first": [
+    "fill_start",
+    "reserve_bank",
+    "reserve_v",
+    "reserve_total[0]",
+    "reserve_total[1]"
+   ],
+   "layer_changes": 0,
+   "outline_um": [
+    216.0,
+    129.6
+   ],
+   "instances": 16,
+   "host_types": {
+    "q_hub_nw": [
+     "u_wbk_Q__q0__r0__g1",
+     "u_wbk_Q__q0__r1__g1",
+     "u_wbk_Q__q0__r2__g1",
+     "u_wbk_Q__q0__r3__g1",
+     "u_wbk_Q__q1__r0__g1",
+     "u_wbk_Q__q1__r1__g1",
+     "u_wbk_Q__q1__r2__g1",
+     "u_wbk_Q__q1__r3__g1"
+    ],
+    "q_hub_ne": [
+     "u_wbk_Q__q0__r0__g1",
+     "u_wbk_Q__q0__r1__g1",
+     "u_wbk_Q__q0__r2__g1",
+     "u_wbk_Q__q0__r3__g1",
+     "u_wbk_Q__q1__r0__g1",
+     "u_wbk_Q__q1__r1__g1",
+     "u_wbk_Q__q1__r2__g1",
+     "u_wbk_Q__q1__r3__g1"
+    ]
+   },
+   "pin_cycles": 0,
+   "macros_outline_clock": "unchanged"
+  },
+  {
+   "module": "ot_svgr_own",
+   "form": "HBM-OPEN-B own_vRF4T pins, LOCAL_PASS_NEEDS_PARENT epyc6 hbm-cores-b/own_RF4T_eco1b/i1",
+   "kit_pins": "/srv/opentallas-scratch2/claude/die-hbm-97/corepins_in/own_vRF4T.pins.json",
+   "kit_pins_sha256": "f218373ef5c8c9ade8dc57f7b6b248d197f98c67816bbc72d61989aee31ef2ec",
+   "old_table": "cores/ot_svgr_own__129.6x432__d44v_split.json",
+   "new_table": "cores/ot_svgr_own__129.6x432__RF4T.json",
+   "new_table_sha256": "74e165eee1c733e52de71ceae17bd33f83999ac4be81ead2dbde31d0ebe14fa7",
+   "pins": 4897,
+   "pins_moved": 2396,
+   "pins_unchanged": 2501,
+   "moved_first": [
+    "bk_cr[0]",
+    "bk_cr[1]",
+    "bk_cr[2]",
+    "bk_cr[3]",
+    "bk_cr[4]"
+   ],
+   "layer_changes": 0,
+   "outline_um": [
+    129.6,
+    432.0
+   ],
+   "instances": 8,
+   "host_types": {
+    "q_hub_nw": [
+     "u_svg_Q0__o",
+     "u_svg_Q1__o",
+     "u_svg_Q2__o",
+     "u_svg_Q3__o"
+    ],
+    "q_hub_ne": [
+     "u_svg_Q0__o",
+     "u_svg_Q1__o",
+     "u_svg_Q2__o",
+     "u_svg_Q3__o"
+    ]
+   },
+   "pin_cycles": 0,
+   "macros_outline_clock": "unchanged"
+  }
+ ],
+ "die_plan_sha256": "3742832d6eb33412ec1ce37941538d71b9eba1220bad477c3b8136464d31acd4",
+ "host_types": [
+  "q_hub_ne",
+  "q_hub_nw"
+ ]
+}

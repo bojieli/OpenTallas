@@ -3,15 +3,32 @@ import contextlib,io,json,shutil,copy
 from pathlib import Path
 
 
-def source_entries(typ):
+def selected_buses(ab,*names):
+    """Optional per-type OUT bus scope (asbuilt.internal_stations_buses {type: [bus]}).
+
+    None = every OUT bus of the type (the original per-type opt-in).  A listed
+    type realises only the named OUT buses natively; its other OUT stations stay
+    KIT stations exactly as before the type was selected.
+    """
+    scope=(ab or {}).get('internal_stations_buses') or {}
+    for n in names:
+        if n in scope:return set(scope[n])
+    return None
+
+
+def source_entries(typ,only=None):
     """Coalesce only identical OUT geometry; IN/core entries remain owned by their existing flow."""
     buses={x['name']:x for x in typ.get('buses',[])}
+    if only is not None:
+        missing=set(only)-{n for n,x in buses.items() if x.get('dir')=='out'}
+        if missing:raise ValueError(f'internal_stations_buses names unknown OUT buses {sorted(missing)}')
     selected={}
     for e in typ.get('internal_stations',[]):
         if not e.get('conn','').startswith('bus:'):continue
         name=e['conn'][4:]
         if name not in buses:raise ValueError(f'internal station references unknown bus {name}')
         if buses[name]['dir']!='out':continue
+        if only is not None and name not in only:continue
         geometry={k:v for k,v in e.items() if k!='note'}
         if name in selected:
             old={k:v for k,v in next(row for row in typ['internal_stations'] if row.get('conn')=='bus:'+name).items() if k!='note'}
@@ -36,7 +53,7 @@ def annotate(b):
     for part,p in b.parts.items():
         if p['type'] not in selected:continue
         t=b.types[p['type']]
-        for e in source_entries(t):
+        for e in source_entries(t,selected_buses(b.ab,p['type'],t.get('split_of',p['type']))):
             name=e['conn'][4:];bus=next(x for x in t['buses'] if x['name']==name)
             count=len(e['regs_um']);matches=[L for L in b.out_bus[part] if L['oname']==name]
             if len(matches)!=1:raise ValueError(f'native stations {part}.{name}: expected one outgoing lane')
@@ -59,7 +76,7 @@ def materialize(b,tn,file):
     selected=set(b.ab.get('internal_stations_types',[]))
     if tn not in selected and original not in selected:return
     typ=copy.deepcopy(typ)
-    typ['internal_stations']=source_entries(typ)
+    typ['internal_stations']=source_entries(typ,selected_buses(b.ab,tn,original))
     if not typ['internal_stations']:return
     # Binding removes proven constant/unused payload bits from the functional
     # lane. The native station carries that exact bound payload plus its epoch,

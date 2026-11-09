@@ -422,6 +422,49 @@ if {[llength $ct_taps] >= 2} {
   }
   if {$ct_hl || $ct_hlx} { puts "OT_CLOCK_TAPS hop latches: $ct_hl on their launch station's tap ($ct_hlm re-hung), $ct_hlx without a tapped launch flop" }
 }
+# DIE-HBM-97 11-09 (vsN2 a8 TT -33.18: u_fl_rst_15/16/22 and u_fl_L201x2_o_6 on the LATE tap clk_t11 (+402 ps) feed captures
+# on the EARLY tap clk_t10 (-160 window, +64 ps), so latch -> capture has T/2 - 338 ps): a latch whose launch tap is the
+# later one is hung on its CAPTURE station's tap instead.  launch -> latch then crosses the port with the latch open
+# from the capture fall edge (setup ~T/2 headroom, hold against the closing rise edge of the cycle before), and
+# latch -> capture shares one tap (CRPR, T/2 hold).  Opt-in, named from the measured routed DB:
+# OT_HOP_LATCH_CAPTURE_TAP = space-separated regexes matched against the latch instance name.  Unset = no change.
+if {[llength $ct_taps] >= 2 && [info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && [string trim $::env(OT_HOP_LATCH_CAPTURE_TAP)] ne ""} {
+  set ct_cl 0; set ct_clx {}
+  foreach ct_i [$ct_blk getInsts] {
+    set ct_nm [$ct_i getName]
+    if {![regexp {(^|[./])u_fl_} $ct_nm]} continue
+    set ct_hit 0
+    foreach ct_re $::env(OT_HOP_LATCH_CAPTURE_TAP) { if {[regexp -- $ct_re $ct_nm]} { set ct_hit 1; break } }
+    if {!$ct_hit} continue
+    set ct_cit [ct_clk_iterm $ct_i]
+    if {$ct_cit eq ""} { lappend ct_clx $ct_nm; continue }
+    # forward from Q through BUF/INV/HB to the clocked sinks; majority tap wins
+    set ct_front {}; set ct_seen {}; set ct_votes {}
+    foreach ct_it [$ct_i getITerms] { if {[[$ct_it getMTerm] getIoType] eq "OUTPUT" && [$ct_it getNet] ne "NULL"} { lappend ct_front [$ct_it getNet] } }
+    while {[llength $ct_front]} {
+      set ct_n [lindex $ct_front 0]; set ct_front [lrange $ct_front 1 end]
+      if {[dict exists $ct_seen [$ct_n getName]]} continue
+      dict set ct_seen [$ct_n getName] 1
+      foreach ct_it [$ct_n getITerms] {
+        if {[[$ct_it getMTerm] getIoType] ne "INPUT"} continue
+        set ct_d [$ct_it getInst]
+        if {$ct_d eq $ct_i} continue
+        if {[regexp {^(BUF|INV|HB)} [[$ct_d getMaster] getName]]} {
+          foreach ct_o [$ct_d getITerms] { if {[[$ct_o getMTerm] getIoType] eq "OUTPUT" && [$ct_o getNet] ne "NULL"} { lappend ct_front [$ct_o getNet] } }
+        } elseif {[set ct_sk [ct_clk_iterm $ct_d]] ne ""} {
+          dict incr ct_votes [[$ct_sk getNet] getName]
+        }
+      }
+    }
+    if {![dict size $ct_votes]} { lappend ct_clx $ct_nm; continue }
+    set ct_best ""; set ct_bn -1
+    dict for {k v} $ct_votes { if {$v > $ct_bn} { set ct_best $k; set ct_bn $v } }
+    if {[[$ct_cit getNet] getName] ne $ct_best} {
+      $ct_cit disconnect; $ct_cit connect [$ct_blk findNet $ct_best]; incr ct_cl
+    }
+  }
+  puts "OT_CLOCK_TAPS hop latches on capture tap (OT_HOP_LATCH_CAPTURE_TAP): $ct_cl re-hung, [llength $ct_clx] without a tapped capture: [lrange $ct_clx 0 9]"
+}
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
 # assembly (gen.py assembly, views/<type>/ot_clock_taps.json) leaves it unconnected, so the spine makes no dead drop.

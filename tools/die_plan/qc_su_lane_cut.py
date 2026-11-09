@@ -35,6 +35,25 @@ def kv_wr_pipe_head(text):
     return out
 
 
+def read_extra_head(text, extra):
+    """QC-MEM9 11-08: bind the lane head to the memory-transport successor (rtl/physical/qfd_dv_lane_h_su_mem9.sv):
+    MEMORY_READ_EXTRA=extra (SU lanes: 9, the parent request 5 + answer 4 of the qc53 plan); same five leaves, same
+    pins, no parent change.  extra==0 keeps the original head.  Idempotent."""
+    if not extra:
+        return text
+    head = re.compile(r'^(    )qfd_dv_lane_h_(?:safe2|su_mem9)( #\()([^\n]*?)(\) u_u_head\d+ \()', re.M)
+    def sub(m):
+        params = m[3]
+        if '.MEMORY_READ_EXTRA(' not in params:
+            raise ValueError('lane head has no MEMORY_READ_EXTRA parameter')
+        params = re.sub(r'\.MEMORY_READ_EXTRA\(\d+\)', f'.MEMORY_READ_EXTRA({extra})', params)
+        return f'{m[1]}qfd_dv_lane_h_su_mem9{m[2]}{params}{m[4]}'
+    out, n = head.subn(sub, text)
+    if n != 1:
+        raise ValueError(f'expected exactly one lane head for READ_EXTRA, found {n}')
+    return out
+
+
 def refs(text, widths):
     result = collections.defaultdict(set)
     for m in REF.finditer(text):
@@ -56,7 +75,7 @@ def concat(bits):
     return '{' + ', '.join(f'{n}[{b}]' if w > 1 else n for n, b, w in reversed(bits)) + '}'
 
 
-def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0):
+def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0, memory_read_extra=0):
     module = module or f'qfd_qc_su_lane_w_l{lane}'
     if len(re.findall(r'\bendmodule\b', source)) != 1:
         raise ValueError('expected one bound partition module')
@@ -75,6 +94,7 @@ def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0):
     body = '\n'.join(m['body'] for m in chosen)
     if kv_wr_pipe:
         body = kv_wr_pipe_head(body)
+    body = read_extra_head(body, memory_read_extra)
     reset_args=re.findall(r'\.rst_n\(([^()]+)\)',body)
     if len(reset_args)!=5 or len(set(reset_args))!=1 or not re.fullmatch(r'rst_n(?:_t\d+)?',reset_args[0]):
         raise ValueError('five-leaf group requires one exact delivered reset net')
@@ -110,7 +130,7 @@ def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0):
     frame = WIRE.sub(lambda m: '' if m[2] in private else m[0], frame)
     report = dict(schema='opentallas.qc_su_lane_cut.v1', lane=lane, module=module,
                   source_sha256=hashlib.sha256(source.encode()).hexdigest(), added_cycles=0,
-                  memory_alignment=alignment, kv_wr_pipe=int(bool(kv_wr_pipe)), reset_source=reset_source,
+                  memory_alignment=alignment, kv_wr_pipe=int(bool(kv_wr_pipe)), memory_read_extra=int(memory_read_extra), reset_source=reset_source,
                   leaves=[dict(instance=m['inst'], module=m['module']) for m in chosen],
                   inputs=[dict(name=n, bit=b) for n,b,_ in ib],
                   outputs=[dict(name=n, bit=b) for n,b,_ in ob],

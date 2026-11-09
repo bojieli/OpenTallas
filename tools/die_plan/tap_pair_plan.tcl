@@ -22,11 +22,19 @@ namespace eval ::ot_tap_pair {
   if {$cap<1 || $radius<=0 || $limit<2 || $limit>$cap || $maxpasses<1} {
    error "OT_TAP_PAIR invalid capacity/radius/group/passes"
   }
+  # DIE-QC-97 11-09: the initial load must be KNOWN for every tap, but it may exceed cap.  clock_taps.tcl keeps an
+  # over-full tap with no room within the reassign radius as a WARN (COORD 10-23 19:55: sinks per tap are guidance,
+  # not a gate) and leaves hard-core clock pins on their tap, so taps above cap are legal inputs (QC cbn_q00 clk_t11,
+  # slw_su_c: CTS stopped here).  Every move below admits a tap only while load+n<=cap, so an over-full tap only
+  # donates; the end check proves no tap is left above max(cap, its initial load).
+  set initload {}
   dict for {tap xy} $tapxy {
-   if {![dict exists $load $tap] || [dict get $load $tap]>$cap} {
+   if {![dict exists $load $tap] || ![string is integer -strict [dict get $load $tap]] || [dict get $load $tap]<0} {
     error "OT_TAP_PAIR initial tap capacity invalid: $tap"
    }
+   dict set initload $tap [dict get $load $tap]
   }
+  set overfull [llength [lmap {tap l0} $initload {expr {$l0>$cap ? $tap : [continue]}}]]
   set parent {};set adj {}
   dict for {name row} $regs {
    if {![dict exists $tapxy [lindex $row 3]]} {error "OT_TAP_PAIR unknown source tap"}
@@ -220,6 +228,9 @@ namespace eval ::ot_tap_pair {
    lappend passes [list shift $shifts $shifts $cross]
   }
   # Fail before any physical connection changes if a promised invariant is lost.
+  dict for {tap l0} $initload {
+   if {[dict get $load $tap]>max($cap,$l0)} {error "OT_TAP_PAIR tap filled above capacity: $tap"}
+  }
   foreach edge $pairs {
    lassign $edge distance a b
    if {[lindex [dict get $initial $a] 3] eq [lindex [dict get $initial $b] 3] &&
@@ -228,6 +239,6 @@ namespace eval ::ot_tap_pair {
    }
   }
   return [dict create regs $regs load $load passes $passes moves $moves groupmoves $groupmoves \
-   components [dict size $groups] largest $largest frozen $frozen converged $converged]
+   components [dict size $groups] largest $largest frozen $frozen converged $converged overfull $overfull]
  }
 }

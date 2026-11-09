@@ -19,7 +19,7 @@ for m in ${MUTS:-0 1 2 3 4 5 6 7}; do
   E=$([ $m = 0 ] && echo PASS || echo FAIL)
   G=$m; D=""; [ $m = 5 ] && { G=0; D=+define+OT_DSROM_LINK_MUT_NOREPLAY; }; [ $m = 6 ] && { G=0; D=+define+OT_DSROM_LINK_MUT_NOCRC; }
   "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style \
-    +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF --top-module tb_s81hd_mesh_ep -GMUT=$G -GBQ=$BQV $D \
+    +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF --top-module tb_s81hd_mesh_ep -GMUT=$G -GBQ=$BQV -GRBL=${RBL:-0} $D \
     -Mdir "$O/obj_m$m" $SRC --build-jobs ${J:-2} > "$O/build_m$m.log" 2>&1 \
     || { echo "m$m BUILD FAIL"; grep -m10 %Error "$O/build_m$m.log"; rc=1; continue; }
   "$O/obj_m$m/Vtb_s81hd_mesh_ep" > "$O/run_m$m.log" 2>&1

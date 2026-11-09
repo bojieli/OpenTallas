@@ -1,0 +1,54 @@
+# DIE-S81-85 prime source event: bound portfix178 copies, 2026-11-09T18:28:11Z, loved-redfish
+dd5695c1e6c0f37a7739966735ba73a8a8e28b91d7a911d7dc3611cc0dc3f51c  old/dsdv_idx_rg3.sv
+038ef90e3733abb853f3c78a74d9bd646c9158e88e9910ca56e2c48aac3e984c  old/dsdv_idx_rg3_nq_native.sv
+cbbd5eb1b07c27d845be5c752102f30e4720bfa38b92af44b9a44e7d47accf5f  physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3.sv
+c462c830782cf32888edfb1e651ca4fd3f1449a0b56ee4a1f7d75eeff91aafff  physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv
+## dsdv_idx_rg3: verilator -E -P (define off) old vs new
+1007
+PP_IDENTICAL
+## dsdv_idx_rg3: yosys equiv (define off) old bytes = gold, new bytes = gate (submodules as blackboxes)
+rc=0 Found 31041 $equiv cells in eq: Of those cells 31041 are proven and 0 are unproven. 
+## dsdv_idx_rg3: s81_svc_idx_fit.py on old and new bytes
+ok fo_dsdv_idx_rg3.sv ce29f3e80c0f
+ok fn_dsdv_idx_rg3.sv 6d4dbc1f0cd9
+FIT_PP_IDENTICAL (fit of old == fit of new, define off; header comment differs only)
+## dsdv_idx_rg3 fit: yosys equiv old-fit vs new-fit (define off)
+rc=0 Found 31041 $equiv cells in eq: Of those cells 31041 are proven and 0 are unproven. 
+## dsdv_idx_rg3_nq_native: verilator -E -P (define off) old vs new
+1014
+PP_IDENTICAL
+## dsdv_idx_rg3_nq_native: yosys equiv (define off) old bytes = gold, new bytes = gate (submodules as blackboxes)
+rc=0 Found 31059 $equiv cells in eq: Of those cells 31059 are proven and 0 are unproven. 
+## dsdv_idx_rg3_nq_native: s81_svc_idx_fit.py on old and new bytes
+ok fo_dsdv_idx_rg3_nq_native.sv 1b59e4850b05
+ok fn_dsdv_idx_rg3_nq_native.sv aa346c1c2055
+FIT_PP_IDENTICAL (fit of old == fit of new, define off; header comment differs only)
+## dsdv_idx_rg3_nq_native fit: yosys equiv old-fit vs new-fit (define off)
+rc=0 Found 31059 $equiv cells in eq: Of those cells 31059 are proven and 0 are unproven. 
+## pytest tools/die_plan/test_s81_svc_memory_closure.py -k idx_fit (new bytes)
+..                                                                       [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED test_s81_svc_memory_closure.py::test_idx_fit_renames_svc_lo_reader_and_sizes_masters
+PASSED test_s81_svc_memory_closure.py::test_idx_fit_chain_end_nq_reader
+## OT_IDX_RG3_PRIME outside the RTL / bench (kit and define sets): must be none
+none (worktree sparse set)
+## sha pins of the two bound files (git grep dd5695c1e6c0 / 038ef90e3733 / 54e3d3ebf8a9 over the tree)
+LIVE gates on the current bytes -> updated in this source event:
+  tools/die_plan/s81_svc_idx_fit.py  SRC_SHA + cbbd5eb1b07c, NQ_SHA + c462c830782c (old shas kept: old kits stay valid)
+  physical/die_plan/s81/bind/source_modules/portfix178/sources.json  rg3 / nq_native sha256 -> new bytes, + sha256_history
+    sources.json was stale: rg3 54e3d3ebf8a9 was true at 441e2fb399 (10-25) only; f60ba09972 (11-01 scan-word cast) made
+    the bytes dd5695c1e6c0 (TRUE until this event) without updating it.  nq_native 93587aeede69 likewise stale since
+    6e220e31bf (11-01 NQ cast) made 038ef90e3733 (TRUE until this event).
+RECORDS of past runs, each pinning {path, revision or worktree, sha} as read at that time -> NOT rewritten (true for their
+revision; rewriting would falsify the record, and their prepare scripts re-read by revision):
+  results/rtl/s81_hierarchy_substitution_0310/service/staged_readset.json      54e3d3 (11-02 run)
+  results/rtl/s81_nq_cast_1131/impact.json                                     038ef9 = new_sha256 of the 11-01 cast event
+  results/rtl/s81_successor_reuse_0402/archive_reuse.json, module_definitions.json   54e3d3 (11-02 inventories)
+  results/rtl/s81_svc_idx_fit_1103/README.md, pilot/..._memory_closure.json   dd5695 / 54e3d3 (11-03 fit proof)
+  results/rtl/s81_token_source_event_0715/source_readset.json                  dd5695 / 038ef9 at revision 39f754dda0
+  results/token_pass/s81_current_link_ages_2240/source_selection_closure3.json 54e3d3 (11-01)
+OTHER stale sources.json entries found (bytes changed after 441e2fb399, json not updated; NOT touched here, not idx rg3):
+  dsdv_hostb_seqhost_mux 84cc15d882c4 -> file a7c2353f0e23, dsdv_idx_l20s 47dfc9031ac3 -> cab54e3df937,
+  dsdv_svc_rs_pvso_entry c18c9d77e786 -> 8ca529fd4191, ot_s81_mu72_lnland 10a0f33047ee -> 29a1a109fc56,
+  ot_s81sl_xg 140f9a5508b4 -> 824700b93a92, ot_s81sl_xgt_xo 6a0f8b10b866 -> acbec655098c

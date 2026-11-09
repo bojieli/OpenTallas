@@ -1,0 +1,20 @@
+# (d) default netlist unchanged: dsdv_idx_rg3.sv 9b6810c755 (old) vs this branch (new), no define
+## verilator -E -P (comments + blank lines dropped): old vs new
+  1007 old.pp
+  1007 new.pp
+  2014 total
+PP_IDENTICAL (old == new without OT_IDX_RG3_PRIME)
+## verilator -E -P +define+OT_IDX_RG3_PRIME: old vs prime (the whole added logic)
+127a128,133
+>     localparam [2:0] PRIME = 3'd6;
+>     reg  [2:0] pk;
+>     reg        pr_f;
+>     always @(posedge ck or negedge rl[0])
+>         if (!rl[0]) begin pk <= 3'd0; pr_f <= 1'b0; end
+>         else begin if (pk != PRIME) pk <= pk + 3'd1; pr_f <= hdr_job && pk < PRIME; end
+997a1004
+>             if (pr_f) fc_set[5] <= 1'b1;                        
+## yosys proc; flatten; opt (with ot_rst_relay): word-level FF cells (prime: +1 $adff = pr_f 1 b, +1 $adffe = pk 3 b -> +4 FF bits)
+old: 3949 cells  88 $adff  129 $adffe  97 $dff  223 $dffe  9 $sdff 
+new: 3949 cells  88 $adff  129 $adffe  97 $dff  223 $dffe  9 $sdff 
+prime: 3956 cells  89 $adff  130 $adffe  97 $dff  223 $dffe  9 $sdff 

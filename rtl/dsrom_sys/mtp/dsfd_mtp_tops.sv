@@ -222,6 +222,7 @@ module dsfd_mtp_seq_fan #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10,
     parameter integer MAXU = 8, parameter integer G = 5,
     parameter integer DATA_RST = 0,     // DIE-HEAD-71 11-05 (opt-in): u_r slots + u_seq ef / ep_ / tq cleared in reset
+    parameter integer EX_PRE = 0,       // DIE-HEAD-83 11-07 (opt-in, 0 cycles): u_seq draft compare registered in S_PRE
     parameter integer SW = USER_W + 3 * NW + 4, parameter integer DW = USER_W + 3 + NW
 ) (
     input  wire [0:0]        ck,
@@ -258,7 +259,7 @@ module dsfd_mtp_seq_fan #(
     ot_dsrom_mtp_lrx #(.W(DW)) u_q (.clk(clk), .rst_n(rn), .l_valid(f_qv[0]), .l_ready(t_qg[0]), .l_data(f_qd),
         .c_valid(qv), .c_ready(qr), .c_data(qd));
     wire av, fl; wire [USER_W-1:0] au; wire [2:0] aa; wire [NW-1:0] ac, ay;
-    ot_dsrom_mtp_seq_fan #(.FLIT(FLIT), .NW(NW), .USER_W(USER_W), .MAXU(MAXU), .G(G), .DATA_RST(DATA_RST)) u_seq (
+    ot_dsrom_mtp_seq_fan #(.FLIT(FLIT), .NW(NW), .USER_W(USER_W), .MAXU(MAXU), .G(G), .DATA_RST(DATA_RST), .EX_PRE(EX_PRE)) u_seq (
         .clk(clk), .rst_n(rn), .cfg_plen(cfg_q[NW-1:0]), .cfg_glen(cfg_q[2*NW-1:NW]),
         .r_valid(rv), .r_ready(rr), .r_data(rd), .t_valid(tv), .t_ready(tr), .t_data(td),
         .s_valid(sv), .s_ready(sr), .s_data(sd), .w_valid(wv), .w_ready(wr), .w_user(wd),

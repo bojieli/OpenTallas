@@ -123,3 +123,20 @@ end else begin:g_bad
 qfd_station_math_requires_fixed_ADD7_SCALE6_DRST0 u_fail();
 end endgenerate
 endmodule
+module qfd_dv_s8_pad #(parameter integer W = 1, parameter integer D = 0, parameter integer RST = 0) (input wire ck, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
+    // QC-TRANSPORT-FIX-3: fixed delay line, D = 0 is a wire (no flop); RST = 1: async reset (valids), RST = 0: data, no reset.
+    generate if (D == 0) begin : g_wire
+        assign q = d;
+    end else begin : g_line
+        reg [W-1:0] r [0:D-1];
+        integer i;
+        if (RST != 0) begin : g_r
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) for (i = 0; i < D; i = i + 1) r[i] <= {W{1'b0}};
+                else begin r[0] <= d; for (i = 1; i < D; i = i + 1) r[i] <= r[i-1]; end
+        end else begin : g_n
+            always @(posedge ck) begin r[0] <= d; for (i = 1; i < D; i = i + 1) r[i] <= r[i-1]; end
+        end
+        assign q = r[D-1];
+    end endgenerate
+endmodule

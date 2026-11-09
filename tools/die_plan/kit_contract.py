@@ -921,9 +921,10 @@ def _foreach_lists(txt):
     return out
 
 
-def _plan_contents(kd, plan_dir):
+def _plan_contents(kd, plan_dir, prefer_hard=False):
     """{instance: contents / hard_cores entry} of this partition kit's type from plan_dir/die_plan.json (budget.json
-    type); a contents entry wins over a hard core of the same instance name."""
+    type); a contents entry wins over a hard core of the same instance name, unless prefer_hard (DIE-QC-97 11-09: the
+    clock entry check judges the declared hard core, as gen_phys._placed_entries does)."""
     if not plan_dir:
         return None
     pf = Path(plan_dir) / "die_plan.json"
@@ -939,7 +940,8 @@ def _plan_contents(kd, plan_dir):
     out = {}
     # AUTOBUILD-PIPE-2 (KIT-WAVE-2 00:1x, KV kv3_hg_v1 23 issues 'not a contents macro of this type'): a placed macro
     # is either a contents entry or a declared hard core (partition_types[type].hard_cores, gen place_macro by inst)
-    for e in list(pt.get("hard_cores") or []) + list(pt.get("contents") or []):
+    hard, soft = list(pt.get("hard_cores") or []), list(pt.get("contents") or [])
+    for e in (soft + hard if prefer_hard else hard + soft):
         if not isinstance(e, dict):
             continue
         if e.get("inst") and e.get("outline_um"):
@@ -1128,7 +1130,7 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
 def _clock_entry_access(kd, plan_dir, row, site, src, name, x, y, top):
     """Read staged LEF and emitted pin again; never trust a free-space claim."""
     from lef_clock_entry import validate_access
-    contents = _plan_contents(kd, plan_dir) or {}
+    contents = _plan_contents(kd, plan_dir, prefer_hard=True) or {}
     core = contents.get(row["inst"])
     access = row["clock_entry_access"]
     if core is None or core.get("clock_entry_access") != access or row.get("pin") != access.get("pin"):

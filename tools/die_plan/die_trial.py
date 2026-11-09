@@ -4226,6 +4226,16 @@ def transition_intervals(P, L, g=GCELL_UM, ext=OBS_EXT_UM):
     return out
 
 
+def band_phase_flip(P, layers):
+    """band layers whose die-kept slice sits at the top / right of the gcell (band_share_obs row phase): per direction,
+    the layers sorted by level alternate keep-bottom, keep-top, ...  M4..M7 bands give M6 and M7."""
+    out = set()
+    for d in ("H", "V"):
+        same = sorted((L for L in layers if P.layers[L]["dir"] == d), key=lambda L: int(L[1:]))
+        out |= set(same[1::2])
+    return out
+
+
 def band_share_obs(P, regs, g=GCELL_UM):
     """die_ft_bands share as OBSTRUCTION stripes: in every one-gcell strip from band_region_adjust (kept fraction a)
     obstruct the top f of each gcell row (H layer) or the right f of each gcell column (V layer), f = 1 - a.
@@ -4235,8 +4245,19 @@ def band_share_obs(P, regs, g=GCELL_UM):
     edge+band root interior, 8,806 zero-capacity gcells, 21 tracks in the layer-adjustment run of the same LEF).
     There f = (1 - TRANSITION_KEEP) * (1 - a), which keeps TRANSITION_KEEP * a: the same capacity a global layer
     adjustment gives (measured 10-25 on a 216x216 test die: M6 14,110 strips vs 14,259 layer adjustment 0.75; the
-    uncompensated strips 12,490), so band and non-band kits share one capacity model.  -> [(layer, x0, y0, x1, y1)]"""
+    uncompensated strips 12,490), so band and non-band kits share one capacity model.
+
+    Row phase (DIE-HBM-97 11-09, q_su30__physical_v1 GRT-0116): the die keeps a fraction a of each gcell row, and the
+    partition reserves exactly that part (partition_ft_reserve complement).  With every H layer kept at the SAME
+    phase, the reserved M4 and M6 slices sit in the same rows, so those rows have no horizontal track above M2 in the
+    partition, and none at all over a macro (OBS M1-M5).  Station and pin gcells at macro edges then have nowhere to
+    step (GRT probe on the q_su30 pv1 4_cts.odb: M4 overflow 3182 aligned, 775 staggered, same shares).  So the band
+    layers of one direction alternate by level: the 1st (M4 / M5) obstructs the top / right f of the gcell (as
+    before) and keeps the bottom / left a, the 2nd (M6 / M7) obstructs the bottom / left f and keeps the top / right
+    a.  The die-kept slices are disjoint whenever a1 + a2 <= 1.  The obstructed length per gcell is unchanged, so
+    the die capacity is unchanged; only the row phase moves.  -> [(layer, x0, y0, x1, y1)]"""
     trans = {L: transition_intervals(P, L, g) for L in sorted({r[0] for r in regs})}
+    flip = band_phase_flip(P, {r[0] for r in regs})
     out = []
     for L, x0, y0, x1, y1, a in regs:
         if a >= 1.0:
@@ -4257,7 +4278,10 @@ def band_share_obs(P, regs, g=GCELL_UM):
         if pos < hi:
             segs.append((pos, hi, f))
         for s0, s1, ff in segs:
-            c0, c1 = round((k + 1) * g - ff * g, 3), round((k + 1) * g, 3)
+            if L in flip:
+                c0, c1 = round(k * g, 3), round(k * g + ff * g, 3)
+            else:
+                c0, c1 = round((k + 1) * g - ff * g, 3), round((k + 1) * g, 3)
             if vert:
                 out.append((L, c0, round(s0 * g, 3), c1, round(s1 * g, 3)))
             else:

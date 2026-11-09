@@ -1302,6 +1302,30 @@ def post_cts_setup_hook(kd, cfg):
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
 
+def relay_line(a):
+    """--relay-line PREFIXES:DEPTH -> (prefix list, depth) or None (off)."""
+    v = getattr(a, "relay_line", None)
+    if not v:
+        return None
+    pre, sep, dep = v.rpartition(":")
+    if not sep or not dep.isdigit() or int(dep) < 1:
+        raise SystemExit(f"--relay-line {v!r}: want PREFIXES:DEPTH, DEPTH >= 1")
+    pres = [x for x in pre.split(",") if x]
+    if not pres or any(not x.replace("_", "").replace("[", "").replace("]", "").replace(".", "").isalnum() for x in pres):
+        raise SystemExit(f"--relay-line {v!r}: bad prefix list")
+    return pres, int(dep)
+
+
+def max_wire_um(a):
+    """--max-wire-um: repeater pitch for the post-GRT repair_design; None/0 = off (kit unchanged)."""
+    v = getattr(a, "max_wire_um", None)
+    if v is None or v == 0:
+        return 0.0
+    if v < 0:
+        raise SystemExit(f"--max-wire-um {v}: want > 0")
+    return float(v)
+
+
 def drv_fanout(a):
     """HBM-CORES-KITS-20 DRV basis: fanout cap for every repair_design (0 = off)."""
     return int(getattr(a, "max_fanout", 0) or 0)
@@ -1593,6 +1617,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "unchanged, face_guard registered); recorded in face_shell.json out_lockup + freeze.json")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
+    ap.add_argument("--relay-line", default=None, metavar="PREFIXES:DEPTH",
+                    help="HBM-COLLECT-1/PTW-C 11-09 (opt-in): pure register pipelines across a sparse core; at PRE_RESIZE "
+                         "(after GPL) the DEPTH register stages upstream of every port flop whose name starts with one of "
+                         "the comma-separated PREFIXES are placed at k/(DEPTH+1) of the landing -> port line and sized to "
+                         "DFFHQNx3 (tools/die_plan/relay_line_place.tcl).  Without it the kit is unchanged.")
+    ap.add_argument("--max-wire-um", type=float, default=None, metavar="UM",
+                    help="HBM-COLLECT-1/PTW-C 11-09 (opt-in): repeater pitch on every signal net at the post-GRT repair_design "
+                         "(tools/die_plan/grt_maxwire.tcl sourced from core_grt_pre.tcl, export OT_MAXWIRE_UM); same remedy as gen.py "
+                         "phys --max-wire-um.  Without it the kit is unchanged.")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
@@ -2118,9 +2151,21 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # pick it).  exp0 _k36nr BUFx2 guarded chunks stalled at FF hold ws -25.87 (8,538 cells, FAIL_POSTCTS) while _k39hb
     # HB4 reached -86.36 -> +0.94 / 0 viol in 4 chunks (8,536 cells); same margins, constraints and acceptance.
     shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    # HBM-COLLECT-1/PTW-C 11-09 (class: HBM core kits had no repeater-pitch hook; the q_spt2 die-type kits do via
+    # gen.py --max-wire-um): pt_w r2 routed 1297 TT max-slew pins, every one a single ~197 um BUFx6f -> BUFx3 N-S segment
+    # that the GRT-estimate repair_design saw in limit and RCX put at up to 591 ps (limit 320).  Opt-in pitch cap.
+    rl = relay_line(a)
+    if rl:
+        shutil.copyfile(TOOL / "relay_line_place.tcl", kd / "relay_line_place.tcl")
+        (kd / "core_pre_resize.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
+                                                "source /work/relay_line_place.tcl\n")
+    mw = max_wire_um(a)
+    if mw:
+        shutil.copyfile(TOOL / "grt_maxwire.tcl", kd / "grt_maxwire.tcl")
     (kd / "core_grt_pre.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
                                          "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n"
-                                         "source /work/hold_pad_hb4.tcl\n")
+                                         "source /work/hold_pad_hb4.tcl\n" +
+                                         ("source /work/grt_maxwire.tcl\n" if mw else ""))
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
@@ -2507,6 +2552,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         cfg += ["override export PRE_CTS_TCL = /work/multiport_clock_stage_hold.tcl"]
         if source_profile:
             source_profile["clock_stage"] = "HOLD_CTS: common-domain multi-port stage required"
+    if max_wire_um(a):
+        cfg += [f"export OT_MAXWIRE_UM = {max_wire_um(a):g}"]
+    if relay_line(a):
+        cfg += ["override export PRE_RESIZE_TCL = /work/core_pre_resize.tcl",
+                f"export OT_RELAY_LINE_PORTS = {','.join(relay_line(a)[0])}",
+                f"export OT_RELAY_LINE_DEPTH = {relay_line(a)[1]}"]
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     if a.prects_estimate:
         flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)

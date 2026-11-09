@@ -25,12 +25,22 @@ HRT=${HRT:-$(python3 "$H/kst.py" --host-rt "$BG")}; echo "HRT $HRT"
 # KV-FN-7 10-31: the embedding provider relay of THIS bind (kvs_emb row_tx across lanes) -> TXD K[2] + earlier K port-2 slots
 EMBRT=${EMBRT:-$(python3 "$H/kst.py" --emb-rt "$BG")}; echo "EMBRT $EMBRT"
 T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
+# DIE-KV-97 11-09: the bind's own ZB_ADD (param_regen.json of BIND_DIR, kv_ep_offset_regen.py) -> the compiler's Z model; a bind
+# without it leaves OT_KV_ASTK_ZB_ADD as given (unset = 0 = the as-built Z)
+if [ -z "${OT_KV_ASTK_ZB_ADD:-}" ] && [ -f "$B/param_regen.json" ]; then
+  ZB=$(python3 -c "import json,sys; r=json.load(open(sys.argv[1])); print(max([int(c['bound']) for c in r.get('changed', []) if c['param'] == 'ZB_ADD'] or [0]))" "$B/param_regen.json")
+  [ "$ZB" = 0 ] || export OT_KV_ASTK_ZB_ADD=$ZB
+fi
+echo "ZB_ADD ${OT_KV_ASTK_ZB_ADD:-0}"
 set -a; . "$AS/kv_flags.env"; set +a
 [ -z "$task_compute_record_txd" ] || export OT_KV_COMPUTE_RECORD_TXD=$task_compute_record_txd
 [ -z "$task_cal_ofs" ] || export OT_KV_CAL_OFS=$task_cal_ofs
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
 PV_ARGS=(); [ -z "${OT_KV_PV_RESULT_CALENDAR:-}" ] || PV_ARGS=(--pv-result-calendar "$OT_KV_PV_RESULT_CALENDAR")
-python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --out "$O/prep" > "$O/prep.log"
+# DIE-KV-97 11-09: the KV PC core split (DIE-KV-66 RF-KV3, plan_of_record kv67_1104) names its INNER rows by the PCC/PCF halves;
+# prep prices them on the as-built kvpc<->slg bus (repo-relative default, OT_KV_CORE_SPLITS overrides)
+CS=${OT_KV_CORE_SPLITS:-physical/die_plan/qwen_kvsys/plan_of_record/kv67_1104/core_splits.json}
+python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static_model.json" --groups "$BG" --core-splits "$CS" --out "$O/prep" > "$O/prep.log"
 EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=${task_head_prepare_edges:-${OT_KV_HEAD_PREP_EDGES:-12}}
 CST=${CST:-2,2,2,3,2,2}   # selected compute seam; one profile for image AND native compile
 pair_image() {   # $1 = attention-service pad

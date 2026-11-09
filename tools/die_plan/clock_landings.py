@@ -415,10 +415,11 @@ def expand_station_types(binder,table):
 
 
 class Landings:
-    def __init__(self, plan, table, *, require_geometry=True, ca_variants=False):
+    def __init__(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None):
         """ca_variants (MESO-STRAP-1, LEC only): count-aligned PARAMETER form without the TYPE_SPLIT stop, so
         type_rtl(..., inst=<partition>) can emit one copy's parameter wrapper (the LEC reference of a strap master)."""
         self.plan = plan
+        self.plan_path = plan_path      # resolves plan-relative pin tables for tap_grid (added_taps -> reset_tree)
         self.ca_variants = ca_variants
         self.collector = table.get("collector")
         # monitor="region" (opt-in, DIE-HEAD-3): the dataflow monitor plus same-region status links (registered ctl
@@ -1059,7 +1060,7 @@ class Landings:
                 # export. Do not remap any data or leaf clock.
                 import schema
                 if not hasattr(self, "_physical_clock_plan"):
-                    self._physical_clock_plan = schema.Plan(self.plan)
+                    self._physical_clock_plan = schema.Plan(self.plan, getattr(self, "plan_path", None))
                 planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
                 if s_ not in planned:
                     raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
@@ -1354,7 +1355,7 @@ class Landings:
                 or role[0] != 'child' or role[1] != START_PIN_IN):
             raise LandingError(f'{tn}: landing_origin_clock_port requires a dedicated parameter START child')
         import schema
-        P = schema.Plan(self.plan)
+        P = schema.Plan(self.plan, getattr(self, "plan_path", None))
         grid = schema.tap_grid(P, key)
         cores = schema.core_taps(P, key)
         canonical = lambda n: re.sub(r'\[0\]$', '', n.lstrip('\\'))

@@ -13,8 +13,8 @@ dsdv_idx_rg2_m1k (1024x256) landing / queue memories become dsdv_idx_fit_mem siz
 The bound is renamed dsdv_idx_rg3 -> dsdv_idx_rg3_fit (count-checked). Proof + bench: results/rtl/s81_svc_idx_fit_1103.
 
 NQ (DIE-S81-66 11-05, svc_lo_dsdv_svc_rs__t7): the chain-end reader u_u_irg_07 is dsdv_idx_rg3_nq, a wrapper whose one
-child u_rg3 = dsdv_idx_rg3_nq_native (portfix178, sha 038ef90e3733).  That source differs from dsdv_idx_rg3 only in the
-module name, a private infk2_left successor and the named gk_scan_word sum (no memory, address or write line); every
+child u_rg3 = dsdv_idx_rg3_nq_native (portfix178, sha 038ef90e3733 / c462c830782c with the PRIME hunk).  That source
+differs from dsdv_idx_rg3 only in the module name, a private infk2_left successor and the named gk_scan_word sum (no memory, address or write line); every
 proof precondition above is re-checked on it.  The same 13 memory swaps give dsdv_idx_rg3_nq_native_fit; the wrapper
 becomes dsdv_idx_rg3_nq_fit (same ports, keeps u_rg3), and the bound dsdv_idx_rg3_nq instance is renamed to it.
 Bench: results/rtl/s81_svc_idx_fit_1103/run_lock_nq.sh (same lockstep gate with the nq reader as reference).
@@ -22,10 +22,12 @@ Bench: results/rtl/s81_svc_idx_fit_1103/run_lock_nq.sh (same lockstep gate with 
 import hashlib, re, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
-SRC_SHA = ('dd5695c1e6c0', '54e3d3ebf8a9')      # portfix178/dsdv_idx_rg3.sv (main / kit-wave-14d..15; lint cast only)
+SRC_SHA = ('dd5695c1e6c0', '54e3d3ebf8a9', 'cbbd5eb1b07c')  # portfix178/dsdv_idx_rg3.sv (main / kit-wave-14d..15; lint cast
+# only / + DIE-S81-85 11-09 opt-in OT_IDX_RG3_PRIME hunk: off = verilator -E identical to dd5695; on adds pk / pr_f ->
+# fc_set[5] only, no memory, address or write line, so the fit proof below holds either way)
 # the older source's 16'(wc) cast (KIT_PREFLIGHT YC1) is emitted in main's form: wc is reg [3:0], both zero-extend
 CAST = ("gk_wb + 16'(wc)", "gk_wb + {12'd0, wc}")
-NQ_SHA = ('038ef90e3733',)         # portfix178/dsdv_idx_rg3_nq_native.sv (main)
+NQ_SHA = ('038ef90e3733', 'c462c830782c')  # portfix178/dsdv_idx_rg3_nq_native.sv (main / + the same PRIME hunk)
 NQ_WRAP_SHA = ('ec1013d7f3d6',)    # portfix178/dsdv_idx_rg3_nq.sv (main)
 FIT_MEM = 'results/rtl/s81_svc_idx_fit_1103/dsdv_idx_fit_mem.sv'
 MACROS = {'ot_sram_1r1w_256x256_m1_r0c0': 6, 'ot_sram_1r1w_768x256_m2_r0c0': 4, 'ot_sram_1r1w_1024x35_m4_r0c0': 1,

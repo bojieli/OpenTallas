@@ -936,6 +936,37 @@ proc ot_grt_clk_overlapped {locked} {
     }
     if {$::ot_grt_clk_offrow} { puts "OT_GRT_CLK_LOCK: $::ot_grt_clk_offrow off-row clock-net instances left PLACED for legalization: [lrange $offn 0 9]" }
   }
+  # DIE-QC-97 11-09 (QC su_lane_w_l2 5_1_grt DPL-0033 "Placed in rows check failed (1)" on DFF u_u_rcp2...line[266], x4
+  # with dpl_retry): the GRT repair resized a FIRM clock sink in place (188 up-sizes) so its box now crosses a hard
+  # placement blockage (macro halo) that sits over a row segment.  The row test above passes (the row runs under the
+  # blockage) but detailed_placement treats blocked sites as no row and cannot move a FIRM cell.  A locked instance whose
+  # box overlaps a hard (non-soft) placement blockage also stays PLACED.  OT_GRT_CLK_LOCK_BLK=0 disables.
+  if {![info exists ::env(OT_GRT_CLK_LOCK_BLK)] || $::env(OT_GRT_CLK_LOCK_BLK) ne "0"} {
+    set blks {}
+    catch {
+      foreach bl [[ord::get_db_block] getBlockages] {
+        set soft 0; catch { set soft [$bl isSoft] }
+        if {$soft} continue
+        set bb [$bl getBBox]
+        lappend blks [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+      }
+    }
+    set ::ot_grt_clk_onblk 0; set bn {}
+    if {[llength $blks]} {
+      foreach i $locked {
+        if {[dict exists $ov $i]} continue
+        set b [$i getBBox]
+        set x0 [$b xMin]; set y0 [$b yMin]; set x1 [$b xMax]; set y1 [$b yMax]
+        foreach k $blks {
+          lassign $k bx0 by0 bx1 by1
+          if {$x0 < $bx1 && $x1 > $bx0 && $y0 < $by1 && $y1 > $by0} {
+            dict set ov $i 1; incr ::ot_grt_clk_onblk; lappend bn "[$i getName]@$x0,$y0,$x1"; break
+          }
+        }
+      }
+    }
+    if {$::ot_grt_clk_onblk} { puts "OT_GRT_CLK_LOCK: $::ot_grt_clk_onblk clock-net instances on a placement blockage left PLACED for legalization: [lrange $bn 0 9]" }
+  }
   return [dict keys $ov]
 }
 if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {

@@ -1323,6 +1323,16 @@ def archived_ok(unit, files):
     return len(rec) == len(files) and all(rec.get(p) == (s, m) for p, s, m in files)
 
 
+def in_git_checkout(u):
+    """a signed unit inside a git checkout is a tracked view copy in a source tree (views live on origin/main)"""
+    a = u
+    while depth(a) > LANE_DEPTH:
+        if os.path.lexists(os.path.join(a, ".git")):
+            return True
+        a = os.path.dirname(a)
+    return False
+
+
 def list_signed_main(a):
     roots = dedupe_roots(a.roots)
     found = scan_roots(roots, a.find_timeout)
@@ -1338,7 +1348,7 @@ def list_signed_main(a):
         if any(u.startswith(v + "/") for v in units):          # nested unit: the outer one covers it
             continue
         files = unit_files(u, roots)
-        print(json.dumps({"unit": u, "archived": archived_ok(u, files), "files": files,
+        print(json.dumps({"unit": u, "archived": archived_ok(u, files), "files": files, "git": in_git_checkout(u),
                           "bytes": sum(s for _, s, _ in files)}), flush=True)
     return 0
 
@@ -1427,6 +1437,22 @@ def tar_stream(src_argv, src_cmd, dst_argv, dst_cmd, file_list, timeout):
     return ok, f"src rc {p1.returncode} {e1.strip()[:150]} dst rc {p2.returncode} {e2.decode(errors='replace').strip()[:150]}"
 
 
+def counted_paths(coord):
+    """paths of the counted rows: both PROTECTED lists (archive order only, never a deletion input)"""
+    out = set()
+    for f in (os.path.join(coord, "lanes/PROTECTED-DBS.txt"), os.path.join(coord, "PROTECTED-DBS.txt")):
+        try:
+            for p, _ in parse_protected(rd(f), f):
+                out.add(p)
+        except OSError:
+            pass
+    return out
+
+
+def is_counted_unit(unit, counted):
+    return unit in counted or any(a in counted for a in ancestors(unit)[:6]) or any(c.startswith(unit + "/") for c in counted)
+
+
 class Driver:
     store_new = []                 # record-store files added in this drive (COUNT-ARCHIVE-1)
     def __init__(self, a):
@@ -1499,7 +1525,14 @@ class Driver:
             return False
         base = f"{a.archive_root.rstrip('/')}/{h}"
         todo = [json.loads(ln) for ln in r.stdout.splitlines() if ln.startswith("{")]
-        new = [u for u in todo if not u.get("archived")]
+        # COORD 18:5x (DISK-URGENT-4: the job spent 2.5 h on read-only src trees and never reached the EPYC hosts): counted rows first,
+        # source trees skipped; every copied file is still verified by sha256 on both ends below.
+        new = [u for u in todo if not u.get("archived") and not u.get("git")]
+        skipped_src = sum(1 for u in todo if u.get("git") and not u.get("archived"))
+        counted = counted_paths(a.coord) if getattr(a, "coord", "") else set()
+        new.sort(key=lambda u: (0 if is_counted_unit(u["unit"], counted) else 1, u["bytes"]))
+        if skipped_src:
+            say(f"{h}: skipped {skipped_src} signed units inside git checkouts (tracked view copies)")
         say(f"{h}: signed units {len(todo)}, already archived {len(todo) - len(new)}, to archive {len(new)} "
             f"({sum(u['bytes'] for u in new) / 1e9:.2f} GB)")
         ok_all = True

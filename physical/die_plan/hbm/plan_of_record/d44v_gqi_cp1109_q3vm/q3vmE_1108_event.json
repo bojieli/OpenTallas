@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "P-Q3VM-2",
+ "lane": "DIE-HBM-92-Q3VM",
+ "tag": "DIE-HBM-92-Q3VM P-Q3VM-2 (HBM-HARD-6 11-08 04:49): vmasm_rd_il N/M5 -> E/M4 at the as_il partner y; core clock entry [164.16, 358.56] -> [164.16, 501.12]",
+ "base": "d44v_gqi_cp1109 (+ d44v clock_entries, d44v/cores old table)",
+ "out": "d44v_gqi_cp1109_q3vm",
+ "type": "q_hub_nw",
+ "inst": "u_hb_coll_Q_vm__q0",
+ "module": "ot_hfd_coll_q3_vm_core",
+ "old_pins_file": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry.json",
+ "new_pins_file": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry__q3vmE.json",
+ "rd_il_only_table_sha256": "b2c55e781743837aba14df8b06f186e93d607638c84ba51426baba810a2a6111",
+ "rd_il_max_dev_um": 0.144,
+ "rd_il_y": [
+  89.064,
+  381.624
+ ],
+ "pins_changed_by_bus": {
+  "clk": 1,
+  "vmasm_rd_il": 2048
+ },
+ "clk_pin": {
+  "old": [
+   164.184,
+   358.56
+  ],
+  "new": [
+   164.184,
+   501.12
+  ]
+ },
+ "clock_entry": {
+  "old": [
+   164.16,
+   358.56
+  ],
+  "new": [
+   164.16,
+   501.12
+  ]
+ },
+ "die_plan_rows": [
+  {
+   "path": "partition_types.q_hub_nw.hard_cores[inst=u_hb_coll_Q_vm__q0].pins_file",
+   "old": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry.json",
+   "new": "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry__q3vmE.json"
+  },
+  {
+   "path": "partition_types.q_hub_nw.clock.taps[name=u_hb_coll_Q_vm__q0].xy",
+   "old": [
+    1218.24,
+    393.12
+   ],
+   "new": [
+    1218.24,
+    535.68
+   ]
+  },
+  {
+   "path": "note",
+   "old": "<prev chain>",
+   "new": "DIE-HBM-92-Q3VM P-Q3VM-2 (HBM-HARD-6 11-08 04:49): vmasm_rd_il N/M5 -> E/M4 at the as_il partner y; core clock entry [164.16, 358.56] -> [164.16, 501.12] <- <prev chain>"
+  }
+ ],
+ "files": {
+  "die_plan.json": {
+   "sha_in": "74ed22ba7fd0ee4f66be5501b8aad79c5ff268cd46b2b7ca7f81317480b1a87b",
+   "sha_out": "ecf9d3126dc155eb38f3c657dec7b000392f4bc329acf4f99146e8c8bcbfb832"
+  },
+  "clock_entries.json": {
+   "sha_in": "92669babc64eb493cf444d46587d33caf856113e696bcb2763701bbcf1d5eb2a",
+   "sha_out": "58efff60fb21c5532b78cfefa70566d20a0233f7f96497bf544132fb6627389d"
+  },
+  "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry__q3vmE.json": {
+   "sha_in": null,
+   "sha_out": "3a4077c44c385044b6977bce879c021afbba1ffbb9d58d9e679d24f16f9f84dd"
+  },
+  "cores/ot_hfd_coll_q3_vm_core__328.32x717.12__canon__fr15__codex_g21__centry__q3vmE.json.gz": {
+   "sha_in": null,
+   "sha_out": "4965ac104b128f2fbefcc9126e347a1aa150861a3655ddbdeea9acb0c331b448"
+  }
+ },
+ "pin_cycles_added": 0,
+ "internal_stations_changed": 0
+}

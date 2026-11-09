@@ -1,0 +1,902 @@
+{
+ "schema": "opentallas.qc_por_event.v1",
+ "event": "QC NK clock pin adoption (DIE-QC-97 11-09, COORD-approved form)",
+ "base_plan": "plan_qc53v4nS_mem9_vml.json (final QC second-switch plan; intel1/epyc6 /srv/opentallas-scratch2/claude/qc-transport-fix-4/plan, not on main)",
+ "base_plan_sha256": "282ca18ef6cc7923775d54c0a039613637e4d39bb9ae1d4e360d46243a8f1f77",
+ "plan_output": "plan_qc53v4nS_mem9_vml_nkck.json",
+ "plan_output_sha256": "5839af7fc4c82a219f5f3ee597716a9f111031273e0fba125386cf77d41ceb2f",
+ "types": [
+  "cbf_q00__cl1b5a6458",
+  "cbf_q00__cl870de686",
+  "cbf_q00_s2",
+  "cbf_q01",
+  "cbf_q01_s2",
+  "cbf_q11",
+  "cbn_q00__cl622f65d2",
+  "cbn_q00__cld7bf7197",
+  "cbn_q00__cldbcda913",
+  "cbn_q01__clab6e67f2",
+  "cbn_q01__cld9ff4c40",
+  "cbn_q01__cldd6ea846",
+  "cbn_q11__cl49ae4555",
+  "cbn_q11__cl5cc92dfe",
+  "cbx_q10__cl89936551",
+  "cbx_q10__cl94a12200"
+ ],
+ "cores": 62,
+ "partition_instances": 192,
+ "module": "qfd_tile_nk_a0c",
+ "pins_file_old": "cores/a0_nk_pins.json",
+ "pins_file_old_sha256": "b6f25c2e0bb71fa60eebad65fa40e3b63844968128d81d3982ab0791b32abeea",
+ "pins_file_new": "cores/a0_nk_pins_ck1109.json",
+ "pins_file_new_sha256": "7a0da26470f55da248c975386f60bfa585a7b293ce11c15f9a21b90a6922388f",
+ "pin_change": {
+  "pin": "ck",
+  "old": [
+   "M4",
+   457.824,
+   668.076
+  ],
+  "new": [
+   "M5",
+   228.972,
+   578.88
+  ]
+ },
+ "other_pins_unchanged": 2583,
+ "access_lef": "results/physical/qc_nk_clock_adoption_1109/access_v1/qfd_tile_nk_a0c.access.lef",
+ "access_lef_sha256": "1b69964aed6a1bb3967e798930628003def76fd8f5ca2278adad00a7cf471fdb",
+ "original_lef_sha256": "103f6e68f7032cd7172d39c298383cf2194ba7a8f85bb842ff072fe88a0cf326",
+ "obs_windows_child_um": {
+  "M6": [
+   228.897,
+   578.692,
+   229.115,
+   578.848
+  ],
+  "M7": [
+   228.976,
+   578.432,
+   229.088,
+   579.328
+  ]
+ },
+ "entry_stack_child": {
+  "via56": [
+   228.984,
+   578.772
+  ],
+  "via67": [
+   229.024,
+   578.772
+  ],
+  "m7_x": 229.024,
+  "m7_len_um": 0.768,
+  "why": "(child frame, chosen on the PARENT tracks for both R0 and MY at track_offset (0, 0.012)):\n  VIA56 (228.984, 578.772) on the real M5 pin, M6 bar y 578.772, VIA67 + M7 utility pin x 229.024.\n  The pin centre x 228.972 is not a parent M5 track and the parent M7 track over it (228.960) is taken by the\n  foreign NK M7 net15753 (228.928..228.960); the parent M6 tracks through the pin centre (578.836 / 578.900) are\n  within 32 nm of / on the foreign NK M6 net48959 (578.880..578.912).  578.772 / 229.024 is the nearest clear pair."
+ },
+ "tap_rule": "xy = type-frame M7 utility-pin centre of the entry stack: x on the parent M7 track (child 229.024), y = real pin centre (origin + track_offset + 578.880)",
+ "insertion": {
+  "old_ps": [
+   665.8,
+   576.5
+  ],
+  "new_ps": [
+   733.25,
+   586.0
+  ],
+  "source": "epyc6:/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/signoff/signoff.json corners.{tt,ff}.insertion_pinflops.mean (n 2584, ff_vclk_reference pin_flop_mean 733.249323 / 585.995565; identical in the original i1/signoff/signoff.json)"
+ },
+ "taps": [
+  {
+   "type": "cbf_q01",
+   "tap": "u_t02.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    737.208
+   ],
+   "new_xy": [
+    315.424,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q01",
+   "tap": "u_t12.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    737.208
+   ],
+   "new_xy": [
+    920.096,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q01",
+   "tap": "u_t03.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q01",
+   "tap": "u_t13.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q11",
+   "tap": "u_t22.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    737.208
+   ],
+   "new_xy": [
+    306.784,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q11",
+   "tap": "u_t32.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    737.208
+   ],
+   "new_xy": [
+    928.736,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q11",
+   "tap": "u_t23.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    1972.728
+   ],
+   "new_xy": [
+    306.784,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q11",
+   "tap": "u_t33.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    1972.728
+   ],
+   "new_xy": [
+    928.736,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q01_s2",
+   "tap": "u_t02.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    737.208
+   ],
+   "new_xy": [
+    315.424,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q01_s2",
+   "tap": "u_t12.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    737.208
+   ],
+   "new_xy": [
+    920.096,
+    648.012
+   ]
+  },
+  {
+   "type": "cbf_q01_s2",
+   "tap": "u_t03.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q01_s2",
+   "tap": "u_t13.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00_s2",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00_s2",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00_s2",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00_s2",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbx_q10__cl94a12200",
+   "tap": "u_t20.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    745.848
+   ],
+   "new_xy": [
+    306.784,
+    656.652
+   ]
+  },
+  {
+   "type": "cbx_q10__cl94a12200",
+   "tap": "u_t21.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    1972.728
+   ],
+   "new_xy": [
+    306.784,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbx_q10__cl94a12200",
+   "tap": "u_t31.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    1972.728
+   ],
+   "new_xy": [
+    928.736,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbx_q10__cl89936551",
+   "tap": "u_t20.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    745.848
+   ],
+   "new_xy": [
+    306.784,
+    656.652
+   ]
+  },
+  {
+   "type": "cbx_q10__cl89936551",
+   "tap": "u_t21.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    1972.728
+   ],
+   "new_xy": [
+    306.784,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbx_q10__cl89936551",
+   "tap": "u_t31.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    1972.728
+   ],
+   "new_xy": [
+    928.736,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cld7bf7197",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cld7bf7197",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cld7bf7197",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cld7bf7197",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cl622f65d2",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cl622f65d2",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cl622f65d2",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cl622f65d2",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cldbcda913",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cldbcda913",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbn_q00__cldbcda913",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q00__cldbcda913",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "tap": "u_t02.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    737.208
+   ],
+   "new_xy": [
+    315.424,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "tap": "u_t12.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    737.208
+   ],
+   "new_xy": [
+    920.096,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "tap": "u_t03.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "tap": "u_t13.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "tap": "u_t02.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    737.208
+   ],
+   "new_xy": [
+    315.424,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "tap": "u_t12.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    737.208
+   ],
+   "new_xy": [
+    920.096,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "tap": "u_t03.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "tap": "u_t13.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "tap": "u_t02.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    737.208
+   ],
+   "new_xy": [
+    315.424,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "tap": "u_t12.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    737.208
+   ],
+   "new_xy": [
+    920.096,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "tap": "u_t03.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "tap": "u_t13.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q11__cl5cc92dfe",
+   "tap": "u_t22.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    737.208
+   ],
+   "new_xy": [
+    306.784,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q11__cl5cc92dfe",
+   "tap": "u_t32.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    737.208
+   ],
+   "new_xy": [
+    928.736,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q11__cl5cc92dfe",
+   "tap": "u_t23.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    1972.728
+   ],
+   "new_xy": [
+    306.784,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q11__cl5cc92dfe",
+   "tap": "u_t33.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    1972.728
+   ],
+   "new_xy": [
+    928.736,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q11__cl49ae4555",
+   "tap": "u_t22.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    737.208
+   ],
+   "new_xy": [
+    306.784,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q11__cl49ae4555",
+   "tap": "u_t32.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    737.208
+   ],
+   "new_xy": [
+    928.736,
+    648.012
+   ]
+  },
+  {
+   "type": "cbn_q11__cl49ae4555",
+   "tap": "u_t23.ck",
+   "orient": "R0",
+   "old_xy": [
+    535.584,
+    1972.728
+   ],
+   "new_xy": [
+    306.784,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbn_q11__cl49ae4555",
+   "tap": "u_t33.ck",
+   "orient": "MY",
+   "old_xy": [
+    699.936,
+    1972.728
+   ],
+   "new_xy": [
+    928.736,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00__cl1b5a6458",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00__cl1b5a6458",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00__cl1b5a6458",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00__cl1b5a6458",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00__cl870de686",
+   "tap": "u_t00.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    745.848
+   ],
+   "new_xy": [
+    315.424,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00__cl870de686",
+   "tap": "u_t10.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    745.848
+   ],
+   "new_xy": [
+    920.096,
+    656.652
+   ]
+  },
+  {
+   "type": "cbf_q00__cl870de686",
+   "tap": "u_t01.ck",
+   "orient": "R0",
+   "old_xy": [
+    544.224,
+    1972.728
+   ],
+   "new_xy": [
+    315.424,
+    1883.532
+   ]
+  },
+  {
+   "type": "cbf_q00__cl870de686",
+   "tap": "u_t11.ck",
+   "orient": "MY",
+   "old_xy": [
+    691.296,
+    1972.728
+   ],
+   "new_xy": [
+    920.096,
+    1883.532
+   ]
+  }
+ ],
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "signed_view_changed": false,
+ "patch_source": "results/physical/qc_nk_clock_adoption_1109/access_v1/proposed_event.patch.json",
+ "preservation": "every other partition type and every top-level key byte-identical; in the 16 types only the patched paths differ (checked)"
+}

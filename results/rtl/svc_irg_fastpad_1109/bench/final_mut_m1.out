@@ -1,0 +1,12 @@
+[mut_m1 s11] hb 0 rows 40200 warm_resets 8 valid_records 28563 valid_faults 5468 valid_zero 1085 valid_mismatch 15027
+[mut_m1 s11] all_cycle_mismatch_outside_reset 19298 qk_age_compares 292664 qk_age_mismatch 0 term_key16_compares 40009 term_key16_mismatch 0
+[mut_m1 s11] FAIL irg_fastpad_chunk hb 0
+[mut_m1 s11] hb 24 rows 40200 warm_resets 8 valid_records 28563 valid_faults 5468 valid_zero 1085 valid_mismatch 15027
+[mut_m1 s11] all_cycle_mismatch_outside_reset 19298 qk_age_compares 292664 qk_age_mismatch 0 term_key16_compares 40009 term_key16_mismatch 0
+[mut_m1 s11] FAIL irg_fastpad_chunk hb 24
+[mut_m1 s23] hb 0 rows 40200 warm_resets 9 valid_records 28278 valid_faults 7227 valid_zero 1107 valid_mismatch 15088
+[mut_m1 s23] all_cycle_mismatch_outside_reset 19131 qk_age_compares 289344 qk_age_mismatch 0 term_key16_compares 40009 term_key16_mismatch 0
+[mut_m1 s23] FAIL irg_fastpad_chunk hb 0
+[mut_m1 s23] hb 24 rows 40200 warm_resets 9 valid_records 28278 valid_faults 7227 valid_zero 1107 valid_mismatch 15088
+[mut_m1 s23] all_cycle_mismatch_outside_reset 19131 qk_age_compares 289344 qk_age_mismatch 0 term_key16_compares 40009 term_key16_mismatch 0
+[mut_m1 s23] FAIL irg_fastpad_chunk hb 24

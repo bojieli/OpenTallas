@@ -877,6 +877,24 @@ def stage_native_ff_pose(kd, rec, recipes_dir):
     return dict(file=str(spec["file"]), sha256=got, ffs=n)
 
 
+def write_lec_options(kd, rec, mod, modern):
+    """DIE-S81-85 11-09 (COORD: the LEC proof policy lives in the kit, not in the launching shell): recipe "lec"
+    {"superset_vec": bool} -> KIT/lec_options.json, the same file and schema gen_phys type kits write.  lec_async.sh
+    (start / watch / identity) and legacy_gate.py lec read it, so OT_LEC_SUPERSET_VEC no longer depends on who
+    launched the kit (bksel P pk2: EQUIVALENT with it, UNPROVEN 204 o_line points without).  The proof receipts still
+    gate it (lec.py superset_vec.all_shown).  No opt-in: no file (a regenerated kit drops a stale one)."""
+    opts = rec.get("lec", {})
+    if not isinstance(opts, dict) or set(opts) - {"superset_vec"} or any(type(v) is not bool for v in opts.values()):
+        raise SystemExit(f"{mod}: recipe lec accepts only boolean superset_vec")
+    path = Path(kd) / "lec_options.json"
+    if opts.get("superset_vec", False):
+        if not modern:
+            raise SystemExit(f"{mod}: recipe lec.superset_vec needs the modern kit (lec.py + lec_async.sh)")
+        path.write_text(json.dumps(dict(superset_vec=True), sort_keys=True) + "\n")
+    elif path.exists():
+        path.unlink()
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and p.relative_to(kd).parts[0] not in ("run", "views")
@@ -1957,6 +1975,7 @@ def main():
     if modern:                                    # KW-FIX-24: GRAY-MSB TWIN hints by default (kit lec.py reads them)
         import lec_gray_twin
         lec_gray_twin.stage(kd, mod)
+    write_lec_options(kd, rec, mod, modern)
     lec_env_cfg = []
     for k, v in sorted(rec.get("lec_env", {}).items()):
         if k not in ("OT_LEC_RAW_BASE_STEPS",) or not modern:

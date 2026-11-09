@@ -191,6 +191,15 @@ def short_id(s, n=60):
     return s[: n - 9] + "_" + hashlib.sha1(s.encode()).hexdigest()[:8]
 
 
+def bound_instance_params(out, die_name, bmod):
+    """{instance: '#(...)' or ''}: the per-instance parameter (strap) string the bound top passes each instance of the
+    bound module bmod.  One hardened kit = one value set: kit-rtl takes its parameters from here, and
+    param_class_split.py (DIE-QC-97 11-09) splits a plan type whose instances carry different LOGIC value sets."""
+    top = (Path(out) / "rtl" / f"{sv_id(die_name)}_bound_top.sv").read_text()
+    return {m.group(2): (m.group(1) or "").strip() for m in
+            re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+
+
 # ------------------------------------------------------------------------------------------------ rules
 def variant_bump_inputs(plan, R, cell, variant):
     """New variant inputs may be exclusively the exact line-side pins the plan explicitly exports as bumps.
@@ -2354,6 +2363,12 @@ class Binder:
             self.errors.append(f"PARAM_REGEN {f.name}: {e}")
             return
         changed = []
+        # DIE-KV-97 11-09: asbuilt.param_regen.declare {RTL master: {param: default}} names parameters the as-built netlist
+        # cannot show: those of a per-instance substitute master (substitute_inst, e.g. KV qkd_astk_ep_s_e EO_E / EO_RL;
+        # param_defaults deliberately keys them apart from the predecessor) and a parameter added to the master after the
+        # as-built elaboration with a default that keeps the as-built behaviour (KV qkd_kvs_attn_fl ZB_ADD 0).  Keyed by the
+        # RTL master (c.module); absent = unchanged behaviour.
+        declare = spec.get("declare") or {}
         for path, ps in r["params"].items():
             ci = self.cell_index().get(path)
             if ci is None:
@@ -2362,10 +2377,11 @@ class Binder:
             c = self.F.cells[ci]
             for k, v in ps.items():
                 defaults = self.param_defaults.get((c.ytype, c.module), {})
-                if k not in c.params and k not in defaults:
+                decl = declare.get(c.module) or {}
+                if k not in c.params and k not in defaults and k not in decl:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
-                old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
+                old = str(c.params[k] if k in c.params else defaults[k] if k in defaults else decl[k]).strip('"')
                 if old != str(v):
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)
@@ -4354,7 +4370,7 @@ def cmd_bind(a):
             landing_path.relative_to(landing_base)
             B._clock_landing_table = json.loads(landing_path.read_text())
             CL.expand_station_types(B, B._clock_landing_table)
-            B.clock_landings = CL.Landings(raw, B._clock_landing_table)
+            B.clock_landings = CL.Landings(raw, B._clock_landing_table, plan_path=B.source_plan)
             landing_libs = ["rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"]
             if B._clock_landing_table.get("count_aligned"):
                 landing_libs.append("rtl/common/ot_dp_clk_landing_ca.sv")
@@ -5481,16 +5497,17 @@ def cmd_kit_rtl(a):
         # binding. Do not borrow another cohort's (possibly incomplete) top.
         pinst = {component_report["instance"]: ""}
     else:
-        top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
-        pinst = {m.group(2): (m.group(1) or "").strip() for m in
-                 re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+        pinst = bound_instance_params(out, raw["die"]["name"], bmod)
     if a.instance:
         if a.instance not in pinst:
             raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
         pset = pinst[a.instance]
     elif len(set(pinst.values())) > 1:
+        # DIE-QC-97 11-09: a LOGIC value-set difference is a plan fix: tools/die_plan/param_class_split.py splits the
+        # plan type into one type per value set (+ sidecar), then rebind -> every split type kits here generically
         raise BindError(f"kit-rtl {tn}: instances of {bmod} carry different parameters {sorted(set(pinst.values()))[:3]}: "
-                        "pass --instance (one kit per value set)")
+                        "pass --instance (one kit per value set) or split the plan type per value set "
+                        "(tools/die_plan/param_class_split.py) and rebind")
     else:
         pset = next(iter(pinst.values()), "")
     mod = t["module"]

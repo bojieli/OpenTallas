@@ -1329,11 +1329,13 @@ module dsdv_mu_land_head_nr #(
     reg [CB-1:0] cnt [0:NS-1];
     reg [30:0]   tag [0:NS-1];
     reg [SB-1:0] ws, rs;
+    wire [SB-1:0] wsi = (NS > 1) ? ws : '0;  // width-safe slot index (DIE-HEAD-91)
+    wire [SB-1:0] rsi = (NS > 1) ? rs : '0;
     reg [CB-1:0] ri_;                                  // replay beat index
     reg          busy, fl;
-    wire [CB-1:0] wc = cnt[ws];
+    wire [CB-1:0] wc = cnt[wsi];
     wire w_new  = wvq && wc == '0;
-    wire w_cont = wvq && wc != '0 && wc != CB'(NB) && tag[ws] == wtag;
+    wire w_cont = wvq && wc != '0 && wc != CB'(NB) && tag[wsi] == wtag;
 `ifdef OT_DSDV_MU_LAND_MUT_OVR
     wire w_ovr  = wvq && wc == CB'(NB);                // MUTANT: a complete slot is overwritten from beat 0, no fault
     wire w_bad  = wvq && !w_new && !w_cont && !w_ovr;
@@ -1346,7 +1348,7 @@ module dsdv_mu_land_head_nr #(
     wire [CB-1:0] widx = wc;
 `endif
     wire [CB-1:0] wc_nx = w_ovr ? CB'(1) : wc + 1'b1;
-    wire r_go  = rcq[0] && !busy && cnt[rs] == CB'(NB) && tag[rs][30:21] == rcq[10:1];
+    wire r_go  = rcq[0] && !busy && cnt[rsi] == CB'(NB) && tag[rsi][30:21] == rcq[10:1];
     wire r_bad = rcq[0] && !r_go;                      // busy, empty / partial slot, or another user's message
     wire r_last = busy && ri_ == CB'(NB - 1);
     function automatic [SB-1:0] nxs(input [SB-1:0] s);
@@ -1359,22 +1361,22 @@ module dsdv_mu_land_head_nr #(
             ws <= '0; rs <= '0; ri_ <= '0; busy <= 1'b0; fl <= 1'b0;
         end else begin
             if (w_ok) begin
-                cnt[ws] <= wc_nx;
-                if (w_new || w_ovr) tag[ws] <= wtag;
+                cnt[wsi] <= wc_nx;
+                if (w_new || w_ovr) tag[wsi] <= wtag;
                 if (wc_nx == CB'(NB) && !w_ovr) ws <= nxs(ws);
             end
             if (r_go) begin busy <= 1'b1; ri_ <= '0; end
             else if (busy) ri_ <= ri_ + 1'b1;
             if (r_last) begin
                 busy <= 1'b0; rs <= nxs(rs);
-                if (!(w_ok && ws == rs)) cnt[rs] <= '0;
+                if (!(w_ok && wsi == rsi)) cnt[rsi] <= '0;
             end
             if (w_bad || r_bad) fl <= 1'b1;
         end
 
     // ---------------------------------------------------------------- array (registered read)
-    wire [AW-1:0] wa = AW'(ws) * AW'(NB) + AW'(widx);
-    wire [AW-1:0] ra = AW'(rs) * AW'(NB) + AW'(ri_);
+    wire [AW-1:0] wa = AW'(wsi) * AW'(NB) + AW'(widx);
+    wire [AW-1:0] ra = AW'(rsi) * AW'(NB) + AW'(ri_);
     wire [W-1:0] q;
     generate if (SRAM == 0) begin : g_ff
         reg [W-1:0] mem [0:D-1]; reg [W-1:0] q_r;
