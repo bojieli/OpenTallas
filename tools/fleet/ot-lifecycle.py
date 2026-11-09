@@ -1636,6 +1636,110 @@ def fs_table(roots):
     return out
 
 
+# ------------------------------------------------------------------ /tmp tempfile rule (COORD 04:0x, epyc2 /tmp out of inodes)
+def tmp_open_paths(base):
+    out = set()
+    for pid in os.listdir("/proc"):
+        if not pid.isdigit():
+            continue
+        b = f"/proc/{pid}"
+        for x in ("cwd", "root"):
+            try:
+                out.add(os.readlink(f"{b}/{x}"))
+            except OSError:
+                pass
+        try:
+            for fd in os.listdir(f"{b}/fd"):
+                try:
+                    out.add(os.readlink(f"{b}/fd/{fd}"))
+                except OSError:
+                    pass
+        except OSError:
+            pass
+        try:
+            with open(f"{b}/maps") as fh:
+                for ln in fh:
+                    q = ln.split(None, 5)
+                    if len(q) == 6:
+                        out.add(q[5].strip())
+        except OSError:
+            pass
+    return {x for x in out if x.startswith(base.rstrip("/") + "/")}
+
+
+def _tmp_walk(p):
+    st = os.lstat(p)
+    n, newest = 1, st.st_mtime
+    if stat.S_ISDIR(st.st_mode):
+        for dp, dn, fn in os.walk(p):
+            for x in dn + fn:
+                try:
+                    s2 = os.lstat(os.path.join(dp, x))
+                except OSError:
+                    continue
+                n += 1
+                newest = max(newest, s2.st_mtime)
+    return n, newest, st.st_uid
+
+
+def tmp_pass(base="/tmp", apply=False, out=None, hours=24, now=None):
+    """Python tempfile entries (<base>/tmp*) and pytest entries (<base>/pytest-of-*/*) whose newest mtime is older than <hours> and that
+    no process holds (cwd, root, fd, maps), checked at plan and again right before rm.  Named dirs in <base> are never touched.
+    Returns (rows, deleted, inodes freed)."""
+    now = now or time.time()
+    cut = now - hours * 3600
+    cands = []
+    for e in os.listdir(base):
+        p = os.path.join(base, e)
+        if e.startswith("tmp"):
+            cands.append(p)
+        elif e.startswith("pytest-of-") and os.path.isdir(p) and not os.path.islink(p):
+            cands += [os.path.join(p, x) for x in os.listdir(p)]
+    opn = tmp_open_paths(base)
+    held = lambda q, o: any(x == q or x.startswith(q + "/") for x in o)
+    rows = []
+    for q in sorted(cands):
+        if os.path.islink(q):
+            rows.append((q, "SKIP", "symlink", 0)); continue
+        try:
+            n, newest, uid = _tmp_walk(q)
+        except OSError as e:
+            rows.append((q, "SKIP", f"unreadable {e}"[:80], 0)); continue
+        if newest > cut:
+            rows.append((q, "KEEP", f"newer than {hours} h", n))
+        elif held(q, opn):
+            rows.append((q, "KEEP", "open by a process", n))
+        elif uid != os.getuid():
+            rows.append((q, "SKIP", f"owner uid {uid}", n))
+        else:
+            rows.append((q, "DELETE", f"tempfile, >{hours} h, not open", n))
+    if out:
+        with open(out, "w") as fh:                      # manifest before any delete
+            fh.write("path\taction\treason\tinodes\n")
+            for r in rows:
+                fh.write("\t".join(str(x) for x in r) + "\n")
+    deleted = freed = 0
+    if apply:
+        opn = tmp_open_paths(base)
+        for q, act, why, n in rows:
+            if act != "DELETE" or held(q, opn):
+                continue
+            try:
+                n2, newest, _ = _tmp_walk(q)
+                if newest > cut:
+                    continue
+                if os.path.isdir(q) and not os.path.islink(q):
+                    import shutil
+                    shutil.rmtree(q)
+                else:
+                    os.unlink(q)
+                deleted += 1
+                freed += n2
+            except OSError:
+                pass
+    return rows, deleted, freed
+
+
 def tick_main(a):
     os.makedirs(STATE_DIR, exist_ok=True)
     def line(msg, alert=""):
@@ -2089,6 +2193,10 @@ def main():
     ks.add_argument("--lifesnap", required=True)
     ks.add_argument("--out", default=os.path.join(STATE_DIR, "guards", "kitscan.json"))
     ks.add_argument("--roots", nargs="*", default=None)
+    tp = sub.add_parser("tmp", help="/tmp tempfile rule: tmp* and pytest-of-*/* entries older than 24 h with no open handle; dry unless --apply")
+    tp.add_argument("--base", default="/tmp")
+    tp.add_argument("--apply", action="store_true")
+    tp.add_argument("--out", default=os.path.join(STATE_DIR, "manifests"))
     hp = sub.add_parser("hold", help="create or renew an expiring hold on a directory")
     hp.add_argument("path")
     hp.add_argument("--hours", default="24")
@@ -2113,6 +2221,12 @@ def main():
     a = ap.parse_args()
     if a.cmd == "hold":
         sys.exit(hold_main(a))
+    if a.cmd == "tmp":
+        os.makedirs(a.out, exist_ok=True)
+        mf = os.path.join(a.out, f"TMP-{os.uname().nodename}-{time.strftime('%Y%m%d-%H%M%S')}.tsv")
+        rows, d, f = tmp_pass(a.base, a.apply, mf)
+        print(f"tmp: {len(rows)} entries, DELETE {sum(1 for r in rows if r[1] == 'DELETE')}, deleted {d}, inodes freed {f}, manifest {mf}")
+        sys.exit(0)
     if a.cmd == "kitscan":
         roots = a.roots or [r for r in ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude", "/srv/opentallas-scratch/claude",
                                         "/home/ubuntu/scratch-root/claude") if os.path.isdir(r)]

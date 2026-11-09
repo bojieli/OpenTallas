@@ -530,3 +530,22 @@ def test_mention_tokens():
     names, tails = lc.mention_tokens(post)
     assert {"s81-t51-recut", "codex-s81-split-1106", "pg", "fc10"} <= names
     assert {"s81-t51-recut/pg", "s81-t51-recut/kits_b", "s81-t51-recut/probe_r2/sl_w/slew.rpt"} <= tails, sorted(tails)
+
+
+def test_tmp_rule(tmp_path):
+    lc, ac = _lc()
+    B = str(tmp_path)
+    for p in ("tmpold/a/f", "tmpnew/f", "tmpopen/f", "pytest-of-u/pytest-3/x", "pytest-of-u/pytest-9/y", "kw35rd/big/f", "r8t/f"):
+        write(os.path.join(B, p), 8, old=p not in ("tmpnew/f", "pytest-of-u/pytest-9/y"))
+    for p in ("tmpold", "tmpold/a", "tmpold/a/f", "tmpopen", "tmpopen/f", "pytest-of-u/pytest-3", "pytest-of-u/pytest-3/x", "kw35rd", "kw35rd/big", "kw35rd/big/f", "r8t", "r8t/f"):
+        os.utime(os.path.join(B, p), (OLD, OLD))
+    os.utime(os.path.join(B, "pytest-of-u/pytest-9"), (OLD, OLD))                # dir old, file inside young: newest mtime decides
+    fh = open(os.path.join(B, "tmpopen/f"))                                         # an open handle keeps an old entry
+    try:
+        rows, d, f = lc.tmp_pass(B, apply=True, out=os.path.join(B, "m.tsv"))
+    finally:
+        fh.close()
+    assert not os.path.exists(f"{B}/tmpold") and not os.path.exists(f"{B}/pytest-of-u/pytest-3")
+    for p in ("tmpnew", "tmpopen", "pytest-of-u/pytest-9", "kw35rd", "r8t"):
+        assert os.path.exists(os.path.join(B, p)), p                                # young, open, and named lane dirs stay
+    assert d == 2 and open(f"{B}/m.tsv").read().count("\tDELETE\t") == 2
