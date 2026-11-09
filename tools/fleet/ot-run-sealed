@@ -210,13 +210,31 @@ def remote_ok(host, runner, K, bundle=None):
 
 
 FETCH_JOBS = "/srv/opentallas-scratch2/claude/ot-jobs"      # ot-run --dir of a sealed job (it is skipped where absent)
+FETCH_DISK_GB = 60      # ot-run refuses a scratch disk under its 50 GB floor (kv 98b92a196255 a3 13:4x on epyc2: 43 GB -> NOT RUN)
+# KW-FIX-44 COORD 14:3x (OWNER 11-05 every disk is scratch): the job dir (ot-job spec "root", ot-run --dir) is the first of
+# these roots with >= FETCH_DISK_GB free on that host; scratch2 first, scratch3 when scratch2 is under the floor
+JOB_ROOTS = ("/srv/opentallas-scratch2/claude/ot-jobs", "/srv/opentallas-scratch3/claude/ot-jobs")
+JOB_ROOT_SH = ("for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $c ] || continue; "
+               "f=$(df --output=avail -BG $c | tail -1 | tr -dc 0-9); "
+               f"if [ \"${{f:-0}}\" -ge {FETCH_DISK_GB} ]; then mkdir -p $r && echo JOBROOT=$r; break; fi; done")
+
+
+def job_root(host):
+    """-> the job root to use on `host` (JOB_ROOTS order, >= FETCH_DISK_GB free), or None"""
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host,
+                            JOB_ROOT_SH], capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    m = [w[len("JOBROOT="):] for w in p.stdout.split() if w.startswith("JOBROOT=")]
+    return m[0] if m else None
 
 
 def fetch_ok(host, bundle=None, K=None):
     """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
     ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
     # K must be ABSENT there: the returned copy is then ours alone and is removed after the copy-back
-    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"test -d {shlex.quote(FETCH_JOBS)} && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
+    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"{{ {JOB_ROOT_SH}; }} | grep -q JOBROOT= && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
     if bundle:
         sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
     try:
@@ -376,7 +394,10 @@ def decide(argv, conf, check=remote_ok, fetch=None):
         # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
         # with every input fetched from the holder (ot-job tar fetch into its store), and copy K back after
         rows = status_rows(backend)
-        if rows is not None and pick_host(rows, oks, o["mem"]) is None:
+        held = pick_host(rows, oks, o["mem"]) if rows is not None else None
+        if held:                       # a holder of K admits it now: run there (the first configured host may not)
+            host, kids = held, oks[held]
+        elif rows is not None:
             cand = [h for h in conf["ap_fetch_hosts"] if h not in oks]
             with cf.ThreadPoolExecutor(max(len(cand), 1)) as ex:
                 fr = dict(zip(cand, ex.map(lambda h: fetch(h, bundle, K), cand)))
@@ -394,6 +415,7 @@ def decide(argv, conf, check=remote_ok, fetch=None):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
+    root = (conf.get("job_root_of") or job_root)(host) if (ac and conf.get("job_roots")) else None
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
         if ac:
@@ -402,10 +424,14 @@ def decide(argv, conf, check=remote_ok, fetch=None):
             if src:
                 s = fetched(s, src)
                 s["copy_back"] = {"from": host, "to": src, "path": K}
+            if root:
+                s["root"] = root
             json.dump(s, fh)
         else:
             json.dump(spec_for(runner, K, kids, rest[0]), fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
+    if root:
+        out += ["--dir", root]         # ot-run's placement / disk guard / cd use the job root (its default is scratch2)
     out += [f for f in flags if f != "--no-spill"]
     if "priority" in o:
         out += ["--priority", o["priority"]]

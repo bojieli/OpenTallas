@@ -146,3 +146,34 @@ def test_no_fetch_when_holder_admits_or_not_configured(tmp_path, monkeypatch):
     assert why == f"SEALED on epyc2: {K}"                                                # opt-in only
     out, why = M.decide(ap_argv(), c, check=ok, fetch=lambda h, b, k: (False, []))       # fetch host not ready
     assert why == f"SEALED on epyc2: {K}"
+
+
+def test_job_root_on_scratch3_when_scratch2_is_under_the_floor(tmp_path, monkeypatch):
+    """COORD 14:3x: a sealed job's dir may sit on scratch3: spec root + ot-run --dir name it; opt-in by conf job_roots"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    r3 = "/srv/opentallas-scratch3/claude/ot-jobs"
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["intel1"], job_roots=True,
+             job_root_of=lambda h: r3)
+    out, why = M.decide(ap_argv(), c, check=lambda h, r, k, b=None: (True, []), fetch=lambda h, b, k: (True, []))
+    assert out[out.index("--hosts") + 1] == "intel1" and out[out.index("--dir") + 1] == r3
+    assert out.index("--dir") < out.index("--")
+    assert spec_of(out)["root"] == r3
+    c.pop("job_roots")
+    out, _ = M.decide(ap_argv(), c, check=lambda h, r, k, b=None: (True, []), fetch=lambda h, b, k: (True, []))
+    assert "root" not in spec_of(out) and "--dir" not in out[:out.index("--")]
+
+
+def test_holder_that_admits_is_preferred_over_the_first_host(tmp_path, monkeypatch):
+    rows = dict(ROWS, epyc7={"load": 120, "ncpu": 96, "admit": 5, "waiting_gb": 400, "ok": True},
+                epyc2=dict(ROWS["epyc2"], admit=200))
+    monkeypatch.setattr(M, "status_rows", lambda b: rows)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], hosts=["epyc7", "epyc2"], ap_fetch_hosts=["intel1"])
+    out, why = M.decide(ap_argv(), c, check=ok, fetch=lambda h, b, k: (True, []))
+    assert why == f"SEALED on epyc2: {K}" and "copy_back" not in spec_of(out)
+
+
+def test_job_root_shell_picks_first_root_with_room():
+    assert M.JOB_ROOTS[0].startswith("/srv/opentallas-scratch2/") and M.JOB_ROOTS[1].startswith("/srv/opentallas-scratch3/")
+    assert "-ge 60" in M.JOB_ROOT_SH and "JOBROOT=" in M.JOB_ROOT_SH and "break" in M.JOB_ROOT_SH
