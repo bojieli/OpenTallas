@@ -185,3 +185,43 @@ def test_offsets_table_from_another_formula_is_refused():
     off['slices']['u_s_0S']['dn'][1] += 1
     with pytest.raises(ValueError, match='disagrees'):
         LT.report_from_offsets(off, 'top')
+
+
+def vpx_routes(lo):
+    return {'u_s_0N': dict(lo_after_ctl=lo)}
+
+
+def test_lo_send_takes_the_leaf_value_and_default_keeps_the_constant():
+    from unittest.mock import patch
+    from layer_prog import lower_vpx as VP
+    die = object()
+    sl = {'u_s_0N': dict(sid=1), 'u_s_7N': dict(sid=15)}
+    spec = [('u_s_0N', 'W', 'u_s_7N', list(range(16)), 2, None, 0, 0)]
+    def emit(routes):
+        rows, tpl, ev, ins = [], [], [], []
+        with patch('dv_layer_compile.ctl_path', return_value={'edges': 10}):
+            VP._emit(die, sl, spec, 100, rows, tpl, ev, ins, leaf_routes=routes)
+        return [(r['issue'], r['what']) for r in rows]
+    base = VP.leg_program(1, 'W', 15, list(range(16)), leaf=2)
+    wide = VP.leg_program(1, 'W', 15, list(range(16)), leaf=2, lo_after_ctl=30)
+    assert base['sends'][0]['cycle'] != wide['sends'][0]['cycle']
+    assert emit(None) == emit(vpx_routes([15, 15, 15, 15, 15]))
+    assert emit(vpx_routes([9, 9, 30, 9, 9])) != emit(None)
+    with pytest.raises(ValueError, match='no slice'):
+        emit({'u_s_9N': dict(lo_after_ctl=[1] * 5)})
+
+
+def test_substage_segments_do_not_overlap_when_a_later_leaf_arrives_sooner():
+    from layer_prog import lower_vpx as VP
+    default = VP._stage_trel(None)
+    assert default == [sum(m // 8 for _, _, m in VP.STAGE_SEGS[:k]) * VP.beat_period() for k in range(len(VP.STAGE_SEGS))]
+    lo = [15] * 5
+    for f, (lf, _, _) in enumerate(VP.STAGE_SEGS):
+        lo[lf] = 40 - 7 * f                      # each later segment's leaf has a shorter round trip
+    trel = VP._stage_trel(vpx_routes(lo))
+    for k in range(1, len(trel)):
+        prev_leaf, _, prev_n = VP.STAGE_SEGS[k - 1]
+        leaf = VP.STAGE_SEGS[k][0]
+        # the first lo pair of segment k reaches xr after the last pair of segment k-1
+        prev_end = trel[k - 1] + (prev_n // 8 - 1) * VP.beat_period(lo[prev_leaf]) + lo[prev_leaf]
+        assert trel[k] + lo[leaf] > prev_end
