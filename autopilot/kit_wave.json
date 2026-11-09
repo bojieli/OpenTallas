@@ -676,8 +676,8 @@
     "epyc7"
    ],
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "item_env": {
@@ -2039,7 +2039,13 @@
     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
    },
    "note_kw43_k9c2": "KW-FIX-43 15:1x: kv3_sys_c ONLY -> bind9c2 + plan_zbr2 asbuilt, released from hold; every other KV row keeps bind9. Revert: item_inputs[kv3_sys_c] = item_inputs_prev_kw43k9c2[kv3_sys_c] (None = delete); hold_items = hold_items_prev_kw43k9c2.",
-   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43k9c2 edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict."
+   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43k9c2 edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict.",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
   },
   "s81": {
    "enabled": true,
@@ -4283,8 +4289,8 @@
     ]
    },
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
@@ -7178,7 +7184,13 @@
     "eng__t1": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry."
    },
    "note_kw43_ctap": "KW-FIX-43 15:0x: eng__t1 -> ENG-CTAP plan+bind9_ctap via item_inputs, released from EARLY-CORE-TAP hold. Revert: item_inputs[eng__t1] = item_inputs_prev_kw43ctap[eng__t1] (None = delete); hold_items = hold_items_prev_kw43ctap.",
-   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43ctap edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict."
+   "note_kw43_holdfix": "KW-FIX-43 15:2x: restored hold_items as a dict (my kw43ctap edit wrote a list -> KIT-WAVE AttributeError at 15:18); prev key now the full pre-edit dict.",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4."
   },
   "s81_head": {
    "enabled": true,
@@ -8204,7 +8216,6 @@
     "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
-    "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave",
@@ -9367,8 +9378,8 @@
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "epyc2",
     "epyc4",
+    "epyc2",
     "epyc7"
    ],
    "cancel_superseded": false,
@@ -9569,19 +9580,11 @@
     "sle_sc_v3": {
      "OT_CONS_KIT": "1"
     },
-    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
-     "OT_CONS_KIT": "1"
-    },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
-     "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e"
     },
     "slw_sc_v2": {
-     "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e"
-    },
-    "slw_sc_v3": {
-     "OT_CONS_KIT": "1"
     },
     "coll_ftn": {
      "OT_CONS_KIT": "1"
@@ -12213,6 +12216,26 @@
     "slw_su_l0__cl76fb247e": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
      "note": "KW-FIX-43 15:0x DIE-QC-97 CONG-5b 14:51 (CONS-OVERMACRO-1, COORD 14:5x(2)): cand9 fdadb4625355"
+    },
+    "slw_sc_v3": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl63e5a7a2": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v2": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
+     "note": "KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     }
    },
    "notes_kw42": {
@@ -13719,7 +13742,41 @@
      "OT_CONS_KIT": "1"
     }
    },
-   "note_kw43_c5b": "KW-FIX-43 15:0x: slw_su_l0__cl76fb247e CONS-OVERMACRO-1 -> cand9 + OT_CONS_KIT=1 OT_CONS_MAX_LAYER=M7; slw_sc_v1__cl63e5a7a2 = E-CHANNEL, waits for DIE-QC-97 cand10. Revert: item_inputs/item_env = *_prev_kw43c5b[k] (None = delete)."
+   "note_kw43_c5b": "KW-FIX-43 15:0x: slw_su_l0__cl76fb247e CONS-OVERMACRO-1 -> cand9 + OT_CONS_KIT=1 OT_CONS_MAX_LAYER=M7; slw_sc_v1__cl63e5a7a2 = E-CHANNEL, waits for DIE-QC-97 cand10. Revert: item_inputs/item_env = *_prev_kw43c5b[k] (None = delete).",
+   "place_prefer_prev_kw43e4": [
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ],
+   "note_kw43_e4": "KW-FIX-43 15:5x COORD 15:31 queue fullness (epyc4 92/256 -> goal 180+): epyc4 first in place_prefer (epyc4 scratch2 101 GB, scratch3 326 GB). Revert: place_prefer = place_prefer_prev_kw43e4.",
+   "item_inputs_prev_kw43ech1": {
+    "slw_sc_v3": null,
+    "slw_sc_v1__cl63e5a7a2": null,
+    "slw_sc_v2": null,
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": null,
+    "slw_sc_v1__cl64543eaf__cl4590432d": null
+   },
+   "item_env_prev_kw43ech1": {
+    "slw_sc_v3": {
+     "OT_CONS_KIT": "1"
+    },
+    "slw_sc_v1__cl63e5a7a2": null,
+    "slw_sc_v2": {
+     "OT_CONS_KIT": "1",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "OT_CONS_KIT": "1"
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+     "OT_CONS_KIT": "1",
+     "OT_KW42_CSTART": "9db0ec8d71e"
+    }
+   },
+   "hold_items_prev_kw43ech1": {
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form"
+   },
+   "note_kw43_ech1": "KW-FIX-43 15:5x: 5 slw_sc types -> cand10_class, OT_CONS_KIT dropped (normal kits), cl5e017c6f released from hold; cl4590432d route finishes first (fresh gen by waiter if it fails). Revert: *_prev_kw43ech1 (None = delete)."
   },
   "hbm": {
    "enabled": true,
@@ -15955,7 +16012,7 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_f5c_pre/bind",
     "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
@@ -17363,7 +17420,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17371,7 +17428,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17379,7 +17436,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17387,7 +17444,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17395,7 +17452,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17403,7 +17460,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     },
@@ -17411,7 +17468,7 @@
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11s/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11s_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     }
@@ -18365,7 +18422,18 @@
     },
     "q_spb2__physical_v1": null
    },
-   "note_kw43_p11s": "KW-FIX-43 15:3x: 6 p11 types + q_spb2__physical_v1 -> p11s + bind hbm_p11s_pre (6 types byte-identical, running kits untouched); q_spb2__physical_v1 fresh gen replaces the probe. Revert: item_inputs[k] = item_inputs_prev_kw43p11s[k] (None = delete)."
+   "note_kw43_p11s": "KW-FIX-43 15:3x: 6 p11 types + q_spb2__physical_v1 -> p11s + bind hbm_p11s_pre (6 types byte-identical, running kits untouched); q_spb2__physical_v1 fresh gen replaces the probe. Revert: item_inputs[k] = item_inputs_prev_kw43p11s[k] (None = delete).",
+   "kit_rtl_asbuilt_prev_kw43c12": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json",
+   "item_inputs_asbuilt_kw43c12": [
+    "q_b113",
+    "q_b113__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_spb2__physical_v1"
+   ],
+   "note_kw43_c12": "KW-FIX-43 15:4x COORD loopgap-153x KW43-12 ASK2 YES: HBM kit manifest = vK5c + canonical rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv (md5 b9c5cc78) at the FRONT of prefer (kw43/hbm_c12, epyc7/epyc2/intel1). Die kit_rtl.asbuilt + item_inputs listed in item_inputs_asbuilt_kw43c12. Revert: asbuilt back to kit_rtl_asbuilt_prev_kw43c12 in both places."
   }
  },
  "place_prefer": [
