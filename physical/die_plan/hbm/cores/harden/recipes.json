@@ -289,7 +289,7 @@
  "ot_hbm_accel_smh_xs": {
   "top": "ot_hbm_accel_smh_xs",
   "files": [
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+   "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_accel_smh__xs1109.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_hdly.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
@@ -321,7 +321,7 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09"
+  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09; HBM-SM-KIDS-2 11-09 xs copy (kept E-face ifirst/ilast/itag flops, 0 cycles)"
  },
  "ot_hbm_sm_attn_be__cd13": {
   "top": "ot_hbm_sm_attn_be__cd13",

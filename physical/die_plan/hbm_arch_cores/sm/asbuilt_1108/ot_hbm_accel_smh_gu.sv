@@ -205,9 +205,13 @@ module ot_hbm_accel_smh_tcl_gu #(parameter integer L = 8, parameter integer IL =
         always @(posedge clk) sum_q[32*l +: 32] <= sum[32*l +: 32];
         assign lf[l] = f0 | f1;
     end endgenerate
+    // HBM-SM-KIDS-2 11-09 (registered face, 0 cycles): the sticky lane fault keeps its feedback flop; the lfault pin
+    // takes a kept copy with the same reset and next state (equal every cycle), so the port flop drives only the port.
     reg lane_fault;
+    (* keep *) reg lane_fault_o;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
+    always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault_o <= 1'b0; else lane_fault_o <= lane_fault | (|lf);
     assign sum_o = sum_q;
-    assign lfault = lane_fault;
+    assign lfault = lane_fault_o;
 endmodule
 `default_nettype wire
