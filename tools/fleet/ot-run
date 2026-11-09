@@ -1324,7 +1324,7 @@ def main():
             if prio != "die": sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials)")
             os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
-    cmd = a[1:]
+    cmd = ro_source_binds(a[1:])
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
@@ -1758,6 +1758,56 @@ def command_srv_paths(cmd):
                 args[at] = prefix + parts[0]
             i += step
     return re.findall(r"/srv/[^\s'\";|&()<>]*", " ".join(args))
+
+
+def ro_source_binds(cmd):
+    """Mount git source trees read-only: a `docker run/create -v <host>:<target>` with no mode whose host path is the root of
+    a checkout gets :ro, so a root container cannot write through hard-linked source files (STORE-1 test 11-08).
+    Only the root of a checkout, never a directory below it (a kit dir inside a lane repo stays writable); an explicit mode
+    stays as given; compound shell scripts are left alone.  Applies to `docker` run directly or through one `bash -c`."""
+    args, shell = list(cmd), None
+    if len(args) == 3 and os.path.basename(args[0]) in ("bash", "sh") and args[1] in ("-c", "-lc", "-ec", "-euc"):
+        if any(c in args[2] for c in ";&|\n"):
+            return list(cmd)
+        try:
+            args, shell = shlex.split(args[2]), args[:2]
+        except ValueError:
+            return list(cmd)
+    start = 0
+    if args[:1] == ["sudo"]:
+        start = 2 if args[1:2] == ["-n"] else 1
+    if args[start:start+1] == ["exec"]:
+        start += 1
+    if not (len(args) > start+1 and os.path.basename(args[start]) == "docker" and args[start+1] in ("run", "create")):
+        return list(cmd)
+    i, changed = start+2, False
+    values = {"--cpus", "--memory", "--memory-swap", "--name", "--entrypoint", "--user", "-u", "--workdir", "-w", "--env", "-e",
+              "--env-file", "--network", "--hostname", "-h", "--label", "-l", "--gpus", "--device", "--shm-size", "--ulimit"}
+    flags = {"--rm", "--init", "--privileged", "--read-only", "--detach", "-d", "--interactive", "--tty", "-i", "-t", "-it", "-ti"}
+    while i < len(args):
+        a = args[i]
+        if a in ("-v", "--volume") and i+1 < len(args):
+            at, prefix, step = i+1, "", 2
+        elif a.startswith("--volume="):
+            at, prefix, step = i, "--volume=", 1
+        elif a.startswith("-v") and len(a) > 2:
+            at, prefix, step = i, "-v", 1
+        elif a in values:
+            i += 2
+            continue
+        elif a in flags or (a.startswith("--") and "=" in a):
+            i += 1
+            continue
+        else:
+            break
+        parts = args[at][len(prefix):].split(":")
+        if len(parts) == 2 and parts[0].startswith("/") and os.path.lexists(os.path.join(parts[0], ".git")):
+            args[at] = args[at] + ":ro"
+            changed = True
+        i += step
+    if not changed:
+        return list(cmd)
+    return shell + [shlex.join(args)] if shell else args
 
 
 def spill_paths_ok(cmd, d, root):
