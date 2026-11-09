@@ -1310,7 +1310,7 @@ def kit_dead_inputs(kit_rtl_filelist):
     """DIE-S81-51/SPARE 11-03 (COORD 09:3x dead-input declaration form): the kit dead_inputs.json document the bind's
     kit-rtl step wrote into kit_rtl.json "dead_inputs" (the narrow plan input bits beyond the bound payload width that
     the generated wrapper leaves unconnected), or None.  Fail-closed: the receipt wrapper must still hash to its sha256
-    and every bit must lie in a declared narrow input range [bound, plan) -- face_guard then proves 0 loads/0 drivers."""
+    and every bit must lie in a proven narrow range or a wholly unbound input whose native ABI, strict mapping and literal unread wrapper are re-proved. face_guard still proves 0 loads/0 drivers."""
     import gen_rtl
     from face_guard import dead_input_list
     kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
@@ -1328,8 +1328,17 @@ def kit_dead_inputs(kit_rtl_filelist):
     if not wf.is_file() or _hashlib.sha256(wf.read_bytes()).hexdigest() != rc["sha256"]:
         raise gen_rtl.GenError(f"{kj}: dead_inputs receipt wrapper {wf} missing or sha256 changed")
     ok = {f"{x['port']}[{i}]" for x in rc.get("narrow_buses") or [] for i in range(int(x["bound"]), int(x["plan"]))}
+    import kit_dead_inputs
+    manifest=json.loads(kj.read_text())
+    try:
+        ok.update(kit_dead_inputs.validate_unbound(manifest,rc))
+        if rc.get('unbound_input_buses'):
+            # Re-prove final source reads at GEN, even if an earlier hash was valid.
+            kit_dead_inputs.refresh(manifest,wf)
+    except (ValueError,OSError) as exc:
+        raise gen_rtl.GenError(f"{kj}: {exc}") from exc
     if not set(bits) <= ok:
-        raise gen_rtl.GenError(f"{kj}: dead_inputs bits outside the narrow input ranges: {sorted(set(bits) - ok)[:5]}")
+        raise gen_rtl.GenError(f"{kj}: dead_inputs bits outside proven input ranges: {sorted(set(bits) - ok)[:5]}")
     return doc
 
 
