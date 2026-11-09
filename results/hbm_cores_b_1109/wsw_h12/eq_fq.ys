@@ -1,0 +1,21 @@
+read_verilog -sv -DSYNTHESIS /eq/ot_hbm_accel_cdc_fifo.sv
+chparam -set W 29 -set AW 2 ot_hbm_accel_cdc_fifo
+hierarchy -top ot_hbm_accel_cdc_fifo
+proc; flatten; opt_clean
+rename ot_hbm_accel_cdc_fifo gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /eq/fq_module.sv
+chparam -set W 29 -set AW 2 ot_hbm_accel_cdc_fifo_fq
+hierarchy -top ot_hbm_accel_cdc_fifo_fq
+proc; flatten; opt_clean
+rename ot_hbm_accel_cdc_fifo_fq gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+memory_map
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert
