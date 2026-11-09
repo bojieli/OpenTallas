@@ -1247,6 +1247,9 @@ def resize_undersized_bands(plan,sidecar,types):
                 used=[list(o["rect_um"]) for k,o in bands.items()
                       if k!=bus and o.get("rect_um") and (k not in todo or k in done)]
                 nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
+                # DIE-QC-97 11-09: the search runs with BAND_RING="all", so carry the band's own ring_place (DIE-HEAD-13
+                # "ff") forward; dropping it silently changed the landing placement form of the resized band (plan_pv hc1)
+                if "ring_place" in b:nb["ring_place"]=b["ring_place"]
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
                           resize="DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)" if inphy else
                           "FLOW-7 band overlapped a reset relay/collector site (landing_place collector box)" if inrst else
