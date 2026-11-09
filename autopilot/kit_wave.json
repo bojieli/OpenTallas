@@ -7275,7 +7275,8 @@
     "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
    },
    "gen_hosts": [
-    "epyc7"
+    "epyc7",
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -7980,7 +7981,8 @@
     "epyc7"
    ],
    "gen_host_prev_kw43": "epyc7",
-   "note_kw43_gen": "KW-FIX-43 2026-11-09 10:34 PST COORD option (b): HEAD gen on epyc7 only (epyc4 kw27 HEAD run dir resolves to scratch3 on its root fs: 8 l48hp1 a1 died 'no host qualifies'). Revert: gen_hosts <- gen_hosts_prev_kw43, gen_host <- gen_host_prev_kw43."
+   "note_kw43_gen": "KW-FIX-43 2026-11-09 10:34 PST COORD option (b): HEAD gen on epyc7 only (epyc4 kw27 HEAD run dir resolves to scratch3 on its root fs: 8 l48hp1 a1 died 'no host qualifies'). Revert: gen_hosts <- gen_hosts_prev_kw43, gen_host <- gen_host_prev_kw43.",
+   "note_gen_hosts_kw43b": "KW-FIX-43 11:0x: epyc4 back as 2nd HEAD gen host now that ot-run kw43-rootreal authorizes its kw27 lane (symlink -> scratch3, floor 150); epyc7 load-capped held 4 of 8 l48hp1 rows. Revert: gen_hosts [epyc7]"
   },
   "qwen_compute": {
    "enabled": true,
