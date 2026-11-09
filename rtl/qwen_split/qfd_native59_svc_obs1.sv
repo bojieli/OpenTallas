@@ -9,7 +9,7 @@
 module qfd_native59_svc_obs1 #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,
- parameter integer ROPE=0,USER_BIND=0,HEAD_PREP=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
+ parameter integer ROPE=0,USER_BIND=0,HEAD_PREP=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0,EMB_RT_CODE=0,EMB_RT_SCALE=0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -776,6 +776,24 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire emb_read=emb_act&&(emb_k<=7'd64||(ROPE!=0&&emb_k>=7'(ROPE_FIRST)));
  wire[23:0]rope_addr=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'(ROPE_FIRST));
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
+ // QC-TRANSPORT-FIX 11-08: the e1/e2/e3 ring above assumes the provider answers at the pin.  At the bound die the code
+ // re + q crossings add EMB_RT_CODE edges, so the tag waits that long (EMB_RT_CODE 0 = the ring as before, no flop added).
+ // EMB_RT_SCALE (scale re + q edges) only moves the scale READ edge: the scale slot of the tag stays k = 64, its read
+ // issues (RT_SCALE - RT_CODE) edges before that slot (later when negative, on the invalid positions 65..76), so the
+ // ring needs no second length.  The parent's bind derives both numbers from the bound lanes (coll_regen / embed_transport).
+ localparam integer EMB_SCALE_K=64-(EMB_RT_SCALE-EMB_RT_CODE);
+ wire e2x;wire[6:0]k2x;
+ generate if(EMB_RT_CODE==0)begin:g_emb_rt0
+  assign e2x=e2;assign k2x=k2;
+ end else begin:g_emb_rt
+  reg[EMB_RT_CODE-1:0]er_d;reg[6:0]kr_d[0:EMB_RT_CODE-1];integer ri;
+  always @(posedge ck or negedge rst_top)
+   if(!rst_top)begin er_d<=0;for(ri=0;ri<EMB_RT_CODE;ri=ri+1)kr_d[ri]<=0;end
+   else begin er_d<={er_d,e2};kr_d[0]<=k2;for(ri=1;ri<EMB_RT_CODE;ri=ri+1)kr_d[ri]<=kr_d[ri-1];end
+  assign e2x=er_d[EMB_RT_CODE-1];assign k2x=kr_d[EMB_RT_CODE-1];
+ end endgenerate
+ initial if(EMB_RT_SCALE!=EMB_RT_CODE&&(EMB_SCALE_K<0||EMB_SCALE_K>84||(ROPE==0&&EMB_SCALE_K>64)))
+  $fatal(1,"qfd_native59_svc: EMB_RT_SCALE out of the issue window");
  wire[6:0] k3_rel=k3-7'(ROPE_FIRST);   // YOSYS-CONCAT 10-26: 6'(k3-7'(ROPE_FIRST)) inside the dr_o concat was mis-sized by yosys (YC1)
  (* keep = "true" *) reg e3b;(* keep = "true" *) reg[6:0]k3b;   // R3g: == e3 / k3 (half of the e4c / k4c copies)
  // R3e: 3 kept copies of emb_act (the same set / clear statements, so ea_c[k] == emb_act on every edge): [0] code
@@ -795,13 +813,14 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    if(ea[1]&&emb_k<7'd64)emb_code_addr[23:12]<=emb_tok[17:6];
    if(ea[0]&&ROPE!=0&&emb_k>=7'(ROPE_FIRST))begin emb_code_re<=1;emb_code_addr[11:0]<=rope_addr[11:0];end
    if(ea[1]&&ROPE!=0&&emb_k>=7'(ROPE_FIRST))emb_code_addr[23:12]<=rope_addr[23:12];
-   if(ea[2]&&emb_k==7'd64)begin emb_scale_re<=1;emb_scale_addr[8:0]<=emb_tok[8:0];end
-   if(ea[3]&&emb_k==7'd64)emb_scale_addr[17:9]<=emb_tok[17:9];
+   if(ea[2]&&emb_k==EMB_SCALE_K)begin emb_scale_re<=1;emb_scale_addr[8:0]<=emb_tok[8:0];end
+   if(ea[3]&&emb_k==EMB_SCALE_K)emb_scale_addr[17:9]<=emb_tok[17:9];
    if(emb_act)begin
     emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'(ROPE_FIRST+7):7'd64))begin emb_act<=0;ea_c<=0;end
    end
-   // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
-   e1<=emb_read;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;e3b<=e2;k3b<=k2;
+   // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3);
+   // EMB_RT_CODE extra edges (the landed code re + q transport) sit between e2 and e3 (see g_emb_rt)
+   e1<=emb_read;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2x;k3<=k2x;e3b<=e2x;k3b<=k2x;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v;
