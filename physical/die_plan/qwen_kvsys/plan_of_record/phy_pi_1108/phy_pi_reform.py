@@ -158,6 +158,10 @@ def build(raw, lef, bound):
                 dest = [e for e in dt.get("internal_stations", []) if e.get("conn") == f"bus:{d['bus']}"]
                 assert not dest, f"{lid}: receiver {d['part']}.{d['bus']} has internal stations"
                 ln["fixed_cycles"] = DEPTH
+                # latency table rows are read by bind (lane depth, native stations); keep them in step
+                row = Q["latency"]["lanes"][lid]
+                assert (row["fixed"], row["cycles"]) == (0, row["natural"]), f"{lid}: latency row {row}"
+                row["fixed"], row["cycles"], row["natural"] = DEPTH, row["cycles"] + DEPTH, row["natural"] + DEPTH
                 report["lanes"][lid] = dict(type=tn, bus=bus, fixed=[0, DEPTH], pin_cycles=DEPTH)
             rows[bus] = dict(bits=len(src), words=words, d_unregistered_um=round(d_old, 1),
                              hops_um=[round(h0, 1)] + [round(h, 1) for h in hs] + [round(hl, 1)],
@@ -203,6 +207,11 @@ def check_preserved(raw, Q):
     for la, lb in zip(a["lanes"], b["lanes"]):
         la.pop("fixed_cycles", None)
         lb.pop("fixed_cycles", None)
+    # only the rows of the edited lanes may move in the latency table
+    for lid, row in b["latency"]["lanes"].items():
+        if row != a["latency"]["lanes"][lid]:
+            assert row["fixed"] == DEPTH and a["latency"]["lanes"][lid]["fixed"] == 0, f"{lid}: unexpected latency change"
+    a.pop("latency"); b.pop("latency")
     assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True), "a key outside the event changed"
     # the old relay sites / reset / stations of the types are kept unchanged
     for tn in TYPES:
