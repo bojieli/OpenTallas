@@ -4951,7 +4951,17 @@ def kit_inline_includes(fl, kd):
         def sub(m):
             q = (path.parent / m.group(2)).resolve()
             if not q.is_file():
-                raise BindError(f'kit-rtl: {path}: `include "{m.group(2)}" not found next to the including file')
+                # DIE-HBM-94 11-08 (HBM q_spb0, NE_io, vsN0): the repo-wide child fallback can bring a file from outside its own
+                # include directory (reform_1104b/ot_s81_kp4_enc_la.sv -> s81_link/ot_s81_gf1024.svh).  Search the directories of the
+                # kit file list, as a simulator -I list would; one distinct content only, else the old error.
+                hits = {}
+                for d in {Path(x).parent for x in fl}:
+                    c = d / m.group(2)
+                    if c.is_file():
+                        hits.setdefault(c.read_bytes(), c.resolve())
+                if len(hits) != 1:
+                    raise BindError(f'kit-rtl: {path}: `include "{m.group(2)}" not found next to the including file')
+                q = next(iter(hits.values()))
             seen.append(str(q))
             return f'{m.group(1)}// kit-rtl inlined `include "{m.group(2)}"\n' + expand(q, depth + 1, seen) + "\n"
         return KIT_INCLUDE.sub(sub, t)
