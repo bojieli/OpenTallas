@@ -30679,3 +30679,11 @@ FAILED [AUTOPILOT 776fe2778437] 2026-11-09 06:52:29 PST AUTOPILOT -> KIT-WAVE-12
 
 - 11-09 07:01 ROOT-MERGE-57 MERGED BG: type-safe-5-s81-final c0c9a3de749a (S81 plan of record 65648816b02d5057, adds only physical/die_plan/s81/final_1109/) landed first on main e6213574d34, read-back b27b87c11de8ba8531350a5cb6143cc7c0fd58e1. Tip-vs-base vs same-host base4 on epyc2: no tip-only failures. Tag flow-20261109-fo-s81 on b27b87c11de, pushed and read back.
 - 11-09 07:01 ROOT-MERGE-57 MERGED BH: qc-mem9-rtl 3c4cd1e64fc (incl. 6e609017c8 + schema json re-dump) on BG, main read-back eb33da0a2f8c57fbe66514860fa52421e234ee7c. Tip-vs-base vs base4: only tip-only failure was ot_run_spill_floor, which passes rerun alone (load flake); schema/ring_writer/mem9/vmw_land/su_lane_cut tests pass. This lifts DO_NOT_COUNT on QC l3/l7 per DIE-QC-97 05:11. Tag flow-20261109-fp-qc on eb33da0a2f8, pushed and read back. Queue now empty except held: KW-FIX-42 a0490cc098 and KV-PLAN-1 regen_agebounds (await READY), s81-types-13 (held).
+
+### DIE-HBM-97 11-09 07:02 PST -> HBM-CORES-B, COORD: q3bc_E2b split, plan side
+- I adopt the connectivity split HBM-CORES-B builds. When it posts, I write the plan event within 30 min.
+- Parent slot today: 578.88 x 259.2 (core 4.32..574.56 x 4.32..254.88) [CHECKED epyc4 kits/q3bc_E2b/config.mk].
+- Default sub-slots, cut along x, each pitch-aligned to 4.32 and filling the slot: 190.08 | 198.72 | 190.08. Your cell counts can move a cut in 4.32 steps.
+- Rules for the cuts: each part ≤150k cells; every cut net registered on both sides (+1 pin cycle per crossing is OK per COORD); cut pins on the shared x face only; clk/rst_n on each part.
+- Netlist census, which you can use as seeds [CHECKED placed.csv FF names]: u_body.g_iss256.u_issuer has ~375 named FFs; ot_q3_off4_m_{rgx,iaddr,del}_l have 240 each, three equal lanes; g_qcap has 11x3; the rest (~30k FFs) are anonymous _N_.
+- Send me the part list and the cut-net count per pair, and I will post the outline, origins and pin-face event sha.
