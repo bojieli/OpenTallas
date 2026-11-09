@@ -1,0 +1,262 @@
+{
+ "schema": "codex.qc_fw_start_price/1",
+ "verdict": "PASS",
+ "crossings": [
+  {
+   "port": "c_E5_bn_00__rsn__2",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "rsn_o"
+   },
+   "dst": {
+    "part": "sl_E5_st_a",
+    "bus": "rs_s0"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 23,
+   "new_strap": 26,
+   "width": 6
+  },
+  {
+   "port": "c_E5_bf_00__rsf__4",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "rsf_o"
+   },
+   "dst": {
+    "part": "sl_E5_st_a",
+    "bus": "rs_s1"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 23,
+   "new_strap": 26,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__x_fw_ctl__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E5_st_a",
+    "bus": "x_fw_ctl_i"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 23,
+   "new_strap": 26,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__ag_eo_ag_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "ag_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "ag_wi"
+   },
+   "old_W": 1,
+   "new_W": 3,
+   "K_delta": 2,
+   "old_strap": 12,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__ard_eo_ard_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "ard_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "ard_wi"
+   },
+   "old_W": 1,
+   "new_W": 3,
+   "K_delta": 2,
+   "old_strap": 12,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__arl_eo_arl_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "arl_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "arl_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__arm_eo_arm_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "arm_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "arm_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__art_eo_art_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "art_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "art_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__arv_eo_arv_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "arv_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "arv_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__dd_eo_dd_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "dd_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "dd_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fe__l9_eo_l9_wi__3",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "l9_eo_l9_wi_o"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "l9_eo_l9_wi_i"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__sc_eo_sc_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "sc_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "sc_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__st_eo_st_wi__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "st_eo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "st_wi"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  },
+  {
+   "port": "sl_E5_fw__flte__0",
+   "src": {
+    "part": "sl_E5_fw",
+    "bus": "flt_wo"
+   },
+   "dst": {
+    "part": "sl_E4_fe",
+    "bus": "flt_e_i"
+   },
+   "old_W": 0,
+   "new_W": 3,
+   "K_delta": 3,
+   "old_strap": 11,
+   "new_strap": 14,
+   "width": 6
+  }
+ ],
+ "changed_crossings": 14,
+ "covered_buses": [
+  "ag_eo",
+  "ard_eo",
+  "arl_eo",
+  "arm_eo",
+  "art_eo",
+  "arv_eo",
+  "dd_eo",
+  "flt_wo",
+  "l9_eo_l9_wi_o",
+  "rsf_o",
+  "rsn_o",
+  "sc_eo",
+  "st_eo",
+  "x_ctl_o"
+ ],
+ "rule": "K_new=K_logical+W-R+WREG; only W changes; no payload cycles"
+}

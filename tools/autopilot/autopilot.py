@@ -1331,21 +1331,27 @@ try:
         if not str(dest).startswith("/"+"srv/opentallas-scratch") or "/claude/" not in str(dest):
             raise RuntimeError("admission bundle must be under an owned scratch lane")
         dest.parent.mkdir(parents=True,exist_ok=True)
-        with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
-            target=Path(temporary)/"bundle";target.mkdir()
-            command="tar -C "+shlex.quote(str(dest))+" -cf - ."
-            source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",meta["source_host"],command],
-                                    stdin=subprocess.DEVNULL,stdout=subprocess.PIPE)
-            try:
-                extracted=subprocess.run(["tar","-C",str(target),"-xf","-"],stdin=source.stdout)
-            finally:
-                source.stdout.close()
-            if source.wait() or extracted.returncode:
-                raise RuntimeError("admission tool transfer failed; physical runner not started")
-            manifest=json.loads((target/"BUNDLE.json").read_text())
-            if manifest.get("sha256") != meta["sha256"]:
-                raise RuntimeError("admission tool version differs; physical runner not started")
-            if not dest.exists():target.rename(dest)
+        # Retry only a failed pre-payload transport, each into a fresh temporary tree.
+        for attempt in range(1,4):
+            with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
+                target=Path(temporary)/"bundle";target.mkdir()
+                command="tar -C "+shlex.quote(str(dest))+" -cf - ."
+                source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",meta["source_host"],command],
+                                        stdin=subprocess.DEVNULL,stdout=subprocess.PIPE)
+                try:
+                    extracted=subprocess.run(["tar","-C",str(target),"-xf","-"],stdin=source.stdout)
+                finally:
+                    source.stdout.close()
+                if source.wait() or extracted.returncode:
+                    if attempt == 3:
+                        raise RuntimeError("admission tool transfer failed after 3 attempts; physical runner not started")
+                    print("ADMISSION_TOOLS transport retry "+str(attempt)+"/3; physical runner not started",flush=True)
+                    continue
+                manifest=json.loads((target/"BUNDLE.json").read_text())
+                if manifest.get("sha256") != meta["sha256"]:
+                    raise RuntimeError("admission tool version differs; physical runner not started")
+                if not dest.exists():target.rename(dest)
+            break
         if not ready():raise RuntimeError("admission tool installation incomplete")
     print("ADMISSION_TOOLS READY "+meta["sha256"],flush=True)
     os.execv(sys.executable,[sys.executable,str(dest/"signoff_chain.py"),"--preflight",

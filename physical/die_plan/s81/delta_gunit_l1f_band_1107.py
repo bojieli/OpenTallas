@@ -63,6 +63,13 @@ PT_CLEAR = 17.28   # macro edge to a kept clock / station / landing point (u_gun
 # bf has no view: its plan LEF is the KW-PROV-1 contract abstract of this pin table (tools/autopilot/prov_view.py make,
 # outline + pins + RTL directions, OBS M1..M5 less pin windows), committed so the core kit and the parent read one contract
 BF_LEF = "physical/die_plan/s81/cores/legacy/lef/gf1_1107/dsdv_gunit_l1f_bf.lef"
+# S81-GUNIT-FORM-2 11-08 (COORD 11-07 23:3x (3)): bf routes signals up to M6.  gf1 bf (100,784 std, M2-M5) sat >3 h in GRT
+# congestion iterations with >= 10,000 HORIZONTAL-congested gcells (capacity 17-19, usage 18-21) in the x 130-216 um column
+# over the whole height: the W-face inputs (487 pins) / E-face outputs (299) / N-S crossings make an E-W cut that M2 + M4
+# alone cannot carry.  Spreading cells does not change a cut demand, and the N / S crossings are aligned bit for bit with
+# the A bands over x 22-410, so the outline stays; M6 adds the third horizontal layer (recipe route_m6, plan obs_max M6,
+# contract LEF OBS M6).  ba0 / ba1 keep M5.
+OBS_MAX = {"dsdv_gunit_l1f_bf": "M6"}
 TOFF = [0.108, 0.012]          # CORE_TRACK_OFFSET (R0 cores of this type: l1c)
 CELLS = {"dsdv_gunit_l1f_ba0": 82000, "dsdv_gunit_l1f_bf": 77000, "dsdv_gunit_l1f_ba1": 82000}
 CELLS_BASIS = ("ESTIMATE: kit-wave e9eda32d41c gunit__t1 attempt_12 1_2_yosys.v, l1f_0 cells attributed to the band "
@@ -289,7 +296,7 @@ def main():
             path = f"u_gunit.g_l1f[{q}].u_l1f.{inst}"
             row = dict(inst=path, module=mod, physical_inst=f"u_bound.u_u_gunit_g_l1f_{q}_u_l1f.{inst}",
                        physical_master=mod, origin_um=[x, y], outline_um=[BW, h], orient="R0",
-                       track_offset_um=list(TOFF), pins_file=f"{PINS}/{mod}.json", obs_max="M5", reset_net="rst_n",
+                       track_offset_um=list(TOFF), pins_file=f"{PINS}/{mod}.json", obs_max=OBS_MAX.get(mod, "M5"), reset_net="rst_n",
                        cells=CELLS[mod], cells_basis=CELLS_BASIS, note=ID)
             row["lef"] = f"{VIEW[mod]}/{mod}.lef" if mod in VIEW else BF_LEF
             rows.append(row)

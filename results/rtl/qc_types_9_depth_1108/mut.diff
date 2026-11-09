@@ -1,0 +1,4 @@
+122c122
+<      for(seg=0;seg<16;seg=seg+1)begin ht[seg][j]<=(we_q[j]&&(ixm[7:4]==4'(seg)))?(16'd1<<ixm[3:0]):16'd0;dc[seg][8*j+:8]<=co[7:0];end
+---
+>      for(seg=0;seg<16;seg=seg+1)begin ht[seg][j]<=(we_q[j]&&(ixm[7:4]==4'(seg)))?(16'd1<<(ixm[3:0]^4'd1)):16'd0;dc[seg][8*j+:8]<=co[7:0];end
