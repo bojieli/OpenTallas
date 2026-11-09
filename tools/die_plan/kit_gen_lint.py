@@ -49,11 +49,16 @@ QUEUE_LINT_FILES = ("tools/die_plan/kit_preflight.py", "tools/die_plan/kit_contr
                     "tools/autopilot/signoff_chain.py")
 
 
+def _no_lazy_env():
+    return dict(os.environ, GIT_NO_LAZY_FETCH="1")
+
+
 def src_skew(src_sha, queue_repo, files=QUEUE_LINT_FILES):
     """-> (errors, info).  errors non-empty = the kit source is not on the queue's lint version (re-GEN on a source at
     or after the queue's commit for these files)."""
     def git(*a):
-        return subprocess.run(["git", "-C", str(queue_repo), *a], capture_output=True, text=True)
+        # KW-FIX-41: every git call here runs with lazy fetch off.  A partial-clone checkout never downloads a pack for a lint.
+        return subprocess.run(["git", "-C", str(queue_repo), *a], capture_output=True, text=True, env=_no_lazy_env())
     if not src_sha:
         return [], dict(applies=False, reason="no source commit in the launch spec")
     head = git("rev-parse", "HEAD")
@@ -62,15 +67,15 @@ def src_skew(src_sha, queue_repo, files=QUEUE_LINT_FILES):
     qsha = head.stdout.strip()
     # KW-FIX-40 11-08 (COORD: hub scratch2 at 0 GB): an existence check must not lazy-fetch in a partial clone; every run-item
     # fetched the full 747k-object pack (27 x 7.4 GB).  A commit the repo lacks takes the "not proven either way" path below.
-    src = subprocess.run(["git", "-C", str(queue_repo), "rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}"],
-                         capture_output=True, text=True, env=dict(os.environ, GIT_NO_LAZY_FETCH="1"))
+    src = git("rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}")
     if src.returncode:
+        print(f"KW_SRC_SKEW_ERROR commit {src_sha} is not in {queue_repo}: no lazy fetch, skew not judged", flush=True)
         return [], dict(applies=False, reason=f"source {src_sha} unknown to the queue repo (not proven either way)",
                         queue=qsha[:11])
     ssha = src.stdout.strip()
     if ssha == qsha:
         return [], dict(applies=True, src=ssha[:11], queue=qsha[:11], differ=[])
-    d = git("diff", "--name-only", ssha, qsha, "--", *files)
+    d = git("diff", "--no-renames", "--name-only", ssha, qsha, "--", *files)
     if d.returncode:
         return [f"src_skew: git diff {ssha[:11]}..{qsha[:11]} failed: {d.stderr.strip()[:200]}"], dict(applies=True)
     differ = [x for x in d.stdout.split() if x]

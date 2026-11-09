@@ -99,7 +99,7 @@ def _git(d, *a):
     return subprocess.run(["git", "-C", str(d), *a], check=True, capture_output=True, text=True).stdout.strip()
 
 
-def test_src_skew_same_older_unknown(tmp_path):
+def test_src_skew_same_older_unknown(tmp_path, capsys):
     """AUTOBUILD-PIPE-5 (COORD 04:0x): kit src older than the queue lint fails only when a queue-lint file differs."""
     r = tmp_path / "repo"
     (r / "tools/die_plan").mkdir(parents=True)
@@ -119,6 +119,7 @@ def test_src_skew_same_older_unknown(tmp_path):
     errs, info = GL.src_skew(a, r)
     assert len(errs) == 1 and "older than the queue lint" in errs[0] and info["differ"] == ["tools/die_plan/sdc_lint.py"]
     errs, info = GL.src_skew("0123456789ab", r)                # unknown commit: never a false fail
+    assert "KW_SRC_SKEW_ERROR commit 0123456789ab" in capsys.readouterr().out
     assert errs == [] and info["applies"] is False
     assert GL.src_skew("", r)[0] == []
 
@@ -175,3 +176,23 @@ def test_gen_lint_rechecks_flattened_only_on_undriven(tmp_path, monkeypatch=None
         assert GL.run_yosys(tmp_path, mem_gb=8)[0] == und and calls == [(8, None)]
     finally:
         GL._run_yosys = orig
+
+
+def test_src_skew_every_git_call_no_lazy_fetch(tmp_path, monkeypatch):
+    seen = []
+    real = GL.subprocess.run
+    def fake(cmd, **kw):
+        if cmd[:1] == ["git"]:
+            seen.append(cmd)
+            assert kw.get("env", {}).get("GIT_NO_LAZY_FETCH") == "1", cmd
+        return real(cmd, **kw)
+    monkeypatch.setattr(GL.subprocess, "run", fake)
+    r = tmp_path / "r"
+    r.mkdir()
+    GL.subprocess.run.__wrapped__ = real
+    real(["git", "init", "-q", str(r)], check=True)
+    real(["git", "-C", str(r), "-c", "user.email=a@b", "-c", "user.name=a", "commit", "-q", "--allow-empty", "-m", "x"], check=True)
+    head = real(["git", "-C", str(r), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    GL.src_skew(head, r)
+    GL.src_skew("0123456789ab", r)
+    assert len(seen) >= 2
