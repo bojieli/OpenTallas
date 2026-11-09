@@ -307,7 +307,10 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
         return "WAIT", "no FAIL gate (%s), not an ECO case" % e.get("verdict")
     if fails - ECO_FAILS:
         return "SKIP", "not an ECO class: " + nums
-    timing = [(e.get(k), e.get(k + "_n")) for k, g in (("tt", "setup_tt"), ("ff", "hold_ff")) if g in fails]   # port-only hold is not a FAIL
+    # port-only hold is not a FAIL; a mixed record scores hold on the core-owned split, the same set eco_loop.near_miss judges (COORD R4)
+    timing = [(e.get(k), e.get(k + "_n")) for k, g in (("tt", "setup_tt"), ("ff", "hold_ff")) if g in fails and k != "ff"]
+    if "hold_ff" in fails:
+        timing.append((e["ff_core"], e["ff_core_n"]) if e.get("ff_core_n") is not None else (e.get("ff"), e.get("ff_n")))
     if any((w is not None and w < near_wns) or (n or 0) > NEAR_ENDPOINTS for w, n in timing) or (e.get("drc") or 0) >= near_drc:
         return "SKIP", "outside the near-miss bound: " + nums
     if e.get("late_eco_off"):
@@ -476,6 +479,17 @@ try:
                    tt=(c.get("setup_tt") or {}).get("wns_ps"), ff=(c.get("hold_ff") or {}).get("wns_ps"),
                    tt_n=(c.get("setup_tt") or {}).get("violators"), ff_n=(c.get("hold_ff") or {}).get("violators"),
                    drc=(c.get("drc") or {}).get("count"), odb=inp.get("odb"), kit=inp.get("kit"))
+        # KW-FIX-36 11-08 (COORD R4): the FF census split eco_loop.core_hold reads, so a mixed record is judged on the same endpoints
+        try:
+            s = json.load(open(os.path.join(os.path.dirname(p), "ff", "corner.json"))).get("std_min_start") or {}
+            if s.get("err") == 0 and s.get("trunc") == 0:
+                if s.get("core_n") is not None and s.get("core_wns") is not None:
+                    out.update(ff_core=s["core_wns"], ff_core_n=s["core_n"])
+                elif s.get("nonport_n") is not None and s.get("nonport_wns") is not None:
+                    n = s["nonport_n"] if not s.get("oport") else min(s["nonport_n"], (s.get("other") or 0) + (s.get("reg") or 0))
+                    out.update(ff_core=s["nonport_wns"], ff_core_n=n)
+        except Exception:
+            pass
         kit, odb = inp.get("kit") or "", inp.get("odb") or ""
         out["late_eco_off"] = off or os.path.exists(os.path.join(kit, "late_eco.off"))
         if os.path.isfile(odb) and os.path.isdir(kit):

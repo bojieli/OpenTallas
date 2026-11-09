@@ -120,3 +120,17 @@ def test_output_port_with_register_violator_stays_fail():
 def test_session_tcl_census_counts_output_ports():
     t = signoff.session_tcl("ff", [], True)
     assert "so_hs_oport" in t and "STD_MIN_START_OPORTS" in t and "-group_path_count 100000 -endpoint_path_count 1" in t
+
+
+def test_census_tcl_splits_output_endpoints():
+    """KW-FIX-36 R4: the non-port census reports core_n / core_wns, without output-port endpoints"""
+    t = signoff.session_tcl("ff", [], True)
+    assert "core_n [dict size $so_np_core] core_wns" in t
+    assert "![$so_eo is_top_level_port]" in t and "dict set so_np_core" in t
+
+
+def test_census_parses_core_fields():
+    t = session_text(ff_hold=-4.0)["ff"] + ("\nSO STD_MIN_START port 0 other 3 reg 0 trunc 0 err 0 oport 2\nSO STD_MIN_START_PORTS \n"
+                                            "SO STD_MIN_START_OPORTS ft0_o\nSO STD_MIN_NONPORT n 5 wns -4.00 core_n 3 core_wns -1.50")
+    s = signoff.corner_result(signoff.parse_session(t))["std_min_start"]
+    assert s["nonport_n"] == 5 and s["nonport_wns"] == -4.0 and s["core_n"] == 3 and s["core_wns"] == -1.5

@@ -518,6 +518,24 @@ def test_near_miss_counts_endpoints_and_drc_under_50(ap, tmp_path, monkeypatch, 
     assert bool(ap.launched) == launch and only_item(ap)["status"] == ("ECO" if launch else "SKIP")
 
 
+@pytest.mark.parametrize("core,launch", [(dict(core_n=10.0, core_wns=-8.0), True), (dict(core_n=200.0, core_wns=-8.0), False), (dict(core_n=10.0, core_wns=-34.0), False)])
+def test_near_miss_scores_core_split_of_a_mixed_record(ap, tmp_path, monkeypatch, core, launch):
+    """COORD R4: the probe reads the FF census split, so a mixed record is judged on the endpoints sign-off leaves to the core"""
+    roots_ok(monkeypatch, tmp_path)
+    monkeypatch.setattr(AR, "ECO_DISK_GB", 0)
+    kit = eco_kit(tmp_path, ff=-34.0)
+    rec = kit / "signoff" / "signoff.json"
+    d = json.loads(rec.read_text())
+    d["checks"]["hold_ff"]["violators"] = 2100.0
+    rec.write_text(json.dumps(d))
+    (kit / "signoff" / "ff").mkdir(exist_ok=True)
+    (kit / "signoff" / "ff" / "corner.json").write_text(json.dumps(dict(std_min_start=dict(core, err=0, trunc=0, oport=2000.0, nonport_n=2090.0, nonport_wns=-34.0))))
+    register(ap, kit)
+    ap.unit_active = lambda u: True
+    AR.step(ap)
+    assert bool(ap.launched) == launch and only_item(ap)["status"] == ("ECO" if launch else "SKIP")
+
+
 def _eco_result(ap, r):
     orig = ap.rpy
 
