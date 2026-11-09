@@ -55,7 +55,11 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
   set fh [open $::env(OT_CORE_LAT)]
   foreach l [split [read $fh] "\n"] {
     if {[string match "#*" $l] || [llength $l] < 3} continue
+    # DIE-HEAD-88 11-08: core_latency.txt carries the plain generate-loop name; tb_sinks returns the OpenDB name with
+    # escaped brackets (u_core.u.g_pp\[0\].u_pair/clk).  A plain key missed every such core, so the balancer took its
+    # raw pin arrival for its effective arrival and padded LEP clk_c<k> by ~480 ps (FF hold -580 at the pair pins).
     dict set tb_clat "[lindex $l 0]/[lindex $l 1]" [lindex $l 2]
+    dict set tb_clat [string map {"\[" "\\\[" "\]" "\\\]"} "[lindex $l 0]/[lindex $l 1]"] [lindex $l 2]
   }
   close $fh
 }
