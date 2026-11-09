@@ -14,7 +14,14 @@ from sm_images import cal_word,prog_row
 
 def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                      host_launch, rows=128, host_publication=10, request_lane_edges=0,
-                     request_lane_edges_by_bank=None, write_lane_edges_by_bank=None):
+                     request_lane_edges_by_bank=None, write_lane_edges_by_bank=None,
+                     selector_advance_by_bank=None, write_selector_advance_by_bank=None):
+    # HBM-TRANSPORT-1 11-09: at bound depth the tap selector leg (calendar -> tap, D_CAL) and the command leg
+    # (pgp -> leaf, D_CMD) differ per tap; the selector row moves selector_advance_by_bank[b] = D_CAL - D_CMD rows
+    # earlier (su_transport.py profile of the strict bind; None = as built, same row as the command).
+    for name,adv in (('selector_advance_by_bank',selector_advance_by_bank),('write_selector_advance_by_bank',write_selector_advance_by_bank)):
+        if adv is not None and (len(adv)!=8 or any(type(x) is not int for x in adv)):
+            raise ValueError(f'{name} requires eight integers')
     if not isinstance(request_lane_edges,int) or request_lane_edges<0: raise ValueError('request lane depth must be a nonnegative integer')
     if request_lane_edges_by_bank is not None:
         if len(request_lane_edges_by_bank)!=8 or any(type(x) is not int or x<0 for x in request_lane_edges_by_bank):
@@ -34,6 +41,9 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                 ('write',128,39,38,4,'lg_local_write','wslot_v')):
                 lane_edges=(write_lane_edges_by_bank[b] if kind=='write' and write_lane_edges_by_bank is not None else
                             request_lane_edges if request_lane_edges_by_bank is None else request_lane_edges_by_bank[b])
+                adv=((write_selector_advance_by_bank if write_selector_advance_by_bank is not None else selector_advance_by_bank)
+                     if kind=='write' else selector_advance_by_bank)
+                adv=0 if adv is None else adv[b]
                 cmd=word>>(base+width*b)&((1<<width)-1)
                 if not cmd>>vbit:continue
                 sector=(cmd>>(13 if kind=='read' else 8))&65535
@@ -43,13 +53,14 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                 lg=bridge_stream+(4*n+6)//3+1
                 at=lg-first_calendar
                 if not 0<=at<at+2+lane_edges<rows:raise ValueError(f'{kind} edge{lg} outside resident calendar')
-                fields[at][sel]=fields[at].get(sel,0)|1<<b
+                if not 0<=at-adv<rows:raise ValueError(f'{kind} edge{lg} selector row {at-adv} outside resident calendar')
+                fields[at-adv][sel]=fields[at-adv].get(sel,0)|1<<b
                 fields[at+2+lane_edges][owner]=fields[at+2+lane_edges].get(owner,0)|1<<b
                 # Native VM owner0 is the SU face. Remaining selector fields
                 # stay zero: face_response returns by pipelined owner d_p;
                 # client/response fields feed the separate hub/router path.
                 events.append(dict(kind=kind,bank=b,command=e,serial_capture=serial,
-                                   lg_sample=lg,vm_pin_sample=lg+2+lane_edges))
+                                   lg_sample=lg,vm_pin_sample=lg+2+lane_edges,**({'selector_row':at-adv} if adv else {})))
     words=[prog_row(i,cal_word(**f),187) for i,f in enumerate(fields)]
     return words,dict(schema='opentallas.native_su_calendar.v1',qualified=False,
         quarter_command_bits=2470,first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
@@ -57,6 +68,8 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
         calendar_row0_consumer=first_calendar,owner=0,lg_to_vm_pin_edges=2+request_lane_edges if request_lane_edges_by_bank is None else [2+x for x in request_lane_edges_by_bank],request_lane_edges=request_lane_edges,
         **({} if request_lane_edges_by_bank is None else dict(request_lane_edges_by_bank=request_lane_edges_by_bank)),
         **({} if write_lane_edges_by_bank is None else dict(write_lane_edges_by_bank=write_lane_edges_by_bank)),
+        **({} if selector_advance_by_bank is None else dict(selector_advance_by_bank=selector_advance_by_bank)),
+        **({} if write_selector_advance_by_bank is None else dict(write_selector_advance_by_bank=write_selector_advance_by_bank)),
         events=events,unused_fields='hub/router client/response/ring paths unused by native SU face')
 
 def add_host_replay(source,boundary,output,words,meta, *, stream_limit=3700,

@@ -664,13 +664,22 @@ def iso_part_events(P):
     return out, place
 
 
-def epoch_calendar(t_install, last_stream):
-    """finite owner-0 reservation of all 8 SW banks from its launch through last_stream + EPOCH_TAIL."""
+def su_epoch_terms(su_transport=None):
+    """(SU_START_GUARD, EPOCH_TAIL): as built, or from a su_transport.py profile of the strict bind (HBM-TRANSPORT-1
+    11-09: the first SU command must find the selector at its tap, D_CAL - D_CMD later; the last request must find the
+    owner at its bank, D_CMD + D_REQ later).  Never below the as-built values."""
+    if su_transport is None:
+        return SU_START_GUARD, EPOCH_TAIL
+    return max(SU_START_GUARD, int(su_transport["su_start_guard"])), max(EPOCH_TAIL, int(su_transport["epoch_tail"]))
+
+
+def epoch_calendar(t_install, last_stream, tail=EPOCH_TAIL):
+    """finite owner-0 reservation of all 8 SW banks from its launch through last_stream + tail (EPOCH_TAIL as built)."""
     from hbm_layer_vehicle.layer_images import cp_frames
     from hbm_layer_vehicle.sm_images import cal_word, prog_row
     words = [prog_row(0, cal_word(rslot_v=255, wslot_v=255, lg_local_read=255, lg_local_write=255), 187)]
     _, launch, _ = cp_frames(96, words, t_install, loops=1)
-    loops = max(1, last_stream + EPOCH_TAIL - launch)
+    loops = max(1, last_stream + tail - launch)
     if loops > 65535:
         raise ValueError(f"SU epoch of {loops} edges exceeds the calendar loop field")
     ev, launch, _ = cp_frames(96, words, t_install, loops=loops)

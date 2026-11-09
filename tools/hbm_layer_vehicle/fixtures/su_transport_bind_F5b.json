@@ -1,0 +1,525 @@
+{
+"note": "HBM-TRANSPORT-1 11-09: SU-face VM lane-group legs of strict bind bind_F5b (plan 77bbddd873546ac3), extracted from bus_groups.json landing (one member per sink port and source)",
+"landing": [
+{
+"sink": "su_NE0.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NE.lg_local_read",
+"landed_stages": 34
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NE.lg_local_write",
+"landed_stages": 34
+}
+]
+},
+{
+"sink": "su_NE0.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 22
+}
+]
+},
+{
+"sink": "su_NE0.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 22
+}
+]
+},
+{
+"sink": "su_NE1.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NE.lg_local_read",
+"landed_stages": 34
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NE.lg_local_write",
+"landed_stages": 34
+}
+]
+},
+{
+"sink": "su_NE1.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NE1.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NE2.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NE.lg_local_read",
+"landed_stages": 34
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NE.lg_local_write",
+"landed_stages": 34
+}
+]
+},
+{
+"sink": "su_NE2.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 19
+}
+]
+},
+{
+"sink": "su_NE2.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 19
+}
+]
+},
+{
+"sink": "su_NE3.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NE.lg_local_read",
+"landed_stages": 34
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NE.lg_local_write",
+"landed_stages": 34
+}
+]
+},
+{
+"sink": "su_NE3.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NE3.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NE.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NW0.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NW.lg_local_read",
+"landed_stages": 35
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NW.lg_local_write",
+"landed_stages": 35
+}
+]
+},
+{
+"sink": "su_NW0.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 12
+}
+]
+},
+{
+"sink": "su_NW0.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 12
+}
+]
+},
+{
+"sink": "su_NW1.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NW.lg_local_read",
+"landed_stages": 35
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NW.lg_local_write",
+"landed_stages": 35
+}
+]
+},
+{
+"sink": "su_NW1.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NW1.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NW2.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NW.lg_local_read",
+"landed_stages": 35
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NW.lg_local_write",
+"landed_stages": 35
+}
+]
+},
+{
+"sink": "su_NW2.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 25
+}
+]
+},
+{
+"sink": "su_NW2.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 25
+}
+]
+},
+{
+"sink": "su_NW3.g_tap_r8b.u_tap",
+"members": [
+{
+"sink_port": "local_read",
+"source": "calendar_NW.lg_local_read",
+"landed_stages": 35
+},
+{
+"sink_port": "local_write",
+"source": "calendar_NW.lg_local_write",
+"landed_stages": 35
+}
+]
+},
+{
+"sink": "su_NW3.u_slice.g_leaf[0].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "su_NW3.u_slice.g_leaf[1].u_leaf",
+"members": [
+{
+"sink_port": "su_rq",
+"source": "pgp_NW.command",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NE0",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE0.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 27
+},
+{
+"sink_port": "wq0",
+"source": "su_NE0.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 27
+}
+]
+},
+{
+"sink": "vmb_NE1",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE0.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 27
+},
+{
+"sink_port": "wq0",
+"source": "su_NE0.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 27
+}
+]
+},
+{
+"sink": "vmb_NE2",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE1.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NE1.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NE3",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE1.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NE1.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NE4",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE2.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 31
+},
+{
+"sink_port": "wq0",
+"source": "su_NE2.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 31
+}
+]
+},
+{
+"sink": "vmb_NE5",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE2.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 31
+},
+{
+"sink_port": "wq0",
+"source": "su_NE2.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 31
+}
+]
+},
+{
+"sink": "vmb_NE6",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE3.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NE3.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NE7",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NE3.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NE3.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NW0",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW0.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 18
+},
+{
+"sink_port": "wq0",
+"source": "su_NW0.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 18
+}
+]
+},
+{
+"sink": "vmb_NW1",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW0.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 18
+},
+{
+"sink_port": "wq0",
+"source": "su_NW0.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 18
+}
+]
+},
+{
+"sink": "vmb_NW2",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW1.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NW1.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NW3",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW1.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NW1.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NW4",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW2.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 29
+},
+{
+"sink_port": "wq0",
+"source": "su_NW2.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 29
+}
+]
+},
+{
+"sink": "vmb_NW5",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW2.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 29
+},
+{
+"sink_port": "wq0",
+"source": "su_NW2.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 29
+}
+]
+},
+{
+"sink": "vmb_NW6",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW3.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NW3.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+},
+{
+"sink": "vmb_NW7",
+"members": [
+{
+"sink_port": "rq0",
+"source": "su_NW3.g_tap_r8b.u_tap.near_rq",
+"landed_stages": 2
+},
+{
+"sink_port": "wq0",
+"source": "su_NW3.g_tap_r8b.u_tap.near_wq",
+"landed_stages": 2
+}
+]
+}
+]
+}
