@@ -9386,7 +9386,9 @@
         "q_spb2__physical_v1",
         "q_spt0",
         "q_spt0__physical_v1",
-        "q_sm0"
+        "q_sm0",
+        "q_sm1",
+        "q_sm2"
       ],
       "place_prefer": [
         "intel2",
@@ -12397,7 +12399,12 @@
       "gen_hosts_prev_kw40e6r": [
         "epyc4",
         "intel1"
-      ]
+      ],
+      "only_items_kw40_added": [
+        "q_sm1",
+        "q_sm2"
+      ],
+      "note_kw40_qsm": "KW-FIX-40 (DIE-HBM-94 22:20 READY, dry_F3C all stages 0): q_sm1 q_sm2 join plan_final3 keys, item_inputs already present; revert only_items_kw40_added"
     }
   },
   "place_prefer": [
