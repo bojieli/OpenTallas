@@ -7167,7 +7167,10 @@
         "cbx_q10__cl94a12200@12",
         "coll_ftc@4",
         "coll_ft__cl78c7b300@9",
-        "coll_ft__cla4a25d77@10"
+        "coll_ft__cla4a25d77@10",
+        "cbn_q00__cl622f65d2@13",
+        "cbn_q00__cldbcda913@18",
+        "slw_su_l1__clcc9d0155@9"
       ],
       "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
       "type_args": {
@@ -7742,7 +7745,10 @@
         "cbx_q10__cl94a12200@12": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA",
         "coll_ftc@4": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -141.3 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
         "coll_ft__cl78c7b300@9": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -86.69 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
-        "coll_ft__cla4a25d77@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -87.0 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
+        "coll_ft__cla4a25d77@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -87.0 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
+        "cbn_q00__cl622f65d2@13": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
+        "cbn_q00__cldbcda913@18": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
+        "slw_su_l1__clcc9d0155@9": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json"
       },
       "gen_hosts": [
         "intel1",
@@ -9215,6 +9221,11 @@
         "intel1",
         "epyc4",
         "intel2"
+      ],
+      "retry_prev_kw40_added": [
+        "cbn_q00__cl622f65d2@13",
+        "cbn_q00__cldbcda913@18",
+        "slw_su_l1__clcc9d0155@9"
       ]
     },
     "hbm": {
