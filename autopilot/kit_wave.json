@@ -4175,7 +4175,8 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc2",
-    "epyc7"
+    "epyc7",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -7101,7 +7102,12 @@
     "--clock-landing",
     "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
-   "note_kw43_t51": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (2) (DIE-S81-85 READY 12:06): S81 wave plan af2abcca0e416b13 = 65648816 + delta_t51_split + delta_t51_split_classes; src kw43t51/src_t51f (= die-s81-85/s81p7/src_t51f; epyc7 hardlinks, epyc2 src_s81f hardlinks + checksum delta; 179565 files on both); bind8 at kw43t51/bind8 via the SAME kit_rtl script path kw42/kit_rtl_s81_final_1109.sh (content now S81_BIND_OUT=kw43t51/bind8; spec unchanged so no other input hash moves); landed sidecar = src_t51f copy (sha 5f4cff5e, identical). Probe: blocks change only for slice_station__t51 + the 2 t51 native items (held). Revert: src/plan/gen_args = *_prev_kw43t51, drop the 2 hold_items, restore kw43t51/kit_rtl_s81_final_1109.sh.bak-kw42-<host> on epyc7 + epyc2."
+   "note_kw43_t51": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (2) (DIE-S81-85 READY 12:06): S81 wave plan af2abcca0e416b13 = 65648816 + delta_t51_split + delta_t51_split_classes; src kw43t51/src_t51f (= die-s81-85/s81p7/src_t51f; epyc7 hardlinks, epyc2 src_s81f hardlinks + checksum delta; 179565 files on both); bind8 at kw43t51/bind8 via the SAME kit_rtl script path kw42/kit_rtl_s81_final_1109.sh (content now S81_BIND_OUT=kw43t51/bind8; spec unchanged so no other input hash moves); landed sidecar = src_t51f copy (sha 5f4cff5e, identical). Probe: blocks change only for slice_station__t51 + the 2 t51 native items (held). Revert: src/plan/gen_args = *_prev_kw43t51, drop the 2 hold_items, restore kw43t51/kit_rtl_s81_final_1109.sh.bak-kw42-<host> on epyc7 + epyc2.",
+   "gen_hosts_prev_kw43i1": [
+    "epyc2",
+    "epyc7"
+   ],
+   "gen_hosts_note_kw43i1": "KW-FIX-43 13:4x COORD LOOP-GAP 12:5x (3)/(4): S81 T51 inputs on intel1 at the same paths (src_t51f 179565 files incl MOVES-SPLIT gen_phys 5c29a9cf, bind8 1486 files, plan af2abcca0e416b13, asbuilt bc65f0ca, kw42/kit_rtl_s81_final_1109.sh md5 9ca1b37a = bind8). intel2 not added (scratch2 85 GB < 100 GB floor). Revert gen_hosts = gen_hosts_prev_kw43i1."
   },
   "s81_head": {
    "enabled": true,
