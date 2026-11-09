@@ -7271,7 +7271,6 @@
     "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
    },
    "gen_hosts": [
-    "epyc4",
     "epyc7"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -7971,7 +7970,13 @@
    },
    "note_kw43_hp1": "KW-FIX-43 2026-11-09 10:13 PST: l48hp1 launch (COORD 08:0x, HEAD-92 09:11): runtime gate overlay a41f2951daf accepts l48hp1; src_head_hp1 epyc7+epyc4 overlay meshhd 40a07efb45 (4 RTL files, s81_ph shared back to base); hd_serdes added = SC conservative form (OT_CONS_KIT=1 OT_CONS_UTIL=0.40, HEAD-92). Revert: only_items <- only_items_prev_kw43; item_env.hd_serdes <- item_env_prev_kw43_hd_serdes.",
    "flow_tag_prev_kw43": "flow-20261108-ds-head",
-   "note_kw43_tag": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: HEAD wave flow tag must hold l48hp1 + mesh-hd 40a07efb45: fm-head (09:34, both ancestors, tools staged epyc2/epyc4/epyc7/intel1). Auto re-sign has no pin: it takes the newest HEAD tag on origin (fn-head 10:21, also has both). Revert: flow_tag <- flow_tag_prev_kw43 (flow-20261108-ds-head)."
+   "note_kw43_tag": "KW-FIX-43 2026-11-09 10:27 PST COORD 10:2x: HEAD wave flow tag must hold l48hp1 + mesh-hd 40a07efb45: fm-head (09:34, both ancestors, tools staged epyc2/epyc4/epyc7/intel1). Auto re-sign has no pin: it takes the newest HEAD tag on origin (fn-head 10:21, also has both). Revert: flow_tag <- flow_tag_prev_kw43 (flow-20261108-ds-head).",
+   "gen_hosts_prev_kw43": [
+    "epyc4",
+    "epyc7"
+   ],
+   "gen_host_prev_kw43": "epyc7",
+   "note_kw43_gen": "KW-FIX-43 2026-11-09 10:34 PST COORD option (b): HEAD gen on epyc7 only (epyc4 kw27 HEAD run dir resolves to scratch3 on its root fs: 8 l48hp1 a1 died 'no host qualifies'). Revert: gen_hosts <- gen_hosts_prev_kw43, gen_host <- gen_host_prev_kw43."
   },
   "qwen_compute": {
    "enabled": true,
