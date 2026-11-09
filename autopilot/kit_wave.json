@@ -25,7 +25,7 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/kv-types-5/ev/plan_kvr8/plan_c.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_e2rd_lf",
       "src_sha": "5178ea7aa2797689caf8c40e546e0c89fb7808e1",
       "kit_rtl": {
         "mode": "bind",
@@ -1508,7 +1508,9 @@
         "kv3_io_cor": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
         "kv3_io_cor_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
         "kv3_io_ft_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release"
-      }
+      },
+      "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
+      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us."
     },
     "s81": {
       "enabled": true,
@@ -1521,7 +1523,7 @@
       },
       "plan": "/srv/opentallas-scratch3/claude/kw34/wave_cg_frz_xrt/physical/die_plan/s81/plan_h2_2249.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_c303p_lf",
       "src_sha": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
       "kit_rtl": {
         "mode": "script",
@@ -2641,7 +2643,20 @@
         "serdes__t16@11",
         "serdes__t1__clb45db5be@12",
         "serdes__t2@20",
-        "serdes__t3@20"
+        "serdes__t3@20",
+        "ot_s81sl_leaf__t15@1",
+        "ot_s81sl_leaf__t59@1",
+        "ot_s81sl_leaf__t25__cl431c660f@1",
+        "ot_s81sl_leaf__t29@9",
+        "ot_s81sl_leaf__t36@1",
+        "ot_s81sl_leaf__t40__clf8bbdae1@9",
+        "ot_s81sl_leaf__t54__cl501e5681@3",
+        "ot_s81sl_leaf__t65@3",
+        "ot_s81sl_leaf__t71@1",
+        "ot_s81sl_leaf__t24__cl81374cd8@1",
+        "ot_s81sl_leaf__t32@4",
+        "ot_s81sl_leaf__t70@3",
+        "ot_s81sl_leaf__t46@3"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2709,41 +2724,29 @@
         "ot_s81sl_leaf__t11": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t13": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t14": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t15": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t16": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t17": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t2": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t23": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t24__cl2456157b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t24__cl81374cd8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t25__cl431c660f": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t26": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t29": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t30": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t31": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t34": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t35": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t36": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t37": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t38": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t39": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t40__cl86ea32b3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t40__clf8bbdae1": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t41": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t44__clf4ea6d4b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t46": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t5": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t51": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__cl958451dd": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t53__clb66fa5cb": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t59": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t6": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t65": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t69": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t70": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t71": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t72": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "svc_*_dsdv_svc_rs__t*": "KW-FIX-33 2026-11-08 00:23 PST COORD 00:0x (3) G: SVC-RS FLAT 4M cells, REDESIGN split, S81-SVCRS-1",
@@ -2775,7 +2778,7 @@
         "col_h9_r2__t1__clc9ad8f7e@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t10@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t11@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t12@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t12@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t13@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t14@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t15@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -2805,7 +2808,7 @@
         "ot_s81sl_leaf__t44__clf4ea6d4b@4": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t44__clf6cf8492@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t45@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t46@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t46@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t47@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t4@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t50@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -2824,12 +2827,12 @@
         "ot_s81sl_leaf__t60@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t61@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t62@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t65@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t65@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t66@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t67@3": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: collector under moved macro -> 004a51fc1b6 macro exit (kit src abaf081 lacked it); fresh kit on current src",
         "ot_s81sl_leaf__t69@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t6@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t70@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t70@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t71@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t72@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t73@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -2865,7 +2868,7 @@
         "ot_s81sl_leaf__t2@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
         "ot_s81sl_leaf__t30@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
         "ot_s81sl_leaf__t31@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
-        "ot_s81sl_leaf__t32@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
+        "ot_s81sl_leaf__t32@4": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t33@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
         "ot_s81sl_leaf__t34@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
         "ot_s81sl_leaf__t37@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
@@ -3181,7 +3184,7 @@
         "ot_s81sl_leaf__t29@14": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t3@8": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t30@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-        "ot_s81sl_leaf__t31@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
+        "ot_s81sl_leaf__t31@9": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t32@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t33@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
         "ot_s81sl_leaf__t35@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -3622,7 +3625,16 @@
         "dsdv_slice_lepe_mu_C__t1@15": "KW-FIX-35-T 2026-11-08 07:02 PST: S81-TYPES-7-LEC class J3 (xs4_ctl payload + rstopt_xo every-edge loads, re-sha 4a80ce2d3c7, landed c303af train T 9cf2a1ee354): fresh kit",
         "slice_station__t45@11": "REDESIGN: KW-FIX-35-S 2026-11-08 08:03 PST: S81-STATION-1 ring reset tap index space (ring_taps grid fix 857e197e14c); t45 rings now on the nearest equal-depth relay (re-bound: u_cland_ft1_i/ft2_i rst_n_t2->t4, dn rst_n_t11->t3); ONE fresh t45",
         "serdes__t2@20": "KW-FIX-35 2026-11-08 10:55 PST: INFRA staging (epyc6 lacks full codex-wave-bind-1106/src_28fc7; kit_rtl base/rtl fallback leaves), not a strike; S81 gen off epyc6",
-        "serdes__t3@20": "KW-FIX-35 2026-11-08 10:55 PST: INFRA staging (epyc6 lacks full codex-wave-bind-1106/src_28fc7; kit_rtl base/rtl fallback leaves), not a strike; S81 gen off epyc6"
+        "serdes__t3@20": "KW-FIX-35 2026-11-08 10:55 PST: INFRA staging (epyc6 lacks full codex-wave-bind-1106/src_28fc7; kit_rtl base/rtl fallback leaves), not a strike; S81 gen off epyc6",
+        "ot_s81sl_leaf__t15@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t59@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t25__cl431c660f@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t29@9": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t36@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t40__clf8bbdae1@9": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t54__cl501e5681@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t71@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t24__cl81374cd8@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips."
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -3813,15 +3825,15 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t29": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:941.76:60.48:R180,u_lf.u_vn.u_a:414.72:380.16:MX,u_lf.u_vn.u_b:414.72:190.08:MX,u_lf.u_vq:786.24:449.28:MX,u_lf.u_vs:984.96:432:R180,u_lf.u_vsw:959.04:613.44:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t31": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:578.88:717.12:MY,u_lf.u_vn.u_b:587.52:898.56:MY,u_lf.u_vq:302.4:665.28:MY,u_lf.u_vs:103.68:596.16:MY,u_lf.u_vsw:77.76:362.88:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t32": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:743.04:656.64:MY,u_lf.u_vn.u_b:743.04:838.08:MY,u_lf.u_vp.g_ln[14].u_l:1149.12:656.256:R0,u_lf.u_vp.g_ln[3].u_l:1149.12:785.856:R0,u_lf.u_vq:561.6:665.28:MY,u_lf.u_vs:319.68:648:MY,u_lf.u_vsw:267.84:414.72:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t35": {
@@ -3849,7 +3861,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__clf8bbdae1": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t41": {
@@ -3857,7 +3869,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t46": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.98:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.7:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t5": {
@@ -3873,7 +3885,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl501e5681": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:69.12:MX,u_lf.u_vp.g_ln[10].u_l:43.2:302.016:MX,u_lf.u_vp.g_ln[12].u_l:43.2:42.816:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:172.416:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:432:MX,u_lf.u_vsw:812.16:613.44:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t54__cl706d9749": {
@@ -3889,7 +3901,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t65": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.98:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.98:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t67": {
@@ -3901,7 +3913,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t70": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:717.12:846.72:R0,u_lf.u_vn.u_a:371.52:466.56:R0,u_lf.u_vn.u_b:345.6:1010.88:R0,u_lf.u_vp.g_ln[7].u_l:190.08:941.376:R0,u_lf.u_vq:656.64:648:R0,u_lf.u_vs:855.36:604.8:R0,u_lf.u_vsw:829.44:371.52:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t72": {
@@ -3917,7 +3929,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t36": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.34:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.34:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t7": {
@@ -3925,7 +3937,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t15": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t13": {
@@ -3933,7 +3945,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t59": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:172.416:MX,u_lf.u_vp.g_ln[2].u_l:172.8:42.816:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t61": {
@@ -3949,7 +3961,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t24__cl81374cd8": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_m:302.4:43.2:MX,u_lf.u_ve.u_s:112.32:43.2:MX,u_lf.u_vn.u_a:509.76:362.88:R180,u_lf.u_vn.u_b:492.48:172.8:R180,u_lf.u_vp.g_ln[5].u_l:915.84:431.616:MX,u_lf.u_vq:501.12:544.32:R180,u_lf.u_vs:311.04:414.72:MX,u_lf.u_vsw:25.92:432:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t43": {
@@ -3957,7 +3969,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t71": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:483.84:699.84:MY,u_lf.u_vn.u_b:483.84:881.28:MY,u_lf.u_vq:276.48:656.64:MY,u_lf.u_vs:77.76:630.72:MY,u_lf.u_vsw:51.84:397.44:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t23": {
@@ -3969,7 +3981,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl431c660f": {
-          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:51.84:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:432:MX,u_lf.u_vsw:812.16:613.44:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t30": {
@@ -3977,7 +3989,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t12": {
-          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:336.96:665.28:R0,u_lf.u_vn.u_b:362.88:846.72:R0,u_lf.u_vp.g_ln[12].u_l:181.44:794.496:R0,u_lf.u_vp.g_ln[13].u_l:181.44:664.896:R0,u_lf.u_vp.g_ln[14].u_l:51.84:664.896:R0,u_lf.u_vq:1149.12:648:R0,u_lf.u_vs:941.76:648:MY,u_lf.u_vsw:708.48:604.8:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t33": {
@@ -5517,7 +5529,86 @@
         "epyc5",
         "epyc6"
       ],
-      "note_kw35_e14": "KW-FIX-35 2026-11-08 10:55 PST COORD fail_watch: epyc6 out of s81 gen_hosts again: kit_rtl resolves leaf/unindexed sources from the asbuilt tree codex-wave-bind-1106/src_28fc7 (UNINDEXED-SRC-STALE mechanism), which epyc6 holds only partially and has no root room for (163 GB, floor 150). Back when KW-FIX-35-US die-agnostic leaf follow lands. Revert: gen_hosts <- gen_hosts_prev_kw35e14."
+      "note_kw35_e14": "KW-FIX-35 2026-11-08 10:55 PST COORD fail_watch: epyc6 out of s81 gen_hosts again: kit_rtl resolves leaf/unindexed sources from the asbuilt tree codex-wave-bind-1106/src_28fc7 (UNINDEXED-SRC-STALE mechanism), which epyc6 holds only partially and has no root room for (163 GB, floor 150). Back when KW-FIX-35-US die-agnostic leaf follow lands. Revert: gen_hosts <- gen_hosts_prev_kw35e14.",
+      "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_c303p",
+      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us.",
+      "hold_items_prev_kw36leaf": {
+        "ot_s81sl_leaf__t15": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t59": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t25__cl431c660f": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t29": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t31": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t36": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t40__clf8bbdae1": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t65": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t71": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t24__cl81374cd8": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t70": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
+        "ot_s81sl_leaf__t46": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
+      },
+      "item_env_prev_kw36leaf": {
+        "ot_s81sl_leaf__t15": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t59": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t25__cl431c660f": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t29": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:959.04:613.44,u_lf.u_vn.u_b:397.44:190.08,u_lf.u_vs:984.96:432.0:R180,u_lf.u_vn.u_a:397.44:380.16,u_lf.u_vq:803.52:449.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t31": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:604.8:898.56,u_lf.u_vs:103.68:648.0,u_lf.u_vn.u_a:604.8:717.12,u_lf.u_vq:285.12:665.28,u_lf.u_vsw:77.76:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t36": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:820.8:630.72,u_lf.u_vn.u_a:336.96:457.92,u_lf.u_vq:820.8:492.48,u_lf.u_vsw:1002.24:544.32",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t40__clf8bbdae1": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t54__cl501e5681": {
+          "OT_MACRO_MOVES": "u_lf.u_vs:838.08:423.36,u_lf.u_vn.u_a:354.24:596.16,u_lf.u_vq:656.64:440.64,u_lf.u_vsw:812.16:604.8",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t65": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:60.48:544.32,u_lf.u_vn.u_b:699.84:941.76,u_lf.u_vs:302.4:578.88,u_lf.u_vn.u_a:699.84:596.16,u_lf.u_vq:483.84:596.16",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t71": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:509.76:881.28,u_lf.u_vs:77.76:639.36,u_lf.u_vn.u_a:509.76:699.84,u_lf.u_vq:259.2:656.64,u_lf.u_vsw:51.84:406.08",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t24__cl81374cd8": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:492.48:172.8,u_lf.u_vs:259.2:414.72:MX,u_lf.u_vn.u_a:509.76:362.88,u_lf.u_vq:440.64:535.68,u_lf.u_ve.u_s:112.32:60.48,u_lf.u_vsw:25.92:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t32": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:743.04:838.08,u_lf.u_vs:319.68:648.0,u_lf.u_vn.u_a:751.68:656.64,u_lf.u_vq:570.24:665.28,u_lf.u_vsw:267.84:414.72",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t70": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:829.44:397.44,u_lf.u_vn.u_b:345.6:1010.88,u_lf.u_vs:855.36:630.72,u_lf.u_vn.u_a:371.52:466.56,u_lf.u_vq:673.92:648.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t46": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:768.96:976.32,u_lf.u_vs:449.28:648.0,u_lf.u_vn.u_a:751.68:466.56,u_lf.u_vq:630.72:665.28,u_lf.u_vsw:120.96:708.48",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        },
+        "ot_s81sl_leaf__t12": {
+          "OT_MACRO_MOVES": "u_lf.u_vsw:708.48:604.8,u_lf.u_vn.u_b:362.88:846.72,u_lf.u_vs:941.76:648.0:MY,u_lf.u_vn.u_a:336.96:665.28,u_lf.u_vq:1123.2:665.28",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        }
+      },
+      "note_kw36leaf": "KW-FIX-36: S81-TYPES-10 LEAF GRT-0116 batch 15 rows (lanes/S81-LEAF-BATCH-1108.json), OT_MACRO_MOVES escape-open form; hold text 'pending matched spacing form' answered by that form. Revert *_prev_kw36leaf and drop the 15 retry keys."
     },
     "s81_head": {
       "enabled": true,
@@ -6245,7 +6336,7 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/qct10/ctlm/plan/plan_qc53v4w_ctlmfq.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq",
+      "src": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq_lf",
       "src_sha": "7e2f6c9af85ec33de031f45aea6fe6d103a3f61b",
       "kit_rtl": {
         "mode": "bind",
@@ -8603,7 +8694,9 @@
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 19 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
       "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 11:10 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 8: qfd_dv_s5_sc2_leaf qfd_dv_s5_sc2_leaf_dn0 sle_cland_w2_e_200 sle_cland_w515_s_200 sle_cland_w515_s_201 sle_cland_w517_n_200 sle_cland_w765_e_200 sle_cland_w767_e_200. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
       "item_env_prev_kw36glue": null,
-      "note_kw36_glue": "KW-FIX-36 COORD 17:29 (4): glue FSM-recode false LEC, class fix on the hd_host recipe (OT_FSM_NONE_WIRES=st); QC-TYPES-11 17:32: glue is the only row with the st[*] pattern; retry@6, not a failed attempt; rerun LEC is the proof."
+      "note_kw36_glue": "KW-FIX-36 COORD 17:29 (4): glue FSM-recode false LEC, class fix on the hd_host recipe (OT_FSM_NONE_WIRES=st); QC-TYPES-11 17:32: glue is the only row with the st[*] pattern; retry@6, not a failed attempt; rerun LEC is the proof.",
+      "src_prev_kw36us": "/srv/opentallas-scratch2/claude/qct10/ctlm/src_ctlmfq",
+      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us."
     },
     "hbm": {
       "enabled": true,
@@ -8769,7 +8862,7 @@
       "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
       "plan": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
       "gen_host": "epyc5",
-      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9z",
+      "src": "/srv/opentallas-scratch2/claude/kw35/src_cad9z_lf",
       "src_sha": "9d0db1edc35f64a860d40366854e2418a864bf06",
       "gate": {
         "g0c": "PASS",
@@ -11355,7 +11448,9 @@
         "OT_HOLD_REPAIR_SCOPE": "reg2reg"
       },
       "note_kw35rcm": "KW-FIX-35-RCM 2026-11-08 11:08 PST (COORD 10:41 ruling 2, class RC-MODEL from HBM-HARD-6 10:24): INTERIM HBM kit default SLEW/CAP margin 35 (type kits gen_args --slew-margin 35 --cap-margin 35; core kits core_kit.args --slew-margin 35) and OT_HOLD_REPAIR_SCOPE=reg2reg (core kits core_kit.args --orfs-var; type kits die gen_env, applied once kit_wave die gen_env + gen_phys OT_HOLD_REPAIR_SCOPE passthrough land from claude/kw-fix-35rcm-rccal-1108). New attempts only (spec captured at launch); running rows untouched. Revert gen_args <- gen_args_prev_kw35rcm, core_kit.args <- core_kit_args_prev_kw35rcm, gen_env <- gen_env_prev_kw35rcm (null = delete key)",
-      "prov_view_sources_qout_prev_codex1113": null
+      "prov_view_sources_qout_prev_codex1113": null,
+      "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_cad9z",
+      "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us."
     }
   },
   "place_prefer": [
