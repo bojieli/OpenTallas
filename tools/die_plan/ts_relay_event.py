@@ -32,6 +32,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -160,7 +161,14 @@ def _entry(t, bus):
     return next((e for e in t.get("internal_stations", []) if e.get("conn") == f"bus:{bus}"), None)
 
 
-def build(raw, bound, root, skip, only=None, native_base=()):
+def _depth(t, bus):
+    """stations a type really has on bus: the deepest entry, as kit_istations.bus_entries merges per-core rows
+    (e.g. S81 leaf leafdn_i0 carries 1- and 2-station rows); None when the bus has no entry"""
+    n = [len(e["regs_um"]) for e in t.get("internal_stations", []) if e.get("conn") == f"bus:{bus}"]
+    return max(n) if n else None
+
+
+def build(raw, bound, root, skip, only=None, native_base=(), price_existing=False, min_stations=None):
     """Two passes so every lane keeps native_istations' invariant fixed == source stations + destination stations:
     OUT buses first (source stations take the lane's slack: s = max(n_out, fixed - destination need)), then IN buses
     (receiver pad = fixed - source stations; count = max(n_in, pad); fixed = source + count).  Lane latency never
@@ -285,9 +293,9 @@ def build(raw, bound, root, skip, only=None, native_base=()):
     def dest_need(lid):
         _, _, dp, db = _src_part(Q, lid)
         dt = ptype.get(dp)
-        e = _entry(Q["partition_types"].get(dt, {}), db) if dt else None
-        if e is not None:
-            return len(e["regs_um"])
+        n = _depth(Q["partition_types"].get(dt, {}), db) if dt else None
+        if n is not None:
+            return n
         c = cand.get((dt, "in", db))
         return c[0] if c else 0
 
@@ -299,6 +307,10 @@ def build(raw, bound, root, skip, only=None, native_base=()):
         e = _entry(Q["partition_types"][st], sb)
         return len(e["regs_um"]) if e else 0
     for (tn, dirn, bus), (n, row, a) in sorted(cand.items(), key=lambda kv: kv[0][1] != "out"):
+        floor = max([f for rx, b, f in (min_stations or ()) if b == bus and re.fullmatch(rx, tn)], default=0)
+        if floor > n:
+            row["min_stations"] = floor
+            n = floor
         t = Q["partition_types"][tn]
         lns = [lid for lid, _ in lanes_of(Q, tn, bus, dirn)]
         frm, to = a["win"], a["far"]
@@ -324,6 +336,22 @@ def build(raw, bound, root, skip, only=None, native_base=()):
                             f"{a['d']:.0f} um, {n} needed, {count} receiver pad stages sited")
         t.setdefault("internal_stations", []).append(ent)
         touched.append((row, count, lns))
+    if price_existing:
+        # native_istations is per TYPE: once a type goes native-OUT, its older kit OUT stations must be priced as well
+        # (fixed == source + destination).  They are existing hardware, so 0 new stations; the delta is a model catch-up.
+        done = {(r["type"], r["bus"]) for r, _, _ in touched}
+        for tn in sorted(native_out):
+            t = Q["partition_types"][tn]
+            for b in t.get("buses", []):
+                if b["dir"] != "out" or (tn, b["name"]) in done or _entry(t, b["name"]) is None:
+                    continue
+                lns = [lid for lid, _ in lanes_of(Q, tn, b["name"], "out")
+                       if int(lane_by_id[lid].get("fixed_cycles", 0)) < src_count(lid) + dest_need(lid)]
+                for lid in lns:
+                    lane_by_id[lid]["fixed_cycles"] = src_count(lid) + dest_need(lid)
+                if lns:
+                    touched.append((dict(type=tn, bus=b["name"], dir="out", kind="price-existing", d_um=0, need=0,
+                                         ports=[]), 0, lns))
     for row, count, lns in touched:
         lat = {lid: P0.lane_latency(lid) for lid in lns}
         edits.append(dict(row, count=count, lanes={lid: dict(cycles=lat[lid]["cycles"],
@@ -334,8 +362,7 @@ def build(raw, bound, root, skip, only=None, native_base=()):
         for lid in lns:
             sp, sb, dp, db = _src_part(Q, lid)
             if ptype.get(sp) in native | native_out and _entry(Q["partition_types"][ptype[sp]], sb) is not None:
-                e = _entry(Q["partition_types"].get(ptype.get(dp), {}), db)
-                want = src_count(lid) + (len(e["regs_um"]) if e else 0)
+                want = src_count(lid) + (_depth(Q["partition_types"].get(ptype.get(dp), {}), db) or 0)
                 if int(lane_by_id[lid]["fixed_cycles"]) != want:
                     raise AssertionError(f"lane {lid}: fixed_cycles {lane_by_id[lid]['fixed_cycles']} != source + "
                                          f"destination stations {want}")
@@ -354,6 +381,22 @@ def _style(raw_bytes, P):
     return lambda p: json.dumps(p, separators=(",", ":")) + "\n"
 
 
+def regen_latency(out, base, declared):
+    """gen.py latency --inplace on the event plan; every lane cycle delta in the regenerated table must equal the
+    declared pin cycles (no other lane moves, so a lane in an R8 group never silently re-pads)."""
+    import subprocess
+    out = Path(out)
+    subprocess.run([sys.executable, "-I", "-B", str(HERE / "gen.py"), "latency", str(out), "--out",
+                    str(out.parent / "gen_lat"), "--inplace"], check=True)
+    new = json.loads(out.read_text())["latency"]["lanes"]
+    old = base["latency"]["lanes"]
+    delta = {k: new[k]["cycles"] - old[k]["cycles"] for k in new if k in old and new[k]["cycles"] != old[k]["cycles"]}
+    if delta != declared:
+        raise SystemExit("ts_relay_event: latency regen deltas differ from the declared pin cycles: "
+                         + str(sorted(set(delta.items()) ^ set(declared.items()))[:10]))
+    return dict(lanes_changed=len(delta), sum=sum(delta.values()))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("base")
@@ -364,6 +407,16 @@ def main(argv=None):
     ap.add_argument("--bound-list")
     ap.add_argument("--skip-types", default="")
     ap.add_argument("--only-types", default="")
+    ap.add_argument("--price-existing-out", action="store_true",
+                    help="a type that goes native-OUT also prices its older kit OUT stations (+fixed_cycles, 0 new "
+                         "hardware, edits kind price-existing); default off: the native invariant raises instead")
+    ap.add_argument("--min-stations", action="append", default=[], metavar="TYPE_REGEX:BUS=N",
+                    help="raise a bus to at least N stations, so the buses of one R8 class get equal station depth and "
+                         "no pad moves inside a signed grouped core")
+    ap.add_argument("--regen-latency", action="store_true",
+                    help="after writing OUT, regenerate plan.latency with gen.py latency --inplace and check that the "
+                         "per-lane cycle deltas equal the event's pin cycles (the bind reads lane cycles from that "
+                         "table: native_istations.annotate refuses an un-regenerated plan)")
     ap.add_argument("--native-types", default="", help="base asbuilt internal_stations_types (their OUT entries are "
                     "realised as source stations by the bind)")
     a = ap.parse_args(argv)
@@ -379,7 +432,9 @@ def main(argv=None):
     skip = {s for s in a.skip_types.split(",") if s}
     only = {s for s in a.only_types.split(",") if s} or None
     Q, edits, reported, native_out = build(P0, bound, a.pins_root, skip, only,
-                                           {s for s in a.native_types.split(",") if s})
+                                           {s for s in a.native_types.split(",") if s}, a.price_existing_out,
+                                           [(m.rsplit(":", 1)[0], m.rsplit(":", 1)[1].split("=")[0],
+                                             int(m.rsplit("=", 1)[1])) for m in a.min_stations])
     touched = {e["type"] for e in edits}
     touched_lanes = {lid for e in edits for lid in e["lanes"]}
     for k in P0:
@@ -422,6 +477,9 @@ def main(argv=None):
                            pin_cycles_sum=sum(pin.values()), stations=sum(e["count"] for e in edits)),
                preservation="only partition_types[touched].internal_stations and lanes[touched].fixed_cycles change; "
                             "every other key byte-identical (sort_keys compare); RTL/outlines/pins/cores unchanged")
+    if a.regen_latency:
+        rec["latency_regen"] = regen_latency(a.out, P0, rec["pin_cycle_deltas"])
+        rec["plan_output_sha256"] = hashlib.sha256(Path(a.out).read_bytes()).hexdigest()
     Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(rec["totals"]))
 
