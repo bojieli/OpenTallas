@@ -349,6 +349,8 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     lc = ck["landing_contract"]
     pins = {p["name"]: p["xy_um"] for p in lc["pins"]}
     f = Path(rtl_dir) / f"{tn}_part.sv"
+    if not f.exists():
+        f = Path(rtl_dir) / f"{tn}.sv"     # bind writes split variants (kv3_pv_v2n) without the _part suffix
     text = f.read_text()
     m = re.search(r"assign cland_start_raw = (\w+);", text)
     if not m:
