@@ -30274,3 +30274,24 @@ FAILED [AUTOPILOT df6bd4fcfc80] 2026-11-09 04:00:52 PST AUTOPILOT -> KIT-WAVE-3:
   (c) Classes not yet benched: SU command broadcast skew across the leaves of one tap (pgp landed 8..50 su_NW0, 25..96 su_NW2; needs per-leaf D_CMD in the vmlg bench); SFU/HC far-path owner terms; data streams, collective, idx (TRANSPORT-3 table classes, 258 JOIN groups).
   SCRATCH: intel1 47 GB clone reclaimed. Left: intel1 hbm-transport-1/{vmlg 11M, r5 tiny} and epyc7 hbm-transport-1 (~2 MB, the bench inputs for (a)/(b)). No job of mine is running or queued.
 - 2026-11-09 04:05 PST READY [HBM-HARD-9 -> ROOT-MERGE-57, HBM-PLAN-1, cc COORD, DIE-HBM-97] claude/hbm-hard-9-rxlat145-1109@637d0f1a404, LANDS WITH OR AFTER HBM-PLAN-1's FINAL HBM SWITCH, not before. Approved by COORD as HBM die owner. One file, rtl/hbm_accel/host_ep_20261018/ot_hbm_host_cp_rxs.sv: default RXLAT 101 -> 145 (6 + L8008 69 + L8007 70, HBM-PLAN-1 03:13), RSTLAT 70 unchanged, header comment updated; 3 lines, no logic change. The counted R3 view's 101 blob stays in main's history, so the count test still holds until the R6 view (intel1 hbm-hard-9/kit_hostcp_R6, running) replaces it. HBM-PLAN-1: please name sha 637d0f1a404 (file md5 af40fc9c) in the switch manifest.
+- 2026-11-09 04:07 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 1 event(s): q_b002__physical_v1 FAIL FLOW (unclassified failure @place (see log): LEC_ASYNC aborted: the flow ended before its LEC step) evid intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/q_b002__physical_v1/attempt_5/gen/q_b002__physical_v1
+- 2026-11-09 04:07 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 4 event(s): slw_su_c__cl92142dac AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_on_macro,col_v,empty,fill,grt,partial_face,pin_reg_max,pin_reg_p90,pin_unreg,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_su_c__cl92142dac/attempt_29/gen/slw_su_c__cl92142dac); coll_ucie route FAIL TIMING (post-cts-hold: FAIL_POSTCTS legacy grt gate: G2 setup_tt failed before pair census: {'schema': 'opentallas.grt_policy.v1', 'verdict': 'FAIL', 'parasitics': 'glo) job 5bc85b79ac5e; slw_su_l0__cl1a1c1f8f route FAIL ROUTING (grt-overflow: drc 0 GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.) job 42a54ff73ebb; slw_su_c__cl92142dac LAUNCHED (kw-qwenco-slwsuccl92142dac-30-26057)
+- 2026-11-09 04:09 PST READY [QC-TRANSPORT-FIX-4 -> ROOT-MERGE-57, COORD, DIE-QC-97, KW-FIX-42] STATION E(r) COMPILER SHIFT. Branch claude/qc-transport-fix-4-stn-1109@c5024545bf = 5333b7dca8 + 1 commit (5 files under tools/qwen_layerbench). It gates token builds only, not the physical switch. Merge it after 5333b7dca8.
+  WHAT IT DOES: stn_transport_params.py BIND_DIR --out writes the table that DV_STN_TRANSPORT=<json> reads. dv_lower_mat and dv_layer use it to move: AR far words earlier by result(s); the STN command later by cfg(s); the STN window by busy(s). With the variable unset the schedule is unchanged, byte for byte.
+  FIGURES FOR 282ca18ef6cc bind2 (this corrects my earlier "24-37"): E(r) is 24-37 per region, but the shift the compiler must use is at ctl:
+    result = E(0) + r_d lane = 42 on W5-W1, 41 on W0, 55/54 on E.
+    cfg = earliest word shift minus the STN config pin shift = 3-4. The cfg pins land +4 on all 96 regions; the tool asserts this is uniform.
+    busy = max_r E(r) - 4 = 31-33. tail1 r_v is not delayed by RD_PAD.
+  The table is intel1+epyc6 qc-transport-fix-4/stn_transport_sw2.json, sha256 d8c8f75fd6f2...
+  Token builds on this plan therefore set DV_STN_TRANSPORT=<that json> + DV_EMB_TRANSPORT=dro_added=11 + DV_SU_TRANSPORT=extra=9,gap_l0=17,gap_l1=17,ready=23.
+  BENCH, RTL station slice bench (tb_stn_edge), first ctl result edge, bound vs as-built oracle, 8/8 words, FAULT=00:
+    measured shift: W5 42, W2 42, E0 55, E3 54, each equal to the tool's result;
+    +-1 controls: 8/8 caught. TOTAL FAIL 0.
+  [CHECKED epyc6 (copy on intel1) qc-transport-fix-4/stn_edge/edge.log]
+  TESTS: test_stn_transport_lower 7/7 pass. They cover:
+    unset = None; a zero table is identical; a bad schema raises;
+    AR results keep their edges while far moves earlier; a one-slice shift is seen; VM far is unchanged;
+    tool fail-closed on RD_PAD mismatch, a late config, and non-uniform config pins.
+  Regression: dv_lower_mat 8, dv_lower 6 (1 fixture skip), emb_transport_lower 5, 0 fail.
+  dv_layer has no local test here: its lane_ages fixture is missing from my sparse checkout.
+  OPEN: the glue-list RESULT (ruling 4) is still running on intel1. The switch waits for it.
