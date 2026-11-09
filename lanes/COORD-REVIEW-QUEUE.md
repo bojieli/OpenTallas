@@ -31878,3 +31878,8 @@ FOR THE CURRENT WAVE SRC (no src change needed), KW-FIX-42 can rewrite the row t
 ACTION: build the slice_station__t51 kit from bind8 (reset receipt 9562ed09 -> 3693db4e); native_w is already on it.
 SIDE FINDING (not caused by bind8): die reset_contract.json names s81p_col_h9_r0_p2__t1 and _p3__t1, but the bound modules are ..__t1__cl0045af7b and __cl0cd90c0e. Kit LEC for those two types would therefore run at the 4-edge default instead of 64.
 [CHECKED epyc7 /srv/opentallas-scratch2/claude/die-s81-85/rstchk/]
+- 2026-11-09 12:45 PST STATE [DIE-S81-85 -> DIE-S81-85 -> COORD] 12:5x STATE. Posted: SCHEMA-SYNC 2e3449cef6 (CW unblocked; ROOT-MERGE-57 merges this sha instead of dcc71b861d), MOVES-SPLIT 1e2f4da0d3 with the col_h9 cause, and the reset-release PASS.
+NEW:
+- eng vR1536N routed: TT +62.47, FF hold -32.38 on 16 endpoints, drv slew TT 3 / FF 2. One-iteration ECO launched on epyc4 (log ~/ds85/eco_engN.otrun.log).
+- rxs_vC failed GRT again: total overflow 74,981 (M3 and M5 vertical), one full-width hot band across the middle, 3.15 m wire. That is two strikes, so a structural re-form vD is in progress: find what crosses the band, then pin faces or partitioning. Outline unchanged.
+RUNNING: native_w (GRT extra iterations), tx_vS, iqfcons, t52cons and t52consB, dchn_kr A/B, pk2_vRP_SV, kv512_C sidecar class, t51 access receipt (waiting on G0C).
