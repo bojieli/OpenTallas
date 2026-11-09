@@ -606,7 +606,7 @@
  "ot_smh_static_front": {
   "top": "ot_smh_static_front",
   "files": [
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
+   "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_smh_static_front__sx1109.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_smh_static_feed__sf1109.sv",
@@ -624,6 +624,6 @@
   ],
   "params": {},
   "macros": [],
-  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09; HBM-SM-KIDS-2 11-09 feed copy (PIN CYCLES +1 expected_request, +1 schedule_fault)"
+  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09; HBM-SM-KIDS-2 11-09 feed copy (PIN CYCLES +1 expected_request, +1 schedule_fault); HBM-COLLECT-1 11-09 SHARED-X top copy (one shared reset-free x data chain, cycle-exact, GRT-0183 congestion form)"
  }
 }
