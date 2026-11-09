@@ -5318,7 +5318,9 @@ def cmd_kit_rtl(a):
     import schema as SC
     raw = load_plan(a.plan)
     try:
-        P = SC.Plan(raw)                       # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
+        # DIE-KV-97 11-09: the Plan gets the plan dir exactly as the bind does (Binder plan_dir / die_plan.json), so the
+        # reset tree resolves plan-relative hard-core pins_file (KV kv3_astk pins/astk_index0.json) as in the bind of record
+        P = SC.Plan(raw, Path(a.plan).parent / "die_plan.json")   # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
     except KeyError:
         P = None                               # a bind-only plan (no floorplan): data/ctl buses carry an epoch, no taps
     out = Path(a.out)
