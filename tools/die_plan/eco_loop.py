@@ -18,7 +18,7 @@ The iteration, from the kit's routed DB:
      else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
      final = route from the kit's signed 6_final.odb, retried once when the routed seed does not match the SPEF)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
-       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
+       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 5 ps (repair target only)
        (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
        global_route -start_incremental/-end_incremental -> detailed_route (route-keep: only the dirty nets are ripped)
      -> clk_freeze_check.sh (clock wires frozen) -> RCX + slew/cap count -> do-finish
@@ -33,7 +33,7 @@ The post-route LEC is the caller's (signoff_chain.py runs its usual routed LEC o
 kit's lec.py with --lec).  Result: ROOT/eco_loop.json {schema opentallas.eco_loop.v1, kind eco, verdict, base routed
 DB, iterations [commands, metrics, wall], best, flow sha}.
 
-    eco_loop.py run --kit K [--runner R] [--out ROOT] [--hold-margin 0] [--mem 48] [--cpus 8] [--lec] [--owner-override]
+    eco_loop.py run --kit K [--runner R] [--out ROOT] [--hold-margin 5] [--mem 48] [--cpus 8] [--lec] [--owner-override]
     eco_loop.py check SIGNOFF.json        eligibility + near-miss decision of a sign-off record
 Heavy: run through ot-run (--mem = honest peak, the ECO session + DRT + sign-off STA), never on localhost.
     The ECO docker cap is max(--mem, ceil(1.5 x the kit's measured OpenROAD peak)) (ECO-OOM-1); a step killed for memory
@@ -60,7 +60,7 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
-HOLD_MARGIN_PS = 0            # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+HOLD_MARGIN_PS = 5            # COORD 11-09 04:4x (KW-FIX-42): hold REPAIR TARGET 5 ps for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
