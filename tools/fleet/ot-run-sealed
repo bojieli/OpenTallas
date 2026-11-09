@@ -209,11 +209,14 @@ def remote_ok(host, runner, K, bundle=None):
     return "SEALED_OK" in p.stdout and p.returncode == 0, kids
 
 
+FETCH_JOBS = "/srv/opentallas-scratch2/claude/ot-jobs"      # ot-run --dir of a sealed job (it is skipped where absent)
+
+
 def fetch_ok(host, bundle=None, K=None):
     """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
     ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
     # K must be ABSENT there: the returned copy is then ours alone and is removed after the copy-back
-    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + "test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
+    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"test -d {shlex.quote(FETCH_JOBS)} && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
     if bundle:
         sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
     try:
@@ -237,6 +240,12 @@ def copy_back(host, src, K):
     """after a fetched job: the returned K on `host` goes back to K on `src` (where the wave and autopilot read it),
     as ot-run's spill copy-back does; the marker is never copied.  -> rc"""
     par, base = os.path.dirname(K), os.path.basename(K)
+    try:            # the job never ran there (NOT RUN): nothing came back, nothing to copy
+        if subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host, f"test -d {shlex.quote(K)}"],
+                          timeout=60).returncode:
+            return 0
+    except (OSError, subprocess.TimeoutExpired):
+        return 98
     pull = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
             f"tar -C {shlex.quote(par)} --exclude=.ot-run-spill-copy -cf - {shlex.quote(base)}"]
     push = ["ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", src, f"tar -C {shlex.quote(par)} -xf -"]
