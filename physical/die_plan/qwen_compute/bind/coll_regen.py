@@ -86,6 +86,13 @@ def regen(ctx):
     head_params, head_profile = HP.regen(ctx)
     for path, values in head_params.items():
         params.setdefault(path, {}).update(values)
+    embed_record = None
+    if head_profile is not None:
+        # QC-TRANSPORT-FIX 11-08: the embedding read tag ring and provider RoPE (bound-plan transport, not as-built)
+        import embed_transport_params as ET
+        embed_params, embed_record = ET.regen(ctx)
+        for path, values in embed_params.items():
+            params.setdefault(path, {}).update(values)
     if head_profile is not None:
         import head_record_timing as HT
         head_timing = HT.derive(ctx)
@@ -102,12 +109,22 @@ def regen(ctx):
     for path, values in hc_params.items():
         assert path not in params, path
         params[path] = values
+    # QC-TRANSPORT-FIX-3 11-08: opt-in (asbuilt.qc_fabric_transport) bound-transport pads of head columns and stations
+    import qc_fabric_transport as QFT
+    qft_params, qft_record = QFT.regen(ctx)
+    for path, values in qft_params.items():
+        assert path not in params, path
+        params[path] = values
     result = dict(params=params,
                 record=dict(rule=__doc__.split("\n\n")[1], D2D_TXDP_C=txdp, D2D_SEAM_C=seam, TX=TX, RX=RX, RS=RS, RU=fp["R"], LX=LX, LS=LS, calendar=cal,
                             bench_args=f"--relays {fp['R']} {RS[0]} {RS[1]} {RS[2]} --lanes {TX[0]} {TX[1]} {TX[2]} "
                                        f"{RX[0]} {RX[1]} {RX[2]} --lx {LX[0]} {LX[1]} {LX[2]}", ucie_face_params=f2))
     if head_profile is not None:
         result['record']['qwen_head_prepare_profile'] = head_profile
+    if embed_record is not None:
+        result['record']['embed_transport'] = embed_record
     if hc_record:
         result['record']['plan_hard_core_params'] = hc_record
+    if qft_record:
+        result['record']['qc_fabric_transport'] = qft_record
     return result

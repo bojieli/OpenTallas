@@ -29,7 +29,8 @@
 // wrong foff bit), OT_S5_XH3_MUT_POOLW (pooled S tile window without its +1 beat), OT_S5_XH3_MUT_FWD (read pool/k
 // forwarding of a same-edge descriptor write dropped).
 // =====================================================================================================================
-module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
+// QC-TRANSPORT-FIX-3 11-08: N_PAD / S_PAD = extra edges on this column's N / S corridor word (bind hook qc_fabric_transport.py; 0 = as-built, no flop).
+module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PAD = 0, parameter integer S_PAD = 0) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [5:0]     cid,
@@ -650,7 +651,19 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
 `endif
         s_q <= {retag(ts, 1), xo[255:128], ib_c2, g_dx};
     end
-    assign n_d = n_q;
-    assign s_d = s_q;
+    generate if (N_PAD == 0) begin : g_n_nopad
+        assign n_d = n_q;
+    end else begin : g_n_pad
+        reg [CW-1:0] pad_n [0:N_PAD-1]; integer pi_n;
+        always @(posedge ck) begin pad_n[0] <= n_q; for (pi_n = 1; pi_n < N_PAD; pi_n = pi_n + 1) pad_n[pi_n] <= pad_n[pi_n-1]; end
+        assign n_d = pad_n[N_PAD-1];
+    end endgenerate
+    generate if (S_PAD == 0) begin : g_s_nopad
+        assign s_d = s_q;
+    end else begin : g_s_pad
+        reg [CW-1:0] pad_s [0:S_PAD-1]; integer pi_s;
+        always @(posedge ck) begin pad_s[0] <= s_q; for (pi_s = 1; pi_s < S_PAD; pi_s = pi_s + 1) pad_s[pi_s] <= pad_s[pi_s-1]; end
+        assign s_d = pad_s[S_PAD-1];
+    end endgenerate
     assign fault = fault_r;
 endmodule

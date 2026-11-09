@@ -7,10 +7,12 @@ changes RTL defaults nor silently upgrades historical bind manifests.
 SCHEMA = 'opentallas.qwen.head_prepare_params.v1'
 SELECTED = {'d2d_rom': 'qfd_d2d_static_ovl_sf7_obs1',
             'native59': 'qfd_native59_dv_headprep_obs1',
-            'sys_face': 'qfd_sys_face_lctx3_wrapped'}
+            'sys_face': 'qfd_sys_face_lctx3_wrapped',
+            'embed_prov': 'qfd_embedding_word_provider'}
 REQUIRED = {'d2d_rom': {'HEAD_CONTEXT': 1},
             'native59': {'ROPE': 1},
-            'sys_face': {'L_CONTEXTS': 1}}
+            'sys_face': {'L_CONTEXTS': 1},
+            'embed_prov': {'ROPE': 1, 'ROPE_FF': 1}}    # QC-TRANSPORT-FIX 11-08: the provider owns the RoPE storage; flops, no plan macro
 
 
 def regen(ctx):
@@ -40,4 +42,5 @@ def regen(ctx):
         added_pipeline_edges=0, native_embedding_terminal_index=dict(legacy=64, selected=84, delta=20),
         programme_effects=['enable existing recurring HEAD callback',
                            'enable existing eight-word RoPE read after embedding',
+                           'eight RoPE words stored in the provider (ROPE=1, ROPE_FF=1); missing from the legacy profile',
                            'select existing segment1 for layer stages2..36'])
