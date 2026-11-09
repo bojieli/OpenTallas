@@ -6676,7 +6676,7 @@
       },
       "plan": "/srv/opentallas-scratch2/claude/qct11/wave/plan/plan_qc53v4nS.json",
       "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/qct11/wave/src_lfq",
+      "src": "/srv/opentallas-scratch2/claude/kw41/src_lfq_cl",
       "src_sha": "7cb33a3fd1b7649b2767ef0079fd40cbc847ca42",
       "kit_rtl": {
         "mode": "bind",
@@ -7183,7 +7183,19 @@
         "cbn_q00__cl622f65d2@13",
         "cbn_q00__cldbcda913@18",
         "slw_su_l1__clcc9d0155@9",
-        "slw_su_l1__cla2a78701@8"
+        "slw_su_l1__cla2a78701@8",
+        "cbf_q00__cl1b5a6458@12",
+        "cbf_q00__cl870de686@12",
+        "cbn_q00__cld7bf7197@13",
+        "cbn_q01__cldd6ea846@11",
+        "cbx_q10__cl89936551@15",
+        "coll_ft__cl78c7b300@12",
+        "slw_fe_v1__clfe325744__cldb4efe33@9",
+        "cbn_q01__clab6e67f2@20",
+        "cbn_q11__cl49ae4555@7",
+        "cbn_q11__cl5cc92dfe@6",
+        "coll_s@12",
+        "slw_stm_v1__cl05fc43f7__cl389df4e9@19"
       ],
       "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
       "type_args": {
@@ -7926,7 +7938,8 @@
           "OT_CONS_KIT": "1"
         },
         "cbf_q00__cl1b5a6458": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_KW41_CLAND": "aa8acb1988e"
         },
         "sle_fw_v2__cl6740750e": {
           "OT_GRT_ALLOW_CONGESTION": "1"
@@ -7950,10 +7963,12 @@
           "OT_CONS_KIT": "1"
         },
         "cbn_q11__cl49ae4555": {
-          "OT_CONS_KIT": "1"
+          "OT_CONS_KIT": "1",
+          "OT_KW41_CLAND": "aa8acb1988e"
         },
         "cbx_q10__cl89936551": {
-          "OT_CONS_KIT": "1"
+          "OT_CONS_KIT": "1",
+          "OT_KW41_CLAND": "aa8acb1988e"
         },
         "slw_fe_v2__clf110fab2": {
           "OT_CONS_KIT": "1"
@@ -7980,7 +7995,8 @@
           "OT_CONS_KIT": "1"
         },
         "coll_ft__cl78c7b300": {
-          "OT_CONS_KIT": "1"
+          "OT_CONS_KIT": "1",
+          "OT_KW41_CLAND": "aa8acb1988e"
         },
         "coll_ft__cla4a25d77": {
           "OT_CONS_KIT": "1"
@@ -7989,7 +8005,8 @@
           "OT_FSM_NONE_WIRES": "st"
         },
         "coll_s": {
-          "OT_GRT_ALLOW_CONGESTION": "1"
+          "OT_GRT_ALLOW_CONGESTION": "1",
+          "OT_KW41_CLAND": "aa8acb1988e"
         },
         "slw_st_a_v1__clfc5867a6": {
           "OT_GRT_ALLOW_CONGESTION": "1"
@@ -8014,6 +8031,27 @@
         },
         "slw_su_l1__cla2a78701": {
           "OT_KW40_LANDING_EV": "dd955394dd0"
+        },
+        "cbf_q00__cl870de686": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "cbn_q00__cld7bf7197": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "cbn_q01__cldd6ea846": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "slw_fe_v1__clfe325744__cldb4efe33": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "cbn_q01__clab6e67f2": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "cbn_q11__cl5cc92dfe": {
+          "OT_KW41_CLAND": "aa8acb1988e"
+        },
+        "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+          "OT_KW41_CLAND": "aa8acb1988e"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -9272,7 +9310,24 @@
         "slw_su_l1__clcc9d0155@9"
       ],
       "note_kw40_views": "KW-FIX-40 23:3x COORD 23:30: FileNotFoundError provenance.json @gen is NOT the epyc4 move: staged views lacked landing_evidence (QC-TYPES-10 class N). Overlay dd955394dd0 carries it from attempts started after 23:17; the 18 kw32-views copies of 6 sle_cland *_200/_201 masters had none, so kw40/views_ev copies (hard links + landing_evidence from ref_tile, same LEF sha) replace them in prov_view_sources; dir_prev_kw40 = rollback.",
-      "note_kw40_ev": "KW-FIX-40 23:4x: OT_KW40_LANDING_EV is a no-op marker: the landing_evidence fix is in the overlay tool (not src_sha), so HOLD_UNCHANGED would hold these 4 rows on an unchanged input hash."
+      "note_kw40_ev": "KW-FIX-40 23:4x: OT_KW40_LANDING_EV is a no-op marker: the landing_evidence fix is in the overlay tool (not src_sha), so HOLD_UNCHANGED would hold these 4 rows on an unchanged input hash.",
+      "src_prev_kw41": "/srv/opentallas-scratch2/claude/qct11/wave/src_lfq",
+      "note_src_kw41": "KW-FIX-41 2026-11-09 00:14 PST (QC-TYPES-13 23:54): src = src_lfq + tools/die_plan/landing_place.py from claude/qc-types-13-cland-optional-1108@aa8acb1988e (hard-link tree on every gen host: epyc2/epyc4 real under scratch3/claude/kw41src, symlinked); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw41.",
+      "retry_prev_kw41_added": [
+        "cbf_q00__cl1b5a6458@12",
+        "cbf_q00__cl870de686@12",
+        "cbn_q00__cld7bf7197@13",
+        "cbn_q01__cldd6ea846@11",
+        "cbx_q10__cl89936551@15",
+        "coll_ft__cl78c7b300@12",
+        "slw_fe_v1__clfe325744__cldb4efe33@9",
+        "cbn_q01__clab6e67f2@20",
+        "cbn_q11__cl49ae4555@7",
+        "cbn_q11__cl5cc92dfe@6",
+        "coll_s@12",
+        "slw_stm_v1__cl05fc43f7__cl389df4e9@19"
+      ],
+      "note_kw41_cland": "KW-FIX-41: OT_KW41_CLAND is a no-op marker so HOLD_UNCHANGED releases these rows (the fix is in the tool, not src_sha)."
     },
     "hbm": {
       "enabled": true,
