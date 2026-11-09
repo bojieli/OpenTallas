@@ -1,0 +1,9 @@
+# FLEET-MESH-1 2026-11-09: fleet ssh mesh table. alias<TAB>cherry-name<TAB>ip<TAB>mux(yes|no: ControlMaster on this host's outgoing ssh)
+# intel2 mux=no: hub holds 60+ concurrent ssh per peer, sshd MaxSessions=10 on every host would refuse multiplexed sessions.
+intel2	tolerant-swine	185.8.106.226	no
+intel1	key-cardinal	185.8.107.41	yes
+epyc2	dear-crayfish	185.8.107.246	yes
+epyc4	aware-parakeet	185.189.44.212	yes
+epyc5	devoted-wren	185.189.45.167	yes
+epyc6	eager-sunfish	88.216.197.41	yes
+epyc7	loved-redfish	93.115.25.103	yes
