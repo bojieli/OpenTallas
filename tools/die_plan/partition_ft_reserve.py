@@ -75,6 +75,9 @@ def tcl(receipt):
     wins=pdn_windows(receipt)
     if wins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows={len(wins)}"')
+    vwins=pdn_windows_v(receipt)
+    if vwins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_v={len(vwins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -106,9 +109,72 @@ PDN_WIN_STRIPES = {'M4': (2.16, 0.12, 0.072, 4.32),      # offset, width, spacin
                    'M6': (1.968, 0.288, 0.096, 4.32)}    # = gen_phys PG_M6 / the top-grid M6 stripe
 
 
+# DIE-HBM-92-SU 11-08 (HBM q_su21 / q_su30 / q_su31 PDN-0179 "Unable to repair all channels", 54 PDN-0178 channels on
+# M6): the die reserves M7 (the PDN pin layer, vertical) in WIDE vertical bands, e.g. one 251-um block over the SU lane1
+# macro column of q_su21.  The macro-edge channels under it (core edge to the first macro, the 78-um gap between the two
+# macro groups) then have no M7 strap anywhere, and the M6 straps there are cut every 10.8 um by the die M6 FT bands, so
+# pdngen cannot repair the channel.  Bisect on the q_su21 tapcell odb: dropping the M6 or the M7 reservation -> PDNGEN OK;
+# M4 or M5 -> unchanged.  A WIDE band (> PDN_WIN_MIN) on the vertical PDN pin layer keeps one strap window at every
+# PDN_WIN_EVERY_V-th M7 strap of the top grid (real core grid: core x0 + offset + k * pitch), the first strap inside the
+# band included, so every channel at least PDN_WIN_EVERY_V M7 pitches wide gets an M7 strap (q_su21: 1, 2, 3 -> PDNGEN OK;
+# skipping the strap nearest the band edge -> 27 channels left).  M7 cost in such a band: 0.972 of every 17.28 um (5.6 %).
+PDN_WIN_EVERY_V = 2
+PDN_WIN_STRIPES_V = {'M7': (4.128, 0.288, 0.096, 8.64)}  # = gen_phys PDN top-grid M7 stripe (offset, width, spacing, pitch)
+
+
+def pdn_windows_v(receipt, core_x0=4.32):
+    """[(layer, x0, x1, rect)] vertical PDN strap windows cut out of wide M7 reservation rectangles."""
+    if receipt is None:
+        return []
+    out = []
+    for r in receipt['rectangles_um']:
+        if r['layer'] not in PDN_WIN_STRIPES_V:
+            continue
+        x0, y0, x1, y1 = r['rect']
+        if x1 - x0 <= PDN_WIN_MIN:
+            continue
+        off, wd, sp, pitch = PDN_WIN_STRIPES_V[r['layer']]
+        step = PDN_WIN_EVERY_V * pitch
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        first = None
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < x0 + PDN_WIN_MARGIN:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN:
+                break
+            if first is None:
+                first = s
+            if round((s - first) / pitch) % PDN_WIN_EVERY_V:
+                continue
+            out.append((r['layer'], round(lo, 3), round(hi, 3), tuple(r['rect'])))
+    return out
+
+
+# DIE-HBM-92-SU 11-08 (q_su30__physical_v1, 2 PDN-0178 M5 channels over the pretree macro): the die can reserve a tall
+# M6 block as a stack of abutting rows (8.1 / 2.7 um, alternately ending at x 2062.8 and 2064.96 of a 2064.96 outline).
+# Each row alone is thin and not exactly full-width, so the tall-band rule never fired.  Rows that reach both outline
+# edges within PDN_WIN_FULL_TOL count as full width, and abutting full rows of one layer merge into one band.
+PDN_WIN_FULL_TOL = 4.32
+
+
 def _full(row, width):
     x0, y0, x1, y1 = row['rect']
-    return row['layer'] in PDN_WIN_STRIPES and x0 <= 1e-6 and x1 >= width - 1e-6
+    return row['layer'] in PDN_WIN_STRIPES and x0 <= PDN_WIN_FULL_TOL and x1 >= width - PDN_WIN_FULL_TOL
+
+
+def _bands(receipt, width):
+    """[(layer, y0, y1)] maximal y-runs of abutting full-width rows per PDN layer."""
+    rows = sorted((r['layer'], r['rect'][1], r['rect'][3]) for r in receipt['rectangles_um'] if _full(r, width))
+    out = []
+    for L, y0, y1 in rows:
+        if out and out[-1][0] == L and y0 <= out[-1][2] + 1e-6:
+            out[-1][2] = max(out[-1][2], y1)
+        else:
+            out.append([L, y0, y1])
+    return [tuple(b) for b in out]
 
 
 def _width(receipt, width):
@@ -121,13 +187,10 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
         return []
     width = _width(receipt, width)
     out = []
-    for r in receipt['rectangles_um']:
-        if not _full(r, width):
-            continue
-        y0, y1 = r['rect'][1], r['rect'][3]
+    for L, y0, y1 in _bands(receipt, width):
         if y1 - y0 <= PDN_WIN_MIN:
             continue
-        off, wd, sp, pitch = PDN_WIN_STRIPES[r['layer']]
+        off, wd, sp, pitch = PDN_WIN_STRIPES[L]
         step = PDN_WIN_EVERY * pitch
         k = max(0, int((y0 - core_y0 - off) // step))
         while True:
@@ -138,7 +201,7 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
                 continue
             if hi > y1 - pitch:
                 break
-            out.append((r['layer'], round(lo, 3), round(hi, 3)))
+            out.append((L, round(lo, 3), round(hi, 3)))
     return out
 
 
@@ -147,15 +210,28 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
     pdn_windows."""
     width = _width(receipt, width)
     wins = pdn_windows(receipt, width, core_y0)
+    vwins = pdn_windows_v(receipt)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
-        mine = sorted((a, b) for L, a, b in wins if L == r['layer'] and y0 < a and b < y1) if _full(r, width) else []
+        vmine = sorted((a, b) for L, a, b, rr in vwins if L == r['layer'] and rr == tuple(r['rect']))
+        if vmine:
+            cur = x0
+            for a, b in vmine:
+                out.append((r['layer'], [cur, y0, a, y1]))
+                cur = b
+            out.append((r['layer'], [cur, y0, x1, y1]))
+            continue
+        # a window of a merged band may straddle the rows it is made of: cut the overlap out of every row
+        mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins
+                      if L == r['layer'] and a < y1 and b > y0) if _full(r, width) else []
         cur = y0
         for a, b in mine:
-            out.append((r['layer'], [x0, cur, x1, a]))
-            cur = b
-        out.append((r['layer'], [x0, cur, x1, y1]))
+            if a > cur + 1e-9:
+                out.append((r['layer'], [x0, cur, x1, a]))
+            cur = max(cur, b)
+        if y1 > cur + 1e-9:
+            out.append((r['layer'], [x0, cur, x1, y1]))
     return out
 
 

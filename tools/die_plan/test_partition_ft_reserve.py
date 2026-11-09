@@ -151,3 +151,60 @@ def test_obstructions_cover_receipt_minus_windows_and_thin_bands_unchanged():
     thin = {'rectangles_um': [dict(layer='M4', rect=[0.0, 4.32, 552.96, 7.02])]}
     assert F.pdn_windows(thin, 552.96) == [] and 'pdn_windows' not in F.tcl(thin)
     assert 'pdn_windows=95' in F.tcl(r)
+
+
+
+def _wide_m7_receipt():
+    # q_su21 geometry (DIE-HBM-92-SU 11-08): a 251.1-um M7 block over the left SU lane1 macro column, a thin
+    # 2.7-um M7 band and an M6 band.
+    return {'rectangles_um': [dict(layer='M7', rect=[0.0, 4.32, 251.1, 1555.2]),
+                              dict(layer='M7', rect=[10.8, 0.0, 13.5, 4.32]),
+                              dict(layer='M6', rect=[0.0, 1019.52, 1892.16, 1022.22])]}
+
+
+def test_wide_m7_band_keeps_every_second_strap_from_the_band_edge():
+    r = _wide_m7_receipt()
+    w = F.pdn_windows_v(r)
+    off, wd, sp, pitch = F.PDN_WIN_STRIPES_V['M7']
+    starts = [lo + F.PDN_WIN_MARGIN for _, lo, _, _ in w]
+    for s in starts:
+        assert ((s - 4.32 - off) / pitch) == pytest.approx(round((s - 4.32 - off) / pitch), abs=1e-6)
+    assert starts[0] == pytest.approx(4.32 + off)                 # first strap inside the band: the edge channel
+    assert all(b - a == pytest.approx(F.PDN_WIN_EVERY_V * pitch) for a, b in zip(starts, starts[1:]))
+    assert all(x[3] == (0.0, 4.32, 251.1, 1555.2) for x in w) and len(w) == 14
+
+
+def test_wide_m7_obstructions_cover_receipt_minus_windows():
+    r = _wide_m7_receipt()
+    rows = F.obstruction_rows(r, 1892.16)
+    area = lambda q: (q[2] - q[0]) * (q[3] - q[1])
+    win = sum((hi - lo) * (1555.2 - 4.32) for _, lo, hi, _ in F.pdn_windows_v(r))
+    assert sum(area(q) for _, q in rows) == pytest.approx(sum(area(x['rect']) for x in r['rectangles_um']) - win)
+    assert ('M7', [10.8, 0.0, 13.5, 4.32]) in rows and ('M6', [0.0, 1019.52, 1892.16, 1022.22]) in rows
+    assert F.pdn_windows_v({'rectangles_um': [dict(layer='M7', rect=[0.0, 0.0, 8.0, 100.0])]}) == []
+
+
+
+def _stacked_m6_receipt():
+    # q_su30__physical_v1 (DIE-HBM-92-SU 11-08): a tall M6 block given as abutting 8.1 / 2.7 um rows that end
+    # alternately at x 2062.8 and 2064.96 (outline 2064.96).
+    rows, y, k = [], 1429.92, 0
+    while y < 1555.2 - 1e-6:
+        h = 2.7 if k % 2 == 0 else 8.1
+        y1 = min(1555.2, round(y + h, 3))
+        rows.append(dict(layer='M6', rect=[0.0, y, 2064.96 if k % 2 == 0 else 2062.8, y1]))
+        y, k = y1, k + 1
+    return {'rectangles_um': rows}
+
+
+def test_stacked_rows_merge_into_one_tall_band_with_windows():
+    r = _stacked_m6_receipt()
+    w = F.pdn_windows(r, 2064.96)
+    assert w and all(L == 'M6' for L, _, _ in w)
+    assert all(1429.92 + 4.32 <= lo and hi <= 1555.2 - 4.32 for _, lo, hi in w)
+    rows = F.obstruction_rows(r, 2064.96)
+    area = lambda q: (q[2] - q[0]) * (q[3] - q[1])
+    for _, lo, hi in w:            # no obstruction left inside a window
+        assert not any(q[1] < hi - 1e-9 and q[3] > lo + 1e-9 for _, q in rows)
+    lost = sum(area(x['rect']) for x in r['rectangles_um']) - sum(area(q) for _, q in rows)
+    assert 0 < lost <= sum((hi - lo) * 2064.96 for _, lo, hi in w) + 1e-6
