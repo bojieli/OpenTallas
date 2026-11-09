@@ -879,3 +879,12 @@ Elapsed time: 1:05.68[h:]min:sec. CPU time: user 64.56 sys 1.05 (99%). Peak memo
 make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_col_h10_r1__t1__cl95b37463/base/4_1_cts.odb] Error 2
  | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r1__t1__cl95b37463/attempt_13/gen/col_h10_r1__t1__cl95b37463 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-09 13:23:44 PST AUTOPILOT -> KIT-WAVE-3: FAILED 441e454182c2 s81/serdes__t16 (CRASH/flow-error): y: 46548552KB.
+OT_LAYOUT_RENDER place 2026-11-09 21:13:49 2 PNG 22 s: place 0/6 flagged | not computable: opposite_face_pins,channel_tracks,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 241
+make: *** [Makefile:585: /work/run/results/asap7/dp_serdes__t16/base/5_1_grt.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t16/attempt_12/gen/serdes__t16 src claude/kw-fix-35-wave-c303a-1108@804f9e020b2 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-09 13:23:56 PST AUTOPILOT -> KIT-WAVE-3: FAILED 7afa1610ab77 s81/bk_sel__t2 (CRASH/flow-error): YOUT_RENDER place 2026-11-09 21:11:37 2 PNG 32 s: place 1/6 flagged: local_density=0.731 | not computable: opposite_face_pins,channel_tracks,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 241
+make: *** [Makefile:585: /work/run/results/asap7/dp_bk_sel__t2/base/5_1_grt.odb] Error 2
+ | kit epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2 src claude/kw-fix-35-s81src2-1108@9d13c8cce9d | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
