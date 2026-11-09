@@ -1114,10 +1114,22 @@ module ot_hdc_v41x_attn_s #(
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_m
             if (PHYS == 0) begin : g_real
             if (MFAN != 0) begin : g_x
+`ifdef OT_SVC_MERGE_H4
+            // DIE-S81-85 form A (11-09): the H8 merge as two hard H4 providers (u_m.g_h4[0..1].u_h4,
+            // ot_s81_svc_merge_h4), zero added cycles; equal to merge_x H=8 (tb_svc_merge_h4).
+            if (H != 8) begin : g_h4_bad
+                $error("OT_SVC_MERGE_H4 needs H == 8");
+            end
+            ot_s81_svc_merge_h8_split #(.DPT(DPT), .MLEV(MLEV), .FPL(FX), .F12(F12)) u_m (
+                .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
+                .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
+                .of_(m_f[gk*H +: H]));
+`else
             ot_hdc_v41x_attn_merge_x #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX), .F12(F12)) u_m (
                 .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
+`endif
             end else begin : g_s
             ot_hdc_v41x_attn_merge_s #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX)) u_m (
                 .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
