@@ -189,10 +189,17 @@ def check_ft_macro_sites(P, R):
                 R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
                 continue
             name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
+            # stations_in (DIE-S81-85 11-09): the slot's stations are registers of these hard children, so a station
+            # inside one of them is that child's own cell; every other macro is still checked
+            own = set(slot.get('stations_in') or ())
+            unknown = own - {hc['inst'] for hc in t.get('hard_cores') or []}
+            if unknown:
+                R.err('geometry', f'type {tn} slot {name}: stations_in names no hard core of the type: {sorted(unknown)}', type=tn)
+            sboxes = {m: b for m, b in boxes.items() if m not in own}
             if name in full:
                 for (j,bit), row in full[name].items():
                     x,y=row['xy']; w,h=row['size']
-                    for macro,(x0,y0,x1,y1) in boxes.items():
+                    for macro,(x0,y0,x1,y1) in sboxes.items():
                         if min(x+w,x1)-max(x,x0)>EPS and min(y+h,y1)-max(y,y0)>EPS:
                             hits+=1; example=example or (j,bit,macro); break
                 if hits:
@@ -215,7 +222,7 @@ def check_ft_macro_sites(P, R):
                     else:
                         xy = a if (j == 0 and normal) or slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
                         x, y = xy; rect = (x, y, x, y)
-                    for macro, (x0,y0,x1,y1) in boxes.items():
+                    for macro, (x0,y0,x1,y1) in sboxes.items():
                         # Centres have no extent; explicit cells must clear with their whole envelope.
                         hit = (x0+EPS < rect[0] < x1-EPS and y0+EPS < rect[1] < y1-EPS) if rect[0] == rect[2] else (min(rect[2],x1)-max(rect[0],x0)>EPS and min(rect[3],y1)-max(rect[1],y0)>EPS)
                         if hit:
@@ -892,6 +899,56 @@ def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=()):
     return tracks
 
 
+def _child_die_rects(P, part):
+    """{'<part>/<inst>': die-frame box} of the type's hard cores (origin + track_offset through the part orient)"""
+    t = P.ptype(part)
+    out = {}
+    for hc in t.get("hard_cores") or []:
+        (x, y), (w, h) = hc["origin_um"], hc["outline_um"]
+        dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+        a, b = P.to_die(part, (x + dx, y + dy))
+        c, d = P.to_die(part, (x + dx + w, y + dy + h))
+        out[f"{part}/{hc['inst']}"] = (min(a, c), min(b, d), max(a, c), max(b, d))
+    return out
+
+
+def cut_owned_segments(P, geo):
+    """{lane: {segment index: {'<part>/<child>': die box}}} for the lane segments inside a partition whose ft slot
+    declares stations_in (the segment indices follow lane_geometry: pts = port, then each crossing's zroute[1:])."""
+    out = {}
+    for lid in geo:
+        i, tags = 0, {}
+        for part, slot, a, b in P.lane_crossings(lid):
+            s = P.slot(part, slot) or {}
+            pa, pb = P.port_point(a), P.port_point(b)
+            seg = zroute(pa, pb, P.die_face(part, s.get("in_face", "W")), P.die_face(part, s.get("out_face", "E")))
+            n = len(seg) - 1
+            if s.get("stations_in"):
+                boxes = _child_die_rects(P, part)
+                own = {k: r for k, r in boxes.items() if k.split("/", 1)[1] in set(s["stations_in"])}
+                for j in range(i, i + n):
+                    tags[j] = own
+            i += n
+        if tags:
+            out[lid] = tags
+    return out
+
+
+def cut_child_ports(P):
+    """{'<part>/<child>': signal port count} of every hard core of a type with a stations_in slot"""
+    out = {}
+    for part in P.parts:
+        t = P.ptype(part)
+        if not any(s.get("stations_in") for s in t.get("ft_slots") or []):
+            continue
+        for hc in t.get("hard_cores") or []:
+            try:
+                out[f"{part}/{hc['inst']}"] = len(core_pins(hc, Path(P.path).parent if getattr(P, "path", None) else None))
+            except (OSError, ValueError, KeyError):
+                out[f"{part}/{hc['inst']}"] = 0
+    return out
+
+
 def check_cuts(P, R, geo):
     # Same rectangles as the die-route capacity model: declared/routed core
     # obstructions (union), transformed through each instance orientation,
@@ -907,10 +964,13 @@ def check_cuts(P, R, geo):
     out = dict(vertical=[], horizontal=[])
     # segment list: (x0, y0, x1, y1, bits)
     segs = []
+    owned = cut_owned_segments(P, geo)
     for lid, (pts, _, _) in geo.items():
         w = P.ports[P.lanes[lid]["ports"][0]]["width"]
-        for p, q in zip(pts, pts[1:]):
-            segs.append((p, q, w))
+        tags = owned.get(lid) or {}
+        for i, (p, q) in enumerate(zip(pts, pts[1:])):
+            segs.append((p, q, w, tags.get(i)))
+    carried = {}
     rects = {n: P.rect(n) for n in P.parts}
     worst_full, worst_loc = (0, None), (0, None)
     for orient, D, along in (("vertical", P.W, P.H), ("horizontal", P.H, P.W)):
@@ -924,10 +984,21 @@ def check_cuts(P, R, geo):
             if c >= D - EPS:
                 break
             hits = []
-            for p, q, w in segs:
+            for p, q, w, own in segs:
                 a, b = (p[0], q[0]) if orient == "vertical" else (p[1], q[1])
                 if min(a, b) < c - EPS and max(a, b) > c + EPS:
-                    hits.append(((p[1] if orient == "vertical" else p[0]), w))
+                    y_ = p[1] if orient == "vertical" else p[0]
+                    pt = (c, y_) if orient == "vertical" else (y_, c)
+                    # stations_in (DIE-S81-85 11-09): a slot's bits crossing the cut inside a hard child that owns
+                    # the slot's stations run on that child's own (signed) routing between its own ports, not on
+                    # parent tracks over its OBS; bounded below by the child's signal port count
+                    ch = next((k for k, r in (own or {}).items()
+                               if r[0] + EPS < pt[0] < r[2] - EPS and r[1] + EPS < pt[1] < r[3] - EPS), None)
+                    if ch is not None:
+                        carried.setdefault((orient, c, ch), 0)
+                        carried[(orient, c, ch)] += w
+                        continue
+                    hits.append((y_, w))
             bits = sum(w for _, w in hits)
             cap = along * die_den
             parts_cap = 0.0
@@ -983,6 +1054,12 @@ def check_cuts(P, R, geo):
                 worst_full = (ratio, f"{orient}@{c:g}")
             out[orient].append(rec)
     out["worst_full"] = dict(ratio=round(worst_full[0], 4), at=worst_full[1])
+    ports = cut_child_ports(P)
+    for (orient, c, ch), b in sorted(carried.items()):
+        if b > ports.get(ch, 0):
+            R.err("cuts", f"{orient} cut at {c:g}: {b} stations_in bits inside child {ch} > its {ports.get(ch, 0)} "
+                  "signal ports")
+    out["child_carried"] = [dict(orient=o, at_um=c, child=ch, bits=b) for (o, c, ch), b in sorted(carried.items())]
     out["worst_partition_segment"] = dict(ratio=round(worst_loc[0], 4), at=worst_loc[1])
     out["model"] = dict(partition_ft_layers=PART_FT_LAYERS, ft_track_frac_default=FT_TRACK_FRAC,
                         die_layers=die_l, cut_avail=avail, step_um=step,
@@ -1224,6 +1301,65 @@ def type_cells(t):
 _PIN_CACHE = {}
 
 
+def clock_entry_access_by_pin(hc):
+    """{pin: access entry} of a hard core's clock_entry_access (one object, or a list of one entry per root pin);
+    a pin listed twice is an error (ValueError)."""
+    acc = hc.get("clock_entry_access") or []
+    rows = [acc] if isinstance(acc, dict) else list(acc)
+    out = {}
+    for a in rows:
+        if a.get("pin") in out:
+            raise ValueError(f"core {hc.get('inst')}: clock_entry_access lists pin {a.get('pin')} twice")
+        out[a.get("pin")] = a
+    return out
+
+
+def child_root_landings(P, tn, plan_dir=None):
+    """-> [error text] for clock.child_root_taps: every tap landing names a pin of the named hard core whose type-frame
+    centre (origin + track_offset + R0 pin) equals the declared landing xy, and every clock root pin of those children
+    that is a type clock port (clk / clk_t<k>) is landed by the tap of the same name (forwarded_roots excepted)."""
+    import re as _re
+    t = P.types[tn]
+    ck = t.get("clock", {})
+    if ck.get("child_root_taps") is None:
+        return []
+    errs = []
+    hcs = {hc["inst"]: hc for hc in t.get("hard_cores") or []}
+    tabs = {}
+    for inst, hc in hcs.items():
+        if hc.get("orient", "R0") != "R0":
+            errs.append(f"child-root core {inst}: orient {hc.get('orient')} (R0 only)")
+            continue
+        try:
+            tabs[inst] = {nm: (ln, x, y) for nm, ln, x, y in core_pins(hc, plan_dir)}
+        except (OSError, ValueError, KeyError) as e:
+            errs.append(f"child-root core {inst}: pins {e}")
+    landed = {}
+    for tp in ck.get("taps", []):
+        if tp.get("kind") == "core":
+            continue
+        for ld in tp.get("lands_on") or []:
+            inst, _, pin = ld["pin"].rpartition(".")
+            row = tabs.get(inst, {}).get(pin)
+            if row is None:
+                errs.append(f"tap {tp['name']} lands on {ld['pin']}: no such child pin")
+                continue
+            hc = hcs[inst]
+            dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+            px, py = hc["origin_um"][0] + dx + row[1], hc["origin_um"][1] + dy + row[2]
+            if abs(px - ld["xy"][0]) > 1e-3 or abs(py - ld["xy"][1]) > 1e-3:
+                errs.append(f"tap {tp['name']} landing {ld['pin']} xy {ld['xy']} != pin centre [{px:.4f}, {py:.4f}]")
+            if pin != tp["name"]:
+                errs.append(f"tap {tp['name']} lands on {ld['pin']}: a different clock port")
+            landed[ld["pin"]] = tp["name"]
+    fwd = set(ck["child_root_taps"].get("forwarded_roots") or [])
+    for inst, tab in tabs.items():
+        for nm in tab:
+            if _re.fullmatch(r"clk(_t\d+)?", nm) and nm not in fwd and f"{inst}.{nm}" not in landed:
+                errs.append(f"child {inst} clock root {nm}: no tap lands on it")
+    return errs
+
+
 def core_pins(hc, plan_dir=None):
     """[(name, layer, x, y)] of one hard core in its own frame (R0, origin 0): pins[] + pins_file (cached)."""
     pins = [(p_["name"], p_["layer"], *p_["xy"]) for p_ in hc.get("pins", [])]
@@ -1266,6 +1402,8 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             if tp["name"] in names:
                 R.err("clock", f"type {tn}: duplicate clock tap {tp['name']}", type=tn)
             names.add(tp["name"])
+        for e in child_root_landings(P, tn, plan_dir):
+            R.err("clock", f"type {tn}: {e}", type=tn)
         for hc in t.get("hard_cores", []):
             out["hard_cores"] += 1
             cw, chh = hc["outline_um"]
@@ -1300,7 +1438,13 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             # that declared via stack (GEN validate_access + kit guard), not by a parent wire on the pin centre.  Its
             # track proof is the declared footprint on the pin layer: footprint centre on the plan track and within
             # half a pitch of the pin centre.  Every other pin (and an access without such a footprint) is unchanged.
-            acc = hc.get("clock_entry_access") or {}
+            # DIE-S81-85 11-09: clock_entry_access may list one entry per clock root pin; each listed pin is proven by
+            # its own entry exactly as the single-entry form (an unlisted pin is never covered by another's entry).
+            try:
+                acc_by = clock_entry_access_by_pin(hc)
+            except ValueError as e:
+                R.err("hard_cores", f"type {tn} {e}", type=tn)
+                acc_by = {}
             bad = 0
             for nm, ln, x, y in pins:
                 out["core_pins"] += 1
@@ -1309,7 +1453,8 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
                     continue
                 tx, ty = _orient_pt(o, cw, chh, x, y)
                 tx, ty = X0 + tx, Y0 + ty
-                if acc and nm == acc.get("pin"):
+                acc = acc_by.get(nm)
+                if acc:
                     for r_ in (acc.get("footprints_um") or {}).get(ln, []):
                         fx, fy = (r_[0] + r_[2]) / 2, (r_[1] + r_[3]) / 2
                         near = abs((fx - tx) if L["dir"] == "V" else (fy - ty)) <= L["pitch_um"] / 2 + EPS

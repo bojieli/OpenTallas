@@ -422,6 +422,8 @@ def explicit_tap_sites(P, tn):
     """
     import schema
     ck=P.types[tn].get("clock",{})
+    if ck.get("child_root_taps") is not None:
+        return child_root_tap_sites(P, tn)
     table=[p for p in ck.get("taps",[]) if p.get("kind")!="core"]
     if not table:
         raise ValueError(f"{tn}: explicit tap table is empty")
@@ -450,6 +452,85 @@ def explicit_tap_sites(P, tn):
     return out
 
 
+CHILD_ROOT_SEP_UM = 1e-3   # two child-root landings may not share one point
+
+
+def _child_boxes(t):
+    """{hard core inst: placed box (type frame, origin + track_offset, R0/MX/MY/R180 keep the outline)}"""
+    out = {}
+    for hc in t.get("hard_cores") or []:
+        (x, y), (w, h) = hc["origin_um"], hc["outline_um"]
+        dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+        out[hc["inst"]] = (x + dx, y + dy, x + dx + w, y + dy + h)
+    return out
+
+
+def child_root_tap_sites(P, tn):
+    """clock.child_root_taps (DIE-S81-85 11-09): a soft parent with NO flip-flop of its own (every register of the
+    type sits in its hard children, clock.child_root_taps.parent_ffs == 0) has no parent clock buffer to site.  Each
+    explicit type tap (names clk, clk_t1 .. in order, as explicit mode) LANDS ON child clock root pins: tap.lands_on =
+    [{pin: "<child inst>.<root port>", xy: type-frame pin centre}, ...]; the die clock (M9/M8) drops onto the first
+    landing (tap xy = lands_on[0].xy) and reaches any further landing of the same root by a parent wire within
+    clock.tap_radius_um.  Legal: inside the outline; each landing inside its own child's placed box (the halo rule does
+    not apply to the landed child: the landing IS its pin); outside every other hard core / keepout box (+ TAP_CLEAR);
+    landings never coincide.  Spacing is measured between landing pins, not as an empty parent site.  check.py
+    (check_taps_cores) proves each landing xy = the child's pin table (origin + track_offset + pin).  No parent sink is
+    assigned: a parent with registers cannot use this class (and every ft slot with stations declares stations_in)."""
+    import schema
+    t = P.types[tn]
+    ck = t.get("clock", {})
+    cr = ck.get("child_root_taps") or {}
+    if cr.get("parent_ffs") != 0:
+        raise ValueError(f"{tn}: clock.child_root_taps needs parent_ffs 0 (a parent register needs a parent tap)")
+    if ck.get("tap_mode") != "explicit":
+        raise ValueError(f"{tn}: clock.child_root_taps needs tap_mode explicit")
+    boxes = _child_boxes(t)
+    if not boxes:
+        raise ValueError(f"{tn}: clock.child_root_taps needs hard_cores (the children that hold every register)")
+    for s in t.get("ft_slots") or []:
+        if int(s.get("stations", 1)) > 0 and not s.get("stations_in"):
+            raise ValueError(f"{tn}: clock.child_root_taps: ft slot {s['name']} has stations but no stations_in child")
+    table = [p for p in ck.get("taps", []) if p.get("kind") != "core"]
+    if not table:
+        raise ValueError(f"{tn}: explicit tap table is empty")
+    names = [p["name"] for p in table]
+    expected = ["clk"] + [f"clk_t{i}" for i in range(1, len(table))]
+    if names != expected:
+        raise ValueError(f"{tn}: explicit local tap names/order must be {expected}")
+    eps, clear = 1e-8, schema.TAP_CLEAR_UM
+    w, h = t["outline_um"]
+    from placement_obstacles import placement_boxes
+    others = placement_boxes(t, halo=clear)
+    keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in ck.get("keepouts_um", [])]
+    seen, out = [], []
+    for p in table:
+        lands = p.get("lands_on") or []
+        if not lands:
+            raise ValueError(f"{tn}: child-root tap {p['name']} has no lands_on")
+        x, y = map(float, p["xy"])
+        if abs(x - lands[0]["xy"][0]) > 1e-4 or abs(y - lands[0]["xy"][1]) > 1e-4:
+            raise ValueError(f"{tn}: child-root tap {p['name']} xy {p['xy']} != its first landing {lands[0]['xy']}")
+        for ld in lands:
+            inst, _, pin = ld["pin"].rpartition(".")
+            if inst not in boxes or not pin:
+                raise ValueError(f"{tn}: child-root tap {p['name']} lands on {ld['pin']}: not a hard core pin of the type")
+            lx, ly = map(float, ld["xy"])
+            a, b, c, d = boxes[inst]
+            if not (a - eps <= lx <= c + eps and b - eps <= ly <= d + eps):
+                raise ValueError(f"{tn}: child-root tap {p['name']} landing {ld['pin']} outside its child box")
+            if not (-eps <= lx <= w + eps and -eps <= ly <= h + eps):
+                raise ValueError(f"{tn}: child-root tap {p['name']} landing {ld['pin']} outside the outline")
+            hit = [n for n, (a_, b_, c_, d_) in others.items()
+                   if n != inst and a_ + eps < lx < c_ - eps and b_ + eps < ly < d_ - eps]
+            if hit or any(a_ + eps < lx < c_ - eps and b_ + eps < ly < d_ - eps for a_, b_, c_, d_ in keep):
+                raise ValueError(f"{tn}: child-root tap {p['name']} landing {ld['pin']} inside {hit or 'a keepout'}")
+            if any(abs(lx - u) < CHILD_ROOT_SEP_UM and abs(ly - v) < CHILD_ROOT_SEP_UM for u, v in seen):
+                raise ValueError(f"{tn}: child-root tap {p['name']} landing {ld['pin']} coincides with another landing")
+            seen.append((lx, ly))
+        out.append((p["name"], x, y))
+    return out
+
+
 def explicit_taps(P, tn):
     """Validate every actual data/control sink against the frozen explicit endpoints.
 
@@ -459,6 +540,17 @@ def explicit_taps(P, tn):
     """
     out = explicit_tap_sites(P, tn)
     ck = P.types[tn].get("clock", {})
+    if ck.get("child_root_taps") is not None:
+        # child-root class: the load of a tap is its landed child root pins (the child's own signed tree below them);
+        # the parent has no register to assign.  Radius = farthest landing from the die drop.
+        radius = float(ck.get("tap_radius_um", 200.))
+        res = []
+        for (name, x, y), p in zip(out, [q for q in ck["taps"] if q.get("kind") != "core"]):
+            far = max(abs(float(ld["xy"][0]) - x) + abs(float(ld["xy"][1]) - y) for ld in p["lands_on"])
+            if far > radius + 1e-6:
+                raise ValueError(f"{tn}: child-root tap {name} reaches a landing {far:g} um > radius {radius}")
+            res.append((name, x, y, len(p["lands_on"]), far))
+        return res
     sinks=sink_sites(P,tn)
     cap=int(ck.get("tap_max_sinks",1500));radius=float(ck.get("tap_radius_um",200.))
     if cap<=0 or radius<=0:

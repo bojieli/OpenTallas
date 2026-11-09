@@ -1444,7 +1444,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
 
 
 # Private opt-in actual-LEF entry geometry. No default OBS exemption.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["clock_entry_access"] = {
+_CLOCK_ENTRY_ACCESS = {
     "type":"object", "additionalProperties":False, "required":["pin","footprints_um"],
     "properties":{"pin":{"type":"string","minLength":1},
                   "footprints_um":{"type":"object","additionalProperties":False,
@@ -1452,6 +1452,28 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                         layer:{"type":"array","minItems":1,"items":{
                             "type":"array","minItems":4,"maxItems":4,"items":{"type":"number"}}}
                         for layer in ("M5","M6","M7")}}}}
+# One entry (DIE-QC-91) or, for a core with several clock root pins (DIE-S81-85 11-09), one entry per declared root
+# pin: check.py proves every listed pin by its own footprint (no pin is exempted by another's entry).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["clock_entry_access"] = {
+    "type": ["object", "array"], "additionalProperties": False, "required": ["pin", "footprints_um"],
+    "properties": _CLOCK_ENTRY_ACCESS["properties"], "minItems": 1, "items": _CLOCK_ENTRY_ACCESS}
+
+# DIE-S81-85 11-09 (T51 native split class fix 2): an ft slot whose stations are registers of hard children of the type
+# (a native split: the parent holds no register) names those children; check.py geometry accepts the slot's stations
+# inside them, and check_cuts carries the slot's crossing bits inside a named child on that child's own routing
+# (bounded by the child's own signal ports) instead of parent tracks over its OBS.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]["properties"]["stations_in"] = {
+    "type": "array", "minItems": 1, "uniqueItems": True, "items": _name}
+
+# DIE-S81-85 11-09 (class fix 1): clock.child_root_taps = a soft parent with 0 flip-flops whose explicit type taps land
+# on hard-child clock root pins (taps.child_root_tap_sites); each such tap carries lands_on.
+_CK = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+_CK["child_root_taps"] = {"type": "object", "additionalProperties": False, "required": ["parent_ffs", "rule"],
+                          "properties": {"parent_ffs": {"const": 0}, "rule": {"type": "string", "minLength": 1},
+                                         "forwarded_roots": {"type": "array", "items": _name}}}
+_CK["taps"]["items"]["properties"]["lands_on"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["pin", "xy"],
+                                              "properties": {"pin": {"type": "string", "minLength": 3}, "xy": _xy}}}
 
 
 def _check(v, s, path, errs):
