@@ -110,6 +110,10 @@ def main():
     for r in sorted(rows, key=lambda r: r['updated']):
         if r.get('plan_current') == 'no':
             continue
+        # QC-TYPES-11 11-08: prelint LINT-ADVISORY rows refresh every tick; they masked the real row (a route RUNNING or FAIL
+        # read as 'waits on child core').  An advisory row labels the item only when it has no real row.
+        if r['status'] == 'LINT-ADVISORY' and last.get((r['die'], r['item']), r)['status'] != 'LINT-ADVISORY':
+            continue
         last[(r['die'], r['item'])] = r
     ovr = []
     for l in open(OVR):
