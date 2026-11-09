@@ -1060,3 +1060,39 @@ def test_kit_closure_incompatible_preferred_definition_loses(tmp_path):
     picks = {}
     bind.kit_closure(["pp"], idx, [str(old)], picks)
     assert picks["rbank"] == str(old)
+
+
+def test_kit_closure_kitparam_same_file_identical_sibling(tmp_path):
+    """DIE-HBM-92-GEN 11-08 (HBM q_hub_ne "different source files named ot_hgi_coll_reduce_static.sv"): the KITPARAM
+    rule takes red from rtl/ (declares LOCAL); its sibling lane, reached first through another instantiator, was picked
+    from the preferred bundle red.sv.  lane is byte-identical in both files -> taken from the rtl/ file, one red.sv in the
+    kit.  A differing lane keeps both files (kit_dedupe fails closed as before); a plain parent is unchanged."""
+    old = tmp_path / "bundle" / "red.sv"; new = tmp_path / "rtl" / "red.sv"; top = tmp_path / "rtl" / "top.sv"
+    lr = tmp_path / "rtl" / "lr.sv"
+    for f in (old, new):
+        f.parent.mkdir(parents=True, exist_ok=True)
+    lane = "module lane(input clk); // lane\nendmodule\n"
+    old.write_text("module red #(parameter integer MUT=0)(input clk);\n lane u_l(.clk(clk));\nendmodule\n" + lane)
+    new.write_text("module red #(parameter integer MUT=0, LOCAL=0)(input clk);\n lane u_l(.clk(clk));\nendmodule\n"
+                   + lane.replace("// lane", ""))
+    lr.write_text("module zlr(input clk);\n lane u_s(.clk(clk));\nendmodule\n")
+    top.write_text("module top(input clk);\n zlr u_z(.clk(clk));\n red #(.LOCAL(1)) u_r(.clk(clk));\nendmodule\n")
+    idx = {"red": [str(new)], "lane": [str(new)], "zlr": [str(lr)], "top": [str(top)]}
+    picks = {}
+    files, missing, _ = bind.kit_closure(["top"], idx, [str(old)], picks)
+    assert not missing
+    assert picks["red"] == str(new) and picks["lane"] == str(new)
+    assert [f for f in files if Path(f).name == "red.sv"] == [str(new)]
+    bind.kit_dedupe("top", [Path(f) for f in files])          # no "different source files named red.sv"
+    new.write_text(new.read_text().replace("module lane(input clk);", "module lane(input clk, input x);"))
+    picks = {}
+    files, _, _ = bind.kit_closure(["top"], idx, [str(old)], picks)
+    assert picks["lane"] == str(old) and len([f for f in files if Path(f).name == "red.sv"]) == 2
+    with pytest.raises(bind.BindError, match="different source files named red.sv"):
+        bind.kit_dedupe("top", [Path(f) for f in files])
+    plain = tmp_path / "rtl" / "pp.sv"
+    plain.write_text("module pp(input clk);\n red #(.MUT(1)) u_r(.clk(clk));\nendmodule\n")
+    idx["pp"] = [str(plain)]
+    picks = {}
+    bind.kit_closure(["pp"], idx, [str(old)], picks)
+    assert picks["red"] == str(old) and picks["lane"] == str(old)

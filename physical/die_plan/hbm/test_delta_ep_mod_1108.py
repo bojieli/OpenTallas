@@ -107,3 +107,21 @@ def test_side_files():
     assert cm2["cores"]["hfd_ep_host_vc"]["macros"] == [1] and cm2["cores"]["hfd_ep_host_vc"]["status"] == "KNOWN"
     assert ccr2["modules"][D.BASE]["instances"] == 4 and ccr2["modules"]["hfd_ep_static_vc2"]["instances"] == 1
     assert ccr["modules"][D.BASE]["instances"] == 6
+
+
+def test_add_dirs_1108d():
+    new, tables, _ = run()
+    files = {h["pins_file"]: tables[h["module"]] for h in new["partition_types"]["NW_io"]["hard_cores"]
+             if h["inst"] in D.SWAP}
+    vc2p, hostp = D.module_ports(VC_HDR, "hfd_ep_static_vc2"), D.module_ports(VC_HDR, "hfd_ep_host_vc")
+    p2, t2, ch = D.add_dirs(new, files, vc2p, hostp)
+    assert D.changed_types(new, p2) == (["NW_io"], [])
+    assert len(ch) == 2 and all(k.endswith("__epmod1108d.json") for k in t2)
+    vc = next(v for k, v in t2.items() if "vc2" in k)
+    d = {q["name"]: q["dir"] for q in vc}
+    assert d["h_tx_frame[0]"] == "input" and d["h_rx_frame[3]"] == "output" and d["sd_tx[1]"] == "output"
+    assert d["clk"] == "input" and len(d) == len(vc)
+    old = next(v for k, v in files.items() if "vc2" in k)
+    assert [{k: v for k, v in q.items() if k != "dir"} for q in vc] == old           # names and sites unchanged
+    with pytest.raises(ValueError, match="not the EP-MOD-1108 form"):
+        D.add_dirs(p2, t2, vc2p, hostp)
