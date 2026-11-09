@@ -359,6 +359,83 @@ def test_post_runner_used_when_kit_has_one(tmp_path):
     assert post[3] == "post" and not any("abstract" in " ".join(map(str, c)) for c in calls)
 
 
+def _refusing_runner(d):
+    """a kit runner carrying the real stage-resume refusal line of the generated RUN_KIT"""
+    line = next(l for l in (E.HERE / "gen_phys.py").read_text().splitlines() if 'case "$GOAL" in floorplan|place' in l)
+    assert "unsupported" in line and "post" not in line.split(")")[0]
+    (d / "run_kit_hbm.sh").write_text('K=$(cd "$1" && pwd); GOAL=$2  # GOAL=post signs off\n'
+                                      'if [ -f "$K/resume.json" ]; then\n' + line + '\nfi\n'
+                                      'mkdir -p "$K/signoff"; echo "$OT_ALLOW_RESYNTH" > "$K/allow"; cp "$K/rec.json" "$K/signoff/signoff.json"\n')
+
+
+def _resumed_post_run(k, calls):
+    def run(cmd, **kw):
+        calls.append((cmd, kw))
+        if cmd[1].endswith("prd_mk.sh"):
+            d = Path(cmd[3])
+            (d / "run/results/asap7/n/base").mkdir(parents=True)
+            (d / "config.mk").write_text("eco\n")
+            (d / "resume.json").write_text('{"start": "cts"}\n')
+            _refusing_runner(d)
+            r = rec(2, 5)
+            r["inputs"] = {"base": str(d / "run/results/asap7/n/base")}
+            (d / "rec.json").write_text(json.dumps(r))
+        elif cmd[1].endswith("run_kit_hbm.sh"):
+            return subprocess.call(["bash"] + cmd[1:], env=kw.get("env"), stdout=subprocess.DEVNULL)
+        return 0
+    return run
+
+
+def test_post_runs_on_a_stage_resumed_kit(tmp_path):
+    k = kit(tmp_path)
+    (k / "resume.json").write_text('{"start": "cts"}\n')
+    b = base_rec(k, rec(-3, 5))
+    calls = []
+    r = E.run_loop(k, b, run=_resumed_post_run(k, calls), mem=8, cpus=2, runner=str(k / "run_kit_hbm.sh"))
+    assert r["verdict"] == "PASS"
+    it = r["iterations"][0]
+    d = Path(it["dir"])
+    assert it["rc"]["signoff"] == 0 and it["stage_resume_set_aside"] == str(d / "resume.json.was_stage_resume")
+    assert not (d / "resume.json").exists() and (d / "resume.json.was_stage_resume").is_file()
+    assert not (d / "FAIL_PREFLOOR").exists()
+    assert (d / "allow").read_text().strip() == "1"      # the runner's RESYNTH-GUARD stays skipped, as with resume.json
+    assert (k / "resume.json").is_file()                 # only the pass dir changes
+
+
+def test_post_keeps_refusal_when_resume_is_not_set_aside(tmp_path, monkeypatch):
+    """control: the refusal is real, so the test above is proving the fix"""
+    monkeypatch.setattr(E, "set_aside_stage_resume", lambda d: None)
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-3, 5))
+    calls = []
+    r = E.run_loop(k, b, run=_resumed_post_run(k, calls), mem=8, cpus=2, runner=str(k / "run_kit_hbm.sh"))
+    assert r["verdict"] != "PASS" and r["iterations"][0]["rc"]["signoff"] == 10
+
+
+def test_post_without_resume_sets_no_override(tmp_path):
+    k = kit(tmp_path)
+    b = base_rec(k, rec(-3, 5))
+    calls = []
+
+    def run(cmd, **kw):
+        calls.append((cmd, kw))
+        if cmd[1].endswith("prd_mk.sh"):
+            d = Path(cmd[3])
+            (d / "run/results/asap7/n/base").mkdir(parents=True)
+            (d / "config.mk").write_text("eco\n")
+            (d / "run_kit_hbm.sh").write_text('if [ "$GOAL" = post ]; then :; fi\n')
+        elif cmd[1].endswith("run_kit_hbm.sh"):
+            d = Path(cmd[2])
+            (d / "signoff").mkdir()
+            r = rec(2, 5)
+            r["inputs"] = {"base": str(d / "run/results/asap7/n/base")}
+            (d / "signoff/signoff.json").write_text(json.dumps(r))
+        return 0
+    r = E.run_loop(k, b, run=run, mem=8, cpus=2, runner=str(k / "run_kit_hbm.sh"))
+    assert r["verdict"] == "PASS" and "stage_resume_set_aside" not in r["iterations"][0]
+    assert "env" not in [kw for c, kw in calls if c[1].endswith("run_kit_hbm.sh")][0]
+
+
 def test_single_mode_passes():
     m = lambda **k: dict(dict(tt=5, ff=5, drv_tt=0, drv_ff=0, drc=0), **k)  # noqa: E731
     k = Path("/nonexistent")
