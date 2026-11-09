@@ -2811,7 +2811,12 @@
         "dsdv_slice_c1x_C__t7@15",
         "col_h9_r0_p1__t1@14",
         "ot_s81sl_leaf__t3@1",
-        "serdes__t12@7"
+        "serdes__t12@7",
+        "ot_s81sl_leaf__t15@2",
+        "ot_s81sl_leaf__t59@2",
+        "ot_s81sl_leaf__t40__clf8bbdae1@10",
+        "ot_s81sl_leaf__t36@2",
+        "ot_s81sl_leaf__t65@4"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3063,7 +3068,7 @@
         "ot_s81sl_leaf__t3@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t43@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t45@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
-        "ot_s81sl_leaf__t46@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
+        "ot_s81sl_leaf__t46@4": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
         "ot_s81sl_leaf__t47@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t4@4": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
         "ot_s81sl_leaf__t50@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -3797,7 +3802,12 @@
         "dsdv_slice_c1x_C__t7@15": "KW-FIX-38 2026-11-08 20:11 PST: REDESIGN: stale bound leaf source class J3 (S81-TYPES-10 19:36, COORD 19:4x): a15 kit_rtl.f took src_28fc7 xs4/rstopt_xo; fresh kit on leaf-follow src",
         "col_h9_r0_p1__t1@14": "KW-FIX-38 2026-11-08 20:11 PST: movecheck 88c4da89c09d (macro-move check judged placed edges, gen failed on a plan abutment), no P&R ran; S81-TYPES-10 19:11",
         "ot_s81sl_leaf__t3@1": "KW-FIX-38 2026-11-08 20:20 PST: REDESIGN: macros moved, not a retry. Escape-open form, S81-LEAF-BATCH-1108 class (S81-TYPES-10 20:17, model worst 3.7 -> 1.91, residual ve.u_s|vsw; a GRT fail needs an rxsf/rxsb plan move, not a retry)",
-        "serdes__t12@7": "KW-FIX-38 2026-11-08 20:20 PST: REDESIGN: a7 LEC ran at 4 edges with no contract in the kit (57 differ, no-reset codec flops, class J1); current src stages the 64-edge die contract for s81p_serdes__t12 (kit_reset_contract.stage dry 64). Fresh kit (S81-TYPES-10 20:17)"
+        "serdes__t12@7": "KW-FIX-38 2026-11-08 20:20 PST: REDESIGN: a7 LEC ran at 4 edges with no contract in the kit (57 differ, no-reset codec flops, class J1); current src stages the 64-edge die contract for s81p_serdes__t12 (kit_reset_contract.stage dry 64). Fresh kit (S81-TYPES-10 20:17)",
+        "ot_s81sl_leaf__t15@2": "REDESIGN: macro moves re-solved with landing bands as keep-outs (LN12 no longer covers ft1_i, 75% covered); vn_b +5.76, LN2 -6.48 open LN2|vn_b. Model 1.15. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
+        "ot_s81sl_leaf__t59@2": "REDESIGN: macro moves re-solved with landing bands as keep-outs (vn_b no longer covers leafdn_i0 82%; LN12/LN9 clear of ft1_i/ft2_i); vn_b +5.76 x, +5.76 y. Model 1.07. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
+        "ot_s81sl_leaf__t40__clf8bbdae1@10": "REDESIGN: same band-aware form as t15 (LN12 no longer covers ft1_i 75%). Model 1.15. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
+        "ot_s81sl_leaf__t36@2": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
+        "ot_s81sl_leaf__t65@4": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11)."
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4024,7 +4034,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t40__clf8bbdae1": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:34.56:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:192.24:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t41": {
@@ -4032,7 +4042,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t46": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.98:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.7:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.976:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.696:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t5": {
@@ -4064,7 +4074,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t65": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.98:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.98:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.976:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.976:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t67": {
@@ -4092,7 +4102,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t36": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.34:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.34:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.336:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.336:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t7": {
@@ -4100,7 +4110,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t15": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:34.56:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:192.24:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t13": {
@@ -4108,7 +4118,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t59": {
-          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:172.416:MX,u_lf.u_vp.g_ln[2].u_l:172.8:42.816:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+          "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:334.08:40.32:MX,u_lf.u_vp.g_ln[10].u_l:43.2:302.016:MX,u_lf.u_vp.g_ln[12].u_l:51.84:42.816:MX,u_lf.u_vp.g_ln[14].u_l:190.08:172.416:MX,u_lf.u_vp.g_ln[2].u_l:181.44:42.816:MX,u_lf.u_vp.g_ln[9].u_l:60.48:172.416:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t61": {
@@ -5849,7 +5859,16 @@
       "retry_prev_kw38t3_added": [
         "ot_s81sl_leaf__t3@1",
         "serdes__t12@7"
-      ]
+      ],
+      "item_env_prev_s81t12_1108b": {
+        "ot_s81sl_leaf__t15": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+        "ot_s81sl_leaf__t59": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:172.416:MX,u_lf.u_vp.g_ln[2].u_l:172.8:42.816:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+        "ot_s81sl_leaf__t40__clf8bbdae1": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX",
+        "ot_s81sl_leaf__t36": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.34:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.34:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0",
+        "ot_s81sl_leaf__t46": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.98:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.7:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0",
+        "ot_s81sl_leaf__t65": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.98:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.98:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0"
+      },
+      "note_s81t12_1108b": "S81-TYPES-12 22:3x: OT_MACRO_MOVES replaced for the 6 rows of lanes/S81-LEAF-BATCH-1108b.json (band and %g-grid classes); revert = item_env_prev_s81t12_1108b. t46@4/t65@4 stay running (old env, will fail DRT-0073 on the off-grid LN macros at route, default per 22:12) and retry on this env."
     },
     "s81_head": {
       "enabled": true,
@@ -6646,13 +6665,16 @@
       "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 53 rows | KW-FIX-18 19:4x: tag flow-20261106-m-qc 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-l-qc e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-k-qc 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-j-qc 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:1x: tag flow-20261106-i-qc 556ee1c5557 (dplfb + leafslew) -> src kw11/src_556; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-h-qc 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
       "pilot_mode": "queue",
       "hold_items": {
-        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
         "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
         "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
         "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
         "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row",
         "native59": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (DIE-QC-94), a relaunch would meet the same differs",
-        "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs"
+        "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
+        "sl?_hc[0-3]*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3",
+        "sl?_st_a*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3",
+        "sl?_st_b*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3"
       },
       "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
       "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -9090,7 +9112,7 @@
         "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
       ],
       "hold_items_prev_kw38q": {
-        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+        "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
         "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
         "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails"
       },
@@ -9114,7 +9136,12 @@
         "epyc4",
         "epyc5"
       ],
-      "note_kw38q": "KW-FIX-39 2026-11-08 22:05 PST: QC ONE SWITCH (COORD 19:4x + 20:1x, QC-TYPES-11 19:31 + QC-TYPES-12 20:05): 108-type batch fresh kits on the new blocks; 47 RUNNING route jobs on old blocks finish (cancel_superseded false); relay event as a second switch for 18 types if TS3 posts; revert *_prev_kw38q"
+      "note_kw38q": "KW-FIX-39 2026-11-08 22:05 PST: QC ONE SWITCH (COORD 19:4x + 20:1x, QC-TYPES-11 19:31 + QC-TYPES-12 20:05): 108-type batch fresh kits on the new blocks; 47 RUNNING route jobs on old blocks finish (cancel_superseded false); relay event as a second switch for 18 types if TS3 posts; revert *_prev_kw38q",
+      "hold_items_prev_kw39tf": [
+        "sl?_hc[0-3]*",
+        "sl?_st_a*",
+        "sl?_st_b*"
+      ]
     },
     "hbm": {
       "enabled": true,
