@@ -7021,7 +7021,8 @@
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
-    "sle_su_c": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (6) CTS OT_TAP_PAIR initial tap capacity invalid (03:15): QC owner class fix; no unchanged relaunch"
+    "sle_su_c": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (6) CTS OT_TAP_PAIR initial tap capacity invalid (03:15): QC owner class fix; no unchanged relaunch",
+    "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch"
    },
    "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -11024,7 +11025,9 @@
     "q_spt0__physical_v1",
     "q_sm0",
     "q_sm1",
-    "q_sm2"
+    "q_sm2",
+    "q_hub_ne",
+    "i8w_front"
    ],
    "place_prefer": [
     "epyc4",
@@ -11034,10 +11037,10 @@
    ],
    "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-   "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final2/die_plan.json",
-   "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/kw41/src_h94_pv",
-   "src_sha": "a714b9cf4646ed1e0338099005e97a4bd78827f2",
+   "plan": "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/die_plan.json",
+   "gen_host": "epyc7",
+   "src": "/srv/opentallas-scratch2/claude/kw41/src_hbmf4",
+   "src_sha": "4393753cf0b438ba3d15257e9eb651760e35869b",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -11771,7 +11774,7 @@
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
    "pilot_mode": "queue",
-   "queue_src": "claude/kw-fix-40-hbm-src-1108@a714b9cf4646",
+   "queue_src": "claude/hbm-plan-1-1109@4393753cf0b4",
    "hold_items": {
     "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -11801,16 +11804,13 @@
     "q_b113": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
     "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
     "q_hub_nw": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
-    "q_hub_ne": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
     "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
     "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
     "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
-    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
-    "q_spu0": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion in FT-reserved bands (as q_spu0__physical_v1); held for HBM-PLAN-1 switch"
+    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views"
    },
    "gen_hosts": [
     "epyc7",
-    "epyc4",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -12674,7 +12674,9 @@
     "q_b101": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix | RELEASED KW-FIX-42 03:4x: DIE-HBM-97 0591baed overlaid (COORD APPROVED 03:29)",
     "q_b101_nw": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix | RELEASED KW-FIX-42 03:4x: DIE-HBM-97 0591baed overlaid (COORD APPROVED 03:29)",
     "q_b100": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix | RELEASED KW-FIX-42 03:4x: DIE-HBM-97 0591baed overlaid (COORD APPROVED 03:29)",
-    "q_b100__physical_v1": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix | RELEASED KW-FIX-42 03:4x: DIE-HBM-97 0591baed overlaid (COORD APPROVED 03:29)"
+    "q_b100__physical_v1": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix | RELEASED KW-FIX-42 03:4x: DIE-HBM-97 0591baed overlaid (COORD APPROVED 03:29)",
+    "q_hub_ne": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases | RELEASED KW-FIX-42 11-09 04:17: HBM final switch d44v_final4_1109 (COORD 04:1x)",
+    "q_spu0": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion in FT-reserved bands (as q_spu0__physical_v1); held for HBM-PLAN-1 switch | RELEASED KW-FIX-42 11-09 04:17: HBM final switch d44v_final4_1109 (COORD 04:1x)"
    },
    "gen_hosts_prev_kw32f": [
     "epyc4",
@@ -12691,9 +12693,9 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vJ.json",
-    "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_lat_vJ",
-    "note": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-plan-1/bind/asbuilt_p37su5_sm_lat_vK5b.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/hbm-plan-1/bind/bind_F5b",
+    "note": "KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
    "gen_hosts_prev_kw32g": [
     "intel1",
@@ -14327,7 +14329,23 @@
       "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7 epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json (KW-FIX-32 export_view)"
      }
     ]
-   }
+   },
+   "plan_prev_kw42hbm": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final2/die_plan.json",
+   "src_prev_kw42hbm": "/srv/opentallas-scratch2/claude/kw41/src_h94_pv",
+   "src_sha_prev_kw42hbm": "a714b9cf4646ed1e0338099005e97a4bd78827f2",
+   "queue_src_prev_kw42hbm": "claude/kw-fix-40-hbm-src-1108@a714b9cf4646",
+   "kit_rtl_prev_kw42hbm": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vJ.json",
+    "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_lat_vJ",
+    "note": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
+   },
+   "gen_host_prev_kw42hbm": "intel1",
+   "gen_hosts_prev_kw42hbm": [
+    "epyc7",
+    "epyc4",
+    "intel1"
+   ]
   }
  },
  "place_prefer": [
