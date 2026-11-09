@@ -129,3 +129,38 @@ puts OK
     assert (p.returncode == 0) == ok, p.stdout + p.stderr
     if not ok:
         assert "OT_PRD STAGE_MISMATCH: 1 of 2" in p.stdout and "u_y" in p.stdout
+
+
+# DIE-S81-82 11-08: hierarchical kit names (t51 vD).  SPEF escapes the dots and the divider; OpenDB leaves the dots
+# bare and keeps \/ (58218 of 116412 false STAGE_MISMATCH).  A truly absent instance must still stop the ECO.
+SPEF_HIER = r"""*NAME_MAP
+*1 u_bound\.u_x\/_4_
+
+*D_NET *9 0.001
+*CONN
+*I *1:A I *D INVx1_ASAP7_75t_R
+*I u_bound\.u_y\/r\[3\]\$_DFF_P_:D I *D DFFHQNx1_ASAP7_75t_R
+*END
+"""
+HIER_DB = [r"u_bound.u_x\/_4_", r"u_bound.u_y\/r\[3\]$_DFF_P_"]
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="tclsh")
+@pytest.mark.parametrize("db,ok", [(HIER_DB, True), (HIER_DB[:1], False)])
+def test_stage_check_hierarchical_divider_names(tmp_path, db, ok):
+    ins = P.instances(SPEF_HIER.splitlines(True))
+    assert len(ins) == 2
+    lst = tmp_path / "l.tsv"
+    lst.write_text("".join(f"{i} {m}\n" for i, m in sorted(ins.items())))
+    names = " ".join("{" + n + "}" for n in db)
+    script = f"""
+namespace eval ord {{}}
+proc ord::get_db_block {{}} {{ return blk }}
+set ::db [list {names}]
+proc blk {{op name}} {{ if {{$name in $::db}} {{ return inst }} ; return NULL }}
+{_stage_proc()}
+if {{[catch {{ot_prd_stage_check {lst}}} msg]}} {{ puts "ERR $msg"; exit 1 }}
+puts OK
+"""
+    p = subprocess.run(["tclsh"], input=script, capture_output=True, text=True)
+    assert (p.returncode == 0) == ok, p.stdout + p.stderr

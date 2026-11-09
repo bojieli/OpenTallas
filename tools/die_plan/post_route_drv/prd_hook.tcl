@@ -162,8 +162,10 @@ proc ot_prd_stage_check {list} {
     # HBM-FORM-SPLIT-12 11-06: yosys merged-register names hold a literal backslash (u_x._1_[0]$\u_x._1_[1]$dff[0]).
     # SPEF writes u_x\._1_\[0\]\$\\u_x..., OpenDB keeps u_x._1_\[0\]$\\u_x... (brackets and the backslash stay escaped,
     # . and $ do not), so the third candidate unescapes \X but keeps a \\ pair (Q2NF: 2322 of 12396 false misses -> 0)
+    # DIE-S81-82 11-08: hierarchical names keep the \/ divider in OpenDB too: SPEF u_bound\.u_x\/_4_, OpenDB
+    # u_bound.u_x\/_4_, so the last candidate unescapes \X but keeps \/ and brackets (t51 vD: 58218 of 116412 false misses -> 0)
     foreach cand [list $name [regsub -all {\\([^\[\]])} $name {\1}] [regsub -all {\\([^\[\]\\])|(\\\\)} $name {\1\2}] \
-        [string map {\\ {}} $name]] {
+        [string map {\\ {}} $name] [regsub -all {\\([^\[\]/])} $name {\1}]] {
       set i [$block findInst $cand]
       if {$i ne "NULL" && $i ne ""} { set found 1; break }
     }
