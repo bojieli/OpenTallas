@@ -629,7 +629,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "claude/die-kv-97-zbadd-1109@e273bd37e4ee",
+   "queue_src": "claude/kv-plan-2-kvrtt-wave-1109@6d044488624b",
    "hold_items_released": {
     "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -1958,7 +1958,9 @@
     "epyc7"
    ],
    "work_root_prev_kw43": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
-   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43"
+   "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43",
+   "queue_src_prev_kw43kv": "claude/die-kv-97-zbadd-1109@e273bd37e4ee",
+   "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv."
   },
   "s81": {
    "enabled": true,
