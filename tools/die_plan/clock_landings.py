@@ -82,6 +82,26 @@ def ring_write_reg(plan, tn, bus):
 
 
 
+def ring_read_select_copies(plan, tn, bus):
+    """Optional read-select replication only; no writer stage or K adjustment.
+
+    clock.landing_ring_dsrep = {"buses": [...], "dsrep": n} selects existing
+    ot_dp_clk_landing_cas DSREP hardware independently of landing_ring_wreg.
+    """
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    cfg = (typ.get("clock") or {}).get("landing_ring_dsrep")
+    if cfg is None:
+        return None
+    if (not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list)
+            or any(not isinstance(b, str) for b in cfg["buses"])):
+        raise LandingError(f"{tn}: clock.landing_ring_dsrep must list buses and dsrep")
+    copies = cfg.get("dsrep")
+    if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1 or 64 % copies:
+        raise LandingError(f"{tn}: landing_ring_dsrep.dsrep must divide 64")
+    return copies if bus in cfg["buses"] else None
+
+
 def legacy_input_freg(plan, tn, bus):
     """Explicit rising-fclk payload capture of the legacy ring, +1 data cycle.
 
@@ -1165,7 +1185,14 @@ class Landings:
                 # WREG-1 (DIE-HEAD-58 TURNB): registered writer start + per-(slot, chunk) write-enable flops; strap form
                 # only (the strap K carries the +1, count_align_bind.strap_ties)
                 wreg = ring_write_reg(self.plan, key, b) or ring_write_reg(self.plan, tn, b)
+                dsrep = ring_read_select_copies(self.plan, key, b)
+                if dsrep is None:
+                    dsrep = ring_read_select_copies(self.plan, tn, b)
+                if dsrep is not None and not cat.get("straps"):
+                    raise LandingError(f"{tn}.{b}: landing_ring_dsrep needs the count-aligned strap form")
                 if wreg:
+                    if dsrep is not None and dsrep != wreg["dsrep"]:
+                        raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
                     ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") else "") + (", .FREG(1))" if wreg["freg"] else ")")
@@ -1175,6 +1202,9 @@ class Landings:
                         self.reset_placements[tn][b]["ring_write_chunk"] = wreg["write_chunk"]
                     if wreg.get("freg_numeric_order"):
                         self.reset_placements[tn][b]["ring_freg_numeric_order"] = 1
+                elif dsrep is not None:
+                    ring_mod = ring_mod[:-1] + f", .DSREP({dsrep}))"
+                    self.reset_placements[tn][b].update(ring_dsrep=dsrep, ring_dsrep_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
