@@ -8,7 +8,7 @@ HOST dry-run classifier + apply over a reviewed manifest.  Imports the landed ot
 Categories (first holder wins):  KEEP-* never removed by this tool; DEL-* candidates.
   never list: counted/signed-stub, protected, live (proc/docker), <6 h, tok/kv-fn/tool trees, git-locked,
   git HEAD not on a remote-tracking ref, kit-wave keep/resume, named by a live lane in the last 24 h.
-  holds with expiry: .keep, queue mention, local keep line, protect.d line: only while owner lane LIVE or renewed <48 h.
+  holds with expiry: .keep, queue mention, local keep line, protect.d line: only while owner lane LIVE or renewed <24 h (OWNER 11-08 22:3x).
   self-fed protect.d/protected-dbs.txt is NOT a source (DISK-URGENT-2 union fix logic).
   DEL-L1-SIGNED-TRIM  signed unit, intermediates only (archive verified or pending, see reason)
   DEL-L2-ATTEMPT      kit-wave attempt finished and not the latest attempt
@@ -179,7 +179,7 @@ class Plan:
 
     def load_holds(self):
         """.ot-hold files (COORD 18:5x): JSON {"expires": epoch, "lane": ..., "why": ..., "created": epoch}.  An expired or
-        unparsable hold is ignored (unparsable counts as held for 48 h after its mtime, fail safe)."""
+        unparsable hold is ignored (unparsable counts as held for 24 h after its mtime, fail safe)."""
         out = {}
         for r in self.J.roots:
             try:
@@ -196,7 +196,7 @@ class Plan:
                         h = json.load(fh)
                     exp = float(h["expires"])
                 except (OSError, ValueError, KeyError, TypeError):
-                    exp = os.path.getmtime(f) + 48 * 3600
+                    exp = os.path.getmtime(f) + 24 * 3600
                 if exp > self.now:
                     out[d] = (f, exp)
         return self.m.PathSet([(d, f"ot-hold until {time.strftime('%F %H:%M', time.localtime(e))} {f}") for d, (f, e) in out.items()],
@@ -234,10 +234,10 @@ class Plan:
         alts = [r"/srv/opentallas-scratch[0-9]*", os.path.expanduser("~/scratch-root")]
         alts += [r[:-len("/claude")].replace(".", "[.]") for r in J.roots if r.endswith("/claude")]
         pat = "(" + "|".join(sorted(set(alts))) + r")/claude/[A-Za-z0-9_./+-]+"
-        st = os.path.expanduser("~/.local/state")           # the protect lists feed their own holds with their own expiry; job state counts for 48 h
+        st = os.path.expanduser("~/.local/state")           # the protect lists feed their own holds with their own expiry; job state counts for 24 h
         skip = " ".join(f"-path {st}/{x} -prune -o" for x in ("wt-reaper", "ot-autoclean-auto", "ot-lifecycle"))
         cmd = (f"{{ xargs -0 -a {tf.name} -I{{}} find {{}} -xdev -type f \\( {expr} \\) -size -5M -print0 2>/dev/null; "
-               f"find {st} -xdev {skip} -type f \\( {expr} \\) -size -5M -mtime -2 -print0 2>/dev/null; }} "
+               f"find {st} -xdev {skip} -type f \\( {expr} \\) -size -5M -mtime -1 -print0 2>/dev/null; }} "
                f"| nice -n 15 xargs -0 -r -P 32 -n 200 grep -aohE '{pat}' 2>/dev/null | sort -u")
         print("refs: scanning", n, "lane trees", flush=True)
         out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, errors="replace", timeout=2400)
@@ -310,7 +310,7 @@ class Plan:
         rh = self.refset.hit(d)
         if rh:
             return ("KEEP-referenced", rh, rh.startswith("holds "))
-        # queue mention < 48 h (any lane; includes rows named by live lanes)
+        # queue mention < 24 h (any lane; includes rows named by live lanes)
         qh = self.qpaths.hit(d)
         if qh:
             return ("KEEP-queue48", qh, qh.startswith("holds "))
@@ -341,11 +341,11 @@ class Plan:
                 age = self.now - os.path.getmtime(fn)
             except OSError:
                 age = 1e9
-            if age >= 48 * 3600 and "kit_wave.txt" not in src:
-                return None                     # dead-owner line older than 48 h: released (rule 3)
+            if age >= 24 * 3600 and "kit_wave.txt" not in src:
+                return None                     # dead-owner line older than 24 h: released (rule 3)
             if "kit_wave.txt" in src:
                 return ("KEEP-kw-protect", h, partial)
-            return ("KEEP-protectd-48h", h, partial)
+            return ("KEEP-protectd-24h", h, partial)
         return ("KEEP-localkeep", h, partial)
 
     def queue_word_hit(self, p):
@@ -358,7 +358,7 @@ class Plan:
         return None
 
     def dotkeep_hit(self, p, lane_live):
-        """.keep at or above p, or below p.  Expired unless owner lane live or .keep younger than 48 h"""
+        """.keep at or above p, or below p.  Expired unless owner lane live or .keep younger than 24 h"""
         J = self.J
         found = []
         for a in [p] + self.m.ancestors(p):
@@ -377,7 +377,7 @@ class Plan:
                 age = self.now - os.lstat(k).st_mtime
             except OSError:
                 continue
-            if lane_live or age < 48 * 3600:
+            if lane_live or age < 24 * 3600:
                 return ("KEEP-dotkeep", f"{k} age {age / 3600:.0f}h lane_live={bool(lane_live)}", below)
             best = k
         return None
@@ -1052,7 +1052,7 @@ class Apply:
         if w:
             return "SKIP", w
         if P.qpaths.hit(path):
-            return "SKIP", "queue path 48h"
+            return "SKIP", "queue path 24h"
         qw = P.queue_word_hit(path) if live_now and cat != "DEL-L2-ATTEMPT" else None
         if qw:
             return "SKIP", "queue word " + qw
@@ -1339,11 +1339,11 @@ def press_trim_kit(d, m):
 
 
 def hold_main(a):
-    """one-line helper: ot_lifecycle.py hold <dir> [--hours 48] [--lane X] [--why ...]; re-run to renew (hours capped at 168)"""
+    """one-line helper: ot_lifecycle.py hold <dir> [--hours 24] [--lane X] [--why ...]; re-run to renew (hours capped at 24, OWNER 11-08 22:3x)"""
     d = os.path.realpath(a.path)
     if not os.path.isdir(d):
         raise SystemExit("not a directory: " + d)
-    h = min(float(a.hours), 168.0)
+    h = min(float(a.hours), 24.0)
     rec = {"schema": "opentallas.ot_hold.v1", "path": d, "lane": a.lane or os.environ.get("OT_LANE", ""), "why": a.why,
            "created": int(time.time()), "created_h": time.strftime("%F %T %Z"), "expires": int(time.time() + h * 3600),
            "expires_h": time.strftime("%F %T %Z", time.localtime(time.time() + h * 3600))}
@@ -1441,7 +1441,7 @@ def build_lifesnap(out):
     live.discard("COORD")
     paths48, words48 = {}, {}
     for p in posts:
-        if now - p["t"] > 48 * 3600 or not p["auth"]:
+        if now - p["t"] > 24 * 3600 or not p["auth"]:
             continue
         for m in ABS.findall(p["text"]):
             paths48.setdefault(os.path.normpath(m.rstrip(".:,;'\")]}")), p["t"])
@@ -1610,7 +1610,7 @@ def main():
     dv.add_argument("--hosts", default=",".join(HOSTS))
     hp = sub.add_parser("hold", help="create or renew an expiring hold on a directory")
     hp.add_argument("path")
-    hp.add_argument("--hours", default="48")
+    hp.add_argument("--hours", default="24")
     hp.add_argument("--lane", default="")
     hp.add_argument("--why", default="")
     for name in ("plan", "apply"):
