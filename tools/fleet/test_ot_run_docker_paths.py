@@ -1,6 +1,7 @@
 """Docker bind sources remain subject to the exact --stage admission check."""
 import importlib.machinery
 import importlib.util
+import os
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -46,3 +47,39 @@ class DockerPaths(unittest.TestCase):
         self.assertIn("outside the --stage paths",why);network.assert_not_called()
 
 if __name__=="__main__":unittest.main()
+
+
+class RoSourceBinds(unittest.TestCase):
+    def setUp(self):
+        import tempfile
+        self.t = tempfile.TemporaryDirectory()
+        self.repo = self.t.name + "/repo"
+        os.makedirs(self.repo + "/.git")
+        os.makedirs(self.repo + "/kits/k/gen")
+
+    def tearDown(self):
+        self.t.cleanup()
+
+    def test_checkout_root_gets_ro(self):
+        out = M.ro_source_binds(["docker", "run", "--rm", "-v", self.repo + ":/src", "img", "cmd"])
+        self.assertIn(self.repo + ":/src:ro", out)
+
+    def test_other_forms_get_ro(self):
+        self.assertIn(self.repo + ":/s:ro", M.ro_source_binds(["docker", "run", "--volume", self.repo + ":/s", "i"]))
+        self.assertIn("--volume=" + self.repo + ":/s:ro", M.ro_source_binds(["docker", "run", "--volume=" + self.repo + ":/s", "i"]))
+        out = M.ro_source_binds(["bash", "-lc", f"docker run --rm -v {self.repo}:/s img"])
+        self.assertEqual(out[:2], ["bash", "-lc"])
+        self.assertIn(self.repo + ":/s:ro", out[2])
+
+    def test_unchanged_cases(self):
+        for cmd in (
+            ["docker", "run", "-v", self.repo + ":/s:rw", "i"],               # explicit mode wins
+            ["docker", "run", "-v", self.repo + "/kits/k/gen:/work", "i"],    # below the root stays writable
+            ["docker", "run", "-v", "/nonexistent/x:/w", "i"],                # no checkout here
+            ["make", "-v", self.repo + ":/s"],                                # not docker
+            ["bash", "-c", f"docker run -v {self.repo}:/s i; echo x"],        # compound script
+        ):
+            with self.subTest(cmd=cmd):
+                self.assertEqual(M.ro_source_binds(cmd), cmd)
+        self.assertEqual(M.ro_source_binds(["docker", "run", "img", "-v", self.repo + ":/s"]),
+                         ["docker", "run", "img", "-v", self.repo + ":/s"])   # after the image is the container's command
