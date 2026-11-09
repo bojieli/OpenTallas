@@ -1427,6 +1427,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+# DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
+# parameter values each clone binds; provenance only, gen ignores them.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_base_type"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["param_set"] = {"type": "object", "additionalProperties": {"type": ["integer", "string", "boolean", "number"]}}
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
