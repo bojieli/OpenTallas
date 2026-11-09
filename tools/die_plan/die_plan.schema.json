@@ -2896,6 +2896,14 @@
          }
         }
        },
+       "landing_origin_rect_um": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+         "type": "number"
+        }
+       },
        "landing_raw_branches": {
         "type": "array",
         "minItems": 1,
