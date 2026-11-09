@@ -286,10 +286,12 @@ def start_type(P, tn, t, margin, min_um):
     obs = corridor_obstacles(t, margin, min_um)
     bands = [b["rect_um"] for b in lc["bands"].values()]
     taps = RT.consumer_taps(P, tn)
+    # a MISSION-role type gates rst_n_t<i> with run; START relays need the raw wavefront copy rr_t<i> (same depth)
+    raw_prefix = "rst_n_t" if (t.get("reset") or {}).get("start_role") == "bootstrap" else "rr_t"
 
     def raw_of(xy):
         i = min(range(len(taps)), key=lambda j: man(xy, taps[j][1:]))
-        return f"rst_n_t{i}"
+        return f"{raw_prefix}{i}"
     outs = sorted(n[len("cland_fstart_out_"):] for n in pins if n.startswith("cland_fstart_out_"))
     ins = sorted(n[len("cland_fstart_in_"):] for n in pins if n.startswith("cland_fstart_in_"))
     fails, rep = [], dict(origin_site=list(o), writer={}, reader={})

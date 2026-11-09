@@ -1069,6 +1069,9 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
+        raw_used = start_raw_requests(P.types[tn])
+        if raw_used:
+            T["start_raw_used"] = raw_used
         if relay_lockup(P, tn):
             T["relay_lockup"] = relay_lockup_form(P)
         if T["entry"] == "sync" and lock_stages(P):
@@ -1996,6 +1999,20 @@ def relay_sv():
 _TAPQ = re.compile(r"^rst_n_t(\d+)$")
 
 
+def start_raw_requests(t):
+    """rr_t<i> nets named as raw_reset by the plan START transport of type dict t (landing_writer_start /
+    landing_reader_start).  In a MISSION-role type rst_n_t<i> is gated (reset AND run), so a START relay that must
+    run before the gate opens takes the same-depth raw copy u_rrl_<k>_r; start_relays emits it only when asked."""
+    out = set()
+    clock = t.get("clock") or {}
+    for key in ("landing_writer_start", "landing_reader_start"):
+        for branch in ((clock.get(key) or {}).get("branches") or {}).values():
+            for stage in (branch.get("stages") or []) if isinstance(branch, dict) else []:
+                if re.fullmatch(r"rr_t\d+", str(stage.get("raw_reset") or "")):
+                    out.add(stage["raw_reset"])
+    return sorted(out)
+
+
 def start_relays(T):
     """START broadcast (decision 13c, T['start']): the relay list with the run relays and the gated tap stages.
     Nets: rr_t<i> raw reset, rn_* run (rn_ + raw net; run_root at the entry).  A CONSUMER tap (clock tap / hard-core
@@ -2013,6 +2030,7 @@ def start_relays(T):
     def run(n):
         return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
     used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
+    used |= set(T.get("start_raw_used", ()))     # plan START stages that name a raw wavefront tap (mission types)
     roles = T.get("tap_roles", {})
     def role(i):
         # Actual emission trees use integer indices; JSON receipts carry string keys.
