@@ -218,6 +218,56 @@
    "item_env_keep": "OT_MACRO_MOVES (the string the failed attempt ran) and every other key unchanged",
    "form": "GPL routability form (as t65), LOW confidence: FLOW GRT-0229 (vertical edge usage over max). Clusters are u_ft_ft1_o_0 / ft0_o_0 / ft13_o_2 at the S band x 1200-1400, with 'OT_GPL_SPARSE 0.977 % < 2 %: routability off'.",
    "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/epyc5 kit attempt_7 congestion.rpt (binned by 100 um)"
+  },
+  "ot_s81sl_leaf__t29": {
+   "failed_block": "411a9580fe47",
+   "attempt": 10,
+   "retry_key": "ot_s81sl_leaf__t29@10",
+   "item_env_add": {
+    "OT_CLAND_STRIP_ROWS": "3"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string attempt_10 ran) and every other key unchanged",
+   "form": "RING form: GRT-0116 8.87 pct; 1678 of 1679 congestion.rpt violations in the SW 100-um bin; top refs u_cland_ft1_i ring (23,011) + u_ft_ft2_o_0 (6,775). Macro model already passes (0.85). Strip-rows first; if it overflows again, the conservative re-form.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/<item>.{json,out}; congestion.rpt binned by 100 um on the failed attempt"
+  },
+  "ot_s81sl_leaf__t41": {
+   "failed_block": "7cdb28e024e4",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t41@4",
+   "item_env_add": {
+    "OT_CLAND_STRIP_ROWS": "3",
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:924.48:872.64:R0,u_lf.u_vn.u_a:414.72:691.2:R0,u_lf.u_vn.u_b:414.72:924.48:R0,u_lf.u_vp.g_ln[2].u_l:233.28:682.176:R0,u_lf.u_vp.g_ln[6].u_l:250.56:379.776:R0,u_lf.u_vp.g_ln[7].u_l:250.56:250.176:R0,u_lf.u_vq:846.72:656.64:R0,u_lf.u_vs:1062.72:639.36:R0,u_lf.u_vsw:1036.8:406.08:R0"
+   },
+   "item_env_keep": "every other key unchanged",
+   "model_worst_before": 2.46,
+   "model_worst_after": 0.9,
+   "form": "RING + MACRO form: GRT-0116 11.6 pct; violations along the N band y 1100-1200 (x 300-700); top refs u_cland_ft1_i (178,757) and u_cland_leafdn_i0 (107,334) rings; the macro channel model also fails (2.46 -> 0.90 with 7 moves, bus +3.6 pct). Both together.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/<item>.{json,out}; congestion.rpt binned by 100 um on the failed attempt"
+  },
+  "ot_s81sl_leaf__t54__cl501e5681": {
+   "failed_block": "b8bc4d743a5d",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t54__cl501e5681@4",
+   "item_env_add": {
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "OT_MACRO_MOVES (the string attempt_4 ran) and every other key unchanged",
+   "model_worst_before": 0.82,
+   "model_worst_after": 0.78,
+   "form": "GPL routability form (as t65): GRT-0116 6.31 pct; 22 of 28 violations at x 300 / y 200 around station u_ist_leafup_o0_0 (178 refs) and the leafdn station; 3_3 log: OT_GPL_SPARSE movable util 0.237 pct -> routability-driven GPL off. Macro model passes.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/<item>.{json,out}; congestion.rpt binned by 100 um on the failed attempt"
+  },
+  "serdes__t4": {
+   "failed_block": "5d896bfb0f37",
+   "attempt": 12,
+   "retry_key": "serdes__t4@12",
+   "item_env_add": {
+    "OT_CLAND_STRIP_ROWS": "3",
+    "OT_GPL_SPARSE_UTIL": "0"
+   },
+   "item_env_keep": "every other key unchanged",
+   "form": "RING escape form: GRT-0183 boxed net _201963_ (local congestion). u_cland_ft3_i ring = 2,677 FIRM flops stretched over pin y 7-118 plus 8,999 ring logic cells; 3_3 log: OT_GPL_SPARSE util 1.33 pct -> routability-driven GPL off. Strip rows open the ring escape; GPL routability back on spreads the ring logic. Not a leaf: eo_band does not apply (no plan macro map). Two strikes after this -> conservative re-form.",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/<item>.{json,out}; congestion.rpt binned by 100 um on the failed attempt"
   }
  },
  "withdrawn": {
