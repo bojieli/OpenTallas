@@ -1087,8 +1087,21 @@ module dsdv_idx_rg2_chunk (
     output reg           c_fault
 );
     localparam integer NB = 4, FPL = 7, FML = 5, QL = 5, HC = 8, KW = NB * 136;
+`ifdef OT_IDX_HSLICE_FASTPAD
+    // early-load guard (fail-closed, die-s81-85 11-09): the slices' q pin opens 4 edges after rr (slice relay 2 + 1,
+    // then rn_p), i.e. for ql_v at this port >= 6 edges after rst_n rises; a load beat taken by rql_v (rr high) before
+    // then is dropped at slice 0's pin.  sl_ok (3-flop line off rr[2]) marks the open pin; a beat at ql_v while rr is
+    // high and sl_ok[2] low sets q_early, which faults every c_sum of this chunk until the next reset.
+    wire [2:0] rr;
+    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    reg [2:0] sl_ok; reg q_early;
+    always @(posedge clk or negedge rr[2])
+        if (!rr[2]) begin sl_ok <= 3'b000; q_early <= 1'b0; end
+        else begin sl_ok <= {sl_ok[1:0], 1'b1}; if (ql_v && !sl_ok[2]) q_early <= 1'b1; end
+`else
     wire [1:0] rr;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+`endif
     reg rql_v; reg [7:0] rql_head; reg [NB*128-1:0] rql_codes; reg [NB*8-1:0] rql_sc; reg [15:0] rql_w;
     reg [KW-1:0] rkey; reg [7:0] hb_p; reg [7:0] hid [0:HC-1];
     integer i;
@@ -1119,7 +1132,11 @@ module dsdv_idx_rg2_chunk (
             .qo_v(qv[h+1]), .qo_head(qh[h+1]), .qo_codes(qc[h+1]), .qo_sc(qs[h+1]), .qo_w(qw[h+1]),
             .k_key(ky[h]), .ko_key(ky[h+1]), .cs_in(cs[h]), .cf_in(cf[h]), .cs_out(cs[h+1]), .cf_out(cf[h+1]));
     end endgenerate
+`ifdef OT_IDX_HSLICE_FASTPAD
+    always @(posedge clk) begin c_sum <= cs[HC]; c_fault <= cf[HC] || q_early; end
+`else
     always @(posedge clk) begin c_sum <= cs[HC]; c_fault <= cf[HC]; end
+`endif
 endmodule
 
 // =====================================================================================================================
