@@ -928,6 +928,9 @@ class Apply:
                 if x.count("/") < 3:
                     break
                 self.P.signed_below.setdefault(x, []).append(r)
+        msg = self.P.control()              # positive control before the first delete, as in plan and tick
+        if msg:
+            raise SystemExit("positive control FAILED: " + msg)
 
     def rows(self):
         cats = set(self.a.cats.split(",")) if self.a.cats else None
