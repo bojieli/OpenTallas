@@ -1,0 +1,190 @@
+{
+ "scope": "estimate from mapped areas; no placement, no plan event",
+ "capacity_um": 5503.68,
+ "fixed_um": 2246.4,
+ "glue_um": 907.2,
+ "sources": {
+  "fixed_boxes": "results/geom_review/svc_r5_provider_1113/review.json (mapped SML/SMD/H4 at their boxes)",
+  "hslice": "results/rtl/svc_native_providers_1113/result.json (MAP+ODB, 69881 cells)",
+  "fastpad": "results/rtl/svc_irg_fastpad_1113/model.json (estimated_only, RTL unbuilt, unproved)",
+  "glue": "S81-SVC-5 07:20 estimate: 7 boxes, shape and count not measured"
+ },
+ "rows": [
+  {
+   "area": "measured_9095.7",
+   "util": 0.4,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 103.68,
+   "irg_band_um": 3594.24,
+   "demand_um": 6747.84,
+   "slack_um": -1244.16,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.4,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 95.04,
+   "irg_band_um": 3317.76,
+   "demand_um": 6471.36,
+   "slack_um": -967.68,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.45,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 95.04,
+   "irg_band_um": 3317.76,
+   "demand_um": 6471.36,
+   "slack_um": -967.68,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.45,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 86.4,
+   "irg_band_um": 3041.28,
+   "demand_um": 6194.88,
+   "slack_um": -691.2,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.55,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 77.76,
+   "irg_band_um": 2764.8,
+   "demand_um": 5918.4,
+   "slack_um": -414.72,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.55,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 77.76,
+   "irg_band_um": 2764.8,
+   "demand_um": 5918.4,
+   "slack_um": -414.72,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.63,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 69.12,
+   "irg_band_um": 2488.32,
+   "demand_um": 5641.92,
+   "slack_um": -138.24,
+   "fits": false
+  },
+  {
+   "area": "measured_9095.7",
+   "util": 0.63,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 69.12,
+   "irg_band_um": 2488.32,
+   "demand_um": 5641.92,
+   "slack_um": -138.24,
+   "fits": false
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.4,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 86.4,
+   "irg_band_um": 3041.28,
+   "demand_um": 6194.88,
+   "slack_um": -691.2,
+   "fits": false
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.4,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 77.76,
+   "irg_band_um": 2764.8,
+   "demand_um": 5918.4,
+   "slack_um": -414.72,
+   "fits": false
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.45,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 77.76,
+   "irg_band_um": 2764.8,
+   "demand_um": 5918.4,
+   "slack_um": -414.72,
+   "fits": false
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.45,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 69.12,
+   "irg_band_um": 2488.32,
+   "demand_um": 5641.92,
+   "slack_um": -138.24,
+   "fits": false
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.55,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 60.48,
+   "irg_band_um": 2211.84,
+   "demand_um": 5365.44,
+   "slack_um": 138.24,
+   "fits": true
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.55,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 60.48,
+   "irg_band_um": 2211.84,
+   "demand_um": 5365.44,
+   "slack_um": 138.24,
+   "fits": true
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.63,
+   "dy_total_um": 0.0,
+   "band_h_um": 259.2,
+   "hslice_box_w_um": 60.48,
+   "irg_band_um": 2211.84,
+   "demand_um": 5365.44,
+   "slack_um": 138.24,
+   "fits": true
+  },
+  {
+   "area": "fastpad_model_7096.1",
+   "util": 0.63,
+   "dy_total_um": 77.76,
+   "band_h_um": 278.64,
+   "hslice_box_w_um": 51.84,
+   "irg_band_um": 1935.36,
+   "demand_um": 5088.96,
+   "slack_um": 414.72,
+   "fits": true
+  }
+ ]
+}
