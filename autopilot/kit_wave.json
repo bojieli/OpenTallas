@@ -9221,7 +9221,8 @@
         "q_spb2",
         "q_spb2__physical_v1",
         "q_spt0",
-        "q_spt0__physical_v1"
+        "q_spt0__physical_v1",
+        "q_sm0"
       ],
       "place_prefer": [
         "intel2",
@@ -9946,7 +9947,6 @@
         "q_b000__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
         "q_b001": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
         "q_b001__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
-        "q_sm3": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): SM-ASBUILT rows join when their dry passes (COORD 18:5x q_sm0 rule)",
         "q_b113": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
         "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open"
       },
@@ -12151,7 +12151,11 @@
         "--cap-margin",
         "35"
       ],
-      "note_kw38cap": "KW-FIX-38 2026-11-08 20:20 PST: DIE-HBM-93 20:08: --native-cell-cap 517000 as on KV (11-04 rule), so 400-517k q_b rows are not stopped at floorplan; revert gen_args_prev_kw38cap"
+      "note_kw38cap": "KW-FIX-38 2026-11-08 20:20 PST: DIE-HBM-93 20:08: --native-cell-cap 517000 as on KV (11-04 rule), so 400-517k q_b rows are not stopped at floorplan; revert gen_args_prev_kw38cap",
+      "hold_items_prev_kw38sm": {
+        "q_sm3": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): SM-ASBUILT rows join when their dry passes (COORD 18:5x q_sm0 rule)"
+      },
+      "note_kw38sm": "KW-FIX-38 2026-11-08 20:24 PST: DIE-HBM-93 20:19 keys: q_sm0, q_sm3 dry PASS on plan_final3 + bind_F3 + asbuilt vK (item_inputs); q_sm1/2 and q_hub_nw wait for keys, q_hub_ne held by owner (bind interface)"
     }
   },
   "place_prefer": [
