@@ -104,12 +104,17 @@ $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" 
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
+  HSC=; if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -f /work/hold_margin_pick.py ]; then \
+    HMP=\$(python3 -I /work/hold_margin_pick.py \"\$HM\" /work/config.mk /work/native_cell_count.json 2> /work/hold_margin_pick.log); echo \"\$HMP\"; \
+    case \"\$HMP\" in 'OT_HOLD_PICK hm='*' scope=reg2reg '*|'OT_HOLD_PICK hm='*' scope=nonport '*) \
+      HM=\$(printf '%s\\n' \"\$HMP\" | sed -nE 's/^OT_HOLD_PICK hm=([^ ]+) .*/\\1/p'); \
+      HSC=OT_HOLD_REPAIR_SCOPE=\$(printf '%s\\n' \"\$HMP\" | sed -nE 's/^OT_HOLD_PICK hm=[^ ]+ scope=([a-z0-9]+) .*/\\1/p');; esac; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     python3 -I /work/kit_modes.py check /work --step cts > /work/kit_modes_cts.log 2>&1 || echo 'KIT_MODES ADVISORY cts (QoR only)'; cat /work/kit_modes_cts.log; \
     if [ \$MM != 0 ]; then python3 -I /work/kit_modes.py check /work --step grt --session 'tc bc' --hold-repair || rc=9; \
-      if [ \$rc = 0 ]; then \$M grt HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+      if [ \$rc = 0 ]; then \$M grt HOLD_SLACK_MARGIN=\$HM \$HSC; rc=\$?; fi; \
     else python3 -I /work/kit_modes.py check /work --step grt --session bc --vclk-corner ff --hold-repair || rc=9; \
-      if [ \$rc = 0 ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; fi; \
+      if [ \$rc = 0 ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM \$HSC; rc=\$?; fi; fi; \
     if [ \$rc = 9 ]; then echo 'FAIL_POSTCTS kit_modes grt (one timing mode per corner)' | tee -a /work/FAIL_POSTCTS; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ]; then grep -hiE \"hold buffer|RSZ-00(32|46)\" /work/run/logs/asap7/*/base/5_1_grt.log > /work/hold_census.txt 2>/dev/null; echo \"OT_HOLD_CENSUS \$(cat /work/hold_census.txt | tr \"\\n\" \" \")\"; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \

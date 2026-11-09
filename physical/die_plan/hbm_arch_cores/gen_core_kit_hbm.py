@@ -1542,6 +1542,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # is its own knob now: default max(--hold-margin, tools/die_plan/core_flow.HOLD_FF_MARGIN_DEFAULT = 0, OWNER 11-02); 15 where a
     # measured GRT->final RC hold loss > 10 ps is documented (ring).  HOLD_SLACK_MARGIN (other steps) stays --hold-margin.
     ap.add_argument("--hold-ff-margin", type=float, default=None, help="OT_HOLD_FF_MARGIN ps (FF GRT hold repair)")
+    ap.add_argument("--hold-ff-margin-big", type=float, default=35.0,
+                    help="HBM-CORES-B 11-09: GRT FF hold-repair target ps (reg2reg) for cores above "
+                         "--hold-ff-margin-big-cells native stdcells; 0 disables; ignored with --hold-ff-margin")
+    ap.add_argument("--hold-ff-margin-big-cells", type=int, default=100000,
+                    help="native pre-floorplan stdcell threshold for --hold-ff-margin-big")
     # HBM-CORES-KITS-20: shared core-flow DRV basis (KV/S81/QC); 0 disables either knob
     ap.add_argument("--max-fanout", type=int, default=64, help="set_max_fanout for every repair_design (0 = off)")
     ap.add_argument("--slew-margin", type=float, default=20.0, help="ORFS SLEW_MARGIN = CAP_MARGIN percent (0 = off)")
@@ -2270,6 +2275,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
               "hold_gate.tcl", "port_bind_core.py", "internal_core_guard.py"):
         shutil.copyfile(HERE / f, kd / f)
+    # HBM-CORES-B 11-09 (COORD): big-core GRT FF hold-repair target picker, read by run_kit_hbm.sh before grt
+    shutil.copyfile(TOOL / "hold_margin_pick.py", kd / "hold_margin_pick.py")
     # HBM-CORES3 10-25 (COORD KIT-CENSUS): SELRANGE preflight (RTL-SELRANGE gate) ships in every kit
     shutil.copyfile(TOOL / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(TOOL / "rtl_lint.py", kd / "rtl_lint.py")
@@ -2312,6 +2319,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
            f"export OT_VCLK_TT = {ins:g}",
            f"export OT_VCLK_FF = {ff_ins:g}",
            f"export OT_HOLD_FF_MARGIN = {hold_ff_margin(a):g}",
+           # HBM-CORES-B 11-09 (COORD ruling): HBM hard cores > 100k native stdcells drift 22-39 ps FF core hold from GRT
+           # to sign-off; the GRT repair TARGET is 35 ps reg2reg there (hold_margin_pick.py, run_kit_hbm.sh).  Not a gate:
+           # every hold gate stays slack >= 0 (OWNER 11-02).  An explicit --hold-ff-margin is the kit's own measured
+           # margin and writes neither key; 0 disables.
+           *([f"export OT_HOLD_FF_MARGIN_BIG = {a.hold_ff_margin_big:g}",
+              f"export OT_HOLD_FF_MARGIN_BIG_CELLS = {a.hold_ff_margin_big_cells:d}"]
+             if a.hold_ff_margin is None and a.hold_ff_margin_big > 0 else []),
            f"export OT_PRE_ROUTE_FF_HOLD = {int(a.pre_route_ff_hold)}",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
