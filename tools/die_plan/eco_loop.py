@@ -476,12 +476,84 @@ def stage_so(kit, root, tools=HERE):
                    check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for n in ECO_TOOL_FILES:
         _copy_w(Path(tools) / n, dp / n)
-    for n in ("orfs_hold_mm.py", "orfs_hold_mm.tcl"):
-        for src in (Path(kit) / n, Path(tools).parent / n):
+    scope = hold_mm_scope_needed(kit)
+    srcs = (Path(kit), Path(tools).parent)
+    if scope and not hold_mm_supports(Path(kit) / "orfs_hold_mm.tcl", scope):
+        srcs = (Path(tools).parent,)       # KW-FIX-44: a kit copy older than the scope never reaches the ECO
+    for n in HOLD_MM_FILES:
+        for src in (s / n for s in srcs):
             if src.is_file():
                 _copy_w(src, so / "tools" / n)
                 break
+    if scope and not hold_mm_supports(so / "tools" / "orfs_hold_mm.tcl", scope):
+        raise ValueError(f"eco_loop: OT_HOLD_REPAIR_SCOPE={scope} on a two-mode kit needs an orfs_hold_mm.tcl that "
+                         f"supports it; neither the kit {kit} nor the tools {Path(tools).parent} has one "
+                         f"(stage tools/orfs_hold_mm.{{py,tcl}} from main)")
     return so
+
+
+# KW-FIX-44 11-09 (HBM-COLLECT-1/N4-C 10:54, both n4_local_vA ECOs; DIE-HEAD-91 04:10 tx_eco1/1b): a two-mode kit whose
+# orfs_hold_mm.tcl predates the hold-repair scope it now asks for (kit config.mk or env OT_HOLD_REPAIR_SCOPE=nonport) made
+# prd_hook.tcl refuse ("OT_HOLD_SCOPE nonport requires matching orfs_hold_mm.tcl") after the full ECO route, so no repair
+# ran and the one ECO iteration was spent.  prd_mk.sh keeps the pass dir's (= the kit's) copy, and stage_so preferred it
+# too; FLOW_FILES refreshed post_route_drv/* only.  Now the pair is staged from the current tools whenever the kit copy
+# lacks the scope, in the SO tree (stage_so) and in every pass dir after prd_mk.sh (refresh_hold_mm), and the loop stops
+# with ERROR before any prd_run when no copy supports it.  A kit without a scope, or whose copy supports it: unchanged.
+HOLD_MM_FILES = ("orfs_hold_mm.py", "orfs_hold_mm.tcl")
+HOLD_SCOPES = ("reg2reg", "nonport")
+_HOLD_MODES_RX = re.compile(r"^\s*set\s+::ot_hold_scope_supported_modes\s+\{([^}]*)\}", re.M)
+_HOLD_SCOPE_MK_RX = re.compile(r"^\s*(?:override\s+)?export\s+OT_HOLD_REPAIR_SCOPE\s*[:?]?=\s*(\S*)\s*$")
+
+
+def kit_hold_scope(kit):
+    """the ECO's OT_HOLD_REPAIR_SCOPE: the environment (hold_scope()) else the last export in the kit config.mk"""
+    s = hold_scope()
+    if s:
+        return s
+    try:
+        for line in Path(kit, "config.mk").read_text(errors="replace").splitlines():
+            m = _HOLD_SCOPE_MK_RX.match(line)
+            if m:
+                s = m.group(1).strip().lower()
+    except OSError:
+        pass
+    return s
+
+
+def hold_mm_scope_needed(kit):
+    """the scope the kit's orfs_hold_mm.tcl must support in this ECO: '' unless two-mode with a reg2reg / nonport scope"""
+    s = kit_hold_scope(kit)
+    return s if hold_mm(kit) and s in HOLD_SCOPES else ""
+
+
+def hold_mm_supports(tcl, scope):
+    """does orfs_hold_mm.tcl implement `scope`?  nonport: listed in ::ot_hold_scope_supported_modes (what prd_hook.tcl and
+    grt_nonport_hold.tcl check); reg2reg: the list, or (older copies) the ot_hold_repair_scope proc itself"""
+    try:
+        t = Path(tcl).read_text(errors="replace")
+    except OSError:
+        return False
+    m = _HOLD_MODES_RX.search(t)
+    if m:
+        return scope in m.group(1).split()
+    return scope == "reg2reg" and re.search(r"^\s*proc\s+(::)?ot_hold_repair_scope\b", t, re.M) is not None
+
+
+def refresh_hold_mm(pd, so, kit):
+    """after prd_mk.sh: a pass dir whose orfs_hold_mm.tcl is missing or lacks the needed scope gets the SO pair (staged
+    from the current tools by stage_so).  -> list of refreshed names; raises ValueError when the SO copy lacks it too"""
+    scope = hold_mm_scope_needed(kit)
+    if not scope or hold_mm_supports(Path(pd) / "orfs_hold_mm.tcl", scope):
+        return []
+    src = Path(so) / "tools"
+    if not hold_mm_supports(src / "orfs_hold_mm.tcl", scope):
+        raise ValueError(f"eco_loop: OT_HOLD_REPAIR_SCOPE={scope}: no orfs_hold_mm.tcl supporting it for pass dir {pd}")
+    done = []
+    for n in HOLD_MM_FILES:
+        if (src / n).is_file():
+            _copy_w(src / n, Path(pd) / n)
+            done.append(n)
+    return done
 
 
 def post_runner(d, runner):
@@ -675,6 +747,12 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
+        try:
+            fresh = refresh_hold_mm(pd, so, kit)
+        except ValueError as e:
+            return end("ERROR", str(e))
+        if fresh:
+            it.setdefault("hold_mm_refreshed", {})[v] = fresh
         if trim:
             gone = trim_superseded(root, pd)
             if gone:
@@ -871,7 +949,12 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
         return done("NOT_NEAR_MISS", "; ".join(far) + f" (near miss: setup/hold no worse than {NEAR_WNS_PS:g} ps on at most "
                     f"{NEAR_ENDPOINTS} endpoints, at most {NEAR_SLEW_NETS} slew nets, DRC under {NEAR_DRC}): GEOMETRY + REDESIGN, no ECO")
     root.mkdir(parents=True, exist_ok=False)
-    so = stage_so(kit, root, tools)
+    try:
+        so = stage_so(kit, root, tools)
+    except ValueError as e:
+        if "OT_HOLD_REPAIR_SCOPE" not in str(e):
+            raise
+        return done("ERROR", str(e) + " -- refused before any ECO route; no iteration used")
     src, prev = kit, res["base_metrics"]
     best = None
     verdict, stop = "EXHAUSTED", f"{max_iter} iteration(s), still not signed: GEOMETRY + REDESIGN, no second ECO"
@@ -966,11 +1049,26 @@ def summary(res):
             + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
 
-def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call):
+def lec_tool_of(kit, lec_tool=None, tools=HERE):
+    """KW-FIX-44 11-09 (COORD; HBM-CORES-B own_RF4T eco1b met every sign-off number and ended LEC_FAIL only because the
+    kit had no lec.py): --lec-tool, else the kit's own lec.py, else the current tools' lec.py.  -> Path or None"""
+    for p in ([Path(lec_tool)] if lec_tool else []) + [Path(kit) / "lec.py", Path(tools) / "lec.py"]:
+        if p.is_file():
+            return p
+    return None
+
+
+def run_lec(kit, res, mem, cpus, lec_tool=None, run=subprocess.call, tools=HERE):
     """Prove the actual ECO capsule; expose the fresh receipt for resign.py --lec."""
     best = res.get("best") or {}
     netlist = Path(best.get("base") or "") / "6_final.v"
-    tool = Path(lec_tool) if lec_tool else Path(kit) / "lec.py"
+    tool = lec_tool_of(kit, lec_tool, tools)
+    if tool is None:
+        res["lec"] = dict(tool=None, netlist=str(netlist), exit=None, verdict="NO_LEC_TOOL",
+                          reason=f"no lec.py: --lec-tool {lec_tool or '-'}, kit {kit}, tools {tools} (a tool gap, not a design verdict)")
+        Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
+        print("ECO_LOOP LEC_TOOL_MISSING: " + res["lec"]["reason"], file=sys.stderr, flush=True)
+        return False
     candidate = Path(best["dir"]).resolve()
     out = Path(tempfile.mkdtemp(prefix="lec_postroute_", dir=candidate))
     rc = run([sys.executable, str(tool), str(candidate), "--netlist", str(netlist), "--out", str(out), "--mem", str(mem),
@@ -1028,7 +1126,9 @@ def main():
                    repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override,
                    strict_one_pass=a.strict_one_pass)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
-        res["verdict"] = "LEC_FAIL"
+        # NO_LEC_TOOL: the routed DB is untouched and signed; only the proof is missing -> re-sign uncharged with a tool
+        res["verdict"] = "LEC_TOOL_MISSING" if (res.get("lec") or {}).get("verdict") == "NO_LEC_TOOL" else "LEC_FAIL"
+        Path(res["root"], "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
     print("ECO_LOOP " + res["verdict"] + ": " + summary(res))
     print("ECO_LOOP record " + str(Path(res["root"]) / "eco_loop.json"))
     return 0 if res["verdict"] == "PASS" else 1
