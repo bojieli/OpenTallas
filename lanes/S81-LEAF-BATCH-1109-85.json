@@ -1,0 +1,192 @@
+{
+ "schema": "s81_leaf_batch_1109_85",
+ "lane": "DIE-S81-85",
+ "retry_fix_text": "REDESIGN: macros moved, not a retry. Escape-open re-solve (eo_band.py, pass reference model worst <= 1.15) from the FAILED attempt placement (which already carried its 1107 moves); OT_MACRO_MOVES in item_env REPLACES the 1107 string; macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the GRT-0116 overflow that remained after the 1107 batch.",
+ "needs_src": "none: OT_MACRO_MOVES is in the current wave src; resume at floorplan, synth reused, no rebind",
+ "not_in_batch": {
+  "t16": "model 1.77 after 3 passes: u_vs|u_ve.u_s y-channel 25.92 um, u_vs held by tap clk_t36",
+  "t54__cl706d9749": "2.08: u_vp.g_ln[2].u_l|u_vn.u_b x 15.12 um stuck",
+  "t55": "2.08: g_ln[12].u_l|u_vn.u_b x 15.12 um stuck",
+  "t62": "2.71: u_ve.u_m|u_vsw y 17.28 um stuck",
+  "t66": "2.94: u_vsw|u_ve.u_m y 17.28 um stuck",
+  "t72": "2.28: u_vn.u_b|g_ln[11]/[7] and u_vn.u_a|g_ln[10] x 23.74 um stuck"
+ },
+ "rows": {
+  "ot_s81sl_leaf__t1": {
+   "failed_block": "b1b2617c36b1",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t1@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:561.6:691.2:MY,u_lf.u_vn.u_b:527.04:872.64:MY,u_lf.u_vp.g_ln[0].u_l:1045.44:777.216:R0,u_lf.u_vp.g_ln[3].u_l:1183.68:785.856:R0,u_lf.u_vp.g_ln[5].u_l:1002.24:1062.336:R0,u_lf.u_vp.g_ln[8].u_l:1321.92:777.216:R0,u_lf.u_vp.u_b1:786.24:630.72:R0,u_lf.u_vq:354.24:639.36:MY,u_lf.u_vs:146.856:596.16:R0,u_lf.u_vsw:60.48:362.88:R0"
+   },
+   "model_worst_before": 1.77,
+   "model_worst_after": 0.76,
+   "hot_before": 16,
+   "hot_after": 9,
+   "bus_cost_rise_pct": 13.89,
+   "residual": "u_vq|u_ve.u_m y w=60.48 pins=1171 r=0.76",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t1.json"
+  },
+  "ot_s81sl_leaf__t5": {
+   "failed_block": "614cae7758d1",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t5@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:8.64:MX,u_lf.u_vn.u_a:371.52:596.16:MX,u_lf.u_vp.g_ln[0].u_l:164.16:189.696:MX,u_lf.u_vp.g_ln[10].u_l:34.56:189.696:MX,u_lf.u_vp.g_ln[11].u_l:43.2:327.936:MX,u_lf.u_vp.g_ln[12].u_l:51.84:587.136:MX,u_lf.u_vp.g_ln[13].u_l:51.84:457.536:MX,u_lf.u_vp.g_ln[15].u_l:51.84:984.576:MX,u_lf.u_vp.g_ln[1].u_l:138.24:60.096:MX,u_lf.u_vp.g_ln[2].u_l:8.64:60.096:MX,u_lf.u_vp.g_ln[3].u_l:51.84:725.376:MX,u_lf.u_vp.g_ln[6].u_l:172.8:319.296:MX,u_lf.u_vp.g_ln[9].u_l:51.84:854.976:MX,u_lf.u_vp.u_b0:328.32:362.88:MX,u_lf.u_vq:604.8:432:MX,u_lf.u_vs:820.8:440.64:MX,u_lf.u_vsw:794.88:622.08:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 0.56,
+   "hot_before": 11,
+   "hot_after": 3,
+   "bus_cost_rise_pct": 9.61,
+   "residual": "OUTLINE|u_vn.u_b y w=34.60 pins=492 r=0.56",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t5.json"
+  },
+  "ot_s81sl_leaf__t7": {
+   "failed_block": "1fa5ead5efc1",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t7@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:829.44:872.64:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.g_ln[11].u_l:172.8:569.856:R0,u_lf.u_vp.g_ln[13].u_l:34.56:638.976:R0,u_lf.u_vp.g_ln[14].u_l:293.76:759.936:R0,u_lf.u_vp.g_ln[1].u_l:34.56:768.576:R0,u_lf.u_vp.g_ln[8].u_l:164.16:759.936:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:1105.92:656.64:R0,u_lf.u_vs:872.64:648:MY,u_lf.u_vsw:1149.12:406.08:R0"
+   },
+   "model_worst_before": 3.07,
+   "model_worst_after": 0.97,
+   "hot_before": 14,
+   "hot_after": 4,
+   "bus_cost_rise_pct": 10.99,
+   "residual": "u_vp.g_ln[6].u_l|u_vn.u_b x w=32.40 pins=803 r=0.97",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t7.json"
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "failed_block": "e113287f926d",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t24__cl2456157b@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:483.84:362.88:R180,u_lf.u_vn.u_b:483.84:172.8:R180,u_lf.u_vp.g_ln[13].u_l:1028.16:25.536:MX,u_lf.u_vp.g_ln[3].u_l:1192.32:172.416:MX,u_lf.u_vp.g_ln[5].u_l:915.84:431.616:MX,u_lf.u_vp.g_ln[8].u_l:933.12:163.776:MX,u_lf.u_vp.g_ln[9].u_l:1062.72:172.416:MX,u_lf.u_vp.u_b1:673.92:596.16:MX,u_lf.u_vq:34.56:449.28:R180,u_lf.u_vs:267.816:449.28:MX,u_lf.u_vsw:483.84:682.56:MX"
+   },
+   "model_worst_before": 5.3,
+   "model_worst_after": 0.59,
+   "hot_before": 11,
+   "hot_after": 4,
+   "bus_cost_rise_pct": 0.16,
+   "residual": "OUTLINE|u_ve.u_m y w=51.88 pins=787 r=0.59",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t24__cl2456157b.json"
+  },
+  "ot_s81sl_leaf__t27": {
+   "failed_block": "5a381fc461ff",
+   "attempt": 7,
+   "retry_key": "ot_s81sl_leaf__t27@7",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:34.56:846.72:MY,u_lf.u_ve.u_s:241.92:829.44:MY,u_lf.u_vn.u_a:509.76:699.84:MY,u_lf.u_vn.u_b:449.28:881.28:MY,u_lf.u_vp.g_ln[0].u_l:967.68:794.496:R0,u_lf.u_vp.g_ln[10].u_l:1036.8:1079.616:R0,u_lf.u_vp.g_ln[12].u_l:1244.16:656.256:R0,u_lf.u_vp.g_ln[1].u_l:967.68:664.896:R0,u_lf.u_vp.g_ln[3].u_l:898.56:1079.616:R0,u_lf.u_vp.g_ln[4].u_l:1114.56:794.496:R0,u_lf.u_vp.g_ln[6].u_l:1105.92:664.896:R0,u_lf.u_vp.g_ln[8].u_l:1252.8:794.496:R0,u_lf.u_vq:293.76:656.64:MY,u_lf.u_vs:77.76:639.36:MY,u_lf.u_vsw:51.84:406.08:R0"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 0.53,
+   "hot_before": 9,
+   "hot_after": 1,
+   "bus_cost_rise_pct": 0.62,
+   "residual": "u_vp.g_ln[9].u_l|u_vp.g_ln[5].u_l y w=23.76 pins=320 r=0.53",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t27.json"
+  },
+  "ot_s81sl_leaf__t30": {
+   "failed_block": "36b47abf5b9f",
+   "attempt": null,
+   "retry_key": null,
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:43.2:MX,u_lf.u_vp.g_ln[12].u_l:17.28:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[15].u_l:190.08:561.216:MX,u_lf.u_vp.g_ln[2].u_l:146.88:34.176:MX,u_lf.u_vp.g_ln[3].u_l:43.2:690.816:MX,u_lf.u_vp.g_ln[6].u_l:172.8:699.456:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:440.64:MX,u_lf.u_vsw:812.16:622.08:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "hot_before": 12,
+   "hot_after": 5,
+   "bus_cost_rise_pct": 9.18,
+   "residual": "OUTLINE|u_vp.g_ln[2].u_l y w=34.21 pins=911 r=1.04",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t30.json"
+  },
+  "ot_s81sl_leaf__t35": {
+   "failed_block": "d80d947e8858",
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t35@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[15].u_l:190.08:561.216:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[3].u_l:60.48:690.816:MX,u_lf.u_vp.g_ln[6].u_l:190.08:699.456:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:440.64:MX,u_lf.u_vsw:812.16:622.08:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.03,
+   "hot_before": 12,
+   "hot_after": 8,
+   "bus_cost_rise_pct": 10.16,
+   "residual": "OUTLINE|u_vp.g_ln[12].u_l y w=34.21 pins=903 r=1.03",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t35.json"
+  },
+  "ot_s81sl_leaf__t37": {
+   "failed_block": "9c1561c84065",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t37@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_rxsb:786.24:190.08:R0,u_lf.u_rxsf:855.36:345.6:R0,u_lf.u_ve.u_m:829.44:846.72:MY,u_lf.u_ve.u_s:1028.16:872.64:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.g_ln[11].u_l:172.8:569.856:R0,u_lf.u_vp.g_ln[14].u_l:302.4:759.936:R0,u_lf.u_vp.g_ln[8].u_l:172.8:759.936:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:691.2:509.76:R0,u_lf.u_vs:872.64:648:MY,u_lf.u_vsw:1114.56:544.32:R0"
+   },
+   "model_worst_before": 5.87,
+   "model_worst_after": 0.97,
+   "hot_before": 13,
+   "hot_after": 5,
+   "bus_cost_rise_pct": 6.61,
+   "residual": "u_vp.g_ln[6].u_l|u_vn.u_b x w=32.40 pins=803 r=0.97",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t37.json"
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "failed_block": "d1087718d628",
+   "attempt": 7,
+   "retry_key": "ot_s81sl_leaf__t40__cl86ea32b3@7",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:380.16:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "hot_before": 12,
+   "hot_after": 6,
+   "bus_cost_rise_pct": 4.62,
+   "residual": "OUTLINE|u_vp.g_ln[2].u_l y w=34.21 pins=908 r=1.04",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t40__cl86ea32b3.json"
+  },
+  "ot_s81sl_leaf__t42": {
+   "failed_block": "df2d83788086",
+   "attempt": 10,
+   "retry_key": "ot_s81sl_leaf__t42@10",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:362.88:872.64:MY,u_lf.u_vn.u_a:699.84:699.84:MY,u_lf.u_vn.u_b:725.76:881.28:MY,u_lf.u_vp.g_ln[1].u_l:1131.84:932.736:R0,u_lf.u_vp.u_b1:907.2:596.16:R0,u_lf.u_vq:432:622.08:MY,u_lf.u_vs:216:604.8:MY,u_lf.u_vsw:190.08:371.52:R0"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 0.9,
+   "hot_before": 7,
+   "hot_after": 2,
+   "bus_cost_rise_pct": 10.02,
+   "residual": "u_vs|u_ve.u_m y w=17.28 pins=395 r=0.90",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t42.json"
+  },
+  "ot_s81sl_leaf__t69": {
+   "failed_block": "6ba138b14218",
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t69@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:8.64:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[15].u_l:190.08:561.216:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[3].u_l:60.48:690.816:MX,u_lf.u_vp.g_ln[6].u_l:190.08:699.456:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vp.u_b0:336.96:302.4:MX,u_lf.u_vp.u_b1:336.96:354.24:MX,u_lf.u_vq:622.08:440.64:MX,u_lf.u_vs:838.08:440.64:MX,u_lf.u_vsw:812.16:622.08:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "hot_before": 12,
+   "hot_after": 8,
+   "bus_cost_rise_pct": 8.99,
+   "residual": "OUTLINE|u_vp.g_ln[2].u_l y w=34.21 pins=907 r=1.04",
+   "form_source": "eo_band escape-open on the failed attempt macro_place.tcl + 1_synth conn",
+   "evidence": "epyc4 /srv/opentallas-scratch2/claude/s81-types-13/leaf/mp85/ot_s81sl_leaf__t69.json"
+  }
+ }
+}
