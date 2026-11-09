@@ -1,0 +1,75 @@
+#die	kind	key	flow	resign	marker(own)	marker_time	marker_text	other_copy_markers	last_READY-COUNT_post	origin
+hbm	signed_designs	hfd_ep_host_vc	flow-20261108-fr-hbm	resign	epyc6:/srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/eco1/i1	11-08 06:34	DO_NOT_COUNT until plan event EP-MOD-1108 (plan_hbm_1108c a337411c3a25, branch claude/die-hbm-92-int	0	2026-11-08 22:49	epyc6:/srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/resign_fr/signoff/signoff.json
+hbm	signed_designs	hfd_ep_static_vc2	flow-20261108-fr-hbm	resign	epyc6:/srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/eco1/i1	11-08 06:34	DO_NOT_COUNT until plan event EP-MOD-1108 (plan_hbm_1108c a337411c3a25, branch claude/die-hbm-92-int	0	2026-11-08 22:49	epyc6:/srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/resign_fr/signoff/signoff.json
+hbm	signed_designs	hnx_rp3h_lc	flow-20261104-i-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hnx_rp3h_lc__flow-20261104-i-hbm__2c344565/signoff/signoff.json
+hbm	signed_designs	hnx_rp3h_tl	flow-20261106-cr-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hnx_rp3h_tl__flow-20261106-cr-hbm__2be808e4/signoff/signoff.json
+hbm	signed_designs	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/8c39bea619f03526	flow-20261108-fn-hbm	resign	epyc6:/srv/opentallas-scratch2/claude/die-hbm-92-open-vecd/eco_pilot2/i1	11-08 05:34	DIE-HBM-92-OPEN/VECD Sun Nov  8 05:34:16 PST 2026: vXLK pilot form, private kit (copy of hbm-cons-2 	0	2026-11-08 17:42	epyc6:/srv/opentallas-scratch3/claude/die-hbm-93-open/vecd_pilot_eco_resign_fn/signoff/signoff.json
+hbm	signed_designs	ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7	flow-20261106-cr-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json
+hbm	signed_designs	ot_hbm_host_cp_rxs	flow-20261106-a-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json
+hbm	signed_designs	ot_hbm_idx_score_hcol_h0_ra	flow-20261106-dm-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json
+hbm	signed_designs	ot_hbm_idx_tail_native#218.592x187.488/6b243813dbe5dc21	flow-20261031-j-hbm	resign				0		epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-15/tail_native/rs_j/signoff/signoff.json
+hbm	signed_designs	ot_hbm_idx_tail_native#218.592x187.488/b5e0e7076e68a01a	flow-20261101-m-hbm	resign				0		intel2:/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3/signoff/signoff.json
+hbm	signed_designs	ot_hbm_idx_vm_query_static_n12	flow-20261107-du-hbm	resign				1	2026-11-07 09:42	epyc4:/srv/opentallas-scratch3/claude/hbm-hard-2-n12/resign/n12_vN_du/signoff/signoff.json
+hbm	signed_designs	ot_hbm_sm_vm_wr_q_t_lanes4	flow-20261106-cr-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_sm_vm_wr_q_t_lanes4__flow-20261106-cr-hbm__11685eb6/signoff/signoff.json
+hbm	signed_designs	ot_hbm_static_cfg_collar_idx256r	flow-20261030-f-hbm	resign				0		intel1:/srv/opentallas-scratch2/claude/signoff-sprint-3/collar_f2/signoff/signoff.json
+hbm	signed_designs	ot_hbm_su_pcol_h	flow-20261105-m-hbm	resign				0		intel2:/srv/opentallas-scratch2/claude/ss29/resign/pcol_m/signoff/signoff.json
+hbm	signed_designs	ot_hbm_su_static_cxport_ij_q	flow-20261104-i-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json
+hbm	signed_designs	ot_hbm_su_static_qcore_r13	flow-20261107-ea-hbm	resign				0		epyc6:/srv/opentallas-scratch2/claude/hbm-hard-3/resign/qcoreM_ea3/signoff/signoff.json
+hbm	signed_designs	ot_hbm_su_static_sfustore_hw	flow-20261104-b-hbm	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss25/resign/sfustore_b/signoff/signoff.json
+hbm	signed_designs	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	flow-20261108-fs-hbm	resign	epyc2:/srv/opentallas-scratch3/claude/hbm-open-a/h9b_i2_wq_so	11-09 01:11	HBM-OPEN-A 2026-11-09 01:11 PST: overlay kit, RTL not on main / plan path; do not count until DIE-HB	0		epyc2:/srv/opentallas-scratch3/claude/hbm-open-a/h9b_i2_wq_so/signoff/signoff.json
+hbm	signed_designs	ot_hbm_svc_vmdel_lane_n	flow-20261104-k-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/ss29/resign/vm8_k/signoff/signoff.json
+hbm	signed_designs	ot_hfd_coll_q2_hard_v8g__ring_ag	flow-20261030-f-hbm	resign				0		intel1:/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f/signoff/signoff.json
+hbm	signed_designs	ot_hgi_coll_gq_land#142.56x207.36/8c2c0cba1a712d83	flow-20261105-o-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/ss31/resign/gq_o/signoff/signoff.json
+hbm	signed_designs	ot_hgi_coll_inj_idx_join_rg	flow-20261107-dq-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e2_resign_dq/signoff/signoff.json
+hbm	signed_designs	ot_hgi_sfu_opsa_rest	flow-20261107-du-hbm	resign				0		intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json
+hbm	signed_designs	ot_hgi_sfu_split3_ctl_rest_1c	flow-20261107-ea-hbm	resign	epyc4:/srv/opentallas-scratch3/claude/hbm-hard-3/eco/rest1c_rrfix_e1/i1	11-07 07:30		0		epyc4:/srv/opentallas-scratch3/claude/hbm-hard-3/resign/rest1c_e1_ea/signoff/signoff.json
+hbm	signed_designs	ot_hgi_sfu_split3_lane_core_ex	flow-20261104-k-hbm	resign				0		epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json
+hbm	signed_designs	ot_hgi_sm_xload_cl2_bdring	flow-20261106-w-hbm	resign				0		intel1:/srv/opentallas-scratch3/claude/codex-hbm-forms-1105/resign/brmw/signoff/signoff.json
+hbm	signed_designs	ot_hgi_sm_xload_cl2_ctlx	flow-20261104-k-hbm	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/ctlx2_k/signoff/signoff.json
+hbm	signed_designs	ot_hidx_s3_ctl	flow-20261105-t-hbm	resign				0		intel2:/srv/opentallas-scratch2/claude/ss32/resign/s3ctl_t/signoff/signoff.json
+hbm	signed_designs	ot_hidx_s3_q	flow-20261108-fg-hbm	resign	intel1:/srv/opentallas-scratch2/claude/die-hbm-92-open/s3_eco_one/i1	11-08 02:28		0	2026-11-08 09:54	intel1:/srv/opentallas-scratch2/claude/die-hbm-92-open/s3_eco_resign_fg/signoff/signoff.json
+hbm	signed_designs	ot_hnx_fused_tnode	flow-20261101-m-hbm	resign				0		intel2:/srv/opentallas-scratch2/claude/hbm-cores-kits-40/resign/tnode_h4_m20/signoff/signoff.json
+hbm	signed_designs	ot_hnx_idxn_keybuf_slice	flow-20261104-b-hbm	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json
+hbm	signed_designs	ot_svgr_bk	flow-20261107-dq-hbm	resign				0		epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json
+hbm	signed_designs	ot_wbq_root_g0	flow-20261108-ew-hbm	resign	epyc4:/srv/opentallas-scratch2/claude/codex-hbm-root-s7-1107/kit_g0_vS7	11-07 16:18	Unbuilt ROOT S7 g0 locality/control pilot; no signoff or parent adoption. 	0	2026-11-08 01:42	epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json
+qwen_compute	signed_designs	qfd_dv_s8_crh_rp1	flow-20261030-f-qc	resign				0		intel2:/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff/signoff.json
+qwen_compute	signed_designs	qfd_dv_s8x_btab	flow-20261108-ed-qc	resign				0		intel2:/srv/opentallas-scratch2/claude/dq92/resign_ed/qfd_dv_s8x_btab/signoff/signoff.json
+qwen_compute	signed_designs	qfd_dv_s8x_vmr	flow-20261030-a-qc	resign				0		epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1/signoff/signoff.json
+qwen_compute	signed_designs	qfd_qc_su_lane_w_l6	flow-20261103-s-qc	resign				0		epyc2:/srv/opentallas-scratch2/claude/hbm-form-timing-11-qout/repo/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l6/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w2_e_200	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w515_s_200	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w515_s_201	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w517_n_200	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w765_e_200	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/signoff/signoff.json
+qwen_compute	signed_designs	sle_cland_w767_e_200	flow-20261106-ap-qc	resign				0		intel1:/srv/opentallas-scratch2/claude/qc-mem9-rtl/bind9/src/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/signoff/signoff.json
+qwen_compute	signed_types	coll_ftn	flow-20261107-cz-qc	resign				0		epyc6:/srv/opentallas-scratch2/claude/codex-qc-types-1209/coll_ftn_resign_cz/signoff/signoff.json
+qwen_kvsys	signed_designs	kv3_astk	flow-20261104-k-kv	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/astk_k/signoff/signoff.json
+qwen_kvsys	signed_designs	kv3_pv_pair	flow-20261030-b-kv	resign				0		intel2:/srv/opentallas-scratch2/claude/die-kv-49/pv/pv_bkv_eA/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_cdc_ch	flow-20261030-a-kv	resign				0		intel2:/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_cdc_hi	flow-20261103-s-kv	resign				0		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_chi_s_kv/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_cdc_pc	flow-20261103-s-kv	resign				0		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cpc_s_kv/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_core_guard	flow-20261103-s-kv	resign				0		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cg_s_kv/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_core_queue	flow-20261103-s-kv	resign				0		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cq_s_kv/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_core_rx	flow-20261030-b-kv	resign				0		intel1:/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_hr_core_tx	flow-20261031-k-kv	resign				0		intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json
+qwen_kvsys	signed_designs	qkd_kvs_pcf_h_head_p	flow-20261104-y-kv	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json
+s81	signed_designs	dsdv_bksel_c	flow-20261104-y-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k/signoff/signoff.json
+s81	signed_designs	dsfd_bf_front_roots	flow-20261104-v-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/signoff/signoff.json
+s81	signed_designs	ot_dsrom_su_hcpost_lane_pr	flow-20261030-e-s81	resign				0		intel1:/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff/signoff.json
+s81	signed_designs	ot_s81_sstn_base566	flow-20261102-r-s81	resign				0		intel1:/srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/sign_r-s81_m0/signoff/signoff.json
+s81	signed_designs	ot_s81_sstn_payload536	flow-20261030-d-s81	resign				0		intel2:/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81/signoff/signoff.json
+s81	signed_designs	ot_s81c_attn_hcore	flow-20261030-e-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/s81ck7/attn_rt22m_hx2_resign_e-s81/signoff/signoff.json
+s81	signed_designs	ot_s81sl_egg	flow-20261103-x-s81	resign				0		intel1:/srv/opentallas-scratch2/claude/ss25/resign/egg_r64_x/signoff/signoff.json
+s81	signed_designs	ot_s81sl_egn	flow-20261103-x-s81	resign				0		epyc4:/srv/opentallas-scratch2/claude/ss25/resign/egn_r64_x/signoff/signoff.json
+s81	signed_designs	ot_s81sl_ve_m	flow-20261030-e-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81/signoff/signoff.json
+s81	signed_designs	ot_s81sl_vn_a	flow-20261031-b-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81/signoff/signoff.json
+s81	signed_designs	ot_s81sl_vq	flow-20261030-e-s81	resign				0		intel1:/srv/opentallas-scratch2/claude/s81ck7/vq_rt6e_hx3_resign_e-s81/signoff/signoff.json
+s81	signed_designs	ot_v41_bf16_half	flow-20261104-k-s81	resign				0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/half_k/signoff/signoff.json
+s81	signed_types	slice_station__t20	flow-20261105-r-s81	resign				0		intel1:/srv/opentallas-scratch2/claude/auto-resign/s81/slice_station__t20__flow-20261105-r-s81__c80e6557/signoff/signoff.json
+s81	signed_types	slice_station__t22	flow-20261108-en-s81	resign				0		epyc5:/srv/opentallas-scratch3/claude/auto-resign/s81/slice_station__t22__flow-20261108-en-s81__1bfffcf0/signoff/signoff.json
+s81_head	signed_designs	ot_s81hd_elemA_cv	flow-20261027-a-head	route				6		epyc2:/srv/opentallas-scratch2/claude/wt/kw-fix-4-fl-head/results/head_core_clockfreeze_release/elemA_signed/signoff.json
+s81_head	signed_designs	ot_s81hd_elemB_cv	flow-20261027-b-head	route				6		epyc2:/srv/opentallas-scratch2/claude/wt/kw-fix-4-fl-head/results/head_core_clockfreeze_release/elemB_signed/signoff.json
+s81_head	signed_designs	ot_s81hd_lep_pair	flow-20261030-f-head	resign				1	2026-11-06 14:54	intel2:/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/resign_flow-20261030-f-head/signoff/signoff.json
+s81_head	signed_types	hd_ctl_n	flow-20261108-dt-head	resign	epyc4:/srv/opentallas-scratch2/claude/dh86/ctln_eco1/i1	11-08 00:41	DIE-HEAD-84 vF on l48vd@d8506d89265 (spread-7 ring bands), not merged; never count DIE-HEAD-86 Sun N	0	2026-11-08 00:58	epyc4:/srv/opentallas-scratch3/claude/auto-resign/s81_head/hd_ctl_n__flow-20261108-dt-head__379a6b14/signoff/signoff.json
+s81_head	signed_types	hd_spn_end	flow-20261108-ek-head	resign	intel2:/srv/opentallas-scratch2/claude/head-forms-5/spn_end_eco1/i1	11-08 00:59	DO_NOT_COUNT: DIE-HEAD-86/SPN lockup-latch form (kit_zl_lockup.py, -DOT_ZL_LOCKUP); counts only afte	0	2026-11-08 23:09	intel2:/srv/opentallas-scratch2/claude/head-forms-5/spn_end_eco1/i1/resign_ek/signoff/signoff.json
+s81_head	signed_types	hd_spn_wshim_rx	flow-20261106-cj-head	resign				0		epyc5:/srv/opentallas-scratch3/claude/auto-resign/s81_head/hd_spn_wshim_rx__flow-20261106-cj-head__ca6a1f88/signoff/signoff.json

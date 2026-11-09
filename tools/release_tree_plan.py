@@ -314,6 +314,49 @@ def split_revoked(recs, rows, sha=rec_netlist_sha):
     return kept, gone
 
 
+# DO_NOT_COUNT (COORD 11-09 01:1x): the marker a lane leaves in a kit or sign-off dir.  The counter reads no host, so the
+# hourly ingest (signed_store_ingest.py) copies each marker of a counted record to lanes/COUNT-DO-NOT-COUNT.tsv:
+# '<scan_host>:<dir>\t<HOLD|PENDING|CLEARED>\t<marker text>\t<date>'.  Only HOLD stops a record; PENDING is a marker found by
+# the 11-09 audit that waits for COORD's ruling, CLEARED a marker ruled stale.  A hit drops every alias of the record.
+COUNT_DNC = pathlib.Path(__file__).resolve().parent.parent / 'lanes' / 'COUNT-DO-NOT-COUNT.tsv'
+
+
+def dnc_rows(path=None):
+    try: lines = pathlib.Path(path or COUNT_DNC).read_text().splitlines()
+    except Exception: return []
+    out = []
+    for ln in lines:
+        if not ln.strip() or ln.startswith('#'): continue
+        f = [x.strip() for x in ln.split('\t')]
+        if len(f) >= 2 and ':' in f[0]:
+            h, _, d = f[0].partition(':')
+            out.append(dict(host=h, dir=d.rstrip('/') + '/', state=f[1], reason=f[2] if len(f) > 2 else '', date=f[3] if len(f) > 3 else ''))
+    return out
+
+
+def dnc_hit(r, rows):
+    for row in rows:
+        if row['state'] == 'HOLD' and row['host'] == r.get('scan_host') and any(str(r.get(a) or '').startswith(row['dir']) for a in ('path', 'routed_db')):
+            return row
+    return None
+
+
+def split_dnc(recs, rows):
+    """-> (kept, held).  The record is one identity across its aliases: a marker beside any copy holds all of them."""
+    if not any(row['state'] == 'HOLD' for row in rows): return recs, []
+    key = lambda r: (r.get('name'), r.get('top'), str(r.get('generated')))
+    hit = {}
+    for r_ in recs:
+        row = dnc_hit(r_, rows)
+        if row: hit[key(r_)] = row
+    kept, gone = [], []
+    for r_ in recs:
+        row = hit.get(key(r_))
+        if row: gone.append(dict(r_, retired='DO_NOT_COUNT %s:%s %s %s' % (row['host'], row['dir'], row['date'], row['reason'])))
+        else: kept.append(r_)
+    return kept, gone
+
+
 def revoked_module(m, rows):
     """an unreachable host's credit of a revoked name is not carried: its netlist cannot be checked on this refresh"""
     return any(row['name'] == m for row in rows)
@@ -1339,6 +1382,7 @@ def refresh(log=lambda *a: None, old=None):
             r_['legacy'] = is_legacy(r_, cutoff)
         recs, res['retired_records'] = split_retired(recs, retired_refs())
         recs, gone = split_revoked(recs, revoked_rows()); res['retired_records'] += gone
+        recs, gone = split_dnc(recs, dnc_rows()); res['retired_records'] += gone
         names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
         # match SIGNED records to plan types / hard cores
