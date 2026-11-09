@@ -1060,7 +1060,7 @@ class Landings:
                 # export. Do not remap any data or leaf clock.
                 import schema
                 if not hasattr(self, "_physical_clock_plan"):
-                    self._physical_clock_plan = schema.Plan(self.plan, self.plan_path)
+                    self._physical_clock_plan = schema.Plan(self.plan, getattr(self, "plan_path", None))
                 planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
                 if s_ not in planned:
                     raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
@@ -1355,7 +1355,7 @@ class Landings:
                 or role[0] != 'child' or role[1] != START_PIN_IN):
             raise LandingError(f'{tn}: landing_origin_clock_port requires a dedicated parameter START child')
         import schema
-        P = schema.Plan(self.plan, self.plan_path)
+        P = schema.Plan(self.plan, getattr(self, "plan_path", None))
         grid = schema.tap_grid(P, key)
         cores = schema.core_taps(P, key)
         canonical = lambda n: re.sub(r'\[0\]$', '', n.lstrip('\\'))
