@@ -178,3 +178,41 @@ def test_hop_latch_follows_launch_station_tap(tmp_path):
     assert 'NET ck_u_fl_ft0_s0/q_0 nclk' in out, out
     assert 'NET ck_plain nt1' in out
     assert 'hop latches: 1 on their launch station' in out and '(1 re-hung)' in out, out
+
+
+CORETAP = r"""
+# DIE-HEAD-87 11-08: OpenDB stores generate-loop instance names with escaped brackets; core_taps.txt carries the
+# plain name.  The core tap must still find the pair macro and move its clock pin to clk_c0.
+proc dffm {m} {if {$m eq "isBlock"} {return 0}; return DFFHQNx1}
+proc ckm {m} {if {$m eq "getName"} {return clk}; if {$m eq "getIoType"} {return INPUT}; return clk}
+set PAIR {u_core.u.g_pp\[0\].u_pair}
+set NET(ckp) nclk
+proc ckp {m args} {
+  global NET PAIR
+  switch $m {getMTerm {return ckm} getInst {return $PAIR} getNet {return $NET(ckp)}
+             disconnect {set NET(ckp) NULL} connect {set NET(ckp) [lindex $args 0]}}}
+proc pairi {m args} {switch $m {getITerms {return ckp} getName {return $::PAIR}}}
+proc bc0 {m args} {switch $m {getName {return clk_c0} getNet {return nc0}}}
+proc nc0 {m args} "netproc nc0 \$m {*}\$args"
+rename blk blk_orig
+proc blk {m args} {
+  switch $m {
+    findBTerm {if {[lindex $args 0] eq "clk_c0"} {return bc0}; return [blk_orig findBTerm {*}$args]}
+    findInst {if {[lindex $args 0] eq $::PAIR} {return pairi}; return NULL}
+    default {return [blk_orig $m {*}$args]}
+  }
+}
+"""
+
+
+def test_core_tap_finds_escaped_generate_instance(tmp_path):
+    """DIE-HEAD-87 11-08: hd_lep0N vF left all 4 pair core taps empty (plain name vs escaped OpenDB name)."""
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    taps = tmp_path / 'core_taps.txt'
+    taps.write_text('# port inst pin|* early_ps insertion_ps\nclk_c0 u_core.u.g_pp[0].u_pair clk 79.22 529.22\n')
+    p = run(tmp_path, CORETAP + fill, env=f'set ::env(OT_CORE_TAPS) {{{taps}}}\nset ::env(OT_TAP_PITCH_UM) 2400')
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    assert 'missing' not in out, out
+    assert 'core tap clk_c0 <- u_core.u.g_pp[0].u_pair/clk: 1 clock pin(s)' in out, out
+    assert 'NET ckp' not in out or 'NET ckp nc0' in out
