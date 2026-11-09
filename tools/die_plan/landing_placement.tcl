@@ -372,6 +372,30 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   }
  }
  }
+ # DIE-QC-97 11-09 (QC slw_stm_v1__cl05fc43f7__cl2086fa2c a11, first band fail after 0b305f2395): the writer-start
+ # window 445.85..450.17 x 634.22..638.54 has rows, no macro and no blockage, but face_flops.tcl had already placed
+ # FIRM ft-station flops there (u_ft_x_fw_fe_p1_o_2/q[*], 22 DFFHQNx1 + 2 relay flops cover it) before the landing
+ # groups; plan-time windows cannot see station sites.  For a single non-ring window (start, status, local-reset
+ # tags) that is full, the same cell is tried again in the same-centre window grown by one window size on every
+ # side, up to 3 times (x3, x5, x7: +12.96 um each side for a 4.32 um window); the first site found wins.  Ring
+ # bands, multi-rect bands and dry probes fail closed as before.  OT_CLAND_GROW=0 restores the old behaviour.
+ if {![string match {ring:*} $tag] && ![info exists ::cland_grow_in] && ![info exists ::cland_fill_dry]
+     && ![info exists ::cland_col_dry] && ![info exists ::cland_multi_in]
+     && !([info exists ::env(OT_CLAND_GROW)] && $::env(OT_CLAND_GROW) eq "0")} {
+  lassign $rect rax ray rbx rby
+  set rdx [expr {$rbx-$rax}];set rdy [expr {$rby-$ray}]
+  for {set k 1} {$k <= 3} {incr k} {
+   set gr [list [expr {$rax-$k*$rdx}] [expr {$ray-$k*$rdy}] [expr {$rbx+$k*$rdx}] [expr {$rby+$k*$rdy}]]
+   set ::cland_grow_in 1
+   set rc [catch {cland_put $i $gr $tag $sp $cur} gerr gopts]
+   unset ::cland_grow_in
+   if {!$rc} {
+    puts "OT_CLAND grow $tag: $name placed in window x[expr {2*$k+1}] {$gr}, base window {$rect} full"
+    return
+   }
+   if {![string match {OT_CLAND no legal*} $gerr]} { return -options $gopts $gerr }
+  }
+ }
  error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag)"
 }
 proc cland_drivers {n} {
