@@ -397,6 +397,23 @@ proc cland_put_grow {i rect tag kind} {
  }
  error $err
 }
+# DIE-QC-97 11-09 (QC slw_stm_v1__cl05fc43f7__cl2086fa2c a11, first band fail on a kit generated with 0b305f2395):
+# the writer-start window 445.85..450.17 x 634.22..638.54 had rows and no macro or blockage, but face_flops.tcl had
+# placed FIRM ft-station flops (u_ft_x_fw_fe_p1_o_2/q[*]) over all of it before the landing groups; plan-time windows
+# cannot see station sites.  A reader/writer START relay whose window centre lies inside the core and has no site
+# takes the same grow as status, collector and local-reset cells (cland_put_grow: x2..x32 about the same centre, same
+# fail-closed error).  A window centred outside the core takes the plain path (slide or fail closed) unchanged.
+# Windows on a hard macro were moved out at plan time (landing_place.py, 0b305f2395) before this runs.
+# OT_CLAND_START_GROW=0 restores the plain path for every START window.
+proc cland_put_start {i rect tag} {
+ global ff_x0 ff_y0 ff_x1 ff_y1 ff_dbu
+ lassign $rect ax ay bx by
+ set x [expr {($ax+$bx)/2.0*$ff_dbu}]; set y [expr {($ay+$by)/2.0*$ff_dbu}]
+ if {!([info exists ::env(OT_CLAND_START_GROW)] && $::env(OT_CLAND_START_GROW) eq "0") &&
+     $x > $ff_x0 && $x < $ff_x1 && $y > $ff_y0 && $y < $ff_y1} {
+  cland_put_grow $i $rect $tag start
+ } else { cland_put $i $rect $tag }
+}
 # Registered status outputs sit at their declared source point, separately
 # from the ring storage band; the collector then follows its original tree.
 # Status placement only moves cells; it does not create, remove or rename nets.
@@ -1284,7 +1301,8 @@ foreach spec $cland_groups {
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
-  if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } else { cland_put $i $rect $tag };incr hit
+  # DIE-QC-97 11-09: reader/writer START relay windows take the status/collector grow (cland_put_start).
+ if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }
