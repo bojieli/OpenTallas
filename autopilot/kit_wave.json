@@ -2759,7 +2759,13 @@
         "dsdv_slice_c1x_C__t6@21",
         "dsdv_slice_lepe_mu_C__t1@16",
         "col_h10_r1__t1__cl95b37463@10",
-        "ot_s81sl_leaf__t26@18"
+        "ot_s81sl_leaf__t26@18",
+        "ot_s81sl_leaf__t56@10",
+        "ot_s81sl_leaf__t61@3",
+        "serdes__t3@17",
+        "serdes__t1__clfe1f0815@13",
+        "dsdv_slice_iq_C__t1@12",
+        "ot_s81sl_kv_leaf__t2@8"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2917,11 +2923,11 @@
         "ot_s81sl_leaf__t55@2": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t56@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t57@3": "KW-FIX-33 2026-11-08 00:23 PST: COORD 00:0x (3) J infra: intel2 hub disk ENOSPC 11-07 19:39; facing-form kit unchanged; CODEX 12:09 pilot hold dropped (pilot read)",
-        "ot_s81sl_leaf__t58@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t58@3": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "ot_s81sl_leaf__t59@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t5@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t60@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-        "ot_s81sl_leaf__t61@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+        "ot_s81sl_leaf__t61@3": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "ot_s81sl_leaf__t62@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
         "ot_s81sl_leaf__t65@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t66@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -3030,7 +3036,7 @@
         "ot_s81sl_leaf__t65@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t66@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t67@4": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a4 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
-        "ot_s81sl_leaf__t68@3": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
+        "ot_s81sl_leaf__t68@3": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "ot_s81sl_leaf__t69@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t6@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
         "ot_s81sl_leaf__t70@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -3343,7 +3349,7 @@
         "col_h9_r2__t1__cl774acf45@7": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h9_r2__t1__cl87f3ff59@11": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h9_r2__t1__clc9ad8f7e@9": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
-        "col_h9_r0_p1__t1@13": "INFRA, not a retry: a13 stopped at kit_rtl (bind HDL under codex-wave-bind-1106/src_28fc7 absent on epyc4); rtl + physical bind/macro sources copied from epyc2 to epyc4/intel1, kit_rtl dry run PASS 79 sources (KW-FIX-31)",
+        "col_h9_r0_p1__t1@13": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
         "col_h9_r0_p3__t1__cl8ce97bcb@17": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "col_h9_r2__t1__clb8d86cd5@4": "coretappin 9fd204f6b96 in s81src3; DIE-S81-54 06:07 col batch, kit ck->clk",
         "serdes__t13@5": "COORD 06:3x (2): cap stop @place, kit now has --native-cell-cap 517000 (kit changes)",
@@ -3730,7 +3736,12 @@
         "ot_s81sl_leaf__t40__clf8bbdae1@9": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t54__cl501e5681@3": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
         "ot_s81sl_leaf__t71@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
-        "ot_s81sl_leaf__t24__cl81374cd8@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips."
+        "ot_s81sl_leaf__t24__cl81374cd8@1": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+        "ot_s81sl_leaf__t56@10": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
+        "serdes__t3@17": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
+        "serdes__t1__clfe1f0815@13": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
+        "dsdv_slice_iq_C__t1@12": "INFRA no-host at kit_rtl (epyc6 disk 55<60 at 11:00), host recovered",
+        "ot_s81sl_kv_leaf__t2@8": "synth stopped: place rc 2 client ended, no design verdict (kill/OOM, 11-07 08:58); src now _lf"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5726,7 +5737,16 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         }
       },
-      "note_kw36us_batch": "KW-FIX-36 UNINDEXED-SRC-STALE batch from the 17:58 rescan: S-stale rows whose failure class the source fix can change (RTL) or an INFRA stop."
+      "note_kw36us_batch": "KW-FIX-36 UNINDEXED-SRC-STALE batch from the 17:58 rescan: S-stale rows whose failure class the source fix can change (RTL) or an INFRA stop.",
+      "retry_prev_kw37a_added": [
+        "ot_s81sl_leaf__t56@10",
+        "ot_s81sl_leaf__t61@3",
+        "serdes__t3@17",
+        "serdes__t1__clfe1f0815@13",
+        "dsdv_slice_iq_C__t1@12",
+        "ot_s81sl_kv_leaf__t2@8"
+      ],
+      "note_kw37a": "KW-FIX-37 18:3x batch A: staging/infra failures released (no design change); revert: remove retry_prev_kw37a_added keys from retry and retry_fix"
     },
     "s81_head": {
       "enabled": true,
