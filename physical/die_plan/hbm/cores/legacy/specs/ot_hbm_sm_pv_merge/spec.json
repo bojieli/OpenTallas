@@ -1,0 +1,4 @@
+{
+  "note": "The one configuration of the ot_hbm_sm_pv_merge hard core: every staged instance is inside ot_hbm_sm_attn_native_col, whose parent ot_hbm_sm_attn_leafh passes .PUBLISH(1) (recipes.json ot_hbm_sm_attn_native_col params PUBLISH 1). macro_spec_identity reads params for the non-literal .PUBLISH(PUBLISH); native_bb still checks the elaborated value at synth. The view must be built with PUBLISH 1.",
+  "params": {"PUBLISH": 1}
+}
