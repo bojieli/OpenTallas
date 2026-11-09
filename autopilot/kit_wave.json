@@ -12012,6 +12012,18 @@
     "slw_fw_v2__cl8537f156": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand7.json",
      "note": "KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec + 073656d7febf + e1731efe515e (gen_phys) + 42d265cdb636"
+    },
+    "cbf_q00__cl870de686": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    },
+    "cbf_q00__cl1b5a6458": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    },
+    "cbn_q00__cld7bf7197": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
     }
    },
    "notes_kw42": {
@@ -13477,6 +13489,11 @@
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
      "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
     }
+   },
+   "item_inputs_prev_kw43c8": {
+    "cbf_q00__cl870de686": null,
+    "cbf_q00__cl1b5a6458": null,
+    "cbn_q00__cld7bf7197": null
    }
   },
   "hbm": {
