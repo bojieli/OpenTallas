@@ -1381,6 +1381,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                             'type': 'array'},
                 'memory_alignment': {'minimum': 0, 'type': 'integer'},
                 'kv_wr_pipe': {'enum': [0, 1]},
+                'memory_read_extra': {'minimum': 0, 'type': 'integer'},
                 'reset_pin': {'const': 'rst_n'}},
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}

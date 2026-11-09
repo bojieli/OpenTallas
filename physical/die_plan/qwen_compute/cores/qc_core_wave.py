@@ -46,7 +46,7 @@ SU_LANE_SOURCES = [
     "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
     "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_sfu_q.sv", "rtl/hdc/ot_hdc_vreduce.sv",
-    "rtl/hdc/ot_hdc_vstream_sfu_t.sv", "{lane}", "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "rtl/hdc/ot_hdc_vstream_sfu_t.sv", "{lane}", "rtl/physical/qfd_dv_lane_h_su_mem9.sv", "rtl/qwen_dv/qfd_dv_head_safe1.sv",
     "rtl/qwen_dv/qfd_dv_reset_tree.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv", "rtl/qwen_dv/qfd_dv_slice_tload.sv",
     "rtl/qwen_dv/qfd_dv_stream_rsafe.sv", "rtl/qwen_dv/qfd_dv_table_rom_loader.sv", "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
     "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv"]

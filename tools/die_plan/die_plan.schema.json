@@ -3632,6 +3632,10 @@
             1
            ]
           },
+          "memory_read_extra": {
+           "minimum": 0,
+           "type": "integer"
+          },
           "reset_pin": {
            "const": "rst_n"
           }
