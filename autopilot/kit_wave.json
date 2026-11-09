@@ -11578,7 +11578,11 @@
       "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us.",
       "hold_items_prev_kw36rel": {
         "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix"
-      }
+      },
+      "queue_src_exact": {
+        "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b"
+      },
+      "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p."
     }
   },
   "place_prefer": [
