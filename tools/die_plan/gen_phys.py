@@ -2503,7 +2503,9 @@ def tap_pair_affinity_exports(t):
 # COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
 # default (clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP).  Only a latch whose capture tap differs moves; RTL unchanged.
 # Other dies stay opt-in until the first HBM sign-off with it.
-HOP_LATCH_CAPTURE_TAP_DEFAULT = {"hbm": "u_fl_rst_"}
+# COORD 11-09: vsN1's L201 hop latches (u_fl_L201x1_o_*, vsN2 u_fl_L201x2_o_*) are in the default too.  The re-hung
+# launch -> latch hop is hold-padded at GRT by construction (grt_pre.tcl HOPLATCH-HOLD, OT_HOP_LATCH_HOLD_PS).
+HOP_LATCH_CAPTURE_TAP_DEFAULT = {"hbm": "u_fl_rst_ u_fl_L201x"}
 
 
 def _hop_latch_capture_tap(P):
