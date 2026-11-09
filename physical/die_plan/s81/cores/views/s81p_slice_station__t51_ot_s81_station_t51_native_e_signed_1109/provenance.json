@@ -1,0 +1,603 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b",
+  "module": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+  "plan_type": "slice_station__t51_native_split",
+  "outline_um": [
+   794.88,
+   1209.6
+  ],
+  "ref_tile": "/srv/opentallas-scratch3/claude/s81-t51-recut/pg/ot_s81_station_t51_native_e",
+  "spec": "/srv/opentallas-scratch3/claude/s81-t51-recut/pg/ot_s81_station_t51_native_e/spec.json",
+  "spec_sha256": "144a1402da5914ed2c3453f8e993553662bcd0c2978a878b3f35534d78b4fa38",
+  "pins_file": "/srv/opentallas-scratch3/claude/s81-t51-recut/pg/ot_s81_station_t51_native_e/pins.json",
+  "pins_sha256": "6cd07414d45ba3626707db51792c8528f5cab191db8763ae5fd76a1321a912c7",
+  "pins": 11145,
+  "plan_lef": "/srv/opentallas-scratch3/claude/s81-t51-recut/pg/ot_s81_station_t51_native_e/contract.lef",
+  "pins_canon_sha256": "58b67d1facd9a52f4b691eb87790a021ed04e2baeab11712464db2195ef4cd3d",
+  "pins_placed_canon_sha256": "58b67d1facd9a52f4b691eb87790a021ed04e2baeab11712464db2195ef4cd3d",
+  "pins_staged_file": "declared_pin_contract/pins.json",
+  "pins_staged_sha256": "6cd07414d45ba3626707db51792c8528f5cab191db8763ae5fd76a1321a912c7",
+  "clocks": [
+   "clk",
+   "clk_t10",
+   "clk_t11",
+   "clk_t12",
+   "clk_t15",
+   "clk_t17",
+   "clk_t19",
+   "clk_t2",
+   "clk_t20",
+   "clk_t26",
+   "clk_t27",
+   "clk_t28",
+   "clk_t29",
+   "clk_t3",
+   "clk_t30",
+   "clk_t31",
+   "clk_t32",
+   "clk_t35",
+   "clk_t39",
+   "clk_t4",
+   "clk_t40",
+   "clk_t41",
+   "clk_t42",
+   "clk_t45",
+   "clk_t48",
+   "clk_t49",
+   "clk_t5",
+   "clk_t50",
+   "clk_t53",
+   "clk_t55",
+   "clk_t6",
+   "clk_t62",
+   "clk_t63",
+   "clk_t64",
+   "clk_t65",
+   "clk_t66",
+   "clk_t67",
+   "clk_t68",
+   "clk_t71",
+   "clk_t72",
+   "clk_t9",
+   "fclk_in_ft6_i",
+   "fclk_in_ft7_i"
+  ],
+  "resets": [
+   "p01099",
+   "p01102",
+   "p01103",
+   "p01104",
+   "p01105",
+   "p01107",
+   "p01109",
+   "p01110",
+   "p01111",
+   "p01113",
+   "p01115",
+   "p01116",
+   "p01118",
+   "p01121",
+   "p01123",
+   "p06279",
+   "p07680",
+   "p07681",
+   "p07682",
+   "p07683",
+   "p07684",
+   "p08200",
+   "p08201",
+   "p08202",
+   "p08203",
+   "p08204",
+   "p11119"
+  ],
+  "multi_root": {
+   "roots": [
+    {
+     "base": "clk",
+     "clock": "clk",
+     "pins": [
+      "clk"
+     ],
+     "domains": [
+      "clk"
+     ]
+    },
+    {
+     "base": "clk_t10",
+     "clock": "clk_clk_t10",
+     "pins": [
+      "clk_t10"
+     ],
+     "domains": [
+      "clk_t10"
+     ]
+    },
+    {
+     "base": "clk_t11",
+     "clock": "clk_clk_t11",
+     "pins": [
+      "clk_t11"
+     ],
+     "domains": [
+      "clk_t11"
+     ]
+    },
+    {
+     "base": "clk_t12",
+     "clock": "clk_clk_t12",
+     "pins": [
+      "clk_t12"
+     ],
+     "domains": [
+      "clk_t12"
+     ]
+    },
+    {
+     "base": "clk_t15",
+     "clock": "clk_clk_t15",
+     "pins": [
+      "clk_t15"
+     ],
+     "domains": [
+      "clk_t15"
+     ]
+    },
+    {
+     "base": "clk_t17",
+     "clock": "clk_clk_t17",
+     "pins": [
+      "clk_t17"
+     ],
+     "domains": [
+      "clk_t17"
+     ]
+    },
+    {
+     "base": "clk_t19",
+     "clock": "clk_clk_t19",
+     "pins": [
+      "clk_t19"
+     ],
+     "domains": [
+      "clk_t19"
+     ]
+    },
+    {
+     "base": "clk_t2",
+     "clock": "clk_clk_t2",
+     "pins": [
+      "clk_t2"
+     ],
+     "domains": [
+      "clk_t2"
+     ]
+    },
+    {
+     "base": "clk_t20",
+     "clock": "clk_clk_t20",
+     "pins": [
+      "clk_t20"
+     ],
+     "domains": [
+      "clk_t20"
+     ]
+    },
+    {
+     "base": "clk_t26",
+     "clock": "clk_clk_t26",
+     "pins": [
+      "clk_t26"
+     ],
+     "domains": [
+      "clk_t26"
+     ]
+    },
+    {
+     "base": "clk_t27",
+     "clock": "clk_clk_t27",
+     "pins": [
+      "clk_t27"
+     ],
+     "domains": [
+      "clk_t27"
+     ]
+    },
+    {
+     "base": "clk_t28",
+     "clock": "clk_clk_t28",
+     "pins": [
+      "clk_t28"
+     ],
+     "domains": [
+      "clk_t28"
+     ]
+    },
+    {
+     "base": "clk_t29",
+     "clock": "clk_clk_t29",
+     "pins": [
+      "clk_t29"
+     ],
+     "domains": [
+      "clk_t29"
+     ]
+    },
+    {
+     "base": "clk_t3",
+     "clock": "clk_clk_t3",
+     "pins": [
+      "clk_t3"
+     ],
+     "domains": [
+      "clk_t3"
+     ]
+    },
+    {
+     "base": "clk_t30",
+     "clock": "clk_clk_t30",
+     "pins": [
+      "clk_t30"
+     ],
+     "domains": [
+      "clk_t30"
+     ]
+    },
+    {
+     "base": "clk_t31",
+     "clock": "clk_clk_t31",
+     "pins": [
+      "clk_t31"
+     ],
+     "domains": [
+      "clk_t31"
+     ]
+    },
+    {
+     "base": "clk_t32",
+     "clock": "clk_clk_t32",
+     "pins": [
+      "clk_t32"
+     ],
+     "domains": [
+      "clk_t32"
+     ]
+    },
+    {
+     "base": "clk_t35",
+     "clock": "clk_clk_t35",
+     "pins": [
+      "clk_t35"
+     ],
+     "domains": [
+      "clk_t35"
+     ]
+    },
+    {
+     "base": "clk_t39",
+     "clock": "clk_clk_t39",
+     "pins": [
+      "clk_t39"
+     ],
+     "domains": [
+      "clk_t39"
+     ]
+    },
+    {
+     "base": "clk_t4",
+     "clock": "clk_clk_t4",
+     "pins": [
+      "clk_t4"
+     ],
+     "domains": [
+      "clk_t4"
+     ]
+    },
+    {
+     "base": "clk_t40",
+     "clock": "clk_clk_t40",
+     "pins": [
+      "clk_t40"
+     ],
+     "domains": [
+      "clk_t40"
+     ]
+    },
+    {
+     "base": "clk_t41",
+     "clock": "clk_clk_t41",
+     "pins": [
+      "clk_t41"
+     ],
+     "domains": [
+      "clk_t41"
+     ]
+    },
+    {
+     "base": "clk_t42",
+     "clock": "clk_clk_t42",
+     "pins": [
+      "clk_t42"
+     ],
+     "domains": [
+      "clk_t42"
+     ]
+    },
+    {
+     "base": "clk_t45",
+     "clock": "clk_clk_t45",
+     "pins": [
+      "clk_t45"
+     ],
+     "domains": [
+      "clk_t45"
+     ]
+    },
+    {
+     "base": "clk_t48",
+     "clock": "clk_clk_t48",
+     "pins": [
+      "clk_t48"
+     ],
+     "domains": [
+      "clk_t48"
+     ]
+    },
+    {
+     "base": "clk_t49",
+     "clock": "clk_clk_t49",
+     "pins": [
+      "clk_t49"
+     ],
+     "domains": [
+      "clk_t49"
+     ]
+    },
+    {
+     "base": "clk_t5",
+     "clock": "clk_clk_t5",
+     "pins": [
+      "clk_t5"
+     ],
+     "domains": [
+      "clk_t5"
+     ]
+    },
+    {
+     "base": "clk_t50",
+     "clock": "clk_clk_t50",
+     "pins": [
+      "clk_t50"
+     ],
+     "domains": [
+      "clk_t50"
+     ]
+    },
+    {
+     "base": "clk_t53",
+     "clock": "clk_clk_t53",
+     "pins": [
+      "clk_t53"
+     ],
+     "domains": [
+      "clk_t53"
+     ]
+    },
+    {
+     "base": "clk_t55",
+     "clock": "clk_clk_t55",
+     "pins": [
+      "clk_t55"
+     ],
+     "domains": [
+      "clk_t55"
+     ]
+    },
+    {
+     "base": "clk_t6",
+     "clock": "clk_clk_t6",
+     "pins": [
+      "clk_t6"
+     ],
+     "domains": [
+      "clk_t6"
+     ]
+    },
+    {
+     "base": "clk_t62",
+     "clock": "clk_clk_t62",
+     "pins": [
+      "clk_t62"
+     ],
+     "domains": [
+      "clk_t62"
+     ]
+    },
+    {
+     "base": "clk_t63",
+     "clock": "clk_clk_t63",
+     "pins": [
+      "clk_t63"
+     ],
+     "domains": [
+      "clk_t63"
+     ]
+    },
+    {
+     "base": "clk_t64",
+     "clock": "clk_clk_t64",
+     "pins": [
+      "clk_t64"
+     ],
+     "domains": [
+      "clk_t64"
+     ]
+    },
+    {
+     "base": "clk_t65",
+     "clock": "clk_clk_t65",
+     "pins": [
+      "clk_t65"
+     ],
+     "domains": [
+      "clk_t65"
+     ]
+    },
+    {
+     "base": "clk_t66",
+     "clock": "clk_clk_t66",
+     "pins": [
+      "clk_t66"
+     ],
+     "domains": [
+      "clk_t66"
+     ]
+    },
+    {
+     "base": "clk_t67",
+     "clock": "clk_clk_t67",
+     "pins": [
+      "clk_t67"
+     ],
+     "domains": [
+      "clk_t67"
+     ]
+    },
+    {
+     "base": "clk_t68",
+     "clock": "clk_clk_t68",
+     "pins": [
+      "clk_t68"
+     ],
+     "domains": [
+      "clk_t68"
+     ]
+    },
+    {
+     "base": "clk_t71",
+     "clock": "clk_clk_t71",
+     "pins": [
+      "clk_t71"
+     ],
+     "domains": [
+      "clk_t71"
+     ]
+    },
+    {
+     "base": "clk_t72",
+     "clock": "clk_clk_t72",
+     "pins": [
+      "clk_t72"
+     ],
+     "domains": [
+      "clk_t72"
+     ]
+    },
+    {
+     "base": "clk_t9",
+     "clock": "clk_clk_t9",
+     "pins": [
+      "clk_t9"
+     ],
+     "domains": [
+      "clk_t9"
+     ]
+    },
+    {
+     "base": "fclk_in_ft6_i",
+     "clock": "clk_fclk_in_ft6_i",
+     "pins": [
+      "fclk_in_ft6_i"
+     ],
+     "domains": [
+      "fclk_in_ft6_i"
+     ]
+    },
+    {
+     "base": "fclk_in_ft7_i",
+     "clock": "clk_fclk_in_ft7_i",
+     "pins": [
+      "fclk_in_ft7_i"
+     ],
+     "domains": [
+      "fclk_in_ft7_i"
+     ]
+    }
+   ],
+   "entries": 43
+  },
+  "recipe_sha256": "ac87ccbf01363dd28190441d53dd961d6f613229ccab63562d7cdccd22a913f9",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "9cc2e5ef17",
+  "sdc_lint_sha256": "8f078d7aa1562fd08d2a272d2b74cd056279554d07bbb247d91f110c7b2e005b",
+  "face_guard_sha256": "bcaec790131e8ea9f2576027f80240ea9f8bde7e575fac1fc414ae3deec8b011",
+  "signoff_sha256": "a8d9d49661c29602f66edb999319d56b320aa56f0a29baeeea3905244fa4be4e",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "ba15afb957d1bbd0",
+  "native_ff_pose": {
+   "file": "native_ff_pose_e_rc51b.tcl",
+   "sha256": "9f8464ad519bfef73a240770c56a037d6458fccb87608639330802673b183cb5",
+   "ffs": 24819
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": false
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict LOCAL_PASS_NEEDS_PARENT; routed LEC EQUIVALENT)",
+ "views_status": "incomplete: signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED",
+ "src": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1",
+ "src_commit": "639c41787c2efee8c23676f4746a9f900c283031",
+ "flow_tag": "flow-20261109-fh-s81",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-09T17:20:36+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1",
+  "base": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1/run/results/asap7/kl_s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b/base",
+  "signoff": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/signoff/signoff.json",
+  "signoff_sha256": "17f7c2043d4d71b795e1284a5e90a24e5a423ceec1f20a4b3a7e2592e987da69",
+  "signoff_generated": "2026-11-09T15:21:29+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1/run/results/asap7/kl_s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/lec/lec.json",
+  "note": "DIE-S81-85 t51 split event 11-09: RE-SIGN of the vE one-ECO DB 379f773899bb3c8b (build aec3135c52)",
+  "lib_basis": {
+   "s81p_slice_station__t51_ot_s81_station_t51_native_e_tt.lib": "base s81p_slice_station__t51_ot_s81_station_t51_native_e_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "s81p_slice_station__t51_ot_s81_station_t51_native_e_ff.lib": "base s81p_slice_station__t51_ot_s81_station_t51_native_e_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "9a8733ebc34c351995bf43c323419917257dd918efcc902b8ca59e00f0b55b8f",
+   "s81p_slice_station__t51_ot_s81_station_t51_native_e.lef": "4d46c2d0c354be0f05695d4a74eb339c6420392e126e66171e67df4ee3ba5f62",
+   "s81p_slice_station__t51_ot_s81_station_t51_native_e_ff.lib": "8020d5f0a5dc82e11fa1cdf17a87b190080c3d09b4fee810a1911d01fadaf15c",
+   "s81p_slice_station__t51_ot_s81_station_t51_native_e_tt.lib": "8c80cafee900bec039634d53d4ef66b285ba7f81f4a57d2fa52fcd87ae0c9c2c"
+  }
+ }
+}

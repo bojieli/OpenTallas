@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "639c41787c2efee8c23676f4746a9f900c283031",
+ "flow_tag": "flow-20261109-fh-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1/run/results/asap7/kl_s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b/base/6_final.odb",
+ "build_commit": "aec3135c5236eb635b15189cf15843d204e38fc0",
+ "lec": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1",
+ "original_signoff": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1/signoff/signoff.json",
+ "name": "kl_s81p_slice_station__t51_ot_s81_station_t51_native_e_rc51b",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "loved-redfish",
+ "created": "2026-11-09 15:36 UTC",
+ "routed_db_sha256": "379f773899bb3c8b8ed4c020a10699c90311dc246cbb0728b5d471ead7acc041",
+ "verdict_basis": "LOCAL_PASS_NEEDS_PARENT (local SIGNED, only io_hold_parent open) counts SIGNED per COORD 2026-11-03 18:48 ruling / OWNER 18:49; io_hold_parent receipt moves to die STA FF",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch3/claude/auto-resign/tools/flow-20261109-fh-s81/tools/die_plan",
+  "sha256": {
+   "signoff.py": "a67891676f30e2713a89bfc007cc11d2a5ce8a67972ea94a98e38b931d597b36",
+   "lec.py": "f46df757347c437abe1923b28d99cdf57db0c94b3725c9a7df106c7dc1c2e85a"
+  },
+  "checked": "byte-identical to flow-20261109-fh-s81"
+ },
+ "lane": "DIE-S81-85",
+ "as_run_note": "COORD 11-09: t51 vE one-ECO DB re-signed on fh-s81; FROZEN-INPUT COUNT-DNC-RTL-1109 row"
+}

@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:17f7c2043d4d",
+ "die": "s81",
+ "type": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+ "src": "/srv/opentallas-scratch2/claude/die-s81-85/t51eco/i1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "LOCAL_PASS_NEEDS_PARENT",
+ "signoff_record": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/signoff/signoff.json",
+ "tt_wns_ps": 29.0,
+ "ff_wns_ps": -10.49,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/die-s81-85/resign/slice_station__t51_vE__flow-20261109-fh-s81/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": false,
+ "view_problems": [
+  "signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED"
+ ]
+}
