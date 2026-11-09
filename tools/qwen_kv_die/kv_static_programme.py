@@ -71,6 +71,7 @@ AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 # KV-FLOOR1 10-20 (default off): the pair END FLOOR control (ot_qwen_tp8_pv_wide_ctl_tbf, kv_bootage OT_KV_PVFIN_FLOOR):
 # both pairs publish on pair 0's issue count, so the compiler law is P1 = P0 (die profile pv_floor)
 PV_FLOOR = os.environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
+ASTK_ZB_ADD = int(os.environ.get('OT_KV_ASTK_ZB_ADD', '0'))   # KV-TRANSPORT-FIX: bound-chain Z base delta = qkd_attn_cal_gen_r17 ZB_ADD (bind param_regen record ep_offset.zb_add)
 ASTK_EXPAND = os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON (= kv_static_die)
 ASTK_LAW = 'results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json'
 
@@ -595,7 +596,7 @@ def profile(kind, ages=None):
                 pv_result_extra=int(ages['pv'].get('RESULT_TRUNK_EXTRA', 0)),
                 attn_service_pad=int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0')), d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
-                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
+                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None, astk_zb_add=ASTK_ZB_ADD,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
                 f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
                 pv_floor=PV_FLOOR)
@@ -655,6 +656,10 @@ def attention_calendar(T, pr, service_end=None):
                      ('HUB_RECIP', 'dZ'), ('HUB_PUB', 'dZ')):
             c[f] += law[k]
         d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
+        # The generator's Z is its base + ZB_ADD; this law already models base + dZ.  0 = a bind without the regen: unchanged.
+        zb_extra = pr['astk_zb_add'] - law['dZ'] if pr.get('astk_zb_add') else 0
+        for f in ('Z', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
+            c[f] += zb_extra
     po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
     if pr.get('pv_floor'):
         # KV-FLOOR1: ctl_tbf ends FEED / publishes out_age on pair 0's issue count for both pairs (pv_floor_bench: P1 = P0

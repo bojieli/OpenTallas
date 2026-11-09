@@ -539,6 +539,7 @@ module qkd_attn_cal_gen_r17 #(
  parameter integer SERVICE_END=1777,
  parameter integer NV9=16,
  parameter integer STATUS_DELAY=0,   // KV-RETIRE: compiler-priced STATUS tail (end += STATUS_DELAY); service/result unchanged
+ parameter integer ZB_ADD=0,         // KV-TRANSPORT-FIX: bound ASTK chain, Z base later by the last-EP arrival delta (0 = as-built timing)
  parameter integer MUT=0
 )(
  input wire ck,rst_n,
@@ -632,7 +633,7 @@ module qkd_attn_cal_gen_r17 #(
   f6<=0;e6<=0;po0_6<=0;po1_6<=0;adj6<=0;lmax6<=0;zw6<=0;exp6<=0;zb6<=0;hl6<=0;
  end else begin
   f6<=f5;e6<=e5;po0_6<=po0_5;po1_6<=po1_5;adj6<=adj5;lmax6<=lmax5;
-  zw6<=(za5>zb5)?za5:zb5;exp6<=lmax5+16'd15;zb6<=lmax5+16'd265;hl6<=lmax5+16'd7;
+  zw6<=(za5>zb5)?za5:zb5;exp6<=lmax5+16'd15;zb6<=lmax5+16'(265+ZB_ADD);hl6<=lmax5+16'd7;
  end
  reg v7,f7;reg [15:0] e7;reg [15:0] lmax7,exp7,z7,hl7,pvo7;reg [11:0] po0_7,po1_7;
  always @(posedge ck or negedge rst_n)if(!rst_n)v7<=0;else v7<=v6;
@@ -700,7 +701,7 @@ module qkd_attn_fault_root_r17 #(parameter integer ND=8,parameter integer NC=4,p
 endmodule
 
 // The tile core (ports = qkd_kvs_attn_ba5 + the issue landing copies from the face wrapper).
-module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer RETIRE_STATIC=0,parameter integer STATUS_DELAY=0)(
+module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,parameter integer RETIRE_STATIC=0,parameter integer STATUS_DELAY=0,parameter integer ZB_ADD=0)(
     input wire ck,
     input wire rst_n,
     input wire [0:0] ufs_WS,
@@ -778,7 +779,7 @@ module qkd_kvs_attn_r17 #(parameter integer MUT=0,parameter integer NIS=24,param
         .result_data(w_face__result_data), .result_epoch(w_face__result_epoch), .result_layer(w_face__result_layer),
         .result_done(w_face__result_done), .service_fault(w_face__service_fault), .result_reserved(), .busy(), .fault(), .age(),
         .prg_l(prg));
-    qkd_attn_cal_gen_r17 #(.G3S2(1), .RX_CMD(2), .TX_SHIFT(1), .SERVICE_END(1777), .D_QK(255), .D_RL(255), .F_DLY(127), .STATUS_DELAY(STATUS_DELAY), .MUT(MUT))
+    qkd_attn_cal_gen_r17 #(.G3S2(1), .RX_CMD(2), .TX_SHIFT(1), .SERVICE_END(1777), .D_QK(255), .D_RL(255), .F_DLY(127), .STATUS_DELAY(STATUS_DELAY), .ZB_ADD(ZB_ADD), .MUT(MUT))
         u_attn_cal (.ck(ck), .rst_n(rst_n), .cfg_cal({attn_cal__cfg_cal__0, attn_cal__cfg_cal__1, attn_cal__cfg_cal__2}),
         .go(attn_cal__go), .ctx_t(attn_cal__ctx_t), .epoch(attn__authority_epoch), .cal(w_attn_cal__cal), .rx_cmd(w_attn_cal__rx_cmd),
         .tx_first(w_attn_cal__tx_first), .end_age(w_attn_cal__end_age), .cal_epoch(), .done(), .valid(), .fault());

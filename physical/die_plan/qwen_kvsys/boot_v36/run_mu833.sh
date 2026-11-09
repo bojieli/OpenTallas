@@ -20,6 +20,8 @@ cp "$H/asbuilt_rtl6/kv_flags.env" "$H/asbuilt_rtl6/SOURCE_COMMIT" "$AS/"
 for f in "$H"/asbuilt_rtl6/*.json.gz; do zcat "$f" > "$AS/$(basename "${f%.gz}")"; done
 BG=$B/bus_groups.json; [ -f "$BG" ] || { zcat "$B/bus_groups.json.gz" > "$O/bus_groups.json"; BG=$O/bus_groups.json; }
 KST=${KST:-$(python3 "$H/kst.py" "$BG")}; echo "KST $KST"
+# KV-TRANSPORT-FIX 11-08: the Z base delta this bind set on qkd_attn_cal_gen_r17 (param_regen record; absent on older binds = 0)
+export OT_KV_ASTK_ZB_ADD=$(python3 -I -c "import json,os,sys; f=sys.argv[1]; print(((json.load(open(f)).get('record') or {}).get('ep_offset') or {}).get('zb_add', 0) if os.path.exists(f) else 0)" "$B/param_regen.json"); echo "ZB_ADD $OT_KV_ASTK_ZB_ADD"
 # TOK-KV-4 10-29: the HOST record relay of THIS bind (landed out + back) -> pair image TXD K[1] + WITNESS placements
 HRT=${HRT:-$(python3 "$H/kst.py" --host-rt "$BG")}; echo "HRT $HRT"
 # KV-FN-7 10-31: the embedding provider relay of THIS bind (kvs_emb row_tx across lanes) -> TXD K[2] + earlier K port-2 slots

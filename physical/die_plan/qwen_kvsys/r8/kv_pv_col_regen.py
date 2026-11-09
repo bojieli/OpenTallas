@@ -43,5 +43,11 @@ def regen(ctx):
     if xp:
         base._merge(r["params"], xp, "ex_join")
     r["record"]["ex_join"] = xrec
+    # KV-TRANSPORT-FIX 11-08: per-EP EXP offsets and the Z calendar base from the bound chain (empty without an ASTK EP)
+    O = _load("kv_ep_offset_regen", HERE / "kv_ep_offset_regen.py")
+    op, orec = O.ep_offset(ctx)
+    if op:
+        base._merge(r["params"], op, "ep_offset")
+    r["record"]["ep_offset"] = orec
     r["record"]["hook"] = "physical/die_plan/qwen_kvsys/r8/kv_pv_col_regen.py"
     return r
