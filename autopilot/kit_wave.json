@@ -15118,9 +15118,6 @@
     "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
     "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
-    "q_hub_ne": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
-    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
     "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
     "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0"
    },
@@ -17384,11 +17381,12 @@
      }
     },
     "q_hub_ne": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
     },
     "q_sm0": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
@@ -17473,6 +17471,22 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
      },
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
+    },
+    "q_hub_ne__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+    },
+    "q_hub_nw__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -18439,7 +18453,24 @@
    "hold_items_kw43spu0_added": [
     "q_spu0",
     "q_spu0__physical_v1"
-   ]
+   ],
+   "item_inputs_prev_kw43hub": {
+    "q_hub_ne": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_hub_ne__physical_v1": null,
+    "q_hub_nw__physical_v1": null
+   },
+   "hold_items_prev_kw43hub": {
+    "q_hub_ne": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
+    "q_hub_ne__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)",
+    "q_hub_nw__physical_v1": "KW-FIX-43 11:0x COORD LOOP-GAP 10:5x (1): hold q_hub_ne/nw until wsw_H11 is signed off (DIE-HBM-97 10:38)"
+   },
+   "note_kw43_hub": "KW-FIX-43 15:5x: q_hub_ne/+pv1, q_hub_nw__physical_v1 released onto 4a66235b; q_hub_nw stays held (bind_F3b, DIE-HBM-96). Revert: item_inputs/hold_items = *_prev_kw43hub."
   }
  },
  "place_prefer": [
