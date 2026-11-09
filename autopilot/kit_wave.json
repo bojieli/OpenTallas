@@ -7994,6 +7994,18 @@
         },
         "slw_fw_v1__clf51c11d8__cl592e3d37": {
           "OT_GRT_ALLOW_CONGESTION": "1"
+        },
+        "cbn_q00__cl622f65d2": {
+          "OT_KW40_LANDING_EV": "dd955394dd0"
+        },
+        "cbn_q00__cldbcda913": {
+          "OT_KW40_LANDING_EV": "dd955394dd0"
+        },
+        "slw_su_l1__clcc9d0155": {
+          "OT_KW40_LANDING_EV": "dd955394dd0"
+        },
+        "slw_su_l1__cla2a78701": {
+          "OT_KW40_LANDING_EV": "dd955394dd0"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -9251,7 +9263,8 @@
         "cbn_q00__cldbcda913@18",
         "slw_su_l1__clcc9d0155@9"
       ],
-      "note_kw40_views": "KW-FIX-40 23:3x COORD 23:30: FileNotFoundError provenance.json @gen is NOT the epyc4 move: staged views lacked landing_evidence (QC-TYPES-10 class N). Overlay dd955394dd0 carries it from attempts started after 23:17; the 18 kw32-views copies of 6 sle_cland *_200/_201 masters had none, so kw40/views_ev copies (hard links + landing_evidence from ref_tile, same LEF sha) replace them in prov_view_sources; dir_prev_kw40 = rollback."
+      "note_kw40_views": "KW-FIX-40 23:3x COORD 23:30: FileNotFoundError provenance.json @gen is NOT the epyc4 move: staged views lacked landing_evidence (QC-TYPES-10 class N). Overlay dd955394dd0 carries it from attempts started after 23:17; the 18 kw32-views copies of 6 sle_cland *_200/_201 masters had none, so kw40/views_ev copies (hard links + landing_evidence from ref_tile, same LEF sha) replace them in prov_view_sources; dir_prev_kw40 = rollback.",
+      "note_kw40_ev": "KW-FIX-40 23:4x: OT_KW40_LANDING_EV is a no-op marker: the landing_evidence fix is in the overlay tool (not src_sha), so HOLD_UNCHANGED would hold these 4 rows on an unchanged input hash."
     },
     "hbm": {
       "enabled": true,
