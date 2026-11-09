@@ -32,7 +32,7 @@
 `endif
 
 module dsdv_eng_rr_e #(
-    parameter integer RETURN_AGE = 640,
+    parameter integer RETURN_AGE = 1536,
     parameter [29:0] PCBASE = 30'd0,
     parameter integer XQ_MUT = 0,
     // DIE-S81-51/RF-G 11-03 (S81-063): HXL = 1 hx_res landing stage (res_c pin face flop -> res_c2), see
@@ -149,7 +149,7 @@ endmodule
 // Note (bench 10-23): ONE extra register stage on the H -> E hop is NOT observable -- the hash result of a window is
 // stable for >= 2 edges around its res_c capture (hdone), so the hop has a free extra cycle of slack (not used here).
 module dsdv_eng_rr_split #(
-    parameter integer RETURN_AGE = 640,
+    parameter integer RETURN_AGE = 1536,
     parameter [29:0] PCBASE = 30'd0,
     parameter integer XQ_MUT = 0,
     parameter integer SPLIT_MUT = 0
