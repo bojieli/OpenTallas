@@ -59,6 +59,14 @@ def run_fixture(W):
     with open(f"{ROOT}/dead-kk/rec/signoff/signoff.json", "w") as fh:
         json.dump({"verdict": "SIGNED", "inputs": {"odb": f"{ROOT}/dead-jj/kit-wave/s81/p/items/it2/attempt_1/gen/it2/run/results/asap7/d/base/6_final.odb"}}, fh)
     write(f"{ROOT}/dead-ii/kit9/keepme.txt", 20)
+    kit(f"{ROOT}/dead-rr/dead-word-unit")            # a bare name mention of a dead lane's kit holds nothing
+    kit(f"{ROOT}/dead-pp/unit1")                     # archived cited unit: only cited files and record names stay
+    with open(f"{ROOT}/dead-pp/unit1/ARCHIVED.json", "w") as fh:
+        json.dump({"archive": "/archive/x", "verify": "sha256 ok"}, fh)
+    os.utime(f"{ROOT}/dead-pp/unit1/ARCHIVED.json", (OLD, OLD))
+    write(f"{ROOT}/dead-qq/rec/signoff/signoff.json", 10)
+    with open(f"{ROOT}/dead-qq/rec/signoff/signoff.json", "w") as fh:
+        json.dump({"verdict": "SIGNED", "inputs": {"odb": f"{ROOT}/dead-pp/unit1/run/results/asap7/d/base/6_final.odb"}}, fh)
     kit(f"{ROOT}/dead-nn/kit12")                     # read-only dir inside: rm -rf would stop half way, so the folder is not started
     os.chmod(f"{ROOT}/dead-nn/kit12/run/objects", 0o555)
     kit(f"{ROOT}/dead-oo/kit13")                     # lane goes live between plan and apply: recheck must skip the row
@@ -74,7 +82,7 @@ def run_fixture(W):
     json.dump({"attempts": {}, "latest": {f"fix:{ROOT}/dead-jj/kit-wave/s81/p/items/it2": 3}, "keep": [], "current_di": {}, "created": time.time(), "source": "fix"},
               open(f"{snap}/kitwave.json", "w"))
     life = {"created": time.time(), "live": ["DIE-S81-81"], "lane_last": {},
-            "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": [],
+            "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
@@ -94,7 +102,7 @@ def run_fixture(W):
         "dead-nn/kit12": ("KEEP-not-deletable", "KEEP"),
         "dead-oo/kit13": ("DEL-L4-KIT", "DELETE"),
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
-        "dead-jj/kit-wave/s81/p/items/it2/attempt_1": ("KEEP-cited-unit", "KEEP"),   # older attempt cited by a signed record
+        "dead-rr/dead-word-unit": ("DEL-L4-KIT", "DELETE"),
         "dead-aa/kit1": ("DEL-L4-KIT", "DELETE"),          # expired .keep (72 h, dead lane) released
         "dead-bb": ("KEEP-dotkeep", "KEEP"),               # young .keep at the lane root holds its tree
         "dead-cc/kit3": ("KEEP-protected", "KEEP"),
@@ -107,6 +115,21 @@ def run_fixture(W):
     for k, v in expect.items():
         if rows.get(k) != v:
             print("MISMATCH", k, rows.get(k), "expected", v)
+            bad += 1
+    # cited units: the cited view stays, the rest is gated on the archive (unarchived = PEND, held)
+    a1 = "dead-jj/kit-wave/s81/p/items/it2/attempt_1"
+    if rows.get(f"{a1}/gen/it2/run/results/asap7/d/base/6_final.odb", ("", ""))[1] != "KEEP" or a1 in rows:
+        print("MISMATCH cited view of an older attempt", {k: v for k, v in rows.items() if k.startswith(a1)})
+        bad += 1
+    if not [k for k, v in rows.items() if k.startswith(a1 + "/") and v == ("PEND-L1-CITED", "KEEP")]:
+        print("MISMATCH unarchived cited unit must be PEND/KEEP")
+        bad += 1
+    if not [k for k, v in rows.items() if k.startswith("dead-pp/unit1/") and v == ("DEL-L1-CITED", "DELETE")]:
+        print("MISMATCH archived cited unit members must be DELETE")
+        bad += 1
+    for k in ("dead-pp/unit1/run/results/asap7/d/base/6_final.odb", "dead-pp/unit1/config.mk", "dead-pp/unit1/ARCHIVED.json"):
+        if rows.get(k, ("", ""))[1] != "KEEP":
+            print("MISMATCH cited or record-name file must stay", k, rows.get(k))
             bad += 1
     sg = [k for k in rows if k.startswith("dead-ee/kit5/") and rows[k][1] == "DELETE"]
     print("signed trim rows:", sg)
@@ -161,3 +184,28 @@ def test_count_check_lost(tmp_path):
     assert ap.lost({kept}, {f"{root}/b"}) == []                          # still there
     assert ap.lost({ours}, {f"{root}/b"}) == [ours]                      # gone under a removed path: loss
     assert ap.lost({theirs}, {f"{root}/b"}) == []                        # gone but not under anything this run removed
+
+
+def test_kw_release(tmp_path):
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("lc", LC)
+    lc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(lc)
+    sp2 = importlib.util.spec_from_file_location("ac", TOOL)
+    ac = importlib.util.module_from_spec(sp2)
+    sp2.loader.exec_module(ac)
+    class P(lc.Plan):
+        def __init__(self):
+            self.m = ac
+            self.J = type("J", (), {"paths": type("Pa", (), {"canon": staticmethod(lambda p: p)})})()
+        def attempt_verdict(self, d):
+            return "finished-old" if d.endswith("attempt_1") else "latest-open"
+    p = P()
+    base = "/x/claude/w/kit-wave/s81/p/items/it"
+    h = ("KEEP-kw-protect", "line", False)
+    assert p.kw_release(h, f"{base}/attempt_1") is None                  # older attempt goes
+    assert p.kw_release(h, f"{base}/attempt_1/gen/f") is None            # and its members
+    assert p.kw_release(h, f"{base}/attempt_3") == h                     # latest stays
+    assert p.kw_release(h, "/x/claude/w/src_a/f") == h                   # not an attempt: line still holds
+    other = ("KEEP-counted", "line", False)
+    assert p.kw_release(other, f"{base}/attempt_1") == other             # counted is never released

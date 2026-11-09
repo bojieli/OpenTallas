@@ -225,17 +225,19 @@ class Plan:
         n = 0
         for d in lanes:
             lane = self.lane_of(d + "/x")
-            if self.excluded_tree(d) or self.owner_live(lane):
+            if self.tool_tree(d) or self.owner_live(lane):      # COORD 22:3x: a reference from a dead lane's own files holds nothing
                 tf.write(d + "\0")
                 n += 1
-        tf.write(os.path.expanduser("~/.local/state") + "\0")
         tf.close()
         names = ["*.sh", "*.mk", "*.tcl", "*.json", "*.f", "*.otrun", "*.env", "*.txt"]
         expr = " -o ".join(f"-name '{n}'" for n in names)
         alts = [r"/srv/opentallas-scratch[0-9]*", os.path.expanduser("~/scratch-root")]
         alts += [r[:-len("/claude")].replace(".", "[.]") for r in J.roots if r.endswith("/claude")]
         pat = "(" + "|".join(sorted(set(alts))) + r")/claude/[A-Za-z0-9_./+-]+"
-        cmd = (f"xargs -0 -a {tf.name} -I{{}} find {{}} -xdev -type f \\( {expr} \\) -size -5M -print0 2>/dev/null "
+        st = os.path.expanduser("~/.local/state")           # the protect lists feed their own holds with their own expiry; job state counts for 48 h
+        skip = " ".join(f"-path {st}/{x} -prune -o" for x in ("wt-reaper", "ot-autoclean-auto", "ot-lifecycle"))
+        cmd = (f"{{ xargs -0 -a {tf.name} -I{{}} find {{}} -xdev -type f \\( {expr} \\) -size -5M -print0 2>/dev/null; "
+               f"find {st} -xdev {skip} -type f \\( {expr} \\) -size -5M -mtime -2 -print0 2>/dev/null; }} "
                f"| nice -n 15 xargs -0 -r -P 32 -n 200 grep -aohE '{pat}' 2>/dev/null | sort -u")
         print("refs: scanning", n, "lane trees", flush=True)
         out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, errors="replace", timeout=2400)
@@ -271,6 +273,11 @@ class Plan:
         if lane not in self.lane_live_cache:
             self.lane_live_cache[lane] = self.own.live_owner(lane)
         return self.lane_live_cache[lane]
+
+    def tool_tree(self, p):
+        """tok-/kv-fn-/tool trees: permanent referrers.  Renamed and from- trees are excluded from deletion but are dead lanes' files"""
+        rest = p.split("/claude/", 1)[1].split("/")
+        return any(c.startswith(EXCL_PRE) or "tool" in c for c in rest)
 
     def excluded_tree(self, p):
         rest = p.split("/claude/", 1)[1].split("/")
@@ -308,6 +315,15 @@ class Plan:
         if qh:
             return ("KEEP-queue48", qh, qh.startswith("holds "))
         return None
+
+    def kw_old(self, p):
+        """p is, or lies in, a kit-wave attempt that is finished and not the latest"""
+        mm = self.m.ATTEMPT_RE.match(self.J.paths.canon(p))
+        return bool(mm) and self.attempt_verdict(mm.group(0)) == "finished-old"
+
+    def kw_release(self, h, p):
+        """kit_wave.txt root lines keep the latest attempt and resume checkpoints only (COORD 22:3x)"""
+        return None if h and h[0] == "KEEP-kw-protect" and self.kw_old(p) else h
 
     def localkeep_hit(self, d):
         J = self.J
@@ -440,6 +456,8 @@ class Plan:
         return "latest-open" if n >= latest else "finished-old"
 
     def record(self, path, cat, action, reason, st):
+        if cat.startswith("PEND-"):             # counted as reclaimable, removed only after the archive step
+            action = "KEEP"
         self.rows.append((path, cat, action, " ".join(str(reason).split())[:300], st["bytes"], st["files"]))
 
     # --- traversal
@@ -458,7 +476,9 @@ class Plan:
         if os.path.islink(d):
             self.record(d, "KEEP-symlink", "KEEP", "symlink not followed", dict(bytes=0, files=1))
             return
-        h = self.hold(d, bool(live))
+        h = self.kw_release(self.hold(d, bool(live)), d)
+        if h and not h[2] and h[0] == "KEEP-kw-protect" and d in self.attempt_anc:      # a root line above attempts: decide per attempt
+            h = (h[0], h[1], True)
         if h and not h[2]:
             st = self.walk_stats(d)
             self.record(d, h[0], "KEEP", h[1], st)
@@ -472,9 +492,6 @@ class Plan:
         partial = bool(h and h[2]) or bool(dk and dk[2])
         partial = partial or self.link_into(d)
         # unit policy
-        if self.J.paths.canon(d) in self.cited:
-            self.record(d, "KEEP-cited-unit", "KEEP", "cited by a counted/signed record (whole unit stays until the stub is proven)", self.walk_stats(d))
-            return
         v = self.attempt_verdict(d)
         # a live reference or queue path into a unit keeps the whole unit: readers open siblings of the named path
         if h and h[2] and h[0] in ("KEEP-referenced", "KEEP-queue48") and d.count("/") >= 5 and (v or self.is_git(d) or self.kit_like(d)):
@@ -482,6 +499,12 @@ class Plan:
             return
         if v in ("signed", "active"):
             self.record(d, "KEEP-kitwave-" + v, "KEEP", v, self.walk_stats(d))
+            return
+        if self.J.paths.canon(d) in self.cited:
+            if live or self.recent(d):
+                self.record(d, "KEEP-cited-unit", "KEEP", f"cited unit, owner {live or 'recent'}", self.walk_stats(d))
+            else:
+                self.cited_members(d, lane, live)
             return
         if v == "finished-old":
             self.unit_delete(d, lane, live, "DEL-L2-ATTEMPT", "finished, not latest attempt", partial)
@@ -576,9 +599,6 @@ class Plan:
         if self.now - st.st_mtime < 6 * 3600:
             self.record(p, "KEEP-lt6h", "KEEP", "young", info)
             return
-        if self.queue_word_hit(p):
-            self.record(p, "KEEP-queue48-word", "KEEP", self.queue_word_hit(p), info)
-            return
         self.record(p, "DEL-L4-FILE", "DELETE", "dead-lane loose file", info)
 
     def recent_parent(self, p):
@@ -590,7 +610,7 @@ class Plan:
     # --- actions on units
     def unit_delete(self, d, lane, live, cat, why, partial):
         J = self.J
-        qw = self.queue_word_hit(d)
+        qw = self.queue_word_hit(d) if live and cat != "DEL-L2-ATTEMPT" else None
         st = self.walk_stats(d, track=True)
         if qw:
             self.record(d, "KEEP-queue48-word", "KEEP", qw, st)
@@ -606,6 +626,24 @@ class Plan:
             self.record(d, "KEEP-not-deletable", "KEEP", "not owned by this user: " + st["notmine"], st)
             return
         self.record(d, cat, "DELETE", why, st)
+
+    def git_block(self, d):
+        """a git tree that fails the HEAD/clean checks stays whole"""
+        if not (self.is_git(d) and d.count("/") >= 4):
+            return False
+        g = self.git.check(d)
+        if g:
+            self.record(d, "KEEP-" + g.split(" ")[0], "KEEP", g, self.walk_stats(d))
+            return True
+        return False
+
+    def cited_members(self, d, lane, live):
+        """COORD 22:3x: a cited unit keeps the files the counted record names (hold() finds them member by member) plus the record names
+        in file_member; the rest goes once the unit is archived, or is a git tree whose HEAD is on a remote (its sha is the provenance)"""
+        if self.git_block(d):
+            return
+        cat = "DEL-L1-CITED" if self.archive_verified(d) or self.is_git(d) else "PEND-L1-CITED"
+        self.descend_members(d, lane, live, cat, "member of a cited unit, not cited itself")
 
     def descend_members(self, d, lane, live, cat, why):
         try:
@@ -623,7 +661,7 @@ class Plan:
 
     def visit_member(self, d, lane, live, cat, why):
         J = self.J
-        h = self.hold(d, bool(live))
+        h = self.kw_release(self.hold(d, bool(live)), d)
         if h and not h[2]:
             self.record(d, h[0], "KEEP", h[1], self.walk_stats(d))
             return
@@ -631,8 +669,12 @@ class Plan:
         if dk and not dk[2]:
             self.record(d, dk[0], "KEEP", dk[1], self.walk_stats(d))
             return
+        if self.git_block(d):
+            return
         if self.J.paths.canon(d) in self.cited:
-            self.record(d, "KEEP-cited-unit", "KEEP", "cited by a counted/signed record", self.walk_stats(d))
+            if not cat.endswith("-L1-CITED"):
+                cat = "PEND-L1-CITED"
+            self.descend_members(d, lane, live, cat, "member of a cited unit, not cited itself")
             return
         if self.signed_inside(d) and self.is_signed_unit_root(d):
             self.signed_trim(d, lane, live, self.signed_inside(d), bool(h and h[2]))
@@ -665,7 +707,7 @@ class Plan:
         if n in ("signoff.json", "PROVENANCE.json", "ARCHIVED.json", ".keep", "6_final.odb", "config.mk") or n.endswith(".signoff.json"):
             self.record(p, "KEEP-name", "KEEP", n, info)
             return
-        h = self.hold(p, False)                 # counted/protected/kit-wave, ot-hold, local keep, live, refs, queue
+        h = self.kw_release(self.hold(p, False), p)      # counted/protected/kit-wave, ot-hold, local keep, live, refs, queue
         if h:
             self.record(p, h[0], "KEEP", h[1], info)
             return
@@ -843,6 +885,12 @@ class Plan:
                     break
                 self.keep_below.setdefault(a, []).append(k)
         self.unit_anc = set()
+        self.attempt_anc = set()
+        for r in J.found["attempt"]:
+            for a in self.m.ancestors(r):
+                if a.count("/") < 3:
+                    break
+                self.attempt_anc.add(a)
         for lst in (J.found["git"], J.found["record"], J.found["attempt"]):
             for r in lst:
                 for a in self.m.ancestors(r):
@@ -965,20 +1013,22 @@ class Apply:
             return "ALERT", ih
         if path in P.signed_below or (P.signed_inside(path) if os.path.isdir(path) else False):
             return "ALERT", "signed record inside"
-        h = P.localkeep_hit(path)
+        h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]
+        if cat == "DEL-L2-ATTEMPT" and not P.kw_old(path):
+            return "SKIP", "attempt no longer finished-old"
         oh = P.holds.hit(path)
         if oh:
             return "SKIP", "ot-hold " + oh
         lane = P.lane_of(path + "/x" if os.path.isdir(path) else path)
         live_now = P.owner_live(lane)
-        if live_now and cat.startswith("DEL-L4"):               # dead-lane classes only: a successor may have picked the tree up since the plan
+        if live_now and cat.startswith(("DEL-L4", "DEL-L1")):               # dead-lane classes only: a successor may have picked the tree up since the plan
             return "SKIP", f"lane live now: {live_now}"
         dk = P.dotkeep_hit(path, bool(live_now))
         if dk:
             return "SKIP", dk[1]
-        if cat == "DEL-L4-GIT":
+        if cat in ("DEL-L4-GIT", "DEL-L1-CITED"):
             g = self.git_now(path)
             if g:
                 return "SKIP", g
@@ -991,7 +1041,7 @@ class Apply:
             return "SKIP", w
         if P.qpaths.hit(path):
             return "SKIP", "queue path 48h"
-        qw = P.queue_word_hit(path)
+        qw = P.queue_word_hit(path) if live_now and cat != "DEL-L2-ATTEMPT" else None
         if qw:
             return "SKIP", "queue word " + qw
         rh = P.refset.hit(path)
