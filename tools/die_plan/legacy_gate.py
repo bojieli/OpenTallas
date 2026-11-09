@@ -46,6 +46,19 @@ def lec_env(kit):
             if not re.fullmatch(r'\d+', found[0]) or not lo <= int(found[0]) <= hi:
                 raise ValueError(f'{key} = {found[0]!r} outside {lo}..{hi}')
             env[key] = found[0]
+    # DIE-S81-85 11-09: the kit's recorded proof policy (KIT/lec_options.json, gen_core_kit_legacy / gen_phys) beats an
+    # unset shell; a shell value that differs from the kit is refused (the same rule as lec_async.sh kit_lec_options).
+    opt = Path(kit) / 'lec_options.json'
+    if opt.is_file():
+        d = json.loads(opt.read_text())
+        if not isinstance(d, dict) or set(d) != {'superset_vec'} or type(d['superset_vec']) is not bool:
+            raise ValueError('lec_options.json must be exactly {"superset_vec": bool}')
+        want = '1' if d['superset_vec'] else '0'
+        have = os.environ.get('OT_LEC_SUPERSET_VEC')
+        if have not in (None, '') and (have == '1') != (want == '1'):
+            raise ValueError(f'OT_LEC_SUPERSET_VEC={have} differs from the kit proof policy lec_options.json ({want})')
+        if want == '1':
+            env['OT_LEC_SUPERSET_VEC'] = '1'
     return env
 
 
