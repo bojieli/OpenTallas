@@ -1373,3 +1373,59 @@ def test_relay_copy_on_equal_depth_local_reset_leaf_passes():
 def test_relay_copy_local_reset_leaf_mutants_fail_closed(leaf):
     text, spec = _local_reset_leaf_vehicle(leaf)
     assert face_guard.guard(text, "top", land=spec)["verdict"] == "FAIL", leaf
+
+
+# ---- S81-GUNIT-FORM-1 11-07: land form "replica" (D kept replica pin registers, no logic, any buffer tree)
+def _rep_net(tree):
+    return ("module top(clk, a, o);\n  input clk; input a; output o; wire b1; wire b2; wire q0; wire q1; wire q2; wire x; wire oq;\n"
+            + tree +
+            f"  AND3x1{_X} g (.A(q0), .B(q1), .C(q2), .Y(x));\n"
+            f"  DFFHQNx1{_X} fo (.CLK(clk), .D(x), .QN(oq));\n  INVx3{_X} io (.A(oq), .Y(o));\nendmodule\n")
+
+
+_REP_OK = (f"  BUFx2{_X} t0 (.A(a), .Y(b1));\n"
+           f"  DFFHQNx1{_X} r0 (.CLK(clk), .D(a), .QN(q0));\n"
+           f"  DFFHQNx1{_X} r1 (.CLK(clk), .D(b1), .QN(q1));\n"
+           f"  DFFHQNx1{_X} r2 (.CLK(clk), .D(b1), .QN(q2));\n")
+
+
+_RP = "s81/delta_gunit_l1f_band_1107"
+
+
+def _rep(d, plan=_RP):
+    return {"D": d, "form": "replica", "plan": plan}
+
+
+def test_land_replica_form(monkeypatch):
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RP, ("top",))
+    assert face_guard.land_spec(_rep(3)) == (3, "replica")
+    net = _rep_net(_REP_OK)
+    assert face_guard.guard(net, "top")["verdict"] == "FAIL"                       # plain rule: shared
+    r = face_guard.guard(net, "top", land={"a": _rep(3)})
+    assert r["verdict"] == "PASS" and r["land_replica_bits"] == 1, r["fails"]
+    assert face_guard.guard(net, "top", land={"a": _rep(2)})["verdict"] == "FAIL"
+    odd = _REP_OK.replace(f"BUFx2{_X} t0", f"INVx2{_X} t0")                          # odd inversion
+    assert face_guard.guard(_rep_net(odd), "top", land={"a": _rep(3)})["verdict"] == "FAIL"
+    logic = _REP_OK.replace(f"BUFx2{_X} t0 (.A(a), .Y(b1))", f"AND2x2{_X} t0 (.A(a), .B(clk), .Y(b1))")
+    assert face_guard.guard(_rep_net(logic), "top", land={"a": _rep(3)})["verdict"] == "FAIL"
+
+
+def test_land_replica_opt_in_keyed_by_plan(monkeypatch):
+    """COORD 11-07 23:3x: replica is opt-in, keyed by the plan; anything else fails closed and no other form moves."""
+    assert "replica" not in face_guard.LAND_FORMS                                    # not a generic form
+    assert face_guard.REPLICA_PLANS == {_RP: ("dsdv_gunit_l1f_bf",)}
+    net = _rep_net(_REP_OK)
+    for bad in ({"D": 3, "form": "replica"}, _rep(3, "s81/other_plan"), dict(_rep(3), extra=1), _rep(1)):
+        with pytest.raises(ValueError):
+            face_guard.land_spec(bad)
+        with pytest.raises(ValueError):
+            face_guard.guard(net, "top", land={"a": bad})
+    with pytest.raises(ValueError, match="does not list top"):                    # listed plan, other top
+        face_guard.guard(net, "top", land={"a": _rep(3)})
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RP, ("top",))
+    assert face_guard.guard(net, "top", land={"a": _rep(3)})["verdict"] == "PASS"
+    # the other land forms are unchanged
+    assert face_guard.land_spec(3) == (3, "icg")
+    assert face_guard.land_spec({"D": 2, "form": "hold_mux"}) == (2, "hold_mux")
+    with pytest.raises(ValueError):
+        face_guard.land_spec({"D": 2, "form": "hold_mux", "plan": _RP})

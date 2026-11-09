@@ -450,10 +450,23 @@ def kit_land(path):
 
 LAND_FORMS = ("icg", "hold_mux")
 
+# S81-GUNIT-FORM-1 11-07 "replica": a registered input whose bit lands, with no logic, in D kept replica flops (the
+# N32 fan-out copies of a pin register: dsdv_gunit_l1f_bf W face wqc x9 / adc x5 / cbc x32 ...): the D flops ARE the
+# bit's face registers (flop-to-flop crossing, no added cycle), as the ICG / hold_mux slots are.
+# OPT-IN, KEYED BY THE PLAN (COORD 11-07 23:3x): the form is accepted only in a spec {"D", "form": "replica", "plan": P}
+# whose plan event P lists the guarded top module here; a replica spec without a listed plan raises (fails closed), and
+# no other kit can reach this form, so every other kit's guard result is byte-same (test_face_guard replica tests,
+# face_guard_byte_same.py corpus receipt).
+REPLICA_PLANS = {
+    "s81/delta_gunit_l1f_band_1107": ("dsdv_gunit_l1f_bf",),
+}
+
 
 def land_spec(v):
     """(D, form) of one declared landing bus: an int D = the ICG slot form (S81-CORE-LAT-R21); a dict
     {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness); a dict
+    {"D": n, "form": "replica", "plan": P} = D kept replica pin registers, opt-in for the tops plan event P lists in
+    REPLICA_PLANS (S81-GUNIT-FORM-1 11-07, replica_slot); a dict
     {"form": "ring_start", "ring": R} (DIE-HEAD-21, no D) = the count-aligned ring START input -> (0, "ring_start")
     (ring_spec gives R).  ValueError else."""
     if isinstance(v, dict) and v.get('form') == 'hard_child':
@@ -470,6 +483,11 @@ def land_spec(v):
     if isinstance(v, dict) and v.get("form") == "ring_start":
         ring_spec(v)
         return 0, "ring_start"
+    if isinstance(v, dict) and v.get("form") == "replica":
+        if set(v) != {"D", "form", "plan"} or v["plan"] not in REPLICA_PLANS or int(v["D"]) < 2:
+            raise ValueError(f"land_slots replica spec {v}: want exactly {{D >= 2, form: replica, plan in "
+                             f"{sorted(REPLICA_PLANS)}}} (opt-in keyed by the plan)")
+        return int(v["D"]), "replica"
     if isinstance(v, dict):
         if set(v) - {"D", "form"} or v.get("form", "icg") not in LAND_FORMS:
             raise ValueError(f"land_slots bus spec {v}: want {{D, form in {LAND_FORMS}}}")
@@ -929,6 +947,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     land = {}
     for x, v in land_raw.items():
         land[x], land_form[x] = land_spec(v)
+        if land_form[x] == "replica" and top not in REPLICA_PLANS[v["plan"]]:
+            raise ValueError(f"land_slots replica bus {x}: plan {v['plan']} does not list top {top}")
     for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
         if land_form[x] in ("ring_start", "origin_start"):
             if T.dirs.get(x) != "input":
@@ -1651,6 +1671,44 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             record["origin_removed_unloaded"] = origin_removed
         return None, record
 
+    def replica_slot(b, r, D):
+        """S81-GUNIT-FORM-1 11-07 form "replica": (None, flops) = OK, else (failure text, None).  From the port net,
+        every path through BUF / INV / HB cells only (any fanout: the resizer may buffer the D loads after synthesis)
+        ends at the D pin of a flop, with even inversion parity, exactly D distinct flops, all on ONE clock net, no
+        port or other cell reached (no logic, no leak); each flop is then this bit's face register."""
+        ffs, ck, seen, stack = [], set(), {r}, [(r, 0)]
+        while stack:
+            n_, par = stack.pop()
+            if n_ != r and n_ in roots_ports:
+                return f"buffer tree reaches port {roots_ports[n_][0]}", None
+            if n_ != r and len(drv[n_]) != 1:
+                return f"{len(drv[n_])} drivers on replica tree net {n_}", None
+            for ci, pin in loads[n_]:
+                m, path, pp = F.cells[ci]
+                if is_ff(m):
+                    if pin != "D" or par:
+                        return f"replica load {path}.{pin} is not a D pin at even inversion", None
+                    c_ = [v for k, (dd_, v) in pp.items() if k in ("CLK", "C", "CK") and len(v) == 1]
+                    if len(c_) != 1:
+                        return f"replica flop {path} clock pin not found", None
+                    ffs.append(ci); ck.add(F.find(c_[0][0]))
+                    continue
+                if not is_buf(m):
+                    return f"replica tree loads {m} {path}", None
+                outs = [v for k, (dd_, v) in pp.items() if dd_ == "out"]
+                if len(outs) != 1 or len(outs[0]) != 1:
+                    return f"replica tree cell {path} has {len(outs)} outputs", None
+                o_ = F.find(outs[0][0])
+                if o_ in seen:
+                    return "buffer/inverter cycle in replica tree", None
+                seen.add(o_)
+                stack.append((o_, par ^ (1 if m.upper().startswith(("INV", "$_NOT_")) else 0)))
+        if len(ffs) != D or len(set(ffs)) != D:
+            return f"{len(set(ffs))} distinct replica flops ({len(ffs)} D pins), declared D {D}", None
+        if len(ck) != 1:
+            return f"replica flops on {len(ck)} clock nets (want one)", None
+        return None, ffs
+
     def land_slot(b, r, D):
         """None = OK (the D slot flops), else the failure text."""
         ld = loads[r]
@@ -1885,6 +1943,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     continue
                 res.setdefault("ring_start", {})[b] = rec
                 res["ring_start_bits"] = res.get("ring_start_bits", 0) + 1
+                res["ok"] += 1
+                continue
+            elif p in land and land_form[p] == "replica":
+                why, rffs = replica_slot(b, r, int(land[p]))
+                if why:
+                    fail("land_slot", b, why)
+                    continue
+                for ci in rffs:
+                    claimed[ci].append(b)
+                res["flops"][b] = F.cells[rffs[0]][1]
+                res["land_replica_bits"] = res.get("land_replica_bits", 0) + 1
                 res["ok"] += 1
                 continue
             elif p in land and land_form[p] == "hold_mux":

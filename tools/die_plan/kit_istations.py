@@ -84,8 +84,11 @@ def packed_input_delay(tn,bus,txt,width,stages):
     if len(hits)!=1:raise ValueError(f'{tn}.{name}: unsupported or duplicate packed receiver delay')
     w,d=map(int,hits[0].group(1,2))
     # D above the planned site count is fine: the die latency table priced D cycles, the plan pins the first `stages`
-    # registers and the placer keeps the rest (KW-FIX-27: QC v4 nb_i00 D9/7, nb_i22 D3/2).  Fewer than planned stays an error.
-    if w!=width+1 or d<=0 or d<stages:raise ValueError(f'{tn}.{name}: packed delay W{w}/D{d} != payload+epoch {width+1}/planned {stages}')
+    # registers and the placer keeps the rest (KW-FIX-27: QC v4 nb_i00 D9/7, nb_i22 D3/2).
+    # DIE-HBM-91-KCLS 11-08 (class l, COORD default (A)): D BELOW the planned count is the bound, priced latency too
+    # (HBM q_hub_ne/nw L12s_i D12 vs 34/32 planned, L96_i D6 vs 8): the D registers go to evenly spaced planned
+    # sites of the bus path (packed_sites); the cycle count is unchanged and the longer hops are judged at sign-off.
+    if w!=width+1 or d<=0:raise ValueError(f'{tn}.{name}: packed delay W{w}/D{d} != payload+epoch {width+1}/planned {stages}')
     if re.search(r'\b(?:u_ist_'+re.escape(name)+r'_\d+|u_b(?:in|out)_'+re.escape(name)+r'_pad\d+)\s*\(',code):
         raise ValueError(f'{tn}.{name}: mixed packed/individual station forms; regenerate native source')
     pins=dict(re.findall(r'\.(clk|d|q)\s*\(([^()]*)\)',hits[0].group(3)))
@@ -97,6 +100,17 @@ def packed_input_delay(tn,bus,txt,width,stages):
     if pins!=expected:raise ValueError(f'{tn}.{name}: packed delay does not preserve exact face epoch/data connection: {pins}')
     return dict(instance=inst,master='ot_dp_dly',width=w,depth=d,pins=pins,
                 stage_registers=[f'{inst}.r[{j}]' for j in range(d)])
+
+
+def packed_sites(regs, depth):
+    """[(register j, planned site index)] of a packed receiver delay of `depth` registers on a bus with planned
+    station sites regs (face -> leaf order).  depth >= len(regs): registers 0..len-1 on the sites in order, the rest
+    float (KW-FIX-27).  depth < len(regs) (DIE-HBM-91-KCLS 11-08): register j on site round((j+1)(n+1)/(D+1)) - 1, so
+    the D registers split the planned n+1 hops into D+1 near-equal groups, strictly increasing along the path."""
+    n = len(regs)
+    if depth >= n:
+        return [(j, j) for j in range(n)]
+    return [(j, round((j + 1) * (n + 1) / (depth + 1)) - 1) for j in range(depth)]
 
 
 def exact_banks(entry, width):
@@ -820,12 +834,21 @@ def main(argv):
         if packed:
             if exact is not None:
                 raise ValueError(f'{tn}.{bus}: packed data+epoch delay requires complete packed bit sites; unsupported exact bank')
-            for j,(x,y) in enumerate(regs):
+            sites=packed_sites(regs,packed['depth'])
+            for j,k in sites:
+                x,y=regs[k]
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 tcl.append(f'is_place {{{pattern}}} {x} {y} ist:{bus}')
-            rep.append(dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
-                            stations=packed['stage_registers'],packed_delay=packed,
-                            plan_width=b['width'],bound_width=W))
+            row=dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
+                     stations=packed['stage_registers'],packed_delay=packed,
+                     plan_width=b['width'],bound_width=W)
+            if packed['depth']<len(regs):
+                pts=[p for p in [e.get('from_um')]+[regs[k] for _,k in sites]+[e.get('to_um')] if p]
+                row.update(respread_sites=[k for _,k in sites],
+                           respread_max_hop_um=round(max(abs(a[0]-c[0])+abs(a[1]-c[1]) for a,c in zip(pts,pts[1:])),3))
+                print(f"kit_istations: {tn} {bus}: packed D{packed['depth']} < {len(regs)} planned stations, "
+                      f"registers on planned sites {row['respread_sites']}, max hop {row['respread_max_hop_um']} um")
+            rep.append(row)
             continue
         if exact is not None and EXACT_BANK_TCL not in tcl:
             tcl.append(EXACT_BANK_TCL)

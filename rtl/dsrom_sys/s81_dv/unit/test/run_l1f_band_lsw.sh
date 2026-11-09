@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 # STW-S81c-TOK4-BAND 10-22: banded gunit l1f behaviour proof = the dsdv_gunit golden bench (run_gunit_bench.sh, unchanged
-# vectors / mutants) with every dsdv_gunit_l1f replaced by the lockstep shim (banded flat parent drives, current RTL
-# compared on every edge).  usage: run_l1f_band_lsw.sh WORKDIR [cases] [muts]
+# vectors / mutants) with every dsdv_gunit_l1f replaced by the lockstep shim (banded flat parent drives, the flat reference
+# dsdv_gunit_l1f_flat compared on every edge).  usage: run_l1f_band_lsw.sh WORKDIR [cases] [muts]
 # Prints L1F_LSW PASS iff MUT 0 is GUNIT PASS with 0 mismatches (live edges > 0) and every other MUT still FAILs the golden
 # with 0 lockstep mismatches (the mutant hits both copies alike).
 set -u
 U=$(cd "$(dirname "$0")/.." && pwd); R=$(cd "$U/../../../.." && pwd)
 T=$(mkdir -p "$1" && cd "$1" && pwd); N=${2:-8}; MUTS=${3:-"0 1"}
-sed 's/^module dsdv_gunit_l1f #(/module dsdv_gunit_l1f_ref #(/' "$U/dsdv_gunit_l1f.sv" > "$T/l1f_ref.sv"
-grep -q "module dsdv_gunit_l1f_ref" "$T/l1f_ref.sv" || { echo "L1F_LSW ERROR rename"; exit 2; }
-REL=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$T/l1f_ref.sv" "$R")
+# S81-GUNIT-FORM-1 11-07: dsdv_gunit_l1f.sv holds the BANDED front dsdv_gunit_l1f and the flat reference dsdv_gunit_l1f_flat;
+# the bench copy names the banded parent dsdv_gunit_l1f_bp so the shim can stand in for dsdv_gunit_l1f
+sed 's/^module dsdv_gunit_l1f #(/module dsdv_gunit_l1f_bp #(/' "$U/dsdv_gunit_l1f.sv" > "$T/l1f_band.sv"
+grep -q "^module dsdv_gunit_l1f_bp #(" "$T/l1f_band.sv" && grep -q "^module dsdv_gunit_l1f_flat #(" "$T/l1f_band.sv" \
+  || { echo "L1F_LSW ERROR rename"; exit 2; }
+REL=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$T/l1f_band.sv" "$R")
 # BANDMUT=1 (the kit's expect=fail mutant): the BANDED copy alone runs MUT 1 (bias forced 0), the reference stays MUT 0
 # -> the lockstep must report mismatches and the script must print L1F_LSW FAIL.
 SHIM=rtl/dsrom_sys/s81_dv/unit/test/dsdv_gunit_l1f_lsw.sv
@@ -19,7 +22,7 @@ if [ "${BANDMUT:-0}" != 0 ]; then
   SHIM=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$T/l1f_lsw_bandmut.sv" "$R")
   echo "L1F_LSW BANDMUT=1: banded copy MUT 1, reference MUT 0"
 fi
-sed -e "s#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv#$REL rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_band.sv $SHIM#" \
+sed -e "s#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv#$REL $SHIM#" \
     -e 's#^U=.*#U='"$U"'; R='"$R"'#' -e "s#| grep '^GUNIT')#| grep '^GUNIT'; true)#g" "$U/test/run_gunit_bench.sh" > "$T/bench.sh"
 grep -q "l1f_lsw" "$T/bench.sh" || { echo "L1F_LSW ERROR bench rewrite"; exit 2; }
 bash "$T/bench.sh" "$T/w" "$N" "$MUTS" > "$T/bench.out" 2>&1; cat "$T/bench.out"

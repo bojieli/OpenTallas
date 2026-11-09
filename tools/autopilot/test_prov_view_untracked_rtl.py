@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import prov_view as P
@@ -37,6 +38,7 @@ def _git(d, *a):
 class UntrackedRtl(unittest.TestCase):
     def setUp(self):
         P._RTL_CACHE.clear()
+        P._RTL_ROOT_INDEX.clear()
         self.td = tempfile.TemporaryDirectory()
         d = self.td.name
         os.makedirs(os.path.join(d, "rtl", "a", "b", "c"))
@@ -59,8 +61,36 @@ class UntrackedRtl(unittest.TestCase):
         dirs, _ = P.rtl_dirs("ot_tracked", [self.td.name])
         self.assertEqual(dirs, {"clk": "input", "q": "output"})
 
+    def test_root_scan_cached_across_exact_modules_and_missing_lookup(self):
+        with open(os.path.join(self.td.name, "rtl", "many.sv"), "w") as f:
+            f.write("module m(input a); endmodule\nmodule m_more(output b); endmodule\n")
+        run = P.subprocess.run
+        with mock.patch.object(P.subprocess, "run", wraps=run) as calls:
+            self.assertEqual(P.rtl_dirs("m", [self.td.name])[0], {"a": "input"})
+            self.assertEqual(P.rtl_dirs("m_more", [self.td.name])[0], {"b": "output"})
+            self.assertEqual(P.rtl_dirs("absent", [self.td.name]), ({}, None))
+            self.assertEqual(sum("grep" in c.args[0] for c in calls.call_args_list), 1)
+        with tempfile.TemporaryDirectory() as staged:
+            with open(os.path.join(staged, "staged.sv"), "w") as f:
+                f.write("module stage(input x); endmodule\nmodule stage2(output y); endmodule\n")
+            with mock.patch.object(P.subprocess, "run", wraps=run) as calls:
+                self.assertEqual(P.rtl_dirs("stage", [staged])[0], {"x": "input"})
+                self.assertEqual(P.rtl_dirs("stage2", [staged])[0], {"y": "output"})
+                self.assertEqual(len(calls.call_args_list), 1)
+
     def test_absent_module_stays_empty(self):
         self.assertEqual(P.rtl_dirs("ot_nowhere", [self.td.name]), ({}, None))
+
+
+class ParameterWidths(unittest.TestCase):
+    def test_parenthesized_packed_width_keeps_direction(self):
+        body = """module ring #(parameter PMAX=8) (
+            input wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,
+            input wire [PMAX*8-1:0] lane_en_i,
+            output wire [(2048)-1:0] bq_d
+        ); endmodule"""
+        self.assertEqual(P.module_ports(body),
+                         {"bsel": "input", "lane_en_i": "input", "bq_d": "output"})
 
 
 class GzPins(unittest.TestCase):
@@ -99,6 +129,7 @@ class CoreTables(unittest.TestCase):
 
     def setUp(self):
         P._RTL_CACHE.clear()
+        P._RTL_ROOT_INDEX.clear()
 
     def test_cut_port_table(self):
         with tempfile.TemporaryDirectory() as d:
@@ -113,6 +144,25 @@ class CoreTables(unittest.TestCase):
             dirs, src = P.core_table_dirs("m__sk", [d])
             self.assertEqual(dirs, {"clk": "input", "y": "output"})
             self.assertEqual(src, ["recipe top ot_sk_top"])
+
+    def test_recipe_pinned_file_without_working_copy(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._root(d)
+            _git(d, "init", "-q")
+            _git(d, "add", "rtl/sk.sv")
+            _git(d, "commit", "-q", "-m", "pinned source")
+            rev = subprocess.check_output(["git", "-C", d, "rev-parse", "HEAD"], text=True).strip()
+            os.unlink(os.path.join(d, "rtl", "sk.sv"))
+            recipe = {"m__sk": {"top": "ot_sk_top", "files_at": {"rtl/sk.sv": rev}}}
+            with open(os.path.join(d, "physical/die_plan/hbm_arch_cores/recipes_b2.json"), "w") as f:
+                json.dump(recipe, f)
+            dirs, src = P.core_table_dirs("m__sk", [d])
+            self.assertEqual(dirs, {"clk": "input", "y": "output"})
+            self.assertEqual(src, [f"recipe file rtl/sk.sv at {rev}"])
+            recipe["m__sk"]["top"] = "wrong_top"
+            with open(os.path.join(d, "physical/die_plan/hbm_arch_cores/recipes_b2.json"), "w") as f:
+                json.dump(recipe, f)
+            self.assertEqual(P.core_table_dirs("m__sk", [d]), ({}, []))
 
     def test_unknown_module_empty(self):
         with tempfile.TemporaryDirectory() as d:

@@ -260,6 +260,9 @@ _DECL = re.compile(r"\b(input|output|inout)\b([^;()]*?)(?=[;)]|\b(?:input|output
 def module_ports(body):
     body = re.sub(r"/\*.*?\*/", "", re.sub(r"//[^\n]*", "", body), flags=re.S)
     body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)            # (* keep *) attributes
+    # Packed widths can contain parenthesized parameter arithmetic. Remove
+    # ranges before the declaration matcher treats parentheses as boundaries.
+    body = re.sub(r"\[[^\]]*\]", " ", body)
     out = {}
     for m in _DECL.finditer(body):
         rest = re.sub(r"\[[^\]]*\]", " ", m.group(2))
@@ -272,6 +275,53 @@ def module_ports(body):
 
 
 _RTL_CACHE = {}
+_RTL_ROOT_INDEX = {}
+_MODULE_DECL = re.compile(r"^\s*module\s+([A-Za-z_]\w*)\b")
+
+
+def rtl_module_files(root):
+    """Process-local module->files index; one declaration scan per fixed source root."""
+    if root in _RTL_ROOT_INDEX:
+        return _RTL_ROOT_INDEX[root]
+    index = {}
+    result = None
+    try:
+        result = subprocess.run(["git", "-C", root, "grep", "--untracked", "--null", "-n", "-E",
+                                 r"^\s*module\s+[A-Za-z_][A-Za-z_0-9]*", "--", "*.sv", "*.v", "*.svh"],
+                                capture_output=True, text=True, timeout=300)
+    except (OSError, subprocess.SubprocessError):
+        pass
+    if result is not None and result.returncode in (0, 1) and "not a git repository" not in (result.stderr or ""):
+        for record in result.stdout.splitlines():
+            fields = record.split("\0", 2)  # git grep -z -n: filename, line number, declaration
+            if len(fields) != 3:
+                continue
+            match = _MODULE_DECL.match(fields[2])
+            if match:
+                files = index.setdefault(match.group(1), [])
+                path = os.path.join(root, fields[0])
+                if path not in files:
+                    files.append(path)
+    else:
+        for dp, dn, fs in os.walk(root):
+            # Preserve the staged, non-git root's shallow walk and exclusions.
+            dn[:] = [x for x in dn if x not in (".git", "run", "results", "objects", "logs", "reports", "routed",
+                                               "views", "plan", "__pycache__") and dp.count(os.sep) - root.count(os.sep) < 3]
+            for filename in fs:
+                if not filename.endswith((".sv", ".v")):
+                    continue
+                path = os.path.join(dp, filename)
+                try:
+                    with open(path, errors="replace") as source:
+                        text = source.read()
+                except OSError:
+                    continue
+                for match in re.finditer(r"\bmodule\s+([A-Za-z_]\w*)\b", text):
+                    files = index.setdefault(match.group(1), [])
+                    if path not in files:
+                        files.append(path)
+    _RTL_ROOT_INDEX[root] = index
+    return index
 
 
 def rtl_dirs(module, roots):
@@ -285,31 +335,7 @@ def rtl_dirs(module, roots):
     for r in roots:
         if not r or not os.path.isdir(r):
             continue
-        p = None
-        try:
-            # DIE-HBM-91-KCLS 11-08 (class k1): --untracked. A staged wave src (kw33/src_d95ec) is an rsync of a newer
-            # tree over an old .git (HEAD c92647a215, 11-06 index), so the RX BM3 / TX split RTL added since
-            # (rtl/hbm_accel/cores_split/reform_1106/ot_pdie_serdes_rx_bm3.sv) is untracked there: plain git grep
-            # found no definition (rc 1, no walk fallback) and every pin of the child had no direction.
-            p = subprocess.run(["git", "-C", r, "grep", "--untracked", "-l", "-E",
-                                r"^\s*module\s+" + re.escape(module) + r"\b",
-                                "--", "*.sv", "*.v", "*.svh"], capture_output=True, text=True, timeout=300)
-        except (OSError, subprocess.SubprocessError):
-            pass
-        if p is not None and p.returncode in (0, 1) and "not a git repository" not in (p.stderr or ""):
-            files += [os.path.join(r, f) for f in p.stdout.split()]
-            continue
-        for dp, dn, fs in os.walk(r):
-            # a non-git root (a staged plan dir): skip build trees and stay shallow (RTL lives near the plan)
-            dn[:] = [x for x in dn if x not in (".git", "run", "results", "objects", "logs", "reports", "routed",
-                                                "views", "plan", "__pycache__") and dp.count(os.sep) - r.count(os.sep) < 3]
-            for f in fs:
-                if f.endswith((".sv", ".v")):
-                    try:
-                        if pat.search(open(os.path.join(dp, f), errors="replace").read()):
-                            files.append(os.path.join(dp, f))
-                    except OSError:
-                        pass
+        files.extend(rtl_module_files(r).get(module, []))
     dirs, first = {}, None
     for f in files:
         try:
@@ -351,6 +377,7 @@ def core_table_dirs(module, roots):
                     dirs.setdefault(n, d)
                 srcs.append(f"port table {rel}")
     tops = set()
+    pinned = []
     for r in roots:
         for rel in CORE_RECIPES:
             try:
@@ -360,6 +387,8 @@ def core_table_dirs(module, roots):
             for k, v in (j.items() if isinstance(j, dict) else ()):
                 if (k == module or k.startswith(module + "__")) and isinstance(v, dict) and v.get("top"):
                     tops.add(v["top"])
+                    for path, rev in v.get("files_at", {}).items():
+                        pinned.append((r, v["top"], path, rev))
     if len(tops) == 1:
         top = next(iter(tops))
         rp, rf = rtl_dirs(top, roots)
@@ -367,6 +396,28 @@ def core_table_dirs(module, roots):
             for n, d in rp.items():
                 dirs.setdefault(n, d)
             srcs.append(f"recipe top {top}")
+        # Some recipe RTL is explicitly pinned to an older source commit and
+        # absent from the staged working tree. Read that exact module header.
+        pat = re.compile(r"\bmodule\s+" + re.escape(top) + r"\b")
+        for root, declared_top, path, rev in pinned:
+            if declared_top != top:
+                continue
+            try:
+                source = subprocess.run(["git", "-C", root, "show", f"{rev}:{path}"],
+                                        capture_output=True, text=True, timeout=30)
+            except (OSError, subprocess.SubprocessError):
+                continue
+            if source.returncode:
+                continue
+            for match in pat.finditer(source.stdout):
+                end = source.stdout.find("endmodule", match.start())
+                if end < 0:
+                    continue
+                got = module_ports(source.stdout[match.start():end])
+                if got:
+                    for n, d in got.items():
+                        dirs.setdefault(n, d)
+                    srcs.append(f"recipe file {path} at {rev}")
     return dirs, srcs
 
 
@@ -684,6 +735,12 @@ def make(a):
                     shutil.copyfile(selected_lef, os.path.join(vd, m + ".lef"))
                 rec = dict(source="routed", job=meta.get("job"), host=meta.get("host"), signoff=meta.get("signoff"),
                            drc=meta.get("drc"), tt_wns=meta.get("tt_wns"), ff_wns=meta.get("ff_wns"))
+                # KW-FIX-35-V 11-08 (COORD: signed child views missing in the wave): a candidate that IS the counted
+                # signed view of the child (kit_wave stages counted=True + its export gates.json) is the final view,
+                # not a provisional one: the type counts on its own sign-off, no STA re-sign owed.
+                sv = signed_view_ok(cdir, m, meta, plan_lef)
+                if sv:
+                    rec.update(source="signed", counted=sv, final=True)
                 if detail is not None:
                     rec["abstract_detail"] = detail
                 break
@@ -764,9 +821,13 @@ def make(a):
             rec = dict(source="contract", directions=dsrc, clocks=sorted(clocks), routed_tried=tried[:4])
         lef = plan_lef or os.path.join(vd, m + ".lef")
         tt, ff = os.path.join(vd, m + "_tt.lib"), os.path.join(vd, m + "_ff.lib")
+        final = bool(rec.get("final"))
         rec.update(kind=kind, inst=entry.get("inst"), lef=lef, lef_from_plan=bool(plan_lef), lef_sha256=sha256(lef),
                    tt=tt, tt_sha256=sha256(tt), ff=ff, ff_sha256=sha256(ff),
-                   kit_libs=[os.path.basename(tt), os.path.basename(ff)], final=False)
+                   kit_libs=[os.path.basename(tt), os.path.basename(ff)], final=final)
+        if final:   # = resign()'s FINAL record: the kit's macro libs must keep these exact bytes (autopilot classify)
+            rec.update(final_lef=lef, final_tt=tt, final_ff=ff,
+                       final_sha256={os.path.basename(tt): rec["tt_sha256"], os.path.basename(ff): rec["ff_sha256"]})
         children[m] = rec
     if errors:
         print("PROV_FAIL " + " | ".join(errors))
@@ -795,17 +856,43 @@ def make(a):
     op = os.path.join(pd, base)
     with open(op, "w") as f:
         json.dump(plan, f, indent=1)
-    marker = dict(schema=SCHEMA, status="PROVISIONAL", rule=RULE, type=tn, die=(plan.get("die") or {}).get("name"),
+    status = "FINAL" if children and all(v.get("final") for v in children.values()) else "PROVISIONAL"
+    marker = dict(schema=SCHEMA, status=status, rule=RULE, type=tn, die=(plan.get("die") or {}).get("name"),
                   plan=plan_path, plan_sha256=sha256(plan_path), overlay_plan=op, overlay_sha256=sha256(op),
                   generated=datetime.datetime.now().astimezone().isoformat(timespec="seconds"), children=children)
     with open(os.path.join(out, "provisional_views.json"), "w") as f:
         json.dump(marker, f, indent=1)
     print("PROV_JSON " + json.dumps(dict(ok=True, overlay_plan=op, marker=os.path.join(out, "provisional_views.json"),
-                                         children={k: v["source"] for k, v in children.items()})))
+                                         status=status, children={k: v["source"] for k, v in children.items()})))
     return 0
 
 
 # ------------------------------------------------------------------------------------------------------ resign
+SIGNED_VERDICTS = ("SIGNED", "LOCAL_PASS_NEEDS_PARENT")
+
+
+def signed_view_ok(cdir, module, meta, plan_lef=None):
+    """'' unless candidate dir cdir is the COUNTED signed view of module: kit_wave staged it with counted=True (a
+    prov_view_sources entry from counted_child_views.py / export_view.py of the counter's own sign-off record) and its
+    export gates.json says the module signed (SIGNED / LOCAL_PASS_NEEDS_PARENT, OWNER 11-03) with a complete view.  A
+    plan-named LEF (noview child) must be pin/OBS-compatible with the signed LEF.  -> the signed record path."""
+    if not meta.get("counted"):
+        return ""
+    try:
+        g = json.load(open(os.path.join(cdir, "gates.json")))
+    except (OSError, ValueError):
+        return ""
+    if g.get("type") not in (None, module) or (str(g.get("signoff") or "").split() or [""])[0] not in SIGNED_VERDICTS:
+        return ""
+    if g.get("view_complete") is not True:
+        return ""
+    if plan_lef:
+        sl = os.path.join(cdir, module + ".lef")
+        if not os.path.isfile(sl) or lef_compatible(plan_lef, sl, module):
+            return ""
+    return str(g.get("signoff_record") or meta.get("signoff") or meta.get("job") or "counted")
+
+
 def lef_compatible(prov_lef, signed_lef, module):
     """[] when the signed LEF can replace the provisional one under the same routed parent (pins, obs)"""
     _, _, pp, po = lef_info(prov_lef)
