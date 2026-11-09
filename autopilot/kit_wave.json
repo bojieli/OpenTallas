@@ -9978,7 +9978,10 @@
         "q_b102@3",
         "q_b102__physical_v1@3",
         "q_b103@3",
-        "q_b103__physical_v1@3"
+        "q_b103__physical_v1@3",
+        "q_b003@2",
+        "q_sm0@2",
+        "q_sm3@2"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -12218,7 +12221,13 @@
       "hold_items_prev_kw38sm": {
         "q_sm3": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): SM-ASBUILT rows join when their dry passes (COORD 18:5x q_sm0 rule)"
       },
-      "note_kw38sm": "KW-FIX-38 2026-11-08 20:24 PST: DIE-HBM-93 20:19 keys: q_sm0, q_sm3 dry PASS on plan_final3 + bind_F3 + asbuilt vK (item_inputs); q_sm1/2 and q_hub_nw wait for keys, q_hub_ne held by owner (bind interface)"
+      "note_kw38sm": "KW-FIX-38 2026-11-08 20:24 PST: DIE-HBM-93 20:19 keys: q_sm0, q_sm3 dry PASS on plan_final3 + bind_F3 + asbuilt vK (item_inputs); q_sm1/2 and q_hub_nw wait for keys, q_hub_ne held by owner (bind interface)",
+      "retry_prev_kw39sl_added": [
+        "q_b003@2",
+        "q_sm0@2",
+        "q_sm3@2"
+      ],
+      "note_kw39sl": "KW-FIX-39: q_b003, q_sm0, q_sm3 a2 FAIL mkdir 'Already exists' was a self-link from work_alt (attempt 1's W = item dir was itself the scratch2 link; fix c78f5970ba5 on the overlay); retry only, no design change; the 3 self-links removed by hand"
     }
   },
   "place_prefer": [
