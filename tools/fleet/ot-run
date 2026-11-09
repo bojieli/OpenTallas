@@ -1292,6 +1292,7 @@ def held_hosts():
 
 JOB_BIN = os.environ.get("OT_RUN_JOB_BIN", os.path.expanduser("~/.local/bin/ot-job"))
 JOB_SCHEMA = "opentallas.ot_job.v1"
+JOB_ROOT = "/srv/opentallas-scratch2/claude/ot-jobs"     # ot-job's default job root on every host
 
 
 def job_wrap(cmd, spec_path):
@@ -1356,6 +1357,7 @@ def main():
     if job:
         cmd = job_wrap(cmd, job)
         spill = False                      # a sealed job brings its inputs by sha; there is no lane root to copy
+        d = d or JOB_ROOT                  # placement, disk guard and cd use the job root (scratch), never $HOME
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
