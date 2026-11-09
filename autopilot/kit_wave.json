@@ -301,19 +301,18 @@
     "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
     "critical": true
    },
-   "hold_items": {
-    "kv3_sys_c": "CODEX freshfaecd a5 caught prephysical realized96rawflops/23branches vs currentplan101:5old6stage/base59 branches persist instead7/base58. KV owner owns fresh raw-branch emitter/boundwrapper23/101 closure. No route on stale96; preservea5evidence, source-realizationINFRA not designstrike. Reviewed geometry/phase event remains approved.",
-    "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
-    "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
-   },
+   "hold_items": [
+    "qkd_hr_core_prompt",
+    "kv3_hgi",
+    "kv3_hgi_v1*",
+    "kv3_hgi_v2*",
+    "kv3_hgi_v4",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_io_ft_v1"
+   ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
@@ -1989,6 +1988,13 @@
     "kv3_pv_v7": {
      "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
      "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+    },
+    "kv3_sys_c": {
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/bind9c2",
+      "asbuilt": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/plan_zbr2/asbuilt.json"
+     },
+     "note": "KW-FIX-43 15:1x COORD 15:0x KV bind9c2 APPROVED (KV-PLAN-2 15:00): strict 0 errors; only RTL change vs bind9 = kv3_sys_c u_d2d_kv .KV_RTT(511); asbuilt plan_zbr2. Plan stays the die plan. Staged epyc2 (origin) + epyc7."
     }
    },
    "item_inputs_prev_kw43sd": {
@@ -2015,7 +2021,24 @@
     "kv3_pv_v1n": null,
     "kv3_pv_v7": null
    },
-   "note_kw43_r2": "KW-FIX-43 13:4x COORD: KV wave plan = 92370701 (KV-PLAN-2 rstart/risk2, built on 8ca41a6b; 10 at-risk types change: reader-start sites of pv_v1..v4(n), v7, hub_Wi). Dir kw43/kvr2 = plan_zbk hardlinks + this plan_c (epyc2 + epyc7). The 5 rows on 8ca41a6b (item_inputs) keep it (identical content). Revert: plan = plan_prev_kw43r2; item_inputs[k] = item_inputs_prev_kw43r2[k] (None = delete)."
+   "note_kw43_r2": "KW-FIX-43 13:4x COORD: KV wave plan = 92370701 (KV-PLAN-2 rstart/risk2, built on 8ca41a6b; 10 at-risk types change: reader-start sites of pv_v1..v4(n), v7, hub_Wi). Dir kw43/kvr2 = plan_zbk hardlinks + this plan_c (epyc2 + epyc7). The 5 rows on 8ca41a6b (item_inputs) keep it (identical content). Revert: plan = plan_prev_kw43r2; item_inputs[k] = item_inputs_prev_kw43r2[k] (None = delete).",
+   "item_inputs_prev_kw43k9c2": {
+    "kv3_sys_c": null
+   },
+   "hold_items_prev_kw43k9c2": [
+    "kv3_sys_c",
+    "qkd_hr_core_prompt",
+    "kv3_hgi",
+    "kv3_hgi_v1*",
+    "kv3_hgi_v2*",
+    "kv3_hgi_v4",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_io_ft_v1"
+   ],
+   "note_kw43_k9c2": "KW-FIX-43 15:1x: kv3_sys_c ONLY -> bind9c2 + plan_zbr2 asbuilt, released from hold; every other KV row keeps bind9. Revert: item_inputs[kv3_sys_c] = item_inputs_prev_kw43k9c2[kv3_sys_c] (None = delete); hold_items = hold_items_prev_kw43k9c2."
   },
   "s81": {
    "enabled": true,
