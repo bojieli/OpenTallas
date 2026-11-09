@@ -2830,7 +2830,8 @@
         "ot_s81sl_leaf__t36@2",
         "ot_s81sl_leaf__t65@4",
         "ot_s81sl_leaf__t47@1",
-        "ot_s81sl_leaf__t21@13"
+        "ot_s81sl_leaf__t21@13",
+        "serdes__t4@10"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -3823,7 +3824,8 @@
         "ot_s81sl_leaf__t36@2": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
         "ot_s81sl_leaf__t65@4": "GRID: OT_MACRO_MOVES y restored to the solved value (%g rounding in mk3 to 6 significant digits put LN macros 4 nm off the M4 track); same moves, same model. S81-TYPES-12 applied lanes/S81-LEAF-BATCH-1108b.json (requested 22:12 by S81-TYPES-11).",
         "ot_s81sl_leaf__t47@1": "REDESIGN: macros moved, not a retry. Escape-open, band-aware form of the leaf GRT-0116 batch (eo_band.py + mk3b.py, S81-TYPES-12): 16 macros; model worst 3.58 -> 1.81 (u_ve.u_m|u_vsw, above the 1.15 pass reference, so GRT decides). Attempt 1 ran on main@714dd1ea120 for 3 days, GRT-0116 339,319 overflow (M6 223,042), never in the 11-08 batches because it was still running.",
-        "ot_s81sl_leaf__t21@13": "S81-TYPES-12 REDESIGN: macros moved, not a retry. Attempt 13 failed GRT with 10,245 overflow; 97% sits in x 480-600 y 900-1020, the ve_s|vn_b gap, which the @9 moves cut from 17.28 to 8.64 um. The 668-bit FIRM station leafup_o0 is planned at x 535.788, y 954-989, the centre of that gap (istations.tcl is_place). This form returns vn_a/vn_b to their sites of attempt 11 (no overflow there or in the vn|vp channel in that run) and keeps the vs/vq/vsw moves that removed the 46,945 overflow at x 180-300. Prior moves: u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72"
+        "ot_s81sl_leaf__t21@13": "S81-TYPES-12 REDESIGN: macros moved, not a retry. Attempt 13 failed GRT with 10,245 overflow; 97% sits in x 480-600 y 900-1020, the ve_s|vn_b gap, which the @9 moves cut from 17.28 to 8.64 um. The 668-bit FIRM station leafup_o0 is planned at x 535.788, y 954-989, the centre of that gap (istations.tcl is_place). This form returns vn_a/vn_b to their sites of attempt 11 (no overflow there or in the vn|vp channel in that run) and keeps the vs/vq/vsw moves that removed the 46,945 overflow at x 180-300. Prior moves: u_lf.u_vn.u_b:535.68:881.28,u_lf.u_vs:146.88:578.88,u_lf.u_vn.u_a:535.68:699.84,u_lf.u_vq:328.32:596.16,u_lf.u_vsw:43.2:198.72",
+        "serdes__t4@10": "KW-FIX-40 2026-11-08 23:4x PST: REDESIGN: same class J1 as serdes__t12@7: a10 (src d95ec) kit has no reset_contract.json, LEC NOT EQUIVALENT, 57 compare points differ on no-reset u_dec.u_syn codec flops. Current src c303p stages the 64-edge die contract: fresh kit (COORD 23:3x NEWFAIL)."
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -12798,5 +12800,7 @@
   "restage_max_per_tick_prev_kw40": 12,
   "restage_min_wait_s_prev_kw40": 1800,
   "restage_min_wait_s": 300,
-  "note_kw40e6": "KW-FIX-40 2026-11-08 23:08 PST: COORD 23:06: waiters pinned to epyc4 are the launch limit; epyc5/epyc6 OK for new work (drain >=24 h away, +8 h): epyc5+epyc6 back in hosts/place_prefer/gen_hosts (s81 gen_hosts without epyc6: src_c303p_lgm not there), gen_disk_min_gb 100->65 (ot-run scratch floor 60), restage_max_per_tick 12->60, restage_min_wait_s 1800->300 to move unstarted waiters now. Revert keys *_prev_kw40 after the waiters drain."
+  "note_kw40e6": "KW-FIX-40 2026-11-08 23:08 PST: COORD 23:06: waiters pinned to epyc4 are the launch limit; epyc5/epyc6 OK for new work (drain >=24 h away, +8 h): epyc5+epyc6 back in hosts/place_prefer/gen_hosts (s81 gen_hosts without epyc6: src_c303p_lgm not there), gen_disk_min_gb 100->65 (ot-run scratch floor 60), restage_max_per_tick 12->60, restage_min_wait_s 1800->300 to move unstarted waiters now. Revert keys *_prev_kw40 after the waiters drain.",
+  "restage_place_waiters": true,
+  "note_kw40rs": "KW-FIX-40 23:4x COORD 23:06/23:30: place waiters on full epyc4 on scratch3 paths cannot spill (target scratch3 = root disk, root floors); overlay 0fa4f36ff45 lets restage_waiters move them from mkdir to scratch2 elsewhere. Remove when the epyc4 queue is gone."
 }
