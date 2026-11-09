@@ -677,8 +677,8 @@
     "epyc7"
    ],
    "place_prefer": [
-    "epyc4",
     "epyc2",
+    "epyc4",
     "epyc7"
    ],
    "item_env": {
@@ -3268,7 +3268,11 @@
     "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "dsdv_slice_kv512_C__t1": "KW-FIX-43 11:5x COORD: left to DIE-S81-85 structural fix; the gen_args sidecar change must not auto-relaunch it. DIE-S81-85 / COORD releases.",
     "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
-    "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases."
+    "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
+    "ot_s81sl_leaf__t16": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
+    "ot_s81sl_leaf__t27": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
+    "ot_s81sl_leaf__t42": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry.",
+    "eng__t1": "KW-FIX-43 13:5x COORD LOOP-GAP 13:5x (3): EARLY-CORE-TAP class (hard core on a grid tap over the window; t16w2 GRT gate TT -237.80 / FF -220.45 with 689d05d0f4). Hold until DIE-S81-85 posts the early-core-tap plan+bind READY; rerun of the same form = retry."
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave",
@@ -4256,8 +4260,8 @@
     ]
    },
    "place_prefer": [
-    "epyc4",
     "epyc2",
+    "epyc4",
     "epyc7"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
@@ -7107,7 +7111,13 @@
     "epyc2",
     "epyc7"
    ],
-   "gen_hosts_note_kw43i1": "KW-FIX-43 13:4x COORD LOOP-GAP 12:5x (3)/(4): S81 T51 inputs on intel1 at the same paths (src_t51f 179565 files incl MOVES-SPLIT gen_phys 5c29a9cf, bind8 1486 files, plan af2abcca0e416b13, asbuilt bc65f0ca, kw42/kit_rtl_s81_final_1109.sh md5 9ca1b37a = bind8). intel2 not added (scratch2 85 GB < 100 GB floor). Revert gen_hosts = gen_hosts_prev_kw43i1."
+   "gen_hosts_note_kw43i1": "KW-FIX-43 13:4x COORD LOOP-GAP 12:5x (3)/(4): S81 T51 inputs on intel1 at the same paths (src_t51f 179565 files incl MOVES-SPLIT gen_phys 5c29a9cf, bind8 1486 files, plan af2abcca0e416b13, asbuilt bc65f0ca, kw42/kit_rtl_s81_final_1109.sh md5 9ca1b37a = bind8). intel2 not added (scratch2 85 GB < 100 GB floor). Revert gen_hosts = gen_hosts_prev_kw43i1.",
+   "hold_items_kw43ect_added": [
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t42",
+    "eng__t1"
+   ]
   },
   "s81_head": {
    "enabled": true,
@@ -9295,8 +9305,8 @@
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "epyc4",
     "epyc2",
+    "epyc4",
     "epyc7"
    ],
    "cancel_superseded": false,
@@ -18774,5 +18784,25 @@
    "gen_host_base": "epyc5"
   }
  },
- "note_e5gone_kw43": "KW-FIX-43 11:1x COORD: epyc5 terminated 11:13 (Cherry DELETE 204); removed from live host keys; history *_prev_* keys kept. Revert: e5gone_prev_kw43"
+ "note_e5gone_kw43": "KW-FIX-43 11:1x COORD: epyc5 terminated 11:13 (Cherry DELETE 204); removed from live host keys; history *_prev_* keys kept. Revert: e5gone_prev_kw43",
+ "place_prefer_prev_kw43e2": {
+  "s81": [
+   "epyc4",
+   "epyc2",
+   "epyc7"
+  ],
+  "qwen_compute": [
+   "epyc4",
+   "epyc2",
+   "epyc7"
+  ],
+  "qwen_kvsys": [
+   "epyc4",
+   "epyc2",
+   "epyc7"
+  ]
+ },
+ "gen_fallback_per_tick_prev_kw43e2": null,
+ "gen_fallback_per_tick": 6,
+ "note_kw43_e2fill": "KW-FIX-43 13:5x COORD 13:5x (4) fill epyc2 (admits 276 GB, load 57/128): epyc2 already in gen_hosts of s81/qwen_compute/qwen_kvsys (srcs staged); place_prefer epyc2 first for those 3 dies; gen_fallback_per_tick 2 -> 6. The wave has no other per-host in-flight cap (pick_gen_host uses ot-heavy LOADCAP 1.5 x nproc = 192 on epyc2). Hub stays off gen. Revert: place_prefer = place_prefer_prev_kw43e2[die], gen_fallback_per_tick = gen_fallback_per_tick_prev_kw43e2 (None = delete)."
 }
