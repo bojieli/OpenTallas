@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hdc_v41x_idx_hslice_fp",
+ "enable": false,
+ "reason": "Source-registered: ot_hdc_v41x_idx_hslice_fp flops every input at the pin (pin flop) and every output leaves a flop (q / key 2 edges pin to pin); the chunk schedule (cs_out = key_in + LAT_T + FPL + 2 + FPL*hid) is priced on those edges, a recipe pin stage would shift it."
+}
