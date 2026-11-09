@@ -193,3 +193,30 @@ def test_repair_refuses_a_source_with_another_receipt(tmp_path):
     with pytest.raises(SystemExit, match="receipt sha"):
         K.repair(kd, other)
     assert not (kd / "reset_contract/receipt.txt").exists()
+
+
+def test_die_contract_maps_plan_die_names():
+    """DIE-HBM-97 11-09: the HBM plan names its die 'hbm_arch_B2o'; the exact lookup returned None, so no HBM type kit
+    staged the contract (q_b102__physical_v1 LEC NOT EQUIVALENT at 4 edges)."""
+    assert K.die_contract("hbm_arch_B2o") == K.DIE_CONTRACT["hbm"]
+    assert K.die_contract("hbm") == K.DIE_CONTRACT["hbm"]
+    assert K.die_contract("qwen_compute") == K.DIE_CONTRACT["qwen_compute"]
+    assert K.die_contract("s81_head_x") == K.DIE_CONTRACT["s81_head"]     # longest key wins
+    assert K.die_contract("s81_v3") == K.DIE_CONTRACT["s81"]
+    assert K.die_contract("hbmx") is None and K.die_contract("") is None and K.die_contract(None) is None
+
+
+def test_gen_phys_uses_die_name_mapping():
+    txt = (Path(K.__file__).with_name("gen_phys.py")).read_text()
+    assert "kit_reset_contract.die_contract(P.name)" in txt and "DIE_CONTRACT.get(P.name)" not in txt
+
+
+def test_hbm_q_b_type_tops_stage_through_plan_die_name(tmp_path):
+    src = K.die_contract("hbm_arch_B2o")
+    mods = set(json.loads(src.read_text())["modules"])
+    for top in ("hbm_arch_q_b102__physical_v1", "hbm_arch_q_b100", "hbm_arch_q_b013"):
+        assert top in mods, top
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    st = K.stage(kd, "hbm_arch_q_b102__physical_v1", src)
+    assert st and st["edges"] == json.loads(src.read_text())["edges"]

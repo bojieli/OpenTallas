@@ -27,6 +27,19 @@ REPO = TOOL.parents[1]
 DIE_CONTRACT = {d: REPO / "physical/die_plan" / d / "reset_contract.json" for d in ("hbm", "s81", "s81_head", "qwen_kvsys", "qwen_compute")}
 
 
+def die_contract(die_name):
+    """DIE-HBM-97 11-09 (q_b102__physical_v1 LEC NOT EQUIVALENT at 4 edges): the canonical contract of a plan's die.
+    Plans name the die by its plan name (HBM: 'hbm_arch_B2o'), not the contract directory ('hbm'), so the exact
+    DIE_CONTRACT lookup in gen_phys returned None and NO HBM type kit ever staged its contract (freeze.json has no
+    reset_contract; every HBM type LEC ran at the 4-edge default).  Exact key first, else the longest key K with
+    die_name starting 'K_' (hbm_arch_B2o -> hbm; s81_head_x -> s81_head).  None when nothing matches."""
+    name = str(die_name or "")
+    if name in DIE_CONTRACT:
+        return DIE_CONTRACT[name]
+    keys = sorted((k for k in DIE_CONTRACT if name.startswith(k + "_")), key=len, reverse=True)
+    return DIE_CONTRACT[keys[0]] if keys else None
+
+
 def _sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
