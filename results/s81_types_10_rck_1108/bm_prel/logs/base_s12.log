@@ -1,0 +1,6 @@
+BM_PREL loads=1835 zero_loads=257
+BM_PREL checks=59985 lamchecks=59955 frames=1822 errors=0
+- /srv/opentallas-scratch2/claude/s81-types-10-rck/bm_prel/tb_prel.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50us; walltime 0.651 s; speed 76.816 us/s
+- Verilator: cpu 0.651 s on 1 threads; allocated 7 MB

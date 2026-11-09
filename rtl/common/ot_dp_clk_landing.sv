@@ -28,7 +28,48 @@ module ot_dp_clk_landing #(
     localparam integer CW = $clog2(SETTLE + 1);
     reg [CW-1:0] count;
     reg on;
-    wire align = rst_n && !on && (count == CW'(SETTLE));
+`ifdef OT_S81_CLAND_WCHK
+    // S81-RCK-10 11-07 (vJ, CLAND class): vI probe tc(fall fclk) -> s_d -710 ps, 1363 ep: ONE ring counter decoded into
+    // the slot enables of 4 x 576 flops along a 500-um pin column.  Ring WCHK = 1: one registered one-hot slot select per
+    // 64-bit chunk (loaded one edge ahead with tc + 1: same slot at every edge after the first).
+    // vJ: WCHKC (registered slot-index COPY per chunk, local decode) rather than WCHK's one-hot register, so the slot
+    // write conditions stay a decode of one register that face_guard's hold_mux exclusivity proof accepts.
+    // rrl -> align -> 9 dsel di (-260 ps): the receiver's training reset takes ONE local register here (rst_l): the
+    // pointer is placed from the synchronised write samples one edge later, so the data latency is unchanged; only
+    // ready rises one clk later (the free-running ring and the guards are not reset).
+    reg rst_l;
+    always @(posedge clk) rst_l <= rst_n;
+    wire rst_i = rst_l;
+    localparam bit RING_WCHKC = 1;
+`else
+    wire rst_i = rst_n;
+    localparam bit RING_WCHKC = 0;
+`endif
+    wire align = rst_i && !on && (count == CW'(SETTLE));
+`ifdef OT_S81_CLAND_LOCAL_ON
+`ifndef OT_S81_CLAND_WCHK
+    initial $error("CLAND_LOCAL_ON requires the registered local reset of CLAND_WCHK");
+`endif
+    // Exact copies of on and align, computed from their NEXT state on the
+    // same edge. Reader chunks now use local flop Qs instead of one on/align
+    // broadcast along the pin column. No new data or status cycle.
+    reg [NC-1:0] on_c, align_c;
+    (* keep = 1, dont_touch = 1 *) always @(posedge clk) begin
+        on_c <= {NC{rst_i && (on || (count == CW'(SETTLE)))}};
+        // rst_i is itself rst_l <= rst_n, so next-align uses next rst_i
+        // (=rst_n), plus the old reset that decides count/on's next values.
+        align_c <= {NC{rst_n && rst_i && !on && (count == CW'(SETTLE - 1))}};
+    end
+    localparam bit RING_ONV = 1;
+    localparam integer RING_WCCB = 16;
+    wire [NC-1:0] ring_on_v = on_c;
+    wire [NC-1:0] ring_align_v = align_c;
+`else
+    localparam bit RING_ONV = 0;
+    localparam integer RING_WCCB = 64;
+    wire [NC-1:0] ring_on_v = {NC{on}};
+    wire [NC-1:0] ring_align_v = {NC{align}};
+`endif
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [W-1:0] d_write;
     generate if (FREG) begin : g_freg
@@ -52,11 +93,14 @@ module ot_dp_clk_landing #(
     // A private output flop drives ONLY the observed fault pin. The sticky
     // state also controls readiness, so exporting that state directly would
     // violate the dedicated registered-pin rule.
-    ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
+    ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_i), .d(fault_next), .q(fault));
     // The ring write pointer is deliberately free-running across local resets.
     // SETTLE lets Gray/half-edge samples fill before placing the read pointer.
+`ifdef OT_S81_CLAND_LOCAL_ON
+    (* keep = 1, dont_touch = 1 *)
+`endif
     always @(posedge clk) begin
-        if (!rst_n) begin
+        if (!rst_i) begin
             count <= 0;
             on <= 0;
             ready <= 0;
@@ -73,9 +117,9 @@ module ot_dp_clk_landing #(
         end
     end
     ot_meso_ring #(.W(RW), .DEPTH(4), .OFFSET(2), .GUARD_LO(0),
-                   .GUARD_HI(4), .RDREG(1), .TNEG(WNEG)) u_ring (
+                   .GUARD_HI(4), .RDREG(1), .TNEG(WNEG), .WCHKC(RING_WCHKC), .WCCB(RING_WCCB), .ONV(RING_ONV)) u_ring (
         .tclk(fclk), .t_v(1'b1), .t_d(ring_d), .rclk(clk),
-        .r_align(align), .r_on(on), .r_align_v({NC{align}}), .r_on_v({NC{on}}),
+        .r_align(align), .r_on(on), .r_align_v(ring_align_v), .r_on_v(ring_on_v),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok),
         .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
     );

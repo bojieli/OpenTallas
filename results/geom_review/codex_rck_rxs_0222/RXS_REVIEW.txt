@@ -1,0 +1,10 @@
+Pre-PLACE geometry review 2026-11-08: RX-SYN core draft
+Image floorplan.png rendered by tools/ref_tile/layout_png.py and viewed.
+216 x 190.08 um; estimated std area16k um2 =39% fill, ~125k cells, no macros.
+555 input pins N, 897 output pins S. M5 step .192=4 tracks (25% local pin density).
+4um gap reserved around N midpoint clock; root-to-centre95um. Farthest core span288um.
+Input fourth transport register relocated inside; all data outputs use existing registered dsyn faces.
+No new pin cycles relative to vJ. No channels or macro walls. Canonical generator PDN.
+SMELLS: none visible in pin contract; placed control fanout/logic depth unmeasured.
+Verdict PASS for PLACE pilot after TX pilot's placed review. No CTS/route pre-approval.
+RXS output faces point to RX-BACK below in the proposed parent. Parent placement is a draft only.

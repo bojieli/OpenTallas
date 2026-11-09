@@ -1,0 +1,29 @@
+CLAND_RESULT ph=0.050 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.210 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.410 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.620 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+CLAND_RESULT ph=0.790 checks=2895 errors=0 ready_epochs=5 fault_ref=0
+== mutant wch
+        88 Done                    | grep -v '^- '
+        89 Done                    | tail -3
+== mutant offset
+        86 Done                    | grep -v '^- '
+        87 Done                    | tail -3
+== mutant norst
+        87 Done                    | grep -v '^- '
+        88 Done                    | tail -3
+== mutant wch
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED
+%Error: cland/tb_cl.sv:28: Verilog $stop
+Aborting...
+cland/run.sh: line 18:    87 Aborted                 (core dumped) $D/obj/tb 2>&1
+== mutant offset
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED
+%Error: cland/tb_cl.sv:28: Verilog $stop
+Aborting...
+cland/run.sh: line 18:    85 Aborted                 (core dumped) $D/obj/tb 2>&1
+== mutant norst
+[2552000] %Fatal: tb_cl.sv:28: Assertion failed in tb: CLAND lockstep FAILED
+%Error: cland/tb_cl.sv:28: Verilog $stop
+Aborting...
+cland/run.sh: line 18:    86 Aborted                 (core dumped) $D/obj/tb 2>&1

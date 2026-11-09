@@ -1,0 +1,13 @@
+{
+ "ot_s81_rck_tx": {
+  "ref_tile": "results/s81_rck_11_reform_1108/tx_feedback",
+  "rtl_dirs": true,
+  "util": 0.4,
+  "suffix": "vD_region",
+  "orfs_vars": {
+   "OT_SKIP_PRECTS_METRICS": 1,
+   "PRE_GLOBAL_PLACE_TCL": "/work/feedback_pre_gpl.tcl",
+   "PRE_DETAIL_PLACE_TCL": "/work/feedback_pre_dpl.tcl"
+  }
+ }
+}

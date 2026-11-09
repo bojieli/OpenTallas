@@ -24,7 +24,13 @@
 // in the done cycle after a load).  Synthesis folds those bits anyway; THC = 1 states it in the RTL so the X power-up
 // and the folded netlist agree under equivalence checking (HBM ot_pdie_serdes_rx LEC, th[45][9:1]).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, parameter integer THC = 0) (
+// PREL (opt-in, default 0): the load is taken one cycle earlier, into the state registers (d, th, dz, gm, kc) at the end of
+// the ldp cycle, so iteration 0 runs in the ld cycle from registers like every other iteration and the load muxes leave
+// the GF multiply cone (S81-TYPES-10-RCK: vD routed TT -64 ps on ld2/Sl -> operand mux -> multiply -> 46 dz copies, the
+// remaining BM class after SPCYC).  The delta state is then overwritten one cycle early, so lam/om come from result
+// registers fed by nd: same value in every cycle.  ld (one cycle after ldp) stays the control timing: L, any, n, done,
+// the reload cadence and all external cycles are unchanged; PIN CYCLES +0.
+module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, parameter integer THC = 0, parameter integer PREL = 0) (
     input  wire            clk,
     input  wire            rs_n,       // regional synchronous reset leaf
     input  wire [NG-1:0]   ld,         // load this cycle (NG identical copies, one per PE group)
@@ -33,11 +39,16 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
     output wire [149:0]    om,         // omega_i  at [10 i +: 10], i = 0..14
     output reg  [4:0]      L,
     output reg             any,        // a nonzero syndrome
-    output reg  [NCD-1:0]  done        // NCD identical copies
+    output reg  [NCD-1:0]  done,       // NCD identical copies
+    input  wire [NG-1:0]   ldp,        // PREL: the load, one cycle before ld (one copy per PE group); else tied 0
+    input  wire [299:0]    Sp          // PREL: the S image, one cycle before S; else tied 0
 );
-    localparam integer NPE = 46, GS = 12;
+    localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;   // 12 at NG 4 (unchanged); 6 at NG 8 (S81-RCK-10 vJ)
     reg  [9:0] d  [0:NPE-1];
-    reg  [9:0] th [0:NPE-1];
+    reg  [9:0] th [0:((THC != 0) ? NPE-2 : NPE-1)];
+    // Reachable theta45 stores only bit0: upper bits are always zero after the first load.
+    // No never-reset constant-D tail flops exist in this opt-in form.
+    reg th_last;
     (* keep *) reg [9:0] gm [0:NG-1];      // gamma copies
     (* keep *) reg [9:0] dz [0:NG-1];      // delta_0 copies
     (* keep *) reg [5:0] kc [0:NG-1];      // k copies (two's complement)
@@ -46,39 +57,61 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
     function automatic [9:0] dinit(input integer j);
         dinit = (j < 30) ? S[10 * j +: 10] : ((j == 45) ? 10'd1 : 10'd0);
     endfunction
+    function automatic [9:0] dinitp(input integer j);
+        dinitp = (j < 30) ? Sp[10 * j +: 10] : ((j == 45) ? 10'd1 : 10'd0);
+    endfunction
     wire [9:0] nd [0:NPE-1];
     wire [NG-1:0] upd;
+    // PREL: PE0's next value, including the load, one shared mux per bit (S0 fans out to one load, not to 46 dz copies)
+    wire [9:0] nd0p = (PREL != 0 && ldp[0]) ? Sp[9:0] : nd[0];
     genvar gi, gg;
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
-        wire [9:0] G  = ld[gg] ? 10'd1 : gm[gg];
-        wire [9:0] D0 = ld[gg] ? S[9:0] : dz[gg];
-        wire [5:0] K  = ld[gg] ? 6'd0 : kc[gg];
+        wire [9:0] G  = (PREL != 0) ? gm[gg] : (ld[gg] ? 10'd1 : gm[gg]);
+        wire [9:0] D0 = (PREL != 0) ? dz[gg] : (ld[gg] ? S[9:0] : dz[gg]);
+        wire [5:0] K  = (PREL != 0) ? kc[gg] : (ld[gg] ? 6'd0 : kc[gg]);
         assign upd[gg] = (D0 != 10'd0) && !K[5];
         always @(posedge clk) begin
-            gm[gg] <= upd[gg] ? D0 : G;
-            kc[gg] <= upd[gg] ? (~K) : (K + 6'd1);      // -K - 1 = ~K
-            dz[gg] <= nd[0];
+            if (PREL != 0 && ldp[gg]) begin
+`ifdef OT_BM_PREL_MUT
+                gm[gg] <= 10'd1; kc[gg] <= 6'd1;        // bench mutant: wrong k at the load
+`else
+                gm[gg] <= 10'd1; kc[gg] <= 6'd0;
+`endif
+            end else begin
+                gm[gg] <= upd[gg] ? D0 : G;
+                kc[gg] <= upd[gg] ? (~K) : (K + 6'd1);      // -K - 1 = ~K
+            end
+            dz[gg] <= nd0p;
         end
         for (gi = gg * GS; gi < ((gg == NG - 1) ? NPE : (gg + 1) * GS); gi = gi + 1) begin : g_pe
-            wire [9:0] Dn = ld[gg] ? dinit(gi + 1) : ((gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0);
-            wire [9:0] thq = (THC != 0 && gi == NPE - 1) ? {9'd0, th[gi][0]} : th[gi];   // THC: theta_45 in {0, 1}
-            wire [9:0] Th = ld[gg] ? dinit(gi) : thq;
+            wire [9:0] Dn = (PREL == 0 && ld[gg]) ? dinit(gi + 1) : ((gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0);
+            wire [9:0] thq;
+            if (THC != 0 && gi == NPE-1) begin:g_tail_read
+                assign thq={9'd0,th_last};
+            end else begin:g_normal_read
+                assign thq=th[gi];
+            end
+            wire [9:0] Th = (PREL == 0 && ld[gg]) ? dinit(gi) : thq;
             wire [9:0] pa, pb;
             ot_s81_kp4_vmul u_a (.a(G),  .b(Dn), .y(pa));
             ot_s81_kp4_vmul u_b (.a(D0), .b(Th), .y(pb));
             assign nd[gi] = pa ^ pb;
-            always @(posedge clk) begin
-                d[gi]  <= nd[gi];
-                th[gi] <= upd[gg] ? Dn : Th;
+            always @(posedge clk) d[gi] <= (gi == 0) ? nd0p : ((PREL != 0 && ldp[gg]) ? dinitp(gi) : nd[gi]);
+            if (THC != 0 && gi == NPE-1) begin:g_tail_write
+                always @(posedge clk) th_last <= (PREL != 0 && ldp[gg]) ? 1'b1 : (upd[gg] ? Dn[0] : Th[0]);
+            end else begin:g_normal_write
+                always @(posedge clk) th[gi] <= (PREL != 0 && ldp[gg]) ? dinitp(gi) : (upd[gg] ? Dn : Th);
             end
         end
     end endgenerate
     // L, iteration count, any, done (group-0 copies decide L)
+    reg anyp;                              // PREL: |S, registered from the early image
+    always @(posedge clk) anyp <= |Sp;
     wire [4:0] Lc = ld[0] ? 5'd0 : L;
     wire [4:0] r  = ld[0] ? 5'd0 : n;
     always @(posedge clk) begin
         L <= upd[0] ? (r + 5'd1 - Lc) : Lc;
-        if (ld[0]) any <= |S;
+        if (ld[0]) any <= (PREL != 0) ? anyp : |S;
     end
     integer q;
     always @(posedge clk)
@@ -89,10 +122,27 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
             for (q = 0; q < NCD; q = q + 1) done[q] <= !ld[0] && (n == 5'd29);
         end
     genvar go;
-    generate for (go = 0; go < 16; go = go + 1) begin : g_lam
-        assign lam[10 * go +: 10] = d[15 + go];
-        if (go < 15) begin : g_om
-            assign om[10 * go +: 10] = d[go];
+    generate if (PREL != 0) begin : g_resq
+        // result registers: the same value as d in every cycle; d itself may already hold the next frame's load
+        reg [9:0] lq [0:15];
+        reg [9:0] oq [0:14];
+        integer qi;
+        always @(posedge clk) begin
+            for (qi = 0; qi < 16; qi = qi + 1) lq[qi] <= nd[15 + qi];
+            for (qi = 0; qi < 15; qi = qi + 1) oq[qi] <= nd[qi];
+        end
+        for (go = 0; go < 16; go = go + 1) begin : g_lam
+            assign lam[10 * go +: 10] = lq[go];
+            if (go < 15) begin : g_om
+                assign om[10 * go +: 10] = oq[go];
+            end
+        end
+    end else begin : g_resd
+        for (go = 0; go < 16; go = go + 1) begin : g_lam
+            assign lam[10 * go +: 10] = d[15 + go];
+            if (go < 15) begin : g_om
+                assign om[10 * go +: 10] = d[go];
+            end
         end
     end endgenerate
 endmodule

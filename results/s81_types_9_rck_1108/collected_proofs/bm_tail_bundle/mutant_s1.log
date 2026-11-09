@@ -1,0 +1,4 @@
+BM_TAIL checks=3754 frames=125 errors=129
+[3336000] %Fatal: tb.sv:24: Assertion failed in tb: BM_TAIL FAILED
+%Error: /srv/opentallas-scratch2/claude/codex-s81-rck-1113/bm_tail_bundle/tb.sv:24: Verilog $stop
+Aborting...

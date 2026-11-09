@@ -24,6 +24,27 @@ module ot_pl_land_w #(
     output wire [D*(AW+1)-1:0] epo,                    // slot write epochs (assertion only)
     output wire [D-1:0]      vld                       // slot written since the epoch
 );
+`ifdef OT_S81_LPL_CHUNK
+    // S81-RCK-10 11-07 (vJ, LPL class): vI probe u_lpl_5_w rq -> b -538 ps (one rq / wc decode enabling 4 x 544 slot
+    // flops) and u_lpl_5_r rc -> o -208 (one rc decode selecting 544 bits).  Same ring, cut into <= 24-bit local rings
+    // (ot_pl_land_local_w/r below: own rq, counter and one-hot select each; identical slots, epochs, K and reset age).
+    // Every chunk restarts from the same rsi edge, so all chunks' valid / epoch words equal chunk 0's, exported here.
+    localparam integer CB = 24, NCK = (W + CB - 1) / CB;
+    genvar c, s;
+    generate for (c = 0; c < NCK; c = c + 1) begin : g_ck
+        localparam integer CW = (W - c*CB < CB) ? W - c*CB : CB;
+        wire [D*CW-1:0] cb; wire [D*(AW+1)-1:0] ce; wire [D-1:0] cv;
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi), .i(i[c*CB +: CW]), .bank(cb), .epo(ce), .vld(cv));
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CB +: CW] = cb[s*CW +: CW];
+        end
+        if (c == 0) begin : g_tag
+            assign epo = ce;
+            assign vld = cv;
+        end
+    end endgenerate
+`else
     reg            rq;
     reg [AW:0]     wc;
     reg [W-1:0]    b [0:D-1];
@@ -49,6 +70,7 @@ module ot_pl_land_w #(
         assign epo[s*(AW+1) +: AW+1] = e[s];
     end endgenerate
     assign vld = v;
+`endif
 `ifndef SYNTHESIS
     initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_pl_land_w: D must be a power of two >= 2");
 `endif
@@ -65,8 +87,29 @@ module ot_pl_land_r #(
     input  wire [D*W-1:0]    bank,
     input  wire [D*(AW+1)-1:0] epo,
     input  wire [D-1:0]      vld,
+`ifdef OT_S81_LPL_CHUNK
+    output wire [W-1:0]      o                         // flop-last -> destination register (chunk flops)
+`else
     output reg  [W-1:0]      o                         // flop-last -> destination register
+`endif
 );
+`ifdef OT_S81_LPL_CHUNK
+    localparam integer CB = 24, NCK = (W + CB - 1) / CB;
+    genvar c, s;
+    generate for (c = 0; c < NCK; c = c + 1) begin : g_ck
+        localparam integer CW = (W - c*CB < CB) ? W - c*CB : CB;
+        wire [D*CW-1:0] cb;
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign cb[s*CW +: CW] = bank[s*W + c*CB +: CW];
+        end
+`ifdef LPLC_MUT_K
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_r #(.W(CW), .D(D), .K((c == 3) ? ((K % (D-1)) + 1) : K)) u_local (   // MUTANT: chunk 3 wrong K
+`else
+        (* keep_hierarchy = "yes" *) ot_pl_land_local_r #(.W(CW), .D(D), .K(K)) u_local (
+`endif
+            .ck(ck), .rsi(rsi), .bank(cb), .epo(epo), .vld(vld), .o(o[c*CB +: CW]));
+    end endgenerate
+`else
     reg            rq;
     reg [AW:0]     rc;
     reg            warm;
@@ -104,6 +147,7 @@ module ot_pl_land_r #(
         end
     initial if (D < 2 || (D & (D - 1)) != 0) $fatal(1, "ot_pl_land_r: D must be a power of two >= 2");
     initial if (K < 1 || K > D - 1) $fatal(1, "ot_pl_land_r: K must be in 1..D-1");
+`endif
 `endif
 endmodule
 `default_nettype wire

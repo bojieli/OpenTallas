@@ -1,0 +1,66 @@
+{
+ "name": "ot_s81_rck_rxb",
+ "top": "ot_s81_rck_rxb",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rck_reform.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "results/s81_rck_11_reform_1108/rxb_pilot/rtl/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "results/s81_rck_11_reform_1108/rxb_pilot/rtl/ot_s81_kp4_dchn_bb.v",
+  "results/s81_rck_11_reform_1108/rxb_pilot/rtl/ot_sram_1r1w_32x546_m1_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "lpr_syn",
+  "lpr_dly",
+  "lpr_chn",
+  "lpr_out"
+ ],
+ "macros": [
+  {
+   "inst": "u_dly.u_dmem",
+   "view": "results/s81_rck_11_reform_1108/rxb_pilot/macros/ot_sram_1r1w2c_64x546_m1",
+   "at": [
+    21.6,
+    43.2
+   ]
+  },
+  {
+   "inst": "u_chn",
+   "view": "results/s81_rck_11_reform_1108/rxb_pilot/macros/ot_s81_kp4_dchn",
+   "at": [
+    220.32,
+    43.2
+   ]
+  },
+  {
+   "inst": "u_out.u_cmem",
+   "view": "results/s81_rck_11_reform_1108/rxb_pilot/macros/ot_sram_1r1w_32x546_m1",
+   "at": [
+    518.4,
+    43.2
+   ]
+  }
+ ],
+ "params": {},
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "macro_halo_um": 5.4,
+  "max_layer": "M7"
+ },
+ "defines": [
+  "OT_S81_RCK_REFORM",
+  "OT_S81_RCK_RELAY4",
+  "OT_S81_KP4_AM_FACE3",
+  "OT_S81_KP4_SYN_LOCAL",
+  "OT_S81_LPL_CHUNK",
+  "OT_S81_RCK_RXB_FACE_RET",
+  "OT_S81_RCK_RXS_THC",
+  "OT_S81_RCK_RX_SPCYC",
+  "OT_S81_RCK_RXB_DQREG"
+ ]
+}

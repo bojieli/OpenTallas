@@ -1,0 +1,8 @@
+%Error: tb.sv:3:19: syntax error, unexpected '.'
+    3 | reg clk=0;always #.4165 clk=~clk;
+      |                   ^
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: tb.sv:11:18: syntax error, unexpected '.'
+   11 |  @(posedge clk);#.001;
+      |                  ^
+%Error: Exiting due to 2 error(s)

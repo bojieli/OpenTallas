@@ -21,8 +21,15 @@
 // The PMA side runs continuously from the first full frame on (p_v); before it the PMA carries zero words (no AM:
 // the receiver stays in hunt).  Every output leaves a flop.  Reset: regional synchronous tree, control only.
 // MUT 1: parity symbol 7 inverted (the receive side must see a nonzero syndrome) -- bench mutant.
+// PPCYC (opt-in, default 0 = the form above, S81-TYPES-9-RCK 11-08, COORD +1 pin cycle ch_q -> pp): the two window
+//   matrices are computed as FOUR registered partial products pq0..3 (one per 130-bit chunk-select copy of ch_q,
+//   ot_s81_kp4_enc_mat_q4.svh = the exact mask split of ot_s81_kp4_enc_mat.svh) and pp0 = pq0 ^ pq1, pp1 = pq2 ^ pq3
+//   one stage later.  Every stage after ch moves one cycle (pp t_k + 3, wb t_k + 4, rem t_k + 5, par t_9 + 6) and the
+//   beat delay line grows by one (d6), so PMA word w is in p_d at t_k + 7: port -> p_d latency 7 -> 8 cycles, the
+//   stream is otherwise identical (bench: p_v / p_d equal one cycle later, fault equal on the same cycle).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_enc #(parameter integer MUT = 0) (
+module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0, parameter integer H0_SEQ_ONLY = 0,
+    parameter integer PPCYC = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,
@@ -38,16 +45,27 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
     wire [3:0] rs_n;
     ot_s81_kp4_rst #(.NL(4)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
     // ---------------- input side: beat phase, header, beat delay line
-    reg        run, flt;
+    reg        run;
+    (* keep = 1, dont_touch = 1 *) reg flt; // preserve the internal sticky state apart from its optional face copy
     reg  [3:0] ph;                       // index of the beat arriving at the port
     reg  [7:0] seq;
-    reg  [19:0] h0;                      // header of the frame whose beats are in flight (loaded with beat 0)
-    reg  [511:0] d0, d1, d2, d3, d4, d5;
+    // H0_SEQ_ONLY=1 (S81-TYPES-7-RCK 11-08): only the seq byte of the header is a register; the constant 12'hA5C part
+    // is a wire.  The original form keeps 12 never-reset flops whose D is a constant; synthesis folds them while LEC
+    // treats their pre-load value as free (TX vC/vD: 24 differs on ch_q[448..471]).  h0 is only read when sk[*][0]
+    // marks a beat-0 chunk, i.e. after a load, so outputs are identical.  Default 0 = original RTL for all other users.
+    wire [19:0] h0;
+    reg  [19:0] h0_r;                    // header of the frame whose beats are in flight (loaded with beat 0)
+    reg  [7:0]  h0_s;
+    assign h0 = (H0_SEQ_ONLY != 0) ? {12'hA5C, h0_s} : h0_r;
+    reg  [511:0] d0, d1, d2, d3, d4, d5, d6;
     wire       st = tx_v || run;         // a beat enters d0 this cycle
     (* keep *) reg [9:0] sk [0:NRC-1];   // one-hot beat index of d0 (zero = no beat), NRC copies
     always @(posedge clk) begin
-        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4;
-        if (st && ph == 4'd0) h0 <= {12'hA5C, seq};
+        d0 <= tx_d; d1 <= d0; d2 <= d1; d3 <= d2; d4 <= d3; d5 <= d4; d6 <= d5;
+        if (st && ph == 4'd0) begin
+            if (H0_SEQ_ONLY != 0) h0_s <= seq;
+            else h0_r <= {12'hA5C, seq};
+        end
     end
     integer i;
     always @(posedge clk)
@@ -87,20 +105,35 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
     wire [299:0] e_ar, e_p0, e_p1;
     reg  [299:0] rem_q, pp0, pp1, wb, par;
 `include "ot_s81_kp4_enc_mat.svh"
-    // control pipeline: chunk-0 / chunk-9 flags at the ch, pp, wb and rem stages
-    reg  [3:0] f0, f9;                   // [0] = ch stage, [1] = pp stage, [2] = wb stage, [3] = rem (par load)
+    // control pipeline: chunk-0 / chunk-9 flags at the ch, (pq,) pp, wb and rem stages
+    reg  [4:0] f0, f9;                   // [0] = ch stage, [1+P] = pp stage, [2+P] = wb stage, [3+P] = rem (par load)
     (* keep *) reg [3:0] f0w;            // chunk-0 flag at the wb stage, 4 copies (75 rem bits each)
     always @(posedge clk) begin
         ch_q <= ch_n;
-        pp0 <= e_p0; pp1 <= e_p1;
         wb <= pp0 ^ pp1;
     end
+    generate if (PPCYC != 0) begin : g_ppc
+        // +1 pin cycle: four registered partial products, one per 130-bit ch_q select copy
+        wire [299:0] e_q0, e_q1, e_q2, e_q3;
+`include "ot_s81_kp4_enc_mat_q4.svh"
+        reg  [299:0] pq0, pq1, pq2, pq3;
+        always @(posedge clk) begin
+            pq0 <= e_q0; pq1 <= e_q1; pq2 <= e_q2; pq3 <= e_q3;
+`ifdef RCKRF_MUT_PPCYC
+            pp0 <= pq0; pp1 <= pq2 ^ pq3;        // bench mutant: partial 1 dropped
+`else
+            pp0 <= pq0 ^ pq1; pp1 <= pq2 ^ pq3;
+`endif
+        end
+    end else begin : g_pp
+        always @(posedge clk) begin pp0 <= e_p0; pp1 <= e_p1; end
+    end endgenerate
     always @(posedge clk)
-        if (!rs_n[1]) begin f0 <= 4'd0; f9 <= 4'd0; f0w <= 4'd0; end
+        if (!rs_n[1]) begin f0 <= 5'd0; f9 <= 5'd0; f0w <= 4'd0; end
         else begin
-            f0 <= {f0[2:0], sk[0][0]};
-            f9 <= {f9[2:0], sk[0][9]};
-            f0w <= {4{f0[1]}};
+            f0 <= {f0[3:0], sk[0][0]};
+            f9 <= {f9[3:0], sk[0][9]};
+            f0w <= {4{f0[1 + PPCYC]}};
         end
     genvar gr;
     generate for (gr = 0; gr < 300; gr = gr + 1) begin : g_rem
@@ -113,29 +146,32 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
         assign rem_tx[299 - 10 * gr -: 10] = rem_q[10 * gr +: 10] ^ ((MUT == 1 && gr == 7) ? 10'h3FF : 10'h000);
     end endgenerate
     always @(posedge clk)
-        if (f9[3]) par <= rem_tx;
+        if (f9[3 + PPCYC]) par <= rem_tx;
     // ---------------- PMA words: word w = {d5, d4} at a fixed offset (cycle t_w + 5; d5 = beat w, d4 = beat w + 1)
-    reg  [9:0] so [0:4];                 // one-hot beat index delayed 1..5 (so[4] = index of d5)
+    reg  [9:0] so [0:5];                 // one-hot beat index delayed 1..6 (so[4] = index of d5, so[5] = of d6)
     (* keep *) reg [9:0] sw [0:NRO-1];   // so[3] delayed once more: the word select at the d5 stage, NRO copies
     reg        o_v;
     always @(posedge clk)
         if (!rs_n[2]) begin
-            for (i = 0; i < 5; i = i + 1) so[i] <= 10'd0;
+            for (i = 0; i < 6; i = i + 1) so[i] <= 10'd0;
             for (i = 0; i < NRO; i = i + 1) sw[i] <= 10'd0;
             o_v <= 1'b0; p_v <= 1'b0;
         end else begin
-            so[0] <= sk[1]; so[1] <= so[0]; so[2] <= so[1]; so[3] <= so[2]; so[4] <= so[3];
-            for (i = 0; i < NRO; i = i + 1) sw[i] <= so[3];
-            if (so[4][0]) o_v <= 1'b1;
-            p_v <= o_v || so[4][0];
+            so[0] <= sk[1]; so[1] <= so[0]; so[2] <= so[1]; so[3] <= so[2]; so[4] <= so[3]; so[5] <= so[4];
+            for (i = 0; i < NRO; i = i + 1) sw[i] <= so[3 + PPCYC];
+            if (so[4 + PPCYC][0]) o_v <= 1'b1;
+            p_v <= o_v || so[4 + PPCYC][0];
         end
-    wire [1023:0] wo = {d5, d4};
+    // output pair: {d5, d4} (PPCYC 0) or {d6, d5} (PPCYC 1: one stage later)
+    wire [511:0] dA = (PPCYC != 0) ? d6 : d5;
+    wire [511:0] dB = (PPCYC != 0) ? d5 : d4;
+    wire [1023:0] wo = {dA, dB};
     wire [543:0]  wsrc [0:9];
     generate for (gk = 0; gk < 10; gk = gk + 1) begin : g_wsrc
         if (gk == 0) begin : g0
-            assign wsrc[gk] = {h0, d5, d4[511:500]};
+            assign wsrc[gk] = {h0, dA, dB[511:500]};
         end else if (gk == 9) begin : g9
-            assign wsrc[gk] = {d5[243:0], par};
+            assign wsrc[gk] = {dA[243:0], par};
         end else begin : gn
             assign wsrc[gk] = wo[1043 - 32 * gk -: 544];
         end
@@ -147,5 +183,27 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
         end
         always @(posedge clk) p_d[gb] <= |(s & sw[gb / 32]);
     end endgenerate
-    assign fault = flt;
+    // RCK conservative core: the output face is a copy of the sticky NEXT state,
+    // updated on the SAME edge. The original flt remains the feedback state;
+    // the face copy drives only the port and has no feedback/shared load.
+    // ot_keep_regs.tcl preserves both driving cells before opt_merge.
+    generate if (PIN_FAULT != 0) begin : g_fault_face
+        reg fault_q;
+        // Keep the CELL, not the aliased wire (wire KEEP retains a dead output BUF).
+        (* keep = 1, dont_touch = 1, face_keep = 1 *) always @(posedge clk) begin
+`ifdef RCKRF_MUT_FAULT_NORST
+            if (rs_n[0]) fault_q <= flt | (run && !tx_v);
+`else
+            if (!rs_n[0]) fault_q <= 1'b0;
+`ifdef RCKRF_MUT_FAULT_DELAY
+            else fault_q <= flt;
+`else
+            else fault_q <= flt | (run && !tx_v);
+`endif
+`endif
+        end
+        assign fault = fault_q;
+    end else begin : g_fault_plain
+        assign fault = flt;
+    end endgenerate
 endmodule

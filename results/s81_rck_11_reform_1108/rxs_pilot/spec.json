@@ -1,0 +1,29 @@
+{
+ "name": "ot_s81_rck_rxs",
+ "top": "ot_s81_rck_rxs",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rck_reform.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh",
+  "rtl/common/landed_parent/ot_pl_land.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "params": {},
+ "route": {
+  "pd": 0.4,
+  "threads": 8
+ },
+ "defines": [
+  "OT_S81_RCK_REFORM",
+  "OT_S81_RCK_RELAY4",
+  "OT_S81_KP4_AM_FACE3",
+  "OT_S81_KP4_SYN_LOCAL"
+ ]
+}

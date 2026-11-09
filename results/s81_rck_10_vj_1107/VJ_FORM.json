@@ -1,0 +1,9 @@
+{"form":"vJ","lane":"S81-RCK-10","date":"2026-11-07","base_kit":"epyc4:/srv/opentallas-scratch3/claude/s81-rck-8/vI/serdes__t16",
+ "defines_added":["OT_S81_RM_WFULL8","OT_S81_CLAND_WCHK","OT_S81_KP4_SYN_LOCAL","OT_S81_LPL_CHUNK"],
+ "classes":{"RM":"rp_g2 -> 4-bit gray equality vs registered G6/G7/G8 targets; 8 kept per-group copies (64 we_q each); +1 wclk input stage",
+  "CLAND":"ot_meso_ring WCHK=1 (per-64-bit registered one-hot write select) + one local training-reset register in ot_dp_clk_landing",
+  "DSYN":"per-RiBM-unit kept S copy + load copies, NG 8 PE control groups, registered k_* result; ddly DD 55->57",
+  "LPL":"all 11 decoder landings as <=24-bit local rings (ot_pl_land_local_w/r)",
+  "bin_coll_reset":"u_bin_coll_i0 rst_n from depth-9 tap rst_n_t33 beside it (was rst_n_t36 1.4 mm away)"},
+ "pin_cycles":{"rx_wclk_rm_input":1,"rx_rck_decoder_k_and_data":2,"cland_ready_release":1},
+ "proofs":"intel1:/srv/opentallas-scratch2/claude/s81-rck-10/{rmw8,cland,dec}"}

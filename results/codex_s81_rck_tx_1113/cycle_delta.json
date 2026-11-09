@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.private_cycle_delta.v1",
+  "scope": "S81 serdes__t16 TX vG",
+  "clk_period_ps": 833,
+  "added_rx_clk_PIN_cycles": 0,
+  "added_tx_clk_PIN_cycles": 1,
+  "tx_core": {
+    "input_pin_stages": 3,
+    "encoder_before": 7,
+    "encoder_after": 8,
+    "total_before": 10,
+    "total_after": 11
+  },
+  "column": {
+    "txl_retained": 7,
+    "pma_fixed_latency": 4,
+    "total_before": 21,
+    "total_after": 22,
+    "added_ps": 833
+  },
+  "unaffected": [
+    "fault sticky assertion same edge",
+    "fault reset same edge",
+    "TXL physical relay count7 retained",
+    "PMA latency4 retained",
+    "RX recovered clock calendar",
+    "64-rck warm reset hold"
+  ],
+  "reschedule": [
+    "compiler TX launch-to-pad word date+1 clk",
+    "forwarded-clock pad phase witness rechecked",
+    "parent reset-to-first-valid date+1 clk",
+    "full end-to-end token composition+1 clk per traversal"
+  ],
+  "not_adopted": true
+}

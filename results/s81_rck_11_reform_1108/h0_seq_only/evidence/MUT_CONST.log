@@ -1,0 +1,11 @@
+H0_BAD cycle=46 av=1 bv=1
+H0_BAD cycle=55 av=1 bv=1
+H0_BAD cycle=56 av=1 bv=1
+H0_BAD cycle=65 av=1 bv=1
+H0_BAD cycle=66 av=1 bv=1
+H0_BAD cycle=75 av=1 bv=1
+H0_BAD cycle=76 av=1 bv=1
+H0_RESULT checks=5994 errors=1176 valid_beats=5876
+[4992417] %Fatal: tb_h0.sv:30: Assertion failed in tb: h0 lockstep FAIL
+%Error: /srv/opentallas-scratch2/claude/s81-types-7/h0eq/tb_h0.sv:30: Verilog $stop
+Aborting...

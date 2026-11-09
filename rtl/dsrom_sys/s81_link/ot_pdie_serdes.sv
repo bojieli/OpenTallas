@@ -142,14 +142,163 @@ module ot_s81_rate_match (
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
     function automatic [3:0] g2b(input [3:0] g); begin g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; end endfunction
-    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_g; rp_g2 <= rp_g1; end
-    always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_g; wp_g2 <= wp_g1; end
+`ifdef OT_S81_RM_LOCAL4
+    // Free credit follows actual r_m capture, not the preceding read select.
+    // +1 rclk CONTROL-publication edge, no additional data-output stage.
+    reg [3:0] rp_g_pub;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) rp_g_pub <= 4'd0; else rp_g_pub <= rp_g;
+    wire [3:0] rp_to_write = rp_g_pub;
+`else
+    wire [3:0] rp_to_write = rp_g;
+`endif
+    always @(posedge wclk or negedge wrst_n) if (!wrst_n) begin rp_g1 <= 0; rp_g2 <= 0; end else begin rp_g1 <= rp_to_write; rp_g2 <= rp_g1; end
+`ifdef OT_S81_RM_LOCAL4
+`ifndef OT_S81_RM_STAGED
+    initial $error("RM_LOCAL4 requires the explicit RM_STAGED base profile");
+`endif
+    // Publication follows the actual staged memory commit, not the pending
+    // write. This adds one wclk producer PIN cycle versus RM_STAGED.
+    reg [3:0] wp_g_pub;
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) wp_g_pub <= 4'd0; else wp_g_pub <= wp_g;
+    wire [3:0] wp_to_read = wp_g_pub;
+`else
+    wire [3:0] wp_to_read = wp_g;
+`endif
+    always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
     wire [3:0] fill_w = wp - g2b(rp_g2);
     wire idle = w_d[1] && !w_d[0];
     wire full = fill_w == 4'd8;
     wire push = w_v && !full && !(idle && fill_w >= 4'd6);
     reg flt;
 `ifdef OT_S81_RM_STAGED
+`ifdef OT_S81_RM_LOCAL4
+    // Private RCK fallback: slice-local registered one-hot write/read decode.
+    // Read select uses only fully synchronized wp_g2/empty, never wp_g1 lookahead.
+    // Keep r_m by memory and two output relay rows for the 1.3mm BOUT reach.
+    // Versus RM_STAGED: +1 wclk publication and +2 rclk (select + extra relay).
+    // r_m/r_pipe/r_d have no reset: the >=64-edge parent reset flushes IDLE;
+    // internal data flush is three rclk edges, reset release itself is unchanged.
+    localparam integer RM_LOCAL_NS = 64;
+    reg [511:0] w_dq;
+    reg [511:0] r_m, r_pipe;
+    (* keep *) reg [7:0] we_q [0:RM_LOCAL_NS-1];
+    (* keep *) reg [7:0] rsel [0:RM_LOCAL_NS-1];
+    genvar ws, wb, rs, rb;
+`ifdef OT_S81_RM_WFULL8
+    // S81-RCK-10 11-07 (vJ, RM write side): the vI probe's last RM class was rp_g2 -> g2b -> fill_w subtract -> full /
+    // ge6 compare -> push -> 512 we_q (TT -133 ps, 427 ep, DEPTH + fanout).  Same push decision, re-expressed:
+    //   full  <=> g2b(rp_g2) == wp - 8  <=> rp_g2 == G8,  G8 = gray(wp - 8)
+    //   ge6   <=> fill_w in {6,7,8}     <=> rp_g2 in {G6, G7, G8}  (fill_w <= 8 always: push needs !full)
+    // G6/G7/G8 and the write one-hot are REGISTERED from the next write pointer, so the crossing term is
+    // rp_g2 -> 4-bit equality -> push; rp_g2 itself stays the 2nd synchroniser flop (no logic between sync stages).
+    // 8 kept copies (one per 8-slice group = 64 we_q bits each) of {w_v, idle, wp, G6, G7, G8, one-hot}.
+    // PIN CYCLE: w_v / w_d take one more wclk register at the RM input (w_v1 / w_d1): +1 wclk on the RX data path.
+    // The credit loop (push -> wp_g -> read -> rp_g -> rp_g2 -> push) is unchanged: identical occupancy and fault rules.
+    localparam integer RM_WG = 8;
+    function automatic [3:0] b2g(input [3:0] b); begin b2g = b ^ (b >> 1); end endfunction
+    reg [511:0] w_d1;
+    always @(posedge wclk) w_d1 <= w_d;
+    always @(posedge wclk) w_dq <= w_d1;
+    (* keep *) reg [RM_WG-1:0] wv_c, idl_c;
+    (* keep *) reg [3:0] wp_c [0:RM_WG-1];
+    (* keep *) reg [3:0] g6_c [0:RM_WG-1];
+    (* keep *) reg [3:0] g7_c [0:RM_WG-1];
+    (* keep *) reg [3:0] g8_c [0:RM_WG-1];
+    (* keep *) reg [7:0] oh_c [0:RM_WG-1];
+    wire [RM_WG-1:0] push_c, full_c;
+    genvar wg;
+    generate for (wg=0; wg<RM_WG; wg=wg+1) begin : g_wgrp
+        wire f8 = (rp_g2 == g8_c[wg]);
+`ifdef RMW8_MUT_GE7
+        wire f67 = (rp_g2 == g7_c[wg]);                       // MUTANT: occupancy 6 not shed
+`else
+        wire f67 = (rp_g2 == g6_c[wg]) | (rp_g2 == g7_c[wg]);
+`endif
+        assign full_c[wg] = f8;
+        assign push_c[wg] = wv_c[wg] && !f8 && !(idl_c[wg] && f67);
+`ifdef RMW8_MUT_STALEOH
+        wire [3:0] wp_n = (wg == 5) ? wp_c[wg] : wp_c[wg] + {3'd0, push_c[wg]};   // MUTANT: group 5 one-hot never advances
+`else
+        wire [3:0] wp_n = wp_c[wg] + {3'd0, push_c[wg]};
+`endif
+        (* keep *) always @(posedge wclk or negedge wrst_n)
+            if (!wrst_n) begin
+                wv_c[wg] <= 1'b0; idl_c[wg] <= 1'b0; wp_c[wg] <= 4'd0;
+                g6_c[wg] <= b2g(4'd10); g7_c[wg] <= b2g(4'd9); g8_c[wg] <= b2g(4'd8); oh_c[wg] <= 8'd1;
+            end else begin
+`ifdef RMW8_MUT_NOPIN
+                wv_c[wg] <= w_v; idl_c[wg] <= w_d1[1] && !w_d1[0];   // MUTANT: idle from the later word
+`else
+                wv_c[wg] <= w_v; idl_c[wg] <= w_d[1] && !w_d[0];
+`endif
+                wp_c[wg] <= wp_n;
+                g6_c[wg] <= b2g(wp_n - 4'd6);
+                g7_c[wg] <= b2g(wp_n - 4'd7);
+`ifdef RMW8_MUT_FULLOFF
+                g8_c[wg] <= b2g(wp_n - 4'd7);                     // MUTANT: full one entry early
+`else
+                g8_c[wg] <= b2g(wp_n - 4'd8);
+`endif
+                oh_c[wg] <= 8'd1 << wp_n[2:0];
+            end
+        for (ws=wg*(RM_LOCAL_NS/RM_WG); ws<(wg+1)*(RM_LOCAL_NS/RM_WG); ws=ws+1) begin : g_local_write
+            (* keep *) always @(posedge wclk or negedge wrst_n)
+                if (!wrst_n) we_q[ws] <= 8'd0;
+                else we_q[ws] <= push_c[wg] ? oh_c[wg] : 8'd0;
+            for (wb=0; wb<8; wb=wb+1) begin : g_bank
+                always @(posedge wclk)
+                    if (we_q[ws][wb]) mem[wb][ws*8 +: 8] <= w_dq[ws*8 +: 8];
+            end
+        end
+    end endgenerate
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin wp<=0; wp_g<=0; flt<=1'b0; end
+        else begin
+            if (push_c[0]) begin wp<=wp+1'b1; wp_g<=(wp+1'b1)^((wp+1'b1)>>1); end
+            if (wv_c[0] && full_c[0] && !idl_c[0]) flt<=1'b1;
+        end
+`else
+    always @(posedge wclk) w_dq <= w_d;
+    generate for (ws=0; ws<RM_LOCAL_NS; ws=ws+1) begin : g_local_write
+        (* keep *) always @(posedge wclk or negedge wrst_n)
+            if (!wrst_n) we_q[ws] <= 8'd0;
+            else we_q[ws] <= push ? (8'd1 << wp[2:0]) : 8'd0;
+        for (wb=0; wb<8; wb=wb+1) begin : g_bank
+            always @(posedge wclk)
+                if (we_q[ws][wb]) mem[wb][ws*8 +: 8] <= w_dq[ws*8 +: 8];
+        end
+    end endgenerate
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin wp<=0; wp_g<=0; flt<=1'b0; end
+        else begin
+            if (push) begin wp<=wp+1'b1; wp_g<=(wp+1'b1)^((wp+1'b1)>>1); end
+            if (w_v && full && !idle) flt<=1'b1;
+        end
+`endif
+    wire empty = g2b(wp_g2) == rp;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) begin rp<=0; rp_g<=0; end
+        else if (!empty) begin rp<=rp+1'b1; rp_g<=(rp+1'b1)^((rp+1'b1)>>1); end
+    reg r_idle;
+    always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) r_idle<=1'b1; else r_idle<=empty;
+    generate for (rs=0; rs<RM_LOCAL_NS; rs=rs+1) begin : g_local_read
+        (* keep *) always @(posedge rclk or negedge rrst_n)
+            if (!rrst_n) rsel[rs]<=8'd0;
+            else rsel[rs]<=empty ? 8'd0 : (8'd1 << rp[2:0]);
+        for (rb=0; rb<8; rb=rb+1) begin : g_bit
+            localparam integer CB=rs*8+rb;
+            always @(posedge rclk)
+                r_m[CB] <= ((CB==1) & r_idle) | (|({mem[7][CB],mem[6][CB],mem[5][CB],mem[4][CB],mem[3][CB],mem[2][CB],mem[1][CB],mem[0][CB]} & rsel[rs]));
+        end
+    end endgenerate
+    always @(posedge rclk) begin
+        r_pipe<=r_m;
+        r_d<=r_pipe;
+    end
+`else
     // S81-RCK-4 11-07 OT_S81_RM_STAGED: rate matcher form for the 2.9-mm serdes types (class: one enable/select across
     // 4096 mem bits, one reset to 512 flops; TT rp->r_d -300..-872, rp_g2->mem -99..-239).
     //  write: push decided as before; data + per-slice one-hot write enables take one wclk stage, mem written one wclk
@@ -188,6 +337,7 @@ module ot_s81_rate_match (
         r_d <= r_m;
 `endif
     end
+`endif
 `else
     always @(posedge wclk or negedge wrst_n)
         if (!wrst_n) begin wp <= 0; wp_g <= 0; flt <= 1'b0; end
