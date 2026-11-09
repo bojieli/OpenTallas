@@ -495,6 +495,21 @@ def filter_top(top_text, keep_modules):
     return pat.sub(rep, top_text), kept
 
 
+def stage_from_store(die, tn, host, dest):
+    """COUNT-ARCHIVE-1 (OWNER 11-08): a counted view comes from the archive through localhost, never from a fleet host path.
+    -> True when the store has this row and it was pushed; None when the row is not counted (not in the store)."""
+    import argparse
+    sys.path.insert(0, os.path.expanduser("~/coord/tools"))
+    try:
+        import signed_store
+    except ImportError:
+        return None
+    if not signed_store.find_entries(die, [tn]):
+        return None
+    signed_store.stage(argparse.Namespace(die=die, key=[tn], host=host, dest=dest, classes="v,spef,sdc", layout="die_ci"))
+    return True
+
+
 def stage_views(views_path, host, dest, cache=None):
     """(run on localhost) copy every registered view (6_final.v/.spef/.sdc) to host:dest/<die>/<type>/."""
     reg = json.loads(Path(views_path).read_text())
@@ -502,6 +517,9 @@ def stage_views(views_path, host, dest, cache=None):
     done = []
     for die, ents in reg.get("dies", {}).items():
         for tn, e in ents.items():
+            if stage_from_store(die, tn, host, dest):
+                done.append(dict(die=die, type=tn, ok=True, err="", source="signed-store"))
+                continue
             loc = cache / die / tn
             loc.mkdir(parents=True, exist_ok=True)
             src = f"{e['host']}:{e['path']}/" if e.get("host") not in (None, "localhost") else os.path.expanduser(e["path"]) + "/"
