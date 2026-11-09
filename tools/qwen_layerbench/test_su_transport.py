@@ -44,3 +44,12 @@ def test_silu_after_gur_dependency_grows(monkeypatch, spec, extra, dep):
     monkeypatch.setenv('DV_SU_TRANSPORT', spec)
     out = {c['label']: c['edge'] for c in V.lower_vec('silu')['commands']}
     assert out['SILU s0'] - out['GU*r s0'] == base['SILU s0'] - base['GU*r s0'] + extra + dep
+
+
+@pytest.mark.parametrize('spec,extra,tail', [('extra=9,gap_l0=17,gap_l1=17,ready=23', 9, 23), ('extra=9,gap_l0=17,gap_l1=17', 9, 14)])
+def test_silu_after_gur_busy_tail(monkeypatch, spec, extra, tail):
+    monkeypatch.delenv('DV_SU_TRANSPORT', raising=False)
+    base = {c['label']: c['edge'] for c in V.lower_vec('silu')['commands']}
+    monkeypatch.setenv('DV_SU_TRANSPORT', spec)
+    out = {c['label']: c['edge'] for c in V.lower_vec('silu')['commands']}
+    assert out['SILU s0'] - out['GU*r s0'] == base['SILU s0'] - base['GU*r s0'] + extra + tail

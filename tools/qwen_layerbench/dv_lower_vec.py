@@ -408,7 +408,7 @@ def attn_owners(smap, ages):
     vm = vm_map_vec(D.ownership())
     best = None
     for comb in itertools.combinations(range(N), ATT_BLK):
-        S = Sched(smap, D.su_dep_extra(ages))
+        S = Sched(smap, D.su_busy_extra(ages))
         try:
             r0, _, xs = attn_schedule(S, list(comb), 0, ages, vm)
         except LowerError:
@@ -454,7 +454,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
                         rb=D.W_SC | bl[0], rso=bl[1] - bl[0] if len(bl) > 1 else 0)
         Wd[s] = words(s, own, vm, cr, isa, mutant, att)
         img[s] = image(s, Wd[s], ssq)
-    S = Sched(smap, D.su_dep_extra(ages))
+    S = Sched(smap, D.su_busy_extra(ages))
     if rope not in ('stream', 'rx'):
         raise LowerError(f'rope {rope}')
     tables = crom_table(own, cr, consts if rope == 'stream' else {k: v for k, v in consts.items() if k != 'pos'})

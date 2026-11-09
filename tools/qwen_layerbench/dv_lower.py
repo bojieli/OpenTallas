@@ -350,9 +350,13 @@ def memory_profile():
 def su_transport():
     """QC SU parent transport (QC-MEM9 11-08), default OFF: unset DV_SU_TRANSPORT keeps every profile and age byte-identical.
 
-    The head form has MEMORY_READ_EXTRA = request + answer of the plan of record. Value: 'extra=9,gap_l0=16,gap_l1=17'
+    The head form has MEMORY_READ_EXTRA = request + answer of the plan of record. Value: 'extra=9,gap_l0=17,gap_l1=17[,ready=23]'
     (read age +extra on every SU op; lane-pin VM write-to-read issue gap per lane group, native 3). su_l0 = lanes 0..3,
     su_l1 = lanes 4..7.  Producer-consumer issue extra on a VM dependency = extra + (max gap - 3), 23 at 5/4, 26 at 5/7.
+    ready (default = max gap - 3, i.e. no change): SU busy tail, edges beyond the SU read age before a different-class SU op
+    may issue, because su8 ready needs inflight == 0 and the last retire lands at su_c late: request + retire landing - 1,
+    23 at 5/4 with both VM write lanes landed on edge 19 (DIE-QC-96 11-08: proof bench, 1-edge sweep, su_fault threshold moves
+    +32 with transport = extra 9 + ready 23).
     """
     spec = os.environ.get('DV_SU_TRANSPORT', '').strip()
     if not spec:
@@ -360,10 +364,12 @@ def su_transport():
     try:
         f = dict(kv.split('=', 1) for kv in spec.split(','))
         out = dict(read_extra=int(f['extra']), vm_write_read_gap_l0=int(f['gap_l0']), vm_write_read_gap_l1=int(f['gap_l1']))
+        if 'ready' in f:
+            out['su_ready_tail'] = int(f['ready'])
     except (KeyError, ValueError) as e:
-        raise LowerError(f'DV_SU_TRANSPORT {spec!r}: expected extra=N,gap_l0=N,gap_l1=N') from e
-    if set(f) - {'extra', 'gap_l0', 'gap_l1'} or out['read_extra'] < 0 or min(out['vm_write_read_gap_l0'], out['vm_write_read_gap_l1']) < 3:
-        raise LowerError(f'DV_SU_TRANSPORT {spec!r}: unknown field, negative extra or gap under the native 3')
+        raise LowerError(f'DV_SU_TRANSPORT {spec!r}: expected extra=N,gap_l0=N,gap_l1=N[,ready=N]') from e
+    if set(f) - {'extra', 'gap_l0', 'gap_l1', 'ready'} or out['read_extra'] < 0 or min(out['vm_write_read_gap_l0'], out['vm_write_read_gap_l1']) < 3 or out.get('su_ready_tail', 0) < 0:
+        raise LowerError(f'DV_SU_TRANSPORT {spec!r}: unknown field, negative extra, ready or gap under the native 3')
     return out
 
 
@@ -371,6 +377,13 @@ def su_dep_extra(ages):
     """Extra issue-gap edges of a read after an SU write to VM, on top of the shifted write age (0 with no transport)."""
     t = (ages or {}).get('su_parent_transport')
     return max(t['vm_write_read_gap_l0'], t['vm_write_read_gap_l1']) - 3 if t else 0
+
+
+def su_busy_extra(ages):
+    """Extra SU busy-tail edges on the same-slice next-op constraint (su_free): at least the VM dependency extra, and at least
+    the transport's ready tail when given (the next different-class op waits for inflight == 0 at su_c)."""
+    t = (ages or {}).get('su_parent_transport')
+    return max(su_dep_extra(ages), t.get('su_ready_tail', 0)) if t else 0
 
 
 SU_AGE_KEYS = ('ssq_psum_out', 'add_psum_out', 'xs_out', 'silu_out', 'red_vm', 'd2d')
