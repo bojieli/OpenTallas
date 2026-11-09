@@ -30986,3 +30986,5 @@ FINDING for the ORIGINAL form, which has no guard: the same silent drop exists t
       u_xl_Q_aqhi moves down to y 2872.8. At x 5054.40 it overlapped subtree32_0 in q_hub_nw.
       0 hard-core overlaps in q_hub_ne/nw [CHECKED pairwise]. The diff is 20 fields in those 2 types only.
       The plan check (completeness) is running on p6 vs p7. After it I copy p7 to epyc4/epyc7 and post the event sha. KW-FIX-42 then re-keys q_hub_ne/nw.
+- 2026-11-09 08:47 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): coll_ft__cla4a25d77 signoff FAIL TIMING (routed: TT 21.62 FF -19.6 ps late-ECO exhausted (1 it, 12135.3 s): TT 21.62->21.63 FF -19.6->-1.2 drv 3551->0 drc 0->0; 1 iteration(s), still not signed: GEOMET) job bb1eb4ce49c2
+- 2026-11-09 08:47 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 1 event(s): ot_s81sl_leaf__t44__clf4ea6d4b unstarted waiter RESTAGED (epyc7 -> epyc2)
