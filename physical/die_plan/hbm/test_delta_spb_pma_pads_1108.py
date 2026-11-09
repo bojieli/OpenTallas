@@ -1,4 +1,4 @@
-"""SPB-PMA-PADS-1108 event: pads + pad clock on every SerDes type, refuses a second run, PMA-EYE rows added."""
+"""SPB-PMA-PADS-1108 event: pads + pad clock on every SerDes type, refuses a second run."""
 import copy
 import importlib.util
 import sys
@@ -45,11 +45,12 @@ def test_event_adds_pads_and_pad_clock(monkeypatch):
     t = new["partition_types"]["q_spb0__physical_v1"]
     assert [p["name"] for p in t["pads"]] == ["io_lk_S3_pma_rx", "io_lk_S3_pma_rck"]
     assert t["pads"][0]["macro_pin"]["pin"] == "pma_rx" and t["pads"][1]["clock"] is True
+    assert t["pads"][0]["macro_pin"]["inst"] == "u_bound.u_u_lk_S0.u_fcore.u_core.u_rx.u_rest"
     pc = t["clock"]["pad_clock"]["pins"][0]
     assert pc["name"] == "io_lk_S3_pma_rck" and pc["layer"] == "M7" and pc["cdc"] == "synchronized"
-    assert pc["data_inputs"][0]["port"] == "io_lk_S3_pma_rx"                    # PMA-EYE-1108 composes
+    assert "data_inputs" not in pc                                              # generic seam delay, as S81
     assert 199.0 + 0.5 <= pc["xy_um"][0] <= 208.0 - 0.5                         # in the bm/rest channel
-    assert len(rec["pad_rows"]) == 5 and len(rec["pma_eye_rows"]) == 5 and rec["pin_cycles"] == 0
+    assert len(rec["pad_rows"]) == 5 and rec["pin_cycles"] == 0
     with pytest.raises(SystemExit, match="second run"):
         D.apply(new, _p())
 
