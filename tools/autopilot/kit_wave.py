@@ -189,7 +189,7 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
 SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
                       r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
-NO_HOST = re.compile(r"no host qualifies")              # ot-run placed nothing: fleet disk or memory, not the design
+NO_HOST = re.compile(r"no host qualifies|@unit: OSError: \[Errno 28\]")              # ot-run placed nothing: fleet disk or memory, not the design
 NO_HOST_RETRY_S = 900
 STATE_FILE = "kit_wave_state.json"
 LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)

@@ -38,6 +38,8 @@ class InfraHold(unittest.TestCase):
 
     def test_no_host_text_is_the_real_ot_run_line(self):
         self.assertTrue(KW.NO_HOST.search("infra @kit_rtl: ot-run: NOT RUN: no host qualifies (epyc4: disk 49 GB < 60)"))
+        self.assertTrue(KW.NO_HOST.search("infra @unit: OSError: [Errno 28] No space left on device"))
+        self.assertFalse(KW.NO_HOST.search("infra (ssh transport) @relay_bay: Connection closed"))
         self.assertFalse(KW.NO_HOST.search("OSError: [Errno 28] No space left on device"))
 
 
