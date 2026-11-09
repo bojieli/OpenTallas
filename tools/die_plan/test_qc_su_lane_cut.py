@@ -73,3 +73,12 @@ def test_kv_wr_pipe_binds_head_once():
     assert ".KV_WR_PIPE(" not in cut(source, 0)[0]
     with pytest.raises(ValueError, match="different KV_WR_PIPE"):
         cut(source.replace(".MEMORY_READ_EXTRA(0))", ".MEMORY_READ_EXTRA(0), .KV_WR_PIPE(0))"), 0, kv_wr_pipe=1)
+
+
+def test_memory_read_extra_binds_mem9_head():
+    source=fixture().replace("leaf u_u_head0 (", "qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (")  # QC-MEM9: EXTRA9 selects the successor head
+    rtl, _, report = cut(source, 0, memory_alignment=3, kv_wr_pipe=1, memory_read_extra=9)
+    assert rtl.count("qfd_dv_lane_h_su_mem9") == 1 and "qfd_dv_lane_h_safe2 " not in rtl and ".MEMORY_READ_EXTRA(9)" in rtl
+    assert report["memory_read_extra"] == 9
+    rtl0, _, report0 = cut(source, 0, memory_alignment=3, kv_wr_pipe=1)
+    assert "qfd_dv_lane_h_safe2" in rtl0 and report0["memory_read_extra"] == 0

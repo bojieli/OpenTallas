@@ -1121,7 +1121,7 @@ module qfd_qc_su_lane_w_l4 (input wire clk, input wire rst_n,
         .x(w_u_head4_sx_exp_x[31:0]),
         .y(w_u_exp4_y)
     );
-    qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0), .KV_WR_PIPE(1)) u_u_head4 (
+    qfd_dv_lane_h_su_mem9 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(9), .KV_WR_PIPE(1)) u_u_head4 (
         .accept(w_u_lrly4_c_accept[0]),
         .ad(w_u_lrly4_c_ad[2:0]),
         .asi(w_u_lrly4_c_asi[23:0]),
