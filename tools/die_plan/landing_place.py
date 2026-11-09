@@ -35,18 +35,23 @@ def _group_rect_overrides(t, groups):
     if not overrides:
         return groups, ''
     groups = [(p, overrides.get(p, r), tag) for p, r, tag in groups]
-    # Optional copies can disappear during synthesis. An explicitly moved group
-    # must exist in the actual mapped design, rather than silently consuming no site.
-    names = ' '.join(sorted(overrides))
-    check = '''foreach cland_override_prefix {%s} {
+    # Optional raw copies can disappear during synthesis (a relay whose load a later
+    # event re-pointed): placement already skips an absent optional group, so an
+    # override on one only logs. An explicitly moved collector must exist in the
+    # actual mapped design, rather than silently consuming no site.
+    entries = ' '.join(f"{p} {0 if known[p][0] == 'raw-copy-optional' else 1}" for p in sorted(overrides))
+    check = '''foreach {cland_override_prefix cland_override_required} {%s} {
  set cland_override_found 0
  foreach cland_override_i [$ff_blk getInsts] {
   if {[regexp [format {(^|[/.])%%s[/.]} $cland_override_prefix] [$cland_override_i getName]]} {set cland_override_found 1; break}
  }
- if {!$cland_override_found} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+ if {!$cland_override_found} {
+  if {$cland_override_required} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+  puts "OT_CLAND optional group rectangle override $cland_override_prefix: no mapped instance, skipped"
+ }
 }
-unset cland_override_prefix cland_override_found
-''' % names
+unset -nocomplain cland_override_prefix cland_override_required cland_override_found cland_override_i
+''' % entries
     return groups, check
 
 

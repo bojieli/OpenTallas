@@ -51,3 +51,17 @@ def test_mapped_inventory_required(tmp_path, actual, accepted):
     assert (r.returncode == 0) == accepted
     if not accepted:
         assert 'unused group rectangle override' in r.stderr
+
+
+@pytest.mark.parametrize('present', [True, False])
+def test_optional_copy_absent_only_logs(tmp_path, present):
+    name = 'u_cland_rst_bus' if present else 'u_cland_other'
+    _, check = _group_rect_overrides(configured({'u_cland_rst_bus': [15, 16, 25, 26]}), GROUPS)
+    script = ('proc block {cmd} {return {cell}}\n'
+              f'proc cell {{cmd}} {{return {{u_bound.{name}/q}}}}\n'
+              'set ff_blk block\n' + check)
+    p = tmp_path / 'inventory.tcl'
+    p.write_text(script)
+    r = subprocess.run(['tclsh', str(p)], text=True, capture_output=True)
+    assert r.returncode == 0
+    assert ('no mapped instance, skipped' in r.stdout) == (not present)
