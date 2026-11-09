@@ -103,6 +103,18 @@ def fmt(counter, names=None, limit=4):
     return ' · '.join(parts) if parts else 'none'
 
 
+def design_row(last, die, did, design):
+    """latest kit-wave row of one counter design: its own id, else its wave keys, else its module.
+    COUNT-ARCHIVE-2 11-09 (DIE-HBM-97 12:00): the wave names a multi-design module's item module__v<sha256[:12] of the
+    pins file> (the counter's designs[did]['wave_keys']), not the counter's id module#outline/<pins16>; without this the
+    HBM __v rows read as 'no kit-wave row'."""
+    r = last.get((die, did))
+    if r: return r
+    hits = [last[(die, w)] for w in (design or {}).get('wave_keys') or [] if (die, w) in last]
+    if hits: return max(hits, key=lambda x: x.get('updated', ''))
+    return last.get((die, did.split('#')[0]))
+
+
 def main():
     cache = json.load(open(CACHE))
     rows = list(csv.DictReader(open(STAGES), delimiter='\t'))
@@ -135,7 +147,7 @@ def main():
             base = m.split('#')[0]
             lab = next((c for d, p, c in ovr if d == die and base.startswith(p)), None)
             if lab is None:
-                r = last.get((die, m)) or last.get((die, base))
+                r = design_row(last, die, m, designs[m])
                 lab = label(r) if r else 'no kit-wave row'  # COORD 11-07: says only that the wave has no row; kits may exist outside it
             cc[lab] += 1
             cn[lab].append(short(base))

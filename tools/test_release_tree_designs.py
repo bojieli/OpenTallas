@@ -370,3 +370,19 @@ def test_design_unmatched_only_uncredited_modules():
     (rp,) = R.die_counts(dict(plans={'x': part}), 'hbm')
     assert rf['design_unmatched'] == [] and rf['design_unmatched_extra'] == ['m', 'n'] and rf['signed_cores'] == 3
     assert rp['design_unmatched'] == ['m'] and rp['design_unmatched_extra'] == ['n'] and rp['signed_cores'] == 2
+
+
+def test_wave_keys_are_pins_file_sha12(tmp_path):
+    # COUNT-ARCHIVE-2 11-09 (DIE-HBM-97 12:00): kit wave items of a multi-design module are module__v<sha256[:12] of the
+    # pins file bytes>; the counter records them per design so failure_breakdown finds the wave rows
+    import hashlib
+    (tmp_path / 'cores').mkdir()
+    a = json.dumps({'pins': [{'name': 'a', 'layer': 'M4', 'x': 1, 'y': 2}]}).encode()
+    b = json.dumps({'pins': [{'name': 'a', 'layer': 'M4', 'x': 1, 'y': 3}]}).encode()
+    (tmp_path / 'cores' / 'a.json').write_bytes(a); (tmp_path / 'cores' / 'b.json').write_bytes(b)
+    P = {'partition_types': {'t': {'hard_cores': [{'module': 'm', 'pins_file': 'cores/a.json', 'outline_um': [1, 1]},
+                                                  {'module': 'm', 'pins_file': 'cores/b.json', 'outline_um': [1, 1]}]}},
+         'partitions': [{'type': 't'}]}
+    D, _ = R.plan_designs(P, tmp_path)
+    got = sorted(k for d in D.values() for k in d['wave_keys'])
+    assert got == sorted('m__v' + hashlib.sha256(x).hexdigest()[:12] for x in (a, b))
