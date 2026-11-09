@@ -1,0 +1,13 @@
+sr_legal seed=1 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 366 hw 3303 n_go 229 x_q 6637 wl 1904 s 1035 | first ref fault cyc 41 
+sr_legal seed=2 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 390 hw 3356 n_go 214 x_q 6710 wl 1576 s 1059 | first ref fault cyc 41 
+sr_legal seed=3 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 378 hw 3501 n_go 191 x_q 6595 wl 1520 s 1108 | first ref fault cyc 41 
+sr_legal_g48 seed=1 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 201 hw 2254 n_go 127 x_q 6737 wl 992 s 577 | first ref fault cyc 41 
+sr_legal_g48 seed=2 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 228 hw 1799 n_go 121 x_q 6712 wl 1024 s 574 | first ref fault cyc 41 
+sr_legal_g48 seed=3 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 183 hw 2200 n_go 110 x_q 6626 wl 864 s 620 | first ref fault cyc 41 
+sr_hqx2_cs1 seed=1 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 201 hw 2235 n_go 127 x_q 6737 wl 992 s 577 | first ref fault cyc 41 
+sr_hqx2_cs1 seed=2 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 228 hw 1783 n_go 121 x_q 6712 wl 1024 s 574 | first ref fault cyc 41 
+sr_dense_nopost seed=1 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 2491 hw 13906 n_go 1683 x_q 6579 wl 9630 s 8340 | first ref fault cyc 41 
+sr_dense_nopost seed=2 rc=0 VP_SR_RESULT PASS checks 59959 errors 0 | events lo 2407 hw 13824 n_go 1645 x_q 6612 wl 9336 s 8238 | first ref fault cyc 41 
+sr_dense seed=1 rc=0 VP_SR_RESULT FAIL checks 59959 errors 147 | events lo 2491 hw 10746 n_go 1683 x_q 6579 wl 9630 s 8340 | first ref fault cyc 41 
+sr_mut seed=1 rc=0 VP_SR_RESULT FAIL checks 59959 errors 30209 | events lo 366 hw 3303 n_go 229 x_q 6637 wl 1904 s 1035 | first ref fault cyc 41 
+sr_shift0 seed=1 rc=0 VP_SR_RESULT FAIL checks 59959 errors 59959 | events lo 366 hw 3303 n_go 229 x_q 6637 wl 1904 s 1035 | first ref fault cyc 41 
