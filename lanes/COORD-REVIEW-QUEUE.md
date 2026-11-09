@@ -31980,3 +31980,51 @@ FAILED [AUTOPILOT b824c8858deb] 2026-11-09 13:24:05 PST AUTOPILOT -> KIT-WAVE-12
 
 - 11-09 13:23 ROOT-MERGE-57 MERGED DL (--no-ff): QC-GDS-EMPTY claude/die-qc-97-qc-gds-empty-1109@04ca7bf2f780 (gen_core_kit_qc.py + test). Sparse epyc4 vs base16 (4034d0fa37c): 0 tip-only fails/nonzero. test_gen_core_kit_qc: new GdsAllowEmpty passes; the same 4 legacy fails on base16 and tip (as DIE-QC-97 said). _hard_children 10/10, _interior 1/1. Restacked on 7c2dcc324ff, unioncheck bad=0/2. main read-back 2867fe9c54d2912921191b5fc399f89693e1e5c7. Tag flow-20261109-gf-qc.
 - 2026-11-09 13:23 PST STATE [DIE-QC-97 -> COORD, COUNT-ARCHIVE-2] L3: the structural form l3s (fresh GRT from 4_cts, OT_HOLD_FF_MARGIN 10) is NOT SIGNED on the resign.py re-sign of its routed 6_final.odb (epyc7 dq97/l3s/resign_fe): TT -2.91 on 1 endpoint, FF hold -0.61 on 1 core endpoint, DRC 0, slew/cap 0. That is a real near miss, so it gets ONE near-miss ECO (OWNER 11-07 one iteration, no override needed): hold target +5, nonport scope, --strict-one-pass, LEC, run from the l3s view. It is being moved to intel1, because epyc7 admits 2 GB. The l3s config now carries the QC-GDS-EMPTY line (approved 13:06), so the ECO finish completes. The earlier l3 base ECO (l3_eco1, 1 drv pin left) stays EXHAUSTED and gets no second try. DO_NOT_COUNT.
+- 2026-11-09 13:30 PST STATE [KW-FIX-43 -> COORD, KW-FIX-44, DIE-HBM-97, DIE-S81-85, DIE-QC-97, KV-PLAN-2] KW43-10 DONE + QUEUED. DO_NOT_COUNT. Every config edit is made under kit_wave.lock and is on origin coord/state. All relaunches are uncharged (RETRY-INFRA, infra_base formula).
+  (1) HBM RESET-DIE-KEY c027d3fb392a: overlaid on epyc7 kw41/src_hbmf4 with a guarded blob check and new inodes.
+      - kit_reset_contract.py: ea1f5c31 -> 9306903c.
+      - gen_phys.py: 3e06797d -> cc0b14c0. The local tree differs from the branch parent cd813bdc, so I did a clean 3-way merge. The only change is the 1 line DIE_CONTRACT.get -> die_contract(). Checked on epyc7: die_contract("hbm_arch_B2o") -> physical/die_plan/hbm/reset_contract.json.
+      - epyc2 has no src_hbmf4, so HBM gens run on epyc7.
+      - Temp hold "q_b*" removed (revert hold_items_prev_kw43qb).
+      - FRESH relaunch of the reset class, 14 rows:
+        - q_b100, q_b100__physical_v1, q_b102, q_b102__physical_v1 (LEC FAIL / CANCELLED);
+        - q_b103__physical_v1 (no LEC yet);
+        - q_b001(+pv1), q_b002__physical_v1, q_b110(+pv1), q_b111(+pv1), q_b112(+pv1). These were running pre-LEC on kits without the contract; I stopped them.
+      - The 12 bank128 rows (q_b002..q_b013) were already held as fresh, so they also gen on the overlaid src.
+      - Left alone: q_b103 a11 (LEC EQUIVALENT, at the 4-edge default). Not reset class: q_b000(+pv1) PDN-0179 and q_b101(_nw) DPL.
+  (2) HBM p11 (DIE-HBM-97 12:52 + LOOP-GAP 12:5x (1)):
+      - Bandstagger a1e90880fb was missing from src_hbmf4. die_trial.py was exactly its parent, so I overlaid it directly: cc476036 -> 26bfe017.
+      - Strict-bind preflight, bind_F5c recipe (asbuilt vK5c, --strict) on plan_p11 die_plan.json (sha256 2bd45422...): PASS. 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC_BIND 0. Output: epyc7 kw43/hbm_p11_pre/bind.
+      - item_inputs for q_b113(+pv1), q_spu1(+pv1), q_su30(+pv1): plan_p11 + that bind. The q_b113 holds are released.
+      - FRESH relaunch of those 6. Revert: item_inputs_prev_kw43p11 + hold_items_prev_kw43p11.
+  (3) KV:
+      - Plan 8ca41a6b, applied to kv3_pv_v12, v5n, v6n, kv3_sys_SD and SD_v1 through item_inputs. Dir kw43/kvrs = plan_zbk hardlinks + plan_c, on epyc2 + epyc7. FRESH relaunch, SD/SD_v1 units stopped. Revert: item_inputs_prev_kw43rs.
+      - Then the wave plan became 92370701 (die plan = kw43/kvr2/plan_c.json, the same dir method). The 5 rows keep 8ca41a6b (identical content).
+      - kv3_pv_v1n and v7 are in place on 1035a005, pinned there with item_inputs.
+        - Waiter kw43-kvr2wait (intel2): if a row FAILs, it drops the pin, makes one uncharged fresh relaunch onto 92370701 and commits.
+        - Revert: plan_prev_kw43r2 + item_inputs_prev_kw43r2.
+      - lockq ab58fcd7445: on dkv97/src_zb epyc2 + epyc7 (gen_phys 2c5da7c1, test 5315be8f). kv3_hub_C a7 launched 12:56 on that src. The 12:06 FAIL was a5, before the overlay.
+  (4) S81 MOVES-SPLIT 1e2f4da0d3:
+      - src_t51f gen_phys cb121ba4 is older than branch parent 4bf06cbe, so the 3-way merge conflicted inside macro_move_table only. I resolved it by taking main 1e2f4da0d3's whole macro_move_table. That also brings main's placed-box overlap with track offsets and the 1e-6 tolerance; nothing outside the function changed. Result blob 5c29a9cf.
+      - test_macro_moves_split.py 6/6 OK against it.
+      - Overlaid on epyc7, epyc2 and intel1.
+      - col_h9_r0_p1__t1 (bbceed857f5da): FRESH relaunch.
+  (5) QC-GDS-EMPTY 04ca7bf2f780: gen_core_kit_qc.py 46e49c46 -> d7784e4e on kw41/src_qcsw2 on intel2, epyc7, epyc2, intel1 and epyc4 (guarded, new inodes). kw38/rt has no QC core generator, and the QC wave builds type kits only.
+      - The 35 failed kits: RELEASE_TREE has QC CORES 25/26 signed; only qfd_tile_nk_a0c is open. So every su_lane l0-l7 and nl_a0c design is already counted, and by your rule (3) needs no action.
+      - The nk_a0c merge-fail kits are epyc4 qc-a0c-b5/qfd_tile_nk_a0c_vB and qc-a0c-b6/k6/qfd_tile_nk_a0c_vB2. Both are ARCHIVED stubs, and their in-run sign-off already ran: NOT SIGNED, setup_tt -514.59 / -293.22 ps and hold_ff -32.51 / -20.14. A GDS resume cannot change that, so no resume.
+      - The 5 running structural forms (l0s/l1s/l2s/l5s/l6s) and l3s are DIE-QC-97's.
+      - DIE-QC-97: if you know of a failed kit that is not counted and has a passing in-run sign-off, give me the path and I will resume it at do-gds-merged.
+  (6) REHOST (now KW-FIX-44's; for handover):
+      - Staged on intel1 at the same paths:
+        - QC: src_qcsw2 delta, plan_pv md5 2dc5bd8bd1, bind_pv report 5ae25f9940 (also on intel2);
+        - S81 T51: src_t51f 179565 files, bind8 1486 files, plan af2abcca0e416b13, asbuilt bc65f0ca, kit_rtl_s81_final_1109.sh md5 9ca1b37a.
+      - QC and S81 gen_hosts += intel1. Revert: gen_hosts_prev_kw43i1 on each die.
+      - intel2 not added: scratch2 has 85 GB free, below the 100 GB floor.
+      - Moved to intel1 (stop + restage intel1, stage resume):
+        - S81: ot_s81sl_leaf__t25__cl55642d17 bc8c969cf1417, ot_s81sl_leaf__t53__clb66fa5cb be4e275c34ddd, col_h10_r2__t1__cl99efd374 bc148a16f5c42, dsdv_slice_lepe_mu_LP__t2 b49107f9068f2, serdes__t12 bb5c735c92859;
+        - QC: slw_fe_v2__cle312294d b0ef01351ea8f.
+      - New unit ids come with the next tick. KW-FIX-44 follows them from here.
+  (7) epyc6: only kv3_hgi_v3 (job 93c62edefa5a) is still running there. Waiter kw43-e6v3wait acts at 15:10: if it is still active, it stops the job, relaunches a7 from the epyc2 spill copy and posts KW43-E6V3. The other epyc6 references in state.json are stale ORPHAN jobs of attempts that were since relaunched elsewhere.
+  QUEUED NEXT:
+  - ccf792c10b6 (tap_pair_plan.tcl + tap_pair_affinity.tcl) onto src_t51f on all S81 hosts, then dsdv_slice_lepe_nh_mus_LP__t1 + ot_s81sl_leaf__t29 uncharged.
+  - HEAD lep_nr overlay + hd_lep0N.
