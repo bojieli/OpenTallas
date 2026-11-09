@@ -458,6 +458,8 @@ class Plan:
     def record(self, path, cat, action, reason, st):
         if cat.startswith("PEND-"):             # counted as reclaimable, removed only after the archive step
             action = "KEEP"
+        if action == "DELETE" and not os.access(os.path.dirname(path), os.W_OK):      # read-only parent: unlink would only fail
+            cat, action, reason = "KEEP-not-deletable", "KEEP", "parent dir not writable"
         self.rows.append((path, cat, action, " ".join(str(reason).split())[:300], st["bytes"], st["files"]))
 
     # --- traversal
