@@ -35,18 +35,23 @@ def _group_rect_overrides(t, groups):
     if not overrides:
         return groups, ''
     groups = [(p, overrides.get(p, r), tag) for p, r, tag in groups]
-    # Optional copies can disappear during synthesis. An explicitly moved group
-    # must exist in the actual mapped design, rather than silently consuming no site.
-    names = ' '.join(sorted(overrides))
-    check = '''foreach cland_override_prefix {%s} {
+    # Optional raw copies can disappear during synthesis (a relay whose load a later
+    # event re-pointed): placement already skips an absent optional group, so an
+    # override on one only logs. An explicitly moved collector must exist in the
+    # actual mapped design, rather than silently consuming no site.
+    entries = ' '.join(f"{p} {0 if known[p][0] == 'raw-copy-optional' else 1}" for p in sorted(overrides))
+    check = '''foreach {cland_override_prefix cland_override_required} {%s} {
  set cland_override_found 0
  foreach cland_override_i [$ff_blk getInsts] {
   if {[regexp [format {(^|[/.])%%s[/.]} $cland_override_prefix] [$cland_override_i getName]]} {set cland_override_found 1; break}
  }
- if {!$cland_override_found} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+ if {!$cland_override_found} {
+  if {$cland_override_required} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+  puts "OT_CLAND optional group rectangle override $cland_override_prefix: no mapped instance, skipped"
+ }
 }
-unset cland_override_prefix cland_override_found
-''' % names
+unset -nocomplain cland_override_prefix cland_override_required cland_override_found cland_override_i
+''' % entries
     return groups, check
 
 
@@ -296,6 +301,78 @@ def _band_groups(tn, name, band, typ):
     groups.extend((prefix, rect, tag) for rect in rects)
     return groups
 
+def _clear_of_hard_cores(t, rect, margin=4.32):
+    """START relay window wholly inside a hard core has no row: move it to the nearest free window.
+
+    The START event draws its stages on straight lines that cross child cores, and the
+    band check then fails with upper bound 0. Stage count and RTL are unchanged; a window
+    with any row capacity is returned as is (identical output)."""
+    cores = [(h['origin_um'][0], h['origin_um'][1], h['origin_um'][0] + h['outline_um'][0],
+              h['origin_um'][1] + h['outline_um'][1]) for h in (t or {}).get('hard_cores') or []]
+    x0, y0, x1, y1 = rect
+    if not any(a <= x0 and x1 <= c and b <= y0 and y1 <= d for a, b, c, d in cores):
+        return rect
+    w, h = x1 - x0, y1 - y0
+    width, height = t['outline_um']
+    xs = {x0} | {v for a, _, c, _ in cores for v in (a - margin - w, c + margin)}
+    ys = {y0} | {v for _, b, _, d in cores for v in (b - margin - h, d + margin)}
+    edge = 4.32
+    xs = [x for x in xs if edge <= x and x + w <= width - edge]
+    ys = [y for y in ys if edge <= y and y + h <= height - edge]
+    for _, x, y in sorted((abs(x - x0) + abs(y - y0), x, y) for x in xs for y in ys):
+        if not any(x < c + margin and x + w > a - margin and y < d + margin and y + h > b - margin
+                   for a, b, c, d in cores):
+            return [round(x, 5), round(y, 5), round(x + w, 5), round(y + h, 5)]
+    raise ValueError(f'no window clear of hard cores for START site {rect}')
+
+
+def _centre(r):
+    return ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2)
+
+
+def _chain_clear_of_hard_cores(t, origin_xy, stages, margin=4.32):
+    """Windows for one START relay chain: stages inside a core may leave by any side, picked
+    by Viterbi for the smallest longest hop (then total length). Stages not inside a core keep
+    their window, so a chain with none inside is unchanged."""
+    cores = [(h['origin_um'][0], h['origin_um'][1], h['origin_um'][0] + h['outline_um'][0],
+              h['origin_um'][1] + h['outline_um'][1]) for h in (t or {}).get('hard_cores') or []]
+    width, height = (t or {}).get('outline_um', (0, 0))
+    edge = 4.32
+
+    def free(q):
+        return (edge <= q[0] and q[2] <= width - edge and edge <= q[1] and q[3] <= height - edge
+                and not any(q[0] < c + margin and q[2] > a - margin and q[1] < d + margin and q[3] > b - margin
+                            for a, b, c, d in cores))
+
+    options = []
+    for st in stages:
+        x, y = st['xy_um']
+        r = [x - 2.16, y - 2.16, x + 2.16, y + 2.16]
+        near = _clear_of_hard_cores(t, r, margin)
+        opts = [near]
+        for a, b, c, d in cores:
+            if a <= r[0] and r[2] <= c and b <= r[1] and r[3] <= d:
+                opts += [q for q in ([a - margin - 4.32, r[1], a - margin, r[3]],
+                                     [c + margin, r[1], c + margin + 4.32, r[3]],
+                                     [r[0], b - margin - 4.32, r[2], b - margin],
+                                     [r[0], d + margin, r[2], d + margin + 4.32]) if free(q)]
+        options.append(opts)
+    hop = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
+    states = [((0.0, 0.0), origin_xy, [])] if origin_xy is not None else None
+    for opts in options:
+        next_states = []
+        for q in opts:
+            c = _centre(q)
+            if states is None:
+                next_states.append(((0.0, 0.0), c, [q]))
+                continue
+            cost, _, path = min((((max(m, hop(p, c)), tot + hop(p, c)), p, pth) for (m, tot), p, pth in states),
+                                key=lambda v: v[0])
+            next_states.append((cost, c, path + [q]))
+        states = next_states
+    return [] if not stages else min(states, key=lambda v: v[0])[2]
+
+
 def _reader_start_groups(t):
     """Actual kept relay instances at declared sites, through existing FIRM packing."""
     cfg = (t or {}).get('clock', {}).get('landing_reader_start')
@@ -304,12 +381,11 @@ def _reader_start_groups(t):
     groups = []
     if 'origin_rect_um' in cfg:
         origin = 'u_cland_rstart_rx' if (t or {}).get('landing_relay_start_copy') else 'u_cland_origin'
-        groups.append((origin, cfg['origin_rect_um'], 'reader-start-origin'))
+        groups.append((origin, _clear_of_hard_cores(t, cfg['origin_rect_um']), 'reader-start-origin'))
+    origin_xy = _centre(_clear_of_hard_cores(t, cfg['origin_rect_um'])) if 'origin_rect_um' in cfg else None
     for bus, branch in sorted(cfg['branches'].items()):
-        for i, stage in enumerate(branch['stages']):
-            x, y = stage['xy_um']
-            groups.append((f'u_cland_reader_start_{safe(bus)}_{i}',
-                           [x-2.16, y-2.16, x+2.16, y+2.16], 'reader-start:'+bus))
+        for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
+            groups.append((f'u_cland_reader_start_{safe(bus)}_{i}', rect, 'reader-start:'+bus))
     return groups
 
 
@@ -320,10 +396,8 @@ def _writer_start_groups(t):
         return []
     groups = []
     for bus, branch in sorted(cfg['branches'].items()):
-        for i, stage in enumerate(branch['stages']):
-            x, y = stage['xy_um']
-            groups.append((f'u_cland_writer_start_{safe(bus)}_{i}',
-                           [x-2.16, y-2.16, x+2.16, y+2.16], 'writer-start:'+bus))
+        for i, rect in enumerate(_chain_clear_of_hard_cores(t, None, branch['stages'])):
+            groups.append((f'u_cland_writer_start_{safe(bus)}_{i}', rect, 'writer-start:'+bus))
         # The last face relay contains a synchronous-reset AND as well as Q.
         # Keeping only Q at the pin let GPL drag its AND to the distant origin
         # reset: HEAD spn_end bu_o travelled 1.6 mm down and back (-181.51 ps).
