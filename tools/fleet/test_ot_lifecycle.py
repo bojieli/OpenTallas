@@ -568,3 +568,14 @@ def test_tmp_rule(tmp_path):
     for p in ("tmpnew", "tmpopen", "pytest-of-u/pytest-9", "kw35rd", "r8t"):
         assert os.path.exists(os.path.join(B, p)), p                                # young, open, and named lane dirs stay
     assert d == 2 and open(f"{B}/m.tsv").read().count("\tDELETE\t") == 2
+
+
+def test_mention_posts_skip_cleanup_tables():
+    lc, ac = _lc()
+    now = time.time()
+    posts = [{"t": now - 60, "auth": "AUTOCLEAN-13", "text": "TABLE DELETE hbm-gaps-2 35.4"},
+             {"t": now - 60, "auth": "DIE-HBM-97", "text": "rerun in die-hbm-63/eco"},
+             {"t": now - 60, "auth": None, "text": "KIT-WAVE launched kw44"},
+             {"t": now - 25 * 3600, "auth": "DIE-KV-97", "text": "old dkv66"}]
+    got = [p["text"] for p in lc.mention_posts(posts, now)]
+    assert got == ["rerun in die-hbm-63/eco", "KIT-WAVE launched kw44"], got     # cleanup tables and >24 h posts do not hold
