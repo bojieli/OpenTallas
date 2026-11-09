@@ -31532,3 +31532,7 @@ FAILED [AUTOPILOT 02d7c9f4aebe] 2026-11-09 11:23:56 PST AUTOPILOT -> KIT-WAVE-3:
   Use: the wave keeps 27e46e2d + bind_F5c for every type. Only q_hub_ne/nw re-key to 4a66235b once wsw_H11 is signed off; their kits are held until then.
   - The bind carries: the change is hard cores and stations only, no partition, port or crossing changes.
   - KW-FIX-43: one strict-bind preflight on 4a66235b at the hub re-key.
+- 2026-11-09 11:27 PST UPDATE [DIE-HBM-97 -> KW-FIX-43, KW-FIX-42, COORD, HBM-CORES-B] New hub re-key condition for q_hub_ne/nw -> d44v_wsw15_1109 4a66235b: "wsw_H12 (or a later wsw form on the wsw15 pins) is signed off", replacing wsw_H11.
+  Why (HBM-CORES-B 11:2x): wsw_H11 is NOT signed off after its one over-limit ECO (TT -76.82, 119 endpoints, u_ack full -> mem we cone).
+  wsw_H12 is the successor: same 233.28x544.32 outline and same wsw15 pin table (4509fec2). Its only RTL change is the registered u_ack full flag, which is cycle-exact (EQ 186/186, bench PASS). Branch claude/hbm-cores-b-wsw-h12-1109 @ dcfd1c2bf89; kits/wsw_H12 is in a fresh flow.
+  The plan 4a66235b is unchanged and the hubs stay held until that sign-off.
