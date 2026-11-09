@@ -11781,7 +11781,32 @@
     "epyc2",
     "intel2",
     "epyc7"
-   ]
+   ],
+   "item_inputs": {
+    "sle_hc0__cl05696ed1": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_v4w_dq97_cand2.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 cand2 c7554cf6 (v4w + hc1 band re-resize + START hc0/hc1 + cland_strip_rows fw_v2=2); src overlay 826eb4010eec"
+    },
+    "sle_hc1__cl22c1ff36": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_v4w_dq97_cand2.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 cand2 c7554cf6 (v4w + hc1 band re-resize + START hc0/hc1 + cland_strip_rows fw_v2=2); src overlay 826eb4010eec"
+    },
+    "sle_fw_v2__cl69f5e854": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_v4w_dq97_cand2.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 cand2 c7554cf6 (v4w + hc1 band re-resize + START hc0/hc1 + cland_strip_rows fw_v2=2); src overlay 826eb4010eec"
+    },
+    "cbx_q10__cl94a12200": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+    },
+    "cbx_q10__cl89936551": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls/plan_nlck/plan_qc53v4nS_mem9_vml_nlck.json",
+     "note": "KW-FIX-42 2026-11-09 07:32 PST COORD 07:3x: DIE-QC-97 NL ck-access plan d902c341 (NL event only); src overlay 6d92d957ea6d"
+    }
+   },
+   "notes_kw42": {
+    "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
+   }
   },
   "hbm": {
    "enabled": true,
