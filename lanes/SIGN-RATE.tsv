@@ -452,3 +452,4 @@ time	die	signed_types	signed_cores
 2026-11-09 14:05 257 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79 auto
 2026-11-09 14:44	257	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79	forced 14:44 COORD hourly; +HBM ot_wbq_root_g0 (COUNT-ARCHIVE-2 14:00)
 2026-11-09 15:05 257 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79 auto
+2026-11-09 15:51	258	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79+1t	forced 15:30-15:51 COORD hourly; +HBM type q_mca (qmca_vSR3_eco1 re-sign); opsb (DY) + xs not yet in, COUNT-ARCHIVE-2 forced count follows
