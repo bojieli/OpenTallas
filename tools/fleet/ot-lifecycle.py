@@ -1160,7 +1160,8 @@ def tick_main(a):
             free = df_free(root)
             if free >= trig:
                 continue
-            todo = sorted([x for x in P.press if os.path.exists(x[2]) and os.stat(x[2]).st_dev == dev], key=lambda x: (x[0], x[1]))
+            # tier 2 stays report-only: superseded attempts behind kit_wave.txt root lines belong to the landed class a pass (DISK-URGENT-4)
+            todo = sorted([x for x in P.press if x[0] == 1 and os.path.exists(x[2]) and os.stat(x[2]).st_dev == dev], key=lambda x: (x[0], x[1]))
             for tier, newest, path, why in todo:
                 if df_free(root) >= target:
                     break
