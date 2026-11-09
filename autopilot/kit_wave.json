@@ -7326,7 +7326,8 @@
     "slw_stm_v2__cl1ca9c415@13",
     "cbf_q00_s2@16",
     "cbn_q01__clab6e67f2@21",
-    "sle_stm_v2__cl7b3062fa@11"
+    "sle_stm_v2__cl7b3062fa@11",
+    "slw_stm_v3@14"
    ],
    "queue_src": "claude/qc-types-12-sta-1108@7cb33a3fd1b7",
    "type_args": {
@@ -8211,6 +8212,9 @@
      "OT_KW41_CLAND": "0b305f2395"
     },
     "sle_stm_v2__cl7b3062fa": {
+     "OT_KW41_CLAND": "0b305f2395"
+    },
+    "slw_stm_v3": {
      "OT_KW41_CLAND": "0b305f2395"
     }
    },
@@ -9533,7 +9537,8 @@
     "slw_stm_v2__cl1ca9c415@13",
     "cbf_q00_s2@16",
     "cbn_q01__clab6e67f2@21",
-    "sle_stm_v2__cl7b3062fa@11"
+    "sle_stm_v2__cl7b3062fa@11",
+    "slw_stm_v3@14"
    ],
    "note_kw42_cland": "KW-FIX-42 01:59: 7 QC OT_CLAND band FAILs whose gen ran 00:15-01:07 on the aa8 landing_place.py (before the 01:30 0b305f2395 install) restart at gen on 0b305f2395; changed tool, not a retry",
    "e7_prev_kw42": {
@@ -9555,7 +9560,8 @@
      "intel1",
      "epyc4"
     ]
-   }
+   },
+   "note_kw42_stm3": "KW-FIX-42 02:26: slw_stm_v3 a14 kit landing_placement.tcl written 09:30:43.64Z, landing_place.py 0b305f2395 installed on epyc5 09:30:44.26Z: generated on the aa8 tool 0.6 s before the swap; restart at gen on 0b305f2395"
   },
   "hbm": {
    "enabled": true,
@@ -10485,17 +10491,22 @@
     "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
     "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
     "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d",
-    "q_b000": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
-    "q_b000__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
-    "q_b001": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+    "q_b000": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b000__physical_v1": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b001": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
     "q_b001__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
     "q_b113": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
     "q_b113__physical_v1": "KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): DIE-HBM-93 18:51 (c): q_b113 LEC and prov_views open",
     "q_hub_nw": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
     "q_hub_ne": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
-    "q_b011": "KW-FIX-41 2026-11-09 01:3x (DIE-HBM-96 01:13, COORD): PDN-0179 open on this plan; no relaunch until the HBM plan owner posts the fix",
-    "q_b101": "KW-FIX-41 2026-11-09 01:3x (DIE-HBM-96 01:13, COORD): PDN-0179 open on this plan; no relaunch until the HBM plan owner posts the fix",
-    "q_b103": "KW-FIX-41 2026-11-09 01:3x (DIE-HBM-96 01:13, COORD): PDN-0179 open on this plan; no relaunch until the HBM plan owner posts the fix"
+    "q_b011": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b101": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b103": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b100": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b100__physical_v1": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_b101_nw": "KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
+    "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
+    "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children"
    },
    "gen_hosts": [
     "epyc4",
