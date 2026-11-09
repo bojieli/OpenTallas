@@ -180,6 +180,13 @@ def plan_core_tap_insertion(plan, module):
     return sorted(vals)[0] if vals else None
 
 
+# SU-HM10 11-09 (DIE-QC-97, COORD 08:0x class): every su_lane kit (l0/l1/l3/l7 of kits_e9) built with the shared
+# core_flow default FF GRT hold repair margin 0 ended at FF hold -7.2..-12.4 ps over 116-257 endpoints.  The su_lane
+# recipe now asks the GRT/route hold repair for +10 ps.  This is a REPAIR TARGET only: the sign-off hold gate stays
+# FF slack >= 0 (OWNER 11-02, core_flow.HOLD_FF_MARGIN_DEFAULT unchanged for every other family).
+SU_LANE_HOLD_FF_MARGIN = 10.0
+
+
 def su_lane_recipe(e, out, plan=None):
     m = e["module"]
     spec = dict(top=m, sources=[f.format(lane=e["rtl"]) for f in SU_LANE_SOURCES], clock_port="clk",
@@ -189,7 +196,7 @@ def su_lane_recipe(e, out, plan=None):
     sd.mkdir(parents=True, exist_ok=True)
     (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
     rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="w" + e["view"].split("@")[1][:6],
-               rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True,
+               rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True, hold_ff_margin=SU_LANE_HOLD_FF_MARGIN,
                macro_sites={Path(SRAM).name: [[190.08, 99.744, "R0"], [190.08, 138.144, "R0"]]},
                lec_hints=su_lane_lec_hints(m),
                _why=f"qc_core_wave su_lane view {e['view']} (DIE-QC-57b): plan pin table {e['pins_file']}")
