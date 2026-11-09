@@ -45,6 +45,23 @@ module dsdv_svc_sx_hrow #(
     output wire [38:0]       t_o,
     output reg               fault
 );
+`ifdef OT_SVC_H8
+// S81-SVCRS R5 (11-08): the H 8 role ROM (svc_rs_embed.py --heads 8): leaf of tile t taps local head t % 8, the root's
+// right split does not shift (both 8-tile subtrees need heads 0..7).  Every other field = the H 16 ROM.
+`ifdef DSDV_SX_MUT_ORDER
+`ifdef OT_SVC_GROUP72
+`include "dsdv_svc_sx_roles_mut_order_group72_h8.svh"
+`else
+`include "dsdv_svc_sx_roles_mut_order_h8.svh"
+`endif
+`else
+`ifdef OT_SVC_GROUP72
+`include "dsdv_svc_sx_roles_group72_h8.svh"
+`else
+`include "dsdv_svc_sx_roles_h8.svh"
+`endif
+`endif
+`else
 `ifdef DSDV_SX_MUT_ORDER
 `ifdef OT_SVC_GROUP72
 `include "dsdv_svc_sx_roles_mut_order_group72.svh"
@@ -56,6 +73,7 @@ module dsdv_svc_sx_hrow #(
 `include "dsdv_svc_sx_roles_group72.svh"
 `else
 `include "dsdv_svc_sx_roles.svh"
+`endif
 `endif
 `endif
     localparam integer W = 269, N = 8, TW = 5, SW = 137, SL = 33, NS = 4;
