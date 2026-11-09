@@ -217,6 +217,7 @@ def test_h8_pv_words_decode_per_head_per_dim():
                 t, bb, wi = t0 + w // 40, (w % 40) // 5, w % 5
                 if wi == 0:
                     assert d >> 512 & 1 and (d >> 64) & 255 == bb
+                    assert (d >> 32) & 1 == k and (d >> 33) & ((1 << 31)-1) == 0
                 else:
                     assert d >> 256 == 0
                     dim = 32 * t + 8 * (wi - 1) + bb

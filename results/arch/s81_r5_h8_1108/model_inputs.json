@@ -1,0 +1,32 @@
+{
+  "scope": "candidate feasibility; no plan adoption or placement credit",
+  "native_attention": "conditional half64->32 footprints; H8 hard adapter count/area not measured yet",
+  "sm_sml": {
+    "cells": 99978,
+    "flops": 12411,
+    "std_area_um2": 11268.96948,
+    "model_outline_um": 172.8,
+    "outline_basis": "minimum at0.40 snapped8.64"
+  },
+  "sm_smd": {
+    "cells": 62884,
+    "flops": 7553,
+    "std_area_um2": 6834.84156,
+    "model_outline_um": 155.52,
+    "outline_basis": "actual generated conservative PLACE pilot"
+  },
+  "sm_leaf_count": {
+    "sml": 8,
+    "smd": 4
+  },
+  "combined_std_area_um2": 117491.12208,
+  "halo_um_per_side": 4.32,
+  "packing_efficiency_after_halo": 0.85,
+  "root_glue": "unchanged prior estimate 0.73M hi/0.89Mlo, split110k cores,parent<=150k",
+  "irg_cell_bounds": [
+    1564000,
+    2101000
+  ],
+  "reticle_height_margin_um": 541.6,
+  "latency": "old estimate script token-rate rows historical ONLY; actual H8 price UNCALIBRATED"
+}

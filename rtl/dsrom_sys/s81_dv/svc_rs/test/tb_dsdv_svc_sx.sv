@@ -153,14 +153,26 @@ module tb_dsdv_svc_sx;
         end
     endgenerate
     wire gov; wire [19:0] gtag;
-    ot_hdc_v41x_vdly #(.D(4*FX)) u_gv (.clk(ck), .rst_n(rst), .d(gv), .q(gov));
+    // S81-SVC-4 (11-08): the golden valid delay is a whole-vector shift in the bench.  ot_hdc_v41x_vdly at D = 20
+    // (a for-loop of bit NBAs longer than --unroll-count 16) simulated as a ONE-cycle delay under Verilator 5.050:
+    // gold rows were written from source + 1 with the empty tree output, so every root/tap check compared to 0.
+    reg [4*FX-1:0] gvs;
+    always @(posedge ck or negedge rst) if (!rst) gvs <= '0; else gvs <= {gvs[4*FX-2:0], gv};
+    assign gov = gvs[4*FX-1];
     ot_hdc_v41x_dly #(.W(20), .D(4*FX)) u_gt (.clk(ck), .d(gl[0][W-1 -: 20]), .q(gtag));
     reg [W-1:0] gold [0:NB-1]; integer ng = 0;
     always @(posedge ck) if (gov) begin
         gold[ng][W-1 -: 20] <= gtag;
         for (int k = 0; k < N; k++) begin gold[ng][N + 32*k +: 32] <= tn[k*32 +: 32]; gold[ng][k] <= tf[k]; end
         ng <= ng + 1;
+`ifdef SX_DBG
+        if (ng < 3) $display("SX_DBG gold_write cyc=%0d ng=%0d gtag=%05x tn0=%08x tf=%08x", cyc, ng, gtag, tn[31:0], tf[N-1:0]);
+`endif
     end
+`ifdef SX_DBG
+    always @(posedge ck) if (gv && cyc < T0 + 8) $display("SX_DBG src cyc=%0d gl0tag=%05x gl0h0=%08x", cyc, gl[0][W-1 -: 20], gl[0][N +: 32]);
+    always @(posedge ck) if (rt_v != 0 && nr < 2) $display("SX_DBG root cyc=%0d nr=%0d ng=%0d gold_nr_tag=%05x", cyc, nr, ng, gold[nr][W-1 -: 20]);
+`endif
 
     // ---------------- drive ----------------
     function automatic integer skew(input integer sd);   // SX_MUT_SKEW: slice 5's engine share starts one cycle late
