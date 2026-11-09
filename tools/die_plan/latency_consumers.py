@@ -14,6 +14,7 @@ groups (landed - as-built cycles per crossing member) and the die hook's param_r
       Per as-built instance:  added = max landed delta on its request ports + max on its response ports.
       added != 0 and the hook did not regenerate (inst, PARAM) -> FIXED_LATENCY_MISMATCH inst/param/as-built/needed.
       An align contract (ports sampled on one edge) whose ports land with different deltas -> FIXED_LATENCY_MISALIGNED.
+      advisory=True on a contract: reported as ADVISORY_MISMATCH, never an error (fixed-age consumers with no parameter).
       Port lists are regexes (fullmatch).  A loop through several leaves is checked at the consumer leaf only; its
       inner hops are covered by (1).
   (3) Advisory census: undeclared latency-named parameters (*RETURN*, *_LAT, *_RT, *DELAY*) of leaves whose crossings
@@ -44,6 +45,13 @@ CONTRACTS = {
     "ot_hgi_sfu_lg_pair_tap_leaf": [dict(align=["c_rq", "local_read"]), dict(align=["c_wq", "local_write"])],
     "ot_hgi_sfu_lg_pair_tap_leaf_term": [dict(align=["c_rq", "local_read"]), dict(align=["c_wq", "local_write"])],
     "ot_hbm_router_ids_static_2src": [dict(align=["run_v", "run1_v", "run_layer", "run1_layer"])],
+    # TRANSPORT-1 11-08: QC fixed-age readers with no parameter to regenerate (param = a label, not an RTL parameter).
+    # advisory=True reports a landed delta on the loop as ADVISORY_MISMATCH and is never a bind error.
+    # qfd_dv_s5_lrly: SU memory delay ML in the lane head; qfd_native59_*: the e1/e2/e3 ring of the embedding read.
+    "qfd_dv_s5_lrly": [dict(param="ML", req=["v[abc]_(addr|re)"], resp=["v[abc]_q"], advisory=True),
+                       dict(param="CROM_ML", req=["crom_(addr|re)"], resp=["cr_q"], advisory=True)],
+    "qfd_native59_dv_headprep_obs1": [dict(param="EMB_CODE_RING", req=["emb_code_(addr|re)"], resp=["emb_code_q"], advisory=True),
+                                      dict(param="EMB_SCALE_RING", req=["emb_scale_(addr|re)"], resp=["emb_scale_q"], advisory=True)],
 }
 LAT_NAME = re.compile(r"RETURN|_LAT$|(^|_)RT$|DELAY")
 _INT = re.compile(r"\s*(\d*)'[sS]?([bdhBDH])([0-9a-fA-F_]+)\s*")
@@ -223,6 +231,8 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
                 row["verdict"] = "MATCH"
             elif (path, c["param"]) in regen:
                 row.update(verdict="REGEN", bound=regen[(path, c["param"])]["bound"])
+            elif c.get("advisory"):
+                row["verdict"] = "ADVISORY_MISMATCH"
             else:
                 row["verdict"] = "FIXED_LATENCY_MISMATCH"
                 errors.append(f"FIXED_LATENCY_MISMATCH {path} ({v['module']}) {c['param']}: as-built {asb}, the bind adds "
@@ -335,6 +345,10 @@ def main(argv=None):
         a.json.write_text(json.dumps(res, indent=1, default=str) + "\n")
     for e in res["errors"]:
         print("ERROR", e)
+    for r in res["contracts"]:
+        if r["verdict"] == "ADVISORY_MISMATCH":
+            print(f"ADVISORY_MISMATCH {r['inst']} ({r['module']}) {r['param']}: the bind adds {r['added']} cycles on a fixed-age "
+                  f"loop (request {r['req']} + response {r['resp']}{', TORN' if r['torn'] else ''})")
     for r in res["advisory"]:
         print(f"ADVISORY {r['module']} n={r['n']} max_added={r['max_added']} {json.dumps(r['params'])[:160]} e.g. {r['eg']}")
     print(f"LATENCY_CONSUMERS {'FAIL' if res['errors'] else 'PASS'} {json.dumps(res['stats'])} r8={res['r8'].get('verdict')} "

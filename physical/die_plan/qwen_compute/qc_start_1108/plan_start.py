@@ -63,7 +63,8 @@ def plan(base,side,rawdir):
             if okay:break
             R+=1
         else:raise ValueError((n,'reader cannot clear occupied bands at bounded reach'))
-        c['landing_reader_start']=dict(depth=R,origin_rect_um=[round(origin[0]-8.64,2),round(origin[1]-8.64,2),round(origin[0]+8.64,2),round(origin[1]+8.64,2)],branches=reader)
+        # QC-TYPES-11 11-08: R==0 (every input band within one hop of the origin) has no reader transport; schema needs depth>=1
+        if R:c['landing_reader_start']=dict(depth=R,origin_rect_um=[round(origin[0]-8.64,2),round(origin[1]-8.64,2),round(origin[0]+8.64,2),round(origin[1]+8.64,2)],branches=reader)
         outs=[b for b in mask['outputs'] if 'cland_fstart_out_'+b in pins];needs={b:H.stages_needed(origin,H.ORIGIN_EXT,pins['cland_fstart_out_'+b],0) for b in outs};W=max(needs.values(),default=0)
         # Existing writer branches must remain covered at their new uniform phase.
         far=sorted(set(b for b,x in needs.items() if x)|set(c.get('landing_writer_start',{}).get('branches',{})))

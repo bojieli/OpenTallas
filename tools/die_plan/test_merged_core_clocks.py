@@ -49,6 +49,19 @@ def test_missing_or_fabricated_bit_rejected(tmp_path, mutant):
     with pytest.raises(ValueError): G.core_tap_rows(p, 'p')
 
 
+def test_signed_abstract_use_signal_with_liberty_clock_accepted(tmp_path):
+    # write_abstract_lef emits USE SIGNAL on clock ports; Liberty names the clocks
+    p, tap = fixture(tmp_path)
+    f = tmp_path/'core.lef'; f.write_text(f.read_text().replace('USE CLOCK', 'USE SIGNAL'))
+    assert M.pins(p, 'p', tap, 'u_h') == tap['merged_clock_ports']
+
+
+def test_output_direction_still_rejected(tmp_path):
+    p, tap = fixture(tmp_path)
+    f = tmp_path/'core.lef'; f.write_text(f.read_text().replace('DIRECTION INPUT', 'DIRECTION OUTPUT', 1))
+    with pytest.raises(ValueError): M.pins(p, 'p', tap, 'u_h')
+
+
 def test_tcl_materializes_both_bits_and_missing_bit_fails(tmp_path):
     import shutil
     import subprocess

@@ -3932,7 +3932,10 @@ def macro_move_table(t, tn, env=None):
         return out
     cores = {c.get("inst"): c for c in t.get("hard_cores", []) or []}
     w, h = t["outline_um"]
-    pos = {n: list(c["origin_um"]) for n, c in cores.items()}
+    # Overlap is judged on the placed boxes (origin + the plan's per-core track offset, as place_macro gets them): a plan
+    # can abut two cores through their offsets (S81 bf_col3 u_c / bf16 u_ha: origins 0.888 um inside, placed edges equal).
+    pos = {n: [c["origin_um"][0] + c.get("track_offset_um", [0.0, 0.0])[0],
+               c["origin_um"][1] + c.get("track_offset_um", [0.0, 0.0])[1]] for n, c in cores.items()}
     for e in raw.split(","):
         f = e.split(":")
         if len(f) not in (3, 4) or f[0] not in cores:
@@ -3946,7 +3949,7 @@ def macro_move_table(t, tn, env=None):
         if orient not in _CORE_TRACK_OFFSET:
             raise ValueError(f"type {tn}: OT_MACRO_MOVES {f[0]} orient {orient!r}")
         ox, oy = _CORE_TRACK_OFFSET[orient]
-        pos[f[0]] = [x, y]
+        pos[f[0]] = [x + ox, y + oy]
         out[c.get("physical_inst", f[0])] = {"inst": f[0], "from": list(c["origin_um"]), "to": [x, y], "orient": orient,
                                              "x": x + ox, "y": y + oy}
     names = sorted(cores)
@@ -3954,7 +3957,7 @@ def macro_move_table(t, tn, env=None):
         for b in names[i + 1:]:
             ax, ay = pos[a]; aw, ah = cores[a]["outline_um"]
             bx, by = pos[b]; bw, bh = cores[b]["outline_um"]
-            if ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah:
+            if ax < bx + bw - 1e-6 and bx < ax + aw - 1e-6 and ay < by + bh - 1e-6 and by < ay + ah - 1e-6:
                 raise ValueError(f"type {tn}: OT_MACRO_MOVES overlap {a} / {b}")
     return out
 

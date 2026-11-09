@@ -189,6 +189,8 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
 SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
                       r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
+NO_HOST = re.compile(r"no host qualifies")              # ot-run placed nothing: fleet disk or memory, not the design
+NO_HOST_RETRY_S = 900
 STATE_FILE = "kit_wave_state.json"
 LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)
 
@@ -3749,6 +3751,10 @@ def collect(AP, cfg, st, notices):
         if res.get("class"):                             # KW-RESUME-1 'nochange': the previous attempt's class stands
             cls, why = res["class"], (res.get("reason") or why)
         rec.update(status="FAIL", **{"class": cls}, reason=why)
+        if cls == "INFRA" and NO_HOST.search(why):       # KW-FIX-37: a host shortage spends no infra attempt, the row waits
+            rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
+            rec["no_host_at"] = time.time()
+            rec["status"] = "RETRY-INFRA"
         if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
@@ -3780,7 +3786,9 @@ def infra_relaunch_due(cfg, rec):
            for pat in (((cfg.get("dies") or {}).get(rec["die"]) or {}).get("hold_items") or {})):
         return False
     if rec.get("status") == "RETRY-INFRA":
-        return True
+        # KW-FIX-37 11-08 (COORD 18:49, iq_C t1 'no host qualifies'): such a row retries, paced so a full fleet is not
+        # hit with a new attempt on every tick
+        return time.time() - float(rec.get("no_host_at") or 0) >= NO_HOST_RETRY_S
     return (rec.get("status") == "FAIL" and rec.get("class") == "INFRA"
             and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
