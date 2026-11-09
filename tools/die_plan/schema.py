@@ -1354,6 +1354,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['r
            'type': 'object'},
  'type': 'array'}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['keep_modules'] = {'items': {'minLength': 1, 'type': 'string'}, 'type': 'array'}
+# KV-TYPES-5 11-08: opt-in synchronous reset relays from a delivered reset to named ot_dp_st sinks (reset_port_relays.py)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['port_relays'] = {
+    'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': ['name', 'depth', 'sinks'],
+                               'properties': {'name': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'},
+                                              'depth': {'type': 'integer', 'minimum': 1, 'maximum': 8},
+                                              'sinks': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
+                                                        'items': {'type': 'string', 'pattern': '^[A-Za-z_][A-Za-z_0-9]*$'}}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["bound_group"] = {'additionalProperties': False,
  'properties': {'kind': {'const': 'exact_post_bind_group'},
                 'members': {'items': {'additionalProperties': False,
