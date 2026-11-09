@@ -20,12 +20,11 @@ module ot_smh_static_feed #(parameter integer MUT=0)(
  reg [42:0] er_in;
  reg c29_q,pv_q;
  reg [9:0] ctag_q,ptag_q;
- (* keep *) reg fault_r;
- wire fault_o;
+ (* keep *) reg [1:0] fv;   // [0] sticky fault_r, [1] its port copy fault_o (kept vector: no port-net alias)
+ wire fault_r = fv[0], fault_o = fv[1];
  assign fault=fault_o;
  wire cmp_f=(pv_q!=c29_q) || (c29_q && ptag_q!=ctag_q) || (s1_c[25] && !c29_q);
  reg [25:0] s1_c;
- ot_smh_static_feed_kq u_fo(.clk(clk),.rst_n(rst_n),.d(fault_r|cmp_f),.q(fault_o));
  reg [25:0] hc[0:3];
  reg [1055:0] hw0,hw2;
  reg [543:0] hw1,hw3;
@@ -38,7 +37,7 @@ module ot_smh_static_feed #(parameter integer MUT=0)(
  end
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin
-   fault_r<=0;expected_request<=0;er_in<=0;c29_q<=0;pv_q<=0;ctag_q<=0;ptag_q<=0;fm<=0;
+   fv<=0;expected_request<=0;er_in<=0;c29_q<=0;pv_q<=0;ctag_q<=0;ptag_q<=0;fm<=0;
    s1_c<=0;for(k=0;k<4;k=k+1)hc[k]<=0;
   end else begin
    s1_c<=command[25:0];
@@ -46,14 +45,8 @@ module ot_smh_static_feed #(parameter integer MUT=0)(
    er_in<=command[82:40];expected_request<=er_in;
    for(k=0;k<4;k=k+1)fm[3*k+:3]<=command[28:26];
    c29_q<=command[29];ctag_q<=command[39:30];pv_q<=packet[1098];ptag_q<=packet[1097:1088];
-   if(cmp_f)fault_r<=1;
+   fv<={2{fault_r|cmp_f}};
   end
  assign lt0={hc[0],hw0};assign lb0={hc[1],hw1};
  assign lt1={hc[2],hw2};assign lb1={hc[3],hw3};
-endmodule
-// HBM-SM-KIDS-2 11-09: kept port-flop copy (async reset to 0)
-module ot_smh_static_feed_kq (input wire clk, input wire rst_n, input wire d, output wire q);
-    (* keep *) reg r;
-    always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= d;
-    assign q = r;
 endmodule
