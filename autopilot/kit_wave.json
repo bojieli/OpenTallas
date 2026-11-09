@@ -10048,7 +10048,9 @@
         "q_b011__physical_v1@1",
         "q_b012__physical_v1@1",
         "q_b013__physical_v1@4",
-        "q_spb1@2"
+        "q_spb1@2",
+        "q_b012@1",
+        "q_b013@4"
       ],
       "pilot_max": 2,
       "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -10327,7 +10329,9 @@
         "q_b012__physical_v1@1": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall (DIE-HBM-94 22:51)",
         "q_b013__physical_v1@4": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall (DIE-HBM-94 22:51)",
         "q_spb1@2": "REDESIGN: RE-FORM R6, OT_FT_POLARITY_LOCAL 1 + OT_MAXWIRE_UM 80, repeat long hops and keep FT inverters at the launch station (DIE-HBM-94 22:51), fresh kit",
-        "q_spt0@1": "kit_istations compares the resolved kit dir, moved kit (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)"
+        "q_spt0@1": "kit_istations compares the resolved kit dir, moved kit (DIE-HBM-94 7428ba78a88b, wave src a714b9cf46)",
+        "q_b012@1": "REDESIGN: diamond DPL (--dpl-diamond), DPL-0033 legalizer stall, same class as q_b012pv1 (DIE-HBM-94 22:51, q_b012 failed 22:51 after that post)",
+        "q_b013@4": "REDESIGN: M7 PDN strap windows centred on the real pdngen strap pair, PDN-0179 class (DIE-HBM-94 ee38ee88f048), diamond DPL"
       },
       "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
       "item_args_rf1prev": {
@@ -12042,7 +12046,7 @@
         "--native-cell-cap",
         "517000",
         "--dpl-diamond",
-        "q_b012__physical_v1,q_b013__physical_v1"
+        "q_b012,q_b012__physical_v1,q_b013,q_b013__physical_v1"
       ],
       "gen_env": {
         "OT_HOLD_REPAIR_SCOPE": "reg2reg"
@@ -12333,7 +12337,9 @@
         "q_b011__physical_v1@1",
         "q_b012__physical_v1@1",
         "q_b013__physical_v1@4",
-        "q_spb1@2"
+        "q_spb1@2",
+        "q_b012@1",
+        "q_b013@4"
       ],
       "note_src_kw40": "KW-FIX-40 2026-11-08 22:58 PST (DIE-HBM-94 22:51 READY): src = mclk adc4b6a6fa44 + bind.py/kit_istations.py 7428ba78a88b + partition_ft_reserve.py ee38ee88f048, composition branch claude/kw-fix-40-hbm-src-1108 a714b9cf46, md5 equal on epyc4/intel1/epyc5; revert *_prev_kw40"
     }
