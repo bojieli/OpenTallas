@@ -37,6 +37,18 @@ class NativeStations(unittest.TestCase):
   t['internal_stations'][1]['regs_um'][0]=[1,999]
   with self.assertRaisesRegex(ValueError,'conflicting OUT'):native_istations.annotate(b)
 
+ def test_bus_scope_skips_unselected_out_buses(self):
+  # HBM-PLAN-1: a relay type realises only its relay OUT buses; per-core OUT rows of other buses stay KIT
+  b,L=self.fixture();t=b.types['sys']
+  t['buses'].append(dict(name='m',dir='out',width=4))
+  t['internal_stations']+= [dict(conn='bus:m',regs_um=[[0,0]]),dict(conn='bus:m',regs_um=[[5,5],[6,6]])]
+  with self.assertRaisesRegex(ValueError,'conflicting OUT'):native_istations.annotate(b)
+  b.ab['internal_stations_buses']={'sys':['o']}
+  native_istations.annotate(b);self.assertEqual(L['internal_source_cycles'],8)
+  self.assertEqual([e['conn'] for e in native_istations.source_entries(t,native_istations.selected_buses(b.ab,'sys'))],['bus:o'])
+  self.assertIsNone(native_istations.selected_buses(b.ab,'other'))
+  with self.assertRaisesRegex(ValueError,'unknown OUT buses'):native_istations.source_entries(t,{'zz'})
+
  def test_output_geometry_follows_signal_order(self):
   b,L=self.fixture();e=b.types['sys']['internal_stations'][0]
   e.update(launch='u_t00.n_y',capture='face flop',from_um=[0,0],to_um=[8,0])
