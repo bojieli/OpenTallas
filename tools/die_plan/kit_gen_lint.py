@@ -60,7 +60,10 @@ def src_skew(src_sha, queue_repo, files=QUEUE_LINT_FILES):
     if head.returncode:
         return [], dict(applies=False, reason=f"queue repo {queue_repo} is not a git checkout")
     qsha = head.stdout.strip()
-    src = git("rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}")
+    # KW-FIX-40 11-08 (COORD: hub scratch2 at 0 GB): an existence check must not lazy-fetch in a partial clone; every run-item
+    # fetched the full 747k-object pack (27 x 7.4 GB).  A commit the repo lacks takes the "not proven either way" path below.
+    src = subprocess.run(["git", "-C", str(queue_repo), "rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}"],
+                         capture_output=True, text=True, env=dict(os.environ, GIT_NO_LAZY_FETCH="1"))
     if src.returncode:
         return [], dict(applies=False, reason=f"source {src_sha} unknown to the queue repo (not proven either way)",
                         queue=qsha[:11])
