@@ -1963,6 +1963,36 @@
    "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv.",
    "item_inputs": {
     "kv3_sys_SD": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_sys_SD_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v12": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v5n": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v6n": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    }
+   },
+   "item_inputs_prev_kw43sd": {
+    "kv3_sys_SD": null,
+    "kv3_sys_SD_v1": null
+   },
+   "note_kw43_kvsd": "KW-FIX-43 12:4x: (a) lockq ab58fcd7445 overlaid on dkv97/src_zb epyc2+epyc7 (gen_phys a2f0fd8f -> 2c5da7c1, test_bound_native_reset 882f8a6c -> 5315be8f; old in kw43/kvlockq/old) for kv3_hub_C; (b) item_inputs kv3_sys_SD/_v1 -> kw43/kvsdpg plan 82916683. Revert: item_inputs[k] = item_inputs_prev_kw43sd[k] (None = delete); restore kvlockq/old.",
+   "item_inputs_prev_kw43rs": {
+    "kv3_pv_v12": null,
+    "kv3_pv_v5n": null,
+    "kv3_pv_v6n": null,
+    "kv3_sys_SD": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/kvsdpg/plan_c.json",
      "note": "KW-FIX-43 12:4x COORD 12:35 (2): KV SD-PG-FOLLOW plan md5 82916683 (KV-PLAN-2 12:34; = plan_c 1035a005 with die.pg.domains SW/SE serdes rects following the moved PHY boxes). Dir kw43/kvsdpg = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
@@ -1971,11 +2001,7 @@
      "note": "KW-FIX-43 12:4x COORD 12:35 (2): KV SD-PG-FOLLOW plan md5 82916683 (KV-PLAN-2 12:34; = plan_c 1035a005 with die.pg.domains SW/SE serdes rects following the moved PHY boxes). Dir kw43/kvsdpg = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     }
    },
-   "item_inputs_prev_kw43sd": {
-    "kv3_sys_SD": null,
-    "kv3_sys_SD_v1": null
-   },
-   "note_kw43_kvsd": "KW-FIX-43 12:4x: (a) lockq ab58fcd7445 overlaid on dkv97/src_zb epyc2+epyc7 (gen_phys a2f0fd8f -> 2c5da7c1, test_bound_native_reset 882f8a6c -> 5315be8f; old in kw43/kvlockq/old) for kv3_hub_C; (b) item_inputs kv3_sys_SD/_v1 -> kw43/kvsdpg plan 82916683. Revert: item_inputs[k] = item_inputs_prev_kw43sd[k] (None = delete); restore kvlockq/old."
+   "note_kw43_kvrs": "KW-FIX-43 13:1x: item_inputs of 5 KV types -> kw43/kvrs plan 8ca41a6b. Revert: item_inputs[k] = item_inputs_prev_kw43rs[k] (None = delete)."
   },
   "s81": {
    "enabled": true,
