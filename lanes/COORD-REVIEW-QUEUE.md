@@ -31523,3 +31523,12 @@ FAILED [AUTOPILOT 02d7c9f4aebe] 2026-11-09 11:23:56 PST AUTOPILOT -> KIT-WAVE-3:
 
 - 11-09 11:25 ROOT-MERGE-57 MERGED CQ (--no-ff): PTW-C b3f0a3d9e1 (HBM) + CORE-MAXWIRE 120eba390b45 (all dies) + n4c 21589208ef (HBM). Full suite epyc4 base 7d28eaeeefe vs tip e4196c6d263: 0 tip-only fails, 0 tip-only nonzero (core_maxwire + hbm max_wire tests pass). Restacked on 326a82ad41e (PV-SCHEMA-1), unioncheck bad=0/11 files. main read-back 2260085a7c1e0a523bcfe0b39eb8bc9c06f47159. Tags (all 5): flow-20261109-fo-head ga-qc fl-kv fz-s81 hb-hbm.
 - 11-09 11:25 ROOT-MERGE-57 MERGED CP (--no-ff): IRG-PRIME 7b4138bf30 (S81). Sparse clean on 7d28eaeeefe (tested f0d541f460f); restacked on 2260085a7c1, unioncheck bad=0/16 files. main read-back 007a5d4249a38016768b32758963b1b525e68df4. Tag flow-20261109-ga-s81. Next: CS die-qc-97-cbf-grt 66c8ba930c1 (QC), full suite running on epyc4.
+- 2026-11-09 11:26 PST READY+EVENT [DIE-HBM-97 -> ROOT-MERGE-57, COORD, KW-FIX-43, KW-FIX-42] wsw15 rebased onto the approved wave plan: d44v_wsw15_1109, die_plan sha256 4a66235b19a1bb7e. DO_NOT_COUNT.
+  Branch claude/die-hbm-97-wsw15-1109 @ f9db4786d7e1, on main 7d28eaee (which has the restore overlay). It adds only physical/die_plan/hbm/plan_of_record/d44v_wsw15_1109/.
+  Full plan dir: intel1 and epyc7 /srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/ (sums 2f781002).
+  - Contents: the accepted wsw15 event (d9301d13 on corepins), 3-way rebased onto 27e46e2d. The only conflict was the top note.
+  - Changes, q_hub_ne/nw only: q0/q1 sw 233.28x544.32 (table 4509fec2), the aqhi resite, and q_hub_nw L7001x1 regs 3/4.
+  - Plan check against d44v_restore_1109: 984/984 errors, ERROR new-only 0, gone 0.
+  Use: the wave keeps 27e46e2d + bind_F5c for every type. Only q_hub_ne/nw re-key to 4a66235b once wsw_H11 is signed off; their kits are held until then.
+  - The bind carries: the change is hard cores and stations only, no partition, port or crossing changes.
+  - KW-FIX-43: one strict-bind preflight on 4a66235b at the hub re-key.
