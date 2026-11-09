@@ -1096,3 +1096,22 @@ def test_kit_closure_kitparam_same_file_identical_sibling(tmp_path):
     picks = {}
     bind.kit_closure(["pp"], idx, [str(old)], picks)
     assert picks["red"] == str(old) and picks["lane"] == str(old)
+
+
+def test_kit_inline_include_found_in_a_kit_file_directory(tmp_path):
+    """DIE-HBM-94 11-08: an include absent next to its file resolves from the kit list's directories, once, else BindError."""
+    from bind import BindError, kit_inline_includes
+    a, b, c = tmp_path / "a", tmp_path / "b", tmp_path / "c"
+    for d in (a, b, c):
+        d.mkdir()
+    (a / "x.sv").write_text('module x;\n`include "h.svh"\nendmodule\n')
+    (b / "y.sv").write_text("module y; endmodule\n")
+    (c / "z.sv").write_text("module z; endmodule\n")
+    (b / "h.svh").write_text("wire one;\n")
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, _ = kit_inline_includes([a / "x.sv", b / "y.sv", c / "z.sv"], kd)
+    assert "wire one;" in Path(out[0]).read_text()
+    (c / "h.svh").write_text("wire two;\n")
+    with pytest.raises(BindError, match="not found next to"):
+        kit_inline_includes([a / "x.sv", b / "y.sv", c / "z.sv"], kd)

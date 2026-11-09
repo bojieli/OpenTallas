@@ -815,7 +815,7 @@ def main(argv):
     t = raw["partition_types"][tn]
     man = json.loads((kd / "kit_rtl.json").read_text())
     bfile = next(Path(f) for f in man["files"] if Path(f).stem == man["bound_module"])
-    if bfile.parent != kd:
+    if bfile.resolve().parent != kd:      # kd is resolved; a moved kit dir leaves a symlink in the recorded path (DIE-HBM-94 11-08, q_spt0)
         raise SystemExit(f"kit_istations: bound module {bfile} is not a kit-local copy (run kit_rsync.py first)")
     txt = bfile.read_text()
     tcl = [TCL_HEAD]
