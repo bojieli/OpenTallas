@@ -148,6 +148,34 @@ def add_extra(eid, archive, files, note, store=None):
     return True
 
 
+def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_logs=()):
+    """COUNT-ARCHIVE-2 11-09: a re-sign writes PROVENANCE.json (and lec/) after signoff.json; an ingest that ran in between stored
+    the record without them, so the counter saw it unversioned (QC NK nk_eco2_resign_fc, 02:08 vs 03:26).  Same sign-off (same id):
+    take the scan fields and provenance once, and the new unit files as an archived extra set.  Only for an entry that has no
+    provenance yet; a provenance already stored is never replaced.  -> True when the entry changed."""
+    p = entry_path(eid, store)
+    with store_lock(store):
+        e = read_entry(p)
+        if (e.get("scan") or {}).get("prov_file") or e.get("provenance_json") or not scan.get("prov_file") or not prov_json:
+            return False
+        e["scan"] = dict(e.get("scan") or {}, **{k: scan[k] for k in SCAN_FIELDS if k in scan})
+        for k in ("flow_tag", "src_commit", "prov_file"):
+            if scan.get(k) is not None:
+                e[k] = scan[k]
+        e["provenance_json"] = blob(prov_json)
+        note = "late-provenance %s" % time.strftime("%F %T %Z")
+        if files:
+            e.setdefault("extra", []).append(dict(archive=archive, files=files, note=note))
+        e["late_provenance"] = dict(time=time.strftime("%F %T %Z"), prov_file=scan["prov_file"], files=len(files or []),
+                                    changed_logs_kept_first_version=list(changed_logs))
+        data = gzip.compress((json.dumps(e, sort_keys=True) + "\n").encode(), 9, mtime=0)
+        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".e.")
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        os.replace(tmp, p)
+    return True
+
+
 def find_entries(die, keys=None, entries=None):
     es = read_manifest() if entries is None else entries
     keys = set(keys or ())
