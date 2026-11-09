@@ -699,6 +699,32 @@ class TestSafety(Base):
         finally:
             ac.HOME = saved
 
+    def test_spill_done_stops_holding(self):
+        # COORD 11-08: <tag>.done = back-copy finished (spill_sweep reads only *.json).  With the flag it holds nothing; a
+        # pending *.json still holds; flag off is the negative control.
+        home = os.path.join(self.t, "home")
+        sp = os.path.join(home, ".local/state/ot-run/spill_pending")
+        os.makedirs(sp)
+        k, b = self.kit_c("lane/spilled")
+        k2, b2 = self.kit_c("lane/pending")
+        with open(os.path.join(sp, "1-1.done"), "w") as f:
+            json.dump({"roots": [k]}, f)
+        with open(os.path.join(sp, "2-2.json"), "w") as f:
+            json.dump({"roots": [k2]}, f)
+        saved = ac.HOME
+        ac.HOME = home
+        try:
+            self.run_job("--classes", "c")
+            self.assertIn("1-1.done", self.row(b)[4])
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            self.run_job("--classes", "c", "--union-real-sources-only")
+            self.assertEqual(self.row(b)[3], "DELETED", self.row(b))
+            self.assertFalse(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            self.assertIn("2-2.json", self.row(b2)[4])
+            self.assertTrue(os.path.exists(os.path.join(b2, "3_3_place_gp.odb")))
+        finally:
+            ac.HOME = saved
+
 
 class TestKitwave(unittest.TestCase):
     def test_reduce(self):

@@ -744,6 +744,9 @@ class Job:
         sp = os.path.join(HOME, ".local/state/ot-run/spill_pending")
         if os.path.isdir(sp):
             for f in os.listdir(sp):
+                # <tag>.done = back-copy finished; ot-run --spill-sweep reads only *.json, so a .done record holds nothing live.
+                if f.endswith(".done") and getattr(self.a, "union_real_sources_only", False):
+                    continue
                 try:
                     for p in text_paths(rd(os.path.join(sp, f))):
                         rows.append((p, "ot-run spill_pending/" + f))
@@ -1644,7 +1647,8 @@ def main(argv=None):
                         "still does); COORD ruling")
     r.add_argument("--union-real-sources-only", action="store_true",
                    help="do not read protect.d/protected-dbs.txt (this job's own union) back as a keep source; a path stays "
-                        "only while a real source names it (COORD 11-08)")
+                        "only while a real source names it; finished ot-run spill records (spill_pending/*.done) stop holding "
+                        "paths, pending *.json records still hold (COORD 11-08)")
     r.add_argument("--c-old-keep-h", type=float, default=0.0,
                    help="class c only: an ancestor .keep older than this many hours does not block the trim of a finished "
                         "or superseded kit (6_final.odb, signoff.json or a later attempt); 0 = off (COORD 11-08)")
