@@ -208,10 +208,16 @@ module ot_hbm_accel_smh_tcl_gu #(parameter integer L = 8, parameter integer IL =
     // HBM-SM-KIDS-2 11-09 (registered face, 0 cycles): the sticky lane fault keeps its feedback flop; the lfault pin
     // takes a kept copy with the same reset and next state (equal every cycle), so the port flop drives only the port.
     // both flops kept: synthesis merges a non-kept twin into the kept copy (xs/static_front 11-09 face_guard)
-    (* keep *) reg [1:0] lfv;   // [0] sticky feedback flop, [1] its port copy (kept vector: no port-net alias)
-    wire lane_fault = lfv[0], lane_fault_o = lfv[1];
-    always @(posedge clk or negedge rst_n) if (!rst_n) lfv <= 2'b00; else lfv <= {2{lane_fault | (|lf)}};
+    reg lane_fault;
+    wire lane_fault_o;
+    always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
+    ot_hbm_accel_smh_gu_kh u_lfo (.clk(clk), .rst_n(rst_n), .d(lane_fault | (|lf)), .q(lane_fault_o));
     assign sum_o = sum_q;
     assign lfault = lane_fault_o;
 endmodule
 `default_nettype wire
+// HBM-SM-KIDS-2 11-09: port-copy flop cell (keep_hierarchy, async reset to 0): face_guard's prevention form
+(* keep_hierarchy *)
+module ot_hbm_accel_smh_gu_kh (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule

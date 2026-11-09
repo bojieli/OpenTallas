@@ -2747,9 +2747,8 @@ module ot_hbm_accel_smh_leaf #(
     // ---- E4 ----
     // HBM-SM-KIDS-2: ifirst/ilast/itag kept like their E copies (else synthesis merges them into the copies)
     reg              iv_b, iv_f, ifp4;
-    // ifirst/ilast: one kept 2-bit vector like itag (a kept SCALAR reg aliases the port net: face_guard shared)
-    (* keep *) reg [1:0] ifl;
-    wire ifirst = ifl[0], ilast = ifl[1];
+    // ifirst/ilast plain regs; their E copies are keep_hierarchy kreg cells (no merge across the hierarchy)
+    reg              ifirst, ilast;
     (* keep *) reg [TAGW-1:0] itag;
     reg [WSW-1:0]    iw;
     reg [SLW-1:0]    ix;
@@ -2758,7 +2757,7 @@ module ot_hbm_accel_smh_leaf #(
         else begin iv_b <= c3bv[1]; iv_f <= c3bv[0]; end
     end
     always @(posedge clk) begin
-        ifl <= {c3bd[CW-4], c3bd[CW-3]}; ifp4 <= c3bd[CW-5]; itag <= c3bd[TAGW-1:0];
+        ifirst <= c3bd[CW-3]; ilast <= c3bd[CW-4]; ifp4 <= c3bd[CW-5]; itag <= c3bd[TAGW-1:0];
         iw <= w3b;
         ix <= xrd[SLW-1:0];
     end
@@ -2771,10 +2770,11 @@ module ot_hbm_accel_smh_leaf #(
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
     // kept E-face copies (same D as ifirst / ilast / itag: equal every cycle, 0 cycles)
-    (* keep *) reg [1:0] ifl_e;
-    wire ifirst_e = ifl_e[0], ilast_e = ifl_e[1];
+    wire ifirst_e, ilast_e;
+    ot_hbm_accel_smh_kreg #(.W(1)) u_ifirst_e (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(c3bd[CW-3]), .q(ifirst_e));
+    ot_hbm_accel_smh_kreg #(.W(1)) u_ilast_e (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(c3bd[CW-4]), .q(ilast_e));
     (* keep *) reg [TAGW-1:0] itag_e;
-    always @(posedge clk) begin ifl_e <= {c3bd[CW-4], c3bd[CW-3]}; itag_e <= c3bd[TAGW-1:0]; end
+    always @(posedge clk) itag_e <= c3bd[TAGW-1:0];
     assign o_ifirst_e = ifirst_e; assign o_ilast_e = ilast_e; assign o_itag_e = itag_e;
 `else
     reg              jv_b, jv_f, jfirst, jlast, jfp4;
