@@ -15,8 +15,10 @@ ext < $RG2 | sed 's/^module dsdv_idx_rg2_chunk (/module chk_ref (/' > src/chk_re
 { echo '`define OT_IDX_HSLICE_FASTPAD'; git -C $G show b9200f3611:rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv | ext |
   sed 's/^module dsdv_idx_rg2_chunk (/module chk_fp (/'; echo '`undef OT_IDX_HSLICE_FASTPAD'; } > src/chk_fp.sv
 for m in dsdv_idx_rg3 dsdv_idx_rg3_nq_native; do
-  sed "s/^module $m #(/module rg3_ref_m #(/" $P/$m.sv > src/ref_$m.sv
-  cp $P/$m.sv src/p_$m.sv; (cd src && patch -s -p1 --no-backup-if-mismatch p_$m.sv < $B/$m.prime.patch)
+  # since the source event the bound file carries the hunk: ref = the bytes before it (4dedcf1423), p = the bound file
+  git -C $G show 4dedcf1423:physical/die_plan/s81/bind/source_modules/portfix178/$m.sv | sed "s/^module $m #(/module rg3_ref_m #(/" > src/ref_$m.sv
+  if grep -q OT_IDX_RG3_PRIME $P/$m.sv; then cp $P/$m.sv src/p_$m.sv
+  else cp $P/$m.sv src/p_$m.sv; (cd src && patch -s -p1 --no-backup-if-mismatch p_$m.sv < $B/$m.prime.patch); fi
   sed -i "s/^module $m #(/module rg3_p_m #(/" src/p_$m.sv
   grep -q "^module rg3_ref_m #(" src/ref_$m.sv; grep -q "^module rg3_p_m #(" src/p_$m.sv
 done

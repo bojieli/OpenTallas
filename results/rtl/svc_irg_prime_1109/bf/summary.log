@@ -1,0 +1,103 @@
+# irg PRIME banded-flat (bf, KR 1) bench 2026-11-09T18:38:46Z devoted-wren src: 521064486a45e139b181e5b8dcbf3cec5b24bc5c57142cd528a6eeb4e128ce6b ref_rg3.sv;d8c5274a813cc2a67c49f0bb7f168b73d7c5d27dc865842cc040c1d27182fd99 chk_fp.sv;8e31f01ef88d87040c13e0d952e612dc4f81071e17021b7a32f852604a099958 chk_ref.sv;0a70cae6ce1a293effd7e33075566dc2b29ae29294ae1ea702b659905b1cbf78 rtl/dsdv_idx_rg2.sv;ab73be3e9b1fe133362dfa872f749b9f72311608aaa59eac3b414c1959927dd7 rtl/dsdv_idx_rg3_band.sv;c32ccc6da34c8f4599b5e060364c5a692c13a26cb47c653f816e4cffe8dd6b5d rtl/dsdv_idx_rg3_bf.sv;a4148b6c226e72ec475f4fd8e5d2a6fa36857a22c478aebc899618380de14705 rtl/dsdv_idx_rg3_br.sv;
+[bf mut MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf mut MUTK0SEED1NEP120] D 2 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf mut MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK0SEED1NEP120] kr 1 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34400 qbad_ep_ref 10 qbad_ep_fp 10
+[bf mut MUTK0SEED1NEP120] mismatch 0 fail_open_ref 1916 fail_open_fp 1916 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 30
+[bf mut MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[bf mut MUTK0SEED1NEP120] out_diff_all 10520 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf mut MUTK0SEED1NEP120] FAIL irg_prime kr 1 mutk 0
+[bf mut MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf mut MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf mut MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf mut MUTK3SEED1NEP120] kr 1 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 34400 qbad_ep_ref 40 qbad_ep_fp 40
+[bf mut MUTK3SEED1NEP120] mismatch 0 fail_open_ref 7669 fail_open_fp 7669 fail_open_ref_p 2944 fail_open_fp_p 2944 pf_wrong 30
+[bf mut MUTK3SEED1NEP120] fail_open_ref_p5 3829 fail_open_fp_p5 3829 fc_seen_u 00000100
+[bf mut MUTK3SEED1NEP120] out_diff_all 10520 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf mut MUTK3SEED1NEP120] FAIL irg_prime kr 1 mutk 3
+[bf noprime MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 2 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK0SEED1NEP120] kr 1 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22080 qbad_ep_ref 10 qbad_ep_fp 10
+[bf noprime MUTK0SEED1NEP120] mismatch 0 fail_open_ref 1916 fail_open_fp 1916 fail_open_ref_p 1474 fail_open_fp_p 1474 pf_wrong 50
+[bf noprime MUTK0SEED1NEP120] fail_open_ref_p5 1916 fail_open_fp_p5 1916 fc_seen_u 00000100
+[bf noprime MUTK0SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf noprime MUTK0SEED1NEP120] FAIL irg_prime kr 1 mutk 0
+[bf noprime MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 0 fail_open_ep 10 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf noprime MUTK3SEED1NEP120] kr 1 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 22080 qbad_ep_ref 40 qbad_ep_fp 40
+[bf noprime MUTK3SEED1NEP120] mismatch 0 fail_open_ref 7669 fail_open_fp 7669 fail_open_ref_p 5897 fail_open_fp_p 5897 pf_wrong 50
+[bf noprime MUTK3SEED1NEP120] fail_open_ref_p5 7669 fail_open_fp_p5 7669 fc_seen_u 00000100
+[bf noprime MUTK3SEED1NEP120] out_diff_all 0 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf noprime MUTK3SEED1NEP120] FAIL irg_prime kr 1 mutk 3
+[bf prime MUTK0SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK0SEED1NEP120] D 2 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK0SEED1NEP120] D 3 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK0SEED1NEP120] D 4 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK0SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK0SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK0SEED1NEP120] kr 1 mutk 0 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 52880 qbad_ep_ref 10 qbad_ep_fp 10
+[bf prime MUTK0SEED1NEP120] mismatch 0 fail_open_ref 1916 fail_open_fp 1916 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[bf prime MUTK0SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[bf prime MUTK0SEED1NEP120] out_diff_all 26300 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf prime MUTK0SEED1NEP120] PASS irg_prime kr 1 mutk 0
+[bf prime MUTK3SEED1NEP120] D 1 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK3SEED1NEP120] D 2 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK3SEED1NEP120] D 3 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK3SEED1NEP120] D 4 epochs 10 qbad 10 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK3SEED1NEP120] D 5 epochs 10 qbad 0 prime_fault 10 fail_open_ep 0 out_diff_ep 10
+[bf prime MUTK3SEED1NEP120] D 6 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 7 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 8 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 9 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 10 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 11 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] D 12 epochs 10 qbad 0 prime_fault 0 fail_open_ep 0 out_diff_ep 0
+[bf prime MUTK3SEED1NEP120] kr 1 mutk 3 epochs 120 cyc 66112 valid 96000 vfault 3816 pf_records 52880 qbad_ep_ref 40 qbad_ep_fp 40
+[bf prime MUTK3SEED1NEP120] mismatch 0 fail_open_ref 7669 fail_open_fp 7669 fail_open_ref_p 0 fail_open_fp_p 0 pf_wrong 0
+[bf prime MUTK3SEED1NEP120] fail_open_ref_p5 0 fail_open_fp_p5 0 fc_seen_u 00000100
+[bf prime MUTK3SEED1NEP120] out_diff_all 26300 out_diff_ge6 0 chunk_in_diff 0 pk_bad 0
+[bf prime MUTK3SEED1NEP120] PASS irg_prime kr 1 mutk 3
