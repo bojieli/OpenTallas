@@ -11,7 +11,8 @@ Method = the commercial LEC flow (Conformal / Formality): sequential equivalence
 equivalence of every next-state / output function) plus register correspondence.
   gold  the kit RTL (config.mk VERILOG_FILES / DEFINES / INCLUDE_DIRS / TOP_PARAMS) read with a DIFFERENT HDL frontend
         than synthesis used (synthesis read_slang -> gold read_verilog -sv; synthesis read_verilog -> gold read_slang),
-        then only proc / opt_expr -keepdc / wreduce -keepdc / peepopt / flatten / memory_map / generic techmap (no
+        then only proc / opt_expr -keepdc / wreduce -keepdc / peepopt / flatten / opt_expr -fine -keepdc + opt_muxtree
+        (exact dead-X clean-up) / memory_map / generic techmap (no
         fsm / share / opt_dff / abc on the reference).
   gate  the gate netlist (default: 1_2_yosys.v; --netlist for the ODB export) with the ASAP7 TT liberty functions
         (RVT / LVT / SLVT, read_liberty functional models), flattened.
@@ -83,6 +84,55 @@ RAWPREFIX_S_DEFAULT = 900
 # counterexample (state and every input are free), so that base is refuted without a solver call.
 RAWPREFIX_SIM_WORDS = 8
 RAWPREFIX_SIM_ROUNDS = 4
+
+
+# LEC-ESCALATE (DIE-QC-97 11-09): a final compare-point cone that every normal stage left undecided is run once more,
+# alone, with &cec -m -C ESCALATE_C and the wall ESCALATE_S, before it is reported UNPROVEN (QC coll_core v3: the 6
+# undecided CRC / slot-fault cones each proved EQUIVALENT with -C 5000000 in 240-602 s; the normal stages stop at
+# -C 1000 x conflicts / 600 s).  Same solver, same miter, same soundness (undecided stays undecided, a SAT answer is a
+# difference); only the budget is larger.  OT_LEC_ESCALATE_C=0 disables it; OT_LEC_ESCALATE_S = wall per cone
+# (0 = no limit); OT_LEC_ESCALATE_MAX = at most that many cones are escalated (the rest stays undecided, logged).
+ESCALATE_C_DEFAULT = 5000000
+ESCALATE_S_DEFAULT = 1800
+ESCALATE_MAX_DEFAULT = 64
+
+
+def escalate_params():
+    """(conflicts, wall s, max cones) of the final undecided-cone escalation; conflicts 0 = off."""
+    def num(k, d, f):
+        try:
+            return max(0, f(float(os.environ.get(k, d))))
+        except ValueError:
+            return d
+    return (num("OT_LEC_ESCALATE_C", ESCALATE_C_DEFAULT, int), num("OT_LEC_ESCALATE_S", ESCALATE_S_DEFAULT, float),
+            num("OT_LEC_ESCALATE_MAX", ESCALATE_MAX_DEFAULT, int))
+
+
+def escalate_cones(abc, swept, work, tag, ids, log, runner=None):
+    """{id: status} of each undecided cone rerun alone with the escalation budget (escalate_params); cones past the
+    cap are not run and keep 'undecided'.  -> (statuses, record for lec.json)."""
+    conflicts, wall, cap = escalate_params()
+    rec = dict(conflicts=conflicts, wall_s=wall, max=cap, tried=[], proved=[], differs=[], undecided=[], skipped=[])
+    if not conflicts or not ids:
+        rec["skipped"] = list(ids)
+        return {}, rec
+    out = {}
+    for n, i in enumerate(ids):
+        if n >= cap:
+            rec["skipped"].append(i)
+            continue
+        t0 = time.time()
+        st = cone_batch(abc, swept, work, f"{tag}_esc", [i], "-m", conflicts, log, limit=wall, runner=runner,
+                        solo=True)[0]
+        out[i] = st
+        rec["tried"].append(i)
+        rec[st if st in ("proved", "differs") else "undecided"].append(i)
+        log.append(f"LEC ESCALATE {tag} output {i}: {st} (&cec -m -C {conflicts}, wall {wall:.0f} s, "
+                   f"{time.time() - t0:.0f} s)")
+    if rec["skipped"]:
+        log.append(f"LEC ESCALATE {tag}: {len(rec['skipped'])} undecided cones past OT_LEC_ESCALATE_MAX={cap} "
+                   "not escalated (stay undecided)")
+    return out, rec
 
 
 def cone_limit_s():
@@ -753,6 +803,26 @@ def seq_tail_b(out, lecff):
                      [c.format(lecff=lecff, out=out) for c in SEQ_TAIL[1:]]) + "\n"
 
 
+def gold_dead_x_cmds():
+    """DIE-QC-97 11-09 (QC coll_core ot_qwen_static_slot_ctl epoch_abort / fault_cause[0]: gold_x x226 x228 x229,
+    x55690 ...): exact, X-preserving clean-up of provably unreachable RTL X in the flattened gold, so a dead X never
+    reaches a compare cone as a gold-only $anyseq.  Two sources, both unobservable by construction:
+      (a) slang bound checks of a dynamic index: written[cmd_ws] with a 6-bit index into 64 entries reads
+          `cmd_ws < 7'd64 ? m[cmd_ws] : 1'bx` (a write is guarded by `j >= 0 && j < 64`).  The compare is constant
+          for the operand width; opt_expr -fine folds it (unsigned 6 b < 64 -> 1, unsigned >= 0 -> 1) and then the
+          mux, so the X arm is gone.  (Its techmapped $alu also left dangling undriven CO[2] / CO[4] wires; those
+          had no load and never reached a cone.)
+      (b) proc mux chains whose X arm is selected only under a condition an outer mux on the SAME select already
+          decides: `$103 = epoch_begin ? 'x : P` feeding `$107 = epoch_begin ? 0 : $103`.  opt_muxtree removes the
+          dead arm.
+    Both are exact for every input: -keepdc chooses no value for a reachable X and opt_muxtree only drops branches
+    that no select assignment reaches, so a real, reachable RTL X stays a don't care.  No flop is created, merged or
+    renamed.  OT_LEC_GOLD_DEADX=0 restores the previous gold script."""
+    if os.environ.get("OT_LEC_GOLD_DEADX", "1") == "0":
+        return []
+    return ["opt_expr -fine -keepdc", "opt_muxtree"]
+
+
 def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
     s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False, slang_extra=slang_extra)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
@@ -765,7 +835,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # constant-stride slices instead of a 32-stage x-filled barrel shifter): without them eng_rr_e's 552
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
-          "flatten -noscopeinfo", "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "flatten -noscopeinfo", *gold_dead_x_cmds(), "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
           "select -clear", f"write_json {out}.aliases.json",
           # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
@@ -2642,13 +2712,15 @@ def raw_prefix_limit_ands():
         return RAWPREFIX_ANDS_DEFAULT
 
 
-def prove(m, work, conflicts, log, tag="miter", single_cap=2000, wall=None):
+def prove(m, work, conflicts, log, tag="miter", single_cap=2000, wall=None, escalate=None):
     """per-output status {name: 'proved' | 'differs' | 'undecided'} of the miter outputs of builder m.
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
     &sat -a -z on what is left (each output: UNSAT -> const 0, SAT -> counterexample kept).  When &sat leaves undefined
     outputs, random simulation marks the SAT ones and the rest are re-checked one cone at a time (&cone -O i;
     &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion).
-    wall: optional wall limit (s) on that first sweep; on an overrun every output is 'undecided' (never proved)."""
+    wall: optional wall limit (s) on that first sweep; on an overrun every output is 'undecided' (never proved).
+    escalate: a dict (the final compare-point proof): what is still undecided at the end is rerun once per cone with
+    the LEC-ESCALATE budget (escalate_cones) and the escalation record is stored in it."""
     if not m.outs:
         return {}
     work = Path(work)
@@ -2725,6 +2797,12 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000, wall=None):
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
         st.update(xor_sat(m, unknown, log))
+    if escalate is not None:
+        unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
+        res, rec = escalate_cones(abc, swept, work, tag, unknown, log)
+        for i, status in res.items():
+            st[m.onames[i]] = status
+        escalate.update({k: ([m.onames[i] for i in v] if isinstance(v, list) else v) for k, v in rec.items()})
     return st
 
 
@@ -7935,8 +8013,11 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             raise Unproven("no matched compare points")
         # 4. prove every compare point (and the correspondence hypotheses once more, together)
         t1 = time.time()
-        status = prove(m, out, conflicts, log, tag="miter")
+        esc = {}
+        status = prove(m, out, conflicts, log, tag="miter", escalate=esc)
         rec["t_prove_s"] = round(time.time() - t1, 1)
+        rec["escalated_cones"] = {k: (dict(n=len(v), first=v[:40]) if isinstance(v, list) else v)
+                                  for k, v in esc.items()}
         idx = {n: i for i, n in enumerate(m.onames)}
         hard, soft = [], []
         for n, st in sorted(status.items()):
@@ -8107,6 +8188,11 @@ def via_docker(args, image, mem):
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     if os.environ.get("OT_LEC_GOLD_NOWIDEN") == "1":
         cmd += ["-e", "OT_LEC_GOLD_NOWIDEN=1"]
+    if os.environ.get("OT_LEC_GOLD_DEADX") == "0":             # DIE-QC-97: dead-X gold clean-up off (default on)
+        cmd += ["-e", "OT_LEC_GOLD_DEADX=0"]
+    for k in ("OT_LEC_ESCALATE_C", "OT_LEC_ESCALATE_S", "OT_LEC_ESCALATE_MAX"):   # LEC-ESCALATE budget
+        if k in os.environ:
+            cmd += ["-e", f"{k}={os.environ[k]}"]
     for k in ("OT_LEC_RAWPREFIX_S", "OT_LEC_RAWPREFIX_ANDS"):
         if k in os.environ:
             cmd += ["-e", f"{k}={os.environ[k]}"]
