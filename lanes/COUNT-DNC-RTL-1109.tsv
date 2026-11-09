@@ -19,3 +19,33 @@ C-spot	dsdv_bksel_c	epyc2:/srv/opentallas-scratch2/claude/ss29/resign/kit_bksel_
 C-spot	dsfd_bf_front_roots	epyc2:/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr	45	39	4	2	ot_v41_bf16_lanes3.sv (main rtl/v41rom/ot_v41_bf16_lanes3.sv) ; ot_v41_bf_col.sv (main rtl/v41rom/ot_v41_bf_col.sv) ; ot_v41_bf_front_core_roots.sv (main rtl/v41rom/ot_v41_bf_front_core_roots.sv) ; ot_v41_bmul2_rne_prepare.sv (main rtl/v41rom/ot_v41_bmul2_rne_prepare.sv)
 C-spot	ot_s81hd_elemA_cv	epyc2:/srv/opentallas-scratch2/claude/wt/kw-fix-4-fl-head/results	0	0	0	0	
 C-spot	ot_s81hd_elemB_cv	epyc2:/srv/opentallas-scratch2/claude/wt/kw-fix-4-fl-head/results	0	0	0	0	
+#COORD 02:3x test (supersedes the rows above for verdicts): kit rtl blob anywhere in main 82d8624efb source history: rtl/** (not rtl/test), physical/die_plan/*/bind/*/rtl/**, physical/die_plan/*/cores/harden/kits/*/rtl/**. SIDE-ONLY = blob only under results/, proof/, hbm_arch_cores/, over_cap_split/
+#hist	top	verdict	file	blob	state	first_main_path
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_face_reg.sv	f9aa6183d5	SRC	rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_r14_stream_pc_strap_h9.sv	36bc6f4ce6	SRC	rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_svc_pc_ctrl_leaf.sv	29d89b66a5	SRC	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv	f39df60ec5	SIDE-ONLY	physical/die_plan/hbm_arch_cores/h9b_wqdiag/rtl/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_svc_pin_skid2_h9.sv	611b9bb903	SRC	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_hbm_svc_ring_h9b.sv	3edc63a7d8	SRC	rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv
+hist	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	HOLD	ot_rst_relay.sv	0259a92669	SRC	rtl/lib/ot_rst_relay.sv
+hist	ot_hgi_sfu_split3_ctl_rest_1c	HOLD	ot_hbm_face_reg.sv	f9aa6183d5	SRC	rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv
+hist	ot_hgi_sfu_split3_ctl_rest_1c	HOLD	ot_hgi_sfu_split3_ctl_rest_1c.sv	3fc60840be	NEVER	
+hist	ot_hgi_sfu_split3_ctl_rest_1c	HOLD	ot_hgi_sfu_split3_ctl_rest_core.sv	5201ef0a03	NEVER	
+hist	ot_hidx_s3_q	HOLD	ot_hbm_face_reg.sv	f9aa6183d5	SRC	rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv
+hist	ot_hidx_s3_q	HOLD	ot_hidx_s3_q.sv	e34d7c91d0	NEVER	
+hist	ot_hidx_s3_q	HOLD	ot_rst_relay.sv	0259a92669	SRC	rtl/lib/ot_rst_relay.sv
+hist	ot_wbq_root_g0	HOLD	ot_hbm_accel_cdc_fifo.sv	f40974bb30	SRC	rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv
+hist	ot_wbq_root_g0	HOLD	ot_hbm_face_reg.sv	f9aa6183d5	SRC	rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/ot_hbm_face_reg.sv
+hist	ot_wbq_root_g0	HOLD	ot_hbm_svc_pc_ctrl_leaf.sv	29d89b66a5	SRC	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv
+hist	ot_wbq_root_g0	HOLD	ot_reset_sync.sv	e3d89eafc8	SRC	rtl/lib/ot_reset_sync.sv
+hist	ot_wbq_root_g0	HOLD	ot_wbq_split.sv	ad093efdb1	NEVER	
+hist	ot_s81hd_ctl_nstrip	CLEARED	ot_dp_clk_landing.sv	4a57156f84	SRC	rtl/common/ot_dp_clk_landing.sv
+hist	ot_s81hd_ctl_nstrip	CLEARED	ot_dp_clk_landing_ca.sv	34ce6ec763	SRC	rtl/common/ot_dp_clk_landing_ca.sv
+hist	ot_s81hd_ctl_nstrip	CLEARED	ot_meso_fifo.sv	688d3e0a65	SRC	rtl/common/ot_meso_fifo.sv
+hist	ot_s81hd_ctl_nstrip	CLEARED	ot_reset_sync.sv	e3d89eafc8	SRC	rtl/lib/ot_reset_sync.sv
+hist	ot_s81hd_spn_end_strip	HOLD	ot_dp_clk_landing.sv	4a57156f84	SRC	rtl/common/ot_dp_clk_landing.sv
+hist	ot_s81hd_spn_end_strip	HOLD	ot_dp_clk_landing_ca.sv	79f4a574b9	NEVER	
+hist	ot_s81hd_spn_end_strip	HOLD	ot_meso_fifo.sv	688d3e0a65	SRC	rtl/common/ot_meso_fifo.sv
+hist	ot_s81hd_spn_end_strip	HOLD	ot_reset_sync.sv	e3d89eafc8	SRC	rtl/lib/ot_reset_sync.sv
+hist	ot_s81hd_spn_end_strip	HOLD	ot_s81hd_spo.sv	805e128f82	SRC	rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv
+hist	ot_s81hd_spn_end_strip	HOLD	ot_s81hd_spr.sv	a9ac18c635	SRC	rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv
