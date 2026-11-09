@@ -89,6 +89,29 @@ class LowerError(D.LowerError):
     pass
 
 
+def stn_result_shift(s):
+    """edges slice s's station result reaches ctl later than the as-built l8_ar (DV_STN_TRANSPORT; 0 unset)"""
+    x = D.stn_transport()
+    return x[s]['result'] if x else 0
+
+
+def stn_cfg_shift(s):
+    """edges every stream word reaches slice s's stations later than as-built: the STN config moves with them"""
+    x = D.stn_transport()
+    return x[s]['cfg'] if x else 0
+
+
+def stn_busy_shift(s):
+    """edges slice s's station (its own last region output, before the r_d lane) stays busy longer than as-built"""
+    x = D.stn_transport()
+    return x[s]['busy'] if x else 0
+
+
+def stn_result_shift_max():
+    x = D.stn_transport()
+    return max(v['result'] for v in x) if x else 0
+
+
 def load_ages(path=None):
     path = path or STN_AGES
     p = ROOT / path
@@ -237,20 +260,21 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
     prefix_edges = (kc - 1) * 8 if running_k else 0
     if running_k and dst != DST_AR:
         # All input k blocks must follow cfg, after the previous round drains.
-        period = max(period, prefix_edges + rv + RV_SLACK + STN_LEAD + 8)
+        period = max(period, prefix_edges + rv + RV_SLACK + STN_LEAD + 8
+                     + max(stn_busy_shift(s) - stn_cfg_shift(s) for s in range(N)))
     deliveries, stn, exp_ar, exp_vm, last_far = [], [], [], {}, {}
     for r, rl in enumerate(rounds_of(own, name)):
         for s, bl, role in rl:
             if dst == DST_AR:
                 if mutant == 'nostagger':
-                    far = [t0 + 96 * r - LAR + j for j in range(words_of(bl[0]))]
+                    far = [t0 + 96 * r - LAR - stn_result_shift(s) + j for j in range(words_of(bl[0]))]
                 else:
-                    far = [t0 + 8 * bl[0]['block'] + j - LAR - 2 * s for j in range(words_of(bl[0]))]
+                    far = [t0 + 8 * bl[0]['block'] + j - LAR - stn_result_shift(s) - 2 * s for j in range(words_of(bl[0]))]
             else:
                 far = [t0 + r * period + j for j in range(sum(words_of(b) for b in bl) if lv != 7 else words_of(bl[0]))]
             nw = sum(words_of(b) for b in bl)
-            land = far[0] - prefix_edges - STN_LEAD
-            lo = last_far.get(s, -10 ** 9) + rv + RV_SLACK
+            land = far[0] + stn_cfg_shift(s) - prefix_edges - STN_LEAD
+            lo = last_far.get(s, -10 ** 9) + rv + stn_busy_shift(s) + RV_SLACK
             if land < lo:
                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
             if role == 'snd':
@@ -295,7 +319,7 @@ def ar_collisions(low, ages):
             continue
         s = d['slice']
         for f in d['far']:
-            out0 = f + ages['l8_ar']          # leaves W5 (slice 0) this edge when s = 0
+            out0 = f + ages['l8_ar'] + stn_result_shift(s)   # leaves W5 (slice 0) this edge when s = 0
             for m in range(s, -1, -1):
                 occ.setdefault((m, out0 + 2 * s - 2 * m), []).append(s)
     return sorted((k, v) for k, v in occ.items() if len(v) > 1)
@@ -366,7 +390,7 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None,
     recv = sorted(last)
     if len(recv) != AMNB:
         raise LowerError(f'{len(recv)} LM-head receivers (amnb {AMNB})')
-    ready = {s: last[s] + rv + 8 for s in recv}       # + the 5-edge compare tree and the running best
+    ready = {s: last[s] + rv + stn_result_shift(s) + 8 for s in recv}   # + the 5-edge compare tree and the running best
     # the root emits first (its candidate merges locally); far receivers next, collision-free on the dn chain
     occ, emits = {}, {}
     if 0 in ready:
@@ -399,7 +423,9 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None,
 
 # ------------------------------------------------------------------------------------------------ stage 0 embedding
 def lower_embed(t0, chain, mutant=None):
-    """word w of the embedding row at the dvs_W5 D2D return pin on edge t0 + w; each slice lands its residual blocks."""
+    """word w of the embedding row at the dvs_W5 D2D return pin on edge t0 + w; each slice lands its residual blocks.
+    t0 is the zero-transport edge: the bound-plan native59 ring moves word 0 by D.emb_dro_added()."""
+    t0 += D.emb_dro_added()
     own = D.ownership()
     vm = D.vm_map(own)
     res = own['residual']['blocks_per_slice']
@@ -516,7 +542,7 @@ def splice(tile_first=40, ctlm_args=None, ages=None):
             name = mat_of[p['pc']]
             go_w5 = p['at'] + C['ISSUE_TO_ROM'] + R['R_HR']
             ch = Chain(D.slice_map())
-            t0 = go_w5 + tile_first + (ages['l8_ar'] + 2 * (N - 1) if own[name]['level'] == 8 else 0)
+            t0 = go_w5 + tile_first + (ages['l8_ar'] + stn_result_shift_max() + 2 * (N - 1) if own[name]['level'] == 8 else 0)
             if own[name]['level'] == 8:              # AR message: the XC edge is exact, reserved before the STN
                 tag = len(xc_low)
                 x = lower_xc(ch, ages, t0, 4096 // 16, tag)
