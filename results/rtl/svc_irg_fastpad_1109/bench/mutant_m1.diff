@@ -1,0 +1,4 @@
+132c132
+<             default: pad_q = pad[TW*(7*FPL)-1 -: TW];
+---
+>             default: pad_q = pad[TW*(7*FPL-1)-1 -: TW];
