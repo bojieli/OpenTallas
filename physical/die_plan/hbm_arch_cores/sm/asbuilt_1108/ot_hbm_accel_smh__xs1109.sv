@@ -3231,14 +3231,27 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
     ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkmdn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bkm_n[BBW-2:0]));
     ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkmvs (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bkm_s[BBW-1]));
     ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkmds (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bkm_s[BBW-2:0]));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rw_n), .d(rlm_n), .q(rl1_n_q));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rw_n), .d(rlm_s), .q(rl1_s_q));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-1]), .q(bk1_n_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .d(bkm_n[2048 +: NBEAT]), .q(ohl1_n_q));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-1]), .q(bk1_s_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .d(bkm_s[2048 +: NBEAT]), .q(ohl1_s_q));
+    // HBM-COLLECT-1/PTW-C 11-09 (COORD 10:1x (2), pt_w strike 2: r2 routed TT -53.17 / 8 ep relay -> S port flop on the
+    // up-to-1438 um W-face -> N/S-face spans, one landing + one relay = two ~720 um hops): a SECOND relay stage per leaf
+    // copy, so every W-in -> N/S-face span is three register hops of <= ~480 um (the kit places relay 1 / relay 2 at 1/3
+    // and 2/3 of each landing -> port line).  rl/bk/ohl move together (+1 more leaf-landing cycle, +3 in total vs
+    // as-built), x-store write/read order in the leaf unchanged; row path rp->rpm / bl->bm and HOPD unchanged.  Kept (K).
+    wire [RBW-1:0] rlm2_n, rlm2_s;
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlm2n (.clk(clk), .rst_n(rw_n), .d(rlm_n), .q(rlm2_n));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlm2s (.clk(clk), .rst_n(rw_n), .d(rlm_s), .q(rlm2_s));
+    wire [BBW-1:0] bkm2_n, bkm2_s;
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkm2vn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-1]), .q(bkm2_n[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm2dn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-2:0]), .q(bkm2_n[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkm2vs (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-1]), .q(bkm2_s[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm2ds (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-2:0]), .q(bkm2_s[BBW-2:0]));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rw_n), .d(rlm2_n), .q(rl1_n_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rw_n), .d(rlm2_s), .q(rl1_s_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .d(bkm2_n[BBW-1]), .q(bk1_n_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .d(bkm2_n[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .d(bkm2_n[2048 +: NBEAT]), .q(ohl1_n_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .d(bkm2_s[BBW-1]), .q(bk1_s_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .d(bkm2_s[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .d(bkm2_s[2048 +: NBEAT]), .q(ohl1_s_q));
 endmodule
 // pt_e: the third (u_rpn / u_bln) and launch (u_rp2 / u_bl2) registers
 module ot_hbm_accel_smh_pt_e #(parameter integer TAGW = 16, parameter integer NBEAT = 13) (
