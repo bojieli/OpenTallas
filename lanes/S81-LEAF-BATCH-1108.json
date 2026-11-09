@@ -1,0 +1,176 @@
+{
+ "schema": "s81_leaf_batch_1108",
+ "lane": "S81-TYPES-10",
+ "retry_fix_text": "REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply <=1.04 (from 1.2-5.3), OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins, taps, RTL unchanged. Fixes the measured GRT-0116 overflow at channel mouths and outline pin strips.",
+ "needs_src": "none: OT_MACRO_MOVES is in the current wave src; resume at floorplan, synth reused, no rebind",
+ "not_in_batch": {
+  "private forms still running or passed GRT 0 (do not duplicate)": [
+   "t1",
+   "t24cl245",
+   "t37",
+   "t40cl86",
+   "t5",
+   "t30",
+   "t69"
+  ],
+  "S81-TYPES-10-COLH": "16 col_h rows"
+ },
+ "rows": {
+  "ot_s81sl_leaf__t15": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t15@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "bus_cost_rise_pct": 2.59,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t59": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t59@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:60.48:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:172.416:MX,u_lf.u_vp.g_ln[2].u_l:172.8:42.816:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "bus_cost_rise_pct": 2.65,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t25__cl431c660f@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:51.84:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:432:MX,u_lf.u_vsw:812.16:613.44:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "bus_cost_rise_pct": 4.85,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t29": {
+   "attempt": 9,
+   "retry_key": "ot_s81sl_leaf__t29@9",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:941.76:60.48:R180,u_lf.u_vn.u_a:414.72:380.16:MX,u_lf.u_vn.u_b:414.72:190.08:MX,u_lf.u_vq:786.24:449.28:MX,u_lf.u_vs:984.96:432:R180,u_lf.u_vsw:959.04:613.44:MX"
+   },
+   "model_worst_before": 1.75,
+   "model_worst_after": 0.85,
+   "bus_cost_rise_pct": -20.29,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t31": {
+   "attempt": 9,
+   "retry_key": "ot_s81sl_leaf__t31@9",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:578.88:717.12:MY,u_lf.u_vn.u_b:587.52:898.56:MY,u_lf.u_vq:302.4:665.28:MY,u_lf.u_vs:103.68:596.16:MY,u_lf.u_vsw:77.76:362.88:R0"
+   },
+   "model_worst_before": 5.3,
+   "model_worst_after": 0.84,
+   "bus_cost_rise_pct": 10.92,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t36": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t36@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:682.56:864:R0,u_lf.u_vn.u_a:336.96:457.92:R0,u_lf.u_vp.g_ln[0].u_l:164.16:932.736:R0,u_lf.u_vp.g_ln[1].u_l:155.52:1062.34:R0,u_lf.u_vp.g_ln[2].u_l:25.92:1062.34:R0,u_lf.u_vp.u_b0:311.04:829.44:R0,u_lf.u_vq:820.8:466.56:R0,u_lf.u_vs:820.8:613.44:R0,u_lf.u_vsw:1002.24:544.32:R0"
+   },
+   "model_worst_before": 2.08,
+   "model_worst_after": 0.97,
+   "bus_cost_rise_pct": 3.6,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "attempt": 9,
+   "retry_key": "ot_s81sl_leaf__t40__clf8bbdae1@9",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vp.g_ln[12].u_l:43.2:34.176:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:163.776:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:423.36:MX,u_lf.u_vsw:812.16:604.8:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "bus_cost_rise_pct": 2.59,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t54__cl501e5681": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t54__cl501e5681@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:699.84:17.28:MX,u_lf.u_vn.u_a:354.24:596.16:MX,u_lf.u_vn.u_b:328.32:69.12:MX,u_lf.u_vp.g_ln[10].u_l:43.2:302.016:MX,u_lf.u_vp.g_ln[12].u_l:43.2:42.816:MX,u_lf.u_vp.g_ln[14].u_l:172.8:163.776:MX,u_lf.u_vp.g_ln[2].u_l:172.8:34.176:MX,u_lf.u_vp.g_ln[9].u_l:43.2:172.416:MX,u_lf.u_vq:639.36:440.64:MX,u_lf.u_vs:838.08:432:MX,u_lf.u_vsw:812.16:613.44:MX"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 1.04,
+   "bus_cost_rise_pct": 4.87,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t65": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t65@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:691.2:596.16:MY,u_lf.u_vn.u_b:699.84:941.76:MY,u_lf.u_vp.g_ln[8].u_l:1105.92:1070.98:R0,u_lf.u_vp.g_ln[9].u_l:1235.52:1070.98:R0,u_lf.u_vq:483.84:596.16:MY,u_lf.u_vs:112.32:578.88:MY,u_lf.u_vsw:60.48:328.32:R0"
+   },
+   "model_worst_before": 2.71,
+   "model_worst_after": 0.93,
+   "bus_cost_rise_pct": -23.18,
+   "form_source": "mpb"
+  },
+  "ot_s81sl_leaf__t71": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t71@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:483.84:699.84:MY,u_lf.u_vn.u_b:483.84:881.28:MY,u_lf.u_vq:276.48:656.64:MY,u_lf.u_vs:77.76:630.72:MY,u_lf.u_vsw:51.84:397.44:R0"
+   },
+   "model_worst_before": 2.46,
+   "model_worst_after": 0.82,
+   "bus_cost_rise_pct": 3.03,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "attempt": 1,
+   "retry_key": "ot_s81sl_leaf__t24__cl81374cd8@1",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_m:302.4:43.2:MX,u_lf.u_ve.u_s:112.32:43.2:MX,u_lf.u_vn.u_a:509.76:362.88:R180,u_lf.u_vn.u_b:492.48:172.8:R180,u_lf.u_vp.g_ln[5].u_l:915.84:431.616:MX,u_lf.u_vq:501.12:544.32:R180,u_lf.u_vs:311.04:414.72:MX,u_lf.u_vsw:25.92:432:MX"
+   },
+   "model_worst_before": 5.3,
+   "model_worst_after": 0.97,
+   "bus_cost_rise_pct": -26.5,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t32": {
+   "attempt": 4,
+   "retry_key": "ot_s81sl_leaf__t32@4",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:743.04:656.64:MY,u_lf.u_vn.u_b:743.04:838.08:MY,u_lf.u_vp.g_ln[14].u_l:1149.12:656.256:R0,u_lf.u_vp.g_ln[3].u_l:1149.12:785.856:R0,u_lf.u_vq:561.6:665.28:MY,u_lf.u_vs:319.68:648:MY,u_lf.u_vsw:267.84:414.72:R0"
+   },
+   "model_worst_before": 1.22,
+   "model_worst_after": 0.9,
+   "bus_cost_rise_pct": 0.1,
+   "form_source": "mp"
+  },
+  "ot_s81sl_leaf__t70": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t70@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_ve.u_s:717.12:846.72:R0,u_lf.u_vn.u_a:371.52:466.56:R0,u_lf.u_vn.u_b:345.6:1010.88:R0,u_lf.u_vp.g_ln[7].u_l:190.08:941.376:R0,u_lf.u_vq:656.64:648:R0,u_lf.u_vs:855.36:604.8:R0,u_lf.u_vsw:829.44:371.52:R0"
+   },
+   "note": "tool moves + hand LN7 -17.28; model 0.83; long S-edge bus runs not modelled"
+  },
+  "ot_s81sl_leaf__t46": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t46@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:751.68:466.56:MY,u_lf.u_vn.u_b:768.96:976.32:MY,u_lf.u_vp.g_ln[15].u_l:1157.76:1070.98:R0,u_lf.u_vp.g_ln[5].u_l:1157.76:932.736:R0,u_lf.u_vp.g_ln[6].u_l:1287.36:915.456:R0,u_lf.u_vp.g_ln[7].u_l:1287.36:500.736:R0,u_lf.u_vp.g_ln[8].u_l:1157.76:500.736:R0,u_lf.u_vp.g_ln[9].u_l:1287.36:1053.7:R0,u_lf.u_vq:630.72:648:MY,u_lf.u_vs:432:648:MY,u_lf.u_vsw:120.96:708.48:R0"
+   },
+   "note": "tool moves + hand LN5/LN6 +8.64; model 1.18, above the 1.15 pass reference: marginal"
+  },
+  "ot_s81sl_leaf__t12": {
+   "attempt": 3,
+   "retry_key": "ot_s81sl_leaf__t12@3",
+   "item_env_add": {
+    "OT_MACRO_MOVES": "u_lf.u_vn.u_a:336.96:665.28:R0,u_lf.u_vn.u_b:362.88:846.72:R0,u_lf.u_vp.g_ln[12].u_l:181.44:794.496:R0,u_lf.u_vp.g_ln[13].u_l:181.44:664.896:R0,u_lf.u_vp.g_ln[14].u_l:51.84:664.896:R0,u_lf.u_vq:1149.12:648:R0,u_lf.u_vs:941.76:648:MY,u_lf.u_vsw:708.48:604.8:R0"
+   },
+   "note": "model 6.02 stays on u_vsw|u_ve.u_m (34.5-um overlap, model counts whole faces; tap clk_t24 blocks ve_m); other channels <=0.83; tool moves only"
+  }
+ }
+}

@@ -6731,7 +6731,8 @@
         "slw_su_l0__cl1a1c1f8f@13",
         "slw_su_l0__cl1e5219ea@10",
         "slw_su_l0__cl76fb247e@4",
-        "tt_ctlm@9"
+        "tt_ctlm@9",
+        "glue@6"
       ],
       "queue_src": "claude/kw-fix-35p-wave-ctlm-1108@7e2f6c9af85",
       "type_args": {
@@ -7506,6 +7507,9 @@
         },
         "coll_ft__cla4a25d77": {
           "OT_CONS_KIT": "1"
+        },
+        "glue": {
+          "OT_FSM_NONE_WIRES": "st"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -8597,7 +8601,9 @@
       },
       "prov_view_sources_prev_kw32": null,
       "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 19 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
-      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 11:10 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 8: qfd_dv_s5_sc2_leaf qfd_dv_s5_sc2_leaf_dn0 sle_cland_w2_e_200 sle_cland_w515_s_200 sle_cland_w515_s_201 sle_cland_w517_n_200 sle_cland_w765_e_200 sle_cland_w767_e_200. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv"
+      "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 11:10 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 8: qfd_dv_s5_sc2_leaf qfd_dv_s5_sc2_leaf_dn0 sle_cland_w2_e_200 sle_cland_w515_s_200 sle_cland_w515_s_201 sle_cland_w517_n_200 sle_cland_w765_e_200 sle_cland_w767_e_200. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
+      "item_env_prev_kw36glue": null,
+      "note_kw36_glue": "KW-FIX-36 COORD 17:29 (4): glue FSM-recode false LEC, class fix on the hd_host recipe (OT_FSM_NONE_WIRES=st); QC-TYPES-11 17:32: glue is the only row with the st[*] pattern; retry@6, not a failed attempt; rerun LEC is the proof."
     },
     "hbm": {
       "enabled": true,
