@@ -220,8 +220,17 @@ def run_fixture(W):
     assert not bad
 
 
-def test_lifecycle_fixture(tmp_path):
-    run_fixture(str(tmp_path))
+def test_lifecycle_fixture():
+    # the tool reads record paths only under /srv, /home or /tmp (ABS_RE, the fleet's data roots); a basetemp elsewhere (the merge
+    # lane uses /dev/shm) drops every citation, so the fixture always lives under /tmp
+    import shutil, tempfile
+    W = tempfile.mkdtemp(prefix="ot-lifecycle-fix-", dir="/tmp")
+    try:
+        run_fixture(W)
+    finally:
+        for dp, dn, fn in os.walk(W):
+            os.chmod(dp, 0o755)
+        shutil.rmtree(W, ignore_errors=True)
 
 
 def test_count_check_lost(tmp_path):
