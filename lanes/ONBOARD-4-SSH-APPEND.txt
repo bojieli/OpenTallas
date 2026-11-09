@@ -1,0 +1,30 @@
+# ONBOARD-4 2026-11-09 02:0x PST: ssh append lines for epyc7 (Cherry 1058886 loved-redfish, 93.115.25.103, EPYC 7443).
+# OWNER 01:4x "yes, onboard the same way" (as ONBOARD-1/2). COORD applies; ONBOARD-4 edits no ~/.ssh file on any existing host.
+# Append only, nothing removed. Suggested backup first per file: cp -p FILE FILE.bak-onboard4-1109
+# epyc7 host key (ED25519) fingerprint: SHA256:lynp+fFyJMxNprvfo6WP8YeyVG8HadunW24jnDM9b6c (read on the host as root);
+# blocks use StrictHostKeyChecking accept-new like the epyc6 entries, so no known_hosts line is needed.
+# The name "epyc7" is new; it does not match the existing localhost patterns "ot-epyc7" / "ot-epyc7-retired" (exact-token match).
+
+########## 1. intel2 (hub) ~/.ssh/authorized_keys  -- append this ONE line (public key of ubuntu@epyc7; like epyc4/5/6 keys there)
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDUaHSS07iowXm1C26wDqgdtm3nyua4NzAqW9pvDsr9A ubuntu@loved-redfish
+
+########## 2. intel2, intel1, epyc2, epyc4, epyc5, epyc6 ~/.ssh/config  -- append this block on each (same form as their epyc6 block)
+# ONBOARD-4 2026-11-09: Cherry 1058886 loved-redfish (EPYC 7443 96T/1 TB, Zen 3)
+Host epyc7 loved-redfish
+    HostName 93.115.25.103
+    User ubuntu
+    StrictHostKeyChecking accept-new
+
+########## 3. localhost ~/.ssh/config  -- append this block (same form as its epyc6 block)
+# ONBOARD-4 2026-11-09: Cherry 1058886 loved-redfish (US, EPYC 7443 96T/1 TB, Zen 3)
+Host epyc7 loved-redfish
+  HostName 93.115.25.103
+  User ubuntu
+  IdentityFile ~/.ssh/agidock_ot
+  ServerAliveInterval 30
+
+########## Not needed (already on epyc7 by ONBOARD-3): epyc7 ~ubuntu/.ssh/authorized_keys holds the fleet list
+# (agidock, epyc1, epyc3, intel1, intel2, epyc2, epyc4, epyc5, epyc6); epyc7 ~/.ssh/config has hub/intel2, epyc2, intel1, epyc4, epyc5, epyc6.
+# Reach after this: every fleet host -> epyc7; epyc7 -> hub only (like epyc4/5/6).
+# Check after applying: from intel2:  ssh -o BatchMode=yes epyc7 hostname   -> loved-redfish
+#                       from epyc7:   ssh -o BatchMode=yes hub hostname
