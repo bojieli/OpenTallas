@@ -1971,9 +1971,9 @@
     "clock": "PASS",
     "evidence": "DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw43t51/src_t51f/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw42/src_s81f",
+   "src": "/srv/opentallas-scratch2/claude/kw43t51/src_t51f",
    "src_sha": "c0c9a3de749adaa0acf74a596fcf1c58c6ff0696",
    "kit_rtl": {
     "mode": "script",
@@ -1987,7 +1987,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch2/claude/kw43t51/src_t51f/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-63)",
    "lane": "KIT-WAVE-3",
@@ -3211,7 +3211,9 @@
     "ot_s81sl_vq": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "ot_s81sl_vs": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
-    "dsdv_slice_kv512_C__t1": "KW-FIX-43 11:5x COORD: left to DIE-S81-85 structural fix; the gen_args sidecar change must not auto-relaunch it. DIE-S81-85 / COORD releases."
+    "dsdv_slice_kv512_C__t1": "KW-FIX-43 11:5x COORD: left to DIE-S81-85 structural fix; the gen_args sidecar change must not auto-relaunch it. DIE-S81-85 / COORD releases.",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases."
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave",
@@ -7033,7 +7035,18 @@
     "--clock-landing",
     "/srv/opentallas-scratch3/claude/codex-wave-bind-1106/src_28fc7/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
    ],
-   "note_kw43_cland": "KW-FIX-43 2026-11-09 11:5x COORD 11:5x class (DIE-S81-85 11:21/11:45): --clock-landing -> src_s81f sidecar (sha256-16 5f4cff5ee0ed84dd on epyc7+epyc2; the sidecar of the bound plan 65648816/bind6) for new + relaunched rows; running rows untouched. Revert: gen_args = gen_args_prev_kw43cl; drop hold_items dsdv_slice_kv512_C__t1."
+   "note_kw43_cland": "KW-FIX-43 2026-11-09 11:5x COORD 11:5x class (DIE-S81-85 11:21/11:45): --clock-landing -> src_s81f sidecar (sha256-16 5f4cff5ee0ed84dd on epyc7+epyc2; the sidecar of the bound plan 65648816/bind6) for new + relaunched rows; running rows untouched. Revert: gen_args = gen_args_prev_kw43cl; drop hold_items dsdv_slice_kv512_C__t1.",
+   "src_prev_kw43t51": "/srv/opentallas-scratch2/claude/kw42/src_s81f",
+   "plan_prev_kw43t51": "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/plan_h2_2249.json",
+   "gen_args_prev_kw43t51": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "100",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw42/src_s81f/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+   ],
+   "note_kw43_t51": "KW-FIX-43 2026-11-09 12:3x COORD 12:1x (2) (DIE-S81-85 READY 12:06): S81 wave plan af2abcca0e416b13 = 65648816 + delta_t51_split + delta_t51_split_classes; src kw43t51/src_t51f (= die-s81-85/s81p7/src_t51f; epyc7 hardlinks, epyc2 src_s81f hardlinks + checksum delta; 179565 files on both); bind8 at kw43t51/bind8 via the SAME kit_rtl script path kw42/kit_rtl_s81_final_1109.sh (content now S81_BIND_OUT=kw43t51/bind8; spec unchanged so no other input hash moves); landed sidecar = src_t51f copy (sha 5f4cff5e, identical). Probe: blocks change only for slice_station__t51 + the 2 t51 native items (held). Revert: src/plan/gen_args = *_prev_kw43t51, drop the 2 hold_items, restore kw43t51/kit_rtl_s81_final_1109.sh.bak-kw42-<host> on epyc7 + epyc2."
   },
   "s81_head": {
    "enabled": true,
