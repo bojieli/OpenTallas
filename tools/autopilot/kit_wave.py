@@ -1583,7 +1583,8 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
             counted = prov_counted(c)
             files = [f"{c['dir']}/{m}_tt.lib", f"{c['dir']}/{m}_ff.lib", f"{c['dir']}/{m}.lef"] + (
                 [f"{c['base']}/{m}.lef"] if c.get("base") else []) + (
-                [f"{c['dir']}/gates.json", f"{c['dir']}/provenance.json"] if counted else [])
+                [f"{c['dir']}/gates.json", f"{c['dir']}/provenance.json",
+                 f"{c['dir']}/landing_evidence"] if counted else [])   # KW-FIX-40 (QC-TYPES-10 11-08 class N): hard_landing reads it beside the LEF
             for f in files:
                 if (dst / os.path.basename(f)).exists():
                     continue

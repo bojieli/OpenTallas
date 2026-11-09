@@ -768,6 +768,7 @@ def make(a):
                 sv = signed_view_ok(cdir, m, meta, plan_lef)
                 if sv:
                     rec.update(source="signed", counted=sv, final=True)
+                    carry_landing_evidence(cdir, vd)
                 if detail is not None:
                     rec["abstract_detail"] = detail
                 break
@@ -906,6 +907,17 @@ def needs_parent_view_only(g):
     pr = g.get("view_problems") or []
     return (str(g.get("signoff") or "").split() or [""])[0] == "LOCAL_PASS_NEEDS_PARENT" and bool(pr) and all(
         "LOCAL_PASS_NEEDS_PARENT" in str(x) and "is not SIGNED" in str(x) for x in pr)
+
+
+def carry_landing_evidence(cdir, vd):
+    """KW-FIX-40 11-08 (QC-TYPES-10 class N): a counted hard-landing child's gen reads landing_evidence/ (or provenance.json,
+    needing the original host) beside its selected LEF; the view staged only LEF and libs, so hard_landing.capture failed."""
+    src = os.path.join(cdir, "provenance.json")
+    if os.path.isfile(src):
+        shutil.copyfile(src, os.path.join(vd, "provenance.json"))
+    ev = os.path.join(cdir, "landing_evidence")
+    if os.path.isdir(ev):
+        shutil.copytree(ev, os.path.join(vd, "landing_evidence"), dirs_exist_ok=True)
 
 
 def signed_view_ok(cdir, module, meta, plan_lef=None):
