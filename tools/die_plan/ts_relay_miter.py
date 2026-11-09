@@ -93,6 +93,11 @@ def main(argv):
     ev = json.load(open(ev_f))
     ports = {p["id"]: p for p in P["ports"]}
     ptype = {p["name"]: p["type"] for p in P["partitions"]}
+    # bound file stems: <type>, s81p_<type>, the plan module, or the cloned <module>__<type>
+    stem_type = {}
+    for t, rec in (P.get("partition_types") or {}).items():
+        mod = rec.get("module", t) if isinstance(rec, dict) else t
+        stem_type.update({t: t, f"s81p_{t}": t, mod: t, f"{mod}__{t}": t})
     declared = defaultdict(int)
     for e in ev["edits"]:
         for lid, v in e["lanes"].items():
@@ -119,7 +124,7 @@ def main(argv):
         A, B = norm(of.read_text()), norm(nf.read_text())
         if A == B:
             continue
-        tn = nf.stem[5:] if nf.stem.startswith("s81p_") else nf.stem
+        tn = stem_type.get(nf.stem, nf.stem[5:] if nf.stem.startswith("s81p_") else nf.stem)
         buses = {b for (t, b) in tb if t == tn}
         A = rename_src_names(A, B)
         ca, cb = Counter(A), Counter(B)
