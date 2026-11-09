@@ -303,6 +303,31 @@ def _reset_sites_for_type(plan,tn,tree,base_type=None):
     return reset_site_rects(tree) if tn in selected or base_type in selected else []
 
 
+# DIE-QC-97 11-09 (FACE_CROSSING only, i.e. resize_undersized_bands; compose byte-identical): when no candidate band
+# covers its own pin window, also try face-aligned bands that are SHALLOWER and LONGER than the window (same reserved
+# area, depth from 4 rows up to the strip depth on the 2.16-um grid) and cover the whole window along the face, at the
+# nearest legal inset.  cbf_q00__cl870de686 na_i00 (515 bits, N pins x 94.6..183.2 over hard core u_t01, whose top +
+# CLEAR_UM leaves 47.5 um): the 51.84-um strip did not fit there, so the band went to the W gutter corner
+# [28.1,2425.3,79.9,2514.2] (every bit off-window), stacked with bc_o01's 517 N pins and bout flops: GRT-0116, 65 of 66
+# overflow gcells in x 0..100 / y 2450..2531.  A 47.52 x 95.04 band at x 91.3..186.3 covers the window (0 crossing).
+def _face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi):
+    f=b["face"];along=h if f in "EW" else w;out=[]
+    for k in range(4,int(round(depth/2.16))):
+        d=2.16*k;L=math.ceil(area/d/2.16)*2.16
+        if L<=length+1e-6 or L>along-2*margin:continue
+        s0=max(margin,min(along-margin-L,(lo+hi-L)/2));s1=s0+L
+        if s0>lo+1e-6 or s1<hi-1e-6:continue
+        for inset in [margin+2.16*j for j in range(88)]:
+            box=([inset,s0,inset+d,s1] if f=="W" else [w-inset-d,s0,w-inset,s1] if f=="E" else
+                 [s0,inset,s1,inset+d] if f=="S" else [s0,h-inset-d,s1,h-inset])
+            if box[0]<margin or box[1]<margin or box[2]>w-margin or box[3]>h-margin:break
+            if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:break
+            if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):
+                continue
+            out.append(box);break
+    return out
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()):
     if resets:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
@@ -397,6 +422,9 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
                 if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
                 if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
                 candidates.append(box)
+    if FACE_CROSSING and not any(face_crossing(t,bus,c,width)[0]<0.5 for c in candidates):
+        wide=_face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi)
+        if wide:candidates=wide
     if not candidates and scale==1.0:
         candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
     if candidates:
@@ -1257,9 +1285,34 @@ def resize_undersized_bands(plan,sidecar,types):
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
                                    new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
                 bands[bus]=nb;done.add(bus)
+            # DIE-QC-97 11-09 (cbf_q00__cl870de686 GRT-0116): a wide ring band that covers less than half of its own pin
+            # window (most bits run along the face to reach it) is searched again with every other band as obstacle;
+            # the new rect is taken only if its crossing demand is lower, else the band stays byte-identical.
+            for bus in sorted(bands,key=lambda k:(-int(bands[k].get("width") or 0),k)):
+                b=bands[bus]
+                if bus.startswith("monitor_") or not b.get("rect_um") or int(b.get("width") or 0)<RELOCATE_MIN_BITS:continue
+                dm0,_=face_crossing(tt,bus,b["rect_um"],int(b["width"]))
+                if dm0<=RELOCATE_OFF_WINDOW*int(b["width"]):continue
+                used=[list(o["rect_um"]) for k,o in bands.items() if k!=bus and o.get("rect_um")]
+                try:nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
+                except ValueError:continue
+                dm1,_=face_crossing(tt,bus,nb["rect_um"],int(b["width"]))
+                if dm1>=dm0-0.5:continue
+                if "ring_place" in b:nb["ring_place"]=b["ring_place"]
+                nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
+                          resize="DIE-QC-97 off-window face band relocated onto its pin window (face crossing)")
+                x0,y0,x1,y1=b["rect_um"]
+                report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(ring_ff_reserve_um2(b["width"]),1),
+                                   new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"],
+                                   crossing_bits=[round(dm0,1),round(dm1,1)]))
+                bands[bus]=nb
     finally:
         BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc
     return out,report
+
+
+RELOCATE_MIN_BITS=64        # DIE-QC-97: narrow control bands are not worth a move
+RELOCATE_OFF_WINDOW=0.5     # relocate when more than this fraction of the bus bits lie outside the band's face span
 
 
 # DIE-S81-47 11-01 (fix-only): fill the placement FAIL ring bands of the named types of an existing plan with a
