@@ -354,6 +354,22 @@ def _style(raw_bytes, P):
     return lambda p: json.dumps(p, separators=(",", ":")) + "\n"
 
 
+def regen_latency(out, base, declared):
+    """gen.py latency --inplace on the event plan; every lane cycle delta in the regenerated table must equal the
+    declared pin cycles (no other lane moves, so a lane in an R8 group never silently re-pads)."""
+    import subprocess
+    out = Path(out)
+    subprocess.run([sys.executable, "-I", "-B", str(HERE / "gen.py"), "latency", str(out), "--out",
+                    str(out.parent / "gen_lat"), "--inplace"], check=True)
+    new = json.loads(out.read_text())["latency"]["lanes"]
+    old = base["latency"]["lanes"]
+    delta = {k: new[k]["cycles"] - old[k]["cycles"] for k in new if k in old and new[k]["cycles"] != old[k]["cycles"]}
+    if delta != declared:
+        raise SystemExit("ts_relay_event: latency regen deltas differ from the declared pin cycles: "
+                         + str(sorted(set(delta.items()) ^ set(declared.items()))[:10]))
+    return dict(lanes_changed=len(delta), sum=sum(delta.values()))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("base")
@@ -364,6 +380,10 @@ def main(argv=None):
     ap.add_argument("--bound-list")
     ap.add_argument("--skip-types", default="")
     ap.add_argument("--only-types", default="")
+    ap.add_argument("--regen-latency", action="store_true",
+                    help="after writing OUT, regenerate plan.latency with gen.py latency --inplace and check that the "
+                         "per-lane cycle deltas equal the event's pin cycles (the bind reads lane cycles from that "
+                         "table: native_istations.annotate refuses an un-regenerated plan)")
     ap.add_argument("--native-types", default="", help="base asbuilt internal_stations_types (their OUT entries are "
                     "realised as source stations by the bind)")
     a = ap.parse_args(argv)
@@ -422,6 +442,9 @@ def main(argv=None):
                            pin_cycles_sum=sum(pin.values()), stations=sum(e["count"] for e in edits)),
                preservation="only partition_types[touched].internal_stations and lanes[touched].fixed_cycles change; "
                             "every other key byte-identical (sort_keys compare); RTL/outlines/pins/cores unchanged")
+    if a.regen_latency:
+        rec["latency_regen"] = regen_latency(a.out, P0, rec["pin_cycle_deltas"])
+        rec["plan_output_sha256"] = hashlib.sha256(Path(a.out).read_bytes()).hexdigest()
     Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(rec["totals"]))
 

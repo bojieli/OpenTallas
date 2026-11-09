@@ -87,3 +87,18 @@ def test_station_sites_leave_core_keepouts():
         assert not (100.0 - TE.HALO < x < 400.0 + TE.HALO and 0.0 - TE.HALO < y < 150.0 + TE.HALO)
         assert 0.0 <= x <= 1000.0 and 0.0 <= y <= 200.0
     assert regs[1] == [450.0, 50.0]          # outside: unchanged
+
+
+def test_regen_latency_checks_declared_deltas(tmp_path, monkeypatch):
+    import subprocess as sp
+    import pytest
+    import ts_relay_event as T
+    base = dict(latency=dict(lanes=dict(L1=dict(cycles=4), L2=dict(cycles=7))))
+    out = tmp_path / "p.json"
+    out.write_text(json.dumps(dict(latency=dict(lanes=dict(L1=dict(cycles=5), L2=dict(cycles=7))))))
+    monkeypatch.setattr(sp, "run", lambda *a, **k: None)
+    assert T.regen_latency(out, base, {"L1": 1}) == dict(lanes_changed=1, sum=1)
+    with pytest.raises(SystemExit):
+        T.regen_latency(out, base, {"L1": 2})
+    with pytest.raises(SystemExit):
+        T.regen_latency(out, base, {"L2": 1})
