@@ -283,7 +283,7 @@ def test_pass_on_second_iteration(tmp_path, three_iter):
     assert all(it["commands"] for it in r["iterations"])
     # iteration 2 starts from iteration 1's routed dir; the superseded iteration 1 run data is pruned, best kept
     mk2 = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")][1]
-    assert mk2[2] == r["iterations"][0]["dir"] and mk2[4] == "m0"
+    assert mk2[2] == r["iterations"][0]["dir"] and mk2[4] == f"m{E.HOLD_MARGIN_PS}"
     assert not (Path(r["iterations"][0]["dir"]) / "run/results").exists()
     assert (Path(r["best"]["dir"]) / "run/results").exists()
     # sign-off on the kit's own config.mk (ECO overrides kept aside as config_eco.mk)
@@ -303,7 +303,7 @@ def test_no_improvement_stops_and_keeps_best(tmp_path, three_iter):
     r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
     assert r["verdict"] == "EXHAUSTED" and len(r["iterations"]) == 2 and "no improvement" in r["reason"]
     assert r["best"]["n"] == 2                                                 # -2.6 is better than -3
-    assert r["iterations"][0]["variant"] == "t0+b0"                          # TT slew + FF hold: both passes
+    assert r["iterations"][0]["variant"] == f"t{E.HOLD_MARGIN_PS}+b{E.HOLD_MARGIN_PS}"                          # TT slew + FF hold: both passes
     s = E.summary(r)
     assert s.startswith("late-ECO exhausted (2 it") and "FF -8->-2.6" in s
 
@@ -461,7 +461,7 @@ def test_t_then_b_chain(tmp_path):
     assert r["verdict"] == "PASS"
     it = r["iterations"][0]
     mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
-    assert [c[4] for c in mk] == ["t0", "b0"]
+    assert [c[4] for c in mk] == [f"t{E.HOLD_MARGIN_PS}", f"b{E.HOLD_MARGIN_PS}"]
     assert mk[0][3].endswith("/i1t") and mk[1][2] == mk[0][3] and mk[1][3] == it["dir"]
     envs = [e for c, e in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")]
     assert envs[1]["OT_PRD_FROM"] == "route"
@@ -1141,3 +1141,9 @@ def test_stage_so_read_only_tag_tools_with_kit_override(tmp_path):
     assert (tools / "face_flops_release.tcl").read_text() == "# tag tool copy\n"
     assert all(os.access(p, os.W_OK) for p in dp.iterdir() if p.is_file())
     E.stage_so(k, tmp_path / "eco", tools)          # re-staging over the existing tree works too
+
+
+def test_hold_repair_target_default_is_5():
+    """COORD 11-09 stopgap: the repair aims 5 ps above 0; the gate (FF hold slack >= 0) does not use this number."""
+    assert E.HOLD_MARGIN_PS == 5
+

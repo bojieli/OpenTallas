@@ -18,7 +18,7 @@ The iteration, from the kit's routed DB:
      else grt = one full detailed route from the pre-DRT GRT DB, the FLOW-SHARED-10 form that clears small DRC counts;
      final = route from the kit's signed 6_final.odb, retried once when the routed seed does not match the SPEF)
   2. prd_run.sh D CPUS MEM 1 with OT_PRD_POST=0: the ECO hook prd_hook.tcl on the routed RCX SPEF (= measured arrivals)
-       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold margin 0 ps
+       repair_design (slew/cap) -> repair_timing -setup (two-mode kits) -> repair_timing -hold, hold repair target HOLD_MARGIN_PS (5 ps; the gate stays >= 0)
        (OWNER 11-02; was 12.19 measured arrivals + 10 ps) -> detailed_placement (legalises only what moved) ->
        global_route -start_incremental/-end_incremental -> detailed_route (route-keep: only the dirty nets are ripped)
      -> clk_freeze_check.sh (clock wires frozen) -> RCX + slew/cap count -> do-finish
@@ -60,7 +60,10 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
-HOLD_MARGIN_PS = 0            # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+HOLD_MARGIN_PS = 5            # REPAIR TARGET only (COORD 11-09 stopgap, HBM-SM-KIDS-2): repair_timing -hold aims 5 ps above 0
+                              # because the repair view lands 0.03..1.4 ps short of the sign-off view (tct/tcl_gu/cd16 11-09);
+                              # the GATE is unchanged: OWNER 11-02 (FLOW-22) FF hold slack >= 0, no +10 ps gate margin (25 ps
+                              # FF hold uncertainty stays). Real fix: time the repair in the sign-off view (KW-FIX-42). Was 0.
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
