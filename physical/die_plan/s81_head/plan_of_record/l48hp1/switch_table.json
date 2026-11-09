@@ -44,7 +44,8 @@
  ],
  "rtl_dependencies": [
   {"branch": "codex/head-ctl-vg-0222@70a23d9b629", "why": "ot_s81hd_ctl_core parameters SRAM_RAW_CAPTURE / CTL_PRE / CTL_WINDOW_PRE"},
-  {"branch": "codex/head-mesh-collector-1113@b6d8c0d798e", "why": "ot_s81hd_mesh_ep_core parameter RBL; DSREP8 read-select proof"},
+  {"branch": "claude/head-92-mesh-hd-1109@40a07efb45", "why": "ot_s81hd_mesh_ep_core parameter RBL; DSREP8 read-select proof; HEAD-local _hd copy of codex/head-mesh-collector-1113@b6d8c0d798e (yosys EQ PROVEN 11-09), shared s81_ph untouched"},
+  {"branch": "claude/head-92-lep-hp1-1109 (= claude/dh85-lep-pipe-1107@f9cadadf2a)", "why": "ot_s81hd_lep0N_noidx_core parameters KTX/KRX/TXI/PIN/POUT/PLW/COL0 that the l48hp1 hd_lep0N wrapper sets (GEN_LINT 11-09 11:30: Can't find object for defparam COL0; strict bind did not check instance parameters until HEAD-92 11-09)"},
   {"branch": "claude/die-head-84-host-hsplit-1107@e0599ebe03b", "why": "HSPLIT tools + completed top / start stages (source/) for the bind"},
   {"branch": "main", "why": "OT_HEAD_TX_CH_STAGE / OT_HEAD_TX_FOLD defines in ot_s81hd_serdes_sc_cores.sv; landing_ring_dsrep schema (head-forms-4-dsrep)"}
  ],

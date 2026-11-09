@@ -22,8 +22,9 @@ module ot_s81hd_lep_core_nr #(
     parameter integer IDX_MRG = 0,     // 1 (S81/IDXNET, s_0N): tm (the s_0S TP RX beats) merged into ca, collision = fault
     parameter integer IDX_Q = 0,       // 1 (S81/IDXNET, s_0N): rank-tree query frames: qc (iqf, 2-beat) -> link pair A, pair B
                                        // -> ql (iqf) + cut-through relay to pair A by the header relay count (see g_qrx)
-    parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
+    parameter integer IN_PIPE = 0,     // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
+    parameter [15:0]  TXI = 16'h0000   // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -503,7 +504,11 @@ module ot_s81hd_lep_core_nr #(
         (* keep = "true" *) reg cr_q;                  // lo_r pin flop
         wire [H:0] q;
         wire iss = n != 0 && cnt != 0;
-        wire psh = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
+        wire psh_s = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
+        wire psh; wire [TX_NA-1:0] pg_s, pgx; wire [H:0] wdx;
+        for(genvar gi=0;gi<TX_NA;gi=gi+1)begin:g_pgs assign pg_s[gi]=push_group[2*gi+t/2]; end
+        ot_s81hd_lep_txi #(.W(H+1),.NG(TX_NA),.N(TXI[4*t+:4])) g_txi(.clk(clk),.rn(rt),.psh_i(psh_s),.pg_i(pg_s),
+            .wd_i({sq[t/2],(t%2==0)?hf0:hf1}),.psh_o(psh),.pg_o(pgx),.wd_o(wdx));
         wire wr = psh && (n != DT || iss);
         if(SAFE_FIFO && SRAM!=0) begin:g_safe_write
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
@@ -519,14 +524,14 @@ module ot_s81hd_lep_core_nr #(
                   // Separate genuine state/pointer/memory consumer cones. A
                   // single write/read predicate otherwise fans ~45 ABC pins.
                   (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_memory(
-                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_group[c]),.rd(rd_group[c]));
+                    .push(pgx[c]),.count(count_r),.credit(credit_r),.wr(wr_group[c]),.rd(rd_group[c]));
                   (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_state(
-                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_update),.rd(rd_update));
+                    .push(pgx[c]),.count(count_r),.credit(credit_r),.wr(wr_update),.rd(rd_update));
                   (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_pointer(
-                    .push(push_group[2*c+t/2]),.count(count_r),.credit(credit_r),.wr(wr_pointer),.rd(rd_pointer));
+                    .push(pgx[c]),.count(count_r),.credit(credit_r),.wr(wr_pointer),.rd(rd_pointer));
                 end else begin:g_existing_qualify
                   assign rd_group[c]=(count_r!=0 && credit_r!=0);
-                  assign wr_group[c]=push_group[2*c+t/2] && (count_r!=(AT+1)'(DT) || rd_group[c]);
+                  assign wr_group[c]=pgx[c] && (count_r!=(AT+1)'(DT) || rd_group[c]);
                   assign wr_update=wr_group[c];assign rd_update=rd_group[c];
                   assign wr_pointer=wr_group[c];assign rd_pointer=rd_group[c];
                 end
@@ -552,10 +557,10 @@ module ot_s81hd_lep_core_nr #(
                 assign wa_copy[c*AT+:AT]=wp_r;assign ra_copy[c*AT+:AT]=rp_r;
             end
             ot_sram_oldread_wreg_nr #(.W(H+1),.AW(AT),.SB(8),.GA(GA),.GROUP_IO(1)) u_m(.clk(clk),.rst_n(rr[TX_RSTBASE+t*TX_RST_STRIDE+:TX_NS]),
-                .we(wr),.we_group(wr_group),.re_group(rd_group),.wa(wa_copy),.wd({sq[t/2],(t%2==0)?hf0:hf1}),.re(iss),.ra(ra_copy),.q(q));
+                .we(wr),.we_group(wr_group),.re_group(rd_group),.wa(wa_copy),.wd(wdx),.re(iss),.ra(ra_copy),.q(q));
         end else begin:g_legacy_write
         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
-            .wd({sq[t / 2], (t % 2 == 0) ? hf0 : hf1}), .re(iss), .ra(rp), .q(q));
+            .wd(wdx), .re(iss), .ra(rp), .q(q));
         end
         always @(posedge clk or negedge rt)
             if (!rt) begin wp <= 0; rp <= 0; n <= 0; inf <= 1'b0; of <= 1'b0; cr_q <= 1'b0; cnt <= CW'(CRED); ov <= 1'b0; end
@@ -1204,7 +1209,7 @@ endmodule
 
 module ot_s81hd_lep_idx_nr #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1238,7 +1243,7 @@ module ot_s81hd_lep_idx_nr #(
     output wire [275:0]    cb
 );
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
-        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1494,5 +1499,27 @@ module ot_sram_showahead_1r1w_head_nr #(
  initial begin
   if(AW>5 || AW<1 || W<1 || NS!=(W+SB-1)/SB || (SB!=8 && SB!=16)) $fatal(1,"ot_sram_showahead_1r1w invalid shape");
  end
+`endif
+endmodule
+
+module ot_s81hd_lep_txi #(parameter integer W = 553, parameter integer NG = 18, parameter integer N = 0) (
+    input  wire          clk, rn,
+    input  wire          psh_i, input wire [NG-1:0] pg_i, input wire [W-1:0] wd_i,
+    output wire          psh_o, output wire [NG-1:0] pg_o, output wire [W-1:0] wd_o
+);
+    // DIE-HEAD-84: N registered stages on a TX lane's ingress; the pushes clear on the lane reset, the word is reset-free
+    wire [NG:0] v [0:N]; wire [W-1:0] d [0:N];
+    assign v[0] = {pg_i, psh_i}; assign d[0] = wd_i;
+    for (genvar j = 0; j < N; j = j + 1) begin : g_s
+        (* keep = "true" *) reg [NG:0] vq; (* keep = "true" *) reg [W-1:0] dq;   // keep: lanes 0 / 2 (1 / 3) share D
+        always @(posedge clk or negedge rn) if (!rn) vq <= '0; else vq <= v[j];
+        always @(posedge clk) dq <= d[j];
+        assign v[j + 1] = vq; assign d[j + 1] = dq;
+    end
+    assign {pg_o, psh_o} = v[N];
+`ifdef OT_S81HD_LEPK_MUT_TXISKEW
+    assign wd_o = d[(N > 0) ? N - 1 : 0];             // MUTANT: the word one stage ahead of its pushes
+`else
+    assign wd_o = d[N];
 `endif
 endmodule
