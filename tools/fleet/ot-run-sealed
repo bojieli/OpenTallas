@@ -15,9 +15,14 @@ Config (JSON; $OT_RUN_SEALED_CONF, default ~/.local/lib/fleet/isolate-1/sealed.j
   {"enabled": true, "host": "epyc7", "dirs": ["/srv/.../runs/qwen_kvsys/"], "backend": "/home/ubuntu/.local/lib/kw23/ot-run",
    "sealed_backend": "/home/ubuntu/.local/lib/fleet/isolate-1-<sha>/ot-run", "log": "~/.local/lib/fleet/isolate-1/sealed.log"}
 A missing or unreadable config, or "enabled": false, passes everything to the backend.  Revert = kit_wave.json ot_run back.
+KW-FIX-42 11-09 (OWNER 08:2x all dies / all stages): conf "stages" (runner stage words sealed, default ["place"]),
+"hosts" (the first that holds K + runner + ot-job/bwrap), and the fallback: a sealed job that fails on a missing input
+outside the job dir is logged to conf "gaps" (ISOLATE-GAPS.tsv: time die type stage path tool) and rerun ONCE unsealed.
 """
 import json
 import os
+import re
+import signal
 import shlex
 import subprocess
 import sys
@@ -58,26 +63,29 @@ def parse(argv):
     return o, flags, cmd
 
 
-def place_call(cmd):
-    """bash -c "bash <runner> <K> place <mem> <threads>" -> (runner, K, rest) or None"""
+STAGES = ("place",)
+
+
+def place_call(cmd, stages=None):
+    """bash -c "bash <runner> <K> <stage> <mem> <threads>" -> (runner, K, rest) or None (stage in conf "stages")"""
     if len(cmd) != 3 or cmd[:2] != ["bash", "-c"]:
         return None
     try:
         w = shlex.split(cmd[2])
     except ValueError:
         return None
-    if len(w) >= 4 and w[0] == "bash" and w[3] == "place" and os.path.isabs(w[1]) and os.path.isabs(w[2]):
+    if len(w) >= 4 and w[0] == "bash" and w[3] in (stages or STAGES) and os.path.isabs(w[1]) and os.path.isabs(w[2]):
         return w[1], w[2].rstrip("/"), w[3:]
     return None
 
 
-def spec_for(runner, K, children=()):
-    name = os.path.basename(K) + "-place"
+def spec_for(runner, K, children=(), stage="place"):
+    name = os.path.basename(K) + "-" + stage
     inputs = [] if (runner == K or runner.startswith(K + "/")) else [{"path": runner}]
     inputs += [{"path": c} for c in children]           # KWCHILD signed child records, read-only at their own paths
     return {"schema": "opentallas.ot_job.v1", "name": name, "inputs": inputs,
             "work": {"at": K, "seed": [{"path": K}]},
-            "publish": [{"name": f"kit-wave/{os.path.basename(K)}/place-run", "path": "run", "when": "always"}],
+            "publish": [{"name": f"kit-wave/{os.path.basename(K)}/{stage}-run", "path": "run", "when": "always"}],
             "return": {"to": K, "paths": ["."]}}
 
 
@@ -134,6 +142,71 @@ def log(conf, msg):
         pass
 
 
+def status_rows(backend):
+    """-> {host: {"admit", "waiting_gb", "load", "ncpu", "capped", "held"}} from one ot-run --status, or None"""
+    try:
+        p = subprocess.run([backend, "--status"], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    out = {}
+    for seg in (p.stdout or "").replace("ot-run status: ", "", 1).split(" | "):
+        f = seg.split()
+        if not f:
+            continue
+        h = f[0]
+        if len(f) > 1 and f[1] in ("HELD", "REFUSED", "unreachable"):
+            out[h] = dict(admit=0, waiting_gb=0.0, load=0.0, ncpu=1, capped=False, held=True)
+            continue
+        m = re.match(r"\S+ admits (-?\d+) GB", seg)
+        if not m:
+            continue
+        ld = re.search(r" load (\d+(?:\.\d+)?)/(\d+)", seg)
+        w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
+        out[h] = dict(admit=int(m.group(1)), waiting_gb=float(w.group(1)) if w else 0.0,
+                      load=float(ld.group(1)) if ld else 0.0, ncpu=max(int(ld.group(2)), 1) if ld else 1,
+                      capped=" LOADCAP" in seg, held=False)
+    return out
+
+
+def row_admits(r, mem):
+    return bool(r) and not r["held"] and not r["capped"] and r["admit"] - r["waiting_gb"] >= int(float(mem))
+
+
+def pick_host(rows, oks, mem):
+    """among the hosts that hold the inputs (oks: host -> kids), those that admit MEM now; the lowest load/cores,
+    then the most memory left after the queued waiters.  -> host or None"""
+    fit = [h for h in oks if row_admits((rows or {}).get(h if h != os.environ.get("OT_HUB_NAME", "intel2") else "localhost"), mem)]
+    if not fit:
+        return None
+    key = lambda h: (lambda r: (round(r["load"] / r["ncpu"], 2), -(r["admit"] - r["waiting_gb"])))(
+        rows[h if h != os.environ.get("OT_HUB_NAME", "intel2") else "localhost"])
+    return min(fit, key=key)
+
+
+def admits(backend, host, mem):
+    """True when ot-run --status says HOST admits >= MEM GB now (unknown -> True, the pilot behaviour)"""
+    try:
+        p = subprocess.run([backend, "--status"], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return True
+    h = "localhost" if host == os.environ.get("OT_HUB_NAME", "intel2") else host
+    m = re.search(r"(?:^|\| )" + re.escape(h) + r" admits (-?\d+) GB", p.stdout or "")
+    if not m:
+        return not re.search(r"(?:^|\| )" + re.escape(h) + r" (?:REFUSED|HELD)", p.stdout or "")
+    # REHOST-1 11-09 (COORD 09:2x): "admits N GB" is memory only.  A sealed job is pinned (--hosts, no spill, no
+    # re-place), so it must not be pinned to a host whose ot-heavy holds it on the load cap (status says LOADCAP) or
+    # whose queued waiters already claim that memory (epyc7 09:2x: admits 104, waiters 45:1950 GB, load 186/96 ->
+    # 12 sealed PLACE jobs pinned behind the queue).  Such a call runs unsealed, so ot-run can spill it.
+    seg = (p.stdout or "")[m.start():].split(" | ", 1)[0]
+    if " LOADCAP" in seg:
+        return False
+    w = re.search(r" waiters \d+:(\d+(?:\.\d+)?) GB", seg)
+    try:
+        return int(m.group(1)) - (float(w.group(1)) if w else 0.0) >= int(float(mem))
+    except ValueError:
+        return True
+
+
 def decide(argv, conf, check=remote_ok):
     """-> (argv to exec, why)"""
     backend = conf.get("backend") or DEFAULT_BACKEND
@@ -144,25 +217,107 @@ def decide(argv, conf, check=remote_ok):
     if not p:
         return passthru, "not a plain ot-run call"
     o, flags, cmd = p
-    pc = place_call(cmd)
+    pc = place_call(cmd, conf.get("stages"))
     if not pc or "mem" not in o:
         return passthru, "not a place call"
-    runner, K, _rest = pc
+    runner, K, rest = pc
     kdir = o.get("dir") or (o["stage"][0] if o["stage"] else "")
     if kdir.rstrip("/") != K or not any(K.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
         return passthru, "not a pilot dir"
-    host = conf.get("host", "epyc7")
-    ok, kids = check(host, runner, K)
-    if not ok:
-        return passthru, f"kit/runner/ot-job/bwrap not ready on {host}"
+    hosts = conf.get("hosts") or [conf.get("host", "epyc7")]
+    # REHOST-1 11-09: every sealed host that holds K + runner + ot-job/bwrap (parallel checks), not only the first
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(len(hosts), 1)) as ex:
+        res = dict(zip(hosts, ex.map(lambda h: check(h, runner, K), hosts)))
+    oks = {h: kd for h, (okh, kd) in res.items() if okh}
+    if not oks:
+        return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
+    host = next(h for h in hosts if h in oks)
+    kids = oks[host]
+    rows = None
+    if conf.get("capacity_passthru", True):
+        rows = status_rows(backend)
+        if rows is not None:
+            best = pick_host(rows, oks, o["mem"])
+            if best is None:
+                return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (spill unsealed)"
+            host, kids = best, oks[best]
+    if conf.get("capacity_passthru", True) and rows is None and not admits(backend, host, o["mem"]):
+        # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
+        # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
+        return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
-        json.dump(spec_for(runner, K, kids), fh)
+        json.dump(spec_for(runner, K, kids, rest[0]), fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
     out += [f for f in flags if f != "--no-spill"]
     if "max-wait" in o:
         out += ["--max-wait", o["max-wait"]]
     return out + ["--"] + cmd, f"SEALED on {host}: {K}"
+
+
+ENOENT = re.compile(r"No such file or directory|FileNotFoundError|ENOENT|not found: /|missing\b")
+APATH = re.compile(r"(/(?:srv|home|mnt|archive|tmp|var/tmp|media)/[^\s'\":,;()\[\]]+)")
+
+
+def gaps_in(text, K, job_root="/srv/opentallas-scratch2/claude/ot-jobs/"):
+    """-> [(path, tool line)] for missing-input errors on paths outside the sealed job (K, the job root)"""
+    out, seen = [], set()
+    for ln in text.splitlines():
+        if not ENOENT.search(ln):
+            continue
+        for p in APATH.findall(ln):
+            p = p.rstrip(".")
+            if p == K or p.startswith(K + "/") or p.startswith(job_root) or p in seen:
+                continue
+            seen.add(p)
+            out.append((p, ln.strip()[:200]))
+    return out
+
+
+def gap_row(conf, K, stage, path, tool):
+    """one ISOLATE-GAPS.tsv row: time, die, type, stage, path, tool line"""
+    die = K.split("/runs/", 1)[1].split("/", 1)[0] if "/runs/" in K else "?"
+    typ = K.split("/items/", 1)[1].split("/", 1)[0] if "/items/" in K else os.path.basename(K)
+    row = "\t".join([time.strftime("%Y-%m-%d %H:%M:%S %Z"), die, typ, stage, path, tool.replace("\t", " ")])
+    try:
+        with open(os.path.expanduser(conf.get("gaps", "~/.local/lib/fleet/isolate-1/ISOLATE-GAPS.tsv")), "a") as fh:
+            fh.write(row + "\n")
+    except OSError:
+        pass
+
+
+def run_sealed(argv, conf, orig):
+    """run the sealed job, streaming its output; on a missing undeclared input outside the job, log the gap(s) and
+    rerun ONCE unsealed (OWNER 11-09 08:2x fallback) -> exit code"""
+    p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+    for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):    # the wave stops a client: stop the job client too
+        signal.signal(sig, lambda n, f: (p.send_signal(n), sys.exit(128 + n)))
+    buf = []
+    for ln in p.stdout:
+        sys.stdout.write(ln)
+        sys.stdout.flush()
+        buf.append(ln)
+        if len(buf) > 20000:
+            del buf[:5000]
+    rc = p.wait()
+    if rc == 0 or not conf.get("fallback_unsealed", True):
+        return rc
+    po = parse(orig)
+    pc = place_call(po[2], conf.get("stages")) if po else None
+    if not pc:
+        return rc
+    _r, K, rest = pc
+    gaps = gaps_in("".join(buf), K)
+    if not gaps:
+        return rc
+    for path, tool in gaps:
+        gap_row(conf, K, rest[0], path, tool)
+    log(conf, f"GAP {len(gaps)} {K} {rest[0]}: rerun unsealed once ({gaps[0][0]})")
+    print(f"ot-run-sealed: ISOLATE-GAP {len(gaps)} path(s) outside the job (first {gaps[0][0]}); rerun UNSEALED once",
+          file=sys.stderr, flush=True)
+    backend = conf.get("backend") or DEFAULT_BACKEND
+    return subprocess.call([backend] + list(orig))
 
 
 def main():
@@ -171,6 +326,12 @@ def main():
     if argv[0] != (conf.get("backend") or DEFAULT_BACKEND):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
+        sys.exit(run_sealed(argv, conf, sys.argv[1:]))
+    elif why in ("not a pilot dir",) or why.startswith("kit/runner") or why.startswith("capacity"):
+        p = parse(sys.argv[1:])
+        k = (p[0].get("dir") or "?") if p else "?"
+        if why.startswith(("kit/runner", "capacity")) or any(k.startswith(d) for d in conf.get("dirs", [])) or "/runs/qwen_kvsys/" in k:
+            log(conf, f"PASS place {k}: {why}")             # a pilot-die place call that ran unsealed, and why
     os.execv(argv[0], argv)
 
 
