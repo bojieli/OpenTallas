@@ -9523,7 +9523,8 @@
      "OT_CONS_KIT": "1"
     },
     "slw_su_l0__cl76fb247e": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_CONS_MAX_LAYER": "M7"
     },
     "cbn_q11__cl49ae4555": {
      "OT_CONS_KIT": "1",
@@ -12183,6 +12184,10 @@
     "sle_ctl__cl372cea1c": {
      "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
      "note": "KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1c=2; supersedes cand8_class. Staged epyc7/epyc2/intel1 dq97/cls2."
+    },
+    "slw_su_l0__cl76fb247e": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand9.json",
+     "note": "KW-FIX-43 15:0x DIE-QC-97 CONG-5b 14:51 (CONS-OVERMACRO-1, COORD 14:5x(2)): cand9 fdadb4625355"
     }
    },
    "notes_kw42": {
@@ -13680,7 +13685,16 @@
      "OT_KW42_CSTART": "9db0ec8d71e"
     }
    },
-   "note_kw43_c9": "KW-FIX-43 14:3x: CONS-OVERMACRO-1 (cons-kit ceiling >= macro blockage + 2) via item_env OT_CONS_MAX_LAYER=M7 on the 3 su lanes (= branch 82af67af8f26 kit on current main, no merge wait) + cand9 plan; sle_ctl__cl372cea1c on cand9, no cons switch; slw_sc_v3 untouched until the DIE-QC-97 what-if. Revert: item_inputs/item_env = *_prev_kw43c9[k] (None = delete)."
+   "note_kw43_c9": "KW-FIX-43 14:3x: CONS-OVERMACRO-1 (cons-kit ceiling >= macro blockage + 2) via item_env OT_CONS_MAX_LAYER=M7 on the 3 su lanes (= branch 82af67af8f26 kit on current main, no merge wait) + cand9 plan; sle_ctl__cl372cea1c on cand9, no cons switch; slw_sc_v3 untouched until the DIE-QC-97 what-if. Revert: item_inputs/item_env = *_prev_kw43c9[k] (None = delete).",
+   "item_inputs_prev_kw43c5b": {
+    "slw_su_l0__cl76fb247e": null
+   },
+   "item_env_prev_kw43c5b": {
+    "slw_su_l0__cl76fb247e": {
+     "OT_CONS_KIT": "1"
+    }
+   },
+   "note_kw43_c5b": "KW-FIX-43 15:0x: slw_su_l0__cl76fb247e CONS-OVERMACRO-1 -> cand9 + OT_CONS_KIT=1 OT_CONS_MAX_LAYER=M7; slw_sc_v1__cl63e5a7a2 = E-CHANNEL, waits for DIE-QC-97 cand10. Revert: item_inputs/item_env = *_prev_kw43c5b[k] (None = delete)."
   },
   "hbm": {
    "enabled": true,
