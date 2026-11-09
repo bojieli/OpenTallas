@@ -12,6 +12,7 @@ Categories (first holder wins):  KEEP-* never removed by this tool; DEL-* candid
   self-fed protect.d/protected-dbs.txt is NOT a source (DISK-URGENT-2 union fix logic).
   DEL-L1-SIGNED-TRIM  signed unit, intermediates only (archive verified or pending, see reason)
   DEL-L2-ATTEMPT      kit-wave attempt finished and not the latest attempt
+  DEL-L2-ATTEMPT-DONE latest kit-wave attempt the wave closed (SUPERSEDED/CANCELLED/WITHDRAWN), not active/signed/kept (COORD 07:1x)
   DEL-L2-LATEST-TRIM  latest attempt kept as resume checkpoint: only 2_x/3_x/4_1/5_3/5_route/6_1 intermediates
   DEL-L4-KIT / DEL-L4-GIT / DEL-L4-LOOSE   dead-lane orphans (member level)
 """
@@ -615,9 +616,20 @@ class Plan:
         mm = self.m.ATTEMPT_RE.match(self.J.paths.canon(p))
         return bool(mm) and self.attempt_verdict(mm.group(0)) == "finished-old"
 
+    def kw_done(self, p):
+        """p is, or lies in, a kit-wave attempt the wave itself closed (COORD 07:1x: terminal, not ECO-pending): not active, not
+        signed, and a terminal stage SUPERSEDED / CANCELLED / WITHDRAWN on some host.  A latest attempt that only FAILed is NOT done:
+        a fix may resume from its checkpoints (owner 11-08).  Kit-wave keep (resume/spec), counted and protected holds come first."""
+        mm = self.m.ATTEMPT_RE.match(self.J.paths.canon(p))
+        if not mm:
+            return False
+        st = getattr(self.J, "kw_attempts", {}).get(mm.group(0))
+        return bool(st) and not st["active"] and not st["signed"] and \
+            any(str(t).endswith(("SUPERSEDED", "CANCELLED", "WITHDRAWN")) for t in st.get("terminal") or [])
+
     def kw_release(self, h, p):
-        """kit_wave.txt root lines keep the latest attempt and resume checkpoints only (COORD 22:3x)"""
-        return None if h and h[0] in KW_ROOT_CATS and self.kw_old(p) else h
+        """kit_wave.txt root lines keep the latest attempt and resume checkpoints only (COORD 22:3x); closed attempts go (07:1x)"""
+        return None if h and h[0] in KW_ROOT_CATS and (self.kw_old(p) or self.kw_done(p)) else h
 
     def localkeep_hit(self, d):
         J = self.J
@@ -653,7 +665,11 @@ class Plan:
                 continue
             k = 1 if (rest[0] in WRAPPERS or rest[0].startswith(("moved-", "from-", "relocated"))) else 0
             if len(rest) > k and rest[k] in self.mnames:
-                return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", False)
+                # COORD 07:2x (finished-job disk is reclaimed unless an ECO/fix uses it): a named wave lane keeps its latest, active
+                # and signed attempts (decided earlier/later by the kit-wave state), but a finished superseded attempt is the wave's
+                # call, not the lane name's.  A post naming that attempt's path still holds it (mpaths below).
+                if not (self.kw_old(d) or self.kw_done(d)):
+                    return ("KEEP-lane-mention", f"lane dir {rest[k]} named in the last 24 h", d in getattr(self, "attempt_anc", ()))
             if len(rest) <= k:                       # a wrapper dir itself (wt, moved-*): hold it if any dir below it is a mentioned lane
                 try:
                     if any(e in self.mnames for e in os.listdir(d)):
@@ -837,6 +853,9 @@ class Plan:
             return
         if v == "finished-old":
             self.unit_delete(d, lane, live, "DEL-L2-ATTEMPT", "finished, not latest attempt", partial)
+            return
+        if v in ("latest-open", "unknown") and self.kw_done(d) and not self.J.resume_hold(d):
+            self.unit_delete(d, lane, live, "DEL-L2-ATTEMPT-DONE", "attempt the wave closed (SUPERSEDED/CANCELLED/WITHDRAWN), COORD 07:1x", partial)
             return
         if v in ("latest-open", "unknown"):
             if v == "unknown" and not live:
@@ -1412,6 +1431,8 @@ class Apply:
             return "SKIP", h[1]
         if cat == "DEL-L2-ATTEMPT" and not P.kw_old(path):
             return "SKIP", "attempt no longer finished-old"
+        if cat == "DEL-L2-ATTEMPT-DONE" and not P.kw_done(path):
+            return "SKIP", "attempt no longer closed by the wave (active/signed/relaunched)"
         oh = P.holds.hit(path)
         if oh:
             return "SKIP", "ot-hold " + oh
@@ -1426,6 +1447,10 @@ class Apply:
             g = self.git_now(path)
             if g:
                 return "SKIP", g
+        if cat == "DEL-L2-ATTEMPT-DONE":
+            r = J.resume_hold(path)
+            if r:
+                return "SKIP", r
         if cat == "DEL-L2-LATEST-TRIM":
             r = J.resume_hold(os.path.dirname(path))
             if r:
@@ -1443,7 +1468,7 @@ class Apply:
             return "SKIP", "referenced: " + rh
         if P.link_into(path):
             return "SKIP", "symlink into"
-        if cat == "DEL-L2-ATTEMPT":
+        if cat in ("DEL-L2-ATTEMPT", "DEL-L2-ATTEMPT-DONE"):
             k = self.kept_link_into(path)
             if k:
                 return "SKIP", k
