@@ -137,6 +137,15 @@ FF_GRT_STEP = (HOLD_MARGIN_READ +
                "if [ \\$rc != 0 ]; then echo 'FF-only GRT hold repair (FF vclk frame) failed'; fi; fi; ")
 KIT_MODE_FILES = ("kit_modes.py", "kit_modes_eco.tcl")
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
+# CORE-MAXWIRE 11-09 (COORD LOOP-GAP 10:5x; HBM-COLLECT-1/PTW-C, S81 station405 slew class): type kits get a repeater
+# pitch through gen.py phys --max-wire-um (grt_maxwire.tcl), core kits had none.  Every core kit now gets the same hook
+# by default: the post-GRT repair_design adds -max_wire_length, CORE_MAXWIRE_UM_LOCAL on a core whose top routing
+# layer is M7 or lower (local M2-M7 nets, slew set by repeater spacing), CORE_MAXWIRE_UM_HOP where M8/M9 hops exist
+# (METHODOLOGY 450-um hop pitch).  Picked at make time from the kit's final MAX_ROUTING_LAYER (platform default M7).
+# A kit that sets OT_MAXWIRE_UM itself keeps its value; "export OT_MAXWIRE_UM =" (empty) = off.  Clock nets untouched.
+CORE_MAXWIRE_UM_LOCAL, CORE_MAXWIRE_UM_HOP = 80, 450
+CORE_MAXWIRE_LINE = (f"export OT_MAXWIRE_UM ?= $(if $(filter M8 M9,$(MAX_ROUTING_LAYER)),"
+                     f"{CORE_MAXWIRE_UM_HOP},{CORE_MAXWIRE_UM_LOCAL})")
 # FLOW-KITFAIL-3 10-29 (S81 CRS4 ra2 RSZ-0060, fixed kit-local in ra3): the FF-only GRT hold repair runs through ORFS
 # repair_timing_helper at OpenROAD's default 20 % buffer cap, below the demand of pin-fed bank flops (4519 flops fed
 # straight from input pins at min input delay -40 ps on the FF vclk).  Same raise as hold_repair_pre.tcl (plan_demand
@@ -214,7 +223,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     kd = Path(kd)
     shutil.copyfile(TOOL.parent / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     stage_grt183(kd)
-    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
+    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_maxwire.tcl", "hold_guard_grt.tcl","grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
     # KIT-TRIAGE-1/G5 11-01 (COORD 05:0x: extend the HBM-CORES-KITS-40 HB4 hook b26a827db45 to the S81 / KV / QC core
     # kits as one class form): every core kit's FF GRT hold repair may pad with HB4xp67 (physical/common_flow/
@@ -250,7 +259,8 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
            "export OT_CORE_PRE_FLOORPLAN_TCL := $(PRE_FLOORPLAN_TCL)",
            "export PRE_FLOORPLAN_TCL = /work/pre_floorplan_core.tcl",
            "override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_core.tcl",
-           "override export POST_GLOBAL_ROUTE_TCL = /work/grt_post_core.tcl"]
+           "override export POST_GLOBAL_ROUTE_TCL = /work/grt_post_core.tcl",
+           CORE_MAXWIRE_LINE]
     if grt_nonport_hold:
         cfg.append("export OT_GRT_NONPORT_HOLD = 1")
     if rc_cal:
