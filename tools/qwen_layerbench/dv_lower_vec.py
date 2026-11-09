@@ -309,8 +309,8 @@ class Sched:
     """one command an edge at dvs_W5.cmd_wi; occupancy of the downward scalar chain, the x stream (one x word per slice
     per edge) and the outbound D2D chain (one word per W5 edge after the 2-edge hops); SU busy per slice"""
 
-    def __init__(self, smap):
-        self.smap, self.arr = smap, smap['cmd_arrival']
+    def __init__(self, smap, dep_extra=0):
+        self.smap, self.arr, self.dep_extra = smap, smap['cmd_arrival'], dep_extra
         self.cmds, self.occ, self.su_free, self.exp = {}, {}, [0] * N, []
 
     def keys(self, s, entry, kind, offs):
@@ -347,7 +347,7 @@ class Sched:
         for k, j in ks:
             self.occ.setdefault(k, []).append((s, label, j))
         self.cmd(e, c, label)
-        self.su_free[s] = e + span + MARGIN
+        self.su_free[s] = e + span + MARGIN + self.dep_extra
         return e
 
     def collisions(self):
@@ -366,7 +366,7 @@ def load_ages(path=AGES_VEC):
         if k not in a:
             raise LowerError(f'{path}: no {k}')
     D.check_memory_profile(a, path)
-    return a
+    return D.apply_su_transport(a)
 
 
 def span(ages, op):
@@ -408,7 +408,7 @@ def attn_owners(smap, ages):
     vm = vm_map_vec(D.ownership())
     best = None
     for comb in itertools.combinations(range(N), ATT_BLK):
-        S = Sched(smap)
+        S = Sched(smap, D.su_dep_extra(ages))
         try:
             r0, _, xs = attn_schedule(S, list(comb), 0, ages, vm)
         except LowerError:
@@ -454,7 +454,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
                         rb=D.W_SC | bl[0], rso=bl[1] - bl[0] if len(bl) > 1 else 0)
         Wd[s] = words(s, own, vm, cr, isa, mutant, att)
         img[s] = image(s, Wd[s], ssq)
-    S = Sched(smap)
+    S = Sched(smap, D.su_dep_extra(ages))
     if rope not in ('stream', 'rx'):
         raise LowerError(f'rope {rope}')
     tables = crom_table(own, cr, consts if rope == 'stream' else {k: v for k, v in consts.items() if k != 'pos'})
@@ -518,7 +518,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
         start = max(ent.values())
         for s in range(N):
             n = len(blocks[s])
-            e = S.place(s, D.cmd_su(PIDX['xs'], s), f'XS s{s}', max(start, ent[s] + L[n - 1] + MARGIN), 'x',
+            e = S.place(s, D.cmd_su(PIDX['xs'], s), f'XS s{s}', max(start, ent[s] + L[n - 1] + MARGIN + D.su_dep_extra(ages)), 'x',
                         O[:2 * n], span=O[2 * n - 1], check=mutant != 'xslot')
             for j in range(2 * n):
                 b = blocks[s][j // 2]
@@ -536,10 +536,10 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
                                   for j, o in enumerate(a['v'])]
                 continue
             e4 = S.place(s, D.cmd_su(PIDX['qkr'], s), f'{role}*r+SS s{s}', t, span=ages['red_vm'])
-            e5 = S.place(s, D.cmd_su(PIDX['rs'], s), f'RS s{s}', e4 + ages['red_vm'] + MARGIN, span=span(ages, 'rs'))
-            e6 = S.place(s, D.cmd_su(PIDX['qn'], s), f'QN s{s}', e5 + span(ages, 'rs') + MARGIN, span=span(ages, 'qn'))
+            e5 = S.place(s, D.cmd_su(PIDX['rs'], s), f'RS s{s}', e4 + ages['red_vm'] + MARGIN + D.su_dep_extra(ages), span=span(ages, 'rs'))
+            e6 = S.place(s, D.cmd_su(PIDX['qn'], s), f'QN s{s}', e5 + span(ages, 'rs') + MARGIN + D.su_dep_extra(ages), span=span(ages, 'qn'))
             op = 'rope_q' if role == 'q' else 'rope_k'
-            prev = e6 + span(ages, 'qn') + MARGIN
+            prev = e6 + span(ages, 'qn') + MARGIN + D.su_dep_extra(ages)
             for nm in ('rlo', 'rhi'):
                 e = S.place(s, D.cmd_su(PIDX[nm], s), f'{nm} s{s} ({role})', prev, 'd2d', a[op], span=span(ages, op))
                 expect['d2d'] += [dict(slice=s, op=f'{nm}_{role}', word=j, edge_w5=e + smap['cmd_arrival'][s] + o + 2 * s)
@@ -556,7 +556,7 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
             prev = t
             if mutant != 'nor':
                 e9 = S.place(s, D.cmd_su(PIDX['gur'], s), f'GU*r s{s}', t, span=span(ages, 'gur'))
-                prev = e9 + span(ages, 'gur') + MARGIN
+                prev = e9 + span(ages, 'gur') + MARGIN + D.su_dep_extra(ages)
             e = S.place(s, D.cmd_su(PIDX['silu'], s), f'SILU s{s}', prev, 'x', O, span=O[-1])
             for j in range(len(O)):
                 expect['x'].append(dict(slice=s, eaddr=BLOCK * s + 64 * j,
