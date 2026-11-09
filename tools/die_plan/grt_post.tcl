@@ -4,6 +4,12 @@
 set gq_dir [file dirname [file normalize [info script]]]
 if {[info exists ::env(OT_TAP_GRT_MODE)] && $::env(OT_TAP_GRT_MODE) ne ""} { source [file join $gq_dir tap_balance_grt.tcl] }
 if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} { ot_vclk_bind tt }
+# DIE-HBM-97 11-09 HOPLATCH-HOLD: the GRT-repair-only hop latch -hold uncertainty (grt_pre.tcl) comes off before the SDC is written
+if {[info exists ::ot_hlh_pins] && [llength $::ot_hlh_pins]} {
+  foreach ot_hlh_p $::ot_hlh_pins { unset_clock_uncertainty -hold $ot_hlh_p }
+  puts "OT_HOP_LATCH_HOLD removed from [llength $::ot_hlh_pins] hop latch clock pins"
+  set ::ot_hlh_pins {}
+}
 # Repair buffers do not replace registered reset stations or waive their reach.
 if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "1"} {
   uplevel #0 [list source [file join $gq_dir reset_pair_place.tcl]]

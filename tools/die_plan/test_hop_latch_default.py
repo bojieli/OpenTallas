@@ -10,7 +10,7 @@ def _p(name):
 
 def test_hbm_default(monkeypatch):
     monkeypatch.delenv("OT_HOP_LATCH_CAPTURE_TAP", raising=False)
-    assert gen_phys._hop_latch_capture_tap(_p("hbm_arch_B2o")) == "u_fl_rst_"
+    assert gen_phys._hop_latch_capture_tap(_p("hbm_arch_B2o")) == "u_fl_rst_ u_fl_L201x"
 
 
 def test_other_dies_off(monkeypatch):
