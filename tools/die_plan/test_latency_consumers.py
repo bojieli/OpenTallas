@@ -176,3 +176,26 @@ def test_check_r8_missing_bus_groups_is_error_when_the_bind_adds_stages(tmp_path
     R = check.Report()
     st = check.check_r8(None, R, tmp_path)
     assert st["adds"] == 1 and R.errors() and "adds stages" in R.errors()[0]["msg"]
+
+
+def _ring_bg(req, resp, req0=0, resp0=0):
+    g = lambda port, src, sink, asb, land: dict(sink=sink, members=[dict(sink_port=port, source=src, bound_stages=land, landed_stages=land, asbuilt_stages=asb)])
+    return dict(landing=[g("d", "p.u_c.emb_code_addr", "mem", req0, req), g("emb_code_q", "mem.q", "p.u_c", resp0, resp)])
+
+
+def test_design_loop_reports_required_not_only_added():
+    leaves = {"p.u_c": dict(module="qfd_native59_dv_headprep_obs1", params={})}
+    res = LC.check(leaves, _ring_bg(4, 7, 2, 2))
+    r = next(r for r in res["contracts"] if r["param"] == "EMB_CODE_RING")
+    assert (r["verdict"], r["added"], r["landed_loop"], r["required"]) == ("ADVISORY_MISMATCH", 7, 11, 11) and res["errors"] == []
+    # as-built equal to landed: added 0, but the design loop is still exceeded and must not read MATCH
+    r0 = next(r for r in LC.check(leaves, _ring_bg(4, 7, 4, 7))["contracts"] if r["param"] == "EMB_CODE_RING")
+    assert (r0["added"], r0["required"], r0["verdict"]) == (0, 11, "ADVISORY_MISMATCH")
+    # negative control: a loop at the design depth reports required 0 and no row
+    assert not [r for r in LC.check(leaves, _ring_bg(0, 0))["contracts"] if r["param"] == "EMB_CODE_RING"]
+
+
+def test_yosys_leaves_elab_keep_uses_u_die_paths():
+    yjs = dict(modules=dict(bind_elab_keep=dict(attributes=dict(top=1), cells=dict(u_die=dict(type="die"), u_v0=dict(type="leaf"))),
+                            die=dict(attributes={}, cells=dict(a=dict(type="leaf"))), leaf=dict(attributes={}, cells={})))
+    assert set(LC.yosys_leaves(yjs)) == {"a"}
