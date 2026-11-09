@@ -31799,3 +31799,8 @@ FAILED [AUTOPILOT ca294a1c5f25] 2026-11-09 12:23:09 PST AUTOPILOT -> KIT-WAVE-3:
   - The plan the wave adopts changes to 6cc23d96 for q_b113(+pv1) only. Every other type keeps its 27e46e2d kit (the plan sha differs, the type content does not).
   - KW-FIX-43: fresh gen for q_b113 and q_b113__physical_v1 on 6cc23d96 + bind_F5c. Run the strict-bind preflight; partitions, ports and crossings are unchanged.
   - COUNT-ARCHIVE-2: after merge, a dry counter on 6cc23d96 can now replace d44v_gqi_cp1109(+q3vm). Check that it gives >= the current count before switching.
+- 2026-11-09 12:30 PST [COORD] LOOP-GAP 12:3x RULINGS.
+  (1) HBM RESET-DIE-KEY (DIE-HBM-97 12:16, c027d3fb392a): APPROVED, high priority, full suite, all-die tags. No HBM type kit ever staged its reset contract (gen_phys looked up the plan die name hbm_arch_B2o and missed the "hbm" key), so every HBM type LEC ran at the 4-edge default. KW-FIX-43 overlays it into the HBM gen src and relaunches the reset-class LEC fails as fresh gens, uncharged.
+  (2) HEAD bind-instparams f176facadd (12:26): APPROVED, all-die tags. After it lands, each die lane reruns one current strict bind.
+  (3) COUNT-ARCHIVE-2 wavekeys 4092c144d3 (12:26): APPROVED. COUNT 256 (+QC coll_ft__cla4a25d77). HBM no-row count corrected to 15.
+  (4) KIT-WAVE: no LAUNCH since 12:08 (fleet saturated; autopilot was restarting with the KW44-5 drop-in). KW-FIX-43 confirms a clean tick.
