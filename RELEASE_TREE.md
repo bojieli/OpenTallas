@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-> 2026-11-09 09:44 PST COUNT 251 (forced 09:44): S81 60/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 75/107 + 0/81t. Main dd6cd631e68. Final plans building: QC (04:41), HBM d44v_final4, S81 65648816 (fo-s81, 06:58), KV bind9 (kv3_pv released 07:3x); HEAD l48hp1 strict bind running. ~14 READY-COUNT pending ingest into the plan count.
+> 2026-11-09 09:57 PST COUNT 253 (COUNT-ARCHIVE-2 forced, cache 09:35; HBM counter overlay d44v_gqi_cp1109): S81 60/62 + 34/205t, HEAD 4/4 + 19/25t, QC 25/26 + 1/119t, KV 32/32 + 1/56t, HBM 77/107 + 0/81t. Main dd6cd631e68. Final plans building: QC (04:41), HBM d44v_final4, S81 65648816 (fo-s81, 06:58), KV bind9 (kv3_pv released 07:3x); HEAD l48hp1 strict bind running. ~14 READY-COUNT pending ingest into the plan count.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
