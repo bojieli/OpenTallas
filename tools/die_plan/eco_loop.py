@@ -484,6 +484,19 @@ def post_runner(d, runner):
     return None
 
 
+def set_aside_stage_resume(d):
+    """KW-FIX-37 11-08 (COORD, HBM-HARD-7 EP host): prd_mk.sh copies a stage-resumed kit's resume.json into the pass dir, and
+    the kit runner refuses GOAL=post while it is there (FAIL_PREFLOOR 'goal post unsupported', exit 10), so the ECO ended
+    'sign-off wrote no record' on a finished route.  resume.json only steers the runner's make chain, which GOAL=post never
+    enters.  Renamed in this pass dir only (never the kit); the file stays beside it for the audit.  -> new path or None"""
+    p = Path(d) / "resume.json"
+    if not (p.is_file() or p.is_symlink()):
+        return None
+    q = p.with_name("resume.json.was_stage_resume")
+    os.replace(p, q)
+    return str(q)
+
+
 def docker():
     return "docker" if subprocess.call(["docker", "ps"], stdout=subprocess.DEVNULL,
                                        stderr=subprocess.DEVNULL) == 0 else "sudo docker"
@@ -686,7 +699,11 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
     ts = time.time()
     pr = post_runner(d, runner)
     if pr:
-        step("signoff", ["bash", pr, d, "post", mem, cpus])
+        aside = set_aside_stage_resume(d)
+        if aside:
+            it["stage_resume_set_aside"] = aside
+        # RESYNTH-GUARD is skipped while resume.json exists; keep that for this post, which runs no make chain
+        step("signoff", ["bash", pr, d, "post", mem, cpus], **({"env": dict(os.environ, OT_ALLOW_RESYNTH="1")} if aside else {}))
     else:
         rc = step("abstract", ["bash", "-c", ABSTRACT_SH, "eco_abstract", d, cpus, mem, image, docker(),
                                "1" if hold_mm(kit) else "0"])
