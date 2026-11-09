@@ -553,3 +553,7 @@ epyc6	/home/ubuntu/cp1106-manifest/patches	PRUNE-AUDIT-1 11-07: same, epyc6 work
 intel1	/srv/opentallas-scratch2/claude/die-kv-63-start/veh60c45/src_0822	PRUNE-AUDIT-1 11-07: only source of the c47 KV dieslice bind.f (118 files), needed to rebuild the lost KV-08 binary
 epyc6	/srv/opentallas-scratch2/claude/dkv80dbg/dkv69	PRUNE-AUDIT-1 11-07: inputs for the KV-08 c47 dieslice rebuild (build.sh, vdir, vimg, c47fc)
 epyc6	/srv/opentallas-scratch2/claude/codex-head-1105/parent_head_union_exact6	PRUNE-AUDIT-1 11-07: published exact6 source for the HEAD boot_full_tt1 rebuild
+epyc6	/srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/eco1/i1	hbm/hfd_ep_host_vc kit_root (routed ECO i1, routed_db 6_final.odb sha256 a93c98134d1f; HBM-HARD-7 11-08, COORD approved)
+epyc6	/srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/resign_fr	hbm/hfd_ep_host_vc resign_dir, hbm/hfd_ep_host_vc provenance_dir, hbm/hfd_ep_host_vc lec_dir (flow-20261108-fr-hbm; HBM-HARD-7 11-08, COORD approved)
+epyc6	/srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/eco1/i1	hbm/hfd_ep_static_vc2 kit_root (routed ECO i1, routed_db 6_final.odb sha256 55a58a4b7745; HBM-HARD-7 11-08, COORD approved)
+epyc6	/srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/resign_fr	hbm/hfd_ep_static_vc2 resign_dir, hbm/hfd_ep_static_vc2 provenance_dir, hbm/hfd_ep_static_vc2 lec_dir (flow-20261108-fr-hbm; HBM-HARD-7 11-08, COORD approved)
