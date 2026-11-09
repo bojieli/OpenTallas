@@ -1,6 +1,7 @@
 import pytest
 from tools.die_plan.landing_place import (_chain_clear_of_hard_cores, _clear_of_hard_cores,
-                                          _reader_start_groups, _writer_start_groups)
+                                          _reader_start_groups, _status_reset_groups,
+                                          _writer_start_groups)
 
 CORE = {'inst': 'u', 'origin_um': [50, 50], 'outline_um': [100, 400]}
 TYPE = {'outline_um': [300, 600], 'hard_cores': [CORE]}
@@ -12,8 +13,8 @@ def test_no_core_or_outside_is_identical():
     assert _clear_of_hard_cores(TYPE, r) is r
 
 
-def test_partial_overlap_keeps_rows_and_is_unchanged():
-    r = [48, 100, 52, 104]
+def test_window_with_rows_beside_core_is_unchanged():
+    r = [46, 100, 50.32, 104.32]
     assert _clear_of_hard_cores(TYPE, r) is r
 
 
@@ -58,3 +59,20 @@ def test_writer_groups_use_chain():
     t = dict(TYPE, clock={'landing_writer_start': {'branches': {'b': {'stages': [{'xy_um': [62, 202]}]}}}})
     (_, rect, tag), = _writer_start_groups(t)
     assert tag == 'writer-start:b' and rect[2] <= 50 - 4.32 + 1e-6
+
+
+def test_window_in_macro_halo_only_moves():
+    x0, _, x1, _ = _clear_of_hard_cores(TYPE, [47.9, 100, 49.9, 104.32])
+    assert x1 <= 50 - 4.32 + 1e-6 or x0 >= 150
+
+
+def test_local_reset_inside_core_moves():
+    t = dict(TYPE, clock={'landing_local_resets': [{'name': 'start_6', 'xy_um': [62, 202]}]})
+    (name, rect, tag), = _status_reset_groups(t)
+    assert name == 'u_cland_lrst_start_6' and tag == 'local-reset' and rect[2] <= 50 - 4.32 + 1e-6
+
+
+def test_local_reset_outside_core_keeps_window():
+    t = dict(TYPE, clock={'landing_local_resets': [{'name': 'a', 'xy_um': [20, 20]}]})
+    (_, rect, _), = _status_reset_groups(t)
+    assert rect == [17.84, 17.84, 22.16, 22.16]

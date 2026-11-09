@@ -301,16 +301,32 @@ def _band_groups(tn, name, band, typ):
     groups.extend((prefix, rect, tag) for rect in rects)
     return groups
 
-def _clear_of_hard_cores(t, rect, margin=4.32):
-    """START relay window wholly inside a hard core has no row: move it to the nearest free window.
+def _hard_core_rects(t):
+    return [(h['origin_um'][0], h['origin_um'][1], h['origin_um'][0] + h['outline_um'][0],
+             h['origin_um'][1] + h['outline_um'][1]) for h in (t or {}).get('hard_cores') or []]
 
-    The START event draws its stages on straight lines that cross child cores, and the
-    band check then fails with upper bound 0. Stage count and RTL are unchanged; a window
-    with any row capacity is returned as is (identical output)."""
-    cores = [(h['origin_um'][0], h['origin_um'][1], h['origin_um'][0] + h['outline_um'][0],
-              h['origin_um'][1] + h['outline_um'][1]) for h in (t or {}).get('hard_cores') or []]
+
+def _row_free_fraction(cores, rect, halo=2.17):
+    """Share of a window with rows: floorplan cuts rows about 2.05-2.17 um beside every macro (measured, coll_s)."""
     x0, y0, x1, y1 = rect
-    if not any(a <= x0 and x1 <= c and b <= y0 and y1 <= d for a, b, c, d in cores):
+    hit = [(a - halo, b - halo, c + halo, d + halo) for a, b, c, d in cores
+           if x0 < c + halo and x1 > a - halo and y0 < d + halo and y1 > b - halo]
+    if not hit:
+        return 1.0
+    n = 16
+    points = [(x0 + (i + .5) * (x1 - x0) / n, y0 + (j + .5) * (y1 - y0) / n) for i in range(n) for j in range(n)]
+    return sum(not any(a <= x <= c and b <= y <= d for a, b, c, d in hit) for x, y in points) / len(points)
+
+
+def _clear_of_hard_cores(t, rect, margin=4.32):
+    """A landing window with almost no row under it moves to the nearest free window.
+
+    The START event draws relay and local-reset sites on straight lines that cross child
+    cores and SRAMs, and the band check then fails with upper bound 0. Stage count and RTL
+    are unchanged; a window with row capacity is returned as is (identical output)."""
+    cores = _hard_core_rects(t)
+    x0, y0, x1, y1 = rect
+    if _row_free_fraction(cores, rect) >= 0.25:
         return rect
     w, h = x1 - x0, y1 - y0
     width, height = t['outline_um']
@@ -334,8 +350,7 @@ def _chain_clear_of_hard_cores(t, origin_xy, stages, margin=4.32):
     """Windows for one START relay chain: stages inside a core may leave by any side, picked
     by Viterbi for the smallest longest hop (then total length). Stages not inside a core keep
     their window, so a chain with none inside is unchanged."""
-    cores = [(h['origin_um'][0], h['origin_um'][1], h['origin_um'][0] + h['outline_um'][0],
-              h['origin_um'][1] + h['outline_um'][1]) for h in (t or {}).get('hard_cores') or []]
+    cores = _hard_core_rects(t)
     width, height = (t or {}).get('outline_um', (0, 0))
     edge = 4.32
 
@@ -351,7 +366,7 @@ def _chain_clear_of_hard_cores(t, origin_xy, stages, margin=4.32):
         near = _clear_of_hard_cores(t, r, margin)
         opts = [near]
         for a, b, c, d in cores:
-            if a <= r[0] and r[2] <= c and b <= r[1] and r[3] <= d:
+            if near is not r and r[0] < c + margin and r[2] > a - margin and r[1] < d + margin and r[3] > b - margin:
                 opts += [q for q in ([a - margin - 4.32, r[1], a - margin, r[3]],
                                      [c + margin, r[1], c + margin + 4.32, r[3]],
                                      [r[0], b - margin - 4.32, r[2], b - margin],
@@ -441,7 +456,7 @@ def _status_reset_groups(t):
     """DIE-HEAD-38 R1/R2 opt-in sites (absent = no group): status input relays, status stage anchors and
     same-cycle local reset copies, through the existing FIRM packing at +-2.16 um."""
     ck=(t or {}).get('clock',{});groups=[]
-    near=lambda xy:[xy[0]-2.16,xy[1]-2.16,xy[0]+2.16,xy[1]+2.16]
+    near=lambda xy:_clear_of_hard_cores(t,[xy[0]-2.16,xy[1]-2.16,xy[0]+2.16,xy[1]+2.16])
     for tgt,rings in sorted((ck.get('landing_status_input_stages') or {}).items()):
         for ring,stages in sorted(rings.items()):
             for k,s in enumerate(stages):
