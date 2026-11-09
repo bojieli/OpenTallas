@@ -210,13 +210,14 @@ def remote_ok(host, runner, K, bundle=None):
 
 
 FETCH_JOBS = "/srv/opentallas-scratch2/claude/ot-jobs"      # ot-run --dir of a sealed job (it is skipped where absent)
+FETCH_DISK_GB = 60      # ot-run refuses a scratch disk under its 50 GB floor (kv 98b92a196255 a3 13:4x on epyc2: 43 GB -> NOT RUN)
 
 
 def fetch_ok(host, bundle=None, K=None):
     """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
     ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
     # K must be ABSENT there: the returned copy is then ours alone and is removed after the copy-back
-    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"test -d {shlex.quote(FETCH_JOBS)} && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
+    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"test -d {shlex.quote(FETCH_JOBS)} && test $(df --output=avail -BG {shlex.quote(os.path.dirname(os.path.dirname(FETCH_JOBS)))} | tail -1 | tr -dc 0-9) -ge {FETCH_DISK_GB} && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
     if bundle:
         sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
     try:
