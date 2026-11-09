@@ -234,3 +234,40 @@ def test_tall_column_never_windowed():
     r = {'rectangles_um': [dict(layer='M5', rect=[18.9, 0.0, 21.6, 2903.04])]}
     assert F.pdn_windows_comb(r) == []
 
+
+
+def _gap_receipt(own_rows=True):
+    """q_b011 shape: 6.048-um M5 column between two macros with its own M4 rows, closed by M5 street rows on both ends,
+    plus a plain 2.7-um FT column with no own rows."""
+    R = [dict(layer='M5', rect=[123.552, 2989.44, 129.6, 3276.72]),
+         dict(layer='M5', rect=[124.74, 3276.72, 129.6, 3279.744]),
+         dict(layer='M5', rect=[124.74, 3279.744, 246.24, 3287.52]),
+         dict(layer='M5', rect=[124.74, 2978.208, 246.24, 2985.12]),
+         dict(layer='M5', rect=[120.69, 2985.12, 246.24, 2989.44]),
+         dict(layer='M5', rect=[5.94, 0.0, 8.64, 4320.0])]
+    if own_rows:
+        R += [dict(layer='M4', rect=[123.552, 3000.0 + 10.8 * k, 129.6, 3002.7 + 10.8 * k]) for k in range(5)]
+    return dict(rectangles_um=R)
+
+
+def test_gap_column_gets_m5_window_through_end_rows_and_m6_fill():
+    r = _gap_receipt()
+    w = F.pdn_windows_col(r)
+    assert {(a, b) for _, a, b, _ in w} == {(127.194, 127.806)}
+    hit = {rr for _, _, _, rr in w}
+    assert (123.552, 2989.44, 129.6, 3276.72) in hit and (124.74, 3279.744, 246.24, 3287.52) in hit
+    assert (120.69, 2985.12, 246.24, 2989.44) in hit and (5.94, 0.0, 8.64, 4320.0) not in hit
+    assert F.pdn_col_fill(r) == [('M6', [123.552, 2989.44, 129.6, 3276.72])]
+    rows = F.obstruction_rows(r)
+    assert ('M6', [123.552, 2989.44, 129.6, 3276.72]) in rows
+    assert not any(L == 'M5' and q[0] < 127.5 < q[2] and q[1] < 3100 < q[3] for L, q in rows)
+    assert any(L == 'M5' and q == [123.552, 2989.44, 127.194, 3276.72] for L, q in rows)
+    assert all(q[2] > q[0] for _, q in rows)
+    assert 'pdn_windows_col=5 col_fill_m6=1' in F.tcl(r)
+
+
+def test_plain_columns_without_own_rows_unchanged():
+    r = _gap_receipt(own_rows=False)
+    assert F.pdn_windows_col(r) == [] and F.pdn_col_fill(r) == []
+    assert F.obstruction_rows(r) == [(x['layer'], x['rect']) for x in r['rectangles_um']]
+    assert 'pdn_windows_col' not in F.tcl(r)
