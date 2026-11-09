@@ -2019,6 +2019,7 @@ def workroot_low(AP, cfg, run=None):
     free_map.clear()
     alt_map = cfg.setdefault("_workroot_alt", {}) if isinstance(cfg, dict) else {}
     alt_map.clear()
+    cfg.pop("_alt_spent", None)
     alt_on = cfg.get("workroot_alt") is not False
     alt_lim = floor + int(cfg.get("gen_need_gb", GEN_NEED_GB))
     if cfg.get("workroot_probe") is False or floor <= 0:
@@ -2263,6 +2264,7 @@ def alt_charge(cfg, h):
         if free[die] < lim:
             del alt[die]
             cfg.setdefault("_workroot_low", {}).setdefault(h, {})[die] = free[die]
+            cfg.setdefault("_alt_spent", {}).setdefault(h, set()).add(die)
 
 
 def charge(v, gb):
@@ -3611,6 +3613,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     alt = ((cfg.get("_workroot_alt") or {}).get(sp["gen_host"]) or {}).get(die)
     if alt:                                        # KW-FIX-38: this host starts the attempt on its scratch2
         sp["work_alt_lane"] = alt
+    elif die in (cfg.get("_alt_spent") or {}).get(sp["gen_host"], ()):
+        # the plan for this tick was made before the charges: the disk this host had room on is used up, the attempt would
+        # wait at kit_rtl behind the root floor; it stays pending for a later tick instead (no attempt number consumed)
+        AP.log(f"KIT-WAVE LAUNCH-DEFER {die}/{r['item']}: scratch2 room on {sp['gen_host']} used up this tick")
+        return None
     d = cfg["dies"][die]
     if (r.get("kind") or "type") == "type" and prov_item(d, r["item"]):
         # KW-PROV-1 (COORD 17:50 (C)): a type whose child views are unsigned launches on PROVISIONAL child views

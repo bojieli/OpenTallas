@@ -637,6 +637,7 @@ def test_alt_charge_stops_the_tick_burst():
     assert c["_workroot_alt"]["e"] == {"s81": "/x"} and c["_workroot_free"]["e"]["s81"] == 106
     K.alt_charge(c, "e")                                                         # 100 < 106: off for the tick, reported low
     assert not c["_workroot_alt"]["e"] and c["_workroot_low"]["e"]["s81"] == 100
+    assert "s81" in c["_alt_spent"]["e"]                                         # launch defers instead of starting behind the floor
 
 
 def test_work_alt_cmd_shell(tmp_path):
