@@ -1,0 +1,8 @@
+{
+ "tool": "tools/die_plan/check.py PLAN (G0/G0C), diffed vs base 65648816 by message",
+ "base": "G0 FAIL 84 errors (pre-existing)",
+ "v2_plan": "plan_h2_2249_svcprov_v2_c7076e019de189c7 (G0 FAIL 89): 0 new errors from the 31 new macros; NEW = 5 svc_lo ft-slot station-site clashes (t1 ft0 / ft1, t7 ft0 / ft4, w__t1 ft0: the same 5 as v1, step 3 re-site) + 1 provider pin table not yet built (planned provider boxes, kits pending); pre-existing base hop / landing ERRORs longer by the form G +77.76; 1 cut line gone",
+ "type_checks": "event types[*].validation_fails = [] on all 14 types: 8.64 lattice, 2 x 4.32 halo vs every box / core / macro incl. the 31 new, inside outline, clock bay free, band x <= 1401.84, box cells <= 150k, box fill <= 0.45 (IRG fastpad first form <= 0.535, COORD 11-09 (a)), parent soft + cores <= 400k, no clock / reset / ft point under a new macro + halo",
+ "bind_name_gate": "svc_prov_1109_v2_bind_gate.json: 31 / 31 mapped (proxy on the svc_hi t4 bound module); real check = first kit preflight macro_instances",
+ "sta_tt_preroute_833ps": {"macro_address_min_ps": {"hi5": 216.6, "lo5": 154.2}, "by_group_hi5": {"sw": 357.5, "wq": 340.3, "qmem": 495.8, "pbuf": 216.6}, "by_group_lo5": {"sw": 346.4, "wq": 372.1, "qmem": 394.3, "pbuf": 154.2}}
+}
