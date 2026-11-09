@@ -281,9 +281,25 @@ class Plan:
                 d = os.path.dirname(q)
                 if "." in os.path.basename(q) and "/" in d.split("/claude/", 1)[-1]:     # readers open siblings of a named file
                     rows.append((d, "directory of a file named by a live kit record"))
+        # fleet union (AUTOCLEAN-13): kits restage and spill between hosts at the same paths, so a record on any host holds that path
+        # here too.  lifesnap kit_union = path tails below /claude/ from every host's records; a missing list refuses, an empty one is a fixture
+        ku = self.life.get("kit_union")
+        if ku is None:
+            raise SystemExit("lifesnap has no kit_union (fleet list of live kit inputs); refusing")
+        for t in ku:
+            t = t.split("/claude/", 1)[1] if "/claude/" in t else t
+            if not t or t.startswith(("/", "..")):
+                continue
+            for r in J.roots:
+                p = os.path.normpath(os.path.join(r, t))
+                for q in {p, os.path.realpath(p)}:
+                    rows.append((q, "named by a live kit record on the fleet"))
+                    d = os.path.dirname(q)
+                    if "." in os.path.basename(q) and "/" in d.split("/claude/", 1)[-1]:
+                        rows.append((d, "directory of a file named by a live kit record on the fleet"))
         self.kit = m.PathSet(rows, canon=J.paths.canon)
         self.kit_refs = kr
-        print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths", flush=True)
+        print(f"kit input guard: {kn} records and wave files read, {len(kr)} named paths, fleet union {len(ku)}", flush=True)
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
             raise SystemExit("lifesnap has no protected_full rows")
@@ -1225,6 +1241,10 @@ class Apply:
             ch = P.coord.hit(f)
             if ch:
                 return "SKIP", ch
+        for f in {path, real} | set(J.paths.forms(path)):        # kit records re-read at apply start: one written after the plan holds too
+            kh = P.kit.hit(f)
+            if kh:
+                return "SKIP", "live kit input: " + kh
         h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]

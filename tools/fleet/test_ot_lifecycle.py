@@ -120,6 +120,7 @@ def run_fixture(W):
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
             "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
             "coord_holds": [{"pattern": "dead-hh2/tkm", "lane": "X", "why": "open"}],
+            "kit_union": [],
             "wave_paths": [f"{ROOT}/dead-sc/kit_rtl_x.sh", f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr", f"{ROOT}/dead-xy/sub/c.json", f"{ROOT}/dead-xz/a.json"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
@@ -350,3 +351,106 @@ def test_live_kit_inputs(tmp_path):
     assert f"{root}/sc2/next.json" in refs and f"{root}/b2/bind" in refs  # two hops through wave-named files
     assert lc.live_kit_inputs([str(tmp_path / "none")], []) == (set(), 0)
 
+
+
+def _incident_fleet(W):
+    """the 11-09 00:14 epyc5 pass, as a fixture: a dead, old bind lane on one root, reached by live kits only through an alias
+    symlink on the other root, a kit_rtl.json, a bind_report.json and a kit_rtl.f (+incdir+ and -v forms)"""
+    R2, R3 = os.path.join(W, "s2/claude"), os.path.join(W, "s3/claude")
+    os.makedirs(R2); os.makedirs(R3)
+    B = f"{R3}/codex-wave-bind-1106"
+    for f in ("s81_emitted_v2/bind/rtl/top.sv", "s81_emitted_v2/bind/rtl/sib.sv", "s81_seeded/bind/rtl/a.sv", "s81_seeded/run.sh",
+              "kv_sys_phy/bind/inc/defs.svh", "kv_sys_phy/bind/x.sv", "unnamed/f.bin", "late/g.bin",
+              "kv_union/bind/u.sv", "kv_union/bind/sib.sv"):
+        write(f"{B}/{f}", 64)
+    os.symlink(B, f"{R2}/codex-wave-bind-1106")                                   # alias, like kw26-wave-1106 -> scratch2
+    att = f"{R2}/kwx/kit-wave/s81/p/items/it/attempt_4/rtl"
+    write(f"{att}/own.sv", 64)
+    with open(f"{att}/kit_rtl.json", "w") as fh:                                    # names the alias form, realpath is on R3
+        json.dump({"own": f"{att}/own.sv", "bound": [f"{R2}/codex-wave-bind-1106/s81_emitted_v2/bind/rtl/top.sv"]}, fh)
+    os.makedirs(f"{R2}/kwy/bind_out")
+    with open(f"{R2}/kwy/bind_out/bind_report.json", "w") as fh:                   # names a directory: rows inside it stay
+        json.dump({"bind_out": f"{B}/s81_seeded/bind"}, fh)
+    os.makedirs(f"{R2}/kwz/u")
+    with open(f"{R2}/kwz/u/kit_rtl.f", "w") as fh:
+        fh.write(f"+incdir+{B}/kv_sys_phy/bind/inc\n-v {B}/kv_sys_phy/bind/x.sv\n")
+    kit(f"{R2}/dead-pc/kit1")                                                       # protected, for the plan's own control
+    write(f"{R2}/dead-wv/wave/w.json", 64)
+    snap = os.path.join(W, "snap")
+    os.makedirs(snap)
+    with open(f"{snap}/protected.tsv", "w") as fh:
+        fh.write(f"{R2}/dead-pc/kit1\tfixture\n")
+        for i in range(120):
+            fh.write(f"/srv/none/claude/lane/x{i}\tpad\n")
+    json.dump({"created": time.time(), "created_h": "now"}, open(f"{snap}/meta.json", "w"))
+    json.dump({"paths": [], "words": []}, open(f"{snap}/queue.json", "w"))
+    json.dump({"attempts": {}, "latest": {}, "keep": [], "current_di": {}, "created": time.time(), "source": "fix"}, open(f"{snap}/kitwave.json", "w"))
+    json.dump({"created": time.time(), "live": [], "lane_last": {}, "paths48": [], "words48": [],
+               "protected_full": [["fix", f"{R2}/dead-pc/kit1", "fixture"]], "coord_holds": [],
+               "kit_union": ["codex-wave-bind-1106/kv_union/bind/u.sv"],     # named only by a record on another host
+               "wave_paths": [f"{R2}/dead-wv/wave/w.json"]}, open(f"{W}/life.json", "w"))
+    return R2, R3, B, snap
+
+
+def _lc_run(W, lc, cmd, R2, R3, snap, *extra):
+    return subprocess.run([sys.executable, "-I", lc, cmd, "--tool", TOOL, "--host", "fix", "--lifesnap", f"{W}/life.json", "--out", f"{W}/out",
+                           "--state", f"{W}/state-{cmd}", "--snapshot", snap, "--docker", "", "--roots", R2, R3, *extra],
+                          capture_output=True, text=True, timeout=600)
+
+
+def _mutant(W, old, new):
+    src = open(LC).read()
+    assert src.count(old) == 1, old
+    p = os.path.join(W, "mutant-lifecycle.py")
+    open(p, "w").write(src.replace(old, new))
+    return p
+
+
+def test_incident_0014_live_kit_inputs(tmp_path):
+    W = str(tmp_path)
+    R2, R3, B, snap = _incident_fleet(W)
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    print(r.stdout[-2000:], r.stderr[-1500:])
+    assert r.returncode == 0
+    mf = sorted(f for f in os.listdir(f"{W}/out") if f.startswith("PLAN-"))[-1]
+    rows = {}
+    for ln in open(f"{W}/out/{mf}").read().splitlines()[1:]:
+        c = ln.split("\t")
+        rows[os.path.realpath(c[0])] = (c[1], c[2])
+    named = [f"{B}/s81_emitted_v2/bind/rtl/top.sv", f"{B}/s81_seeded/bind/rtl/a.sv", f"{B}/kv_sys_phy/bind/inc/defs.svh", f"{B}/kv_sys_phy/bind/x.sv", f"{B}/kv_union/bind/u.sv"]
+    for p, (cat, act) in rows.items():                       # no DELETE row is, contains or sits inside a named input (realpath both sides)
+        if act == "DELETE":
+            assert not [n for n in named if n == p or n.startswith(p + "/") or p.startswith(os.path.dirname(n) + "/")], (p, cat)
+    assert rows.get(f"{B}/unnamed", ("", ""))[1] == "DELETE", "negative control: an unnamed dir of the dead lane still goes"
+    assert any(v[0] == "KEEP-kit-input" for v in rows.values()), "the guard, not some other hold, kept them"
+    for n in named:
+        assert os.path.exists(n)
+    # mutant 0: without the fleet list the plan refuses
+    life = json.load(open(f"{W}/life.json")); ku = life.pop("kit_union"); json.dump(life, open(f"{W}/life.json", "w"))
+    r = _lc_run(W, LC, "plan", R2, R3, snap)
+    assert r.returncode != 0 and "kit_union" in (r.stdout + r.stderr)
+    life["kit_union"] = ku; json.dump(life, open(f"{W}/life.json", "w"))
+    # mutant 1: guard matching nothing -> the plan's positive control must refuse
+    mp = _mutant(W, "self.kit = m.PathSet(rows, canon=J.paths.canon)", "self.kit = m.PathSet([], canon=J.paths.canon)")
+    r = _lc_run(W, mp, "plan", R2, R3, snap)
+    assert r.returncode != 0 and "live kit input" in (r.stdout + r.stderr), "positive control must catch a dead guard"
+    # a kit record written after the plan names late/: the apply recheck must skip that row
+    os.makedirs(f"{R2}/kwq/v/rtl")
+    with open(f"{R2}/kwq/v/rtl/kit_rtl.json", "w") as fh:
+        json.dump({"bound": [f"{R2}/codex-wave-bind-1106/late/g.bin"]}, fh)
+    assert rows.get(f"{B}/late", ("", ""))[1] == "DELETE"
+    lm = f"{W}/late.tsv"
+    with open(lm, "w") as fh:
+        fh.write("path\tcategory\taction\treason\tbytes\tfiles\n")
+        fh.write(f"{B}/late\t{rows[B + '/late'][0]}\tDELETE\tfixture\t64\t1\n")
+    # mutant 2: the recheck without the kit-input check deletes it (proves the test sees the gap)
+    mp2 = _mutant(W, '            kh = P.kit.hit(f)\n            if kh:\n                return "SKIP", "live kit input: " + kh\n',
+                  '            kh = None\n')
+    r = _lc_run(W, mp2, "apply", R2, R3, snap, "--manifest", lm, "--coord-ref", "fixture", "--dry")
+    out = open(sorted(os.path.join(f"{W}/out", f) for f in os.listdir(f"{W}/out") if f.startswith("APPLY-"))[-1]).read()
+    assert r.returncode == 0 and "\tWOULD\t" in out, (r.stdout[-800:], r.stderr[-800:], out)
+    time.sleep(1.1)                                          # APPLY manifests are named by the second
+    r = _lc_run(W, LC, "apply", R2, R3, snap, "--manifest", lm, "--coord-ref", "fixture")
+    out = open(sorted(os.path.join(f"{W}/out", f) for f in os.listdir(f"{W}/out") if f.startswith("APPLY-"))[-1]).read()
+    print(r.stdout[-800:], r.stderr[-800:], out)
+    assert r.returncode == 0 and "live kit input" in out and os.path.exists(f"{B}/late/g.bin"), "recheck must hold a record written after the plan"
