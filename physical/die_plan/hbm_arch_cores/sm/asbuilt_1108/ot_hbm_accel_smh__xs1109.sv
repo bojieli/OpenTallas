@@ -3213,19 +3213,32 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rw_n), .d(rp), .q(rpm_q[j*RBW +: RBW]));
         assign rp_all[j*RBW +: RBW] = rp;
     end endgenerate
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rw_n), .d(rp_all[0 +: RBW]), .q(rl1_n_q));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rw_n), .d(rp_all[RBW +: RBW]), .q(rl1_s_q));
     wire [BBW-1:0] bl;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bl[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-1]), .q(bm_q[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bk1_n_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .d(bl[2048 +: NBEAT]), .q(ohl1_n_q));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bk1_s_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .d(bl[2048 +: NBEAT]), .q(ohl1_s_q));
+    // HBM-COLLECT-1 11-09 (pt_w fx3 routed TT -232.68 ps: one landing flop cannot reach the W-in -> N/S face copies,
+    // up to ~1440 um Manhattan, in one 833 ps cycle): one RELAY stage per leaf copy (rl1/bk1/ohl1, N and S each), placed
+    // between the landing and the port flop.  rl/bk/ohl move together (+1 more leaf-landing cycle, +2 in total vs as-built),
+    // so x-store write/read order in the leaf is unchanged; row path rp->rpm / bl->bm and HOPD unchanged.  ohl rides the bk
+    // relay (same bits bl[2048 +: NBEAT]).  Relays are kept (K / kregk) so N and S copies stay separate cells.
+    wire [RBW-1:0] rlm_n, rlm_s;
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlmn (.clk(clk), .rst_n(rw_n), .d(rp_all[0 +: RBW]), .q(rlm_n));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlms (.clk(clk), .rst_n(rw_n), .d(rp_all[RBW +: RBW]), .q(rlm_s));
+    wire [BBW-1:0] bkm_n, bkm_s;
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkmvn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bkm_n[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkmdn (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bkm_n[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkmvs (.clk(clk), .rst_n(rw_n), .d(bl[BBW-1]), .q(bkm_s[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkmds (.clk(clk), .rst_n(rw_n), .d(bl[BBW-2:0]), .q(bkm_s[BBW-2:0]));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rw_n), .d(rlm_n), .q(rl1_n_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rw_n), .d(rlm_s), .q(rl1_s_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-1]), .q(bk1_n_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .d(bkm_n[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .d(bkm_n[2048 +: NBEAT]), .q(ohl1_n_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-1]), .q(bk1_s_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .d(bkm_s[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .d(bkm_s[2048 +: NBEAT]), .q(ohl1_s_q));
 endmodule
 // pt_e: the third (u_rpn / u_bln) and launch (u_rp2 / u_bl2) registers
 module ot_hbm_accel_smh_pt_e #(parameter integer TAGW = 16, parameter integer NBEAT = 13) (
