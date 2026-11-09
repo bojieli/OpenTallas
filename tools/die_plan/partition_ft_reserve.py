@@ -4,6 +4,7 @@ Only types explicitly declaring die_ft_bands opt in. The same global map is
 transformed back through every instance; one hardened type must have one map.
 """
 import hashlib
+import math
 import json
 
 
@@ -289,11 +290,17 @@ def pdn_col_fill(receipt):
 # Each row alone is thin and not exactly full-width, so the tall-band rule never fired.  Rows that reach both outline
 # edges within PDN_WIN_FULL_TOL count as full width, and abutting full rows of one layer merge into one band.
 PDN_WIN_FULL_TOL = 4.32
+PDN_WIN_PARTIAL_MIN_UM = 100.0
 
 
 def _full(row, width):
     x0, y0, x1, y1 = row['rect']
-    return row['layer'] in PDN_WIN_STRIPES and x0 <= PDN_WIN_FULL_TOL and x1 >= width - PDN_WIN_FULL_TOL
+    if row['layer'] not in PDN_WIN_STRIPES:
+        return False
+    if x0 <= PDN_WIN_FULL_TOL and x1 >= width - PDN_WIN_FULL_TOL:
+        return True
+    # DIE-HBM-97 11-09: a TALL band bounded by macros (q_b100__physical_v1 M6 0-259.2 x 423-527 of a 734.4 outline) is a band too
+    return y1 - y0 > PDN_WIN_MIN + 1e-6 and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM
 
 
 def _bands(receipt, width):
@@ -318,7 +325,8 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
         return []
     width = _width(receipt, width)
     out = []
-    for L, y0, y1 in _bands(receipt, width):
+    bands = _bands(receipt, width)
+    for L, y0, y1 in bands:
         if y1 - y0 <= PDN_WIN_MIN:
             continue
         off, wd, sp, pitch = PDN_WIN_STRIPES[L]
@@ -336,12 +344,101 @@ def pdn_windows(receipt, width=None, core_y0=4.32):
     return out
 
 
+# DIE-HBM-97 11-09 (q_b100__physical_v1 / q_b101 / q_b101_nw PDN-0179, M5 channels in a strip): a tall macro-bounded
+# M6 band (pdn_windows above) can end in a narrow STRIP between two macro rows (q_b100__physical_v1 y 515.4-527.0 between
+# ot_hbm_idx_score_hcol_h1 and u_ra/u_rb, all OBS to M6) where the die reserves M4 and M6 across the band and M5 as
+# columns + teeth.  The M5 strap pieces under the teeth reach neither M4, M6 nor the macros: islands.  One M6 strap-pair
+# window at the lowest strap position inside the strip's M4 reservation joins them (bisect: removing the band's M6
+# clears the strip; a window near the band edge above the teeth does not).
+def _m4_strips(rows):
+    """[(x0, y0, x1, y1)] wide M4 rows, with abutting rows of one stack (q_b101_nw y 1302.048 / 1303.02 / 1311.12, each
+    alone thinner than a strap pair or not holding the M5 teeth) merged into one strip of at most 2 * PDN_WIN_MIN."""
+    m4 = sorted(tuple(r['rect']) for r in rows if r['layer'] == 'M4' and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM
+                and r['rect'][3] - r['rect'][1] <= 2 * PDN_WIN_MIN)
+    m4.sort(key=lambda b: (b[1], b[0]))
+    runs = []
+    for b in m4:
+        for run in runs:
+            if abs(run[3] - b[1]) < 1e-6 and min(run[2], b[2]) - max(run[0], b[0]) >= 0.9 * min(run[2] - run[0], b[2] - b[0]) \
+                    and b[3] - run[1] <= 2 * PDN_WIN_MIN + 1e-6:
+                run[:] = [min(run[0], b[0]), run[1], max(run[2], b[2]), b[3]]
+                break
+        else:
+            runs.append(list(b))
+    return [tuple(r) for r in runs]
+
+
+def pdn_windows_strip(receipt, width=None, core_y0=4.32, strips=None):
+    """[(layer, y0, y1)] one M6 window per narrow (<= 2 * PDN_WIN_MIN), wide M4 strip lying wholly under wide M6."""
+    if receipt is None:
+        return []
+    width = _width(receipt, width)
+    off, wd, sp, pitch = PDN_WIN_STRIPES['M6']
+    rows = receipt['rectangles_um']
+    out = []
+    m6s = [r['rect'] for r in rows if r['layer'] == 'M6' and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM]
+    for x0, y0, x1, y1 in _m4_strips(rows):
+        # the strip's whole height is under cuttable (band) M6 over at least 90 % of its width
+        cov = sorted((max(r[1], y0), min(r[3], y1)) for r in m6s
+                     if r[1] < y1 and r[3] > y0 and min(r[2], x1) - max(r[0], x0) >= 0.9 * (x1 - x0))
+        cur = y0
+        for a_, b_ in cov:
+            if a_ > cur + 1e-6:
+                break
+            cur = max(cur, b_)
+        if cur < y1 - 1e-6:
+            continue
+        k = math.ceil((y0 + 2 * PDN_WIN_MARGIN - core_y0 - off) / pitch - 1e-9)
+        s = core_y0 + off + k * pitch
+        lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+        if hi <= y1 - PDN_WIN_MARGIN:
+            w = ('M6', round(lo, 3), round(hi, 3))
+            if w not in out:
+                out.append(w)
+            if strips is not None:
+                strips.append((x0, y0, x1, y1))
+    return out
+
+
+def pdn_windows_strip_m5(receipt, width=None, core_x0=4.32):
+    """[(layer, x0, x1, rect)] M5 strap windows through the M5 columns/teeth inside a pdn_windows_strip strip, so the strap
+    pieces under them (between the lower macro and the column, q_b101 y 1301.7-1302.0) reach the strip's M6 window."""
+    if receipt is None:
+        return []
+    strips = []
+    pdn_windows_strip(receipt, width, strips=strips)
+    off, wd, sp, pitch = PDN_WIN_COMB['M5']
+    out = []
+    for r in receipt['rectangles_um']:
+        if r['layer'] != 'M5':
+            continue
+        x0, y0, x1, y1 = r['rect']
+        # inside the strip, or mostly so (q_b101_nw x 358.56 y 295.92-306.72: a column piece entering the strip from below
+        # holds the strap between the tooth above and the strip's M6 window)
+        if x1 - x0 > PDN_WIN_MIN + 1e-6 or not any(min(y1, sy1) - max(y0, sy0) >= 0.5 * (y1 - y0) - 1e-6
+                                                   and sx0 <= x0 and x1 <= sx1 for sx0, sy0, sx1, sy1 in strips):
+            continue
+        k = max(0, int((x0 - core_x0 - off) // pitch) - 1)
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if hi <= x0:
+                continue
+            if lo >= x1:
+                break
+            # a strap pair over the column edge is clipped to the column (the piece under it must escape too)
+            out.append(('M5', round(max(lo, x0), 3), round(min(hi, x1), 3), tuple(r['rect'])))
+    return out
+
+
 def obstruction_rows(receipt, width=None, core_y0=4.32):
     """[(layer, rect)] the obstructions to create: the receipt rectangles, tall full-width M4/M6 bands split at
     pdn_windows."""
     width = _width(receipt, width)
-    wins = pdn_windows(receipt, width, core_y0)
-    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt)
+    swins = pdn_windows_strip(receipt, width, core_y0)
+    wins = pdn_windows(receipt, width, core_y0) + swins
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
@@ -356,8 +453,12 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
                 out.append((r['layer'], [cur, y0, x1, y1]))
             continue
         # a window of a merged band may straddle the rows it is made of: cut the overlap out of every row
-        mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins
-                      if L == r['layer'] and a < y1 and b > y0) if _full(r, width) else []
+        if _full(r, width):
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins if L == r['layer'] and a < y1 and b > y0)
+        elif r['layer'] == 'M6' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # strip windows cut the wide partial M6 rows too
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in swins if L == 'M6' and a < y1 and b > y0)
+        else:
+            mine = []
         cur = y0
         for a, b in mine:
             if a > cur + 1e-9:
