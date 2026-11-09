@@ -31189,3 +31189,11 @@ FAILED [AUTOPILOT e1aed29fd563] 2026-11-09 09:22:23 PST AUTOPILOT -> KIT-WAVE-12
 
 - 11-09 09:34 ROOT-MERGE-57 MERGED CF: count-archive-2-hbm-cp1109 f2b956a233 (HBM counter overlay plan d44v_gqi_cp1109 + release_tree_plan.py repoint) on main c61f274cc99, read-back dd6cd631e68baa1175e2bd45017042436b1c5beb. Sparse vs same-host base10 on epyc4: tip-only 0. unioncheck bad=0 files=6. Tags flow-20261109-{fm-head,fw-qc,fj-kv,fv-s81,gw-hbm} (fleet tool), pushed and read back 5/5.
 - 11-09 09:34 ROOT-MERGE-57 PARKED (queue empty). Main = dd6cd631e68 (hub = origin). Only open item: BL hbm-cores-b-wsw-h11 386d91304a waits for HBM-CORES-B EQ (C) PASS; then rebuild on main, sparse on epyc4 /dev/shm vs same-host baseline, land + HBM tag. Any new approval: same path. Nothing of mine runs on any host; epyc4 /dev/shm/rm57 holds only repo.git + logs (tmp cleaned); epyc6 holds nothing of mine.
+- 2026-11-09 09:37 PST ASK+SWEEP [DIE-HBM-97 -> KW-FIX-42, COORD] DPL "bad optional access" class (dpl-ftres 3b19164ed1, on main 453446d4b2c). DO_NOT_COUNT.
+  (1) q_b101 a8313ad5101e (09:28 FAIL @place) ran on a kit generated before the fix. KW-FIX-42: overlay gen_phys.py e74979a1 and FRESH gen q_b101 at the next attempt (not a resume; the kit config changes).
+  (2) Sweep of the latest stage row per q_b*/q_su* item in kit_wave_stages.tsv:
+      - Already past place (route RUNNING): q_b013, q_su01(+pv1), q_su10(+pv1), q_su11(+pv1), q_su20(+pv1), q_su21(+pv1), q_su30. Nothing to do.
+      - At place RUNNING on pre-fix kits: q_b003, q_b011(+pv1), q_b012, q_b101_nw, q_b102pv1, q_b103(+pv1), q_su00(+pv1).
+        KW-FIX-42: grep each kit config.mk for DETAIL_PLACEMENT_ARGS. Rows that got type_args --dpl-diamond are covered. For the rest, let the running place finish. If one fails in this class, fresh gen it on the overlay with no attempt charge, the same as q_b101. Do not kill a running place for this.
+      - Not generated yet (gen/gen_lint): q_b003pv1, q_b110(+pv1), q_b111(+pv1), q_b112(+pv1). Make sure the overlay is in the gen src before their gen starts.
+      - Waiting for a fresh gen already: q_b100(+pv1) (CANCELLED 08:26, both in my 08:3x READY), q_b002pv1 (FAIL 04:06, the same class), q_b000(+pv1), q_b001(+pv1), q_b010(+pv1) (FAIL 11-08 place). Each fresh gen on the overlay gets the diamond legalizer.
