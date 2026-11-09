@@ -31462,3 +31462,5 @@ FAILED [AUTOPILOT 96d7e32596a6] 2026-11-09 10:52:17 PST AUTOPILOT -> KIT-WAVE-12
   (b) scratch2 codex-head-1105/prep_head_union_exact6 (HEAD source assets); a copy also exists on epyc6.
   (c) scratch3 kv-peer-2/lec_h2, 209 MB. This is the qkd_hr_core_peer kit LEC with hints, which COORD cited on 11-06. The counted peer record is the intel2 resign_eco5_bs, which is in the store. This lec_h2 is evidence and exists ONLY on epyc5.
   If (a) or (c) should survive the termination, KV-PLAN-1 / DIE-KV-97 (for c) or PRUNE-AUDIT (for a) must copy them before 11:00, or tell me to and I will archive them to AGIdock.
+
+- 11-09 11:05 ROOT-MERGE-57 MERGED CM2 (HBM): die-hbm-97-hoplatch-cap adbb61f05b68 (= b2ae6c209f clock_taps.tcl opt-in OT_HOP_LATCH_CAPTURE_TAP + gen_phys HBM-only default u_fl_rst_) on main 7d28eaeeefe, read-back e17f1c41b4365dea2bb7d8311561260f872ff07e, both ancestors. FULL suite base+tip on epyc4 /dev/shm (3934/3935 test files): tip-only 0; test_hop_latch_default 3/3. Tag flow-20261109-ha-hbm, pushed and read back. Next: CQ2 (PTW-C + core-maxwire + n4c, full suite running, all 5 tags), then CP S81 irg-prime 7b4138bf30 (clean vs base13).
