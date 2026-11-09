@@ -1,0 +1,2 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_svgr_bk		complete,complete_bank,bfault	port	1	DIE-HBM-86 part 61: signed svgrbk_e2 is VARIANT 1 (vB, ot_svgr_bk_b12.sv): landing write, complete and bank fault +1 stream_clk per packet vs B8, at most one packet per two stream cycles per landing bank; credits cr follow the later pops; bench results/die_hbm_1105/reform_b12/svgr_bk
