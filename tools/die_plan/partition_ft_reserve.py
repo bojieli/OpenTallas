@@ -81,6 +81,9 @@ def tcl(receipt):
     cwins=pdn_windows_comb(receipt)
     if cwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_comb={len(cwins)}"')
+    colwins=pdn_windows_col(receipt)
+    if colwins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_col={len(colwins)} col_fill_m6={len(pdn_col_fill(receipt))}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -203,6 +206,84 @@ def pdn_windows_comb(receipt, core_x0=4.32):
     return out
 
 
+# DIE-HBM-96/97 11-09 (q_b011 a5, q_b103 a10 PDN-0179, 2-3 PDN-0178 M4 channels each about 6 x 9 um inside ONE column):
+# the die reserves a tall narrow M5 column (q_b011 x 123.552-129.6, 6.048 um) together with M4 rows of exactly the same
+# x extent every 10.8 um.  Each 8.1-um pocket between two of those M4 rows has M4 straps but M5 reserved over its whole
+# width, so it gets no M4-M5 via (real pdngen on the 2_3 tapcell DB: dropping the column's 83 M4 rects -> worse; dropping
+# its 4 M5 rects -> all 3 M4 channels gone).  Such a column (M5, no wider than PDN_WIN_MIN, taller than 2 * PDN_WIN_MIN,
+# with at least PDN_WIN_COL_ROWS M4 rects of its own x extent inside its height) keeps one M5 strap-pair window at each
+# M5 strap position that fits, through its full height and on through the M5 rects stacked on its ends (the street rows
+# that close it), and the column's M6 is reserved whole (pdn_col_fill).  Plain FT columns (no own M4 rows, e.g. the
+# 2.7-um columns) are unchanged.  Cost: about 0.612 um of M5 per window in that column and its end rows; the gap's M6.
+# Real pdngen, q_b011 a5 2_3: window only -> 1 M6 VDD channel; window + M6 fill without the end rows -> 3 M5 channels;
+# window through the end rows + M6 fill -> PDNGEN OK.
+PDN_WIN_COL_ROWS = 2
+
+
+def _gap_columns(rects):
+    """[(layer, rect)] tall narrow M5 columns with at least PDN_WIN_COL_ROWS M4 rects of their own x extent inside."""
+    out = []
+    for layer, rect in rects:
+        if layer not in PDN_WIN_COMB:
+            continue
+        x0, y0, x1, y1 = rect
+        if x1 - x0 > PDN_WIN_MIN + 1e-6 or y1 - y0 <= 2 * PDN_WIN_MIN + 1e-6:
+            continue
+        own = sum(1 for L, q in rects if L == 'M4' and abs(q[0] - x0) < 1e-3 and abs(q[2] - x1) < 1e-3
+                  and q[1] >= y0 - 1e-6 and q[3] <= y1 + 1e-6)
+        if own >= PDN_WIN_COL_ROWS:
+            out.append((layer, rect))
+    return out
+
+
+def pdn_windows_col(receipt, core_x0=4.32):
+    """[(layer, x0, x1, rect)] M5 strap windows through tall narrow M5 columns that carry their own M4 rows."""
+    if receipt is None:
+        return []
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    out = []
+    for layer, rect in _gap_columns(rects):
+        x0, y0, x1, y1 = rect
+        off, wd, sp, pitch = PDN_WIN_COMB[layer]
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < x0 + PDN_WIN_MARGIN:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN:
+                break
+            out.append((layer, round(lo, 3), round(hi, 3), rect))
+            # the strap must leave the column: carry the same window through every M5 rect stacked on its ends
+            # (q_b011: street rows 124.74-246.24 close both ends; without this the window strap is an island, its M6
+            # VDD in the pocket has no M7 landing, and 1 M6 channel stays)
+            for up in (True, False):
+                edge, seen = (y1 if up else y0), {rect}
+                while True:
+                    nxt = [q for L, q in rects if L == layer and q not in seen and q[0] < hi and q[2] > lo
+                           and abs((q[1] if up else q[3]) - edge) < 1e-6]
+                    if not nxt:
+                        break
+                    for q in nxt:
+                        seen.add(q)
+                        out.append((layer, round(max(lo, q[0]), 3), round(min(hi, q[2]), 3), q))
+                    edge = max(q[3] for q in nxt) if up else min(q[1] for q in nxt)
+    return out
+
+
+def pdn_col_fill(receipt):
+    """[(layer, rect)] M6 fill over each column that got a pdn_windows_col window: the column sits in the gap between two
+    macros whose OBS reach M6, so an M6 strap piece in it has no M7 landing on the 8.64-um M7 grid (q_b011: the VDD strap
+    of the pair over the gap edge lands on the macro; 1 M6 VDD channel).  With the gap's M6 reserved the pocket feeds
+    through the M5 window strap instead.  The partition cannot use that M6 (macro OBS on both sides)."""
+    if receipt is None:
+        return []
+    cols = {rr for _, _, _, rr in pdn_windows_col(receipt)}
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    return [('M6', list(rect)) for _, rect in _gap_columns(rects) if rect in cols]
+
+
 # DIE-HBM-92-SU 11-08 (q_su30__physical_v1, 2 PDN-0178 M5 channels over the pretree macro): the die can reserve a tall
 # M6 block as a stack of abutting rows (8.1 / 2.7 um, alternately ending at x 2062.8 and 2064.96 of a 2064.96 outline).
 # Each row alone is thin and not exactly full-width, so the tall-band rule never fired.  Rows that reach both outline
@@ -260,17 +341,19 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
     pdn_windows."""
     width = _width(receipt, width)
     wins = pdn_windows(receipt, width, core_y0)
-    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt)
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
-        vmine = sorted((a, b) for L, a, b, rr in vwins if L == r['layer'] and rr == tuple(r['rect']))
+        vmine = sorted({(a, b) for L, a, b, rr in vwins if L == r['layer'] and rr == tuple(r['rect'])})
         if vmine:
             cur = x0
             for a, b in vmine:
-                out.append((r['layer'], [cur, y0, a, y1]))
-                cur = b
-            out.append((r['layer'], [cur, y0, x1, y1]))
+                if a > cur + 1e-9:
+                    out.append((r['layer'], [cur, y0, a, y1]))
+                cur = max(cur, b)
+            if x1 > cur + 1e-9:
+                out.append((r['layer'], [cur, y0, x1, y1]))
             continue
         # a window of a merged band may straddle the rows it is made of: cut the overlap out of every row
         mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins
@@ -282,7 +365,7 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
             cur = max(cur, b)
         if y1 > cur + 1e-9:
             out.append((r['layer'], [x0, cur, x1, y1]))
-    return out
+    return out + pdn_col_fill(receipt)
 
 
 def blocks_rows(receipt, width):
