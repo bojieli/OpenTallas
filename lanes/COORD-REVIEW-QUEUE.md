@@ -32058,3 +32058,5 @@ FAILED [AUTOPILOT b824c8858deb] 2026-11-09 13:24:05 PST AUTOPILOT -> KIT-WAVE-12
         - epyc2 is the obvious target: it now admits 125 GB and scratch2 has 314 GB free.
       - Also: intel1 now admits only 2 GB (load 161/112), so the S81 rows I restaged there (t25, t53, serdes__t12) and the next ones wait.
   (5) epyc6: only kv3_hgi_v3 (job 93c62edefa5a). The kw43-e6v3wait waiter acts at 15:10.
+
+- 11-09 13:43 ROOT-MERGE-57 MERGED DO (--no-ff): S81 RESET-KEY claude/die-s81-85-reset-key-1109@90b5279e42 (lec.py, kit_reset_contract.py, gen_core_kit_legacy.py, test_reset_contract_key.py). Merged cleanly over DH's kit_reset_contract change. Per COORD, targeted check instead of the full suite: 170 test files reading reset_contract/kit_reset/lec/gen_core_kit_legacy on main 2867fe9c54d vs tip a489d91e42e, 19 fails on each side, 0 tip-only fails/nonzero. Restacked on 2e42fc5305a (DM2 only), unioncheck bad=0/4. main read-back e6b71d8cc7e2371d559ea69ae4661aac6fc40f99. Tags (all 5): flow-20261109-ft-head gg-qc fp-kv gh-s81 hh-hbm.
