@@ -78,6 +78,9 @@ def tcl(receipt):
     vwins=pdn_windows_v(receipt)
     if vwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_v={len(vwins)}"')
+    cwins=pdn_windows_comb(receipt)
+    if cwins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_comb={len(cwins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -153,6 +156,42 @@ def pdn_windows_v(receipt, core_x0=4.32):
     return out
 
 
+# DIE-HBM-93 11-08 (q_b002, q_b013__physical_v1, one PDN-0178 M5 VSS channel x 45.2-62.6, y 2514-2607 between two bank
+# macros): the die reserves M5 as tall columns plus a short tooth row closing the top of the pocket.  The M5 straps of the
+# gaps between columns end at the tooth, under the only free M6 rows, so they get no M5-M6 via.  A tooth taller than
+# PDN_WIN_MIN keeps one strap-pair window at each M5 strap that is not under a column (removing the teeth: PDNGEN OK).
+PDN_WIN_COMB = {'M5': (2.064, 0.12, 0.072, 4.32)}    # = gen_phys PDN top-grid M5 stripe (offset, width, spacing, pitch)
+
+
+def pdn_windows_comb(receipt, core_x0=4.32):
+    """[(layer, x0, x1, rect)] strap windows cut out of narrow, taller-than-PDN_WIN_MIN M5 tooth rows."""
+    if receipt is None:
+        return []
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    out = []
+    for layer, rect in rects:
+        if layer not in PDN_WIN_COMB:
+            continue
+        x0, y0, x1, y1 = rect
+        if x1 - x0 > PDN_WIN_MIN + 1e-6 or not PDN_WIN_MIN + 1e-6 < y1 - y0 <= 2 * PDN_WIN_MIN:   # columns stay whole
+            continue
+        off, wd, sp, pitch = PDN_WIN_COMB[layer]
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < x0 + PDN_WIN_MARGIN:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN:
+                break
+            if any(L == layer and q != rect and q[0] < hi and q[2] > lo and (abs(q[3] - y0) < 1e-6 or abs(q[1] - y1) < 1e-6)
+                   for L, q in rects):
+                continue            # a column continues this strap position: the window could not reach the pocket
+            out.append((layer, round(lo, 3), round(hi, 3), rect))
+    return out
+
+
 # DIE-HBM-92-SU 11-08 (q_su30__physical_v1, 2 PDN-0178 M5 channels over the pretree macro): the die can reserve a tall
 # M6 block as a stack of abutting rows (8.1 / 2.7 um, alternately ending at x 2062.8 and 2064.96 of a 2064.96 outline).
 # Each row alone is thin and not exactly full-width, so the tall-band rule never fired.  Rows that reach both outline
@@ -210,7 +249,7 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
     pdn_windows."""
     width = _width(receipt, width)
     wins = pdn_windows(receipt, width, core_y0)
-    vwins = pdn_windows_v(receipt)
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']

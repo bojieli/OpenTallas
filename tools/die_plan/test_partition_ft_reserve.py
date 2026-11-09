@@ -208,3 +208,29 @@ def test_stacked_rows_merge_into_one_tall_band_with_windows():
         assert not any(q[1] < hi - 1e-9 and q[3] > lo + 1e-9 for _, q in rows)
     lost = sum(area(x['rect']) for x in r['rectangles_um']) - sum(area(q) for _, q in rows)
     assert 0 < lost <= sum((hi - lo) * 2064.96 for _, lo, hi in w) + 1e-6
+
+
+def _comb_receipt():
+    # q_b002 pocket: columns 2.7 wide under the tooth row, tooth 47.25-54.0 x 2607.12-2617.92, gap strap at x 49.584
+    return {'rectangles_um': [dict(layer='M5', rect=[51.3, 2514.24, 54.0, 2607.12]),
+                              dict(layer='M5', rect=[47.25, 2607.12, 54.0, 2617.92])]}
+
+
+def test_comb_tooth_keeps_window_at_gap_strap_only():
+    r = _comb_receipt()
+    w = F.pdn_windows_comb(r)
+    assert [(L, a, b) for L, a, b, _ in w] == [('M5', 49.434, 50.046)]   # strap 53.904 is on the column
+    rows = F.obstruction_rows(r, 380.16)
+    assert ('M5', [47.25, 2607.12, 49.434, 2617.92]) in rows and ('M5', [50.046, 2607.12, 54.0, 2617.92]) in rows
+
+
+def test_short_tooth_unchanged():
+    r = {'rectangles_um': [dict(layer='M5', rect=[47.25, 2607.12, 54.0, 2615.76])]}   # 8.64 tall
+    assert F.pdn_windows_comb(r) == []
+    assert F.obstruction_rows(r, 380.16) == [('M5', [47.25, 2607.12, 54.0, 2615.76])]
+
+
+def test_tall_column_never_windowed():
+    r = {'rectangles_um': [dict(layer='M5', rect=[18.9, 0.0, 21.6, 2903.04])]}
+    assert F.pdn_windows_comb(r) == []
+
