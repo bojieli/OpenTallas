@@ -73,6 +73,20 @@ class ParentAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'duplicate'):
             A.adapt(source, [contract, contract])
 
+    def test_cgr_follows_recipe_and_keeps_legacy_seal(self):
+        self.assertEqual(A.FIXED['CGR'], A.RECIPE_CGR)
+        source, contract = fixture()
+        output, _ = A.adapt(source, [contract])          # legacy CGR 0 seal (signed _he / _hw) unchanged
+        self.assertIn('.CGR(0)', output)
+        if A.RECIPE_CGR != A.LEGACY_CGR:
+            contract['selected_params']['CGR'] = str(A.RECIPE_CGR)
+            output, receipt = A.adapt(source, [contract])
+            self.assertIn('.CGR(%d)' % A.RECIPE_CGR, output)
+            self.assertEqual(receipt['instances'][0]['selected_params']['CGR'], str(A.RECIPE_CGR))
+        contract['selected_params']['CGR'] = '3'
+        with self.assertRaisesRegex(ValueError, 'selected CGR'):
+            A.adapt(source, [contract])
+
     def test_duplicate_overrides_rejected(self):
         source, contract = fixture()
         source = source.replace('.NB(2)', '.NB(2), .NB(2)')
