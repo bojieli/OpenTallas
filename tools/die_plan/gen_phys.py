@@ -670,7 +670,7 @@ def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     # Core kits already staged this contract; type kits silently used LEC's four-edge
     # default, leaving reset-less pipeline/SRAM write constants unresolved.
     import kit_reset_contract
-    source = kit_reset_contract.DIE_CONTRACT.get(P.name)
+    source = kit_reset_contract.die_contract(P.name)   # DIE-HBM-97 11-09: plan die name -> contract dir
     if source is not None:
         reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
         if reset_contract is not None:
