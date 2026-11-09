@@ -236,6 +236,12 @@ def _cland_pinslot_dense(budgets, tn):
 # (cons_gpl_pre.tcl): a target below the cell area (fixed plan outline) is a GPL-0302 stop, not a conservative form.
 # Registered faces need no switch: every port is registered at both pins by construction (schema.py conventions,
 # face_flops.tcl FIRM at the pin); an extra stage per face is a plan event (lane fixed_cycles / bus pads).
+# CONS-OVERMACRO-1 11-09 (DIE-QC-97, GRT-0116 of the CONS kits slw_sc_v3, sle_su_l0 x2, sle_su_l1): a staged hard
+# macro whose LEF OBS reaches Mk leaves only M(k+1) (one direction) and M(k+2) (the other) over its whole area, so the
+# signal ceiling never drops below M(k+2) (capped at the kit top) and those layers get no pin-access cut.  With the SU
+# lanes / SC core (OBS M1-M5) the M7 cut to 10 % left every vertical net that crosses a macro (lane3 c_i feed over
+# lane2, the M7-planned rsn/rsf ft over lanes 4-7, the x_su_l1_ctl ft past u_core) about 0.1 x 6000 tracks over a
+# 415-um lane, so GRT piled them into the 13-19 um side channels between macro and die edge.
 CONS_KIT_UTIL = 0.35
 CONS_KIT_MAX_LAYER = "M6"
 CONS_KIT_PIN_LAYER_ADJ = 0.9
@@ -288,9 +294,26 @@ def _lnum(ln):
     return int(ln[1:])
 
 
+def _lef_obs_top(path):
+    """highest metal layer of the OBS section(s) of a LEF (hard macro routing obstruction), or None."""
+    top, obs = None, False
+    for line in Path(path).read_text(errors="replace").splitlines():
+        tok = line.replace(";", " ").split()
+        if not tok:
+            continue
+        if tok[0] == "OBS":
+            obs = True
+        elif obs and tok[0] == "END" and len(tok) == 1:
+            obs = False
+        elif obs and tok[0] == "LAYER" and len(tok) > 1 and re.fullmatch(r"M\d+", tok[1]):
+            if top is None or _lnum(tok[1]) > _lnum(top):
+                top = tok[1]
+    return top
+
+
 def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
     """rewrite the kit config lines in place for the conservative form; write cons_kit.json + the two hook wrappers."""
-    pins = {}
+    pins, obs = {}, {}
     for ln in _CONS_PLACE_PIN_LAYER.findall(io_text):
         pins.setdefault(ln, "io.tcl place_pin")
     for p in mlef:
@@ -298,12 +321,20 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
         if f.is_file():
             for ln in _lef_signal_pin_layers(f):
                 pins.setdefault(ln, f"macro LEF {f.name}")
+            ot = _lef_obs_top(f)
+            if ot:
+                obs[f.name] = ot
     floor = max(pins, key=_lnum) if pins else "M2"
     want = cons["max_layer"]
-    new_max = max(want, floor, key=_lnum)
+    # CONS-OVERMACRO-1: one routing layer pair above the highest macro OBS stays a signal layer (no pin-access cut)
+    over = f"M{_lnum(max(obs.values(), key=_lnum)) + 2}" if obs else None
+    sig = max(want, over, key=_lnum) if over else want
+    if _lnum(sig) > _lnum(top):
+        sig = top
+    new_max = max(sig, floor, key=_lnum)
     if _lnum(new_max) > _lnum(top):        # the cap only lowers; a ceiling above the kit top is the kit top
         new_max = top
-    access = [f"M{k}" for k in range(_lnum(want) + 1, _lnum(new_max) + 1)]
+    access = [f"M{k}" for k in range(_lnum(sig) + 1, _lnum(new_max) + 1)]
     i_max = cfg.index(f"export MAX_ROUTING_LAYER = {top}")
     cfg[i_max] = f"export MAX_ROUTING_LAYER = {new_max}"
     i_pd = next(k for k, c in enumerate(cfg) if c.startswith("export PLACE_DENSITY = "))
@@ -320,7 +351,7 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
     shutil.copyfile(Path(__file__).with_name("cons_gpl_pre.tcl"), Path(kd) / "cons_gpl_pre.tcl")
     cfg += ["# KW-FIX-24/CONSKIT: conservative re-kit (OT_CONS_KIT=1 at generation; cons_kit.json)",
             "export OT_CONS_KIT = 1", f"export OT_CONS_UTIL = {cons['util']:g}",
-            f"export OT_CONS_SIGNAL_MAX = {want}"]
+            f"export OT_CONS_SIGNAL_MAX = {sig}"]
     # TYPE-CONS-4 11-07: ring flops are FIRM, so the density cap above never reaches them; thin their strip too
     # (landing_placement.tcl).  OT_CONS_STRIP_ROWS=1 keeps the packed strip.
     strip = int(os.environ.get("OT_CONS_STRIP_ROWS") or 3)
@@ -339,6 +370,8 @@ def cons_kit_apply(cfg, kd, cons, io_text, top, mlef=()):
            "place_density": {"kit": pd0, "cap": cons["util"], "used": pd,
                              "floor": "GPL uniform-density lower bound + 0.01 (cons_gpl_pre.tcl, logged OT_CONS_KIT)"},
            "signal_max_layer": {"requested": want, "kit_top": top, "pin_floor": floor,
+                                "macro_obs_top": {k: obs[k] for k in sorted(obs)}, "over_macro_floor": over,
+                                "signal_max": sig,
                                 "pin_layers": {k: pins[k] for k in sorted(pins, key=_lnum)},
                                 "max_routing_layer": new_max, "pin_access_layers": access,
                                 "pin_access_adjustment": cons["pin_layer_adj"] if access else None},
