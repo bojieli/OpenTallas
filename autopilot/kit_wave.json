@@ -329,7 +329,7 @@
     "kv3_pv*": "KW-FIX-42 03:11 COORD 03:1x: KV-PLAN-1 transport error (bind5 vport RT bound 63 vs bound round trips 64-71, 3 W-lane pads short); hold every kv3_pv* until KV-PLAN-1 posts its type-local fix",
     "kv3_sys_SD": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (4) held out of the first KV switch; waits for the macro-origin form"
    },
-   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
     "kv3_io_cor_v1@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -1848,7 +1848,9 @@
     "epyc7",
     "intel1",
     "epyc6"
-   ]
+   ],
+   "work_root_prev_kw42": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_kvsys/kit-wave",
+   "note_work_root_kw42": "KW-FIX-42 11-09 04:29 PST COORD ruling: new work root kw27-wave-1109 (epyc7 kw26-wave-1106 is spill-marked from epyc5, so epyc7 was no gen host since 03:10). Real dir on scratch2 on epyc7 and intel2; symlink to scratch3 (root fs) on intel1, epyc4, epyc6, epyc2. In-flight kw26 attempts keep their own paths; old kw26 epyc7 dir and marker untouched until epyc5 terminates."
   },
   "s81": {
    "enabled": true,
@@ -3127,7 +3129,7 @@
     "ot_s81sl_kv_leaf__t5": "KW-FIX-35-S 2026-11-08 06:04 PST: CLASS J1: LEC-only rerun on the existing kit (off-wave), no fresh kit"
    },
    "queue_src": "claude/kw-fix-35-wave-c303a-1108@804f9e020b2",
-   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
     "__batch_kwfix3_0450": "101 rows appended 04:5x = KW-FIX-3 S81 KIT_PREFLIGHT class fix, merged main 3fe3f58473f (b15ddb969a4 bound macro paths, 19e83948214, b213d81bfd7 clock_entry_clear/macro_channels), in wave src 84291033b77; tools gen_phys/kit_contract change every macro-bearing kit; the CANCELLED-VOLUME leaf rows are the same leaf class with the same macro inputs; the KW-RESUME nochange guard refuses any kit whose inputs did not change",
@@ -6158,7 +6160,9 @@
    "item_env_prev_kw42mv": {
     "ot_s81sl_leaf__t50": "u_lf.u_vs:838.08:622.08,u_lf.u_vn.u_a:354.24:457.92,u_lf.u_vq:656.64:639.36,u_lf.u_vsw:812.16:388.8",
     "ot_s81sl_leaf__t68": null
-   }
+   },
+   "work_root_prev_kw42": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave",
+   "note_work_root_kw42": "KW-FIX-42 11-09 04:29 PST COORD ruling: new work root kw27-wave-1109 (epyc7 kw26-wave-1106 is spill-marked from epyc5, so epyc7 was no gen host since 03:10). Real dir on scratch2 on epyc7 and intel2; symlink to scratch3 (root fs) on intel1, epyc4, epyc6, epyc2. In-flight kw26 attempts keep their own paths; old kw26 epyc7 dir and marker untouched until epyc5 terminates."
   },
   "s81_head": {
    "enabled": true,
@@ -6362,7 +6366,7 @@
      "ref": "COORD 11-01 09:2x: aspect = plan slot shape, granted by exception (12.28b), no reshape; DIE-HEAD-53"
     }
    ],
-   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81_head/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave",
    "hold_items": {
     "hd_spn": "CODEX HEAD owner01:59: future autosubmits held until reviewed prepared-source paid internal-station realization event; current plan prices registerchains but oldl48uh actualRTL has0u_ist stages. Existing spn@3 ifprogressing and private FSTART vA/vB remainowned/live; no sweep or blind same-unrealized-source retry."
    },
@@ -6962,7 +6966,9 @@
     "intel1",
     "epyc4",
     "epyc5"
-   ]
+   ],
+   "work_root_prev_kw42": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81_head/kit-wave",
+   "note_work_root_kw42": "KW-FIX-42 11-09 04:29 PST COORD ruling: new work root kw27-wave-1109 (epyc7 kw26-wave-1106 is spill-marked from epyc5, so epyc7 was no gen host since 03:10). Real dir on scratch2 on epyc7 and intel2; symlink to scratch3 (root fs) on intel1, epyc4, epyc6, epyc2. In-flight kw26 attempts keep their own paths; old kw26 epyc7 dir and marker untouched until epyc5 terminates."
   },
   "qwen_compute": {
    "enabled": true,
@@ -7024,7 +7030,7 @@
     "sle_su_c": "KW-FIX-42 03:24 COORD RULINGS 03:2x: (6) CTS OT_TAP_PAIR initial tap capacity invalid (03:15): QC owner class fix; no unchanged relaunch",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch"
    },
-   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "sle_st_a_v1__cl67389ecd@1",
@@ -10852,7 +10858,9 @@
     "sl?_st_a*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3 | RELEASED KW-FIX-42 11-09 03:57: QC final switch 282ca18ef6cc (QC-TRANSPORT-FIX-4 pads/MEM9 RTL in)",
     "sl?_st_b*": "KW-FIX-39 2026-11-08 22:25 PST: COORD 22:3x: hc0-3 and st_a/st_b types will change RTL (column and station skew pads, QC-TRANSPORT-FIX-2); unstarted rows hold, running rows stay as physical pilots, second QC switch for these only from QC-TRANSPORT-FIX-3 | RELEASED KW-FIX-42 11-09 03:57: QC final switch 282ca18ef6cc (QC-TRANSPORT-FIX-4 pads/MEM9 RTL in)",
     "native59": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (DIE-QC-94), a relaunch would meet the same differs | RELEASED KW-FIX-42 11-09 03:57: QC final switch 282ca18ef6cc (QC-TRANSPORT-FIX-4 pads/MEM9 RTL in)"
-   }
+   },
+   "work_root_prev_kw42": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave",
+   "note_work_root_kw42": "KW-FIX-42 11-09 04:29 PST COORD ruling: new work root kw27-wave-1109 (epyc7 kw26-wave-1106 is spill-marked from epyc5, so epyc7 was no gen host since 03:10). Real dir on scratch2 on epyc7 and intel2; symlink to scratch3 (root fs) on intel1, epyc4, epyc6, epyc2. In-flight kw26 attempts keep their own paths; old kw26 epyc7 dir and marker untouched until epyc5 terminates."
   },
   "hbm": {
    "enabled": true,
@@ -12132,7 +12140,7 @@
    "plan_core_items": [
     "hnx_rp3h_xs"
    ],
-   "work_root": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave",
+   "work_root": "/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
    "hosts_base": [
     "epyc6",
@@ -14345,7 +14353,9 @@
     "epyc7",
     "epyc4",
     "intel1"
-   ]
+   ],
+   "work_root_prev_kw42": "/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave",
+   "note_work_root_kw42": "KW-FIX-42 11-09 04:29 PST COORD ruling: new work root kw27-wave-1109 (epyc7 kw26-wave-1106 is spill-marked from epyc5, so epyc7 was no gen host since 03:10). Real dir on scratch2 on epyc7 and intel2; symlink to scratch3 (root fs) on intel1, epyc4, epyc6, epyc2. In-flight kw26 attempts keep their own paths; old kw26 epyc7 dir and marker untouched until epyc5 terminates."
   }
  },
  "place_prefer": [
