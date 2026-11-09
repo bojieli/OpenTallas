@@ -7,9 +7,9 @@ col_h10_r1__t1__cl95b37463	RELAY	RTL	internal_stations	tap_pair_affinity		route	
 col_h10_r1__t1__cld01bb4ae	RELAY	RTL	internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 col_h10_r2__t1__cl1f5d6c2a	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 col_h10_r2__t1__cl8b686b3e	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
-col_h10_r2__t1__cl99efd374	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+col_h10_r2__t1__cl99efd374	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		queue	ORPHAN	yes	SUPERSEDED: relaunch on new plan
 col_h10_r2__t1__clac068e56	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
-col_h9_r0_p1__t1	RELAY	RTL	internal_stations	tap_pair_affinity		gen	RUNNING	yes	SUPERSEDED: relaunch on new plan
+col_h9_r0_p1__t1	RELAY	RTL	internal_stations	tap_pair_affinity		gen	WAIT-DISK	yes	SUPERSEDED: relaunch on new plan
 col_h9_r0_p2__t1__cl0045af7b	RELAY	RTL	internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 col_h9_r0_p2__t1__cl9f71e63d	RELAY	RTL	hard_cores,internal_stations	added_taps,tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 col_h9_r0_p3__t1__cl0cd90c0e	RELAY	RTL	hard_cores,internal_stations	tap_pair_affinity		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
@@ -47,17 +47,17 @@ dsdv_gunit_l5	CORE	-			yes			no	KEEP counted
 dsdv_gunit_l5f	CORE	-			yes			no	KEEP counted
 dsdv_idx_tx_n32	CORE	-			yes			no	KEEP counted
 dsdv_slice_c1x_C__t1	RELAY	RTL	internal_stations	tap_pair_affinity		place	RUNNING	yes	SUPERSEDED: relaunch on new plan
-dsdv_slice_c1x_C__t10	RELAY	RTL	internal_stations	tap_pair_affinity		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+dsdv_slice_c1x_C__t10	RELAY	RTL	internal_stations	tap_pair_affinity		queue	ORPHAN	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t3	RELAY	RTL	internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t4	RELAY	RTL	internal_stations	tap_pair_affinity		place	RUNNING	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t5	RELAY	RTL	internal_stations	tap_pair_affinity		kit_topology	FAIL	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t6	RELAY	RTL	internal_stations	tap_pair_affinity		place	RUNNING	yes	SUPERSEDED: relaunch on new plan
-dsdv_slice_c1x_C__t7	RELAY	RTL	internal_stations	tap_pair_affinity		kit_rtl	WAIT-DISK	yes	SUPERSEDED: relaunch on new plan
+dsdv_slice_c1x_C__t7	RELAY	RTL	internal_stations	tap_pair_affinity		resume_fp	RUNNING	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t8	RELAY	RTL	internal_stations	tap_pair_affinity		place	RUNNING	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c1x_C__t9	RELAY	RTL	internal_stations	tap_pair_affinity		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_c3x_C__t1	RELAY	RTL	internal_stations	tap_pair_affinity		kit_rtl	CANCELLED	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_iq_C__t1	RELAY	RTL	internal_stations	tap_pair_affinity		kit_rtl	RETRY-INFRA	yes	SUPERSEDED: relaunch on new plan
-dsdv_slice_kv512_C__t1	RELAY	RTL	internal_stations	landing_contract,tap_pair_affinity		gen	RUNNING	yes	SUPERSEDED: relaunch on new plan
+dsdv_slice_kv512_C__t1	RELAY	RTL	internal_stations	landing_contract,tap_pair_affinity		kit_rtl	RETRY-INFRA	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_lepe_mu_C__t1	RELAY	RTL	internal_stations	tap_pair_affinity		place	RUNNING	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_lepe_mu_LP__t2	RELAY	RTL	internal_stations	tap_pair_affinity		kit_topology	FAIL	yes	SUPERSEDED: relaunch on new plan
 dsdv_slice_lepe_nh_mus_C__t1	RELAY	RTL	internal_stations	tap_pair_affinity		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
@@ -110,11 +110,11 @@ ot_s81sl_leaf__t11	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUP
 ot_s81sl_leaf__t12	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t13	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t14	PLAN-DELTA	RTL	ft_slots	added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t15	PLAN-DELTA	RTL		tap_pair_affinity,taps		place	FAIL	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t15	PLAN-DELTA	RTL		tap_pair_affinity,taps		queue	QUEUED	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t16	PLAN-DELTA	RTL	ft_slots	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t17	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t2	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t21	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t21	PLAN-DELTA	RTL		tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t22	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t23	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t24__cl2456157b	PLAN-DELTA	RTL		added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
@@ -125,29 +125,29 @@ ot_s81sl_leaf__t26	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUP
 ot_s81sl_leaf__t27	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t28	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t29	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t3	PLAN-DELTA	RTL		tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t3	PLAN-DELTA	RTL		tap_pair_affinity,taps		geom	RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t30	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t31	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t32	PLAN-DELTA	RTL	ft_slots	added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t33	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t34	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t35	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t36	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t36	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t37	PLAN-DELTA	RTL	ft_slots,hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t38	PLAN-DELTA	RTL	ft_slots	added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t39	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t4	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t40__cl86ea32b3	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t40__cl86ea32b3__sid5S	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
-ot_s81sl_leaf__t40__clf8bbdae1	PLAN-DELTA	RTL		tap_pair_affinity,taps		place	FAIL	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t40__clf8bbdae1	PLAN-DELTA	RTL		tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t41	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t42	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t42	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t43	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t44__clf4ea6d4b	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t44__clf6cf8492	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t45	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t46	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t47	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t46	PLAN-DELTA	RTL		tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t47	PLAN-DELTA	RTL		tap_pair_affinity,taps		unit	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t5	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t50	PLAN-DELTA	NONE		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t51	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
@@ -157,20 +157,20 @@ ot_s81sl_leaf__t53__clb66fa5cb	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUN
 ot_s81sl_leaf__t54__cl501e5681	PLAN-DELTA	RTL	hard_cores,note	tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t54__cl706d9749	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t55	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t56	PLAN-DELTA	RTL	ln_copies	tap_pair_affinity,taps		geom	WAIT-DISK	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t56	PLAN-DELTA	RTL	ln_copies	tap_pair_affinity,taps			RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t57	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t58	PLAN-DELTA	RTL		added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t59	PLAN-DELTA	RTL		tap_pair_affinity,taps		place	FAIL	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t59	PLAN-DELTA	RTL		tap_pair_affinity,taps		queue	QUEUED	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t6	PLAN-DELTA	NONE		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t60	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t60	PLAN-DELTA	RTL		tap_pair_affinity,taps		queue	ORPHAN	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t61	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t62	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
-ot_s81sl_leaf__t65	PLAN-DELTA	RTL	ft_slots	tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t62	PLAN-DELTA	RTL		tap_pair_affinity,taps		queue	ORPHAN	yes	SUPERSEDED: relaunch on new plan
+ot_s81sl_leaf__t65	PLAN-DELTA	RTL	ft_slots	tap_pair_affinity,taps		geom	RUNNING	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t66	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t67	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t68	PLAN-DELTA	RTL		added_taps,tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t69	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
-ot_s81sl_leaf__t7	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
+ot_s81sl_leaf__t7	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
 ot_s81sl_leaf__t70	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t71	PLAN-DELTA	RTL		tap_pair_affinity,taps		route	RUNNING	yes	SUPERSEDED: running route, inputs change, result is evidence only
 ot_s81sl_leaf__t72	PLAN-DELTA	RTL	hard_cores,note	added_taps,tap_pair_affinity,taps		route	FAIL	yes	SUPERSEDED: relaunch on new plan
@@ -194,17 +194,17 @@ ot_v41_bf_col3_c	CORE	-			yes			no	KEEP counted
 ot_v41_rom_elem_q_qxpq_w10_gb	CORE	-						no	KEEP
 phy__t1	SAME	NONE						no	KEEP
 seqhost__t1	SAME	NONE				route	RUNNING	no	KEEP
-serdes__t12	SAME	NONE					RUNNING	no	KEEP
+serdes__t12	SAME	NONE				place	RUNNING	no	KEEP
 serdes__t13	SAME	NONE				route	RUNNING	no	KEEP
 serdes__t14	SAME	NONE				route	RUNNING	no	KEEP
 serdes__t15__cla2127225	SAME	NONE				queue	QUEUED	no	KEEP
-serdes__t15__cla3d02796	SAME	NONE				geom	WAIT-DISK	no	KEEP
+serdes__t15__cla3d02796	SAME	NONE				queue	QUEUED	no	KEEP
 serdes__t16	SAME	NONE				route	RUNNING	no	KEEP
 serdes__t1__clb45db5be	SAME	NONE				queue	QUEUED	no	KEEP
-serdes__t1__clfe1f0815	SAME	NONE				place	RUNNING	no	KEEP
-serdes__t2	SAME	NONE				geom	WAIT-DISK	no	KEEP
-serdes__t3	SAME	NONE				geom	WAIT-DISK	no	KEEP
-serdes__t4	SAME	NONE				queue	QUEUED	no	KEEP
+serdes__t1__clfe1f0815	SAME	NONE				route	RUNNING	no	KEEP
+serdes__t2	SAME	NONE				geom	RUNNING	no	KEEP
+serdes__t3	SAME	NONE				queue	QUEUED	no	KEEP
+serdes__t4	SAME	NONE					RUNNING	no	KEEP
 slice_station__t12	SAME	NONE			yes	queue	WAIT-PARENT	no	KEEP counted
 slice_station__t14	TAPPAIR-ONLY	NONE		tap_pair_affinity		queue	WAIT-PARENT	no	KEEP
 slice_station__t17	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
@@ -231,19 +231,19 @@ slice_station__t37	TAPPAIR-ONLY	NONE		tap_pair_affinity		signoff	FAIL	no	KEEP
 slice_station__t38	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	signoff	FAIL	no	KEEP counted
 slice_station__t40__cl1ea9de02	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
 slice_station__t40__clc8fb2c8c	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
-slice_station__t41	TAPPAIR-ONLY	NONE		tap_pair_affinity		geom	WAIT-DISK	no	KEEP
+slice_station__t41	TAPPAIR-ONLY	NONE		tap_pair_affinity			RUNNING	no	KEEP
 slice_station__t42__cl4bd1432c	SAME	NONE			yes	queue	WAIT-PARENT	no	KEEP counted
 slice_station__t42__clcf44e680	TAPPAIR-ONLY	NONE		tap_pair_affinity		signoff	FAIL	no	KEEP
 slice_station__t43	TAPPAIR-ONLY	NONE		tap_pair_affinity		signoff	FAIL	no	KEEP
 slice_station__t44	TAPPAIR-ONLY	NONE		tap_pair_affinity		queue	WAIT-PARENT	no	KEEP
-slice_station__t45	TAPPAIR-ONLY	RTL		tap_pair_affinity		route	RUNNING	no	FORCE: key does not move but bound RTL or reset changed; add to retry
+slice_station__t45	TAPPAIR-ONLY	RTL		tap_pair_affinity		queue	ORPHAN	no	FORCE: key does not move but bound RTL or reset changed; add to retry
 slice_station__t46	SAME	NONE			yes	signoff	SIGNED	no	KEEP counted
 slice_station__t47	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	signoff	FAIL	no	KEEP counted
 slice_station__t48	SAME	NONE			yes	queue	WAIT-PARENT	no	KEEP counted
 slice_station__t49	TAPPAIR-ONLY	NONE		tap_pair_affinity		signoff	FAIL	no	KEEP
 slice_station__t50__cl39451317	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
 slice_station__t50__cld84c9e24	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
-slice_station__t51	TAPPAIR-ONLY	NONE		tap_pair_affinity		geom	WAIT-DISK	no	KEEP
+slice_station__t51	TAPPAIR-ONLY	NONE		tap_pair_affinity		queue	ORPHAN	no	KEEP
 slice_station__t52	TAPPAIR-ONLY	NONE		tap_pair_affinity		route	RUNNING	no	KEEP
 slice_station__t6__cl0755c26e	TAPPAIR-ONLY	NONE		tap_pair_affinity		signoff	FAIL	no	KEEP
 slice_station__t6__cl54a9ceeb	TAPPAIR-ONLY	NONE		tap_pair_affinity	yes	queue	WAIT-PARENT	no	KEEP counted
