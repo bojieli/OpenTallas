@@ -1,0 +1,5 @@
+rx_prel seed=1 rc=0 RX_RESULT shift=1 checks=30040 errors=0 q_v=29080 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 RX lockstep PASS 
+rx_prel seed=2 rc=0 RX_RESULT shift=1 checks=30040 errors=0 q_v=29080 corrected=7840 uncorrectable=8230 locked=29410 n_relock=2 n_corr=1722 n_unc=167 RX lockstep PASS 
+rx_prel seed=3 rc=0 RX_RESULT shift=1 checks=30040 errors=0 q_v=29080 corrected=7840 uncorrectable=8170 locked=29410 n_relock=2 n_corr=1701 n_unc=160 RX lockstep PASS 
+rx_prel_mut seed=1 rc=1 RX_RESULT shift=1 checks=30040 errors=22180 q_v=29080 corrected=7960 uncorrectable=8100 locked=29410 n_relock=2 n_corr=1625 n_unc=174 [25174000] %Fatal: tb_rx.sv:80: Assertion failed in tb: RX lockstep FAILED 
+RX_PREL_DONE

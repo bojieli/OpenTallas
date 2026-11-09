@@ -1,0 +1,9 @@
+ctl mismatch c=17
+ctl mismatch c=18
+ctl mismatch c=21
+ctl mismatch c=22
+BM_PREL loads=1833 zero_loads=211
+BM_PREL checks=59985 lamchecks=59955 frames=1820 errors=57488
+[50040000] %Fatal: tb_prel.sv:53: Assertion failed in tb: BM_PREL FAILED
+%Error: /srv/opentallas-scratch2/claude/s81-types-10-rck/bm_prel/tb_prel.sv:53: Verilog $stop
+Aborting...
