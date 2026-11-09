@@ -255,7 +255,8 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     # cold L0: stage-0 embedding (256 words on the D2D return chain, PORTS em windows) before the layer's x exists
     ch0 = M.Chain(smap)
     emb = M.lower_embed(40, ch0)
-    emb_cycles = 255 + 8                            # word 0 .. word 255 at the W5 return pin + the 8-edge landing tail
+    emb_cycles = 255 + 8 + D.emb_dro_added()        # word 0 .. word 255 at the W5 return pin + the 8-edge landing tail,
+                                                    # + the bound-plan native59 ring delay of the first word
     xs_c0 = min(c['edge'] for c in rs['commands'] if c['label'].startswith('XS'))
     xs_span = rs_xend - xs_c0                       # the x stream of the landed residual (cold: after the embedding)
     l0_cold = emb_cycles + MARGIN + xs_span + gap(15, 16) + (t_r2 - P[1]['at'])

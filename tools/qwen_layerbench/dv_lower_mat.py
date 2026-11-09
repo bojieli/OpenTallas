@@ -399,7 +399,9 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None,
 
 # ------------------------------------------------------------------------------------------------ stage 0 embedding
 def lower_embed(t0, chain, mutant=None):
-    """word w of the embedding row at the dvs_W5 D2D return pin on edge t0 + w; each slice lands its residual blocks."""
+    """word w of the embedding row at the dvs_W5 D2D return pin on edge t0 + w; each slice lands its residual blocks.
+    t0 is the zero-transport edge: the bound-plan native59 ring moves word 0 by D.emb_dro_added()."""
+    t0 += D.emb_dro_added()
     own = D.ownership()
     vm = D.vm_map(own)
     res = own['residual']['blocks_per_slice']

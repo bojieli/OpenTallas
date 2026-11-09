@@ -109,6 +109,12 @@ def regen(ctx):
     for path, values in hc_params.items():
         assert path not in params, path
         params[path] = values
+    # QC-TRANSPORT-FIX-3 11-08: opt-in (asbuilt.qc_fabric_transport) bound-transport pads of head columns and stations
+    import qc_fabric_transport as QFT
+    qft_params, qft_record = QFT.regen(ctx)
+    for path, values in qft_params.items():
+        assert path not in params, path
+        params[path] = values
     result = dict(params=params,
                 record=dict(rule=__doc__.split("\n\n")[1], D2D_TXDP_C=txdp, D2D_SEAM_C=seam, TX=TX, RX=RX, RS=RS, RU=fp["R"], LX=LX, LS=LS, calendar=cal,
                             bench_args=f"--relays {fp['R']} {RS[0]} {RS[1]} {RS[2]} --lanes {TX[0]} {TX[1]} {TX[2]} "
@@ -119,4 +125,6 @@ def regen(ctx):
         result['record']['embed_transport'] = embed_record
     if hc_record:
         result['record']['plan_hard_core_params'] = hc_record
+    if qft_record:
+        result['record']['qc_fabric_transport'] = qft_record
     return result

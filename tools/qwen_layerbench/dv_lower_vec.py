@@ -294,10 +294,12 @@ ROPE_RX_EDGES = HD // 16 + N + 4   # word 7 has been written into slice N - 1's 
 def rope_rx(S, t, cr, pos, mutant=None):
     """schedule the per-token RoPE row over the D2D return chain (RP 1 slices): one broadcast ROPE ARM entering at t,
     words 0..7 at the dvs_W5 return pin on t + ROPE_ARM_LEAD + k.  Mutant 'rope_late': the ARM one edge late (slice
-    N - 1 misses word 0 -> beat fault + wrong CROM).  Returns (return calendar, next free edge)."""
+    N - 1 misses word 0 -> beat fault + wrong CROM).  Returns (return calendar, next free edge).
+    The ARM and the words move together by D.emb_dro_added() (native59 EMB_RT_CODE at the bound plan)."""
     base = cr['ROPE']['base']
     if base % 16:
         raise LowerError('CROM ROPE base not 16-pair aligned')
+    t += D.emb_dro_added()
     S.cmd(t + (1 if mutant == 'rope_late' else 0), D.cmd_rope_arm(15, base // 16), f'ROPE ARM (all) CROM word {base // 16}')
     w0 = t + ROPE_ARM_LEAD
     cal = [dict(edge=w0 + k, beat=k, word=f'{w:0130x}') for k, w in enumerate(rope_words(pos))]

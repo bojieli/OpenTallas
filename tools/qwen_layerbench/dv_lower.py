@@ -331,6 +331,19 @@ def decode_cmd(c):
 
 
 # ------------------------------------------------------------------------------------------------ the lowering
+def emb_dro_added():
+    """Edges the group-1 (embedding and RoPE) dr words leave native59 later than the zero-transport tag ring: native59
+    EMB_RT_CODE of the bound plan (tools/qwen_split/embed_transport_params.py; regen_constants exports it as
+    EMB_DRO_ADDED_EDGES).  Set with DV_EMB_TRANSPORT=dro_added=N; unset = 0, byte-identical lowering."""
+    spec = os.environ.get('DV_EMB_TRANSPORT', '')
+    if not spec:
+        return 0
+    key, sep, value = spec.partition('=')
+    if key != 'dro_added' or not sep or not value.isdigit():
+        raise LowerError(f'DV_EMB_TRANSPORT {spec!r}: expected dro_added=N')
+    return int(value)
+
+
 def memory_profile():
     """The exact memory switches passed to the calibration RTL build."""
     defines = set()
