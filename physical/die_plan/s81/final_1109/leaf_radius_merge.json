@@ -1,0 +1,110 @@
+{
+ "ot_s81sl_leaf__t17": {
+  "state": "REVERTED_TO_C",
+  "why": "no candidate closes clk_t28: ot_s81sl_leaf__t17: grid+explicit tap clk_t28 load=678/1500, radius=244.08/200.0, empty=False"
+ },
+ "ot_s81sl_leaf__t24__cl2456157b": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t25",
+    [
+     1160.8507,
+     565.6267
+    ],
+    [
+     1182.636,
+     616.856
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t24__cl81374cd8": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t25",
+    [
+     1160.8507,
+     565.6267
+    ],
+    [
+     1182.636,
+     616.856
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t53__cl958451dd": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t33",
+    [
+     816.44,
+     622.08
+    ],
+    [
+     921.736,
+     628.56
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t53__clb66fa5cb": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t33",
+    [
+     816.44,
+     622.08
+    ],
+    [
+     921.736,
+     628.56
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t54__cl501e5681": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t25",
+    [
+     609.0,
+     25.92
+    ],
+    [
+     633.87,
+     59.37
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t61": {
+  "state": "FIXED",
+  "moves": [
+   [
+    "clk_t37",
+    [
+     639.48,
+     1194.48
+    ],
+    [
+     685.924,
+     1217.224
+    ]
+   ]
+  ]
+ },
+ "ot_s81sl_leaf__t7": {
+  "state": "REVERTED_TO_C",
+  "why": "no candidate closes clk_t40: ot_s81sl_leaf__t7: grid+explicit tap clk_t40 load=4/1500, radius=242.44/200.0, empty=False"
+ },
+ "ot_s81sl_leaf__t8": {
+  "state": "REVERTED_TO_C",
+  "why": "no candidate closes clk_t56: ot_s81sl_leaf__t8: grid+explicit tap clk_t56 load=1340/1500, radius=237.303/200.0, empty=False"
+ }
+}
