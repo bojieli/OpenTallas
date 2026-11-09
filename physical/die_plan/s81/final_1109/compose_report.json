@@ -1,0 +1,143 @@
+{
+ "rc_types": [
+  "col_h10_r0_p4__t1",
+  "col_h10_r2__t1__clac068e56",
+  "col_h10_r2__t1__cl8b686b3e",
+  "col_h10_r2__t1__cl99efd374",
+  "col_h10_r2__t1__cl1f5d6c2a"
+ ],
+ "leaf_types": [
+  "ot_s81sl_leaf__t1",
+  "ot_s81sl_leaf__t2",
+  "ot_s81sl_leaf__t3",
+  "ot_s81sl_leaf__t4",
+  "ot_s81sl_leaf__t5",
+  "ot_s81sl_leaf__t6",
+  "ot_s81sl_leaf__t9",
+  "ot_s81sl_leaf__t10",
+  "ot_s81sl_leaf__t11",
+  "ot_s81sl_leaf__t12",
+  "ot_s81sl_leaf__t13",
+  "ot_s81sl_leaf__t14",
+  "ot_s81sl_leaf__t15",
+  "ot_s81sl_leaf__t16",
+  "ot_s81sl_leaf__t75",
+  "ot_s81sl_leaf__t21",
+  "ot_s81sl_leaf__t22",
+  "ot_s81sl_leaf__t23",
+  "ot_s81sl_leaf__t26",
+  "ot_s81sl_leaf__t27",
+  "ot_s81sl_leaf__t28",
+  "ot_s81sl_leaf__t29",
+  "ot_s81sl_leaf__t30",
+  "ot_s81sl_leaf__t31",
+  "ot_s81sl_leaf__t32",
+  "ot_s81sl_leaf__t33",
+  "ot_s81sl_leaf__t34",
+  "ot_s81sl_leaf__t35",
+  "ot_s81sl_leaf__t36",
+  "ot_s81sl_leaf__t37",
+  "ot_s81sl_leaf__t38",
+  "ot_s81sl_leaf__t39",
+  "ot_s81sl_leaf__t41",
+  "ot_s81sl_leaf__t42",
+  "ot_s81sl_leaf__t43",
+  "ot_s81sl_leaf__t45",
+  "ot_s81sl_leaf__t46",
+  "ot_s81sl_leaf__t47",
+  "ot_s81sl_leaf__t50",
+  "ot_s81sl_leaf__t51",
+  "ot_s81sl_leaf__t52",
+  "ot_s81sl_leaf__t55",
+  "ot_s81sl_leaf__t56",
+  "ot_s81sl_leaf__t57",
+  "ot_s81sl_leaf__t58",
+  "ot_s81sl_leaf__t59",
+  "ot_s81sl_leaf__t60",
+  "ot_s81sl_leaf__t61",
+  "ot_s81sl_leaf__t62",
+  "ot_s81sl_leaf__t65",
+  "ot_s81sl_leaf__t66",
+  "ot_s81sl_leaf__t67",
+  "ot_s81sl_leaf__t68",
+  "ot_s81sl_leaf__t69",
+  "ot_s81sl_leaf__t70",
+  "ot_s81sl_leaf__t71",
+  "ot_s81sl_leaf__t72",
+  "ot_s81sl_leaf__t73",
+  "ot_s81sl_leaf__t74",
+  "ot_s81sl_leaf__t53__clb66fa5cb",
+  "ot_s81sl_leaf__t53__cl958451dd",
+  "ot_s81sl_leaf__t54__cl706d9749",
+  "ot_s81sl_leaf__t54__cl501e5681",
+  "ot_s81sl_leaf__t24__cl2456157b",
+  "ot_s81sl_leaf__t24__cl81374cd8",
+  "ot_s81sl_leaf__t25__cl55642d17",
+  "ot_s81sl_leaf__t25__cl431c660f",
+  "ot_s81sl_leaf__t40__clf8bbdae1",
+  "ot_s81sl_leaf__t40__cl86ea32b3",
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+  "ot_s81sl_leaf__t44__clf6cf8492",
+  "ot_s81sl_leaf__t44__clf4ea6d4b"
+ ],
+ "base_tap_fix": [
+  {
+   "type": "col_h10_r2__t1__clac068e56",
+   "tap": "clk_t26",
+   "old": [
+    1049.32,
+    17.28
+   ],
+   "new": [
+    1064.24,
+    128.676
+   ]
+  },
+  {
+   "type": "col_h10_r2__t1__cl8b686b3e",
+   "tap": "clk_t27",
+   "old": [
+    1049.32,
+    17.28
+   ],
+   "new": [
+    1064.24,
+    128.676
+   ]
+  },
+  {
+   "type": "col_h10_r2__t1__cl99efd374",
+   "tap": "clk_t26",
+   "old": [
+    1049.32,
+    17.28
+   ],
+   "new": [
+    1064.24,
+    128.676
+   ]
+  },
+  {
+   "type": "col_h10_r2__t1__cl1f5d6c2a",
+   "tap": "clk_t26",
+   "old": [
+    1049.32,
+    17.28
+   ],
+   "new": [
+    1064.24,
+    128.676
+   ]
+  }
+ ],
+ "checks": {
+  "final": {
+   "sha": "65648816b02d5057",
+   "radius_errors": {}
+  },
+  "base": {
+   "sha": "91da029ab1c47121",
+   "radius_errors": {}
+  }
+ }
+}
