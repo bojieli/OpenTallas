@@ -1,0 +1,322 @@
+#!/usr/bin/python3 -I
+"""ot-job: run one command as a SEALED JOB (ISOLATE-1; OWNER 2026-11-09 03:4x "yes, isolate the jobs. simply delete the
+finished job folder").
+
+  ot-job run (--spec FILE | --spec-b64 B64) [--tag TAG] -- <command...>
+  ot-job check-spec FILE                 validate a spec, print the resolved plan, run nothing
+
+A job owns exactly one directory J = <root>/<name>-<tag> (root default /srv/opentallas-scratch2/claude/ot-jobs):
+  J/in/<n>       declared inputs, hardlinked read-only from the host store (<fs>/ot-store, see ot_store.py)
+  J/work         the writable work dir, seeded by copies of the declared work seeds
+  J/tmp          the job's /tmp
+  J/.ot-job      job.json (spec, owner tag), map.json (what the docker shim allows), the docker shim, results
+The command runs under bwrap: /srv, /mnt, /media, /archive, /tmp and $HOME are empty except the job dir, each input
+at the absolute path the job names it by (its "at", default its source path), the work dir at its "at", and a
+read-only allowlist of tool dirs in $HOME (.local, bin, opentallas-tools).  /usr/bin/docker is ot-job-docker, which
+refuses any container mount of an undeclared host path.  So a job that reads a path it did not declare FAILS, at once.
+
+At exit: every "publish" item is put into the store (hardlinks, no copy) with an artifact record naming the producer,
+re-verified, the "return" paths are copied to the caller dir, and J is DELETED.  If publishing fails J is kept and
+the exit status is 98 (the command's own status is in J/.ot-job/result.json).  The command's status is returned.
+
+Spec (JSON, schema opentallas.ot_job.v1):
+  {"name": "kv3_hub_Ei-place",
+   "root": "/srv/opentallas-scratch2/claude/ot-jobs",                    optional
+   "inputs": [{"path": "/abs/src", "sha": "<tree or file sha>", "host": "epyc4", "at": "/abs/as-seen", "mode": "ro"}],
+   "work": {"at": "/abs/kit/path/the/job/uses", "seed": [{"path"|"sha"|"host", "into": "."}]},
+   "publish": [{"name": "place-run", "path": "run", "when": "ok"|"always", "required": false}],
+   "return": {"to": "/abs/caller/dir", "paths": ["run/logs", "result.json"]},
+   "allow_ro": ["/abs/host/prefix"],                                       optional, read-only system paths
+   "keep": false}                                                          true keeps J (pilot debugging only)
+An input is found by sha in the local store, else at its path on this host, else fetched from "host" (by sha from
+that host's store, else as a tar stream of the path).  Paths in publish/return are relative to the work dir.
+"""
+import base64
+import json
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import time
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, HERE)
+import ot_store as S  # noqa: E402
+
+SCHEMA = "opentallas.ot_job.v1"
+DEFAULT_ROOT = "/srv/opentallas-scratch2/claude/ot-jobs"
+HIDE = ("/srv", "/mnt", "/media", "/archive", "/tmp", "/var/tmp")
+HOME_ALLOW = (".local", "bin", ".docker", ".gitconfig", "opentallas-tools")
+PUBLISH_FAIL = 98
+SPEC_FAIL = 99
+
+
+class JobError(Exception):
+    pass
+
+
+def say(m):
+    print(f"ot-job: {m}", file=sys.stderr, flush=True)
+
+
+def load_spec(a):
+    if "--spec-b64" in a:
+        s = json.loads(base64.b64decode(a[a.index("--spec-b64") + 1]))
+    elif "--spec" in a:
+        with open(a[a.index("--spec") + 1]) as fh:
+            s = json.load(fh)
+    else:
+        raise JobError("no --spec / --spec-b64")
+    if s.get("schema", SCHEMA) != SCHEMA:
+        raise JobError(f"spec schema {s.get('schema')!r} != {SCHEMA}")
+    if not s.get("name") or "/" in s["name"]:
+        raise JobError("spec needs a plain name")
+    for i in s.get("inputs", []):
+        at = i.get("at") or i.get("path")
+        if not at or not os.path.isabs(at):
+            raise JobError(f"input {i}: needs an absolute path or at")
+        if i.get("mode", "ro") != "ro":
+            raise JobError(f"input {i}: mode must be ro (writable data is a work seed)")
+        if not (i.get("sha") or i.get("path")):
+            raise JobError(f"input {i}: needs path or sha")
+    w = s.get("work") or {}
+    if w.get("at") and not os.path.isabs(w["at"]):
+        raise JobError("work.at must be absolute")
+    for p in [x["path"] for x in s.get("publish", [])] + list((s.get("return") or {}).get("paths", [])):
+        if os.path.isabs(p) or os.path.normpath(p).startswith(".."):
+            raise JobError(f"publish/return path {p!r} must be relative to the work dir")
+    return s
+
+
+def tar_fetch(host, path, dest):
+    """copy host:path (a file or dir) to dest through ssh; dest must not exist"""
+    os.makedirs(dest)
+    parent, base = os.path.dirname(path.rstrip("/")), os.path.basename(path.rstrip("/"))
+    p1 = subprocess.Popen(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
+                           f"tar -C '{parent}' -cf - '{base}'"], stdout=subprocess.PIPE)
+    p2 = subprocess.run(["tar", "-C", dest, "-xf", "-"], stdin=p1.stdout)
+    p1.stdout.close()
+    if p1.wait() != 0 or p2.returncode != 0:
+        raise JobError(f"fetch {host}:{path} failed")
+    return os.path.join(dest, base)
+
+
+def resolve(store, item, J, n):
+    """-> (kind, sha) of an input/seed, put into the local store"""
+    sha, path, host = item.get("sha"), item.get("path"), item.get("host")
+    if sha and S.have(store, sha) and not S.verify(store, sha):
+        return ("tree" if S.read_tree(store, sha) else "file"), sha
+    if path and os.path.exists(path):
+        kind, got = S.put(store, os.path.realpath(path))
+    elif host and sha:
+        S.fetch(store, sha, host)
+        kind, got = ("tree" if S.read_tree(store, sha) else "file"), sha
+    elif host and path:
+        tmp = os.path.join(J, ".ot-job", "fetch", str(n))
+        got_path = tar_fetch(host, path, tmp)
+        kind, got = S.put(store, got_path, link=True)
+        shutil.rmtree(tmp)
+    else:
+        raise JobError(f"input {item}: not in the store, not on this host" + ("" if host else ", and no host to fetch from"))
+    if sha and got != sha:
+        raise JobError(f"input {item}: content sha {got} != declared {sha}")
+    return kind, got
+
+
+def bwrap_argv(J, maps, work_at, cmd, home):
+    a = ["bwrap", "--die-with-parent", "--ro-bind", "/", "/", "--dev-bind", "/dev", "/dev", "--proc", "/proc"]
+    for h in HIDE:
+        if os.path.isdir(h) and not os.path.islink(h):
+            a += ["--tmpfs", h]
+    if home and os.path.isdir(home):
+        a += ["--tmpfs", home]
+        for x in HOME_ALLOW:
+            p = os.path.join(home, x)
+            if os.path.exists(p):
+                a += ["--ro-bind", p, p]
+    a += ["--bind", J, J, "--ro-bind", J + "/in", J + "/in", "--ro-bind", J + "/.ot-job", J + "/.ot-job",
+          "--bind", J + "/tmp", "/tmp"]
+    for m in sorted(maps, key=lambda m: len(m["at"])):
+        if m["at"] in (J, J + "/in", J + "/work"):
+            continue
+        a += ["--ro-bind" if m["ro"] else "--bind", m["real"], m["at"]]
+    a += ["--ro-bind", J + "/.ot-job/ot-job-docker", "/usr/bin/docker"]
+    a += ["--setenv", "OT_JOB_DIR", J, "--setenv", "OT_JOB_MAP", J + "/.ot-job/map.json", "--setenv", "TMPDIR", "/tmp",
+          "--unsetenv", "OT_JOB_SHIM_CHECKED", "--chdir", work_at, "--"]
+    return a + list(cmd)
+
+
+def copy_out(src, dst):
+    if os.path.isdir(src) and not os.path.islink(src):
+        shutil.copytree(src, dst, symlinks=True, dirs_exist_ok=True, copy_function=shutil.copyfile)
+    else:
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        if os.path.lexists(dst) and not os.path.isdir(dst):
+            os.unlink(dst)                          # never write through an existing (possibly shared) inode
+        shutil.copyfile(src, dst, follow_symlinks=False) if not os.path.islink(src) else os.symlink(os.readlink(src), dst)
+
+
+def remove_job(J):
+    marker = os.path.join(J, ".ot-job", "job.json")
+    if not os.path.isfile(marker):
+        raise JobError(f"{J} has no ot-job marker: not deleting")
+    for dp, dns, _fns in os.walk(J):
+        for d in dns:
+            p = os.path.join(dp, d)
+            if not os.path.islink(p):
+                os.chmod(p, 0o755)
+    os.chmod(J, 0o755)
+    shutil.rmtree(J)
+
+
+def run(spec, tag, cmd, bwrap=True):
+    host = socket.gethostname()
+    root = spec.get("root") or os.environ.get("OT_JOB_ROOT") or DEFAULT_ROOT
+    J = os.path.join(os.path.realpath(root), f"{spec['name']}-{tag}")
+    store = S.default_store(J)
+    os.makedirs(J)
+    for d in ("in", "work", "tmp", ".ot-job"):
+        os.makedirs(os.path.join(J, d))
+    meta = {"schema": SCHEMA, "spec": spec, "tag": tag, "host": host, "J": J, "store": store, "cmd": cmd,
+            "started": time.time(), "pid": os.getpid()}
+    with open(os.path.join(J, ".ot-job", "job.json"), "w") as fh:
+        json.dump(meta, fh, indent=1, sort_keys=True)
+    work_at = (spec.get("work") or {}).get("at") or J + "/work"
+    maps = [{"at": J + "/in", "real": J + "/in", "ro": True}, {"at": J, "real": J, "ro": False},
+            {"at": J + "/.ot-job", "real": J + "/.ot-job", "ro": True},
+            {"at": work_at, "real": J + "/work", "ro": False}]
+    try:
+        shas, staged = stage_all(spec, store, J, maps)
+    except Exception:
+        remove_job(J)                            # nothing ran and nothing was published: the dir is ours alone
+        raise
+    S.ref(store, "job-" + tag, shas, note=f"live inputs of ot-job {J} on {host}")
+    return run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap)
+
+
+def stage_all(spec, store, J, maps):
+    shas, staged = [], []
+    for n, item in enumerate(spec.get("inputs", [])):
+        kind, sha = resolve(store, item, J, n)
+        dst = os.path.join(J, "in", str(n))
+        S.stage(store, sha, dst)
+        at = item.get("at") or item["path"]
+        maps.append({"at": at, "real": dst, "ro": True})
+        shas.append(sha)
+        staged.append({"n": n, "at": at, "sha": sha, "kind": kind})
+    for n, item in enumerate((spec.get("work") or {}).get("seed", [])):
+        kind, sha = resolve(store, item, J, f"seed{n}")
+        into = os.path.normpath(os.path.join(J, "work", item.get("into", ".")))
+        if kind == "tree":
+            tmp = os.path.join(J, ".ot-job", f"seed{n}")
+            S.stage(store, sha, tmp, copy=True)
+            shutil.copytree(tmp, into, symlinks=True, dirs_exist_ok=True)
+            shutil.rmtree(tmp)
+        else:
+            S.stage(store, sha, into if not os.path.isdir(into) else os.path.join(into, os.path.basename(item.get("path", sha))), copy=True)
+        shas.append(sha)
+        staged.append({"seed": n, "sha": sha, "kind": kind})
+    return shas, staged
+
+
+def run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap):
+    os.chmod(os.path.join(J, "in"), 0o555)
+    real_docker = shutil.which("docker", path="/usr/bin") or "/usr/bin/docker"
+    open(os.path.join(J, ".ot-job", "docker.real"), "w").close()
+    shutil.copyfile(os.path.join(HERE, "ot-job-docker"), os.path.join(J, ".ot-job", "ot-job-docker"))
+    os.chmod(os.path.join(J, ".ot-job", "ot-job-docker"), 0o555)
+    nxt = None
+    if os.environ.get("OT_JOB_NEXT_DOCKER"):         # tests: a stand-in for the docker CLI, copied in so the view has it
+        nxt = os.path.join(J, ".ot-job", "next_docker")
+        shutil.copyfile(os.environ["OT_JOB_NEXT_DOCKER"], nxt)
+        os.chmod(nxt, 0o555)
+    with open(os.path.join(J, ".ot-job", "map.json"), "w") as fh:
+        json.dump({"job": J, "maps": maps, "allow_ro": spec.get("allow_ro", []), "next_docker": nxt}, fh, indent=1, sort_keys=True)
+    with open(os.path.join(J, ".ot-job", "inputs.json"), "w") as fh:
+        json.dump(staged, fh, indent=1)
+    if bwrap:
+        argv = bwrap_argv(J, maps, work_at, cmd, os.path.expanduser("~"))
+        i = argv.index("--setenv")
+        argv[i:i] = ["--ro-bind", real_docker, J + "/.ot-job/docker.real"]
+    else:                                        # tests without bwrap only
+        argv = list(cmd)
+    say(f"SEALED {J}: {len(staged)} inputs, store {store}, cmd {' '.join(cmd)[:160]}")
+    rc = subprocess.call(argv, cwd=J + "/work" if not bwrap else None)
+    say(f"command exit {rc}")
+    return finish(spec, meta, J, store, tag, rc)
+
+
+def finish(spec, meta, J, store, tag, rc):
+    ok = rc == 0
+    pub, errors = [], []
+    producer = {"job": meta["J"], "tag": tag, "host": meta["host"], "name": spec["name"], "cmd": meta["cmd"][:20],
+                "rc": rc, "started": meta["started"], "ended": time.time(),
+                "inputs": json.load(open(os.path.join(J, ".ot-job", "inputs.json")))}
+    for p in spec.get("publish", []):
+        if p.get("when", "ok") == "ok" and not ok:
+            continue
+        src = os.path.join(J, "work", p["path"])
+        if not os.path.exists(src):
+            if p.get("required"):
+                errors.append(f"required output {p['path']} missing")
+            continue
+        try:
+            pub.append(S.publish(store, src, p["name"], producer, link=True))
+        except (S.StoreError, OSError) as e:
+            errors.append(f"publish {p['path']}: {e}")
+    for r in pub:
+        bad = S.verify(store, r["sha"])
+        if bad:
+            errors.append(f"verify {r['name']}: {bad[:3]}")
+    result = {"rc": rc, "published": [{k: r[k] for k in ("id", "name", "kind", "sha")} for r in pub], "errors": errors,
+              "store": store, "host": meta["host"], "J": J, "ended": time.time()}
+    ret = spec.get("return") or {}
+    if ret.get("to"):
+        try:
+            for p in ret.get("paths", []):
+                src = os.path.join(J, "work", p)
+                if os.path.lexists(src):
+                    copy_out(src, os.path.join(ret["to"], p))
+            os.makedirs(ret["to"], exist_ok=True)
+            with open(os.path.join(ret["to"], f".ot-job-{spec['name']}-{tag}.json"), "w") as fh:
+                json.dump(result, fh, indent=1, sort_keys=True)
+        except OSError as e:
+            errors.append(f"return copy: {e}")
+    with open(os.path.join(J, ".ot-job", "result.json"), "w") as fh:
+        json.dump(result, fh, indent=1, sort_keys=True)
+    S.unref(store, "job-" + tag)
+    if errors:
+        say(f"PUBLISH FAILED, job dir KEPT {J}: {errors[:3]}")
+        return PUBLISH_FAIL
+    if spec.get("keep"):
+        say(f"keep=true: job dir kept {J}")
+    else:
+        remove_job(J)
+        say(f"published {len(pub)} artifact(s); job dir deleted {J}")
+    return rc
+
+
+def main(a):
+    if a[:1] == ["check-spec"]:
+        print(json.dumps(load_spec(["--spec", a[1]]), indent=1))
+        return 0
+    if a[:1] != ["run"] or "--" not in a:
+        print(__doc__, file=sys.stderr)
+        return SPEC_FAIL
+    opts, cmd = a[1:a.index("--")], a[a.index("--") + 1:]
+    try:
+        spec = load_spec(opts)
+    except (JobError, ValueError, OSError) as e:
+        say(f"SPEC REFUSED: {e}")
+        return SPEC_FAIL
+    tag = opts[opts.index("--tag") + 1] if "--tag" in opts else f"{socket.gethostname()}-{os.getpid()}-{int(time.time())}"
+    try:
+        return run(spec, tag, cmd, bwrap=os.environ.get("OT_JOB_NO_BWRAP_FOR_TESTS") != "1")
+    except (JobError, S.StoreError) as e:
+        say(f"NOT RUN: {e}")
+        return SPEC_FAIL
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
