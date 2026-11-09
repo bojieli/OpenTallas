@@ -126,3 +126,7 @@ dkv95_src_p4	DIE-KV-97	2026-11-09 02:10	KV src_p4 (epyc4 realpath of dkv95/src_p
 dkv97	DIE-KV-97	2026-11-09 02:10	KV switch dry/boot/zb evidence + src_p5 staging
 dkv97_src_p5	DIE-KV-97	2026-11-09 02:10	KV switch src_p5 = src_p4 + kit-rtl Plan path fix (queue_src faeb1ac9)
 dkv96	DIE-KV-97	2026-11-09 02:10	DIE-KV-96 staging manifests + repo_files (evidence)
+type-safe-4/s81p3	TYPE-SAFE-5	2026-11-09 06:43	S81 final switch plan 65648816 + bind6 (intel1, epyc7, epyc2)
+type-safe-4/s81p3_src_f	TYPE-SAFE-5	2026-11-09 06:43	S81 final src tree for bind6/kit_rtl (intel1 scratch3)
+type-safe-5/	TYPE-SAFE-5	2026-11-09 06:43	S81 final branch clone + src copy (epyc7), QC relay work (intel1)
+s81-plan-1/pcc/fsa_final	TYPE-SAFE-5	2026-11-09 06:43	OT_XS_ASB_SCHEDULE_DIR source for S81 switch
