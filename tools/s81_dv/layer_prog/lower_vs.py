@@ -280,6 +280,17 @@ ENG_ADD_DUR = 81                             # ADD command -> last write (tb_s81
 ENG_HSTORE_LEAD = 64                         # HSTORE (32 row pairs) completes before the REDUCE reads h
 
 
+def _eng_reduce_ctls(ctx, sl):
+    """[(issue offset, leaf mask)] of the Engram REDUCE: ctx['leaf_route_summary'] (opt-in, leaf_transport.summary of the
+    die's emitted_leaf_routes report) gives per-group offsets by round trip; absent = the as-built single mask-11111 beat."""
+    table = ctx.get('leaf_route_summary')
+    if table is None:
+        return [(0, 0x1F)]
+    if sl not in table:
+        raise ValueError(f'leaf route summary has no slice {sl}')
+    return [tuple(g) for g in table[sl]['eng_ctls']]
+
+
 def lower_eng(die, op, ctx, sl, sid):
     """TOK-S81-GAPS/VS: Engram mix words on every leaf of the slice: vp HSTORE -> vs op 14 REDUCE at eng.dot (eng.hh is
     the same REDUCE: hh partials ride with kk / dd), vs op 14 ADD at eng.add -> vp HLOAD.  A0 = the layer's K / W / V region
@@ -306,13 +317,29 @@ def lower_eng(die, op, ctx, sl, sid):
     else:
         cmds = [(t, 'ADD', vp_cmd(14, a0=A0, a1=ENG_HB2, n=32, imm=1 << 30)),
                 (t + ENG_ADD_DUR + GUARD, 'HLOAD', vp_cmd(3, a0=ENG_HB2))]
+    # S81-SVC-9: the REDUCE may split into per-round-trip CTLs (leaf_transport.eng_ctls); every other beat stays mask 11111
+    avoid = (ctx.get('line_avoid') or {}).get(sl[-1], frozenset())
+    expanded = []
+    for c, what, body in cmds:
+        if what == 'REDUCE':
+            ctls = _eng_reduce_ctls(ctx, sl)
+            shift = 0
+            if ctx.get('leaf_route_summary') is not None:
+                while any(c + shift + off in avoid for off, _ in ctls):      # keep the relative offsets, free the line slots
+                    shift += 1
+                    if shift > 64:
+                        raise ValueError(f'{name}: no free line slot for the REDUCE split on {sl}')
+            for k, (off, mask) in enumerate(ctls):
+                expanded.append((c + shift + off, what if len(ctls) == 1 else f'{what}.g{k}', body, mask))
+        else:
+            expanded.append((c, what, body, LM))
     tpl, rows, ev = [], [], []
-    for i, (c, what, body) in enumerate(cmds):
-        tpl.append((f'{name}.{what}.s{sid}', ctl_payload(1 << sid, 0, LM, body)))
-        rows.append(dict(eng=eng, issue=c, arg=i, what=f'vs {name} {what} A0 {A0} leaves 11111'))
-        if what in ('REDUCE', 'ADD'):
-            ev += [dict(cycle=c, inst=f'{sl}.leaf{k}.vs', port='s_d', dir='internal', kind='VS', tag=f'{name}.{what}',
-                        payload=f'op 14 {what}', issue=c, carried_by=f'template {i}') for k in range(5)]
+    for i, (c, what, body, mask) in enumerate(expanded):
+        tpl.append((f'{name}.{what}.s{sid}', ctl_payload(1 << sid, 0, mask, body)))
+        rows.append(dict(eng=eng, issue=c, arg=i, what=f'vs {name} {what} A0 {A0} leaves {mask:05b}'))
+        if what.split('.')[0] in ('REDUCE', 'ADD'):
+            ev += [dict(cycle=c, inst=f'{sl}.leaf{k}.vs', port='s_d', dir='internal', kind='VS', tag=f'{name}.{what.split(".")[0]}',
+                        payload=f'op 14 {what.split(".")[0]}', issue=c, carried_by=f'template {i}') for k in range(5) if mask >> k & 1]
     gap = dict(module='ot_s81sl_xfin (ENG) / ot_s81sl_eg / dsdv_svc_rs',
                port='CTL target 1 ENG go, g_v gates, K/W/V rows at A0',
                missing='op 14 words lowered; the xfin ENG go + gate fan-out (eng.gate) and the svc Engram row read '

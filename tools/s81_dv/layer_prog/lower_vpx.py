@@ -269,10 +269,11 @@ def lower(die, op, ctx):
         if re.search(r'substage_hop\d+$', name):
             own = [r for lf, _, n in STAGE_SEGS for r in range(n)]
             # one xr send packer on s_0N: segment k starts after segment k-1's beats (n / 8 beats a segment)
-            specs = [(STAGE_LEG[0], STAGE_LEG[1], STAGE_LEG[2], list(range(n)), lf, None, 0,
-                      sum(m // 8 for _, _, m in STAGE_SEGS[:k]) * beat_period()) for k, (lf, _, n) in enumerate(STAGE_SEGS)]
+            trel = _stage_trel(ctx.get('leaf_route_summary'))
+            specs = [(STAGE_LEG[0], STAGE_LEG[1], STAGE_LEG[2], list(range(n)), lf, None, 0, trel[k])
+                     for k, (lf, _, n) in enumerate(STAGE_SEGS)]
         reservation_delays = []
-        _emit(die, sl, specs, t0, rows, templates, events, insts, set(ctx.get("ctl_used", ())), reservation_delays)
+        _emit(die, sl, specs, t0, rows, templates, events, insts, set(ctx.get("ctl_used", ())), reservation_delays, leaf_routes=ctx.get("leaf_route_summary"))
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
@@ -336,8 +337,32 @@ def lower(die, op, ctx):
     return dict(status='GAP', unit='vpx', insts=[], gap=dict(module='lower_vpx', port='-', missing=f'{name} not lowered'))
 
 
+def _stage_trel(leaf_routes):
+    """start of each substage segment on the one xr send packer: segment k follows segment k-1's beats, and with bound
+    leaf routes also waits for a previous leaf whose lo pairs arrive later than this leaf's would."""
+    out, t, prev = [], 0, None
+    for lf, _, n in STAGE_SEGS:
+        lo = _lo_after(leaf_routes, STAGE_LEG[0], lf)
+        lo = LO_AFTER_CTL if lo is None else lo
+        if prev is not None:
+            t += prev[0] + max(0, prev[1] - lo)
+        out.append(t)
+        prev = (n // 8 * beat_period(None if leaf_routes is None else lo), lo)
+    return out
+
+
+def _lo_after(leaf_routes, src, leaf):
+    """S81-SVC-9 (opt-in): the leaf's LO_AFTER_CTL from ctx['leaf_route_summary'] (leaf_transport.summary of the plan's routes);
+    None without a route table, which keeps the as-built DL 4 + 4 constant."""
+    if leaf_routes is None:
+        return None
+    if src not in leaf_routes:
+        raise ValueError('leaf route table has no slice ' + str(src))
+    return leaf_routes[src]['lo_after_ctl'][leaf]
+
+
 # ------------------------------------------------------------------------------------- TOK-DS-8 generic leg emission
-def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None, reservation_delays=None):
+def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None, reservation_delays=None, leaf_routes=None):
     """CTL rows / templates / events of leg specs (src, dir, peer, leaf rows, leaf, dst leaf, dst row offset, t_rel);
     the a_allgather emission of 10-18 generalised (identical output for its 3 leaf-0 legs).  Returns the last outward
     beat edge (relative to t0, CTL latency included) so a following phase can start after it."""
@@ -348,7 +373,7 @@ def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None, reserva
         if src not in sl or peer not in sl or not own:
             continue
         sid, psid = sl[src]['sid'], sl[peer]['sid']
-        leg = leg_program(sid, d, psid, own, leaf=leaf, t0=0, dst_leaf=dleaf, dst_off=doff)
+        leg = leg_program(sid, d, psid, own, leaf=leaf, t0=0, dst_leaf=dleaf, dst_off=doff, lo_after_ctl=_lo_after(leaf_routes, src, leaf))
         eng = 0 if src.endswith('N') else 1
         lat = ctl_path(die, src)['edges']
         first = min(c['cycle'] for c in leg['ctl']) - trel
@@ -420,12 +445,12 @@ def lower_ar(die, ctx, t0):
         lf, r0 = ar_quarter(p)
         dl, dr = rs_slot(rank, p)
         rs.append((src, d, peer, list(range(r0, r0 + 320)), lf, dl, dr - r0, 0))
-    last = _emit(die, sl, rs, t0, rows, templates, events, insts, used, reservation_delays)
+    last = _emit(die, sl, rs, t0, rows, templates, events, insts, used, reservation_delays, leaf_routes=ctx.get("leaf_route_summary"))
     lf, r0 = ar_quarter(rank)
     # last carries the CTL path age, which can hold half-edge link ages (ctl_path edges, e.g. 11.5): the AG legs
     # start on the next whole issue edge (ceil = the conservative later edge), never a fractional calendar row
     ag = [(src, d, peer, list(range(r0, r0 + 320)), lf, None, 0, math.ceil(last) + FOLD_GAP) for src, d, peer in LEGS]
-    _emit(die, sl, ag, t0, rows, templates, events, insts, used, reservation_delays)
+    _emit(die, sl, ag, t0, rows, templates, events, insts, used, reservation_delays, leaf_routes=ctx.get("leaf_route_summary"))
     return dict(status='PARTIAL', unit='RS (3 TP legs, quarter -> owner scratch) + owner fold + AG (3 TP legs) on the '
                 'end-slice endpoint ABI', insts=insts, rows=rows, templates=templates, events=events, bench=BENCH,
                 reservation_delays=reservation_delays,
