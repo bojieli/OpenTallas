@@ -14,6 +14,8 @@ set -uo pipefail
 # orfs_hold_mm.py before any stage; post_cts_setup.tcl repairs TT setup after the balanced tree; the GRT step repairs
 # TT setup (scene tc, vclk OT_VCLK_TT) + FF hold (scene BC, vclk OT_VCLK_FF) in one two-mode session.  Unstaged kits
 # keep the FF-only GRT hold repair.  kit_modes.py checks the session first: GRT fails closed (rc 9), CTS advisory.
+# HBM-SM-KIDS-2 11-09: face_guard / port_bind read 1_synth.v when it exists (the old `ls a b | head -1` sorted
+# its arguments and always took 1_2_yosys.v, where kept nets leave port->net BUFs); 1_2_yosys.v only as fallback.
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
 # (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
 # pre-repair screen since KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4,
@@ -77,7 +79,7 @@ $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" 
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
   SP=; if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then ( python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc ) & SP=\$!; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
-  N=\$(ls /work/run/results/asap7/*/base/1_synth.v /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | head -1); \
+  N=; for f in /work/run/results/asap7/*/base/1_synth.v /work/run/results/asap7/*/base/1_2_yosys.v; do if [ -f \$f ]; then N=\$f; break; fi; done; \
   if [ \$rc = 0 ] && [ -n \"\$N\" ]; then python3 -I /work/face_guard_core.py \$N /work > /work/face_guard.log 2>&1; fg=\$?; echo \"face_guard rc \$fg\"; \
     if [ \$fg != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; \
     python3 -I /work/port_bind_core.py \$N /work > /work/port_bind.log 2>&1; pb=\$?; cat /work/port_bind.log; \
