@@ -104,7 +104,7 @@ def live_kit_inputs(roots, wave_paths, days=KIT_RECORD_DAYS):
         names = []
         for x in KIT_RECORD_NAMES:
             names += ["-name", x, "-o"]
-        q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "11", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
+        q = subprocess.run(["timeout", "600", "nice", "-n", "10", "find", "-P", r, "-maxdepth", "16", "(", "-type", "d", "-name", ".git", "-prune", ")", "-o",
                             "-type", "f", "(", *names[:-1], ")", "-mtime", f"-{int(days)}", "-print"], capture_output=True, text=True)
         if q.returncode not in (0, 1):
             raise SystemExit(f"kit record scan failed under {r}: rc {q.returncode}")
