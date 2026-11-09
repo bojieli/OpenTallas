@@ -5970,3 +5970,15 @@ QCcbf_q01a10 and KVsys_SD_v1a12 actualPNGsVIEWED; review/results at results/geom
 ## 2026-11-09 09:37 PST COORD hourly visual review (2 renders, before and after on one core)
 - HBM ot_hbm_accel_smh_xs attempt 3, GRT congestion (epyc2 hbm-collect-1/kfx6/.../grt/congestion.png): it confirms HBM-COLLECT-1's cause. The four u_leaf.g_xm SRAMs fill the bottom-left 80% x 40% as one 2x2 block with hairline streets. The street between the rows, the bottom edge and the left edge are dark red (HOT), and so is the column street at x≈690. Above the block, logic is spread at 60-90% over the left half, and the top-right is 20-40%. VERDICT: FAIL (structural: macro streets), so attempt 3 was correctly not retried.
 - The same core in form XS-F2, place density (epyc2 hbm-collect-1/kfx6b/.../place/density.png): the macros now have clear streets of about 17 um between the columns and about 26 um between the rows, and a ring to the edges. Under the two lower macros the street bins run 50-75% (yellow), and the upper column street is 60-70%. Logic is in the upper-left quadrant at 40-60%. The top-right is nearly empty (0-20%) because the D pins sit along the N edge from x≈100 to 1500 but the logic pulls toward the macro pin faces. VERDICT: PASS-COND for GRT. If GRT still shows heat in the lower row street, flip the lower macro pair (mirror Y) so its pins face the shared street, or open the row street to 34.56 um. The empty top-right is spare area, which is fine.
+
+## 2026-11-09 10:34 PST COORD hourly GEOM (2 renders)
+- HBM xs F2 GRT congestion (HBM-COLLECT-1; GRT overflow 0): PASS-COND for detailed route.
+  - The left edge channel (x≈50-150, y≈300-1100) is dark red, with a HOT marker at the top-left macro corner.
+  - The column street between the macro columns (x≈720-820) is dark red beside both macro rows.
+  - A red band runs along the bottom edge at x≈450-850. The rest is 20-60%.
+  - Condition: if DRT is over 5k violations at iteration 10 or doesn't converge in those regions, the next form moves the upper-left logic cluster off the left edge and widens the column street by 1 street pitch. Do not retry the same form.
+- HBM vsN1_cf GRT congestion (epyc4 die-hbm-97 vsN1_cf): PASS-COND.
+  - The core field is uniformly 40-55%.
+  - The two macro columns at x≈510-710 carry 60-85% vertical slivers between the stacked macros, with CK/FO markers at the top-left column.
+  - There is no channel at or above 100%.
+  - Condition: watch the inter-macro gaps in DRT. If they fail, add macro halo or spacing in Y on the left column only.
