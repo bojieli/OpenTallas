@@ -1,0 +1,1 @@
+cd /srv/opentallas-scratch3/claude/die-s81-81/tools_f79c && OT_LEC_SUPERSET_VEC=1 exec python3 -I tools/die_plan/eco_loop.py run --kit /srv/opentallas-scratch3/claude/die-s81-81/kits/ot_s81ph_hq_pk2_pk --out /srv/opentallas-scratch3/claude/die-s81-81/pk2_eco1 --mem 64 --cpus 8 --lec

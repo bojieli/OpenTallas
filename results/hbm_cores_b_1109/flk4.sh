@@ -1,0 +1,1 @@
+cd /dev/shm/rm56/z; p=0; for i in 1 2 3 4 5; do timeout 100 python3 -m pytest -q -p no:cacheprovider --basetemp=/dev/shm/rm56/tmp/flk4_$i "tools/fleet/test_ot_run_spill_floor.py::test_drop_only_without_signed_or_keep_at_any_depth" >/dev/null 2>&1 && p=$((p+1)); done; echo spill_drop_only pass=$p/5

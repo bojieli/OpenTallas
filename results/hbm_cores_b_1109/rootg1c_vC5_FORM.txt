@@ -1,0 +1,3 @@
+HBM-CORES-B 2026-11-09 rootg1c_vC5 = vC4 (vC3 central channel 43.6 um) + S-face pin spread.
+Why: vC3 GRT overflow 71 (all H, x 60-80 y 0-30, where the dense S pin group ends); vC4 GRT-0232 at overflow 58 (5 H / 2 V max). COORD 00:32 render note: spread S pins east.
+Change: 1074 S M5 pins, order kept, x = 0.984 + 0.192 i (0.984 .. 207.0); was 0.984 .. 147.24 with wd0/wd1 at 0.096 pitch. W pins, clock pins, macros, RTL unchanged. PIN CYCLES 0.
