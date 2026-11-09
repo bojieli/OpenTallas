@@ -212,8 +212,25 @@ tmp.write_text(json.dumps(r)+'\n');os.replace(tmp,dest)
 PYPHASE
 }
 cmd=$1; shift
+# DIE-S81-85 11-09 (COORD class fix): a proof-policy option that changes the verdict lives in the kit, not the shell.
+# K/lec_options.json (gen_phys write_lec_options schema: exactly {"superset_vec": bool}) sets OT_LEC_SUPERSET_VEC for
+# this kit's LEC when the shell leaves it unset; a shell value that differs from the kit's is refused (exit 11), so the
+# same kit can no longer give EQUIVALENT from one shell and UNPROVEN from another (S81 bksel P pk2_vRP 11-09: the 18:20
+# run had the flag in its shell, the 01:18 flow did not: cp 32497 EQUIVALENT vs 32293 UNPROVEN, 204 o_line points).
+kit_lec_options() {
+  local K=$1 v
+  [ -f "$K/lec_options.json" ] || return 0
+  v=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") \
+    || { echo 'LEC_ASYNC lec_options.json invalid: exactly {"superset_vec": true|false}' >&2; return 11; }
+  if [ -z "${OT_LEC_SUPERSET_VEC+x}" ]; then
+    [ "$v" = 1 ] && export OT_LEC_SUPERSET_VEC=1
+  elif [ "${OT_LEC_SUPERSET_VEC}" != "$v" ] && ! { [ "$v" = 0 ] && [ -z "${OT_LEC_SUPERSET_VEC}" ]; }; then
+    echo "LEC_ASYNC proof policy differs: shell OT_LEC_SUPERSET_VEC=${OT_LEC_SUPERSET_VEC}, kit lec_options.json superset_vec=$v" >&2; return 11
+  fi
+  return 0
+}
 case $cmd in
-identity) identity "$@"; exit 0 ;;
+identity) kit_lec_options "$1" || exit $?; identity "$@"; exit 0 ;;
 reference-completed)
   ORIGINAL=$1; K=$2; HOST=$3
   exec 9> "$K/lec_async.lock"; flock 9
@@ -248,6 +265,7 @@ PYCHECK
   ;;
 start)
   K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=${6:-docker}; GOAL=${7:-route}
+  kit_lec_options "$K" || exit $?
   exec 9> "$K/lec_async.lock"; flock 9
   if [ -f "$K/lec_async.completed_reference.json" ] || [ "$(cat "$K/lec_async.mode" 2>/dev/null)" = completed-reference ]; then
     python3 "$(dirname "$0")/lec_completed_reference.py" validate "$K" || exit $?
@@ -292,6 +310,7 @@ start)
   ;;
 watch)
   K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=$6
+  kit_lec_options "$K" || exit $?
   trap 'touch "$K/lec_async.done"' EXIT
   trap 'exit 143' TERM INT HUP
   MODE=$(cat "$K/lec_async.mode" 2>/dev/null || echo exec)
