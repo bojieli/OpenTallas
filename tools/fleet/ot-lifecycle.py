@@ -28,6 +28,33 @@ import time
 CAT_ORDER = []
 
 
+WAVE_PAT = re.compile(r"/(?:srv|home)/[^\s\"',;()]+|(?<![\w./-])scratch\d*/claude/[^\s\"',;()]+")
+
+
+def wave_config_paths(cfg):
+    """every path a live wave config names (plan, src, bind, asbuilt, work roots, item args, overlays): live whatever its lane state or age.
+    note and _prev keys are history, not config."""
+    out = set()
+
+    def walk(v):
+        if isinstance(v, dict):
+            for k, x in v.items():
+                if "note" not in str(k) and "_prev" not in str(k) and k != "coord_enable":
+                    walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+        elif isinstance(v, str):
+            for p in WAVE_PAT.findall(v):
+                p = p.rstrip(".:,;'\")]}")
+                if p.startswith("scratch"):
+                    p = "/srv/opentallas-" + p
+                if "/claude/" in p and "<" not in p:
+                    out.add(os.path.normpath(p))
+    walk(cfg)
+    return out
+
+
 def load_tool(path):
     spec = importlib.util.spec_from_file_location("otac", path)
     m = importlib.util.module_from_spec(spec)
@@ -40,6 +67,7 @@ TRANS = [(r"^dkv(\d+)", r"DIEKV\1"), (r"^dq(\d+)", r"DIEQC\1"), (r"^dh(\d+)", r"
          (r"^rm(\d+)", r"ROOTMERGE\1"), (r"^ss(\d+)", r"SIGNOFFSPRINT\1"), (r"^kvt(\d+)", r"KVTYPES\1"), (r"^s81t(\d+)", r"S81TYPES\1")]
 WRAPPERS = {"wt", "moved", "relocated-1106", "relocated-1106b"}
 EXCL_PRE = ("tok-", "kv-fn-")
+KW_ROOT_CATS = ("KEEP-kw-protect", "KEEP-wave-config")   # root-level holds that keep latest attempts and non-attempt content, not older attempts
 RENAMED = re.compile(r"[.](old|bak|orig|moved|aside)([-._]|$)")   # COORD 19:2x: holds are keyed by path, so a renamed tree is skipped whole
 
 
@@ -143,6 +171,19 @@ class Plan:
         if time.time() - self.life["created"] > 6 * 3600:
             raise SystemExit("lifesnap older than 6 h")
         self.own = Owners(self.life)
+        wp = self.life.get("wave_paths")
+        if not wp:
+            raise SystemExit("lifesnap has no wave_paths; refusing")     # a guard matching nothing must refuse
+        rows = []
+        for p in wp:
+            rows.append((p, "named by the live wave config"))
+            q = os.path.realpath(p)
+            if q != p:
+                rows.append((q, "named by the live wave config (realpath)"))
+            d = os.path.dirname(p)
+            if "." in os.path.basename(p) and d.count("/") >= 6:     # a named file holds its directory: readers open siblings
+                rows.append((d, "directory of a file named by the live wave config"))
+        self.wave = m.PathSet(rows, canon=J.paths.canon)
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
             raise SystemExit("lifesnap has no protected_full rows")
@@ -296,6 +337,10 @@ class Plan:
                 h = ps.hit(f)
                 if h:
                     return ("KEEP-" + name, h, h.startswith("holds "))
+        for f in J.paths.forms(d):
+            wh = self.wave.hit(f)
+            if wh:
+                return ("KEEP-wave-config", wh, wh.startswith("holds "))
         oh = self.holds.hit(d)
         if oh:
             return ("KEEP-ot-hold", oh, oh.startswith("holds "))
@@ -323,7 +368,7 @@ class Plan:
 
     def kw_release(self, h, p):
         """kit_wave.txt root lines keep the latest attempt and resume checkpoints only (COORD 22:3x)"""
-        return None if h and h[0] == "KEEP-kw-protect" and self.kw_old(p) else h
+        return None if h and h[0] in KW_ROOT_CATS and self.kw_old(p) else h
 
     def localkeep_hit(self, d):
         J = self.J
@@ -482,7 +527,7 @@ class Plan:
             self.record(d, "KEEP-excluded", "KEEP", "tok/kv-fn/tool or renamed tree below lane level", self.walk_stats(d))
             return
         h = self.kw_release(self.hold(d, bool(live)), d)
-        if h and not h[2] and h[0] == "KEEP-kw-protect" and d in self.attempt_anc:      # a root line above attempts: decide per attempt
+        if h and not h[2] and h[0] in KW_ROOT_CATS and d in self.attempt_anc:      # a root line above attempts: decide per attempt
             h = (h[0], h[1], True)
         if h and not h[2]:
             st = self.walk_stats(d)
@@ -851,6 +896,17 @@ class Plan:
                 got["protected"] += 1
                 if got["protected"] >= 25:
                     break
+        wave_seen = 0
+        for p in self.life["wave_paths"]:
+            if os.path.exists(p):
+                h = self.hold(p, False)
+                if not (h and h[0].startswith("KEEP-")):
+                    return f"control: live wave path {p} not held ({h})"
+                wave_seen += 1
+                if wave_seen >= 25:
+                    break
+        if not wave_seen:
+            return "control: no path named by the live wave config exists on this host"
         if got["counted"] == 0 and got["protected"] == 0:
             return "control: no existing counted or protected path found on this host"
         print(f"controls: positive PASS (counted {got['counted']} protected {got['protected']})", flush=True)
@@ -1027,6 +1083,10 @@ class Apply:
             return "ALERT", ih
         if path in P.signed_below or (P.signed_inside(path) if os.path.isdir(path) else False):
             return "ALERT", "signed record inside"
+        for f in J.paths.forms(path):
+            wh = P.wave.hit(f)
+            if wh and not P.kw_old(path):
+                return "SKIP", "live wave config: " + wh
         h = P.kw_release(P.localkeep_hit(path), path)
         if h:
             return "SKIP", h[1]
@@ -1441,6 +1501,9 @@ def build_lifesnap(out):
         elif parked.get(l):
             live.discard(l)
     live.discard("COORD")
+    wave = sorted(wave_config_paths(json.load(open(os.path.expanduser("~/coord/autopilot/kit_wave.json")))))
+    if len(wave) < 20:
+        raise ValueError(f"live wave config names only {len(wave)} paths")
     paths48, words48 = {}, {}
     for p in posts:
         if now - p["t"] > 24 * 3600 or not p["auth"]:
@@ -1453,7 +1516,7 @@ def build_lifesnap(out):
             words48.setdefault(w.rstrip("."), p["t"])
     json.dump({"created": now, "created_h": time.strftime("%F %T %Z"), "live": sorted(live),
                "lane_last": {k: int(v) for k, v in lane_last.items()},
-               "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected()}, open(out, "w"))
+               "paths48": sorted(paths48), "words48": sorted(words48), "protected_full": strict_protected(), "wave_paths": wave}, open(out, "w"))
     print("live lanes", len(live), sorted(live)[:80])
     print("posts", len(posts), "paths48", len(paths48), "words48", len(words48), "agents", len(agents_all))
 

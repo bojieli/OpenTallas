@@ -62,6 +62,14 @@ def run_fixture(W):
     kit(f"{ROOT}/dead-rr/dead-word-unit")            # a bare name mention of a dead lane's kit holds nothing
     kit(f"{ROOT}/dead-tt/sub/kit15")
     write(f"{ROOT}/dead-tt/tools/flow.py", 4096)     # tool tree below lane level: stays, as the apply recheck demands
+    # live wave config names paths in a dead lane, older than every hold window
+    write(f"{ROOT}/dead-wv/wave/src_x/rtl.v", 4096)
+    write(f"{ROOT}/dead-wv/wave/plan/p.json", 4096)
+    write(f"{ROOT}/dead-wv/wave/plan/sibling.json", 4096)
+    write(f"{ROOT}/dead-wv/wave/other/x.bin", 4096)
+    kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_1/gen/it3")
+    kit(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3/attempt_3/gen/it3")
+    write(f"{ROOT}/dead-wv/wr/kit-wave/s81/p/bind_a", 4096)
     kit(f"{ROOT}/dead-pp/unit1")                     # archived cited unit: only cited files and record names stay
     with open(f"{ROOT}/dead-pp/unit1/ARCHIVED.json", "w") as fh:
         json.dump({"archive": "/archive/x", "verify": "sha256 ok"}, fh)
@@ -81,11 +89,12 @@ def run_fixture(W):
             fh.write(f"/srv/none/claude/lane/x{i}\tpad\n")
     json.dump({"created": time.time(), "created_h": "now"}, open(f"{snap}/meta.json", "w"))
     json.dump({"paths": [], "words": []}, open(f"{snap}/queue.json", "w"))
-    json.dump({"attempts": {}, "latest": {f"fix:{ROOT}/dead-jj/kit-wave/s81/p/items/it2": 3}, "keep": [], "current_di": {}, "created": time.time(), "source": "fix"},
+    json.dump({"attempts": {}, "latest": {f"fix:{ROOT}/dead-jj/kit-wave/s81/p/items/it2": 3, f"fix:{ROOT}/dead-wv/wr/kit-wave/s81/p/items/it3": 3}, "keep": [], "current_di": {}, "created": time.time(), "source": "fix"},
               open(f"{snap}/kitwave.json", "w"))
     life = {"created": time.time(), "live": ["DIE-S81-81"], "lane_last": {},
             "paths48": [f"{ROOT}/dead-dd/kit4"], "words48": ["dead-word-unit"],
-            "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]]}
+            "protected_full": [["fix", f"{ROOT}/dead-cc/kit3", "fixture"]],
+            "wave_paths": [f"{ROOT}/dead-wv/wave/src_x", f"{ROOT}/dead-wv/wave/plan/p.json", f"{ROOT}/dead-wv/wr"]}
     json.dump(life, open(f"{W}/life.json", "w"))
     out = f"{W}/out"
     r = subprocess.run([sys.executable, "-I", LC, "plan", "--tool", TOOL, "--host", "fix", "--lifesnap", f"{W}/life.json", "--out", out,
@@ -106,6 +115,12 @@ def run_fixture(W):
         "dead-ll/kit10": ("KEEP-referenced", "KEEP"),      # positive control of the reference scan
         "dead-rr/dead-word-unit": ("DEL-L4-KIT", "DELETE"),
         "dead-tt/tools": ("KEEP-excluded", "KEEP"),
+        "dead-wv/wave/src_x": ("KEEP-wave-config", "KEEP"),                 # dead lane, old: the config name holds it
+        "dead-wv/wave/plan": ("KEEP-wave-config", "KEEP"),                  # a named file holds its directory
+        "dead-wv/wave/other": ("DEL-L4-LOOSE", "DELETE"),                   # not named: the lane state decides
+        "dead-wv/wr/kit-wave/s81/p/items/it3/attempt_1": ("DEL-L2-ATTEMPT", "DELETE"),   # older attempt under a work root goes
+        "dead-wv/wr/kit-wave/s81/p/items/it3/attempt_3": ("KEEP-wave-config", "KEEP"),   # latest stays
+        "dead-wv/wr/kit-wave/s81/p/bind_a": ("KEEP-wave-config", "KEEP"),   # non-attempt content of a work root stays
         "dead-aa/kit1": ("DEL-L4-KIT", "DELETE"),          # expired .keep (72 h, dead lane) released
         "dead-bb": ("KEEP-dotkeep", "KEEP"),               # young .keep at the lane root holds its tree
         "dead-cc/kit3": ("KEEP-protected", "KEEP"),
@@ -212,3 +227,21 @@ def test_kw_release(tmp_path):
     assert p.kw_release(h, "/x/claude/w/src_a/f") == h                   # not an attempt: line still holds
     other = ("KEEP-counted", "line", False)
     assert p.kw_release(other, f"{base}/attempt_1") == other             # counted is never released
+
+
+def test_wave_config_paths():
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("lc", LC)
+    lc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(lc)
+    cfg = {"work_root": "/srv/opentallas-scratch2/claude/kit-wave", "note": "/srv/opentallas-scratch2/claude/gone/a",
+           "dies": {"q": {"plan": "/srv/opentallas-scratch2/claude/qct11/wave/plan/p.json", "src": "/srv/opentallas-scratch2/claude/qct11/wave/src_lfq",
+                          "kit_rtl": {"bind_out": "/srv/opentallas-scratch2/claude/qct11/wave/bind_v4nS"},
+                          "gen_args": ["--clock-landing", "/srv/opentallas-scratch2/claude/qct11/wave/src_lfq/s.json"],
+                          "src_prev_kw1": "/srv/opentallas-scratch2/claude/old/src", "item": "scratch3/claude/kw35/t45ov/bind"}}}
+    got = lc.wave_config_paths(cfg)
+    for p in ("/srv/opentallas-scratch2/claude/kit-wave", "/srv/opentallas-scratch2/claude/qct11/wave/plan/p.json",
+              "/srv/opentallas-scratch2/claude/qct11/wave/src_lfq", "/srv/opentallas-scratch2/claude/qct11/wave/bind_v4nS",
+              "/srv/opentallas-scratch3/claude/kw35/t45ov/bind"):
+        assert p in got, p
+    assert "/srv/opentallas-scratch2/claude/gone/a" not in got and "/srv/opentallas-scratch2/claude/old/src" not in got
