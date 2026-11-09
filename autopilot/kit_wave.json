@@ -2809,7 +2809,9 @@
         "dsdv_slice_iq_C__t1@13",
         "iqf__t1@10",
         "dsdv_slice_c1x_C__t7@15",
-        "col_h9_r0_p1__t1@14"
+        "col_h9_r0_p1__t1@14",
+        "ot_s81sl_leaf__t3@1",
+        "serdes__t12@7"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -2879,7 +2881,6 @@
         "ot_s81sl_leaf__t2": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t23": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t24__cl2456157b": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
-        "ot_s81sl_leaf__t3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t30": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t34": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
         "ot_s81sl_leaf__t35": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim.",
@@ -3794,7 +3795,9 @@
         "dsdv_slice_iq_C__t1@13": "KW-FIX-37 19:1x INFRA no design change: no host qualifies at kit_rtl (epyc4 disk 49 < 60), COORD 18:49 infra rows retry",
         "iqf__t1@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -95.13 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
         "dsdv_slice_c1x_C__t7@15": "KW-FIX-38 2026-11-08 20:11 PST: REDESIGN: stale bound leaf source class J3 (S81-TYPES-10 19:36, COORD 19:4x): a15 kit_rtl.f took src_28fc7 xs4/rstopt_xo; fresh kit on leaf-follow src",
-        "col_h9_r0_p1__t1@14": "KW-FIX-38 2026-11-08 20:11 PST: movecheck 88c4da89c09d (macro-move check judged placed edges, gen failed on a plan abutment), no P&R ran; S81-TYPES-10 19:11"
+        "col_h9_r0_p1__t1@14": "KW-FIX-38 2026-11-08 20:11 PST: movecheck 88c4da89c09d (macro-move check judged placed edges, gen failed on a plan abutment), no P&R ran; S81-TYPES-10 19:11",
+        "ot_s81sl_leaf__t3@1": "KW-FIX-38 2026-11-08 20:20 PST: REDESIGN: macros moved, not a retry. Escape-open form, S81-LEAF-BATCH-1108 class (S81-TYPES-10 20:17, model worst 3.7 -> 1.91, residual ve.u_s|vsw; a GRT fail needs an rxsf/rxsb plan move, not a retry)",
+        "serdes__t12@7": "KW-FIX-38 2026-11-08 20:20 PST: REDESIGN: a7 LEC ran at 4 edges with no contract in the kit (57 differ, no-reset codec flops, class J1); current src stages the 64-edge die contract for s81p_serdes__t12 (kit_reset_contract.stage dry 64). Fresh kit (S81-TYPES-10 20:17)"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -4137,7 +4140,7 @@
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t3": {
-          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0",
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_a:699.84:362.88:R180,u_lf.u_vn.u_b:717.12:172.8:R180,u_lf.u_vp.g_ln[0].u_l:1114.56:310.656:MX,u_lf.u_vp.g_ln[2].u_l:1105.92:440.256:MX,u_lf.u_vq:17.28:682.56:R180,u_lf.u_vs:164.16:466.56:R180,u_lf.u_vsw:380.16:432:MX",
           "OT_NATIVE_RESET_SCOPE": "selected"
         },
         "ot_s81sl_leaf__t25__cl431c660f": {
@@ -5833,6 +5836,19 @@
         "epyc5",
         "epyc6",
         "intel2"
+      ],
+      "item_env_prev_kw38t3": {
+        "ot_s81sl_leaf__t3": {
+          "OT_MACRO_MOVES": "u_lf.u_vn.u_b:717.12:172.8,u_lf.u_vs:198.72:466.56,u_lf.u_vn.u_a:699.84:362.88,u_lf.u_vq:17.28:457.92,u_lf.u_vsw:380.16:432.0",
+          "OT_NATIVE_RESET_SCOPE": "selected"
+        }
+      },
+      "hold_items_prev_kw38t3": {
+        "ot_s81sl_leaf__t3": "CODEX12:09 first-pilot hold: 55 FT leaf batch, t12 S/W landing packing .8783 peak/13bins>.7; macrochannels open. Future unchanged attempts held pending matched spacing form/image. Existing queued/admitted work untouched; no channel-failure claim."
+      },
+      "retry_prev_kw38t3_added": [
+        "ot_s81sl_leaf__t3@1",
+        "serdes__t12@7"
       ]
     },
     "s81_head": {
@@ -11879,7 +11895,9 @@
         "--slew-margin",
         "35",
         "--cap-margin",
-        "35"
+        "35",
+        "--native-cell-cap",
+        "517000"
       ],
       "gen_env": {
         "OT_HOLD_REPAIR_SCOPE": "reg2reg"
@@ -12126,7 +12144,14 @@
         "epyc5",
         "epyc6",
         "intel2"
-      ]
+      ],
+      "gen_args_prev_kw38cap": [
+        "--slew-margin",
+        "35",
+        "--cap-margin",
+        "35"
+      ],
+      "note_kw38cap": "KW-FIX-38 2026-11-08 20:20 PST: DIE-HBM-93 20:08: --native-cell-cap 517000 as on KV (11-04 rule), so 400-517k q_b rows are not stopped at floorplan; revert gen_args_prev_kw38cap"
     }
   },
   "place_prefer": [
