@@ -71,3 +71,12 @@ def test_off_types_keep_orfs_default():
     assert gen_phys._dpl_args(b, "coll_s", landing=True, outline=[1, 1]) != []
     assert "dpl_legalizer_off_types" not in schema.DEFAULT_BUDGETS
     assert "dpl_legalizer_off_types" in (HERE / "die_plan.schema.json").read_text()
+
+
+def test_ft_reserved_type_gets_diamond():
+    # DIE-HBM-97 11-09: write_type_kit passes landing=... or bool(ft_reservation)
+    src = (Path(__file__).with_name("gen_phys.py")).read_text()
+    assert 'or bool(ft_reservation), outline=t["outline_um"])' in src
+    assert gen_phys._dpl_args({}, "q_b100__physical_v1", landing=True, outline=(708.48, 1555.2)) == [
+        "export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer -max_displacement {709 1556}"]
+    assert gen_phys._dpl_args({"dpl_legalizer_off_types": ["q_b100"]}, "q_b100__physical_v1", landing=True) == []

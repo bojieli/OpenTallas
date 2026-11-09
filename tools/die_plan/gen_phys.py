@@ -117,6 +117,11 @@ def _dpl_args(budgets, tn=None, diamond=False, landing=False, outline=None):
     within 27 um (largest gap 0.918 um) -> DPL-0034/0036 (slw_st_b_v2 13, sle_hc1 61 cells), and the negotiation
     legalizer stalls on the same blocks (DPL-0033).  Diamond places nearest-first, so a cell that finds a site inside the
     default window lands on the same site; the wider window only reaches past a full block.
+    DIE-HBM-97 11-09 (COORD NEWFAIL q_b100__physical_v1 197e741898c1, 3_5 'DPL-0312 257 edge spacing + 15 padding
+    violations', DPL-0201, then detail_place.tcl:46 'bad optional access'; the same class on q_b002, q_b002pv1, q_b003pv1,
+    q_b011pv1, q_su00pv1, q_su10, q_su20, each fixed one by one with --dpl-diamond / dpl_legalizer_types): a kit whose
+    type carries a partition FT reservation (FT station flops and repair buffers between macro walls and reserved
+    tracks) counts like a landing kit (landing=True), so every fresh gen of such a type gets the diamond legalizer.
     budgets.dpl_legalizer_off_types keeps the ORFS default for named types."""
     v=budgets.get("dpl_legalizer")
     if v is None and tn is not None:
@@ -4315,8 +4320,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
-           *_dpl_args(P.budgets, tn, dpl_diamond, landing=bool(t.get("clock", {}).get("landing_contract")),
-                      outline=t["outline_um"]),
+           # DIE-HBM-97 11-09 (DPL class default-on for FT-reserved types too): see _dpl_args
+           *_dpl_args(P.budgets, tn, dpl_diamond, landing=bool(t.get("clock", {}).get("landing_contract"))
+                      or bool(ft_reservation), outline=t["outline_um"]),
            # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
