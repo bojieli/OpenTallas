@@ -171,14 +171,16 @@
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -196,7 +198,8 @@
  "ot_hbm_accel_smh_pt_e": {
   "top": "ot_hbm_accel_smh_pt_e",
   "files": [
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -215,6 +218,7 @@
   "top": "ot_hbm_accel_smh_pt_w",
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_hdly.sv"
   ],
   "defines": [
@@ -234,32 +238,9 @@
   "top": "ot_hbm_accel_smh_tcl_gu",
   "files": [
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_accel_smh_gu.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv"
-  ],
-  "defines": [
-   "OT_SMH_FC_HIER",
-   "OT_SMH_HIER",
-   "OT_SMH_XLK",
-   "OT_FP_DATA_NORST",
-   "OT_SMH_DRST0",
-   "OT_SMH_RSTRELAY",
-   "OT_SM_QSPLIT"
-  ],
-  "params": {},
-  "macros": [],
-  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09"
- },
- "ot_hbm_accel_smh_tct": {
-  "top": "ot_hbm_accel_smh_tct",
-  "files": [
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
@@ -279,12 +260,10 @@
   "macros": [],
   "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09"
  },
- "ot_hbm_accel_smh_xs": {
-  "top": "ot_hbm_accel_smh_xs",
+ "ot_hbm_accel_smh_tct": {
+  "top": "ot_hbm_accel_smh_tct",
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_hdly.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tc_col.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
@@ -292,12 +271,42 @@
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [
+   "OT_SMH_FC_HIER",
+   "OT_SMH_HIER",
+   "OT_SMH_XLK",
+   "OT_FP_DATA_NORST",
+   "OT_SMH_DRST0",
+   "OT_SMH_RSTRELAY",
+   "OT_SM_QSPLIT"
+  ],
+  "params": {},
+  "macros": [],
+  "source": "SM-ASBUILT-1108 as-built leaf (asbuilt vK file set of the q_sm bound kit, r18h5 bundle + vK YC1-free gu + be parameter-set wrappers); HBM-SM-KIDS 11-09"
+ },
+ "ot_hbm_accel_smh_xs": {
+  "top": "ot_hbm_accel_smh_xs",
+  "files": [
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_hdly.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tc_col.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fpu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm.sv",
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_bd_col.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm2.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm2.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -319,18 +328,18 @@
   "files": [
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd13.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -350,18 +359,18 @@
   "files": [
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd16.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -381,18 +390,18 @@
   "files": [
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd17.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -412,18 +421,18 @@
   "files": [
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be__cd9.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -444,18 +453,18 @@
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be_seed__cd20.sv",
    "rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -476,18 +485,18 @@
    "physical/die_plan/hbm_arch_cores/sm/asbuilt_1108/ot_hbm_sm_attn_be_seed__cd21.sv",
    "rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_stack.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_tree.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -527,8 +536,8 @@
   "top": "ot_hbm_sm_i8w_front",
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_i8w_front.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -568,11 +577,11 @@
   "top": "ot_hbm_sm_pv_merge",
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv",
-   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/gpu/ot_gpu_fadd.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -599,9 +608,10 @@
   "files": [
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
-   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
