@@ -1,0 +1,9 @@
+{
+ "tool": "tools/die_plan/check.py PLAN --completeness --plan-geom report (G0/G0C), diffed vs base 65648816 (events/g0c_diff_1109.py)",
+ "base": "FAIL 2820 errors (pre-existing)",
+ "hi_only (7cf7e318)": "FAIL 3145: +325 new ERROR, all missing provider pins_file/LEF (planned providers, no kit yet); svc_hi ft-station geometry clean (boxes in old hcore columns)",
+ "G_record (2a032700)": "FAIL 4109: +1285 missing provider pins/LEF; 5 svc_lo ft-slot station-site clashes (t1 ft0/ft1, t7 ft0/ft4, w__t1 ft0); 54 pre-existing base hop/reach/clock_landing ERRORs longer by up to +77.76 (626->704 um), no new failing lane; 1 cut-sample line moved (10500 s_5S_L0 0.64; worst segment 1.07 -> 0.83)",
+ "N_fallback (3aba6375)": "FAIL 4110: +1285 missing provider pins/LEF; same 5 svc_lo ft-slot clashes; no die change",
+ "type_checks": "per type: 8.64 lattice, 8.64 gaps (2x4.32 halo) vs every box/core/macro, inside outline, clock bay free, band x <= 1401.84, fill <= 0.65, cells <= 150k: 0 fails on all 14 types (event types[*].validation_fails)",
+ "die_channel": "14 svcband channels 319.68 -> 397.44 (<= 405 reach; growth 77.76 <= +85 bound); die 25358.4 -> 25436.16 um; 0 partitions straddle y 4104; 0 W/E ports across the cut"
+}
