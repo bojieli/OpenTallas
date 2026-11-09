@@ -1147,3 +1147,109 @@ def test_hold_repair_target_default_is_5():
     """COORD 11-09 stopgap: the repair aims 5 ps above 0; the gate (FF hold slack >= 0) does not use this number."""
     assert E.HOLD_MARGIN_PS == 5
 
+
+
+# KW-FIX-44 11-09 (HBM-COLLECT-1/N4-C 10:54): a two-mode kit whose orfs_hold_mm.tcl predates the hold-repair scope.
+STALE_MM_TCL = "# kit two-mode hook, before HOLD-REPAIR-SCOPE\nproc ot_hold_stage {} { return 4_cts.sdc }\n"
+R2R_MM_TCL = "# reg2reg-era hook\nproc ot_hold_repair_scope {body} { uplevel 1 $body }\n"
+
+
+def _mm_kit(tmp_path, tcl, scope="nonport"):
+    k = tmp_path / "kit"
+    k.mkdir(parents=True)
+    (k / "config.mk").write_text("export DESIGN_NAME = x\noverride export OT_HOLD_MM = 1\n"
+                                 + (f"export OT_HOLD_REPAIR_SCOPE = {scope}\n" if scope else ""))
+    (k / "orfs_hold_mm.tcl").write_text(tcl)
+    (k / "orfs_hold_mm.py").write_text("# kit patcher\n")
+    return k
+
+
+def test_hold_mm_supports_reads_the_declared_modes(tmp_path):
+    t = tmp_path / "o.tcl"
+    assert not E.hold_mm_supports(t, "nonport")                                   # missing file
+    t.write_text(STALE_MM_TCL)
+    assert not E.hold_mm_supports(t, "nonport") and not E.hold_mm_supports(t, "reg2reg")
+    t.write_text(R2R_MM_TCL)
+    assert E.hold_mm_supports(t, "reg2reg") and not E.hold_mm_supports(t, "nonport")
+    assert E.hold_mm_supports(E.HERE.parent / "orfs_hold_mm.tcl", "nonport")    # the current tools copy
+    assert E.hold_mm_supports(E.HERE.parent / "orfs_hold_mm.tcl", "reg2reg")
+
+
+def test_kit_hold_scope_env_then_config(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k = _mm_kit(tmp_path, STALE_MM_TCL, scope="nonport")
+    assert E.kit_hold_scope(k) == "nonport" and E.hold_mm_scope_needed(k) == "nonport"
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "reg2reg")
+    assert E.kit_hold_scope(k) == "reg2reg"
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE")
+    (k / "config.mk").write_text("export OT_HOLD_REPAIR_SCOPE = nonport\n")      # single-mode kit: no orfs_hold_mm
+    assert E.hold_mm_scope_needed(k) == ""
+
+
+def test_stage_so_stages_current_hold_mm_over_a_stale_kit_copy(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k = _mm_kit(tmp_path, STALE_MM_TCL)
+    so = E.stage_so(k, tmp_path / "eco")
+    for n in E.HOLD_MM_FILES:   # the pair, both from the tools: a new .tcl never runs under the kit's old patcher
+        assert (so / "tools" / n).read_bytes() == (E.HERE.parent / n).read_bytes()
+
+
+def test_stage_so_keeps_a_kit_copy_that_supports_the_scope_or_has_no_scope(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    good = STALE_MM_TCL + "set ::ot_hold_scope_supported_modes {reg2reg nonport}\n"
+    k = _mm_kit(tmp_path / "a", good)
+    assert (E.stage_so(k, tmp_path / "a" / "eco") / "tools/orfs_hold_mm.tcl").read_text() == good
+    k = _mm_kit(tmp_path / "b", STALE_MM_TCL, scope="")                          # no scope asked: unchanged
+    assert (E.stage_so(k, tmp_path / "b" / "eco") / "tools/orfs_hold_mm.tcl").read_text() == STALE_MM_TCL
+
+
+def test_stage_so_refuses_when_no_copy_supports_the_scope(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    tools = _tools_copy(tmp_path)
+    (tools.parent / "orfs_hold_mm.tcl").write_text(STALE_MM_TCL)
+    (tools.parent / "orfs_hold_mm.py").write_text("# old patcher\n")
+    k = _mm_kit(tmp_path / "k", STALE_MM_TCL)
+    with pytest.raises(ValueError, match="OT_HOLD_REPAIR_SCOPE=nonport"):
+        E.stage_so(k, tmp_path / "eco", tools)
+
+
+class StaleMM(Fake):
+    """prd_mk.sh as on n4_local_vA: the pass dir carries the kit's pre-scope orfs_hold_mm.{py,tcl}"""
+
+    def __call__(self, cmd, **kw):
+        rc = super().__call__(cmd, **kw)
+        if cmd[0] == "bash" and cmd[1].endswith("prd_mk.sh"):
+            d = Path(cmd[3])
+            (d / "orfs_hold_mm.tcl").write_text(STALE_MM_TCL)
+            (d / "orfs_hold_mm.py").write_text("# kit patcher\n")
+            (d / "config.mk").write_text("override export OT_HOLD_MM = 1\nexport OT_HOLD_REPAIR_SCOPE = nonport\n")
+        if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh"):
+            self.mm_at_run = Path(cmd[2], "orfs_hold_mm.tcl").read_text()
+        return rc
+
+
+def test_run_loop_refreshes_the_pass_dir_hold_mm_before_prd_run(tmp_path, monkeypatch):
+    """N4-C: both n4_local_vA ECOs routed 30 min, then prd_hook.tcl refused the unscoped repair.  The pass dir now gets the
+    current pair after prd_mk.sh, before the physical run, and the record says so."""
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k = _mm_kit(tmp_path, STALE_MM_TCL)
+    (k / "signoff").mkdir()
+    (k / "signoff.py").write_text("# kit sign-off\n")
+    fake = StaleMM([rec(5, 5)])
+    r = E.run_loop(k, base_rec(k, rec(-5, -2)), tmp_path / "eco", run=fake, strict_one_pass=True, keep=True)
+    assert fake.mm_at_run == (E.HERE.parent / "orfs_hold_mm.tcl").read_text()
+    it = r["iterations"][0]
+    assert sorted(sum(it["hold_mm_refreshed"].values(), [])) == sorted(E.HOLD_MM_FILES)
+    assert r["verdict"] == "PASS"
+
+
+def test_run_loop_errors_before_any_route_when_no_copy_supports_the_scope(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    tools = _tools_copy(tmp_path / "t")
+    (tools.parent / "orfs_hold_mm.tcl").write_text(STALE_MM_TCL)
+    k = _mm_kit(tmp_path, STALE_MM_TCL)
+    (k / "signoff").mkdir()
+    fake = Fake([rec(5, 5)])
+    r = E.run_loop(k, base_rec(k, rec(-5, -2)), tmp_path / "eco", run=fake, tools=tools)
+    assert r["verdict"] == "ERROR" and "no iteration used" in r["reason"] and not r["iterations"]
+    assert not [c for c, _ in fake.calls if c[0] == "bash"]
