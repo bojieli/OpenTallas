@@ -146,3 +146,36 @@ def test_strip_rows_only_in_cons_kits():
     # DIE-QC-97 11-09: plus the opt-in plan knob budgets.cland_strip_rows(_types) (absent = no export)
     assert src.count('export OT_CLAND_STRIP_ROWS') == 2
     assert 'if _cland_strip_rows(P.budgets, tn) else []' in src
+
+
+def test_over_macro_layers_stay_signal_layers(tmp_path):
+    """CONS-OVERMACRO-1 11-09: a hard macro with OBS up to M5 keeps M6+M7 as signal layers (no M7 pin-access cut);
+    a low OBS (M3) leaves the requested ceiling and the pin-access cut as before."""
+    cfg = ["export MAX_ROUTING_LAYER = M7", "export PLACE_DENSITY = 0.5",
+           "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl", "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"]
+    io = "place_pin -pin_name {a[0]} -layer M7 -location {0 1}\n"
+    (tmp_path / "macros").mkdir()
+    lef = (tmp_path / "macros" / "lane.lef")
+    lef.write_text("MACRO lane\n PIN d\n  USE SIGNAL ;\n  PORT\n   LAYER M5 ;\n   RECT 0 0 1 1 ;\n  END\n END d\n"
+                   " OBS\n  LAYER M1 ;\n   RECT 0 0 9 9 ;\n  LAYER M5 ;\n   RECT 0 0 9 9 ;\n END\nEND lane\n")
+    assert gen_phys._lef_obs_top(lef) == "M5"
+    c = list(cfg)
+    rec = gen_phys.cons_kit_apply(c, tmp_path, gen_phys.cons_kit_settings({"OT_CONS_KIT": "1"}), io, "M7",
+                                  ["/work/macros/lane.lef"])
+    assert "export MAX_ROUTING_LAYER = M7" in c and "export OT_CONS_SIGNAL_MAX = M7" in c
+    assert rec["signal_max_layer"]["pin_access_layers"] == [] and rec["signal_max_layer"]["over_macro_floor"] == "M7"
+    assert "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl" in c and not any("OT_CONS_PIN_LAYER" in x for x in c)
+    assert "export PLACE_DENSITY = 0.35" in c                     # the density cap and strip rows still apply
+    # OBS only to M3: M5 pair is under the requested M6, so the M7 pin-access cut stays
+    lef.write_text("MACRO lane\n OBS\n  LAYER M3 ;\n   RECT 0 0 9 9 ;\n END\nEND lane\n")
+    c = list(cfg)
+    rec = gen_phys.cons_kit_apply(c, tmp_path, gen_phys.cons_kit_settings({"OT_CONS_KIT": "1"}), io, "M7",
+                                  ["/work/macros/lane.lef"])
+    assert "export OT_CONS_SIGNAL_MAX = M6" in c and "export OT_CONS_PIN_LAYERS = M7" in c
+    # OBS to M6: the pair would be M8, capped at the kit top M7
+    lef.write_text("MACRO lane\n OBS\n  LAYER M6 ;\n   RECT 0 0 9 9 ;\n END\nEND lane\n")
+    c = list(cfg)
+    rec = gen_phys.cons_kit_apply(c, tmp_path, gen_phys.cons_kit_settings({"OT_CONS_KIT": "1"}), io, "M7",
+                                  ["/work/macros/lane.lef"])
+    assert "export MAX_ROUTING_LAYER = M7" in c and "export OT_CONS_SIGNAL_MAX = M7" in c
+    assert rec["signal_max_layer"]["pin_access_layers"] == []
