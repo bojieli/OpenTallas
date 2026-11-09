@@ -1,0 +1,215 @@
+{
+ "schema": "opentallas.head_switch_rtl_preservation.v1",
+ "generator": "tools/die_plan/gen.py rtl PLAN --clock-landing SIDECAR --rtl-root . (main 6f55385d34e)",
+ "switch_rtl": {
+  "ot_dp_cells.sv": "cb5435286af51c63f5f47903fac914f6da23a52d0514c7c93f51f87ac13784b9",
+  "ot_s81hd_ctl.sv": "1e17e9e7de9593c1afff4a0c9eb5c01ad0735e16415de1552da368a9d6a273bd",
+  "ot_s81hd_ctl_estrip.sv": "c588d44dd798bff024bdd5b6d752e04e26dca426a2b1f6a8ec142d719d73b762",
+  "ot_s81hd_ctl_nstrip.sv": "7155727360fd3c3a78a576def19a5bb11d1e8cbcee204eba45ead4dd4339e700",
+  "ot_s81hd_host_e_ep.sv": "0c320ccf29dcddcf41114f6519b3644c57985d9b6a3e6573dd3e25aea70b243d",
+  "ot_s81hd_host_nstrip.sv": "d180c394f890c95addab483529111bfef4e02a62ac63583a1e0df0766c54fab5",
+  "ot_s81hd_host_w_ep.sv": "b8969fa765ac3cde8d3cdd513882b8b7b1eae94d426308b38665c41cac669fe7",
+  "ot_s81hd_lep0N.sv": "f4bbbb63394c08de15304b3b2b5383ae2a70f281122ed6652b7b216befe603d3",
+  "ot_s81hd_mesh_ep.sv": "cdaf15cabfe3f3790457f8c746cffdfabe27a735dd64a1cd9804b5854ff29863",
+  "ot_s81hd_mesh_estrip.sv": "146aae800430826d68ccf4b4e9f7354327fce4617fa063187db10c95b6648c42",
+  "ot_s81hd_serdes.sv": "1a8114e347d0671fe0f01e65d4c931b550dd00fc46aacf04e4295ad0c9e17683",
+  "ot_s81hd_spn_end_strip.sv": "3d374cf50fc6ab45d8dd5ee0bde9baf785f8fd4858577d637f71bbd1929c7824",
+  "ot_s81hd_spn_eshim_rx.sv": "96a9245b47f1da0e4289eee7df9d553cf00504f8c5bae4b33019955deac781eb",
+  "ot_s81hd_spn_eshim_tx.sv": "35a1dd2737f74dae37475eca8cf490ed06c13e44c4c42680c0b8dbfbd61721fa",
+  "ot_s81hd_spn_strip.sv": "8b3f958999e9a138465e9e9e9afb1417d221ab4d26d4d6289ed060f24d5025f6",
+  "ot_s81hd_spn_wshim_rx.sv": "c6651274ba26fbe29a54640f821eac788f0dbfab63e28edf7893f2b305b28411",
+  "ot_s81hd_spn_wshim_tx.sv": "5945eb8db1198e8a5dcbbac9fb6d043081d0a6b9f1c62bd40edd2387a9defb7a",
+  "ot_s81hd_st_k5.sv": "f6de484c3208425fbba4d985dfd0061c319e320ac5e135c9d56fa60459082751",
+  "ot_s81hd_st_m.sv": "e1cb790f76cac59e1ae002387251e439ae8d13e021e2ad1762c7820e79726c47",
+  "ot_s81hd_st_n3_transit.sv": "adac2fb8d9e6a9701f9bbcd4939146099e89657e4361c593c29e381f75e8cc41",
+  "ot_s81hd_st_n3_turn.sv": "a1a4db7a29a54daf6eb0f70ca863b60df7ef3ee890fb53cf6fc8271535186c1e",
+  "ot_s81hd_st_n4.sv": "7c1cbc5e17a07ec8af42288b3d54047517c67ea5ffb679808af8c40e1f356c08",
+  "ot_s81hd_st_str.sv": "1620cc30b60932c56bef882be66281b0b9eb0b3a519e5ec9069406dae45657c8",
+  "ot_s81hd_st_turn.sv": "d1ed2a2ce903842ecad93ef5b8d552df5f72741847349cbc1049f405a816fd62",
+  "ot_s81hd_tile_p.sv": "cdf6a6140ea49400c5d7fb1a64ad38849495fe9ba7ee94e603cb3b1e0f270bf5",
+  "ot_s81hd_turn_a.sv": "b091f6f829cd60ebec1655b8639d72d6cd72d48012f1333d4ddce85923b2cadf",
+  "ot_s81hd_turn_b.sv": "12eb76b419d88d44e4b2eb56d8228effd18c8c3cf5d125b02ff3ec468c39ab63",
+  "s81_head_top.sv": "cbe938905ee2c393858b611c3a8681529a6522198d30c7d4a0c204b95da77e3c"
+ },
+ "vs_base_l48ve": {
+  "ot_dp_cells.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_ctl.sv": {
+   "diff_lines": 12,
+   "new_lines_head": [
+    ">     ot_dp_clk_landing_cas #(.W(67), .DEPTH(4), .DSREP(8)) u_cland_a_rx_i (",
+    ">     ot_dp_clk_landing_cas #(.W(67), .DEPTH(4), .DSREP(8)) u_cland_b7_rx_i (",
+    ">     ot_dp_clk_landing_cas #(.W(568), .DEPTH(4), .DSREP(8)) u_cland_b_i (",
+    ">     ot_dp_clk_landing_cas #(.W(279), .DEPTH(4), .DSREP(8)) u_cland_h_rx_i (",
+    ">     ot_dp_clk_landing_cas #(.W(1107), .DEPTH(4), .DSREP(8)) u_cland_lepk_i0 (",
+    ">     ot_s81hd_ctl_core #(.SRAM_RAW_CAPTURE(1), .CTL_PRE(1), .CTL_WINDOW_PRE(1)) u_core ("
+   ]
+  },
+  "ot_s81hd_ctl_estrip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_ctl_nstrip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_host_ep.sv": "REMOVED (HSPLIT)",
+  "ot_s81hd_host_nstrip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_lep0N.sv": {
+   "diff_lines": 1667,
+   "new_lines_head": [
+    ">     input  wire clk_t1,  // spine tap at (351, 9) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t2,  // spine tap at (730, 9) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t3,  // spine tap at (1161, 9) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t4,  // spine tap at (1496, 9) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t5,  // spine tap at (869, 17) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t6,  // spine tap at (1745, 81) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t7,  // spine tap at (17, 135) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock",
+    ">     input  wire clk_t8,  // spine tap at (17, 167) um: the kit (clock_taps.tcl) moves the nearest sinks onto it before CTS; same die clock"
+   ]
+  },
+  "ot_s81hd_mesh_ep.sv": {
+   "diff_lines": 6,
+   "new_lines_head": [
+    ">     ot_dp_clk_landing_cas #(.W(517), .DEPTH(4), .DSREP(8)) u_cland_coll_ia (",
+    ">     ot_dp_clk_landing_cas #(.W(517), .DEPTH(4), .DSREP(8)) u_cland_coll_ib (",
+    ">     ot_s81hd_mesh_ep_core #(.BQ(10), .RBL(1)) u_core ("
+   ]
+  },
+  "ot_s81hd_mesh_estrip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_serdes.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_spn_end_strip.sv": {
+   "diff_lines": 194,
+   "new_lines_head": [
+    ">     wire cland_lrst_fstart_face_ad_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_ad_o (.clk(clk), .d(rst_rl_25), .q(cland_lrst_fstart_face_ad_o));  // local same-cycle reset copy (depth 5)",
+    ">     wire cland_lrst_fstart_face_au_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_au_o (.clk(clk), .d(rst_rl_61), .q(cland_lrst_fstart_face_au_o));  // local same-cycle reset copy (depth 5)",
+    ">     wire cland_lrst_fstart_face_b_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_b_o (.clk(clk), .d(rst_rl_61), .q(cland_lrst_fstart_face_b_o));  // local same-cycle reset copy (depth 5)",
+    ">     wire cland_lrst_fstart_face_bd_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_bd_o (.clk(clk), .d(rst_rl_25), .q(cland_lrst_fstart_face_bd_o));  // local same-cycle reset copy (depth 5)"
+   ]
+  },
+  "ot_s81hd_spn_eshim_rx.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_spn_eshim_tx.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_spn_strip.sv": {
+   "diff_lines": 256,
+   "new_lines_head": [
+    ">     wire cland_lrst_fstart_face_ad_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_ad_o (.clk(clk), .d(rst_rl_14), .q(cland_lrst_fstart_face_ad_o));  // local same-cycle reset copy (depth 7)",
+    ">     wire cland_lrst_fstart_face_au_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_au_o (.clk(clk), .d(rst_rl_55), .q(cland_lrst_fstart_face_au_o));  // local same-cycle reset copy (depth 7)",
+    ">     wire cland_lrst_fstart_face_b_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_b_o (.clk(clk), .d(rst_rl_216), .q(cland_lrst_fstart_face_b_o));  // local same-cycle reset copy (depth 7)",
+    ">     wire cland_lrst_fstart_face_bd_o;",
+    ">     (* keep = \"true\" *) ot_dp_rrelay u_cland_lrst_fstart_face_bd_o (.clk(clk), .d(rst_rl_14), .q(cland_lrst_fstart_face_bd_o));  // local same-cycle reset copy (depth 7)"
+   ]
+  },
+  "ot_s81hd_spn_wshim_rx.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_spn_wshim_tx.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_k5.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_m.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_n3_transit.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_n3_turn.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_n4.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_str.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_st_turn.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_tile_p.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_turn_a.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "ot_s81hd_turn_b.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "s81_head_top.sv": {
+   "diff_lines": 298,
+   "new_lines_head": [
+    ">     input  wire pst_host_e,",
+    ">     input  wire pst_host_w,",
+    ">     wire clock_landing_fwd_host_e__coll_o1;",
+    ">     wire clock_landing_fwd_host_w__coll_o0;",
+    ">     wire clock_landing_start_host_e__coll_o1;",
+    ">     wire clock_landing_start_host_w__coll_o0;",
+    ">     wire cland_mon_host_e__coll_o1_ready, cland_mon_host_e__coll_o1_fault;",
+    ">     wire cland_mon_host_e__l1_rx_o_ready, cland_mon_host_e__l1_rx_o_fault;"
+   ]
+  },
+  "ot_s81hd_host_e_ep.sv": "NEW (HSPLIT)",
+  "ot_s81hd_host_w_ep.sv": "NEW (HSPLIT)"
+ },
+ "vs_event_plans": {
+  "H2_HSPLIT l48uo_hsplit ot_s81hd_host_w_ep.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "H2_HSPLIT l48uo_hsplit ot_s81hd_host_e_ep.sv": {
+   "diff_lines": 2,
+   "new_lines_head": [
+    ">     ot_dp_clk_landing_cas #(.W(517), .DEPTH(4), .DSREP(8)) u_cland_coll_i1 ("
+   ]
+  },
+  "H5_SPN l48uj ot_s81hd_spn_strip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "H5_SPN l48uj ot_s81hd_spn_end_strip.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  },
+  "H4_LEP prepared_dt ot_s81hd_lep0N.sv": {
+   "diff_lines": 0,
+   "new_lines_head": []
+  }
+ },
+ "verdict": "18 wrappers + ot_dp_cells byte-identical to l48ve; changed: ctl (5 DSREP + u_core params), mesh (2 DSREP + u_core params), spn/spn_end/lep0N byte-identical to their own event plans, host_w identical to l48uo_hsplit, host_e = l48uo_hsplit + DSREP(8) coll_i1; top changed (host split, LEP clock entries)"
+}
