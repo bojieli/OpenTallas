@@ -57,3 +57,16 @@ def test_relay_line_parse_and_hook():
     assert "OT_RELAY_LINE_PORTS" in t and "setLocation" in t and "swapMaster" in t
     assert '"override export PRE_RESIZE_TCL = /work/core_pre_resize.tcl"' in SRC
     assert 'shutil.copyfile(TOOL / "relay_line_place.tcl", kd / "relay_line_place.tcl")' in SRC
+
+
+def test_grt_layer_adjust_parse_and_hook():
+    g = _g()
+    assert g.grt_layer_adjust(argparse.Namespace()) == []
+    assert g.grt_layer_adjust(argparse.Namespace(grt_layer_adjust=["M2-M3=0.75", "M4=0.3"])) == [("M2-M3", 0.75), ("M4", 0.3)]
+    for bad in ("M2-M3", "M2-M3=1.2", "X2=0.5", "M2-M3-M4=0.5", "M2=abc"):
+        try:
+            g.grt_layer_adjust(argparse.Namespace(grt_layer_adjust=[bad]))
+        except SystemExit:
+            continue
+        raise AssertionError(bad)
+    assert '("source /work/grt_layer_adjust.tcl\\n" if gla else "")' in SRC

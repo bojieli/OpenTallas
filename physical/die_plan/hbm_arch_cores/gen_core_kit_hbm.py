@@ -1302,6 +1302,22 @@ def post_cts_setup_hook(kd, cfg):
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
 
+def grt_layer_adjust(a):
+    """--grt-layer-adjust LAYERS=ADJ (repeatable) -> [(layers, adj)]; [] = off."""
+    out = []
+    for v in getattr(a, "grt_layer_adjust", None) or []:
+        lay, sep, adj = v.partition("=")
+        ok = sep and all(x.startswith("M") and x[1:].isdigit() for x in lay.split("-")) and 1 <= len(lay.split("-")) <= 2
+        try:
+            f = float(adj)
+        except ValueError:
+            f = -1.0
+        if not ok or not 0.0 <= f < 1.0:
+            raise SystemExit(f"--grt-layer-adjust {v!r}: want LAYERS=ADJ, e.g. M2-M3=0.75, 0 <= ADJ < 1")
+        out.append((lay, f))
+    return out
+
+
 def relay_line(a):
     """--relay-line PREFIXES:DEPTH -> (prefix list, depth) or None (off)."""
     v = getattr(a, "relay_line", None)
@@ -1617,6 +1633,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "unchanged, face_guard registered); recorded in face_shell.json out_lockup + freeze.json")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
+    ap.add_argument("--grt-layer-adjust", action="append", default=[], metavar="LAYERS=ADJ",
+                    help="HBM-COLLECT-1/PTW-C2 11-10 (opt-in, repeatable): set_global_routing_layer_adjustment LAYERS ADJ "
+                         "at PRE_GLOBAL_ROUTE (grt_layer_adjust.tcl from core_grt_pre.tcl), e.g. M2-M3=0.75 to keep "
+                         "long buffered nets off the high-R low layers.  Without it the kit is unchanged.")
     ap.add_argument("--relay-line", default=None, metavar="PREFIXES:DEPTH",
                     help="HBM-COLLECT-1/PTW-C 11-09 (opt-in): pure register pipelines across a sparse core; at PRE_RESIZE "
                          "(after GPL) the DEPTH register stages upstream of every port flop whose name starts with one of "
@@ -2154,6 +2174,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # HBM-COLLECT-1/PTW-C 11-09 (class: HBM core kits had no repeater-pitch hook; the q_spt2 die-type kits do via
     # gen.py --max-wire-um): pt_w r2 routed 1297 TT max-slew pins, every one a single ~197 um BUFx6f -> BUFx3 N-S segment
     # that the GRT-estimate repair_design saw in limit and RCX put at up to 591 ps (limit 320).  Opt-in pitch cap.
+    gla = grt_layer_adjust(a)
+    if gla:
+        (kd / "grt_layer_adjust.tcl").write_text(
+            "# gen_core_kit_hbm.py --grt-layer-adjust (PRE_GLOBAL_ROUTE, after load_design): per-layer GRT capacity reserve\n" +
+            "".join(f"set_global_routing_layer_adjustment {l} {f:g}\nputs \"OT_GRT_LAYER_ADJUST {l} {f:g}\"\n" for l, f in gla))
     rl = relay_line(a)
     if rl:
         shutil.copyfile(TOOL / "relay_line_place.tcl", kd / "relay_line_place.tcl")
@@ -2165,7 +2190,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "core_grt_pre.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
                                          "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n"
                                          "source /work/hold_pad_hb4.tcl\n" +
-                                         ("source /work/grt_maxwire.tcl\n" if mw else ""))
+                                         ("source /work/grt_maxwire.tcl\n" if mw else "") +
+                                         ("source /work/grt_layer_adjust.tcl\n" if gla else ""))
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
