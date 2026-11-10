@@ -1,7 +1,7 @@
 # HBM-COLLECT-1 L1P-HS 11-10 (COORD: hold-safe shift lines, CA safe-by-design): one HB4xp67 hold pad on the sink side of
 # every zero-logic hop (flop D or macro data input whose driver is a flop output through <=2 BUF/INV).
 # Physical buffer only, so LEC-neutral. PRE_GLOBAL_PLACE hook (sourced from face_flops.tcl). Idempotent: skips when
-# ot_hs_pad_0 exists. Pads are NOT dont_touch: a dont_touch load pin makes RSZ insertBufferBeforeLoads fail hard
+# ot_hsp_pad_0 exists. Pads are NOT dont_touch: a dont_touch load pin makes RSZ insertBufferBeforeLoads fail hard
 # (L1P-HS a1: RSZ-3006 in timing-driven GPL on lane0_ld__fq[0]). Zero-logic hops are not setup-critical, so repair has no
 # reason to remove them; the routed pad count is checked after the run.
 namespace eval ::ot_hs {
@@ -48,7 +48,7 @@ namespace eval ::ot_hs {
     return $out
   }
   set blk [ord::get_db_block]
-  if {[$blk findInst ot_hs_pad_0] ne "NULL"} {
+  if {[$blk findInst ot_hsp_pad_0] ne "NULL"} {
     puts "OT_HS_PAD already present"
   } else {
     set mst ""
@@ -62,8 +62,9 @@ namespace eval ::ot_hs {
       lassign $h it s
       set net [$it getNet]
       set sink [$it getInst]
-      set nn [odb::dbNet_create $blk ot_hs_net_$k]
-      set b [odb::dbInst_create $blk $mst ot_hs_pad_$k]
+      set nn [odb::dbNet_create $blk ot_hsp_net_$k]
+      if {$nn eq "NULL" || $nn eq ""} { error "OT_HS_PAD: net name ot_hsp_net_$k exists" }
+      set b [odb::dbInst_create $blk $mst ot_hsp_pad_$k]
       $it disconnect
       $it connect $nn
       [$b findITerm A] connect $net

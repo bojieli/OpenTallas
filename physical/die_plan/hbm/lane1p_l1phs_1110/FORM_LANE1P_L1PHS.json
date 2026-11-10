@@ -6,18 +6,22 @@
  "change": [
   "hold_pad_hops.tcl sourced at the end of face_flops.tcl (PRE_GLOBAL_PLACE, 3_3): one HB4xp67 hold pad on the sink side of every zero-logic hop (flop D or macro data input driven by a flop output through <=2 BUF/INV); 7607 hops on the D2L floorplan DB (12512 flops)",
   "a2 11-10: pads no longer dont_touch (a1 failed 3_3 RSZ-3006: timing-driven GPL could not buffer before the dont_touch pad load pin on lane0_ld__fq[0])",
-  "a2 11-10 COORD tap affinity (HEAD ds8c style): tap_affinity.tcl sourced at the end of core_density_taps.tcl (PRE_CTS) moves 27 member clock pins (7 launch flops + their captures of the 27 D2L TT setup endpoints) onto the tap of each launch worst capture; dry run on the D2L placement: moved 7, same 20, missing 0"
+  "a2 11-10 COORD tap affinity (HEAD ds8c style): tap_affinity.tcl sourced at the end of core_density_taps.tcl (PRE_CTS) moves 27 member clock pins (7 launch flops + their captures of the 27 D2L TT setup endpoints) onto the tap of each launch worst capture; dry run on the D2L placement: moved 7, same 20, missing 0",
+  "a3 11-10: pad hook moved from PRE_GLOBAL_PLACE (face_flops.tcl) to PRE_RESIZE (max_fanout.tcl, 3_4): in a2 global_place.tcl remove_buffers (GPL_TIMING_DRIVEN) deleted all 7607 pads right after the hook (RSZ-0026 Removed 10718 buffers; 0 pads in 6_final.v). Post-GPL hop set 6719 pads (dry run on a2 3_3_place_gp.odb). Pad names ot_hsp_* (ot_hs_net_* survive in the reused 3_3 DB).",
+  "a3 11-10: tap affinity drops s_q[0] (+2 captures) and d_q[143] (+2 captures): in a2 moving s_q[0] (fan-out over taps 9/15/19/21) gave TT -63.05 on 9 r_sum endpoints and FF -79.16 on its RESETN; d_q[67] on one tap improved -43.30 -> -21.20. 22 member rows kept"
  ],
  "measured": {
   "d2l_ff_sdc_hold": "port-start 591 worst -46.13, reg->outport 294, internal reg2reg 124 worst -13.59",
   "internal_covered_by_hops": "118/124; 6 uncovered have 1-2 logic gates, worst -2.49 ps, left to the flow hold repair (scope nonport)",
   "pad_ff_delay_est_ps": 37,
   "pad_area_um2": 776,
-  "d2l_tt_setup": "27 endpoints from 7 launch flops (d_q[67] tap9->tap4 -43.30, aind_e[0] 0->5 -20.67, d3 line[247] 12->19 -11.98, s1_power[2] 10->16 -9.80, d3 line[246] 12->16 -7.31, d_q[143] same tap -4.25, s_q[0] 3->17/8 -1.95)"
+  "d2l_tt_setup": "27 endpoints from 7 launch flops (d_q[67] tap9->tap4 -43.30, aind_e[0] 0->5 -20.67, d3 line[247] 12->19 -11.98, s1_power[2] 10->16 -9.80, d3 line[246] 12->16 -7.31, d_q[143] same tap -4.25, s_q[0] 3->17/8 -1.95)",
+  "a2": "NOT SIGNED TT -63.05/11, FF -214.20/1772 (sdc -144.20: port 1613, internal 159 worst -79.16), DRC 0; pads 0 in final netlist; affinity moved 8"
  },
  "rtl_change": false,
  "pin_cycles": 0,
  "outline_change": false,
  "lec": "physical buffers only; routed lec.py required",
- "do_not_count": "until signed off, routed LEC EQ, images viewed, READY-COUNT"
+ "do_not_count": "until signed off, routed LEC EQ, images viewed, READY-COUNT",
+ "resume": "a3 reuses a2 results through 3_3_place_gp.odb (GPL unchanged: the pads were removed before GPL in a2); runs from 3_4"
 }

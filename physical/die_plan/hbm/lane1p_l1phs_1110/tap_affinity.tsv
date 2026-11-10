@@ -1,4 +1,4 @@
-# L1P-HS tap affinity: D2L TT setup violators (27), launch + captures onto the worst capture tap
+# L1P-HS tap affinity: D2L TT setup violators (27), launch + captures onto the worst capture tap | a3: s_q[0] and d_q[143] dropped (s_q[0] fans out over 4+ taps; moving it made TT -63.05 / FF -79.16 in a2)
 u_fcore.u_core.u_lane0.d_q\[67\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_me2.genblk1.genblk1.g_l5.u.u.u_c1.q\[46\]$_DFF_PN0_
 u_fcore.u_core.u_lane0.u_lane.u_me2.genblk1.genblk1.g_l5.u.u.u_c1.q\[38\]$_DFF_PN0_	u_fcore.u_core.u_lane0.u_lane.u_me2.genblk1.genblk1.g_l5.u.u.u_c1.q\[46\]$_DFF_PN0_
 u_fcore.u_core.u_lane0.u_lane.u_me2.genblk1.genblk1.g_l5.u.u.u_c1.q\[35\]$_DFF_PN0_	u_fcore.u_core.u_lane0.u_lane.u_me2.genblk1.genblk1.g_l5.u.u.u_c1.q\[46\]$_DFF_PN0_
@@ -21,8 +21,3 @@ u_fcore.u_core.u_lane0.u_lane.u_q.genblk1.genblk1.g_l5.u.u.s2_mr\[41\]$_DFF_P_	u
 u_fcore.u_core.u_lane0.u_lane.u_q.genblk1.genblk1.g_l5.u.u.s2_ms\[36\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_q.genblk1.genblk1.g_l5.u.u.s2_mr\[29\]$_DFF_P_
 u_fcore.u_core.u_lane0.u_lane.u_d3.genblk1.g_line.line\[246\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_e1m.genblk1.genblk1.g_l5.u.u.u_c1.q\[66\]$_DFF_PN0_
 u_fcore.u_core.u_lane0.u_lane.u_e1m.genblk1.genblk1.g_l5.u.u.u_c1.q\[54\]$_DFF_PN0_	u_fcore.u_core.u_lane0.u_lane.u_e1m.genblk1.genblk1.g_l5.u.u.u_c1.q\[66\]$_DFF_PN0_
-u_fcore.u_core.u_lane0.d_q\[143\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_ad.genblk1.g_keep.u.u.s1_small\[10\]$_DFF_P_
-u_fcore.u_core.u_lane0.u_lane.u_ad.genblk1.g_keep.u.u.s1_small\[1\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_ad.genblk1.g_keep.u.u.s1_small\[10\]$_DFF_P_
-u_fcore.u_core.u_lane0.u_lane.u_ad.genblk1.g_keep.u.u.s1_small\[2\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.u_ad.genblk1.g_keep.u.u.s1_small\[10\]$_DFF_P_
-u_fcore.u_core.u_lane0.s_q\[0\]$_DFF_PN0_	u_fcore.u_core.u_lane0.u_lane.g_leaf.r_sum\[113\]$_DFF_P_
-u_fcore.u_core.u_lane0.u_lane.g_leaf.r_sum\[7\]$_DFF_P_	u_fcore.u_core.u_lane0.u_lane.g_leaf.r_sum\[113\]$_DFF_P_
