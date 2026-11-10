@@ -73,7 +73,7 @@ def tcl(receipt):
         lines.append(f'set ot_ft_layer [[ord::get_db_tech] findLayer {layer}]')
         lines.append('odb::dbObstruction_create $ot_ft_blk $ot_ft_layer '+' '.join(
             f'[expr {{round({v:.3f}*$ot_ft_dbu)}}]' for v in rect))
-    lines += SLIVER_TCL.splitlines()
+    lines += sliver_tcl().splitlines()
     wins=pdn_windows(receipt)
     if wins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows={len(wins)}"')
@@ -97,26 +97,80 @@ def tcl(receipt):
 # pair + spacing (0.384 um) from a placed block's edge is closed up to that edge over their common height.  Probed
 # (real pdngen, 2_3 tapcell DB): 13 -> 1 channel on q_b102__physical_v1 (272 slivers closed), and with the column rule's
 # covering own rows -> PDNGEN OK; q_b011/b100/b100a6/b100pv1/b101/b101_nw/b103 PDNGEN OK, 0 slivers there.
+# DIE-HBM-97 11-09 (q_b010 QN-alt / q_b010__physical_v1 / q_b000 PDN-0179, 3-6 PDN-0178 M6 channels): the same island,
+# wider.  (a) q_b010 x 127.44-129.6: M6 FT rows of a macro-gap column end 2.16 um short of macro u_rb, M7 reserved over
+# the gap; (b) q_b010 x 591.84-602.64 y 2913.57-2917.62: a 10.8-um hole between two M6 FT rows, M7 reserved 588.0-604.3;
+# (c) q_b010__physical_v1 x 469.15-483.84 (VSS only): the M6 pocket between macro h1 and macro u_ra, where the one M7
+# strap window (483.354-484.326) lands the first strap of the pair inside the pocket and the second over u_ra.  An M6
+# strap piece in such a gap is bounded on both sides (block or M6 obstruction) and one of its nets has no M7 strap
+# above it, so pdngen reports the channel and cannot repair it (M7 is reserved there).  Every M6 gap between two
+# M6 blockers (blocks and M6 obstructions) over their common height is closed when it is a sliver (< ot_ft_sl, the
+# rule above) or when, for either net, no strap of the top-grid M7 pair (core x0 + offset + k * pitch, first strap
+# centred on it) lies wholly inside the gap clear of M7 obstructions AND no free M7 run in the gap is as wide as a
+# strap pair (2w + sp, so pdngen's channel repair could not place one either).  Only M6 strap pieces that can never
+# lift both nets to M7 are removed; M7, every gap where both nets land and every repairable gap are unchanged.
 SLIVER_TCL = """set ot_ft_m6 [[ord::get_db_tech] findLayer M6]
+set ot_ft_m7 [[ord::get_db_tech] findLayer M7]
 set ot_ft_sl [expr {round(0.384*$ot_ft_dbu)}]
-set ot_ft_mac {}
-foreach ot_i [$ot_ft_blk getInsts] { if {[[$ot_i getMaster] isBlock]} { lappend ot_ft_mac [$ot_i getBBox] } }
-set ot_ft_add {}
+set ot_ft_core [$ot_ft_blk getCoreArea]
+set ot_ft_s7 [list [expr {[$ot_ft_core xMin] + round(@OFF@*$ot_ft_dbu)}] [expr {round(@W@*$ot_ft_dbu)}] [expr {round(@SP@*$ot_ft_dbu)}] [expr {round(@PITCH@*$ot_ft_dbu)}]]
+set ot_ft_bl {}; set ot_ft_o7 {}
+foreach ot_i [$ot_ft_blk getInsts] { if {[[$ot_i getMaster] isBlock]} { set ot_b [$ot_i getBBox]
+  lappend ot_ft_bl [list [$ot_b xMin] [$ot_b yMin] [$ot_b xMax] [$ot_b yMax] 1] } }
 foreach ot_o [$ot_ft_blk getObstructions] {
-  set ot_b [$ot_o getBBox]
-  if {[$ot_b getTechLayer] ne $ot_ft_m6} { continue }
-  set ox0 [$ot_b xMin]; set oy0 [$ot_b yMin]; set ox1 [$ot_b xMax]; set oy1 [$ot_b yMax]
-  foreach ot_m $ot_ft_mac {
-    set ya [expr {max($oy0, [$ot_m yMin])}]; set yb [expr {min($oy1, [$ot_m yMax])}]
-    if {$yb <= $ya} { continue }
-    set g [expr {[$ot_m xMin] - $ox1}]
-    if {$g > 0 && $g < $ot_ft_sl} { lappend ot_ft_add [list $ox1 $ya [$ot_m xMin] $yb] }
-    set g [expr {$ox0 - [$ot_m xMax]}]
-    if {$g > 0 && $g < $ot_ft_sl} { lappend ot_ft_add [list [$ot_m xMax] $ya $ox0 $yb] }
+  set ot_b [$ot_o getBBox]; set ot_l [$ot_b getTechLayer]
+  set ot_r [list [$ot_b xMin] [$ot_b yMin] [$ot_b xMax] [$ot_b yMax] 0]
+  if {$ot_l eq $ot_ft_m6} { lappend ot_ft_bl $ot_r } elseif {$ot_l eq $ot_ft_m7} { lappend ot_ft_o7 $ot_r }
+}
+set ot_ft_bl [lsort -integer -index 1 $ot_ft_bl]
+proc ot_ft_m7_ok {o7 s7 x0 y0 x1 y1} {
+  # 1 when BOTH straps of some top-grid M7 pair position land in [x0, x1] clear of the M7 obstructions over y0-y1,
+  # or when M7 is free over at least one strap pair width there (repairable)
+  lassign $s7 s0 w sp p
+  set ob {}
+  foreach r $o7 { lassign $r a b c d; if {$b < $y1 && $d > $y0 && $c > $x0 && $a < $x1} { lappend ob [list $a $c] } }
+  set got {0 0}
+  set k [expr {max(0, ($x0 - $s0) / $p - 1)}]
+  while {1} {
+    set s [expr {$s0 + $k * $p}]; incr k
+    if {$s - $w > $x1} { break }
+    foreach n {0 1} lo [list [expr {$s - $w / 2}] [expr {$s + $w / 2 + $sp}]] {
+      set hi [expr {$lo + $w}]
+      if {$lo < $x0 || $hi > $x1} { continue }
+      set free 1
+      foreach q $ob { if {[lindex $q 0] < $hi && [lindex $q 1] > $lo} { set free 0; break } }
+      if {$free} { lset got $n 1 }
+    }
+    if {[lindex $got 0] && [lindex $got 1]} { return 1 }
+  }
+  # a net does not land: pdngen can still repair the channel with its own M7 strap pair where M7 is free over 2w+sp
+  set cur $x0
+  foreach q [lsort -integer -index 0 $ob] {
+    lassign $q a c
+    if {$a - $cur >= 2 * $w + $sp} { return 1 }
+    if {$c > $cur} { set cur $c }
+  }
+  return [expr {$x1 - $cur >= 2 * $w + $sp}]
+}
+set ot_ft_add {}; set ot_ft_add7 0
+foreach ot_r $ot_ft_bl {
+  lassign $ot_r ox0 oy0 ox1 oy1 om
+  foreach ot_q $ot_ft_bl {
+    lassign $ot_q qx0 qy0 qx1 qy1 qm
+    if {$qy0 >= $oy1} { break }
+    if {$qy1 <= $oy0 || $qx0 <= $ox1} { continue }
+    set ya [expr {max($oy0, $qy0)}]; set yb [expr {min($oy1, $qy1)}]
+    if {$om != $qm && $qx0 - $ox1 < $ot_ft_sl} { lappend ot_ft_add [list $ox1 $ya $qx0 $yb]; continue }
+    if {[ot_ft_m7_ok $ot_ft_o7 $ot_ft_s7 $ox1 $ya $qx0 $yb]} { continue }
+    set ot_dup 0
+    foreach ot_c $ot_ft_bl { lassign $ot_c cx0 cy0 cx1 cy1 cm
+      if {$cy0 > $ya} { break }
+      if {!$cm && $cx0 <= $ox1 && $cx1 >= $qx0 && $cy1 >= $yb} { set ot_dup 1; break } }
+    if {!$ot_dup} { lappend ot_ft_add [list $ox1 $ya $qx0 $yb]; incr ot_ft_add7 }
   }
 }
 foreach ot_r $ot_ft_add { odb::dbObstruction_create $ot_ft_blk $ot_ft_m6 {*}$ot_r }
-puts "OT_PARTITION_FT_RESERVE m6_sliver_close=[llength $ot_ft_add]\""""
+puts "OT_PARTITION_FT_RESERVE m6_sliver_close=[llength $ot_ft_add] m6_no_m7_close=$ot_ft_add7\""""
 
 
 # DIE-HBM-90 11-07 (HBM transit types q_spu0 / q_spu1 2_4_floorplan_pdn [ERROR PDN-0179] "Unable to repair all
@@ -167,6 +221,13 @@ PDN_WIN_STRIPES = {'M4': (2.16, 0.12, 0.072, 4.32),      # offset, width, spacin
 # skipping the strap nearest the band edge -> 27 channels left).  M7 cost in such a band: 0.972 of every 17.28 um (5.6 %).
 PDN_WIN_EVERY_V = 2
 PDN_WIN_STRIPES_V = {'M7': (4.128, 0.288, 0.096, 8.64)}  # = gen_phys PDN top-grid M7 stripe (offset, width, spacing, pitch)
+
+
+def sliver_tcl():
+    """SLIVER_TCL with the top-grid M7 stripe (PDN_WIN_STRIPES_V) filled in."""
+    off, w, sp, pitch = PDN_WIN_STRIPES_V['M7']
+    return (SLIVER_TCL.replace('@OFF@', f'{off:g}').replace('@W@', f'{w:g}').replace('@SP@', f'{sp:g}')
+            .replace('@PITCH@', f'{pitch:g}'))
 
 
 def pdn_windows_v(receipt, core_x0=4.32):

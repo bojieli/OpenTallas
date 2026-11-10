@@ -376,3 +376,83 @@ def test_m4_m6_reservations_are_disjoint_rows_and_exact_complements():
     a4=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M4'])
     a6=sum((r['rect'][2]-r['rect'][0])*(r['rect'][3]-r['rect'][1]) for r in own['M6'])
     assert a4==pytest.approx(a6)
+
+
+# Mock odb for SLIVER_TCL: blocks + obstructions in um (dbu 1000), returns the M6 fills it creates.
+_MOCK_ODB = r'''
+namespace eval ord {}; namespace eval odb {}
+set ::made {}
+proc ord::get_db_tech {} { return mtech }
+proc mtech {m L} { return L_$L }
+proc mbox {kind x0 y0 x1 y1 {L {}}} {
+  set n box[incr ::nbox]
+  proc $n {m} "switch \$m {xMin {return $x0} yMin {return $y0} xMax {return $x1} yMax {return $y1} getTechLayer {return {$L}}}"
+  return $n
+}
+proc mwrap {bb} { set n w[incr ::nbox]; proc $n {m} "if {\$m eq {getBBox}} {return $bb}; if {\$m eq {getMaster}} {return mmaster}"; return $n }
+proc mmaster {m} { return 1 }
+proc odb::dbObstruction_create {blk L x0 y0 x1 y1} { lappend ::made [list $L $x0 $y0 $x1 $y1] }
+proc mblk {m} { if {$m eq {getInsts}} { return $::insts }; if {$m eq {getCoreArea}} { return $::core }; return $::obss }
+set ot_ft_blk mblk; set ot_ft_dbu 1000
+set ::insts {}; set ::obss {}; set ::core [mbox c 4320 4320 829440 4315680]
+proc um {v} { return [expr {round($v*1000)}] }
+foreach b $::B { lassign $b x0 y0 x1 y1; lappend ::insts [mwrap [mbox i [um $x0] [um $y0] [um $x1] [um $y1]]] }
+foreach o $::O { lassign $o L x0 y0 x1 y1; lappend ::obss [mwrap [mbox o [um $x0] [um $y0] [um $x1] [um $y1] L_$L]] }
+'''
+
+
+def _sliver_fills(blocks, obs):
+    import shutil, subprocess
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh not installed')
+    tl = lambda rows: '{' + ' '.join('{' + ' '.join(str(v) for v in r) + '}' for r in rows) + '}'
+    src = f'set ::B {tl(blocks)}\nset ::O {tl(obs)}\n' + _MOCK_ODB + F.sliver_tcl() + \
+        '\nforeach m $::made { puts "FILL [lindex $m 0] [lrange $m 1 end]" }\n'
+    out = subprocess.run(['tclsh'], input=src, capture_output=True, text=True, check=True).stdout
+    fills = sorted(tuple(round(int(v) / 1000, 3) for v in l.split()[2:]) for l in out.splitlines() if l.startswith('FILL L_M6'))
+    return fills, out
+
+
+def test_m6_gap_to_macro_under_reserved_m7_is_closed():
+    """DIE-HBM-97 11-09 q_b010 x 127.44-129.6: M6 rows of a macro-gap column end 2.16 um short of the macro, M7 reserved
+    over the gap -> the M6 strap piece there has no M7 landing (PDN-0178/0179).  Without M7 above, the gap is kept."""
+    blk = [(129.6, 2989.44, 235.872, 3279.744)]
+    row = ('M6', 123.552, 3259.17, 127.44, 3263.22)
+    fills, out = _sliver_fills(blk, [row, ('M7', 127.44, 0.0, 130.14, 4320.0)])
+    assert fills == [(127.44, 3259.17, 129.6, 3263.22)] and 'm6_no_m7_close=1' in out
+    fills, out = _sliver_fills(blk, [row, ('M7', 127.44, 0.0, 128.5, 4320.0)])      # M7 free over part of the gap
+    assert fills == [] and 'm6_sliver_close=0' in out
+
+
+def test_m6_hole_between_rows_under_reserved_m7_is_closed():
+    """DIE-HBM-97 11-09 q_b010 x 591.84-602.64 y 2913.57-2917.62: a hole between two M6 FT rows under M7 reserved by two
+    abutting-or-overlapping M7 rects (588.006-604.314) -> closed; with an M7 strap window over the hole -> kept."""
+    rows = [('M6', 483.84, 2913.57, 591.84, 2917.62), ('M6', 602.64, 2913.57, 710.64, 2917.62)]
+    m7 = [('M7', 588.006, 4.32, 596.0, 4320.0), ('M7', 596.0, 4.32, 604.314, 4320.0)]
+    fills, out = _sliver_fills([], rows + m7)
+    assert fills == [(591.84, 2913.57, 602.64, 2917.62)] and 'm6_no_m7_close=1' in out
+    win = [('M7', 588.006, 4.32, 595.0, 4320.0), ('M7', 596.0, 4.32, 604.314, 4320.0)]   # window 595-596
+    assert _sliver_fills([], rows + win)[0] == []
+
+
+def test_m6_pocket_between_macros_with_half_landing_pair_is_closed():
+    """DIE-HBM-97 11-09 q_b010__physical_v1 (VSS channel x 466.6-477.3): macro h1 ends 469.152, macro u_ra starts 483.84,
+    M7 reserved 467.046-483.354 with a strap window 483.354-484.326 that lands only the first strap of the pair inside
+    the pocket (the second is over u_ra) and is narrower than a pair -> closed.  With M7 free (repairable) -> kept."""
+    blk = [(250.56, 3135.936, 469.152, 3323.424), (483.84, 2920.32, 590.112, 3210.624)]
+    m7 = [('M7', 449.766, 4.32, 466.074, 4320.0), ('M7', 467.046, 4.32, 483.354, 4320.0),
+          ('M7', 484.326, 4.32, 498.96, 4320.0)]
+    fills, out = _sliver_fills(blk, m7)
+    assert fills == [(469.152, 3135.936, 483.84, 3210.624)] and 'm6_no_m7_close=1' in out
+    assert _sliver_fills(blk, [])[0] == []
+
+
+def test_m6_gap_where_both_nets_land_is_kept():
+    blk = [(129.6, 2989.44, 235.872, 3279.744)]
+    fills, out = _sliver_fills(blk, [('M6', 100.0, 3259.17, 110.0, 3263.22), ('M7', 100.0, 0.0, 120.0, 4320.0)])
+    assert fills == [] and 'm6_sliver_close=0' in out          # pair at 120.768 lands clear of the M7 rect
+
+
+def test_m6_sliver_at_macro_edge_still_closed_without_m7():
+    fills, out = _sliver_fills([(579.012, 0.0, 700.0, 300.0)], [('M6', 572.832, 58.32, 578.88, 65.07)])
+    assert fills == [(578.88, 58.32, 579.012, 65.07)] and 'm6_no_m7_close=0' in out
