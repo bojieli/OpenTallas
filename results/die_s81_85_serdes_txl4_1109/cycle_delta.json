@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.private_cycle_delta.v1",
+  "scope": "S81 serdes u_txl form TXL4 (DIE-S81-85 2026-11-09): OT_S81_SERDES_TXL4 adds two ot_pl_pad relay rows to ot_pdie_serdes_col u_txl (TXL 2 -> 4 at the kit default). Opt-in define; default elaboration unchanged.",
+  "clk_period_ps": 833,
+  "added_rx_clk_PIN_cycles": 0,
+  "added_tx_clk_PIN_cycles": 2,
+  "measurement": {
+    "bench": "rtl/dsrom_sys/s81_link/col/tb_s81_col_rlat.sv via tools/s81_link/run_serdes_rst_tree_bench.sh rlat (Verilator 5.050, PMA loopback pma_rck = pma_tck = clk, LOCKSAFE=1, HOLD_EDGES=64; fixed latency, lat_min == lat_max in every build; RT_EXPECT enforces the value)",
+    "loopback_lat_clk": {
+      "released_column": 88,
+      "released_plus_TXL4": 90,
+      "vB": 99,
+      "vB_plus_TXL4": 101
+    },
+    "mutant": {
+      "MUT=8 with TXL4 (u_txl one row short), RT_EXPECT=90": "FAIL lat 89"
+    },
+    "two_die_col_bench": "tb_s81_pdie_col MODE=0 with TXL4 RT_TREE=0: PASS sent 6000 got 6000 bad 0",
+    "yosys_eq_default": "ot_pdie_serdes_col, origin/main d8f90c6a8c vs this form, default defines, async2sync; equiv_status -assert PASS (submodules as named cells)"
+  },
+  "tx": {
+    "data_latency_delta": 2,
+    "split": {
+      "u_txl relay rows": 2
+    },
+    "added_ps_nominal": 1666
+  },
+  "rx": {
+    "data_latency_delta": 0
+  },
+  "unaffected": [
+    "RX latency",
+    "PMA latency 4 both directions",
+    "reset trees (rst edges)",
+    "rate match occupancy and fault rules"
+  ],
+  "reschedule": [
+    "compiler TX pad date +2 clk",
+    "full end-to-end token composition +2 per TX traversal"
+  ],
+  "placement_requirement": "TXL rows must be pinned: 4_cts census shows GPL places row 0 at the encoder and the last row at the pad, so all wire falls on one hop. The two new rows must sit at 1/3 and 2/3 of the row0->last-row span (relay_mid class; relay_mid.tcl needs fixed endpoints, so row 0 and the last row or a dedicated hook are required).",
+  "hop_estimate_after_staging_ps": {
+    "method": "worst r0->q span from 4_cts census / 3 x 0.49 ps/um (t2 G2 repaired-wire figure) + 60 ck-q+setup; budget 833 with W 180 as carried in today's SDC, skew = worst launch-capture on those bits",
+    "vC_t14": {
+      "span_um": 2355,
+      "hop_um": 785,
+      "hop_data_ps": 445,
+      "slack_W180": 208,
+      "slack_W180_after_worst_skew": 32,
+      "slack_W0": 388
+    },
+    "vC_t16": {
+      "span_um": 1621,
+      "hop_um": 540,
+      "hop_data_ps": 325,
+      "slack_W180": 328,
+      "slack_W180_after_worst_skew": 270,
+      "slack_W0": 508
+    },
+    "vB_t16": {
+      "span_um": 1714,
+      "hop_um": 571,
+      "hop_data_ps": 340,
+      "slack_W180": 313,
+      "slack_W180_after_worst_skew": 247,
+      "slack_W0": 493
+    },
+    "t2": {
+      "span_um": 2183,
+      "hop_um": 728,
+      "hop_data_ps": 417,
+      "slack_W180": 236,
+      "slack_W180_after_worst_skew": 66,
+      "slack_W0": 416
+    },
+    "caveat": "Estimate only, not built. Assumes placed stations; without the placement hook TXL4 can stack the same wire on one hop."
+  },
+  "not_adopted": true
+}
