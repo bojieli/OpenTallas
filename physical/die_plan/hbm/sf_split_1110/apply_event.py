@@ -28,7 +28,7 @@ for T in ("q_sm0","q_sm1","q_sm2","q_sm3"):
         g["origin_um"]=[round(h["origin_um"][0]+(0 if H=="W" else XC),4),h["origin_um"][1]]; g["outline_um"]=[907.2,233.28]
         g["pins_file"]=pinsfile[H][0]; g["physical_inst"]=h["physical_inst"]+".u_"+H.lower()
         g["note"]="SF-SPLIT 11-10 (HBM-COLLECT-1, COORD form b): %s half of ot_smh_static_front, cut x 907.2, launch-registered seam, 0 pin cycles; was: %s"%(H,h["note"][:120])
-        if H=="E": g["reset_from_master"]={"kind":"internal","content":"seam","source":"SF-SPLIT: the E half has no rst_n port; its resets are launch-registered seam_w2e bits from the W half reset relays (as built in SF-C)","pin":None}
+        if H=="E": g["reset_from_master"]={"kind":"internal","content":"u_sm","source":"SF-SPLIT: the E half has no rst_n port; its resets are launch-registered seam_w2e bits from the W half reset relays (as built in SF-C); no reset pin (pin omitted)"}
         new.append(g)
     t["hard_cores"][i:i+1]=new
     taps=t["clock"]["taps"]; j=[k for k,x in enumerate(taps) if x["name"]=="u_sm_front_nf"]; assert len(j)==1; j=j[0]; tp=taps[j]
