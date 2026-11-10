@@ -276,6 +276,8 @@ def main():
     ap.add_argument('--skew-ns', type=float, default=2.0, help='random region phase range +- (10 ns period)')
     ap.add_argument('--fwd-ns', type=float, default=0.0, help='forwarded clock delay at every landing (ns)')
     ap.add_argument('--force-wneg', type=int, default=None, help='what-if: override every landing WNEG')
+    ap.add_argument('--cut', type=Path, default=None, help='walk a dv_bound_cut directory instead of the whole bound '
+                    'top: its <name>.sv top and its generated pass-through shells (<type>__ftshell*.sv)')
     a = ap.parse_args()
     sys.path[:0] = [str(a.repo / 'tools/s81_dv/layer_prog')]
     import bound_ctl_lanes as BCL
@@ -299,8 +301,14 @@ def main():
             if mm.get('lane'):
                 sinks[mm['lane']].add((g['sink'], mm['sink_port']))
     prog_ctl = json.loads((a.prog / 'bound_ctl_lanes.json').read_text())['lanes']
-    toptxt = (rtl / 's81_bound_top.sv').read_text()
-    top = parse_module(toptxt, 's81_bound_top')
+    topf, topm, extra = rtl / 's81_bound_top.sv', 's81_bound_top', {}
+    if a.cut:
+        cf = [Path(x) for x in (a.cut / 'cut.f').read_text().split() if x.endswith('.sv')]
+        topf = cf[-1]
+        topm = topf.stem
+        extra = {f.stem: f for f in cf if '__ftshell' in f.stem}
+    toptxt = topf.read_text()
+    top = parse_module(toptxt, topm)
     tags = {}
     for line in toptxt.splitlines():
         m = re.match(r'\s*wire\s*(?:\[[^\]]*\])?\s*(' + ID + r')\s*;\s*//\s*lane\s+(' + ID + ')', line)
@@ -317,7 +325,7 @@ def main():
     def part(inst):
         mod = by_name[inst]['mod']
         if mod not in cache:
-            cache[mod] = parse_module((rtl / f'{mod}.sv').read_text(), mod)
+            cache[mod] = parse_module((extra.get(mod) or rtl / f'{mod}.sv').read_text(), mod)
         return Part(cache[mod], inst)
 
     mut = {s.rsplit(':', 1)[0]: int(s.rsplit(':', 1)[1]) for s in a.mutant}
@@ -425,7 +433,8 @@ def main():
                           f"sim {[(v['edges'], v['bad_samples']) for v in e['measured'].values()]}"
                           f"{'' if e['named_in_bus_groups'] else ' SINK-NOT-IN-BUS-GROUPS'}" for e in row['ends'])
               + (f" | problems {row['problems'][:3]}" if row['problems'] else ''), flush=True)
-    rep = dict(schema='tok-verify-1.lane_arrival.v2', bind=str(a.bind), prog=str(a.prog), mutants=a.mutant,
+    rep = dict(schema='tok-verify-1.lane_arrival.v2', bind=str(a.bind), cut=str(a.cut) if a.cut else None,
+               shells=sorted(extra), prog=str(a.prog), mutants=a.mutant,
                phase_sets=a.phases, skew_ns=a.skew_ns, fwd_ns=a.fwd_ns, force_wneg=a.force_wneg, lanes=len(rows), passed=sum(r['verdict'] == 'PASS' for r in rows),
                verdict='PASS' if ok_all else 'FAIL', status='DO_NOT_COUNT', rows=rows,
                cell_sources=[str(f) for f in cell_files])

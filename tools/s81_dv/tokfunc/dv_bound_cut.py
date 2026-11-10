@@ -27,6 +27,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import lane_arrival as LA  # noqa: E402
+import ft_shell as FS  # noqa: E402
 
 INST_RE = re.compile(r'^    ([A-Za-z_][A-Za-z0-9_]*) (#\(.*\) )?([A-Za-z_][A-Za-z0-9_]*) \($')
 PORT_RE = re.compile(r'^\s*(input|output|inout)\s+(?:wire|reg|logic)?\s*(\[[^\]]+\])?\s*([A-Za-z_][A-Za-z0-9_]*)')
@@ -68,6 +69,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--name', default='cut_top')
     ap.add_argument('--no-grow', action='store_true')
+    ap.add_argument('--no-shell', action='store_true', help='keep grown pass-through partitions whole')
+    ap.add_argument('--shell-mutant', default=None, help='INST:PORT:+1 -- one extra stage in that shell (must FAIL)')
     a = ap.parse_args()
     rtl = a.bind / 'rtl'
     tp = rtl / 's81_bound_top.sv'
@@ -103,8 +106,10 @@ def main():
                 users[b].append((it['name'], p))
     if not a.no_grow:
         lat = json.loads((a.bind / 'bind_latency.json').read_text())['buses']
+        grown_lanes = set()
         for b in lat:
-            if b['src'] in how and b['dst'] in how:
+            if b['src'] in want and b['dst'] in want:      # lanes between LISTED members only (no cascade)
+                grown_lanes.add(b['lane'])
                 # every top net tagged with this lane names a partition on its path
                 for net, ln in tags.items():
                     if ln == b['lane']:
@@ -112,6 +117,42 @@ def main():
                             if inst not in how:
                                 how[inst] = f"path of lane {b['lane']}"
     dirs_cache = {}
+    shells, shell_rep = {}, {}
+    if a.no_grow:
+        grown_lanes = set()
+    if not a.no_shell:
+        for inst in [i for i in how if how[i] != 'listed']:
+            it = by_name[inst]
+            t = it['mod']
+            tdirs = port_dirs(rtl / f'{t}.sv', t)
+            keep = set()
+            for p, e in it['conns'].items():
+                n = LA.base(e)[0]
+                if tdirs.get(p) == 'output' and tags.get(n) in grown_lanes:
+                    keep.add(p)
+                    if f'fclk_out_{p}' in tdirs:
+                        keep.add(f'fclk_out_{p}')
+            mut = None
+            if a.shell_mutant and a.shell_mutant.split(':', 1)[0] == inst:
+                mut = a.shell_mutant.split(':', 1)[1]
+            try:
+                txt, kept, r = FS.build((rtl / f'{t}.sv').read_text(), t, keep, mutant=mut)
+            except ValueError as exc:
+                shell_rep[inst] = dict(type=t, shell=None, refused=str(exc)[:400])
+                continue
+            sname = f'{t}__ftshell' + ('__mut' if mut else '')
+            if mut:
+                txt = txt.replace(f'module {t}__ftshell', f'module {sname}', 1)
+            shells[inst] = dict(module=sname, text=txt, ports=set(kept))
+            shell_rep[inst] = dict(r, shell=sname, kept_outputs=sorted(keep))
+            it2 = dict(it, mod=sname, conns={p: e for p, e in it['conns'].items() if p in kept})
+            by_name[inst] = it2
+            dirs_cache[sname] = {p: d for p, d in tdirs.items() if p in kept}
+        users = defaultdict(list)
+        for it in by_name.values():
+            for p, e in it['conns'].items():
+                for b in ([LA.base(e)[0]] if LA.base(e)[0] else re.findall(LA.ID, e)):
+                    users[b].append((it['name'], p))
 
     def pdir(inst, port):
         t = by_name[inst]['mod']
@@ -163,21 +204,33 @@ def main():
         body.append(f'    wire {width.get(n, "") + " " if width.get(n) else ""}{n};')
     for inst in sorted(members, key=lambda x: blk[x][2]):
         _, _, i, j = blk[inst]
-        body += lines[i:j + 1]
+        if inst in shells:            # same block, shell type, only the kept port connections
+            sh = shells[inst]
+            head = lines[i].replace(blk[inst][1], sh['module'], 1)
+            cl = [ln for ln in lines[i + 1:j] if (lambda m: m and m.group(1) in sh['ports'])(re.match(r'^\s*\.(\w+)\(', ln))]
+            cl = [ln.rstrip().rstrip(',') + (',' if k < len(cl) - 1 else '') for k, ln in enumerate(cl)]
+            body += [head] + cl + [lines[j]]
+        else:
+            body += lines[i:j + 1]
     body += ['endmodule', '`default_nettype wire', '']
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / f'{a.name}.sv').write_text('\n'.join(body))
     (a.out / 'cut_ports.json').write_text(json.dumps(dict(
         schema='tok-verify-1.bound_cut.v1', bind=str(a.bind), top_sha256=hashlib.sha256(text.encode()).hexdigest(),
         ports=ports), indent=1) + '\n')
-    (a.out / 'cut_insts.json').write_text(json.dumps({i: dict(type=by_name[i]['mod'], how=how[i]) for i in sorted(members)},
-                                                     indent=1) + '\n')
+    (a.out / 'cut_insts.json').write_text(json.dumps({i: dict(type=by_name[i]['mod'], how=how[i], shell=shell_rep.get(i))
+                                                      for i in sorted(members)}, indent=1) + '\n')
+    for inst, sh in shells.items():
+        (a.out / f"{sh['module']}.sv").write_text(sh['text'])
     bf = [x for x in (a.bind / 'bind.f').read_text().split() if x.strip()]
     (a.out / 'cut.f').write_text('\n'.join([x for x in bf if not x.endswith('s81_bound_top.sv')] +
+                                           sorted({str((a.out / f"{sh['module']}.sv").resolve()) for sh in shells.values()}) +
                                            [str((a.out / f'{a.name}.sv').resolve())]) + '\n')
     kinds = defaultdict(int)
     for p in ports.values():
         kinds[f"{p['dir']}:{p['kind']}"] += 1
+    print(f'shells {len(shells)}, refused {sum(1 for v in shell_rep.values() if v.get("shell") is None)}: ' +
+          '; '.join(f"{i} {v.get('refused')}" for i, v in shell_rep.items() if v.get('shell') is None)[:600])
     print(f'{a.name}: {len(members)} instances ({sum(v == "listed" for v in how.values())} listed), '
           f'{len(ports)} ports {dict(kinds)}, {len(internal)} internal nets')
 
