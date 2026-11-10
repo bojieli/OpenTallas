@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "kshare_pc_1109",
+ "plan": "kshare_pc_1109 (plan_p12_kshare)",
+ "base": "p11t (die_plan.json 4548550146e469dee3c7b93586d4428fd56eeeb8cf924b05f8722444f6b0acf9)",
+ "lane": "DIE-HBM-97/KSHARE-PC",
+ "date": "2026-11-10",
+ "kind": "core pin cycles (COORD YES: pin-cycle form; owner 11-03 pin cycles are a lever, compiler reschedule + token)",
+ "modules": [
+  "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+  "ot_hbm_svc_vm_kshare_splitstrap__v700685"
+ ],
+ "instances": {
+  "q_hub_nw": {
+   "u_vmks_Q0": "v700685",
+   "u_vmks_Q1": "v8e478a",
+   "u_vmks_Q2": "v700685",
+   "u_vmks_Q3": "v700685"
+  },
+  "q_hub_ne": {
+   "u_vmks_Q0": "v700685",
+   "u_vmks_Q1": "v8e478a",
+   "u_vmks_Q2": "v700685",
+   "u_vmks_Q3": "v700685"
+  }
+ },
+ "ports_plus1": {
+  "inputs_hbm_clk": [
+   {
+    "port": "w_k_v",
+    "width": 4,
+    "dir": "input",
+    "face": "w_k from u_wbk_Q",
+    "added_cycles": 1
+   },
+   {
+    "port": "w_k_addr",
+    "width": 120,
+    "dir": "input",
+    "face": "w_k from u_wbk_Q",
+    "added_cycles": 1
+   },
+   {
+    "port": "w_k_wdata",
+    "width": 1024,
+    "dir": "input",
+    "face": "w_k from u_wbk_Q",
+    "added_cycles": 1
+   },
+   {
+    "port": "c_kr_v",
+    "width": 4,
+    "dir": "input",
+    "face": "c_kr from u_ctl_Q_p*",
+    "added_cycles": 1
+   },
+   {
+    "port": "c_kr_tag",
+    "width": 68,
+    "dir": "input",
+    "face": "c_kr from u_ctl_Q_p*",
+    "added_cycles": 1
+   },
+   {
+    "port": "c_kr_beat",
+    "width": 16,
+    "dir": "input",
+    "face": "c_kr from u_ctl_Q_p*",
+    "added_cycles": 1
+   },
+   {
+    "port": "c_kr_data",
+    "width": 1024,
+    "dir": "input",
+    "face": "c_kr from u_ctl_Q_p*",
+    "added_cycles": 1
+   }
+  ],
+  "outputs_stream_fill": [
+   {
+    "port": "fill_v",
+    "width": 4,
+    "dir": "output",
+    "face": "fill to u_vmdel_Q*",
+    "added_cycles": 1
+   },
+   {
+    "port": "fill_bank",
+    "width": 4,
+    "dir": "output",
+    "face": "fill to u_vmdel_Q*",
+    "added_cycles": 1
+   },
+   {
+    "port": "fill_slot",
+    "width": 24,
+    "dir": "output",
+    "face": "fill to u_vmdel_Q*",
+    "added_cycles": 1
+   },
+   {
+    "port": "fill_epoch",
+    "width": 64,
+    "dir": "output",
+    "face": "fill to u_vmdel_Q*",
+    "added_cycles": 1
+   },
+   {
+    "port": "fill_data",
+    "width": 1024,
+    "dir": "output",
+    "face": "fill to u_vmdel_Q*",
+    "added_cycles": 1
+   }
+  ],
+  "reset": [
+   {
+    "port": "hbm_rst_n",
+    "width": 1,
+    "dir": "input",
+    "added_cycles": 1,
+    "note": "lane reset release"
+   }
+  ]
+ },
+ "ports_zero": [
+  "g_k_v",
+  "g_k_rdy",
+  "g_k_addr",
+  "g_k_len",
+  "g_k_tag",
+  "g_k_we",
+  "g_k_wdata",
+  "g_k_wstrb",
+  "g_k_wr_done",
+  "g_kr_v",
+  "g_kr_rdy",
+  "g_kr_tag",
+  "g_kr_beat",
+  "g_kr_data",
+  "c_k_v",
+  "c_k_rdy",
+  "c_k_addr",
+  "c_k_len",
+  "c_k_tag",
+  "c_k_we",
+  "c_k_wdata",
+  "c_k_wstrb",
+  "c_k_wr_done",
+  "c_kr_rdy",
+  "w_k_rdy",
+  "w_k_wr_done",
+  "vm_v",
+  "vm_bank",
+  "vm_epoch",
+  "vm_row",
+  "vm_col",
+  "wbw_v",
+  "wbw_base",
+  "wbw_total",
+  "sm_stream",
+  "sm_hbm",
+  "fault"
+ ],
+ "changes": {
+  "corelat": "corelat/cycles_kshare_pc_1109.tsv (new)",
+  "compiler_core_delta": "pending_not_folded[DIE-HBM-97/KSHARE-PC kshare_pc_1109] (new)",
+  "die_plan.json": "unchanged (no pin, outline, station, lane or clock change; core cycles are not carried by latency.lanes)"
+ },
+ "rtl": {
+  "core ot_hbm_svc_vm_kshare_splitstrap.sv (PCF=1)": "5b5fcd124cf5c35b84a5f50f91a4f9c0fca5e5546a1b62cd80025eb4767234ee",
+  "v8e478a fshell": "e584156b6d5b69cff8d6e0a21a32b80fbab117d4d3e98560ffe8fe86ef186930",
+  "v8e478a wrap": "6cb46fe6a780c46c375f7172146e0d6c92b829a130aa5901751c04877f07a824",
+  "v700685 fshell": "ae5ca134aafd7808e3c5656a6b20208721418c2251f2e55cf2adda28bbb244b2",
+  "v700685 wrap": "95f5f02f49d1b3bf82c2c3dba616a4ce145f61689138e3ab9d6e48a865604267"
+ },
+ "evidence": {
+  "bench": "epyc4 /srv/opentallas-scratch3/claude/die-hbm-97-kshare-pc/bench (mk_bench.py lockstep: new vs vR shell, inputs delayed 1 on the 7 buses, fill compared one edge later; MODE 0 PASS, MODE 1 (no fill shift) and MODE 2 (no input delay) FAIL)",
+  "kits": "intel1 /srv/opentallas-scratch2/claude/die-hbm-97-kshare-pc/kit_kshare_{v8e478a,v700685}_vPC (DO_NOT_COUNT)"
+ },
+ "risk": "valid/ready loops around the +1 inputs: KRL1 c_kr (ring depth 3 sized for ready latency 1 + face) and w_k (pin skid2) each see one more cycle between the core ready and the arriving valid; the static schedule must keep the c_kr / w_k issue inside the window the controller and wb_kport already honour, or the ring needs depth 4 + c_rdy_seen +1",
+ "not_changed": "outline, origin, orient, pins, clock taps/entries, stations, partitions, lanes, every other type",
+ "gate": "plan check (--completeness --plan-geom report) vs chk_plan_p11t g0_report.json: new-only must be 0"
+}

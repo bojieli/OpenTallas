@@ -1610,7 +1610,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-in-stage", action="append", default=[], metavar="BUSRE=K",
                     help="opt-in (DIE-HBM-61/CUTS 11-03): K extra free-placed relay register stages after the face flop "
                          "of every shell INPUT bus matching BUSRE (that input +K cycles, recorded in face_shell.json "
-                         "in_extra_stages); default none = unchanged")
+                         "in_extra_stages); default none = unchanged.  A recipe can also carry them as "
+                         "face_in_stages {BUSRE: K} (DIE-HBM-97/KSHARE-PC 11-10; merged with this option)")
     ap.add_argument("--face-reset-relay", type=int, default=0, metavar="N",
                     help="DIE-HBM-61/RTL 11-03 (OWNER RE-FORM registered reset relay, opt-in, default 0 = off): every "
                          "active-low reset input of the face shell goes through ot_hbm_face_rst_relay (async assert, "
@@ -1991,7 +1992,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                              drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
                              stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None,
                              lockup=a.face_lockup or None, reset_relay=a.face_reset_relay,
-                             in_stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage} or None,
+                             in_stages=({x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_in_stage}
+                                        | {k_: int(v_) for k_, v_ in rec.get("face_in_stages", {}).items()}) or None,
                              pass_buses=a.face_pass or None, native_context=native_context)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
@@ -2665,6 +2667,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
                                plan_pins=len(names) + len(shell["dropped"]),
                                **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}),
+                               **({"in_extra_stages": shell["in_extra_stages"]} if shell.get("in_extra_stages") else {}),
                                **({"out_lockup": shell["out_lockup"]} if shell.get("out_lockup") else {}),
                                **({"native_registered_passthrough": shell["native_registered_passthrough"],
                                    "face_cycle_overrides": shell["face_cycle_overrides"],

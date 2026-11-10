@@ -1,0 +1,26 @@
+BENCH v8e478a MODE 0 seed -620549490 cycles 40000 errs 0 fill_v_new 827 fill_v_old 827 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 PASS seedarg 1
+BENCH v8e478a MODE 1 seed -620549490 cycles 40000 errs 3274 fill_v_new 827 fill_v_old 827 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 FAIL seedarg 1
+BENCH v8e478a MODE 2 seed -620549490 cycles 40000 errs 479322 fill_v_new 827 fill_v_old 419 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 FAIL seedarg 1
+BENCH v8e478a MODE 0 seed 1286699011 cycles 40000 errs 0 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 PASS seedarg 7
+BENCH v8e478a MODE 1 seed 1286699011 cycles 40000 errs 1210 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 FAIL seedarg 7
+BENCH v8e478a MODE 2 seed 1286699011 cycles 40000 errs 382129 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 FAIL seedarg 7
+BENCH v8e478a MODE 0 seed -1112144509 cycles 40000 errs 0 fill_v_new 1422 fill_v_old 1422 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 PASS seedarg 42
+BENCH v8e478a MODE 1 seed -1112144509 cycles 40000 errs 5312 fill_v_new 1422 fill_v_old 1422 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 FAIL seedarg 42
+BENCH v8e478a MODE 2 seed -1112144509 cycles 40000 errs 448056 fill_v_new 1422 fill_v_old 563 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 FAIL seedarg 42
+BENCH v8e478a MODE 0 seed -251767710 cycles 40000 errs 0 fill_v_new 2022 fill_v_old 2022 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 PASS seedarg 1009
+BENCH v8e478a MODE 1 seed -251767710 cycles 40000 errs 7352 fill_v_new 2022 fill_v_old 2022 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 FAIL seedarg 1009
+BENCH v8e478a MODE 2 seed -251767710 cycles 40000 errs 468102 fill_v_new 2022 fill_v_old 385 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 FAIL seedarg 1009
+BENCH v700685 MODE 0 seed -620549490 cycles 40000 errs 0 fill_v_new 827 fill_v_old 827 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 PASS seedarg 1
+BENCH v700685 MODE 1 seed -620549490 cycles 40000 errs 3274 fill_v_new 827 fill_v_old 827 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 FAIL seedarg 1
+BENCH v700685 MODE 2 seed -620549490 cycles 40000 errs 479322 fill_v_new 827 fill_v_old 419 c_k_v 4084 g_kr_v 17016 w_k_wr_done 351 lane0_notNORM 37230 g_k_rdy 1100 fault 1 FAIL seedarg 1
+BENCH v700685 MODE 0 seed 1286699011 cycles 40000 errs 0 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 PASS seedarg 7
+BENCH v700685 MODE 1 seed 1286699011 cycles 40000 errs 1210 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 FAIL seedarg 7
+BENCH v700685 MODE 2 seed 1286699011 cycles 40000 errs 382129 fill_v_new 320 fill_v_old 320 c_k_v 4649 g_kr_v 22374 w_k_wr_done 11 lane0_notNORM 647 g_k_rdy 1101 fault 1 FAIL seedarg 7
+BENCH v700685 MODE 0 seed -1112144509 cycles 40000 errs 0 fill_v_new 1422 fill_v_old 1422 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 PASS seedarg 42
+BENCH v700685 MODE 1 seed -1112144509 cycles 40000 errs 5312 fill_v_new 1422 fill_v_old 1422 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 FAIL seedarg 42
+BENCH v700685 MODE 2 seed -1112144509 cycles 40000 errs 448056 fill_v_new 1422 fill_v_old 563 c_k_v 5661 g_kr_v 20844 w_k_wr_done 1066 lane0_notNORM 4115 g_k_rdy 0111 fault 1 FAIL seedarg 42
+BENCH v700685 MODE 0 seed -251767710 cycles 40000 errs 0 fill_v_new 2022 fill_v_old 2022 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 PASS seedarg 1009
+BENCH v700685 MODE 1 seed -251767710 cycles 40000 errs 7352 fill_v_new 2022 fill_v_old 2022 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 FAIL seedarg 1009
+BENCH v700685 MODE 2 seed -251767710 cycles 40000 errs 468102 fill_v_new 2022 fill_v_old 385 c_k_v 6841 g_kr_v 16354 w_k_wr_done 2712 lane0_notNORM 34226 g_k_rdy 1110 fault 1 FAIL seedarg 1009
+BENCH PCF0-identity v8e478a MODE 3 seed 1985691183 cycles 20000 errs 0 fill_v_new 2120 fill_v_old 2120 c_k_v 4155 g_kr_v 6492 w_k_wr_done 2129 lane0_notNORM 6462 g_k_rdy 0111 fault 1 PASS
+BENCH PCF0-identity v8e478a MODE 3 seed -737726377 cycles 20000 errs 0 fill_v_new 4084 fill_v_old 4084 c_k_v 6439 g_kr_v 2738 w_k_wr_done 4812 lane0_notNORM 13975 g_k_rdy 1111 fault 1 PASS
