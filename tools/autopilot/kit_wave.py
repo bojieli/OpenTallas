@@ -1163,6 +1163,21 @@ def strip_admission(text):
     return "\n".join(ln for ln in (text or "").splitlines() if not ADMISSION.search(ln))
 
 
+# KW43-77 11-10: a try that was NOT RUN (admission refused: 'ot-heavy: NOT RUN ...', 'ot-run: NOT RUN on epyc2: ot-heavy
+# exit 75') and then retried, with the retry reporting 'ot-run: RAN on', is a superseded try, not the verdict.
+# kv3_pv_v12 a25 / kv3_pv_v1 a10 failed FLOW (OT_CLAND) at 04:15/04:53; the 05:30 auto-rejudge re-read the whole
+# place.log, met the earlier try's NOT RUN line before the CLAND rule and rewrote both rows to INFRA.
+SUPERSEDED_TRY = re.compile(r"^\s*(?:ot-run|ot-heavy): NOT RUN\b")
+RAN_LINE = re.compile(r"ot-run: RAN on \S+")
+
+
+def drop_superseded_tries(text):
+    """the text without NOT RUN lines that a later 'ot-run: RAN on' line supersedes (the retry ran: its result decides)"""
+    lines = (text or "").splitlines()
+    last = max((i for i, ln in enumerate(lines) if RAN_LINE.search(ln)), default=-1)
+    return "\n".join(ln for i, ln in enumerate(lines) if i > last or not SUPERSEDED_TRY.search(ln))
+
+
 def decisive_line(text):
     """the line that decides a failed stage: the last exception / ERROR / <CHECK> FAIL line of the (admission-free)
     log, else the last error-looking line, else the last non-empty line"""
@@ -1207,7 +1222,7 @@ def classify(stage, text):
     line, or the exception line when the match is a bare Traceback / frame)"""
     raw = text or ""
     ran = re.search(r"ot-run: RAN on \S+", raw)
-    clean = strip_admission(raw)
+    clean = drop_superseded_tries(strip_admission(raw))
     views = (error_lines(clean), clean)
     for cls, st_re, tx_re, why in RULES:
         if st_re and not re.search(st_re, stage or ""):
