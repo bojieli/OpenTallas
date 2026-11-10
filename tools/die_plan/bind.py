@@ -5088,6 +5088,106 @@ def kit_library_select(profile, tn, idx, prefer, wide, defines, base):
     return idx, prefer, new_wide, list(receipt["defines"]), receipt
 
 
+LEAF_FOLLOW_TOPS = ("rtl", "physical", "results")
+
+LEAF_SRC = None     # tests only: the wave source kit-rtl follows (default: the checkout this bind.py runs from)
+
+
+class LeafFollow:
+    """KW-FIX-35-US 11-08 (class UNINDEXED-SRC-STALE, S81-TYPES-9-LEC 09:50; generalises S81_LEAF_FOLLOW fc0e2cb749a to
+    every die, no env gate): kit-rtl indexes the leaf RTL under the as-built manifest's own base, a FROZEN bind source
+    tree (S81 codex-wave-bind-1106/src_28fc7, QC kw33src/src_d95ec, HBM hbm-bind-6/tip2, KV kw-fix-8/src_n ...), and
+    under absolute manifest files in older lane trees, so leaf-file class fixes in the wave source never reached a
+    relaunched kit (J2 xs_ctl, J3 xs4/rstopt_xo failed LEC again; sweep 11-08: 166 live kits differ from their spec
+    src).  Leaf sources now resolve from the wave source `src` (the checkout kit-rtl runs from, the die config "src"):
+    a leaf file with a counterpart in src at the same repo-relative path is replaced by that counterpart (bytes equal:
+    'same'; bytes differ and the src file still defines every module of the old one: 'followed'; added helper modules
+    are common, e.g. ot_dp_landing_input_face).  Kept as they are: files already in src, in the bind out / kit
+    dir, hardened child views (a dir <m>/ with <m>.lef: signed views stay in the bind tree), library-profile
+    replacements, and files with no src counterpart ('frozen').  A leaf whose bytes differ from src while src no longer
+    defines one of its modules cannot follow: if the kit closure picks it, kit-rtl FAILS CLOSED (check)."""
+
+    def __init__(self, base, src, exclude=(), keep=()):
+        self.base, self.src = Path(base).resolve(), Path(src).resolve()
+        self.exclude = [Path(x).resolve() for x in exclude if x]
+        self.keep = {str(Path(x).resolve()) for x in keep if x}
+        self.st = {}
+
+    @staticmethod
+    def _under(p, d):
+        return p == d or d in p.parents
+
+    @staticmethod
+    def _md5(p):
+        return hashlib.md5(Path(p).read_bytes()).hexdigest()
+
+    @staticmethod
+    def _mods(p):
+        return sorted(set(E.MOD_RE.findall(E._strip(Path(p).read_text(errors="replace")))))
+
+    def active(self):
+        return not self._under(self.base, self.src)
+
+    def classify(self, f):
+        """-> (status, path to use, rel or None)"""
+        key = str(f)
+        if key in self.st:
+            return self.st[key]
+        rp = Path(f).resolve()
+        r = None
+        if self._under(rp, self.src) or any(self._under(rp, x) for x in self.exclude):
+            r = ("src", str(f), None)
+        elif (rp.parent / f"{rp.parent.name}.lef").is_file():
+            r = ("view", str(f), None)
+        elif str(rp) in self.keep:
+            r = ("pinned", str(f), None)
+        else:
+            rel = None
+            if self._under(rp, self.base):
+                rel = rp.relative_to(self.base)
+            else:
+                for i, x in enumerate(rp.parts):
+                    if x in LEAF_FOLLOW_TOPS and (self.src / Path(*rp.parts[i:])).is_file():
+                        rel = Path(*rp.parts[i:])
+                        break
+            now = self.src / rel if rel is not None else None
+            if now is None or not now.is_file() or not rp.is_file():
+                r = ("frozen", str(f), str(rel) if rel is not None else None)
+            elif self._md5(rp) == self._md5(now):
+                r = ("same", str(now), str(rel))
+            elif set(self._mods(rp)) <= set(self._mods(now)):
+                r = ("followed", str(now), str(rel))
+            else:
+                r = ("mismatch", str(f), str(rel))
+        self.st[key] = r
+        return r
+
+    def map_list(self, fs):
+        return list(dict.fromkeys(self.classify(f)[1] for f in fs))
+
+    def check(self, tn, files):
+        """fail closed: a selected leaf that differs from the wave source and could not follow it"""
+        bad = []
+        for f in files:
+            s, use, rel = self.classify(f)
+            if s == "mismatch":
+                bad.append(f"{rel}: {f} md5 {self._md5(f)[:8]} defines {self._mods(f)[:4]}, wave src {self.src / rel} "
+                           f"md5 {self._md5(self.src / rel)[:8]} defines {self._mods(self.src / rel)[:4]}")
+        if bad:
+            raise BindError(f"kit-rtl {tn}: {len(bad)} leaf source(s) differ from the wave source {self.src} and cannot "
+                            "follow it (the wave file lacks a module of the old one): stale RTL (UNINDEXED-SRC-STALE). Fix the wave source, or "
+                            "bind the child as a signed hard view. " + "; ".join(bad[:5]))
+
+    def record(self):
+        rows = [dict(file=rel, was=k, now=use, was_md5=self._md5(k), now_md5=self._md5(use))
+                for k, (s, use, rel) in sorted(self.st.items()) if s == "followed"]
+        frozen = sorted({k for k, (s, _, _) in self.st.items() if s == "frozen"})
+        return dict(rule="KW-FIX-35-US 11-08: leaf sources resolve from the wave source (UNINDEXED-SRC-STALE)",
+                    src=str(self.src), base=str(self.base), followed=rows,
+                    same=sum(1 for s, _, _ in self.st.values() if s == "same"),
+                    frozen_only=len(frozen), frozen_examples=frozen[:20])
+
+
 def kit_library_verify(tn, receipt, closure_files, picks, filelist, dedup=None):
     """KW-FIX-22: fail closed unless every profile replacement is the source the closure actually selected: each
     replacement file is in the closure, no captured original is in the closure or the final filelist (directly or as a
@@ -5587,6 +5687,19 @@ def cmd_kit_rtl(a):
     if getattr(a, "library_profile", None):
         idx, prefer, wide, kit_defines, lib_profile = kit_library_select(a.library_profile, tn, idx, prefer, wide,
                                                                         kit_defines, base)
+    # KW-FIX-35-US 11-08 (UNINDEXED-SRC-STALE): leaf sources follow the wave source (LeafFollow); the repo-wide fallback
+    # index is the wave source's rtl/ first, the frozen base's rtl/ only for modules the wave source lacks
+    src_tree = Path(LEAF_SRC).resolve() if LEAF_SRC else Path(__file__).resolve().parents[2]
+    leaf_follow = LeafFollow(base, src_tree, exclude=[out, kd],
+                             keep=[r["replacement"] for r in (lib_profile or {}).get("replacements", [])])
+    idx = {m: leaf_follow.map_list(fs) for m, fs in idx.items()}
+    prefer = leaf_follow.map_list(prefer)
+    if leaf_follow.active() and (src_tree / "rtl").is_dir():
+        wide = {**{m: leaf_follow.map_list(fs) for m, fs in (wide or {}).items()},
+                **E.module_index([str(src_tree / "rtl")], [], src_tree)}
+    else:
+        wide = {m: leaf_follow.map_list(fs) for m, fs in (wide or {}).items()}
+    E.validate_preferred_files(prefer)
     widened = {}
     views = macro_views(base)
     # S81-SERDES-PHY-2 10-31: a macro view generated after the bind (S81 PMA abstracts) lives in the kit tool checkout,
@@ -5615,7 +5728,8 @@ def cmd_kit_rtl(a):
     files = [Path(f).resolve() for f in cl]
     if spb_geometry:
         files.append(Path(spb_geometry['rtl']).resolve())
-    pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
+    pkgs = [Path(leaf_follow.classify(str(x))[1]) for x in kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)]
+    leaf_follow.check(tn, [str(f) for f in files] + [str(x) for x in pkgs])
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]
@@ -5658,6 +5772,7 @@ def cmd_kit_rtl(a):
                bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
+               leaf_follow=leaf_follow.record(),
                hbm_spb_native_geometry=spb_geometry,
                **({"bound_reset": dict(file="bound_reset.json", tree_sha256=bound_reset_source["tree_sha256"],
                                         source=bound_reset_source["authority"])} if bound_reset else {}),
