@@ -35363,3 +35363,19 @@ ASK COORD, pick one (my recommendation A):
 (B) Reverse LEC-TOOL-4 for this register shape only: lec.py pins the gold power-up value to the constant the register can only ever load (standard X-refinement, about 60 lines plus a unit test). This clears all three without a re-bind, but the change applies on every die.
 (C) Make keep survive opt_dff's enable extraction. This means a flow change and re-synthesis of every kit.
 Default if silent: A, listed with the re-bind items. A fresh dsdv t7 re-run on current main lec.py is running as a control (ds85-lec-dsdv_slice_c1x_C__t7, about 8.5 h); same result expected.
+- 2026-11-10 08:47 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-78): 1 event(s): kv3_sys_c LAUNCHED (kw-qwenkv-kv3sysc-8-29276)
+FAILED [AUTOPILOT 3ae4f7cc1241] 2026-11-10 08:52:10 PST AUTOPILOT -> KIT-WAVE-3: FAILED 3ae4f7cc1241 s81/col_h9_r0_p5__t1 (STRUCTURAL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p5__t1/attempt_20/gen/col_h9_r0_p5__t1 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-10 08:56 PST STATE KW-FIX-44 -> COORD: OT_MAXWIRE pilot queued on epyc7 (4 runs); ca1 keep branch pushed; kw32r move running
+  (2) OT_MAXWIRE pilot: 4 runs queued with --direct on epyc7 and 4 NEAR-CLOSE rows added. The six S81 jobs inside the step are untouched.
+      They are waiting on the direct headroom check: MemAvailable must be >= mem + 32 GB, and an earlier direct job is still inside its 300 s window.
+      - Pilot dirs: epyc7:/srv/opentallas-scratch2/claude/kw44/mwpilot/{fe2,leaf}_{mw150,mwoff}. Each has a DO_NOT_COUNT marker.
+      - Hub units: kw44-mw2-<dir>.service. Logs: intel2 /srv/opentallas-scratch2/claude/kw44/kw4377/mwpilot-logs/.
+      - Each run stage-resumes from the same 4_cts.odb as its baseline: kit_resume apply, start grt, synth..cts reused from my private copy of the source run. Only OT_MAXWIRE_UM changes: 150, or the line removed (hook off).
+      - Baselines:
+          slw_fe_v2__cle312294d, N=50, the running autopilot job on intel1. repair_design took 21,959 s for +142k buffers.
+          ot_s81sl_leaf__t27, N=100. GRT took 3:13 h, repair_design 1,555 s, +13%.
+      - Each run goes grt -> route -> in-kit sign-off: fe2 at 48 GB / 16 threads, leaf at 32 GB / 8.
+      - I will compare GRT and repair_design time, instance growth, long nets, routed and sign-off slew/cap, and TT/FF WNS.
+      - My error: the first leaf start (08:49) failed preflight on "staged_tools: missing signoff.py". My copy had excluded /signoff* at the kit top. I restored signoff.py and run/objects into all 4 kits, removed the FAIL_PREFLOOR marker that run wrote, restored preflight.json and relaunched at 08:52.
+  (4) /tmp/ca1: d027adf4af1 is pushed to hub branch claude/ca1-keep-1110 (ls-remote shows d027adf4af17ac71902ff26fbdcfb78d617878be). The dir is left as is.
+      /tmp/kw32r: copying to epyc7:/srv/opentallas-scratch2/claude/kw44/hold/kw32r, 19 of 40 GB at 08:5x. Then a checksum pass, then I remove the local copy and post the free space.
