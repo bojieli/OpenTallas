@@ -1,0 +1,27 @@
+{
+ "event": "FTLOCK-S81",
+ "form": "hb4",
+ "die": "s81",
+ "items": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "set": {
+  "type_args": {
+   "slice_station__t27": [
+    "--hold-ff-margin",
+    "85"
+   ],
+   "slice_station__t49": [
+    "--hold-ff-margin",
+    "85"
+   ]
+  }
+ },
+ "applied": false,
+ "note": "proposal only: kit_wave.json is not touched by this tool",
+ "retry_fix_template": {
+  "slice_station__t27@<attempt>": "REDESIGN: FTLOCK-S81 hb4 form on internal ft station hops (0 pin cycles)",
+  "slice_station__t49@<attempt>": "REDESIGN: FTLOCK-S81 hb4 form on internal ft station hops (0 pin cycles)"
+ }
+}

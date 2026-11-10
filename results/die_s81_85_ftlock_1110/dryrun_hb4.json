@@ -1,0 +1,51 @@
+{
+ "die": "s81",
+ "event": "e9eda32d41c",
+ "plan": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "rows": 271,
+ "changed": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "key_changed": [],
+ "input_hash_changed": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "named_unchanged": [],
+ "named_missing": [],
+ "blockers": [],
+ "ok": true,
+ "detail": [
+  {
+   "item": "slice_station__t27",
+   "named": true,
+   "key_before": "s81|slice_station__t27|b624e45f1685f",
+   "key_after": "s81|slice_station__t27|b624e45f1685f",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": false,
+   "kit_rtl_changed": false,
+   "gen_args_changed": true
+  },
+  {
+   "item": "slice_station__t49",
+   "named": true,
+   "key_before": "s81|slice_station__t49|b72159f21c44d",
+   "key_after": "s81|slice_station__t49|b72159f21c44d",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": false,
+   "kit_rtl_changed": false,
+   "gen_args_changed": true
+  }
+ ],
+ "kit_wave_py": "/srv/opentallas-scratch3/claude/die-s81-85/ftlock/rt/tools/autopilot/kit_wave.py",
+ "kit_wave_py_sha256": "731340efc0a4450fe304fb592be01315e250e4a14db98e1a8f776c59e97e7e1c",
+ "cfg": "/srv/opentallas-scratch3/claude/die-s81-85/ftlock/in/kit_wave.json",
+ "cfg_sha256": "76f32e47eb35049d5719d830ed52a021aed4c60ec7ec181dfc00ae756f3e4a09",
+ "state": "/srv/opentallas-scratch3/claude/die-s81-85/ftlock/in/kit_wave_state.json",
+ "fragment": "/srv/opentallas-scratch3/claude/die-s81-85/ftlock/frag_hb4.json",
+ "fragment_sha256": "16ef4463b60aacca08a7f65a27e3be15dcea60d833ee00a0ea7c947e6ef1e27e"
+}

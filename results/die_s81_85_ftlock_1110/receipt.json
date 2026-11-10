@@ -1,0 +1,252 @@
+{
+ "event": "FTLOCK-S81",
+ "tool": "tools/die_plan/ft_hop_lockup_item_event.py",
+ "form": "latch",
+ "plan_in": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_in_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "plan_out": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+ "plan_out_sha256": "9c9ac92a70d162a8278c0b5b725122df6033669d537281560ce6e6fd3c6cbc6e",
+ "items": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "ft_hop_lockup_before": null,
+ "ft_hop_lockup": {
+  "types": [
+   "slice_station__t27",
+   "slice_station__t49"
+  ],
+  "note": "FTLOCK-S81 DIE-S81-85 11-10 (COORD): per-item event plan for item_inputs only (die plan of record unchanged); t27 ft6_o_1->_2 -15.26 ps / t49 ft9_o_3->_4 -20.86 ps FF hold after late ECO i1; lockup latch on every internal ft hop, 0 pin cycles"
+ },
+ "changed_keys": [
+  "clock.ft_hop_lockup"
+ ],
+ "partition_types_unchanged": true,
+ "lockup_on": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "lockup_on_before": [],
+ "census": {
+  "slice_station__t27": {
+   "slots": 15,
+   "hops": 50,
+   "latch_bits": 20401,
+   "max_hop_um": 361.237,
+   "max_half_hop_um": 180.619,
+   "per_slot": [
+    {
+     "slot": "ft0",
+     "stations": 5,
+     "hops": 4,
+     "width": 1104,
+     "latch_bits": 4420,
+     "max_hop_um": 361.237
+    },
+    {
+     "slot": "ft1",
+     "stations": 5,
+     "hops": 4,
+     "width": 1104,
+     "latch_bits": 4420,
+     "max_hop_um": 361.231
+    },
+    {
+     "slot": "ft2",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.264
+    },
+    {
+     "slot": "ft3",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.284
+    },
+    {
+     "slot": "ft4",
+     "stations": 5,
+     "hops": 4,
+     "width": 604,
+     "latch_bits": 2420,
+     "max_hop_um": 307.281
+    },
+    {
+     "slot": "ft5",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft6",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft7",
+     "stations": 4,
+     "hops": 3,
+     "width": 45,
+     "latch_bits": 138,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft8",
+     "stations": 4,
+     "hops": 3,
+     "width": 176,
+     "latch_bits": 531,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft9",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft10",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft11",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft12",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft13",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft14",
+     "stations": 4,
+     "hops": 3,
+     "width": 70,
+     "latch_bits": 213,
+     "max_hop_um": null
+    }
+   ]
+  },
+  "slice_station__t49": {
+   "slots": 10,
+   "hops": 35,
+   "latch_bits": 17221,
+   "max_hop_um": 308.336,
+   "max_half_hop_um": 154.168,
+   "per_slot": [
+    {
+     "slot": "ft0",
+     "stations": 4,
+     "hops": 3,
+     "width": 258,
+     "latch_bits": 777,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft1",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.264
+    },
+    {
+     "slot": "ft2",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.284
+    },
+    {
+     "slot": "ft3",
+     "stations": 5,
+     "hops": 4,
+     "width": 513,
+     "latch_bits": 2056,
+     "max_hop_um": 308.336
+    },
+    {
+     "slot": "ft4",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.28
+    },
+    {
+     "slot": "ft5",
+     "stations": 5,
+     "hops": 4,
+     "width": 512,
+     "latch_bits": 2052,
+     "max_hop_um": 307.263
+    },
+    {
+     "slot": "ft6",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft7",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft8",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    },
+    {
+     "slot": "ft9",
+     "stations": 4,
+     "hops": 3,
+     "width": 514,
+     "latch_bits": 1545,
+     "max_hop_um": null
+    }
+   ]
+  }
+ },
+ "pin_cycles_added": 0,
+ "zero_cycle_argument": "station k launches at rise 0; the transparent-low latch (ot_dp_lk) passes it at fall T/2; station k+1 captures at rise T: one cycle per hop as before, pins and plan latency unchanged"
+}
