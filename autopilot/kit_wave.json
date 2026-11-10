@@ -15126,7 +15126,22 @@
     "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
-    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0"
+    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
+    "q_b113": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b113__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_spu1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_spu1__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_su30": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_su30__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_spb2__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_hub_ne": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_hub_ne__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_hub_nw__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b110": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b110__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b111": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b111__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
+    "q_b112__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch"
    },
    "gen_hosts": [
     "epyc2",
@@ -16018,7 +16033,7 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_f5c_pre/bind",
     "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
@@ -18536,7 +18551,26 @@
      "note": "KW-FIX-43 15:3x DIE-HBM-97 READY 14:50 SPB2-ISTGAP: plan p11s c5535cdce2d9a9f1 (= p11 + q_spb2__physical_v1 internal_stations) + strict bind kw43/hbm_p11s_pre (epyc7, 90/81/420, errors 0); vK5c. KW43-12 ASK default YES on bind pass."
     }
    },
-   "note_kw43_p11t": "KW-FIX-43 16:0x: 7 types -> p11t (supersedes p11s); q_b113(+pv1) fresh gen once with p11t opsb pins + reset contract (src) + c12 prefer; the other 5 byte-identical, running kits untouched. Revert: item_inputs[k] = item_inputs_prev_kw43p11t[k]."
+   "note_kw43_p11t": "KW-FIX-43 16:0x: 7 types -> p11t (supersedes p11s); q_b113(+pv1) fresh gen once with p11t opsb pins + reset contract (src) + c12 prefer; the other 5 byte-identical, running kits untouched. Revert: item_inputs[k] = item_inputs_prev_kw43p11t[k].",
+   "kit_rtl_asbuilt_prev_kw43bleed": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json",
+   "hold_items_kw43bleed_added": [
+    "q_b113",
+    "q_b113__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_spb2__physical_v1",
+    "q_hub_ne",
+    "q_hub_ne__physical_v1",
+    "q_hub_nw__physical_v1",
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112__physical_v1"
+   ],
+   "note_kw43_bleed": "KW-FIX-43 16:1x: stop-the-bleed: die kit_rtl.asbuilt back to vK5c (matches bind_F5c) for non-held types; c12/p11t/hub/RING types held. Revert: asbuilt = kit_rtl_asbuilt_prev_kw43bleed; drop hold_items_kw43bleed_added."
   }
  },
  "place_prefer": [
