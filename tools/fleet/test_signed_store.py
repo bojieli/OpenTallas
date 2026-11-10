@@ -110,6 +110,8 @@ def test_late_pass_refuses_changed_unit():
     calls = []
     orig = si.ss.late_provenance
     si.ss.late_provenance = lambda *a, **k: calls.append(a) or True
+    origp = si.host_pins
+    si.host_pins = lambda h, r: None
     try:
         coll = lambda h, p: dict(signoff=so, prov='{"kind": "resign"}')
         good = {"/k/r/signoff/signoff.json": [5, "s1"], "/k/r/x.v": [7, "s2"], "/k/r/PROVENANCE.json": [3, "pp"]}
@@ -127,6 +129,7 @@ def test_late_pass_refuses_changed_unit():
         assert "signoff.json changed" in fails[0][2]
     finally:
         si.ss.late_provenance = orig
+        si.host_pins = origp
 
 
 def test_late_pass_alias_copy():
@@ -148,21 +151,46 @@ def test_late_pass_alias_copy():
     assert si.select_late([r], [dict(e, aliases=[e["origin"]])]) == []               # origin-only entry: alias path unknown
     unit = dict(files=[["/k/so/signoff/signoff.json", 5], ["/k/so/PROVENANCE.json", 3], ["/k/run/6_final.odb", 9]])
     good = {"/k/so/signoff/signoff.json": [5, "s1"], "/k/so/PROVENANCE.json": [3, "pp"], "/k/run/6_final.odb": [9, "db"]}
-    calls = []
+    calls = []; kws = []; asked = []
     orig = si.ss.late_provenance
-    si.ss.late_provenance = lambda *a, **k: calls.append(a) or True
+    si.ss.late_provenance = lambda *a, **k: calls.append(a) or kws.append(k) or True
     try:
         coll = lambda h, p: dict(signoff=so, prov='{"kind": "resign"}')
         fails = []
-        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=coll) == [eid] and not fails
+        pinf = lambda h, r: asked.append(h) or {"rows": [1]}
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=coll, pinf=pinf) == [eid] and not fails
         assert [x[0] for x in calls[0][4]] == ["k/run/6_final.odb", "k/so/PROVENANCE.json", "k/so/signoff/signoff.json"]
+        assert asked == ["h1"] and kws[0]["pins"] == {"rows": [1]}          # missing pin table read on the alias host
+        asked.clear(); kws.clear()
+        assert si.late_pass([(dict(e, pins={"rows": [0]}), r)], [], archive=lambda h, c, f: (good, {r["path"]: unit}), collect=coll, pinf=pinf) == [eid]
+        assert asked == [] and kws[0]["pins"] is None                        # an existing table is not re-read
+        si.ss.late_provenance = orig
         fails = []
         part = {k: v for k, v in good.items() if not k.endswith(".odb")}
-        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (part, {r["path"]: unit}), collect=coll) == [] and "unverified" in fails[0][2]
+        si.ss.late_provenance = lambda *a, **k: True
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (part, {r["path"]: unit}), collect=coll, pinf=pinf) == [] and "unverified" in fails[0][2]
         fails = []
-        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=lambda h, p: dict(signoff=so + " ", prov="{}")) == []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=lambda h, p: dict(signoff=so + " ", prov="{}"), pinf=pinf) == []
     finally:
         si.ss.late_provenance = orig
+
+
+def test_late_provenance_and_set_pins_fill_missing_only():
+    import tempfile, gzip, json as J
+    with tempfile.TemporaryDirectory() as d:
+        so = '{"verdict": "SIGNED", "n": "pins"}'
+        import hashlib
+        eid = hashlib.sha256(so.encode()).hexdigest()
+        e = dict(id=eid, origin="h7:/c/so/signoff/signoff.json", scan=dict(name="n"), files=[], pins=None)
+        p = ss.entry_path(eid, d); os.makedirs(os.path.dirname(p), exist_ok=True)
+        open(p, "wb").write(gzip.compress((J.dumps(e) + "\n").encode()))
+        sc = dict(name="n", prov_file="/k/so/PROVENANCE.json", flow_tag="flow-x", src_commit="abc")
+        assert ss.late_provenance(eid, sc, {"kind": "resign"}, "/archive/h1", [], d, pins={"rows": [1]})
+        assert ss.read_entry(p)["pins"] == {"rows": [1]}
+        assert not ss.set_pins(eid, {"rows": [2]}, d) and ss.read_entry(p)["pins"] == {"rows": [1]}   # never replaced
+        e2 = dict(e, id="0" * 64); p2 = ss.entry_path(e2["id"], d); os.makedirs(os.path.dirname(p2), exist_ok=True)
+        open(p2, "wb").write(gzip.compress((J.dumps(e2) + "\n").encode()))
+        assert ss.set_pins(e2["id"], {"rows": [3]}, d) and ss.read_entry(p2)["pins"] == {"rows": [3]}
 
 if __name__ == "__main__":
     for k, v in list(globals().items()):

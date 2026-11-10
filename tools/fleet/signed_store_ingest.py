@@ -222,7 +222,18 @@ def select_late(recs, manifest):
     return out
 
 
-def late_pass(late, fails, archive=None, collect=None):
+def host_pins(h, r):
+    """the counter's pin fetch for one record on its host (routed DEF of its PROVENANCE routed_db first) -> stored form or None"""
+    rtp = ss._rtp(); hosts0 = rtp.HOSTS; rtp.HOSTS = [h]
+    try:
+        return ss.pins_doc(rtp.fetch_rec_pins([dict(r, scan_host=h)]).get((h, r.get('pins_path'))))
+    except Exception as x:
+        say('pins', h, r.get('path'), str(x)[:200]); return None
+    finally:
+        rtp.HOSTS = hosts0
+
+
+def late_pass(late, fails, archive=None, collect=None, pinf=None):
     """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
     archive = archive or archive_host
     collect = collect or (lambda h, p: json.loads(run(SSH + [h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)], p + '\n', 300).stdout)[p])
@@ -252,8 +263,9 @@ def late_pass(late, fails, archive=None, collect=None):
                 fails.append([h, r['path'], 'late: no PROVENANCE text']); continue
             if ss.hashlib.sha256(t['signoff'].encode()).hexdigest() != e['id']:
                 fails.append([h, r['path'], 'late: signoff.json changed']); continue
+            pins = (pinf or host_pins)(h, r) if e.get('pins') is None else None
             if ss.late_provenance(e['id'], r, json.loads(t['prov']), ss.ARCHIVE_ROOT + '/' + h,
-                                  [[p.lstrip('/'), good[p][0], good[p][1]] for p in sorted(newf)], changed_logs=sorted(logs)):
+                                  [[p.lstrip('/'), good[p][0], good[p][1]] for p in sorted(newf)], changed_logs=sorted(logs), pins=pins):
                 done.append(e['id']); say('LATE PROVENANCE', e['id'][:12], r['path'])
     return done
 
