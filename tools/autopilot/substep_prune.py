@@ -199,8 +199,11 @@ def tick(AP, cfg, st, ap_dir, ssh_argv, read_protected, _live=None):
     coord/state file; every file of PROTECTED_FILES must read non-empty, else nothing is removed this tick."""
     if cfg.get("substep_prune") is False:
         return
-    cand = [c for c in candidates(st) if ((cfg.get("dies") or {}).get(st["items"][c[0]].get("die")) or {})
-            .get("substep_prune", True) is not False][:MAX_DIRS_PER_TICK]
+    # KW-FIX-44 11-10 (COORD): a terminated host (kit_wave.json retired_hosts: epyc5/epyc6 since 11-09) is never asked;
+    # its rows were retried every tick ('Could not resolve hostname').  The rows themselves are left as they are.
+    gone = set(cfg.get("retired_hosts") or [])
+    cand = [c for c in candidates(st) if c[1] not in gone and ((cfg.get("dies") or {}).get(st["items"][c[0]].get("die"))
+            or {}).get("substep_prune", True) is not False][:MAX_DIRS_PER_TICK]
     if not cand:
         return
     texts = {rel: read_protected(rel) or "" for rel in PROTECTED_FILES}

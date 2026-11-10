@@ -95,7 +95,7 @@ def eco_receipt(res):
 
 
 def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
-                 late=True, eco_loop=late_eco):
+                 late=True, eco_loop=late_eco, plan_dir=None):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -105,8 +105,14 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
         print("KIT_PREFLIGHT FAIL: staged source tool missing", flush=True)
         return 3
     if preflight.is_file():
+        # KW-FIX-44 11-10 (DIE-KV-97): this run has no plan dir, so the plan-reading contract checks (macro_pin_grid
+        # ...) FAIL 'no plan contents (pass --plan-dir)'; it then overwrote KIT/preflight.json, the gen-time --plan-dir
+        # verdict.  Its own receipt is kept; KIT/preflight.json stays the gen-time one.
+        extra = ["--plan-dir", str(plan_dir)] if plan_dir else (
+            ["--no-emit"] if (kit / "preflight.json").is_file() and "--no-emit" in preflight.read_text(errors="replace")
+            else [])
         rc = run([sys.executable, str(preflight), str(kit), "--out",
-                  str(kit / ("preflight_autopilot_" + str(time.time_ns()) + ".json"))])
+                  str(kit / ("preflight_autopilot_" + str(time.time_ns()) + ".json"))] + extra)
         if rc:
             print("KIT_PREFLIGHT FAIL: autopilot stopped before physical runner", flush=True)
             return rc
@@ -208,6 +214,7 @@ def main():
     ap.add_argument("--preflight", help="separately staged shared tool, including its source helpers")
     ap.add_argument("--lec", help="separately staged current main lec.py (routed proof); default KIT/lec.py")
     ap.add_argument("--no-late-eco", action="store_true", help="KW-ECO-1 opt-out: no late-stage ECO loop on a NOT SIGNED route")
+    ap.add_argument("--plan-dir", help="plan dir for the kit preflight's plan-reading contract checks (optional)")
     ap.add_argument("runner")
     ap.add_argument("kit")
     ap.add_argument("goal")
@@ -215,7 +222,7 @@ def main():
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
     return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, lec=a.lec,
-                        late=not a.no_late_eco)
+                        late=not a.no_late_eco, plan_dir=a.plan_dir)
 
 
 if __name__ == "__main__":

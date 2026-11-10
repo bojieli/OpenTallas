@@ -205,6 +205,24 @@ class Tick(unittest.TestCase):
             finally:
                 SP.candidates = orig
 
+    def test_retired_host_never_asked(self):
+        # KW-FIX-44 11-10: epyc5/epyc6 terminated; their rows must not be sent to ssh every tick, and stay unmarked
+        now = time.time()
+        st = {"items": {"k5": {"die": "s81", "event": "ev", "item": "x", "attempt": "2", "status": "FAIL",
+                               "updated": now - 9 * 3600,
+                               "evidence": "epyc5:/srv/s/kit-wave/s81/ev/items/x/attempt_2/gen/x"}}}
+        self.assertEqual([c[1] for c in SP.candidates(st)], ["epyc5"])
+        asked = []
+        ap = self.AP()
+        ap.sh = lambda cmd, **kw: asked.append(cmd) or (255, "", "ssh: Could not resolve hostname epyc5")
+        SP.tick(ap, {"retired_hosts": ["epyc5", "epyc6"], "dies": {"s81": {}}}, st, "/nonexistent",
+                lambda h: ["ssh", h], lambda rel: "intel2\t/srv/zz\tx\n", _live=[])
+        self.assertEqual(asked, [])
+        self.assertNotIn("substep_checked", st["items"]["k5"])
+        SP.tick(ap, {"dies": {"s81": {}}}, st, "/nonexistent", lambda h: ["ssh", h],
+                lambda rel: "intel2\t/srv/zz\tx\n", _live=[])
+        self.assertEqual(len(asked), 1)                 # without the list the host is asked, as before
+
 
 if __name__ == "__main__":
     unittest.main()
