@@ -1297,7 +1297,12 @@ def post_cts_setup_hook(kd, cfg):
     """COORD 2026-10-27 10:37 (2): HBM kits repair TT setup post-CTS (after the kit's balanced-tree POST_CTS hook) and
     at GRT (two-mode session), one timing mode per corner like the other dies.  Chains the effective POST_CTS_TCL."""
     prev = _effective_hook(cfg, "POST_CTS_TCL")
-    (kd / "post_cts_setup.tcl").write_text(CTS_SETUP_TCL.replace("@PREV@", ("source {" + prev + "}\n") if prev else ""))
+    # CLK-ROOT-CROSS (DIE-HBM-97 11-10, COORD vecd-clkroot-gen): FIRST in POST_CTS, before the kit's tap / leaf balance
+    # (so the balance pads the trees with the repeaters in them), one root repeater for every clock port boxed in by
+    # macros (vecd4ae: clk GRT-0116 over macro u_a, clk_e GRT-0183 in the same gap); geometry decides per port net.
+    sys.path.insert(0, str(TOOL)); import core_flow
+    crc = core_flow.stage_clk_root_cross(kd)
+    (kd / "post_cts_setup.tcl").write_text(CTS_SETUP_TCL.replace("@PREV@", crc + (("source {" + prev + "}\n") if prev else "")))
     cfg += ["override export POST_CTS_TCL = /work/post_cts_setup.tcl"]
     return dict(previous_post_cts=prev, repair="setup only (scene tc / vclk OT_VCLK_TT)", hold="GRT step only")
 
