@@ -35,7 +35,11 @@ module ot_hdc_fp32_add_lat #(
     //   E  inside A2: swap-select the smaller operand + one jam shifter | sticky OR, d >= 28 pick
     //   F  inside B2a: carry pick, sentinel OR | LZC
     //   G  inside C2: round carry, exponent, encode, overflow | zero check, output select
-    parameter integer XCUTS = 0
+    parameter integer XCUTS = 0,
+    // SWREP (DIE-S81-85 11-09 native census, opt-in; default 0 = unchanged, bit for bit): with the A cut on, the swap
+    // flop (A1 -> A2, ~134 load pins) is registered as 4 kept copies, each driving one quarter of the A2 swap muxes.
+    // Same function and reset as the u_ca bit it replaces.
+    parameter integer SWREP = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -100,21 +104,58 @@ module ot_hdc_fp32_add_lat #(
     wire [7:0]  x_aexp, x_bexp, x_dab, x_dba;
     wire [23:0] x_aman, x_bman;
     assign {x_swap, x_v, x_byp, x_err, x_code, x_sub, x_as, x_bs, x_aexp, x_bexp, x_aman, x_bman, x_dab, x_dba} = a2_in;
+    wire [3:0]  x_swc;                                // the A2 swap selects (SWREP: kept copies; else x_swap)
+    wire [7:0]  x_dab2, x_dba2, x_dab3, x_dba3;       // the jam lost-mask (2) / >= 28 (3) copies of x_dab / x_dba (SWREP)
+    generate if (SWREP > 0 && CUT_A) begin : g_swrep
+        (* keep = "true", dont_touch = "true" *) reg [3:0] swc;
+        (* keep = "true", dont_touch = "true" *) reg [7:0] dab2, dba2, dab3, dba3;
+        if (DRST) begin : g_rs
+            always @(posedge clk `OT_ARST(rst_n)) begin
+                if (!rst_n) begin swc <= 4'd0; dab2 <= 8'd0; dba2 <= 8'd0; dab3 <= 8'd0; dba3 <= 8'd0; end
+                else begin swc <= {4{a1_swap}}; dab2 <= dab; dba2 <= dba; dab3 <= dab; dba3 <= dba; end
+            end
+        end else begin : g_nr
+            always @(posedge clk) begin swc <= {4{a1_swap}}; dab2 <= dab; dba2 <= dba; dab3 <= dab; dba3 <= dba; end
+        end
+        assign x_swc = swc; assign x_dab2 = dab2; assign x_dba2 = dba2; assign x_dab3 = dab3; assign x_dba3 = dba3;
+    end else begin : g_swone
+        assign x_swc = {4{x_swap}}; assign x_dab2 = x_dab; assign x_dba2 = x_dba; assign x_dab3 = x_dab; assign x_dba3 = x_dba;
+    end endgenerate
     function automatic [27:0] jam28;
         input [23:0] man;
-        input [7:0]  d;
+        input [7:0]  d;                                // the shift amount
+        input [7:0]  dm;                               // the same value (a copy): lost mask
+        input [7:0]  dc;                               // the same value (a copy): >= 28 test
         reg [27:0] val, lost;
         begin
             val = {1'b0, man, 3'b000};
-            if (d >= 8'd28) jam28 = {27'd0, |val};
+            if (dc >= 8'd28) jam28 = {27'd0, |val};
             else begin
-                lost = val & ~({28{1'b1}} << d[4:0]);
+                lost = val & ~({28{1'b1}} << dm[4:0]);
                 jam28 = (val >> d[4:0]) | {27'd0, |lost};
             end
         end
     endfunction
-    wire [27:0] small_a = jam28(x_aman, x_dba);
-    wire [27:0] small_b = jam28(x_bman, x_dab);
+    // SWREP form of jam28 (same function): the sticky bit is (lowest set bit of val) < d, so the shift amount copy
+    // drives one 6-bit compare instead of a 28-bit lost-mask decoder (census: the mask put 65-76 loads on a d bit)
+    function automatic [27:0] jam28c;
+        input [23:0] man;
+        input [7:0]  d;                                // the shift amount
+        input [7:0]  dm;                               // the same value (a copy): sticky compare
+        input [7:0]  dc;                               // the same value (a copy): >= 28 test
+        reg [27:0] val;
+        reg [5:0]  lo;
+        integer i;
+        begin
+            val = {1'b0, man, 3'b000};
+            lo = 6'd63;
+            for (i = 23; i >= 0; i = i - 1) if (man[i]) lo = 6'(i + 3);
+            if (dc >= 8'd28) jam28c = {27'd0, |val};
+            else jam28c = (val >> d[4:0]) | {27'd0, lo < {1'b0, dm[4:0]}};
+        end
+    endfunction
+    wire [27:0] small_a = (SWREP > 0 && CUT_A) ? jam28c(x_aman, x_dba, x_dba2, x_dba3) : jam28(x_aman, x_dba, x_dba2, x_dba3);
+    wire [27:0] small_b = (SWREP > 0 && CUT_A) ? jam28c(x_bman, x_dab, x_dab2, x_dab3) : jam28(x_bman, x_dab, x_dab2, x_dab3);
 
     reg        s1_v, s1_byp, s1_sub, s1_sign;
     reg [1:0]  s1_err;
@@ -131,10 +172,11 @@ module ot_hdc_fp32_add_lat #(
         s1_err <= XC_E ? xe_err : x_err;
         s1_code <= XC_E ? xe_code : x_code;
         s1_sub <= XC_E ? xe_sub : x_sub;
-        s1_sign <= XC_E ? xe_sign : x_swap ? x_bs : x_as;
-        s1_exp <= XC_E ? xe_exp : x_swap ? x_bexp : x_aexp;
-        s1_big <= XC_E ? xe_big : x_swap ? x_bman : x_aman;
-        s1_small <= XC_E ? xe_small : x_swap ? small_a : small_b;
+        s1_sign <= XC_E ? xe_sign : x_swc[0] ? x_bs : x_as;
+        s1_exp <= XC_E ? xe_exp : x_swc[0] ? x_bexp : x_aexp;
+        s1_big <= XC_E ? xe_big : x_swc[1] ? x_bman : x_aman;
+        s1_small[13:0] <= XC_E ? xe_small[13:0] : x_swc[2] ? small_a[13:0] : small_b[13:0];
+        s1_small[27:14] <= XC_E ? xe_small[27:14] : x_swc[3] ? small_a[27:14] : small_b[27:14];
     end
 
     generate if (XC_E != 0) begin : g_xe

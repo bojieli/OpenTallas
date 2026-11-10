@@ -15,9 +15,11 @@ sed 's/^module dsdv_idx_rg2_chunk (/module chk_ref (/' $W/chunk.sv > $W/chk_ref.
 FP=$B/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hslice_fp.sv
 case $var in
   good)   cp $FP $W/hslice_fp.sv ;;
-  mut_m1) sed 's/default: pad_q = pad\[TW\*(7\*FPL)-1 -: TW\];/default: pad_q = pad[TW*(7*FPL-1)-1 -: TW];/' $FP > $W/hslice_fp.sv ;;
+  mut_m1) sed -e 's/default: pad_q = pad\[TW\*(7\*FPL)-1 -: TW\];/default: pad_q = pad[TW*(7*FPL-1)-1 -: TW];/' \
+              -e 's/default: pad_q\[pb\] = pad\[TW\*(7\*FPL-1) + pb\];/default: pad_q[pb] = pad[TW*(7*FPL-2) + pb];/' $FP > $W/hslice_fp.sv ;;
   mut_p1) sed -e 's/localparam integer PD = FPL \* (HC - 1);/localparam integer PD = FPL * (HC - 1) + 1;/' \
-              -e 's/default: pad_q = pad\[TW\*(7\*FPL)-1 -: TW\];/default: pad_q = pad[TW*(7*FPL+1)-1 -: TW];/' $FP > $W/hslice_fp.sv ;;
+              -e 's/default: pad_q = pad\[TW\*(7\*FPL)-1 -: TW\];/default: pad_q = pad[TW*(7*FPL+1)-1 -: TW];/' \
+              -e 's/default: pad_q\[pb\] = pad\[TW\*(7\*FPL-1) + pb\];/default: pad_q[pb] = pad[TW*(7*FPL) + pb];/' $FP > $W/hslice_fp.sv ;;
 esac
 if [ $var != good ] && cmp -s $FP $W/hslice_fp.sv; then echo "mutant sed did not apply"; exit 3; fi
 diff $FP $W/hslice_fp.sv > $W/mutant.diff || true

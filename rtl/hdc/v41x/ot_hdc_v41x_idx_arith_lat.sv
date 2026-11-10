@@ -263,7 +263,10 @@ endmodule
 // the same adder.  A LAT > 3 build must add that file to its sources.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_faddl #(
-    parameter integer LAT = 3
+    parameter integer LAT = 3,
+    // DIE-S81-85 11-09 (opt-in, defaults = unchanged): forwarded to ot_hdc_fp32_add_lat (LAT > 3 only)
+    parameter integer DRST = `ifdef OT_FP_DATA_NORST 0 `else 1 `endif,
+    parameter integer SWREP = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -282,7 +285,7 @@ module ot_hdc_v41x_faddl #(
             // a LAT-3 build does not list ot_hdc_fp32_add_lat.sv: this branch is not elaborated then, and the
             // lint's timescale check must not trip on the unresolved name
             // verilator lint_off TIMESCALEMOD
-            ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .y(y),
+            ot_hdc_fp32_add_lat #(.LAT(LAT), .DRST(DRST), .SWREP(SWREP)) u (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .y(y),
                                                 .err(err), .valid_out(valid_out));
             // verilator lint_on TIMESCALEMOD
         end

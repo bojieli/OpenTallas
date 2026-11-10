@@ -107,6 +107,38 @@ def mc3c7_scoped_admission(report, kit=None):
                for r in rows)
 
 
+# COORD 2026-11-09 (loopgap-153x-1109, DIE-S81-85): census exception for ALL S81 svc provider kits (kit dir
+# s81svc_*): drivers at 33-64 loads stay as they are and sign-off STA / slew decides; every driver above 64 is still
+# fixed structurally. Admits ONLY s81svc_* kits, no role errors and every violating driver <=64 loads.
+S81SVC_SCOPE = 'coord-20261109-153x-s81-svc-provider-census-64'
+S81SVC_PREFIX = 's81svc_'
+S81SVC_MAX = 64
+
+
+def s81svc_scoped_admission(report, kit=None):
+    """Kit-family-scoped coordinator exception; raw FAIL receipt is retained unchanged."""
+    if not isinstance(report, dict) or not isinstance(report.get('netlist'), dict):
+        return False
+    rk = report.get('kit')
+    if (not isinstance(rk, str) or not rk.startswith(S81SVC_PREFIX) or len(rk) <= len(S81SVC_PREFIX)
+            or (kit is not None and kit != rk)):
+        return False
+    sha = report['netlist'].get('sha256')
+    libs = report.get('liberty')
+    rows = report.get('violations')
+    if (report.get('schema') != 'opentallas.pre_gate_native_census.v1' or report.get('status') != 'FAIL'
+            or report.get('limit') != 32 or report.get('role_errors') != []
+            or not isinstance(sha, str) or not re.fullmatch('[a-f0-9]{64}', sha)
+            or not isinstance(libs, list) or not libs
+            or any(not isinstance(r, dict) or not re.fullmatch('[a-f0-9]{64}', str(r.get('sha256', ''))) for r in libs)
+            or type(report.get('max_dynamic_loads')) is not int
+            or not 32 < report['max_dynamic_loads'] <= S81SVC_MAX
+            or not isinstance(rows, list) or not rows):
+        return False
+    return all(isinstance(r, dict) and type(r.get('loads')) is int and 32 < r['loads'] <= S81SVC_MAX
+               for r in rows)
+
+
 BUF = re.compile(r'^  (BUFx\w+) (_\d+_) \(\n(.*?)\n  \);', re.M | re.S)
 PIN = re.compile(r'^    \.(\w+)\(([^()]+)\)(,?)$')
 
@@ -631,6 +663,11 @@ def main():
         scoped = True
         report['admission'] = {'status': 'PASS_WITH_SCOPED_WAIVER', 'authority': MC3C7_SCOPE,
                                'raw_status': 'FAIL', 'kit': report['kit'], 'scoped_limit': MC3C7_MAX,
+                               'global_limit': 32}
+    elif s81svc_scoped_admission(report):
+        scoped = True
+        report['admission'] = {'status': 'PASS_WITH_SCOPED_WAIVER', 'authority': S81SVC_SCOPE,
+                               'raw_status': 'FAIL', 'kit': report['kit'], 'scoped_limit': S81SVC_MAX,
                                'global_limit': 32}
     Path(a.out).write_text(json.dumps(report, indent=2) + '\n')
     print('PRE_GATE_NATIVE_CENSUS ' + report['status'] + ' report=' + a.out)

@@ -1764,6 +1764,11 @@ def check_native_census(g: Gate, out: str, kit: str | None = None):
                   f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator waiver <={NC.MC3C7_MAX} for kit {kit}",
                   NC.MC3C7_SCOPE + '; guidance under rule freeze; route timing decides')
             return True
+        if kit is not None and NC.s81svc_scoped_admission(report, kit):
+            g.add('WARN', 'native_census',
+                  f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator exception <={NC.S81SVC_MAX} for kit {kit}",
+                  NC.S81SVC_SCOPE + '; drivers at 33-64 stay, sign-off STA / slew decides; >64 fixed structurally')
+            return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
                 or not report.get('liberty') or not re.fullmatch('[a-f0-9]{64}', report.get('netlist', {}).get('sha256', ''))
