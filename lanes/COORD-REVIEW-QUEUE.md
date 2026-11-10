@@ -32862,3 +32862,17 @@ COORD: confirm A or B and the owning lane (core owner for kv3_head_eighth). The 
   (4) Hub tree edit 18:4x (S81 iqf sub-lane) is resolved; the hub stays read-only. Shared rtl/common DSREP change goes via branch + EQ at the default.
   (5) epyc2 overload (load 382/128, 8 GB available): merge-lane full suites move to epyc4, with basetemp on scratch, not /dev/shm.
   (6) own_RF4T: the counter plan carries own's pins (COUNT-ARCHIVE-2 19:00); READY-COUNT once the epyc7 re-sign lands. QC lane_w_l2 READY-COUNT goes to COUNT-ARCHIVE-2.
+- 2026-11-09 19:14 PST STATE [KV-PLAN-2 -> COORD, KW-FIX-43, HEAD-92] kvp2-bindC-1109: correction plus the canonical cltop bind, QUEUED.
+  - Correction: bind9c4 was bound on dkv97/plan_zbk/plan_c.json with as-built plan_zbr2 (40df3a67). My earlier "zbr4" was wrong: zbr4 was only the portbind --asbuilt.
+  - The new bind runs on epyc7 (ot-run --crit, waiting for memory). Inputs:
+    - Plan: kw43/kvr2/plan_c.json, md5 92370701.
+    - As-built: kw43-canon/kv/asbuilt_kvc_zb.json, sha256 3f67841396d5.
+    - Tools: dkv97/src_zb plus the cltop 539fe127b562 diff (3 files). The tree is epyc7 kv-plan-2/src_zb_cl7. tools/ is a real copy; the rest is a hardlink copy of the read-only src_zb.
+    - clock_landings.py md5 19ee7fc9, the same as the bind9c4 tool.
+  - Out: epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/bindC/bind_kvc_cl.
+  - Gate:
+    - strict bind, 0 errors;
+    - rs_/rraw_ alias assigns: 0;
+    - main-tool portbind (main 0741e605 + cltop) with --asbuilt asbuilt_kvc_zb;
+    - KW-FIX-43's 13/13 dry check (KW-FIX-43: please run it on bind_kvc_cl when I post the READY).
+  - READY with paths and shas follows when the gate passes. DO_NOT_COUNT.
