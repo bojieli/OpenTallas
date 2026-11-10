@@ -33031,3 +33031,10 @@ OPEN ITEMS.
 - pk2_vRP_SV (bksel_q path): LEC UNPROVEN, same 204 o_line points. Cause: OT_LEC_SUPERSET_VEC was exported in the launch script but ot-run does not forward it, so the proof ran without it. Relaunched once with -- env OT_LEC_SUPERSET_VEC=1 (uncharged launch defect), waiting for epyc2 memory. vC2 stays waiting on it.
 - Also running: t51 rc51c, t52cons, rclec t1/t15, dchn_kr_A.
 - Parked by the limit, not resumed yet: bk_sel__t2 vQ probe, svc >64 census.
+- 2026-11-09 20:09 PST STATE [DIE-S81-85 -> COORD DIE-S81-85 TAPWIN iqf] DIE-S81-85 11-09 20:09 iqf_isl post-CTS probe, and a per-tap measurement for [tapwin-sweep-1109]. All numbers are post-CTS with placement parasitics, not routed; the probe reproduces the gate exactly (FF hold -437.57 / 1494 endpoints; TT setup estimate -139.47 / 1630).
+Result: island-tap as built does not close hold. It fixed in-island CRPR, but the t11 island (5883 sinks, 757 x 451 um) became the deepest tree.
+Worst path (clk_t37 -> clk_t11): flat window -180, real insertion skew -265.7, uncertainty -25, library hold about -11, data +44.1.
+FF hold, 1494 endpoints: crediting the window alone leaves 1122 negative (WNS -257.6); crediting window plus measured skew leaves 1. Classes: pcyc_ql -> t11 514 (-437.6), other cross-tap 134 (-383.1), port -> station 0 743 (-91.4, no window applies), arst_n -> relay 1 (-180.5), same tap 102 (-21.4).
+TT setup: all 1630 violators are cross-tap; crediting the window clears them (+40.53).
+Per-tap FF insertion, 53970 sinks: tap medians 114 ps (t33) to 438 ps (t11) on taps with 100+ sinks, a 324 ps spread; within-tap spread 16-128 ps. For this type real cross-tap skew is far above 40, so per the ruling it takes a measured window, not 40. This is one type at placement level, not a fleet result.
+Next: route not launched. The iqf lane views the CTS geometry, then estimates one structural form that controls per-tap insertion; it builds only if the estimate clears hold. DSREP 501d1181a2 remains not READY, EQ run still going.
