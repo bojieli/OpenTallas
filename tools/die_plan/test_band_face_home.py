@@ -105,6 +105,19 @@ class FaceHome(unittest.TestCase):
                                    CP.ring_ff_reserve_um2(1573))
         self.assertEqual(b, [[557.28, 17.28, 604.8, 276.512]])                    # clamped into the 17.28-um margin
 
+    def test_near_face_band_never_traded_for_a_far_one(self):
+        # sle_su_c cws1_i form: an off-window band at its face whose only lower-crossing rect is > far_um from the face
+        # stays where it is (the first rule set moved it 17.28 -> 205.2 um)
+        geom = {"a": dict(name="a", face="S", window_um=[4.32, 300.0], width=512)}
+        t = dict(outline_um=[600.0, 600.0], hard_cores=[], buses=[], clock=dict(landing_contract=dict(pins=[], bands={
+            "a": dict(rect_um=[300.0, 17.28, 420.0, 66.96], width=512, instance="u_cland_a"),
+            "blk": dict(rect_um=[17.28, 17.28, 299.0, 200.0], width=32, instance="u_cland_blk")})))
+        p = dict(partition_types=dict(x=t), budgets={})
+        side = dict(collector=dict(types=dict(x=dict(bus_geometry=geom))))
+        new, rep = CP.rehome_far_bands(p, side, ["x"])
+        self.assertEqual(rep, [])
+        self.assertEqual(json.dumps(new, sort_keys=True), json.dumps(p, sort_keys=True))
+
 
 if __name__ == "__main__":
     unittest.main()

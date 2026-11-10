@@ -1357,7 +1357,8 @@ def rehome_far_bands(plan,sidecar,types=None,far_um=None):
     >= RELOCATE_MIN_BITS bits that sits more than far_um from its own pin face, or covers less than half of its pin
     window along the face, is searched again as ONE set: widest first, the old rects of the set are no obstacle, every
     other band stays a byte-identical obstacle, with FACE_CROSSING and FACE_HOME (clamped corner-window face strip).  A
-    new rect is kept only if it is nearer its face or crosses fewer bits; otherwise the band keeps its rect, which must
+    new rect is kept only if it is nearer its face with its crossing within the strip cap, or crosses fewer bits while
+    staying within far_um of its face; otherwise the band keeps its rect, which must
     then be clear of the bands already moved (else ValueError: no partial plan).  Types not named: byte-identical."""
     global BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING,FACE_HOME
     types=face_home_types(plan) if types is None else list(types)
@@ -1387,9 +1388,14 @@ def rehome_far_bands(plan,sidecar,types=None,far_um=None):
                       if k!=bus and o.get("rect_um") and (k not in todo or k in done)]
                 try:nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
                 except ValueError:nb=None
+                ok=False
                 if nb is not None:
-                    dist1=face_distance(tt,bus,nb["rect_um"]);dm1,_=face_crossing(tt,bus,nb["rect_um"],int(b["width"]))
-                if nb is None or not (dist1<dist0-1e-6 or dm1<dm0-0.5):
+                    dist1=face_distance(tt,bus,nb["rect_um"]);dm1,cap1=face_crossing(tt,bus,nb["rect_um"],int(b["width"]))
+                    # nearer its face without crossing more than the strip holds, or fewer crossings while staying
+                    # within far_um of the face (never trade a near-face band for a far one)
+                    ok=((dist1<dist0-1e-6 and dm1<=max(dm0,cap1)+1e-6) or
+                        (dm1<dm0-0.5 and dist1<=max(dist0,far)+1e-6))
+                if not ok:
                     if any(_rect_overlap(b["rect_um"],o) for o in used):
                         raise ValueError(f"{tn}.{bus}: no nearer face band and its old rect {b['rect_um']} now overlaps "
                                          "a re-homed band")
