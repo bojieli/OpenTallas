@@ -11,7 +11,8 @@ module ot_dp_clk_landing #(
     parameter integer W = 1,
     parameter integer SETTLE = 16,
     parameter bit     WNEG = 0,    // S81-RINGHOLD-3: falling forwarded-clock write
-    parameter bit     FREG = 0     // optional rising-fclk input capture: +1 data cycle
+    parameter bit     FREG = 0,    // optional rising-fclk input capture: +1 data cycle
+    parameter integer DSREP = 1    // DIE-S81-85 11-09: ring read-select copies per 64-bit chunk (ot_meso_dsel SREP); 1 = identical logic
 ) (
     input wire fclk,
     input wire clk,
@@ -117,7 +118,7 @@ module ot_dp_clk_landing #(
         end
     end
     ot_meso_ring #(.W(RW), .DEPTH(4), .OFFSET(2), .GUARD_LO(0),
-                   .GUARD_HI(4), .RDREG(1), .TNEG(WNEG), .WCHKC(RING_WCHKC), .WCCB(RING_WCCB), .ONV(RING_ONV)) u_ring (
+                   .GUARD_HI(4), .RDREG(1), .TNEG(WNEG), .WCHKC(RING_WCHKC), .WCCB(RING_WCCB), .ONV(RING_ONV), .DSREP(DSREP)) u_ring (
         .tclk(fclk), .t_v(1'b1), .t_d(ring_d), .rclk(clk),
         .r_align(align), .r_on(on), .r_align_v(ring_align_v), .r_on_v(ring_on_v),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok),
