@@ -324,6 +324,15 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     return rep
 
 
+def closure_inputs(form, ref=None):
+    """Every repo file the --kit-rtl path needs.  A source tree without ref_1105 would otherwise fall back silently to
+    the 61c902f1 reference, whose numbered nets no longer match a current bound."""
+    p = list(REF.values()) + [CUR_REF / 'ref_map.json', CUR_REF / 'ref_t7_bound.sv.gz', Path(ref) if ref else REF_GZ]
+    p += [ROOT / f for f, _ in children(form).values()]
+    if form == 'v2': p.append(ROOT / IDX.FIT_MEM)
+    return p
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--ref', help='T7 original bound (sha 61c902f1); default the committed native_parent.sv.gz')
@@ -336,6 +345,9 @@ def main():
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
+    if a.kit_rtl:
+        missing = [str(p) for p in closure_inputs(a.form, a.ref) if not p.exists()]
+        if missing: sys.exit('closure inputs missing: ' + ' '.join(missing))
     ref_s = ref_text(a.ref); cur_s, rm = cur_ref()
     if a.kit_rtl:
         for d in a.kit_rtl:

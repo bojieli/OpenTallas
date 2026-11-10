@@ -105,3 +105,42 @@ def test_rebase_source_renames_tokens_and_refuses_unknown():
     assert c.rebase_source(src, rm) == "P+'720_Y[0]' E+'112_Y' 'src_%s_Y' procmux_69497 ['559'] 0_Y" % ('b' * 20)
     with pytest.raises(ValueError, match='not in the regenerated map'):
         c.rebase_source("P+'733_Y'", rm)
+
+
+def _kit_rtl_main(monkeypatch, tmp_path, **kw):
+    called = []
+    monkeypatch.setattr(c, 'apply_kit', lambda *a, **k: called.append('apply_kit') or dict(status='APPLIED'))
+    for k, v in kw.items(): monkeypatch.setattr(c, k, v)
+    monkeypatch.setattr(c.sys, 'argv', ['closure', '--kit-rtl', str(tmp_path)])
+    return called
+
+
+def test_kit_rtl_inputs_all_present_in_the_tree():
+    assert [p for p in c.closure_inputs('v2') if not p.exists()] == []
+    assert [p for p in c.closure_inputs('v1') if not p.exists()] == []
+
+
+def test_kit_rtl_proceeds_when_inputs_present(monkeypatch, tmp_path):
+    called = _kit_rtl_main(monkeypatch, tmp_path, ref_text=lambda p=None: 'ref', cur_ref=lambda: ('cur', {}))
+    c.main()
+    assert called == ['apply_kit']
+
+
+@pytest.mark.parametrize('name', ['CUR_REF', 'transform', 'child', 'idx'])
+def test_kit_rtl_missing_input_fails_and_names_it_without_fallback(monkeypatch, tmp_path, name):
+    def no_fallback(*a, **k): raise AssertionError('reference was read: fallback to 61c902f1')
+    gone = tmp_path / 'absent'
+    kw = dict(ref_text=no_fallback, cur_ref=no_fallback)
+    if name == 'CUR_REF':
+        kw['CUR_REF'] = gone; want = str(gone / 'ref_map.json')
+    elif name == 'transform':
+        kw['REF'] = {**c.REF, 'land': gone / 'transform.py'}; want = str(gone / 'transform.py')
+    elif name == 'child':
+        kw['CHILDREN_V2'] = {**c.CHILDREN_V2, 'x.sv': (str(gone / 'x.sv'), None)}; want = str(gone / 'x.sv')
+    else:
+        monkeypatch.setattr(c.IDX, 'FIT_MEM', str(gone / 'fit_mem.sv')); want = str(gone / 'fit_mem.sv')
+    called = _kit_rtl_main(monkeypatch, tmp_path, **kw)
+    with pytest.raises(SystemExit) as e:
+        c.main()
+    assert str(e.value).startswith('closure inputs missing: ') and want in str(e.value)
+    assert called == []
