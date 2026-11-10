@@ -35218,3 +35218,39 @@ FAILED [AUTOPILOT 7505834571cb] 2026-11-10 08:12:12 PST AUTOPILOT -> KIT-WAVE-3:
     hbm ot_hbm_idx_qctl_static (intel1): NO_LEC
     hbm ot_hbm_static_cfg_collar_idx256r (intel1): EQUIVALENT on 6_final_lecnorm.v
   Of note: qwen_compute qfd_tile_nl_a0c is counted while the LEC its PROVENANCE names (epyc2 /srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/resign_cv/lec/lec.json) is NOT EQUIVALENT, 1 point (u_me.idle). NO_LEC = no LEC found next to the record (legacy views may hold it elsewhere). NO_SIGNOFF = the signoff.json path in the cache no longer exists (pruned or moved). These rows need a count-owner check; I have not changed anything.
+- 2026-11-10 08:23 PST RESULT+ASK KW-FIX-44 -> COORD, KW-FIX-43, DIE-S81, DIE-QC: OT_MAXWIRE at GRT: sources, cost, 88 running kits at N<=100, fix proposal
+  Read only, no kit changed.
+  WHAT IT IS: tools/die_plan/grt_maxwire.tcl (sourced by grt_pre.tcl whenever the kit config has OT_MAXWIRE_UM) replaces ORFS repair_design_helper at GRT with "repair_design -max_wire_length N". It applies to EVERY signal net in the kit, not just the station lanes.
+  WHERE N COMES FROM, in priority order:
+    (1) relay_bay.py (SAFE-STATION-1, e811e9d1807 11-03; wired in by 38a6a1b2bdf KW-FIX-8 11-04 22:21) rewrites OT_MAXWIRE_UM in every station kit (S81 slice_station*, QC *_stm_/*_fe_/*_fw_) to its "BUFx4 pitch". The pitch is the largest probed pitch whose lane hop meets +10% TT setup / FF hold, minimum over all hops. relay_bay_hop_rows.json only probes 25/33/40/50/62/75/100 um, so the pitch can never exceed 100.
+    (2) Die-wide gen_args --max-wire-um in kit_wave.json:
+        - S81 100, since 8acfd601b45 10-30 02:55, "S81 recipe owner";
+        - QC 120, since 62e3f056364 11-07 08:34, KW-FIX-28, after coll_ftn showed 1,318 slew pins after route, and the note itself says "unproven on QC";
+        - HBM 80 on type_args q_spb1 / q_spt1 / q_spt2 / vsN4-6 (DIE-HBM-95 R6 re-form).
+    (3) The hook itself: c46038b443e 10-24, ELEM-S81 station405, opt-in gen --max-wire-um. The reason given: 2-27 max-slew pins (limit 320 ps, worst 386.7) on single 150-um M2/M3 segments that GRT-RC passed and RCX did not.
+  None of these comes from the owner's 450-um rule. That rule (die_reach.py, gap_repeaters, proto_sweep) is for die-level inter-block repeaters; nothing gave the in-kit value an owner rule. OpenROAD flags every one of these runs itself: "[WARNING RSZ-0065] max wire length less than 143u increases wire delays" (169u on one kit). So 143 um is the tool's own ASAP7 buffering length, and every value in use (33-120) is below it.
+  COST, measured from the "Took N seconds" lines of 5_1_grt logs of running/finished jobs on all 5 hosts (repair_design time, instances, buffers):
+    N=40   slw_fe_v1  10,395 s, 276,097 -> 453,679 (+64%), 177,582 buffers on 53,162 "long wires", only 16 slew violations; GRT total 7:51 h
+    N=50   slw_fe_v2  21,959 s, 280,912 -> 422,965 (+51%), 142,053 buffers on 52,053 nets, 9 slew; still running
+    N=62   slw_fw_v3   9,299 s, 294,945 -> 401,381 (+36%), 106,436 buffers; GRT total 9:10 h
+    N=100  s81 leaf t27  1,555 s, 149,874 -> 169,864 (+13%)
+    N=120  QC st_b / hc0 / ctl  560-12,082 s, +4% to +11% (about 20-57k buffers)
+  At N<=62 the step adds about 2 buffers per long net. It finds 50k+ long nets where the slew check alone sees 9-16 violations.
+  Right now 6 S81 jobs at N=100 are inside this step: leaf t29 / t31 / t39 / t68, col_h10_r2, serdes__t12. Their GRT logs have been open 2-5 h.
+  RUNNING KITS WITH N<=100 (config.mk of every running container's /work on the 5 hosts, de-duplicated by item): 88 of 191 kits.
+    - 59 at N=100 (S81 die-wide)
+    - 8 at N=80 (HBM, HEAD gen copies)
+    - 21 relay_bay station kits at 33-62: sle_stm_v1/v2, slw_stm_v1 x3, slw_stm_v3 at 33; sle_fe_v1 x2, slw_fe_v1 x3, slw_fw_v1 at 40; slw_fe_v2, slice_station__t41 and 4 ECO dirs at 50; sle_fw_v1/v2, slw_fw_v3 at 62
+    - 43 at 120 (QC)
+    - 60 with none
+  CONTROLS (signed-store, the 108 SIGNED records whose file list includes config.mk): 48 signed off WITHOUT grt_maxwire.tcl in the kit, all with DRV slew 0 in both corners. They include 14 HEAD station/shim kits (dp_hd_st_k5 / str / n3_transit, spn shims). The 60 that signed off WITH it also have slew 0.
+    The 67 other S81 slice_station records have no config.mk in their file list, so they prove nothing either way.
+    So no signed control needed the hook to close slew. The one measured case for it is st405 (2-27 pins, before the post-route DRV repair existed).
+  CAUSE: relay_bay's pitch is a lane-hop number (one BUFx4 hop on M5/M7, hold +10%), but it is written as the kit-wide repeater pitch. That turns the station rule into ~100-178k buffers on all long nets of the fe/fw kits. The die-wide 100/120 are below the tool's own 143-um length.
+  PROPOSED FIX (not applied; a branch with tests on your yes):
+    (a) grt_maxwire.tcl: an effective N of max(OT_MAXWIRE_UM, OT_MAXWIRE_FLOOR_UM = 150), printed in the OT_MAXWIRE line. One change covers every source.
+    (b) relay_bay.py: keep the table and stations, stop writing the lane pitch into OT_MAXWIRE_UM. Lane hop timing is set by the <=300-um station spacing the form already places; the pitch stays in declared_cycles.json and the table as a target.
+    (c) kit_wave.json, new launches only: S81 --max-wire-um 100 -> 150 and QC 120 -> 150 (or drop it). Slew stays covered by the post-route DRV repair (prd_hook.tcl, its own -max_wire_length) and the sign-off DRV check, which the controls pass without the hook.
+    PILOT FIRST (owner rule): from the same 4_cts.odb of slw_fe_v2 (N=50 baseline above) and of one S81 leaf (N=100), run GRT -> route -> sign-off at 150 and at none through ot-run. Compare GRT time, instances and routed slew pins, then the batch.
+    I have no measured point at 150. The trend (120 gives 20k long nets and +4-11%; 40-62 gives 53k and +36-64%) predicts a small add, but the pilot is the proof.
+    Live kits stay as they are, including the 6 in the step now; stopping them would be your or the owners' call.
