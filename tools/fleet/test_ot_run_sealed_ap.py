@@ -261,3 +261,72 @@ def test_hub_only_kit_is_fetched_to_a_sealed_host(tmp_path, monkeypatch):
     assert out[0] == "/wave/ot-run" and "held only on hub" in why
     out, why = M.decide(ap_argv(), dict(c, ap_source_hosts=[]), check=no, fetch=lambda h, b, k: (True, []), source=src)
     assert out[0] == "/wave/ot-run" and "not ready" in why
+
+
+def place_argv(kit=K):
+    return ["--mem", "48", "--threads", "8", "--dir", kit, "--stage", kit, "--", "bash", "-c", f"bash {R} {kit} place 48 8"]
+
+
+def test_scan_finds_flow_paths_not_comments_or_globs(tmp_path):
+    """step 2: the submit scan reads the kit's flow files; a comment, a glob pattern and json records are not inputs"""
+    k = tmp_path / "kit"
+    (k / "run").mkdir(parents=True)
+    (k / "config.mk").write_text("export X = /srv/opentallas-scratch2/claude/other_lane/gen/split_clean.json\n"
+                                 "# export Y = /srv/opentallas-scratch2/claude/comment_only/x\n"
+                                 "set g [glob /srv/opentallas*/claude/a/*]\n")
+    (k / "prov.json").write_text('{"src": "/srv/opentallas-scratch2/claude/record_only/x"}')
+    (k / "run" / "x.tcl").write_text("source /srv/opentallas-scratch2/claude/in_run/x.tcl\n")
+    import subprocess, sys
+    p = subprocess.run([sys.executable, "-I", "-c", M.SCAN_PY, str(k)], capture_output=True, text=True)
+    refs = json.loads(p.stdout.split("SCAN ", 1)[1])
+    assert refs == {"/srv/opentallas-scratch2/claude/other_lane/gen/split_clean.json": ["config.mk", False]}
+
+
+def test_declared_inputs_split():
+    refs = {R: ["config.mk", True], "/srv/c/rec/a.lib": ["x.tcl", True], "/srv/tools/t.py": ["x.sh", True],
+            "/srv/opentallas-scratch2/claude/other/gen/split_clean.json": ["config.mk", True], "/srv/gone/x": ["y.tcl", False]}
+    extra, bad = M.declared_inputs(refs, R, ["/srv/c/rec"], {"declared_roots": ["/srv/tools"]})
+    assert extra == [{"path": "/srv/tools/t.py"}]
+    assert sorted(b[0] for b in bad) == ["/srv/gone/x", "/srv/opentallas-scratch2/claude/other/gen/split_clean.json"]
+
+
+def test_place_with_undeclared_path_fails_closed_at_submit(tmp_path, monkeypatch):
+    """MUTANT (step 2): a kit naming another lane's file is REFUSED at submit, with the path in the reason; nothing runs.
+    declare=warn seals it anyway (bwrap then hides the path) and reports it; a declared tool path becomes an input"""
+    other = "/srv/opentallas-scratch2/claude/other_lane/gen/split_clean.json"
+    c = conf(spec_dir=str(tmp_path), declare="enforce", declared_roots=["/srv/tools"])
+    scan = {other: ["config.mk", True], "/srv/tools/t.py": ["run_x.sh", True]}
+    c["scan_of"] = lambda h, k: scan
+    out, why = M.decide(place_argv(), c, check=ok)
+    assert out[0] == M.REFUSE and other in why and "config.mk" in why
+    M.DECLARE_WARN[:] = []
+    out, why = M.decide(place_argv(), dict(c, declare="warn"), check=ok)
+    assert out[0] == "/sb/ot-run" and [b[0] for b in M.DECLARE_WARN] == [other]
+    assert {"path": "/srv/tools/t.py"} in spec_of(out)["inputs"]
+    M.DECLARE_WARN[:] = []
+    del scan[other]
+    out, why = M.decide(place_argv(), c, check=ok)
+    assert out[0] == "/sb/ot-run" and {"path": "/srv/tools/t.py"} in spec_of(out)["inputs"]
+    c["scan_of"] = lambda h, k: None                                     # no scan -> closed, not open
+    assert M.decide(place_argv(), c, check=ok)[0][0] == M.REFUSE
+
+
+def test_place_fetch_and_wave_roots(tmp_path, monkeypatch):
+    """a sealed place whose holder cannot admit runs on a fetch host (place_fetch), scanned on the holder; the wave's
+    declared die inputs (src tree, plan dir, item dir) are declared roots"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    wc = tmp_path / "kit_wave.json"
+    wc.write_text(json.dumps({"dies": {"s81": {"src": "/srv/s/src_x", "plan": "/srv/p/plan_c.json", "note": "/srv/no"}}}))
+    roots = M.wave_roots(K, str(wc))
+    assert "/srv/s/src_x" in roots and "/srv/p" in roots and "/srv/no" not in roots
+    assert K.split("/attempt_")[0] in roots
+    seen = []
+    c = conf(spec_dir=str(tmp_path), declare="enforce", wave_conf=str(wc), ap_fetch_hosts=["epyc2", "intel1"], place_fetch=True,
+             scan_of=lambda h, k: (seen.append(h), {"/srv/s/src_x/physical/a.lef": ["pdn.tcl", True]})[1])
+    out, why = M.decide(place_argv(), c, check=ok, fetch=lambda h, b, k: (True, []))
+    assert why == f"SEALED on intel1: {K} (inputs fetched from epyc2)" and seen == ["epyc2"]
+    s = spec_of(out)
+    assert {"path": "/srv/s/src_x/physical/a.lef", "host": "epyc2"} in s["inputs"]
+    assert s["copy_back"] == {"from": "intel1", "to": "epyc2", "path": K}
+    assert M.sealed_ap(out, c)                                     # re-hand applies to sealed place jobs too

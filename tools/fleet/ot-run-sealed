@@ -230,6 +230,117 @@ def job_root(host):
     return m[0] if m else None
 
 
+# KW-FIX-44 COORD 17:3x step 2: the absolute host paths a kit's FLOW files name (config.mk, tcl, sdc, sh, ys, f), outside
+# K.  Comment lines and glob / variable patterns are not paths the flow opens.  -> "SCAN {path: [file, exists]}"
+SCAN_PY = r"""
+import json, os, re, sys
+K = os.path.realpath(sys.argv[1])
+rx = re.compile(r"/(?:srv|home|mnt|archive|media)/[A-Za-z0-9_.+@%=,:-]+(?:/[A-Za-z0-9_.+@%=,:-]+)*")
+SKIP = {"run", "logs", "objects", "reports", "results", "__pycache__", ".git", "lec", "signoff", "geom", "tmp"}
+EXT = (".mk", ".tcl", ".sdc", ".sh", ".ys", ".f")
+refs = {}
+for dp, dns, fns in os.walk(K):
+    dns[:] = [d for d in dns if d not in SKIP and not d.startswith(("eco_", "signoff_"))]   # earlier runs' outputs
+    for fn in fns:
+        if not fn.endswith(EXT):
+            continue
+        p = os.path.join(dp, fn)
+        try:
+            if os.path.getsize(p) > 4 << 20:
+                continue
+            lines = open(p, errors="replace").read().splitlines()
+        except OSError:
+            continue
+        for ln in lines:
+            s = ln.strip()
+            if s.startswith(("#", "//")):
+                continue
+            for m in rx.finditer(ln):
+                if ln[m.end():m.end() + 1] in ("*", "?", "[", "{", "$"):
+                    continue
+                refs.setdefault(m.group(0).rstrip(".,:;"), os.path.relpath(p, K))
+out = {}
+for r, f in refs.items():
+    if r == K or r.startswith(K + "/"):
+        continue
+    e = os.path.exists(r)
+    rr = os.path.realpath(r) if e else r
+    if rr == K or rr.startswith(K + "/"):
+        continue
+    out[r] = [f, e]
+print("SCAN " + json.dumps(out))
+"""
+
+
+DECLARE_WARN = []
+
+
+def kit_refs(host, K):
+    """-> {path: [kit file, exists]} the kit's flow files name outside K, from the host that holds K; None on failure"""
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host,
+                            f"python3 -I -c {shlex.quote(SCAN_PY)} {shlex.quote(K)}"], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    line = [ln for ln in p.stdout.splitlines() if ln.startswith("SCAN ")]
+    try:
+        return json.loads(line[0][5:]) if line else None
+    except ValueError:
+        return None
+
+
+def under(p, roots):
+    return any(p == r.rstrip("/") or p.startswith(r.rstrip("/") + "/") for r in roots)
+
+
+def declared_inputs(refs, runner, kids, conf, extra_roots=()):
+    """-> (extra inputs [{"path"}], undeclared [(path, file, exists)]).  Declared: the runner, the KWCHILD records, the
+    conf "declared_roots" (tool / admission bundles).  A declared, existing path the kit names becomes a read-only input."""
+    roots = [runner] + [k for k in kids if k != "BUNDLE_OK"] + list(conf.get("declared_roots") or ()) + list(extra_roots)
+    extra, bad = [], []
+    for r in sorted(refs):
+        f, e = refs[r]
+        if e and under(r, roots):
+            if not under(r, [runner] + kids) and not any(under(r, [x["path"]]) for x in extra):
+                extra.append({"path": r})
+        else:
+            bad.append((r, f, e))
+    return extra, bad
+
+
+REFUSE = "ot-run-sealed-REFUSE"
+WAVE_KEYS = ("src", "plan", "kit_rtl", "item_inputs", "prov_view_sources", "core_kit", "bind", "bind_out")
+
+
+def wave_roots(K, wave_conf):
+    """the inputs the kit wave DECLARES for K's die (kit_wave.json dies[die]: src tree, plan dir, bind / kit_rtl dirs,
+    item inputs, provenance view sources, core kits) + K's own item dir (its other attempts, its prov views)"""
+    roots = []
+    if "/items/" in K:
+        roots.append(K.split("/items/", 1)[0] + "/items/" + K.split("/items/", 1)[1].split("/", 1)[0])
+    die = K.split("/runs/", 1)[1].split("/", 1)[0] if "/runs/" in K else None
+    try:
+        cfg = json.load(open(os.path.expanduser(wave_conf)))
+    except (OSError, ValueError, TypeError):
+        return roots
+    d = (cfg.get("dies") or {}).get(die) or {}
+
+    def walk(v):
+        if isinstance(v, str):
+            if v.startswith("/srv/") or v.startswith("/home/"):
+                yield v.split(":", 1)[-1]
+        elif isinstance(v, dict):
+            for x in v.values():
+                yield from walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                yield from walk(x)
+    for k in WAVE_KEYS:
+        for v in walk(d.get(k)):
+            roots.append(os.path.dirname(v) if k == "plan" or v.endswith((".json", ".v", ".sv")) else v)
+    return roots
+
+
 def source_ok(host, runner, K):
     """KW-FIX-44 COORD 17:3x (widen sealing to every autopilot route/finish job): a host that only HOLDS K (the hub has
     no ot-job) can still be the fetch source of a sealed job run elsewhere: K + runner there.  -> (ok, child dirs)"""
@@ -397,7 +508,7 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
         res = dict(zip(hosts, ex.map(chk, hosts)))
     oks = {h: kd for h, (okh, kd) in res.items() if okh}
     srcs = {}
-    if not oks and ac and conf.get("ap_fetch_hosts") and conf.get("ap_source_hosts"):
+    if not oks and (ac or pc) and conf.get("ap_fetch_hosts") and conf.get("ap_source_hosts"):
         # K is held only on a source host (the hub): every input is fetched from it to a sealed fetch host
         sc = source or source_ok
         srcs = {h: kd for h in conf["ap_source_hosts"] for okh, kd in [sc(h, runner, K)] if okh}
@@ -411,7 +522,7 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
         kids = srcs[host]
     rows, src = None, None
     fetch = fetch or fetch_ok
-    if ac and conf.get("ap_fetch_hosts"):
+    if (ac or pc and conf.get("place_fetch")) and conf.get("ap_fetch_hosts"):
         # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
         # with every input fetched from the holder (ot-job tar fetch into its store), and copy K back after
         rows = status_rows(backend)
@@ -436,10 +547,23 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
+    if pc and conf.get("declare") in ("warn", "enforce"):
+        refs = (conf.get("scan_of") or kit_refs)(src or host, K)        # on the host that HOLDS K
+        if refs is None:
+            bad, extra = [("?", "kit scan failed on " + host, False)], []
+        else:
+            extra, bad = declared_inputs(refs, runner, kids, conf,
+                                         wave_roots(K, conf["wave_conf"]) if conf.get("wave_conf") else ())
+        if bad and conf["declare"] == "enforce":
+            msg = "; ".join(f"{r} (named in {f}{'' if e else ', missing'})" for r, f, e in bad[:8])
+            return [REFUSE, K, rest[0], json.dumps(bad[:50])], f"REFUSED {K}: undeclared input path(s): {msg}"
+        if bad:
+            DECLARE_WARN[:] = bad
+        kids = list(kids) + [x["path"] for x in extra]
     if not oks and not src:
         # a source-only holder cannot run the sealed job itself; no fetch host qualifies -> unsealed, as before
         return passthru, f"kit held only on {host} (no ot-job) and no fetch host admits {o['mem']} GB now"
-    root = (conf.get("job_root_of") or job_root)(host) if (ac and conf.get("job_roots")) else None
+    root = (conf.get("job_root_of") or job_root)(host) if ((ac or pc) and conf.get("job_roots")) else None
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
         if ac:
@@ -452,7 +576,13 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
                 s["root"] = root
             json.dump(s, fh)
         else:
-            json.dump(spec_for(runner, K, kids, rest[0]), fh)
+            s = spec_for(runner, K, kids, rest[0])
+            if src:
+                s = fetched(s, src)
+                s["copy_back"] = {"from": host, "to": src, "path": K}
+            if root:
+                s["root"] = root
+            json.dump(s, fh)
     out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
     if root:
         out += ["--dir", root]         # ot-run's placement / disk guard / cd use the job root (its default is scratch2)
@@ -552,7 +682,8 @@ def run_sealed(argv, conf, orig):
 def sealed_ap(argv, conf):
     """is this a sealed autopilot job (spec with tools_sha256), i.e. one whose inputs are declared / fetchable"""
     try:
-        return "--job" in argv and "tools_sha256" in json.load(open(argv[argv.index("--job") + 1]))
+        s = json.load(open(argv[argv.index("--job") + 1])) if "--job" in argv else {}
+        return "tools_sha256" in s or s.get("schema") == "opentallas.ot_job.v1"
     except (OSError, ValueError):
         return False
 
@@ -587,6 +718,23 @@ def rehand(argv, conf, why):
 def main():
     conf = load_conf()
     argv, why = decide(sys.argv[1:], conf)
+    if argv[0] == REFUSE:
+        # fail closed at submit (COORD 17:3x step 2): nothing ran; the reason names every undeclared path
+        log(conf, f"{why} pid {os.getpid()}")
+        if json.loads(argv[3])[:1] and json.loads(argv[3])[0][0] == "?":
+            # the scan itself did not run (ssh): an infra NOT RUN the caller retries, never a design refusal
+            print(f"ot-run: NOT RUN: ot-run-sealed {why}", file=sys.stderr, flush=True)
+            sys.exit(75)
+        for r, f, _e in json.loads(argv[3]):
+            gap_row(conf, argv[1], argv[2], r, f"REFUSED at submit: named in {f}")
+        print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
+        sys.exit(96)
+    if DECLARE_WARN:
+        k = argv[argv.index("--job") + 1] if "--job" in argv else "?"
+        for r, f, _e in DECLARE_WARN:
+            gap_row(conf, (parse(sys.argv[1:]) or [{}])[0].get("dir", "?"), "declare-warn", r, f"WARN undeclared, named in {f} ({k})")
+        print(f"ot-run-sealed: WARN {len(DECLARE_WARN)} undeclared input path(s) (declare=warn): "
+              + "; ".join(r for r, _f, _e in DECLARE_WARN[:5]), file=sys.stderr, flush=True)
     if argv[0] != backend_of(conf):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
