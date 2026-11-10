@@ -350,7 +350,7 @@ def admits(backend, host, mem):
         return True
 
 
-def decide(argv, conf, check=remote_ok, fetch=None):
+def decide(argv, conf, check=remote_ok, fetch=None, exclude=()):
     """-> (argv to exec, why)"""
     backend = backend_of(conf)
     passthru = [backend] + list(argv)
@@ -386,7 +386,7 @@ def decide(argv, conf, check=remote_ok, fetch=None):
     oks = {h: kd for h, (okh, kd) in res.items() if okh}
     if not oks:
         return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
-    host = next(h for h in hosts if h in oks)
+    host = next((h for h in hosts if h in oks and h not in exclude), next(h for h in hosts if h in oks))
     kids = oks[host]
     rows, src = None, None
     fetch = fetch or fetch_ok
@@ -394,11 +394,11 @@ def decide(argv, conf, check=remote_ok, fetch=None):
         # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
         # with every input fetched from the holder (ot-job tar fetch into its store), and copy K back after
         rows = status_rows(backend)
-        held = pick_host(rows, oks, o["mem"]) if rows is not None else None
+        held = pick_host(rows, {h: kd for h, kd in oks.items() if h not in exclude}, o["mem"]) if rows is not None else None
         if held:                       # a holder of K admits it now: run there (the first configured host may not)
             host, kids = held, oks[held]
         elif rows is not None:
-            cand = [h for h in conf["ap_fetch_hosts"] if h not in oks]
+            cand = [h for h in conf["ap_fetch_hosts"] if h not in oks and h not in exclude]
             with cf.ThreadPoolExecutor(max(len(cand), 1)) as ex:
                 fr = dict(zip(cand, ex.map(lambda h: fetch(h, bundle, K), cand)))
             best = pick_host(rows, {h: kd for h, (okh, kd) in fr.items() if okh}, o["mem"])
@@ -407,7 +407,7 @@ def decide(argv, conf, check=remote_ok, fetch=None):
     if not src and conf.get("capacity_passthru", True):
         rows = status_rows(backend)
         if rows is not None:
-            best = pick_host(rows, oks, o["mem"])
+            best = pick_host(rows, {h: kd for h, kd in oks.items() if h not in exclude}, o["mem"])
             if best is None:
                 return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (spill unsealed)"
             host, kids = best, oks[best]
@@ -471,6 +471,26 @@ def gap_row(conf, K, stage, path, tool):
         pass
 
 
+LAST_OUT = []
+
+
+def not_admitted(out):
+    """the sealed client ended without its job ever starting: ot-heavy gave up waiting (--max-wait) -> NOT RUN"""
+    text = "".join(out)
+    return "ot-heavy: admitted" not in text and "ot-job: SEALED" not in text and bool(
+        re.search(r"ot-run: NOT RUN on \S+: ot-heavy exit 75", text))
+
+
+def with_max_wait(argv, s):
+    """the sealed backend argv with --max-wait S (before '--'), replacing any given one"""
+    i = argv.index("--")
+    head, tail = argv[:i], argv[i:]
+    if "--max-wait" in head:
+        j = head.index("--max-wait")
+        head = head[:j] + head[j + 2:]
+    return head + ["--max-wait", str(int(s))] + tail
+
+
 def run_sealed(argv, conf, orig):
     """run the sealed job, streaming its output; on a missing undeclared input outside the job, log the gap(s) and
     rerun ONCE unsealed (OWNER 11-09 08:2x fallback) -> exit code"""
@@ -485,6 +505,7 @@ def run_sealed(argv, conf, orig):
         if len(buf) > 20000:
             del buf[:5000]
     rc = p.wait()
+    LAST_OUT[:] = buf[-200:]
     if rc == 0 or not conf.get("fallback_unsealed", True):
         return rc
     po = parse(orig)
@@ -504,13 +525,48 @@ def run_sealed(argv, conf, orig):
     return subprocess.call([backend] + list(orig))
 
 
+def sealed_ap(argv, conf):
+    """is this a sealed autopilot job (spec with tools_sha256), i.e. one whose inputs are declared / fetchable"""
+    try:
+        return "--job" in argv and "tools_sha256" in json.load(open(argv[argv.index("--job") + 1]))
+    except (OSError, ValueError):
+        return False
+
+
+def rehand(argv, conf, why):
+    """KW-FIX-44 COORD 15:5x (load imbalance class): a sealed autopilot job waits at most conf rehand_after_s (600) on
+    its host; when ot-heavy has not admitted it by then the client is cancelled there (never started: NOT RUN, exit 75)
+    and the job is placed again on another qualifying host -- a holder that admits now, or a fetch host -- (the host it
+    waited on is excluded for that pick; with no other host it waits there again).  At most rehand_max rounds
+    (default 12), then the last placement waits without a bound, as before.  -> (rc, argv of the last round)"""
+    after, rounds, tried = int(conf.get("rehand_after_s") or 0), int(conf.get("rehand_max", 12)), []
+    n = 0
+    while True:
+        bounded = after > 0 and sealed_ap(argv, conf) and n < rounds
+        a = with_max_wait(argv, after) if bounded else argv
+        rc = run_sealed(a, conf, sys.argv[1:])
+        if not (bounded and rc and not_admitted(LAST_OUT)):
+            return rc, argv
+        host = argv[argv.index("--hosts") + 1]
+        tried.append(host)
+        n += 1
+        argv2, why2 = decide(sys.argv[1:], conf, exclude=(host,))
+        if argv2[0] == backend_of(conf):          # never fall back to unsealed on a re-hand: wait sealed where it was
+            argv2, why2 = argv, why
+        if argv2[argv2.index("--hosts") + 1] == host:
+            n = rounds          # no other host qualifies: wait there without a bound (each round costs queue seniority)
+        log(conf, f"REHAND {n}: not admitted on {host} in {after} s -> {why2} pid {os.getpid()}")
+        print(f"ot-run-sealed: REHAND {n}: not admitted on {host} in {after} s -> {why2}", file=sys.stderr, flush=True)
+        argv, why = argv2, why2
+
+
 def main():
     conf = load_conf()
     argv, why = decide(sys.argv[1:], conf)
     if argv[0] != backend_of(conf):
         log(conf, f"{why} pid {os.getpid()}")
         print(f"ot-run-sealed: {why}", file=sys.stderr, flush=True)
-        rc = run_sealed(argv, conf, sys.argv[1:])
+        rc, argv = rehand(argv, conf, why)
         try:
             cb = json.load(open(argv[argv.index("--job") + 1])).get("copy_back") if "--job" in argv else None
         except (OSError, ValueError):

@@ -177,3 +177,47 @@ def test_holder_that_admits_is_preferred_over_the_first_host(tmp_path, monkeypat
 def test_job_root_shell_picks_first_root_with_room():
     assert M.JOB_ROOTS[0].startswith("/srv/opentallas-scratch2/") and M.JOB_ROOTS[1].startswith("/srv/opentallas-scratch3/")
     assert "-ge 60" in M.JOB_ROOT_SH and "JOBROOT=" in M.JOB_ROOT_SH and "break" in M.JOB_ROOT_SH
+
+
+def test_not_admitted_signature():
+    assert M.not_admitted(["ot-run: -> epyc7 (will queue)\n", "ot-run: NOT RUN on epyc7: ot-heavy exit 75\n"])
+    assert not M.not_admitted(["ot-heavy: admitted on x\n", "ot-run: NOT RUN on epyc7: ot-heavy exit 75\n"])
+    assert not M.not_admitted(["ot-run: RAN on epyc7 (unit u): exit 1\n"])
+    assert M.with_max_wait(["b", "--max-wait", "9", "--hosts", "h", "--", "x"], 600) == ["b", "--hosts", "h", "--max-wait", "600", "--", "x"]
+
+
+def test_rehand_moves_a_waiter_that_was_not_admitted(tmp_path, monkeypatch):
+    """COORD 15:5x: a sealed job not admitted in rehand_after_s on its host is placed again with that host excluded"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    monkeypatch.setattr(M, "log", lambda c, m: None)
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], hosts=["epyc2", "intel1"], rehand_after_s=600)
+    monkeypatch.setattr(M.sys, "argv", ["ot-run-sealed"] + ap_argv())
+    first, _ = M.decide(ap_argv(), dict(c, hosts=["epyc2"]), check=ok)
+    assert first[first.index("--hosts") + 1] == "epyc2"
+    calls = []
+
+    def fake_run(a, conf_, orig):
+        calls.append(a)
+        if len(calls) == 1:
+            M.LAST_OUT[:] = ["ot-run: NOT RUN on epyc2: ot-heavy exit 75\n"]
+            return 75
+        M.LAST_OUT[:] = ["ot-heavy: admitted on x\n"]
+        return 0
+    monkeypatch.setattr(M, "run_sealed", fake_run)
+    real = M.decide
+    monkeypatch.setattr(M, "decide", lambda a, cf, exclude=(): real(a, cf, check=ok, exclude=exclude))
+    rc, last = M.rehand(first, c, "SEALED")
+    assert rc == 0 and len(calls) == 2
+    assert calls[0][calls[0].index("--max-wait") + 1] == "600"
+    assert last[last.index("--hosts") + 1] == "intel1"
+
+
+def test_rehand_off_by_default_and_never_unsealed(tmp_path, monkeypatch):
+    monkeypatch.setattr(M, "log", lambda c, m: None)
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"])
+    first, _ = M.decide(ap_argv(), c, check=ok)
+    seen = []
+    monkeypatch.setattr(M, "run_sealed", lambda a, cf, o: (seen.append(a), 0)[1])
+    rc, _ = M.rehand(first, c, "SEALED")
+    assert rc == 0 and "--max-wait" not in seen[0][:seen[0].index("--")]
