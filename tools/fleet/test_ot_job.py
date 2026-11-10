@@ -73,6 +73,58 @@ class Tmp(unittest.TestCase):
         return p
 
 
+class SeedMtime(Tmp):
+    OLD_V, OLD_SDC = 1_700_000_000, 1_600_000_000
+
+    def kit(self):
+        K = os.path.join(self.t, "K")
+        os.makedirs(K + "/run/results")
+        with open(K + "/run/results/1_2_yosys.v", "w") as fh:
+            fh.write("netlist")
+        with open(K + "/vclk_ff.sdc", "w") as fh:
+            fh.write("sdc")
+        os.utime(K + "/run/results/1_2_yosys.v", (self.OLD_V, self.OLD_V))
+        os.utime(K + "/vclk_ff.sdc", (self.OLD_SDC, self.OLD_SDC))
+        return K
+
+    def staged(self, item):
+        J = os.path.join(self.t, "J")
+        os.makedirs(J + "/.ot-job")
+        os.makedirs(J + "/work")
+        JOB.stage_all({"work": {"seed": [item]}}, self.store, J, [])
+        return J + "/work"
+
+    def check(self, w):
+        self.assertEqual(os.stat(w + "/run/results/1_2_yosys.v").st_mtime, self.OLD_V)
+        self.assertEqual(os.stat(w + "/vclk_ff.sdc").st_mtime, self.OLD_SDC)
+        self.assertLess(os.stat(w + "/vclk_ff.sdc").st_mtime, os.stat(w + "/run/results/1_2_yosys.v").st_mtime)
+
+    def test_local_seed_keeps_source_mtimes(self):
+        self.check(self.staged({"path": self.kit()}))
+
+    def test_fetched_seed_keeps_source_mtimes(self):
+        K = self.kit()
+
+        def fake(host, path, dest):
+            os.makedirs(dest)
+            out = os.path.join(dest, "K")
+            shutil.copytree(K, out)
+            return out
+        real, JOB.tar_fetch = JOB.tar_fetch, fake
+        try:
+            self.check(self.staged({"path": "/no/such/K", "host": "h"}))
+        finally:
+            JOB.tar_fetch = real
+
+    def test_seed_file_keeps_its_mtime(self):
+        K = self.kit()
+        J = os.path.join(self.t, "J")
+        os.makedirs(J + "/.ot-job")
+        os.makedirs(J + "/work")
+        JOB.stage_all({"work": {"seed": [{"path": K + "/vclk_ff.sdc", "into": "vclk_ff.sdc"}]}}, self.store, J, [])
+        self.assertEqual(os.stat(J + "/work/vclk_ff.sdc").st_mtime, self.OLD_SDC)
+
+
 class Store(Tmp):
     def test_tree_dedup_stage_ro_and_copy(self):
         self.mk("a/x.txt", "same")
