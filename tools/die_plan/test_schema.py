@@ -213,3 +213,10 @@ def test_param_class_split_provenance_keys_allowed():
     assert P['param_set']['type'] == 'object'
     on_disk = json.loads((HERE / 'die_plan.schema.json').read_text())
     assert 'param_set' in on_disk['properties']['partition_types']['additionalProperties']['properties']
+
+
+def test_port_buf_at_pin_bool():
+    # S81-SVCRS-3 11-10: partition_types[*].port_buf_at_pin is a bool (gen_phys opt-in); a non-bool is refused
+    name = next(iter(EX["partition_types"]))
+    assert errs_of(lambda p: p["partition_types"][name].__setitem__("port_buf_at_pin", True)) == []
+    assert errs_of(lambda p: p["partition_types"][name].__setitem__("port_buf_at_pin", "yes")) != []
