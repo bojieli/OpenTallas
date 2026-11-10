@@ -46,6 +46,11 @@
    "src": "ot_qwen_d2d_cal_seq.sv", "words": 64, "width": 32,
    "sha256": "f476573acfb60472e1b6ff14ef74f8d3cb8251c03f567454d55dc943fee26443",
    "users": "QC qfd_qc_glue_part u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_seq.u_seq",
-   "reason": "OWNER D-ROM-2 'QC 64x32 constant table': QC-side D2D calendar RX image; same note as qc_d2d_cal_tx"}
+   "reason": "OWNER D-ROM-2 'QC 64x32 constant table': QC-side D2D calendar RX image; same note as qc_d2d_cal_tx"},
+  {"id": "v41x_idx_q4_sprod", "module": "ot_hdc_v41x_idx_arith", "table": "TAB = mktab(0): sprod(j) ^ 9'h100, j = {sign, ma[2:0], mb[2:0]} (bmux2rom of TAB[9*x +: 9])",
+   "src": "ot_hdc_v41x_idx_arith.sv", "words": 128, "width": 9,
+   "sha256": "55ff39c5a4a936ce056612df9343e35ec863061d4a6f671de453cb0801700407",
+   "users": "S81 IRG ot_hdc_v41x_idx_hslice_fp (s81svc_irg_hsfp: 128 per slice = 4 blocks x 32 terms)",
+   "reason": "OWNER D-ROM-2 (a) fixed math function table: the FP4 x FP4 signed product (+-dmag(a) * dmag(b), offset 2^8), identical in every instance; DIE-S81-85 11-10"}
  ]
 }
