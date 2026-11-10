@@ -131,6 +131,32 @@ class Cloner:
         return len(g.cells) - 1, fresh
 
 
+def strip_dead_unary(g, roles):
+    """--strip-dead-unary: remove transparent unary cells (BUF / INV in the census model) whose output net has no load and
+    no port, to a fixpoint.  ORFS synthesis turns the pin-register wrapper's `assign o = o__ot_q` into a loadless BUFx2 on
+    the output port net; P&R deletes it (absent from 6_final.v), but face_guard reads 1_2_yosys.v and counted it as a
+    second load on the port net ('shared').  Dead logic only, so the netlist function is unchanged.  -> removed names"""
+    removed = []
+    while True:
+        _rep, ex = model(g, roles)
+        # raw pin references, NOT the census load model (that one skips clock and constant pins): a net is unread only
+        # when the dead cell's own output pin is its single reference and no top port is on it
+        refs = {}
+        for _m, _n, pins in g.cells:
+            for nets in pins.values():
+                for x in nets:
+                    r = g.find(x)
+                    refs[r] = refs.get(r, 0) + 1
+        port_nets = {g.find(x) for _d, x in g.ports.values()}
+        dead = sorted(ci for ci, (_i, o) in ex['transparent'].items()
+                      if refs.get(g.find(o), 0) == 1 and g.find(o) not in port_nets)
+        if not dead:
+            return removed
+        ds = set(dead)
+        removed += [g.cells[ci][1] for ci in dead]
+        g.cells[:] = [c for i, c in enumerate(g.cells) if i not in ds]
+
+
 def split_once(g, roles, limit, cl, log):
     rep, ex = model(g, roles)
     cl.outs = {}
@@ -256,6 +282,7 @@ def main(argv=None):
     p.add_argument('--report', required=True)
     p.add_argument('--limit', type=int, default=64)
     p.add_argument('--max-iter', type=int, default=12)
+    p.add_argument('--strip-dead-unary', action='store_true', help='remove loadless BUF / INV cells first (see strip_dead_unary)')
     a = p.parse_args(argv)
     roles, libs = NC.liberty_roles(a.liberty)
     raw = Path(a.netlist).read_bytes()
@@ -265,6 +292,7 @@ def main(argv=None):
     if before['role_errors']:
         print('fanout_dup: role errors in the input netlist', before['role_errors'][:5], file=sys.stderr)
         return 2
+    dead = strip_dead_unary(g, roles) if a.strip_dead_unary else []
     log, residual, it = [], [], 0
     cl = Cloner(g)
     while it < a.max_iter:
@@ -273,7 +301,7 @@ def main(argv=None):
         if n == 0:
             break
     # nothing split: the input bytes pass through unchanged (same netlist sha, so every receipt of it stays valid)
-    text = emit(g, tm, a.top) if log else raw.decode()
+    text = emit(g, tm, a.top) if (log or dead) else raw.decode()
     Path(a.out).write_text(text)
     # verification = the census itself on the WRITTEN netlist, parsed exactly like native_census.main
     g2, _ = load_graph(text, a.top, roles)
@@ -286,11 +314,12 @@ def main(argv=None):
                output=dict(path=a.out, sha256=hashlib.sha256(text.encode()).hexdigest()),
                liberty=libs, iterations=it, cells_before=cells0, cells_after=len(g2.cells),
                cells_added=len(g2.cells) - cells0, before=summary(before, a.limit), after=summary(after, a.limit),
-               splits=log, residual=residual if final_over else [], residual_after=final_over)
+               splits=log, residual=residual if final_over else [], residual_after=final_over,
+               dead_unary_removed=dict(n=len(dead), cells=dead[:200]))
     Path(a.report).write_text(json.dumps(rec, indent=1) + '\n')
     print(f"FANOUT_DUP {'PASS' if not final_over and not after['role_errors'] else 'FAIL'} "
           f"max {rec['before']['max_loads']} -> {rec['after']['max_loads']}, >{a.limit} "
-          f"{rec['before']['over_limit']} -> {rec['after']['over_limit']}, cells +{rec['cells_added']}, iter {it}")
+          f"{rec['before']['over_limit']} -> {rec['after']['over_limit']}, cells +{rec['cells_added']}, iter {it}, dead unary removed {len(dead)}")
     return 0 if not final_over and not after['role_errors'] else 1
 
 
