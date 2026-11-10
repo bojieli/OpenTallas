@@ -1,0 +1,18 @@
+{
+ "schema": "kv-host-wi.asbuilt_delta.v1",
+ "note": "DO_NOT_COUNT; proposal only, not installed",
+ "replace": {
+  "files": [
+   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv"
+  ],
+  "prefer": [
+   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv"
+  ]
+ },
+ "present": {
+  "files": true,
+  "prefer": true
+ }
+}
