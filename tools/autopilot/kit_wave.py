@@ -969,7 +969,8 @@ RULES = [
                     r"yosys elaboration failed rc[ =]+137\b|"
                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
                     # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
-                    r"\] Error 241\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
+                    # KW-FIX-43 11-09: make Error 247 = 256-9, a SIGKILL (q_su20 cgroup kill was labelled PLAN off [INFO PDN-0001])
+                    r"\] Error 24[17]\b|yosys exit -15\b|FAIL_PREFLOOR \w+ KILLED \(yosys signal", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
@@ -1022,7 +1023,7 @@ RULES = [
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
-                   r"outline|utili[sz]ation .* exceeds|PDN-0\d+", "plan geometry / site"),
+                   r"outline|utili[sz]ation .* exceeds|\[ERROR PDN-0\d+|Error:[^\n]*PDN-0\d+", "plan geometry / site"),
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),

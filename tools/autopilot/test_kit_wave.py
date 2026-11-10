@@ -335,6 +335,13 @@ class Capacity(unittest.TestCase):
 
 
 class Classify(unittest.TestCase):
+    def test_pdn_info_is_no_plan_error_and_error_247_is_infra(self):
+        kill = "[INFO PDN-0001] Inserting grid: top\nmake[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 247\n"
+        self.assertEqual(KW.classify("place", kill)[0], "INFRA")
+        self.assertNotEqual(KW.classify("place", "[INFO PDN-0001] Inserting grid: top\n")[0], "PLAN")
+        self.assertEqual(KW.classify("place", "Error: pdn.tcl, 7 PDN-0179\n")[0], "PLAN")
+        self.assertEqual(KW.classify("place", "[ERROR PDN-0179] no straps\n")[0], "PLAN")
+
     def test_classes(self):
         cases = [
             ("place", "ot-run: NOT RUN (no memory within --max-wait)", "INFRA"),
