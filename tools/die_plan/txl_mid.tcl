@@ -12,6 +12,9 @@
 # hop: pilot 11-10 moved rows only and left those cells at their GPL spot, so r[2] -> q ran 1136 -> 2170 -> 107 -> 587 um
 # through a 49-cell chain (TT -1326 ps at GRT, W=180).
 # Kit use: copy to the kit and add "export OT_TXL_MID = 1" and "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl".
+# OT_TXL_MID_CHAINS (default "u_txl"): space-separated ot_pl_pad instance paths (rows <C>.g_reg.r[k][b], last <C>.q[b]) to
+# space the same way, e.g. "u_txl u_dec.u_rck_transport4" (DIE-S81-85 11-10: vC t14 GRT rck_transport4 r0 -> r1 1850 um,
+# TT -412.5 ps at W=180).  Unset = u_txl only, same moves and same log line as before.
 namespace eval ot_txl_mid {
   # n points at (k+1)/(n+1) of the segment a->b
   proc targets {ax ay bx by n} {
@@ -130,7 +133,8 @@ namespace eval ot_txl_mid {
     set blk [ord::get_db_block]
     set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
     set halo [expr {8.64*$dbu}]
-    set macs {}; set lasts {}
+    set macs {}; set lasts [dict create]
+    set chains [expr {[info exists ::env(OT_TXL_MID_CHAINS)] && [string trim $::env(OT_TXL_MID_CHAINS)] ne "" ? $::env(OT_TXL_MID_CHAINS) : "u_txl"}]
     set ca [$blk getCoreArea]; set core [list [$ca xMin] [$ca yMin] [$ca xMax] [$ca yMax]]
     set step [expr {5.0*$dbu}]; set maxr [expr {400.0*$dbu}]
     foreach i [$blk getInsts] {
@@ -139,17 +143,22 @@ namespace eval ot_txl_mid {
         lappend macs [list [expr {[$b xMin]-$halo}] [expr {[$b yMin]-$halo}] [expr {[$b xMax]+$halo}] [expr {[$b yMax]+$halo}]]
       }
       set nm [$i getName]
-      if {[string first "u_txl.q" $nm] >= 0 && [regexp {u_txl\.q\\?\[[0-9]+\\?\]} $nm]} { lappend lasts $i }
+      foreach C $chains {
+        if {[string first "$C.q" $nm] >= 0 && [regexp [string cat [string map {. {\.}} $C] {\.q\\?\[[0-9]+\\?\]}] $nm]} { dict lappend lasts $C $i }
+      }
     }
+    set ret {}
+    foreach C $chains {
+    set clasts [expr {[dict exists $lasts $C] ? [dict get $lasts $C] : {}}]
     set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0
-    foreach q $lasts {
+    foreach q $clasts {
       # rows oldest first, ending with q; src = enc driver output iterm
       set chain [list $q]; set src ""
       for {set cur $q} {[llength $chain] < 16} {} {
         set d [iterm_of $cur {D}]; if {$d eq ""} break
         set u [up $d]; if {![llength $u]} break
         lassign $u di dt
-        if {[string first "u_txl.g_reg.r" [$di getName]] >= 0} { set chain [linsert $chain 0 $di]; set cur $di } else { set src $dt; break }
+        if {[string first "$C.g_reg.r" [$di getName]] >= 0} { set chain [linsert $chain 0 $di]; set cur $di } else { set src $dt; break }
       }
       set qo [iterm_of $q {QN Q}]
       set snk [expr {$qo eq "" ? "" : [down $qo]}]
@@ -186,8 +195,11 @@ namespace eval ot_txl_mid {
       if {$h > $hmax} { set hmax $h }
       incr moved
     }
-    puts "OT_TXL_MID bits moved $moved of [llength $lasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um"
-    return [list $moved [llength $lasts] $hmax]
+    set tag [expr {$chains eq "u_txl" ? "" : " chain $C"}]
+    puts "OT_TXL_MID$tag bits moved $moved of [llength $clasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um"
+    lappend ret [list $moved [llength $clasts] $hmax]
+    }
+    return [expr {[llength $ret] == 1 ? [lindex $ret 0] : $ret}]
   }
 }
 if {[info exists ::env(OT_TXL_MID)] && $::env(OT_TXL_MID) eq "1"} { ot_txl_mid::run }
