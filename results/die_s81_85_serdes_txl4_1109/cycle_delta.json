@@ -38,42 +38,63 @@
     "compiler TX pad date +2 clk",
     "full end-to-end token composition +2 per TX traversal"
   ],
-  "placement_requirement": "TXL rows must be pinned: 4_cts census shows GPL places row 0 at the encoder and the last row at the pad, so all wire falls on one hop. The two new rows must sit at 1/3 and 2/3 of the row0->last-row span (relay_mid class; relay_mid.tcl needs fixed endpoints, so row 0 and the last row or a dedicated hook are required).",
+  "placement_requirement": "Rows must be spaced: 4_cts census shows GPL places row 0 at the encoder and the last row at the pad, so the wire falls on one hop. Hook tools/die_plan/txl_mid.tcl (OT_TXL_MID=1, POST_GLOBAL_PLACE, before 3_4 resize) moves the N rows to (k+1)/(N+1) of the enc-driver -> PMA-pin span, nearest free point outside macro halos. Trial on the vC t14 3_3_place_gp ODB with TXL=2: 545/545 bits moved, max hop 2354 -> 816 um, DPL and check_placement clean. Not yet run through a TXL=4 kit.",
   "hop_estimate_after_staging_ps": {
-    "method": "worst r0->q span from 4_cts census / 3 x 0.49 ps/um (t2 G2 repaired-wire figure) + 60 ck-q+setup; budget 833 with W 180 as carried in today's SDC, skew = worst launch-capture on those bits",
+    "method": "TXL=4 is 5 hops enc->r0->r1->r2->q->pma per bit. Hook trial on vC t14 (TXL=2, 3 hops): worst span 2207 um, worst hop 816 um = 1.11 x span/hops. Scaled to 5 hops: 490 um; vC t16 / vB t16 use the census path sum /5 as an upper bound. Hop data ps = um x 0.49 (t2 G2 repaired-wire figure) + 60 ck-q + setup. skew = worst launch-capture on those bits from the census. W values are the tap window in the SDC: W180 = today's carried window, W0 = no-window bound. W for serdes is unmeasured; neither is a closure figure.",
     "vC_t14": {
-      "span_um": 2355,
-      "hop_um": 785,
-      "hop_data_ps": 445,
-      "slack_W180": 208,
-      "slack_W180_after_worst_skew": 32,
-      "slack_W0": 388
+      "worst_hop_um": 490,
+      "hop_data_ps": 300,
+      "W180": {
+        "slack_no_skew": 353,
+        "slack_after_worst_skew": 177
+      },
+      "W0": {
+        "slack_no_skew": 533,
+        "slack_after_worst_skew": 357
+      },
+      "worst_skew_ps": -176
     },
     "vC_t16": {
-      "span_um": 1621,
-      "hop_um": 540,
-      "hop_data_ps": 325,
-      "slack_W180": 328,
-      "slack_W180_after_worst_skew": 270,
-      "slack_W0": 508
+      "worst_hop_um": 530,
+      "hop_data_ps": 320,
+      "W180": {
+        "slack_no_skew": 333,
+        "slack_after_worst_skew": 275
+      },
+      "W0": {
+        "slack_no_skew": 513,
+        "slack_after_worst_skew": 455
+      },
+      "worst_skew_ps": -58
     },
     "vB_t16": {
-      "span_um": 1714,
-      "hop_um": 571,
-      "hop_data_ps": 340,
-      "slack_W180": 313,
-      "slack_W180_after_worst_skew": 247,
-      "slack_W0": 493
+      "worst_hop_um": 544,
+      "hop_data_ps": 327,
+      "W180": {
+        "slack_no_skew": 326,
+        "slack_after_worst_skew": 260
+      },
+      "W0": {
+        "slack_no_skew": 506,
+        "slack_after_worst_skew": 440
+      },
+      "worst_skew_ps": -66
     },
     "t2": {
-      "span_um": 2183,
-      "hop_um": 728,
-      "hop_data_ps": 417,
-      "slack_W180": 236,
-      "slack_W180_after_worst_skew": 66,
-      "slack_W0": 416
+      "worst_hop_um": 490,
+      "hop_data_ps": 300,
+      "W180": {
+        "slack_no_skew": 353,
+        "slack_after_worst_skew": 183
+      },
+      "W0": {
+        "slack_no_skew": 533,
+        "slack_after_worst_skew": 363
+      },
+      "worst_skew_ps": -170
     },
-    "caveat": "Estimate only, not built. Assumes placed stations; without the placement hook TXL4 can stack the same wire on one hop."
+    "includes": "The q->pma hop is one of the 5 equal hops. The PMA pin sits inside the PHY macro band, so the last hop has about 150 um over the macro edge (q station below the band, ring search off the line).",
+    "caveat": "Estimate only, from placement-RC census + trial on TXL=2. Not a closure result."
   },
   "not_adopted": true
 }
