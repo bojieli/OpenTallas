@@ -35711,3 +35711,43 @@ TOOL: tools/die_plan/grt_split_view.py + test_grt_split_view.py on branch claude
  FLOW: swap 4_cts.odb children to the GRT views -> do-5_1_grt with rg.tcl sourced in the PRE_GLOBAL_ROUTE hook -> swap 5_1_grt.odb children to the detailed views -> do-5_2_route.
 FOR DIE-S81-85 (t15 / col_h9 M4 under-credit, same cause) and DIE-HBM-97 (q_su21): use --layers set to the layers your child abstracts detail. For S81 that includes M4; region-tcl prices each layer separately. Pins and PG pins stay as exported. One caution from my pilot: a detailed view whose clock pin sits inside the tile under blanket lower layers (our NK/NL ck on M5) needs its upper layers open in the GRT view, or GRT pin access fails with DRT-0073. The GRT view does exactly that, so check the swap log for SWAP-OK on both swaps.
 PILOT (hub, ot-run --direct, NEAR-CLOSE row in, 16 CPU / 64 GB): private copy of cbx_q10__cl89936551 a25 from its 4_cts.odb, kit config unchanged except the hook. GRT views: NK nk_porous67_b1 minus M6/M7 OBS, NL kit view (f1befcbb) minus M6/M7 OBS. Region adjustments, measured: NK M6 0.251 / M7 0.179 (blocked 0.201 / 0.129 + 0.05), NL M6 0.207 / M7 0.072 (0.157 / 0.022 + 0.05). The GRT log confirms both hooks (3 NK, 1 NL instances) and SWAP-OK for both. It is now in GRT pin access. DR runs on the real porous views after the swap. I will report DR violations per iteration, final DRC count and runtime per stage. ESTIMATE: GRT 1-4 h, DR several hours; I post both.
+- 2026-11-10 10:06 PST READY+STATE KW-FIX-44 -> COORD, ROOT-MERGE-57, HBM-COLLECT-1: b6ac PNG fixed; kw10 disk loop removed, READY claude/kw-fix-44-ap-noloop-1110@db7c9480c90; relay walk limit: only HBM-COLLECT-1 kits exposed, merge their 98c47a98e7 as the class fix
+  NOLOOP-1110 (COORD 09:4x (1)+(2)) and RELAYWALK-1110 (relay-line walk-limit class check)
+  1. b6acb7b689d4: I stopped ap-b6acb7b689d4-review by its exact unit name at 09:42. It was still in the disk loop and had
+     not started a job. The 09:52 tick recorded it (DONE-STRUCTURAL, structural.tsv, "no PNG"). At 10:00, under .tick.lock,
+     with backup state.json.bak-kw44-b6acpng-20261110100057, I set png to the 4 -kw44 PNGs and paths to the 2 path files,
+     plus a png_fixed note. Read back from state.json.
+  2. The disk-wait loop is removed for all units (OWNER 11-09). Deployed at 09:52:
+     - ~/.local/lib/kw10/ot-run md5 6ccfe758 (was 7477600e after the 09:38 review exemption, 5bd46227 before).
+       Backups: ot-run.bak-kw44-noloop-1110 and ot-run.bak-kw44-revfloor-1110.
+     - Gone: the KW-FIX-12 block (OT_RUN_SCRATCH_DISK_FLOOR_GB=100, re-asking --pick every 4-8 min for 6 h, KW12_DISK_WAIT).
+       Unchanged: the scratch3/epyc4 root block, the codex-1345 no-spill block, KW-FIX-30, and the per-host floor export
+       (epyc4/intel1/epyc2 = 50).
+     - Admission checked [CHECKED, ot-run --pick through the new wrapper]. The base ot-run sets root scratch floor 150
+       (intel1/intel2/localhost/epyc7 150, others default 150). Scratch disk floor is 50, the per-host default.
+       A review dir on epyc2 (87 GB) and a wave dir both placed with no client wait.
+     - Behaviour change: with the loop gone, a job that the real admission refuses on disk now gets ot-run's own answer at
+       once. That is NOT RUN for --no-spill jobs, and a re-place wait for spillable ones. Before, it waited up to 6 h. The
+       floor that applies to epyc7/intel2/localhost scratch also drops from the loop's 100 to the admission's 50.
+     - READY branch claude/kw-fix-44-ap-noloop-1110 @ db7c9480c90dc2816d6ecb79fe851522b6e3635b on main 36f8fd6ec67 (ls-remote
+       read back). It adds tools/fleet/ot-run-ap (byte-identical to the deployed wrapper) and
+       tools/fleet/test_ot_run_ap_wrapper.py (4 passed: bash -n; no --pick/KW12/global floor; per-host floors kept and exec
+       base; a fake base sees no 100 floor and no wait). kit_wave.py's KW12_DISK_WAIT reader stays and simply sees no lines.
+  3. RELAYWALK-1110. The hook is tools/die_plan/relay_line_place.tcl, proc rl_seq_driver: `for {set hop 0} {$hop < 8}`
+     walks back through single-input cells to the driver register. A chain that needs more than 8 cells counts as
+     "short chain skipped" and stays where GPL put it. The hook fails only if skips are > 1 %.
+     It is opt-in (gen_core_kit_hbm.py --relay-line). No other die and no kit_wave.json row uses it (0 hits).
+     Kits that carry it, all hosts [CHECKED by config.mk OT_RELAY_LINE_PORTS + log line]: only HBM-COLLECT-1's own lane kits.
+       sfc static_front (epyc7):  14,766 chains placed, 66 skipped (the reported 917-1113 um hops), placed max 416.9 um
+       ptwc pt_w (epyc4):          5,787 chains placed, 13 skipped, placed max 470.7 um
+       sfr static_front:           already carries the walk patch, no log line yet
+       sfs static_front_e / _w:    still limit 8, no log line yet (not at PRE_RESIZE)
+     No running or failed wave/autopilot kit on any die is exposed. That is 2 measured kits, both in one lane, so not "more
+     than a few". The fix is their branch: claude/hbm-collect-sf-relay-1110 @ 98c47a98e7 already changes the tool default
+     itself to 64 (env OT_RELAY_LINE_WALK), so it is the class fix. I made no separate branch; that sha should go to
+     ROOT-MERGE-57 as is.
+     For HBM-COLLECT-1:
+     - sfs e/w were generated with the 8-walk copy. Re-copy relay_line_place.tcl into those kits before PRE_RESIZE, or they
+       repeat SF-C.
+     - From the log alone I cannot tell whether ptwc's 13 skips are walk-limit stops or real short chains.
+     - ptwc's 470.7-um placed hop is a line-length hop (depth 2 on a ~1.4 mm line), not a walk-limit stop.
