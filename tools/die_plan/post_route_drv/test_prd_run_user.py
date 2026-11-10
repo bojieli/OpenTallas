@@ -21,7 +21,8 @@ class ContainerUser(unittest.TestCase):
     def test_count_runs_as_host_user(self):
         count = [r for r in runs() if "--name prd-count-" in r]
         self.assertEqual(len(count), 1, runs())
-        self.assertIn('--user "$(id -u):$(id -g)"', count[0])
+        # one --user=U:G word: callers that parse docker flags pairwise (the test_post_route_drv fake docker) skip it
+        self.assertIn('--user="$(id -u):$(id -g)"', count[0])
 
     def test_patching_containers_stay_root_and_are_chowned(self):
         rs = runs()
@@ -36,6 +37,12 @@ class ContainerUser(unittest.TestCase):
         text = (HERE / "prd_run.sh").read_text()
         self.assertIn("/OpenROAD-flow-scripts/flow/scripts/util.tcl", text)   # the in-image patch that needs root
         self.assertIn("orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts", text)
+
+
+def _default_signals():
+    import signal
+    for s in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(s, signal.SIG_DFL)
 
 
 def trap_block():
@@ -64,8 +71,10 @@ class OwnBackTrap(unittest.TestCase):
                 (stub / "find").chmod(0o755)
             script = f'DK={t}/dk; IMAGE=img; D={d}; FINAL=\n' + trap_block() + body
             env = dict(os.environ, PATH=f"{stub}:{os.environ['PATH']}")
+            # bash cannot trap a signal that was ignored when it started (nohup / a background CI job ignores INT):
+            # give the child default dispositions, as systemd and ot-run do
             p = subprocess.run(["bash", "-uo", "pipefail", "-c", script], env=env, capture_output=True, text=True,
-                               timeout=30)
+                               timeout=30, preexec_fn=_default_signals)
             calls = log.read_text().splitlines() if log.exists() else []
             return p.returncode, calls, str(d)
 

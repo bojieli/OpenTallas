@@ -60,7 +60,7 @@ PY_COUNT_LIMITS
   # root-owned (it has no chown after it).  The pass and finish containers stay root: they patch ORFS scripts inside
   # the image (orfs_hold_mm.py on every two-mode kit, kwrs_busfit.py on util.tcl), which are root 0664 there, so
   # --user would end them 'exit 9'; their output is chowned back by the container itself and by the chown run after.
-  $DK run --rm --user "$(id -u):$(id -g)" --name prd-count-$2-$$ --cpus="$count_cpus" --memory="${count_mem}g" --memory-swap="${count_mem}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
+  $DK run --rm --user="$(id -u):$(id -g)" --name prd-count-$2-$$ --cpus="$count_cpus" --memory="${count_mem}g" --memory-swap="${count_mem}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
     -e ODB=/work/${B#$D/}/$(test -s $B/5_route.odb && echo 5_route.odb || echo 5_2_route.odb) -e SDC=/work/${B#$D/}/4_cts.sdc -e SPEF=/work/${B#$D/}/$4 -e TAG=$2 -e CHKPL=$5 "$IMAGE" bash -lc '
     source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
     M="make -s DESIGN_CONFIG=/work/config.mk WORK_HOME=/tmp/w FLOW_VARIANT=base"
