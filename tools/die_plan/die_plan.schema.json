@@ -2733,6 +2733,81 @@
          }
         }
        },
+       "tap_entries": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "name",
+          "tap",
+          "take_taps",
+          "xy_um",
+          "stations_um",
+          "cell",
+          "region_um",
+          "evidence"
+         ],
+         "properties": {
+          "name": {
+           "type": "string",
+           "minLength": 1
+          },
+          "tap": {
+           "type": "string",
+           "minLength": 1
+          },
+          "take_taps": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "xy_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          },
+          "stations_um": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           }
+          },
+          "cell": {
+           "type": "string",
+           "minLength": 1
+          },
+          "region_um": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+             "type": "number"
+            }
+           }
+          },
+          "evidence": {
+           "type": "string",
+           "minLength": 1
+          }
+         }
+        }
+       },
        "landing_export_form": {
         "enum": [
          "tie",
@@ -3163,81 +3238,6 @@
          "forwarded_roots": {
           "type": "array",
           "items": {
-           "type": "string",
-           "minLength": 1
-          }
-         }
-        }
-       },
-       "tap_entries": {
-        "type": "array",
-        "minItems": 1,
-        "items": {
-         "type": "object",
-         "additionalProperties": false,
-         "required": [
-          "name",
-          "tap",
-          "take_taps",
-          "xy_um",
-          "stations_um",
-          "cell",
-          "region_um",
-          "evidence"
-         ],
-         "properties": {
-          "name": {
-           "type": "string",
-           "minLength": 1
-          },
-          "tap": {
-           "type": "string",
-           "minLength": 1
-          },
-          "take_taps": {
-           "type": "array",
-           "minItems": 1,
-           "items": {
-            "type": "string",
-            "minLength": 1
-           }
-          },
-          "xy_um": {
-           "type": "array",
-           "items": {
-            "type": "number"
-           },
-           "minItems": 2,
-           "maxItems": 2
-          },
-          "stations_um": {
-           "type": "array",
-           "items": {
-            "type": "array",
-            "items": {
-             "type": "number"
-            },
-            "minItems": 2,
-            "maxItems": 2
-           }
-          },
-          "cell": {
-           "type": "string",
-           "minLength": 1
-          },
-          "region_um": {
-           "type": "array",
-           "minItems": 1,
-           "items": {
-            "type": "array",
-            "minItems": 4,
-            "maxItems": 4,
-            "items": {
-             "type": "number"
-            }
-           }
-          },
-          "evidence": {
            "type": "string",
            "minLength": 1
           }
@@ -5205,6 +5205,11 @@
         }
        }
       }
+     },
+     "reset_relay_names": {
+      "enum": [
+       "site"
+      ]
      },
      "relay_sites": {
       "type": "object",
