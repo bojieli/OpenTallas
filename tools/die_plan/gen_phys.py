@@ -1931,19 +1931,16 @@ def seam_hold(P):
 # iqf__t1 on cross-tap paths only (1390 setup / 2319 hold violators, 10 / ~100 with W credited).  The shared part of
 # the band is common to every tap of the type and is credited by CPPR in a related-pair view, so the kit SDC charges
 # only the inter-tap related-pair budget X: tap_window_ps = min(window_ps, X) for every type without a MEASURED
-# window.  X = clock.tap_window.related_pair_ps, default TAP_RELATED_PAIR_PS 40 ps (measured routed die proofs: the
-# per-port worst-partner related-pair damage after CPPR, clock.tap_window.per_port_ps, has median 32 ps on S81 (1833
-# ports, 42 types, 67.5 % <= 40) and 30 ps on HEAD (220 ports, 62 % <= 40); the kit tap trees are balanced within
-# local_window_ps 20).  Measured windows are kept as they are: clock.tap_window.per_type_ps (ceil10 of the type's
+# window.  X = clock.tap_window.related_pair_ps, a plan value only.  TAPWIN-FIX-1109 (COORD): there is NO default X.
+# The former 40 ps default was not validated (S81 G50 proof, gate chain: iqf__t1 worst 80, unmeasured types median 78,
+# 18 of 159 above 180): a type with no measurement and no plan related_pair_ps is charged window_ps, as before TAPWIN.
+# Measured windows are kept as they are: clock.tap_window.per_type_ps (ceil10 of the type's
 # measured related-pair damage) and per_port_ps (per-port measured damage) ARE the die clock's related-pair
 # prediction, not the band.  The band itself and every pair above X are checked at die STA (die_sta_related
 # W_intra reads this same function per region; damage > X fails there).  OpenSTA construct (probe tapwin_sta 11-09,
 # asap7lock): a clock-level -source -early/-late on [get_clocks clk] and a generated clock per tap with -source the
 # master port are NOT credited across ports (cross-tap still pays the full 180), so the per-port form with the
 # budget X is the one construct that gives cross-tap X and same-tap 0 (CRPR at the common port).
-TAP_RELATED_PAIR_PS = 40.0
-
-
 def tap_window_band_ps(P, tn=None):
     """the plan's DECLARED window (ps): window_ps, or the type's per_type_ps entry; 0.0 without clock.tap_window.  This
     is the die arrival band / measured type window before the related-pair budget (tap_window_ps applies X)."""
@@ -1962,10 +1959,12 @@ def tap_window_band_ps(P, tn=None):
 
 
 def tap_related_pair_ps(P):
-    """the inter-tap related-pair budget X (ps) the kit SDC charges a cross-tap pair of an unmeasured type (TAPWIN-1109):
-    plan clock.tap_window.related_pair_ps, else TAP_RELATED_PAIR_PS."""
+    """the inter-tap related-pair budget X (ps) the kit SDC charges a cross-tap pair of an unmeasured type: plan
+    clock.tap_window.related_pair_ps, None when the plan gives none (TAPWIN-FIX-1109: no default; window_ps is charged)."""
     x = (P.clock.get("tap_window") or {}).get("related_pair_ps")
-    x = TAP_RELATED_PAIR_PS if x is None else float(x)
+    if x is None:
+        return None
+    x = float(x)
     if not 0 <= x:
         raise ValueError(f"clock.tap_window.related_pair_ps {x:g} < 0")
     return x
@@ -1982,12 +1981,13 @@ def tap_window_ps(P, tn=None):
     DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
     value for type tn (12.24c block arrival contract per block, W_t from the die's measured related-pair damage of
     that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W.
-    TAPWIN-1109: an unmeasured type (and the die value, tn None) charges min(window_ps, related-pair budget X); the
-    full band is tap_window_band_ps."""
+    TAPWIN-1109: an unmeasured type (and the die value, tn None) charges min(window_ps, plan related_pair_ps X); with no
+    plan X (TAPWIN-FIX-1109) it charges window_ps.  The full band is tap_window_band_ps."""
     w = tap_window_band_ps(P, tn)
-    if not w or tap_window_measured(P, tn):
+    x = tap_related_pair_ps(P)
+    if not w or tap_window_measured(P, tn) or x is None:
         return w
-    return min(w, tap_related_pair_ps(P))
+    return min(w, x)
 
 
 # KW-FIX-4-SDC (COORD RULING 2026-11-03 10:49, plain-seam input-face class): MEASURED per-port window, opt-in plan
