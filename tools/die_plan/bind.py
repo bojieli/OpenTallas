@@ -4496,6 +4496,23 @@ def cmd_bind(a):
     rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
                                     advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
     B.errors.extend(lc["errors"])
+    # TOK-VERIFY-1 / COORD 11-10: signed landing phase class (WNEG=1 rings flip +3 -> +2 at zero phase).  ADVISORY
+    # (targets, not gates): reported here and in landing_phase_sign.json, never a bind error.  Arrivals at the rings
+    # (routed clock, TT + FF, OCV-derated) come from OT_LANDING_PHASE_ARRIVALS; without them every ring is UNMEASURED.
+    try:
+        import os
+        import landing_phase_sign as LPS
+        _lb = out.parent if (out.parent / "bind_clock_landings.json").is_file() else out
+        if (_lb / "bind_clock_landings.json").is_file():
+            lps = LPS.run(_lb, os.environ.get("OT_LANDING_PHASE_ARRIVALS") or None,
+                          float(os.environ.get("OT_LANDING_PHASE_MARGIN_PS", "100")))
+            (_lb / "landing_phase_sign.json").write_text(json.dumps(lps, indent=1) + "\n")
+            rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict=lps["verdict"], counts=lps["counts"],
+                                             landings=lps["landings"], near=len(lps["near"]), margin_ps=lps["margin_ps"],
+                                             corners=lps["corners"], arrivals_source=lps["arrivals_source"],
+                                             lane_cycle_adjust=lps["lane_cycle_adjust"])
+    except Exception as exc:                # advisory: a failure is recorded, never raised
+        rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
