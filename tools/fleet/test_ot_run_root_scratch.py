@@ -141,21 +141,6 @@ class RemoteShell(unittest.TestCase):
         env = self.env(40, 230)
         self.assertEqual(self.sh(m.scratch_env('intel1') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[2]))
         self.assertEqual(self.sh(m.scratch_env('epyc2') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[1]))
-        pre = 'OT_SCRATCH=/srv/opentallas-scratch3; '
-        r = self.sh(pre + m.disk_guard_sh('T1', 'localhost') + 'echo ADMITTED', env)
-        self.assertEqual((r.returncode, r.stdout.strip()), (0, 'ADMITTED'), r.stderr)
-        r = self.sh(pre + m.disk_guard_sh('T2', 'localhost') + 'echo ADMITTED', self.env(40, 165))
-        self.assertEqual(r.returncode, 98)
-        self.assertIn('keeps 150 GB', r.stderr)
-
-    def test_disk_guard_keeps_root_floor_for_second_root(self):
-        pre = 'OT_SCRATCH=/srv/opentallas-scratch3; '
-        r = self.sh(pre + m.disk_guard_sh('T1') + 'echo ADMITTED', self.env(40, 3276))
-        self.assertEqual((r.returncode, r.stdout.strip()), (0, 'ADMITTED'), r.stderr)
-        r = self.sh(pre + m.disk_guard_sh('T2') + 'echo ADMITTED', self.env(40, m.ROOT_SCRATCH_FLOOR_GB + 15))
-        self.assertEqual(r.returncode, 98)
-        self.assertIn('OT_RUN_SCRATCHLOW T2', r.stderr)
-
 
 class SecondFloor(unittest.TestCase):
     """QUEUE-BAL-2 (COORD 21:2x): intel2 21:2x = scratch2 29 GB, root 197 GB free, root floor 150 -> 47 GB usable on

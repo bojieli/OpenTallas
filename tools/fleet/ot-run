@@ -294,6 +294,7 @@ def scratch_disk(row, d, out, host=None):
             extra.update(rootfs_pct=int(f[1]), rootfs_free_gb=int(f[2]))
             if host in ROOTFS_MIN_FREE_GB_HOSTS:
                 extra["rootfs_floor_gb"] = ROOTFS_MIN_FREE_GB_HOSTS[host]
+            extra["host_name"] = host
         elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
             extra["dir_onroot"] = f[1] == "1"
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
@@ -340,6 +341,9 @@ def scratch_disk(row, d, out, host=None):
     return row
 
 
+ROOTFS_DIR_AWARE_HOSTS = set(x.strip() for x in os.environ.get("OT_RUN_ROOTFS_DIR_AWARE_HOSTS", "epyc4,epyc7").split(",") if x.strip())
+
+
 def host_refusal(row):
     """v13 (FLEET-DISK 2026-10-24): why this host admits no new job, or '' -- root fs > ROOTFS_MAX_PCT % full, or its
     separate scratch disk below SCRATCH_DISK_FLOOR_GB (the root fs is never the fallback).  Rows of older probes: ''."""
@@ -353,11 +357,16 @@ def host_refusal(row):
         return (f"second scratch root {row['scratch_disk']} (root fs) has {row['scratch_disk_gb']} GB usable < floor "
                 f"{SCRATCH_SECOND_FLOOR_GB} GB after keeping {row.get('root_floor_gb', ROOT_SCRATCH_FLOOR_GB)} GB free on the root fs (ROOTSCR_1101)")
     fl = row.get("rootfs_floor_gb")
-    if fl is not None and row.get("rootfs_free_gb") is not None:     # DISK-URGENT-4: this host's root guard is free GB, not %
+    # KW-FIX-44 11-09 COORD loopgap-181x (A): the free-GB root guard refuses a job only when its --dir / job root is ON the
+    # root fs; a job whose dir is on the host's separate scratch disk writes nothing to root and is admitted (the owner's
+    # 150 GB floor still protects root).  Hosts in OT_RUN_ROOTFS_DIR_AWARE_HOSTS (epyc4, epyc7: scratch2 is its own device).
+    dir_off_root = (row.get("dir_onroot") is False and row.get("scratch_disk") and not row.get("scratch_second")
+                    and row.get("host_name") in ROOTFS_DIR_AWARE_HOSTS)
+    if fl is not None and row.get("rootfs_free_gb") is not None and not dir_off_root:     # DISK-URGENT-4: free GB, not %
         if row["rootfs_free_gb"] < fl:
             return (f"ROOT FS {row['rootfs_free_gb']} GB free < floor {fl} GB (DISK GUARD, owner floor 150 GB 11-06; "
                     f"free the root fs, OT_RUN_ROOTFS_MIN_FREE_GB_HOSTS overrides)")
-    elif pct is not None and pct > lim:
+    elif pct is not None and pct > lim and not dir_off_root:
         return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
     if row.get("scratch_disk") and not row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
@@ -852,11 +861,14 @@ def memory_charge_note(row):
     return f"growth {row['growth_gb']}"
 
 
+STATUS_DIR = os.environ.get("OT_RUN_STATUS_DIR", "/srv/opentallas-scratch2/claude")
+
+
 def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
     held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
-        res = dict(ex.map(lambda h: probe(h, None), hosts))
+        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if h in ROOTFS_DIR_AWARE_HOSTS else None), hosts))   # KW-FIX-44 disks-all
     out = []
     for h in hosts:
         if h in held:
@@ -974,50 +986,6 @@ def scratch_env(host=None):
 
 
 SCRATCH_ENV = scratch_env()
-# v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
-# old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
-def rootfs_floor_sh(host, tag):
-    """DISK-URGENT-4: on a floor host, refuse below the free-GB floor and then disable the percentage test (lim=100)."""
-    fl = ROOTFS_MIN_FREE_GB_HOSTS.get(host)
-    if fl is None:
-        return ""
-    return (f"rf=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); if [ \"${{rf:-0}}\" -lt {fl} ]; then "
-            f"echo \"ot-run: DISK GUARD: root fs ${{rf}} GB free < floor {fl} GB on $(hostname -s); no new job admitted\" >&2; "
-            f"echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; lim=100; ")
-
-
-def disk_guard_sh(tag, host=None, d=None):
-    sec, rfl = " ".join(ROOT_SCRATCH_ROOTS), root_floor(host)
-    work = shlex.quote(d) if d else '"$PWD"'
-    return (f"rd=$(stat -c %d /); for q in {work} \"$OT_SCRATCH/claude\"; do "
-            f"qd=$(stat -L -c %d \"$q\" 2>/dev/null) || {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; "
-            f"if [ \"$qd\" = \"$rd\" ]; then allowed=0; "
-            f"for ar in {sec}; do case \"$q\" in \"$ar\"|\"$ar\"/*) allowed=1;; esac; done; "
-            f"if [ $allowed = 0 ]; then echo \"ot-run: ROOT filesystem working/output directory refused: $q\" >&2; "
-            f"echo OT_RUN_ROOTDIR {tag} >&2; exit 97; fi; "
-            f"qfree=$(df -BG --output=avail \"$q\" | tail -1 | tr -dc 0-9); "
-            f"if [ $(( ${{qfree:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
-            f"echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; "
-            f"else qfree=$(df -BG --output=avail \"$q\" | tail -1 | tr -dc 0-9); "
-            f"if [ \"${{qfree:-0}}\" -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
-            f"echo \"ot-run: actual working/output filesystem $q has $qfree GB below floor\" >&2; "
-            f"echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; fi; done; "
-            f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); lim={ROOTFS_MAX_PCT}; sd0=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd0\" != \"$(stat -c %d /)\" ] && lim={ROOTFS_MAX_PCT_SCRATCH}; "
-            # ROOTSCR_1101: OT_SCRATCH = a second root on the root fs: keep ROOT_SCRATCH_FLOOR_GB free on the root fs
-            f"case ' {sec} ' in *\" $OT_SCRATCH \"*) lim={ROOTFS_MAX_PCT_SCRATCH}; f=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
-            f"if [ $(( ${{f:-0}} - {rfl} )) -lt {SCRATCH_SECOND_FLOOR_GB} ]; then "
-            f"echo \"ot-run: second scratch root $OT_SCRATCH: root fs has ${{f}} GB free, keeps {rfl} GB; "
-            f"usable < floor {SCRATCH_SECOND_FLOOR_GB} GB on $(hostname -s)\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi;; esac; "
-            + rootfs_floor_sh(host, tag) +
-            f"if [ \"${{p:-0}}\" -gt $lim ]; then "
-            f"echo \"ot-run: DISK GUARD: root fs $p% full > $lim% on $(hostname -s); no new job admitted "
-            f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
-            f"if sd=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd\" != \"$(stat -c %d /)\" ]; then "
-            f"f=$(df -BG --output=avail $OT_SCRATCH/claude/ | tail -1 | tr -dc 0-9); if [ \"${{f:-0}}\" -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
-            f"echo \"ot-run: scratch disk $OT_SCRATCH has ${{f}} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB on $(hostname -s); "
-            f"the root fs is never a fallback\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; fi; ")
-
-
 # v12 SCRATCH2 (SCRATCH2-1021 2026-10-21): runs on the job host before `cd --dir`; see the header.  Never fails the job.
 SCRATCH_PLACE_PY = r'''
 import base64, json, os, re, sys
@@ -1217,7 +1185,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     # Recheck before output placement: never recreate an input directory that
     # disappeared after the probe and then launch in an empty source tree.
     workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
-    remote = scratch_env(host) + disk_guard_sh(tag, host, d) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
+    remote = scratch_env(host) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)

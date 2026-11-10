@@ -152,7 +152,8 @@ def _inside(rel_dir, target):
 
 
 def put_tree(store, root, link=False):
-    """-> tree sha.  Refuses absolute/escaping symlinks and special files."""
+    """-> tree sha.  Keeps relative links that stay inside and absolute links that resolve inside (stored relative);
+    refuses links that leave the tree, and special files."""
     files, links, dirs = {}, {}, []
     root = os.path.abspath(root)
     for dp, dns, fns in os.walk(root, followlinks=False):
@@ -170,6 +171,13 @@ def put_tree(store, root, link=False):
             st = os.lstat(p)
             if stat.S_ISLNK(st.st_mode):
                 t = os.readlink(p)
+                if os.path.isabs(t):
+                    # KW-FIX-44 COORD 19:3x: an ABSOLUTE link that resolves inside the tree (W/plandir/README.md ->
+                    # W/prov/plan/README) is kept, stored as the equivalent relative link so it stays inside wherever
+                    # the tree is materialized; one that resolves outside is refused as before
+                    a = os.path.normpath(t)
+                    if a == root or a.startswith(root + "/"):
+                        t = os.path.relpath(a, os.path.dirname(p))
                 if not _inside(os.path.dirname(rel), t):
                     raise StoreError(f"symlink {p} -> {t} leaves the tree: declare its target as an input instead")
                 links[rel] = t
