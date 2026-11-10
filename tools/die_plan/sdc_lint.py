@@ -474,6 +474,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, export_l)
     gen_src = {}                      # forwarded output port -> generated clock
     land_ex = {}                      # (max|min, from, to) -> ps : landed-crossing delay exceptions
+    ring_fo_seen = []                 # DIE-QC-97: set_max_fanout commands seen (at most one)
     land_window = float(period_ps) / 2 - landing_window_setup_ps()
     pad_env = set()
     ft_env = set()                    # ft ports reached by set_load / set_driving_cell
@@ -640,6 +641,19 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                         err.append(f"{role}: forwarded clock output {p} carries two generated clocks")
                     gen_src[p] = nm
                 ctx.gclocks[nm] = tp
+                continue
+            if c == "set_max_fanout":
+                # DIE-QC-97 CLAND-RING-FO (b): a design rule (no timing relaxation), only in a landed-ring kit, only the
+                # generator form 'set_max_fanout F [current_design]', F a power of two 1..64, at most once
+                if not land_l:
+                    err.append(f"ring_fanout: set_max_fanout only in a kit with landed rings (fail-closed): {cmd}")
+                elif (len(w) != 3 or w[2] != "[current_design]" or not re.fullmatch(r"[0-9]+", w[1])
+                        or int(w[1]) not in (1, 2, 4, 8, 16, 32, 64)):
+                    err.append(f"ring_fanout: only 'set_max_fanout F [current_design]' (F a power of two <= 64) is "
+                               f"allowed (fail-closed): {cmd}")
+                elif ring_fo_seen:
+                    err.append(f"ring_fanout: set_max_fanout given twice: {cmd}")
+                ring_fo_seen.append(cmd)
                 continue
             if c in ("set_max_delay", "set_min_delay") and land_l:
                 kind = "max" if c == "set_max_delay" else "min"

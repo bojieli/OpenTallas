@@ -30,6 +30,48 @@ def ring_write_fall(plan, tn=None):
     only = rh.get("write_fall_types")
     return tn is None or only is None or tn in only or tn.split("__")[0] in only
 
+RING_FANOUT_CHOICES = (0, 1, 2, 4, 8, 16, 32, 64)
+
+
+def ring_fanout_max(clock):
+    """DIE-QC-97 CLAND-RING-FO (COORD 11-10): die-level clock.landing_ring_fanout_max = F (power of two <= 64; 0 /
+    absent = legacy).  With F > 0 every WREG count-aligned ring has <= F loads per write-enable flop (write_chunk <= F)
+    and per read-select copy (dsrep >= 64 / F on the legacy 64-bit read chunk), using the existing kept same-D register
+    copies (0 cycles, no K change), and gen_phys emits set_max_fanout F in the kit SDC.  Default 0: byte-same kits."""
+    f = (clock or {}).get("landing_ring_fanout_max", 0)
+    if isinstance(f, bool) or not isinstance(f, int) or f not in RING_FANOUT_CHOICES:
+        raise ValueError(f"clock.landing_ring_fanout_max must be one of {RING_FANOUT_CHOICES}, got {f!r}")
+    return f
+
+
+def ring_fanout_wreg_cfg(clock, cfg):
+    """The landing_ring_wreg cfg dict as built under the die fanout bound (a new dict; cfg itself when the bound is 0 or
+    the type has no WREG cfg).  Read-select copies are raised only on the legacy 64-bit read chunk (read_chunk 0): a
+    bounded read_chunk type keeps its own dsrep (ot_meso_dsel needs SREP | chunk width)."""
+    f = ring_fanout_max(clock)
+    if not f or not isinstance(cfg, dict) or not cfg:
+        return cfg
+    out = dict(cfg)
+    wc = out.get("write_chunk", 64)
+    if isinstance(wc, int) and not isinstance(wc, bool) and wc > f:
+        out["write_chunk"] = f
+    if not out.get("read_chunk"):
+        ds = out.get("dsrep", 1)
+        if isinstance(ds, int) and not isinstance(ds, bool) and ds * f < 64:
+            out["dsrep"] = 64 // f
+    return out
+
+
+def ring_status_reg_all(clock):
+    """DIE-QC-97 CLAND-RING-FO part (c): die-level clock.landing_ring_status_reg = true turns STATUS_REG=1 on for every
+    count-aligned ring (the per-type landing_status_reg opt-in, die-wide).  Data q and ready keep their cycles; a rv/lap
+    fault is seen one clk later (status_reg_added_fault_cycles 1).  Absent / false = legacy."""
+    v = (clock or {}).get("landing_ring_status_reg", False)
+    if not isinstance(v, bool):
+        raise ValueError("clock.landing_ring_status_reg must be a boolean")
+    return v
+
+
 def ring_write_reg(plan, tn, bus):
     """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
     ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
@@ -44,6 +86,7 @@ def ring_write_reg(plan, tn, bus):
         return None
     if not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list):
         raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    cfg = ring_fanout_wreg_cfg(plan.get("clock"), cfg)   # DIE-QC-97: die fanout bound (0 = cfg unchanged)
     if bus not in cfg["buses"]:
         return None
     dsrep = cfg.get("dsrep", 1)
@@ -99,6 +142,9 @@ def ring_read_select_copies(plan, tn, bus):
     copies = cfg.get("dsrep")
     if isinstance(copies, bool) or not isinstance(copies, int) or copies < 1 or 64 % copies:
         raise LandingError(f"{tn}: landing_ring_dsrep.dsrep must divide 64")
+    f = ring_fanout_max(plan.get("clock"))   # DIE-QC-97: same die bound as ring_write_reg (no conflict with its dsrep)
+    if f and copies * f < 64:
+        copies = 64 // f
     return copies if bus in cfg["buses"] else None
 
 
@@ -1000,6 +1046,9 @@ class Landings:
         status_reg = self.types[key].get("landing_status_reg", False)
         if not isinstance(status_reg, bool):
             raise LandingError(f"{tn}: landing_status_reg must be a boolean")
+        # DIE-QC-97 (c): die-wide STATUS_REG on every count-aligned ring (plan clock.landing_ring_status_reg)
+        if cat and ring_status_reg_all(self.plan.get("clock")):
+            status_reg = True
         if status_reg and not cat:
             raise LandingError(f"{tn}: landing_status_reg needs count-aligned rings")
         if inst is not None:
