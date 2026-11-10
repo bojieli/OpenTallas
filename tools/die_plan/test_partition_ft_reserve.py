@@ -517,3 +517,32 @@ def test_edge_pocket_rule_leaves_other_columns_whole():
     for r in (interior,no_rows,too_wide,narrow):
         assert F.pdn_windows_edge_pocket(r)==[]
     assert 'pdn_windows_edge_pocket' not in F.tcl(interior)
+
+
+def _macro_street_receipt(rows):
+    return dict(rectangles_um=[dict(layer='M4', rect=list(r)) for r in rows])
+
+
+STREET_BOXES = [(25.92, 1105.92, 276.48, 1373.76), (25.92, 1382.4, 276.48, 1650.24)]
+
+
+def test_street_window_lands_on_m4_strap_inside_one_row():
+    r = _macro_street_receipt([(0, 1373.76, 453.6, 1375.92), (0, 1375.92, 457.92, 1378.62), (0, 1378.62, 453.6, 1382.4)])
+    assert F.pdn_windows_street(r, boxes=STREET_BOXES) == [('M4', 1380.09, 1380.702)]
+    rows = [q for L, q in F.obstruction_rows(r, 457.92, macro_boxes=STREET_BOXES) if L == 'M4']
+    assert [0, 1378.62, 453.6, 1380.09] in rows and [0, 1380.702, 453.6, 1382.4] in rows
+
+
+def test_no_street_window_without_macros_or_when_m4_open_or_already_cut():
+    full = _macro_street_receipt([(0, 1373.76, 457.92, 1382.4)])
+    assert F.pdn_windows_street(full) == [] and F.pdn_windows_street(None, boxes=STREET_BOXES) == []
+    assert F.obstruction_rows(full, 457.92) == [('M4', [0, 1373.76, 457.92, 1382.4])]
+    opened = _macro_street_receipt([(0, 1373.76, 457.92, 1376.0), (0, 1379.0, 457.92, 1382.4)])
+    assert F.pdn_windows_street(opened, boxes=STREET_BOXES) == []
+    assert F.pdn_windows_street(full, boxes=STREET_BOXES, existing=[('M4', 1376.0, 1376.6)]) == []
+
+
+def test_tcl_unchanged_without_macro_boxes_and_counts_street_windows():
+    full = _macro_street_receipt([(0, 1373.76, 457.92, 1382.4)])
+    assert 'pdn_windows_street' not in F.tcl(full)
+    assert 'pdn_windows_street=1' in F.tcl(full, STREET_BOXES)

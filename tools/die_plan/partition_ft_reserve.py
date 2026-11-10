@@ -63,12 +63,12 @@ def reservation(P, typ):
                 rectangles_um=[dict(layer=L,rect=list(r)) for L,*r in rows])
 
 
-def tcl(receipt):
+def tcl(receipt, macro_boxes=None):
     if receipt is None:return ''
     lines=['# Exact partition complement of the die-owned FT tracks.',
            'set ot_ft_blk [ord::get_db_block]',
            'set ot_ft_dbu [$ot_ft_blk getDbUnitsPerMicron]']
-    rows=obstruction_rows(receipt)
+    rows=obstruction_rows(receipt, macro_boxes=macro_boxes)
     for layer,rect in rows:
         lines.append(f'set ot_ft_layer [[ord::get_db_tech] findLayer {layer}]')
         lines.append('odb::dbObstruction_create $ot_ft_blk $ot_ft_layer '+' '.join(
@@ -89,6 +89,9 @@ def tcl(receipt):
     edgewins=pdn_windows_edge_pocket(receipt)
     if edgewins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_edge_pocket={len(edgewins)}"')
+    streetwins=pdn_windows_street(receipt, boxes=macro_boxes, existing=wins)
+    if streetwins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_street={len(streetwins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -624,12 +627,62 @@ def pdn_windows_strip_m5(receipt, width=None, core_x0=4.32):
     return out
 
 
-def obstruction_rows(receipt, width=None, core_y0=4.32):
+# DIE-HBM-97 11-10 (q_b000 / q_b000__physical_v1 PDN-0179, M3 channels in the 8.64-um streets of the abutted bank128_pair
+# stack): the street between two stacked macros has all of M4 reserved, so its M3 bridge straps have no M4 strap to land on.
+# pdn_windows only cuts tall bands on a 21.6-um grid, which an 8.64-um street can miss (q_b000 pv1: the streets at y 1926.72
+# and 2203.2 get a window and pass, y 1373.76 and 1650.24 get none and fail).  On the q_b000 tapcell DB, one M4 strap-pair
+# window per street gave 0 PDN-0178 / 0 PDN-0179; extending or merging the M4 rows did not.  Streets come from the plan's
+# hard cores, not the receipt, so partition_ft_reservation.json and every kit without such a street stay byte-identical.
+def macro_boxes(typ):
+    """[(x0, y0, x1, y1)] of the type's hard cores in type coordinates."""
+    return [(c['origin_um'][0], c['origin_um'][1], c['origin_um'][0] + c['outline_um'][0], c['origin_um'][1] + c['outline_um'][1])
+            for c in typ.get('hard_cores', ()) if c.get('origin_um') and c.get('outline_um')]
+
+
+def pdn_windows_street(receipt, width=None, core_y0=4.32, boxes=None, existing=()):
+    """[(layer, y0, y1)] one M4 strap window per macro street that is wholly reserved on M4 and has no window yet."""
+    if receipt is None or not boxes:
+        return []
+    off, wd, sp, pitch = PDN_WIN_STRIPES['M4']
+    rows = sorted((r['rect'] for r in receipt['rectangles_um']
+                   if r['layer'] == 'M4' and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM), key=lambda q: (q[1], q[0]))
+    streets = {}
+    for a in boxes:
+        for b in boxes:
+            xa, xb = max(a[0], b[0]), min(a[2], b[2])
+            if 0 < b[1] - a[3] <= PDN_WIN_MIN + 1e-6 and xb - xa >= 0.5 * min(a[2] - a[0], b[2] - b[0]):
+                old = streets.get((a[3], b[1]))
+                streets[(a[3], b[1])] = (min(xa, old[0]), max(xb, old[1])) if old else (xa, xb)
+    out = []
+    for (y0, y1), (xa, xb) in sorted(streets.items()):
+        cov = [r for r in rows if r[1] < y1 - 1e-6 and r[3] > y0 + 1e-6 and r[0] <= xa + 1e-6 and r[2] >= xb - 1e-6]
+        cur = y0
+        for r in cov:
+            if r[1] > cur + 1e-6:
+                break
+            cur = max(cur, r[3])
+        if cur < y1 - 1e-6 or any(L == 'M4' and a < y1 and b > y0 for L, a, b in existing):
+            continue
+        fits = []
+        for k in range(math.floor((y0 - core_y0 - off) / pitch), math.ceil((y1 - core_y0 - off) / pitch) + 1):
+            s = core_y0 + off + k * pitch
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo >= y0 + PDN_WIN_MARGIN - 1e-6 and hi <= y1 - PDN_WIN_MARGIN + 1e-6:
+                fits.append((lo, hi))
+        inside = [w for w in fits if any(w[0] >= r[1] + PDN_WIN_MARGIN - 1e-6 and w[1] <= r[3] - PDN_WIN_MARGIN + 1e-6 for r in cov)]
+        pick = (inside or fits)[:1]
+        out += [('M4', round(lo, 3), round(hi, 3)) for lo, hi in pick]
+    return out
+
+
+def obstruction_rows(receipt, width=None, core_y0=4.32, macro_boxes=None):
     """[(layer, rect)] the obstructions to create: the receipt rectangles, tall full-width M4/M6 bands split at
     pdn_windows."""
     width = _width(receipt, width)
     swins = pdn_windows_strip(receipt, width, core_y0)
     wins = pdn_windows(receipt, width, core_y0) + swins
+    stwins = pdn_windows_street(receipt, width, core_y0, macro_boxes, wins)
+    wins = wins + stwins
     vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width) + pdn_windows_edge_pocket(receipt)
     out = []
     for r in receipt['rectangles_um']:
@@ -649,6 +702,8 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
             mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins if L == r['layer'] and a < y1 and b > y0)
         elif r['layer'] == 'M6' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # strip windows cut the wide partial M6 rows too
             mine = sorted((max(a, y0), min(b, y1)) for L, a, b in swins if L == 'M6' and a < y1 and b > y0)
+        elif r['layer'] == 'M4' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # street windows cut the wide partial M4 rows too
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in stwins if a < y1 and b > y0)
         else:
             mine = []
         cur = y0
