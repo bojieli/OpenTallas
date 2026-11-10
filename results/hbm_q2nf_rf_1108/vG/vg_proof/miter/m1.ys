@@ -1,0 +1,4 @@
+read_verilog miter/miter_1.v
+hierarchy -top miter_1
+proc; opt_clean
+sat -prove ok 1 -verify miter_1

@@ -1,0 +1,19 @@
+# HBM-Q2NF-RF vG lock-step proof: old ot_q2nf_rest_x vs retimed ot_q2nf_rest_x, sequential equivalence by induction
+read_verilog -sv -DSYNTHESIS -DOT_Q2NF_TGTQ1 -DOT_Q2NF_RW -DOT_Q2NF_CFG_CASE -DOT_Q2NF_FLOWADDR -DOT_Q2NF_DNZ old/ot_q2nf_rest.sv old/ot_q2nf_cfg_case.sv
+hierarchy -top ot_q2nf_rest_x
+proc; flatten; async2sync; opt_clean
+rename ot_q2nf_rest_x gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS -DOT_Q2NF_TGTQ1 -DOT_Q2NF_RW -DOT_Q2NF_CFG_CASE -DOT_Q2NF_FLOWADDR -DOT_Q2NF_DNZ new/ot_q2nf_rest.sv new/ot_q2nf_cfg_case.sv
+hierarchy -top ot_q2nf_rest_x
+proc; flatten; async2sync; opt_clean
+rename ot_q2nf_rest_x gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert
