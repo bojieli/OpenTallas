@@ -266,6 +266,31 @@ def test_gap_column_gets_m5_window_through_end_rows_and_m6_fill():
     assert 'pdn_windows_col=5 col_fill_m6=1' in F.tcl(r)
 
 
+def _edge_receipt():
+    """q_su20 a7 shape: 2004.48-um outline (full-width M4 row), the die M5 column 1995.84-2002.32 beside macro p0 crossing
+    the core edge 2000.16 with its own 8.64-um M4 rows to the outline, plus the same column moved inside the core."""
+    R = [dict(layer='M4', rect=[0.0, 220.32, 2004.48, 223.02])]
+    for x0, x1, rx1 in ((1995.84, 2002.32, 2004.48), (1000.08, 1006.56, 1008.72)):
+        R.append(dict(layer='M5', rect=[x0, 233.28, x1, 544.32]))
+        R += [dict(layer='M4', rect=[x0, 241.92 + 10.8 * k, rx1, 244.62 + 10.8 * k]) for k in range(28)]
+    return dict(rectangles_um=R)
+
+
+def test_outline_edge_column_is_not_a_macro_gap():
+    # DIE-HBM-97/SUPDN: an edge column window turned the core-edge pocket into 141 serial pdngen repair rounds (50 GB OOM)
+    r = _edge_receipt()
+    hit = {rr for _, _, _, rr in F.pdn_windows_col(r)}
+    assert (1995.84, 233.28, 2002.32, 544.32) not in hit                # edge column: no window, no M6 fill
+    assert (1000.08, 233.28, 1006.56, 544.32) in hit                    # interior column: unchanged rule
+    assert F.pdn_col_fill(r) == [('M6', [1000.08, 233.28, 1006.56, 544.32])]
+    rows = F.obstruction_rows(r)
+    assert ('M5', [1995.84, 233.28, 2002.32, 544.32]) in rows           # edge column stays whole
+    left = dict(rectangles_um=[dict(layer=x['layer'], rect=[2004.48 - x['rect'][2], x['rect'][1],
+                                                              2004.48 - x['rect'][0], x['rect'][3]])
+                               for x in r['rectangles_um']])            # mirrored: left outline edge
+    assert (2.16, 233.28, 8.64, 544.32) not in {rr for _, _, _, rr in F.pdn_windows_col(left)}
+
+
 def test_plain_columns_without_own_rows_unchanged():
     r = _gap_receipt(own_rows=False)
     assert F.pdn_windows_col(r) == [] and F.pdn_col_fill(r) == []

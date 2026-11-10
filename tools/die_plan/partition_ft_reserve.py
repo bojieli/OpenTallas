@@ -312,14 +312,33 @@ def pdn_windows_comb(receipt, core_x0=4.32):
 PDN_WIN_COL_ROWS = 2
 
 
+# DIE-HBM-97/SUPDN 11-09 (HBM q_su20 a7 2_4_floorplan_pdn OOM-killed at 50 GB under --mem 48, q_su11 a10 41 GB, while
+# q_su11__physical_v1 with the same macros took 8 GB): a column that reaches the outline margin (x0 < core_x0 or
+# x1 > width - core_x0, e.g. q_su20 1995.84-2002.32 of a 2004.48 outline beside macro p0 ending at 1995.84) is not a gap
+# between two macros, so the window premise does not hold.  Its window puts an M5 strap pair into the 4.32-um core-edge
+# pocket, and the 2.27-um row stubs there become one pdngen repair channel per 4.32 um of pocket height (q_su20: 140 of
+# 278 listed channels at x 1997.89; an M5 strap in the pocket is enough, the same stubs appear with no reservation at
+# all; why individual rails stay unconnected is inferred, not traced).  pdngen repairs one channel per x range per round
+# and each round re-runs makeVias; Shape::vias_ is never cleared in the OpenROAD source, and memory grows ~0.39 GB per
+# round.  Real pdngen on the q_su20 2_3 DB: base 159 rounds, 57.1 GB, 2378 s; edge columns left plain 47 rounds, 13.2 GB,
+# 570 s; both PDNGEN OK, 0 PDN-0178.  q_su11 a10: 41 GB -> 8.8 GB.  q_b101_nw (left edge columns): OK both ways, 1.6 GB.
+PDN_CORE_INSET = 4.32
+
+
 def _gap_columns(rects):
-    """[(layer, rect)] tall narrow M5 columns with at least PDN_WIN_COL_ROWS M4 rects of their own x extent inside."""
+    """[(layer, rect)] tall narrow M5 columns with at least PDN_WIN_COL_ROWS M4 rects of their own x extent inside,
+    strictly inside the core in x (an outline-edge column is not a macro gap)."""
     out = []
+    # the outline width is the right end of the rows that start at the left outline edge (the full-width FT bands); a
+    # receipt without such a row has no known right edge and only the left-edge test applies
+    width = max((q[2] for _, q in rects if q[0] <= 1e-6), default=None)
     for layer, rect in rects:
         if layer not in PDN_WIN_COMB:
             continue
         x0, y0, x1, y1 = rect
         if x1 - x0 > PDN_WIN_MIN + 1e-6 or y1 - y0 <= 2 * PDN_WIN_MIN + 1e-6:
+            continue
+        if x0 < PDN_CORE_INSET - 1e-6 or (width is not None and x1 > width - PDN_CORE_INSET + 1e-6):
             continue
         # own rows: the column's x extent, or (q_b102__physical_v1 572.832-578.88 rows over the 574.29-578.88 column) a row
         # that covers it and is at most twice its width; wider rows (q_b101 0-8.64 over the 2.7-um 5.94-8.64) are streets
