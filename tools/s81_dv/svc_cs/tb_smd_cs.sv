@@ -30,7 +30,9 @@ module tb_smd_fold2_cs;
    n=($urandom%4==0)?($urandom%32):32;                     // short sets: the tail fault path
    for(k=0;k<n;k++)begin csv=1;csi=5'(k);csd={val(k),val(k+1)};tick;csv=0;csd=$urandom;repeat($urandom%2)tick;end
    repeat(2+$urandom%6)tick;
-   for(k=0;k<32;k++)begin pa={val(k),val(k+1),val(k+2),val(k+3)};pv=1;tick;pv=0;pa={4{$urandom}};repeat(1+$urandom%3)tick;end
+   for(k=0;k<32;k++)begin pa={val(k),val(k+1),val(k+2),val(k+3)};pv=1;tick;pv=0;pa={4{$urandom}};
+    // the last set of each reset epoch: vectors back to back
+    if(j%8==7&&$urandom%2==0) begin end else repeat(1+$urandom%3)tick;end
    repeat(120+$urandom%40)tick;
   end
   repeat(100)tick;

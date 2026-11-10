@@ -10,15 +10,18 @@
 //     nv), so pointer = one-hot(wcnt[lane]) under the configuration contract (cv only between rows, 1 <= nv <= NVMAX);
 //   - cv / mv / rd_on / wc / smv / inactive / es / ei: kept replicas, each driving one slice of the consumers;
 //   - the score line data (scaled, 80 store words + max) -> one copy per logical lane from replica selects;
-//   - sp: selected by kept copies of pending (hi loads every edge, the hold term is dropped: sp is consumed only
-//     with sv).  This equals the original on every edge where i_sv && pending is low -- the fold2 schedule leaves an
-//     idle edge after every two-lane vector, and the overlap is the original's own o_fault (still raised as before);
+//   - sp: selected by kept copies of pending, each gated by !i_sv, the original's priority (hi loads every edge: it is
+//     read only on the edge after i_sv; the hold term is dropped: sp is consumed only with sv).  Exact on every stimulus,
+//     including i_sv on the edge after i_sv;
 //   - sd: the hold term is dropped (sd is consumed only with av); the score store keeps the multiplier word (lane 0
 //     from u_m's y, lane 1 from its kept replica) and one inactive flag per word, applied at the read;
 //   - the context / inactive / sink / last / ctx tag lines are DRST 0 (data, qualified by their valid lines);
 //   - u_m / u_a / u_e: the census-safe f12 / exp copies (rtl/dsrom_sys/s81_svc/ot_s81_svc_fp32_f12_cs.sv,
 //     ot_s81_svc_exp_cs.sv; yosys EQ vs rtl/hdc).
 // Lock-step bench against the original: tools/s81_dv/svc_cs/tb_sml_cs.sv.
+`ifndef SYNTHESIS
+ `define OT_S81_SVC_CS_CHECK
+`endif
 module ot_s81_su_sml_fold2_cs #(
  parameter integer NVMAX=40, LM=5, LA=4, MUT=0
 )(
@@ -57,8 +60,8 @@ module ot_s81_su_sml_fold2_cs #(
  always @(posedge clk) begin
   nvp<=i_nv;scalep<=i_scale;sinkp<=i_sink;nmbp<=i_nmb;ske<=sk_en;
   hi<=i_s[63:32];
-  sp[15:0]<=pk[0]?hi[15:0]:i_s[15:0];
-  sp[31:16]<=pk[1]?hi[31:16]:i_s[31:16];
+  sp[15:0]<=(pk[0]&&!i_sv)?hi[15:0]:i_s[15:0];
+  sp[31:16]<=(pk[1]&&!i_sv)?hi[31:16]:i_s[31:16];
   if(cvk[0]) begin nv<=nvp; nl<={{(NVMAX-1){1'b0}},1'b1}<<(nvp-7'd1); end
   if(cvk[1]) scale[15:0]<=scalep[15:0];
   if(cvk[2]) scale[31:16]<=scalep[31:16];
@@ -73,6 +76,9 @@ module ot_s81_su_sml_fold2_cs #(
    if(i_sv&&pending) o_fault<=1;
   end
  wire mv=mvk[0];
+`ifdef OT_S81_SVC_CS_CHECK
+ always @(negedge clk) if(rn&&cvk[0]&&(nvp<7'd1||nvp>NVMAX)) $fatal(1,"SML_CS_ASSERT nv %0d outside 1..%0d",nvp,NVMAX);
+`endif
  // score-side lines: smv (valid, reset) with 2 kept last-stage copies; ctx / inactive (data, DRST 0) with kept
  // last-stage copies: wc [0] wcnt / rmax / mx control, [1] lane 0 writes, [2] lane 1 writes; inactive per lane
  reg [LM:1] mvl;
@@ -115,6 +121,11 @@ module ot_s81_su_sml_fold2_cs #(
      if(ehi) wp[NVMAX-1:PH]<=wp[NVMAX-2:PH-1]&~nl[NVMAX-2:PH-1];
     end
   end
+`ifdef OT_S81_SVC_CS_CHECK
+   // the one-hot pointers' contract: = wcnt[lane].  Fails if nv changes mid-row or nv is outside 1..NVMAX.
+   always @(negedge clk) if(rnk[0]&&rnk[1+gl]&&(g_wc[0].wp!==({{(NVMAX-1){1'b0}},1'b1}<<wcnt[gl])||g_wc[1].wp!==g_wc[0].wp))
+    $fatal(1,"SML_CS_ASSERT wp != onehot(wcnt) lane %0d wcnt %0d",gl,wcnt[gl]);
+`endif
   wire ed0=smvk[13+6*gl]&&(wck[13+6*gl]==gl), ed1=smvk[14+6*gl]&&(wck[14+6*gl]==gl);
   wire [31:0] wd=(gl==0)?raw:rawr;
   for(gk=0;gk<NVMAX;gk=gk+1) begin : g_sw

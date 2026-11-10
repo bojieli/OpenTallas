@@ -24,7 +24,7 @@ for f in $CS $CSLIB; do cp $f $O/; done
 if [ -n "$MS" ]; then sed -i "$MS" $O/$(basename $MF); cmp -s $MF $O/$(basename $MF) && { echo "MUTANT NOT APPLIED"; exit 3; }; fi
 CSF=""; for f in $CS $CSLIB; do CSF="$CSF $O/$(basename $f)"; done
 verilator --binary -j 8 --x-initial unique --x-assign unique -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN \
-  -DSYNTHESIS --top-module $TOP -Mdir $O/obj $LIB $F $CSF $T/tb_${BOX}_cs.sv > $O/build.log 2>&1 || { echo "BUILD FAIL"; tail -20 $O/build.log; exit 4; }
+  -DSYNTHESIS -DOT_S81_SVC_CS_CHECK --top-module $TOP -Mdir $O/obj $LIB $F $CSF $T/tb_${BOX}_cs.sv > $O/build.log 2>&1 || { echo "BUILD FAIL"; tail -20 $O/build.log; exit 4; }
 rc=0
 for s in $(seq 1 $NSEED); do
   $O/obj/V$TOP +verilator+seed+$s +verilator+rand+reset+2 +seed=$s > $O/run_$s.log 2>&1 || true

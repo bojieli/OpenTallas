@@ -10,6 +10,9 @@
 //     comb = vi && par, and par rises only on an edge with vi && !par, which is the edge the original loads it;
 //   - the adders: ot_s81_svc_qadd_lat_cs (KEEP 1, LAT LA; = ot_dsrom_su_softmax_add ADD6 0, yosys EQ vs rtl/hdc).
 // Lock-step bench against the original: tools/s81_dv/svc_cs/tb_smr_cs.sv.
+`ifndef SYNTHESIS
+ `define OT_S81_SVC_CS_CHECK
+`endif
 module ot_s81_su_smr_cs #(
     parameter integer LPH = 16, LA = 4, LTMAX = 6
 ) (
@@ -52,6 +55,9 @@ module ot_s81_su_smr_cs #(
     (* keep = 1 *) reg [LTMAX:0] loh0, loh1;
     always @(posedge clk) if (cv) begin loh0 <= {{LTMAX{1'b0}}, 1'b1} << lt_p; loh1 <= {{LTMAX{1'b0}}, 1'b1} << lt_p; end
     always @(posedge clk) if (skv) sk_hold <= sk;
+`ifdef OT_S81_SVC_CS_CHECK
+    always @(negedge clk) if (rst_n && cv && lt_p > LTMAX) $fatal(1, "SMR_CS_ASSERT lt %0d above LTMAX %0d", lt_p, LTMAX);
+`endif
     genvar k, l;
     generate for (k = 0; k <= LH; k = k + 1) begin : g_mt
         wire [(LPH >> k)*32-1:0] x;

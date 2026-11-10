@@ -1,7 +1,7 @@
 #!/bin/bash
 # eq_cs.sh REPO UNIT [MUT]: yosys sequential equivalence of an S81 census-safe copy against its rtl/hdc original
 # (gold = the original, gate = the copy; matched by flattened register names, equiv_simple + equiv_induct).
-# UNIT: mul | add | add5x | exp | fdiv.  MUT=1 applies a mutant to the copy (must FAIL).  Run in the ORFS image (yosys on PATH).
+# UNIT: mul | add | add5x | qmul | qadd | exp | fdiv.  MUT=1 applies a mutant to the copy (must FAIL).  Run in the ORFS image (yosys on PATH).
 set -u
 R=${1:-/src}; U=$2; MUT=${3:-0}; T=${EQ_T:-$(mktemp -d)}; mkdir -p $T
 D=$R/rtl/dsrom_sys/s81_svc
@@ -33,6 +33,19 @@ module g_add5x(input clk, rst_n, valid_in, input [31:0] a, b, output [31:0] y, o
 endmodule
 module c_add5x(input clk, rst_n, valid_in, input [31:0] a, b, output [31:0] y, output [1:0] err, output valid_out);
   ot_s81_svc_add_f12_l5x_cs u(.*);
+endmodule
+module g_qmul(input clk, rst_n, v, input [31:0] a, b, output [31:0] y, output fault, output [31:0] yx, yx2);
+  ot_hdc_qmul_lat #(.LAT(5)) u(.clk(clk),.rst_n(rst_n),.v(v),.a(a),.b(b),.y(y),.fault(fault));
+  assign yx = y; assign yx2 = y;
+endmodule
+module c_qmul(input clk, rst_n, v, input [31:0] a, b, output [31:0] y, output fault, output [31:0] yx, yx2);
+  ot_s81_svc_qmul_lat_cs #(.LAT(5), .YXR(3)) u(.clk(clk),.rst_n(rst_n),.v(v),.a(a),.b(b),.y(y),.fault(fault),.yx(yx),.yx2(yx2));
+endmodule
+module g_qadd(input clk, rst_n, v, input [31:0] a, b, output [31:0] y, output fault);
+  ot_hdc_qadd_lat #(.KEEP(1), .LAT(4)) u(.*);
+endmodule
+module c_qadd(input clk, rst_n, v, input [31:0] a, b, output [31:0] y, output fault);
+  ot_s81_svc_qadd_lat_cs #(.KEEP(1), .LAT(4)) u(.*);
 endmodule
 module g_exp(input clk, rst_n, v, input [31:0] x, output [31:0] y, output vo, fault);
   ot_hdc_v41x_exp #(.LM(5), .LA(4)) u(.clk(clk),.rst_n(rst_n),.v(v),.x(x),.y(y),.vo(vo),.fault(fault));

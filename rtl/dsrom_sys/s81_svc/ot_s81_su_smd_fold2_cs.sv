@@ -5,9 +5,9 @@
 //   - rst_n: NRN kept copies of the reset relay's second flop (each = rr1), one per load group;
 //   - the cos / sin read index {ctxd[D_DIV], u_q[1:0]} (u_q[0] 512 / u_q[1] 256 / ctxd 131 pins) -> two kept one-hot
 //     registers (cos / sin), loaded from the lines' previous stage, so they equal the index cycle for cycle;
-//   - pa: selected by kept copies of pending (hi loads every edge; the hold term is dropped: pa is consumed only with
-//     piv).  The schedule leaves an idle edge after every two-lane vector (i_pv is never high on the edge after
-//     i_pv), as the original's pending / ctx pairing already requires;
+//   - pa: selected by kept copies of pending, each gated by !i_pv, the original's priority (hi loads every edge: it is
+//     read only on the edge after i_pv; the hold term is dropped: pa is consumed only with piv).  Exact on every
+//     stimulus, including i_pv on the edge after i_pv;
 //   - the ctx tag line is DRST 0 (data, qualified by dv); its last stage and dv's last stage are kept x2 for the
 //     output word enables;
 //   - u_d / u_m1 / u_m2 / u_a: the census-safe f12 copies (ot_s81_svc_fdiv_f12_cs, ot_s81_svc_qmul_lat_cs,
@@ -50,10 +50,10 @@ module ot_s81_su_smd_fold2_cs #(
     (* keep = 1 *) reg [3:0] pk;                           // pending copies: pa 16-bit quarter selects
     always @(posedge clk) begin
         hi<=i_pa[127:64];
-        pa[15:0]<=pk[0]?hi[15:0]:i_pa[15:0];
-        pa[31:16]<=pk[1]?hi[31:16]:i_pa[31:16];
-        pa[47:32]<=pk[2]?hi[47:32]:i_pa[47:32];
-        pa[63:48]<=pk[3]?hi[63:48]:i_pa[63:48];
+        pa[15:0]<=(pk[0]&&!i_pv)?hi[15:0]:i_pa[15:0];
+        pa[31:16]<=(pk[1]&&!i_pv)?hi[31:16]:i_pa[31:16];
+        pa[47:32]<=(pk[2]&&!i_pv)?hi[47:32]:i_pa[47:32];
+        pa[63:48]<=(pk[3]&&!i_pv)?hi[63:48]:i_pa[63:48];
         dnq<=i_den;csd<=i_csd;csi<=i_csi;p<=cfg_p;
     end
     always @(posedge clk or negedge rst_n)

@@ -30,11 +30,13 @@ module tb_sml_fold2_cs;
   seed=SEED; if($value$plusargs("seed=%d",seed)) r=0; r=$urandom(seed);
   for(j=0;j<ROWS;j++)begin
    if(j%20==0) begin rst=0;repeat(3+$urandom%4)tick;rst=1;repeat(64)tick; end   // boot holds reset; warm resets
-   if(j==0||$urandom%3==0) begin
-    nv=1+$urandom%40; scale={1'b0,8'(120+$urandom%8),23'($urandom)}; sink=score(0);
+   if(j==0||$urandom%3==0||j%20>=18) begin
+    nv=(j%20==18)?40:1+$urandom%40;                       // row 18: every store word written, row 19 may read any scale={1'b0,8'(120+$urandom%8),23'($urandom)}; sink=score(0);
     cv=1;tick;cv=0;repeat(2+$urandom%5)tick;
    end
-   for(k=0;k<nv;k++)begin sv=1;s={score(k+1),score(k)};tick;sv=0;s={$urandom,$urandom};repeat(1+$urandom%3)tick;end
+   for(k=0;k<nv;k++)begin sv=1;s={score(k+1),score(k)};tick;sv=0;s={$urandom,$urandom};
+    // row 19 of each reset epoch (no later row depends on its counters): vectors back to back, the original's o_fault case
+    if(j%20==19&&$urandom%2==0) begin end else repeat(1+$urandom%3)tick;end
    repeat(20+$urandom%20)tick;
    ske=$urandom%4!=0; nmb={1'b1,8'(124+$urandom%6),23'($urandom)};
    mv=1;tick;mv=0;ske=$urandom%2;repeat(2*nv+80+$urandom%30)tick;
