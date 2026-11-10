@@ -157,6 +157,35 @@ def strip_dead_unary(g, roles):
         g.cells[:] = [c for i, c in enumerate(g.cells) if i not in ds]
 
 
+def replica_pin_regs(g):
+    """{input port bit: D} for input bits whose net feeds the D pin of more than one register: a pin register that the
+    split copied (its clones load the same D).  Read from the written netlist (clones connect D to the port net)."""
+    is_reg = lambda m: m.upper().startswith(("DFF", "SDF", "$_DFF", "$_SDFF"))
+    cnt = {}
+    for b, (d, x) in g.ports.items():
+        if d != 'input':
+            continue
+        r = g.find(x)
+        n = sum(1 for m, _n, pins in g.cells if is_reg(m) for x2 in pins.get('D', ()) if g.find(x2) == r)
+        if n > 1:
+            cnt[b] = n
+    return cnt
+
+
+def land_slots(rep, plan):
+    """face_guard land_slots.json of the copied pin registers: a bus = per-bit D map, a scalar port = uniform D"""
+    buses = {}
+    for b, n in sorted(rep.items()):
+        m = PORT_BIT.match(b)
+        name, idx = m.group(1), m.group(2)
+        if idx is None:
+            buses[name] = {"D": n, "form": "replica", "plan": plan}
+        else:
+            buses.setdefault(name, {"bits": {}, "form": "replica", "plan": plan})["bits"][idx[1:-1]] = n
+    return {"schema": "opentallas.face_guard.land_slots.v1", "source": "tools/ref_tile/fanout_dup.py --land-slots",
+            "buses": buses}
+
+
 def split_once(g, roles, limit, cl, log):
     rep, ex = model(g, roles)
     cl.outs = {}
@@ -282,6 +311,8 @@ def main(argv=None):
     p.add_argument('--report', required=True)
     p.add_argument('--limit', type=int, default=64)
     p.add_argument('--max-iter', type=int, default=12)
+    p.add_argument('--land-slots', help='write face_guard land_slots.json of copied pin registers here (replica form)')
+    p.add_argument('--land-plan', help='plan event keying the replica form (face_guard.REPLICA_PLANS)')
     p.add_argument('--strip-dead-unary', action='store_true', help='remove loadless BUF / INV cells first (see strip_dead_unary)')
     a = p.parse_args(argv)
     roles, libs = NC.liberty_roles(a.liberty)
@@ -316,6 +347,16 @@ def main(argv=None):
                cells_added=len(g2.cells) - cells0, before=summary(before, a.limit), after=summary(after, a.limit),
                splits=log, residual=residual if final_over else [], residual_after=final_over,
                dead_unary_removed=dict(n=len(dead), cells=dead[:200]))
+    reps = replica_pin_regs(g2)
+    rec['replica_pin_regs'] = reps
+    if a.land_slots:
+        if reps and not a.land_plan:
+            print('fanout_dup: copied pin registers need --land-plan', file=sys.stderr)
+            return 2
+        if reps:
+            Path(a.land_slots).write_text(json.dumps(land_slots(reps, a.land_plan), indent=1) + '\n')
+        elif Path(a.land_slots).exists():
+            Path(a.land_slots).unlink()
     Path(a.report).write_text(json.dumps(rec, indent=1) + '\n')
     print(f"FANOUT_DUP {'PASS' if not final_over and not after['role_errors'] else 'FAIL'} "
           f"max {rec['before']['max_loads']} -> {rec['after']['max_loads']}, >{a.limit} "
