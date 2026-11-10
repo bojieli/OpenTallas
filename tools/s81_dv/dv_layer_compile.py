@@ -1150,6 +1150,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         # S81-PLAN-1 11-10: the statically scheduled control lanes (idx / TP4 / query / MU / svc unit) from the same bind
         from layer_prog import bound_ctl_lanes as BCL
         ctx['bound_ctl'] = BCL.load(B['bound'])
+        # S81-PLAN-1 11-10: Engram lookup RETURN_AGE from the bind's own RTL (main 1536, candidate 640), never main's
+        from layer_prog import lower_eng as LENG
+        ra, found = LENG.bound_return_age(Path(B['bound']) / 'rtl')
+        ctx['bound_eng'] = dict(return_age=ra, instances=[f'{f}:{i}' for f, i, _ in found], latency=LENG.latency(ra))
+        (out / 'bound_eng.json').write_text(json.dumps(dict(
+            schema='opentallas.s81_dv.bound_eng.v1', bind_dir=str(B['bound']), **ctx['bound_eng']), indent=1,
+            sort_keys=True) + '\n')
         # TOK-VERIFY-1 11-10: record the control-lane depths this programme was compiled from (all 30 lanes, also the
         # ones no op of this layer reads), so a programme can be checked against a bind without recompiling
         (out / 'bound_ctl_lanes.json').write_text(json.dumps(dict(
