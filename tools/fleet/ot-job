@@ -4,6 +4,8 @@ finished job folder").
 
   ot-job run (--spec FILE | --spec-b64 B64) [--tag TAG] -- <command...>
   ot-job check-spec FILE                 validate a spec, print the resolved plan, run nothing
+  ot-job reap [ROOT...]                  delete every job dir under ROOT whose ot-job process is gone (its lock is
+                                         free), after stopping the containers it started; legacy dirs are listed only
 
 A job owns exactly one directory J = <root>/<name>-<tag> (root default /srv/opentallas-scratch2/claude/ot-jobs):
   J/in/<n>       declared inputs, hardlinked read-only from the host store (<fs>/ot-store, see ot_store.py)
@@ -18,6 +20,12 @@ refuses any container mount of an undeclared host path.  So a job that reads a p
 At exit: every "publish" item is put into the store (hardlinks, no copy) with an artifact record naming the producer,
 re-verified, the "return" paths are copied to the caller dir, and J is DELETED.  If publishing fails J is kept and
 the exit status is 98 (the command's own status is in J/.ot-job/result.json).  The command's status is returned.
+KW-FIX-44 11-09 (COORD 17:3x step 5, OWNER "the finished job folder is simply deleted"): the same end runs when the
+job is STOPPED (SIGTERM/SIGINT/SIGHUP, e.g. an ot-heavy unit stop): the command gets the signal, the containers the
+job started (docker label ot-job.dir=J) are stopped and removed, then publish / return / delete as above (rc 128+sig).
+J holds an flock (J/.ot-job/lock) for the job's whole life; a J whose lock is free has no live ot-job (SIGKILL, host
+reboot) and is deleted by "ot-job reap", which every ot-job run calls on its own root first.  A J kept after a
+publish failure is reaped after KEEP_FAILED_S (24 h, OWNER 11-08 host lifetimes); keep=true is never reaped.
 
 Spec (JSON, schema opentallas.ot_job.v1):
   {"name": "kv3_hub_Ei-place",
@@ -33,9 +41,11 @@ An input is found by sha in the local store, else at its path on this host, else
 that host's store, else as a tar stream of the path).  Paths in publish/return are relative to the work dir.
 """
 import base64
+import fcntl
 import json
 import os
 import shutil
+import signal
 import socket
 import subprocess
 import sys
@@ -51,6 +61,10 @@ HIDE = ("/srv", "/mnt", "/media", "/archive", "/tmp", "/var/tmp")
 HOME_ALLOW = (".local", "bin", ".docker", ".gitconfig", "opentallas-tools")
 SYSTEM_RW = ("/var/tmp/ot-heavy",)       # fleet admission state: a nested ot-heavy (lec_async LEC unit) must see it
 PUBLISH_FAIL = 98
+KEEP_FAILED_S = 24 * 3600
+LOCK_PROTO = 1            # .ot-isolated.json "lock": J holds J/.ot-job/lock while its ot-job lives
+STOP_SIGNALS = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
+STOP_GRACE_S = 20         # under systemd's 90 s stop timeout, so publish / return / delete still run
 SPEC_FAIL = 99
 
 
@@ -223,16 +237,122 @@ def remove_job(J):
         shutil.rmtree(J)
 
 
+def docker_cli():
+    return shutil.which("docker", path="/usr/bin") or "/usr/bin/docker"
+
+
+def stop_containers(J):
+    """stop + remove every container this job started (the shim labels each one ot-job.dir=J) -> [ids]"""
+    try:
+        p = subprocess.run([docker_cli(), "ps", "-aq", "--filter", f"label=ot-job.dir={J}"],
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    ids = p.stdout.split()
+    if ids:
+        subprocess.run([docker_cli(), "stop", "-t", "20"] + ids, capture_output=True, timeout=180)
+        subprocess.run([docker_cli(), "rm", "-f"] + ids, capture_output=True, timeout=120)
+    return ids
+
+
+LOCK_FD = []
+
+
+def hold_lock(J):
+    """the job's life lock: held until this process AND the command it runs have ended, however they end (the fd is
+    passed to the command, so an orphaned command keeps J locked and the reaper waits for it)"""
+    fd = os.open(os.path.join(J, ".ot-job", "lock"), os.O_CREAT | os.O_RDWR, 0o644)
+    fcntl.flock(fd, fcntl.LOCK_EX)
+    return fd
+
+
+def ot_job_alive(pid):
+    try:
+        with open(f"/proc/{int(pid)}/cmdline", "rb") as fh:
+            return b"ot-job" in fh.read()
+    except (OSError, ValueError):
+        return False
+
+
+def reap(roots, now=None, say_=None):
+    """delete each J under ROOTS whose ot-job is gone: a lock-protocol J with a free lock (stop its containers first);
+    a J kept after a publish failure only after KEEP_FAILED_S; never keep=true, never a J without the ot-job marker,
+    never a legacy J (no lock protocol: listed, untouched).  -> {"reaped": [...], "legacy": [...], "live": n}"""
+    now = now or time.time()
+    say_ = say_ or say
+    out = {"reaped": [], "legacy": [], "live": 0}
+    for root in roots:
+        try:
+            names = sorted(os.listdir(root))
+        except OSError:
+            continue
+        for n in names:
+            J = os.path.join(root, n)
+            try:
+                mk = json.load(open(os.path.join(J, MARKER)))
+                job = json.load(open(os.path.join(J, ".ot-job", "job.json")))
+            except (OSError, ValueError):
+                continue
+            if mk.get("kind") != "ot-job":
+                continue
+            if mk.get("lock") != LOCK_PROTO:
+                # a J of an ot-job without the lock: dead when its recorded ot-job pid on this host is gone
+                if job.get("host") == socket.gethostname() and job.get("pid") and not ot_job_alive(job["pid"]) \
+                        and not (job.get("spec") or {}).get("keep"):
+                    ids = stop_containers(J)
+                    try:
+                        remove_job(J)
+                        out["reaped"].append(J)
+                        say_(f"reaped legacy {J} (ot-job pid {job['pid']} gone; {len(ids)} container(s) stopped)")
+                    except (JobError, OSError) as e:
+                        say_(f"reap {J}: {e}")
+                else:
+                    out["legacy"].append(J)
+                continue
+            try:
+                fd = os.open(os.path.join(J, ".ot-job", "lock"), os.O_RDWR)
+            except OSError:
+                continue
+            try:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError:
+                    out["live"] += 1
+                    continue
+                if (job.get("spec") or {}).get("keep"):
+                    continue
+                try:
+                    res = json.load(open(os.path.join(J, ".ot-job", "result.json")))
+                except (OSError, ValueError):
+                    res = None
+                if res and res.get("errors") and now - res.get("ended", now) < KEEP_FAILED_S:
+                    continue
+                ids = stop_containers(J)
+                try:
+                    remove_job(J)
+                except (JobError, OSError) as e:
+                    say_(f"reap {J}: {e}")
+                    continue
+                out["reaped"].append(J)
+                say_(f"reaped {J} (no live ot-job; {len(ids)} container(s) stopped)")
+            finally:
+                os.close(fd)
+    return out
+
+
 def run(spec, tag, cmd, bwrap=True):
     host = socket.gethostname()
     root = spec.get("root") or os.environ.get("OT_JOB_ROOT") or DEFAULT_ROOT
     J = os.path.join(os.path.realpath(root), f"{spec['name']}-{tag}")
     store = S.default_store(J)
+    if os.path.isdir(os.path.realpath(root)):
+        reap([os.path.realpath(root)])           # dead jobs on this root go before a new one starts
     os.makedirs(J)
-    mark(J, {"kind": "ot-job", "tag": tag, "host": host})       # AUTOCLEAN-13: legacy cleanup never owns a marked folder
+    mark(J, {"kind": "ot-job", "tag": tag, "host": host, "lock": LOCK_PROTO})   # legacy cleanup never owns a marked folder
     mark(os.path.dirname(J), {"kind": "ot-jobs-root"})
     for d in ("in", "work", "tmp", ".ot-job"):
         os.makedirs(os.path.join(J, d))
+    LOCK_FD[:] = [hold_lock(J)]
     meta = {"schema": SCHEMA, "spec": spec, "tag": tag, "host": host, "J": J, "store": store, "cmd": cmd,
             "started": time.time(), "pid": os.getpid()}
     with open(os.path.join(J, ".ot-job", "job.json"), "w") as fh:
@@ -277,7 +397,7 @@ def stage_all(spec, store, J, maps):
 
 def run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap):
     os.chmod(os.path.join(J, "in"), 0o555)
-    real_docker = shutil.which("docker", path="/usr/bin") or "/usr/bin/docker"
+    real_docker = docker_cli()
     open(os.path.join(J, ".ot-job", "docker.real"), "w").close()
     shutil.copyfile(os.path.join(HERE, "ot-job-docker"), os.path.join(J, ".ot-job", "ot-job-docker"))
     os.chmod(os.path.join(J, ".ot-job", "ot-job-docker"), 0o555)
@@ -297,12 +417,53 @@ def run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap):
     else:                                        # tests without bwrap only
         argv = list(cmd)
     say(f"SEALED {J}: {len(staged)} inputs, store {store}, cmd {' '.join(cmd)[:160]}")
-    rc = subprocess.call(argv, cwd=J + "/work" if not bwrap else None)
-    say(f"command exit {rc}")
+    got = []
+    # its own process group: a stop reaches every process of the command (bwrap does not forward signals into the
+    # sandbox); STOP_GRACE_S later the group is killed, so the job end always runs
+    child = subprocess.Popen(argv, cwd=J + "/work" if not bwrap else None, pass_fds=tuple(LOCK_FD), start_new_session=True)
+    with open(os.path.join(J, ".ot-job", "cmd.pgid"), "w") as fh:      # the command's process group (ops / reap)
+        fh.write(str(child.pid))
+
+    def group(sig):
+        try:
+            os.killpg(child.pid, sig)
+        except OSError:
+            pass
+
+    def stop(sig, _frame):
+        if not got:
+            say(f"signal {sig}: stopping the command; the job end (publish, return, delete) follows")
+            import threading
+            k = threading.Timer(STOP_GRACE_S, group, (signal.SIGKILL,))
+            k.daemon = True
+            k.start()
+        got.append(sig)
+        group(sig)
+    old = {s: signal.signal(s, stop) for s in STOP_SIGNALS}
+    try:
+        rc = child.wait()
+    finally:
+        for s in STOP_SIGNALS:
+            signal.signal(s, signal.SIG_IGN)     # the job end itself is not interrupted by a second stop
+    if got and rc >= 0:
+        rc = 128 + got[0]
+    elif rc < 0:
+        rc = 128 - rc
+    ids = stop_containers(J)
+    say(f"command exit {rc}" + (f" (stopped by signal {got[0]})" if got else "") + (f"; {len(ids)} container(s) stopped" if ids else ""))
     return finish(spec, meta, J, store, tag, rc)
 
 
 def finish(spec, meta, J, store, tag, rc):
+    try:
+        return _finish(spec, meta, J, store, tag, rc)
+    finally:
+        for fd in LOCK_FD:      # the command has ended and J is gone, or kept (then reapable)
+            os.close(fd)
+        LOCK_FD[:] = []
+
+
+def _finish(spec, meta, J, store, tag, rc):
     ok = rc == 0
     pub, errors = [], []
     producer = {"job": meta["J"], "tag": tag, "host": meta["host"], "name": spec["name"], "cmd": meta["cmd"][:20],
@@ -367,6 +528,10 @@ def finish(spec, meta, J, store, tag, rc):
 def main(a):
     if a[:1] == ["check-spec"]:
         print(json.dumps(load_spec(["--spec", a[1]]), indent=1))
+        return 0
+    if a[:1] == ["reap"]:
+        r = reap(a[1:] or [DEFAULT_ROOT, DEFAULT_ROOT.replace("scratch2", "scratch3")])
+        print(json.dumps({"reaped": len(r["reaped"]), "live": r["live"], "legacy": r["legacy"]}))
         return 0
     if a[:1] != ["run"] or "--" not in a:
         print(__doc__, file=sys.stderr)

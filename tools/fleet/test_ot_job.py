@@ -378,6 +378,77 @@ class Sealed(Tmp):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(self.jobs_left(), [])
 
+    def test_stopped_job_publishes_returns_and_deletes(self):
+        """KW-FIX-44 step 5: a job STOPPED by SIGTERM (an ot-heavy unit stop) still publishes its "always" outputs,
+        returns, and deletes J; rc 128+15"""
+        spec = {"schema": JOB.SCHEMA, "name": "t", "root": self.root, "inputs": [],
+                "publish": [{"name": "stopped-run", "path": "run", "when": "always"}],
+                "return": {"to": self.ret, "paths": ["run"]}}
+        sp = self.mk("spec.json", json.dumps(spec), root=self.base)
+        p = subprocess.Popen([sys.executable, "-I", str(HERE / "ot-job"), "run", "--spec", sp, "--", "sh", "-c",
+                              "mkdir -p run && echo partial > run/log && touch started && exec sleep 60"],
+                             env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for _ in range(200):
+            if any(os.path.exists(os.path.join(self.root, j, "work", "started")) for j in self.jobs_left()):
+                break
+            time.sleep(0.05)
+        p.terminate()
+        _out, err = p.communicate(timeout=60)
+        self.assertEqual(p.returncode, 128 + 15, err)
+        self.assertEqual(self.jobs_left(), [], "a stopped job dir must be deleted too")
+        self.assertEqual(open(os.path.join(self.ret, "run", "log")).read(), "partial\n")
+        self.assertEqual([e["name"] for e in S.records(self.store)], ["stopped-run"])
+
+    def test_reap_deletes_dead_jobs_only(self):
+        """a J whose ot-job died (SIGKILL) is reaped; a live J, a keep=true J and a legacy J (no lock) are not"""
+        spec = {"schema": JOB.SCHEMA, "name": "t", "root": self.root, "inputs": []}
+        sp = self.mk("spec.json", json.dumps(spec), root=self.base)
+        def start(cmd, sp=sp):
+            return subprocess.Popen([sys.executable, "-I", str(HERE / "ot-job"), "run", "--spec", sp, "--", "sh", "-c", cmd],
+                                    env=self.env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        def wait_for(n):
+            for _ in range(200):
+                if len([j for j in self.jobs_left() if os.path.exists(os.path.join(self.root, j, "work", "up"))]) >= n:
+                    return
+                time.sleep(0.05)
+            self.fail(f"{n} jobs did not start")
+        live = start("touch up; exec sleep 60")
+        dead = start("touch up; exec sleep 60")
+        wait_for(2)
+        os.kill(dead.pid, 9)                     # ot-job SIGKILLed: its command still runs and keeps J locked
+        dead.wait()
+        time.sleep(0.5)
+        self.assertEqual(JOB.reap([self.root], say_=lambda m: None)["reaped"], [], "J is in use while its command lives")
+        dj = [j for j in self.jobs_left() if j.endswith(f"-{dead.pid}-") or f"-{dead.pid}-" in j][0]
+        os.killpg(int(open(os.path.join(self.root, dj, ".ot-job", "cmd.pgid")).read()), 9)   # orphan dies: J is free
+        import socket
+        legacy = os.path.join(self.root, "old-legacy")             # pid of a live ot-job: kept
+        gone = os.path.join(self.root, "old-gone")                  # pid gone: reaped
+        for d, pid in ((legacy, live.pid), (gone, dead.pid)):
+            os.makedirs(os.path.join(d, ".ot-job"))
+            json.dump({"kind": "ot-job"}, open(os.path.join(d, JOB.MARKER), "w"))
+            json.dump({"spec": {}, "host": socket.gethostname(), "pid": pid}, open(os.path.join(d, ".ot-job", "job.json"), "w"))
+        reaped, r = [], None
+        for _ in range(100):                     # the dead job's command has gone (lock released)
+            r = JOB.reap([self.root], say_=lambda m: None)
+            reaped += r["reaped"]
+            if len(reaped) >= 2:
+                break
+            time.sleep(0.1)
+        self.assertIn(gone, reaped)
+        self.assertEqual(len(reaped), 2, reaped)
+        self.assertEqual(r["live"], 1)
+        self.assertEqual(r["legacy"], [legacy])
+        self.assertTrue(os.path.isdir(legacy))
+        live.terminate()
+        live.wait(timeout=60)
+        self.assertEqual(self.jobs_left(), ["old-legacy"])
+
+    def test_shim_labels_containers_with_the_job_dir(self):
+        m = {"job": "/srv/x/J", "maps": [], "allow_ro": []}
+        a = SHIM.check(["run", "--rm", "alpine", "true"], m, [])
+        self.assertEqual(a, ["run", "--rm", "--label", "ot-job.dir=/srv/x/J", "alpine", "true"])
+
     def test_bad_input_cleans_up(self):
         r = self.job("true", inputs=[{"path": os.path.join(self.base, "nope")}])
         self.assertEqual(r.returncode, JOB.SPEC_FAIL)

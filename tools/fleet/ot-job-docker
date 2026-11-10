@@ -153,6 +153,7 @@ def check(argv, m, maps):
         elif o in VALUE_OPTS and not eq:
             j += 1
         j += 1
+    a[j:j] = ["--label", f"ot-job.dir={m['job']}"]       # KW-FIX-44: ot-job stops the containers it started at job end
     return a
 
 

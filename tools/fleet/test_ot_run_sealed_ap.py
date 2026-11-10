@@ -221,3 +221,43 @@ def test_rehand_off_by_default_and_never_unsealed(tmp_path, monkeypatch):
     monkeypatch.setattr(M, "run_sealed", lambda a, cf, o: (seen.append(a), 0)[1])
     rc, _ = M.rehand(first, c, "SEALED")
     assert rc == 0 and "--max-wait" not in seen[0][:seen[0].index("--")]
+
+
+K2 = "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/qwen_kvsys/e1/items/kv3_x/attempt_2/gen/kv3_x"
+
+
+def ap_argv2():
+    return [a.replace(K, K2) for a in ap_argv()]
+
+
+def test_widened_every_ap_kit_is_sealed_without_a_pilot_list(tmp_path, monkeypatch):
+    """COORD 17:3x step 1: no ap_pilot list -> every autopilot route/finish kit under a claude scratch root is sealed;
+    a non-autopilot call still passes through"""
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route", "finish"],
+             dirs=["/srv/opentallas-scratch2/claude/", "/srv/opentallas-scratch3/claude/"])
+    out, why = M.decide(ap_argv2(), c, check=ok)
+    assert why == f"SEALED on epyc2: {K2}" and out[0] == "/sb/ot-run"
+    assert spec_of(out)["work"]["seed"][0]["path"] == K2
+    out, why = M.decide(["--mem", "8", "--", "bash", "-c", "true"], c, check=ok)
+    assert out[0] == "/wave/ot-run"
+    piloted = dict(c, ap_pilot=["/items/other/"])                     # the old pilot narrowing still works when set
+    assert M.decide(ap_argv2(), piloted, check=ok)[1] == "not an ap pilot kit"
+
+
+def test_hub_only_kit_is_fetched_to_a_sealed_host(tmp_path, monkeypatch):
+    """the hub holds K but has no ot-job: K + runner + child records are fetched from it to a fetch host that admits,
+    and K is copied back to the hub; no fetch host admits -> unsealed pass-through, never a sealed run on the hub"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["epyc2", "intel1"], ap_source_hosts=["hub"])
+    no = lambda h, r, k, b=None: (False, [])
+    src = lambda h, r, k: (h == "hub", ["/srv/x/child_rec"])
+    out, why = M.decide(ap_argv(), c, check=no, fetch=lambda h, b, k: (True, []), source=src)
+    assert why == f"SEALED on intel1: {K} (inputs fetched from hub)"
+    s = spec_of(out)
+    assert s["work"]["seed"] == [{"path": K, "host": "hub"}] and s["copy_back"] == {"from": "intel1", "to": "hub", "path": K}
+    assert {"path": "/srv/x/child_rec", "host": "hub"} in s["inputs"]
+    out, why = M.decide(ap_argv(), c, check=no, fetch=lambda h, b, k: (False, []), source=src)
+    assert out[0] == "/wave/ot-run" and "held only on hub" in why
+    out, why = M.decide(ap_argv(), dict(c, ap_source_hosts=[]), check=no, fetch=lambda h, b, k: (True, []), source=src)
+    assert out[0] == "/wave/ot-run" and "not ready" in why

@@ -230,6 +230,18 @@ def job_root(host):
     return m[0] if m else None
 
 
+def source_ok(host, runner, K):
+    """KW-FIX-44 COORD 17:3x (widen sealing to every autopilot route/finish job): a host that only HOLDS K (the hub has
+    no ot-job) can still be the fetch source of a sealed job run elsewhere: K + runner there.  -> (ok, child dirs)"""
+    sh = f"test -d {shlex.quote(K)} && test -f {shlex.quote(runner)} && echo SOURCE_OK && python3 -I -c {shlex.quote(KWCHILD_PY)} {shlex.quote(K)}"
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return False, []
+    return "SOURCE_OK" in p.stdout and p.returncode == 0, [ln[6:] for ln in p.stdout.splitlines() if ln.startswith("CHILD ")]
+
+
 def fetch_ok(host, bundle=None, K=None):
     """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
     ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
@@ -350,7 +362,7 @@ def admits(backend, host, mem):
         return True
 
 
-def decide(argv, conf, check=remote_ok, fetch=None, exclude=()):
+def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     """-> (argv to exec, why)"""
     backend = backend_of(conf)
     passthru = [backend] + list(argv)
@@ -384,10 +396,19 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=()):
     with cf.ThreadPoolExecutor(max(len(hosts), 1)) as ex:
         res = dict(zip(hosts, ex.map(chk, hosts)))
     oks = {h: kd for h, (okh, kd) in res.items() if okh}
-    if not oks:
+    srcs = {}
+    if not oks and ac and conf.get("ap_fetch_hosts") and conf.get("ap_source_hosts"):
+        # K is held only on a source host (the hub): every input is fetched from it to a sealed fetch host
+        sc = source or source_ok
+        srcs = {h: kd for h in conf["ap_source_hosts"] for okh, kd in [sc(h, runner, K)] if okh}
+    if not oks and not srcs:
         return passthru, f"kit/runner/ot-job/bwrap not ready on {','.join(hosts)}"
-    host = next((h for h in hosts if h in oks and h not in exclude), next(h for h in hosts if h in oks))
-    kids = oks[host]
+    if oks:
+        host = next((h for h in hosts if h in oks and h not in exclude), next(h for h in hosts if h in oks))
+        kids = oks[host]
+    else:
+        host = next(iter(srcs))
+        kids = srcs[host]
     rows, src = None, None
     fetch = fetch or fetch_ok
     if ac and conf.get("ap_fetch_hosts"):
@@ -415,6 +436,9 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=()):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
+    if not oks and not src:
+        # a source-only holder cannot run the sealed job itself; no fetch host qualifies -> unsealed, as before
+        return passthru, f"kit held only on {host} (no ot-job) and no fetch host admits {o['mem']} GB now"
     root = (conf.get("job_root_of") or job_root)(host) if (ac and conf.get("job_roots")) else None
     fd, sp = tempfile.mkstemp(prefix="sealed-", suffix=".json", dir=conf.get("spec_dir") or None)
     with os.fdopen(fd, "w") as fh:
