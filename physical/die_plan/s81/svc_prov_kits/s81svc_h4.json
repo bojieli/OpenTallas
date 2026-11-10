@@ -1,0 +1,90 @@
+{
+ "name": "s81svc_h4",
+ "top": "ot_s81_svc_merge_h4",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv"
+ ],
+ "params": {
+  "DPT": 8,
+  "MLEV": 5,
+  "FPL": 5,
+  "F12": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 259.2,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "iblk",
+   "if_",
+   "ifin",
+   "iv",
+   "iy"
+  ],
+  "E": [
+   "of_",
+   "ov",
+   "oy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inter": [],
+ "children": [],
+ "defines": [
+  "OT_SVC_ATT_MEM_MACRO",
+  "DSFD_PQ_STATIC_X2",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED",
+  "OT_SVC_H8",
+  "OT_SVC_H8_REUSE_RT2",
+  "OT_SVC_MERGE_H4",
+  "OT_SVC_ATT_RDPIPE"
+ ],
+ "why_floorplan": "S81-SVCRS-3 11-10 svc_rs provider box h4 (form A v5, COORD 11-10 provider kits): 103.68 x 259.2 exact = one outline per box module (min width / min height over its v5 slots, so it fits every svc_hi 259.2 and svc_lo 276.48 / 285.12 slot at the slot origin); faces: clk / reset N, inputs W, outputs E; recipe 4 pin registers; fanout <= 64 loads by construction (fanout_dup.py on the synth netlist).",
+ "job": {
+  "owner": "Claude:S81-SVCRS-3",
+  "branch": "claude/s81-svcrs-3-provkits-1110",
+  "tag": "prov_h4",
+  "purpose": "S81 svc_rs form A v5 provider box ot_s81_svc_merge_h4 {'DPT': 8, 'MLEV': 5, 'FPL': 5, 'F12': 1}",
+  "views_to": "physical/ref_tile/s81svc_h4/views",
+  "record_to": "results/rtl/ref_tile/s81svc_h4",
+  "benches": []
+ }
+}

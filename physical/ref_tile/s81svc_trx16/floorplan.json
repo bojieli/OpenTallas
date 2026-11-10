@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81svc_trx16",
+ "top": "ot_hdc_v41x_attn_tr_x",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  60.48,
+  259.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  58.31999999999999,
+  257.03999999999996
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "qk_ib",
+   "r_c_i",
+   "r_half_i",
+   "sel_i",
+   "w_cnt_i",
+   "w_en_i",
+   "w_g",
+   "w_half_i",
+   "w_pad_i"
+  ],
+  "E": [
+   "col",
+   "eib"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+  "physical/ref_tile/s81svc_trx16/kit.env",
+  "physical/ref_tile/s81svc_trx16/clock.sdc",
+  "physical/ref_tile/s81svc_trx16/signoff.sdc",
+  "physical/ref_tile/s81svc_trx16/pdn.tcl",
+  "physical/ref_tile/s81svc_trx16/pre_cts.tcl",
+  "physical/ref_tile/s81svc_trx16/post_cts.tcl",
+  "physical/ref_tile/s81svc_trx16/post_grt.tcl",
+  "physical/ref_tile/s81svc_trx16/pre_drt.tcl",
+  "physical/ref_tile/s81svc_trx16/pre_fill.tcl",
+  "physical/ref_tile/s81svc_trx16/post_fill.tcl",
+  "physical/ref_tile/s81svc_trx16/pre_grt.tcl",
+  "physical/ref_tile/s81svc_trx16/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/common_flow/port_buf_at_pin.tcl",
+  "physical/common_flow/out_flop_release_pbp.tcl"
+ ]
+}
