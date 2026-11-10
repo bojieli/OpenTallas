@@ -112,7 +112,8 @@ HOME = Path.home()
 AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
-CLASSES = ("PLAN", "FLOW", "RTL", "INFRA")
+# STRUCTURAL (DIE-HBM-97 11-10, COORD): a design verdict the flow reached early (gpl-noconverge); held like FLOW/PLAN
+CLASSES = ("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")
 CELL_CAP = 400_000       # default kit run cap; a kit's own native_cell_count.json limit (--native-cell-cap) overrides it
 CELL_CAP_MAX = 517_000   # COORD 11-04 06:00 (2): 400k advisory up to the largest closed run; above stays stopped
 PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
@@ -1003,8 +1004,51 @@ def kit_class(die, item, kind="type"):
 
 
 # ------------------------------------------------------------------------------------------------ classification
+# DIE-HBM-97 11-10 (COORD ruling, gplcap-classifier): this OpenROAD build caps each Nesterov pass at 5,000 iterations.
+# At the cap it prints [WARNING GPL-1010], writes the placement anyway and the flow goes on: kv_line vC stopped at row
+# 4,990 with overflow 0.370, repair_design then inserted 459k buffers and DPL-0038 failed at 153% utilisation.
+# Converging peers end under 1,000 iterations at overflow <= 0.1 (q_b100pv1 957, q_b011 468, q_b012 441, q_spu1 463).
+# A capped pass at overflow <= 0.1 is not this class.  Routability / timing-driven runs restart the Nesterov table
+# many times (vB 225,900 iterations): each GPL-1010 closes one pass, and the first capped pass above the limit decides.
+GPL_CAP_OVERFLOW = 0.1
+GPL_CAP_MARK = "GPL-1010"
+GPL_ROW = re.compile(r"^\s*(\d+) \|\s+([0-9.]+) \|")                       # 'Iteration | Overflow | HPWL ...' table
+GPL_ROW_OLD = re.compile(r"Iter:\s*(\d+)\s+overflow:\s*([0-9.]+)", re.I)   # older [NesterovSolve] form
+GPL_PROBE_PREFIX = "KW_GPL "                                                  # probe lines (after_place / PROBE_CLASSIFY)
+
+
+def gpl_cap_noconverge(text, limit=GPL_CAP_OVERFLOW):
+    """a 3_3_place_gp log (or the probe's KW_GPL lines: the last table row before each GPL-1010 and the warning) ->
+    'GPL-1010 ... iteration N overflow X > 0.1 ...' for the first Nesterov pass that stopped at the iteration cap with
+    overflow above limit, else None.  A pass whose last row is <= limit, or a log without GPL-1010, gives None."""
+    last, capped = None, 0
+    for ln in (text or "").splitlines():
+        if ln.startswith(GPL_PROBE_PREFIX):
+            ln = ln[len(GPL_PROBE_PREFIX):]
+        if GPL_CAP_MARK in ln:
+            capped += 1
+            if last is not None and last[1] > limit:
+                return (f"{GPL_CAP_MARK} Nesterov pass cap hit at iteration {last[0]} with overflow {last[1]:.3f} > "
+                        f"{limit:g} (capped pass {capped}): placement did not converge; resizer/DPL would run on it")
+            last = None
+            continue
+        m = GPL_ROW.search(ln) or GPL_ROW_OLD.search(ln)
+        if m:
+            last = (int(m.group(1)), float(m.group(2)))
+    return None
+
+
+# probe shell (gen host): the last table row before each GPL-1010 of the kit's global-place logs, prefixed KW_GPL
+GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""; next} """
+                 r"""/^ *[0-9]+ \| +[0-9.]+ \|/ || /Iter: *[0-9]+ +overflow:/{l=$0}'""")
+
+
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
+    # DIE-HBM-97 11-10 (COORD): before INFRA and the PLAN geometry rules.  The capped unconverged placement is the cause;
+    # the DPL-0038 / utilisation / OOM / watchdog lines after it are its consequence, so it wins whatever surrounds it.
+    ("STRUCTURAL", r"^place$", lambda s: gpl_cap_noconverge(s),
+     "gpl-noconverge: global placement stopped at the per-pass Nesterov iteration cap unconverged"),
     # KIT-TRIAGE-1 11-01: gen raises when a plan landing band has no rect / placement FAIL (S81 svc_* on e8cbe5f6c70;
     # DIE-S81-47 event2 2026e1e1561 adds the bands) -> a plan event, not a flow error
     ("PLAN", None, r"landing band absent", "plan landing band absent (plan event: band rect / placement)"),
@@ -2847,6 +2891,9 @@ def run_item(spec_path):
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
                  f"if [ -f {q(K)}/native_cell_count.json ]; then sed 's/^/NATIVE_CELL_COUNT /' {q(K)}/native_cell_count.json; fi; "
                  f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
+                 # DIE-HBM-97 11-10: GPL-1010 cap lines for classify() (gpl-noconverge); the stage tail does not reach them
+                 f"for f in {q(K)}/run/logs/asap7/*/base/3_3_place_gp*.log; do [ -f \"$f\" ] && {GPL_PROBE_AWK} \"$f\"; "
+                 f"done 2>/dev/null | tail -40; "
                  f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
         _, ptxt = run("place_probe", remote(probe), idempotent=True)
         odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")

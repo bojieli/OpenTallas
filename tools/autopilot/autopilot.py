@@ -670,6 +670,20 @@ if nc.get("schema") == "opentallas.native_cell_count.v1" and type(nc.get("stdcel
 g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "5_1_grt.log"))), ""))
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
+# DIE-HBM-97 11-10: the last Nesterov row before each GPL-1010 (per-pass iteration cap) of this run's global placement
+gl = []
+for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "3_3_place_gp*.log")):
+    if os.path.getmtime(p) < since:
+        continue
+    last = ""
+    for ln in rd(p).splitlines():
+        if "GPL-1010" in ln:
+            gl += ["KW_GPL " + last, "KW_GPL " + ln.strip()]
+            last = ""
+        elif re.match(r"^\s*\d+ \|\s+[0-9.]+ \|", ln) or re.search(r"Iter:\s*\d+\s+overflow:", ln, re.I):
+            last = ln.strip()
+if gl:
+    out["gpl_cap"] = "\n".join(gl[-40:])
 out["goal"] = goal
 chain_records = glob.glob(os.path.join(K, "autopilot_chain*.json"))
 out["chain"] = jl(max(chain_records, key=os.path.getmtime)) if chain_records else None
@@ -996,6 +1010,11 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    # DIE-HBM-97 11-10 (COORD): a global placement that stopped at the per-pass Nesterov cap above overflow 0.1 is the
+    # cause of what follows it (kv_line vC: 459k resizer buffers, DPL-0038 at 153%), not a crash or a congestion row
+    gpl = KW.gpl_cap_noconverge(c.get("gpl_cap") or "")
+    if gpl:
+        return "STRUCTURAL", "gpl-noconverge", gpl
     if (c.get("clock_source_error") and
             "TT global-routing insertion gate failed: PASS exit 1" in c.get("FAIL_POSTCTS", "")):
         # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
