@@ -1301,6 +1301,14 @@ def route_hold_pass_lines(tools=None):
             "export OT_ROUTE_HOLD_PASS = 1", f"export OT_ROUTE_HOLD_TOOLS = {tools}"]
 
 
+def route_hold_pass_spec(on):
+    """freeze.json flow_defaults.route_hold_pass: the declared form (tools/die_plan/route_hold_pass.py)"""
+    sys.path.insert(0, str(TOOL)); import eco_loop
+    return dict(on=bool(on), passes=1, repair_target_ps=eco_loop.HOLD_MARGIN_PS, gate="FF hold slack >= 0 (unchanged)",
+                scope="core-owned FF hold (no input-port start, no output-port end)", lec="routed LEC after the pass",
+                eco_on_top=False, rule="COORD vecd-clkroot-r2 ruling (a) 11-10")
+
+
 def post_cts_setup_hook(kd, cfg):
     """COORD 2026-10-27 10:37 (2): HBM kits repair TT setup post-CTS (after the kit's balanced-tree POST_CTS hook) and
     at GRT (two-mode session), one timing mode per corner like the other dies.  Chains the effective POST_CTS_TCL."""
@@ -2617,6 +2625,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
+    # ROUTE-HOLD-PASS (DIE-HBM-97 11-10, COORD vecd-clkroot-r2 (a)): the declared in-flow routed-RCX hold pass is part of
+    # the kit spec (freeze.json flow_defaults + config.mk), on or off for the whole build; eco_loop reads it from here.
+    flow["route_hold_pass"] = route_hold_pass_spec(a.route_hold_pass == "on")
     if flow.get("f1") and not a.single_mode_grt:
         flow["f1"]["mechanism"] = "two-mode GRT (scene BC vclk_ff.sdc FF hold, scene tc TT setup) + gates"
     # GATE-PINS-2 (as gen_phys.plan_pin_records, COORD 10-27 KV-KITS-7 ruling 3): kit plan_pins.json = the plan pin

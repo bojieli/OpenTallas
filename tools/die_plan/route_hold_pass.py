@@ -13,8 +13,10 @@ route).  The stage runs when the record's hold_ff FAILs on core-owned endpoints 
 start nor output-port end); port-only hold is the parent's (NEEDS_PARENT) and is left alone.  It is ONE iteration of the
 shared post-route repair (eco_loop.run_loop -> prd_mk.sh / prd_run.sh / prd_hook.tcl: repair_design, repair_timing -hold
 on the routed RCX SPEF, legalise, incremental GRT, one detailed route, RCX, the kit's GOAL=post sign-off), with
-max_iter 1, strict_one_pass (one physical dispatch, no recovery retry) and in_flow_form (the late-ECO near-miss numbers
-are recorded, not applied: this is the kit's form).  Repair TARGET = eco_loop.HOLD_MARGIN_PS (5 ps, the flow's exposed
+max_iter 1, strict_one_pass (one physical dispatch, no recovery retry) and route_hold_form, which eco_loop honours only when
+the kit SPEC declares the pass (freeze.json flow_defaults.route_hold_pass.on + config.mk; on/off for the whole build).
+The pass record (on/off, before/after FF hold, core endpoints repaired, verdict, LEC) is written into the sign-off
+records (key route_hold_pass); routed LEC after the pass; no ECO on top (eco_loop NOT_ELIGIBLE once it ran).  Repair TARGET = eco_loop.HOLD_MARGIN_PS (5 ps, the flow's exposed
 target, COORD 11-09 KW-FIX-42); every GATE stays FF hold slack >= 0.  Result: KIT/route_hold_pass.json.
     route_hold_pass.py run KIT SIGNOFF.json [--mem 48] [--cpus 16] [--lec]
     route_hold_pass.py decide KIT SIGNOFF.json         (no P&R: prints the decision)
@@ -33,22 +35,37 @@ KEY = "OT_ROUTE_HOLD_PASS"
 
 
 def enabled(kit):
-    """config.mk: the last `[override] export OT_ROUTE_HOLD_PASS = v` wins; on = 1"""
-    v = None
+    """the kit SPEC declares the pass (eco_loop.route_hold_declared: freeze.json flow_defaults.route_hold_pass.on and
+    config.mk OT_ROUTE_HOLD_PASS = 1)"""
+    return eco_loop.route_hold_declared(kit)
+
+
+def hold_numbers(signoff):
+    """{wns_ps, violators, core_wns_ps, core_n} of a sign-off record's FF hold (core = eco_loop.core_hold split)"""
     try:
-        for line in (Path(kit) / "config.mk").read_text().splitlines():
-            m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?" + KEY + r"\s*[:?]?=\s*(.*?)\s*$", line)
-            if m:
-                v = m[1]
-    except OSError:
-        return False
-    return v == "1"
+        h = (json.loads(Path(signoff).read_text()).get("checks") or {}).get("hold_ff") or {}
+    except (OSError, ValueError):
+        return None
+    split = eco_loop.core_hold(signoff)
+    return dict(verdict=h.get("verdict"), wns_ps=h.get("wns_ps"), violators=h.get("violators"),
+                core_wns_ps=split[0] if split else None, core_n=split[1] if split else None)
+
+
+def record(signoff, block):
+    """the pass record goes INTO the sign-off record (key route_hold_pass); the rest of the record is untouched"""
+    try:
+        p = Path(signoff)
+        d = json.loads(p.read_text())
+        d["route_hold_pass"] = block
+        p.write_text(json.dumps(d, indent=1, default=str) + "\n")
+    except (OSError, ValueError):
+        pass
 
 
 def decide(kit, signoff):
     """-> (run: bool, reason)"""
     if not enabled(kit):
-        return False, f"{KEY} not set in the kit config"
+        return False, "ROUTE-HOLD-PASS not declared in the kit spec (off for this build)"
     try:
         rec = json.loads(Path(signoff).read_text())
     except (OSError, ValueError) as e:
@@ -65,20 +82,36 @@ def decide(kit, signoff):
     return True, "hold_ff FAIL, " + what
 
 
-def run(kit, signoff, mem=48, cpus=16, lec=False, run_loop=eco_loop.run_loop):
+def run(kit, signoff, mem=48, cpus=16, lec=False, run_loop=eco_loop.run_loop, run_lec=None):
     kit = Path(kit).resolve()
     go, why = decide(kit, signoff)
-    out = dict(schema="opentallas.route_hold_pass.v1", kit=str(kit), signoff=str(signoff), run=go, reason=why,
-               hold_margin_ps=eco_loop.HOLD_MARGIN_PS)
+    before = hold_numbers(signoff)
+    out = dict(schema="opentallas.route_hold_pass.v1", kit=str(kit), signoff=str(signoff), on=enabled(kit), run=go,
+               reason=why, passes=1 if go else 0, hold_margin_ps=eco_loop.HOLD_MARGIN_PS, before=before)
     print(("ROUTE_HOLD_PASS run: " if go else "ROUTE_HOLD_PASS skip: ") + why, flush=True)
     if go:
         runner = kit / "run_kit_hbm.sh"
         res = run_loop(kit, signoff, root=kit / "route_hold_pass", runner=str(runner) if runner.is_file() else None,
                        max_iter=1, hold_margin=eco_loop.HOLD_MARGIN_PS, mem=mem, cpus=cpus,
-                       strict_one_pass=True, in_flow_form=True)
-        out.update(verdict=res.get("verdict"), reason_loop=res.get("reason"), root=res.get("root"), best=res.get("best"))
-        if res.get("verdict") == "PASS" and lec and not eco_loop.run_lec(str(kit), res, mem, cpus, None):
-            out["verdict"] = "LEC_FAIL"
+                       strict_one_pass=True, route_hold_form=True)
+        its = res.get("iterations") or []
+        after_so = (its[0].get("signoff") if its else None) or (res.get("best") or {}).get("signoff")
+        after = hold_numbers(after_so) if after_so else None
+        rep = None
+        if before and after and before.get("core_n") is not None and after.get("core_n") is not None:
+            rep = int(before["core_n"]) - int(after["core_n"])
+        out.update(verdict=res.get("verdict"), reason_loop=res.get("reason"), root=res.get("root"),
+                   after_signoff=after_so, after=after, core_endpoints_repaired=rep)
+        if res.get("verdict") == "PASS" and lec:
+            ok = (run_lec or eco_loop.run_lec)(str(kit), res, mem, cpus, None)
+            out["lec"] = (res.get("lec") or {}).get("verdict") if ok else "LEC_FAIL"
+            if not ok:
+                out["verdict"] = "LEC_FAIL"
+        if after_so:
+            record(after_so, {k: out.get(k) for k in ("on", "run", "passes", "hold_margin_ps", "before", "after",
+                                                      "core_endpoints_repaired", "verdict", "lec", "signoff")})
+    record(signoff, {k: out.get(k) for k in ("on", "run", "reason", "passes", "hold_margin_ps", "before")} |
+           {"after_signoff": out.get("after_signoff"), "verdict": out.get("verdict", "SKIP")})
     (kit / "route_hold_pass.json").write_text(json.dumps(out, indent=1, default=str) + "\n")
     print("ROUTE_HOLD_PASS " + str(out.get("verdict", "SKIP")), flush=True)
     return 0 if (not go or out.get("verdict") == "PASS") else 1
