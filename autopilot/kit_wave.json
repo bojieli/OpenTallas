@@ -5574,7 +5574,13 @@
       "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
      }
     ],
-    "dsdv_eng_rr_e": [{"host": "epyc7", "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e", "job": "COUNTED dsdv_eng_rr_e epyc5:/srv/opentallas-scratch3/claude/die-s81-78/engrr/resign_vJ_eco1_dg/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 63e15c4d79da: archived LEF + tc/BC ETMs of the signed DB (export_view tc->tt, BC->ff); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e)"}]
+    "dsdv_eng_rr_e": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e",
+      "job": "COUNTED dsdv_eng_rr_e epyc5:/srv/opentallas-scratch3/claude/die-s81-78/engrr/resign_vJ_eco1_dg/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 63e15c4d79da: archived LEF + tc/BC ETMs of the signed DB (export_view tc->tt, BC->ff); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e)"
+     }
+    ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
    "src_sha_prev_kw32b": "6a7e5c39dcce406da72b0fd2a9d1accf92bb45f6",
@@ -18558,7 +18564,13 @@
       "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view)"
      }
     ],
-    "ot_hgi_sfu_split3_ctl_pipe_1c": [{"host": "epyc7", "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c", "job": "COUNTED ot_hgi_sfu_split3_ctl_pipe_1c epyc5:/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_resign_cz/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 0ea093c4040d: tt/ff ETM regenerated from the archived signed 6_final.odb with the kit corners_hbm.tcl + write_abstract_lef, no re-sign; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c)"}],
+    "ot_hgi_sfu_split3_ctl_pipe_1c": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c",
+      "job": "COUNTED ot_hgi_sfu_split3_ctl_pipe_1c epyc5:/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_resign_cz/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 0ea093c4040d: tt/ff ETM regenerated from the archived signed 6_final.odb with the kit corners_hbm.tcl + write_abstract_lef, no re-sign; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c)"
+     }
+    ],
     "ot_hgi_sfu_split3_lane_core_bk": [
      {
       "host": "epyc4",
@@ -22353,7 +22365,6 @@
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
-  "epyc6",
   "epyc2",
   "intel1",
   "intel2",
@@ -22966,5 +22977,10 @@
  "note_kw43_gen3": "KW-FIX-43 11-09 20:3x COORD 20:3x: epyc2 added to gen_hosts of s81/qwen_compute/hbm/qwen_kvsys, restage_max_per_tick 12 -> 30, so unstarted waiters move by restage_waiters (fresh gen on the target). epyc2 W lives on scratch3 = root (scratch2 has 40 GB, under the 50 floor). Revert: dies.<die>.gen_hosts <- gen_hosts_prev_kw43gen3; restage_max_per_tick <- restage_max_per_tick_prev_kw43gen3.",
  "note_kw43_hubqc": "KW-FIX-43 COORD 21:1x (3): intel2 (hub) added to qwen_compute gen_hosts; revert gen_hosts_prev_kw43hub",
  "gen_disk_min_gb_prev_kw44disk": 65,
- "note_kw44_disk1110": "KW-FIX-44 2026-11-10 COORD disk step 3: gen_disk_min_gb 65 -> 150, then 70 per COORD (keep at least two gen hosts per die: s81_head has only epyc7+epyc4, epyc4 about 80 GB). Revert: gen_disk_min_gb <- gen_disk_min_gb_prev_kw44disk (65); backup kit_wave.json.bak-kw44-disk1110."
+ "note_kw44_disk1110": "KW-FIX-44 2026-11-10 COORD disk step 3: gen_disk_min_gb 65 -> 150, then 70 per COORD (keep at least two gen hosts per die: s81_head has only epyc7+epyc4, epyc4 about 80 GB). Revert: gen_disk_min_gb <- gen_disk_min_gb_prev_kw44disk (65); backup kit_wave.json.bak-kw44-disk1110.",
+ "retired_hosts": [
+  "epyc5",
+  "epyc6"
+ ],
+ "note_retired_hosts_kw44": "KW-FIX-44 2026-11-10 06:53 PST (COORD): epyc5/epyc6 terminated 11-09 (owner drain ruling); SUBSTEP-1 skips rows whose evidence host is listed here (substep_prune.py). _kw17_ok had epyc6, removed (was ['epyc6','epyc2','intel1','intel2','epyc4']). *_prev_* history keys and archived records left as they are."
 }
