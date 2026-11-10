@@ -10343,37 +10343,37 @@
     ],
     "sle_cland_w515_n": [
      {
-      "host": "epyc6",
+      "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n",
-      "job": "COUNTED sle_cland_w515_n epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n/PROVENANCE.json (QC-TYPES-9)"
+      "job": "COUNTED sle_cland_w515_n epyc7:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n/PROVENANCE.json (QC-TYPES-9)"
      }
     ],
     "sle_cland_w515_n_300": [
      {
-      "host": "epyc6",
+      "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_300",
-      "job": "COUNTED sle_cland_w515_n_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/PROVENANCE.json (QC-TYPES-9)"
+      "job": "COUNTED sle_cland_w515_n_300 epyc7:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/PROVENANCE.json (QC-TYPES-9)"
      }
     ],
     "sle_cland_w515_n_301": [
      {
-      "host": "epyc6",
+      "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_301",
-      "job": "COUNTED sle_cland_w515_n_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_301/PROVENANCE.json (QC-TYPES-9)"
+      "job": "COUNTED sle_cland_w515_n_301 epyc7:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_301/PROVENANCE.json (QC-TYPES-9)"
      }
     ],
     "sle_cland_w517_s_300": [
      {
-      "host": "epyc6",
+      "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_300",
-      "job": "COUNTED sle_cland_w517_s_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_300/PROVENANCE.json (QC-TYPES-9)"
+      "job": "COUNTED sle_cland_w517_s_300 epyc7:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_300/PROVENANCE.json (QC-TYPES-9)"
      }
     ],
     "sle_cland_w517_s_301": [
      {
-      "host": "epyc6",
+      "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_301",
-      "job": "COUNTED sle_cland_w517_s_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
+      "job": "COUNTED sle_cland_w517_s_301 epyc7:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
      }
     ],
     "qfd_tile_nl_a0c": [
@@ -12462,15 +12462,15 @@
      "note": "KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec + 073656d7febf + e1731efe515e (gen_phys) + 42d265cdb636"
     },
     "cbf_q00__cl870de686": {
-     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
      "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
     },
     "cbf_q00__cl1b5a6458": {
-     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
      "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
     },
     "cbn_q00__cld7bf7197": {
-     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand10_class.json",
      "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
     },
     "sle_su_l0__cl7a55c676": {
@@ -14058,7 +14058,60 @@
     "epyc7",
     "intel1"
    ],
-   "note_kw43e4g_qc": "KW-FIX-43 16:0x COORD (1) YES: epyc4 added to gen_hosts; wave src + die kit_rtl inputs staged read-only on epyc4 scratch3 (same paths via scratch2 symlinks; file counts + md5 manifests equal to epyc7). Revert: gen_hosts = gen_hosts_prev_kw43e4g_qc."
+   "note_kw43e4g_qc": "KW-FIX-43 16:0x COORD (1) YES: epyc4 added to gen_hosts; wave src + die kit_rtl inputs staged read-only on epyc4 scratch3 (same paths via scratch2 symlinks; file counts + md5 manifests equal to epyc7). Revert: gen_hosts = gen_hosts_prev_kw43e4g_qc.",
+   "prov_view_sources_prev_kw43e6": {
+    "sle_cland_w515_n": [
+     {
+      "host": "epyc6",
+      "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n",
+      "job": "COUNTED sle_cland_w515_n epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n/PROVENANCE.json (QC-TYPES-9)"
+     }
+    ],
+    "sle_cland_w515_n_300": [
+     {
+      "host": "epyc6",
+      "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_300",
+      "job": "COUNTED sle_cland_w515_n_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/PROVENANCE.json (QC-TYPES-9)"
+     }
+    ],
+    "sle_cland_w515_n_301": [
+     {
+      "host": "epyc6",
+      "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w515_n_301",
+      "job": "COUNTED sle_cland_w515_n_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_301/PROVENANCE.json (QC-TYPES-9)"
+     }
+    ],
+    "sle_cland_w517_s_300": [
+     {
+      "host": "epyc6",
+      "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_300",
+      "job": "COUNTED sle_cland_w517_s_300 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_300/PROVENANCE.json (QC-TYPES-9)"
+     }
+    ],
+    "sle_cland_w517_s_301": [
+     {
+      "host": "epyc6",
+      "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/views_dy/sle_cland_w517_s_301",
+      "job": "COUNTED sle_cland_w517_s_301 epyc6:/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w517_s_301/PROVENANCE.json (QC-TYPES-9)"
+     }
+    ]
+   },
+   "note_kw43_e6vs": "KW-FIX-43 17:5x COORD 17:17 epyc6 terminated: 5 sle_cland prov_view_sources host epyc6 -> epyc7 (same absolute paths; views_dy dirs 9 files each, resign_dy PROVENANCE.json present). Revert: prov_view_sources[k] = prov_view_sources_prev_kw43e6[k].",
+   "item_inputs_prev_kw43pp1": {
+    "cbf_q00__cl1b5a6458": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    },
+    "cbf_q00__cl870de686": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    },
+    "cbn_q00__cld7bf7197": {
+     "plan": "/srv/opentallas-scratch2/claude/dq97/cls2/plan_qc53v4nS_mem9_vml_pv_cand8_class.json",
+     "note": "KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin window (CBF-GRT-1); supersedes cand7 for these 3; PV-SCHEMA-1 overlaid first"
+    }
+   },
+   "note_kw43_pp1": "KW-FIX-43 17:5x COORD PROV-PLANDIR-1 (DIE-QC-97): cbf_q00__cl1b5a6458/cl870de686 + cbn_q00__cld7bf7197 cand8_class -> cand10_class 84f32c9d (scratch2 dq97/cls2 path on every gen host; epyc4 now a real read-only file there, not the scratch3 link). Revert: item_inputs[k] = item_inputs_prev_kw43pp1[k]."
   },
   "hbm": {
    "enabled": true,
