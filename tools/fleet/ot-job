@@ -40,6 +40,7 @@ Spec (JSON, schema opentallas.ot_job.v1):
 An input is found by sha in the local store, else at its path on this host, else fetched from "host" (by sha from
 that host's store, else as a tar stream of the path).  Paths in publish/return are relative to the work dir.
 """
+import stat
 import base64
 import fcntl
 import json
@@ -118,12 +119,39 @@ def tar_fetch(host, path, dest):
     return os.path.join(dest, base)
 
 
-def resolve(store, item, J, n):
-    """-> (kind, sha) of an input/seed, put into the local store"""
+def seed_mtimes(path):
+    """{rel: st_mtime_ns} of the regular files of a seed source ('.' for one file).  The store keeps content only: staged
+    copies are dated when staged, in path order, which made vclk_ff.sdc newer than a restored run/results netlist
+    (RESYNTH-GUARD exit 12, HBM pt_w 11-10)."""
+    if not os.path.isdir(path):
+        return {".": os.stat(path).st_mtime_ns}
+    out = {}
+    for dp, _dns, fns in os.walk(path, followlinks=False):
+        for fn in fns:
+            q = os.path.join(dp, fn)
+            st = os.lstat(q)
+            if stat.S_ISREG(st.st_mode):
+                out[os.path.relpath(q, path)] = st.st_mtime_ns
+    return out
+
+
+def apply_mtimes(dest, times):
+    """give the staged copies under dest the source dates seed_mtimes read"""
+    for rel, ns in times.items():
+        q = os.path.normpath(os.path.join(dest, rel))
+        if os.path.isfile(q) and not os.path.islink(q):
+            os.utime(q, ns=(ns, ns))
+
+
+def resolve(store, item, J, n, times=None):
+    """-> (kind, sha) of an input/seed, put into the local store; times (a dict) receives the source files' mtimes when the
+    source is a path here or fetched from a host (a seed named only by sha has none)"""
     sha, path, host = item.get("sha"), item.get("path"), item.get("host")
     if sha and S.have(store, sha) and not S.verify(store, sha):
         return ("tree" if S.read_tree(store, sha) else "file"), sha
     if path and os.path.exists(path):
+        if times is not None:
+            times.update(seed_mtimes(os.path.realpath(path)))
         kind, got = S.put(store, os.path.realpath(path))
     elif host and sha:
         S.fetch(store, sha, host)
@@ -131,6 +159,8 @@ def resolve(store, item, J, n):
     elif host and path:
         tmp = os.path.join(J, ".ot-job", "fetch", str(n))
         got_path = tar_fetch(host, path, tmp)
+        if times is not None:
+            times.update(seed_mtimes(got_path))
         kind, got = S.put(store, got_path, link=True)
         shutil.rmtree(tmp)
     else:
@@ -381,15 +411,19 @@ def stage_all(spec, store, J, maps):
         shas.append(sha)
         staged.append({"n": n, "at": at, "sha": sha, "kind": kind})
     for n, item in enumerate((spec.get("work") or {}).get("seed", [])):
-        kind, sha = resolve(store, item, J, f"seed{n}")
+        times = {}
+        kind, sha = resolve(store, item, J, f"seed{n}", times)
         into = os.path.normpath(os.path.join(J, "work", item.get("into", ".")))
         if kind == "tree":
             tmp = os.path.join(J, ".ot-job", f"seed{n}")
             S.stage(store, sha, tmp, copy=True)
             shutil.copytree(tmp, into, symlinks=True, dirs_exist_ok=True)
             shutil.rmtree(tmp)
+            apply_mtimes(into, times)
         else:
-            S.stage(store, sha, into if not os.path.isdir(into) else os.path.join(into, os.path.basename(item.get("path", sha))), copy=True)
+            dst = into if not os.path.isdir(into) else os.path.join(into, os.path.basename(item.get("path", sha)))
+            S.stage(store, sha, dst, copy=True)
+            apply_mtimes(dst, times)
         shas.append(sha)
         staged.append({"seed": n, "sha": sha, "kind": kind})
     return shas, staged
