@@ -1162,6 +1162,9 @@
       "minItems": 2,
       "maxItems": 2
      },
+     "port_buf_at_pin": {
+      "type": "boolean"
+     },
      "cells": {
       "type": "integer",
       "minimum": 0
