@@ -373,6 +373,31 @@ class TestClientLog(Base):
         self.assertEqual(self.ap.render_mem_gb(0), 8)
         self.assertEqual(self.ap.render_mem_gb(1873572309), 22)
 
+    def test_review_render_goes_direct(self):
+        # KW-FIX-44 11-10 (COORD): review renders sat behind 30-50 heavy waiters for hours; they run --direct
+        seen = []
+        self.ap.rbash = lambda host, script, timeout=60: (0, "", "")
+        self.ap.sh = lambda cmd, timeout=300, input=None: (0, "", "")
+        self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
+        self.ap.set_status = lambda st, j, s, why="": j.update(status=s)
+        j = {"id": "f45a6c60e141", "host": "epyc7", "die": "hbm", "type": "q_spt1", "status": "STRUCTURAL", "src": "x",
+             "path": "/srv/k", "signoff": {"odb": "/srv/k/run/6_final.odb", "path": "/srv/k/signoff", "odb_bytes": 3192478288}}
+        self.ap.start_review({"jobs": {}}, j)
+        (argv,) = seen
+        pre = argv[:argv.index("--")]
+        self.assertIn("--direct", pre)
+        self.assertEqual(pre[pre.index("--mem") + 1], "34")           # the honest request stays
+        self.assertEqual(pre[pre.index("--threads") + 1], "2")
+        self.assertIn("--no-spill", pre)
+        self.assertEqual(j["status"], "REVIEW-STRUCTURAL")
+        os.environ["AP_REVIEW_DIRECT"] = "0"
+        try:
+            seen.clear()
+            self.ap.start_review({"jobs": {}}, dict(j, status="STRUCTURAL"))
+            self.assertNotIn("--direct", seen[0][:seen[0].index("--")])
+        finally:
+            os.environ.pop("AP_REVIEW_DIRECT", None)
+
     def test_not_run(self):
         o = self.ap.parse_client_log("ot-run: NOT RUN no host admitted 64 GB within --max-wait\nAP_RC=75\n")
         self.assertTrue(o["not_run"])
