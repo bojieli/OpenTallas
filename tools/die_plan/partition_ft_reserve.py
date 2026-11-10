@@ -86,6 +86,9 @@ def tcl(receipt):
     colwins=pdn_windows_col(receipt)
     if colwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_col={len(colwins)} col_fill_m6={len(pdn_col_fill(receipt))}"')
+    edgewins=pdn_windows_edge_pocket(receipt)
+    if edgewins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_edge_pocket={len(edgewins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -386,6 +389,67 @@ def pdn_windows_col(receipt, core_x0=4.32):
     return out
 
 
+# DIE-HBM-97/SUPDN 11-09 (q_b001__physical_v1 a11 PDN-0179, 57 PDN-0178 M4 channels x 4.32-25.9, y 28-944): the die reserves
+# the whole strip between the outline and the first macro column (M5 x 0-25.92, y 17.28-285.12 and two more, beside
+# ot_hbm_hc_bank128_pair_core OBS through M6 at x 25.92) together with M4 rows of the same x extent every 10.8 um.  This is
+# the q_b011 pocket above, but wider than PDN_WIN_MIN, so _gap_columns never sees it: each 8.1-um pocket between two M4 rows
+# has M4 straps and no M5 over its whole width.  The narrow edge exclusion above does not apply either: at 13-22 um of core
+# width this strip is a real pocket, not the 4.32-um core margin.  One M5 strap-pair window at the middle in-core strap
+# position feeds it (M5-M6 on the free M6 between the die M6 rows, M6-M7 on the M7 straps left over the strip); no M6 fill
+# and no window through the end rows are needed.  Real pdngen on the a11 2_3 DB: window at the first / middle strap / every
+# strap -> PDNGEN OK, 0 PDN-0178, 8-8.7 GB, about 6 min each (a11 failed PDN-0179 after 16 min, 12.9 GB).  The width limit
+# is what was measured (17.28 and 25.92 um columns); wider edge columns (q_b001 0-138.24) did not fail and stay whole.
+# Cost: 0.612 um of M5 per column.
+PDN_WIN_EDGE_POCKET_MAX = 4 * PDN_WIN_MIN
+
+
+def _edge_pockets(rects):
+    """[(layer, rect)] M5 columns wider than PDN_WIN_MIN that reach the outline margin and carry their own M4 rows."""
+    width = max((q[2] for _, q in rects if q[0] <= 1e-6), default=None)
+    out = []
+    for layer, rect in rects:
+        if layer not in PDN_WIN_COMB:
+            continue
+        x0, y0, x1, y1 = rect
+        if not PDN_WIN_MIN + 1e-6 < x1 - x0 <= PDN_WIN_EDGE_POCKET_MAX + 1e-6 or y1 - y0 <= 2 * PDN_WIN_MIN + 1e-6:
+            continue
+        if x0 >= PDN_CORE_INSET - 1e-6 and (width is None or x1 <= width - PDN_CORE_INSET + 1e-6):
+            continue
+        own = sum(1 for L, q in rects if L == 'M4' and q[0] <= x0 + 1e-3 and q[2] >= x1 - 1e-3
+                  and q[2] - q[0] <= 2 * (x1 - x0) + 1e-6
+                  and q[1] >= y0 - 1e-6 and q[3] <= y1 + 1e-6)
+        if own >= PDN_WIN_COL_ROWS:
+            out.append((layer, rect))
+    return out
+
+
+def pdn_windows_edge_pocket(receipt, core_x0=PDN_CORE_INSET):
+    """[(layer, x0, x1, rect)] one M5 strap-pair window at the middle in-core strap position of each _edge_pockets column."""
+    if receipt is None:
+        return []
+    rects = [(r['layer'], tuple(r['rect'])) for r in receipt['rectangles_um']]
+    width = max((q[2] for _, q in rects if q[0] <= 1e-6), default=None)
+    out = []
+    for layer, rect in _edge_pockets(rects):
+        x0, _, x1, _ = rect
+        off, wd, sp, pitch = PDN_WIN_COMB[layer]
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        fits = []
+        while True:
+            s = core_x0 + off + k * pitch
+            k += 1
+            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+            if lo < x0 + PDN_WIN_MARGIN:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN or (width is not None and hi > width - core_x0):
+                break
+            fits.append((lo, hi))
+        if fits:
+            lo, hi = fits[len(fits) // 2]
+            out.append((layer, round(lo, 3), round(hi, 3), rect))
+    return out
+
+
 def pdn_col_fill(receipt):
     """[(layer, rect)] M6 fill over each column that got a pdn_windows_col window: the column sits in the gap between two
     macros whose OBS reach M6, so an M6 strap piece in it has no M7 landing on the 8.64-um M7 grid (q_b011: the VDD strap
@@ -566,7 +630,7 @@ def obstruction_rows(receipt, width=None, core_y0=4.32):
     width = _width(receipt, width)
     swins = pdn_windows_strip(receipt, width, core_y0)
     wins = pdn_windows(receipt, width, core_y0) + swins
-    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width)
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width) + pdn_windows_edge_pocket(receipt)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
