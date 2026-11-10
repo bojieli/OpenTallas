@@ -1,12 +1,59 @@
 {
  "schema": "opentallas.hbm_core_reg_guides.v1",
  "module": "ot_hbm_sm_kv_line",
- "outline_um": [734.4, 233.28],
- "source": "DIE-HBM-97 KVPIPE rev3 2026-11-10: the per-bank-column copies g_col[c] (h128 / wf4 / fill / in_v) of ot_hbm_sm_kv_line, one GPL guide box per column in the north logic strip (banks: 2 rows x 4 columns, x 8.64-179.93 / 188.57-359.86 / 368.50-539.78 / 548.42-719.71, y 8.65-172.84; m_data N face).  Picked up by gen_core_kit_hbm.py (default_reg_guides) when no --reg-guide-boxes / --macro-reg-guide is given; INCLUSIVE regions released before DPL (macro_reg_guide.tcl).",
+ "outline_um": [
+  734.4,
+  233.28
+ ],
+ "source": "DIE-HBM-97 KVPIPE rev3 2026-11-10: the per-bank-column copies g_col[c] (h128 / wf4 / fill / in_v, ~20 cells, ~4.2 um2 each) of ot_hbm_sm_kv_line; copy c feeds banks c and c+4 (bank k at x-column k%4) and bb / sc / lane slices of column c.  One small GPL guide pad per column, 60 x 10.8 um centred on the column just above the upper bank row (top 172.84).  Pads must stay small: GPL removes an INCLUSIVE region's area from the top-level region, and full-strip boxes (rev3 v1, 726 x 55 um) left the top level at 280 % utilisation (GPL-0301, vE probe 11-10).  Picked up by gen_core_kit_hbm.py (default_reg_guides) when no --reg-guide-boxes / --macro-reg-guide is given; released before DPL.",
  "boxes": [
-  {"name": "kvl_col0", "prefixes": ["u_fcore.g_col[0]."], "box_um": [4.32, 174.0, 184.25, 228.96]},
-  {"name": "kvl_col1", "prefixes": ["u_fcore.g_col[1]."], "box_um": [184.25, 174.0, 364.18, 228.96]},
-  {"name": "kvl_col2", "prefixes": ["u_fcore.g_col[2]."], "box_um": [364.18, 174.0, 544.1, 228.96]},
-  {"name": "kvl_col3", "prefixes": ["u_fcore.g_col[3]."], "box_um": [544.1, 174.0, 730.08, 228.96]}
+  {
+   "name": "kvl_col0",
+   "prefixes": [
+    "u_fcore.g_col[0]."
+   ],
+   "box_um": [
+    64.285,
+    174.0,
+    124.285,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_col1",
+   "prefixes": [
+    "u_fcore.g_col[1]."
+   ],
+   "box_um": [
+    244.215,
+    174.0,
+    304.215,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_col2",
+   "prefixes": [
+    "u_fcore.g_col[2]."
+   ],
+   "box_um": [
+    424.14,
+    174.0,
+    484.14,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_col3",
+   "prefixes": [
+    "u_fcore.g_col[3]."
+   ],
+   "box_um": [
+    604.065,
+    174.0,
+    664.065,
+    184.8
+   ]
+  }
  ]
 }
