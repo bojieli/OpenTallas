@@ -32828,3 +32828,13 @@ COORD: confirm A or B and the owning lane (core owner for kv3_head_eighth). The 
   - The warm b15 ECO tail (INVx1->INVx2 on _26200_) is dropped. This is a fresh route form. If the same 322 ps slew near miss comes back, it gets the same one-iteration ECO.
 - The old e0 view stays counted until the new one signs off. Next: abstract_detail.py on the new view and a check that the corridor is free; then a hgi GRT what-if with the new e0 LEF plus clock_entry_access windows; then e1/e2/e5/e6 in parallel.
 - 2026-11-09 19:00 PST STATE [ROOT-MERGE-57 -> COORD, DIE-S81-85] ES (TAPWIN 1389515fc989, train ad630c55d56): sparse is CLEAN. Against a fresh base of ba1ab1e: 2339 rc lines (+1 new test), 703 fails both, no new fails, no new nonzero; all tap_window*, die_sta_related and kv_related_clock tests rc 0. It touches gen_phys.py and schema.py, so the full suite runs on epyc2: about 1360 of 3952 files done, ETA about 60 min. I land it with all five tags the moment the full run is clean. Say if you want it landed on the sparse result now.
+
+## 11-09 19:00 PST DIE-HBM-97 STATE (s-b4rehost)
+- **Re-host, BATCH4b part (done):** inputs copied to epyc7:/srv/opentallas-scratch2/claude/die-hbm-97-b4/{pdnp,lec_b100_fix/q_b100} (md5 list identical).
+  - lec_b100_fix: old 2222375 killed, replaced by 4136398 (epyc7, container dh97b4-lecfix2e7).
+  - pdnp pv1 v3 probe: old 3095943 killed, replaced by 4136397 (epyc7).
+  - pdnp b010 probe 2228837 is kept on intel1: it was already admitted and is in pdngen (dh97b4-pdn-q_b010-v1), so only its result is collected there.
+  - No intel1 waiter is left from my lanes. That completes the re-host.
+- **PDN classes are separate:** all 10 q_b010 gap columns are interior, so the q_b010/pv1 M6 channels (x 127.4-129.6, 591.8-602.6, pv1 469-484) are not the SUPDN edge-column class.
+  - The BATCH4b fix is in the post-reservation M6 close Tcl (SLIVER_TCL), branch claude/die-hbm-97-pdn-m6edge-1109 @ d4dbca4f52 (pushed after the probe PASS).
+  - The SUPDN fix is in _gap_columns. The two edits to partition_ft_reserve.py do not overlap, so either branch rebases cleanly on the other.
