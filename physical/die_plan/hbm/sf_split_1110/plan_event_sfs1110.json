@@ -32,9 +32,9 @@
     0.0
    ],
    "pins_file": "cores/ot_smh_static_front_w__907.2x233.28__sfs1110.json",
-   "pin_count": 13917,
-   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits/ot_smh_static_front_w_393cded47be9c789",
-   "kit_hash": "393cded47be9c789"
+   "pin_count": 13905,
+   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits2/ot_smh_static_front_w_0ac230c58d27cec6",
+   "kit_hash": "0ac230c58d27cec6"
   },
   "ot_smh_static_front_e": {
    "inst": "u_sm_front_nfe",
@@ -47,9 +47,9 @@
     0.0
    ],
    "pins_file": "cores/ot_smh_static_front_e__907.2x233.28__sfs1110.json",
-   "pin_count": 13915,
-   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits/ot_smh_static_front_e_ad90b1ef01b79bfe",
-   "kit_hash": "ad90b1ef01b79bfe"
+   "pin_count": 13903,
+   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits2/ot_smh_static_front_e_e05e0710a4deb256",
+   "kit_hash": "e05e0710a4deb256"
   }
  },
  "wrapper": "ot_smh_static_front = u_w + u_e + per-half bit maps (split3/ot_smh_static_front_split.v), parent RTL/pins unchanged"

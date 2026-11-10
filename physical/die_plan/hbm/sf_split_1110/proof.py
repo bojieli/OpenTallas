@@ -26,6 +26,7 @@ def parse(path):
         if st.startswith(("wire","input","output","reg")): continue
         if st.startswith("assign"):
             m=re.match(r"assign\s+(.+?)\s*=\s*(.+?)\s*;",st); cur["assign"].append((norm(m.group(1)),norm(m.group(2)))); continue
+        st=re.sub(r"^\(\*[^*]*\*\)\s*","",st)
         m=re.match(r"(\S+)\s+(\\\S+|[^\s(]+)\s*\((.*)\)\s*;",st)
         if m:
             conns=dict((p,norm(n)) for p,n in re.findall(r"\.(\w+)\s*\(\s*(\\\S+\s|[^()\s]*)\s*\)",m.group(3)))

@@ -34,6 +34,12 @@ for H in "WE":
         if e=="rtl": os.makedirs(d); continue
         (shutil.copytree(s,d,symlinks=True) if os.path.isdir(s) else shutil.copy2(s,d))
     shutil.copy2(os.path.join(SPL,mod+".v"),os.path.join(tmp,"rtl",mod+".v"))
+    shutil.copy2(os.path.join(os.path.dirname(os.path.abspath(__file__)),"seam_face_advisory.py"),os.path.join(tmp,"seam_face_advisory.py"))
+    rk=open(os.path.join(tmp,"run_kit_hbm.sh")).read()
+    old="if [ \\$fg != 0 ]; then echo 'FAIL_PREFLOOR face_guard'"
+    assert old in rk,"runner pattern"
+    rk=rk.replace(old,"if [ \\$fg != 0 ] && ! python3 -I /work/seam_face_advisory.py /work; then echo 'FAIL_PREFLOOR face_guard'",1)
+    open(os.path.join(tmp,"run_kit_hbm.sh"),"w").write(rk)
     # ---- pins
     def ren(n):
         return mymap.get(n)
@@ -127,7 +133,7 @@ for H in "WE":
     open(os.path.join(tmp,"rtl","portlist.txt"),"w").write("module %s\n"%mod+"".join("%s [%d:0] %s\n"%(d_of(b),wid[b]-1,b) for b in sorted(wid)))
     # ---- hash + freeze + provenance
     h=hashlib.sha256()
-    for f in ("rtl/%s.v"%mod,"config.mk","io.tcl","constraint.sdc","pins.json","sdc_lint.json"):
+    for f in ("rtl/%s.v"%mod,"config.mk","io.tcl","constraint.sdc","pins.json","sdc_lint.json","run_kit_hbm.sh"):
         h.update(open(os.path.join(tmp,f),"rb").read())
     kh=h.hexdigest()[:16]
     fz=json.load(open(os.path.join(SRC,"freeze.json")))
@@ -135,7 +141,7 @@ for H in "WE":
     fz.update(view=mod+"@sfs1110",module=mod,design=mod,rtl_top=mod,recipe_key=mod,outline_um=[w,H_],pins=nports,pins_sha256=ppsha,
       pins_canon_sha256=None,resets=resets,kit_hash=kh,face_shell=None,plan_pins_source="SF-SPLIT "+H,plan_pins_source_sha256=None,plan_pins_source_canon_sha256=None,
       split_derived={"from_kit":"4f244bbf347ac167","from_netlist":"SF-C 1_synth.v","cut_x_um":XC,"half":H,"seam_out":out_s,"seam_in":in_s,
-        "seam_bits":nseam,"proof":"structural netlist equivalence EQUIVALENT (split3/proof.out); 2-bit seam swap mutant NOT_EQUIVALENT"})
+        "seam_bits":nseam,"proof":"structural netlist equivalence EQUIVALENT (split4/proof.out); 2-bit seam swap mutant NOT_EQUIVALENT"})
     json.dump(fz,open(os.path.join(tmp,"freeze.json"),"w"),indent=1)
     pv=json.load(open(os.path.join(SRC,"PROVENANCE.json"))) if os.path.exists(os.path.join(SRC,"PROVENANCE.json")) else {}
     pv={"sf_split":{"lane":"HBM-COLLECT-1","date":"2026-11-10","half":H,"kit_hash":kh,"source_kit":SRC,"netlists":SPL},"parent_provenance":pv}

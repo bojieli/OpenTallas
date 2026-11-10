@@ -3,7 +3,7 @@
 # flops locked); every comb/tie cell is copied into each side its forward cone reaches, so every seam net is driven by a
 # flop output (registered launch, 0 pin cycles). Writes W/E gate netlists + the composite top for LEC.
 import odb,collections,re,json,os
-XC=float(os.environ.get("XC","907.2")); R=float(os.environ.get("REFINE_UM","250")); OUT="/w2/split3"; os.makedirs(OUT,exist_ok=True)
+XC=float(os.environ.get("XC","907.2")); R=float(os.environ.get("REFINE_UM","250")); OUT="/w2/split4"; os.makedirs(OUT,exist_ok=True)
 pins={p["name"]:p for p in json.load(open("/w2/pins.json"))}
 dbp=odb.dbDatabase.create(); odb.read_db(dbp,"/w/3_place.odb"); P=dbp.getChip().getBlock(); u=float(P.getDbUnitsPerMicron())
 pos={i.getName():((i.getBBox().xMin()+i.getBBox().xMax())/2/u,(i.getBBox().yMin()+i.getBBox().yMax())/2/u) for i in P.getInsts()}
@@ -46,6 +46,19 @@ side={}
 for n in I:
     if isseq[n]: side[("s",n)]="W" if pos[n][0]<XC else "E"
 for p in pins: side[("p",p)]=psd(p)
+# SF-SPLIT fix 11-10 (face_guard feedthrough 32): a port's face flop goes to its PORT's side, not its placed side
+for l,E in L.items():
+    if l[0]=="p":
+        for e in E:
+            if e[0]=="s": side[e]=psd(l[1])
+forced=0
+for l,E in L.items():
+    if l[0]=="s":
+        ps=[psd(e[1]) for e in E if e[0]=="p"]
+        if ps:
+            t=max(set(ps),key=ps.count)
+            if side[l]!=t: forced+=1
+            side[l]=t
 fanin=collections.defaultdict(list)
 for l,E in L.items():
     for e in E: fanin[e].append(l)
@@ -170,7 +183,7 @@ for H in "WE":
     for n in I:
         if H in home(n):
             c=",".join(".%s(%s)"%(mt,nv(nn)) for mt,nn in netsof[n])
-            f.write("%s \\%s  (%s);\n"%(I[n].getMaster().getName(),n.replace("\\",""),c))
+            f.write("(* keep *) %s \\%s  (%s);\n"%(I[n].getMaster().getName(),n.replace("\\",""),c))
     f.write("endmodule\n"); f.close()
 # composite (same ports as the original)
 f=open(OUT+"/ot_smh_static_front_split.v","w")
@@ -200,6 +213,6 @@ for H in "WE":
         geo.append({"bus":SP[H],"bit":k,"from":nm,"y":sum(ys)/len(ys)})
 st={"XC":XC,"cross_before":c0,"cross_after":c1,"moves":moves,"seq_W":sum(1 for k,v in side.items() if k[0]=="s" and v=="W"),"seq_E":sum(1 for k,v in side.items() if k[0]=="s" and v=="E"),
  "comb_W":sum(1 for n in cs if "W" in cs[n]),"comb_E":sum(1 for n in cs if "E" in cs[n]),"comb_dup":sum(1 for n in cs if len(cs[n])>1),
- "seam_w2e":len(seams["W"]),"seam_e2w":len(seams["E"]),"locked":len(locked),"cands":len(cands)}
+ "seam_w2e":len(seams["W"]),"seam_e2w":len(seams["E"]),"locked":len(locked),"forced_to_port_side":forced,"cands":len(cands)}
 json.dump({"stats":st,"pinmap":{H:OWN[H][1] for H in "WE"},"seam":geo,"side":{k[1]:v for k,v in side.items() if k[0]=="s"}},open(OUT+"/split.json","w"))
 print(json.dumps(st))
