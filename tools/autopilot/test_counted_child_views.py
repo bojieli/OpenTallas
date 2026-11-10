@@ -78,6 +78,23 @@ class ExportDetail(unittest.TestCase):
         self.assertIn("--layers M6", work)
         self.assertIn("realpath /k/base/6_final.odb", work)
 
+    def test_pin_window_exports_exact_shapes_and_passes_the_window(self):
+        pw = dict(margin_um=1.0, top_layer="M7", clear_um=0.05, pins=["ck"])
+        _, calls, logs = self.go(dict(needed=True, layers=["M6", "M7"], bloat_factor=1, enclosed=["ck"], pin_window=pw))
+        work = next(c for c in calls if "docker" in c)
+        self.assertIn("write_abstract_lef -bloat_factor 0 /o/detail0.lef", work)
+        self.assertIn("--pin-window-um 1.0 --top-layer M7 --window-detail $T/detail0.lef", work)
+        self.assertTrue(any("pin windows ['ck']" in x for x in logs))
+        _, calls, _ = self.go(dict(needed=True, layers=["M6"], bloat_factor=0, enclosed=["ck"], pin_window=pw))
+        work = next(c for c in calls if "docker" in c)
+        self.assertNotIn("detail0.lef", work)                     # bloat 0: the detail itself is the exact export
+        self.assertIn("--window-detail $T/detail.lef", work)
+
+    def test_real_plan_of_a_blanket_centre_pin_asks_for_the_window(self):
+        p = AD.export_plan(lef(obs=("M5", "M6", "M7")))
+        self.assertEqual(p["pin_window"]["pins"], ["ck"])
+        self.assertEqual(p["pin_window"]["top_layer"], "M7")
+
     def test_pg_form_opts_in_explicitly(self):
         out, _, _ = self.go(dict(needed=True, layers=["M6"], bloat_factor=1, pg_layer=True, enclosed=["ck"]))
         self.assertIs(out["detail_pg_layer"], True)

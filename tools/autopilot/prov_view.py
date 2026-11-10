@@ -668,7 +668,10 @@ def routed_detail(cdir, module, meta, source_root):
         layers = pg_layer_detail_layers(tool, before, after, bloat)
     if not layers or receipt.get("layers_detailed") != layers:
         raise ValueError("detailed abstract layers differ from layers above PG pins")
-    ok, problems = tool.check(before, after, layers)
+    window = receipt.get("pin_window")        # DIE-QC-97 11-10: pin access windows, rechecked on the base
+    if window is not None and not isinstance(window, dict):
+        raise ValueError("detailed abstract pin_window must be an object")
+    ok, problems = tool.check(before, after, layers, window) if window else tool.check(before, after, layers)
     if not ok:
         raise ValueError("detailed abstract changed protected geometry: " + "; ".join(problems))
     out = dict(base_sha256=receipt["base_sha256"], out_sha256=receipt["out_sha256"],
@@ -676,6 +679,9 @@ def routed_detail(cdir, module, meta, source_root):
                detail_pins_equal_base=True, helper_sha256=sha256(helper))
     if pg_layer:
         out["pg_layer_detail"] = True
+    if window:
+        out["pin_window"] = {k: window.get(k) for k in ("margin_um", "top_layer", "clear_um")}
+        out["pin_window"]["pins"] = sorted(window.get("windows") or {})
     return detail, out
 
 

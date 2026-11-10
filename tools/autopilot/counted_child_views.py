@@ -234,6 +234,9 @@ def view_detail(die, rid, p, mod, vdir, on_hub, log):
     if not plan or not plan.get("needed"):
         if not plan:
             log(f"DETAIL-PLAN-FAIL {die} {mod} {p['host']} rc {rc}: {(se or so)[-200:]}")
+        elif plan.get("pin_window"):
+            log(f"PIN-WINDOW-NO-DETAIL-FORM {die} {mod} {plan['pin_window'].get('pins')}: no pin access, but no "
+                "detailed splice form applies; view published without a window")
         if not on_hub:
             run(SSH + [p["host"], f"rm -rf {q(stage)}"])
         return {}
@@ -241,21 +244,29 @@ def view_detail(die, rid, p, mod, vdir, on_hub, log):
         log(f"DETAIL-NEEDED-ON-HUB {die} {mod} {plan.get('enclosed')}: view published without detail")
         return {}
     bf, layers = plan["bloat_factor"], ",".join(plan["layers"])
+    # DIE-QC-97 11-10: signal pins the base leaves unreachable get a pin access window (exact metal kept inside it)
+    pw = plan.get("pin_window") or {}
+    on = pw.get("margin_um") is not None and bool(pw.get("top_layer"))
+    exact = "detail.lef" if bf == 0 else "detail0.lef"
+    win = (f" --pin-window-um {float(pw['margin_um'])} --top-layer {q(str(pw['top_layer']))} --window-detail $T/{exact}"
+           if on else "")
+    exact_tcl = (r"&& printf 'write_abstract_lef -bloat_factor 0 /o/detail0.lef\n' >> $T/d.tcl " if on and bf != 0 else "")
     sh = (f"cd / && T={q(stage)}; V={q(vdir)}; A={q(tool)}; "
           f"O=$(realpath {q(p['base'] + '/6_final.odb')}) && test -s $O "
           f"&& python3 -I $A tcl --odb /b/$(basename $O) --out /o/detail.lef --bloat-factor {bf} > $T/d.tcl "
-          f"&& printf 'puts OT_DETAIL_DONE\n' >> $T/d.tcl "
+          f"{exact_tcl}&& printf 'puts OT_DETAIL_DONE\n' >> $T/d.tcl "
           f"&& timeout 600 docker run --rm --memory 16g --user $(id -u):$(id -g) -v $(dirname $O):/b:ro -v $T:/o "
           f"{ORFS_IMAGE} bash -lc '{OPENROAD} -no_init -exit /o/d.tcl' > $T/d.log 2>&1 "
           f"&& grep -q OT_DETAIL_DONE $T/d.log "
           f"&& python3 -I $A splice --base {q(lef)} --detail $T/detail.lef --out $V/detail_view.lef "
-          f"--layers {q(layers)} --bloat-factor {bf} > $V/detail_receipt.json; rc=$?; "
+          f"--layers {q(layers)} --bloat-factor {bf}{win} > $V/detail_receipt.json; rc=$?; "
           f"[ $rc = 0 ] || rm -f $V/detail_view.lef $V/detail_receipt.json; rm -rf $T; exit $rc")
     rc, so, se = run(SSH + [p["host"], sh], timeout=900)
     if rc:
         log(f"DETAIL-FAIL {die} {mod} {p['host']}:{p['base']} rc {rc}: {(se or so)[-200:]}")
         return {}
-    log(f"DETAIL {die} {mod} layers {layers} bloat {bf} enclosed {plan.get('enclosed')}")
+    log(f"DETAIL {die} {mod} layers {layers} bloat {bf} enclosed {plan.get('enclosed')}"
+        + (f" pin windows {pw.get('pins')}" if win else ""))
     out = dict(detailed_lef="detail_view.lef", detailed_receipt="detail_receipt.json", detail_bloat_factor=bf)
     if plan.get("pg_layer"):
         out["detail_pg_layer"] = True
