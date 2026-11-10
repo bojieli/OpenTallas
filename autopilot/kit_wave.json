@@ -314,7 +314,8 @@
     "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
     "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
     "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
-    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key."
+    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_pv_*": "KW-FIX-44 2026-11-10 14:46 PST COORD: kv3_pv_v1/v1n/v3n/v4n/v6n/v12 all FAIL the same place landing-band check; DIE-KV-97 is patching cland_band_fit. Hold every kv3_pv_* row until that fix lands (no relaunch only to fail). Lift = delete this key (prev: hold_items_prev_kw44pvband)."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -2259,7 +2260,21 @@
      "OT_HOLD_STOP_PS": "-200"
     }
    },
-   "note_kw43lr": "KW-FIX-43 2026-11-10 PST (COORD: relaunch the seven LAND-RESERVE rows on the overlay, no merge wait): src = dkv97/src_zb hardlinks + tools/die_plan/{face_flops.tcl f7ae2142, landing_placement.tcl 332861cf, gen_phys.py fa593868}: opt-in OT_LAND_RESERVE=1 (gen_phys writes export OT_LAND_RESERVE = 1 into config.mk; face_flops.tcl reserves the non-ring landing windows before the station grid; landing_placement.tcl grows reader/writer-start and literal-local-reset windows). Unset = byte-identical kit tcl. Private pilot kv3_pv_v2n PLACE PASS (KW43-87). item_env OT_LAND_RESERVE=1 on the 7 rows only. Staged read-only md5-checked epyc7/epyc2 (gen hosts). Revert: src=src_prev_kw43lr, item_env rows from item_env_prev_kw43lr"
+   "note_kw43lr": "KW-FIX-43 2026-11-10 PST (COORD: relaunch the seven LAND-RESERVE rows on the overlay, no merge wait): src = dkv97/src_zb hardlinks + tools/die_plan/{face_flops.tcl f7ae2142, landing_placement.tcl 332861cf, gen_phys.py fa593868}: opt-in OT_LAND_RESERVE=1 (gen_phys writes export OT_LAND_RESERVE = 1 into config.mk; face_flops.tcl reserves the non-ring landing windows before the station grid; landing_placement.tcl grows reader/writer-start and literal-local-reset windows). Unset = byte-identical kit tcl. Private pilot kv3_pv_v2n PLACE PASS (KW43-87). item_env OT_LAND_RESERVE=1 on the 7 rows only. Staged read-only md5-checked epyc7/epyc2 (gen hosts). Revert: src=src_prev_kw43lr, item_env rows from item_env_prev_kw43lr",
+   "hold_items_prev_kw44pvband": {
+    "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key."
+   }
   },
   "s81": {
    "enabled": true,
