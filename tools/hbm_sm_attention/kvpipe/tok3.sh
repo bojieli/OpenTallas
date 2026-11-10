@@ -18,5 +18,10 @@ run tok_skew_m1  KV_SHELL=1 KV_SKEW=-1 python3 -I $U run --kv $KV --stage L0 --L
 run tok_skew_p1  KV_SHELL=1 KV_SKEW=1 python3 -I $U run --kv $KV --stage L0 --L 0 --bundle $B --work $R/w_tok3/pass --out $O/tok_skew_p1.json $CTL
 run tok_dmut2    KV_SHELL=1 python3 -I $U run --kv $KV --stage L0 --L 0 --bundle $B --work $R/w_tok3/pass --out $O/tok_dmut2.json --dmut 2 $CTL
 run tok_uncomp   KV_SHELL=1 ATT_UNIT_DEFINES=OT_KVLINE_UNCOMP python3 -I $U run --kv $KV --stage L0 --L 0 --bundle $B --work $R/w_tok3/pass --out $O/tok_uncomp.json $CTL
+# late-side slack sweep (rev2: KV_SKEW=+1 PASSED = the late side is slack, not a failing control): first late shift
+# that fails = the schedule's late margin + 1
+for k in 2 3 4 6 8; do
+run tok_skew_p$k  KV_SHELL=1 KV_SKEW=$k python3 -I $U run --kv $KV --stage L0 --L 0 --bundle $B --work $R/w_tok3/pass --out $O/tok_skew_p$k.json $CTL
+done
 echo KVPIPE_TOK3_DONE
 

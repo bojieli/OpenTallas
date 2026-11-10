@@ -218,18 +218,18 @@ module ot_hbm_sm_kv_line #(
             if (rwave_end) full[rb] <= 1'b0;
         end
     end
-    // row scales: sc bits 64c .. 64c + 63 and sc1 byte c written under copy c (rf: the control copy)
-    wire [255:0] sc_wd8 = row[8*256 +: 256], sc_wd4 = {128'd0, row[8*512 +: 128]};
+    // row scales: sc bits 64c .. 64c + 63 written under copy c (rf, sc1: the control copy)
     integer is;
     always @(posedge clk) begin
         bb <= bb_n;
         in_q <= s_data;                  // no enable: in_q is read only when in_v (= accepted last cycle)
         for (is = 0; is < NC; is = is + 1) begin
             if (emit_c[is] && !h128_c[is])
-                sc[{wb, wr[2:0]}][64*is +: 64] <= wf4_c[is] ? sc_wd8[64*is +: 64] : sc_wd4[64*is +: 64];
-            if (emit_c[is] && h128_c[is]) sc1[{wb, wr}][8*is +: 8] <= 8'd127;
+                sc[{wb, wr[2:0]}][64*is +: 64] <= wf4_c[is] ? row[8*256 + 64*is +: 64]
+                                                             : (is < 2) ? row[8*512 + 64*is +: 64] : 64'd0;
         end
         if (emit && !h128) rf[{wb, wr[2:0]}] <= wf4;
+        if (emit && h128) sc1[{wb, wr}] <= {4{8'd127}};   // constant data: synthesis folds sc1 (as in rev2), keep this form
     end
     // ---------------- wave buffer: eight 64x512 1R1W macros ----------------
     //   512-dim rows: bank t word {0, 0, wave, row} = beat t of the row (written from the realigner in one edge)

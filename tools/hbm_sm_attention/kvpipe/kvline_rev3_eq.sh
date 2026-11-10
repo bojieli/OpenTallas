@@ -3,9 +3,10 @@
 # (yosys; no bounded simulation):
 #  STEP A  (rev3 alone, -DOT_KVLINE_EQ_COPIES): `sat -tempinduct -prove-asserts` from reset: the 4 per-column copies
 #          g_col[c].{h128_r, wf4_r, in_v_r, fill_r} are equal in every reachable state (k-induction).
-#  STEP B  (rev2 vs the TIED form of rev3, -DOT_KVLINE_EQ_TIED = every column reads copy 3): equiv_make (registers
-#          matched by name; rev2 h128 / wf4 / fill / in_v = copy 3) + equiv_struct + equiv_simple -seq 1 +
-#          equiv_induct -seq 1; equiv_status -assert.
+#  STEP B  (rev2 vs the TIED form of rev3, -DOT_KVLINE_EQ_TIED = every column reads copy 3): every flip-flop of both
+#          is everted (expose -evert-dff: Q = input, D = output, matched by name; rev2 h128 / wf4 / fill / in_v = copy 3),
+#          then equiv_make + equiv_struct + equiv_simple (combinational) + equiv_status -assert: equal next state and
+#          outputs from every equal state.
 #  A + B => rev3 == rev2: in every reachable state of rev3 the copies are equal (A), so reading copy c or copy 3 gives the
 #  same value and rev3 steps exactly as its tied form, which equals rev2 (B).
 #  The 8 SRAM macros are cut in both steps: rd_out (rdat) is a free input (shared by gold and gate in B), their inputs
@@ -25,6 +26,7 @@ CUT='expose -cut w:rdat
 expose w:rce w:raddr w:g_bank[*].we w:g_bank[*].wa w:g_bank[*].wd w:g_bank[*].wm
 delete t:ot_sram_1r1w_64x512_m1_r2c2'
 # ---------------- STEP A ----------------
+[ "${KVL_EQ_SKIP_A:-0}" = 1 ] || {
 cat > "$W/stepA.ys" <<EOF
 read_verilog -sv $W/sram_bb.v
 read_verilog -sv -formal -DOT_KVLINE_EQ_COPIES $T
@@ -43,6 +45,7 @@ EOF
 "$Y" -q -l "$W/stepA.log" -s "$W/stepA.ys" && echo "KVLINE_REV3_EQ STEP_A PASS (copies equal in every reachable state)" \
   || { echo "KVLINE_REV3_EQ STEP_A FAIL (see $W/stepA.log)"; exit 1; }
 grep -E "Induction step proven|induction|SUCCESS|PASSED" "$W/stepA.log" | tail -3 || true
+}
 # ---------------- STEP B ----------------
 sed 's/^module ot_hbm_sm_kv_line #(/module kvl_gold #(/' "$G" > "$W/gold.sv"
 sed 's/^module ot_hbm_sm_kv_line #(/module kvl_tied #(/' "$T" > "$W/tied.sv"
@@ -57,13 +60,20 @@ memory -nomap
 memory_map
 opt_clean
 $CUT
-opt -fast
+# no opt_merge / opt_dff before eversion: merging equal flops renames state and breaks name matching
+opt_expr
+opt_clean
 async2sync
+dffunmap
+opt_clean
+# every flip-flop -> Q input + D output (same names in gold and gate): a combinational check of all next-state
+# functions and outputs from equal states (stronger than reachable-state equivalence)
+expose -evert-dff t:\$dff
+opt_clean
 equiv_make kvl_gold kvl_tied eq
 hierarchy -top eq
 equiv_struct
-equiv_simple -seq 1
-equiv_induct -seq 1
+equiv_simple
 equiv_status
 equiv_status -assert
 EOF
