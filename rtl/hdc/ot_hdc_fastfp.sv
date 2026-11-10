@@ -1,10 +1,3 @@
-`ifndef OT_ARST
- `ifdef OT_S81ENG_SYNC_RST
-  `define OT_ARST(x)
- `else
-  `define OT_ARST(x) or negedge x
- `endif
-`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Low-latency binary32 add and multiply (ot_hdc_qadd / ot_hdc_qmul) for the
@@ -226,7 +219,7 @@ module ot_hdc_fp32_add_fast (
     reg [7:0]  s1_exp;
     reg [23:0] s1_big;
     reg [27:0] s1_small;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= valid_in;
     end
@@ -267,7 +260,7 @@ module ot_hdc_fp32_add_fast (
     reg [31:0] s2_code;
     reg [7:0]  s2_exp;
     reg [26:0] s2_val;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
@@ -288,7 +281,7 @@ module ot_hdc_fp32_add_fast (
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {s2_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (s2_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= s2_v;
@@ -351,7 +344,7 @@ module ot_hdc_fp32_mul_fast (
     reg [1:0]  s1_err;
     reg [48*8-1:0] s1_rows;
     reg signed [11:0] s1_power;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= valid_in;
     end
@@ -388,7 +381,7 @@ module ot_hdc_fp32_mul_fast (
     reg [47:0] s2_prod, s2_mr, s2_ms;
     reg [5:0]  s2_sh;
     reg signed [11:0] s2_fl47, s2_fl46;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
@@ -426,7 +419,7 @@ module ot_hdc_fp32_mul_fast (
     wire sub_carry = is_sub && rnd[23];
     wire [31:0] code = is_sub ? (sub_carry ? {s2_sign, 8'h01, 23'd0} : {s2_sign, 8'h00, rnd[22:0]})
                               : {s2_sign, field, man[22:0]};
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= s2_v;

@@ -1,10 +1,3 @@
-`ifndef OT_ARST
- `ifdef OT_S81ENG_SYNC_RST
-  `define OT_ARST(x)
- `else
-  `define OT_ARST(x) or negedge x
- `endif
-`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // Pipelined binary32 adder, one result per cycle.
@@ -95,7 +88,7 @@ module ot_fp32_add_rne_pipe (
     reg [31:0] s1_code;
     reg [7:0]  s1_exp, s1_dist;
     reg [23:0] s1_big, s1_small;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s1_v <= 1'b0; s1_byp <= 1'b0; s1_sub <= 1'b0; s1_sign <= 1'b0;
             s1_err <= E_NONE; s1_code <= 32'd0; s1_exp <= 8'd0;
@@ -149,7 +142,7 @@ module ot_fp32_add_rne_pipe (
     reg [31:0] s2_code;
     reg [7:0]  s2_exp;
     reg [27:0] s2_big, s2_small;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s2_v <= 1'b0; s2_byp <= 1'b0; s2_sub <= 1'b0; s2_sign <= 1'b0;
             s2_err <= E_NONE; s2_code <= 32'd0; s2_exp <= 8'd0;
@@ -178,7 +171,7 @@ module ot_fp32_add_rne_pipe (
     reg [31:0] s3_code;
     reg [7:0]  s3_exp;
     reg [26:0] s3_val;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s3_v <= 1'b0; s3_byp <= 1'b0; s3_sub <= 1'b0; s3_sign <= 1'b0;
             s3_zero <= 1'b0; s3_err <= E_NONE; s3_code <= 32'd0;
@@ -217,7 +210,7 @@ module ot_fp32_add_rne_pipe (
     reg [31:0] s4_code;
     reg [7:0]  s4_exp;
     reg [26:0] s4_val;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s4_v <= 1'b0; s4_byp <= 1'b0; s4_sign <= 1'b0; s4_zero <= 1'b0;
             s4_err <= E_NONE; s4_code <= 32'd0; s4_exp <= 8'd0; s4_val <= 27'd0;
@@ -244,7 +237,7 @@ module ot_fp32_add_rne_pipe (
     //: Overflow before rounding and after it are both refusals, never infinity.
     wire        s5_over = (s4_exp >= 8'hff) || (s5_exp >= 8'hff);
 
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             y <= 32'd0; err <= E_NONE; valid_out <= 1'b0;
         end else begin

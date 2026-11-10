@@ -55,7 +55,8 @@ module ot_hbm_su_static_lane #(
     parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
     // LDCS = 1 (opt-in, HBM-GAPS-4-L1P 11-05; default 0 keeps g_ld3k): the LEAF offset load (K = 1) in carry-save
     // over the same three cycles: same offsets mod 2^AW, same edges, same banks (g_ld3c below)
-    parameter integer LDCS = 0
+    parameter integer LDCS = 0,
+    parameter integer LD_COPY = 0   // HBM-OPEN-A: 1 = each LDCS stream's p enable comes from its own pin-register copy of ld (ld_sc)
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -63,6 +64,7 @@ module ot_hbm_su_static_lane #(
     input  wire [10:0]       lane_id,   // this lane's index in the unit (a constant at every instance)
     // ---- offsets of an op being set up: lane l's offset is the sum of c[k] over the set bits k of l
     input  wire              ld,
+    input  wire [4:0]        ld_sc,     // per-stream registered copies of ld, same cycle; used only when LD_COPY != 0
     input  wire              ld_bank,
     input  wire [5*LN*AW-1:0] ld_c,     // stream s (A, B, C, D, O), term k: [(s*LN + k)*AW +: AW]
     // ---- emit (E): the controller's vector position and the active op's fields
@@ -424,19 +426,8 @@ module ot_hbm_su_static_lane #(
                 assign cs1[2*jj*AW +: AW] = s1 ^ c1;
                 assign cs1[(2*jj+1)*AW +: AW] = (s1 & c1) << 1;
 `else
-                if (LDCS >= 2 && HI-LO <= 3) begin : g_three_terms
-                    // The fourth term is zero: retain the first carry-save rows.
-                    // s1+c1 equals the four-term sum modulo 2^AW; no edge changes.
-                    assign cs1[2*jj*AW +: AW] = s1;
-`ifdef LDCS_MUT_PRUNE_CARRY
-                    assign cs1[(2*jj+1)*AW +: AW] = c1 >> 1;
-`else
-                    assign cs1[(2*jj+1)*AW +: AW] = c1;
-`endif
-                end else begin : g_four_terms
-                    assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
-                    assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
-                end
+                assign cs1[2*jj*AW +: AW] = s1 ^ c1 ^ t3;
+                assign cs1[(2*jj+1)*AW +: AW] = ((s1 & c1) | (s1 & t3) | (c1 & t3)) << 1;
 `endif
             end
             reg  [6*AW-1:0] p;
@@ -455,12 +446,26 @@ module ot_hbm_su_static_lane #(
             wire          unused_co;
             ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q_s), .b(q_c), .cin(1'b0), .s(s_all), .cout(unused_co));
             assign s_bus[ss*AW +: AW] = s_all;
-            always @(posedge clk_stage[0]) begin
+            // HBM-HARD-9 11-09 (COORD 03:5x): with LD_COPY the first ld reaches p only after reset, so p bits whose cs1 term
+            // is constant (carry-row low bits) stayed unreset X in RTL while synthesis made them constants (LEC 230 differs,
+            // p[120]/p[121]). LD_COPY != 0 resets p to 0, so RTL and netlist agree; LD_COPY = 0 keeps the old flop exactly.
+            if (LD_COPY != 0) begin : g_prst
+                always @(posedge clk_stage[0] or negedge rst_n)
+                    if (!rst_n) p <= {6*AW{1'b0}};
 `ifdef LDCS_MUT_STALE
-                if (ldp_v) p <= cs1;
+                    else if (ldp_v) p <= cs1;
 `else
-                if (ld_e) p <= cs1;
+                    else if (ld_sc[ss]) p <= cs1;
 `endif
+            end else begin : g_pnr
+                always @(posedge clk_stage[0])
+`ifdef LDCS_MUT_STALE
+                    if (ldp_v) p <= cs1;
+`else
+                    if (ld_e) p <= cs1;
+`endif
+            end
+            always @(posedge clk_stage[0]) begin
                 if (ldp_v) begin q_s <= sd; q_c <= cd; end
             end
         end

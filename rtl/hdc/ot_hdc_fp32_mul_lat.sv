@@ -1,10 +1,3 @@
-`ifndef OT_ARST
- `ifdef OT_S81ENG_SYNC_RST
-  `define OT_ARST(x)
- `else
-  `define OT_ARST(x) or negedge x
- `endif
-`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_hdc_fp32_mul_lat #(LAT): the binary32 multiplier of ot_hdc_fp32_mul_fast (rtl/hdc/ot_hdc_fastfp.sv), bit for
@@ -132,7 +125,7 @@ module ot_hdc_fp32_mul_lat #(
     reg [1:0]  s1_err;
     reg [48*8-1:0] s1_rows;
     reg signed [11:0] s1_power;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= p_v;
     end
@@ -192,7 +185,7 @@ module ot_hdc_fp32_mul_lat #(
     reg [47:0] s2_prod, s2_mr, s2_ms;
     reg [5:0]  s2_sh;
     reg signed [11:0] s2_fl47, s2_fl46;
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
         else s2_v <= q_v;
     end
@@ -258,7 +251,7 @@ module ot_hdc_fp32_mul_lat #(
     wire [31:0] e_code;
     assign {e_v, e_byp, e_err, e_over, e_code} = c6;
     generate if (DRST != 0) begin : g_output_reset
-    always @(posedge clk `OT_ARST(rst_n)) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= e_v;
@@ -268,7 +261,7 @@ module ot_hdc_fp32_mul_lat #(
         end
     end
     end else begin : g_output_valid_reset
-        always @(posedge clk `OT_ARST(rst_n)) begin
+        always @(posedge clk or negedge rst_n) begin
             if (!rst_n) valid_out <= 1'b0;
             else valid_out <= e_v;
         end
@@ -309,7 +302,7 @@ endmodule
 
 // KCP copy of the C1 operand register: kept (SYNTH_KEEP_MODULES) so equal-D copies are never merged into one driver
 module ot_hdc_mul_kcp48 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
-    always @(posedge clk `OT_ARST(rst_n)) if (!rst_n) q <= 48'd0; else q <= d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 48'd0; else q <= d;
 endmodule
 
 // ot_hdc_mul24_rows with the operands supplied as K copies: partial product i reads copy i*K/24 (identical values)
