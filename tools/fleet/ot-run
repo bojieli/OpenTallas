@@ -247,11 +247,20 @@ SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "
                    "test -d $r/claude && echo OT_SCRATCH_DEV $r $(stat -L -c %d $r/claude); done; "
                    "echo OT_DIR_DEV $(stat -L -c %d \"$t\" 2>/dev/null); "
                    "echo OT_ROOTFS $(df --output=pcent / | tail -1 | tr -dc 0-9) $(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
-                   "echo OT_DIR_ONROOT $([ \"$(stat -L -c %d \"$t\" 2>/dev/null)\" = \"$rd\" ] && echo 1 || echo 0); ")
+                   "echo OT_DIR_ONROOT $([ \"$(stat -L -c %d \"$t\" 2>/dev/null)\" = \"$rd\" ] && echo 1 || echo 0); "
+                   # KW-FIX-43 11-09 ROOTREAL: the real path of the --dir (symlinked scratch2 lane -> scratch3)
+                   "echo OT_DIR_REAL $(readlink -f \"$t\" 2>/dev/null); ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
 SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
+# KW-FIX-42 11-09 (COORD 08:3x): per-host scratch-disk floor "host=gb,..." (epyc4=50 while the wave keeps 100 elsewhere).
+SCRATCH_DISK_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
+    "OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS", "").split(",")) if k.strip() and v.strip()}
+
+
+def sfloor(host=None):
+    return SCRATCH_DISK_FLOOR_GB_HOSTS.get(host, SCRATCH_DISK_FLOOR_GB)
 # QUEUE-BAL-2 11-05 (COORD 21:2x, OWNER 11-05 every disk is scratch): a SECOND root on the root fs (scratch3 bind) only
 # needs this much USABLE space (free - its per-host root floor).  The root floor (epyc 150, intel 150, epyc5/6 100) is
 # already the reserve; demanding SCRATCH_DISK_FLOOR_GB on top refused intel2 at 21:2x (scratch2 29 GB, root 197 GB free,
@@ -297,6 +306,8 @@ def scratch_disk(row, d, out, host=None):
             extra["host_name"] = host
         elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
             extra["dir_onroot"] = f[1] == "1"
+        elif len(f) == 2 and f[0] == "OT_DIR_REAL":
+            extra["dir_real"] = f[1]
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
     rfl = root_floor(host)                                    # ROOTSCR-INTEL: per-host root floor
     second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in ROOT_SCRATCH_ROOTS}
@@ -307,7 +318,8 @@ def scratch_disk(row, d, out, host=None):
         extra.update(scratch_disk=max(disk_roots, key=disk_roots.get), scratch_disk_gb=max(disk_roots.values()))
         roots = disk_roots
         sr = SCRATCH_PIN if SCRATCH_PIN in second else (max(second, key=second.get) if second else None)
-        if sr and (sr == SCRATCH_PIN or (extra["scratch_disk_gb"] < SCRATCH_DISK_FLOOR_GB
+        extra["scratch_floor_gb"] = sfloor(host)
+        if sr and (sr == SCRATCH_PIN or (extra["scratch_disk_gb"] < sfloor(host)
                                          and second[sr] >= SCRATCH_SECOND_FLOOR_GB)):
             extra.update(scratch_disk=sr, scratch_disk_gb=second[sr], scratch_second=True, root_floor_gb=rfl)
             roots = {sr: second[sr]}                          # new run dirs go to the second root
@@ -327,7 +339,9 @@ def scratch_disk(row, d, out, host=None):
     own = row["disk_gb"]
     row["disk_own_gb"] = own
     if row.get("dir_onroot"):
-        authorized = next((r for r in second if os.path.normpath(d) == r or os.path.normpath(d).startswith(r + "/")), None)
+        # KW-FIX-43 ROOTREAL: the spelled path or its real path on the host (readlink -f) must lie under an authorized root
+        authorized = next((r for r in second for p in {os.path.normpath(d), os.path.normpath(row.get("dir_real") or d)}
+                           if p == r or p.startswith(r + "/")), None)
         if not authorized:
             row["disk_refusal"] = "--dir is on the ROOT filesystem without an explicit root scratch exception"
             return row
@@ -377,8 +391,9 @@ def host_refusal(row):
     elif pct is not None and pct > lim and not dir_off_root:
         return (f"ROOT FS {pct}% full > {lim}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
                 f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
-    if row.get("scratch_disk") and not row.get("scratch_second") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
-        return (f"scratch disk {row['scratch_disk']} has {row['scratch_disk_gb']} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB "
+    fl = row.get("scratch_floor_gb", SCRATCH_DISK_FLOOR_GB)
+    if row.get("scratch_disk") and not row.get("scratch_second") and row.get("scratch_disk_gb", 0) < fl:
+        return (f"scratch disk {row['scratch_disk']} has {row['scratch_disk_gb']} GB free < floor {fl} GB "
                 f"(the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)")
     return ""
 
@@ -391,7 +406,7 @@ def dir_disk_full(row):
     the floor, but this job's --dir is ON that full disk and the job writes into its --dir: keep the data's host only as a
     spill source (epyc5/epyc6 run it), never fill the full disk further.  '' when the job may run here."""
     own = row.get("disk_own_gb") if isinstance(row, dict) else None
-    if not (row.get("scratch_second") and own is not None and own < SCRATCH_DISK_FLOOR_GB):
+    if not (row.get("scratch_second") and own is not None and own < row.get("scratch_floor_gb", SCRATCH_DISK_FLOOR_GB)):
         return ""
     return (f"{DIR_FULL_NOTE} ({own} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB); new work here goes to "
             f"{row.get('scratch_disk')} only")
@@ -985,7 +1000,7 @@ def scratch_env(host=None):
                # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
                "case ' " + " ".join(ROOT_SCRATCH_ROOTS) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
-               "awk -v fl=" + str(SCRATCH_DISK_FLOOR_GB) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
+               "awk -v fl=" + str(sfloor(host)) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
                "if ($3==pin && ($1==0 || ($1==2 && $2>=sfl))) pr=$3} "
                "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=sfl) {print 0, bsr; exit} "
@@ -1155,7 +1170,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
     pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(ROOT_SCRATCH_ROOTS))} '
           f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
-    return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={SCRATCH_DISK_FLOOR_GB} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
+    return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={sfloor(host)} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
             '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '
             f'[ $prc = 3 ] && {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; ')
@@ -1561,7 +1576,8 @@ SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hos
 # here needs that much root free; any other spill needs the host's scratch disk above SPILL_DST_SCRATCH_FLOOR.  The host comes
 # back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
 SPILL_DST_ROOT_FLOOR = {"epyc2": 150, "epyc7": 150, "epyc8": 150}   # OWNER 11-06 22:4x: 150 (was 500)
-SPILL_DST_SCRATCH_FLOOR = {"epyc2": 140, "intel1": 100, "intel2": 100, "localhost": 100}   # epyc2 80 -> 140 KW-FIX-8 11-04 (COORD: scratch2 118 GB, 30 GB/h)
+SPILL_DST_SCRATCH_FLOOR = {"epyc2": 140, "intel1": 50,  # KW-FIX-42 11-09 COORD 08:5x(4): intel1 50 (dedicated nvme scratch2; was 100)
+    "intel2": 100, "localhost": 100}   # epyc2 80 -> 140 KW-FIX-8 11-04 (COORD: scratch2 118 GB, 30 GB/h)
 # COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
 SPILL_DST_SCRATCH_FLOOR_ECO = {"epyc2": 50}
 SPILL_ECO_RE = re.compile(r"eco_loop|late_eco|(^|[/_.-])eco($|[/_.-]|\s)")
