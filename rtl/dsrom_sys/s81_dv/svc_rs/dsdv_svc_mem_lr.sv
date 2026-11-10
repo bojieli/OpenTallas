@@ -7,8 +7,9 @@
 //   N = the entry rp + 1: two generated 1R1W banks (even / odd entries) read, at every edge, the rows of parity b among
 //       {rp + 1, rp + 2} of the pointer before the edge; the new pointer is rp or rp + 1, so N = the bank of parity
 //       (rp + 1)[0] (+ a same-edge write bypass: read-first macros).
-//   H <= (write to entry rp_n at this edge) ? wd : (rp_n != rp) ? N : H        (rp_n = the pointer's D input)
-// The pointer's next-state cone drives only the H load select, never a macro address (the address is the rp flop + 1/2).
+//   H <= (write to entry rp_n at this edge) ? wd : adv ? N : H        (rp_n = rp + adv, the pointer's next value)
+// The write-hit test is adv ? (wa == rp + 1) : (wa == rp), both from flops, so the advance (the scanner decision) only
+// drives the final selects, never an adder or comparator; it never drives a macro address (rp flop + 1/2).
 // H is the flop-array word whenever the entry is readable: after a reset the pointer is 0 and the first write to entry
 // 0 loads H; a stale H is never read while the FIFO is empty (the scanner is gated by sw_have).
 //   DEPTH = 2^AW (pointer wraps), each bank DEPTH / 2 <= 32 entries on ot_sram_1r1w_32x128_m1_r0c0.
@@ -20,7 +21,7 @@ module dsdv_svc_mem_lr #(
 )(
     input  wire          clk,
     input  wire [AW-1:0] rp,
-    input  wire [AW-1:0] rp_n,
+    input  wire          adv,                      // the pointer steps to rp + 1 at this edge
     input  wire          we,
     input  wire [AW-1:0] wa,
     input  wire [W-1:0]  wd,
@@ -31,6 +32,8 @@ module dsdv_svc_mem_lr #(
     localparam integer RW = AW - 1;
     wire [AW-1:0] rp1 = rp + 1'b1;
     wire [AW-1:0] rp2 = rp + 2'd2;
+    wire [AW-1:0] rp_n = rp + AW'(adv);
+    wire hit0 = we && wa == rp, hit1 = we && wa == rp1;
     reg  [1:0] byp_v;
     reg  [W-1:0] byp_d [0:1];
     wire [N*MW-1:0] wdp = (N*MW)'(wd);
@@ -58,21 +61,19 @@ module dsdv_svc_mem_lr #(
     wire nsel = (MUT == 2) ? rp[0] : rp1[0];
     wire [W-1:0] n_w = byp_v[nsel] ? byp_d[nsel] : rdb[nsel][W-1:0];
     always @(posedge clk)
-        if (MUT != 1 && we && wa == rp_n) h <= wd;
-        else if (rp_n != rp) h <= n_w;
+        if (MUT != 1 && (adv ? hit1 : hit0)) h <= wd;
+        else if (adv) h <= n_w;
     assign rd = h;
 `ifdef OT_SVC_MEM_COV
     integer cov_w = 0, cov_mv = 0, cov_rd = 0, cov_byp = 0;
     always @(posedge clk) begin
         if (we) cov_w <= cov_w + 1;
-        if (rp_n != rp) cov_mv <= cov_mv + 1;
+        if (adv) cov_mv <= cov_mv + 1;
         if (cov_w > 0 && rd != 0) cov_rd <= cov_rd + 1;
-        if (byp_v != 0 || (we && wa == rp_n)) cov_byp <= cov_byp + 1;
+        if (byp_v != 0 || (adv ? hit1 : hit0)) cov_byp <= cov_byp + 1;
     end
     final $display("MEM_COV %m writes=%0d ptr_moves=%0d nonzero_reads=%0d bypass=%0d", cov_w, cov_mv, cov_rd, cov_byp);
 `endif
 `ifndef SYNTHESIS
-    always @(posedge clk) if (rp_n != rp && rp_n != rp + 1'b1 && $time > 20)
-        $display("dsdv_svc_mem_lr %m: pointer stepped by more than 1 (%0d -> %0d)", rp, rp_n);
 `endif
 endmodule

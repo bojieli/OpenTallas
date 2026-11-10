@@ -46,7 +46,7 @@ module tb_svc_mem_ar;
     wire [4:0] d_rpn = d_adv ? d_rp + 1'b1 : d_rp;
     wire [511:0] e_rd;
     reg e_ok = 0; integer lr_chk = 0, lr_err = 0;
-    dsdv_svc_mem_lr #(.W(512), .AW(5), .MUT(MUT)) u_e (.clk(clk), .rp(d_rp), .rp_n(d_rpn), .we(d_we), .wa(d_wp), .wd(d_wd), .rd(e_rd));
+    dsdv_svc_mem_lr #(.W(512), .AW(5), .MUT(MUT)) u_e (.clk(clk), .rp(d_rp), .adv(d_adv), .we(d_we), .wa(d_wp), .wd(d_wd), .rd(e_rd));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) e_ok <= 0; else if ((d_we && d_wp == d_rpn) || d_adv) e_ok <= 1;
 

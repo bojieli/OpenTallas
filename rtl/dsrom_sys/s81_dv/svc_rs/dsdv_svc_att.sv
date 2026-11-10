@@ -278,7 +278,19 @@ module dsdv_svc_att #(
     function automatic [4:0] pcmap(input [29:0] s);
         reg [29:0] x; x = (s >> 2) ^ (s >> 7) ^ (s >> 12); pcmap = x[4:0];
     endfunction
+`ifdef OT_SVC_ATT_RDPIPE
+    // the window ring base as a flop, computed from the D inputs of wb / wuser (cycle-exact: ring_r == wb + 68 * wuser
+    // at every edge after the reset); the qrq window / scale requests start at a flop (was wuser -> 68 x + add -> qrq).
+    wire [29:0] wb_d = (hdr_mine && h_type == 4'd12) ? q_d[29:0] : wb;
+    wire [9:0] wuser_d = (start && !job_open) ? q_d[458:449] : wuser;
+    reg [29:0] ring_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) ring_r <= 30'd0;
+        else ring_r <= wb_d + 30'(wuser_d) * 30'd68;
+    wire [29:0] ring = ring_r;
+`else
     wire [29:0] ring = wb + 30'(wuser) * 30'd68;
+`endif
 
     // ------------------------------------------------------------------ write FIFOs per PC: OWN_ROW codes / scales, host
     // depth 8 each (OWN_ROW: 1 code + 1 scale write per 17-word frame; host: <= 8 words in flight on the 8 host credits)
@@ -366,7 +378,13 @@ module dsdv_svc_att #(
         if (!rst_n) dp_r <= 2'(DIE_ID);
         else if (RX && hdr_mine && h_type == 4'd12 && q_d[57]) dp_r <= q_d[56:55];
     wire g_own = sid_g[5:4] == (RX ? dp_r : 2'(DIE_ID)) && sid_g[7:6] == st_r;
+`ifdef OT_SVC_ATT_RDPIPE
+    // both PCs' full flags from the pointer flops, then the sid select (was the select in front of the subtract)
+    wire [1:0] f_full2 = {(fq_w[1] - fq_r[1]) >= 5'd16, (fq_w[0] - fq_r[0]) >= 5'd16};
+    wire f_full = f_full2[sid_g[8]];
+`else
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
+`endif
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
 `ifdef OT_SVC_ATT_RDPIPE
     // DIE-S81-85 read-data retime (11-09): a head register per PC holds the head entry fq[p][fq_r[p]] (raw
@@ -629,23 +647,23 @@ module dsdv_svc_att #(
     // (dsdv_svc_mem_la: macro address from the sw_r flop only; TT pre-route of the ar form was -107 ps at 833 ps)
 `ifdef OT_SVC_ATT_RDPIPE
     // read-data retime (11-09): the word is a flop (dsdv_svc_mem_lr), so the scanner decision starts at a flop, not
-    // at the macro clk->q; the load select is the pointer's D input (sw_r_n), the macro address the sw_r flop + 1 / 2.
+    // at the macro clk->q; the load select is the advance (sw_adv), the macro address the sw_r flop + 1 / 2.
 `ifdef OT_SVC_ATT_RDPIPE_MUT1
     localparam integer LR_MUT = 1;                   // negative control: the write into the held entry is not captured
 `else
     localparam integer LR_MUT = MEM_MUT;
 `endif
     wire sw_adv = sw_step && (sw_i == 5'd15 || sw_i + 1'b1 >= sw_nc);
-    wire [4:0] sw_r_n = sw_r[4:0] + 5'(sw_adv);
     dsdv_svc_mem_lr #(.W(512), .AW(5), .MUT(LR_MUT)) u_sw_mem (
-        .clk(clk), .rp(sw_r[4:0]), .rp_n(sw_r_n), .we(sel_pay), .wa(sw_w[4:0]), .wd(q_d), .rd(swd));
+        .clk(clk), .rp(sw_r[4:0]), .adv(sw_adv), .we(sel_pay), .wa(sw_w[4:0]), .wd(q_d), .rd(swd));
     // the current entry's count / base as flops, loaded like the word H (the 32:1 sw_n / sw_base mux at the sw_r flop
-    // was in front of sw_adv -> the H load enables, TT -173 ps): write into entry sw_r_n -> the written value, else on
-    // an advance the entry sw_r + 1 (read from the flop arrays at the sw_r flop).
+    // was in front of sw_adv -> the H load enables, TT -173 ps): write into entry sw_r + sw_adv -> the written value, else on
+    // an advance the entry sw_r + 1 (read from the flop arrays at the sw_r flop); the write-hit tests are from flops.
     reg [4:0] sw_nh; reg [9:0] sw_bh;
     wire [4:0] sw_r1 = sw_r[4:0] + 5'd1;
+    wire nb_h0 = sel_pay && sw_w[4:0] == sw_r[4:0], nb_h1 = sel_pay && sw_w[4:0] == sw_r1;
     always @(posedge clk)
-        if (LR_MUT != 1 && sel_pay && sw_w[4:0] == sw_r_n) begin sw_nh <= sw_pay_n; sw_bh <= sw_pay_b; end
+        if (LR_MUT != 1 && (sw_adv ? nb_h1 : nb_h0)) begin sw_nh <= sw_pay_n; sw_bh <= sw_pay_b; end
         else if (sw_adv) begin sw_nh <= sw_n[sw_r1]; sw_bh <= sw_base[sw_r1]; end
     assign sw_nc = sw_nh; assign sw_bc = sw_bh;
 `else
