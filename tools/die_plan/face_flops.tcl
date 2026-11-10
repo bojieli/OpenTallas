@@ -604,18 +604,35 @@ foreach bt [$ff_blk getBTerms] {
 # capture station = Q load): the latch -> capture half hop must fit T/2 - W of setup (gen_rtl.ft_hop_lockup).  A latch
 # whose stations are not both found stays to GPL (counted).  The latches are the ones the station walks above passed
 # (::ff_hl_seen), so a design without hop latches does no extra work.
+# DIE-HBM-97/SPB 11-09 (q_spb1 a5 TT -18.25: latch u_fl_L720x3_o_2 on clk_t14 at 310 ps insertion -> u_ft_L720x3_o_3 on
+# clk_t9 at 200 ps, tap window W 160: T/2 - W + 200 - 310 - setup = 138 ps for latch D->Q 46 + a 150-um half hop 110):
+# OT_HOP_LATCH_FRAC f (0 < f <= 1, config.mk) sites the latch at launch + f * (capture - launch).  f near 1 puts the long
+# wire into the launch -> latch leg (full cycle, intra-tap: launch and latch share the launch tap) and leaves the
+# half-cycle cross-tap latch -> capture leg local.  Unset = the midpoint, byte-identical to the 11-06 form.
+set ff_hl_frac ""
+if {[info exists ::env(OT_HOP_LATCH_FRAC)] && $::env(OT_HOP_LATCH_FRAC) ne ""} {
+  set ff_hl_frac $::env(OT_HOP_LATCH_FRAC)
+  if {![string is double -strict $ff_hl_frac] || $ff_hl_frac <= 0 || $ff_hl_frac > 1} {
+    error "OT_HOP_LATCH_FRAC must be a number in (0, 1], got '$ff_hl_frac'"
+  }
+}
 set ff_hl 0; set ff_hl_miss 0
 if {![info exists ::ff_hl_seen]} { set ::ff_hl_seen {} }
 foreach i [dict values $::ff_hl_seen] {
   set a [ff_d_driver $i]; set b [ff_from_in [ff_pin_net $i Q] 0]
   if {$a eq "" || $b eq ""} { incr ff_hl_miss; continue }
   lassign [$a getLocation] ax ay; lassign [$b getLocation] bx by
-  set got [ff_put_near $i [expr {($ax + $bx) / 2}] [expr {($ay + $by) / 2}]]
+  if {$ff_hl_frac eq ""} {
+    set got [ff_put_near $i [expr {($ax + $bx) / 2}] [expr {($ay + $by) / 2}]]
+  } else {
+    set got [ff_put_near $i [expr {round($ax + $ff_hl_frac * ($bx - $ax))}] [expr {round($ay + $ff_hl_frac * ($by - $ay))}]]
+  }
   if {$got eq ""} { incr ff_hl_miss; continue }
   puts $ff_out "[$i getName]\thl\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t[$a getName]"
   incr ff_hl
 }
-if {$ff_hl || $ff_hl_miss} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at their hop midpoints ($ff_hl_miss without both stations)" }
+if {($ff_hl || $ff_hl_miss) && $ff_hl_frac eq ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at their hop midpoints ($ff_hl_miss without both stations)" }
+if {($ff_hl || $ff_hl_miss) && $ff_hl_frac ne ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at launch + $ff_hl_frac of their hops (OT_HOP_LATCH_FRAC; $ff_hl_miss without both stations)" }
 close $ff_out
 close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"

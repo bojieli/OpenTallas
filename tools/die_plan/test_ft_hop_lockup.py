@@ -153,6 +153,31 @@ def test_face_flops_walks_through_hop_latch_and_places_it_mid_hop(pfx):
 
 
 @pytest.mark.skipif(not shutil.which("tclsh"), reason="no tclsh")
+def test_face_flops_hop_latch_frac_sites_latch_toward_capture():
+    """DIE-HBM-97/SPB 11-09: OT_HOP_LATCH_FRAC moves the latch to launch + f * hop; the station sites do not move."""
+    out = _ff_run(True, "", "set ::env(OT_HOP_LATCH_FRAC) 0.85\n")
+    assert "RESULT st=2 miss=0 hl=2 hlmiss=0" in out, out
+    st = {r[1]: float(r[2]) for r in (ln.split("\t") for ln in out.splitlines()) if r[1:2] and r[1].startswith("st")}
+    assert st == {"st1": 100.0, "st2": 200.0}, out
+    hl = [ln.split("\t") for ln in out.splitlines() if "\thl\t" in ln]
+    assert [(r[0].split("/")[0], float(r[2])) for r in hl] == [("u_fl_tx_s0", 85.0), ("u_fl_tx_s1", 185.0)], hl
+    assert "launch + 0.85 of their hops" in out, out
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="no tclsh")
+@pytest.mark.parametrize("bad", ["0", "1.5", "-0.2", "mid"])
+def test_face_flops_hop_latch_frac_rejects_out_of_range(bad, tmp_path):
+    a = FF.index("set ff_st 0; set ff_st_miss 0")
+    body = (MOCK + _procs(FF) + "\nproc ff_put_near {f x y} { return [list $x $y] }\n"
+            + "design 1 {}\nset ff_done {}\nset ff_ft [dict create tx [list 3 W E {}]]\n"
+            + f"set ::env(OT_HOP_LATCH_FRAC) {bad}\n" + FF[a:FF.index("close $ff_out", a)])
+    (tmp_path / "ff.tcl").write_text(body)      # a script file: tclsh stops at the first error (stdin goes on)
+    r = subprocess.run(["tclsh", str(tmp_path / "ff.tcl")], text=True, capture_output=True)
+    assert r.returncode != 0 and "OT_HOP_LATCH_FRAC must be a number in (0, 1]" in r.stderr, r.stdout + r.stderr
+    assert "\thl\t" not in r.stdout, r.stdout
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="no tclsh")
 def test_face_flops_unlatched_unchanged():
     out = _ff_run(False)
     assert "RESULT st=2 miss=0 hl=0 hlmiss=0" in out, out
