@@ -14,6 +14,10 @@ hierarchy parent ot_hfd_coll_q{2,3}_hard_v5 (H-NETLIST/COLL 1045, V5 issue timin
                 effect, busy, done, injects, VM requests, rails, deliveries) is +5 (SH).  Host launch -> first uop
                 effect: 5 -> 10 edges.  The programme target's occupancy view of the issuer is UNCHANGED (the issuer
                 exports busy | start_q), so frame/descriptor/launch legality windows are as before.
+  q3bc CF2      (HBM-CORES-B 11-10, parent hard_v5_q3cf2) the body_ctl conservative form registers the u_flow read and
+                check_row before the row_bad compare: the descriptor-scan END (configured rise / init_busy fall / scan fault)
+                is 1 edge later; checking-style rejects are held over that edge.  Nothing else moves, so only
+                descriptor_scan_end_shift_edges and the descriptor -> launch gap change (+1).
   child faults  registered once more at the fj pins: host-visible fault = (V4 edge) + SH + 1 for a fault raised on the
                 issue path; a programme-frame fault is + SHP.
 
@@ -51,6 +55,7 @@ HOST_V4 = {
     "issue_path_shift_edges": 0,                # every issue-path output (busy/done/injects/VM/rails/deliveries)
     "child_fault_extra_edges": 0,               # child fault -> host fault, beyond the issue-path shift
     "program_fault_shift_edges": 0,
+    "descriptor_scan_end_shift_edges": 0,       # configured / init_busy fall / scan fault at the END of descriptor validation
 }
 
 
@@ -69,7 +74,10 @@ def _hard_v5(sh: int, shp: int) -> dict:
 
 
 HARD_V5 = _hard_v5(5, 1)          # tb_hgi_coll_q_hard_v5.sv COLLPIN: SH=5, SHP=1, child fault +SH+1 (V6 SH=4; V5 5bb671b57 SH=3)
-PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5}
+CF2_SCAN_END_SHIFT = 1          # q3bc CF2 lockstep (tools/hbm_coll_static/q3bc_cf2/gen_cf2_tb.py: gate scan end = gold + 1)
+HARD_V5_Q3CF2 = dict(HARD_V5, parent="hard_v5_q3cf2", descriptor_scan_end_shift_edges=CF2_SCAN_END_SHIFT,
+                     host_descriptor_to_launch_gap_edges=HOST_V4["host_descriptor_to_launch_gap_edges"] + CF2_SCAN_END_SHIFT)
+PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5, "hard_v5_q3cf2": HARD_V5_Q3CF2}
 
 
 def constants(parent: str = "host_v4") -> dict:
@@ -95,6 +103,15 @@ def check(parent: str, c: dict, tb: Path = TB) -> list:
     """failures of constants c for parent against the evidence (host_v4: the identity; hard_v5: the lockstep bench)"""
     if parent == "host_v4":
         return [f"{k}: {c.get(k)} != host_v4 {v}" for k, v in HOST_V4.items() if k != "parent" and c.get(k) != v]
+    if parent == "hard_v5_q3cf2":
+        base = {k: v for k, v in c.items() if k not in ("parent", "descriptor_scan_end_shift_edges", "host_descriptor_to_launch_gap_edges")}
+        bad = check("hard_v5", dict(HARD_V5, **base), tb)
+        if c.get("descriptor_scan_end_shift_edges") != CF2_SCAN_END_SHIFT:
+            bad.append(f"descriptor_scan_end_shift_edges: compiled {c.get('descriptor_scan_end_shift_edges')} but q3bc CF2 is +{CF2_SCAN_END_SHIFT}")
+        g = HOST_V4["host_descriptor_to_launch_gap_edges"] + CF2_SCAN_END_SHIFT
+        if c.get("host_descriptor_to_launch_gap_edges") != g:
+            bad.append(f"host_descriptor_to_launch_gap_edges: compiled {c.get('host_descriptor_to_launch_gap_edges')} but q3bc CF2 needs {g}")
+        return bad
     if parent != "hard_v5":
         return [f"unknown parent {parent}"]
     e = tb_facts(tb)
@@ -116,10 +133,15 @@ def selftest(tb: Path = TB) -> dict:
     pos = check("hard_v5", constants("hard_v5"), tb)
     neg = check("hard_v5", constants("host_v4"), tb)
     v4 = check("host_v4", constants("host_v4"), tb)
-    ok = not pos and bool(neg) and not v4
+    cf2 = check("hard_v5_q3cf2", constants("hard_v5_q3cf2"), tb)
+    cf2_neg = check("hard_v5_q3cf2", constants("hard_v5"), tb)
+    ok = not pos and bool(neg) and not v4 and not cf2 and bool(cf2_neg)
     return {"positive_hard_v5": "PASS" if not pos else pos,
             "negative_hard_v5_with_v4_constants": "FAIL (as required): " + "; ".join(neg) if neg else "SURVIVED",
-            "host_v4_unchanged": "PASS" if not v4 else v4, "facts": tb_facts(tb),
+            "host_v4_unchanged": "PASS" if not v4 else v4,
+            "positive_hard_v5_q3cf2": "PASS" if not cf2 else cf2,
+            "negative_q3cf2_with_hard_v5_constants": "FAIL (as required): " + "; ".join(cf2_neg) if cf2_neg else "SURVIVED",
+            "facts": tb_facts(tb),
             "verdict": "PARENT_TIMING_SELFTEST PASS" if ok else "PARENT_TIMING_SELFTEST FAIL"}
 
 

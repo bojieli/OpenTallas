@@ -15,6 +15,7 @@
 `endif
 module tb_q3prog_trace;
  localparam integer NLINK=3, VM_RT=81, VMLAT=VM_RT, ROWS=256;
+ integer LGAP=ROWS+8, CHECKONLY=0;
  localparam [15:0] VB=16'h0400,VS=16'h0020;localparam [39:0] OBASE_A=40'h41000000,DSTRIDE=40'h40;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,launch=0,cv=0,dvc=0;
@@ -162,9 +163,10 @@ module tb_q3prog_trace;
     $display("Q3PROG FAIL run %s host row %0d drain (init_busy%0d program_fault%0d)",run,r,init_busy,program_fault);
     $fclose(tfd);$finish;end
   end
-  @(negedge clk);dvc=1;@(negedge clk);dvc=0;repeat(ROWS+8)@(negedge clk);
+  @(negedge clk);dvc=1;@(negedge clk);dvc=0;repeat(LGAP)@(negedge clk);  // LGAP default ROWS+8 (+LGAP= for the scan-end +-1 control)
   if(!configured || program_fault)begin
-   $display("Q3PROG FAIL run %s descriptor configured%0d program_fault%0d",run,configured,program_fault);$fclose(tfd);$finish;end
+   $display("Q3PROG FAIL run %s descriptor configured%0d program_fault%0d LGAP%0d",run,configured,program_fault,LGAP);$fclose(tfd);$finish;end
+  if(CHECKONLY)begin $display("Q3PROG GAP LGAP%0d configured%0d program_fault%0d",LGAP,configured,program_fault);$fclose(tfd);$finish;end
   clear_sb();
   @(negedge clk);launch=1;@(negedge clk);launch=0;
  endtask
@@ -188,6 +190,7 @@ module tb_q3prog_trace;
   integer t0;
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"missing +DIR");
   if(!$value$plusargs("TRACE=%s",tracef))$fatal(1,"missing +TRACE");
+  void'($value$plusargs("LGAP=%d",LGAP));void'($value$plusargs("CHECKONLY=%d",CHECKONLY));
   void'($value$plusargs("P=%d",P));void'($value$plusargs("MAXC=%d",MAXC));
   void'($value$plusargs("WARMAT=%d",WARMAT));void'($value$plusargs("HOLD=%d",HOLD));
   if(!$value$plusargs("NR=%d",NR))$fatal(1,"missing +NR");

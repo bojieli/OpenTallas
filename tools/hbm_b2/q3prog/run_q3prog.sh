@@ -46,7 +46,14 @@ s=[]
 [s.append(e['source']) for e in c['emitted'] if e['emitted'] in fl and e['source'] not in s]
 print(' '.join(s))")
   files="$ASMF $files"; DEF=+define+DUT=ot_hbm_q3_producer_native
+  if [ "${BODY_FORM:-}" = q3bc_cf2 ]; then    # HBM-CORES-B 11-10: body_core in the q3bc CF2 form, generated at HEAD
+    BC=rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv
+    echo " $files " | grep -q " $BC " || { echo "BODY_FORM: $BC not in the file list"; exit 2; }
+    tools/hbm_coll_static/q3bc_cf2/apply_cf2.sh $BC "$D/ot_hfd_coll_q3_body_core__cf2.sv" > "$D/body_form.log" 2>&1 || { cat "$D/body_form.log"; exit 2; }
+    files=$(echo " $files " | sed "s# $BC # $D/ot_hfd_coll_q3_body_core__cf2.sv #")
+  fi
 fi
+[ -n "${BODY_FORM:-}" ] && [ $MODE != legacy ] && { echo "BODY_FORM needs legacy mode"; exit 2; }
 log=$D/sim.log
 echo "# $(date) host=$(hostname) commit=$(git rev-parse HEAD) mode=$MODE P=$P NR=$NR WARMAT=$WARMAT HOLD=$HOLD" > $log
 echo "# files: $(echo $files $mac | wc -w)" >> $log
@@ -55,6 +62,9 @@ echo "# files: $(echo $files $mac | wc -w)" >> $log
  --Mdir $D/obj -o tb tools/hbm_b2/q3prog/tb_q3prog_trace.sv $files $mac > $D/build.log 2>&1
 brc=$?; echo "# build rc=$brc $(grep 'Maximum resident' $D/build.log)" >> $log
 [ $brc = 0 ] || { tail -30 $D/build.log; echo "Q3PROG build FAIL"; exit 2; }
+for G in ${GAPS:-}; do   # scan-end control: stop right after the configured check at descriptor + G edges
+  $D/obj/tb +DIR=$D/prog +P=$P +NR=$NR +LGAP=$G +CHECKONLY=1 +TRACE=$D/gap_$G.txt 2>&1 | grep -E "^Q3PROG (GAP|FAIL)" | tee -a $D/gaps.log
+done
 /usr/bin/time -v $D/obj/tb +DIR=$D/prog +P=$P +NR=$NR +WARMAT=$WARMAT +HOLD=$HOLD +TRACE=$D/trace.txt >> $log 2>&1
 simrc=$?
 echo "# sim rc=$simrc $(date)" >> $log

@@ -78,6 +78,17 @@ def encode_program(rows: dict[int, tuple[int, int]], qid: int, base: int, limit:
                            'next_frame_gap_edges':55 if segment == 6 else 1})
     # F24 increments the frame address. Segment7 is reserved, so F20 selects
     # each next row explicitly instead of silently streaming through address7.
+    gap = 66                       # host_v4 / hard_v5; a parent may lengthen it (hard_v5_q3cf2: scan end +1 -> 67)
+    if parent != 'host_v4':
+        import sys as _sys
+        from pathlib import Path as _P
+        _sys.path.insert(0, str(_P(__file__).resolve().parent))
+        import parent_timing as PT
+        c = PT.constants(parent)
+        bad = PT.check(parent, c)
+        if bad:
+            raise ValueError(f'{parent} timing constants disagree with the lockstep evidence: {bad}')
+        gap = c['host_descriptor_to_launch_gap_edges']
     csr = []
     for row in sorted(rows):
         csr.append({'op':'write32','address_hex':'f20','data_hex':f'{(row*8<<8)|(52+qid):08x}'})
@@ -89,24 +100,16 @@ def encode_program(rows: dict[int, tuple[int, int]], qid: int, base: int, limit:
     csr.extend([
         {'op':'write32','address_hex':'f28','data_hex':f'{(limit<<12)|base:08x}'},
         {'op':'write32','address_hex':'f2c','data_hex':'00000001'},
-        {'op':'idle_core_edges','edges':66,'anchor':'after acknowledgement of F2C descriptor write'},
+        {'op':'idle_core_edges','edges':gap,'anchor':'after acknowledgement of F2C descriptor write'},
     ])
     out = {'abi':'hcoll-f20-1536-v1', 'descriptor_units':'instructions',
             'frames':frames, 'csr_programming_plan':csr,
             'global_launch_doorbell':{'address_hex':'c10','data_hex':'00000001','prerequisite':'caller must also configure all VM and engine targets participating in this kernel'},
             'descriptor':{'target':52+qid,'base':base,'limit':limit,'loops':1},
-            'descriptor_to_launch_gap_edges':66,
-            'launch':'global launch at least66edges after descriptor capture, after fixed64row validation',
+            'descriptor_to_launch_gap_edges':gap,
+            'launch':f'global launch at least{gap}edges after descriptor capture, after fixed64row validation',
             'runtime_loop_count_source':'native64b metadata, not descriptorloops'}
     if parent != 'host_v4':
-        import sys as _sys
-        from pathlib import Path as _P
-        _sys.path.insert(0, str(_P(__file__).resolve().parent))
-        import parent_timing as PT
-        c = PT.constants(parent)
-        bad = PT.check(parent, c)
-        if bad:
-            raise ValueError(f'{parent} timing constants disagree with the lockstep evidence: {bad}')
         out['parent_timing'] = c
     return out
 
@@ -118,7 +121,7 @@ def main():
     ap.add_argument('--base', type=int, default=0)
     ap.add_argument('--limit', type=int, required=True)
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--parent', default='host_v4', choices=['host_v4', 'hard_v5'])
+    ap.add_argument('--parent', default='host_v4', choices=['host_v4', 'hard_v5', 'hard_v5_q3cf2'])
     args = ap.parse_args()
     commands = [int(line.strip(), 16) for line in args.cfg.read_text().splitlines() if line.strip()]
     args.out.write_text(json.dumps(encode_program(decode_issuer_cfg(commands),args.qid,args.base,args.limit,args.parent),indent=2)+'\n')
