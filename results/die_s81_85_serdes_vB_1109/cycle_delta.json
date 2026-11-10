@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.private_cycle_delta.v1",
+  "scope": "S81 serdes__t14 / serdes__t16 column form vB (DIE-S81-85 2026-11-09): OT_S81_KP4_AM_FACE3 + OT_S81_RCK_RELAY4 + OT_S81_KP4_SYN_LOCAL + OT_S81_RM_STAGED + OT_S81_RM_LOCAL4 + OT_S81_RM_WFULL8 + OT_S81_SERDES_RST_TREE (+ PMATX-DT kit hook, no RTL)",
+  "clk_period_ps": 833,
+  "added_rx_clk_PIN_cycles": 11,
+  "added_tx_clk_PIN_cycles": 0,
+  "measurement": {
+    "bench": "rtl/dsrom_sys/s81_link/col/tb_s81_col_rlat.sv via tools/s81_link/run_serdes_rst_tree_bench.sh rlat (Verilator 5.050, PMA loopback pma_rck = pma_tck = clk, LOCKSAFE=1, HOLD_EDGES=64; fixed latency, lat_min == lat_max in every build)",
+    "loopback_lat_clk": {
+      "released_column": 88,
+      "rst_tree_only": 88,
+      "rck_AM_FACE3_RELAY4_SYN_LOCAL": 94,
+      "rck_plus_RM_STAGED": 95,
+      "rck_plus_RM_STAGED_LOCAL4": 98,
+      "vB_without_rst_tree": 99,
+      "vB": 99
+    },
+    "rst_tree_proof": {
+      "bench": "tb_s81_col_rst_tree (run_serdes_rst_tree_bench.sh, RT_DEFS = the vB define set, LOCKSAFE=1)",
+      "tree_ls": "PASS tx_checks 8418 tx_bad 0, RX 6000/6000 beats seq_diff 0, RM RLEAF=0 vs 1 per-epoch beat sequences equal",
+      "mut_rt2_ls": "FAIL tx_bad 8177 (encoder reset not moved with tx_v)",
+      "mut_nocomp_ls": "FAIL tx_bad 8174 (no one-edge tx shift)",
+      "released_defines": "tree / tree_ls PASS (base rate matcher, ot_s81_rate_match_rt)"
+    }
+  },
+  "rx": {
+    "decoder_rck_delta": 6,
+    "decoder_rck_split": {
+      "OT_S81_KP4_AM_FACE3": 0,
+      "OT_S81_RCK_RELAY4": 4,
+      "OT_S81_KP4_SYN_LOCAL": 2
+    },
+    "rate_match_delta": 5,
+    "rate_match_split": {
+      "OT_S81_RM_STAGED": {
+        "rclk": 1,
+        "wclk": 0
+      },
+      "OT_S81_RM_LOCAL4": {
+        "rclk": 2,
+        "wclk": 1
+      },
+      "OT_S81_RM_WFULL8": {
+        "rclk": 0,
+        "wclk": 1
+      }
+    },
+    "rate_match_rclk_delta": 3,
+    "rate_match_wclk_delta": 2,
+    "wclk_is": "pma_rck (recovered clock, 833 ps nominal)",
+    "added_ps_nominal": 9163
+  },
+  "tx": {
+    "data_latency_delta": 0,
+    "OT_S81_SERDES_RST_TREE": "reset release +1 clk edge on the whole clk domain (u_enc rst_n and tx_v on one leaf: frame calendar moves with the beat stream); beat latency unchanged"
+  },
+  "unaffected": [
+    "TX data latency (TXL, PMA latency 4, encoder)",
+    "PMA latency 4 both directions",
+    "64-rck warm reset hold (LOCKSAFE=1, HOLD_EDGES=64)",
+    "rate-match occupancy, IDLE drop and fault rules",
+    "fault sticky assertion"
+  ],
+  "reschedule": [
+    "compiler RX pad-to-rx word date +11 (6 rck decoder + 2 wclk/rck + 3 clk rate matcher)",
+    "parent reset-to-first-valid: clk domain released +1 clk (RST_TREE)",
+    "full end-to-end token composition +11 per RX traversal"
+  ],
+  "note": "The requested +4 rck / +2 rclk / +1 wclk covers RELAY4, LOCAL4 select+relay and WFULL8; the bench also counts SYN_LOCAL +2 rck (DD 55->57), RM_STAGED +1 rclk (r_d stage) and LOCAL4 +1 wclk credit publication.",
+  "not_adopted": true
+}

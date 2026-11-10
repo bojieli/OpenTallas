@@ -129,8 +129,13 @@ endmodule
 // FIFO; the write side drops an IDLE beat (bit 1 set, no gearbox bits) while the FIFO holds >= 6 beats, the read side
 // presents an IDLE beat (512'b10) while it is empty, so a plesiochronous offset is absorbed on IDLE beats only.  A
 // non-IDLE beat arriving to a full FIFO is a sticky fault (lost data).
+// RLEAF (S81-SERDES-RST-TREE, DIE-S81-85 2026-11-09; default 0 = unchanged): 1 = registered read-side reset leaves for the
+//   OT_S81_RM_STAGED / RM_LOCAL4 forms -- rrst_n -> 9 kept rclk leaf flops beside their loads (control 1: wp_g1/wp_g2, rp,
+//   rp_g, rp_g_pub, r_idle, f1/f2; select 8: rsel slices 8j..8j+7, 64 FF each).  The whole read side asserts and releases
+//   ONE rclk edge later, together (no read-side flop sees the old reset); the write side is unchanged.  Base form: use
+//   ot_s81_rate_match_rt (ot_pdie_serdes_col.sv).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_rate_match (
+module ot_s81_rate_match #(parameter integer RLEAF = 0) (
     input  wire          wclk, wrst_n,
     input  wire          w_v,
     input  wire [511:0]  w_d,
@@ -138,6 +143,18 @@ module ot_s81_rate_match (
     output reg  [511:0]  r_d,
     output wire          fault
 );
+    wire rrn_c; wire [7:0] rrn_s;
+    generate if (RLEAF != 0) begin : g_rleaf
+`ifndef OT_S81_RM_STAGED
+        initial $error("ot_s81_rate_match RLEAF=1 needs OT_S81_RM_STAGED (base form: ot_s81_rate_match_rt)");
+`endif
+        (* keep *) reg rl_c;
+        (* keep *) reg [7:0] rl_s;
+        always @(posedge rclk) begin rl_c <= rrst_n; rl_s <= {8{rrst_n}}; end
+        assign rrn_c = rl_c; assign rrn_s = rl_s;
+    end else begin : g_rflat
+        assign rrn_c = rrst_n; assign rrn_s = {8{rrst_n}};
+    end endgenerate
     reg  [511:0] mem [0:7];
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
@@ -146,8 +163,8 @@ module ot_s81_rate_match (
     // Free credit follows actual r_m capture, not the preceding read select.
     // +1 rclk CONTROL-publication edge, no additional data-output stage.
     reg [3:0] rp_g_pub;
-    always @(posedge rclk or negedge rrst_n)
-        if (!rrst_n) rp_g_pub <= 4'd0; else rp_g_pub <= rp_g;
+    always @(posedge rclk or negedge rrn_c)
+        if (!rrn_c) rp_g_pub <= 4'd0; else rp_g_pub <= rp_g;
     wire [3:0] rp_to_write = rp_g_pub;
 `else
     wire [3:0] rp_to_write = rp_g;
@@ -166,7 +183,7 @@ module ot_s81_rate_match (
 `else
     wire [3:0] wp_to_read = wp_g;
 `endif
-    always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
+    always @(posedge rclk or negedge rrn_c) if (!rrn_c) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
     wire [3:0] fill_w = wp - g2b(rp_g2);
     wire idle = w_d[1] && !w_d[0];
     wire full = fill_w == 4'd8;
@@ -278,15 +295,15 @@ module ot_s81_rate_match (
         end
 `endif
     wire empty = g2b(wp_g2) == rp;
-    always @(posedge rclk or negedge rrst_n)
-        if (!rrst_n) begin rp<=0; rp_g<=0; end
+    always @(posedge rclk or negedge rrn_c)
+        if (!rrn_c) begin rp<=0; rp_g<=0; end
         else if (!empty) begin rp<=rp+1'b1; rp_g<=(rp+1'b1)^((rp+1'b1)>>1); end
     reg r_idle;
-    always @(posedge rclk or negedge rrst_n)
-        if (!rrst_n) r_idle<=1'b1; else r_idle<=empty;
+    always @(posedge rclk or negedge rrn_c)
+        if (!rrn_c) r_idle<=1'b1; else r_idle<=empty;
     generate for (rs=0; rs<RM_LOCAL_NS; rs=rs+1) begin : g_local_read
-        (* keep *) always @(posedge rclk or negedge rrst_n)
-            if (!rrst_n) rsel[rs]<=8'd0;
+        (* keep *) always @(posedge rclk or negedge rrn_s[rs/8])
+            if (!rrn_s[rs/8]) rsel[rs]<=8'd0;
             else rsel[rs]<=empty ? 8'd0 : (8'd1 << rp[2:0]);
         for (rb=0; rb<8; rb=rb+1) begin : g_bit
             localparam integer CB=rs*8+rb;
@@ -326,8 +343,8 @@ module ot_s81_rate_match (
             if (w_v && full && !idle) flt <= 1'b1;
         end
     wire empty = g2b(wp_g2) == rp;
-    always @(posedge rclk or negedge rrst_n)
-        if (!rrst_n) begin rp <= 0; rp_g <= 0; end
+    always @(posedge rclk or negedge rrn_c)
+        if (!rrn_c) begin rp <= 0; rp_g <= 0; end
         else if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
     always @(posedge rclk) begin
         r_m <= empty ? 512'd2 : mem[rp[2:0]];
@@ -351,6 +368,6 @@ module ot_s81_rate_match (
         else if (!empty) begin r_d <= mem[rp[2:0]]; rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
         else r_d <= 512'd2;                        // IDLE beat: bit 1 set, no marker, no reverse frame, no slot bits
 `endif
-    reg f1, f2; always @(posedge rclk or negedge rrst_n) if (!rrst_n) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
+    reg f1, f2; always @(posedge rclk or negedge rrn_c) if (!rrn_c) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
     assign fault = f2;
 endmodule

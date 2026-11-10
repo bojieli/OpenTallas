@@ -9,6 +9,9 @@
 //   RX : both columns receive the same PMA lane (a reference ot_pdie_serdes peer, 300 ppm slow, one bit error in about every
 //        second word): identical in-order non-IDLE beat sequence, >= NB - 400 beats, exact payloads, final st 2'b10 both.
 //   Leaf: 2 clk edges after rst falls the new column is in reset (st 0, rx IDLE).
+// Under OT_S81_RM_STAGED (the combined RCK form): RM compares ot_s81_rate_match RLEAF=0 vs RLEAF=1 (read side +1 rclk): the
+//   in-order non-IDLE beat sequence per epoch (prefix equal, lengths within 2, no fault); the leaf check reads st at 2 edges
+//   and rx IDLE at 6 edges (r_m / r_pipe / r_d carry no reset there).  RLAT: measured fixed RX/TX latencies (bench report).
 // Mutants (must FAIL): RT=2 (encoder rst_n not moved with tx_v), NOCOMP=1 (no one-edge data shift on tx).
 module tb_s81_col_rst_tree;
     parameter integer RT = 1, NOCOMP = 0, LS = 0, NB = 6000;
@@ -22,17 +25,40 @@ module tb_s81_col_rst_tree;
     reg rm_wr = 0, rm_rr = 0, w_v = 0; reg [511:0] w_d = 512'd2;
     wire [511:0] rd_a, rd_b; wire fa, fb;
     ot_s81_rate_match    u_rma (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_n(rm_rr), .r_d(rd_a), .fault(fa));
+`ifdef OT_S81_RM_STAGED
+    ot_s81_rate_match #(.RLEAF(1)) u_rmb (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_n(rm_rr), .r_d(rd_b),
+                                .fault(fb));
+`else
     ot_s81_rate_match_rt u_rmb (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_nc(rm_rr), .rrst_nd({8{rm_rr}}),
                                 .r_d(rd_b), .fault(fb));
+`endif
     integer rm_chk = 0, rm_nonidle = 0;
     always @(negedge cb) begin
         w_v <= ($urandom % 8) != 0;
         w_d <= (($urandom % 3) == 0) ? 512'd2 : {$urandom, $urandom, 448'(0), 32'($urandom) & ~32'h3};
     end
+`ifdef OT_S81_RM_STAGED
+    reg [511:0] rq_a [0:4095]; reg [511:0] rq_b [0:4095]; integer na = 0, nb = 0, rm_on = 0, k;
+    task rm_epoch_check; begin
+        if (na - nb > 2 || nb - na > 2) $fatal(1, "RM: RLEAF beat count %0d vs %0d", na, nb);
+        for (k = 0; k < na && k < nb; k = k + 1) if (rq_a[k] !== rq_b[k]) $fatal(1, "RM: RLEAF beat %0d differs", k);
+        rm_chk = rm_chk + ((na < nb) ? na : nb); na = 0; nb = 0;
+    end endtask
+    always @(posedge ca) begin #1;
+        rm_on = rm_rr ? rm_on + 1 : 0;
+        if (rm_on > 0) begin
+            if (fa || fb) $fatal(1, "RM: fault");
+            if (!(rd_a[1] && !rd_a[0]) && na < 4096) begin rq_a[na] = rd_a; na = na + 1; rm_nonidle = rm_nonidle + 1; end
+            if (!(rd_b[1] && !rd_b[0]) && nb < 4096) begin rq_b[nb] = rd_b; nb = nb + 1; end
+        end
+    end
+`else
+    task rm_epoch_check; begin end endtask
     always @(posedge ca) begin #1;
         if ({rd_a, fa} !== {rd_b, fb}) $fatal(1, "RM: ot_s81_rate_match_rt differs from ot_s81_rate_match");
         rm_chk = rm_chk + 1; if (!(rd_a[1] && !rd_a[0])) rm_nonidle = rm_nonidle + 1;
     end
+`endif
     // ------------------------------------------------------------------ columns
     reg [511:0] tx_o = 512'd2, tx_n = 512'd2;
     wire [511:0] rx_o, rx_n, rx_p; wire [1:0] st_o, st_n, st_p;
@@ -65,18 +91,26 @@ module tb_s81_col_rst_tree;
         end else tx_p <= 512'd2;
     end
     // TX lock-step
-    reg [543:0] pt_o_d; reg rst_d1 = 0, rst_d2 = 0; integer tx_chk = 0, tx_bad = 0, lf_chk = 0;
+    reg [543:0] pt_o_d; reg rst_d1 = 0, rst_d2 = 0; reg [5:0] rst_dh = 6'h3f; integer tx_chk = 0, tx_bad = 0, lf_chk = 0;
     always @(posedge ca) begin
         #1;
         if (rst && rst_d2) begin
             if (pt_n !== pt_o_d) begin tx_bad = tx_bad + 1; if (tx_bad < 4) $display("TX lock-step mismatch at cyc %0d", cyc); end
             tx_chk = tx_chk + 1;
         end
+`ifdef OT_S81_RM_STAGED
+        if (!rst && !rst_d2 && st_n !== 2'b00) $fatal(1, "RST_TREE leaf: new column st not in reset 2 edges after rst");
+        if (rst_dh == 6'd0) begin
+            if (rx_n !== 512'd2) $fatal(1, "RST_TREE leaf: new column rx not IDLE 6 edges after rst");
+            lf_chk = lf_chk + 1;
+        end
+`else
         if (!rst && !rst_d2) begin
             if (st_n !== 2'b00 || rx_n !== 512'd2) $fatal(1, "RST_TREE leaf: new column not in reset 2 edges after rst");
             lf_chk = lf_chk + 1;
         end
-        pt_o_d = pt_o; rst_d2 = rst_d1; rst_d1 = rst;
+`endif
+        pt_o_d = pt_o; rst_d2 = rst_d1; rst_d1 = rst; rst_dh = {rst_dh[4:0], rst};
     end
     // RX sequences (only the last epoch carries the peer stream; earlier epochs compare idles / partial beats too)
     integer go = 0, gn = 0, bo = 0, bn = 0, eq_bad = 0;
@@ -90,7 +124,7 @@ module tb_s81_col_rst_tree;
     initial begin
         // RM epochs
         for (ep = 0; ep < 3; ep = ep + 1) begin
-            rm_wr = 0; rm_rr = 0; repeat (5) @(posedge ca); #200 rm_wr = 1; #300 rm_rr = 1; repeat (2000) @(posedge ca);
+            rm_wr = 0; rm_rr = 0; repeat (5) @(posedge ca); #200 rm_wr = 1; #300 rm_rr = 1; repeat (2000) @(posedge ca); rm_epoch_check;
         end
         // column epochs 0, 1: warm resets mid-stream (TX lock-step through re-assertion / release); epoch 2 carries the RX run
         repeat (8) @(posedge ca); #100 rst = 1;

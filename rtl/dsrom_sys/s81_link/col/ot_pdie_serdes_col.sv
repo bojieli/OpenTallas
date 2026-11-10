@@ -34,6 +34,9 @@
 //   takes rst_n AND tx_v from the same leaf, so its frame calendar moves with the TX beat stream by that one edge (lock-step
 //   proof tb_s81_col_rst_tree: pma_tx(new, t+1) == pma_tx(old, t) with tx delayed one edge; RX beat sequence identical).
 //   2 = bench mutant only (u_enc rst_n left on rs_t[1], tx_v on the leaf: frame calendar off by one -> lock-step FAIL).
+//   Under OT_S81_RM_STAGED (+ RM_LOCAL4 / WFULL8, + RCK_RELAY4): u_rm is ot_s81_rate_match #(.RLEAF(1)) fed rn_t, its read-side
+//   leaves (control 1 + rsel 8 x 64) live inside it (ot_pdie_serdes.sv); the column keeps the u_enc / status leaves.  The same
+//   +1 clk edge for the whole clk domain; RELAY4's lock guard (LOCKSAFE=1, HOLD_EDGES >= 64) is unchanged and >> 1 edge.
 module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
                             parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
 `ifdef OT_S81_SERDES_RST_TREE
@@ -86,16 +89,17 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     localparam integer RT_ND = 8;
     wire rn_te, rn_te_rst, rn_ts, rn_tc; wire [RT_ND-1:0] rn_td;
     generate if (RST_TREE != 0) begin : g_rst_tree
+        (* keep *) reg rt_e, rt_s;
+        always @(posedge clk) begin rt_e <= rn_t; rt_s <= rn_t; end
+        assign rn_te = rt_e; assign rn_ts = rt_s;
 `ifdef OT_S81_RM_STAGED
-        initial $error("RST_TREE: the u_rm reset-leaf form is the base rate matcher only (not OT_S81_RM_STAGED)");
-`endif
-`ifdef OT_S81_RCK_RELAY4
-        initial $error("RST_TREE: OT_S81_RCK_RELAY4 keeps the outer rate matcher on the native immediate reset");
-`endif
-        (* keep *) reg rt_e, rt_s, rt_c;
+        assign rn_tc = rn_t; assign rn_td = {RT_ND{rn_t}};      // u_rm makes its own read-side leaves (RLEAF)
+`else
+        (* keep *) reg rt_c;
         (* keep *) reg [RT_ND-1:0] rt_d;
-        always @(posedge clk) begin rt_e <= rn_t; rt_s <= rn_t; rt_c <= rn_t; rt_d <= {RT_ND{rn_t}}; end
-        assign rn_te = rt_e; assign rn_ts = rt_s; assign rn_tc = rt_c; assign rn_td = rt_d;
+        always @(posedge clk) begin rt_c <= rn_t; rt_d <= {RT_ND{rn_t}}; end
+        assign rn_tc = rt_c; assign rn_td = rt_d;
+`endif
         assign rn_te_rst = (RST_TREE == 2) ? rn_t : rt_e;   // 2 = bench mutant: encoder reset not moved with tx_v
     end else begin : g_rst_flat
         assign rn_te = rn_t; assign rn_te_rst = rn_t; assign rn_ts = rn_t; assign rn_tc = rn_t; assign rn_td = {RT_ND{rn_t}};
@@ -150,7 +154,10 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         .ck_syn(pma_rck), .ck_dly(pma_rck), .ck_chn(pma_rck), .ck_out(pma_rck));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-`ifdef OT_S81_SERDES_RST_TREE
+`ifdef OT_S81_RM_STAGED
+    ot_s81_rate_match #(.RLEAF((RST_TREE != 0) ? 1 : 0)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),
+        .rrst_n(rn_t), .r_d(rx), .fault(rm_flt));
+`elsif OT_S81_SERDES_RST_TREE
     // same instance name; with RST_TREE=0 every leaf input is rn_t (== ot_s81_rate_match, tb_s81_col_rst_tree RM compare)
     ot_s81_rate_match_rt #(.NRD(RT_ND)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),
         .rrst_nc(rn_tc), .rrst_nd(rn_td), .r_d(rx), .fault(rm_flt));
