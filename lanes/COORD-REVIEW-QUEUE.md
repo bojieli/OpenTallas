@@ -32980,3 +32980,25 @@ Collected first; no live job was relaunched. Nothing below is signed off; all pr
 7. **vsN6 form1:** GRT overflow 0 (5.62%), GRT stage finished 03:45 UTC, route stage next. Sign-off pending.
 8. **TAPWIN / HBM tap-to-tap (sent to a5267335918ea0a5d; correction to "the mesh needed W 160"):** W 160 is a provisional declared window that passed on T028 mesh v1 ("0 violations at 160"), not a need. Measured needed-W: hub full-DRT mesh NW 85.23 / NE 109.50 ps (at 80 the gate fails 179 contract violations; plan per_type_ps 120), GRT-RC 64.98 / 70.39; T010 197.4 -> 144.2. Related-pair skew hub a3e6 NW 83.0 TT / 76.1 FF.
    - These are d44g/d44s hub or single-tile proofs, needed-W rather than delivered per-tap skew. **I have no per-tap measurement for the 9 HBM sweep rows on the current plan.** No HBM measurement supports 40 ps for those rows; they stay unproven until the sweep's per-tap measurement.
+
+## 11-09 19:59 PST DIE-HBM-97 READY PDN-EDGECOL-1 (q_su20 PDN memory kill) (DO_NOT_COUNT)
+- **Branch:** claude/die-hbm-97-pdnmem-1109 @ 8dc0e1aab7 (fix 090d3750 plus a comment-only commit, on ba1ab1ed; the touched files are unchanged on main through d8f90c6a). _gap_columns no longer treats an M5 column that crosses the core edge as a gap between two macros.
+- **Class:** FLOW/generator, not PLAN. q_su20 a7 was killed by the cgroup at 50.2 GB under --mem 48 (epyc2 dmesg 17:48:32). The PLAN label is a kit-wave classifier error: PDN-0\d+ matched [INFO PDN-0001] and Error 247 is not in the INFRA rule; the classifier is not changed here.
+- **Corrects my earlier numbers:** su20 base is 159 rounds at about 0.39 GB per round (I posted about 165 / 0.37). The leak reading of Shape::vias_ is from the OpenROAD source and was not profiled. Why individual rails stay unconnected is inferred; the pocket stubs also appear with no reservation at all (noobs 248 first-round channels).
+- **Real pdngen on the 2_3 DB:**
+
+| Run | Rounds (first-round channels) | Peak | Time | Result |
+|---|---|---|---|---|
+| su20 base | 159 (287) | 57.1 GB | 2378 s | OK |
+| su20 fixed | 47 (166) | 13.2 GB | 570 s | OK |
+| su11 a10 fixed | 34 (54) | 8.8 GB (41 GB in the flow) | 241 s | OK |
+| su11pv1 control | 32 (29) | 8.0 GB | 316 s | OK |
+| b101_nw base / fixed | 34 / 34 | 1.65 GB | 111 / 129 s | OK / OK |
+
+- **su20 PG, fixed vs base (counts, not a geometric diff):** M1, M2, M4, M6, M7 wires identical on both nets; M5 +18 per net; M3 about -0.3%; via boxes -0.08%; 0 PDN-0178/0179. PDN-0110 24 -> 42 lines, non-fatal, 8 new ones beside the macro edge at x 1992-1995.4.
+- **Test:** test_outline_edge_column_is_not_a_macro_gap fails without the fix; 28 pass in that file. Tcl for su20, su11 a10, b101_nw is byte-identical to the probed variants. No full kit has been rebuilt with it.
+- **Relaunch (KW-FIX-43):** q_su20 bbc75c only: re-generate pdn.tcl from fixed source and resume at floorplan (kit_resume is coarse; it keeps synth and re-runs 2_1-2_3). The reservation json does not change. If the merge waits, place_mem_gb_by_item q_su20: 64 covers the base run.
+- **No relaunch:** q_su11 a10, q_su00 a6, q_spu1 a6 (live, PDN passed or strap outside core; they take the fix on any re-gen) and rows with no edge column (q_spt0, q_spu1 pv1, q_su01 x3, q_su21, q_su30 x2, q_su31 x2). Not scanned, no receipt yet: q_spb0 x2, q_spb2 x2, q_su10, q_su11 pv1 a6; they need gen from a source with the fix.
+- **Merge order:** separate from PDN-M6EDGE-1 4f7a78955d; second to merge rebases.
+- **Open:** 25 serial M7 channels on su20 at x 1224.79 remain (the run still passes); Error 247 mislabelled PLAN.
+- **Rule breaks by the sub-lane (disclosed):** one read-only git config --get in the localhost owner checkout, and its clone used GIT_NO_LAZY_FETCH=0 for blob fetch (pushes used 1).
