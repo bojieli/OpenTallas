@@ -18490,10 +18490,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -18538,10 +18538,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -23510,12 +23510,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -23528,8 +23528,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -23770,12 +23770,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -23788,8 +23788,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -37677,10 +37677,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -37725,10 +37725,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -43485,12 +43485,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -43503,8 +43503,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -43745,12 +43745,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -43763,8 +43763,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -71614,10 +71614,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -71662,10 +71662,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -77367,12 +77367,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -77385,8 +77385,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -77627,12 +77627,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -77645,8 +77645,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -143234,10 +143234,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -143282,10 +143282,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -151864,12 +151864,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -151882,8 +151882,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -152124,12 +152124,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -152142,8 +152142,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -212295,10 +212295,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -212343,10 +212343,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -220416,12 +220416,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -220434,8 +220434,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -220676,12 +220676,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -220694,8 +220694,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -290137,10 +290137,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -290185,10 +290185,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -299067,12 +299067,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -299085,8 +299085,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -299327,12 +299327,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -299345,8 +299345,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -376471,10 +376471,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -376519,10 +376519,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -385681,12 +385681,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -385699,8 +385699,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -385941,12 +385941,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -385959,8 +385959,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -458108,10 +458108,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -458156,10 +458156,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -466956,12 +466956,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -466974,8 +466974,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -467216,12 +467216,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -467234,8 +467234,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -557910,10 +557910,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -557958,10 +557958,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -564376,12 +564376,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -564394,8 +564394,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -564636,12 +564636,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -564654,8 +564654,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -1757923,10 +1757923,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -1757971,10 +1757971,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -1763681,12 +1763681,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -1763699,8 +1763699,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -1763941,12 +1763941,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -1763959,8 +1763959,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2138101,10 +2138101,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -2138149,10 +2138149,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -2143853,12 +2143853,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2143871,8 +2143871,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2144113,12 +2144113,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2144131,8 +2144131,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2158655,10 +2158655,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -2158703,10 +2158703,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -2164372,12 +2164372,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2164390,8 +2164390,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2164632,12 +2164632,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2164650,8 +2164650,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2179174,10 +2179174,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -2179222,10 +2179222,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -2184981,12 +2184981,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2184999,8 +2184999,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2185241,12 +2185241,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2185259,8 +2185259,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2199783,10 +2199783,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -2199831,10 +2199831,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -2205548,12 +2205548,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2205566,8 +2205566,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2205808,12 +2205808,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2205826,8 +2205826,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2220350,10 +2220350,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head0_e4",
@@ -2220398,10 +2220398,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head1_e4",
@@ -2226583,12 +2226583,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head0__g_t_4 + head0__g_t_5 + head0__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=0, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2226601,8 +2226601,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head0_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2226843,12 +2226843,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head1__g_t_4 + head1__g_t_5 + head1__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=1, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2226861,8 +2226861,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head1_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2249546,10 +2249546,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -2249594,10 +2249594,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -2253697,12 +2253697,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2253715,8 +2253715,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2253957,12 +2253957,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2253975,8 +2253975,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2275921,10 +2275921,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -2275969,10 +2275969,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -2280188,12 +2280188,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2280206,8 +2280206,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2280448,12 +2280448,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2280466,8 +2280466,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2305449,10 +2305449,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -2305497,10 +2305497,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -2309428,12 +2309428,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2309446,8 +2309446,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2309688,12 +2309688,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2309706,8 +2309706,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2334694,10 +2334694,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head2_e4",
@@ -2334742,10 +2334742,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 239.76,
-      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 191.11
+      "insertion_ps": 237.8,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1) | KV-PLAN-2 11-10: re-signed spread-pin e2, insertion_pinflops mean TT 237.80 / FF 189.25",
+      "insertion_ff_ps": 189.25
      },
      {
       "name": "head3_e4",
@@ -2338777,12 +2338777,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head2__g_t_4 + head2__g_t_5 + head2__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=2, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2338795,8 +2338795,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head2_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
@@ -2339037,12 +2339037,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles",
+     "note": "head_eighth: head3__g_t_4 + head3__g_t_5 + head3__g_front_1; PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden) | v3.8x outline 285.12 -> 216 (KVG3-CORES review: fill, ectl gap) | even ID strap master e2; head HID=3, BSEL=1; 0 schedule cycles | KV-PLAN-2 11-10 (COORD: e2 pin move approved, replace not revoke): spread-pin e2 re-SIGNED (TT +58.87, FF +0.38), pins r26q4s = 68 S-face w_head pins to the e0 partner x, view hgclk_1110",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4.json",
+     "pins_file": "pins/kv3_head_eighth_e2_pins_r26q4s.json",
      "straps": [
       {
        "port": "strap_hid",
@@ -2339055,8 +2339055,8 @@
        "value": "2'b01"
       }
      ],
-     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
      "physical_inst": "u_bound.u_head3_e2",
      "physical_master": "kv3_head_eighth_e2"
     },
