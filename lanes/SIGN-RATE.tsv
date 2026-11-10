@@ -457,3 +457,4 @@ time	die	signed_types	signed_cores
 2026-11-09 17:03	259	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=80+1t	forced 17:03 COORD; +HBM ot_hgi_sfu_opsb_output (DY opsb plan line). smk 11 kids + xs + QC nk_a0c (epyc6 rescue) pending
 2026-11-09 17:05 259 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=80+1t auto
 2026-11-09 17:12	259	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=80+1t	forced 16:51 COUNT-ARCHIVE-2 on d44v_gqi_cp1109_q3vm_opsb (store 51427); +opsb_output (plan event) +q_mca type; 11 smk kids + xs archived, count after smk overlay merges
+2026-11-09 17:53	257	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=78+1t	forced 17:52 COORD on d44v_gqi_cp1109_q3vm_smk (store 51427); HBM denom 107->119 (smk kids), 2 opsb-counted HBM cores dropped + smk kids not yet credited -> COUNT-ARCHIVE-2 asked; nk_a0c not yet counted
