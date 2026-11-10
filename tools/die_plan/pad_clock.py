@@ -7,10 +7,20 @@ plus a "cdc_evidence" string (COORD ruling 10-31 (3): every crossing of that
 plesiochronous PHY clock is synchronized), which emits exactly the asynchronous
 crossing form CDC_RULE describes (no set_clock_groups: OpenSTA would then drop
 the max delay).
+
+Opt-in second clock entries (S81 RCK2-1109, COORD loopgap-155x-1109): an input pad
+clock may declare "entries", each a plan-placed trunk from the pad pin (stations_um,
+one `cell` per station, every hop <= ENTRY_HOP_UM, 12.1e reach) ending in an entry
+driver at xy_um whose output net carries the sinks inside region_um plus the declared
+macro sink_pins.  The PRE_CTS hook pad_clock_entry.tcl builds it, so TritonCTS sees
+one local tree per entry (the pad net keeps the rest) under the same clock; SDC,
+ports and RTL are unchanged.  Absent "entries" = kit byte-identical.
 """
 import math
 import re
 
+ENTRY_HOP_UM = 405.0         # METHODOLOGY 12.1e: plan 405 um per hop (repeaters <= 450)
+ENTRY_KEYS = {'name', 'xy_um', 'stations_um', 'cell', 'region_um', 'sink_pins', 'evidence'}
 CDC_VALUES = ('synchronized',)
 CDC_RULE = ('COORD 10-31 ruling (3): synchronized plesiochronous pad clock -> asynchronous crossing, '
             'max delay one pad period (latency ignored), no hold check')
@@ -33,7 +43,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence', 'data_inputs', 'data_outputs', 'entries'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -108,10 +118,89 @@ def pins(P, tn):
                     raise ValueError(f'{tn}.{n}: data_outputs requires finite min_ps <= max_ps')
                 if not isinstance(row['evidence'], str) or not row['evidence'].strip():
                     raise ValueError(f'{tn}.{n}: actual source-synchronous data-clock evidence required')
+        if 'entries' in p:
+            check_entries(tn, t, p, {q['name'] for q in t.get('pads', [])})
         result.append(dict(p))
     if seen != set(pads):
         raise ValueError(f'{tn}: pad_clock must cover every existing clock pad: {sorted(set(pads) - seen)}')
     return result
+
+
+def _finite_xy(v):
+    return (isinstance(v, list) and len(v) == 2
+            and all(not isinstance(a, bool) and isinstance(a, (int, float)) and math.isfinite(a) for a in v))
+
+
+def check_entries(tn, t, p, port_names):
+    """Fail closed on a malformed second-entry declaration (see the module note)."""
+    n = p['name']
+    rows = p['entries']
+    if p['dir'] != 'in' or not isinstance(rows, list) or not rows:
+        raise ValueError(f'{tn}.{n}: entries needs a nonempty list on an input pad clock')
+    w, h = t['outline_um']
+    declared = [(s['module'], s['pin']) for s in p.get('sink_pins', [])]
+    taken, names = set(), set()
+    for e in rows:
+        if not isinstance(e, dict) or set(e) != ENTRY_KEYS:
+            raise ValueError(f'{tn}.{n}: entry requires exactly {sorted(ENTRY_KEYS)}')
+        en = e['name']
+        if (not isinstance(en, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', en) or en in names
+                or en in port_names):
+            raise ValueError(f'{tn}.{n}: duplicate, invalid or port-colliding entry name {en!r}')
+        names.add(en)
+        if not isinstance(e['cell'], str) or not re.fullmatch(r'[A-Za-z0-9_]+', e['cell']):
+            raise ValueError(f'{tn}.{n}.{en}: entry cell must be one library cell name')
+        if not isinstance(e['evidence'], str) or not e['evidence'].strip():
+            raise ValueError(f'{tn}.{n}.{en}: entry evidence required')
+        st = e['stations_um']
+        if not isinstance(st, list) or not _finite_xy(e['xy_um']) or not all(_finite_xy(s) for s in st):
+            raise ValueError(f'{tn}.{n}.{en}: entry xy_um / stations_um must be finite [x, y] points')
+        chain = [p['xy_um']] + st + [e['xy_um']]
+        for x, y in chain[1:]:
+            if not (0.0 < x < w and 0.0 < y < h):
+                raise ValueError(f'{tn}.{n}.{en}: trunk point ({x}, {y}) outside the outline')
+        for a, b in zip(chain, chain[1:]):
+            hop = abs(a[0] - b[0]) + abs(a[1] - b[1])
+            if hop > ENTRY_HOP_UM + 1e-6:
+                raise ValueError(f'{tn}.{n}.{en}: trunk hop {hop:.1f} um > {ENTRY_HOP_UM:g} um (12.1e)')
+        reg = e['region_um']
+        if (not isinstance(reg, list) or not reg or
+                any(not isinstance(r, list) or len(r) != 4 or not all(_finite_xy(r[i:i + 2]) for i in (0, 2))
+                    or not (r[0] < r[2] and r[1] < r[3]) for r in reg)):
+            raise ValueError(f'{tn}.{n}.{en}: region_um must be a nonempty list of [x0, y0, x1, y1] (x0<x1, y0<y1)')
+        sp = e['sink_pins']
+        if not isinstance(sp, list) or any(not isinstance(s, dict) or set(s) != {'module', 'pin'} for s in sp):
+            raise ValueError(f'{tn}.{n}.{en}: entry sink_pins require module/pin identities')
+        for s in sp:
+            key = (s['module'], s['pin'])
+            if key not in declared or key in taken:
+                raise ValueError(f'{tn}.{n}.{en}: entry sink pin {key} is not a declared pad sink or is claimed twice')
+            taken.add(key)
+    return rows
+
+
+def entries(P, tn):
+    """[(pad clock name, entry)] of every declared second entry of the type (validated), [] when none."""
+    return [(p['name'], e) for p in pins(P, tn) for e in p.get('entries', [])]
+
+
+def _tcl_list(v):
+    return '{' + ' '.join(_tcl_list(x) if isinstance(x, (list, tuple)) else
+                          (f'{x:.4f}' if isinstance(x, float) else str(x)) for x in v) + '}'
+
+
+def entries_tcl(P, tn):
+    """PRE_CTS data + hook call for the declared entries ('' when none): pad_clock_entry.tcl builds each trunk."""
+    rows = entries(P, tn)
+    if not rows:
+        return ''
+    body = ''.join('  ' + _tcl_list([port, e['name'], e['cell'], [[float(a) for a in s] for s in e['stations_um']],
+                                     [float(a) for a in e['xy_um']], [[float(a) for a in r] for r in e['region_um']],
+                                     [[s['module'], s['pin']] for s in e['sink_pins']]]) + '\n' for port, e in rows)
+    return ('# GENERATED by tools/die_plan/gen.py phys (plan clock.pad_clock pins[].entries, RCK2-1109): '
+            'port entry cell stations entry_xy regions macro_sinks\n'
+            'set ::pce_entries {\n' + body + '}\n'
+            'uplevel #0 {source /work/pad_clock_entry.tcl}\n')
 
 
 SAME_EDGE_KEYS = {'capture', 'eye_hold_extra_ps'}

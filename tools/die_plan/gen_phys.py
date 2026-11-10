@@ -4379,8 +4379,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW-20 11-01: CTS-stage repair_timing leaves the CTS tree alone (cts_repair_protect.tcl; OpenSTA RequiredCmp
     # assert on KV kv3_phy when UnbufferMove removed + restored clock buffers on a macro-launch path)
     crp_hook = "\nuplevel #0 {source /work/cts_repair_protect.tcl}\n"
+    # S81 RCK2-1109 (opt-in plan clock.pad_clock pins[].entries): plan-placed second pad-clock entries (pad_clock.py,
+    # pad_clock_entry.tcl) before TritonCTS; absent = pre_cts.tcl byte-identical and no hook file in the kit.
+    import pad_clock as PC
+    pce_hook = PC.entries_tcl(P, tn)
+    if pce_hook:
+        shutil.copyfile(Path(__file__).with_name("pad_clock_entry.tcl"), kd / "pad_clock_entry.tcl")
+        pce_hook = "\n" + pce_hook
     (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
-                                    + rsp_hook)
+                                    + rsp_hook + pce_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
