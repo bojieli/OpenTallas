@@ -1050,6 +1050,12 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                svc_allq=('OT_SVC_ALLQ' in {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}) if svc_timing_profile is not None else None, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     if bound_data is not None:
         ctx['bound_image_selectors'] = B['image_selectors']
+        # S81-PLAN-1 11-10: the statically scheduled control lanes (idx / TP4 / query / MU / svc unit) from the same bind
+        from layer_prog import bound_ctl_lanes as BCL
+        ctx['bound_ctl'] = BCL.load(B['bound'])
+        bad = BCL.svc_cross_check(ctx['bound_ctl'], {k: dict(v) for k, v in die.links.items() if k in BCL.SVC_LINKS})
+        if bad:
+            raise ValueError(f'--bound-data: svc unit link ages differ from the bind lane depths: {bad}')
     if leaf_routes is not None:
         # S81-SVC-9 (opt-in): Engram REDUCE per-round-trip CTL split on the plan's leaf routes (layer_prog/leaf_transport.py)
         from layer_prog import leaf_transport as LT
