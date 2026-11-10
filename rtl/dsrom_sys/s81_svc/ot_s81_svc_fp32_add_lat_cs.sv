@@ -1,0 +1,353 @@
+`timescale 1ns/1ps
+// DIE-S81-85 11-10: census-safe copy of ot_hdc_fp32_add_lat (rtl/hdc/ot_hdc_fp32_add_lat.sv at main, unchanged there)
+// for the S81 svc provider kits only (IRG ot_s81_svc_idx_hslice_fp).  Same function; with SWREP > 0 and the A cut the
+// drivers above 64 load pins in the native census are replicated (COORD loopgap-153x-1109: only > 64 is fixed):
+//   - the A1 -> A2 swap flop (~134 load pins) as 4 kept copies, each driving a quarter of the A2 swap muxes;
+//   - the dab / dba shift amounts (65-76 load pins) as kept copies for the sticky compare / >= 28 test, with jam28c
+//     (sticky = lowest set bit < d, the same function as the lost-mask OR; equivalence bench 4M random + all
+//     single-bit cases, 0 errors).
+// Needs rtl/hdc/ot_hdc_fp32_add_lat.sv (ot_hdc_w11_cut) and rtl/hdc/ot_hdc_prefix.sv in the source list.
+`ifndef OT_ARST
+ `ifdef OT_S81ENG_SYNC_RST
+  `define OT_ARST(x)
+ `else
+  `define OT_ARST(x) or negedge x
+ `endif
+`endif
+module ot_s81_svc_fp32_add_lat_cs #(
+    parameter integer LAT = 3,
+    // CUTS >= 0 picks the extra cuts explicitly, bits {D, C, B, A} (LAT must be 3 + their count); -1: by LAT.
+    // W11 serial domain: CUTS = 4'b0001 (C_A, LAT 4) cuts the INPUT side, so an operand multiplexer in front of
+    // the unit shares stage 1 with the decode / compare instead of the alignment
+    parameter integer CUTS = -1,
+    // DRST 0 (fe-push-hphys-1010, opt-in via OT_FP_DATA_NORST): only the valid bits are reset (cuts VB, valid_out);
+    // y / err / data cuts are plain flops (consumers qualify them with valid_out).  1: legacy, every stage bit reset.
+    parameter integer DRST = `ifdef OT_FP_DATA_NORST 0 `else 1 `endif,
+    // XCUTS (DIE-HBM-61 RE-FORM 11-03, opt-in; default 0 = unchanged, bit for bit): extra register stages on top of
+    // LAT, bits {G, F, E}; latency = LAT + popcount(XCUTS).  Needs LAT 7 (all of A..D cut).  Same function.
+    //   E  inside A2: swap-select the smaller operand + one jam shifter | sticky OR, d >= 28 pick
+    //   F  inside B2a: carry pick, sentinel OR | LZC
+    //   G  inside C2: round carry, exponent, encode, overflow | zero check, output select
+    parameter integer XCUTS = 0,
+    // SWREP (DIE-S81-85 11-09 native census, opt-in; default 0 = unchanged, bit for bit): with the A cut on, the swap
+    // flop (A1 -> A2, ~134 load pins) is registered as 4 kept copies, each driving one quarter of the A2 swap muxes.
+    // Same function and reset as the u_ca bit it replaces.
+    parameter integer SWREP = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output reg  [31:0] y,
+    output reg  [1:0]  err,
+    output reg         valid_out
+);
+    localparam integer CUT_A = (CUTS >= 0) ? CUTS % 2       : (LAT >= 5) ? 1 : 0;
+    localparam integer CUT_B = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 4) ? 1 : 0;
+    localparam integer CUT_C = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 6) ? 1 : 0;
+    localparam integer CUT_D = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;     // inside B2: after the sentinel LZC
+    generate if (CUTS >= 0 && CUT_A + CUT_B + CUT_C + CUT_D + 3 != LAT) begin : g_bad_cuts
+        ot_hdc_fp32_add_lat_CUTS_must_match_LAT u_trap ();
+    end endgenerate
+    localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
+    localparam integer XC_E = XCUTS % 2, XC_F = (XCUTS / 2) % 2, XC_G = (XCUTS / 4) % 2;
+    generate if (XCUTS != 0 && (LAT != 7 || XCUTS > 7)) begin : g_bad_xcuts
+        ot_hdc_fp32_add_lat_XCUTS_needs_LAT7 u_trap ();
+    end endgenerate
+    // XCUTS stage outputs (driven only inside g_xe / g_xf when the cut is on)
+    wire        xe_v, xe_byp, xe_sub, xe_sign;
+    wire [1:0]  xe_err;
+    wire [31:0] xe_code;
+    wire [7:0]  xe_exp;
+    wire [23:0] xe_big;
+    wire [27:0] xe_small;
+    wire [27:0] xe_smalln;                             // XCUTS E: ~s1_small, registered beside it (B1 subtract input)
+
+    // ---- A1 ----------------------------------------------------------------------------------------
+    wire [7:0]  a_field = a[30:23];
+    wire [7:0]  b_field = b[30:23];
+    wire [7:0]  a_exp = (a_field == 8'd0) ? 8'd1 : a_field;
+    wire [7:0]  b_exp = (b_field == 8'd0) ? 8'd1 : b_field;
+    wire [23:0] a_man = {(a_field != 8'd0), a[22:0]};
+    wire [23:0] b_man = {(b_field != 8'd0), b[22:0]};
+    wire nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
+    wire a_zero = (a[30:0] == 31'd0);
+    wire b_zero = (b[30:0] == 31'd0);
+    wire bypass = nonfinite || a_zero || b_zero;
+    wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+    wire cmp_c;
+    wire [30:0] cmp_s;
+    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+    wire [7:0] dab, dba;
+    wire dab_c, dba_c;
+    ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
+    ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    // A1 -> A2 boundary bundle
+    localparam integer WA = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
+    wire [WA-1:0] a1 = {valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
+                        a_exp, b_exp, a_man, b_man, dab, dba} ;
+    wire          a1_swap = !cmp_c;
+    wire [WA:0]   a2_in;
+    ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+    // ---- A2 ----------------------------------------------------------------------------------------
+    wire        x_v, x_byp, x_sub, x_as, x_bs, x_swap;
+    wire [1:0]  x_err;
+    wire [31:0] x_code;
+    wire [7:0]  x_aexp, x_bexp, x_dab, x_dba;
+    wire [23:0] x_aman, x_bman;
+    assign {x_swap, x_v, x_byp, x_err, x_code, x_sub, x_as, x_bs, x_aexp, x_bexp, x_aman, x_bman, x_dab, x_dba} = a2_in;
+    wire [3:0]  x_swc;                                // the A2 swap selects (SWREP: kept copies; else x_swap)
+    wire [7:0]  x_dab2, x_dba2, x_dab3, x_dba3;       // the jam lost-mask (2) / >= 28 (3) copies of x_dab / x_dba (SWREP)
+    generate if (SWREP > 0 && CUT_A) begin : g_swrep
+        (* keep = "true", dont_touch = "true" *) reg [3:0] swc;
+        (* keep = "true", dont_touch = "true" *) reg [7:0] dab2, dba2, dab3, dba3;
+        if (DRST) begin : g_rs
+            always @(posedge clk `OT_ARST(rst_n)) begin
+                if (!rst_n) begin swc <= 4'd0; dab2 <= 8'd0; dba2 <= 8'd0; dab3 <= 8'd0; dba3 <= 8'd0; end
+                else begin swc <= {4{a1_swap}}; dab2 <= dab; dba2 <= dba; dab3 <= dab; dba3 <= dba; end
+            end
+        end else begin : g_nr
+            always @(posedge clk) begin swc <= {4{a1_swap}}; dab2 <= dab; dba2 <= dba; dab3 <= dab; dba3 <= dba; end
+        end
+        assign x_swc = swc; assign x_dab2 = dab2; assign x_dba2 = dba2; assign x_dab3 = dab3; assign x_dba3 = dba3;
+    end else begin : g_swone
+        assign x_swc = {4{x_swap}}; assign x_dab2 = x_dab; assign x_dba2 = x_dba; assign x_dab3 = x_dab; assign x_dba3 = x_dba;
+    end endgenerate
+    function automatic [27:0] jam28;
+        input [23:0] man;
+        input [7:0]  d;                                // the shift amount
+        input [7:0]  dm;                               // the same value (a copy): lost mask
+        input [7:0]  dc;                               // the same value (a copy): >= 28 test
+        reg [27:0] val, lost;
+        begin
+            val = {1'b0, man, 3'b000};
+            if (dc >= 8'd28) jam28 = {27'd0, |val};
+            else begin
+                lost = val & ~({28{1'b1}} << dm[4:0]);
+                jam28 = (val >> d[4:0]) | {27'd0, |lost};
+            end
+        end
+    endfunction
+    // SWREP form of jam28 (same function): the sticky bit is (lowest set bit of val) < d, so the shift amount copy
+    // drives one 6-bit compare instead of a 28-bit lost-mask decoder (census: the mask put 65-76 loads on a d bit)
+    function automatic [27:0] jam28c;
+        input [23:0] man;
+        input [7:0]  d;                                // the shift amount
+        input [7:0]  dm;                               // the same value (a copy): sticky compare
+        input [7:0]  dc;                               // the same value (a copy): >= 28 test
+        reg [27:0] val;
+        reg [5:0]  lo;
+        integer i;
+        begin
+            val = {1'b0, man, 3'b000};
+            lo = 6'd63;
+            for (i = 23; i >= 0; i = i - 1) if (man[i]) lo = 6'(i + 3);
+            if (dc >= 8'd28) jam28c = {27'd0, |val};
+            else jam28c = (val >> d[4:0]) | {27'd0, lo < {1'b0, dm[4:0]}};
+        end
+    endfunction
+    wire [27:0] small_a = (SWREP > 0 && CUT_A) ? jam28c(x_aman, x_dba, x_dba2, x_dba3) : jam28(x_aman, x_dba, x_dba2, x_dba3);
+    wire [27:0] small_b = (SWREP > 0 && CUT_A) ? jam28c(x_bman, x_dab, x_dab2, x_dab3) : jam28(x_bman, x_dab, x_dab2, x_dab3);
+
+    reg        s1_v, s1_byp, s1_sub, s1_sign;
+    reg [1:0]  s1_err;
+    reg [31:0] s1_code;
+    reg [7:0]  s1_exp;
+    reg [23:0] s1_big;
+    reg [27:0] s1_small;
+    always @(posedge clk `OT_ARST(rst_n)) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= XC_E ? xe_v : x_v;
+    end
+    always @(posedge clk) begin
+        s1_byp <= XC_E ? xe_byp : x_byp;
+        s1_err <= XC_E ? xe_err : x_err;
+        s1_code <= XC_E ? xe_code : x_code;
+        s1_sub <= XC_E ? xe_sub : x_sub;
+        s1_sign <= XC_E ? xe_sign : x_swc[0] ? x_bs : x_as;
+        s1_exp <= XC_E ? xe_exp : x_swc[0] ? x_bexp : x_aexp;
+        s1_big <= XC_E ? xe_big : x_swc[1] ? x_bman : x_aman;
+        s1_small[13:0] <= XC_E ? xe_small[13:0] : x_swc[2] ? small_a[13:0] : small_b[13:0];
+        s1_small[27:14] <= XC_E ? xe_small[27:14] : x_swc[3] ? small_a[27:14] : small_b[27:14];
+    end
+
+    generate if (XC_E != 0) begin : g_xe
+        // A2a: both jam shifts in parallel (no swap select in front of the shifters), sticky ORs before the cut
+        wire [27:0] va = {1'b0, x_aman, 3'b000};
+        wire [27:0] vb = {1'b0, x_bman, 3'b000};
+        wire [27:0] shf_a = va >> x_dba[4:0];
+        wire [27:0] shf_b = vb >> x_dab[4:0];
+        wire stk_a = |(va & ~({28{1'b1}} << x_dba[4:0]));
+        wire stk_b = |(vb & ~({28{1'b1}} << x_dab[4:0]));
+        localparam integer WE = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 28 + 28 + 6;
+        wire [WE-1:0] e_q;
+        ot_hdc_w11_cut #(.W(WE), .CUT(1), .VB(DRST ? -1 : WE - 1)) u_ce (.clk(clk), .rst_n(rst_n),
+            .d({x_v, x_byp, x_err, x_code, x_sub, x_swap, x_as, x_bs, x_aexp, x_bexp, x_aman, x_bman, shf_a, shf_b,
+                stk_a, stk_b, x_dba >= 8'd28, x_dab >= 8'd28, |va, |vb}), .q(e_q));
+        // A2b: swap pick (smaller operand = jam28(a, dba) when swapped, else jam28(b, dab)) and the d >= 28 pick
+        wire e_swap, e_as, e_bs, e_sa, e_sb, e_gea, e_geb, e_anya, e_anyb;
+        wire [7:0] e_aexp, e_bexp; wire [23:0] e_aman, e_bman; wire [27:0] e_shfa, e_shfb;
+        assign {xe_v, xe_byp, xe_err, xe_code, xe_sub, e_swap, e_as, e_bs, e_aexp, e_bexp, e_aman, e_bman, e_shfa, e_shfb,
+                e_sa, e_sb, e_gea, e_geb, e_anya, e_anyb} = e_q;
+        assign xe_sign = e_swap ? e_bs : e_as;
+        assign xe_exp = e_swap ? e_bexp : e_aexp;
+        assign xe_big = e_swap ? e_bman : e_aman;
+        assign xe_small = e_swap ? (e_gea ? {27'd0, e_anya} : (e_shfa | {27'd0, e_sa}))
+                                 : (e_geb ? {27'd0, e_anyb} : (e_shfb | {27'd0, e_sb}));
+        reg [27:0] s1n;
+        always @(posedge clk) s1n <= ~xe_small;
+        assign xe_smalln = s1n;
+    end endgenerate
+
+    // ---- B1 ----------------------------------------------------------------------------------------
+    wire [27:0] big28 = {1'b0, s1_big, 3'b000};
+    wire [27:0] sum_w, dif_w;
+    wire sum_c, dif_c;
+    ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
+    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(XC_E ? xe_smalln : ~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+    localparam integer WB = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
+    wire [WB-1:0] b2_in;
+    ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+        .d({s1_v, s1_byp, s1_sub, s1_sign, s1_err, s1_code, s1_exp, sum_w, dif_w}), .q(b2_in));
+    // ---- B2 ----------------------------------------------------------------------------------------
+    wire        t_v, t_byp, t_sub, t_sign;
+    wire [1:0]  t_err;
+    wire [31:0] t_code;
+    wire [7:0]  t_exp;
+    wire [27:0] sum, dif;
+    assign {t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, sum, dif} = b2_in;
+    wire carry = sum[27];
+    wire [26:0] add_val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
+    wire [7:0]  room = t_exp - 8'd1;
+    wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
+    wire [5:0]  lz_w;
+    ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
+    // B2a -> B2b boundary (LAT >= 7)
+    localparam integer WD = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
+    wire [WD-1:0] xf_d;                                // XCUTS F: the u_cd input after the extra cut
+    generate if (XC_F != 0) begin : g_xf
+        // B2a1: carry pick, sentinel OR | B2a2: LZC
+        localparam integer WF = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 27 + 1;
+        wire [WF-1:0] f_q;
+        ot_hdc_w11_cut #(.W(WF), .CUT(1), .VB(DRST ? -1 : WF - 1)) u_cf (.clk(clk), .rst_n(rst_n),
+            .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, dif[26:0] | sentinel, carry}), .q(f_q));
+        wire f_v, f_byp, f_sub, f_sign, f_carry; wire [1:0] f_err; wire [31:0] f_code; wire [7:0] f_exp;
+        wire [26:0] f_add, f_x; wire [27:0] f_dif; wire [5:0] f_lz;
+        assign {f_v, f_byp, f_sub, f_sign, f_err, f_code, f_exp, f_add, f_dif, f_x, f_carry} = f_q;
+        ot_hdc_lzc32 u_lzf (.x({f_x, 5'b11111}), .n(f_lz));
+        assign xf_d = {f_v, f_byp, f_sub, f_sign, f_err, f_code, f_exp, f_add, f_dif, f_lz, f_carry};
+    end endgenerate
+    wire [WD-1:0] d2_in;
+    ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+        .d(XC_F ? xf_d : {t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
+    wire        w_v, w_byp, w_sub, w_sign, w_carry;
+    wire [1:0]  w_err;
+    wire [31:0] w_code;
+    wire [7:0]  w_exp;
+    wire [26:0] w_add;
+    wire [27:0] w_dif;
+    wire [5:0]  lz;
+    assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = d2_in;
+    wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
+    wire [7:0]  exp_sub, exp_add;
+    wire exp_sub_c, exp_add_c;
+    ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
+    ot_hdc_ksadd_k #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
+
+    reg        s2_v, s2_byp, s2_sign, s2_zero;
+    reg [1:0]  s2_err;
+    reg [31:0] s2_code;
+    reg [7:0]  s2_exp;
+    reg [26:0] s2_val;
+    always @(posedge clk `OT_ARST(rst_n)) begin
+        if (!rst_n) s2_v <= 1'b0;
+        else s2_v <= w_v;
+    end
+    always @(posedge clk) begin
+        s2_byp <= w_byp; s2_err <= w_err; s2_code <= w_code; s2_sign <= w_sign;
+        s2_zero <= w_sub && (w_dif == 28'd0);
+        s2_exp <= w_sub ? exp_sub : exp_add;
+        s2_val <= w_sub ? sub_val : w_add;
+    end
+
+    // ---- C1 ----------------------------------------------------------------------------------------
+    wire inc = s2_val[2] && ((|s2_val[1:0]) || s2_val[3]);
+    wire [23:0] rnd_w;
+    wire rnd_cw;
+    ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
+    localparam integer WC = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
+    // DRST 0 (QK-CORES-10 10-27): err bit 1 is E_OVERFLOW, made only at the output stage; through stages A..C it is
+    // the constant 0 of {E_NONE, E_NONFINITE}.  The unreset data cuts carried that 0 as an X power-up chain into err
+    // (pv16 slice kit LEC: 32 differs, CHECKED); the defined constant is fed instead.  DRST 1: unchanged.
+    wire [1:0] s2_err_c = DRST ? s2_err : {1'b0, s2_err[0]};
+    wire [WC-1:0] c2_in;
+    ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+        .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err_c, s2_code, s2_exp, rnd_w, rnd_cw}), .q(c2_in));
+    // ---- C2 ----------------------------------------------------------------------------------------
+    wire        u_v, u_byp, u_zero, u_sign, rnd_c;
+    wire [1:0]  u_err;
+    wire [31:0] u_code;
+    wire [7:0]  u_exp;
+    wire [23:0] rnd;
+    assign {u_v, u_byp, u_zero, u_sign, u_err, u_code, u_exp, rnd, rnd_c} = c2_in;
+    wire [23:0] man = rnd_c ? {1'b1, rnd[23:1]} : rnd;
+    wire [8:0]  e = {1'b0, u_exp} + {8'd0, rnd_c};
+    wire subnormal = (e == 9'd1) && !man[23];
+    wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
+    wire over = (u_exp == 8'hff) || (e >= 9'd255);
+    generate if (XC_G != 0) begin : g_yx
+        // C2a: round carry, exponent, encode, overflow | C2b: zero check, output select
+        localparam integer WG = 1 + 1 + 1 + 1 + 32 + 2 + 32;
+        wire [WG-1:0] g_q;
+        ot_hdc_w11_cut #(.W(WG), .CUT(1), .VB(DRST ? -1 : WG - 1)) u_cg (.clk(clk), .rst_n(rst_n),
+            .d({u_v, u_byp, u_zero, over, u_code, u_err, code}), .q(g_q));
+        wire g_v, g_byp, g_zero, g_over; wire [31:0] g_ucode, g_code; wire [1:0] g_err;
+        assign {g_v, g_byp, g_zero, g_over, g_ucode, g_err, g_code} = g_q;
+        if (DRST != 0) begin : g_r
+            always @(posedge clk `OT_ARST(rst_n)) begin
+                if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+                else begin
+                    valid_out <= g_v;
+                    if (g_byp) begin y <= g_ucode; err <= g_err; end
+                    else if (g_zero) begin y <= 32'd0; err <= E_NONE; end
+                    else if (g_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                    else begin y <= (g_code[30:0] == 31'd0) ? 32'd0 : g_code; err <= E_NONE; end
+                end
+            end
+        end else begin : g_n
+            always @(posedge clk `OT_ARST(rst_n)) begin
+                if (!rst_n) valid_out <= 1'b0;
+                else valid_out <= g_v;
+            end
+            always @(posedge clk) begin
+                if (g_byp) begin y <= g_ucode; err <= g_err; end
+                else if (g_zero) begin y <= 32'd0; err <= E_NONE; end
+                else if (g_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                else begin y <= (g_code[30:0] == 31'd0) ? 32'd0 : g_code; err <= E_NONE; end
+            end
+        end
+    end else if (DRST != 0) begin : g_yr
+        always @(posedge clk `OT_ARST(rst_n)) begin
+            if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+            else begin
+                valid_out <= u_v;
+                if (u_byp) begin y <= u_code; err <= u_err; end
+                else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+                else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+            end
+        end
+    end else begin : g_yn
+        always @(posedge clk `OT_ARST(rst_n)) begin
+            if (!rst_n) valid_out <= 1'b0;
+            else valid_out <= u_v;
+        end
+        always @(posedge clk) begin
+            if (u_byp) begin y <= u_code; err <= u_err; end
+            else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+            else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+        end
+    end endgenerate
+endmodule

@@ -35,7 +35,12 @@ module ot_s81_svc_merge_h8_split #(
     genvar h;
     generate for(h=0;h<2;h=h+1)begin:g_h4
         ot_s81_svc_merge_h4 #(.DPT(DPT),.MLEV(MLEV),.FPL(FPL),.F12(F12)) u_h4
-          (.clk(clk),.rst_n(rst_n),.iv(iv),.ifin(ifin),.iblk(iblk),
+          (.clk(clk),.rst_n(rst_n),.iv(iv),.ifin(ifin),
+`ifdef OT_SVC_MERGE_H4_MUT
+           .iblk(h==1 ? iblk^{{(MLEV-1){1'b0}},1'b1} : iblk), // bench-only negative control
+`else
+           .iblk(iblk),
+`endif
            .iy(iy[h*128+:128]),.if_(if_[h*4+:4]),.ov(ov_h[h]),.oy(oy[h*128+:128]),.of_(of_[h*4+:4]));
     end endgenerate
     assign ov=ov_h[0];

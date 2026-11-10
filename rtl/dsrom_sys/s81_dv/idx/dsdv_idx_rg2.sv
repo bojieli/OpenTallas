@@ -1117,7 +1117,14 @@ module dsdv_idx_rg2_chunk (
     genvar h;
     generate for (h = 0; h < HC; h = h + 1) begin : g_s
 `ifdef OT_IDX_HSLICE_FASTPAD
- `ifdef OT_IDX_HSLICE_HARD
+ // OT_IDX_HSLICE_FP_CS (DIE-S81-85 11-10): the census-safe S81 svc copy (rtl/dsrom_sys/s81_svc/ot_s81_svc_idx_hslice_fp.sv)
+ `ifdef OT_IDX_HSLICE_FP_CS
+  `ifdef OT_IDX_HSLICE_HARD
+        ot_s81_svc_idx_hslice_fp u_s (.clk(clk),
+  `else
+        ot_s81_svc_idx_hslice_fp #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL)) u_s (.clk(clk),
+  `endif
+ `elsif OT_IDX_HSLICE_HARD
         ot_hdc_v41x_idx_hslice_fp u_s (.clk(clk),
  `else
         ot_hdc_v41x_idx_hslice_fp #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL)) u_s (.clk(clk),

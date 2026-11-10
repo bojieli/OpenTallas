@@ -13,6 +13,9 @@
 //   PV  slice cyc x_hex data_hex      entry P.V / SO gather word (pv_x 48 b, pv_d 513 b)
 //   JD  entry cyc jd                  jd pulse (bit0 done, bit1 fault)
 //   FLT slice cyc code                slice fault code change
+//   WRST cyc len                      (+wrst=C, DIE-S81-85 11-09) warm reset: rst low at C for +wrlen=L cycles (default 64)
+//                                     mid-stream, TB HBM queues flushed, then the image replays from its start
+//                                     (stimulus time t = cyc - base).  Off by default (dumps unchanged).
 `ifndef RS_OBS
 `define RS_OBS
 `endif
@@ -21,7 +24,7 @@
 `endif
 module tb_svc_lockstep;
     parameter integer ST = 0;
-    parameter integer MAXCYC = 30000;
+    parameter integer MAXCYC = 60000;
 `include "dsdv_svc_rs_roles.svh"
     localparam integer H = `TBH, NHBM = 8192, QMAX = 8192;
     reg ck = 0; always #0.5 ck = ~ck;
@@ -33,13 +36,15 @@ module tb_svc_lockstep;
     reg [255:0] hdat [0:NHBM-1];
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
-    integer seed = 1, lat = 40, fd = 0;
+    integer seed = 1, lat = 40, fd = 0, wrst = 0, wrlen = 64, base = 0;
     integer NQ, JW, JE, NH, i;
     reg [32:0] JWORD;
     initial begin
         if (!$value$plusargs("dir=%s", dir)) begin $display("+dir missing"); $finish; end
         if ($value$plusargs("seed=%d", seed)) ;
         if ($value$plusargs("lat=%d", lat)) ;
+        if ($value$plusargs("wrst=%d", wrst)) ;
+        if ($value$plusargs("wrlen=%d", wrlen)) ;
         $readmemh({dir, "/meta.hex"}, meta);
         NQ = meta[0]; JW = meta[2]; JE = meta[3]; JWORD = {meta[5][0], meta[4]}; NH = meta[6];
         if (meta[11] != ST) begin $display("image ST %0d != bench ST %0d", meta[11], ST); $finish; end
@@ -131,6 +136,7 @@ module tb_svc_lockstep;
     always @(posedge ck) begin
         reg [340:0] w341; reg [255:0] old; longint key; integer pc, sd, pp, jj;
         for (sd = 0; sd < 16; sd = sd + 1) begin rk[sd] <= 0; wd[sd] <= 0; rv[sd] <= 0; end
+        if (wrst > 0 && cyc >= wrst && cyc < wrst + wrlen) for (pc = 0; pc < 32; pc = pc + 1) begin pq_h[pc] = 0; pq_n[pc] = 0; pq_b[pc] = 0; end
         for (pc = 0; pc < 32; pc = pc + 1) begin
             sd = pc / 2; pp = pc % 2;
             if (rq[sd][341*pp]) begin
@@ -166,11 +172,16 @@ module tb_svc_lockstep;
     always @(posedge ck) begin
         cyc <= cyc + 1;
         if (cyc == 3) rst <= 1;
-        jcmd[0] <= (cyc == JW) ? JWORD : 33'd0;
-        jcmd[1] <= (cyc == JE) ? JWORD : 33'd0;
+        if (wrst > 0 && cyc == wrst) begin rst <= 0; $fdisplay(fd, "WRST %0d %0d", cyc, wrlen); end
+        if (wrst > 0 && cyc == wrst + wrlen) begin
+            rst <= 1; base <= wrst + wrlen - 3; qi = 0;
+            n_done[0] = 0; n_done[1] = 0; done_c[0] = -1; done_c[1] = -1;
+        end
+        jcmd[0] <= (cyc - base == JW) ? JWORD : 33'd0;
+        jcmd[1] <= (cyc - base == JE) ? JWORD : 33'd0;
         q_v <= 0;
-        if (qi < NQ && cyc == qcyc[qi]) begin q_v <= 1; q_d <= qwd[qi]; qi = qi + 1; end
-        else if (qi < NQ && cyc > qcyc[qi]) late_q = late_q + 1;
+        if (qi < NQ && cyc - base == qcyc[qi]) begin q_v <= 1; q_d <= qwd[qi]; qi = qi + 1; end
+        else if (qi < NQ && cyc - base > qcyc[qi]) late_q = late_q + 1;
         for (int k = 0; k < 2; k++) if (jdx[k] != 2'b00) begin
             $fdisplay(fd, "JD %0d %0d %0d", k, cyc, jdx[k]);
             if (jdx[k][0]) begin n_done[k] = n_done[k] + 1; done_c[k] = cyc; end

@@ -1,0 +1,110 @@
+{
+ "provenance": "DIE-S81-85 11-09 epyc7 ORFS asap7 synth (openroad/orfs:asap7lock), SYNTH_HIERARCHICAL with KEEP of the box modules; hcore / sx_hrow / sml / smd / merge_x black boxes; -DOT_SVC_ATT_MEM_MACRO (+ pvq as the as-built capture: 9 x 32x128), H8 RT2",
+ "boxes": {
+  "TRX0": {
+   "cells": 27880,
+   "area": 3612.28,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "TRX1": {
+   "cells": 27908,
+   "area": 3612.28,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "TRX2": {
+   "cells": 27908,
+   "area": 3612.28,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "TRX3": {
+   "cells": 27908,
+   "area": 3612.28,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "SMC": {
+   "cells": 65901,
+   "area": 7726.1,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "SMR": {
+   "cells": 40242,
+   "area": 4461.38,
+   "basis": "hi5/lo5 synth_stat module total (max of the two types)"
+  },
+  "SML": {
+   "cells": 87328,
+   "area": 11268.96948,
+   "basis": "svc_r5_provider_1113 mapped area; cells = area / 0.1290 (hi5 mean)"
+  },
+  "H4": {
+   "cells": 82680,
+   "area": 10669.19202,
+   "basis": "svc_r5_provider_1113 mapped area; cells = area / 0.1290 (hi5 mean)"
+  },
+  "SMD": {
+   "cells": 52966,
+   "area": 6834.84156,
+   "basis": "svc_r5_provider_1113 mapped area; cells = area / 0.1290 (hi5 mean)"
+  },
+  "IRG": {
+   "cells": 59836,
+   "area": 7389.67,
+   "basis": "results/rtl/svc_irg_fastpad_1109/map/fp synth_stat (ot_hdc_v41x_idx_hslice_fp)"
+  }
+ },
+ "parent_soft": {
+  "hi": {
+   "cells": 228760,
+   "members": {
+    "u_rsv_local_and_soft_children": 228760
+   },
+   "soft_children_in_u_rsv": {
+    "sx": 21907,
+    "note": "sx (own logic; its 8 hrows are type hard cores), gw, smq, so_target, 4 x rt2 load stages, u_att / rs_c / attn_s own logic"
+   }
+  },
+  "lo": {
+   "cells": 381961,
+   "members": {
+    "u_rsv_local_and_soft_children": 237971,
+    "u_irg remainder (hslices black-boxed, r5_irg)": 59622,
+    "u_ctrl_a/b (r2_ctrl, as-built SRAM FIFO defines)": 42078,
+    "u_etap_a/b (r2_etap)": 42290
+   },
+   "soft_children_in_u_rsv": {
+    "sx": 34875,
+    "note": "sx (own logic; its 8 hrows are type hard cores), gw, smq, so_target, 4 x rt2 load stages, u_att / rs_c / attn_s own logic"
+   }
+  }
+ },
+ "runs": {
+  "hi": {
+   "stat": "/srv/opentallas-scratch2/claude/die-s81-85/svcprov/meas2/run_hi5/run/reports/asap7/svcglue_hi5/base/synth_stat.txt",
+   "top": "dsdv_svc_rs_fv_4224242442",
+   "total_cells": 446492,
+   "area_um2": 57616.16508,
+   "trx": [
+    27880,
+    27908,
+    27908,
+    27908
+   ],
+   "smc": 65886,
+   "smr": 40242
+  },
+  "lo": {
+   "stat": "/srv/opentallas-scratch2/claude/die-s81-85/svcprov/meas2/run_lo5/run/reports/asap7/svcglue_lo5/base/synth_stat.txt",
+   "top": "dsdv_svc_rs_fv_a33a101001",
+   "total_cells": 455718,
+   "area_um2": 59817.90546,
+   "trx": [
+    27880,
+    27908,
+    27908,
+    27908
+   ],
+   "smc": 65901,
+   "smr": 40242
+  }
+ }
+}

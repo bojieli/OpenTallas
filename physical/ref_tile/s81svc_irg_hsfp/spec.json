@@ -1,0 +1,121 @@
+{
+ "name": "s81svc_irg_hsfp",
+ "top": "ot_s81_svc_idx_hslice_fp",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_svc/ot_s81_svc_idx_hslice_fp.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/dsrom_sys/s81_svc/ot_s81_svc_fp32_add_lat_cs.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_reset_sync.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 77.76,
+  "h": 276.48,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "hid",
+   "first"
+  ],
+  "W": [
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "k_key",
+   "cs_in",
+   "cf_in"
+  ],
+  "E": [
+   "qo_v",
+   "qo_head",
+   "qo_codes",
+   "qo_sc",
+   "qo_w",
+   "ko_key",
+   "cs_out",
+   "cf_out"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: ot_s81_svc_idx_hslice_fp flops every input at the pin (pin flop) and every output leaves a flop (q / key 2 edges pin to pin); the chunk schedule (cs_out = key_in + LAT_T + FPL + 2 + FPL*hid) is priced on those edges, a recipe pin stage would shift it."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inter": [],
+ "children": [],
+ "why_floorplan": "DIE-S81-85 svc provider form A, svc_lo fallback (b) IRG box (COORD 11-09 native-census decision): 77.76 x 276.48 exact (the band height), fill 0.399; the 8 slices of a chunk abut W->E at 86.4 pitch (8.64 seams), so the chain faces are W (ql / k_key / cs_in) and E (qo / ko_key / cs_out); clk / rst_n / hid / first straps from the chunk relay on N.  Census: drivers > 64 loads fixed structurally (q_we / pos_r kept copies, adder swap select SWREP 4, adder data cuts DRST 0 so the reset relay drives only valid bits); 33-64 load drivers stay (COORD loopgap-153x-1109 census exception, sign-off STA / slew decides).",
+ "job": {
+  "owner": "Claude:DIE-S81-85",
+  "branch": "claude/die-s81-85-svc-prov-1109",
+  "tag": "irghsfp",
+  "purpose": "DIE-S81-85 svc provider form A: IRG fastpad hslice (ot_s81_svc_idx_hslice_fp) pilot kit, fallback (b) 77.76 box at fill 0.399, 32 per svc_lo type",
+  "views_to": "physical/ref_tile/s81svc_irg_hsfp/views",
+  "record_to": "results/rtl/ref_tile/s81svc_irg_hsfp",
+  "extra_paths": [
+   "results/rtl/svc_irg_fastpad_1109/bench"
+  ],
+  "benches": [
+   {
+    "name": "irg_fastpad_chunk_exact",
+    "cmd": "cd results/rtl/svc_irg_fastpad_1109/bench && ln -sfn ../../../.. src && bash run.sh good 11 40000 0 8",
+    "expect": "pass",
+    "pass_regex": "PASS irg_fastpad_chunk hb 8",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "irg_fastpad_chunk_mutant_m1",
+    "cmd": "cd results/rtl/svc_irg_fastpad_1109/bench && ln -sfn ../../../.. src && bash run.sh mut_m1 11 40000 0",
+    "expect": "fail",
+    "fail_regex": "FAIL irg_fastpad_chunk",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   }
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
