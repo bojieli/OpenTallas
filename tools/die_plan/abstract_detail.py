@@ -23,6 +23,8 @@ pins (same ODB).
       cut is NOT modeled for the parent: the report counts it, and --pin-clear-layers should stay the pin's own layer.
   python3 -I abstract_detail.py check --base signed.lef --new new.lef
       -> exit 0 iff everything except OBS of the replaced layers is identical
+  python3 -I abstract_detail.py plan --base signed.lef
+      -> JSON: does this view enclose a signal pin (DRT-0073 class), and which splice form an export should add
 Die-agnostic: any single-MACRO abstract (HEAD lep_pair, KV head_eighth, ...).
 """
 import argparse
@@ -185,6 +187,82 @@ def signal_pin_rects(base_lines):
     return out
 
 
+def enclosed_signal_pins(base_lines, edge_um=0.5):
+    """{pin: layer} of signal pins the view leaves with no way in (DRT-0073 class, DIE-HBM-97 11-09): an interior pin
+    whose every shape is covered by OBS on its own layer AND on the layer above, so no via up and no planar entry."""
+    size = next((re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", ln) for ln in base_lines if "SIZE" in ln), None)
+    if not size:
+        return {}
+    w, h = float(size.group(1)), float(size.group(2))
+    _, body, _ = _split(base_lines)
+    obs = {}
+    for layer, geo in _obs_by_layer(body):
+        for ln in geo:
+            m = _RECT.match(ln)
+            if m:
+                obs.setdefault(layer, []).append(tuple(float(v) for v in m.groups()[1:]))
+
+    def covered(layer, r):
+        e = 0.001
+        pts = [(r[0] + e, r[1] + e), (r[2] - e, r[1] + e), (r[0] + e, r[3] - e), (r[2] - e, r[3] - e),
+               ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2)]
+        return all(any(a <= x <= c and b <= y <= d for a, b, c, d in obs.get(layer, ())) for x, y in pts)
+
+    pins, name, skip, layer = {}, None, False, None
+    for line in base_lines:
+        m = re.match(r"\s*PIN (\S+)", line)
+        if m:
+            name, skip, layer = m.group(1), False, None
+            pins[name] = []
+            continue
+        if name is None:
+            continue
+        if re.match(r"\s*END %s\s*$" % re.escape(name), line):
+            name = None
+        elif re.search(r"USE (POWER|GROUND)", line):
+            skip = True
+            pins.pop(name, None)
+        elif re.match(r"\s*LAYER (\S+)", line):
+            layer = re.match(r"\s*LAYER (\S+)", line).group(1)
+        elif not skip and layer:
+            m = _RECT.match(line)
+            if m:
+                pins[name].append((layer, tuple(float(x) for x in m.groups()[1:])))
+    out = {}
+    for pin, shapes in pins.items():
+        if not shapes or any(l not in LAYER_ORDER[:-1] or min(r[0], r[1], w - r[2], h - r[3]) < edge_um
+                             for l, r in shapes):
+            continue
+        if all(covered(l, r) and covered(LAYER_ORDER[LAYER_ORDER.index(l) + 1], r) for l, r in shapes):
+            out[pin] = shapes[0][0]
+    return out
+
+
+def export_plan(base_lines):
+    """Which detailed splice a counted-view export should add -> {needed, layers, bloat_factor, pg_layer, enclosed}.
+    Needed only when a signal pin is enclosed and the layer above it is one this form replaces.  Normal form: layers
+    above the PG pins, exact shapes (bloat 0; bloat 1 still left DRT-0073 on wbq_root_g0, gqi_issue, opsa_rest and ahub).  PG pins on the top OBS
+    layer: that one layer at bloat 1, the only form prov_view.pg_layer_detail_layers accepts."""
+    enclosed = enclosed_signal_pins(base_lines)
+    plan = dict(needed=False, layers=[], bloat_factor=None, pg_layer=False, enclosed=sorted(enclosed))
+    if not enclosed:
+        return plan
+    pg = pg_pin_layers(base_lines)
+    tops = [l for ls in pg.values() for l in ls if l in LAYER_ORDER]
+    if not tops:
+        return plan
+    layers, bloat, pg_layer = default_layers(base_lines), 0, False
+    if not layers:
+        top = max(tops, key=LAYER_ORDER.index)
+        _, body, _ = _split(base_lines)
+        have = [l for l, _ in _obs_by_layer(body) if l in LAYER_ORDER]
+        if have and max(have, key=LAYER_ORDER.index) == top:
+            layers, bloat, pg_layer = [top], 1, True
+    if layers and any(LAYER_ORDER[LAYER_ORDER.index(l) + 1] in layers for l in enclosed.values()):
+        plan.update(needed=True, layers=layers, bloat_factor=bloat, pg_layer=pg_layer)
+    return plan
+
+
 def _subtract(r, p):
     a, b, c, d = r
     e, f, g, h = p
@@ -281,6 +359,9 @@ def main(argv=None):
     s.add_argument("--layers", default="")
     s.add_argument("--pin-clear-um", type=float, default=None)
     s.add_argument("--pin-clear-layers", default="")
+    s.add_argument("--bloat-factor", type=int, default=None, help="recorded in the report (the wave receipt contract)")
+    p = sub.add_parser("plan")
+    p.add_argument("--base", required=True)
     c = sub.add_parser("check")
     c.add_argument("--base", required=True)
     c.add_argument("--new", required=True)
@@ -290,6 +371,9 @@ def main(argv=None):
         print("read_db %s\nwrite_abstract_lef -bloat_factor %d %s" % (a.odb, a.bloat_factor, a.out))
         return 0
     base = open(a.base).read().splitlines(keepends=True)
+    if a.cmd == "plan":
+        print(json.dumps(export_plan(base)))
+        return 0
     layers = [l for l in a.layers.split(",") if l] or default_layers(base)
     if a.cmd == "splice":
         same_pins = _head_stream(a.detail) == _pin_section(base)
@@ -308,6 +392,8 @@ def main(argv=None):
                "pg_pin_layers": {k: sorted(v) for k, v in pg_pin_layers(base).items()},
                "detail_pins_equal_base": same_pins, "check_ok": ok and same_pins, "problems": probs
                + ([] if same_pins else ["detailed export PIN section != base (different ODB?)"])}
+        if a.bloat_factor is not None:
+            rep["bloat_factor"] = a.bloat_factor
         print(json.dumps(rep, indent=1))
         return 0 if rep["check_ok"] else 1
     new = open(a.new).read().splitlines(keepends=True)

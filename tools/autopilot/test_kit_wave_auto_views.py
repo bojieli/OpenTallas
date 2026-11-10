@@ -67,6 +67,25 @@ class Overlay(unittest.TestCase):
             self.assertNotIn("bad", cfg["dies"]["hbm"]["prov_view_sources"])
             self.assertIn("signed+view 2", K.prelint(cfg["dies"]["hbm"], "hbm", set(), {})["q_b100"][0])
 
+    def test_detailed_config_entry_is_not_shadowed_by_plain_sidecar(self):
+        with tempfile.TemporaryDirectory() as td:
+            det = {"host": "intel1", "dir": "/det/ra", "job": "COUNTED ra", "detailed_lef": "detail_view.lef"}
+            cfg = {"dies": {"hbm": die_cfg(td, {"ra": [det, {"host": "intel1", "dir": "/old/ra"}]})}}
+            (Path(td) / K.AUTO_VIEWS_FILE).write_text(json.dumps({"dies": {"hbm": {"modules": {"ra": [CAND]}}}}))
+            K.merge_auto_views(cfg, td)
+            self.assertEqual([c["dir"] for c in cfg["dies"]["hbm"]["prov_view_sources"]["ra"]],
+                             ["/det/ra", CAND["dir"], "/old/ra"])
+
+    def test_detailed_sidecar_view_stays_first(self):
+        with tempfile.TemporaryDirectory() as td:
+            det = {"host": "intel1", "dir": "/det/ra", "detailed_lef": "detail_view.lef"}
+            cfg = {"dies": {"hbm": die_cfg(td, {"ra": [det]})}}
+            (Path(td) / K.AUTO_VIEWS_FILE).write_text(json.dumps({"dies": {"hbm": {"modules": {
+                "ra": [dict(CAND, detailed_lef="detail_view.lef")]}}}}))
+            K.merge_auto_views(cfg, td)
+            self.assertEqual([c["dir"] for c in cfg["dies"]["hbm"]["prov_view_sources"]["ra"]],
+                             [CAND["dir"], "/det/ra"])
+
     def test_opt_out_and_missing_sidecar(self):
         with tempfile.TemporaryDirectory() as td:
             cfg = {"dies": {"hbm": dict(die_cfg(td), auto_child_views=False)}}
@@ -125,6 +144,16 @@ class LefOnly(unittest.TestCase):
 
 
 class Publish(unittest.TestCase):
+    def test_publish_keeps_the_detailed_view_fields(self):
+        with tempfile.TemporaryDirectory() as td:
+            side = Path(td) / "auto.json"
+            C.publish_manifest(side, {"die": "hbm", "modules": {"d": {"candidates": [dict(
+                CAND, dir="/v/d", detailed_lef="detail_view.lef", detailed_receipt="detail_receipt.json",
+                detail_bloat_factor=0)]}}})
+            d = json.loads(side.read_text())["dies"]["hbm"]["modules"]["d"][0]
+            self.assertEqual((d["detailed_lef"], d["detailed_receipt"], d["detail_bloat_factor"]),
+                             ("detail_view.lef", "detail_receipt.json", 0))   # the wave needs all three
+
     def test_publish_merges_and_keeps_earlier_modules(self):
         with tempfile.TemporaryDirectory() as td:
             side = Path(td) / "auto.json"
