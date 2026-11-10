@@ -15133,22 +15133,7 @@
     "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
-    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
-    "q_b113": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b113__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_spu1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_spu1__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_su30": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_su30__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_spb2__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_hub_ne": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_hub_ne__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_hub_nw__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b110": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b110__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b111": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b111__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch",
-    "q_b112__physical_v1": "KW-FIX-43 16:1x COORD URGENT KIT_TOPOLOGY_BIND_STALE: held until the canonical HBM bind (p11t / wsw15 + vK5d_c12, strict 0 errors) is staged read-only on every HBM gen host; then one uncharged fresh relaunch"
+    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0"
    },
    "gen_hosts": [
     "epyc2",
@@ -16040,8 +16025,8 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_f5c_pre/bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
     "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
    "gen_hosts_prev_kw32g": [
@@ -17412,10 +17397,10 @@
     "q_hub_ne": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_sm0": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
@@ -17448,74 +17433,74 @@
     "q_b113": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_b113__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_spu1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_spu1__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_su30": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_su30__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_spb2__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_hub_ne__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_hub_nw__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -18577,7 +18562,112 @@
     "q_b111__physical_v1",
     "q_b112__physical_v1"
    ],
-   "note_kw43_bleed": "KW-FIX-43 16:1x: stop-the-bleed: die kit_rtl.asbuilt back to vK5c (matches bind_F5c) for non-held types; c12/p11t/hub/RING types held. Revert: asbuilt = kit_rtl_asbuilt_prev_kw43bleed; drop hold_items_kw43bleed_added."
+   "note_kw43_bleed": "KW-FIX-43 16:1x: stop-the-bleed: die kit_rtl.asbuilt back to vK5c (matches bind_F5c) for non-held types; c12/p11t/hub/RING types held. Revert: asbuilt = kit_rtl_asbuilt_prev_kw43bleed; drop hold_items_kw43bleed_added.",
+   "kit_rtl_prev_kw43canon": {
+    "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_f5c_pre/bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-collect-1/f5c/asbuilt_p37su5_sm_lat_vK5c.json"
+   },
+   "item_inputs_prev_kw43canon": {
+    "q_b113": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_b113__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_spu1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_spu1__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_su30": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_su30__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_spb2__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_p11t_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 16:0x DIE-HBM-97 READY 15:40 p11t 4548550146e469de (= p11s + OPSBPINS-1109; new-only 0, gone 0) + strict bind kw43/hbm_p11t_pre (errors 0) + vK5c_c12 prefer; COORD: switch with no further ask."
+    },
+    "q_hub_ne": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+    },
+    "q_hub_ne__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+    },
+    "q_hub_nw__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43/hbm_wsw15_pre/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43/hbm_c12/asbuilt_p37su5_sm_lat_vK5c_c12.json"
+     },
+     "note": "KW-FIX-43 15:5x COORD (2) YES: hubs on d44v_wsw15_1109 4a66235b19a1bb7e + strict bind kw43/hbm_wsw15_pre (epyc7, errors 0) + vK5c_c12; routes in parallel with wsw_H12 (hold-only fail); resume at the touched stage if the wsw abstract changes"
+    }
+   },
+   "kw43canon_items_left_on_old": [],
+   "hold_items_kw43canon_released": [
+    "q_b113",
+    "q_b113__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_spb2__physical_v1",
+    "q_hub_ne",
+    "q_hub_ne__physical_v1",
+    "q_hub_nw__physical_v1",
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112__physical_v1"
+   ],
+   "note_kw43_canon": "KW-FIX-43 16:4x: die kit_rtl + 7 p11t items + 3 hubs -> canonical kw43-canon/hbm (p11t / wsw15 binds + vK5d_c12); stop-the-bleed holds released. Revert: kit_rtl = kit_rtl_prev_kw43canon; item_inputs = item_inputs_prev_kw43canon."
   }
  },
  "place_prefer": [
