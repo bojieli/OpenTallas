@@ -4248,7 +4248,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
-        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
+        # KV-PLAN-2 11-09: routed upper-layer OBS fragments of a hard core staged solid (view_lef.solid_routed_obs); bump kits
+        # (PHY macros: bump access by design, their upper OBS is already solid) keep the exported LEF as for prune
+        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports, solid=not bump_ports)
         # DIE-QC-97 11-09: a hard core with clock_entry_access gets its access abstract by construction (cbx_q10 NL
         # DRT-0073: the signed blanket-OBS LEF was staged, the M5 ck had no access point)
         stage_clock_entry_lefs(P, tn, kd, macros, lambda q: _CR.resolve(q, base))
