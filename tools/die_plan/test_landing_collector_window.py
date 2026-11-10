@@ -80,3 +80,46 @@ def test_no_room_fails_at_gen_with_size_error():
     full = {'inst': 'u_f', 'origin_um': [0.0, 0.0], 'outline_um': [300.0, 300.0]}
     with pytest.raises(ValueError, match=r'landing collector \w+ window .*no row within \+-69\.12 um'):
         LP.tcl(_plan([full], relay_xy=[150.0, 150.0], outline=[300.0, 300.0]), 't')
+
+
+# DIE-S81-85 11-09 CLAND-RESET-IN-MACRO (kw43 ot_s81sl_leaf__t33 / t43 3_3 'no legal ... for
+# u_bound.u_cland_reset_rst_rl_189/_1_ (raw-copy-optional)'): the TYPE-SAFE-5 leaf ctap+moves event put u_lf.u_vsw over
+# the reset tree relay; the RESET raw copy (placed before its collector) takes the same moved window, clear of the core.
+def _reset_plan(core, node, relay, extra=()):
+    tree = {'root': [1432.56, 1218.2], 'relays': [
+        {'q': 'rst_rl_1', 'd': 'rst_root_n', 'xy': [1300.0, 1100.0]},
+        {'q': node, 'd': 'rst_rl_1', 'xy': list(relay)},
+        {'q': 'rst_n_t20', 'd': node, 'xy': [17.28, 1202.468]}]}
+    c = {'collector_tree': tree, 'collector_root_node': 'rst_root_n',
+         'collector_local_sources': [{'name': 'ft0_i', 'tap': 20, 'xy_um': [17.28, 1202.468]}]}
+    return SimpleNamespace(types={'t': {'outline_um': OUTLINE, 'hard_cores': [core, *extra],
+                                        'clock': {'landing_contract': c}}})
+
+
+# t43 u_lf.u_vs abuts u_vsw on its W edge (207.36..380.16): the nearest clear exit is the N edge
+VS43 = {'inst': 'u_lf.u_vs', 'origin_um': [207.36, 423.36], 'outline_um': [172.8, 172.8]}
+
+
+@pytest.mark.parametrize('origin,node,relay,edge,extra', [
+    ([423.36, 656.64], 'rst_rl_189', [541.08, 766.8], ('x0', 648.0 + 4.32), ()),       # t33: 106.9 um to the E edge
+    ([388.8, 414.72], 'rst_rl_99', [462.24, 531.32], ('y0', 639.36 + 4.32), (VS43,)),  # t43: 108.0 um to the N edge
+])
+def test_kw43_reset_raw_copy_window_leaves_the_macro(origin, node, relay, edge, extra):
+    core = dict(VSW, origin_um=origin)
+    plan = _reset_plan(core, node, relay, extra)
+    out = LP.tcl(plan, 't')
+    coll, raw = _group(out, 'u_cland_collect_' + node), _group(out, 'u_cland_reset_' + node)
+    assert raw == coll
+    assert raw[{'x0': 0, 'y0': 1}[edge[0]]] == pytest.approx(edge[1])
+    for a, b, c, d in LP._hard_core_rects(plan.types['t']):
+        assert raw[2] <= a or raw[0] >= c or raw[3] <= b or raw[1] >= d
+    # the reset copy sits in the OPTIONAL list (placed by the raw-copy loop), not in cland_groups
+    opt = out.split('set cland_optional_groups {', 1)[1].split('}\nset cland_status', 1)[0]
+    assert '{u_cland_reset_' + node + ' ' in opt and 'raw-copy-optional' in opt
+
+
+def test_kw43_mutant_plain_window_is_inside_the_macro():
+    # negative control: the kw43 kits (src without aa1420b0404) kept the plain window, inside u_vsw, x32 unreachable
+    t = _reset_plan(dict(VSW, origin_um=[423.36, 656.64]), 'rst_rl_189', [541.08, 766.8]).types['t']
+    g = 2.16 * LP.COLLECTOR_GROW_MAX
+    assert not LP._rows_reachable(t, [541.08 - g, 766.8 - g, 541.08 + g, 766.8 + g])
