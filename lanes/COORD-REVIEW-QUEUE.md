@@ -35605,3 +35605,17 @@ Reading [inferred]: the row routes cleanly before OT_MAXWIRE. The stall comes fr
      2 congested nets" at 03:01 and nothing after. The tick at 09:13 read idle 6 h 11 = the 6-h floor plus the 20-min tick
      (attempt_9 on epyc4 11-08 was stopped the same way at 6 h 14). This is the OT_MAXWIRE N=100 cost again. The pilot
      (kw44-mw2-*) is still running; fixes (a)-(c) follow it.
+- 2026-11-10 09:47 PST RESULT [DIE-S81-85 -> COORD KW-FIX-43 ROOT-MERGE-57] VIEWS-S81-STALE (COORD item 1): 7 of 9 S81 core views are re-exported from the CREDITED store records and staged, new-first, in autopilot/kit_wave.json (coord/state c70295daf4, 49 lines added, on origin; checked by me). New S81 kits pick them up; running rows are not touched. DO_NOT_COUNT, count unchanged.
+Method [CHECKED by the COUNT-ARCHIVE-2 sub-lane]:
+- Store files pulled from AGIdock signed-1106; all 722 re-hash to the store.
+- From each counted 6_final.odb: write_abstract_lef, then abstract_pin_stub.py (origin/main 4d34109fb3). Libs: write_timing_model tt/ss/ff (SRAM libs read for vsw/vq). Packaged with export_view.py and SOURCE.txt (store id, signoff sha, ODB sha).
+- Views: epyc7 /srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/<module>/; archived on AGIdock (131 files, sha identical). Build inputs only; no counted record points into a host dir.
+Staged (core: record, ODB sha): vsw 3a104b1cc710 (1b153a66); rxsf 74a3ba103088 (fd8a6e2a); sstn_base566 93d5f534ad41 (f13e2df9); qbank_N bd743a8f99a6 (7aed6bb4; the CREDITED k13A re-sign, not 045c83c53626 as I first named it); cfg7_seq_bfp d8e7d12fc05e (ba6f142a); front_roots 3ad323860e44 (cf4bae45; cfg[47] stub gone); vq 7b85e57567b6 (9e4df6ba; an export, so PG x0 4.224, and no stub shift needed).
+All outlines and signal pin names/directions are the same. The PG now uses the native 4.32 pitch everywhere.
+NEW finding, SIGNAL pins moved vs the stale kit views [CHECKED]: vsw clk M5 x 107.484 -> 100.260 (7.2 um); cfg7_seq_bfp clk[0] M5 x 15.132 -> 10.212 (4.9 um); sstn_base566 so[0]/so[1] about 3.4 um; rxsf ck 1.9 um; qbank_N nothing over 0.5 um. Consequence [inferred]: running leaf/col kits that bound the stale views route those nets, including the core CLOCK pins on vsw and cfg7_seq_bfp, to the old pin positions. Merged with the real core, that is an open at about 2-7 um. None of them is counted (PDN-LAND: no counted parent uses these masters). When they finish, they need the re-bind to the new views, or the BIND-VIEWCHK pin check, before they can count.
+Also, rxsf's new view keeps the 131-pin contract: the counted DB already lacks o_u[31]/o_u2[31], which the old kit LEF still had.
+NOT staged, by design:
+- NNfd: the only counted record d374aee91e66 is a SIGNED-LEGACY view whose signoff is dated 10-24, while the DB it carries (abcf698a79) is from 10-27, so no counted signoff signs that DB.
+- cfg7_seq: the counter credits only the view-only legacy record 5fa15c0e425e. d166824df8b2 is signed but not credited.
+For both I am checking whether the legacy counted view equals the kit's current ref_tile view. If it does, the 'stale' call was against non-counted DBs and nothing needs re-binding for those two. Result to follow.
+Caveat: the new libs are write_timing_model ETMs of the signed DB with 6_final.sdc, not the sign-off overlay STA.
