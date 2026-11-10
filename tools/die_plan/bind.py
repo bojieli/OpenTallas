@@ -4507,10 +4507,9 @@ def cmd_bind(a):
             lps = LPS.run(_lb, os.environ.get("OT_LANDING_PHASE_ARRIVALS") or None,
                           float(os.environ.get("OT_LANDING_PHASE_MARGIN_PS", "100")))
             (_lb / "landing_phase_sign.json").write_text(json.dumps(lps, indent=1) + "\n")
-            rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict=lps["verdict"], counts=lps["counts"],
-                                             landings=lps["landings"], near=len(lps["near"]), margin_ps=lps["margin_ps"],
-                                             corners=lps["corners"], arrivals_source=lps["arrivals_source"],
-                                             lane_cycle_adjust=lps["lane_cycle_adjust"])
+            rep["landing_phase_sign"] = LPS.summary(lps)
+            if os.environ.get("OT_DIE_SIGNOFF_RECORD"):      # die sign-off record (COORD 11-10): same section
+                LPS.write_die_record(os.environ["OT_DIE_SIGNOFF_RECORD"], lps, detail=str(_lb / "landing_phase_sign.json"))
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)

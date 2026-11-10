@@ -102,6 +102,21 @@ def run(bind, arrivals=None, margin=100.0, lanes=None):
                 rows=rows)
 
 
+def summary(lps):
+    """the landing_phase_sign section of the bind record (bind_report.json) and the die sign-off record"""
+    return dict(gate='ADVISORY', verdict=lps['verdict'], counts=lps['counts'], landings=lps['landings'],
+                near=len(lps['near']), margin_ps=lps['margin_ps'], corners=lps['corners'],
+                arrivals_source=lps['arrivals_source'], lane_cycle_adjust=lps['lane_cycle_adjust'])
+
+
+def write_die_record(path, lps, detail=None):
+    """create / update the die sign-off record's landing_phase_sign section (other sections are kept)"""
+    path = Path(path)
+    rec = json.loads(path.read_text()) if path.is_file() else dict(schema='opentallas.die_signoff.v1', sections={})
+    rec.setdefault('sections', {})['landing_phase_sign'] = dict(summary(lps), bind=lps['bind'], detail=detail)
+    path.write_text(json.dumps(rec, indent=1) + '\n')
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('bind')
@@ -111,6 +126,7 @@ def main(argv=None):
     ap.add_argument('--lanes-from-bcl', help='repo root: restrict to layer_prog/bound_ctl_lanes.LANES')
     ap.add_argument('--out')
     ap.add_argument('--tsv')
+    ap.add_argument('--die-record', help='die sign-off record to update (e.g. physical/die_plan/s81/die_signoff.json)')
     a = ap.parse_args(argv)
     lanes = set(a.lanes.split(',')) if a.lanes else None
     if a.lanes_from_bcl:
@@ -120,6 +136,8 @@ def main(argv=None):
     rep = run(a.bind, a.arrivals, a.margin_ps, lanes)
     out = Path(a.out) if a.out else Path(a.bind) / 'landing_phase_sign.json'
     out.write_text(json.dumps(rep, indent=1) + '\n')
+    if a.die_record:
+        write_die_record(a.die_record, rep, detail=str(out))
     if a.tsv:
         cs = rep['corners'] or ['TT', 'FF']
         with open(a.tsv, 'w') as f:

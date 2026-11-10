@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.die_signoff.v1",
+ "sections": {
+  "landing_phase_sign": {
+   "gate": "ADVISORY",
+   "verdict": "UNMEASURED",
+   "counts": {
+    "UNMEASURED": 993
+   },
+   "landings": 993,
+   "near": 0,
+   "margin_ps": 100.0,
+   "corners": [],
+   "arrivals_source": null,
+   "lane_cycle_adjust": {},
+   "bind": "/srv/opentallas-scratch2/claude/type-safe-5/cand/bind_s81",
+   "detail": "/srv/opentallas-scratch2/claude/tok-verify-1/s1/sign/all.json"
+  }
+ }
+}
