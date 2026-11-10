@@ -45,3 +45,11 @@ def test_modes(tmp_path, monkeypatch, capsys):
     mf.write_text("off\n")
     assert M.main(argv) == 0
     assert (tmp_path / "log.tsv").read_text().count(OTHER) == 2
+
+
+def test_auto_resign_tools_are_system_tools():
+    d = "/srv/opentallas-scratch3/claude/auto-resign/tools/flow-x"
+    argv = ["--mem", "48", "--dir", "/srv/opentallas-scratch2/claude/lane", "--", "python3", "-I", d + "/tools/die_plan/eco_loop.py", "run"]
+    assert M.check(argv) == []
+    argv2 = ["--mem", "48", "--dir", "/srv/opentallas-scratch2/claude/lane", "--", "python3", "-I", "/srv/opentallas-scratch3/claude/other/x.py"]
+    assert M.check(argv2) == [("/srv/opentallas-scratch3/claude/other/x.py", "command")]

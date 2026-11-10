@@ -24,6 +24,8 @@ LOG = os.path.expanduser("~/.local/state/ot-run/lane-declare.tsv")
 RX = re.compile(r"/(?:srv|home|mnt|archive|media)/[A-Za-z0-9_.+@%=,:-]+(?:/[A-Za-z0-9_.+@%=,:-]+)*")
 SCRIPT_EXT = (".sh", ".tcl", ".bash")
 SYSTEM_OK = ("/home/ubuntu/.local/", "/home/ubuntu/bin/", "/home/ubuntu/opentallas-tools/")   # tool dirs sealed jobs also see
+# the auto-resign tag trees: read-only, sha-manifested, prestaged on every host; lanes run eco_loop.py from them by hand (COORD 11-09)
+SYSTEM_OK += ("/srv/opentallas-scratch2/claude/auto-resign/tools/", "/srv/opentallas-scratch3/claude/auto-resign/tools/")
 VALUE = {"--mem", "--threads", "--dir", "--stage", "--hosts", "--host", "--tag", "--max-wait", "--priority", "--job",
          "--mem-hint", "--name", "--root", "--timeout", "--cpus"}
 

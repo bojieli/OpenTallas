@@ -120,7 +120,7 @@ def ap_call(cmd, goals=()):
 
 def sealed_target(cmd, conf):
     """(K, stage) of a call this wrapper seals (place or autopilot), else None"""
-    gc = gen_call(cmd) if conf.get("gen") else None
+    gc = conf_gen_call(cmd, conf)
     if gc:
         return gc[1], "gen"
     pc = place_call(cmd, conf.get("stages"))
@@ -607,6 +607,20 @@ def gen_ok(host, src, W, paths):
         return False, []
 
 
+def conf_gen_call(cmd, conf):
+    """gen_call(cmd) when conf turns sealed gen on for this item, else None.  conf "gen_items" limits it to the named wave
+    items (COORD 11-09: prove sealed gen on one real retry row before every row); absent = every item."""
+    if not conf.get("gen"):
+        return None
+    gc = gen_call(cmd)
+    items = conf.get("gen_items")
+    if gc and items is not None:
+        W = gc[1]
+        if "/items/" not in W or W.split("/items/", 1)[1].split("/", 1)[0] not in items:
+            return None
+    return gc
+
+
 def gen_spec(src, W, inputs):
     T = W.split("/items/", 1)[1].split("/", 1)[0] if "/items/" in W else os.path.basename(W)
     work = next((i["_work"] for i in inputs if isinstance(i, dict) and "_work" in i), None)
@@ -677,7 +691,7 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     if not p:
         return passthru, "not a plain ot-run call"
     o, flags, cmd = p
-    gc = gen_call(cmd) if conf.get("gen") else None
+    gc = conf_gen_call(cmd, conf)
     if gc and "mem" in o:
         return decide_gen(o, flags, cmd, gc, conf, passthru, exclude=exclude)
     pc = place_call(cmd, conf.get("stages"))

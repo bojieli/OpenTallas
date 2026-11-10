@@ -724,3 +724,38 @@ def test_item_inputs_override_plan_and_bind_for_listed_items_only():
     other = K.spec_for(c, "s81", "t2", "hub")
     assert other["plan"] == "/p/final2.json" and other["kit_rtl"] == {"bind_out": "/b/vJ", "asbuilt": "/a/vJ", "script": "/x"}
     assert d["kit_rtl"]["bind_out"] == "/b/vJ"                                    # die entry not mutated
+
+
+def test_unchanged_fail_sees_source_overlay_only_when_both_sides_measured(tmp_path):
+    c = cfg(); c["dies"]["s81"]["_src_overlay"] = "a" * 64
+    r = _failrec(tmp_path, c, **{"class": "FLOW"})
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # same tree: held
+    c["dies"]["s81"]["_src_overlay"] = "b" * 64
+    assert not K.unchanged_fail(c, {}, "s81", "t1", r)                                # overlaid in place: changed
+    c["dies"]["s81"]["_src_overlay"] = ""
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # unreadable now: compares as before
+
+
+def test_unchanged_fail_old_kit_without_overlay_field_stays_held(tmp_path):
+    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})                         # spec written before the field
+    c["dies"]["s81"]["_src_overlay"] = "a" * 64
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # shipping the field releases nothing
+
+
+def test_src_overlay_timing_routing_still_needs_redesign_text(tmp_path):
+    c = cfg(); c["dies"]["s81"]["_src_overlay"] = "a" * 64
+    r = _failrec(tmp_path, c, **{"class": "TIMING"})
+    c["dies"]["s81"]["_src_overlay"] = "b" * 64
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # COORD 11-07 05:24 rule untouched
+
+
+def test_src_overlay_hash_is_content_only(tmp_path):
+    import os
+    s = tmp_path / "src"; (s / "tools" / "__pycache__").mkdir(parents=True); (s / "rtl").mkdir()
+    (s / "tools" / "a.py").write_text("x"); (s / "rtl" / "b.sv").write_text("y")
+    h = lambda: K.src_overlay_hash(str(s), "localhost", "localhost")
+    h0 = h(); assert len(h0) == 64
+    os.utime(s / "tools" / "a.py", (1, 1)); assert h() == h0                          # a re-copy with new mtimes is no change
+    (s / "tools" / "__pycache__" / "a.pyc").write_text("z"); (s / "tools" / "a.py.bak-x").write_text("z"); assert h() == h0
+    (s / "rtl" / "b.sv").write_text("y2"); assert h() != h0                           # an overlaid file is
+    assert K.src_overlay_hash(str(tmp_path / "gone"), "localhost", "localhost") == ""
