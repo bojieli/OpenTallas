@@ -10,6 +10,9 @@
 # upstream stages (those few are left where GPL put them and reported).
 if {![info exists ::env(OT_RELAY_LINE_PORTS)] || $::env(OT_RELAY_LINE_PORTS) eq ""} { error "relay_line_place.tcl: OT_RELAY_LINE_PORTS unset" }
 set rl_depth [expr {[info exists ::env(OT_RELAY_LINE_DEPTH)] ? int($::env(OT_RELAY_LINE_DEPTH)) : 2}]
+# walk limit through single-input cells (SF-RELAY 11-10: max-wire repeaters on a ~1.1 mm core->relay line exceed 8, which
+# skipped 66 static_front chains and left 1100-um hops); default 64, env OT_RELAY_LINE_WALK.
+set ::rl_walk [expr {[info exists ::env(OT_RELAY_LINE_WALK)] ? int($::env(OT_RELAY_LINE_WALK)) : 64}]
 set rl_ff [expr {[info exists ::env(OT_RELAY_LINE_FF)] ? $::env(OT_RELAY_LINE_FF) : "DFFHQNx3_ASAP7_75t_R"}]
 set rl_db [ord::get_db]
 set rl_blk [ord::get_db_block]
@@ -25,7 +28,7 @@ proc rl_in_iterms {inst} {
 }
 # driver register of a register's D pin, through single-input combinational cells only
 proc rl_seq_driver {it} {
-  for {set hop 0} {$hop < 8} {incr hop} {
+  for {set hop 0} {$hop < $::rl_walk} {incr hop} {
     set net [$it getNet]
     if {$net eq "NULL" || $net eq ""} { return "" }
     set drv ""
