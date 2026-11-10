@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "sfs1110",
+ "lane": "HBM-COLLECT-1 (SF-SPLIT)",
+ "status": "READY DO_NOT_COUNT (die-local)",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore",
+ "base_plan_sha256": "27e46e2d84777acfeb035f55080b505af33814372801dd27616ce52a41f15807",
+ "new_plan": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/plan_sfs1110",
+ "new_plan_sha256": "ea0f7ebaae5b0625d52ceb7b062ef3d2375baadf69a15d2495d4dac1da38a489",
+ "types": [
+  "q_sm0",
+  "q_sm1",
+  "q_sm2",
+  "q_sm3"
+ ],
+ "parent_core": "ot_smh_static_front",
+ "parent_outline_um": [
+  1814.4,
+  233.28
+ ],
+ "cut_x_um": 907.2,
+ "pin_cycles_added": 0,
+ "children": {
+  "ot_smh_static_front_w": {
+   "inst": "u_sm_front_nfw",
+   "outline_um": [
+    907.2,
+    233.28
+   ],
+   "origin_in_parent_um": [
+    0.0,
+    0.0
+   ],
+   "pins_file": "cores/ot_smh_static_front_w__907.2x233.28__sfs1110.json",
+   "pin_count": 13905,
+   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits2/ot_smh_static_front_w_0ac230c58d27cec6",
+   "kit_hash": "0ac230c58d27cec6"
+  },
+  "ot_smh_static_front_e": {
+   "inst": "u_sm_front_nfe",
+   "outline_um": [
+    907.2,
+    233.28
+   ],
+   "origin_in_parent_um": [
+    907.2,
+    0.0
+   ],
+   "pins_file": "cores/ot_smh_static_front_e__907.2x233.28__sfs1110.json",
+   "pin_count": 13903,
+   "kit": "/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits2/ot_smh_static_front_e_e05e0710a4deb256",
+   "kit_hash": "e05e0710a4deb256"
+  }
+ },
+ "wrapper": "ot_smh_static_front = u_w + u_e + per-half bit maps (split3/ot_smh_static_front_split.v), parent RTL/pins unchanged"
+}
