@@ -89,41 +89,56 @@ module ot_hbm_sm_kv_line #(
     reg [255:0] sc [0:15];               // 512-dim row scales [wave*8 + row]: KV8 bytes 0..15, KV4 bytes 0..31
     reg [31:0]  sc1 [0:63];              // 128-dim row scales [wave*32 + row]: 4 UE8M0 bytes
     reg [15:0]  rf;                      // row format of the 512-dim rows [wave*8 + row]: 1 = SM-KV4
-    wire        wf4 = (wri >= n8);       // format of the row being written
+    // KVPIPE (DIE-HBM-97 2026-11-10): the write side is split in two stages (vB placed STA: the realigner path
+    // wri >= n8 -> rqw -> emit -> fill_e -> variable insert index was ~45 levels, -690 ps at 833 ps, the same with zero
+    // wire RC).  (1) wf4 (= wri >= n8, the format of the row being written) is a register, updated with wri; (2) an
+    // accepted line waits one cycle in the input register in_q and is inserted at the REGISTERED fill (before the row
+    // shift), so the 96-qword insert is a log shifter on registers and the emit shift is a 4-way mux.  Accept latency
+    // +1 cycle (a line accepted at k is in bb at k + 2); s_ready keeps one line of room for the line in flight.
+    reg         wf4;                     // format of the row being written (= wri >= n8, registered)
     reg [12:0] wleft;
     wire [12:0] wleft_m1 = wleft - 13'd1;
     wire [12:0] wcap = tq ? 13'd32 : 13'd8;
     // ---- 512-dim rows: qword realigner ----
     reg  [96*64-1:0] bb;                 // pending bytes of the line stream, oldest at bit 0
     reg  [6:0]       fill;               // qwords in bb
+    reg              in_v;               // in_q holds an accepted line (inserted this cycle)
+    reg  [1087:0]    in_q;
     wire [6:0]       rqw = h128 ? 7'd16 : wf4 ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
     wire             emit = act && (wleft != 13'd0) && !full[wb] && (fill >= rqw);
-    wire [6:0]       fill_e = fill - (emit ? rqw : 7'd0);
-    wire             room = ({1'b0, fill_e} + 8'd17 <= 8'd96);
+    wire [7:0]       fill_n = {1'b0, fill} + (in_v ? 8'd17 : 8'd0) - (emit ? {1'b0, rqw} : 8'd0);
+    wire             room = (fill_n + 8'd17 <= 8'd96);  // the line accepted now is inserted at fill_n next cycle
     assign s_ready = act && (wleft != 13'd0) && room;
     wire wacc = s_valid && s_ready;
     wire wrow_end = emit;
     wire wwave_end = wrow_end && ({1'b0, wr} == wn - 6'd1);
     wire [66*64-1:0] row = bb[66*64-1:0];
-    reg  [96*64-1:0] bb_n;
+    // insert in_q at qword fill (fill + 17 <= 96 by the room rule), then shift out the emitted row
+    wire [96*64-1:0] ins_d = {{(96-17)*64{1'b0}}, in_q} << {fill, 6'd0};
+    wire [95:0]      ins_m = in_v ? ({79'd0, 17'h1ffff} << fill) : 96'd0;
+    reg  [96*64-1:0] bb_i, bb_n;
+    integer iq;
     always @(*) begin
-        bb_n = emit ? (h128 ? (bb >> (16*64)) : wf4 ? (bb >> (36*64)) : (bb >> (66*64))) : bb;
-        if (wacc) bb_n[fill_e*64 +: 1088] = s_data;
+        for (iq = 0; iq < 96; iq = iq + 1) bb_i[64*iq +: 64] = ins_m[iq] ? ins_d[64*iq +: 64] : bb[64*iq +: 64];
+        bb_n = !emit ? bb_i : h128 ? (bb_i >> (16*64)) : wf4 ? (bb_i >> (36*64)) : (bb_i >> (66*64));
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wn <= 6'd0; wleft <= 13'd0; full <= 2'b00; flast <= 2'b00; wri <= 13'd0;
-            fill <= 7'd0;
+            fill <= 7'd0; in_v <= 1'b0; wf4 <= 1'b0;
         end else begin
             if (cfg_v && !act) begin
-                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0; fill <= 7'd0;
+                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0; fill <= 7'd0; in_v <= 1'b0;
+                wf4 <= cfg_h128 ? (cfg_rows == 13'd0) : (cfg_kv4 || (cfg_n8 == 13'd0));
                 wn <= (cfg_rows > ((cfg_h128 && cfg_qk) ? 13'd32 : 13'd8)) ? ((cfg_h128 && cfg_qk) ? 6'd32 : 6'd8) : cfg_rows[5:0];
             end else begin
-                fill <= fill_e + (wacc ? 7'd17 : 7'd0);
+                fill <= fill_n[6:0];
+                in_v <= wacc;
                 if (wrow_end) begin
                     wr <= wr + 5'd1;
                     wleft <= wleft - 13'd1;
                     wri <= wri + 13'd1;
+                    wf4 <= (wri + 13'd1 >= n8);
                 end
                 if (wwave_end) begin
                     wr <= 5'd0; wb <= ~wb;
@@ -138,6 +153,7 @@ module ot_hbm_sm_kv_line #(
     end
     always @(posedge clk) begin
         bb <= bb_n;
+        if (wacc) in_q <= s_data;
         if (emit && !h128) begin
             sc[{wb, wr[2:0]}] <= wf4 ? row[8*256 +: 256] : {128'd0, row[8*512 +: 128]};
             rf[{wb, wr[2:0]}] <= wf4;
@@ -174,16 +190,16 @@ module ot_hbm_sm_kv_line #(
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     end endgenerate
-    // ---------------- read side ----------------
+    // ---------------- read side (KVPIPE: p1 address, p2 bank word + dequantise, p3 registered beat, then FIFO) ------
     reg       rb;                        // wave buffer being read
     reg [2:0] rs, rt;                    // QK: slot, step; PV: row, beat
     reg [2:0] inflight;                  // reads issued, not yet in the FIFO
-    reg [2:0] fcnt;                      // output FIFO occupancy (depth 4)
+    reg [2:0] fcnt;                      // output FIFO occupancy (depth 5)
     wire [5:0] rn = fn[rb];
     wire [3:0] nsl = tq ? 4'((rn + 6'd3) >> 2) : rn[3:0];   // ring slots of the wave (QK) / rows (PV)
     wire [2:0] bmax = qk ? 3'd7 : (h128 ? 3'd1 : 3'd7);
     wire rlast_beat = (rt == bmax) && ({1'b0, rs} == nsl - 4'd1);
-    wire can_rd = act && full[rb] && ({1'b0, inflight} + {1'b0, fcnt} < 4'd4);
+    wire can_rd = act && full[rb] && ({1'b0, inflight} + {1'b0, fcnt} < 4'd5);
     wire rwave_end = can_rd && rlast_beat;
     wire op_done_rd = rwave_end && flast[rb];
     reg  op_drain;
@@ -222,16 +238,18 @@ module ot_hbm_sm_kv_line #(
         p1_sc1 <= tq ? {sc1[{rb, rs, 2'd3}], sc1[{rb, rs, 2'd2}], sc1[{rb, rs, 2'd1}], sc1[{rb, rs, 2'd0}]}
                      : {96'd0, sc1[{rb, 2'b00, rs}]};
     end
+    // KVPIPE: the scale byte of each lane is selected on the p1 -> p2 edge (p2_ls: one byte a lane), so the dequantiser
+    // of a lane reads only its own scale register (vB: one p2_sc1 byte drove 130 loads into dq8).
     reg       p2_v, p2_h, p2_last, p2_we, p2_k4;
     reg [2:0] p2_s, p2_t;
     reg [5:0] p2_n;
-    reg [255:0] p2_sc;
-    reg [127:0] p2_sc1;
+    reg [511:0] p2_ls;                   // per-lane scale byte (lane j at [8j +: 8])
+    wire [511:0] p1_ls;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) p2_v <= 1'b0; else p2_v <= p1_v;
     always @(posedge clk) begin
         p2_h <= p1_h; p2_s <= p1_s; p2_t <= p1_t; p2_n <= p1_n; p2_last <= p1_last; p2_we <= p1_we;
-        p2_sc <= p1_sc; p2_sc1 <= p1_sc1; p2_k4 <= p1_k4;
+        p2_ls <= p1_ls; p2_k4 <= p1_k4;
     end
     // ---------------- dequantisation (64 lanes) ----------------
     function automatic [16:0] dq8(input [7:0] c, input [7:0] e);   // {fault, bf16}
@@ -277,35 +295,56 @@ module ot_hbm_sm_kv_line #(
     generate for (j = 0; j < 64; j = j + 1) begin : g_lane
         localparam integer B8 = (MUT == 1) ? (j / 2) % 16 : j / 4;
         localparam integer Q = (MUT == 4) ? 3 - j / 16 : j / 16, JJ = j % 16;   // MUT 4: rows of a 4-row beat reversed
+        assign p1_ls[8*j +: 8] = tq ? p1_sc1[32*Q + 8*(JJ/4) +: 8] : h128 ? p1_sc1[8*(JJ/4) +: 8]
+                               : p1_k4 ? p1_sc[8*(j/2) +: 8] : p1_sc[8*B8 +: 8];
+        wire [7:0] ls = p2_ls[8*j +: 8];
         wire [7:0] c8 = p2_h ? rdat[512 + 8*j +: 8] : rdat[8*j +: 8];
-        wire [16:0] r8 = dq8(tqd[8*j +: 8], p2_sc[8*B8 +: 8]);
-        wire [16:0] r4 = dq4(tqd[4*j +: 4], p2_sc[8*(j/2) +: 8]);
+        wire [16:0] r8 = dq8(tqd[8*j +: 8], ls);
+        wire [16:0] r4 = dq4(tqd[4*j +: 4], ls);
         // head dim 128
         wire        qv = ({p2_s, 2'b00} + Q) < {1'b0, p2_n};          // tq: row 4s + q exists
-        wire [16:0] rq = dq8(tqd[128*Q + 8*JJ +: 8], p2_sc1[32*Q + 8*(JJ/4) +: 8]);
-        wire [16:0] rp = dq8(c8, p2_sc1[8*(JJ/4) +: 8]);
+        wire [16:0] rq = dq8(tqd[128*Q + 8*JJ +: 8], ls);
+        wire [16:0] rp = dq8(c8, ls);
         assign bf[16*j +: 16] = tq ? (qv ? rq[15:0] : 16'd0) : h128 ? rp[15:0] : p2_k4 ? r4[15:0] : r8[15:0];
         assign lf[j] = tq ? (qv && rq[16]) : h128 ? rp[16] : p2_k4 ? r4[16] : r8[16];
     end endgenerate
-    // ---------------- output FIFO (4 entries: the read pipeline is 2 deep, so 4 sustain one beat a cycle) ----------------
-    reg [1023:0] fd [0:3];
-    reg [7:0]    ff [0:3];                // {last, wend, step, slot}
-    reg [1:0]    fh, ft;
+    // ---------------- p3: KVPIPE read stage after dequantisation (the 64 lanes' BF16 and fault bits registered) -------
+    reg          p3_v, p3_last, p3_we;
+    reg [2:0]    p3_s, p3_t;
+    reg [1023:0] p3_bf;
+    reg [63:0]   p3_lf;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) p3_v <= 1'b0; else p3_v <= p2_v;
+    always @(posedge clk) begin
+        p3_bf <= bf; p3_lf <= lf; p3_last <= p2_last; p3_we <= p2_we; p3_t <= p2_t; p3_s <= p2_s;
+    end
+    // ---------------- output FIFO (5 entries: the read pipeline is 3 deep, so 5 sustain one beat a cycle) ----------------
+    // entries are plain registers (flat vectors, not an inferred memory: 5 x 1024 bits > SYNTH_MEMORY_MAX_BITS)
+    wire [5*1024-1:0] fd;
+    wire [5*8-1:0]    ff;                 // {last, wend, step, slot}
+    reg [2:0]    fh, ft;
     wire pop = m_valid && m_ready;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin fcnt <= 3'd0; fh <= 2'd0; ft <= 2'd0; inflight <= 3'd0; fault <= 1'b0; end
+        if (!rst_n) begin fcnt <= 3'd0; fh <= 3'd0; ft <= 3'd0; inflight <= 3'd0; fault <= 1'b0; end
         else begin
-            fcnt <= fcnt + {2'b0, p2_v} - {2'b0, pop};
-            inflight <= inflight + {2'b0, can_rd} - {2'b0, p2_v};
-            if (p2_v) ft <= ft + 2'd1;
-            if (pop) fh <= fh + 2'd1;
-            if (p2_v && |lf) fault <= 1'b1;
+            fcnt <= fcnt + {2'b0, p3_v} - {2'b0, pop};
+            inflight <= inflight + {2'b0, can_rd} - {2'b0, p3_v};
+            if (p3_v) ft <= (ft == 3'd4) ? 3'd0 : ft + 3'd1;
+            if (pop) fh <= (fh == 3'd4) ? 3'd0 : fh + 3'd1;
+            if (p3_v && |p3_lf) fault <= 1'b1;
         end
     end
-    always @(posedge clk)
-        if (p2_v) begin fd[ft] <= bf; ff[ft] <= {p2_last, p2_we, p2_t, p2_s}; end
+    genvar fe;
+    generate for (fe = 0; fe < 5; fe = fe + 1) begin : g_fifo
+        reg [1023:0] e_d;
+        reg [7:0]    e_f;
+        always @(posedge clk)
+            if (p3_v && ft == fe) begin e_d <= p3_bf; e_f <= {p3_last, p3_we, p3_t, p3_s}; end
+        assign fd[1024*fe +: 1024] = e_d;
+        assign ff[8*fe +: 8] = e_f;
+    end endgenerate
     assign m_valid = (fcnt != 3'd0);
-    assign m_data = fd[fh];
-    assign {m_last, m_wend, m_step, m_slot} = ff[fh];
+    assign m_data = fd[1024*fh +: 1024];
+    assign {m_last, m_wend, m_step, m_slot} = ff[8*fh +: 8];
 endmodule
 `default_nettype wire

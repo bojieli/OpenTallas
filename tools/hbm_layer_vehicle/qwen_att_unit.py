@@ -142,7 +142,8 @@ def compile_q(rec, op, lat, smut="", probe=False, t0=8):
     cal.set(c, configure=1, rows=n, n8=n, **hold)
     m = E.KvLineModel()
     m.cfg(qk, False, n, True, n)
-    c += 1
+    c += 1 + E.KV_SHELL                 # KVPIPE: c counts CORE cycles from here (front = core - KV_SHELL)
+    SH, SK, KL = E.KV_SHELL, E.KV_SKEW, E.KV_LAUNCH
     if qk:
         assert n % 32 == 0, "QK op rows must be whole 32-row waves"
         nbeats = 2 * n
@@ -154,7 +155,9 @@ def compile_q(rec, op, lat, smut="", probe=False, t0=8):
         assert c < 60000, "calendar runaway"
         acc += E.LINE_RATE[0]
         give = False
-        if li < len(lines) and acc >= E.LINE_RATE[1] and m.s_ready() and c > t_cfg + lat["req_lead"]:
+        fc = c - SH + SK                # front cycle of a converter command acting at core cycle c
+        lc = c - SH + KL                # launch cycle of a beat popped at core cycle c
+        if li < len(lines) and acc >= E.LINE_RATE[1] and m.s_ready() and c - SH > t_cfg + lat["req_lead"]:
             acc -= E.LINE_RATE[1]
             give = True
         elif acc >= E.LINE_RATE[1]:
@@ -163,16 +166,16 @@ def compile_q(rec, op, lat, smut="", probe=False, t0=8):
         if m.m_valid():
             h = m.head()
             ring = h["slot"] if qk else 2 * (h["slot"] % 4) + h["step"]
-            if c % 8 == ring:
+            if lc % 8 == ring:
                 take = True
         popped = m.step(give, take)
         if give:
             tag = li & 0x3FF
-            cal.pkt[c] = (1 << 1098) | (tag << 1088) | lines[li]
-            cal.set(c, pkt=1, pkt_tag=tag, **hold)
-            cal.set(c - lat["req_lead"], req=1, req_addr=base + li, req_tag=tag, **hold)
+            cal.pkt[fc] = (1 << 1098) | (tag << 1088) | lines[li]
+            cal.set(fc, pkt=1, pkt_tag=tag, **hold)
+            cal.set(fc - lat["req_lead"], req=1, req_addr=base + li, req_tag=tag, **hold)
             if first_line is None:
-                first_line = c
+                first_line = fc
             li += 1
         if take:
             b = popped
@@ -180,18 +183,18 @@ def compile_q(rec, op, lat, smut="", probe=False, t0=8):
                 w = consumed // 64                  # waves of 32 rows = 8 slots x 8 steps (n % 32 == 0 asserted)
                 if w == len(wave_beats):
                     wave_beats.append([])
-                wave_beats[w].append((c, b["slot"], b["step"]))
-                cal.set(c, consume=1, eslot=b["slot"], estep=b["step"], first=int(b["step"] == 0),
+                wave_beats[w].append((lc, b["slot"], b["step"]))
+                cal.set(fc, consume=1, eslot=b["slot"], estep=b["step"], first=int(b["step"] == 0),
                         last=int(b["step"] == 7), tag_row=32 * w + 4 * b["slot"], tag_last=1, tag_slot=b["slot"],
                         xaddr=b["step"], **hold)
             else:
                 i = 8 * (consumed // 16) + b["slot"]
                 u, k = i % 4, i // 4
                 nk = n // 4
-                cal.set(c, consume=1, eslot=b["slot"], estep=b["step"], first=int(k % 8 == 0), last=int(k % 8 == 7),
+                cal.set(fc, consume=1, eslot=b["slot"], estep=b["step"], first=int(k % 8 == 0), last=int(k % 8 == 7),
                         run_first=int(k < 8), run_last=int(k >= nk - 8), tag_row=i, tag_slot=2 * u + b["step"], **hold)
-                cal.set(c - 3, pread=1, paddr=i, **hold)
-            beats.append(c)
+                cal.set(fc - 3, pread=1, paddr=i, **hold)
+            beats.append(lc)
             consumed += 1
         c += 1
     last_consume = beats[-1]

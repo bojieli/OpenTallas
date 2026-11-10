@@ -51,9 +51,22 @@ SRC = ["rtl/hdc/ot_hdc_prefix.sv", "rtl/gpu/ot_gpu_fadd.sv", "rtl/hdc/ot_hdc_fp3
 
 
 # ---------------------------------------------------------------- converter cycle model (= ot_hbm_sm_kv_line) ---------
+# KVPIPE (DIE-HBM-97 2026-11-10): kv_line has an input line register (accept +1) and a 3-deep read pipeline with a
+# 5-entry FIFO (m_valid +1).  KV_SHELL = 1 (the bound form, default): kv_line is a hard core inside its face-register
+# shell (face_shell.py: +1 cycle on every input, +1 on every output) and ot_hbm_sm_attn_front_static compensates it
+# (a consume issued at front cycle t pops the core at t + 1 and its beat is launched at t + 2; the packet / busy checks
+# move +2 with it).  KV_SHELL = 0 = the bare core, front built with OT_KVLINE_UNSHELLED.  KV_SKEW (bench negative
+# control only) moves every converter-side command (packet, request, consume, pstore read) by that many cycles
+# against the rest of the calendar: -1 and +1 must FAIL.
+KV_SHELL = int(os.environ.get("KV_SHELL", "1"))
+KV_SKEW = int(os.environ.get("KV_SKEW", "0"))
+KV_LAUNCH = 2 * KV_SHELL         # consume command -> row launch (front cycles)
+
+
 class KvLineModel:
-    """Cycle transcription of ot_hbm_sm_kv_line's write side (qword realigner, two waves), read side (2-deep read
-    pipeline, 4-entry FIFO) and its op state, used by the compiler to place packet and consume slots exactly."""
+    """Cycle transcription of ot_hbm_sm_kv_line's write side (input line register, qword realigner, two waves), read
+    side (3-deep read pipeline, 5-entry FIFO) and its op state, in CORE cycles, used by the compiler to place packet
+    and consume slots exactly (the face shell offsets are applied by the compiler: front = core - KV_SHELL)."""
 
     def __init__(self):
         self.act = False
@@ -65,17 +78,19 @@ class KvLineModel:
         self.tq = h128 and qk
         self.wcap = 32 if self.tq else 8
         self.wb, self.wr, self.wleft, self.wri, self.fill = 0, 0, rows, 0, 0
+        self.in_v = False
+        self.wf4 = self.n8 == 0 if not h128 else rows == 0
         self.wn = min(rows, self.wcap)
         self.full, self.fn, self.flast = [False, False], [0, 0], [False, False]
         self.rb, self.rs, self.rt, self.inflight, self.op_drain = 0, 0, 0, 0, False
-        self.p1, self.p2, self.fifo = None, None, []
+        self.p1, self.p2, self.p3, self.fifo = None, None, None, []
 
     def comb(self):
-        rqw = 16 if self.h128 else (36 if self.wri >= self.n8 else 66)
+        rqw = 16 if self.h128 else (36 if self.wf4 else 66)
         emit = self.act and self.wleft != 0 and not self.full[self.wb] and self.fill >= rqw
-        fill_e = self.fill - (rqw if emit else 0)
-        s_ready = self.act and self.wleft != 0 and fill_e + 17 <= 96
-        return rqw, emit, fill_e, s_ready
+        fill_n = self.fill + (17 if self.in_v else 0) - (rqw if emit else 0)
+        s_ready = self.act and self.wleft != 0 and fill_n + 17 <= 96
+        return rqw, emit, fill_n, s_ready
 
     def s_ready(self):
         return self.comb()[3]
@@ -91,7 +106,7 @@ class KvLineModel:
         if not self.act:
             assert not s_valid and not m_ready
             return None
-        rqw, emit, fill_e, s_ready = self.comb()
+        rqw, emit, fill_n, s_ready = self.comb()
         assert not s_valid or s_ready, "line offered while the converter has no room (schedule fault)"
         wacc = s_valid and s_ready
         wwave_end = emit and self.wr == self.wn - 1
@@ -99,7 +114,7 @@ class KvLineModel:
         nsl = (rn + 3) >> 2 if self.tq else rn
         bmax = 7 if self.qk else (1 if self.h128 else 7)
         rlast_beat = self.rt == bmax and self.rs == nsl - 1
-        can_rd = self.act and self.full[self.rb] and self.inflight + len(self.fifo) < 4
+        can_rd = self.act and self.full[self.rb] and self.inflight + len(self.fifo) < 5
         rwave_end = can_rd and rlast_beat
         op_done_rd = rwave_end and self.flast[self.rb]
         op_done = self.op_drain and self.inflight == 0 and len(self.fifo) == 0
@@ -107,17 +122,20 @@ class KvLineModel:
         assert not m_ready or pop, "consume slot with no beat (schedule fault)"
         popped = self.fifo.pop(0) if pop else None
         # ---- edge ----
-        p2_new = self.p1
+        if self.p3 is not None:
+            self.fifo.append(self.p3)
+        assert len(self.fifo) <= 5
+        self.p3, self.p2 = self.p2, self.p1
         self.p1 = dict(slot=self.rs, step=self.rt, last=op_done_rd, wend=rlast_beat) if can_rd else None
-        if self.p2 is not None:
-            self.fifo.append(self.p2)
-        self.p2 = p2_new
-        self.inflight = (1 if self.p1 else 0) + (1 if self.p2 else 0)   # = inflight + can_rd - p2_v
+        self.inflight = sum(1 for p in (self.p1, self.p2, self.p3) if p)   # = inflight + can_rd - p3_v
         wb0, wleft0, rb0 = self.wb, self.wleft, self.rb
-        self.fill = fill_e + (17 if wacc else 0)
+        assert 0 <= fill_n <= 96
+        self.fill = fill_n
+        self.in_v = wacc
         if emit:
             self.wr += 1
             self.wleft -= 1
+            self.wf4 = self.wri + 1 >= self.n8
             self.wri += 1
         if wwave_end:
             self.wr = 0
@@ -296,7 +314,8 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut="", *, runtime_probability_rows
     cal.set(c, mode=mode, configure=1, rows=len(rows), n8=(n8 if qk else (0 if kv4 else len(rows))))
     m = KvLineModel()
     m.cfg(qk, bool(kv4) and not qk, n8 if qk else (0 if kv4 else len(rows)), False, len(rows))
-    c += 1
+    c += 1 + KV_SHELL                   # c counts CORE cycles from here: the core sees front cycle f at f + KV_SHELL
+    SH, SK = KV_SHELL, KV_SKEW
     # requests lead their packets by REQ_LEAD cycles (declared staging-buffer boundary)
     li, acc, consumed, beats = 0, 0, 0, []
     nbeats = 8 * len(rows)
@@ -307,45 +326,46 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut="", *, runtime_probability_rows
         # packet slot
         acc += LINE_RATE[0]
         give = False
-        if li < len(lines) and acc >= LINE_RATE[1] and m.s_ready() and c > t_cfg + lat["req_lead"]:
+        fc = c - SH + SK                # front cycle of a converter command acting at core cycle c
+        if li < len(lines) and acc >= LINE_RATE[1] and m.s_ready() and c - SH > t_cfg + lat["req_lead"]:
             acc -= LINE_RATE[1]
             give = True
         elif acc >= LINE_RATE[1]:
             acc = LINE_RATE[1]
-        # consume slot: head beat whose ring residue matches this cycle
+        # consume slot: head beat whose ring residue matches its LAUNCH cycle (front c - SH + KV_LAUNCH)
         take = False
         if m.m_valid():
             h = m.head()
             ring = h["slot"] if qk else h["step"]
-            if (c - ring_k) % 8 == ring:
+            if (c - SH + KV_LAUNCH - ring_k) % 8 == ring:
                 take = True
         popped = m.step(give, take)
         if give:
             tag = li & 0x3FF
-            cal.pkt[c] = (1 << 1098) | (tag << 1088) | lines[li]
-            cal.set(c, mode=mode, pkt=1, pkt_tag=tag)
-            cal.set(c - lat["req_lead"], mode=mode, req=1, req_addr=base + li, req_tag=tag)
+            cal.pkt[fc] = (1 << 1098) | (tag << 1088) | lines[li]
+            cal.set(fc, mode=mode, pkt=1, pkt_tag=tag)
+            cal.set(fc - lat["req_lead"], mode=mode, req=1, req_addr=base + li, req_tag=tag)
             if first_line is None:
-                first_line = c
+                first_line = fc
             li += 1
         if take:
             b = popped
             if qk:
                 wave = consumed // (8 * 8)
                 row = 8 * wave + b["slot"]
-                cal.set(c, mode=mode, consume=1, eslot=b["slot"], estep=b["step"], first=int(b["step"] == 0),
+                cal.set(fc, mode=mode, consume=1, eslot=b["slot"], estep=b["step"], first=int(b["step"] == 0),
                         last=int(b["step"] == 7), tag_row=row, tag_last=1, tag_slot=b["slot"], xaddr=b["step"])
             else:
                 wave = consumed // 64
                 tk = 8 * wave + b["slot"]
                 nr = len(rows)
                 lastc = (nr - 1) & ~7
-                cal.set(c, mode=mode, consume=1, eslot=b["slot"], estep=b["step"], first=int(tk % 8 == 0),
+                cal.set(fc, mode=mode, consume=1, eslot=b["slot"], estep=b["step"], first=int(tk % 8 == 0),
                         last=int(tk % 8 == 7 or tk + 1 == nr), run_first=int(tk < 8), run_last=int(tk >= lastc),
                         tag_row=tk, tag_slot=b["step"])
-                cal.set(c - 3, mode=mode, pread=1,
+                cal.set(fc - 3, mode=mode, pread=1,
                         paddr=(tk if runtime_probability_rows is None else runtime_probability_rows[rows[tk]]))
-            beats.append((c, b))
+            beats.append((c - SH + KV_LAUNCH, b))     # launch cycle: the results calendar is keyed to it
             consumed += 1
         c += 1
     last_consume = beats[-1][0]
@@ -407,18 +427,37 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut="", *, runtime_probability_rows
 
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
+KV_SHELL_DIR = "rtl/test/hbm_accel/sm_attn/kv_line_shell"   # face_shell.py output for kv_line (pin table unchanged)
+
+
+def kv_sources(work):
+    """KV_SHELL = 1: the bound form = the core renamed ot_hbm_sm_kv_line__fcore inside its face-register shell."""
+    if not KV_SHELL:
+        return ["rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv"], ["OT_KVLINE_UNSHELLED"]
+    core = (ROOT / "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv").read_text()
+    assert core.count("module ot_hbm_sm_kv_line #(") == 1
+    d = work / "kv_shell_src"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "ot_hbm_sm_kv_line__fcore.sv").write_text(core.replace("module ot_hbm_sm_kv_line #(", "module ot_hbm_sm_kv_line__fcore #("))
+    return [str(d / "ot_hbm_sm_kv_line__fcore.sv")] + [f"{KV_SHELL_DIR}/{f}" for f in
+                                                       ("ot_hbm_sm_kv_line__fshell.sv", "ot_hbm_face_reg.sv", "ot_hbm_face_nreg.sv")], []
+
+
 def build(work, probe, dmut):
     # HBM-P4-SM (10-23): SM_ELEM_DEFINES=OT_SM_QSPLIT[,OT_SM_QSPLIT_MUT=n] = extra build defines (opt-in RTL variants)
-    xdef = [d for d in os.environ.get("SM_ELEM_DEFINES", "").split(",") if d]
-    obj = work / (f"obj_p{int(probe)}_d{dmut}" + "".join("_" + d.replace("=", "") for d in xdef))
+    # KVPIPE: SM_ELEM_DEFINES=OT_KVLINE_UNCOMP = the uncompensated front (failing control for the shelled kv_line)
+    kvsrc, kvdef = kv_sources(work)
+    xdef = [d for d in os.environ.get("SM_ELEM_DEFINES", "").split(",") if d] + kvdef
+    obj = work / (f"obj_p{int(probe)}_d{dmut}_sh{KV_SHELL}" + "".join("_" + d.replace("=", "") for d in xdef))
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
-    cmd = [vl, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
+    cmd = [vl, "--binary", "-j", os.environ.get("SM_ELEM_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
            "-Wno-MULTIDRIVEN", "--unroll-count", "256", "--top-module", "tb_hbm_smh_attn", "-DOT_SMH_HIER", "-DOT_SMH_FC_HIER",
            f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + [f"-D{d}" for d in xdef] + \
-          [str(ROOT / s) for s in SRC]
+          [str(ROOT / s) for s in SRC if s != "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv"] + \
+          [s if s.startswith("/") else str(ROOT / s) for s in kvsrc]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_{obj.name[4:]}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
