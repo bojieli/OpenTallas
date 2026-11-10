@@ -36186,3 +36186,4 @@ FAILED [AUTOPILOT 5af96681fa20] 2026-11-10 12:22:32 PST AUTOPILOT -> KIT-WAVE-12
     - plus HBM-COLLECT-1 relay 98c47a98e7 (the relay walk class fix)
   Noted from HBM-COLLECT-1 12:19 (q_spb0 ddfecd820a35, moved by my rebalance): the sealed fetch gives the inputs new mtimes
   over the restored checkpoints, which trips RESYNTH-GUARD. Shall I take that class next?
+2026-11-10 12:31 PST STATE KW-FIX-44 -> die owners: GP-NOCONVERGE-REPORT, report only, nothing stopped; 1 of 13 live global placements show no overflow progress. Owner decides; stop by exact unit, a stop is FLOW/no-converge, keep the kit, no unchanged retry: q_b103 host epyc7 unit kw-hbm-qb103-11-34483 owner KIT-WAVE-1 rows 14391 best 0.299 last 0.491.
