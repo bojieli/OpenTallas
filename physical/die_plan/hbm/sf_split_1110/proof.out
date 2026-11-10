@@ -1,0 +1,4 @@
+{"gold_cells": 228297, "comp_cells": 228444, "dup_copies": 147, "multi_driven": 0, "errors": {}, "examples": []}
+VERDICT EQUIVALENT
+{"gold_cells": 228297, "comp_cells": 228444, "dup_copies": 147, "multi_driven": 0, "errors": {"driver": 2}, "examples": ["('drv', '_19930_', 'A', ('u_fcore.wm_data[1496]$_DFF_P_', 'QN'), ('u_fcore.wm_data[1455]$_DFF_P_', 'QN'))", "('drv', '_42138_', 'A', ('u_fcore.wm_data[1455]$_DFF_P_', 'QN'), ('u_fcore.wm_data[1496]$_DFF_P_', 'QN'))"]}
+VERDICT NOT_EQUIVALENT
