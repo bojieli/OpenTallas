@@ -12,9 +12,14 @@
 // Under OT_S81_RM_STAGED (the combined RCK form): RM compares ot_s81_rate_match RLEAF=0 vs RLEAF=1 (read side +1 rclk): the
 //   in-order non-IDLE beat sequence per epoch (prefix equal, lengths within 2, no fault); the leaf check reads st at 2 edges
 //   and rx IDLE at 6 edges (r_m / r_pipe / r_d carry no reset there).  RLAT: measured fixed RX/TX latencies (bench report).
+// Form vC: RT=3 (two leaf stages, +2 clk edges) and RTT=1 (RST_RT retime flop, +1 pma_rck edge on the clk domain release):
+//   the tx compensation is TXD = stages + RTT edges; the leaf check reads st at stages + 1 edges (assertion is not retimed).
+//   Mutants RT=4 (encoder reset on the mid stage) and NOCOMP / TXD one short (TXSHORT=1) must FAIL.
 // Mutants (must FAIL): RT=2 (encoder rst_n not moved with tx_v), NOCOMP=1 (no one-edge data shift on tx).
 module tb_s81_col_rst_tree;
-    parameter integer RT = 1, NOCOMP = 0, LS = 0, NB = 6000;
+    parameter integer RT = 1, NOCOMP = 0, LS = 0, NB = 6000, RTT = 0, TXSHORT = 0;
+    localparam integer STG = (RT >= 3) ? 2 : 1;
+    localparam integer TXD = NOCOMP ? 0 : STG + RTT - TXSHORT;
     reg ca = 0, cb = 0, rst = 0;
     always #416.5 ca = ~ca;
     always #416.62495 cb = ~cb;
@@ -63,9 +68,9 @@ module tb_s81_col_rst_tree;
     reg [511:0] tx_o = 512'd2, tx_n = 512'd2;
     wire [511:0] rx_o, rx_n, rx_p; wire [1:0] st_o, st_n, st_p;
     wire [543:0] pt_o, pt_n, pt_p; wire tc_o, tc_n, tc_p; reg [543:0] pt_p_e;
-    ot_pdie_serdes_col #(.RST_TREE(0), .LOCKSAFE(LS)) u_o (.clk(ca), .rst(rst), .tx(tx_o), .rx(rx_o), .st(st_o), .pma_tx(pt_o),
+    ot_pdie_serdes_col #(.RST_TREE(0), .RST_RT(0), .LOCKSAFE(LS)) u_o (.clk(ca), .rst(rst), .tx(tx_o), .rx(rx_o), .st(st_o), .pma_tx(pt_o),
         .pma_tck(tc_o), .pma_rx(pt_p_e), .pma_rck(tc_p), .pma_lock(1'b1));
-    ot_pdie_serdes_col #(.RST_TREE(RT), .LOCKSAFE(LS)) u_n (.clk(ca), .rst(rst), .tx(tx_n), .rx(rx_n), .st(st_n), .pma_tx(pt_n),
+    ot_pdie_serdes_col #(.RST_TREE(RT), .RST_RT(RTT), .LOCKSAFE(LS)) u_n (.clk(ca), .rst(rst), .tx(tx_n), .rx(rx_n), .st(st_n), .pma_tx(pt_n),
         .pma_tck(tc_n), .pma_rx(pt_p_e), .pma_rck(tc_p), .pma_lock(1'b1));
     // peer: reference flat SerDes on cb, sends the beat stream; receives the released column's lane
     reg [511:0] tx_p = 512'd2;
@@ -76,11 +81,14 @@ module tb_s81_col_rst_tree;
     always @(posedge tc_p) begin err_on <= ($urandom % 2) == 0; err_bit <= $urandom % 544; end
     // tx streams: tx_n = tx_o one clk edge later (NOCOMP mutant: same edge)
     integer cyc = 0;
-    reg [511:0] tx_src;
+    reg [511:0] tx_src; reg [511:0] tx_h [0:7]; integer th;
+    initial for (th = 0; th < 8; th = th + 1) tx_h[th] = 512'd2;
     always @(negedge ca) begin
         cyc = cyc + 1;
         tx_src = (cyc % 256 == 0) ? 512'd2 : beat(cyc * 13 + 5);
-        tx_n <= NOCOMP ? tx_src : tx_o;
+        tx_n <= (TXD == 0) ? tx_src : tx_h[TXD - 1];     // tx_h[k] = tx_src k + 1 edges ago (before the shift)
+        for (th = 7; th > 0; th = th - 1) tx_h[th] = tx_h[th - 1];
+        tx_h[0] = tx_src;
         tx_o <= tx_src;
     end
     integer sent = 0, pc = 0;
@@ -91,7 +99,8 @@ module tb_s81_col_rst_tree;
         end else tx_p <= 512'd2;
     end
     // TX lock-step
-    reg [543:0] pt_o_d; reg rst_d1 = 0, rst_d2 = 0; reg [5:0] rst_dh = 6'h3f; integer tx_chk = 0, tx_bad = 0, lf_chk = 0;
+    reg [543:0] pt_h [0:7]; integer th2;
+    reg [543:0] pt_o_d; reg rst_d1 = 0, rst_d2 = 0; reg [7:0] rst_dh = 8'hff; wire [7:0] rst_dm = (8'd1 << (STG + 1)) - 8'd1; integer tx_chk = 0, tx_bad = 0, lf_chk = 0;
     always @(posedge ca) begin
         #1;
         if (rst && rst_d2) begin
@@ -99,18 +108,19 @@ module tb_s81_col_rst_tree;
             tx_chk = tx_chk + 1;
         end
 `ifdef OT_S81_RM_STAGED
-        if (!rst && !rst_d2 && st_n !== 2'b00) $fatal(1, "RST_TREE leaf: new column st not in reset 2 edges after rst");
-        if (rst_dh == 6'd0) begin
+        if (!rst && (rst_dh & rst_dm) == 8'd0 && st_n !== 2'b00) $fatal(1, "RST_TREE leaf: new column st not in reset");
+        if ((rst_dh & ((rst_dm << 5) | 8'h1f)) == 8'd0) begin
             if (rx_n !== 512'd2) $fatal(1, "RST_TREE leaf: new column rx not IDLE 6 edges after rst");
             lf_chk = lf_chk + 1;
         end
 `else
-        if (!rst && !rst_d2) begin
+        if (!rst && (rst_dh & rst_dm) == 8'd0) begin
             if (st_n !== 2'b00 || rx_n !== 512'd2) $fatal(1, "RST_TREE leaf: new column not in reset 2 edges after rst");
             lf_chk = lf_chk + 1;
         end
 `endif
-        pt_o_d = pt_o; rst_d2 = rst_d1; rst_d1 = rst; rst_dh = {rst_dh[4:0], rst};
+        for (th2 = 7; th2 > 0; th2 = th2 - 1) pt_h[th2] = pt_h[th2 - 1];
+        pt_h[0] = pt_o; pt_o_d = pt_h[(TXD == 0) ? 0 : TXD - 1]; rst_d2 = rst_d1; rst_d1 = rst; rst_dh = {rst_dh[6:0], rst};
     end
     // RX sequences (only the last epoch carries the peer stream; earlier epochs compare idles / partial beats too)
     integer go = 0, gn = 0, bo = 0, bn = 0, eq_bad = 0;
@@ -138,8 +148,8 @@ module tb_s81_col_rst_tree;
             if (seq_o[i] !== beat(i)) bo = bo + 1;
             if (seq_n[i] !== beat(i)) bn = bn + 1;
         end
-        $display("TB_S81_COL_RST_TREE RT=%0d NOCOMP=%0d LS=%0d rm_checks=%0d rm_nonidle=%0d tx_checks=%0d tx_bad=%0d leaf_checks=%0d got_old=%0d got_new=%0d seq_diff=%0d bad_old=%0d bad_new=%0d st_old=%b st_new=%b",
-                 RT, NOCOMP, LS, rm_chk, rm_nonidle, tx_chk, tx_bad, lf_chk, go, gn, eq_bad, bo, bn, st_o, st_n);
+        $display("TB_S81_COL_RST_TREE RT=%0d RTT=%0d TXD=%0d NOCOMP=%0d LS=%0d rm_checks=%0d rm_nonidle=%0d tx_checks=%0d tx_bad=%0d leaf_checks=%0d got_old=%0d got_new=%0d seq_diff=%0d bad_old=%0d bad_new=%0d st_old=%b st_new=%b",
+                 RT, RTT, TXD, NOCOMP, LS, rm_chk, rm_nonidle, tx_chk, tx_bad, lf_chk, go, gn, eq_bad, bo, bn, st_o, st_n);
         if (tx_bad == 0 && tx_chk > 6000 && rm_nonidle > 1000 && lf_chk > 100 && go == gn && go >= NB - 400 && eq_bad == 0 &&
             bo == 0 && bn == 0 && st_o == 2'b10 && st_n == 2'b10)
             $display("TB_S81_COL_RST_TREE PASS"); else $display("TB_S81_COL_RST_TREE FAIL");
