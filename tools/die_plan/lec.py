@@ -11,8 +11,8 @@ Method = the commercial LEC flow (Conformal / Formality): sequential equivalence
 equivalence of every next-state / output function) plus register correspondence.
   gold  the kit RTL (config.mk VERILOG_FILES / DEFINES / INCLUDE_DIRS / TOP_PARAMS) read with a DIFFERENT HDL frontend
         than synthesis used (synthesis read_slang -> gold read_verilog -sv; synthesis read_verilog -> gold read_slang),
-        then only proc / opt_expr -keepdc / wreduce -keepdc / peepopt / flatten / opt_expr -fine -keepdc + opt_muxtree
-        (exact dead-X clean-up) / memory_map / generic techmap (no
+        then only proc / opt_expr -keepdc / wreduce -keepdc / peepopt / flatten / constant-compare fold +
+        opt_muxtree (exact dead-X clean-up) / memory_map / generic techmap (no
         fsm / share / opt_dff / abc on the reference).
   gate  the gate netlist (default: 1_2_yosys.v; --netlist for the ODB export) with the ASAP7 TT liberty functions
         (RVT / LVT / SLVT, read_liberty functional models), flattened.
@@ -173,6 +173,45 @@ module _lec_ff (C, D, Q);
   (* keep *) wire \_TECHMAP_REPLACE_.lecq ;
   $dff #(.WIDTH(1), .CLK_POLARITY(_TECHMAP_CELLTYPE_ == "$_DFF_P_")) _TECHMAP_REPLACE_ (.CLK(C), .D(D), .Q(\_TECHMAP_REPLACE_.lecq ));
   assign Q = \_TECHMAP_REPLACE_.lecq ;
+endmodule
+"""
+
+# gold dead-X clean-up (gold_dead_x_cmds): an unsigned compare against a constant whose result is the same for EVERY
+# value of the variable operand (A < C with C >= 2^width(A), A >= 0, ...) becomes that constant; every other compare
+# fails the rule (_TECHMAP_FAIL_) and is left exactly as it was
+DEADX_CMP_V = r"""(* techmap_celltype = "$lt $le $gt $ge" *)
+module _lec_deadx_cmp (A, B, Y);
+  parameter _TECHMAP_CELLTYPE_ = "";
+  parameter A_SIGNED = 0;
+  parameter B_SIGNED = 0;
+  parameter A_WIDTH = 1;
+  parameter B_WIDTH = 1;
+  parameter Y_WIDTH = 1;
+  parameter _TECHMAP_CONSTMSK_A_ = 0;
+  parameter _TECHMAP_CONSTVAL_A_ = 0;
+  parameter _TECHMAP_CONSTMSK_B_ = 0;
+  parameter _TECHMAP_CONSTVAL_B_ = 0;
+  input [A_WIDTH-1:0] A;
+  input [B_WIDTH-1:0] B;
+  output [Y_WIDTH-1:0] Y;
+  localparam UNS = !A_SIGNED && !B_SIGNED;
+  localparam KA = &_TECHMAP_CONSTMSK_A_ && ((^_TECHMAP_CONSTVAL_A_) !== 1'bx);
+  localparam KB = &_TECHMAP_CONSTMSK_B_ && ((^_TECHMAP_CONSTVAL_B_) !== 1'bx);
+  localparam VA = UNS && KB && !(&_TECHMAP_CONSTMSK_A_);
+  localparam VB = UNS && KA && !(&_TECHMAP_CONSTMSK_B_);
+  localparam W = VA ? A_WIDTH : B_WIDTH;
+  localparam CW = VA ? B_WIDTH : A_WIDTH;
+  localparam [CW:0] C = VA ? _TECHMAP_CONSTVAL_B_ : _TECHMAP_CONSTVAL_A_;
+  localparam Z = C == 0;
+  localparam GT = (C >> W) != 0;
+  localparam GE = ((C + 1) >> W) != 0;
+  localparam integer R = !(VA || VB) ? -1 :
+      _TECHMAP_CELLTYPE_ == "$lt" ? (VA ? (Z ? 0 : GT ? 1 : -1) : (GE ? 0 : -1)) :
+      _TECHMAP_CELLTYPE_ == "$le" ? (VA ? (GE ? 1 : -1) : (Z ? 1 : GT ? 0 : -1)) :
+      _TECHMAP_CELLTYPE_ == "$gt" ? (VA ? (GE ? 0 : -1) : (Z ? 0 : GT ? 1 : -1)) :
+      _TECHMAP_CELLTYPE_ == "$ge" ? (VA ? (Z ? 1 : GT ? 0 : -1) : (GE ? 1 : -1)) : -1;
+  wire _TECHMAP_FAIL_ = R < 0;
+  assign Y = R == 1;
 endmodule
 """
 
@@ -803,24 +842,36 @@ def seq_tail_b(out, lecff):
                      [c.format(lecff=lecff, out=out) for c in SEQ_TAIL[1:]]) + "\n"
 
 
-def gold_dead_x_cmds():
+def gold_dead_x_cmds(cmp_map):
     """DIE-QC-97 11-09 (QC coll_core ot_qwen_static_slot_ctl epoch_abort / fault_cause[0]: gold_x x226 x228 x229,
     x55690 ...): exact, X-preserving clean-up of provably unreachable RTL X in the flattened gold, so a dead X never
     reaches a compare cone as a gold-only $anyseq.  Two sources, both unobservable by construction:
       (a) slang bound checks of a dynamic index: written[cmd_ws] with a 6-bit index into 64 entries reads
-          `cmd_ws < 7'd64 ? m[cmd_ws] : 1'bx` (a write is guarded by `j >= 0 && j < 64`).  The compare is constant
-          for the operand width; opt_expr -fine folds it (unsigned 6 b < 64 -> 1, unsigned >= 0 -> 1) and then the
-          mux, so the X arm is gone.  (Its techmapped $alu also left dangling undriven CO[2] / CO[4] wires; those
-          had no load and never reached a cone.)
+          `cmd_ws < 7'd64 ? m[cmd_ws] : 1'bx`.  The compare has one value for every value of its 6-bit operand; the
+          DEADX_CMP_V techmap (cmp_map) replaces exactly such compares (unsigned, the other operand a defined
+          constant: A < C / A <= C / A > C / A >= C with C = 0 or C beyond the operand range, either operand order)
+          by their constant, and the mux with the constant select loses the X arm.  Every other compare stays as
+          written.
       (b) proc mux chains whose X arm is selected only under a condition an outer mux on the SAME select already
           decides: `$103 = epoch_begin ? 'x : P` feeding `$107 = epoch_begin ? 0 : $103`.  opt_muxtree removes the
           dead arm.
-    Both are exact for every input: -keepdc chooses no value for a reachable X and opt_muxtree only drops branches
-    that no select assignment reaches, so a real, reachable RTL X stays a don't care.  No flop is created, merged or
-    renamed.  OT_LEC_GOLD_DEADX=0 restores the previous gold script."""
+    HBM-COLLECT-1 11-09 (xs core, 9 false differs on u_leaf.g_xm[*].u_wm.q[k], EQUIVALENT with the step off): the
+    first form, `opt_expr -fine -keepdc`, was X-exact but also rewrote every compare against a power of two
+    (788 `({21'd0, ac} + k) >= 2048` -> `|sum[11]`) and 50 `g0 < 16` compares; the finer gold cones then had other
+    next-state supports than their siblings (wm_q[4m] lost ac[1:0], wm_q[4m+3] kept them), the same-support
+    proposals missed the true wm_q[4m+3] == wm_q[4m] relation, and the induction could not exclude unreachable
+    states.  The fold is now limited to compares whose result is a constant, which removes the bound-check X arms
+    and changes no other cone.
+    Both steps are exact for every input: no X value is chosen (a reachable RTL X stays a don't care) and no flop is
+    created, merged or renamed.  OT_LEC_GOLD_DEADX=0 restores the previous gold script."""
     if os.environ.get("OT_LEC_GOLD_DEADX", "1") == "0":
         return []
-    return ["opt_expr -fine -keepdc", "opt_muxtree"]
+    return [f"techmap -map {cmp_map} t:$lt t:$le t:$gt t:$ge", "opt_muxtree"]
+
+
+def gold_dead_x_map(out):
+    """the DEADX_CMP_V file of the gold run whose output prefix is out (OUT/gold -> OUT/deadx_cmp.v)."""
+    return os.path.join(os.path.dirname(str(out)), "deadx_cmp.v")
 
 
 def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extra=()):
@@ -835,7 +886,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # constant-stride slices instead of a 32-stage x-filled barrel shifter): without them eng_rr_e's 552
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
-          "flatten -noscopeinfo", *gold_dead_x_cmds(), "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "flatten -noscopeinfo", *gold_dead_x_cmds(gold_dead_x_map(out)), "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
           "select -clear", f"write_json {out}.aliases.json",
           # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
           # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
@@ -7505,6 +7556,7 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
     # This preserves individual logical register elements before memory_map;
     # every next-state and output compare still passes normal induction.
     no_mem = gold_fe == "slang" and str(env.get("OT_LEC_GOLD_NO_IMPLICIT_MEMORIES", "0")) == "1"
+    Path(gold_dead_x_map(out / "gold")).write_text(DEADX_CMP_V)   # the dead-X compare fold map (gold_dead_x_cmds)
     if no_mem:
         rec["gold_no_implicit_memories"] = True
     try:
