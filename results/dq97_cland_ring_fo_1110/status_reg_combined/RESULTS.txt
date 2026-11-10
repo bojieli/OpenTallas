@@ -1,0 +1,9 @@
+DIE-QC-97 2026-11-10 epyc7, src_qcsw2 RTL (ot_dp_clk_landing_ca.sv 34ce6ec = main; ot_meso_fifo.sv 688d3e0), verilator 5.x
+tb_status_reg_fo32_rf.sv    8/8 STATUS_REG_PASS, mutants SR_ARM SR_OH SR_TAG SR_GUARD caught, RC 0
+tb_status_reg_fo32both.sv   8/8 STATUS_REG_PASS, mutants caught, RC 0
+stock tb_status_reg.sv      8/8 PASS (STATUS_REG alone, legacy chunking)
+stock stimulus with gold legacy vs cand fo32+SR1: q mismatches only at WREG=1 WFALL=1 around t_rst_n edges = simulator
+race (t_rst_n/data change ON the falling writer edge; raw-fclk wen flops vs ~fclk data flops); the same pair with the
+stimulus 208 ps after the edge passes (fo32_rf), and the yosys LEC proves the chunking equivalent (lec/).
+ring LEC (lec/lec.sh): dd_ei W=549 WFALL WREG DSREP1/WC64 vs DSREP2/WC32: 4370/4370 $equiv proven (src RTL and main RTL);
+mutant OT_MESO_CA_MUTANT_WREG on the gate: 32 unproven (s_d[0] bits 0..31), caught.
