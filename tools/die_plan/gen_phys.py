@@ -1121,7 +1121,15 @@ def core_tap_view_report(P, tn):
 def budget_tap_rows(P, tn):
     """Keep budget rows identical with one macro-avoiding grid count per type."""
     density = _density(P.types[tn])
-    grid_count = 0 if density else len(S._grid_taps(P, tn))
+    try:
+        grid_count = 0 if density else len(S._grid_taps(P, tn))
+    except ValueError:
+        # S81 slice_station__t51 native split: two hard children cover the outline, so the R4 grid has no legal site.
+        # An explicit type's clock ports come from its taps table alone (tap_grid), so no row is a grid row.  Other
+        # explicit types keep their byte-identical budget; any other mode still refuses.
+        if P.types[tn].get("clock", {}).get("tap_mode") != "explicit":
+            raise
+        grid_count = 0
     rows = [dict(name=n, xy=[x, y], kind="density" if density else
                  ("grid" if i < grid_count else "sinks"))
             for i, (n, x, y) in enumerate(S.tap_grid(P, tn))]
