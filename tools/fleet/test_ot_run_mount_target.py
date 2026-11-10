@@ -50,3 +50,14 @@ def test_job_host_disk_guard_is_removed_hub_floor_stays():
                 scratch_second=False, free_gb=100, disk_gb=500)
     assert m.host_refusal(dict(base, dir_onroot=True))                  # a job on root is refused below the floor
     assert not m.host_refusal(dict(base, dir_onroot=False))             # a job on the separate scratch disk is admitted
+
+
+def test_every_host_is_dir_aware_by_default():
+    """DISK-FLOOR-PER-TARGET 11-10: intel1/intel2/epyc2 scratch-disk jobs are not held to the root floor."""
+    pass
+    for h in ("intel1", "intel2", "epyc2", "epyc7"):
+        base = dict(rootfs_free_gb=100, rootfs_floor_gb=150, rootfs_pct=97, host_name=h, scratch_disk='/s2',
+                    scratch_disk_gb=87, scratch_second=False)
+        assert not m.host_refusal(dict(base, dir_onroot=False)), h      # 87 GB scratch2 >= its own 50 GB floor
+        assert m.host_refusal(dict(base, dir_onroot=True)), h           # root still keeps 150
+        assert m.host_refusal(dict(base, dir_onroot=False, scratch_disk_gb=40)), h   # scratch disk's own floor
