@@ -1,0 +1,538 @@
+# WAVE-SRC-GAP KW-FIX-43 2026-11-09: main commits (tools/die_plan, tools/flow, flow, tools/autopilot; no test_ files) whose file version a die wave source lacks. OLDER = commit predates the source base (the same_relay kind); since_base = normal staleness. Read per file blob, so a local merge is listed as local_unseen and not here. tools/autopilot in sources is not used by the wave runtime.
+die	kind	commit	date	files	paths	subject
+hbm	OLDER	539f02fdd750	11-08 11:43	2	die_plan/post_route_drv/eco_grt_pre.tcl (file absent) die_plan/post_route_drv/prd_mk.sh	Preserve pre-routed wires around ECO pin access
+hbm	OLDER	06641d575b40	11-08 12:03	1	die_plan/lec.py	Refine scope twin proposals after rejected rare-event matches
+hbm	OLDER	53e79ea9417e	11-08 17:23	3	autopilot/auto_resign.py die_plan/eco_loop.py die_plan/signoff.py	KW-FIX-36 R4: ECO near-miss census follows sign-off's output-port hold classification
+hbm	OLDER	ec3ebad7ba26	11-08 17:39	1	die_plan/schema.py	Declare independent landing read-select copies in plan schema
+hbm	OLDER	623e2f9794d0	11-08 17:39	1	die_plan/clock_landings.py	Expose count-aligned read-select replication without writer delay
+hbm	OLDER	0efc6e43a2b9	11-08 17:42	1	autopilot/kit_wave.py	KW-FIX-36: gen disk fallback when no gen host clears the preference
+hbm	OLDER	e59c98789ad3	11-08 17:51	1	die_plan/die_plan.schema.json	die_plan.schema.json: regenerate for landing_ring_dsrep (dump-schema, mechanical)
+hbm	OLDER	02aaf7931607	11-08 18:10	1	autopilot/kit_wave.py	item_env: allow [ ] in OT_MACRO_MOVES values only
+hbm	OLDER	8140ea2694e2	11-08 18:24	4	die_plan/bound_groups.py die_plan/qc_su_lane_cut.py die_plan/qc_su_mem9_event.py (file absent) die_plan/schema.py	QC-MEM9: EXTRA9 SU lane head form and plan event (off main until path ruling)
+hbm	OLDER	d8f85c8cf716	11-08 18:28	1	die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: derive MEMORY_READ_EXTRA from the plan su_l<->su_c depths
+hbm	OLDER	29a806f6ec60	11-08 18:37	1	die_plan/eco_loop.py	KW-FIX-37: eco_loop GOAL=post works on a stage-resumed kit
+hbm	OLDER	99d7dfcd2809	11-08 19:13	1	autopilot/kit_wave.py	KW-FIX-37: spill measures the lane on the target; no-host rows retry
+hbm	OLDER	4b09875b1002	11-08 19:16	1	die_plan/post_route_drv/prd_hook.tcl	ECO stage check: match hierarchical SPEF names that keep the \/ divider in OpenDB
+hbm	OLDER	3b3bf0f0d584	11-08 19:58	1	autopilot/kit_wave.py	KW-FIX-38: wave picker sees root-fs lanes on bind mounts, scratch2 alternative, WAIT-DISK rows
+hbm	OLDER	71a6993a25b9	11-08 20:00	1	autopilot/kit_wave.py	KW-FIX-38: alternative-disk per-kit charge 6 GB within a tick
+hbm	OLDER	422126acd127	11-08 20:06	1	die_plan/tap_balance.tcl	tap_balance: match escaped OpenDB names in the core latency table
+hbm	OLDER	063236aea5f2	11-08 20:11	1	autopilot/kit_wave.py	KW-FIX-38: die option item_inputs builds listed items from their own plan and bind
+hbm	OLDER	84ac53507bb7	11-08 20:18	1	autopilot/kit_wave.py	KW-FIX-38: defer launches once a host alternative disk is used up in the tick
+hbm	OLDER	fdfd08eb4d50	11-08 22:05	2	die_plan/transport_known_consumers.json (file absent) die_plan/transport_table.py (file absent)	TRANSPORT-3: per-die bound transport table (advisory)
+hbm	OLDER	c78f5970ba5e	11-08 22:11	1	autopilot/kit_wave.py	KW-FIX-39: work_alt: do not self-link when a parent is already on the alternative lane
+hbm	OLDER	215b178d6404	11-08 22:59	1	autopilot/kit_resume.py	kit_resume: carry the last reused step's own logs past the 1 s mtime limit
+hbm	OLDER	c52ad880bd79	11-08 23:16	2	autopilot/kit_wave.py autopilot/prov_view.py	kit_wave/prov_view: stage landing_evidence and provenance of a counted hard-landing child view
+hbm	OLDER	6e609017c8e1	11-08 23:27	1	die_plan/qc_su_vmw_land_event.py (file absent)	qc_su_vmw_land_event: land SU lane writes of su_l0 and su_l1 on one edge
+hbm	OLDER	c473c5ccf1fe	11-08 23:37	1	autopilot/kit_wave.py	kit_wave: restage_place_waiters makes unspillable PLACE waiters movable
+hbm	OLDER	882f260cd295	11-08 23:49	1	die_plan/landing_place.py	Landing group override: absent optional raw copy logs, collector still errors
+hbm	OLDER	aa8acb1988ee	11-08 23:53	1	die_plan/landing_place.py	Landing START relays: leave hard cores by the side that shortens the chain
+hbm	OLDER	9f6cf3f1369c	11-08 23:54	1	die_plan/kit_gen_lint.py	kit_gen_lint: src_skew existence check never lazy-fetches a partial clone
+hbm	OLDER	0f70bd142ca4	11-09 00:17	2	autopilot/kit_wave.py die_plan/kit_gen_lint.py	KW-FIX-41: unit-level ENOSPC spends no infra attempt; src_skew never lazy-fetches
+hbm	OLDER	19d33e6cf64e	11-09 00:54	1	die_plan/lec_async.sh	lec_async: write identity atomically; band-order test names fixture cores
+hbm	OLDER	0b305f23952b	11-09 00:58	1	die_plan/landing_place.py	Landing local-reset windows: clear of hard cores, halo-aware test
+hbm	OLDER	0ebdeada75f5	11-09 01:36	1	die_plan/ts_relay_event.py	ts_relay_event: --regen-latency regenerates plan.latency and checks deltas equal declared pin cycles
+hbm	OLDER	43ba7f0e904d	11-09 01:46	1	die_plan/ts_relay_event.py	relay event and native_istations: receiver depth = deepest per-core entry of the bus
+hbm	OLDER	46dd208b10b9	11-09 01:56	1	die_plan/ts_relay_event.py	ts_relay_event: --price-existing-out prices a native-OUT type older kit OUT stations (0 new hardware, model ca
+hbm	OLDER	4d2a87c11289	11-09 01:59	2	die_plan/kit_zl_lockup.py (file absent) die_plan/zl_lockup/hd_spn.json (file absent)	kit_zl_lockup: opt-in zero-logic hop lockup latches as a kit RTL post-pass (hd_spn / hd_spn_end)
+hbm	OLDER	facd3d40577a	11-09 02:02	1	autopilot/prov_view.py	prov_view: narrow detail_pg_layer form for cores with PG pins on the top OBS layer (DRT-0073 bank128)
+hbm	OLDER	57856d101951	11-09 02:05	1	die_plan/ts_relay_event.py	ts_relay_event: --min-stations floors a bus station count so an R8 class stays equal depth
+hbm	OLDER	7e4e5f87f33d	11-09 02:07	1	die_plan/lec.py	lec.py: clock-tap tie model for black-box clock pins on tapped clock trees (hd_tile ft_*)
+hbm	OLDER	a1d19af3ab85	11-09 02:13	1	die_plan/lec.py	lec.py: forward OT_LEC_TAP_TIE into the LEC container
+hbm	OLDER	a2a7cc494e15	11-09 02:27	1	die_plan/ts_relay_miter.py	ts_relay_miter: multiset compare, pair bind source-hash names by connectivity signature
+hbm	OLDER	a0d06cd7dcfb	11-09 02:28	4	die_plan/clock_landings.py die_plan/kv_start_corridor_event.py (file absent) die_plan/reset_tree.py die_plan/start_obstacle_path.py (file absent)	KV one-switch package: plan_p4 tools, PLL views, boot CDC underflow tie
+hbm	OLDER	3c56a42e364d	11-09 02:28	1	die_plan/ts_relay_miter.py	ts_relay_miter: resolve bound file stems through the plan module (cloned module__type)
+hbm	OLDER	ba8f6f686f95	11-09 02:33	1	die_plan/ts_relay_miter.py	ts_relay_miter: --r8 mode checks per-bit landing pad moves against stage deltas
+hbm	OLDER	9db0ec8d71eb	11-09 02:52	1	die_plan/landing_placement.tcl	landing_placement: START relay windows take the status/collector grow (QC FIRM ft-station collision)
+hbm	OLDER	aa8745402b28	11-09 03:53	1	die_plan/lec_async.sh	lec_async: kit lec_options.json sets OT_LEC_SUPERSET_VEC, differing shell value refused
+hbm	OLDER	7c0931570526	11-09 03:54	1	die_plan/signoff.py	signoff: TT vclk rebind over early-core-tap clocks when no boundary register is on clk
+hbm	since_base	7dd16dd58d3a	11-09 04:20	1	die_plan/legacy_gate.py	Legacy core kits record the LEC proof policy (lec_options.json)
+hbm	since_base	cf8c4104ef08	11-09 04:42	1	die_plan/clock_landings.py	KV delta: clock_landings plan_path read via getattr for __new__-built Landings
+hbm	since_base	76ed2823bef9	11-09 04:47	2	die_plan/qn_alternate.py (file absent) die_plan/qn_chain_proof.py (file absent)	HBM q_b010 pilot: QN-alternate station chains (qn_alternate + chain proof)
+hbm	since_base	a0490cc098da	11-09 04:51	1	die_plan/eco_loop.py	eco_loop: default hold repair margin 5 ps (repair target only; gate stays FF hold >= 0)
+hbm	since_base	b2ae6c209fa8	11-09 04:58	1	die_plan/clock_taps.tcl	clock_taps: opt-in OT_HOP_LATCH_CAPTURE_TAP hangs named hop latches on their capture tap
+hbm	since_base	64db1baf83bf	11-09 05:07	1	die_plan/lec.py	lec.py: exact dead-X gold clean-up + final undecided-cone escalation (DIE-QC-97)
+hbm	since_base	3c4cd1e64fc7	11-09 05:10	1	die_plan/die_plan.schema.json	die_plan.schema.json: dump-schema for memory_read_extra (ROOT-MERGE-57 hold)
+hbm	since_base	ccf792c10b63	11-09 07:02	2	die_plan/tap_pair_affinity.tcl die_plan/tap_pair_plan.tcl	DIE-QC-97 TAP-CAP: tap-pair planner accepts over-cap initial taps (donate only)
+hbm	since_base	6d92d957ea6d	11-09 07:13	2	die_plan/kit_contract.py die_plan/lef_clock_entry.py	DIE-QC-97 NL-CK-ACCESS: stage the clock-entry access LEF by construction; hard core wins over same-name conten
+hbm	since_base	c20531743e11	11-09 07:16	1	die_plan/clock_landing_plan.py	DIE-QC-97: band resize keeps wide face bands on their pin window (GRT-0116 class)
+hbm	since_base	826eb4010eec	11-09 07:27	2	die_plan/die_plan.schema.json die_plan/schema.py	DIE-QC-97: plan knob budgets.cland_strip_rows(_types) for the N/S ring_ff face strip
+hbm	since_base	67133eca41ec	11-09 07:35	1	die_plan/die_ci.py	COUNT-ARCHIVE-1: durable signed record store, archive-backed view staging, auto-archive ingest
+hbm	since_base	42d265cdb636	11-09 07:55	2	autopilot/kit_wave.py die_plan/param_class_split.py (file absent)	DIE-QC-97: param_class_split -- one plan type per bound LOGIC value set
+hbm	since_base	073656d7febf	11-09 08:59	1	die_plan/clock_landing_plan.py	DIE-QC-97: resize_undersized_bands keeps the band ring_place tag
+hbm	since_base	120eba390b45	11-09 10:56	1	die_plan/core_flow.py	core_flow: every core kit gets the repeater-pitch hook (OT_MAXWIRE_UM, grt_maxwire.tcl)
+hbm	since_base	0409748de8de	11-09 11:07	2	die_plan/die_plan.schema.json die_plan/schema.py	die_plan schema: allow param_base_type/param_set on partition_types (__pv clones)
+hbm	since_base	66c8ba930c16	11-09 11:07	1	die_plan/clock_landing_plan.py	DIE-QC-97: relocate off-window ring bands onto their pin window (cbf_q00 GRT-0116)
+hbm	since_base	393765179ca8	11-09 11:27	1	die_plan/romq_parent_adapter.py	romq_parent_adapter: FIXED CGR follows the legacy recipe (CGR 8); keep CGR 0 for signed _he/_hw seals
+hbm	since_base	8b22a8cd23a9	11-09 11:43	1	die_plan/eco_loop.py	eco_loop: stage a scope-capable orfs_hold_mm pair before each ECO (KW-FIX-44)
+hbm	since_base	5bdc916451b4	11-09 11:47	2	autopilot/autopilot.py autopilot/watchdog.py	autopilot: name the hub WATCHDOG as the sender of a 137/143 stop (KW-FIX-44)
+hbm	since_base	28e008f692f5	11-09 11:58	1	die_plan/eco_loop.py	eco_loop: post-route LEC falls back to the tools lec.py; no tool = LEC_TOOL_MISSING (KW-FIX-44)
+hbm	since_base	c2836b8f2596	11-09 12:07	2	die_plan/grt_post.tcl die_plan/grt_pre.tcl	HOPLATCH-HOLD: hop latch launch->latch hop hold-padded at GRT by construction; default pattern adds u_fl_L201x
+hbm	since_base	2e3449cef64a	11-09 12:40	1	die_plan/die_plan.schema.json	die_plan: regenerate die_plan.schema.json for stations_in / lands_on (schema.py dump-schema)
+hbm	since_base	90b5279e4254	11-09 13:00	2	die_plan/kit_reset_contract.py die_plan/lec.py	Reset contract: landing clones resolve to their base entry; base-name miss is a FLOW error (RESET-KEY-1109)
+hbm	since_base	b65a848a700d	11-09 14:00	1	die_plan/post_route_drv/post_grt_chain.py	post_grt_chain: a post-route ECO never re-runs kit clock-tree editors (ECO-CLOCK-HOOK, KW-FIX-44)
+hbm	since_base	c15eb3676920	11-09 14:21	1	die_plan/hold_margin_pick.py (file absent)	HBM kits: 35 ps reg2reg GRT FF hold-repair target for hard cores > 100k cells
+hbm	since_base	1940add62dc6	11-09 14:52	1	die_plan/landing_placement.tcl	landing_placement: key chunk-wire ring storage dch[c].sd_c[k] as s_d[slot][bit] (KV kv3_hgi_v3 ft27_i GRT-0116
+hbm	since_base	cb30718c0ae8	11-09 15:40	1	die_plan/clock_landings.py	clock_landings: drive a single declared rs_/rraw_ die-top net directly, no top alias assign (KV die_port_bind 
+hbm	since_base	02f251ec0103	11-09 16:07	1	die_plan/leaf_affinity.tcl	leaf_affinity: local split pass for zero-logic chains that span the core
+hbm	since_base	539fe127b562	11-09 17:02	1	die_plan/clock_landings.py	clock_landings: rs_/rraw_ die-top ports emitted by this pass count as declared (direct-net fix was a no-op on 
+hbm	since_base	ac4c2c478488	11-09 18:09	3	die_plan/qc_struct_ctl.py (file absent) die_plan/qc_struct_ctl_lanes.py (file absent) die_plan/qc_struct_ctl_val.py (file absent)	DIE-QC-97 STRUCT-CTL-1: structural data-path plan form for QC sle_ctl__cl67434795
+hbm	since_base	b3f0a3d9e1e4	11-09 18:30	1	die_plan/relay_line_place.tcl (file absent)	HBM pt_w conservative form (PTW-C): second relay stage + kit repeater pitch and relay-line placement
+hbm	since_base	7b4138bf30f2	11-09 18:39	1	die_plan/s81_svc_idx_fit.py	DIE-S81-85: source event - prime hunk in the bound portfix178 idx readers
+hbm	since_base	1389515fc989	11-09 18:46	3	die_plan/die_plan.schema.json die_plan/die_sta_related.py die_plan/schema.py	TAPWIN-1109: kit SDC charges cross-tap pairs the related-pair budget X, not the die band
+hbm	since_base	dcc71b861d9f	11-09 19:00	3	die_plan/check.py die_plan/schema.py die_plan/taps.py	die_plan: native split classes (child-root taps, ft stations_in, per-root clock_entry_access); S81 T51-SPLIT-C
+hbm	since_base	5d2c5c95bdc5	11-09 19:14	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN, pair merged twins at other bit indices of the same register
+hbm	since_base	4f7a78955d54	11-09 19:14	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: close M6 gaps that cannot lift both nets to M7 (PDN-0179 M6 macro-edge class)
+hbm	since_base	f7cad6d7818a	11-09 19:15	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN signature ignores gold X words (q_b100 hint-free NOT EQ 3)
+hbm	since_base	aa1420b04041	11-09 19:18	1	die_plan/landing_place.py	Landing collectors: move a window whose grow cannot reach rows out of hard cores at gen
+hbm	since_base	8dc0e1aab7ee	11-09 19:58	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: edge-column comment states measured numbers, marks mechanism as inferred
+hbm	since_base	ea72f65aad0e	11-09 20:04	1	autopilot/kit_wave.py	kit_wave: rotate launch order across dies per pass
+hbm	since_base	ec524673e0e1	11-09 20:34	2	autopilot/autopilot.py autopilot/kit_wave.py	Failure classifiers: gate FAIL after caught tool errors; PDN INFO lines; Error 247
+hbm	since_base	9618f1c0fea0	11-10 01:11	4	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 RCK2-1109: second io_pma_rck entry for the serdes types (plan event + generator)
+hbm	since_base	1e34e1135a3d	11-10 01:31	1	die_plan/landing_placement.tcl	Landing reset raw copies: macro exit at run time without macro_moves.json (CLAND-RESET-IN-MACRO)
+hbm	since_base	d4de8694bc1e	11-10 02:55	4	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 LEAF-CLKENTRY-1109: widen the vs/vq channel on t21-geometry leaf types; opt-in core-clock tap entries
+head	OLDER	8140ea2694e2	11-08 18:24	3	die_plan/bound_groups.py die_plan/qc_su_lane_cut.py die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: EXTRA9 SU lane head form and plan event (off main until path ruling)
+head	OLDER	d8f85c8cf716	11-08 18:28	1	die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: derive MEMORY_READ_EXTRA from the plan su_l<->su_c depths
+head	OLDER	6e609017c8e1	11-08 23:27	1	die_plan/qc_su_vmw_land_event.py (file absent)	qc_su_vmw_land_event: land SU lane writes of su_l0 and su_l1 on one edge
+head	OLDER	facd3d40577a	11-09 02:02	1	autopilot/prov_view.py	prov_view: narrow detail_pg_layer form for cores with PG pins on the top OBS layer (DRT-0073 bank128)
+head	OLDER	7e4e5f87f33d	11-09 02:07	1	die_plan/lec.py	lec.py: clock-tap tie model for black-box clock pins on tapped clock trees (hd_tile ft_*)
+head	OLDER	a1d19af3ab85	11-09 02:13	1	die_plan/lec.py	lec.py: forward OT_LEC_TAP_TIE into the LEC container
+head	OLDER	a0d06cd7dcfb	11-09 02:28	5	die_plan/bind.py die_plan/clock_landings.py die_plan/kv_start_corridor_event.py (file absent) die_plan/reset_tree.py die_plan/start_obstacle_path.py (file absent)	KV one-switch package: plan_p4 tools, PLL views, boot CDC underflow tie
+head	OLDER	20168ea1dfb8	11-09 02:35	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: PDN windows for macro-gap M5 columns with their own M4 rows (PDN-0179 M4 class)
+head	OLDER	9db0ec8d71eb	11-09 02:52	1	die_plan/landing_placement.tcl	landing_placement: START relay windows take the status/collector grow (QC FIRM ft-station collision)
+head	OLDER	075832317cf7	11-09 03:20	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: M5 strip rule for PDN-0179 strips under macro-bounded M6 bands
+head	OLDER	aa8745402b28	11-09 03:53	1	die_plan/lec_async.sh	lec_async: kit lec_options.json sets OT_LEC_SUPERSET_VEC, differing shell value refused
+head	OLDER	7c0931570526	11-09 03:54	1	die_plan/signoff.py	signoff: TT vclk rebind over early-core-tap clocks when no boundary register is on clk
+head	OLDER	23e8a72fd79e	11-09 04:07	2	die_plan/kit_topology.py die_plan/native_istations.py	HBM-PLAN-1: one final HBM switch d44v_final4_1109 + native OUT bus scope
+head	OLDER	7dd16dd58d3a	11-09 04:20	1	die_plan/legacy_gate.py	Legacy core kits record the LEC proof policy (lec_options.json)
+head	OLDER	cf8c4104ef08	11-09 04:42	1	die_plan/clock_landings.py	KV delta: clock_landings plan_path read via getattr for __new__-built Landings
+head	OLDER	2218bb5fc7f0	11-09 04:43	1	die_plan/bind.py	KV ZB_ADD build of record: attn Z base parameter, EP offset hook, compiler Z shift
+head	OLDER	76ed2823bef9	11-09 04:47	2	die_plan/qn_alternate.py (file absent) die_plan/qn_chain_proof.py (file absent)	HBM q_b010 pilot: QN-alternate station chains (qn_alternate + chain proof)
+head	OLDER	b2ae6c209fa8	11-09 04:58	1	die_plan/clock_taps.tcl	clock_taps: opt-in OT_HOP_LATCH_CAPTURE_TAP hangs named hop latches on their capture tap
+head	OLDER	52078d8f9e9a	11-09 05:03	1	die_plan/pinband_site.py	pinband_site: linear PIN block parser (hub gen spent > 2 h in pin_rows)
+head	OLDER	64db1baf83bf	11-09 05:07	1	die_plan/lec.py	lec.py: exact dead-X gold clean-up + final undecided-cone escalation (DIE-QC-97)
+head	OLDER	ccf792c10b63	11-09 07:02	2	die_plan/tap_pair_affinity.tcl die_plan/tap_pair_plan.tcl	DIE-QC-97 TAP-CAP: tap-pair planner accepts over-cap initial taps (donate only)
+head	OLDER	6d92d957ea6d	11-09 07:13	2	die_plan/kit_contract.py die_plan/lef_clock_entry.py	DIE-QC-97 NL-CK-ACCESS: stage the clock-entry access LEF by construction; hard core wins over same-name conten
+head	OLDER	c20531743e11	11-09 07:16	1	die_plan/clock_landing_plan.py	DIE-QC-97: band resize keeps wide face bands on their pin window (GRT-0116 class)
+head	OLDER	826eb4010eec	11-09 07:27	2	die_plan/die_plan.schema.json die_plan/schema.py	DIE-QC-97: plan knob budgets.cland_strip_rows(_types) for the N/S ring_ff face strip
+head	OLDER	703f586fd5db	11-09 07:28	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: q_b102pv1 PDN-0179 class (M6-only strips, M6 sliver close at macro edges, covering colum
+head	OLDER	42d265cdb636	11-09 07:55	3	autopilot/kit_wave.py die_plan/bind.py die_plan/param_class_split.py (file absent)	DIE-QC-97: param_class_split -- one plan type per bound LOGIC value set
+head	OLDER	073656d7febf	11-09 08:59	1	die_plan/clock_landing_plan.py	DIE-QC-97: resize_undersized_bands keeps the band ring_place tag
+head	OLDER	a1e90880fb2c	11-09 09:56	1	die_plan/die_trial.py	die_trial.band_share_obs: alternate die-band row phase per direction (DIE-HBM-97)
+head	OLDER	adbb61f05b68	11-09 10:34	1	die_plan/gen_phys.py	gen_phys: HBM kits default OT_HOP_LATCH_CAPTURE_TAP=u_fl_rst_ (COORD 11-09)
+head	OLDER	120eba390b45	11-09 10:56	1	die_plan/core_flow.py	core_flow: every core kit gets the repeater-pitch hook (OT_MAXWIRE_UM, grt_maxwire.tcl)
+head	OLDER	0409748de8de	11-09 11:07	2	die_plan/die_plan.schema.json die_plan/schema.py	die_plan schema: allow param_base_type/param_set on partition_types (__pv clones)
+head	OLDER	66c8ba930c16	11-09 11:07	1	die_plan/clock_landing_plan.py	DIE-QC-97: relocate off-window ring bands onto their pin window (cbf_q00 GRT-0116)
+head	OLDER	393765179ca8	11-09 11:27	1	die_plan/romq_parent_adapter.py	romq_parent_adapter: FIXED CGR follows the legacy recipe (CGR 8); keep CGR 0 for signed _he/_hw seals
+head	OLDER	8b22a8cd23a9	11-09 11:43	1	die_plan/eco_loop.py	eco_loop: stage a scope-capable orfs_hold_mm pair before each ECO (KW-FIX-44)
+head	OLDER	5bdc916451b4	11-09 11:47	2	autopilot/autopilot.py autopilot/watchdog.py	autopilot: name the hub WATCHDOG as the sender of a 137/143 stop (KW-FIX-44)
+head	OLDER	28e008f692f5	11-09 11:58	1	die_plan/eco_loop.py	eco_loop: post-route LEC falls back to the tools lec.py; no tool = LEC_TOOL_MISSING (KW-FIX-44)
+head	OLDER	ea774944986a	11-09 11:59	1	die_plan/face_flops.tcl	face_flops: OT_HOP_LATCH_FRAC sites ft hop lockup latches toward the capture station
+head	OLDER	c2836b8f2596	11-09 12:07	3	die_plan/gen_phys.py die_plan/grt_post.tcl die_plan/grt_pre.tcl	HOPLATCH-HOLD: hop latch launch->latch hop hold-padded at GRT by construction; default pattern adds u_fl_L201x
+head	since_base	c027d3fb392a	11-09 12:16	1	die_plan/gen_phys.py	kit_reset_contract: map the plan die name to its contract (HBM type kits never staged the reset contract)
+head	since_base	778a264cf808	11-09 12:29	1	die_plan/gen_phys.py	Native bound reset: verify the root PLL lock qualifier instead of refusing it (kv3_hub_C)
+head	since_base	2e3449cef64a	11-09 12:40	1	die_plan/die_plan.schema.json	die_plan: regenerate die_plan.schema.json for stations_in / lands_on (schema.py dump-schema)
+head	since_base	1e2f4da0d3a3	11-09 12:42	1	die_plan/gen_phys.py	gen_phys: OT_MACRO_MOVES on a split core moves its children as one rigid group (S81 MOVES-SPLIT-1109)
+head	since_base	90b5279e4254	11-09 13:00	2	die_plan/kit_reset_contract.py die_plan/lec.py	Reset contract: landing clones resolve to their base entry; base-name miss is a FLOW error (RESET-KEY-1109)
+head	since_base	21d06018f94e	11-09 13:46	1	die_plan/gen_phys.py	Declare qkd_pv_fin_s sbuf (32 x 512) a flop memory by design (kv3_hub_C gen_lint)
+head	since_base	b65a848a700d	11-09 14:00	1	die_plan/post_route_drv/post_grt_chain.py	post_grt_chain: a post-route ECO never re-runs kit clock-tree editors (ECO-CLOCK-HOOK, KW-FIX-44)
+head	since_base	82af67af8f26	11-09 14:13	1	die_plan/gen_phys.py	CONS-OVERMACRO-1: keep the layer pair above hard-macro OBS as signal layers in conservative kits
+head	since_base	c15eb3676920	11-09 14:21	1	die_plan/hold_margin_pick.py (file absent)	HBM kits: 35 ps reg2reg GRT FF hold-repair target for hard cores > 100k cells
+head	since_base	625e17271d46	11-09 14:23	1	die_plan/bind.py	Strict port-bind: KITPARAM parity and as-built alternate files (DIE-HBM-97/BINDPARAM)
+head	since_base	1940add62dc6	11-09 14:52	1	die_plan/landing_placement.tcl	landing_placement: key chunk-wire ring storage dch[c].sd_c[k] as s_d[slot][bit] (KV kv3_hgi_v3 ft27_i GRT-0116
+head	since_base	cb30718c0ae8	11-09 15:40	1	die_plan/clock_landings.py	clock_landings: drive a single declared rs_/rraw_ die-top net directly, no top alias assign (KV die_port_bind 
+head	since_base	3c7c7e9573c3	11-09 15:44	1	die_plan/bind.py	bind portbind: asbuilt portbind_files (strict-check-only sources, e.g. real RTL of core_splits hard cores)
+head	since_base	02f251ec0103	11-09 16:07	1	die_plan/leaf_affinity.tcl	leaf_affinity: local split pass for zero-logic chains that span the core
+head	since_base	539fe127b562	11-09 17:02	1	die_plan/clock_landings.py	clock_landings: rs_/rraw_ die-top ports emitted by this pass count as declared (direct-net fix was a no-op on 
+head	since_base	ac4c2c478488	11-09 18:09	3	die_plan/qc_struct_ctl.py (file absent) die_plan/qc_struct_ctl_lanes.py (file absent) die_plan/qc_struct_ctl_val.py (file absent)	DIE-QC-97 STRUCT-CTL-1: structural data-path plan form for QC sle_ctl__cl67434795
+head	since_base	b3f0a3d9e1e4	11-09 18:30	1	die_plan/relay_line_place.tcl (file absent)	HBM pt_w conservative form (PTW-C): second relay stage + kit repeater pitch and relay-line placement
+head	since_base	7b4138bf30f2	11-09 18:39	1	die_plan/s81_svc_idx_fit.py	DIE-S81-85: source event - prime hunk in the bound portfix178 idx readers
+head	since_base	1389515fc989	11-09 18:46	4	die_plan/die_plan.schema.json die_plan/die_sta_related.py die_plan/gen_phys.py die_plan/schema.py	TAPWIN-1109: kit SDC charges cross-tap pairs the related-pair budget X, not the die band
+head	since_base	090d37504b52	11-09 18:57	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: no gap-column window on outline-edge columns (HBM q_su20 PDN OOM class)
+head	since_base	dcc71b861d9f	11-09 19:00	3	die_plan/check.py die_plan/schema.py die_plan/taps.py	die_plan: native split classes (child-root taps, ft stations_in, per-root clock_entry_access); S81 T51-SPLIT-C
+head	since_base	5d2c5c95bdc5	11-09 19:14	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN, pair merged twins at other bit indices of the same register
+head	since_base	4f7a78955d54	11-09 19:14	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: close M6 gaps that cannot lift both nets to M7 (PDN-0179 M6 macro-edge class)
+head	since_base	f7cad6d7818a	11-09 19:15	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN signature ignores gold X words (q_b100 hint-free NOT EQ 3)
+head	since_base	aa1420b04041	11-09 19:18	2	die_plan/gen_phys.py die_plan/landing_place.py	Landing collectors: move a window whose grow cannot reach rows out of hard cores at gen
+head	since_base	8dc0e1aab7ee	11-09 19:58	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: edge-column comment states measured numbers, marks mechanism as inferred
+head	since_base	ea72f65aad0e	11-09 20:04	1	autopilot/kit_wave.py	kit_wave: rotate launch order across dies per pass
+head	since_base	ec524673e0e1	11-09 20:34	2	autopilot/autopilot.py autopilot/kit_wave.py	Failure classifiers: gate FAIL after caught tool errors; PDN INFO lines; Error 247
+head	since_base	3905271dc6d1	11-09 23:43	1	die_plan/gen_phys.py	S81 PMATX-DT: macro_pin output pads keep their direct net (dont_touch before buffer_ports)
+head	since_base	9618f1c0fea0	11-10 01:11	5	die_plan/die_plan.schema.json die_plan/gen_phys.py die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 RCK2-1109: second io_pma_rck entry for the serdes types (plan event + generator)
+head	since_base	1e34e1135a3d	11-10 01:31	1	die_plan/landing_placement.tcl	Landing reset raw copies: macro exit at run time without macro_moves.json (CLAND-RESET-IN-MACRO)
+head	since_base	d4de8694bc1e	11-10 02:55	4	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 LEAF-CLKENTRY-1109: widen the vs/vq channel on t21-geometry leaf types; opt-in core-clock tap entries
+kv	OLDER	7f6b7773d8ee	11-08 02:28	1	die_plan/core_flow.py	core_flow: stage existing nonport GRT hold scope on explicit opt-in
+kv	OLDER	c462697287dd	11-08 02:32	1	die_plan/face_guard.py	Fix planned face pin census for clock and reset exclusions
+kv	OLDER	2d7cd48b00b8	11-08 02:35	2	die_plan/face_flops.tcl die_plan/ft_polarity_local.tcl (file absent)	Keep FT polarity cells beside their planned launch stations
+kv	OLDER	7d2ba37c5999	11-08 02:37	1	die_plan/kit_topology.py	Allow opt-in selected native reset context with verified producer
+kv	OLDER	9eef95c77988	11-08 02:47	1	die_plan/ft_polarity_local.tcl (file absent)	Recognize escaped FT names and existing unary buffers
+kv	OLDER	3610c3bb90ac	11-08 02:57	1	die_plan/kit_topology.py	Accept an exact captured producer context for portable topology pilots
+kv	OLDER	722e04e70456	11-08 03:00	1	die_plan/ft_polarity_local.tcl (file absent)	Spread FT inverter cohorts into neighbouring placement bands
+kv	OLDER	6b70cae16501	11-08 03:46	1	die_plan/lec_async.sh	LEC: forward explicit parity budget in asynchronous proof modes
+kv	OLDER	45b881ddf04d	11-08 03:59	1	autopilot/autopilot.py	Retry transient admission tool transport before physical payload
+kv	OLDER	f51e05a4f9e8	11-08 04:49	1	die_plan/reset_scope_packet.py (file absent)	reset_scope_packet: read-only class-A packet builder for KIT_TOPOLOGY_BIND_STALE rows
+kv	OLDER	95df6810481e	11-08 04:52	1	die_plan/landing_placement.tcl	landing placement: preserve resize-family footprint between FIRM cells
+kv	OLDER	6977586e9c03	11-08 05:16	1	die_plan/gutter_block.tcl	S81 class C col_h ROM walls: COL-WALLGAP-1108 plan delta + gutter blockage min-span filter
+kv	since_base	9ba1e6f86e2b	11-08 06:37	1	autopilot/prov_view.py	prov_view: index tracked RTL even when the staged src ignores everything (KW-PROV-1)
+kv	since_base	118e99bf7ce9	11-08 07:01	1	autopilot/hub_git_sync.sh	hub_git_sync: ALERT line on failure/behind>5; move identical untracked files aside
+kv	since_base	f35d3ebca110	11-08 07:21	1	autopilot/kit_wave.py	kit_wave: restage / volume cancel never stop an attempt past PLACE (KW-FIX-35-H)
+kv	since_base	240fcf844c9c	11-08 07:50	1	die_plan/early_core_taps.py	S81 CORE-TAP-LATE plan event: leaf early core taps + bind tap budget by tap moves
+kv	since_base	185238f18324	11-08 08:35	2	die_plan/kit_reset_contract.py die_plan/lec.py	KW-FIX-35-RC: LEC refuses a listed reset contract without its receipt (FLOW error); stagers verify the kit cop
+kv	since_base	54da643aa0d8	11-08 08:41	1	autopilot/kit_wave.py	KW-FIX-35: die-aware gen disk floor (work_root lane measure beats ot-run scratch2 figure; root lanes keep root
+kv	since_base	8d15e7b3879e	11-08 08:57	1	autopilot/kit_wave.py	kit_wave: _own_wave_unit accepts every listed wave job of a parent (KW-FIX-35-P)
+kv	since_base	4aa8c234091c	11-08 09:15	1	die_plan/landing_collector.py	QC-TYPES-10/CLAND: landing raw resets follow the collector tree, not same-named relays of the bound tree
+kv	since_base	57b854d12395	11-08 09:28	1	die_plan/lec.py	lec.py: scope-twin proposals for free gold-only registers (LEC-SCOPE-TWIN)
+kv	since_base	7fe4a970bbd0	11-08 09:48	1	autopilot/kit_wave.py	kit_wave: cancel_superseded keeps held rows and rows whose own plan block is unchanged
+kv	since_base	251b11706a3a	11-08 09:50	1	die_plan/die_clock.py	die_clock: build/report/render pass the plan path to schema.Plan
+kv	since_base	a61d5586223d	11-08 10:14	1	autopilot/kit_wave.py	KW-FIX-35-RD RESTAGE-DEPS: probe every kit_rtl/gen_args/item input on each gen host
+kv	since_base	cb5984770c2f	11-08 10:35	2	autopilot/counted_child_views.py autopilot/kit_wave.py	KW-FIX-35-CV: tick exports counted child views (SIGNED IN COUNT BUT NO WAVE VIEW) automatically
+kv	since_base	18e54f8be907	11-08 10:45	1	autopilot/prov_view.py	KW-FIX-35-CV: counted LOCAL_PASS_NEEDS_PARENT views go FINAL in prov_view
+kv	since_base	cb13e19342af	11-08 11:06	1	die_plan/clock_taps.tcl	clock_taps: find core-tap instances by escaped OpenDB name
+kv	since_base	c7c76e829330	11-08 11:18	1	die_plan/lec.py	fix(lec): lower escaped indexed instances into named generate loops
+kv	since_base	5382e2a0ad04	11-08 11:22	1	autopilot/kit_wave.py	Keep one producer claim for allowlisted plan classes
+kv	since_base	a5644801c46c	11-08 11:24	1	die_plan/lec.py	fix(lec): preserve formal widths in indexed port bridges
+kv	since_base	7cb02e709025	11-08 11:36	1	die_plan/kit_gen_lint.py	Reject non-kit directories in generation lint
+kv	since_base	539f02fdd750	11-08 11:43	2	die_plan/post_route_drv/eco_grt_pre.tcl (file absent) die_plan/post_route_drv/prd_mk.sh	Preserve pre-routed wires around ECO pin access
+kv	since_base	0290f2352bc4	11-08 11:54	1	autopilot/kit_resume.py	Ignore Tcl comment-only stage references in resume dependencies
+kv	since_base	06641d575b40	11-08 12:03	1	die_plan/lec.py	Refine scope twin proposals after rejected rare-event matches
+kv	since_base	224a127d4865	11-08 12:05	1	die_plan/kit_dead_inputs.py	Prove complete unbound plan inputs from exact native source mapping
+kv	since_base	e5a368eb2c12	11-08 12:57	1	die_plan/bound_macro_paths.py	Join projected split macro receipts to explicit source physical identities
+kv	since_base	5dcf2d66543f	11-08 12:57	1	die_plan/bound_macro_paths.py	Retain split glue parent identity when rooting physical paths
+kv	since_base	aed47412eb5c	11-08 12:57	1	die_plan/hbm_split_phy_asbuilt.py (file absent)	Stage exact split PHY sources with their required local includes
+kv	since_base	b0d8c1b52de4	11-08 12:57	1	die_plan/bound_macro_paths.py	Keep absent producer manifests as unmapped paths for preflight
+kv	since_base	25374de70116	11-08 12:57	1	die_plan/hbm_split_phy_asbuilt.py (file absent)	Limit split PHY substitution to the four p37 parents present in kw27g
+kv	since_base	c637b290e0f9	11-08 12:57	2	die_plan/bound_macro_paths.py die_plan/hbm_split_phy_asbuilt.py (file absent)	Root explicit split-core macro paths through exact as-built parent table
+kv	since_base	a3a72e8a8746	11-08 13:14	2	die_plan/bound_macro_paths.py die_plan/hbm_split_phy_asbuilt.py (file absent)	Split the fifth HBM serdes leaf lk_S3 and root its physical-variant type
+kv	since_base	d25a79da9fb1	11-08 13:15	1	die_plan/lec.py	LEC BB-PORT-FOLD: model a one-pin physical view of a wider gold black-box input
+kv	since_base	665a24ec18f2	11-08 13:42	4	die_plan/clock_landing_verify.py die_plan/gen_rtl.py die_plan/kit_rsync.py die_plan/reset_consumers.py	RLK-1108: reset.relay_lockup form "latch" (hop lockup latch on internal reset relay hops)
+kv	since_base	fae52d26d286	11-08 13:53	1	die_plan/type_safe_event.py (file absent)	type_safe_event: per-die TYPE-SAFE constructor event (tap-pair affinity on every multi-tap type)
+kv	since_base	92f726e4bc4c	11-08 14:01	1	die_plan/type_safe_event.py (file absent)	type_safe_event: rebalance planned internal stations with a hop over 405 um along their own route
+kv	since_base	14aca37706ba	11-08 14:24	1	die_plan/bound_reset_contract.py	RLK-1108: latch form through bind kit-rtl (native reset export)
+kv	since_base	6834af155537	11-08 15:04	1	die_plan/face_flops.tcl	face_flops: source ft_polarity_local.tcl before the OT_GPL_GUARD section
+kv	since_base	7a664b6e4abe	11-08 15:23	3	die_plan/core_conns_from_bind.py (file absent) die_plan/ts_relay_event.py (file absent) die_plan/ts_relay_miter.py (file absent)	die_plan: TYPE-SAFE-2 relay constructor (face bus <-> hard-core wiring stations + pin cycles) and its bound-RT
+kv	since_base	78912602cbc4	11-08 15:42	4	die_plan/bind_compose.py die_plan/bind_compose_split.py (file absent) die_plan/bound_macro_paths.py die_plan/hbm_split_su_asbuilt.py (file absent)	HBM SU split bind: compose_split regroups cut members under the signed hard sub-cores
+kv	since_base	ac77e04d7d52	11-08 16:12	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: re-anchor stale station chains, keep station sites out of hard cores, report unmeasurable buse
+kv	since_base	9d12eb833749	11-08 16:24	1	die_plan/ring_band_spread.py	KV kvcls_1108: compose onto plan_r8fix + ring_band_spread --bisect
+kv	since_base	81b02390f771	11-08 16:32	1	die_plan/bind_compose.py	bind_compose: compose_split optional on binders without an asbuilt; pre-split compose call unchanged
+kv	since_base	830128f7fbe8	11-08 16:43	2	die_plan/slot_channel_event.py (file absent) die_plan/slot_lattice_cost.py (file absent)	die_plan: slot channel repack event + abutted-lattice growth cost (TYPE-SAFE-2-AREA, brief item 3)
+kv	since_base	3e13ae679dea	11-08 16:47	1	die_plan/bound_macro_paths.py	bound_macro_paths: flat plan cores resolve by the bind's folded name (DIE-HBM-92-SU-IDX)
+kv	since_base	402ee2c794d1	11-08 16:47	1	die_plan/hbm_split_idx_asbuilt.py (file absent)	HBM d44v hb_idx h0 split as-built manifest (DIE-HBM-92-SU-IDX)
+kv	since_base	c13d4d4da166	11-08 16:47	2	die_plan/bind_compose_split.py (file absent) die_plan/hbm_split_su_asbuilt.py (file absent)	HBM SU split p37su2: Q0/Q1 lanes_plain -> lane1p sub-cores; split sources honour recipe defines
+kv	since_base	460ddf0d1e00	11-08 17:05	1	autopilot/prov_view.py	DIE-HBM-92-GEN: prov_view contract LEF marks merged core clock tap pins USE CLOCK
+kv	since_base	027edfc77a3c	11-08 17:05	1	die_plan/kit_core_clocks.py	DIE-HBM-92-GEN: HBM pre-P&R kit classes (kit-rtl merged clocks + same-file KITPARAM sibling, bb localparams, s
+kv	since_base	53e79ea9417e	11-08 17:23	2	autopilot/auto_resign.py die_plan/signoff.py	KW-FIX-36 R4: ECO near-miss census follows sign-off's output-port hold classification
+kv	since_base	d4c56145f161	11-08 17:29	1	autopilot/kit_wave.py	KW-FIX-36 (e): resolve composed queue_src to one provable commit for the queue row
+kv	since_base	0efc6e43a2b9	11-08 17:42	1	autopilot/kit_wave.py	KW-FIX-36: gen disk fallback when no gen host clears the preference
+kv	since_base	561fdb6b6cdb	11-08 17:56	3	die_plan/check.py die_plan/latency_consumers.py (file absent) die_plan/regen_constants.py	DIE-HBM-92-LCHK: fail-closed regen_constants (F3) + bind-time latency-consumer check (F4)
+kv	since_base	02aaf7931607	11-08 18:10	1	autopilot/kit_wave.py	item_env: allow [ ] in OT_MACRO_MOVES values only
+kv	since_base	8140ea2694e2	11-08 18:24	3	die_plan/bound_groups.py die_plan/qc_su_lane_cut.py die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: EXTRA9 SU lane head form and plan event (off main until path ruling)
+kv	since_base	d8f85c8cf716	11-08 18:28	1	die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: derive MEMORY_READ_EXTRA from the plan su_l<->su_c depths
+kv	since_base	e0c5a7d7f3c4	11-08 18:40	1	die_plan/hold_hop_lockup_event.py (file absent)	die_plan: hold_hop_lockup_event (TYPE-SAFE-2 Fix A, hold-safe zero-logic hops, 0 pin cycles)
+kv	since_base	99d7dfcd2809	11-08 19:13	1	autopilot/kit_wave.py	KW-FIX-37: spill measures the lane on the target; no-host rows retry
+kv	since_base	4b09875b1002	11-08 19:16	1	die_plan/post_route_drv/prd_hook.tcl	ECO stage check: match hierarchical SPEF names that keep the \/ divider in OpenDB
+kv	since_base	3bd3bef72e31	11-08 19:22	1	die_plan/latency_consumers.py (file absent)	latency_consumers: advisory contracts for QC fixed-age readers (ML, embedding ring)
+kv	since_base	34b03a117054	11-08 19:54	1	die_plan/merged_core_clocks.py	merged_core_clocks: Liberty clock identity, signed abstract USE SIGNAL is not a clock miss
+kv	since_base	3b3bf0f0d584	11-08 19:58	1	autopilot/kit_wave.py	KW-FIX-38: wave picker sees root-fs lanes on bind mounts, scratch2 alternative, WAIT-DISK rows
+kv	since_base	71a6993a25b9	11-08 20:00	1	autopilot/kit_wave.py	KW-FIX-38: alternative-disk per-kit charge 6 GB within a tick
+kv	since_base	422126acd127	11-08 20:06	1	die_plan/tap_balance.tcl	tap_balance: match escaped OpenDB names in the core latency table
+kv	since_base	6c1693a73476	11-08 20:10	1	die_plan/latency_consumers.py (file absent)	latency_consumers: report required value and match QC paths in the CLI
+kv	since_base	063236aea5f2	11-08 20:11	1	autopilot/kit_wave.py	KW-FIX-38: die option item_inputs builds listed items from their own plan and bind
+kv	since_base	84ac53507bb7	11-08 20:18	1	autopilot/kit_wave.py	KW-FIX-38: defer launches once a host alternative disk is used up in the tick
+kv	since_base	259223d39105	11-08 20:25	1	die_plan/regen_constants.py	QC embedding read at bound transport: tag ring delay and RoPE provider form
+kv	since_base	fdfd08eb4d50	11-08 22:05	2	die_plan/transport_known_consumers.json (file absent) die_plan/transport_table.py (file absent)	TRANSPORT-3: per-die bound transport table (advisory)
+kv	since_base	c78f5970ba5e	11-08 22:11	1	autopilot/kit_wave.py	KW-FIX-39: work_alt: do not self-link when a parent is already on the alternative lane
+kv	since_base	ee38ee88f048	11-08 22:37	1	die_plan/partition_ft_reserve.py	M7 PDN strap windows: centre the window on the real pdngen strap pair
+kv	since_base	7428ba78a88b	11-08 22:50	1	die_plan/kit_istations.py	kit-rtl include search over the kit file directories; kit_istations accepts moved kit dirs
+kv	since_base	215b178d6404	11-08 22:59	1	autopilot/kit_resume.py	kit_resume: carry the last reused step's own logs past the 1 s mtime limit
+kv	since_base	c52ad880bd79	11-08 23:16	2	autopilot/kit_wave.py autopilot/prov_view.py	kit_wave/prov_view: stage landing_evidence and provenance of a counted hard-landing child view
+kv	since_base	6e609017c8e1	11-08 23:27	1	die_plan/qc_su_vmw_land_event.py (file absent)	qc_su_vmw_land_event: land SU lane writes of su_l0 and su_l1 on one edge
+kv	since_base	c473c5ccf1fe	11-08 23:37	1	autopilot/kit_wave.py	kit_wave: restage_place_waiters makes unspillable PLACE waiters movable
+kv	since_base	882f260cd295	11-08 23:49	1	die_plan/landing_place.py	Landing group override: absent optional raw copy logs, collector still errors
+kv	since_base	aa8acb1988ee	11-08 23:53	1	die_plan/landing_place.py	Landing START relays: leave hard cores by the side that shortens the chain
+kv	since_base	9f6cf3f1369c	11-08 23:54	1	die_plan/kit_gen_lint.py	kit_gen_lint: src_skew existence check never lazy-fetches a partial clone
+kv	since_base	0f70bd142ca4	11-09 00:17	2	autopilot/kit_wave.py die_plan/kit_gen_lint.py	KW-FIX-41: unit-level ENOSPC spends no infra attempt; src_skew never lazy-fetches
+kv	since_base	19d33e6cf64e	11-09 00:54	1	die_plan/lec_async.sh	lec_async: write identity atomically; band-order test names fixture cores
+kv	since_base	0b305f23952b	11-09 00:58	1	die_plan/landing_place.py	Landing local-reset windows: clear of hard cores, halo-aware test
+kv	since_base	c915c2cc4fa8	11-09 01:30	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M7 strap windows in wide FT bands; merge abutting full rows (PDN-0179 class)
+kv	since_base	0ebdeada75f5	11-09 01:36	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --regen-latency regenerates plan.latency and checks deltas equal declared pin cycles
+kv	since_base	43ba7f0e904d	11-09 01:46	2	die_plan/native_istations.py die_plan/ts_relay_event.py (file absent)	relay event and native_istations: receiver depth = deepest per-core entry of the bus
+kv	since_base	5d79919b42e1	11-09 01:50	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M5 strap windows in tall tooth rows of the FT reservation
+kv	since_base	46dd208b10b9	11-09 01:56	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --price-existing-out prices a native-OUT type older kit OUT stations (0 new hardware, model ca
+kv	since_base	4d2a87c11289	11-09 01:59	2	die_plan/kit_zl_lockup.py (file absent) die_plan/zl_lockup/hd_spn.json (file absent)	kit_zl_lockup: opt-in zero-logic hop lockup latches as a kit RTL post-pass (hd_spn / hd_spn_end)
+kv	since_base	facd3d40577a	11-09 02:02	1	autopilot/prov_view.py	prov_view: narrow detail_pg_layer form for cores with PG pins on the top OBS layer (DRT-0073 bank128)
+kv	since_base	57856d101951	11-09 02:05	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --min-stations floors a bus station count so an R8 class stays equal depth
+kv	since_base	7e4e5f87f33d	11-09 02:07	1	die_plan/lec.py	lec.py: clock-tap tie model for black-box clock pins on tapped clock trees (hd_tile ft_*)
+kv	since_base	a1d19af3ab85	11-09 02:13	1	die_plan/lec.py	lec.py: forward OT_LEC_TAP_TIE into the LEC container
+kv	since_base	a2a7cc494e15	11-09 02:27	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: multiset compare, pair bind source-hash names by connectivity signature
+kv	since_base	3c56a42e364d	11-09 02:28	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: resolve bound file stems through the plan module (cloned module__type)
+kv	since_base	ba8f6f686f95	11-09 02:33	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: --r8 mode checks per-bit landing pad moves against stage deltas
+kv	since_base	20168ea1dfb8	11-09 02:35	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: PDN windows for macro-gap M5 columns with their own M4 rows (PDN-0179 M4 class)
+kv	since_base	9db0ec8d71eb	11-09 02:52	1	die_plan/landing_placement.tcl	landing_placement: START relay windows take the status/collector grow (QC FIRM ft-station collision)
+kv	since_base	075832317cf7	11-09 03:20	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: M5 strip rule for PDN-0179 strips under macro-bounded M6 bands
+kv	since_base	aa8745402b28	11-09 03:53	1	die_plan/lec_async.sh	lec_async: kit lec_options.json sets OT_LEC_SUPERSET_VEC, differing shell value refused
+kv	since_base	7c0931570526	11-09 03:54	1	die_plan/signoff.py	signoff: TT vclk rebind over early-core-tap clocks when no boundary register is on clk
+kv	since_base	23e8a72fd79e	11-09 04:07	2	die_plan/kit_topology.py die_plan/native_istations.py	HBM-PLAN-1: one final HBM switch d44v_final4_1109 + native OUT bus scope
+kv	since_base	7dd16dd58d3a	11-09 04:20	1	die_plan/legacy_gate.py	Legacy core kits record the LEC proof policy (lec_options.json)
+kv	since_base	76ed2823bef9	11-09 04:47	2	die_plan/qn_alternate.py (file absent) die_plan/qn_chain_proof.py (file absent)	HBM q_b010 pilot: QN-alternate station chains (qn_alternate + chain proof)
+kv	since_base	b2ae6c209fa8	11-09 04:58	1	die_plan/clock_taps.tcl	clock_taps: opt-in OT_HOP_LATCH_CAPTURE_TAP hangs named hop latches on their capture tap
+kv	since_base	52078d8f9e9a	11-09 05:03	1	die_plan/pinband_site.py	pinband_site: linear PIN block parser (hub gen spent > 2 h in pin_rows)
+kv	since_base	64db1baf83bf	11-09 05:07	1	die_plan/lec.py	lec.py: exact dead-X gold clean-up + final undecided-cone escalation (DIE-QC-97)
+kv	since_base	ccf792c10b63	11-09 07:02	2	die_plan/tap_pair_affinity.tcl die_plan/tap_pair_plan.tcl	DIE-QC-97 TAP-CAP: tap-pair planner accepts over-cap initial taps (donate only)
+kv	since_base	6d92d957ea6d	11-09 07:13	2	die_plan/kit_contract.py die_plan/lef_clock_entry.py	DIE-QC-97 NL-CK-ACCESS: stage the clock-entry access LEF by construction; hard core wins over same-name conten
+kv	since_base	c20531743e11	11-09 07:16	1	die_plan/clock_landing_plan.py	DIE-QC-97: band resize keeps wide face bands on their pin window (GRT-0116 class)
+kv	since_base	703f586fd5db	11-09 07:28	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: q_b102pv1 PDN-0179 class (M6-only strips, M6 sliver close at macro edges, covering colum
+kv	since_base	67133eca41ec	11-09 07:35	1	die_plan/die_ci.py	COUNT-ARCHIVE-1: durable signed record store, archive-backed view staging, auto-archive ingest
+kv	since_base	42d265cdb636	11-09 07:55	2	autopilot/kit_wave.py die_plan/param_class_split.py (file absent)	DIE-QC-97: param_class_split -- one plan type per bound LOGIC value set
+kv	since_base	073656d7febf	11-09 08:59	1	die_plan/clock_landing_plan.py	DIE-QC-97: resize_undersized_bands keeps the band ring_place tag
+kv	since_base	a1e90880fb2c	11-09 09:56	1	die_plan/die_trial.py	die_trial.band_share_obs: alternate die-band row phase per direction (DIE-HBM-97)
+kv	since_base	120eba390b45	11-09 10:56	1	die_plan/core_flow.py	core_flow: every core kit gets the repeater-pitch hook (OT_MAXWIRE_UM, grt_maxwire.tcl)
+kv	since_base	66c8ba930c16	11-09 11:07	1	die_plan/clock_landing_plan.py	DIE-QC-97: relocate off-window ring bands onto their pin window (cbf_q00 GRT-0116)
+kv	since_base	393765179ca8	11-09 11:27	1	die_plan/romq_parent_adapter.py	romq_parent_adapter: FIXED CGR follows the legacy recipe (CGR 8); keep CGR 0 for signed _he/_hw seals
+kv	since_base	5bdc916451b4	11-09 11:47	2	autopilot/autopilot.py autopilot/watchdog.py	autopilot: name the hub WATCHDOG as the sender of a 137/143 stop (KW-FIX-44)
+kv	since_base	ea774944986a	11-09 11:59	1	die_plan/face_flops.tcl	face_flops: OT_HOP_LATCH_FRAC sites ft hop lockup latches toward the capture station
+kv	since_base	c2836b8f2596	11-09 12:07	2	die_plan/grt_post.tcl die_plan/grt_pre.tcl	HOPLATCH-HOLD: hop latch launch->latch hop hold-padded at GRT by construction; default pattern adds u_fl_L201x
+kv	since_base	c027d3fb392a	11-09 12:16	1	die_plan/kit_reset_contract.py	kit_reset_contract: map the plan die name to its contract (HBM type kits never staged the reset contract)
+kv	since_base	90b5279e4254	11-09 13:00	2	die_plan/kit_reset_contract.py die_plan/lec.py	Reset contract: landing clones resolve to their base entry; base-name miss is a FLOW error (RESET-KEY-1109)
+kv	since_base	b65a848a700d	11-09 14:00	1	die_plan/post_route_drv/post_grt_chain.py	post_grt_chain: a post-route ECO never re-runs kit clock-tree editors (ECO-CLOCK-HOOK, KW-FIX-44)
+kv	since_base	c15eb3676920	11-09 14:21	1	die_plan/hold_margin_pick.py (file absent)	HBM kits: 35 ps reg2reg GRT FF hold-repair target for hard cores > 100k cells
+kv	since_base	1940add62dc6	11-09 14:52	1	die_plan/landing_placement.tcl	landing_placement: key chunk-wire ring storage dch[c].sd_c[k] as s_d[slot][bit] (KV kv3_hgi_v3 ft27_i GRT-0116
+kv	since_base	02f251ec0103	11-09 16:07	1	die_plan/leaf_affinity.tcl	leaf_affinity: local split pass for zero-logic chains that span the core
+kv	since_base	ac4c2c478488	11-09 18:09	3	die_plan/qc_struct_ctl.py (file absent) die_plan/qc_struct_ctl_lanes.py (file absent) die_plan/qc_struct_ctl_val.py (file absent)	DIE-QC-97 STRUCT-CTL-1: structural data-path plan form for QC sle_ctl__cl67434795
+kv	since_base	b3f0a3d9e1e4	11-09 18:30	1	die_plan/relay_line_place.tcl (file absent)	HBM pt_w conservative form (PTW-C): second relay stage + kit repeater pitch and relay-line placement
+kv	since_base	7b4138bf30f2	11-09 18:39	1	die_plan/s81_svc_idx_fit.py	DIE-S81-85: source event - prime hunk in the bound portfix178 idx readers
+kv	since_base	1389515fc989	11-09 18:46	1	die_plan/die_sta_related.py	TAPWIN-1109: kit SDC charges cross-tap pairs the related-pair budget X, not the die band
+kv	since_base	090d37504b52	11-09 18:57	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: no gap-column window on outline-edge columns (HBM q_su20 PDN OOM class)
+kv	since_base	dcc71b861d9f	11-09 19:00	2	die_plan/check.py die_plan/taps.py	die_plan: native split classes (child-root taps, ft stations_in, per-root clock_entry_access); S81 T51-SPLIT-C
+kv	since_base	5d2c5c95bdc5	11-09 19:14	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN, pair merged twins at other bit indices of the same register
+kv	since_base	4f7a78955d54	11-09 19:14	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: close M6 gaps that cannot lift both nets to M7 (PDN-0179 M6 macro-edge class)
+kv	since_base	f7cad6d7818a	11-09 19:15	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN signature ignores gold X words (q_b100 hint-free NOT EQ 3)
+kv	since_base	aa1420b04041	11-09 19:18	1	die_plan/landing_place.py	Landing collectors: move a window whose grow cannot reach rows out of hard cores at gen
+kv	since_base	8dc0e1aab7ee	11-09 19:58	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: edge-column comment states measured numbers, marks mechanism as inferred
+kv	since_base	ea72f65aad0e	11-09 20:04	1	autopilot/kit_wave.py	kit_wave: rotate launch order across dies per pass
+kv	since_base	ec524673e0e1	11-09 20:34	2	autopilot/autopilot.py autopilot/kit_wave.py	Failure classifiers: gate FAIL after caught tool errors; PDN INFO lines; Error 247
+kv	since_base	9618f1c0fea0	11-10 01:11	2	die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent)	S81 RCK2-1109: second io_pma_rck entry for the serdes types (plan event + generator)
+kv	since_base	1e34e1135a3d	11-10 01:31	1	die_plan/landing_placement.tcl	Landing reset raw copies: macro exit at run time without macro_moves.json (CLAND-RESET-IN-MACRO)
+kv	since_base	d4de8694bc1e	11-10 02:55	2	die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent)	S81 LEAF-CLKENTRY-1109: widen the vs/vq channel on t21-geometry leaf types; opt-in core-clock tap entries
+qc	OLDER	251b11706a3a	11-08 09:50	1	die_plan/die_clock.py	die_clock: build/report/render pass the plan path to schema.Plan
+qc	OLDER	cb5984770c2f	11-08 10:35	1	autopilot/counted_child_views.py	KW-FIX-35-CV: tick exports counted child views (SIGNED IN COUNT BUT NO WAVE VIEW) automatically
+qc	OLDER	18e54f8be907	11-08 10:45	1	autopilot/prov_view.py	KW-FIX-35-CV: counted LOCAL_PASS_NEEDS_PARENT views go FINAL in prov_view
+qc	OLDER	cb13e19342af	11-08 11:06	1	die_plan/clock_taps.tcl	clock_taps: find core-tap instances by escaped OpenDB name
+qc	OLDER	7cb02e709025	11-08 11:36	1	die_plan/kit_gen_lint.py	Reject non-kit directories in generation lint
+qc	OLDER	539f02fdd750	11-08 11:43	2	die_plan/post_route_drv/eco_grt_pre.tcl (file absent) die_plan/post_route_drv/prd_mk.sh	Preserve pre-routed wires around ECO pin access
+qc	OLDER	0290f2352bc4	11-08 11:54	1	autopilot/kit_resume.py	Ignore Tcl comment-only stage references in resume dependencies
+qc	OLDER	224a127d4865	11-08 12:05	1	die_plan/kit_dead_inputs.py	Prove complete unbound plan inputs from exact native source mapping
+qc	OLDER	9d12eb833749	11-08 16:24	1	die_plan/ring_band_spread.py	KV kvcls_1108: compose onto plan_r8fix + ring_band_spread --bisect
+qc	OLDER	53e79ea9417e	11-08 17:23	3	autopilot/auto_resign.py die_plan/eco_loop.py die_plan/signoff.py	KW-FIX-36 R4: ECO near-miss census follows sign-off's output-port hold classification
+qc	OLDER	623e2f9794d0	11-08 17:39	1	die_plan/clock_landings.py	Expose count-aligned read-select replication without writer delay
+qc	OLDER	29a806f6ec60	11-08 18:37	1	die_plan/eco_loop.py	KW-FIX-37: eco_loop GOAL=post works on a stage-resumed kit
+qc	OLDER	e0c5a7d7f3c4	11-08 18:40	1	die_plan/hold_hop_lockup_event.py (file absent)	die_plan: hold_hop_lockup_event (TYPE-SAFE-2 Fix A, hold-safe zero-logic hops, 0 pin cycles)
+qc	OLDER	64af829c09fa	11-08 18:42	1	die_plan/reset_port_relays.py (file absent)	KV PHY RE-FORM: PI payload source stations (+3 pin cycles) and host reset relays
+qc	OLDER	4b09875b1002	11-08 19:16	1	die_plan/post_route_drv/prd_hook.tcl	ECO stage check: match hierarchical SPEF names that keep the \/ divider in OpenDB
+qc	OLDER	3bd3bef72e31	11-08 19:22	1	die_plan/latency_consumers.py	latency_consumers: advisory contracts for QC fixed-age readers (ML, embedding ring)
+qc	OLDER	34b03a117054	11-08 19:54	1	die_plan/merged_core_clocks.py	merged_core_clocks: Liberty clock identity, signed abstract USE SIGNAL is not a clock miss
+qc	OLDER	422126acd127	11-08 20:06	1	die_plan/tap_balance.tcl	tap_balance: match escaped OpenDB names in the core latency table
+qc	OLDER	6c1693a73476	11-08 20:10	1	die_plan/latency_consumers.py	latency_consumers: report required value and match QC paths in the CLI
+qc	OLDER	fdfd08eb4d50	11-08 22:05	2	die_plan/transport_known_consumers.json (file absent) die_plan/transport_table.py (file absent)	TRANSPORT-3: per-die bound transport table (advisory)
+qc	OLDER	ee38ee88f048	11-08 22:37	1	die_plan/partition_ft_reserve.py	M7 PDN strap windows: centre the window on the real pdngen strap pair
+qc	OLDER	7428ba78a88b	11-08 22:50	1	die_plan/kit_istations.py	kit-rtl include search over the kit file directories; kit_istations accepts moved kit dirs
+qc	OLDER	215b178d6404	11-08 22:59	1	autopilot/kit_resume.py	kit_resume: carry the last reused step's own logs past the 1 s mtime limit
+qc	OLDER	c52ad880bd79	11-08 23:16	1	autopilot/prov_view.py	kit_wave/prov_view: stage landing_evidence and provenance of a counted hard-landing child view
+qc	OLDER	9f6cf3f1369c	11-08 23:54	1	die_plan/kit_gen_lint.py	kit_gen_lint: src_skew existence check never lazy-fetches a partial clone
+qc	OLDER	0f70bd142ca4	11-09 00:17	1	die_plan/kit_gen_lint.py	KW-FIX-41: unit-level ENOSPC spends no infra attempt; src_skew never lazy-fetches
+qc	OLDER	19d33e6cf64e	11-09 00:54	1	die_plan/lec_async.sh	lec_async: write identity atomically; band-order test names fixture cores
+qc	OLDER	c915c2cc4fa8	11-09 01:30	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M7 strap windows in wide FT bands; merge abutting full rows (PDN-0179 class)
+qc	OLDER	0ebdeada75f5	11-09 01:36	1	die_plan/ts_relay_event.py	ts_relay_event: --regen-latency regenerates plan.latency and checks deltas equal declared pin cycles
+qc	OLDER	43ba7f0e904d	11-09 01:46	2	die_plan/native_istations.py die_plan/ts_relay_event.py	relay event and native_istations: receiver depth = deepest per-core entry of the bus
+qc	OLDER	5d79919b42e1	11-09 01:50	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M5 strap windows in tall tooth rows of the FT reservation
+qc	OLDER	46dd208b10b9	11-09 01:56	1	die_plan/ts_relay_event.py	ts_relay_event: --price-existing-out prices a native-OUT type older kit OUT stations (0 new hardware, model ca
+qc	OLDER	4d2a87c11289	11-09 01:59	2	die_plan/kit_zl_lockup.py (file absent) die_plan/zl_lockup/hd_spn.json (file absent)	kit_zl_lockup: opt-in zero-logic hop lockup latches as a kit RTL post-pass (hd_spn / hd_spn_end)
+qc	OLDER	facd3d40577a	11-09 02:02	1	autopilot/prov_view.py	prov_view: narrow detail_pg_layer form for cores with PG pins on the top OBS layer (DRT-0073 bank128)
+qc	OLDER	57856d101951	11-09 02:05	1	die_plan/ts_relay_event.py	ts_relay_event: --min-stations floors a bus station count so an R8 class stays equal depth
+qc	OLDER	a2a7cc494e15	11-09 02:27	1	die_plan/ts_relay_miter.py	ts_relay_miter: multiset compare, pair bind source-hash names by connectivity signature
+qc	OLDER	a0d06cd7dcfb	11-09 02:28	4	die_plan/clock_landings.py die_plan/kv_start_corridor_event.py (file absent) die_plan/reset_tree.py die_plan/start_obstacle_path.py (file absent)	KV one-switch package: plan_p4 tools, PLL views, boot CDC underflow tie
+qc	OLDER	3c56a42e364d	11-09 02:28	1	die_plan/ts_relay_miter.py	ts_relay_miter: resolve bound file stems through the plan module (cloned module__type)
+qc	OLDER	ba8f6f686f95	11-09 02:33	1	die_plan/ts_relay_miter.py	ts_relay_miter: --r8 mode checks per-bit landing pad moves against stage deltas
+qc	OLDER	20168ea1dfb8	11-09 02:35	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: PDN windows for macro-gap M5 columns with their own M4 rows (PDN-0179 M4 class)
+qc	OLDER	075832317cf7	11-09 03:20	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: M5 strip rule for PDN-0179 strips under macro-bounded M6 bands
+qc	since_base	aa8745402b28	11-09 03:53	1	die_plan/lec_async.sh	lec_async: kit lec_options.json sets OT_LEC_SUPERSET_VEC, differing shell value refused
+qc	since_base	7c0931570526	11-09 03:54	1	die_plan/signoff.py	signoff: TT vclk rebind over early-core-tap clocks when no boundary register is on clk
+qc	since_base	23e8a72fd79e	11-09 04:07	2	die_plan/kit_topology.py die_plan/native_istations.py	HBM-PLAN-1: one final HBM switch d44v_final4_1109 + native OUT bus scope
+qc	since_base	7dd16dd58d3a	11-09 04:20	1	die_plan/legacy_gate.py	Legacy core kits record the LEC proof policy (lec_options.json)
+qc	since_base	cf8c4104ef08	11-09 04:42	1	die_plan/clock_landings.py	KV delta: clock_landings plan_path read via getattr for __new__-built Landings
+qc	since_base	76ed2823bef9	11-09 04:47	2	die_plan/qn_alternate.py (file absent) die_plan/qn_chain_proof.py (file absent)	HBM q_b010 pilot: QN-alternate station chains (qn_alternate + chain proof)
+qc	since_base	a0490cc098da	11-09 04:51	1	die_plan/eco_loop.py	eco_loop: default hold repair margin 5 ps (repair target only; gate stays FF hold >= 0)
+qc	since_base	b2ae6c209fa8	11-09 04:58	1	die_plan/clock_taps.tcl	clock_taps: opt-in OT_HOP_LATCH_CAPTURE_TAP hangs named hop latches on their capture tap
+qc	since_base	52078d8f9e9a	11-09 05:03	1	die_plan/pinband_site.py	pinband_site: linear PIN block parser (hub gen spent > 2 h in pin_rows)
+qc	since_base	703f586fd5db	11-09 07:28	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: q_b102pv1 PDN-0179 class (M6-only strips, M6 sliver close at macro edges, covering colum
+qc	since_base	67133eca41ec	11-09 07:35	1	die_plan/die_ci.py	COUNT-ARCHIVE-1: durable signed record store, archive-backed view staging, auto-archive ingest
+qc	since_base	a1e90880fb2c	11-09 09:56	1	die_plan/die_trial.py	die_trial.band_share_obs: alternate die-band row phase per direction (DIE-HBM-97)
+qc	since_base	120eba390b45	11-09 10:56	1	die_plan/core_flow.py	core_flow: every core kit gets the repeater-pitch hook (OT_MAXWIRE_UM, grt_maxwire.tcl)
+qc	since_base	66c8ba930c16	11-09 11:07	1	die_plan/clock_landing_plan.py	DIE-QC-97: relocate off-window ring bands onto their pin window (cbf_q00 GRT-0116)
+qc	since_base	393765179ca8	11-09 11:27	1	die_plan/romq_parent_adapter.py	romq_parent_adapter: FIXED CGR follows the legacy recipe (CGR 8); keep CGR 0 for signed _he/_hw seals
+qc	since_base	8b22a8cd23a9	11-09 11:43	1	die_plan/eco_loop.py	eco_loop: stage a scope-capable orfs_hold_mm pair before each ECO (KW-FIX-44)
+qc	since_base	5bdc916451b4	11-09 11:47	2	autopilot/autopilot.py autopilot/watchdog.py	autopilot: name the hub WATCHDOG as the sender of a 137/143 stop (KW-FIX-44)
+qc	since_base	28e008f692f5	11-09 11:58	1	die_plan/eco_loop.py	eco_loop: post-route LEC falls back to the tools lec.py; no tool = LEC_TOOL_MISSING (KW-FIX-44)
+qc	since_base	ea774944986a	11-09 11:59	1	die_plan/face_flops.tcl	face_flops: OT_HOP_LATCH_FRAC sites ft hop lockup latches toward the capture station
+qc	since_base	c2836b8f2596	11-09 12:07	2	die_plan/grt_post.tcl die_plan/grt_pre.tcl	HOPLATCH-HOLD: hop latch launch->latch hop hold-padded at GRT by construction; default pattern adds u_fl_L201x
+qc	since_base	2e3449cef64a	11-09 12:40	1	die_plan/die_plan.schema.json	die_plan: regenerate die_plan.schema.json for stations_in / lands_on (schema.py dump-schema)
+qc	since_base	90b5279e4254	11-09 13:00	1	die_plan/kit_reset_contract.py	Reset contract: landing clones resolve to their base entry; base-name miss is a FLOW error (RESET-KEY-1109)
+qc	since_base	b65a848a700d	11-09 14:00	1	die_plan/post_route_drv/post_grt_chain.py	post_grt_chain: a post-route ECO never re-runs kit clock-tree editors (ECO-CLOCK-HOOK, KW-FIX-44)
+qc	since_base	c15eb3676920	11-09 14:21	1	die_plan/hold_margin_pick.py (file absent)	HBM kits: 35 ps reg2reg GRT FF hold-repair target for hard cores > 100k cells
+qc	since_base	cb30718c0ae8	11-09 15:40	1	die_plan/clock_landings.py	clock_landings: drive a single declared rs_/rraw_ die-top net directly, no top alias assign (KV die_port_bind 
+qc	since_base	02f251ec0103	11-09 16:07	1	die_plan/leaf_affinity.tcl	leaf_affinity: local split pass for zero-logic chains that span the core
+qc	since_base	539fe127b562	11-09 17:02	1	die_plan/clock_landings.py	clock_landings: rs_/rraw_ die-top ports emitted by this pass count as declared (direct-net fix was a no-op on 
+qc	since_base	b3f0a3d9e1e4	11-09 18:30	1	die_plan/relay_line_place.tcl (file absent)	HBM pt_w conservative form (PTW-C): second relay stage + kit repeater pitch and relay-line placement
+qc	since_base	7b4138bf30f2	11-09 18:39	1	die_plan/s81_svc_idx_fit.py	DIE-S81-85: source event - prime hunk in the bound portfix178 idx readers
+qc	since_base	1389515fc989	11-09 18:46	3	die_plan/die_plan.schema.json die_plan/die_sta_related.py die_plan/schema.py	TAPWIN-1109: kit SDC charges cross-tap pairs the related-pair budget X, not the die band
+qc	since_base	090d37504b52	11-09 18:57	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: no gap-column window on outline-edge columns (HBM q_su20 PDN OOM class)
+qc	since_base	dcc71b861d9f	11-09 19:00	2	die_plan/check.py die_plan/taps.py	die_plan: native split classes (child-root taps, ft stations_in, per-root clock_entry_access); S81 T51-SPLIT-C
+qc	since_base	4f7a78955d54	11-09 19:14	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: close M6 gaps that cannot lift both nets to M7 (PDN-0179 M6 macro-edge class)
+qc	since_base	aa1420b04041	11-09 19:18	1	die_plan/landing_place.py	Landing collectors: move a window whose grow cannot reach rows out of hard cores at gen
+qc	since_base	8dc0e1aab7ee	11-09 19:58	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: edge-column comment states measured numbers, marks mechanism as inferred
+qc	since_base	ec524673e0e1	11-09 20:34	1	autopilot/autopilot.py	Failure classifiers: gate FAIL after caught tool errors; PDN INFO lines; Error 247
+qc	since_base	9618f1c0fea0	11-10 01:11	4	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 RCK2-1109: second io_pma_rck entry for the serdes types (plan event + generator)
+qc	since_base	1e34e1135a3d	11-10 01:31	1	die_plan/landing_placement.tcl	Landing reset raw copies: macro exit at run time without macro_moves.json (CLAND-RESET-IN-MACRO)
+qc	since_base	d4de8694bc1e	11-10 02:55	4	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent) die_plan/schema.py	S81 LEAF-CLKENTRY-1109: widen the vs/vq channel on t21-geometry leaf types; opt-in core-clock tap entries
+s81	OLDER	7f6b7773d8ee	11-08 02:28	1	die_plan/core_flow.py	core_flow: stage existing nonport GRT hold scope on explicit opt-in
+s81	OLDER	c462697287dd	11-08 02:32	1	die_plan/face_guard.py	Fix planned face pin census for clock and reset exclusions
+s81	OLDER	2d7cd48b00b8	11-08 02:35	2	die_plan/face_flops.tcl die_plan/ft_polarity_local.tcl (file absent)	Keep FT polarity cells beside their planned launch stations
+s81	OLDER	9eef95c77988	11-08 02:47	1	die_plan/ft_polarity_local.tcl (file absent)	Recognize escaped FT names and existing unary buffers
+s81	OLDER	722e04e70456	11-08 03:00	1	die_plan/ft_polarity_local.tcl (file absent)	Spread FT inverter cohorts into neighbouring placement bands
+s81	OLDER	118e99bf7ce9	11-08 07:01	1	autopilot/hub_git_sync.sh	hub_git_sync: ALERT line on failure/behind>5; move identical untracked files aside
+s81	OLDER	f35d3ebca110	11-08 07:21	1	autopilot/kit_wave.py	kit_wave: restage / volume cancel never stop an attempt past PLACE (KW-FIX-35-H)
+s81	OLDER	240fcf844c9c	11-08 07:50	1	die_plan/early_core_taps.py	S81 CORE-TAP-LATE plan event: leaf early core taps + bind tap budget by tap moves
+s81	OLDER	185238f18324	11-08 08:35	2	die_plan/kit_reset_contract.py die_plan/lec.py	KW-FIX-35-RC: LEC refuses a listed reset contract without its receipt (FLOW error); stagers verify the kit cop
+s81	OLDER	54da643aa0d8	11-08 08:41	1	autopilot/kit_wave.py	KW-FIX-35: die-aware gen disk floor (work_root lane measure beats ot-run scratch2 figure; root lanes keep root
+s81	OLDER	8d15e7b3879e	11-08 08:57	1	autopilot/kit_wave.py	kit_wave: _own_wave_unit accepts every listed wave job of a parent (KW-FIX-35-P)
+s81	OLDER	4aa8c234091c	11-08 09:15	2	die_plan/clock_landings.py die_plan/landing_collector.py	QC-TYPES-10/CLAND: landing raw resets follow the collector tree, not same-named relays of the bound tree
+s81	OLDER	57b854d12395	11-08 09:28	1	die_plan/lec.py	lec.py: scope-twin proposals for free gold-only registers (LEC-SCOPE-TWIN)
+s81	OLDER	7fe4a970bbd0	11-08 09:48	1	autopilot/kit_wave.py	kit_wave: cancel_superseded keeps held rows and rows whose own plan block is unchanged
+s81	OLDER	251b11706a3a	11-08 09:50	1	die_plan/die_clock.py	die_clock: build/report/render pass the plan path to schema.Plan
+s81	OLDER	a61d5586223d	11-08 10:14	1	autopilot/kit_wave.py	KW-FIX-35-RD RESTAGE-DEPS: probe every kit_rtl/gen_args/item input on each gen host
+s81	OLDER	cb5984770c2f	11-08 10:35	2	autopilot/counted_child_views.py autopilot/kit_wave.py	KW-FIX-35-CV: tick exports counted child views (SIGNED IN COUNT BUT NO WAVE VIEW) automatically
+s81	OLDER	18e54f8be907	11-08 10:45	1	autopilot/prov_view.py	KW-FIX-35-CV: counted LOCAL_PASS_NEEDS_PARENT views go FINAL in prov_view
+s81	OLDER	cb13e19342af	11-08 11:06	1	die_plan/clock_taps.tcl	clock_taps: find core-tap instances by escaped OpenDB name
+s81	OLDER	c7c76e829330	11-08 11:18	1	die_plan/lec.py	fix(lec): lower escaped indexed instances into named generate loops
+s81	OLDER	5382e2a0ad04	11-08 11:22	1	autopilot/kit_wave.py	Keep one producer claim for allowlisted plan classes
+s81	OLDER	a5644801c46c	11-08 11:24	1	die_plan/lec.py	fix(lec): preserve formal widths in indexed port bridges
+s81	OLDER	7cb02e709025	11-08 11:36	1	die_plan/kit_gen_lint.py	Reject non-kit directories in generation lint
+s81	OLDER	539f02fdd750	11-08 11:43	2	die_plan/post_route_drv/eco_grt_pre.tcl (file absent) die_plan/post_route_drv/prd_mk.sh	Preserve pre-routed wires around ECO pin access
+s81	OLDER	0290f2352bc4	11-08 11:54	1	autopilot/kit_resume.py	Ignore Tcl comment-only stage references in resume dependencies
+s81	OLDER	06641d575b40	11-08 12:03	1	die_plan/lec.py	Refine scope twin proposals after rejected rare-event matches
+s81	OLDER	224a127d4865	11-08 12:05	2	die_plan/bind.py die_plan/kit_dead_inputs.py	Prove complete unbound plan inputs from exact native source mapping
+s81	OLDER	5178ea7aa279	11-08 14:00	2	die_plan/ring_band_merge.py (file absent) die_plan/ring_band_spread.py (file absent)	KV kvcls_1108: LANDING-RING-DENSITY band spread tool + KV class plan event (io_ft_v1 lockup + status_reg)
+s81	OLDER	14aca37706ba	11-08 14:24	2	die_plan/bound_reset_contract.py die_plan/reset_tree.py	RLK-1108: latch form through bind kit-rtl (native reset export)
+s81	OLDER	6834af155537	11-08 15:04	1	die_plan/face_flops.tcl	face_flops: source ft_polarity_local.tcl before the OT_GPL_GUARD section
+s81	OLDER	7a664b6e4abe	11-08 15:23	3	die_plan/core_conns_from_bind.py (file absent) die_plan/ts_relay_event.py (file absent) die_plan/ts_relay_miter.py (file absent)	die_plan: TYPE-SAFE-2 relay constructor (face bus <-> hard-core wiring stations + pin cycles) and its bound-RT
+s81	OLDER	78912602cbc4	11-08 15:42	4	die_plan/bind_compose.py die_plan/bind_compose_split.py (file absent) die_plan/bound_macro_paths.py die_plan/hbm_split_su_asbuilt.py (file absent)	HBM SU split bind: compose_split regroups cut members under the signed hard sub-cores
+s81	OLDER	ac77e04d7d52	11-08 16:12	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: re-anchor stale station chains, keep station sites out of hard cores, report unmeasurable buse
+s81	OLDER	9d12eb833749	11-08 16:24	1	die_plan/ring_band_spread.py (file absent)	KV kvcls_1108: compose onto plan_r8fix + ring_band_spread --bisect
+s81	OLDER	81b02390f771	11-08 16:32	1	die_plan/bind_compose.py	bind_compose: compose_split optional on binders without an asbuilt; pre-split compose call unchanged
+s81	OLDER	830128f7fbe8	11-08 16:43	2	die_plan/slot_channel_event.py (file absent) die_plan/slot_lattice_cost.py (file absent)	die_plan: slot channel repack event + abutted-lattice growth cost (TYPE-SAFE-2-AREA, brief item 3)
+s81	OLDER	3e13ae679dea	11-08 16:47	1	die_plan/bound_macro_paths.py	bound_macro_paths: flat plan cores resolve by the bind's folded name (DIE-HBM-92-SU-IDX)
+s81	OLDER	402ee2c794d1	11-08 16:47	1	die_plan/hbm_split_idx_asbuilt.py (file absent)	HBM d44v hb_idx h0 split as-built manifest (DIE-HBM-92-SU-IDX)
+s81	OLDER	c13d4d4da166	11-08 16:47	2	die_plan/bind_compose_split.py (file absent) die_plan/hbm_split_su_asbuilt.py (file absent)	HBM SU split p37su2: Q0/Q1 lanes_plain -> lane1p sub-cores; split sources honour recipe defines
+s81	OLDER	460ddf0d1e00	11-08 17:05	1	autopilot/prov_view.py	DIE-HBM-92-GEN: prov_view contract LEF marks merged core clock tap pins USE CLOCK
+s81	OLDER	027edfc77a3c	11-08 17:05	2	die_plan/bind.py die_plan/kit_core_clocks.py	DIE-HBM-92-GEN: HBM pre-P&R kit classes (kit-rtl merged clocks + same-file KITPARAM sibling, bb localparams, s
+s81	OLDER	53e79ea9417e	11-08 17:23	2	autopilot/auto_resign.py die_plan/signoff.py	KW-FIX-36 R4: ECO near-miss census follows sign-off's output-port hold classification
+s81	OLDER	d4c56145f161	11-08 17:29	1	autopilot/kit_wave.py	KW-FIX-36 (e): resolve composed queue_src to one provable commit for the queue row
+s81	OLDER	623e2f9794d0	11-08 17:39	1	die_plan/clock_landings.py	Expose count-aligned read-select replication without writer delay
+s81	OLDER	0efc6e43a2b9	11-08 17:42	1	autopilot/kit_wave.py	KW-FIX-36: gen disk fallback when no gen host clears the preference
+s81	OLDER	e59c98789ad3	11-08 17:51	1	die_plan/die_plan.schema.json	die_plan.schema.json: regenerate for landing_ring_dsrep (dump-schema, mechanical)
+s81	OLDER	561fdb6b6cdb	11-08 17:56	3	die_plan/bind.py die_plan/latency_consumers.py (file absent) die_plan/regen_constants.py	DIE-HBM-92-LCHK: fail-closed regen_constants (F3) + bind-time latency-consumer check (F4)
+s81	OLDER	02aaf7931607	11-08 18:10	1	autopilot/kit_wave.py	item_env: allow [ ] in OT_MACRO_MOVES values only
+s81	OLDER	8140ea2694e2	11-08 18:24	3	die_plan/bound_groups.py die_plan/qc_su_lane_cut.py die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: EXTRA9 SU lane head form and plan event (off main until path ruling)
+s81	OLDER	d8f85c8cf716	11-08 18:28	1	die_plan/qc_su_mem9_event.py (file absent)	QC-MEM9: derive MEMORY_READ_EXTRA from the plan su_l<->su_c depths
+s81	OLDER	e0c5a7d7f3c4	11-08 18:40	1	die_plan/hold_hop_lockup_event.py (file absent)	die_plan: hold_hop_lockup_event (TYPE-SAFE-2 Fix A, hold-safe zero-logic hops, 0 pin cycles)
+s81	OLDER	64af829c09fa	11-08 18:42	3	die_plan/bind.py die_plan/die_plan.schema.json die_plan/reset_port_relays.py (file absent)	KV PHY RE-FORM: PI payload source stations (+3 pin cycles) and host reset relays
+s81	OLDER	99d7dfcd2809	11-08 19:13	1	autopilot/kit_wave.py	KW-FIX-37: spill measures the lane on the target; no-host rows retry
+s81	OLDER	4b09875b1002	11-08 19:16	1	die_plan/post_route_drv/prd_hook.tcl	ECO stage check: match hierarchical SPEF names that keep the \/ divider in OpenDB
+s81	OLDER	958a7d6d7fe3	11-08 19:17	1	die_plan/legacy_gate.py	KW-FIX-37: deep G2 setup miss at GRT is advisory
+s81	OLDER	3bd3bef72e31	11-08 19:22	1	die_plan/latency_consumers.py (file absent)	latency_consumers: advisory contracts for QC fixed-age readers (ML, embedding ring)
+s81	OLDER	34b03a117054	11-08 19:54	1	die_plan/merged_core_clocks.py	merged_core_clocks: Liberty clock identity, signed abstract USE SIGNAL is not a clock miss
+s81	OLDER	3b3bf0f0d584	11-08 19:58	1	autopilot/kit_wave.py	KW-FIX-38: wave picker sees root-fs lanes on bind mounts, scratch2 alternative, WAIT-DISK rows
+s81	OLDER	71a6993a25b9	11-08 20:00	1	autopilot/kit_wave.py	KW-FIX-38: alternative-disk per-kit charge 6 GB within a tick
+s81	OLDER	422126acd127	11-08 20:06	1	die_plan/tap_balance.tcl	tap_balance: match escaped OpenDB names in the core latency table
+s81	OLDER	6c1693a73476	11-08 20:10	1	die_plan/latency_consumers.py (file absent)	latency_consumers: report required value and match QC paths in the CLI
+s81	OLDER	063236aea5f2	11-08 20:11	1	autopilot/kit_wave.py	KW-FIX-38: die option item_inputs builds listed items from their own plan and bind
+s81	OLDER	84ac53507bb7	11-08 20:18	1	autopilot/kit_wave.py	KW-FIX-38: defer launches once a host alternative disk is used up in the tick
+s81	OLDER	259223d39105	11-08 20:25	1	die_plan/regen_constants.py	QC embedding read at bound transport: tag ring delay and RoPE provider form
+s81	OLDER	fdfd08eb4d50	11-08 22:05	2	die_plan/transport_known_consumers.json (file absent) die_plan/transport_table.py (file absent)	TRANSPORT-3: per-die bound transport table (advisory)
+s81	OLDER	c78f5970ba5e	11-08 22:11	1	autopilot/kit_wave.py	KW-FIX-39: work_alt: do not self-link when a parent is already on the alternative lane
+s81	OLDER	ee38ee88f048	11-08 22:37	1	die_plan/partition_ft_reserve.py	M7 PDN strap windows: centre the window on the real pdngen strap pair
+s81	OLDER	7428ba78a88b	11-08 22:50	2	die_plan/bind.py die_plan/kit_istations.py	kit-rtl include search over the kit file directories; kit_istations accepts moved kit dirs
+s81	OLDER	215b178d6404	11-08 22:59	1	autopilot/kit_resume.py	kit_resume: carry the last reused step's own logs past the 1 s mtime limit
+s81	OLDER	c52ad880bd79	11-08 23:16	2	autopilot/kit_wave.py autopilot/prov_view.py	kit_wave/prov_view: stage landing_evidence and provenance of a counted hard-landing child view
+s81	OLDER	6e609017c8e1	11-08 23:27	1	die_plan/qc_su_vmw_land_event.py (file absent)	qc_su_vmw_land_event: land SU lane writes of su_l0 and su_l1 on one edge
+s81	OLDER	c473c5ccf1fe	11-08 23:37	1	autopilot/kit_wave.py	kit_wave: restage_place_waiters makes unspillable PLACE waiters movable
+s81	OLDER	882f260cd295	11-08 23:49	1	die_plan/landing_place.py	Landing group override: absent optional raw copy logs, collector still errors
+s81	OLDER	aa8acb1988ee	11-08 23:53	1	die_plan/landing_place.py	Landing START relays: leave hard cores by the side that shortens the chain
+s81	OLDER	9f6cf3f1369c	11-08 23:54	1	die_plan/kit_gen_lint.py	kit_gen_lint: src_skew existence check never lazy-fetches a partial clone
+s81	OLDER	0f70bd142ca4	11-09 00:17	2	autopilot/kit_wave.py die_plan/kit_gen_lint.py	KW-FIX-41: unit-level ENOSPC spends no infra attempt; src_skew never lazy-fetches
+s81	OLDER	19d33e6cf64e	11-09 00:54	1	die_plan/lec_async.sh	lec_async: write identity atomically; band-order test names fixture cores
+s81	OLDER	0b305f23952b	11-09 00:58	1	die_plan/landing_place.py	Landing local-reset windows: clear of hard cores, halo-aware test
+s81	OLDER	c915c2cc4fa8	11-09 01:30	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M7 strap windows in wide FT bands; merge abutting full rows (PDN-0179 class)
+s81	OLDER	0ebdeada75f5	11-09 01:36	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --regen-latency regenerates plan.latency and checks deltas equal declared pin cycles
+s81	OLDER	43ba7f0e904d	11-09 01:46	1	die_plan/ts_relay_event.py (file absent)	relay event and native_istations: receiver depth = deepest per-core entry of the bus
+s81	OLDER	5d79919b42e1	11-09 01:50	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: keep M5 strap windows in tall tooth rows of the FT reservation
+s81	OLDER	46dd208b10b9	11-09 01:56	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --price-existing-out prices a native-OUT type older kit OUT stations (0 new hardware, model ca
+s81	OLDER	4d2a87c11289	11-09 01:59	2	die_plan/kit_zl_lockup.py (file absent) die_plan/zl_lockup/hd_spn.json (file absent)	kit_zl_lockup: opt-in zero-logic hop lockup latches as a kit RTL post-pass (hd_spn / hd_spn_end)
+s81	OLDER	facd3d40577a	11-09 02:02	1	autopilot/prov_view.py	prov_view: narrow detail_pg_layer form for cores with PG pins on the top OBS layer (DRT-0073 bank128)
+s81	OLDER	57856d101951	11-09 02:05	1	die_plan/ts_relay_event.py (file absent)	ts_relay_event: --min-stations floors a bus station count so an R8 class stays equal depth
+s81	OLDER	7e4e5f87f33d	11-09 02:07	1	die_plan/lec.py	lec.py: clock-tap tie model for black-box clock pins on tapped clock trees (hd_tile ft_*)
+s81	OLDER	a1d19af3ab85	11-09 02:13	1	die_plan/lec.py	lec.py: forward OT_LEC_TAP_TIE into the LEC container
+s81	OLDER	a2a7cc494e15	11-09 02:27	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: multiset compare, pair bind source-hash names by connectivity signature
+s81	OLDER	a0d06cd7dcfb	11-09 02:28	5	die_plan/bind.py die_plan/clock_landings.py die_plan/kv_start_corridor_event.py (file absent) die_plan/reset_tree.py die_plan/start_obstacle_path.py (file absent)	KV one-switch package: plan_p4 tools, PLL views, boot CDC underflow tie
+s81	OLDER	3c56a42e364d	11-09 02:28	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: resolve bound file stems through the plan module (cloned module__type)
+s81	OLDER	ba8f6f686f95	11-09 02:33	1	die_plan/ts_relay_miter.py (file absent)	ts_relay_miter: --r8 mode checks per-bit landing pad moves against stage deltas
+s81	OLDER	20168ea1dfb8	11-09 02:35	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: PDN windows for macro-gap M5 columns with their own M4 rows (PDN-0179 M4 class)
+s81	OLDER	075832317cf7	11-09 03:20	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: M5 strip rule for PDN-0179 strips under macro-bounded M6 bands
+s81	OLDER	aa8745402b28	11-09 03:53	1	die_plan/lec_async.sh	lec_async: kit lec_options.json sets OT_LEC_SUPERSET_VEC, differing shell value refused
+s81	OLDER	7c0931570526	11-09 03:54	1	die_plan/signoff.py	signoff: TT vclk rebind over early-core-tap clocks when no boundary register is on clk
+s81	OLDER	23e8a72fd79e	11-09 04:07	2	die_plan/kit_topology.py die_plan/native_istations.py	HBM-PLAN-1: one final HBM switch d44v_final4_1109 + native OUT bus scope
+s81	OLDER	7dd16dd58d3a	11-09 04:20	1	die_plan/legacy_gate.py	Legacy core kits record the LEC proof policy (lec_options.json)
+s81	OLDER	cf8c4104ef08	11-09 04:42	1	die_plan/clock_landings.py	KV delta: clock_landings plan_path read via getattr for __new__-built Landings
+s81	OLDER	2218bb5fc7f0	11-09 04:43	1	die_plan/bind.py	KV ZB_ADD build of record: attn Z base parameter, EP offset hook, compiler Z shift
+s81	OLDER	76ed2823bef9	11-09 04:47	2	die_plan/qn_alternate.py (file absent) die_plan/qn_chain_proof.py (file absent)	HBM q_b010 pilot: QN-alternate station chains (qn_alternate + chain proof)
+s81	OLDER	b2ae6c209fa8	11-09 04:58	1	die_plan/clock_taps.tcl	clock_taps: opt-in OT_HOP_LATCH_CAPTURE_TAP hangs named hop latches on their capture tap
+s81	OLDER	52078d8f9e9a	11-09 05:03	1	die_plan/pinband_site.py	pinband_site: linear PIN block parser (hub gen spent > 2 h in pin_rows)
+s81	OLDER	64db1baf83bf	11-09 05:07	1	die_plan/lec.py	lec.py: exact dead-X gold clean-up + final undecided-cone escalation (DIE-QC-97)
+s81	OLDER	3c4cd1e64fc7	11-09 05:10	1	die_plan/die_plan.schema.json	die_plan.schema.json: dump-schema for memory_read_extra (ROOT-MERGE-57 hold)
+s81	since_base	6d92d957ea6d	11-09 07:13	2	die_plan/kit_contract.py die_plan/lef_clock_entry.py	DIE-QC-97 NL-CK-ACCESS: stage the clock-entry access LEF by construction; hard core wins over same-name conten
+s81	since_base	c20531743e11	11-09 07:16	1	die_plan/clock_landing_plan.py	DIE-QC-97: band resize keeps wide face bands on their pin window (GRT-0116 class)
+s81	since_base	826eb4010eec	11-09 07:27	1	die_plan/die_plan.schema.json	DIE-QC-97: plan knob budgets.cland_strip_rows(_types) for the N/S ring_ff face strip
+s81	since_base	703f586fd5db	11-09 07:28	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: q_b102pv1 PDN-0179 class (M6-only strips, M6 sliver close at macro edges, covering colum
+s81	since_base	67133eca41ec	11-09 07:35	1	die_plan/die_ci.py	COUNT-ARCHIVE-1: durable signed record store, archive-backed view staging, auto-archive ingest
+s81	since_base	42d265cdb636	11-09 07:55	3	autopilot/kit_wave.py die_plan/bind.py die_plan/param_class_split.py (file absent)	DIE-QC-97: param_class_split -- one plan type per bound LOGIC value set
+s81	since_base	073656d7febf	11-09 08:59	1	die_plan/clock_landing_plan.py	DIE-QC-97: resize_undersized_bands keeps the band ring_place tag
+s81	since_base	a1e90880fb2c	11-09 09:56	1	die_plan/die_trial.py	die_trial.band_share_obs: alternate die-band row phase per direction (DIE-HBM-97)
+s81	since_base	120eba390b45	11-09 10:56	1	die_plan/core_flow.py	core_flow: every core kit gets the repeater-pitch hook (OT_MAXWIRE_UM, grt_maxwire.tcl)
+s81	since_base	0409748de8de	11-09 11:07	1	die_plan/die_plan.schema.json	die_plan schema: allow param_base_type/param_set on partition_types (__pv clones)
+s81	since_base	66c8ba930c16	11-09 11:07	1	die_plan/clock_landing_plan.py	DIE-QC-97: relocate off-window ring bands onto their pin window (cbf_q00 GRT-0116)
+s81	since_base	393765179ca8	11-09 11:27	1	die_plan/romq_parent_adapter.py	romq_parent_adapter: FIXED CGR follows the legacy recipe (CGR 8); keep CGR 0 for signed _he/_hw seals
+s81	since_base	5bdc916451b4	11-09 11:47	2	autopilot/autopilot.py autopilot/watchdog.py	autopilot: name the hub WATCHDOG as the sender of a 137/143 stop (KW-FIX-44)
+s81	since_base	ea774944986a	11-09 11:59	1	die_plan/face_flops.tcl	face_flops: OT_HOP_LATCH_FRAC sites ft hop lockup latches toward the capture station
+s81	since_base	c2836b8f2596	11-09 12:07	2	die_plan/grt_post.tcl die_plan/grt_pre.tcl	HOPLATCH-HOLD: hop latch launch->latch hop hold-padded at GRT by construction; default pattern adds u_fl_L201x
+s81	since_base	c027d3fb392a	11-09 12:16	1	die_plan/kit_reset_contract.py	kit_reset_contract: map the plan die name to its contract (HBM type kits never staged the reset contract)
+s81	since_base	2e3449cef64a	11-09 12:40	1	die_plan/die_plan.schema.json	die_plan: regenerate die_plan.schema.json for stations_in / lands_on (schema.py dump-schema)
+s81	since_base	90b5279e4254	11-09 13:00	2	die_plan/kit_reset_contract.py die_plan/lec.py	Reset contract: landing clones resolve to their base entry; base-name miss is a FLOW error (RESET-KEY-1109)
+s81	since_base	b65a848a700d	11-09 14:00	1	die_plan/post_route_drv/post_grt_chain.py	post_grt_chain: a post-route ECO never re-runs kit clock-tree editors (ECO-CLOCK-HOOK, KW-FIX-44)
+s81	since_base	c15eb3676920	11-09 14:21	1	die_plan/hold_margin_pick.py (file absent)	HBM kits: 35 ps reg2reg GRT FF hold-repair target for hard cores > 100k cells
+s81	since_base	625e17271d46	11-09 14:23	1	die_plan/bind.py	Strict port-bind: KITPARAM parity and as-built alternate files (DIE-HBM-97/BINDPARAM)
+s81	since_base	cb30718c0ae8	11-09 15:40	1	die_plan/clock_landings.py	clock_landings: drive a single declared rs_/rraw_ die-top net directly, no top alias assign (KV die_port_bind 
+s81	since_base	3c7c7e9573c3	11-09 15:44	1	die_plan/bind.py	bind portbind: asbuilt portbind_files (strict-check-only sources, e.g. real RTL of core_splits hard cores)
+s81	since_base	02f251ec0103	11-09 16:07	1	die_plan/leaf_affinity.tcl	leaf_affinity: local split pass for zero-logic chains that span the core
+s81	since_base	539fe127b562	11-09 17:02	1	die_plan/clock_landings.py	clock_landings: rs_/rraw_ die-top ports emitted by this pass count as declared (direct-net fix was a no-op on 
+s81	since_base	ac4c2c478488	11-09 18:09	3	die_plan/qc_struct_ctl.py (file absent) die_plan/qc_struct_ctl_lanes.py (file absent) die_plan/qc_struct_ctl_val.py (file absent)	DIE-QC-97 STRUCT-CTL-1: structural data-path plan form for QC sle_ctl__cl67434795
+s81	since_base	b3f0a3d9e1e4	11-09 18:30	1	die_plan/relay_line_place.tcl (file absent)	HBM pt_w conservative form (PTW-C): second relay stage + kit repeater pitch and relay-line placement
+s81	since_base	7b4138bf30f2	11-09 18:39	1	die_plan/s81_svc_idx_fit.py	DIE-S81-85: source event - prime hunk in the bound portfix178 idx readers
+s81	since_base	1389515fc989	11-09 18:46	2	die_plan/die_plan.schema.json die_plan/die_sta_related.py	TAPWIN-1109: kit SDC charges cross-tap pairs the related-pair budget X, not the die band
+s81	since_base	090d37504b52	11-09 18:57	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: no gap-column window on outline-edge columns (HBM q_su20 PDN OOM class)
+s81	since_base	5d2c5c95bdc5	11-09 19:14	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN, pair merged twins at other bit indices of the same register
+s81	since_base	4f7a78955d54	11-09 19:14	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: close M6 gaps that cannot lift both nets to M7 (PDN-0179 M6 macro-edge class)
+s81	since_base	f7cad6d7818a	11-09 19:15	1	die_plan/lec.py	lec: LEC-SIBLING-TWIN signature ignores gold X words (q_b100 hint-free NOT EQ 3)
+s81	since_base	aa1420b04041	11-09 19:18	1	die_plan/landing_place.py	Landing collectors: move a window whose grow cannot reach rows out of hard cores at gen
+s81	since_base	8dc0e1aab7ee	11-09 19:58	1	die_plan/partition_ft_reserve.py	partition_ft_reserve: edge-column comment states measured numbers, marks mechanism as inferred
+s81	since_base	ea72f65aad0e	11-09 20:04	1	autopilot/kit_wave.py	kit_wave: rotate launch order across dies per pass
+s81	since_base	ec524673e0e1	11-09 20:34	2	autopilot/autopilot.py autopilot/kit_wave.py	Failure classifiers: gate FAIL after caught tool errors; PDN INFO lines; Error 247
+s81	since_base	9618f1c0fea0	11-10 01:11	3	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent)	S81 RCK2-1109: second io_pma_rck entry for the serdes types (plan event + generator)
+s81	since_base	d4de8694bc1e	11-10 02:55	3	die_plan/die_plan.schema.json die_plan/pad_clock.py die_plan/pad_clock_entry.tcl (file absent)	S81 LEAF-CLKENTRY-1109: widen the vs/vq channel on t21-geometry leaf types; opt-in core-clock tap entries
