@@ -36216,3 +36216,53 @@ Two strikes (wave plus ECO), so this goes to the structural form, not a retry. T
 - 2026-11-10 12:33 PST STATE [AUTOCLEAN-13 -> COORD] standing auto archive+cleanup (COORD 12:3x) STARTED on intel1/intel2/epyc2 with the standing tool only (ot-autoclean.py 04e48d0f, its classes a/b/c + wt-reaper, no heuristic/partial/release deletes). df before: intel1 root 146 / scratch2 52; intel2 root 140 / scratch2 138; epyc2 root 141 / scratch2 54 GB. Step 1 running: drive --apply --no-run (archive SIGNED units to AGIdock signed-1106, sha of every file both ends, ARCHIVED.json; fresh snapshot = both protected lists + queue paths 25 h + kit-wave state). Step 2: dry host run, I check every row against live handles, git locks, realpaths and the epyc2 kit-wave dir (left to KW-FIX-44, any row there dropped); then apply, count check, post GB freed per host. Timers stay as they are (lifecycle OFF, host ot-autoclean timers not restarted).
 - 2026-11-10 12:34 PST RESULT [KV-PLAN-2 -> COORD, KW-FIX-43, ROOT-MERGE-57] tag kvp2-bindstale. kv3_hgi_v6 3aa896f00723 attempt_10 KIT_TOPOLOGY_BIND_STALE = MY e2 overlay, not event28w_c and not the LAND-RESERVE src_zb_lr. Cause: kit_topology.native_contract hashes, into the die-wide reset digest, every type's clock block except landing_* keys, and that includes clock.taps. The plan_e2s edit of the 38 e2 core taps (insertion 239.76/191.11 -> 237.80/189.25, budget_owner, note) changed that digest for every type. Measured on epyc7 against the canonical bind bind_kvr2_9237b + asbuilt_kvc_zb: wave plan kvr2 bind_matches 56/56; old plan_e2s 0/56; type and transport contracts identical. Fix, no bind regeneration needed: plan_e2s rebuilt with ONLY the 38 e2 hard_cores edits (pins r26q4s + detail lef/lib, which are not in the native contract), md5 c289de61, bind_matches 56/56; kit_wave notes updated. The tap insertion change was 2 ps, inside the 40 ps insertion tolerance; it waits for the next canonical KV bind event. Count: 1 KV row hit it (kv3_hgi_v6@10, the only launch on the bad overlay). The other 18 overlay types would have hit it on their next launch; kv3_hgi_v3@7 had not launched, and the kv3_pv_* gen rows running since 11:57 use their own item plan and are unaffected. KW-FIX-43: kv3_hgi_v6@10 is released in kit_wave retry on the fixed overlay; nothing else to relaunch. ROOT-MERGE-57: branch kvp2/e2-spread-resign-1110 now @ d978ae15b8 (2nd commit restores the 38 taps to main values, so merging it does not stale the KV bind); READY as kvp2-e2-ready otherwise.
 - 2026-11-10 12:35 PST STATE [DIE-HBM-97 kv_line KVPIPE] Re COORD epyc7->epyc8: vE place had not started (still waiting for memory on epyc7), so I cancelled exactly that waiter (my ot-run PID 2404867 on intel2; no leftover unit on epyc7), staged the vE kit (1.0 GB, no symlinks, DO_NOT_COUNT) to epyc8 at the same path, and resubmitted with --hosts epyc8: admitted at once (oth-ubuntu-703818-1794342925). vT synth (lec.py step B revised side) had already been admitted on epyc7, so it is left running there. Branch @bc9d22bd.
+- 2026-11-10 12:36 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): sle_su_l1__cl5ea486db signoff FAIL TIMING (routed-not-signed: TT -532.79 FF -73.84 ps late-ECO not a near miss: setup WNS -532.79 ps worse than -30; setup 1289 endpoints > 100; hold WNS -32.78 ps worse t) job 022df12e5262
+- 2026-11-10 12:36 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 2 event(s): slice_station__t45 route FAIL FLOW (flow-error: exit 12) job d63b8378919d; svc_hi_dsdv_svc_pvso_entry__t2 unstarted waiter RESTAGED (epyc4 -> epyc7)
+- 2026-11-10 12:40 PST STATE+READY KW-FIX-44 -> COORD, ROOT-MERGE-57, HBM-COLLECT-1, DIE-S81-85: sealed return keeps mtimes (deployed), scratch2 fallback for linked lane (deployed), epyc2 kit-wave reclaim blocked by .keep. DO_NOT_COUNT.
+  RETM-ALT-1110.
+  (A) Sealed timestamp class: DONE, deployed 12:3x. ROOT CAUSE (MEASURED): the fetch was not the problem. ot-job's seed
+      staging already keeps source mtimes (seed-mtime fix, on main). The gap was the RETURN copy:
+      ot-job copy_out/_copy_file used copyfile + copymode, so every returned file got the return time, in walk order.
+      A sealed job returns its whole kit (return paths ["."]), and the sealed wrapper's copy_back (tar) then carries
+      those times to the source host. q_spb0 on epyc7 shows it: every file in attempt_16/gen/q_spb0 is dated
+      11-10 11:54:14. So rtl/ could come back newer than run/results, and the next route job stopped at RESYNTH-GUARD.
+      Fix: each returned file takes the source mtime. An identical dst takes it too, unless it is hardlinked (shared
+      inode, left alone).
+      test_ot_job.py ReturnMtime: 2 new tests, which fail on main's copy_out; 47/47 pass.
+      Deployed to ot-job on epyc2/epyc4/epyc7/epyc8/intel1 (isolate-1-kw44mt-0911130f0f/ot-job 3493195f -> 49584088;
+      backup ot-job.bak-kw44-retm-1110). Running jobs keep their loaded code.
+      READY -> ROOT-MERGE-57: claude/kw-fix-44-return-mtime-1110 @ bd4ffb7dffca38bb6304f42475fcf17030efacf3 on main
+      679fee99eb1 (ot-job + test_ot_job.py).
+      ddfecd820a35 / q_spb0: nothing is left to resume. The autopilot deleted its failed run data at 12:02:38, and
+      HBM-COLLECT-1's relaunch is already running as kit-wave attempt 17 (LAUNCH 12:26:39, kw-hbm-qspb0-17-42399, uncharged
+      per their post). I did not launch a second copy.
+      Second row of the same class: d63b8378919d s81/slice_station__t45 a1 (sealed on epyc8, fetched from epyc4) also hit
+      RESYNTH-GUARD, exit 12 at 12:32:30, and its run data was deleted at 12:32:34. It is not relaunched yet. Recommendation:
+      the S81 owner relaunches it uncharged (or tell me to). The other 6 rebalanced rows are RUNNING.
+  (B) epyc2 kit-wave reclaim: NOT DONE, the tool refuses it by design. Both protected lists were checked (PROTECTED-DBS.txt
+      383 lines + lanes/PROTECTED-DBS.txt 563):
+        - One protected subtree on epyc2: hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2, 1.3 GB, kit_root
+          + results rows.
+        - No process holds the dir (cwd/fd scan; the only hit was my own shell).
+        - state.json has 68 rows naming it, all terminal: DONE-STRUCTURAL 41, DONE-CRASH 17, DONE-NEAR-MISS 5,
+          CANCELLED 4, ARCHIVED 1.
+      ot-autoclean.py run --host epyc2 --roots /srv/opentallas-scratch2/claude/kit-wave (dry) aborts at
+      "controls: positive FAIL", nothing deleted. The reason: kit-wave/.keep and kit-wave/hbm/.keep (empty, dated
+      11-01 22:00) are ancestors of every candidate, and the tool skips anything under a .keep.
+      Even without the .keep, the tool only deletes finished attempt dirs and ODB trims, not the whole 36 GB.
+      Also, epyc2's ot-autoclean.timer has not run since 11-09 00:30, per OWNER 11-09 17:3x ("isolation, not the old
+      autoclean"). I did not restart it.
+      To reclaim this I need one of:
+        (a) a ruling to remove the two .keep files, plus OWNER-compatible approval to run the tool once on this root only.
+        (b) a by-hand delete of named paths: kit-wave minus the protected attempt_2 subtree, and minus the 5 DONE-NEAR-MISS
+            rows if any ECO may use them. Done as a manifest, then rm, then read-back.
+      Recommendation: (b). It is one plain delete of terminal rows, with no heuristic scan.
+  (C) Scratch2 fallback for the symlinked lane: DONE, deployed 12:39:29 between ticks. Runtime kit_wave.py b15459de ->
+      d46b835d; backup kw44/kw4377/rt_bak/kit_wave.py.b15459de. It keeps KW-FIX-43's future_lec_commit overlay.
+      A lane spelled under scratch2 whose real path is on root (epyc2 kw43-wave-1109) now starts NEW attempts in
+      <lane>-s2 (/srv/opentallas-scratch2/claude/kw43-wave-1109-s2, a real scratch2 dir) through the existing work_alt link.
+      This needs scratch2 >= gen_disk_min_gb + gen_need_gb (70 + 20). The 316 GB stays.
+      It does not fire yet: epyc2 scratch2 has 55 GB. With (B) it would have about 91.
+      Tests: test_kit_wave_genhosts 54 pass (1 new); all test_kit_wave*: the same 9 failures as main.
+      READY -> ROOT-MERGE-57: claude/kw-fix-44-alt-linked-lane-1110 @ 969faa1f6b7bc4732c90889f95c7ba0f143a38dd on main 679fee99eb1.
+  (D) epyc8 src staging is still running; the gen_hosts edit follows the checksum dry run.
