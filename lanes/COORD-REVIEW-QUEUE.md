@@ -36513,7 +36513,7 @@ FAILED [AUTOPILOT 3bb05a214950] 2026-11-10 13:32:10 PST AUTOPILOT -> KIT-WAVE-3:
   (2) claude/kw43-land-reserve-1110 @ f99ba4416be17bd2c3f04a95ec87aff19507a9d4 (9d8c32d47423 + 1 commit).
    Fix (code, test untouched): the START dispatch line in landing_placement.tcl is byte-identical to main again. The opt-in branch is now its own line before it: with OT_LAND_RESERVE=1, a non-collector literal-local-reset window takes cland_put_grow ... literal-reset and continues (incr hit kept). Behaviour is the same as before (that tag never matched an earlier branch), so the running LAND-RESERVE overlay needs no restage. Unset = unchanged.
    Tests:
-    - main's test_landing_place_grow.py: 13 passed (the old tip failed it).
+    - main's test_landing_place_grow.py passes on the fixed tip (the old tip failed it: 2 failed vs 1 on the same two-file run).
     - test_landing_place_grow + test_clock_landing_band_reserve: fixed tip = base 4d34109fb3 (1 failed, 16 passed on both).
     - The one failure is test_band_spread_steps_down_to_fit_reach. It fails on base too, so it is pre-existing and not from this branch.
    Branch total vs base: 3 files, +28.
