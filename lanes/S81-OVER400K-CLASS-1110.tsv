@@ -53,6 +53,8 @@ ot_s81sl_leaf__t69 f60a3295e8f7	a4	n/a (synth 42199)	19048	16/11	M6 10351,M4 522
 col_h9_r2__t1__cl774acf45 b2a2229cca11	a10	n/a	66935	28/16	M6 52055,M4 6832,M5 6057,M7 1637	n/a	n/a	n/a	M6-LARGEST-GRT	not conservative M7-cap (no cons_grt_pre, M7 derate 32.39% normal); no moves in live row; no relaunch unchanged
 col_h9_r2__t1__clce45cab5 04c36309e6fc	a27	n/a	57273	29/14	M6 43061,M4 7787,M5 4532,M7 1533	n/a	n/a	n/a	M6-LARGEST-GRT	not conservative M7-cap; no moves in live row; no relaunch unchanged
 ot_s81sl_leaf__t16 b66e2e09b7f6	a6	n/a	15494	16/13	M6 8216,M4 4771,M5 1632,M7 832	n/a	n/a	n/a	M6-LARGEST-GRT	not conservative M7-cap; kit macro positions differ from live OT_MACRO_MOVES (e.g. u_vn.u_b kit 388.9,924.5 vs move 725.76,881.28) -> moves NOT carried (frame not checked); relaunch-with-moves candidate
+ot_s81sl_leaf__t38 1eb9aa9985ab	a5	n/a	23681	21/17	M6 17200,M4 3408,M5 2234,M7 803	n/a	n/a	n/a	M6-LARGEST-GRT	macro moves CARRIED 5/5; not conservative M7-cap; joins M6 class form
+col_h10_r2__t1__cl99efd374 c148a16f5c42	a23	n/a	n/a (GRT unfinished)	n/a	n/a	n/a	n/a	n/a	GRT-CONGESTION-ITER-HANG	watchdog 6h13: hung inside the initial global_route (extra congestion iteration 24/30, log silent from 22:59); not OT_MAXWIRE, not -end_incremental; no relaunch unchanged
 dsdv_slice_c1x_C__t7 fd54a26b3f3c	a21	n/a	n/a	n/a	n/a	n/a	LEC @place: 806 differ of 139734, 32 kept bits g_hq[*].h[21,31..33]; listed cone u_xg.u_s.g_ql[*].ln 467, u_r.vo_d 28 (first vo_d[248], gold_only u_r.vts[800]), u_s.er*a 5	n/a	J3 (LeafFollow)	same signature as t6/t8; not RESET-KEY; waits for the one S81 re-bind with LeafFollow; no relaunch unchanged
 
 # SECTION 3: slice_station HOLD_UNCHANGED rows (KW43-60)
