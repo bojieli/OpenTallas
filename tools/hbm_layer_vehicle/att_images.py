@@ -209,7 +209,9 @@ def die_sources(bundle: Path):
 
 
 def build_unit(work: Path, bundle: Path, tb: Path, dmut: int, probe: bool):
-    obj = work / f"obj_d{dmut}_p{int(probe)}"
+    # KVPIPE (11-10): ATT_UNIT_DEFINES=OT_KVLINE_UNCOMP[,..] = extra build defines (the uncompensated-front control)
+    xdef = [d for d in os.environ.get("ATT_UNIT_DEFINES", "").split(",") if d]
+    obj = work / (f"obj_d{dmut}_p{int(probe)}" + "".join("_" + d.replace("=", "") for d in xdef))
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
@@ -217,7 +219,7 @@ def build_unit(work: Path, bundle: Path, tb: Path, dmut: int, probe: bool):
     cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
            "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",
            "--top-module", "tb_hbm_smh_attn", f"-GDMUT={dmut}", "--Mdir", str(obj)] + \
-          [f"-D{d}" for d in DIE_DEFINES] + (["-DPROBE"] if probe else []) + \
+          [f"-D{d}" for d in DIE_DEFINES + xdef] + (["-DPROBE"] if probe else []) + \
           [f"-I{bundle / p}" for p in sorted({str(Path(s).parent.relative_to(bundle)) for s in die_sources(bundle)})] + \
           [str(s) for s in die_sources(bundle)] + [str(tb)]
     t0 = time.time()
