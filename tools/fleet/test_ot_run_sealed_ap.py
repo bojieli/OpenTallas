@@ -454,3 +454,57 @@ def test_gen_items_limits_sealed_gen_to_named_rows():
     assert M.conf_gen_call(call("a"), {"gen": True, "gen_items": ["a"]}) == (src, f"{base}/a/attempt_1")
     assert M.conf_gen_call(call("b"), {"gen": True, "gen_items": ["a"]}) is None
     assert M.conf_gen_call(call("a"), {"gen": True, "gen_items": []}) is None
+
+
+# ---- HUB-FETCH 11-10 (COORD: intel2 516 GB idle while epyc7 waiters queue)
+def test_hub_is_a_fetch_host_with_a_staged_return(tmp_path, monkeypatch):
+    """the hub (localhost in ot-run) admits, K's holder does not: sealed on the hub, ot-run gets --hosts localhost; the
+    hub already holds a sync copy of K, so the job returns into a private stage and the copy-back sends that"""
+    rows = {"epyc2": dict(ROWS["epyc2"]), "localhost": {"load": 33, "ncpu": 112, "admit": 266, "waiting_gb": 0, "ok": True}}
+    monkeypatch.setattr(M, "status_rows", lambda b: rows)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["intel2"])
+    out, why = M.decide(ap_argv(), c, check=lambda h, r, k, b=None: (True, ["/srv/x/child_rec"]),
+                        fetch=lambda h, b, k: (True, ["BUNDLE_OK", "K_PRESENT"]))
+    assert why == f"SEALED on intel2: {K} (inputs fetched from epyc2)"
+    assert out[out.index("--hosts") + 1] == "localhost"
+    s = spec_of(out)
+    st = s["copy_back"]["stage"]
+    assert st.endswith("/" + K.rsplit("/", 1)[1]) and "/.return/" in st and st != K
+    assert s["return"]["to"] == st and s["copy_back"]["path"] == K and s["copy_back"]["from"] == "intel2"
+    assert all(i.get("path") != "K_PRESENT" and i.get("path") != "BUNDLE_OK" for i in s["inputs"])
+
+
+def test_absent_k_keeps_the_plain_return(tmp_path, monkeypatch):
+    rows = {"epyc2": dict(ROWS["epyc2"]), "localhost": {"load": 33, "ncpu": 112, "admit": 266, "waiting_gb": 0, "ok": True}}
+    monkeypatch.setattr(M, "status_rows", lambda b: rows)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], ap_fetch_hosts=["intel2"])
+    out, _ = M.decide(ap_argv(), c, check=lambda h, r, k, b=None: (True, []), fetch=lambda h, b, k: (True, []))
+    s = spec_of(out)
+    assert s["return"] == {"to": K, "paths": ["."]} and "stage" not in s["copy_back"]
+
+
+def test_on_runs_locally_for_the_hub():
+    assert M.on("intel2", "true") == ["bash", "-c", "true"] and M.on("localhost", "x")[:2] == ["bash", "-c"]
+    assert M.on("epyc7", "true")[0] == "ssh" and M.on("epyc7", "true")[-2:] == ["epyc7", "true"]
+    assert M.otrun_host("intel2") == "localhost" and M.otrun_host("epyc8") == "epyc8"
+
+
+def test_staged_copy_back_leaves_the_hosts_k(tmp_path, monkeypatch):
+    """copy_back from a stage: the stage goes to the source K and is removed; the job host's own K stays"""
+    k_host = tmp_path / "hostK" / "kit"           # the hub's sync copy (must survive)
+    k_host.mkdir(parents=True)
+    (k_host / "mine").write_text("hub copy")
+    stage = tmp_path / "jobs" / ".return" / "1-2" / "kit"
+    (stage / "run").mkdir(parents=True)
+    (stage / "run" / "out.odb").write_text("new")
+    dest = tmp_path / "src"
+    dest.mkdir()
+    monkeypatch.setattr(M, "HUB_LOCAL", {"intel2", "localhost", "srchost"})
+    rc = M.copy_back("intel2", "srchost", str(dest / "kit"), str(stage))
+    assert rc == 0
+    assert (dest / "kit" / "run" / "out.odb").read_text() == "new"
+    assert not (tmp_path / "jobs" / ".return" / "1-2").exists()
+    assert (k_host / "mine").read_text() == "hub copy"
+    assert M.copy_back("intel2", "srchost", str(dest / "kit"), str(tmp_path / "x" / "other")) == 99
