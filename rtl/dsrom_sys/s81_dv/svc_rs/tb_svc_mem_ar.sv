@@ -4,6 +4,9 @@
 // out-of-range pointers (pbuf form), SYNC 16 of 32 with out-of-range writes and reads (qmem form).
 // + LA 32 x 512 (sw scanner form, dsdv_svc_mem_la).  MUT 1 = no write bypass, 2 = read one cycle late / LA bank by
 // the previous pointer: both must be CAUGHT.
+// + LR (11-09, -DOT_SVC_ATT_RDPIPE sw form, dsdv_svc_mem_lr: registered read word) on the D stream; its word is
+// compared whenever the entry is readable (after a reset: once entry rp_n is written or the pointer steps), counted
+// in lr_chk.  MUT 1 = no write capture into the held word, 2 = N from the wrong bank: both must be CAUGHT.
 // Warm resets (11-09): rst_n is pulsed low mid-stream (1..80 cycles, at a negedge) with the pointers non-zero; as in
 // dsdv_svc_att / dsdv_svc_rs the pointer D inputs carry NO reset term, the pointer enables (adv / go) are false while
 // reset is held and the pointer flops reset asynchronously; writes keep running.  The first post-reset reads are
@@ -39,6 +42,13 @@ module tb_svc_mem_ar;
     reg [511:0] d_mem [0:31]; reg [4:0] d_rp, d_wp; reg d_adv, d_we; reg [511:0] d_wd;
     wire [511:0] d_rd;
     dsdv_svc_mem_la #(.W(512), .AW(5), .MUT(MUT)) u_d (.clk(clk), .rp(d_rp), .we(d_we), .wa(d_wp), .wd(d_wd), .rd(d_rd));
+    // ---- E: LR registered lookahead on the D stream
+    wire [4:0] d_rpn = d_adv ? d_rp + 1'b1 : d_rp;
+    wire [511:0] e_rd;
+    reg e_ok = 0; integer lr_chk = 0, lr_err = 0;
+    dsdv_svc_mem_lr #(.W(512), .AW(5), .MUT(MUT)) u_e (.clk(clk), .rp(d_rp), .rp_n(d_rpn), .we(d_we), .wa(d_wp), .wd(d_wd), .rd(e_rd));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) e_ok <= 0; else if ((d_we && d_wp == d_rpn) || d_adv) e_ok <= 1;
 
     integer i;
     initial begin
@@ -99,9 +109,11 @@ module tb_svc_mem_ar;
             if (b_rd !== b_ref) err = err + 1;
             if (c_rd !== c_q) err = err + 1;
             if (d_rd !== d_mem[d_rp]) err = err + 1;
+            if (e_ok) begin lr_chk = lr_chk + 1; if (e_rd !== d_mem[d_rp]) begin err = err + 1; lr_err = lr_err + 1; end end
             if (cyc - wr_rel <= 3) begin wr_chk = wr_chk + 1; wr_err = wr_err + (err - e0); end
         end
         if (cyc == NCYC) begin
+            $display("lr checks=%0d lr errors=%0d", lr_chk, lr_err);
             $display("warm resets=%0d (pointers all non-zero at assertion: %0d) post-reset checks=%0d post-reset errors=%0d", wr_n, wr_nz, wr_chk, wr_err);
             if (MUT == 0) $display("%s tb_svc_mem_ar MUT=0 checks=%0d errors=%0d same-address collisions=%0d", err == 0 && wr_n > 20 ? "PASS" : "FAIL", chk, err, coll);
             else $display("%s tb_svc_mem_ar MUT=%0d checks=%0d errors=%0d", err != 0 ? "CAUGHT" : "MISSED", MUT, chk, err);

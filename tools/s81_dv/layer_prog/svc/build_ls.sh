@@ -11,7 +11,7 @@ RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.s
 # DIE-S81-85 form A: LS_MERGE_H4=1 builds the H8 merge as two H4 providers (-DOT_SVC_MERGE_H4)
 if [ "${LS_MERGE_H4:-0}" = 1 ]; then RS_DEF+=(-DOT_SVC_MERGE_H4); RS_SRC+=(rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv); fi
 # DIE-S81-85 form A (3): LS_ATT_MEM=1 builds u_att sw/wq/pvq/qmem and u_rsv.pbuf as 1R1W macros (-DOT_SVC_ATT_MEM_MACRO)
-if [ "${LS_ATT_MEM:-0}" = 1 ]; then RS_DEF+=(-DOT_SVC_ATT_MEM_MACRO); RS_SRC+=(rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv
+if [ "${LS_ATT_MEM:-0}" = 1 ]; then RS_DEF+=(-DOT_SVC_ATT_MEM_MACRO); RS_SRC+=(rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_lr.sv
   physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.v
   physical/asap7_memory_macros_v2/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v); fi
 mkdir -p "$O"; "$VL" --version > "$O/verilator.version"

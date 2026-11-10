@@ -14,8 +14,9 @@ mk() {  # $1 suffix, $2.. defines
   grep -q "^module dsdv_svc_att_$s " "$f" || { echo "rename failed $s"; exit 1; }
 }
 mk f
-mk m OT_SVC_ATT_MEM_MACRO
-mk mm OT_SVC_ATT_MEM_MACRO OT_SVC_ATT_MEM_MACRO_MUT
+# MDEFS / MMDEFS: the define sets of the m (must equal f) and mm (negative control, must differ) copies
+mk m ${MDEFS:-OT_SVC_ATT_MEM_MACRO}
+mk mm ${MMDEFS:-OT_SVC_ATT_MEM_MACRO OT_SVC_ATT_MEM_MACRO_MUT}
 SRC=(); for f in "${RS_SRC[@]}"; do [ "$f" = "$A" ] || [ "$f" = "$D/dsdv_svc_rs.sv" ] || SRC+=("$f"); done
 SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv)
 M=physical/asap7_memory_macros_v2
@@ -23,7 +24,7 @@ M=physical/asap7_memory_macros_v2
   --unroll-count 16 --unroll-limit 131072 -CFLAGS -O1 -I"$D" -DOT_SVC_ALLQ -DOT_SVC_H8 -DOT_SVC_H8_REUSE_RT2 -DOT_ATTN_HCORE \
   -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED -DSU_SMU_T -DOT_SVC_MEM_COV -GNCYC=$NCYC \
   "${RS_DEF[@]}" "$O/src/dsdv_svc_att_f.sv" "$O/src/dsdv_svc_att_m.sv" "$O/src/dsdv_svc_att_mm.sv" \
-  rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv \
+  rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_lr.sv \
   $M/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.v $M/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v \
   "${SRC[@]}" "${RS_LIB[@]}" rtl/dsrom_sys/s81_dv/svc_rs/tb_svc_att_mem.sv > "$O/build.log" 2>&1 || { tail -30 "$O/build.log"; exit 1; }
 for s in $SEEDS; do "$O/obj/Vtb_svc_att_mem" +seed=$s > "$O/run_s$s.log" 2>&1 & done; wait
