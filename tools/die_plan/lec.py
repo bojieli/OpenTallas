@@ -7141,7 +7141,10 @@ def sibling_twin_search(L, rest, found, rv, words=16, seed=20261108, exclude=(),
     for the registers already found, D(k) must simulate equal to D(c) ^ inv on every word, and reset values must
     not disagree.  Found bindings stay applied for the next round, so a pipeline is found stage by stage (rounds <=
     its depth).  Lowest index first, inv 0 first; only proposals: apply_hints proves them by the same simultaneous
-    induction as every hypothesis and drops any that fails (never a waiver).  Adds to found -> number added."""
+    induction as every hypothesis and drops any that fails (never a waiver).  Adds to found -> number added.
+    X words do not count (L.dxlit, the gold ternary X of each next state, the same don't-care rule as the compare
+    points): the shared expression reads kb_r[bi_r], an out-of-range part-select is X in the gold frontend with one
+    fresh $anyseq per cell, so the copies disagree exactly where they are X (q_b100: every random word differed)."""
     if not rest:
         return 0
     by_vec = collections.defaultdict(list)
@@ -7169,6 +7172,7 @@ def sibling_twin_search(L, rest, found, rv, words=16, seed=20261108, exclude=(),
                 L.hyp[("gold", k)] = ("eq", "gold", c, inv)
             m, _ = L.build(with_compare=False, with_hyp=True)
             val, mask = m.simulate(words, seed=seed + 7919 + r)
+            dx = getattr(L, "dxlit", {}) or {}
             new = {}
             for k, cs in sibs.items():
                 if k in bound:
@@ -7177,11 +7181,14 @@ def sibling_twin_search(L, rest, found, rv, words=16, seed=20261108, exclude=(),
                 if dk is None:
                     continue
                 sk = lit_val(val, mask, dk)
+                xk = lit_val(val, mask, dx.get(k, 0))
                 for c in cs:
                     dc = L.dlit.get(("gold", c))
                     if dc is None:
                         continue
-                    hit = [inv for inv in (0, 1) if (k, c, inv) not in exclude and sk == lit_val(val, mask, dc ^ inv)]
+                    care = mask & ~(xk | lit_val(val, mask, dx.get(c, 0)))
+                    hit = [inv for inv in (0, 1) if (k, c, inv) not in exclude and care
+                           and not (sk ^ lit_val(val, mask, dc ^ inv)) & care]
                     if hit:
                         new[k] = (c, hit[0])
                         break

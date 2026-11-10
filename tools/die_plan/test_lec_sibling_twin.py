@@ -102,3 +102,65 @@ def test_auto_twins_end_to_end_and_mutants(tmp_path, monkeypatch, gold_shared, g
     assert (not _differs(L)) == eq
     if gold_shared and gate_ok:
         assert rec["auto_twins"]["kept"] == 6
+
+
+# ------------------------------------------------------------------ X twins (q_b100 hint-free rerun, 11-09)
+def _seq_x(tmp_path, name, inputs, xins, latches, nxt_fn):
+    """_seq with extra AIG inputs that have no name in the map: the gold frontend's $anyseq X sources."""
+    L, mp = _seq(tmp_path, name, list(inputs) + list(xins), latches, nxt_fn)
+    mp["input"] = {i: v for i, v in mp["input"].items() if v[0][0] not in xins}
+    return L, mp
+
+
+def _design_x(tmp_path, gold_shared=True):
+    """gold: s1[k] <= ke_n | (sel ? kb : X_k) -- kb_r[bi_r] with bi_r out of range is X, ONE fresh $anyseq per bit --
+    s2[k] <= s1[k], y[k] <= s2[k].  gate (X chosen 0, bits merged into bit 3): s1[3] <= ke_n | (sel & kb).
+    gold_shared=False: gold s1[1] <= ke_n & (sel ? kb : X_1) (not a twin)."""
+    XS = [f"x{k}" for k in range(4)]
+
+    def mux(m, s, a, b):
+        return _or(m, m.AND(s, a), m.AND(s ^ 1, b))
+
+    def gold(m, l):
+        d = {S1[k]: _or(m, l["ke_n"], mux(m, l["sel"], l["kb"], l[XS[k]])) for k in range(4)}
+        if not gold_shared:
+            d[S1[1]] = m.AND(l["ke_n"], mux(m, l["sel"], l["kb"], l[XS[1]]))
+        d.update({S2[k]: l[S1[k]] for k in range(4)})
+        d.update({Y[k]: l[S2[k]] for k in range(4)})
+        return d
+
+    def gate(m, l):
+        d = {S1[3]: _or(m, l["ke_n"], m.AND(l["sel"], l["kb"])), S2[3]: l[S1[3]]}
+        d.update({Y[k]: l[S2[3]] for k in range(4)})
+        return d
+
+    g, gm = _seq_x(tmp_path, "gold", ["ke_n", "sel", "kb"], XS, S1 + S2 + Y, gold)
+    t, tm = _seq(tmp_path, "gate", ["ke_n", "sel", "kb"], [S1[3], S2[3]] + Y, gate)
+    return lec.Lec(g, gm, t, tm)
+
+
+def test_x_twins_paired_outside_their_x_words(tmp_path):
+    """Each copy of the shared expression reads its own X source, so the copies differ on every word where they are
+    X; those words are don't-care (gold X), and outside them the bits are the same register."""
+    L = _design_x(tmp_path)
+    found = {}
+    n = lec.sibling_twin_search(L, [f"ff:u_dut.{r}[{k}]" for r in ("s1", "s2") for k in range(3)], found,
+                                lambda k: None)
+    assert n == 6 and found == {f"ff:u_dut.{r}[{k}]": (f"ff:u_dut.{r}[3]", 0) for r in ("s1", "s2") for k in range(3)}
+    assert not L.hyp
+
+
+def test_x_twin_mutant_not_proposed(tmp_path):
+    L = _design_x(tmp_path, gold_shared=False)
+    found = {}
+    lec.sibling_twin_search(L, [f"ff:u_dut.{r}[{k}]" for r in ("s1", "s2") for k in range(3)], found, lambda k: None)
+    assert "ff:u_dut.s1[1]" not in found and found["ff:u_dut.s1[0]"] == ("ff:u_dut.s1[3]", 0)
+
+
+@pytest.mark.parametrize("gold_shared,eq", [(True, True), (False, False)])
+def test_x_twins_end_to_end(tmp_path, monkeypatch, gold_shared, eq):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _design_x(tmp_path, gold_shared)
+    rec = {}
+    lec.auto_twins(L, rec, tmp_path, 100, [])
+    assert (not _differs(L)) == eq
