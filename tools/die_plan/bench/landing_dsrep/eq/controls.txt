@@ -1,0 +1,47 @@
+DSREP yosys equivalence: controls, coverage and limits (DIE-S81-85, 2026-11-09)
+
+Pair compared: rtl/common/ot_meso_fifo.sv and ot_dp_clk_landing.sv at ba1ab1ed (parent of
+501d1181; both files unchanged at origin/main 9ca6d3fd) versus 501d1181.  Flattened yosys
+equiv_make / equiv_simple / equiv_induct, one row per module x parameter set x define in
+result.tsv.  Run: run_eq.py gold gate <out> -j 12 in openroad/orfs:asap7lock on epyc2.
+
+Coverage: 13 of 13 modules defined in the two files, 1337 sets, PROVED 1337, UNPROVEN 0,
+ILLEGAL 0, OTHER 0.  Parameter sets come from a survey of origin/main: 16 candidate json, 9
+landing tables (s81, qwen_kvsys, qwen_compute), 13467 rows, all default ring form, 160
+distinct widths 1..4015.  run_eq.py covers W, W+1, W+2 x WNEG 0/1 for each surveyed width
+plus a parameter grid (ot_meso_fifo: all 8 bit parameters at W=64 and points at W 65, DEPTH 8,
+PINREG; ot_meso_ring: all 7 bit parameters at W 64 and 513).  Largest W 4017.
+
+Negative controls (mutated gate, same flow, raw output below):
+  neg     SETTLE-1 mutant in the landing: UNPROVEN on all 4 sets tried with WNEG active
+  neg2    .REG(1) added on the ring u_dsel: UNPROVEN on all 3 sets tried
+  negtneg TNEG(1'b0) clock-polarity mutant: PROVED, see the blind spot below
+
+Limits:
+  - Blind spot: yosys equiv ignores clock polarity, so an inverted clock edge is not detected
+    (negtneg).  The DSREP diff touches no clock edge; that was read from the diff, not proved
+    by this flow.
+  - DEFAULT DSREP=1 only.  DSREP=4 on the six iqf landings is not an equivalence claim; it is
+    covered by the lock-step bench in ../result.txt.
+  - Coverage of instantiating sets is by the survey above, not an elaboration of every die.
+  - An earlier run at -j 24 / 48 GB had 125 ERROR or ELAB_MISMATCH rows that passed when rerun
+    alone (cause not captured, assumed resource).  This result is a complete clean run at
+    -j 12 / 128 GB; no row was rerun or patched.
+
+Raw negative-control output:
+== neg
+ot_dp_clk_landing	W=1,WNEG=0,FREG=0	-	UNPROVEN	Found 1400 $equiv cells in eq: Of those cells 1395 are proven and 5 are unproven. Found a total of 5 unproven $equiv cells.
+ot_dp_clk_landing	W=1,WNEG=1,FREG=0	-	UNPROVEN	Found 1399 $equiv cells in eq: Of those cells 1394 are proven and 5 are unproven. Found a total of 5 unproven $equiv cells.
+ot_dp_clk_landing	W=64,WNEG=1,FREG=0	-	UNPROVEN	Found 1525 $equiv cells in eq: Of those cells 1520 are proven and 5 are unproven. Found a total of 5 unproven $equiv cells.
+ot_dp_clk_landing	W=513,WNEG=0,FREG=0	-	UNPROVEN	Found 12256 $equiv cells in eq: Of those cells 12227 are proven and 29 are unproven. Found a total of 29 unproven $equiv cells.
+== neg2
+ot_meso_ring	W=64,RDREG=0,WCHK=0,PLREG=0,ONV=0,RSPLIT=0,WCHKC=0,TNEG=0	-	UNPROVEN	Found 1107 $equiv cells in eq: Of those cells 979 are proven and 128 are unproven. Found a total of 128 unproven $equi
+ot_meso_ring	W=513,RDREG=0,WCHK=0,PLREG=0,ONV=0,RSPLIT=0,WCHKC=0,TNEG=0	-	UNPROVEN	Found 7842 $equiv cells in eq: Of those cells 6816 are proven and 1026 are unproven. Found a total of 1026 unproven $
+ot_meso_fifo	W=64,ENABLE=1,RDREG=0,NOBP=0,CRDREG=0,WCHK=0,OBYP=0,PLREG=1,ONREG=1,RSPLIT=0	-	UNPROVEN	Found 2281 $equiv cells in eq: Of those cells 2089 are proven and 192 are unproven. Found a total o
+== negtneg
+ot_dp_clk_landing	W=1,WNEG=1,FREG=0	-	PROVED	Found 1399 $equiv cells in eq: Of those cells 1399 are proven and 0 are unproven.
+ot_dp_clk_landing	W=64,WNEG=1,FREG=0	-	PROVED	Found 1525 $equiv cells in eq: Of those cells 1525 are proven and 0 are unproven.
+== edits
+2
+>         ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(RSPLIT), .SREP(DSREP)) u_dsel (.clk(rclk), .align(ONV ?
+1
