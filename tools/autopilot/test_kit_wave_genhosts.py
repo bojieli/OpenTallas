@@ -629,6 +629,26 @@ def test_alt_requires_another_disk_and_a_scratch3_lane():
     assert set(got) == {"epyc5", "epyc6"} and not c["_workroot_alt"]              # option off
 
 
+def test_alt_for_a_scratch2_lane_linked_onto_root():
+    """KW-FIX-44 11-10: epyc2 kw43-wave-1109 is spelled under scratch2 but is a symlink onto scratch3 = root"""
+    lane = "/srv/opentallas-scratch2/claude/kw43-wave-1109"
+    c = cfg(gen_host="epyc2", gen_hosts=["epyc2"], work_root=lane + "/runs/s81/kit-wave")
+    c["gen_disk_min_gb"] = 70
+
+    def run(rows):
+        return lambda h, cmd: (0, "W %s %s %s %s %s %s %s\n" % ((lane,) + rows))
+    got = K.workroot_low(FakeAP(), c, run=run((134, "/srv/opentallas-scratch3", "9", "9", "120", "7")))
+    assert got == {} and c["_workroot_alt"] == {"epyc2": {"s81": lane + "-s2"}}
+    assert c["_workroot_free"]["epyc2"]["s81"] == 120
+    got = K.workroot_low(FakeAP(), c, run=run((134, "/srv/opentallas-scratch3", "9", "9", "55", "7")))
+    assert got == {"epyc2": {"s81": 134}} and not c["_workroot_alt"]             # scratch2 55 < 70 + 20: stays low
+    got = K.workroot_low(FakeAP(), c, run=run((300, "/srv/opentallas-scratch3", "9", "9", "120", "7")))
+    assert got == {} and not c["_workroot_alt"]                                  # root lane has room: no alternative
+    w = lane + "/runs/s81/kit-wave/s81/e1/items/t/attempt_3"
+    sh = K.work_alt_cmd(w, lane + "-s2")
+    assert "A=" + lane + "-s2/runs/s81/kit-wave/s81/e1/items/t/attempt_3;" in sh
+
+
 def test_alt_charge_stops_the_tick_burst():
     c = _e6cfg()
     c["gen_disk_min_gb"], c["gen_alt_charge_gb"] = 100, 6

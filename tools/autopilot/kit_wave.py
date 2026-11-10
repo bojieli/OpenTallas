@@ -2221,6 +2221,13 @@ def workroot_low(AP, cfg, run=None):
                 if on_root and gb < lim and alt_on and len(f) >= 8 and f[6].isdigit() and f[7] != f[5] \
                         and int(f[6]) >= alt_lim and f[1].startswith(SCRATCH3_ROOT + "/"):
                     alt, gb, hard = SCRATCH2_ROOT + f[1][len(SCRATCH3_ROOT):], int(f[6]), GEN_SCRATCH_HARD_FLOOR_GB
+                # KW-FIX-44 11-10 (COORD): a lane SPELLED under scratch2 whose real path is on the root fs (epyc2:
+                # kw43-wave-1109 is a symlink onto scratch3 = root) has no same-path twin on scratch2; its new attempts
+                # start in <lane><workroot_alt_suffix> (default "-s2"), a real scratch2 dir; work_alt_cmd links them in
+                elif on_root and gb < lim and alt_on and len(f) >= 8 and f[6].isdigit() and f[7] != f[5] \
+                        and int(f[6]) >= alt_lim and f[1].startswith(SCRATCH2_ROOT + "/"):
+                    alt = f[1].rstrip("/") + str(cfg.get("workroot_alt_suffix") or "-s2")
+                    gb, hard = int(f[6]), GEN_SCRATCH_HARD_FLOOR_GB
                 for die in lanes[f[1]]:
                     free_map.setdefault(h, {})[die] = gb
                     cfg.setdefault("_workroot_hard", {}).setdefault(h, {})[die] = hard
