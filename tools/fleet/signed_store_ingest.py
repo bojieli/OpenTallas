@@ -205,11 +205,15 @@ def archive_host(h, cands, fails):
 
 def select_late(recs, manifest):
     """-> [(entry, fresh record)]: a stored record that is not versioned whose origin copy now has a versioned provenance (a re-sign that wrote
-    PROVENANCE.json after an ingest had already taken its signoff.json).  Origin copy only: its unit is the archived one."""
+    PROVENANCE.json after an ingest had already taken its signoff.json).  Origin copy, or (11-09 16:5x, HBM smk so_ho) an alias copy of the same
+    sign-off: the ingest took a copy whose PROVENANCE names another host's routed DB (epyc7 signed2 -> intel1 kit), so that copy scans
+    unversioned while the alias on the DB's host is versioned; the alias unit is then archived in full as the extra set."""
     by = {}
     for e in manifest:
         if e.get('flow_tag') and e.get('src_commit'): continue        # versioned already (11-09: not 'has any provenance')
-        by[(str(e.get('origin')), (e.get('name'), e.get('top'), str(e.get('generated'))))] = e
+        k = (e.get('name'), e.get('top'), str(e.get('generated')))
+        for o in [str(e.get('origin'))] + [str(x) for x in e.get('aliases') or [] if str(x) != str(e.get('origin'))]:
+            by.setdefault((o, k), e)
     out = []
     for r in recs:
         if not (r.get('prov_file') and r.get('flow_tag') and r.get('src_commit')): continue
@@ -229,7 +233,10 @@ def late_pass(late, fails, archive=None, collect=None):
         good, P = archive(h, [[r] for e, r in items], fails)
         for e, r in items:
             unit = [f[0] for f in (P.get(r['path']) or {}).get('files', [])]
-            old = {'/' + f[0]: f[2] for f in e.get('files') or []}
+            # an alias copy (not the origin) has its own paths: none of the stored origin files is in its unit, so the whole alias
+            # unit is the new, verified extra set; identity is still the signoff.json sha check below
+            alias = '%s:%s' % (h, r['path']) != str(e.get('origin'))
+            old = {} if alias else {'/' + f[0]: f[2] for f in e.get('files') or []}
             changed = [p for p, s in old.items() if p not in good or good[p][1] != s]
             # a re-sign's own log (lec.log, signoff.log) is rewritten after the first copy; the archive keeps the first version
             # (never rewritten) and the change is recorded.  Any other stored file that changed refuses.
