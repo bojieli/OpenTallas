@@ -5594,6 +5594,69 @@
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e",
       "job": "COUNTED dsdv_eng_rr_e epyc5:/srv/opentallas-scratch3/claude/die-s81-78/engrr/resign_vJ_eco1_dg/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 63e15c4d79da: archived LEF + tc/BC ETMs of the signed DB (export_view tc->tt, BC->ff); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/s81/dsdv_eng_rr_e)"
      }
+    ],
+    "ot_s81sl_vsw": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vsw",
+      "job": "COUNTED ot_s81sl_vsw epyc2:/srv/opentallas-scratch2/claude/ss21-resign/vsw_q_s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 3a104b1cc710, routed DB 6_final.odb sha 1b153a66d6971fdb; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vsw)"
+     }
+    ],
+    "dsfd_su_t_rxsf": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_su_t_rxsf",
+      "job": "COUNTED dsfd_su_t_rxsf epyc2:/srv/opentallas-scratch2/claude/s81ck13/rxsf_t40_h-s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 74a3ba103088, routed DB 6_final.odb sha fd8a6e2aea5ef7b4; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_su_t_rxsf)"
+     }
+    ],
+    "ot_s81_sstn_base566": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81_sstn_base566",
+      "job": "COUNTED ot_s81_sstn_base566 intel1:/srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/sign_r-s81_m0/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 93d5f534ad41, routed DB 6_final.odb sha f13e2df909f5f71c; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81_sstn_base566)"
+     }
+    ],
+    "dsfd_qbank_N": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_qbank_N",
+      "job": "COUNTED dsfd_qbank_N intel2:/srv/opentallas-scratch2/claude/s81ck13/qbn_k13A_h-s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record bd743a8f99a6, routed DB 6_final.odb sha 7aed6bb4203d4e39; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_qbank_N)"
+     }
+    ],
+    "ot_s81_cfg7_seq_bfp": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81_cfg7_seq_bfp",
+      "job": "COUNTED ot_s81_cfg7_seq_bfp intel1:/srv/opentallas-scratch2/claude/ss24/cfg7_w_s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record d8e7d12fc05e, routed DB 6_final.odb sha ba6f142adeaaa0e6; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81_cfg7_seq_bfp)"
+     }
+    ],
+    "dsfd_bf_front_roots": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_bf_front_roots",
+      "job": "COUNTED dsfd_bf_front_roots epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 3ad323860e44, routed DB 6_final.odb sha cf4bae456ed11e9a; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_bf_front_roots)"
+     }
+    ],
+    "ot_s81sl_vq": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vq",
+      "job": "COUNTED ot_s81sl_vq intel1:/srv/opentallas-scratch2/claude/s81ck7/vq_rt6e_hx3_resign_e-s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 7b85e57567b6, routed DB 6_final.odb sha 9e4df6ba54ba9220; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vq)"
+     }
+    ],
+    "ot_s81_cfg7_seq": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/ot_s81_cfg7_seq",
+      "job": "COUNTED ot_s81_cfg7_seq intel2:/srv/opentallas-scratch2/claude/tok-ds/bind178/plan_ff/s81/cores/views/ot_s81_cfg7_seq/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE (b), DIE-S81-85: counted SIGNED-LEGACY store record 5fa15c0e425e view; record LEF sha 2ada3d26ea505196 + abstract_pin_stub.py only (-> 1b1c96243b62c708, pins/PG unchanged), record tt/ff libs unchanged, no ss; replaces the closure-loop old-PG kit view; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/ot_s81_cfg7_seq)"
+     }
+    ],
+    "dsfd_node_NNfd": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd",
+      "job": "COUNTED dsfd_node_NNfd intel1:/srv/opentallas-scratch2/claude/counted/s81/dsfd_node_NNfd/view_legacy_record/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE (b), DIE-S81-85: counted SIGNED-LEGACY store record d374aee91e66 view; record LEF sha 246b093de77af1f3 + abstract_pin_stub.py only (-> abae33314d3d6284, pins/PG unchanged), record tt/ff libs unchanged, no ss; replaces the closure-loop old-PG kit view; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd)"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
