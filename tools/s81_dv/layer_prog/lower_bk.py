@@ -693,10 +693,12 @@ def drain_for(t_last, n_words_max):
 
 
 def job_rank_tree_rd(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boot_done=True, leg=LEG, mut=None,
-                     mut_die=None):
+                     mut_die=None, q_off=None):
     """the static rank tree on the die RTL (reader + vmux + bk_sel + tx); t_q = the edge the query's reader beats start
     at the root's bk_sel vi_s (E of the root); a die at depth h starts at t_q + h leg (query fan-out over the same
-    links, qf pin -> pin = the link's).  Returns {die: plan}, summary (root selection == fixture topk_local)."""
+    links, qf pin -> pin = the link's).  q_off(h) (S81-PLAN-1 11-10, bound die): the query offset of a depth-h die from
+    the bind (bound_ctl_lanes.query_offset: h link cores + qc + ql), replacing h * leg.
+    Returns {die: plan}, summary (root selection == fixture topk_local)."""
     kd = k_dies or shard_k(layer)
     s = load_op(fx, 'attn.idx.score')
     q4 = s.size // 4
@@ -724,7 +726,7 @@ def job_rank_tree_rd(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boo
         om = 0
         for i, c in enumerate(ch[d]):
             om |= 1 << (CHILD_LANES[i] - 1)
-        e0 = t_q + depth[d] * leg
+        e0 = t_q + (depth[d] * leg if q_off is None else q_off(depth[d]))
         rb = reader_beats(keys, b0, m, K_MAX, tag, om, e0)
         pos_l = {0: np.arange(b0, b0 + m)}
         key_l = {0: keys}
@@ -951,11 +953,21 @@ def lower(die, op, ctx):
     sd = int(ctx.get('shard_die') or 0)
     ops = {o['op']: o for o in (ctx.get('sched') or {}).get('ops', [])}
     key = (str(fx), str(ctx.get('layer')))
+    bct = None
+    if ctx.get('bound_ctl') is not None:
+        from layer_prog import bound_ctl_lanes as BCL
+        bct = BCL.idxnet(ctx['bound_ctl'])
+        res['bound_ctl'] = dict(tree_legs=bct['tree_legs'], query_lane=bct['query_lane'], tp4_on_die=BCL.tp4_on_die(bct),
+                                idx_chain=bct['idx_chain'])
     try:
         if name.endswith('topk_local') and kd > 1 and ctx.get('idx_tree') == 'rd':
             # S81-L20DIE: the die-RTL tree (readers + vmux + bk_sel + tx); plan shaped like plan_select's
             t_q = int(math.floor(ops['attn.idx.score']['start'])) if 'attn.idx.score' in ops else t_issue
-            plans, tree = job_rank_tree_rd(fx, k_dies=kd, layer=ctx.get('layer'), t_q=t_q + READER_T0)
+            kw = {}
+            if bct is not None:
+                # S81-PLAN-1 11-10: bound die -> tree leg and query fan-out from the bind (static schedule, no slack)
+                kw = dict(leg=max(bct['tree_legs'].values()), q_off=lambda h: BCL.query_offset(bct, h))
+            plans, tree = job_rank_tree_rd(fx, k_dies=kd, layer=ctx.get('layer'), t_q=t_q + READER_T0, **kw)
             pr = plans[sd]
             plan = dict(pr, ingress=sorted(pr['reader']), golden=f'golden rule over the subtree of die {sd}',
                         shard=dict(k_dies=kd, die=sd, children=pr['children'], child_arrive=pr['child_arrive']))
@@ -981,7 +993,9 @@ def lower(die, op, ctx):
             # roots' 512-sets are all-gathered: root egress + the topk_merge window (static, no ready)
             mg = ops.get('attn.idx.topk_merge')
             ready = _TREE_DONE.get(key)
-            t0 = t_issue if ready is None else max(t_issue, ready + 1 + int(math.ceil(mg['end'] - mg['start']) if mg else 0))
+            tp4 = 0 if bct is None else BCL.tp4_on_die(bct)   # bound on-die TP4 hops (S81-PLAN-1 11-10)
+            t0 = t_issue if ready is None else max(t_issue, ready + 1 + tp4 +
+                                                   int(math.ceil(mg['end'] - mg['start']) if mg else 0))
             plan = job_topk_final(fx, t0=t0, boot_done=False, indexed13=bool(ctx.get('bk_indexed13')))
     except KeyError as x:
         res['gap'] = dict(module='lower_bk', port='fixtures', missing=f'fixture op {x} missing')

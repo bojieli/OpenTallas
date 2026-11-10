@@ -63,6 +63,26 @@ CLASS_MAP = [
     (r'(unit|flt)__eng__svc_\d+', 'Engram unit / fault to svc (lower_eng LAT via rebind_links; flt is a sticky '
                                   'fault level)', 'C2 bind'),
     (r'xtier__.*', 'layer_prog/norm_q_plan (V route over xtier lanes from the latency table)', 'C1 table'),
+    # S81-PLAN-1 11-10: the static control lanes (TYPE-SAFE-5 06:25: 30 lanes with no row); all read through
+    # layer_prog/bound_ctl_lanes.load (bound_stages == plan_cycles, fail closed) from the dv_layer_compile --bound-data bind
+    (r'(tl|ca|cb)__(bk_sel|s_0N_LP)__(bk_sel|s_0N_LP)', 'bound_ctl_lanes.idxnet tree_legs -> lower_bk job_rank_tree_rd '
+                                                        'leg (child arrival)', 'C2 bind'),
+    (r'(qc__iqf__s_0N_LP|ql__s_0N_LP__iqf)', 'bound_ctl_lanes.query_offset -> lower_bk job_rank_tree_rd e0 (query '
+                                             'fan-out per depth)', 'C2 bind'),
+    (r'tp__(bk_sel|s_\d[NS]_LP)__(bk_sel|s_\d[NS]_LP)', 'bound_ctl_lanes.tp4_on_die -> lower_bk topk_final t0 (TP4 '
+                                                       'all-gather on-die hops)', 'C2 bind'),
+    (r'idx__(svc_\d+__bk_sel|s_\d[NS]_C__iqf)', 'bound_ctl_lanes.idxnet idx_chain (score-chain / iq arrival; the IDX_S '
+                                              'job is not lowered: lower_bk GAPS producer)', 'C2 bind'),
+    (r'(unit__seqhost__s_\d[NS]_LP|ctrl__s_\d[NS]_LP__seqhost|unit__s_\d[NS]_LP__seqhost)',
+     'MU HWIN: bound_ctl_lanes.hwin_bound_transport -> native_hwin_calendar.check_consumer_book(bound_transport); '
+     'dv_layer_compile --bound-data re-ages mu_*/rt_0N/ht_7N/hf_7N', 'C2 bind'),
+    (r'(unit__seqhost__s_\d[NS]_C|ctrl__s_\d[NS]_C__seqhost|unit__seqhost__(gunit|eng))',
+     'dv_layer_compile --bound-data (rebind_links hbc_*, cw_seqhost, eks_7N; a BLOCKED link raises on read)', 'C2 bind'),
+    (r'unit__(seqhost__svc_\d+|svc_\d+__seqhost)', 'lower_svc _ages j_w/j_e/jd_w/jd_e from the re-aged jw_*/jd_* links '
+                                                 '(bound_ctl_lanes.svc_cross_check in dv_layer_compile)', 'C2 bind'),
+    (r'attn__svc_\d+__s_\d[NS]_C', 'svc -> hub C pv (pv_v valid-qualified at the hub; compose svc_to_hub)', 'C2 bind'),
+    (r'flt__gunit__s_\d[NS]_C', 'sticky fault level (no date)', 'C2 bind'),
+    (r'vid_(seqhost__svc_\d+|svc_\d+__seqhost)', 'fault relay / alive level (no date)', 'C2 bind'),
 ]
 
 

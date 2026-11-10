@@ -843,7 +843,10 @@ def seqhost_live(die, cut, idle_run):
     # the measured unit edge: t_host alive at the pin at 100 = live 99 + 1), then the name order: deterministic.
     lks = sorted((k for k, L in die.links.items() if nb and nb in L['src_bits'] and cut.out_by_net.get(L['out_net'])),
                  key=lambda k: (not k.startswith('ht_'), k))
-    lk = lks[0] if lks else next((k for k, L in die.links.items() if nb and nb in L['src_bits']), None)
+    # S81-PLAN-1 11-10: the unobserved fallback takes the same order (ht_* first, then name), never dict order: the
+    # alive bit also rides hbc_reverse_l0 (a copy into the HBC_ENABLE(0) s_0N hub, BLOCKED on the bound die)
+    lk = lks[0] if lks else next(iter(sorted((k for k, L in die.links.items() if nb and nb in L['src_bits']),
+                                             key=lambda k: (not k.startswith('ht_'), k))), None)
     if lk is None:
         raise SystemExit('--idle-run: u_seqhost.t_host alive bit has no lane in this build')
     L = die.links[lk]

@@ -62,8 +62,12 @@ def event_ledger(mu, descriptor, ks_sampling_edge):
                 production_consumer_booked=False)
 
 
-def check_consumer_book(ledger, book, resource):
-    """Match actual source events to explicit parent resource/consumer dates."""
+def check_consumer_book(ledger, book, resource, bound_transport=None):
+    """Match actual source events to explicit parent resource/consumer dates.
+
+    bound_transport (S81-PLAN-1 11-10): {endpoint_name: edges} from the bind (bound_ctl_lanes.mu_transport out ages,
+    seqhost pin -> end LP).  When given, every booked transport_edges must equal its endpoint's bound depth: the
+    static schedule may not date a mu_c / mu_rc word on an as-built or legacy lane age."""
     if book is None:
         return [dict(cause='native_HWIN_consumer_event_book_missing', resource=list(resource),
                      required_events=len(ledger['events']))]
@@ -87,6 +91,9 @@ def check_consumer_book(ledger, book, resource):
         if (type(transit) is not int or transit < 1 or type(edge) is not int or
                 edge != source['pin_visible_after_edge']+transit or not row.get('consumer_source')):
             problems.append(dict(cause='native_HWIN_consumer_transport_booking_missing_or_mismatched', event=row['event']))
+        elif bound_transport is not None and transit != bound_transport.get(source['endpoint_name']):
+            problems.append(dict(cause='native_HWIN_consumer_transport_not_bound_depth', event=row['event'],
+                                 booked=transit, bound=bound_transport.get(source['endpoint_name'])))
     return problems
 
 

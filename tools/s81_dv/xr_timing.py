@@ -28,10 +28,34 @@ XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64':
              'd09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3': 7,
              # TOK-DS-7 10-27: d09cf3f6 (c71b81ad0f) + 844ead2a8b cores-kits lint only (loop indices scoped per loop,
              # `integer k, i` removed); the diff normalised for loop-variable declarations is empty -> same 7 edges
-             '59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9': 7}
+             '59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9': 7,
+             # S81-PLAN-1 11-10: main d2a543e4 (6871075225 RF-B + b6e0e0efcf RF-J) adds opt-in landing forms.  7 edges
+             # ONLY for RING_LAND 2, the RF-J form every bound S81 slice uses (XRT_FORMS): bench tools/s81_slice/xrt_rfj_eq.sh, REF_REV 844ead2a8b
+             # (= 59a53960), RL 2 / FL 2 / OL 1, PDC 0, HB 0+1, seeds 1+2, every output every cycle PASS; mutants
+             # rfj_rpos / rfj_fpos / olat_pos FAIL (receipt epyc7 s81-plan-1/xrtq).  RING_LAND 1 (+1 edge) and 0 (not benched here) stay unqualified.
+             'd2a543e4fd9f25b13ccece85058652ecb9ccae366353738b6da20346e9c030a9': 7}
+# sha -> the RING_LAND forms its XRT_MODEL age was measured for (absent = form-independent, the pre-RF-B sources)
+XRT_FORMS = {'d2a543e4fd9f25b13ccece85058652ecb9ccae366353738b6da20346e9c030a9': {2}}
 
 
-def source_contract(tree, fallback, instances=None):
+def bound_xrt_ring_land(rtl_dir):
+    """S81-PLAN-1 11-10: the XRT landing form of a strict bind's OWN emitted RTL (<bind>/rtl/*.sv): every ot_s81sl_xrt*
+    instance must name RING_LAND explicitly and all must agree, else raise; returns (value, instance count)"""
+    import re
+    vals, n = set(), 0
+    for f in sorted(Path(rtl_dir).glob('*.sv')):
+        for m in re.finditer(r'\bot_s81sl_xrt\w*\s*#\s*\(([^;]*?)\)\s*\w+\s*\(', f.read_text()):
+            n += 1
+            v = re.findall(r'\.RING_LAND\s*\(\s*(\d+)\s*\)', m.group(1))
+            if len(v) != 1:
+                raise ValueError(f'bound XRT instance in {f.name} without one explicit RING_LAND')
+            vals.add(int(v[0]))
+    if n == 0 or len(vals) != 1:
+        raise ValueError(f'bound XRT landing forms {sorted(vals)} over {n} instances: need exactly one')
+    return vals.pop(), n
+
+
+def source_contract(tree, fallback, instances=None, xrt_ring_land=None):
     if instances is not None:
         from layer_prog.slice_source import resolve
         root = Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or tree)
@@ -49,10 +73,13 @@ def source_contract(tree, fallback, instances=None):
             known = XRT_MODEL if family == 'XRT' else QUALIFIED
             if sha not in known:
                 raise ValueError('unqualified selected '+family+' source model '+sha)
+            form = xrt_ring_land if xrt_ring_land is not None else r.get('xr_ring_land')
+            if family == 'XRT' and sha in XRT_FORMS and form not in XRT_FORMS[sha]:
+                raise ValueError(f'unqualified selected XRT landing form RING_LAND {form} of {sha}')
             if pins.setdefault(path, sha) != sha:
                 raise ValueError('selected transports disagree on source '+path)
             selected[name] = dict(master=r['xr'], family=family, source_path=path, source_sha256=sha,
-                                  wrapper_chain=r['wrapper_chain'])
+                                  wrapper_chain=r['wrapper_chain'], ring_land=form if family == 'XRT' else None)
             if r.get('selected_asbuilt_manifest'):
                 selected[name].update(selected_asbuilt_manifest=r['selected_asbuilt_manifest'],
                                       selected_source_sha256=r['source_sha256'],
