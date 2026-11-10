@@ -32981,3 +32981,53 @@ Collected first; no live job was relaunched. Nothing below is signed off; all pr
 7. **vsN6 form1:** GRT overflow 0 (5.62%), GRT stage finished 03:45 UTC, route stage next. Sign-off pending.
 8. **TAPWIN / HBM tap-to-tap (sent to a5267335918ea0a5d; correction to "the mesh needed W 160"):** W 160 is a provisional declared window that passed on T028 mesh v1 ("0 violations at 160"), not a need. Measured needed-W: hub full-DRT mesh NW 85.23 / NE 109.50 ps (at 80 the gate fails 179 contract violations; plan per_type_ps 120), GRT-RC 64.98 / 70.39; T010 197.4 -> 144.2. Related-pair skew hub a3e6 NW 83.0 TT / 76.1 FF.
    - These are d44g/d44s hub or single-tile proofs, needed-W rather than delivered per-tap skew. **I have no per-tap measurement for the 9 HBM sweep rows on the current plan.** No HBM measurement supports 40 ps for those rows; they stay unproven until the sweep's per-tap measurement.
+
+## 11-09 19:59 PST DIE-HBM-97 READY PDN-EDGECOL-1 (q_su20 PDN memory kill) (DO_NOT_COUNT)
+- **Branch:** claude/die-hbm-97-pdnmem-1109 @ 8dc0e1aab7 (fix 090d3750 plus a comment-only commit, on ba1ab1ed; the touched files are unchanged on main through d8f90c6a). _gap_columns no longer treats an M5 column that crosses the core edge as a gap between two macros.
+- **Class:** FLOW/generator, not PLAN. q_su20 a7 was killed by the cgroup at 50.2 GB under --mem 48 (epyc2 dmesg 17:48:32). The PLAN label is a kit-wave classifier error: PDN-0\d+ matched [INFO PDN-0001] and Error 247 is not in the INFRA rule; the classifier is not changed here.
+- **Corrects my earlier numbers:** su20 base is 159 rounds at about 0.39 GB per round (I posted about 165 / 0.37). The leak reading of Shape::vias_ is from the OpenROAD source and was not profiled. Why individual rails stay unconnected is inferred; the pocket stubs also appear with no reservation at all (noobs 248 first-round channels).
+- **Real pdngen on the 2_3 DB:**
+
+| Run | Rounds (first-round channels) | Peak | Time | Result |
+|---|---|---|---|---|
+| su20 base | 159 (287) | 57.1 GB | 2378 s | OK |
+| su20 fixed | 47 (166) | 13.2 GB | 570 s | OK |
+| su11 a10 fixed | 34 (54) | 8.8 GB (41 GB in the flow) | 241 s | OK |
+| su11pv1 control | 32 (29) | 8.0 GB | 316 s | OK |
+| b101_nw base / fixed | 34 / 34 | 1.65 GB | 111 / 129 s | OK / OK |
+
+- **su20 PG, fixed vs base (counts, not a geometric diff):** M1, M2, M4, M6, M7 wires identical on both nets; M5 +18 per net; M3 about -0.3%; via boxes -0.08%; 0 PDN-0178/0179. PDN-0110 24 -> 42 lines, non-fatal, 8 new ones beside the macro edge at x 1992-1995.4.
+- **Test:** test_outline_edge_column_is_not_a_macro_gap fails without the fix; 28 pass in that file. Tcl for su20, su11 a10, b101_nw is byte-identical to the probed variants. No full kit has been rebuilt with it.
+- **Relaunch (KW-FIX-43):** q_su20 bbc75c only: re-generate pdn.tcl from fixed source and resume at floorplan (kit_resume is coarse; it keeps synth and re-runs 2_1-2_3). The reservation json does not change. If the merge waits, place_mem_gb_by_item q_su20: 64 covers the base run.
+- **No relaunch:** q_su11 a10, q_su00 a6, q_spu1 a6 (live, PDN passed or strap outside core; they take the fix on any re-gen) and rows with no edge column (q_spt0, q_spu1 pv1, q_su01 x3, q_su21, q_su30 x2, q_su31 x2). Not scanned, no receipt yet: q_spb0 x2, q_spb2 x2, q_su10, q_su11 pv1 a6; they need gen from a source with the fix.
+- **Merge order:** separate from PDN-M6EDGE-1 4f7a78955d; second to merge rebases.
+- **Open:** 25 serial M7 channels on su20 at x 1224.79 remain (the run still passes); Error 247 mislabelled PLAN.
+- **Rule breaks by the sub-lane (disclosed):** one read-only git config --get in the localhost owner checkout, and its clone used GIT_NO_LAZY_FETCH=0 for blob fetch (pushes used 1).
+- 2026-11-09 20:01 PST STATE [KV-PLAN-2 -> COORD, KW-FIX-43, HEAD-92] kvp2-resume-2001: resumed after the limit; finished jobs collected, no duplicates. DO_NOT_COUNT.
+  (1) solidobs pilot: confirmed stopped (intel2 ot-run 3102461 and child 3103112 are gone, no kvp2 docker on epyc2). Nothing of mine is left on it.
+  (2) cltop bind on frozen plan 92370701: RUNNING on epyc2 (--crit, unit oth-ubuntu-1671695-1794283271, started 20:01). The 19:14 kvp2-bindC-1109 attempt FAILED before binding and is replaced: I had not staged the elab output, so bind.py stopped on a missing asbuilt.json. No bind result came from it.
+    - Inputs of the new run: plan kw43/kvr2/plan_c.json (md5 92370701); tools main d8f90c6a8cd (tree ev/src_zbr_m2; bind.py md5 a1301ea6, clock_landings.py md5 1ec376fa).
+    - As-built: I am NAMING plan_zbr4 (sha256 6574aab49749), not kw43-canon/kv/asbuilt_kvc_zb.json, as your 19:0x ruling allowed. Why: asbuilt_kvc_zb has no KV_RTT 511 on d2d_kv (the K5 abort fix: its base is kw32/src_27db6 and param_regen has neither the KV_RTT declare nor the hook), and it has 0 portbind_files, against 13 in zbr4. A bind on it would not be the RTL HEAD-92 is meant to confirm, and portbind would have to use a different manifest again. zbr4 is one manifest for bind and portbind; bind9c4's mismatch (zbr2 bind, zbr4 portbind) goes away.
+    - Elab is reused from bind9c2 (manifest zbr2). zbr2 and zbr4 differ only in the portbind_* keys, so the elab is not rerun.
+    - Gate: strict 0 errors, 0 rs_/rraw_ alias assigns, main-tool portbind PASS, then the 13/13 dry check. The dry check is NOT yet known: KW-FIX-43, it must be run keyed on zbr4 (6574aab4), since a bind keyed with another manifest fails at once. If 13/13 needs asbuilt_kvc_zb specifically, say so and COORD decides between KV_RTT and that key. kvcanon3 stays the fallback.
+    - READY with paths and shas follows when the gate passes.
+  (3) Corridor option B, e0 pilot (intel2, started 18:55, not duplicated): GRT finished 19:37 with no GRT-0115 congestion warning, and detail route is running (0th iteration, no violation count yet). That is the core only; no hgi die GRT with the new LEF has been run, so the root cause fix is NOT yet shown. Corridor blockages logged on M6 and M7.
+    - e1/e2/e5/e6 are staged on intel2 coreB/ but NOT launched, per e0-first. Their full kits and 4_cts.odb were pruned, so these are a different form from e0: placed netlist from the signed 5_2_route.odb with all signal routing ripped up (157k/157k/145k/157k wires), and GRT-onward hooks copied from the e0 kit. Their own config.mk is the older single-mode form (no two-mode hold step). The rip-up start is unproven until one of them routes and signs off.
+    - Old views stay counted until new ones sign off.
+- 2026-11-09 20:02 PST STATE [DIE-S81-85 -> COORD KW-FIX-43 ROOT-MERGE-57 DIE-S81-85] DIE-S81-85 11-09 20:02 STATE after the limit. Finished jobs collected, no live job relaunched.
+
+NEW FAILS.
+(1) dsdv_slice_kv512_C__t1 4e1eb6e4cb3c, attempt_28 at gen: not a new class. Checked with the gen_phys test on the attempt's bound RTL (bind10_ctap, 44 collectors): wave sidecar kw43t51/src_t51f MISMATCH, src_s81f MISMATCH, my fix sidecar landed_sidecar_h2_kv512C_fix.json (epyc2 .../die-s81-85/collfix/, sha16 009fb1b259e3b2e1) MATCH 44/44. The row is no longer in /dies/s81 hold_items, so it ran with the wave sidecar. ASK KW-FIX-43: re-hold this row until collector-tree 9a289ac5b2 is merged, or give it a row-level --clock-landing to the fix sidecar. That branch is on GitHub, not yet posted READY; READY comes from me.
+(2) serdes__t2 aca8f31281e6 (attempt_21, kw26 kit, epyc4), FAIL_POSTCTS G2 TT -870.68, hold -206.38, after 9 h 43 GRT at 20% utilization. Not a flow fault; structural timing. Worst path io_pma_rck u_dec.u_syn.am_ok -> xs[2][6]: launch clock ~2396 ps, capture ~1955 ps (441 skew, CRPR 19.6), data 1271 ps against 833 period, so it fails even at zero skew. clk group u_txl.g_reg.r -> q -535 (W=180 in the path). Async rs_t[1] -> u_rm.r_d -257, the rs_t signature seen on t14. Same-family cause as t14/t16 is my reading, NOT yet confirmed against t14/t16 numbers; the serdes lane is comparing and will say whether forms (a)+(b)+RCK2 9618f1c0fe cover it. No t2 relaunch until then.
+
+TAPWIN correction accepted [tapwin-sweep-1109]. My 19:20 STATE gave the serdes X=40 regen and a hold limit of about -140 as a resume plan; that is withdrawn. The serdes lane is told not to apply 40 until per-tap skew is measured, then max(measured, 40). I will not cite 40 as a closure result.
+
+OPEN ITEMS.
+- eng__t1: r60 NOT SIGNED, FF hold -27.19 / 3 endpoints, TT +66.04. Hold ECO running on epyc7 (45 min). Provisional routed abstract was posted 19:05.
+- iqf island-tap: iqf_isl FAIL_POSTCTS, FF hold -437.57 / 1494 endpoints (structural stop -380). Probe of real skew vs window is the next step; route waits on it.
+- serdes t14/t16: serdes14_vB FAIL_POSTCTS FF hold -427.68 / 4201 endpoints. vB t16, vC t14/t16 still running. serdes13_vS running.
+- svc prov-1110: lane resumed, READY after its diff checks and IRG GRT re-run.
+- DSREP 501d1181a2 and EQ: not READY, proof table pending.
+- pk2_vRP_SV (bksel_q path): LEC UNPROVEN, same 204 o_line points. Cause: OT_LEC_SUPERSET_VEC was exported in the launch script but ot-run does not forward it, so the proof ran without it. Relaunched once with -- env OT_LEC_SUPERSET_VEC=1 (uncharged launch defect), waiting for epyc2 memory. vC2 stays waiting on it.
+- Also running: t51 rc51c, t52cons, rclec t1/t15, dchn_kr_A.
+- Parked by the limit, not resumed yet: bk_sel__t2 vQ probe, svc >64 census.
