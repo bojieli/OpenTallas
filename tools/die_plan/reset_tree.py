@@ -69,6 +69,7 @@ import json
 import math
 import re
 import sys
+import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -663,9 +664,9 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
                 taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1), walls=len(walls))
 
 
-def assign(topo, depth=None, prefix="", pad_spread=False, boxes=(), box_out=None, walls=()):
+def assign(topo, depth=None, prefix="", pad_spread=False, boxes=(), box_out=None, walls=(), site_names=False):
     geometry = dict(boxes=boxes, box_out=box_out, walls=walls) if pad_spread else None
-    T = _assign(topo["nodes"], topo["root"], topo["ntap"], depth, prefix, geometry)
+    T = _assign(topo["nodes"], topo["root"], topo["ntap"], depth, prefix, geometry, site_names)
     reach = topo["reach"]
     T.update(reach_um=reach, plan_reach_um=topo["plan_reach"], topology=topo["method"], taps=list(topo["taps"]),
              tap_offset_um=topo["tap_offset_um"])
@@ -820,7 +821,21 @@ def _pad_sites(p, q, count, boxes=(), box_out=None, walls=()):
     return [q] * count
 
 
-def _assign(nodes, root, ntap, depth, prefix, pad_geometry=None):
+def site_relay_id(xy, dep, used):
+    """RELAY-SITES (TYPE-SAFE-5 11-09): relay number from where the relay is, not from its visit order.  A tap re-bin
+    used to renumber every later relay, so plan raw_reset names went stale (QC 'writer START raw reset rst_rl_228 has no
+    registered wavefront driver') and two different trees could hold different relays under one name (t35/t71 collector
+    rst_rl_235, rst_rl_45).  Still decimal, so the rst_rl_<n> / u_rrl_<n> patterns in the flow keep matching."""
+    seed = f"{round(xy[0] * 10)}:{round(xy[1] * 10)}:{dep}"
+    v = zlib.crc32(seed.encode())
+    while v in used:                       # relays sharing a site and depth, in preorder
+        seed += "+"
+        v = zlib.crc32(seed.encode())
+    used.add(v)
+    return v
+
+
+def _assign(nodes, root, ntap, depth, prefix, pad_geometry=None, site_names=False):
     """relay names / nets / depths with shared pads: D = max(structural depth, depth)."""
     kids = {}
     for v, nd in enumerate(nodes):
@@ -841,11 +856,13 @@ def _assign(nodes, root, ntap, depth, prefix, pad_geometry=None):
     D = max(own, int(depth or 0))
     relays, net, k, arr = [], {-1: f"{prefix}rst_root_n"}, 0, {-1: 0}
     tap_own_net = {}
+    used = set()
 
     def add(xy, d, kind, tap, dep, last_tap=None):
         nonlocal k
-        q = f"{prefix}rst_n_t{last_tap}" if last_tap is not None else f"{prefix}rst_rl_{k}"
-        relays.append(dict(name=f"{prefix}u_rrl_{k}", xy=xy, d=d, q=q, depth=dep, tap=tap, kind=kind))
+        n = site_relay_id(xy, dep, used) if site_names else k
+        q = f"{prefix}rst_n_t{last_tap}" if last_tap is not None else f"{prefix}rst_rl_{n}"
+        relays.append(dict(name=f"{prefix}u_rrl_{n}", xy=xy, d=d, q=q, depth=dep, tap=tap, kind=kind))
         k += 1
         return q
     for v in order:
@@ -1034,7 +1051,8 @@ def _type_tree0(P, tn, depth, reach):
     t = P.types[tn]; w, h = t["outline_um"]
     T = assign(cache[("topo", tn, reach)], depth,
                pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
-               box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+               box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
+               site_names=t.get("reset_relay_names") == "site")
     T = resite_type(P, tn, T)
     if t.get("reset", {}).get("local_taps_um"):
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(consumer_taps(P, tn)), local_reset_taps=True)
@@ -1740,7 +1758,8 @@ def _wf_type_tree(P, tn):
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
-                   box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+                   box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
+                   site_names=t.get("reset_relay_names") == "site")
         T = resite_type(P, tn, T)
         T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(taps),
                  local_reset_taps=bool(t.get("reset", {}).get("local_taps_um")), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
