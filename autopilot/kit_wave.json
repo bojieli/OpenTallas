@@ -672,8 +672,7 @@
     "epyc2"
    ],
    "gen_hosts": [
-    "epyc7",
-    "epyc2"
+    "epyc7"
    ],
    "place_prefer": [
     "epyc4",
@@ -2064,6 +2063,10 @@
     "epyc7",
     "epyc4",
     "epyc2"
+   ],
+   "gen_hosts_prev_kw44e2root": [
+    "epyc7",
+    "epyc2"
    ]
   },
   "s81": {
@@ -3244,7 +3247,8 @@
     "ot_s81sl_leaf__t50@10",
     "dsdv_slice_lepe_nh_mus_C__t1@11",
     "svc_hi_dsdv_svc_pvso_entry__t1@6",
-    "svc_hi_dsdv_svc_pvso_entry__t2@6"
+    "svc_hi_dsdv_svc_pvso_entry__t2@6",
+    "dsdv_slice_c1x_C__t10@13"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4224,8 +4228,7 @@
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
-    "epyc7",
-    "epyc2"
+    "epyc7"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -7531,6 +7534,10 @@
     "epyc2",
     "intel1",
     "epyc4"
+   ],
+   "gen_hosts_prev_kw44e2root": [
+    "epyc7",
+    "epyc2"
    ]
   },
   "s81_head": {
@@ -8582,7 +8589,8 @@
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
     "cbn_q01__clab6e67f2": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a26 clock-landing band too small/blocked; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "cbn_q01__cld9ff4c40": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a11 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
-    "cbn_q01__cldd6ea846": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a16 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form."
+    "cbn_q01__cldd6ea846": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a16 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -9732,8 +9740,7 @@
     "slw_st_a_v1__clb036e152@7": "REDESIGN: KW-FIX-43 11:1x PV-SCHEMA-1 0409748de8de overlaid into src_qcsw2 (epyc7, epyc2): schema accepts param_base_type/param_set; plan_pv/cand7/pv_nlck validate 0 errors"
    },
    "gen_hosts": [
-    "epyc7",
-    "epyc2"
+    "epyc7"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -14246,6 +14253,10 @@
     "epyc2",
     "intel1",
     "epyc4"
+   ],
+   "gen_hosts_prev_kw44e2root": [
+    "epyc7",
+    "epyc2"
    ]
   },
   "hbm": {
@@ -15596,8 +15607,7 @@
     "q_b010__physical_v1": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 OT_NATIVE_CELL_CAP; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form."
    },
    "gen_hosts": [
-    "epyc7",
-    "epyc2"
+    "epyc7"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -18142,6 +18152,14 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
      "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b003": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 19:5x COORD route (2): missed by the q_b p11t batch (kit_topology dry check True on p11t, False on die plan r2_restore)"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -19421,7 +19439,14 @@
     "q_b112__physical_v1": null,
     "q_spt0": null
    },
-   "note_kw43_qbp": "KW-FIX-43 18:4x COORD 18:2x(1): 22 q_b*/q_spt0 items keyed onto p11t + bind_p11t_vK5d_c12 + vK5d_c12 (like q_b113). Cause of the 18:22 KIT_TOPOLOGY_BIND_STALE: items without item_inputs used die plan plan_r2_restore against the p11t bind. Revert: item_inputs[k] = item_inputs_prev_kw43qbp[k] (None = delete)."
+   "note_kw43_qbp": "KW-FIX-43 18:4x COORD 18:2x(1): 22 q_b*/q_spt0 items keyed onto p11t + bind_p11t_vK5d_c12 + vK5d_c12 (like q_b113). Cause of the 18:22 KIT_TOPOLOGY_BIND_STALE: items without item_inputs used die plan plan_r2_restore against the p11t bind. Revert: item_inputs[k] = item_inputs_prev_kw43qbp[k] (None = delete).",
+   "gen_hosts_prev_kw44e2root": [
+    "epyc7",
+    "epyc2"
+   ],
+   "item_inputs_prev_kw43r1950": {
+    "q_b003": null
+   }
   }
  },
  "place_prefer": [
@@ -20054,5 +20079,6 @@
   "epyc7"
  ],
  "note_kw44_store7": "KW-FIX-44 2026-11-09 18:2x PST COORD (OWNER: use all disks): epyc7 scratch2 (4.9 TB) = fleet store; epyc7 first in gen_hosts/hosts/place_prefer for every die, so new K are generated under the work_root on epyc7 real scratch2; sealed jobs on other hosts fetch K (sealed-wave place_fetch) and return outputs to K host. Revert: <key> <- <key>_prev_kw44store (top + per die); backup kit_wave.json.bak-kw44-store7.",
- "note_kw44_genfull": "KW-FIX-44 2026-11-09 18:4x PST COORD 18:3x: epyc4 (scratch2 77 GB; its kw43/kw27 wave roots are symlinks onto md0 root, 108 GB) and intel1 (scratch2 88 GB, 41 waiters) out of every die gen_hosts: new W/K on epyc7 (scratch2 4.6 TB) then epyc2. Revert: gen_hosts <- gen_hosts_prev_kw44genfull; backup kit_wave.json.bak-kw44-genfull."
+ "note_kw44_genfull": "KW-FIX-44 2026-11-09 18:4x PST COORD 18:3x: epyc4 (scratch2 77 GB; its kw43/kw27 wave roots are symlinks onto md0 root, 108 GB) and intel1 (scratch2 88 GB, 41 waiters) out of every die gen_hosts: new W/K on epyc7 (scratch2 4.6 TB) then epyc2. Revert: gen_hosts <- gen_hosts_prev_kw44genfull; backup kit_wave.json.bak-kw44-genfull.",
+ "note_kw44_e2root": "KW-FIX-44 2026-11-09 19:3x PST COORD: epyc2 root -137 GB/h; its kw43-wave-1109 work_root is a symlink onto scratch3 = root (nvme1n1p2): epyc2 out of gen_hosts, new W only on epyc7 scratch2. Revert: gen_hosts <- gen_hosts_prev_kw44e2root; backup kit_wave.json.bak-kw44-e2root."
 }
