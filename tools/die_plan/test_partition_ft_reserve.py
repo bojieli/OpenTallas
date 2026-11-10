@@ -546,3 +546,34 @@ def test_tcl_unchanged_without_macro_boxes_and_counts_street_windows():
     full = _macro_street_receipt([(0, 1373.76, 457.92, 1382.4)])
     assert 'pdn_windows_street' not in F.tcl(full)
     assert 'pdn_windows_street=1' in F.tcl(full, STREET_BOXES)
+
+
+# q_b102 street 445.824-449.28 between hcol macros k2h0 and k2h1: M6 over the lower 1.296 um, M4 over the rest, M5 teeth
+# over the upper part, and a full-width M4 band elsewhere (row bridge on).
+M5_STREET_BOXES = [(241.92, 155.52, 460.512, 445.824), (241.92, 449.28, 460.512, 636.768)]
+
+
+def _m5_street_receipt(teeth=True, m6=True):
+    rows = [('M4', [235.872, 447.12, 466.56, 449.28]), ('M4', [0, 1000.0, 708.48, 1002.16])]
+    if m6:
+        rows.append(('M6', [235.872, 445.824, 708.48, 447.12]))
+    if teeth:
+        rows.append(('M5', [239.76, 447.12, 460.512, 449.28]))
+    return dict(rectangles_um=[dict(layer=L, rect=r) for L, r in rows])
+
+
+def test_m5_island_in_street_gets_one_m6_window():
+    r = _m5_street_receipt()
+    assert F.pdn_windows_street(r, boxes=M5_STREET_BOXES) == [('M6', 446.778, 447.75)]
+    rows = [q for L, q in F.obstruction_rows(r, 708.48, macro_boxes=M5_STREET_BOXES) if L == 'M6']
+    assert rows == [[235.872, 445.824, 708.48, 446.778]]
+    assert 'pdn_windows_street=1' in F.tcl(r, M5_STREET_BOXES)
+
+
+def test_m5_street_without_island_gets_no_m6_window():
+    # M5 pieces reach the free M6 strap above the reserved row, or M6 is not reserved in the street at all
+    for r in (_m5_street_receipt(teeth=False), _m5_street_receipt(m6=False)):
+        assert [w for w in F.pdn_windows_street(r, boxes=M5_STREET_BOXES) if w[0] == 'M6'] == []
+    r = _m5_street_receipt()
+    assert F.pdn_windows_street(r, boxes=M5_STREET_BOXES, existing=[('M6', 446.778, 447.75)]) == []
+    assert 'pdn_windows_street' not in F.tcl(r)

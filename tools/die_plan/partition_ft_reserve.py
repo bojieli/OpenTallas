@@ -89,7 +89,7 @@ def tcl(receipt, macro_boxes=None):
     edgewins=pdn_windows_edge_pocket(receipt)
     if edgewins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_edge_pocket={len(edgewins)}"')
-    streetwins=pdn_windows_street(receipt, boxes=macro_boxes, existing=wins)
+    streetwins=pdn_windows_street(receipt, boxes=macro_boxes, existing=wins+pdn_windows_strip(receipt))
     if streetwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_street={len(streetwins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
@@ -639,13 +639,68 @@ def macro_boxes(typ):
             for c in typ.get('hard_cores', ()) if c.get('origin_um') and c.get('outline_um')]
 
 
+# DIE-HBM-97 11-10 (q_b102 PDN-0179, PDN-0178 "Remaining channel (235.284, 445.896) - (244.236, 447.048) on M5"): the
+# same island one layer pair up.  In the 3.456-um street between the stacked hcol macros k2h0 (top 445.824) and k2h1
+# (449.28) the die reserves M6 over the lower 1.296 um across the whole street, M4 over the rest, and an M5 tooth
+# (239.76-246.51, from 447.12) over the street's west end.  The M5 strap pair at x 243.984 is then a piece 445.824-447.12,
+# capped by the lower macro and the tooth: its one M6 strap position (446.928) lies in the reserved M6 row, and the M4
+# bridge straps (442.8, 447.12) miss it, so it has no partner on either side and pdngen cannot repair the channel (M6 is
+# reserved inside it).  M6 over M5 gets the street rule too, on the lower layer's real pieces: every M5 strap-pair piece
+# of the street (the street's y-span at an M5 strap x, cut by the M5 reservation over that x) that holds no strap of the
+# M6 grid nor of the M4 bridge grid clear of the reservation of that layer is an island, and its street gets one M6
+# strap-pair window (the usual pair + PDN_WIN_MARGIN, inside a reserved row if one fits, else overlapping one).  M4 over
+# M3 keeps the wholly-reserved test: the M3 bridges are not cut inside a street, so their piece is the whole street.  On
+# the q_b102 tapcell DB the one M6 window (446.778-447.75) gave 0 PDN-0178 / 0 PDN-0179.  M7 needs no street rule: a
+# horizontal street is crossed by the vertical M7 grid, and M6 pieces under reserved M7 are closed by SLIVER_TCL.
+STREET_LAYERS = ('M4', 'M6')               # strap layer over the layer it partners in a street: M4 over M3, M6 over M5
+
+
+def _strap_spans(layer, lo, hi, core):
+    """[(a, b)] the two straps (VSS, VDD) of every grid pair of a PDN_WIN_STRIPES/PDN_WIN_COMB layer near [lo, hi]."""
+    off, wd, sp, pitch = PDN_WIN_STRIPES[layer] if layer in PDN_WIN_STRIPES else PDN_WIN_COMB[layer]
+    out = []
+    for k in range(math.floor((lo - core - off) / pitch) - 1, math.ceil((hi - core - off) / pitch) + 1):
+        s = core + off + k * pitch                 # pdngen: the offset is the centre of the first strap
+        out += [(s - wd / 2, s + wd / 2), (s + wd / 2 + sp, s + 1.5 * wd + sp)]
+    return out
+
+
+def _m5_street_islands(rects, y0, y1, xa, xb, bridge, core_x0=4.32, core_y0=4.32, wins=()):
+    """[(x, y0, y1)] M5 strap pieces of the street [xa, xb] x [y0, y1] with no clear M6 strap (and no clear M4 bridge
+    strap when the row bridge is on) inside their y-span; a strap inside a window of wins [(layer, y0, y1)] is clear."""
+    def cut(layer, a, b):
+        return [r for r in rects if r[0] == layer and r[1] < b - 1e-6 and r[3] > a + 1e-6]
+    out = []
+    for xs0, xs1 in _strap_spans('M5', xa, xb, core_x0):
+        if xs0 < xa - 1e-6 or xs1 > xb + 1e-6:
+            continue
+        cur, pieces = y0, []
+        for r in sorted(cut('M5', xs0, xs1), key=lambda q: q[2]):
+            if r[2] < y1 - 1e-6 and r[4] > cur + 1e-6:
+                if r[2] > cur + 1e-6:
+                    pieces.append((cur, r[2]))
+                cur = max(cur, r[4])
+        if y1 > cur + 1e-6:
+            pieces.append((cur, y1))
+        for p0, p1 in pieces:
+            land = False
+            for layer in ('M6', 'M4') if bridge else ('M6',):
+                blk = cut(layer, xs0, xs1)
+                if any(a >= p0 - 1e-6 and b <= p1 + 1e-6 and (not any(r[2] < b - 1e-6 and r[4] > a + 1e-6 for r in blk)
+                       or any(L == layer and w0 <= a + 1e-6 and w1 >= b - 1e-6 for L, w0, w1 in wins))
+                       for a, b in _strap_spans(layer, p0, p1, core_y0)):
+                    land = True
+                    break
+            if not land:
+                out.append((round(xs0, 3), round(p0, 3), round(p1, 3)))
+    return out
+
+
 def pdn_windows_street(receipt, width=None, core_y0=4.32, boxes=None, existing=()):
-    """[(layer, y0, y1)] one M4 strap window per macro street that is wholly reserved on M4 and has no window yet."""
+    """[(layer, y0, y1)] one strap window per macro street and STREET_LAYERS layer whose lower layer has no partner
+    there (M4: the street wholly reserved on M4; M6: an M5 island piece, _m5_street_islands) and no window yet."""
     if receipt is None or not boxes:
         return []
-    off, wd, sp, pitch = PDN_WIN_STRIPES['M4']
-    rows = sorted((r['rect'] for r in receipt['rectangles_um']
-                   if r['layer'] == 'M4' and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM), key=lambda q: (q[1], q[0]))
     streets = {}
     for a in boxes:
         for b in boxes:
@@ -653,25 +708,37 @@ def pdn_windows_street(receipt, width=None, core_y0=4.32, boxes=None, existing=(
             if 0 < b[1] - a[3] <= PDN_WIN_MIN + 1e-6 and xb - xa >= 0.5 * min(a[2] - a[0], b[2] - b[0]):
                 old = streets.get((a[3], b[1]))
                 streets[(a[3], b[1])] = (min(xa, old[0]), max(xb, old[1])) if old else (xa, xb)
+    rects = [(r['layer'], *r['rect']) for r in receipt['rectangles_um']]
+    bridge = blocks_rows(receipt, _width(receipt, width))
     out = []
-    for (y0, y1), (xa, xb) in sorted(streets.items()):
-        cov = [r for r in rows if r[1] < y1 - 1e-6 and r[3] > y0 + 1e-6 and r[0] <= xa + 1e-6 and r[2] >= xb - 1e-6]
-        cur = y0
-        for r in cov:
-            if r[1] > cur + 1e-6:
-                break
-            cur = max(cur, r[3])
-        if cur < y1 - 1e-6 or any(L == 'M4' and a < y1 and b > y0 for L, a, b in existing):
-            continue
-        fits = []
-        for k in range(math.floor((y0 - core_y0 - off) / pitch), math.ceil((y1 - core_y0 - off) / pitch) + 1):
-            s = core_y0 + off + k * pitch
-            lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
-            if lo >= y0 + PDN_WIN_MARGIN - 1e-6 and hi <= y1 - PDN_WIN_MARGIN + 1e-6:
-                fits.append((lo, hi))
-        inside = [w for w in fits if any(w[0] >= r[1] + PDN_WIN_MARGIN - 1e-6 and w[1] <= r[3] - PDN_WIN_MARGIN + 1e-6 for r in cov)]
-        pick = (inside or fits)[:1]
-        out += [('M4', round(lo, 3), round(hi, 3)) for lo, hi in pick]
+    for layer in STREET_LAYERS:
+        off, wd, sp, pitch = PDN_WIN_STRIPES[layer]
+        rows = sorted((r['rect'] for r in receipt['rectangles_um']
+                       if r['layer'] == layer and r['rect'][2] - r['rect'][0] >= PDN_WIN_PARTIAL_MIN_UM), key=lambda q: (q[1], q[0]))
+        for (y0, y1), (xa, xb) in sorted(streets.items()):
+            cov = [r for r in rows if r[1] < y1 - 1e-6 and r[3] > y0 + 1e-6 and r[0] <= xa + 1e-6 and r[2] >= xb - 1e-6]
+            if not cov or any(L == layer and a < y1 and b > y0 for L, a, b in list(existing) + out):
+                continue
+            if layer == 'M4':
+                cur = y0
+                for r in cov:
+                    if r[1] > cur + 1e-6:
+                        break
+                    cur = max(cur, r[3])
+                if cur < y1 - 1e-6:
+                    continue
+            elif not _m5_street_islands(rects, y0, y1, xa, xb, bridge, core_y0=core_y0, wins=list(existing) + out):
+                continue
+            fits = []
+            for k in range(math.floor((y0 - core_y0 - off) / pitch), math.ceil((y1 - core_y0 - off) / pitch) + 1):
+                s = core_y0 + off + k * pitch
+                lo, hi = s - PDN_WIN_MARGIN, s + 2 * wd + sp + PDN_WIN_MARGIN
+                if lo >= y0 + PDN_WIN_MARGIN - 1e-6 and hi <= y1 - PDN_WIN_MARGIN + 1e-6:
+                    fits.append((lo, hi))
+            inside = [w for w in fits if any(w[0] >= r[1] + PDN_WIN_MARGIN - 1e-6 and w[1] <= r[3] - PDN_WIN_MARGIN + 1e-6 for r in cov)]
+            over = [w for w in fits if any(w[0] < r[3] - 1e-6 and w[1] > r[1] + 1e-6 for r in cov)]
+            pick = (inside or over or fits)[:1]
+            out += [(layer, round(lo, 3), round(hi, 3)) for lo, hi in pick]
     return out
 
 
@@ -700,10 +767,10 @@ def obstruction_rows(receipt, width=None, core_y0=4.32, macro_boxes=None):
         # a window of a merged band may straddle the rows it is made of: cut the overlap out of every row
         if _full(r, width):
             mine = sorted((max(a, y0), min(b, y1)) for L, a, b in wins if L == r['layer'] and a < y1 and b > y0)
-        elif r['layer'] == 'M6' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # strip windows cut the wide partial M6 rows too
-            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in swins if L == 'M6' and a < y1 and b > y0)
+        elif r['layer'] == 'M6' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # strip + street windows cut the wide partial M6 rows too
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in swins + stwins if L == 'M6' and a < y1 and b > y0)
         elif r['layer'] == 'M4' and x1 - x0 >= PDN_WIN_PARTIAL_MIN_UM:      # street windows cut the wide partial M4 rows too
-            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in stwins if a < y1 and b > y0)
+            mine = sorted((max(a, y0), min(b, y1)) for L, a, b in stwins if L == 'M4' and a < y1 and b > y0)
         else:
             mine = []
         cur = y0
