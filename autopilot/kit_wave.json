@@ -9314,7 +9314,8 @@
    },
    "gen_hosts": [
     "epyc7",
-    "epyc4"
+    "epyc4",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -11284,7 +11285,8 @@
     "epyc7",
     "epyc4",
     "epyc2",
-    "intel2"
+    "intel2",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -17400,7 +17402,8 @@
    },
    "gen_hosts": [
     "epyc7",
-    "epyc2"
+    "epyc2",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -23178,5 +23181,6 @@
  ],
  "note_retired_hosts_kw44": "KW-FIX-44 2026-11-10 06:53 PST (COORD): epyc5/epyc6 terminated 11-09 (owner drain ruling); SUBSTEP-1 skips rows whose evidence host is listed here (substep_prune.py). _kw17_ok had epyc6, removed (was ['epyc6','epyc2','intel1','intel2','epyc4']). *_prev_* history keys and archived records left as they are.",
  "future_lec_commit": "9aedf25ac00cca10da314ad3d6125fd1b26ccd89",
- "note_kw43fl": "KW-FIX-43 2026-11-10 PST (COORD class fix: the wave's future_lec pin 3c6f29fb gives false LEC NOT EQUIVALENT; q_b100__physical_v1 a13 proves EQUIVALENT 101,250/101,250 with main's lec.py >= f502d8a): future_lec_commit = main 9aedf25ac00c (contains f502d8adda2 HBM LEC sibling twin). Only lec.py differs from 3c6f29fb (kit_resume.py and the RUN_KIT template are byte-identical). Runtime kit_wave.py reads it at attempt launch (overlay, backup kw43/kit_wave.py.bak-kw43-fl-1794341879). Revert: delete future_lec_commit."
+ "note_kw43fl": "KW-FIX-43 2026-11-10 PST (COORD class fix: the wave's future_lec pin 3c6f29fb gives false LEC NOT EQUIVALENT; q_b100__physical_v1 a13 proves EQUIVALENT 101,250/101,250 with main's lec.py >= f502d8a): future_lec_commit = main 9aedf25ac00c (contains f502d8adda2 HBM LEC sibling twin). Only lec.py differs from 3c6f29fb (kit_resume.py and the RUN_KIT template are byte-identical). Runtime kit_wave.py reads it at attempt launch (overlay, backup kw43/kit_wave.py.bak-kw43-fl-1794341879). Revert: delete future_lec_commit.",
+ "note_kw44_e8gen": "KW-FIX-44 2026-11-10 13:43 PST COORD 11-10: epyc8 added to gen_hosts of hbm, qwen_compute, s81_head (checksum dry run vs epyc7 clean: hbm 8 paths, qwen_compute 20, s81_head 2, 0 differing)"
 }
