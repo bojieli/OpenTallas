@@ -17,3 +17,5 @@ stop-only /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f
 /srv/opentallas-scratch2/claude/dh88/lep/gen2/hd_lep0N
 # DIE-HEAD-89 2026-11-09 01:27: report-only until collected; hd_host_vD_D inline LEC (yosys, CPU-active, flat log before CTS). Remove with the two rows above.
 /srv/opentallas-scratch2/claude/dh88/hd_host_vD_D
+# KW-FIX-44 2026-11-10 03:43 PST stopgap per COORD/KW43-63: t35 busy in OT_MAXWIRE repair_design past the 6 h floor; remove when claude/kw-fix-44-wd-maxwire-1110 is on main, or at 12:31 PST (12 h silent).
+/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t35/attempt_5/
