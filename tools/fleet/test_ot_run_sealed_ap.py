@@ -444,3 +444,13 @@ def test_gen_work_with_escaping_link_is_seeded_by_child(tmp_path):
     out = _sp.run([_s.executable, "-I", "-c", M.GEN_OK_PY, _j.dumps([]), str(clean)], capture_output=True, text=True, check=True).stdout
     s = M.gen_spec("/src", str(clean), _j.loads(out.split("INPUTS ", 1)[1]))
     assert s["work"]["seed"] == [{"path": str(clean)}] and s["return"]["paths"] == ["."]
+
+
+def test_gen_items_limits_sealed_gen_to_named_rows():
+    src, base = "/w/src", "/srv/opentallas-scratch2/claude/r/items"
+    call = lambda item: ["bash", "-c", f"cd {src} && python3 tools/die_plan/gen.py phys /p.json --out {base}/{item}/attempt_1/gen --types t"]
+    assert M.conf_gen_call(call("a"), {}) is None
+    assert M.conf_gen_call(call("a"), {"gen": True}) == (src, f"{base}/a/attempt_1")
+    assert M.conf_gen_call(call("a"), {"gen": True, "gen_items": ["a"]}) == (src, f"{base}/a/attempt_1")
+    assert M.conf_gen_call(call("b"), {"gen": True, "gen_items": ["a"]}) is None
+    assert M.conf_gen_call(call("a"), {"gen": True, "gen_items": []}) is None
