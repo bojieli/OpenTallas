@@ -120,7 +120,7 @@ PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
 PLACE_RECEIPT = r"""
 import glob, json, os, sys
 k, t0 = sys.argv[1], float(sys.argv[2])
-if any(os.path.exists(os.path.join(k, f)) for f in ("lec_async.stop", "FAIL_PREFLOOR", "FAIL_POSTCTS")):
+if any(os.path.exists(os.path.join(k, f)) for f in ("lec_async.stop", "FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_PLACE_NOCONVERGE")):
     sys.exit(0)
 for f in sorted(glob.glob(os.path.join(k, "physical_completion", "*.json"))):
     try:
@@ -1014,6 +1014,10 @@ RULES = [
     # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
     # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
+    # KW-FIX-44 11-10 (COORD): gp_noconverge_gate.tcl ended the run at place, GPL stopped at its iteration cap above
+    # overflow 0.1 (HBM kv_line vC 0.370).  Before INFRA: the make error and any later client text are not the cause.
+    # FLOW class, reason tag PLACE-NOCONVERGE: the kit is kept, an unchanged retry cannot converge.
+    ("FLOW", None, r"PLACE-NOCONVERGE: global placement stopped", "PLACE-NOCONVERGE (GPL at the iteration cap, overflow above 0.1)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b|"

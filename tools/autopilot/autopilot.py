@@ -396,7 +396,7 @@ B = os.path.join(K, "run", "results", "asap7", "*", "base")
 ROUTED = re.compile(r"^(?:5_route|5_2_route|5_3_fillcell|6_[0-9A-Za-z_]+)\.odb$")
 out["routed"] = sorted({os.path.basename(p) for p in glob.glob(os.path.join(B, "*.odb"))
                         if ROUTED.match(os.path.basename(p))})
-out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
+out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_PLACE_NOCONVERGE") if os.path.exists(os.path.join(K, f))]
 # S81-OTHERFAIL-1 11-07: the marker's own text (e.g. a late async 'LEC NOT EQUIVALENT') goes into the REJECT reason
 def _mark_text(f):
     try:
@@ -610,7 +610,7 @@ if so:
                 + "; STA-only re-sign on the signed child libs owed (KW-PROV-1)")
             s_.update(verdict="LOCAL_PASS_NEEDS_PARENT", local_verdict="SIGNED", release_qualified=False,
                       reasons=list(s_.get("reasons") or []) + [why[:400]])
-for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS"):
+for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS", "FAIL_PLACE_NOCONVERGE"):
     p = os.path.join(K, f)
     if os.path.isfile(p) and os.path.getmtime(p) >= since:
         out[f] = rd(p)[-400:].strip()
@@ -996,6 +996,9 @@ def classify(c, client):
         return "STRUCTURAL", "routed-not-signed", reasons
     if c.get("FAIL_PREFLOOR"):
         return "STRUCTURAL", "preflight", "FAIL_PREFLOOR " + c["FAIL_PREFLOOR"]
+    if c.get("FAIL_PLACE_NOCONVERGE"):
+        # KW-FIX-44 11-10 (COORD): gp_noconverge_gate.tcl stopped the run at place (GPL iteration cap, overflow > 0.1)
+        return "STRUCTURAL", "place-noconverge", c["FAIL_PLACE_NOCONVERGE"]
     if (c.get("clock_source_error") and
             "TT global-routing insertion gate failed: PASS exit 1" in c.get("FAIL_POSTCTS", "")):
         # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
