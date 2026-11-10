@@ -1332,7 +1332,7 @@ any	/srv/opentallas-scratch3/claude/kw24/src_c2bec/physical/die_plan/hbm/bind	CO
 any	/srv/opentallas-scratch3/claude/kw24/src_c2bec/physical/die_plan/qwen_compute/bind	COORD 20:2x asbuilt-named path (kw*/dkv*)
 any	/srv/opentallas-scratch3/claude/kw24/src_c2bec/physical/die_plan/qwen_kvsys/bind	COORD 20:2x asbuilt-named path (kw*/dkv*)
 any	/srv/opentallas-scratch3/claude/kw24/src_c2bec/physical/die_plan/s81/bind	COORD 20:2x asbuilt-named path (kw*/dkv*)
-any	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs	COORD 20:0x kit_wave.json live input
+any	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs	COORD 20:0x kit_wave.json live input | NOTE 2026-11-10 COORD (via AUTOCLEAN-13): wave kw24-wave-1106 retired, live wave is kw43-wave-1109; this row keeps its bind inputs only and no longer binds superseded or finished attempts
 any	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave	COORD 20:0x kit_wave.json live input
 any	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81_head/kit-wave	COORD 20:0x kit_wave.json live input
 any	/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave	COORD 20:0x kit_wave.json live input
