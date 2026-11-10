@@ -8,6 +8,12 @@ source tools/s81_dv/svc_rs/rs_files.sh
 RS_DEF+=(-DOT_SVC_ALLQ -DOT_ATTN_HCORE -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED)
 RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv)
 [ "$HH" = 8 ] && RS_DEF+=(-DOT_SVC_H8 -DOT_SVC_H8_REUSE_RT2)
+# DIE-S81-85 form A: LS_MERGE_H4=1 builds the H8 merge as two H4 providers (-DOT_SVC_MERGE_H4)
+if [ "${LS_MERGE_H4:-0}" = 1 ]; then RS_DEF+=(-DOT_SVC_MERGE_H4); RS_SRC+=(rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv); fi
+# DIE-S81-85 form A (3): LS_ATT_MEM=1 builds u_att sw/wq/pvq/qmem and u_rsv.pbuf as 1R1W macros (-DOT_SVC_ATT_MEM_MACRO)
+if [ "${LS_ATT_MEM:-0}" = 1 ]; then RS_DEF+=(-DOT_SVC_ATT_MEM_MACRO); RS_SRC+=(rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_la.sv rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_lr.sv
+  physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.v
+  physical/asap7_memory_macros_v2/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v); fi
 mkdir -p "$O"; "$VL" --version > "$O/verilator.version"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
         --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS $OPT -I$D -DRS_OBS

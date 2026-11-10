@@ -1,0 +1,209 @@
+{
+ "schema": "opentallas.s81_svc_prov_bind_gate.v1",
+ "type": "svc_hi_dsdv_svc_rs__t4",
+ "bound_context": "results/physical/codex_svc_hardening_1551/native_smd_c/rtl/s81p_svc_hi_dsdv_svc_rs__t4_bound.sv",
+ "asbuilt_root": "u_rsv_09.u",
+ "leaves": [
+  "u_rsv_09.u.u_att.u_sw_mem",
+  "u_rsv_09.u.u_att.g_wqm[0].g_pc[0].u_wq_mem",
+  "u_rsv_09.u.u_att.g_wqm[0].g_pc[1].u_wq_mem",
+  "u_rsv_09.u.u_att.g_wqm[1].g_pc[0].u_wq_mem",
+  "u_rsv_09.u.u_att.g_wqm[1].g_pc[1].u_wq_mem",
+  "u_rsv_09.u.u_att.g_wqm[2].g_pc[0].u_wq_mem",
+  "u_rsv_09.u.u_att.g_wqm[2].g_pc[1].u_wq_mem",
+  "u_rsv_09.u.u_att.u_qmem_mem",
+  "u_rsv_09.u.u_pbuf_mem"
+ ],
+ "macros": 31,
+ "mapped": 31,
+ "unmapped": [],
+ "rows": [
+  {
+   "inst": "u_rsv.u_pbuf_mem.g_m[0].g_160.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_pbuf_mem.g_m[0].g_160.u_mem",
+   "asbuilt": "u_rsv_09.u.u_pbuf_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[0].g_m[0].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[0].g_m[0].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[0].g_m[1].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[0].g_m[1].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[0].g_m[2].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[0].g_m[2].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[0].g_m[3].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[0].g_m[3].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[1].g_m[0].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[1].g_m[0].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[1].g_m[1].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[1].g_m[1].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[1].g_m[2].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[1].g_m[2].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_sw_mem.g_b[1].g_m[3].u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_sw_mem.g_b[1].g_m[3].u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_sw_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[0].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_0_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[0].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_0_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[0].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_0_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[1].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_1_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[1].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_1_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[0].g_pc[1].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_0_g_pc_1_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[0].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[0].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_0_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[0].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_0_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[0].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_0_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[1].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_1_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[1].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_1_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[1].g_pc[1].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_1_g_pc_1_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[1].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[0].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_0_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[0].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_0_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[0].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_0_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[0].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[1].u_wq_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_1_u_wq_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[1].u_wq_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_1_u_wq_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.g_wqm[2].g_pc[1].u_wq_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_g_wqm_2_g_pc_1_u_wq_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.g_wqm[2].g_pc[1].u_wq_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_qmem_mem.g_m[0].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_qmem_mem.g_m[0].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_qmem_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_qmem_mem.g_m[1].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_qmem_mem.g_m[1].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_qmem_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_qmem_mem.g_m[2].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_qmem_mem.g_m[2].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_qmem_mem"
+  },
+  {
+   "inst": "u_rsv.u_att.u_qmem_mem.g_m[3].g_32.u_mem",
+   "ok": true,
+   "physical_inst": "u_bound.u_u_u_att_u_qmem_mem.g_m[3].g_32.u_mem",
+   "asbuilt": "u_rsv_09.u.u_att.u_qmem_mem"
+  }
+ ],
+ "verdict": "PASS"
+}
