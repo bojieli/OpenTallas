@@ -100,6 +100,9 @@ rc=$?
 echo "flow_rc=$rc" > $W/status
 [ -n "$STOP" ] && { echo "$(date -Is) stop-after $STOP rc=$rc" >> $W/STATUS; exit $rc; }
 cp $K/signoff.sdc $W/signoff.sdc
+# core-view golden SDC (ref_tile.py gen_core_view_sdc): signoff.py's kit constraint.sdc; replaces
+# run_abi3_physical.py's Tcl placeholder there (config.mk SDC_FILE already points the flow at clock.sdc)
+[ -s $K/constraint.sdc ] && cp $K/constraint.sdc $W/work/orfs/constraint.sdc
 python3 tools/w18/corner_sta_ref.py --orfs-dir $W/work/orfs --extra-sdc $W/signoff.sdc "${M[@]}" \
   --output $W/corner_sta.json > $W/sta.log 2>&1
 src=$?
