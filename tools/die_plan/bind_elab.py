@@ -415,7 +415,13 @@ def lib_stubs(lib, out_path, hard_params=None):
             body = t[hdr_end + 1:body_end]
             ansi = re.search(r"\b(input|output|inout)\b", hdr) is not None
             decl, lp = [], []
-            for st in re.finditer(r"(?:^|(?<=;))\s*((?:parameter|localparam|input|output|inout)\b[^;]*;)", body):
+            # KV-PLAN-2 11-10 (KV-HOST-WI parent.sv, yosys write_verilog form): in a non-ANSI module, function/task
+            # arguments are not module ports, and a generate block before the first port declaration (a parameter
+            # guard) hid that declaration from the ";"-anchored scan.  Port declarations cannot sit in any of these
+            # blocks, so scan the body with them blanked.
+            body_decl = re.sub(r"\bfunction\b.*?\bendfunction\b|\btask\b.*?\bendtask\b|\bgenerate\b.*?\bendgenerate\b",
+                               ";", body, flags=re.S)
+            for st in re.finditer(r"(?:^|(?<=;))\s*((?:parameter|localparam|input|output|inout)\b[^;]*;)", body_decl):
                 txt = st.group(1)
                 if txt.startswith("localparam"):
                     lp.append(txt)
