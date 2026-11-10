@@ -46,6 +46,8 @@ ot_s81sl_leaf__t24__cl2456157b	a6	225929	18607	21/10	M2 1,M3 22,M4 3179,M5 513,M
 ot_s81sl_leaf__t40__cl86ea32b3	a10	166476	22215	14/14	M2 12,M3 487,M4 4304,M5 2002,M6 14325,M7 1085	3716	300-400/100-200;300-400/0-100;200-300/0-100	NO (spec has no OT_MACRO_MOVES)	M6-LARGEST-GRT	carry the batch moves (they were not applied here) via KW-FIX-43; no relaunch unchanged
 ot_s81sl_leaf__t44__clf4ea6d4b	a9	215892	19635	18/11	M4 288,M5 104,M6 19057,M7 186	13	800-900/500-600;0-100/600-700;0-100/500-600	NO (spec has no OT_MACRO_MOVES)	M6-LARGEST-GRT	carry the batch moves (they were not applied here) via KW-FIX-43; no relaunch unchanged
 ot_s81sl_leaf__t25__cl431c660f	a4	170719	0 (GRT0)	0/0		0		n/a	TIMING: GRT G2 setup_tt -715.99; u_rrl_90/q to u_cland_collect_rst_rl_90/fault_o, arrival 1615, required 899, 37 stages (reset-fault collector)	collector-tree form READY 9a289ac5b271 is the candidate; kit does not carry it, not yet shown to reach this path; no build
+ot_s81sl_leaf__t36 1fafd8742ece	a6	n/a (synth 85613)	17999	13/17	M6 8647,M5 4500,M7 3962,M4 886	10 records in rpt	x21-56 y330-336 (left edge; last-iteration report only, 10 records)	n/a	M6-LARGEST-GRT	add to M6 group; no OT_MACRO_MOVES line in config.mk (config only read); top nets ft/cland_ft; no relaunch unchanged
+dsdv_slice_c1x_C__t7 fd54a26b3f3c	a21	n/a	n/a	n/a	n/a	n/a	LEC @place: 806 differ of 139734, 32 kept bits g_hq[*].h[21,31..33]; listed cone u_xg.u_s.g_ql[*].ln 467, u_r.vo_d 28 (first vo_d[248], gold_only u_r.vts[800]), u_s.er*a 5	n/a	J3 (LeafFollow)	same signature as t6/t8; not RESET-KEY; waits for the one S81 re-bind with LeafFollow; no relaunch unchanged
 
 # SECTION 3: slice_station HOLD_UNCHANGED rows (KW43-60)
 row	db_status	sign-off best known	near_miss	action
