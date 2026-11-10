@@ -1,0 +1,31 @@
+{
+ "signal_ports": 2337,
+ "clock_ports": 20524,
+ "clock_cells": 90294,
+ "ndr_nets": {
+  "4": 90094,
+  "8": 201
+ },
+ "partitions": 398,
+ "landing_clock_nets": 1167,
+ "landing_hop_um_max": 513.984,
+ "landing_hop_over_405": 5,
+ "shared_fclk_in_xy": [
+  {
+   "id": "cland_mon_clk__lk_EN1",
+   "shares_with_xy": [
+    25893.024,
+    24030.496
+   ],
+   "moved_um": 0.5
+  },
+  {
+   "id": "cland_mon_clk__s_7S_x10",
+   "shares_with_xy": [
+    21564.384,
+    1333.216
+   ],
+   "moved_um": 0.5
+  }
+ ]
+}

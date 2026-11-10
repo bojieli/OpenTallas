@@ -1,0 +1,734 @@
+{
+ "period_ps": 833.0,
+ "margin_ps": 100.0,
+ "raw": {
+  "all": {
+   "NEAR": 180,
+   "LEAD": 513,
+   "LAG": 300
+  }
+ },
+ "by_corner": {
+  "TT": {
+   "NEAR": 168,
+   "LEAD": 516,
+   "LAG": 309
+  },
+  "FF": {
+   "NEAR": 180,
+   "LEAD": 513,
+   "LAG": 300
+  }
+ },
+ "by_view": {
+  "one_side_declared": {
+   "NEAR": 75,
+   "LEAD": 160,
+   "LAG": 83
+  },
+  "both_declared": {
+   "LEAD": 81,
+   "LAG": 63,
+   "NEAR": 22
+  },
+  "both_measured": {
+   "LEAD": 272,
+   "NEAR": 83,
+   "LAG": 154
+  }
+ },
+ "wrapped": {
+  "one_side_declared": {
+   "NEAR": 99,
+   "EDGE": 129,
+   "LEAD": 36,
+   "LAG": 54
+  },
+  "both_declared": {
+   "EDGE": 79,
+   "NEAR": 53,
+   "LAG": 31,
+   "LEAD": 3
+  },
+  "both_measured": {
+   "NEAR": 149,
+   "LEAD": 37,
+   "EDGE": 240,
+   "LAG": 83
+  },
+  "all": {
+   "NEAR": 301,
+   "EDGE": 448,
+   "LEAD": 76,
+   "LAG": 168
+  }
+ },
+ "abs_d_over_half_period": {
+  "TT": 408,
+  "FF": 273
+ },
+ "worst10": [
+  {
+   "port": "up_s_1N_L2__1",
+   "cls": "NEAR",
+   "clearance_ps": -251.6,
+   "view": "one_side_declared",
+   "TT": {
+    "d_ps": 29.79,
+    "lo_ps": -251.63,
+    "hi_ps": 320.12,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 29.78,
+    "lo_ps": -204.44,
+    "hi_ps": 271.43,
+    "cls": "NEAR"
+   },
+   "src": "s_1N_L0",
+   "dst": "s_1N_C",
+   "src_type": "ot_s81sl_leaf__t17",
+   "dst_type": "dsdv_slice_c1x_C__t10",
+   "src_view": "DECLARED",
+   "dst_view": "types_cts",
+   "A_src": 2964.17,
+   "A_dst": 3063.93,
+   "I_out": 250.0,
+   "I_write": 144.5,
+   "I_read": 325.71,
+   "net_ps": 1.18,
+   "hop_um": 5.312,
+   "p_up": 290.33,
+   "p_dn": 281.42
+  },
+  {
+   "port": "x_W4_in__2",
+   "cls": "NEAR",
+   "clearance_ps": -162.1,
+   "view": "one_side_declared",
+   "TT": {
+    "d_ps": 1.38,
+    "lo_ps": -167.66,
+    "hi_ps": 162.05,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 3.33,
+    "lo_ps": -137.66,
+    "hi_ps": 136.89,
+    "cls": "NEAR"
+   },
+   "src": "s_1N_L1",
+   "dst": "s_0N_L1",
+   "src_type": "ot_s81sl_leaf__t75",
+   "dst_type": "ot_s81sl_leaf__t8",
+   "src_view": "DECLARED",
+   "dst_view": "types_cts",
+   "A_src": 3342.4,
+   "A_dst": 3621.9,
+   "I_out": 250.0,
+   "I_write": 367.97,
+   "I_read": 339.85,
+   "net_ps": 0.0,
+   "hop_um": 4.288,
+   "p_up": 160.67,
+   "p_dn": 169.04
+  },
+  {
+   "port": "xtier__s_1S_C__s_1N_C__5",
+   "cls": "NEAR",
+   "clearance_ps": -159.5,
+   "view": "one_side_declared",
+   "TT": {
+    "d_ps": 102.5,
+    "lo_ps": -159.47,
+    "hi_ps": 374.23,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 84.31,
+    "lo_ps": -133.36,
+    "hi_ps": 310.31,
+    "cls": "NEAR"
+   },
+   "src": "s_1N_L0",
+   "dst": "s_1N_C",
+   "src_type": "ot_s81sl_leaf__t17",
+   "dst_type": "dsdv_slice_c1x_C__t10",
+   "src_view": "DECLARED",
+   "dst_view": "types_cts",
+   "A_src": 2968.09,
+   "A_dst": 3079.64,
+   "I_out": 250.0,
+   "I_write": 110.34,
+   "I_read": 352.06,
+   "net_ps": 0.77,
+   "hop_um": 5.312,
+   "p_up": 271.73,
+   "p_dn": 261.97
+  },
+  {
+   "port": "up_s_1N_L0__0",
+   "cls": "NEAR",
+   "clearance_ps": -127.0,
+   "view": "one_side_declared",
+   "TT": {
+    "d_ps": 140.65,
+    "lo_ps": -127.03,
+    "hi_ps": 417.17,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 119.69,
+    "lo_ps": -104.01,
+    "hi_ps": 349.63,
+    "cls": "NEAR"
+   },
+   "src": "s_1N_L0",
+   "dst": "s_1N_C",
+   "src_type": "ot_s81sl_leaf__t17",
+   "dst_type": "dsdv_slice_c1x_C__t10",
+   "src_view": "DECLARED",
+   "dst_view": "types_cts",
+   "A_src": 2909.32,
+   "A_dst": 3066.52,
+   "I_out": 250.0,
+   "I_write": 144.21,
+   "I_read": 379.92,
+   "net_ps": 2.26,
+   "hop_um": 5.312,
+   "p_up": 276.52,
+   "p_dn": 267.68
+  },
+  {
+   "port": "x_E4_in__2",
+   "cls": "NEAR",
+   "clearance_ps": -115.5,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 48.81,
+    "lo_ps": -115.49,
+    "hi_ps": 208.09,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 49.47,
+    "lo_ps": -84.12,
+    "hi_ps": 181.92,
+    "cls": "NEAR"
+   },
+   "src": "s_6N_L1",
+   "dst": "s_7N_L1",
+   "src_type": "ot_s81sl_leaf__t62",
+   "dst_type": "ot_s81sl_leaf__t72",
+   "src_view": "types_cts",
+   "dst_view": "types_cts",
+   "A_src": 4331.27,
+   "A_dst": 4690.23,
+   "I_out": 207.25,
+   "I_write": 368.75,
+   "I_read": 267.6,
+   "net_ps": 1.74,
+   "hop_um": 4.288,
+   "p_up": 159.28,
+   "p_dn": 164.3
+  },
+  {
+   "port": "dn_s_1N_L0__0",
+   "cls": "NEAR",
+   "clearance_ps": -112.7,
+   "view": "one_side_declared",
+   "TT": {
+    "d_ps": -122.79,
+    "lo_ps": -361.65,
+    "hi_ps": 112.73,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -103.52,
+    "lo_ps": -300.68,
+    "hi_ps": 91.34,
+    "cls": "NEAR"
+   },
+   "src": "s_1N_C",
+   "dst": "s_1N_L0",
+   "src_type": "dsdv_slice_c1x_C__t10",
+   "dst_type": "ot_s81sl_leaf__t17",
+   "src_view": "types_cts",
+   "dst_view": "DECLARED",
+   "A_src": 3066.52,
+   "A_dst": 2912.4,
+   "I_out": 94.38,
+   "I_write": 120.27,
+   "I_read": 250.0,
+   "net_ps": 4.02,
+   "hop_um": 5.312,
+   "p_up": 235.52,
+   "p_dn": 238.86
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES1__6",
+   "cls": "NEAR",
+   "clearance_ps": -109.7,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 1.79,
+    "lo_ps": -111.79,
+    "hi_ps": 109.71,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 8.92,
+    "lo_ps": -85.39,
+    "hi_ps": 97.65,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x12",
+   "dst": "s_7S_x11",
+   "src_type": "slice_station__t24__cl64811a5d",
+   "dst_type": "slice_station__t24__cleece78ec",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 4422.83,
+   "A_dst": 4515.11,
+   "I_out": 221.7,
+   "I_write": 138.66,
+   "I_read": 273.54,
+   "net_ps": 3.67,
+   "hop_um": 5.312,
+   "p_up": 107.92,
+   "p_dn": 113.58
+  },
+  {
+   "port": "coll__lk_ES0__s_7S_LP__4",
+   "cls": "NEAR",
+   "clearance_ps": -100.7,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 12.65,
+    "lo_ps": -100.68,
+    "hi_ps": 122.59,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 14.43,
+    "lo_ps": -78.91,
+    "hi_ps": 104.3,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x13",
+   "dst": "s_7S_x14",
+   "src_type": "slice_station__t25",
+   "dst_type": "slice_station__t24__cl66b71008",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3907.02,
+   "A_dst": 4010.2,
+   "I_out": 223.62,
+   "I_write": 140.99,
+   "I_read": 274.02,
+   "net_ps": -0.06,
+   "hop_um": 5.312,
+   "p_up": 109.94,
+   "p_dn": 113.33
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__3",
+   "cls": "NEAR",
+   "clearance_ps": -98.0,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -6.3,
+    "lo_ps": -112.16,
+    "hi_ps": 98.0,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -7.34,
+    "lo_ps": -93.61,
+    "hi_ps": 78.03,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3421.0,
+   "A_dst": 3508.32,
+   "I_out": 212.31,
+   "I_write": 137.88,
+   "I_read": 257.97,
+   "net_ps": 1.39,
+   "hop_um": 5.312,
+   "p_up": 104.3,
+   "p_dn": 105.86
+  },
+  {
+   "port": "qc__iqf__s_0N_LP__0",
+   "cls": "NEAR",
+   "clearance_ps": -97.5,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 9.93,
+    "lo_ps": -97.5,
+    "hi_ps": 115.34,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 4.49,
+    "lo_ps": -85.04,
+    "hi_ps": 91.25,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3458.99,
+   "A_dst": 3500.88,
+   "I_out": 191.94,
+   "I_write": 111.68,
+   "I_read": 273.94,
+   "net_ps": 2.27,
+   "hop_um": 5.312,
+   "p_up": 105.41,
+   "p_dn": 107.43
+  }
+ ],
+ "worst10_both_measured": [
+  {
+   "port": "x_E4_in__2",
+   "cls": "NEAR",
+   "clearance_ps": -115.5,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 48.81,
+    "lo_ps": -115.49,
+    "hi_ps": 208.09,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 49.47,
+    "lo_ps": -84.12,
+    "hi_ps": 181.92,
+    "cls": "NEAR"
+   },
+   "src": "s_6N_L1",
+   "dst": "s_7N_L1",
+   "src_type": "ot_s81sl_leaf__t62",
+   "dst_type": "ot_s81sl_leaf__t72",
+   "src_view": "types_cts",
+   "dst_view": "types_cts",
+   "A_src": 4331.27,
+   "A_dst": 4690.23,
+   "I_out": 207.25,
+   "I_write": 368.75,
+   "I_read": 267.6,
+   "net_ps": 1.74,
+   "hop_um": 4.288,
+   "p_up": 159.28,
+   "p_dn": 164.3
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES1__6",
+   "cls": "NEAR",
+   "clearance_ps": -109.7,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 1.79,
+    "lo_ps": -111.79,
+    "hi_ps": 109.71,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 8.92,
+    "lo_ps": -85.39,
+    "hi_ps": 97.65,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x12",
+   "dst": "s_7S_x11",
+   "src_type": "slice_station__t24__cl64811a5d",
+   "dst_type": "slice_station__t24__cleece78ec",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 4422.83,
+   "A_dst": 4515.11,
+   "I_out": 221.7,
+   "I_write": 138.66,
+   "I_read": 273.54,
+   "net_ps": 3.67,
+   "hop_um": 5.312,
+   "p_up": 107.92,
+   "p_dn": 113.58
+  },
+  {
+   "port": "coll__lk_ES0__s_7S_LP__4",
+   "cls": "NEAR",
+   "clearance_ps": -100.7,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 12.65,
+    "lo_ps": -100.68,
+    "hi_ps": 122.59,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 14.43,
+    "lo_ps": -78.91,
+    "hi_ps": 104.3,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x13",
+   "dst": "s_7S_x14",
+   "src_type": "slice_station__t25",
+   "dst_type": "slice_station__t24__cl66b71008",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3907.02,
+   "A_dst": 4010.2,
+   "I_out": 223.62,
+   "I_write": 140.99,
+   "I_read": 274.02,
+   "net_ps": -0.06,
+   "hop_um": 5.312,
+   "p_up": 109.94,
+   "p_dn": 113.33
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__3",
+   "cls": "NEAR",
+   "clearance_ps": -98.0,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -6.3,
+    "lo_ps": -112.16,
+    "hi_ps": 98.0,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -7.34,
+    "lo_ps": -93.61,
+    "hi_ps": 78.03,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3421.0,
+   "A_dst": 3508.32,
+   "I_out": 212.31,
+   "I_write": 137.88,
+   "I_read": 257.97,
+   "net_ps": 1.39,
+   "hop_um": 5.312,
+   "p_up": 104.3,
+   "p_dn": 105.86
+  },
+  {
+   "port": "qc__iqf__s_0N_LP__0",
+   "cls": "NEAR",
+   "clearance_ps": -97.5,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 9.93,
+    "lo_ps": -97.5,
+    "hi_ps": 115.34,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 4.49,
+    "lo_ps": -85.04,
+    "hi_ps": 91.25,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3458.99,
+   "A_dst": 3500.88,
+   "I_out": 191.94,
+   "I_write": 111.68,
+   "I_read": 273.94,
+   "net_ps": 2.27,
+   "hop_um": 5.312,
+   "p_up": 105.41,
+   "p_dn": 107.43
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES0__6",
+   "cls": "NEAR",
+   "clearance_ps": -85.2,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -23.3,
+    "lo_ps": -133.71,
+    "hi_ps": 85.25,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -11.78,
+    "lo_ps": -102.5,
+    "hi_ps": 77.94,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x12",
+   "dst": "s_7S_x11",
+   "src_type": "slice_station__t24__cl64811a5d",
+   "dst_type": "slice_station__t24__cleece78ec",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 4423.79,
+   "A_dst": 4485.08,
+   "I_out": 222.84,
+   "I_write": 138.18,
+   "I_read": 278.46,
+   "net_ps": 2.03,
+   "hop_um": 5.312,
+   "p_up": 108.55,
+   "p_dn": 110.41
+  },
+  {
+   "port": "coll__lk_WS2__s_0S_LP__4",
+   "cls": "NEAR",
+   "clearance_ps": -78.5,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -24.76,
+    "lo_ps": -129.21,
+    "hi_ps": 78.45,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -23.66,
+    "lo_ps": -109.73,
+    "hi_ps": 60.88,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3458.99,
+   "A_dst": 3501.25,
+   "I_out": 191.19,
+   "I_write": 139.68,
+   "I_read": 265.32,
+   "net_ps": 1.46,
+   "hop_um": 5.312,
+   "p_up": 103.21,
+   "p_dn": 104.45
+  },
+  {
+   "port": "coll__lk_WS0__s_0S_LP__2",
+   "cls": "NEAR",
+   "clearance_ps": -77.0,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -32.22,
+    "lo_ps": -143.67,
+    "hi_ps": 76.96,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -30.01,
+    "lo_ps": -122.12,
+    "hi_ps": 59.53,
+    "cls": "NEAR"
+   },
+   "src": "iqf",
+   "dst": "s_0S_x00",
+   "src_type": "iqf__t1",
+   "dst_type": "slice_station__t49",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3421.0,
+   "A_dst": 3509.36,
+   "I_out": 245.06,
+   "I_write": 140.4,
+   "I_read": 267.47,
+   "net_ps": 2.59,
+   "hop_um": 5.312,
+   "p_up": 109.18,
+   "p_dn": 111.45
+  },
+  {
+   "port": "coll__lk_ES1__s_7S_LP__5",
+   "cls": "NEAR",
+   "clearance_ps": -76.7,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": -40.33,
+    "lo_ps": -159.79,
+    "hi_ps": 76.67,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": -31.43,
+    "lo_ps": -130.7,
+    "hi_ps": 65.29,
+    "cls": "NEAR"
+   },
+   "src": "s_7S_x13",
+   "dst": "s_7S_x14",
+   "src_type": "slice_station__t25",
+   "dst_type": "slice_station__t24__cl66b71008",
+   "src_view": "types",
+   "dst_view": "types",
+   "A_src": 3970.31,
+   "A_dst": 4037.25,
+   "I_out": 223.19,
+   "I_write": 139.13,
+   "I_read": 256.12,
+   "net_ps": 1.07,
+   "hop_um": 5.312,
+   "p_up": 117.0,
+   "p_dn": 119.46
+  },
+  {
+   "port": "dn_s_1S_L3__1",
+   "cls": "NEAR",
+   "clearance_ps": -59.2,
+   "view": "both_measured",
+   "TT": {
+    "d_ps": 37.12,
+    "lo_ps": -59.2,
+    "hi_ps": 132.87,
+    "cls": "NEAR"
+   },
+   "FF": {
+    "d_ps": 46.74,
+    "lo_ps": -31.14,
+    "hi_ps": 124.86,
+    "cls": "NEAR"
+   },
+   "src": "s_1S_L1",
+   "dst": "s_1S_L3",
+   "src_type": "ot_s81sl_leaf__t14",
+   "dst_type": "ot_s81sl_leaf__t15",
+   "src_view": "types_cts",
+   "dst_view": "types_cts",
+   "A_src": 1088.61,
+   "A_dst": 1350.51,
+   "I_out": 206.0,
+   "I_write": 255.93,
+   "I_read": 238.22,
+   "net_ps": 1.07,
+   "hop_um": 5.312,
+   "p_up": 95.75,
+   "p_dn": 96.32
+  }
+ ]
+}

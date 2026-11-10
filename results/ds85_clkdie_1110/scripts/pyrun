@@ -1,0 +1,4 @@
+#!/bin/bash
+# python3 -I with the script's own directory on sys.path (as plain python3 would add it), nothing else from cwd/env.
+s=$(readlink -f "$1"); shift
+exec python3 -I -c 'import sys,runpy,os; s=sys.argv[1]; sys.argv=sys.argv[1:]; sys.path.insert(0, os.path.dirname(s)); runpy.run_path(s, run_name="__main__")' "$s" "$@"

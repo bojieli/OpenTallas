@@ -1,0 +1,56 @@
+[INFO IFP-0103] Total instances area:         782486357.044 um^2
+OT_T floorplan 24
+OT_T placed 24
+OT_NDR nets4=90094 nets8=201
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 398
+[INFO GRT-0004] Blockages: 225046
+[INFO GRT-0019] Found 90295 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 6
+[INFO GRT-0053] Routing resources analysis:
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   1007661887      250696562          75.12%
+M5         Vertical     1013001208      252100707          75.11%
+M6         Horizontal   938660316      233790873          75.09%
+M7         Vertical     1041590919      258252524          75.21%
+M8         Horizontal   831779387      499060469          40.00%
+M9         Vertical     831790689      499047328          40.00%
+[INFO GRT-0197] Via related to pin nodes: 1181367
+[INFO GRT-0198] Via related Steiner nodes: 719
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1705391
+[INFO GRT-0112] Final usage 3D: 8709533
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           250696562           218            0.00%             0 /  0 /  0
+M5           252100707          1878            0.00%             0 /  0 /  0
+M6           233790873          2560            0.00%             0 /  0 /  0
+M7           258252524           244            0.00%             0 /  0 /  0
+M8           499060469       1997337            0.40%             0 /  0 /  0
+M9           499047328       1591123            0.32%             0 /  0 /  0
+Total        1992948463       3593360            0.18%             0 /  0 /  0
+[INFO GRT-0018] Total wirelength: 9151628 um
+[INFO GRT-0014] Routed nets: 92479
+[INFO GRT-0303] Global routing runtime = 00:01:53
+OT_DONE
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:39.60
+	Maximum resident set size (kbytes): 17385108
+	Exit status: 0

@@ -1,0 +1,31 @@
+{
+ "schema": "ot_clk_actual_reach/1",
+ "max_um": 405.0,
+ "verdict": "FAIL",
+ "cell_edges": 90292,
+ "tap_edges": 20523,
+ "worst_um": 461.29,
+ "over_count": 3,
+ "over": [
+  {
+   "kind": "tap",
+   "child": "t_s_7N_x13__clk_t26",
+   "parent": "b2255",
+   "length_um": 461.29
+  },
+  {
+   "kind": "tap",
+   "child": "t_s_7N_x13__clk_t17",
+   "parent": "b2255",
+   "length_um": 457.578
+  },
+  {
+   "kind": "tap",
+   "child": "t_s_7N_x13__clk_t32",
+   "parent": "b2256",
+   "length_um": 426.378
+  }
+ ],
+ "missing_sites": [],
+ "frozen_home_match": true
+}

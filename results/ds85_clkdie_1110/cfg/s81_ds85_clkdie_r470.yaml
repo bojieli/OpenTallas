@@ -1,0 +1,67 @@
+# DIE-S81-43 (2026-10-31, COORD 13:26: the 199 bk_sel-class contract violations): g03c3_rt3 + residual tap pads
+# (METHODOLOGY 12.8d2, CLOCK-RESIDUAL ledger) in the 6 remaining regions: bk_sel 27 taps / 39 pads, gunit 8/8,
+# fE5_p5_b0 7/8, lk_EN3 6/6, s_7S_L2 2/2, fW0_p2_b0 1/2, plus the 5 rt3 fE4_p3_b0 pads = 70 BUFx24 on 56 of 16890 taps,
+# <= 3 per tap (so a pair < 100 ps in the dump cannot cross W 180).  Pads only on the earliest launchers of the over-W
+# pairs (greedy on the routed kc pair dump of REGTREE-3 P1, dE 20 / dL 25 ps per pad; physical/die_plan tool:
+# padopt3.py in the lane evidence).  Result (epyc2 /srv/opentallas-scratch2/claude/die-s81-43/ck/PA, plan 9c26280d6145 =
+# a83e52c0ae4e + t30 tap fix): GRT 0 overflow TT/FF; TT setup +3.85 (0 neg); FF kit-contract need 217.46 -> 179.97
+# (W 180, 0 violations; was 199); CA re-bind PASS (TT lo 106.8, FF lo 121.0, 0 fail, start-skew 0/799).
+# Rejected 12.17 twin HB (bk_sel -> local H-tree leaf 200 + pads on the other 5): bk_sel core taps lose DME earliness,
+# need 968, 931 violations, TT setup -15.34.
+# Pad table copy in repo: tools/clk/configs/s81_g03c3_rt4_pad.json.
+# S81-REGTREE-3 (2026-10-31): g03c3_rt1 + one sparse residual (METHODOLOGY 12.8d2, CLOCK-RESIDUAL ledger) on plan a83e52c0ae4e
+# (DIE-S81-42 band + tap split + seqhost): region fE4_p3_b0 (DME, 6 early core taps) had 5 kit-contract pairs > W 180
+# (worst 184.15, all launch = the 5 earliest grid taps t21/t11/t18/t15/t22 -> capture clk_t32).  One BUFx24 tap pad on each
+# of those 5 taps (+18..27 ps FF) -> region need 176.19 (W 180), captures into the padded taps <= 123.8; 5 of 16888 taps,
+# no other tap moves.  Rejected: fE4_p3_b0 -> local H-tree (core taps lose DME earliness: 248 / 294 ps), fE4 out of the
+# snake list (204 -> 214 violations).  Evidence epyc2 /srv/opentallas-scratch2/claude/s81-regtree-3/{R0,P1,N1,A,B}.
+# Pad table copy in repo: tools/clk/configs/s81_g03c3_rt3_pad.json.
+# S81-REGTREE-1 (2026-10-31, COORD 05:2x condition 4): ckclk3 form (g03c2 on plan h2_2249, grid+explicit taps) with the
+# 6 station regions whose need was >140 (s_0N_x03/x04/x06, s_0S_x01/x13, s_7N_x13: no core taps) taken out of the
+# region DME into the balanced local H-tree (leaf 200 um, full=1: tapless halves load like dense ones), and
+# dme_feed_centroid=2 so their feed ends stay at the tap centroid (feed + the other 392 region trees unchanged).
+# Root cause: open-loop DME leg error (rms 4.4-5.5 ps/leg, spread if legs = model 13-39 vs measured 70-86 ps).
+# Evidence epyc2 /srv/opentallas-scratch2/claude/s81-regtree-1/S200F (GRT 0 overflow; need 110/101/100/139/94/106).
+schema: ot_clk_config/1
+die: s81
+event:
+  name: ds85_clkdie_h2_2249
+  host: epyc8
+  source: CLOCK geometry03 (codex/clock-takeover-1029 fe1d0cde0 = main 2b90210bd die_trial); DIE-S81-23 g03route run.sh
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-s81-23/g03route/run_c2/kit/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-s81-85/clkdie/src/physical/die_plan/s81/plan_h2_2249.json
+  region_map: /srv/opentallas-scratch2/claude/die-s81-85/clkdie/cfg/map398_h2_2249.json
+  feed: /srv/opentallas-scratch2/claude/die-s81-85/clkdie/cfg/feed_sb6_h2_2249.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_reach_max: 400
+  rep_actual_max: 470   # DS85 diagnostic: 3 tap legs at s_7N_x13 are 426-461 um (ck_fail2/kit/clock/actual_reach.json); reported, not fixed
+  opts:
+    dme_feed_centroid: 2
+    full: 1
+region:
+  form: dme
+  workers: 24
+  dme_mode: delay
+  only: [bk_sel, eng, fE0_p1_b0, fE0_p1_b1, fE0_p1_b2, fE0_p2_b0, fE0_p2_b1, fE0_p2_b2, fE0_p3_b0, fE0_p3_b1, fE0_p3_b2, fE0_p4_b0, fE0_p4_b1, fE0_p4_b2, fE0_p5_b0, fE0_p5_b1, fE0_p5_b2, fE0_p6_b0, fE0_p6_b1, fE0_p6_b2, fE1_p1_b0, fE1_p1_b1, fE1_p1_b2, fE1_p2_b0, fE1_p2_b1, fE1_p2_b2, fE1_p3_b0, fE1_p3_b1, fE1_p3_b2, fE1_p4_b0, fE1_p4_b1, fE1_p4_b2, fE1_p5_b0, fE1_p5_b1, fE1_p5_b2, fE1_p6_b0, fE1_p6_b1, fE1_p6_b2, fE2_p1_b0, fE2_p1_b1, fE2_p1_b2, fE2_p2_b0, fE2_p2_b1, fE2_p2_b2, fE2_p3_b0, fE2_p3_b1, fE2_p3_b2, fE2_p4_b0, fE2_p4_b1, fE2_p4_b2, fE2_p5_b0, fE2_p5_b1, fE2_p5_b2, fE2_p6_b0, fE2_p6_b1, fE2_p6_b2, fE3_p1_b0, fE3_p1_b1, fE3_p1_b2, fE3_p2_b0, fE3_p2_b1, fE3_p2_b2, fE3_p3_b0, fE3_p3_b1, fE3_p3_b2, fE3_p4_b0, fE3_p4_b1, fE3_p4_b2, fE3_p5_b0, fE3_p5_b1, fE3_p5_b2, fE3_p6_b0, fE3_p6_b1, fE3_p6_b2, fE4_p1_b0, fE4_p1_b1, fE4_p1_b2, fE4_p2_b0, fE4_p2_b1, fE4_p2_b2, fE4_p3_b0, fE4_p3_b1, fE4_p3_b2, fE4_p4_b0, fE4_p4_b1, fE4_p4_b2, fE4_p5_b0, fE4_p5_b1, fE4_p5_b2, fE4_p6_b0, fE4_p6_b1, fE4_p6_b2, fE5_p1_b0, fE5_p1_b1, fE5_p1_b2, fE5_p2_b0, fE5_p2_b1, fE5_p2_b2, fE5_p3_b0, fE5_p3_b1, fE5_p3_b2, fE5_p4_b0, fE5_p4_b1, fE5_p4_b2, fE5_p5_b0, fE5_p5_b1, fE5_p5_b2, fE5_p6_b0, fE5_p6_b1, fE5_p6_b2, fW0_p1_b0, fW0_p1_b1, fW0_p1_b2, fW0_p2_b0, fW0_p2_b1, fW0_p2_b2, fW0_p3_b0, fW0_p3_b1, fW0_p3_b2, fW0_p4_b0, fW0_p4_b1, fW0_p4_b2, fW0_p5_b0, fW0_p5_b1, fW0_p5_b2, fW0_p6_b0, fW0_p6_b1, fW0_p6_b2, fW1_p1_b0, fW1_p1_b1, fW1_p1_b2, fW1_p2_b0, fW1_p2_b1, fW1_p2_b2, fW1_p3_b0, fW1_p3_b1, fW1_p3_b2, fW1_p4_b0, fW1_p4_b1, fW1_p4_b2, fW1_p5_b0, fW1_p5_b1, fW1_p5_b2, fW1_p6_b0, fW1_p6_b1, fW1_p6_b2, fW2_p1_b0, fW2_p1_b1, fW2_p1_b2, fW2_p2_b0, fW2_p2_b1, fW2_p2_b2, fW2_p3_b0, fW2_p3_b1, fW2_p3_b2, fW2_p4_b0, fW2_p4_b1, fW2_p4_b2, fW2_p5_b0, fW2_p5_b1, fW2_p5_b2, fW2_p6_b0, fW2_p6_b1, fW2_p6_b2, fW3_p1_b0, fW3_p1_b1, fW3_p1_b2, fW3_p2_b0, fW3_p2_b1, fW3_p2_b2, fW3_p3_b0, fW3_p3_b1, fW3_p3_b2, fW3_p4_b0, fW3_p4_b1, fW3_p4_b2, fW3_p5_b0, fW3_p5_b1, fW3_p5_b2, fW3_p6_b0, fW3_p6_b1, fW3_p6_b2, fW4_p1_b0, fW4_p1_b1, fW4_p1_b2, fW4_p2_b0, fW4_p2_b1, fW4_p2_b2, fW4_p3_b0, fW4_p3_b1, fW4_p3_b2, fW4_p4_b0, fW4_p4_b1, fW4_p4_b2, fW4_p5_b0, fW4_p5_b1, fW4_p5_b2, fW4_p6_b0, fW4_p6_b1, fW4_p6_b2, fW5_p1_b0, fW5_p1_b1, fW5_p1_b2, fW5_p2_b0, fW5_p2_b1, fW5_p2_b2, fW5_p3_b0, fW5_p3_b1, fW5_p3_b2, fW5_p4_b0, fW5_p4_b1, fW5_p4_b2, fW5_p5_b0, fW5_p5_b1, fW5_p5_b2, fW5_p6_b0, fW5_p6_b1, fW5_p6_b2, gunit, iqf, lk_EN0, lk_EN1, lk_EN2, lk_EN3, lk_ES0, lk_ES1, lk_WN0, lk_WN1, lk_WN2, lk_WN3, lk_WS0, lk_WS1, lk_WS2, lk_WS3, phy_hbm, s_0N_C, s_0N_L0, s_0N_L1, s_0N_L2, s_0N_L3, s_0N_L4, s_0N_LP, s_0N_x00, s_0N_x01, s_0N_x05, s_0N_x16, s_0S_C, s_0S_L0, s_0S_L1, s_0S_L2, s_0S_L3, s_0S_L4, s_0S_LP, s_0S_x00, s_0S_x02, s_0S_x03, s_0S_x04, s_0S_x05, s_0S_x07, s_0S_x08, s_0S_x09, s_1N_C, s_1N_L0, s_1N_L1, s_1N_L2, s_1N_L3, s_1N_L4, s_1N_x06, s_1S_C, s_1S_L0, s_1S_L1, s_1S_L2, s_1S_L3, s_1S_L4, s_1S_x06, s_2N_C, s_2N_L0, s_2N_L1, s_2N_L2, s_2N_L3, s_2N_L4, s_2N_x06, s_2S_C, s_2S_L0, s_2S_L1, s_2S_L2, s_2S_L3, s_2S_L4, s_2S_x00, s_3N_C, s_3N_L0, s_3N_L1, s_3N_L2, s_3N_L3, s_3N_L4, s_3N_x06, s_3S_C, s_3S_L0, s_3S_L1, s_3S_L2, s_3S_L3, s_3S_L4, s_4N_C, s_4N_L0, s_4N_L1, s_4N_L2, s_4N_L3, s_4N_L4, s_4N_x06, s_4S_C, s_4S_L0, s_4S_L1, s_4S_L2, s_4S_L3, s_4S_L4, s_4S_x06, s_5N_C, s_5N_L0, s_5N_L1, s_5N_L2, s_5N_L3, s_5N_L4, s_5S_C, s_5S_L0, s_5S_L1, s_5S_L2, s_5S_L3, s_5S_L4, s_5S_x00, s_6N_C, s_6N_L0, s_6N_L1, s_6N_L2, s_6N_L3, s_6N_L4, s_6N_x06, s_6S_C, s_6S_L0, s_6S_L1, s_6S_L2, s_6S_L3, s_6S_L4, s_6S_x06, s_7N_C, s_7N_L0, s_7N_L1, s_7N_L2, s_7N_L3, s_7N_L4, s_7N_LP, s_7N_x06, s_7N_x10, s_7N_x11, s_7N_x14, s_7N_x15, s_7N_x16, s_7S_C, s_7S_L0, s_7S_L1, s_7S_L2, s_7S_L3, s_7S_L4, s_7S_LP, s_7S_x05, s_7S_x10, s_7S_x11, s_7S_x110, s_7S_x111, s_7S_x12, s_7S_x13, s_7S_x14, s_7S_x15, s_7S_x16, s_7S_x17, s_7S_x19, seqhost, svc_0, svc_1, svc_10, svc_11, svc_12, svc_13, svc_14, svc_15, svc_2, svc_3, svc_4, svc_5, svc_6, svc_7, svc_8, svc_9]
+  early:
+    tt: 1.0
+    ff: 1.0
+    mode: merge
+stage_model:
+  entry: inv2_ndr_s81_g03b_refit
+  corners: [TT, FF]
+  edge: rise
+residual:
+  snake: all
+  cell_paths: true
+  tap_pad: /srv/opentallas-scratch2/claude/die-s81-85/clkdie/src/tools/clk/configs/s81_g03c3_rt4_pad.json
+extra_argv: [--region-dme-actual-max, 405]
