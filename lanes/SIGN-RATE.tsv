@@ -454,3 +454,4 @@ time	die	signed_types	signed_cores
 2026-11-09 15:05 257 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79 auto
 2026-11-09 15:51	258	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=79+1t	forced 15:30-15:51 COORD hourly; +HBM type q_mca (qmca_vSR3_eco1 re-sign); opsb (DY) + xs not yet in, COUNT-ARCHIVE-2 forced count follows
 2026-11-09 16:05 259 s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=80+1t auto
+2026-11-09 17:03	259	s81=61+34t head=4+19t qc=25+2t kv=32+1t hbm=80+1t	forced 17:03 COORD; +HBM ot_hgi_sfu_opsb_output (DY opsb plan line). smk 11 kids + xs + QC nk_a0c (epyc6 rescue) pending
