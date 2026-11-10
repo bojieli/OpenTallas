@@ -71,3 +71,21 @@ def test_stage_detail_named_like_base_does_not_overwrite_it(tmp_path):
  meta=json.loads((tmp_path/'prov_relay/core/c0/meta.json').read_text())
  assert meta['detailed_lef']=='detail_view.lef' and meta['source_detailed_lef']==c['detailed_lef']
  assert meta['detail_bloat_factor']==0
+
+
+def test_pin_window_receipt_is_rechecked(tmp_path):
+ """DIE-QC-97 11-10: a receipt with pin windows passes only when its windows sit on base signal pins"""
+ base=P.contract_lef('core',100,50,[dict(name='a',x=.1,y=5.,layer='M4')],{'a':'INPUT'},7)
+ (tmp_path/'core.lef').write_text(base)
+ lines=A.splice(base.splitlines(True),{'M6':['      RECT 20 20 30 20.1 ;\n'],'M7':['      RECT 50 0 50.2 50 ;\n']},['M6','M7'])
+ (tmp_path/'detail_view.lef').write_text(''.join(lines))
+ win=dict(margin_um=1.0,top_layer='M7',clear_um=0.05,windows={})
+ r=dict(base_sha256=P.sha256(tmp_path/'core.lef'),out_sha256=P.sha256(tmp_path/'detail_view.lef'),
+        layers_detailed=['M6','M7'],check_ok=True,detail_pins_equal_base=True,bloat_factor=1,pin_window=win)
+ (tmp_path/'detail_receipt.json').write_text(json.dumps(r))
+ m=dict(detailed_lef='detail_view.lef',detailed_receipt='detail_receipt.json',detail_bloat_factor=1)
+ p,out=P.routed_detail(str(tmp_path),'core',m,str(ROOT))
+ assert p==str(tmp_path/'detail_view.lef') and out['pin_window']['pins']==[]
+ win['windows']={'a':dict(layer='M4',rect=[40,40,42,42],layers=['M5'])}
+ (tmp_path/'detail_receipt.json').write_text(json.dumps(r))
+ with pytest.raises(ValueError):P.routed_detail(str(tmp_path),'core',m,str(ROOT))

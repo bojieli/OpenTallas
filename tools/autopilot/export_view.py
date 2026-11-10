@@ -90,6 +90,29 @@ def lec_all_shown(lec_doc):
     return lec_doc.get("all_shown")
 
 
+def pin_access(lef):
+    """DIE-QC-97 11-10 (DRT-0073 class, QC NK/NL centre ck on M5 under blanket M5-M7): record, never gate, whether every
+    signal pin of the exported abstract can be reached (abstract_detail.access_report: edge pin, or an OBS-free via
+    landing plus a free spot on every layer up to its top OBS layer).  A view that fails it cannot be placed in any
+    parent as is (DRT-0073): it needs the detailed + pin window form (counted_child_views.view_detail, or
+    tools/die_plan/abstract_detail.py splice --pin-window-um --window-detail), which keeps this signed LEF untouched."""
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    try:
+        import abstract_detail as AD
+        lines = Path(lef).read_text().splitlines(keepends=True)
+        rep = AD.access_report(lines)
+        bad = sorted(p for p, e in rep["pins"].items() if not e["ok"])
+        out = dict(ok=not bad, top_layer=rep["top_layer"], signal_pins=len(rep["pins"]), without_access=bad[:32],
+                   n_without_access=len(bad))
+        if bad:
+            out["form"] = AD.export_plan(lines)
+        return out
+    except (OSError, ValueError, ImportError) as exc:
+        return dict(ok=None, error=str(exc)[:200])
+    finally:
+        sys.path.remove(str(HERE.parent / "die_plan"))
+
+
 def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None):
     kit = os.path.realpath(kit)
     sdoc, so = so_record(signoff)
@@ -146,6 +169,9 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
                           odb_not_newer_than_signoff=fresh, lec=lec, note=note, lib_basis=lib_basis or None,
                           files_sha256={k: sha256(v) for k, v in sorted(view["files"].items())})
     gates.update(view_complete=not problems, view_problems=problems)
+    lef_src = view["files"].get(f"{mod}.lef") if mod else None
+    if lef_src and os.path.isfile(lef_src):
+        prov["export"]["pin_access"] = gates["pin_access"] = pin_access(lef_src)
     if not mod:
         raise SystemExit("no module found (kit freeze/core record or a single base LEF)")
     vd = Path(out_root) / mod
