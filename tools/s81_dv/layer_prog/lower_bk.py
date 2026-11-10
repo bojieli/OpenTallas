@@ -650,7 +650,10 @@ TX_LPX_BOOKED = 2
 TX_WORST = 1537 + 15     # HDR + 512 x (REBASE + 2 BEAT) + the first-IDX lead
 TX_LPX_SHIFT = {0: 0, 1: 0, 2: 4}   # measured at the tx pins (LPX 1 invisible, LPX 2 = one 4-cycle beat slot)
 assert TX_WORST + max(TX_LPX_SHIFT[TX_LPX], TX_LPX_SHIFT[TX_LPX_BOOKED]) <= TX_SM * TX_R, 'TX grid cannot absorb LPX'
-TX_OFF = 5               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY
+# tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY.  Measured 5 on 10-19 with
+# FWD 2 / no out-face; the 11-03 dsdv_bk_g re-forms (S81-RF1 FWD 2->3, RF 4 OFACE +1) put the slot 2 edges later and
+# PIN_TO_PIN followed but TX_OFF did not (S81-PLAN-1 11-10: idxd tree bench first tx beat +2 on every die, 6/6 cases).
+TX_OFF = 5 + (FWD - 2) + OFACE
 TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
 VMUX_LAT = 2             # dsdv_idx_vmux pin -> pin
 TX_CTL_LEAD = 16         # the tx-job CTL enters vi_n this many edges before the drain CTL
