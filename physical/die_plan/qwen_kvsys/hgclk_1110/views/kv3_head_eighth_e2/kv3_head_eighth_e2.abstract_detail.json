@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.abstract_detail_rebind.v1",
+ "tool": "tools/die_plan/abstract_detail.py (main 9aedf25ac0) tcl --bloat-factor 1 | openroad; splice; check",
+ "routed_db": "epyc4:/srv/opentallas-scratch2/claude/kv-plan-2/e2r/kit_b/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.odb",
+ "splice": {
+  "base": "epyc4:/srv/opentallas-scratch2/claude/kv-plan-2/e2r/kit_b/kv3_head_eighth_e2__216x216/views/kv3_head_eighth_e2.lef",
+  "base_sha256": "e9a0e0c0e07cd6864b45640eba71808fd4861e68b3dbfe7b183145bd6768a7ab",
+  "detail": "hd/detail.lef",
+  "out": "hd/kv3_head_eighth_e2.lef",
+  "out_sha256": "04a8f2f4c0a8d6400419e1a5645a96a08b23e42b223aa2300d14312a66e94199",
+  "layers_detailed": [
+   "M6",
+   "M7"
+  ],
+  "rects": {
+   "M6": 14984,
+   "M7": 6245
+  },
+  "pg_pin_layers": {
+   "VSS": [
+    "M5"
+   ],
+   "VDD": [
+    "M5"
+   ]
+  },
+  "detail_pins_equal_base": true,
+  "check_ok": true,
+  "problems": []
+ },
+ "check": {
+  "check_ok": true,
+  "layers_detailed": [
+   "M6",
+   "M7"
+  ],
+  "pin_windows": [],
+  "problems": []
+ },
+ "note": "KV-PLAN-2 11-10: same form as the hgclk_1030 e2 view (class C M6/M7 detail, no pin windows), on the re-signed spread-pin e2 routed DB"
+}
