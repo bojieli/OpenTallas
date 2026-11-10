@@ -401,6 +401,55 @@ class Classify(unittest.TestCase):
         self.assertIn(cls, KW.CLASSES)
 
 
+CLAND = ("Error: global_place.tcl, 5 OT_CLAND no legal nonoverlapping row/site in reserved band for "
+         "u_bound.u_cland_reader_start_ft20_i_4/q$_SDFF_PN0_ (reader-start:ft20_i)")
+REFUSED_THEN_RAN = ("ot-heavy: NOT RUN: no memory on dear-crayfish within 599 s (need 0.7 x 29 = 20 GB, admissible 4 GB)\n"
+                    "ot-run: NOT RUN on epyc2: ot-heavy exit 75\n"
+                    "KW_SSH_RETRY place try 2 (ot-run NOT RUN before the command ran)\n"
+                    "ot-run: epyc2 admits\n[INFO GPL-0002] DBU: 1000\n" + CLAND + "\n"
+                    "make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1\n"
+                    "ot-run: RAN on epyc2 (unit oth-ubuntu-771973-1794291072): exit 2\nKW_PLACE_RC=2\n")
+
+
+class FirstRealClassWins(unittest.TestCase):
+    """KW43-77 11-10: a NOT RUN try retried by a try that RAN is superseded; the ran try's failure class decides, also
+    when reclassify / auto-rejudge re-reads the whole stored stage log"""
+
+    def test_refused_try_then_ran_try_is_the_ran_class(self):
+        cls, why = KW.classify("place", REFUSED_THEN_RAN)
+        self.assertEqual(cls, "FLOW")
+        self.assertIn("OT_CLAND", why)
+
+    def test_not_run_without_a_later_run_stays_infra(self):
+        self.assertEqual(KW.classify("place", "ot-run: NOT RUN on epyc2: ot-heavy exit 75\n")[0], "INFRA")
+        # a step that ran, then the stage's own try refused: the refusal is the last word
+        txt = "ot-run: RAN on epyc2 (unit u1): exit 0\nPROBE OK\not-run: NOT RUN on epyc2: ot-heavy exit 75\n"
+        self.assertEqual(KW.classify("place", txt)[0], "INFRA")
+        # a ran try that itself died on infra stays INFRA
+        self.assertEqual(KW.classify("place", "ot-run: NOT RUN on epyc2: ot-heavy exit 75\n"
+                                     "No space left on device\not-run: RAN on epyc2 (unit u2): exit 1\n")[0], "INFRA")
+
+    def test_reclassify_keeps_the_collected_flow_class(self):
+        with tempfile.TemporaryDirectory() as td:
+            d = Path(td) / "a25"
+            d.mkdir()
+            (d / "place.log").write_text(REFUSED_THEN_RAN)
+            (d / "result.json").write_text(json.dumps({
+                "stage": "place", "verdict": "FAIL", "errors": CLAND + "\nmake[1]: *** Error 1",
+                "tail": "ot-run: RAN on epyc2 (unit oth-ubuntu-771973-1794291072): exit 2\nKW_PLACE_RC=2\n"}))
+            res = json.loads((d / "result.json").read_text())
+            cls, why = KW.classify("place", res["errors"] + "\n" + res["tail"])
+            self.assertEqual(cls, "FLOW")
+            rec = {"status": "FAIL", "class": cls, "reason": why, "stage": "place", "dir": str(d),
+                   "attempt": 25, "infra_base": 22}
+            st = {"items": {"qwen_kvsys|kv3_pv_v12|b276d65256f4c": rec}}
+            ch = KW.reclassify(st, write=True)
+            self.assertEqual([c for c in ch if c[2][0] != "FLOW"], [])
+            self.assertEqual(rec["class"], "FLOW")
+            self.assertIn("OT_CLAND", rec["reason"])
+            self.assertEqual((rec["attempt"], rec["infra_base"]), (25, 22))
+
+
 class GeomVerdict(unittest.TestCase):
     def test_lines(self):
         L = "AP_AUTO_GEOM AUTO-GEOM {} kv3 x KIT-WAVE 3_place {}"
