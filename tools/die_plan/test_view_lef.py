@@ -271,12 +271,22 @@ class SolidRoutedObs(Base):
     def test_stage_writes_solid_copy_and_logs(self):
         lef_rel = self.put("v/m.lef", routed_lef(frag_layers=("M6", "M7"), step=1.0))
         lib_rel = self.put("v/m_tt.lib", lib("m"))
-        out = self.stage(lef_rel, lib_rel)                             # default 2.88-um grid: every cell touched
+        (self.kd / "macros" / "m.lef").write_text((self.d / lef_rel).read_text())
+        out = V.stage_kit_macros(self.kd, [("u", "m", lef_rel, lib_rel, 0, 0, "R0")], self.resolve,
+                                 log=self.lines.append, solid=True)   # default 2.88-um grid: every cell touched
         staged = (self.kd / "macros" / "m.lef").read_text()
         self.assertEqual(staged.count("RECT  0 0 10 10"), 5)          # M1-M3 + M6 + M7
         self.assertTrue(any(l.startswith("OT_SOLID_OBS ") for l in self.lines))
         self.assertIn("solid OBS M6,M7", out[0][2])
         self.assertEqual((self.d / lef_rel).read_text().count("RECT  0 0 10 10"), 3)   # the plan LEF is never edited
+
+    def test_stage_default_is_off_and_byte_identical(self):
+        text = routed_lef(frag_layers=("M6", "M7"), step=1.0)
+        lef_rel = self.put("v/m.lef", text)
+        lib_rel = self.put("v/m_tt.lib", lib("m"))
+        self.stage(lef_rel, lib_rel)                                   # no solid= : the pre-11-09 behaviour
+        self.assertEqual((self.kd / "macros" / "m.lef").read_text(), text)
+        self.assertFalse(any(l.startswith("OT_SOLID_OBS ") for l in self.lines))
 
 
 if __name__ == "__main__":

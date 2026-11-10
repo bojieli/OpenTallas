@@ -217,7 +217,7 @@ def _has_own(lib, resolve):
     return resolve(own_lef_path(lib)).is_file()
 
 
-def stage_kit_macros(kd, macros, resolve, prune=True, log=print, solid=True):
+def stage_kit_macros(kd, macros, resolve, prune=True, log=print, solid=False):
     """macros = type_macros rows.  Prints one OT_VIEW_LEF line per master that disagrees; prunes kd/macros/<lef> when the
     view has no LEF of its own; a metal OBS layer that is the core's own routing fragments is staged solid
     (solid_routed_obs, OT_SOLID_OBS line).  Clean masters print nothing and their staged copy is untouched (byte-identical kits).

@@ -1204,6 +1204,16 @@ EDGE_SPLIT_DIES = {"qwen_compute", "qwen_kvsys"}  # KV-SYSSD-2 11-06 (COORD appr
 # DIE-KV-84 11-06 (COORD 14:4x hold rule): macro sinks keyed on their clock pin, roots kept out of the macro; opt-in
 # per die so QC kits stay byte-same.
 EDGE_SPLIT_MACRO_PIN_DIES = {"qwen_kvsys"}
+# KV-PLAN-2 11-09 (COORD/ROOT-MERGE-57 scope ruling): solid staging of a hard core's routed upper-layer OBS fragments
+# (view_lef.solid_routed_obs) changes kit bytes, so it is opt-in per die: on by default only for these dies; any plan
+# overrides with die.kit_solid_routed_obs = true / false (its own plan event).  Every other die stays byte-identical.
+SOLID_OBS_DIES = {"qwen_kvsys"}
+
+
+def solid_obs_on(P):
+    die = getattr(P, "die", None) or {}
+    v = die.get("kit_solid_routed_obs")
+    return bool(v) if v is not None else die.get("name") in SOLID_OBS_DIES
 
 
 # DIE-KV-84 11-06 (COORD 16:2x(b)): an edge clock the plan declares "cdc": "synchronized" + "cdc_evidence" is
@@ -4248,9 +4258,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
-        # KV-PLAN-2 11-09: routed upper-layer OBS fragments of a hard core staged solid (view_lef.solid_routed_obs); bump kits
+        # KV-PLAN-2 11-09: routed upper-layer OBS fragments of a hard core staged solid (view_lef.solid_routed_obs) on opt-in
+        # dies only (solid_obs_on: qwen_kvsys default, plan key die.kit_solid_routed_obs); bump kits
         # (PHY macros: bump access by design, their upper OBS is already solid) keep the exported LEF as for prune
-        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports, solid=not bump_ports)
+        _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports,
+                             solid=solid_obs_on(P) and not bump_ports)
         # DIE-QC-97 11-09: a hard core with clock_entry_access gets its access abstract by construction (cbx_q10 NL
         # DRT-0073: the signed blanket-OBS LEF was staged, the M5 ck had no access point)
         stage_clock_entry_lefs(P, tn, kd, macros, lambda q: _CR.resolve(q, base))
