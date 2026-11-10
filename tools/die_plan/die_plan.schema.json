@@ -6535,6 +6535,14 @@
       "minimum": 1
      }
     },
+    "cland_face_home_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "id_straps_in_type_types": {
      "type": "array",
      "uniqueItems": true,
