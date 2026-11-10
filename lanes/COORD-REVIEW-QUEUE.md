@@ -35921,6 +35921,68 @@ FAILED [AUTOPILOT 7f864770fc8f] 2026-11-10 11:52:22 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-10 12:01 PST RESULT+PLAN [DIE-QC-97 -> COORD, QC-FAIL-22, KW-FIX-43, PLAN-ROUTE-1] cb* post-CTS FF hold class (cbf_q11 -372.13/13,261, cbn_q00__cldbcda913 -413.12/13,737, cbx_q10__cl89936551 -343.80/10,072): ONE mechanism, the core-tap landing leg. Not the rings, not repair, not port. MEASURED: read-only rerun of the kit's own hold_gate.tcl setup on 4_cts.odb (FF libs plus macro _ff.lib, core_taps_ff.sdc, setRC) on private copies (hub dq97/cbhold, docker 24g); it reproduces all three gates exactly. cbn split: 4,919 fabric reg -> qfd_tile core input pins (worst -413.12; all 794 endpoints beyond the -360 stop are these), 8,706 fabric reg->reg (worst -211.89, none beyond the stop), 110 cland start flops posedge (worst -222, none beyond the stop), 2 port-started. 0 ring negedge sd_c/dsel endpoints. The worst 20 are all u_fab_*.u_st.tap_d[195..213] -> u_t10/u_t00 tap[*]. Gap 427-434 ps = capture ck -190.5 (FF source latency -374 plus a 183.5 ps leg) + ETM hold 596.6 - launch ck -28. CAUSE: the leg from the partition clk_c* port (on the core edge) to the core ck pin, which sits at the macro centre (NK LEF 228.95,578.6 in 457.9 x 1157.8), is a single 232 um net costing 130.6 ps after the last BUFx16f, 183.5 ps FF / 198 ps TT in total. schema.core_tap_early_ps (declared core insertion 665.8 TT / 576.5 FF, measured from the ck pin, minus common latency 250/202.5) assumes a zero leg, so every core captures about 184 ps late, by construction. CTS logs agree: OT_TAP_CORE 'pin -218 + internal 818 = 600, WARN early core tap still late' on 4/4 cores in all three kits. cbf and cbx are the same leg (capture ck -190.2..-190.5; cbx NL u_t30 -235.8). FORM (one class fix, generator): core_tap_early_ps also subtracts a modelled port-to-ck leg (from the LEF ck-pin depth and the per-um clock wire rate, TT and FF), so the spine delivers clk_c* about 184 ps (FF) earlier and the core lands on the plan's 250 target. INFERRED linear effect: cbn -413 -> about -230 (794 -> 0 beyond the stop, level with its fabric reg->reg -212, inside in-flow repair), cbf -> about -189, cbx -> about -160. Core -> fabric hold +223 -> about +39, still met. Core-input setup worsens by the same amount (the plan's contract, to be checked in die STA). Fresh kits (core_taps/sdc inputs change). Before the build: the die clock owner checks that the spine root can give clk_c* about 198 ps TT more early latency; branch and item_inputs to follow. CORRECTION to the 11:51/11:57 reading: sle_hc0__cl05696ed1 and slw_stm_v1 FF hold are NOT ring negedge capture. All of their fclk_in_* ring capture groups are positive in signoff/ff STD_MIN (+15..+25 ps; sd_c -> dsel +78/+90); the sd_c paths named were from the SDC_MAX setup dump. sle_hc0 -100.65 is fabric tap-to-tap skew (u_u_xh0.p_ib -> r_ib, clk_t1 -> clk_t2, 112 ps); slw_stm_v1 -106.99 is input-port hold (NEEDS_PARENT) into a clk_t29 tap carrying a 6-stage tap-balance chain (about 115 ps). Those two go to the fabric tap-skew/tap-balance class, not this form. SIDE FLAG: the cbn FF max check out of the cores shows -1,482 / -1,397 ps (u_t00 -> u_r8b_strap_*.r[0][312]; u_t01 -> u_d3_u_t_0_1_n_y.r[0][112]); it needs a look before setup sign-off.
 FAILED [AUTOPILOT 791e06548879] 2026-11-10 12:02:21 PST AUTOPILOT -> KIT-WAVE-3: FAILED 791e06548879 s81/ot_s81sl_leaf__t40__clf8bbdae1 (STRUCTURAL/grt-overflow): GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. | kit localhost:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__clf8bbdae1/attempt_16/gen/ot_s81sl_leaf__t40__clf8bbdae1 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-10 12:02 PST RESULT [DIE-QC-97 -> COORD, QC-FAIL-22, KW-FIX-43] btb north-edge halo REFUTED for slw_st_a_v2 and sle_ctl__cla4f6f12f; both rows are cland ring south-row congestion instead. MEASURED (kit LEF, congestion.rpt markers, landing bands; read only). (1) The btb SRAM ot_sram_1r1w_128x256_m1_r2c2 (94.824 x 41.064) has 0 pins on its N edge. All 819 signal pins are M4 on the W (410) and E (409) edges, and the OBS is M1-M4 full. So there is no escape demand on that edge. (2) slw_st_a_v2__cl9f076a5c (4fccfeabe37d, epyc7 kw27-wave-1109 a13): 152 markers (overflow 200) at x 476.5-564.9, y 167.0-179.6, 143 of them at y 177.3-179.0. The net refs in them are u_bound.u_cland_x_fw_ctl_i 3,691, btab 0. That ring's band is {476.02 168.48 568.22 218.16}, exactly the strip and 6.4 um above btb[0]'s top. Its 537 x_fw_ctl_i input pins are on the S face at the same x span, so they run about 168 um north over the hc0 ring band and btb[0] before landing. Cause: the ring band is placed far from its own pin face. (3) sle_ctl__cla4f6f12f (0073884d747e) has no SRAMs at all (0 macros). Its markers at y 0-27, x 56-340 are inside and under ring u_cland_b_tw_data_i {17.28 17.28 379.30 62.64}, which takes 2,104 S-face pins; this matches QC-FAIL-22's own S-face cland clump reading. FORM (DIE-QC-97, building): both rows join the cland ring class. (a) Per type, budgets.cland_strip_rows_types (OT_CLAND_STRIP_ROWS), sized from the measured demand, as a fresh kit. (b) A landing_place.py class fix so that each ring band is packed nearest to its own pin face and no ring's pins cross another ring's band, plus a class-size list of rows whose ring band sits more than 50 um from its face. Branch and KW-FIX-43 entries follow with a dry-run and a private GRT pre-check.
+FAILED [AUTOPILOT cc50d375efa0] 2026-11-10 12:02:34 PST AUTOPILOT -> KIT-WAVE-3: FAILED cc50d375efa0 s81/ot_s81sl_leaf__t55 (CRASH/infra-stopped): exit 137, no OOM line in the run logs: stopped from outside | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t55/gen/ot_s81sl_leaf__t55 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT ddfecd820a35] 2026-11-10 12:02:38 PST AUTOPILOT -> KIT-WAVE-3: FAILED ddfecd820a35 hbm/q_spb0 (CRASH/flow-error): exit 12 | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/q_spb0/attempt_16/gen/q_spb0 src claude/hbm-plan-1-1109@4393753cf0b4 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-10 12:04 PST RESULT+READY KW-FIX-44 -> COORD, ROOT-MERGE-57, lane owners (die-hbm-97, head-92, hbm-cores-b, dq97): 6 epyc7 autopilot waiters moved to epyc8 and admitted; epyc8 added to the autopilot/sealed ot-run tables; ot-run reconcile READY claude/kw-fix-44-otrun-recon-1110@394439d79aa
+  REBAL-E8-1110 (epyc7 -> epyc8 rebalance) + OTRUN-RECON-1110 (installed ot-run vs main). DO_NOT_COUNT, no running job touched.
+  A. Why epyc8 stayed empty. ONBOARD-4 put epyc8 only into the lanes' ot-run (rehost1). The autopilot/wave chain
+     (kw10 -> kw42/ot-run-base -> fleet/kw43-rootreal/ot-run), the sealed backend (fleet/isolate-1-5ec90f1906/ot-run) and
+     sealed-ap.json / sealed-wave.json (hosts, ap_fetch_hosts) did not have it. Sealed waiters re-hand every 600 s, but only
+     to hosts in those tables. After 12 rounds they wait on epyc7 with no time limit.
+     Fixed 11:49 with ONBOARD-4's same 6 one-line edits:
+     - kw43-rootreal dab62dac -> b2b86013 and isolate-1 ccc4c7b6 -> 46677b11. Backups *.bak-kw44-epyc8-1110.
+       Both --status print epyc8 admits 786 GB.
+     - Both sealed confs: hosts + ap_fetch_hosts += epyc8 (backups *.bak-kw44-epyc8-1110).
+  B. epyc7 waiters at 11:47 [MEASURED, ot-heavy processes whose only child is sleep]: 20 waiting, 4 others.
+     Moved: the 7 autopilot sealed route jobs, oldest first. The kits are self-contained: the sealed spec brings the inputs
+     by sha, the kit is fetched from epyc7, and copy_back returns the result to the epyc7 kit. No hand copy was needed.
+     How: TERM to the exact epyc7 ot-heavy waiter pid, after checking its tag and that its only child is sleep. The client
+     reports "NOT RUN on epyc7: ot-heavy exit 143". The autopilot classifies infra-notrun and resubmits (1/3). The sealed
+     wrapper places it on epyc8. Pilot first, then the rest:
+       ddfecd820a35 q_spb0 (12.9 h)             -> SEALED on epyc8, admitted 11:52 after 1 s
+       85a3ec615891 q_spb0__physical_v1 (12.0 h) -> epyc8 12:02, 0 s
+       3ea8d56e202a q_su30 (12.0 h)             -> epyc8 12:02, 0 s
+       7912c2b57fae q_b012__physical_v1 (9.2 h)  -> epyc8 12:02, 1 s
+       c2d63fe7a05b q_b013 (4.5 h)              -> epyc8 12:02, 1 s
+       220ee71b1db4 q_su21__physical_v1 (0.3 h)  -> epyc8 12:02, 0 s
+       b70788373e8e q_b002__physical_v1          -> admitted on epyc7 itself before I reached it (not touched)
+     Left alone: c443ffed94dc q_b003__physical_v1 (4.0 h), one of the 4 c93de71a-bundle jobs you said stay.
+     I did not move the 6 lane clients. Each pins --hosts epyc7 (or epyc4,epyc7) in its own command, so a resubmit by the
+     lane would go back to epyc7; only the owner can re-pin. For each owner: unpin or add epyc8 (the lanes' ot-run has
+     had it since 10:12), then cancel your own waiter:
+       15.5 h 96 GB die-hbm-97-b4/glue_nw finish (hub pid 2135050, --hosts epyc4,epyc7)
+       11.6 h 64 GB head-92/spe_cons/hd_spn_end route (3850451)
+       10.4 h 96 GB hbm-cores-b/opsbg_C3.sh (2199699, epyc4,epyc7)
+       10.4 h 80 GB hbm-cores-b/wsw_H13_eco1.sh (2002322, epyc4,epyc7)
+        2.4 h 48 GB die-hbm-97-vecd/r2 row v32e0 (2234266)
+        0.0 h 48 GB dq97/cbnp cbn_q01 place (2941886, epyc7,epyc2)
+     Also not moved: the 6 epyc7-local lec_async.sh watch LEC waiters (q_b103/q_b101/q_b000/q_spu0 hbm, kv3_io_cor(_v1)).
+     They run next to their kit on purpose. None is NEAR-CLOSE.
+     ot-run --status 11:55: epyc7 waiters 13:768 GB (22:1200 GB at 11:47); epyc8 admits 833 GB.
+  C. Wave host choice: kit_wave.json has no epyc8 anywhere (hosts, gen_hosts, place_prefer). Wave place/route still
+     reach it through the sealed fetch (place_fetch true, now with epyc8 in ap_fetch_hosts). gen needs the source trees,
+     which were missing on epyc8. Staging started 12:0x: kw44-stage-src5 on epyc8 runs one rsync -aH (hardlinks kept, 83 GB
+     real) of the 5 die src trees from epyc7 to the same paths (dkv97/src_zb, kw43/src_t51f_pbp, kw42/src_head_hp1,
+     kw41/src_qcsw2, kw41/src_hbmf4_m3). When it finishes and checks out by a checksum dry run, I add epyc8 to each die's
+     gen_hosts/hosts/place_prefer (+_base) under the kit_wave lock and post.
+  D. OTRUN-RECON-1110. The hub-installed ot-run (rehost1, which lanes reach through ~/.local/bin/ot-run) vs main, hunk by hunk:
+     - main is right: ISOLATE-1 --job (docstring, JOB_BIN/job_wrap, arg parse, cmd wrap) and ro_source_binds (STORE-1 :ro git roots).
+     - installed is right: HOSTS/HOST_ROLE (main still lists epyc5/6 and lacks epyc7/8), the root-floor and rootfs-free host
+       tables, SPILL_DST_ROOT_FLOOR, NO_AVX512 (main lacks epyc7/8, both Zen 3).
+     - installed-only fixes never in git (from the ac3b 11-07 copy, also in isolate-1): admission_unit(), which counts the
+       "ot-heavy: admitted on H as oth-..." line as a start as well as OT_RUN_START. Also a cancelled waiter now prints
+       "START STATE UNKNOWN; verify..." instead of a definite NOT RUN.
+     I took the right side of each hunk: merged = main + the installed-only hunks. Checks: --selftest choose PASS (31);
+     dry --pick with --hosts pinned to each of epyc2/intel1/localhost/epyc4/epyc7/epyc8 returns that host; a --job pick works.
+     main's tools/fleet/test_ot_run*.py: 248 pass, 16 fail, the same 16 that fail with main's own ot-run.
+     Deployed 11:55: rehost1 ot-run 7d0184a7 -> 9c47ddf7, backup ot-run.bak-kw44-recon-1110. A tick was in progress then;
+     the file is swapped atomically and running clients keep the code they loaded. New for lanes: ro_source_binds and --job.
+     READY: claude/kw-fix-44-otrun-recon-1110 @ 394439d79aa88ba6583323ae2a8e1f4c9165974f on main 9aedf25ac00
+     (tools/fleet/ot-run +18/-10, ls-remote read back).
+     Still separate: kw43-rootreal (autopilot unsealed) and isolate-1 (sealed) are older forks of the same file, 159 and
+     135 lines from main. Next, as a second step, I can point both at the merged file the same way; that needs the same
+     checks. Your call.
+  E. Queued (low priority): lec_tools_copy rc 23 (snapshot never staged) -> stage-or-fail-at-preflight.
 - 2026-11-10 12:03 PST STATE+ASK [S81-SVCRS-3 -> COORD, KW-FIX-43, ROOT-MERGE-57] svc_rs provider kits started; CTRL/ETAP need an owner ruling. DO_NOT_COUNT, nothing signed off.
   **PROVIDER TABLE** (one kit per design; kits on claude/s81-svcrs-3-provkits-1110 @ 6d56b1396e, checked with ls-remote; each has a NEAR-CLOSE row; --direct)
   | design | kit | host | stage | sign-off |
