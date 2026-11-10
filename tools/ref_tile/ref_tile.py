@@ -717,6 +717,28 @@ def pin_hook_flops_only(s: dict) -> bool:
                 and (s.get("pin_hook_before_flops") or s.get("pin_hook_after_flops")) and s.get("recipe", 1) >= 2)
 
 
+PBP_TCL = "physical/common_flow/port_buf_at_pin.tcl"
+PBP_DPL_TCL = "physical/common_flow/out_flop_release_pbp.tcl"
+
+
+def port_buf_at_pin(s: dict) -> bool:
+    """io_flop_at_pins.port_buf_at_pin (S81-SVCRS-3 11-10, COORD face form): at PRE_DETAIL_PLACE, after the pin-flop
+    release, every output port's single BUF / INV driver is placed on its pin face (port_buf_at_pin.tcl).  A pass-through
+    register anchored at its INPUT face (IRG hslice k_key -> ko_key skew lines) otherwise leaves the port buffer
+    mid-die: 25-47 um of wire plus set_load 80 fF reached 502 ps port slew (limit 260), and repair_design does not split
+    wires shorter than its max wire length (61 found, 0 repaired).  Default ON for s81svc_* (svc_rs provider) kits, off
+    elsewhere, so every other kit regenerates byte-identically; an explicit true / false overrides."""
+    io = s.get("io_flop_at_pins")
+    if not io:
+        return False
+    v = io.get("port_buf_at_pin") if isinstance(io, dict) else None
+    if v is None:
+        return str(s.get("name", "")).startswith("s81svc_")
+    if not isinstance(v, bool):
+        raise SpecError("spec: io_flop_at_pins.port_buf_at_pin must be true or false")
+    return v
+
+
 def kit_pin_hooks(s: dict) -> bool:
     return pin_hook_wrapper(s) or pin_hook_flops_only(s)
 
@@ -742,6 +764,8 @@ def gen_pin_hooks(s: dict) -> dict:
             pre_gpl.append(f"source /src/{rel}")
         pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (pin flops, no hold stages): release the pin flops for DPL",
                    f"source /src/{QDM}/out_flop_release.tcl"]
+        if port_buf_at_pin(s):
+            pre_dpl.append(f"source /src/{PBP_TCL}")
         for rel in s.get("pre_dpl_extra", []):
             if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
                 raise SpecError("pre_dpl_extra must name safe relative repo Tcl files")
@@ -789,6 +813,8 @@ def gen_pin_hooks(s: dict) -> dict:
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
+    if port_buf_at_pin(s):
+        pre_dpl.append(f"source /src/{PBP_TCL}")
     # Actual repair/cone ownership can be reconciled only after FIRM pin cells are released.
     # Keep this opt-in hook in both the generated stage and its frozen source manifest.
     for rel in s.get("pre_dpl_extra", []):
@@ -2593,11 +2619,11 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if isinstance(f, bool) or not isinstance(f, (int, float)) or not 0.0 <= float(f) <= 1.0:
                 raise SpecError("spec: io_flop_at_pins.through_frac must be a number in 0..1")
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_fwd_lane/lane_flop_thru.tcl")
-            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+            extra.append(f"--step-tcl PRE_DETAIL_PLACE={PBP_DPL_TCL if port_buf_at_pin(s) else 'physical/qwen_die_masters/out_flop_release.tcl'}")
             extra.append(f"--orfs-var OT_IOFLOP_THRU_FRAC={float(f)}")
         else:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
-            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+            extra.append(f"--step-tcl PRE_DETAIL_PLACE={PBP_DPL_TCL if port_buf_at_pin(s) else 'physical/qwen_die_masters/out_flop_release.tcl'}")
         if s["io_flop_at_pins"].get("allow_none"):
             # the recipe default: a tile without a single-flop port (pure macro / child feed-through) is not an error
             extra.append("--orfs-var OT_OFLOP_ALLOW_NONE=1")
@@ -2799,6 +2825,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and (ROOT / str(v)).is_file())
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
+        if port_buf_at_pin(s):
+            out += [PBP_TCL, PBP_DPL_TCL]
         if s["io_flop_at_pins"].get("through_frac") is not None:
             out.append("physical/qwen_fwd_lane/lane_flop_thru.tcl")
     if s.get("outhold"):
