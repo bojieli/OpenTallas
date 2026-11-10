@@ -1233,6 +1233,40 @@ def test_declared_timed_face_buses(tmp_path):
     assert face_guard.kit_timed_list(tmp_path / "none") == []
 
 
+def test_declared_intra_pair_seam(tmp_path):
+    """HBM-Q2NF-RF 11-10 (COORD, Q2NF split): a declared seam bus turns its shared / unregistered findings into
+    seam_declared; a merged flop passes only with at most ONE non-seam bit; feedthrough, undeclared and die-facing
+    buses keep failing; the file is fail-closed."""
+    seam = {"ft0_o": frozenset({"merged"})}
+    assert face_guard.guard(NET_FT1)["verdict"] == "FAIL"
+    r = face_guard.guard(NET_FT1, ft1={"ft1"}, seam=seam)          # ft0: in-face (die) + out-face (seam) share a flop
+    assert r["verdict"] == "PASS" and len(r["seam_declared"]) == 4 and r["ok"] == 6, r
+    assert face_guard.guard(NET_FT1, ft1={"ft1"}, seam={"ft0_o": frozenset({"shared"})})["fail_counts"] == {"merged": 4}
+    two = NET_FT1.replace(".QN(ft1_o));", ".QN(ft1_o));\n  INVx1_ASAP7_75t_R _9_ (.A(ft0_o[0]), .Y(x_o));") \
+        .replace("output ft1_o;", "output ft1_o; output x_o;").replace("(clk, ft0_i,", "(clk, x_o, ft0_i,")
+    assert face_guard.guard(two, ft1={"ft1"}, seam=seam)["verdict"] == "FAIL"   # extra load: still a finding
+    comb = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                          "NAND2x1_ASAP7_75t_R _3_ (.A(_1_), .B(_0_), .Y(o[1]));")
+    r = face_guard.guard(comb, seam={"o": frozenset({"unregistered", "shared"})})
+    assert r["verdict"] == "PASS" and r["seam_declared"], r
+    assert face_guard.guard(comb, seam={"o": frozenset({"merged"})})["verdict"] == "FAIL"
+    assert face_guard.guard(comb, seam={"a": frozenset({"unregistered", "shared"})})["verdict"] == "FAIL"
+    feed = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "assign o[1] = a[1];")
+    assert "feedthrough" in face_guard.guard(feed, seam={"o": frozenset(face_guard.SEAM_CLASSES),
+                                                         "a": frozenset(face_guard.SEAM_CLASSES)})["fail_counts"]
+    doc = dict(schema=face_guard.SEAM_SCHEMA, partner="ot_q2nf_lk", buses={"o": ["shared", "merged"]},
+               ruling="COORD 11-10", reason="intra-pair seam, timed by pair STA")
+    assert face_guard.seam_face_map(doc) == {"o": frozenset({"shared", "merged"})}
+    for bad in (dict(doc, schema="x"), dict(doc, partner=""), dict(doc, buses={}), dict(doc, buses={"o[1]": ["shared"]}),
+                dict(doc, buses={"o": []}), dict(doc, buses={"o": ["feedthrough"]}), dict(doc, buses={"o": ["shared", "shared"]}),
+                dict(doc, buses=["o"]), dict(doc, ruling=""), dict(doc, reason=None)):
+        with pytest.raises(ValueError):
+            face_guard.seam_face_map(bad)
+    (tmp_path / "seam_face.json").write_text(json.dumps(doc))
+    assert face_guard.kit_seam_map(tmp_path) == {"o": frozenset({"shared", "merged"})}
+    assert face_guard.kit_seam_map(tmp_path / "none") == {}
+
+
 def test_face_lockup_latch_flop_latch_port():
     """S81-RF1 (DIE-S81-51/CLK 11-03): flop -> ONE transparent-low latch (DLLx1 / $_DLATCH_N_) -> port is a registered
     face; a second latch, a high-transparent latch or a latch with fan-out is not."""
