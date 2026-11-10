@@ -113,3 +113,67 @@ def test_schema_accepts_the_knobs():
     raw = copy.deepcopy(T.TINY)
     raw.setdefault("clock", {}).update(landing_ring_fanout_max=32, landing_ring_status_reg=True)
     schema.validate(raw) if hasattr(schema, "validate") else schema.Plan(raw)
+
+
+# ---- part (d) RSTREP-1: same-D copies of the last reader-START stage, ring reset loads split ----
+from clock_landings import ring_reset_copies
+
+
+def _reader_start(p):
+    p["partition_types"]["B"]["clock"]["landing_reader_start"] = dict(
+        depth=2, branches={"y": {"stages": [dict(xy_um=[3., 3.], raw_reset="cland_reset_y"),
+                                            dict(xy_um=[6., 3.], raw_reset="cland_reset_y")]}})
+
+
+def test_reset_copies_count():
+    assert ring_reset_copies({}, 549, 4, 2) == 0 and ring_reset_copies(None, 549, 4, 2) == 0
+    c = {"landing_ring_fanout_max": 32}
+    assert ring_reset_copies(c, 549, 4, 2) == 4      # 9 chunks x 8 select flops: 3 groups of <= 4 chunks + oh
+    assert ring_reset_copies(c, 64, 4, 2) == 2
+    assert ring_reset_copies(c, 549, 8, 2) == 6      # 16 flops / chunk: groups of 2
+    assert ring_reset_copies(c, 549, 4, 2, read_chunk=48) == 1 + 3     # 12 chunks of 48 bits
+    assert ring_reset_copies({"landing_ring_fanout_max": 4}, 64, 4, 2) == 2    # over-wide chunk: one per group
+
+
+def test_reader_start_copies_rtl():
+    p, t = strap_vehicle()
+    _wreg(p)
+    _reader_start(p)
+    base = Landings(p, t).type_rtl("B", B_BODY)
+    assert "ot_dp_landing_relay_rep" not in base and "rst_xn" not in base and "RSTREP" not in base   # legacy
+    p2, t2 = strap_vehicle()
+    _wreg(p2)
+    _reader_start(p2)
+    p2.setdefault("clock", {})["landing_ring_fanout_max"] = 32
+    lg = Landings(p2, t2)
+    rtl = lg.type_rtl("B", B_BODY)
+    assert ".RSTREP(" in rtl and ", .rst_xn(cland_reader_start_y_1_x)" in rtl
+    k = int(rtl.split(".RSTREP(")[1].split(")")[0])
+    assert k >= 2
+    assert f"wire [{k - 1}:0] cland_reader_start_y_1_x;" in rtl
+    assert (f'(* keep = "true" *) ot_dp_landing_relay_rep #(.N({k})) u_cland_reader_start_y_1 (.clk(clk), '
+            f'.rst_raw_n(cland_reset_y), .d(cland_reader_start_y_0), .q(cland_reader_start_y_1), '
+            f'.qx(cland_reader_start_y_1_x));') in rtl
+    # the first stage, the ring's rst_n and the strap K are unchanged
+    assert "ot_dp_landing_relay u_cland_reader_start_y_0 (" in rtl and ".rst_n(cland_reader_start_y_1)" in rtl
+    assert CAB.strap_ties(t2["count_aligned"], p2) == CAB.strap_ties(t["count_aligned"], p)
+    r = lg.reset_placements["B"]["y"]["reader_start"]
+    assert r["ring_reset_copies"] == k and r["ring_reset_copies_added_cycles"] == 0
+    # same placement group (the copies sit inside the stage's kept instance)
+    import landing_place as LP
+    assert [g[0] for g in LP._reader_start_groups(p2["partition_types"]["B"])] == \
+        ["u_cland_reader_start_y_0", "u_cland_reader_start_y_1"]
+
+
+def test_no_reader_start_no_copies():
+    p, t = strap_vehicle()
+    _wreg(p)
+    p.setdefault("clock", {})["landing_ring_fanout_max"] = 32
+    rtl = Landings(p, t).type_rtl("B", B_BODY)
+    assert "RSTREP" not in rtl and "ot_dp_landing_relay_rep" not in rtl
+
+
+def test_rtl_module_has_rstrep():
+    import pathlib
+    src = (pathlib.Path(__file__).resolve().parents[2] / "rtl/common/ot_dp_clk_landing_ca.sv").read_text()
+    assert "module ot_dp_landing_relay_rep" in src and "parameter int RSTREP = 0" in src and "rst_xn" in src

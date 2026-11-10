@@ -1,0 +1,18 @@
+DIE-QC-97 RSTREP-1 (part d), 2026-11-10, epyc7 (all MEASURED)
+Why: baseline slw_fe_v2 4_cts.odb, ring nets with fanout > 32: 4 of 5 are reader-START reset trees
+(cland_reader_start_<bus>_2 DFFHQNx1 -> INVx1 -> BUFx2/16 -> 34..41 sinks: st_ei x2, cws3_i, x_su_l0_ctl_i); the 5th is
+st_ei u_ring.RP0T[1] (52, read-select term: DSREP 2).
+Form: under clock.landing_ring_fanout_max F the last reader-START stage of a strap-form ring with landing_reader_start is
+ot_dp_landing_relay_rep #(N) (same instance name and placement group; 1 + N kept ot_dp_landing_relay copies, same clk /
+rst_raw_n / d, 0 cycles); the cas takes the copies on rst_xn (RSTREP N): rst_n = control flops, rst_xn[0] = oh,
+rst_xn[1..] = read-select chunk groups (clock_landings.ring_reset_copies: N = 1 + ceil(NCH / max(1, F // (DSREP*DEPTH)))).
+LEC (../wlive/lec_rs.sh, mkys_rs.py; RTL = this commit's ot_dp_clk_landing_ca.sv):
+  rs  tops_rs.sv: dd_ei W=549 D4 WFALL WREG DSREP2 WC32 STATUS_REG1, gold one relay -> rst_n, gate relay_rep #(4) RSTREP 4:
+      4366/4366 proven (the per-copy equiv_add names do not resolve after flatten; not needed for the proof)
+  mutant LEC_MUT_LATE (copy rst_xn[2] one flop late): 3 unproven (dch[3..5].u_dsel.align) -> caught
+  mutant OT_MESO_CA_MUTANT_RSTREP (oh copy wrong): 8 unproven (u_ring.oh[0..7]) -> caught
+  def tops_def.sv: old file vs this file, legacy cas W=549 (rst_xn unconnected) + plain ca W=40: 5062/5062 proven
+status_reg harness (tb_status_reg_fo32_rs.sv, cand = fanout-32 + STATUS_REG + RSTREP 2): 8/8 STATUS_REG_PASS, SR mutants
+  caught, RC 0 (RTL before WLIVE-1; W=64 has no padding-only chunk)
+Reset loads (fo_synth.sh: generic yosys synth, hierarchy kept, leaf input pins): gold rst_n 49; gate rst_n 22,
+  rst_xn 10 / 7 / 7 / 7 (generic cells; ASAP7 counts come from the second pilot).

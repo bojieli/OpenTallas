@@ -72,6 +72,22 @@ def ring_status_reg_all(clock):
     return v
 
 
+def ring_reset_copies(clock, w, depth, dsrep=1, read_chunk=0):
+    """DIE-QC-97 CLAND-RING-FO part (d), RSTREP-1: extra same-D copies of a count-aligned ring's last reader-START stage
+    under clock.landing_ring_fanout_max F (0 = legacy, no copies).  The ring (ot_dp_clk_landing_cas RSTREP) keeps the
+    control flops on rst_n, gives the one-hot oh copy 0 and splits its read-select chunks (DSREP x DEPTH select flops each)
+    over the remaining copies in contiguous groups of at most max(1, F // (DSREP x DEPTH)) chunks.  w = ring W (before
+    the cas 64-bit padding), read_chunk = the wreg READ_CHUNK (0 = 64-bit chunks).  Returns 1 + number of chunk groups."""
+    f = ring_fanout_max(clock)
+    if not f:
+        return 0
+    rw = -(-int(w) // 64) * 64
+    nch = -(-rw // int(read_chunk)) if read_chunk else rw // 64
+    per = max(1, int(dsrep) * int(depth))
+    cpc = max(1, f // per)
+    return 1 + -(-nch // cpc)
+
+
 def ring_write_reg(plan, tn, bus):
     """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
     ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
@@ -1255,6 +1271,27 @@ class Landings:
                 elif dsrep is not None:
                     ring_mod = ring_mod[:-1] + f", .DSREP({dsrep}))"
                     self.reset_placements[tn][b].update(ring_dsrep=dsrep, ring_dsrep_added_cycles=0)
+                # RSTREP-1 (DIE-QC-97 (d)): the last reader-START stage becomes 1 + N kept same-D relay copies at its
+                # site (ot_dp_landing_relay_rep, same instance name, 0 cycles) and the ring splits its reset loads
+                if reader_start != "cland_start" and cat.get("straps"):
+                    nrep = ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
+                                             int(cat["rings"][b]["depth"]),
+                                             wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
+                    if nrep:
+                        rx = re.compile(r'^(    \(\* keep = "true" \*\) )ot_dp_landing_relay (u_cland_reader_start_\w+) '
+                                        r'(\(.*\.q\(' + re.escape(reader_start) + r'\))\);$')
+                        hits = [i for i, ln in enumerate(logic) if rx.match(ln)]
+                        if len(hits) != 1:
+                            raise LandingError(f"{tn}.{b}: RSTREP needs exactly one last reader START relay "
+                                               f"driving {reader_start}")
+                        m = rx.match(logic[hits[0]])
+                        logic[hits[0]] = (f"{m.group(1)}ot_dp_landing_relay_rep #(.N({nrep})) {m.group(2)} "
+                                          f"{m.group(3)}, .qx({reader_start}_x));")
+                        logic.insert(hits[0], f"    wire [{nrep - 1}:0] {reader_start}_x;")
+                        ring_mod = ring_mod[:-1] + f", .RSTREP({nrep}))"
+                        ring_rst += f", .rst_xn({reader_start}_x)"
+                        self.reset_placements[tn][b]["reader_start"].update(ring_reset_copies=nrep,
+                                                                            ring_reset_copies_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
