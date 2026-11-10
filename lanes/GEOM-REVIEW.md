@@ -6141,3 +6141,4 @@ QCcbf_q01a10 and KVsys_SD_v1a12 actualPNGsVIEWED; review/results at results/geom
 - Paths #3 and #4 start at east-face input ports and reach flops about 100 um inside, so they're short. They fail on arrival budget, not wire: a port-timing item for the parent.
 - Hold endpoints sit on the west face, at port inputs, so they're NEEDS_PARENT-class.
 - Class confirmed: the stm dupq gather pipeline form (af5a05b78501cf5e4 / stm sub-lane). No new class.
+- 2026-11-10 14:05 PST GEOM REQ [KIT-WAVE-1 sample s81/col_h9_r0_p1__t1] 3_place epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p1__t1/attempt_30/gen/col_h9_r0_p1__t1 (event e9eda32d41c); AUTO-GEOM PASS epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p1__t1/attempt_30/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
