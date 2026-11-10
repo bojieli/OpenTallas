@@ -17,7 +17,7 @@ def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     grow = re.search(r"proc cland_put_grow \{i rect tag kind\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    coll = re.search(r"proc cland_put_collector \{i rect tag \{kind collector\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     exits = re.search(r"proc cland_macro_exits \{cx cy hx hy\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     return occ + put + grow + exits + coll
 
@@ -28,6 +28,8 @@ set ff_x0 0; set ff_y0 0; set ff_x1 40000; set ff_y1 10800; set ff_rh 270; set f
 set ff_orient [dict create]; for {set r 0} {$r < 40} {incr r} { dict set ff_orient [expr {$r*270}] R0 }
 set cland_done {}; set cland_n 0; set cland_cursor {}; set cland_fh [open /dev/null w]
 set cland_occ [dict create]
+# a block without macros (the EXITS head below supplies one with a macro)
+if {![info exists ::ff_blk]} { proc blk0 {op args} { return {} }; set ::ff_blk blk0 }
 # foreign occupancy: every row, x in [OL, OU) dbu
 for {set r 0} {$r < 40} {incr r} { dict lappend cland_occ $r [list %(OL)d %(OU)d] }
 set ::loc {}
@@ -110,7 +112,7 @@ def test_status_pin_in_the_core_margin_takes_the_grow_path():
 def test_optional_group_cells_take_the_grow_path():
     """DIE-QC-73 11-05: raw-copy-optional cells (reset copies) grow like collectors, no plain cland_put."""
     body = TCL.split("foreach spec $cland_optional_groups {", 1)[1].split("\n}\n", 1)[0]
-    assert "cland_put_grow $i $rect $tag raw-copy" in body
+    assert "cland_put_collector $i $rect $tag raw-copy" in body   # grow, then the macro exit (DIE-S81-85 11-09)
     assert "\n  cland_put $i" not in body
 
 
@@ -135,9 +137,13 @@ def _run_exits(moves, ol, ou, mx0, mx1, core=40000):
 
 
 @needs_tcl
-def test_no_macro_moves_fails_closed_as_before():
+def test_no_macro_moves_also_exits_the_covering_macro():
+    """DIE-S81-85 11-09 (kw43 leaf t33/t43: plan moves folded into hard_cores, no macro_moves.json): the DB macro box is
+    the site, so the exit no longer needs the file."""
     out = _run_exits(0, 0, 150000, 0, 150000, core=200000)
-    assert "ERR OT_CLAND no legal" in out and "exits macro" not in out
+    assert "collector exits macro" in out, out
+    x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
+    assert 150000 <= x <= 165000
 
 
 @needs_tcl
@@ -162,3 +168,38 @@ def test_macro_moves_window_that_fits_ignores_macros():
     assert "exits macro" not in out
     x = int(re.search(r"LOC (\d+) (\d+)", out).group(1))
     assert 17840 <= x <= 22160 - 108
+
+
+# DIE-S81-85 11-09 CLAND-RESET-IN-MACRO (kw43 ot_s81sl_leaf__t33 u_cland_reset_rst_rl_189 / t43 rst_rl_99, raw-copy-optional:
+# relay 107 / 73 um inside u_lf.u_vsw, deeper than the x32 grow): a reset raw copy takes the same macro exit as its
+# collector, and the procs exist before the optional-group loop that calls them.
+RAW = MOCK.replace("cland_put_collector c0 {17.84 3.24 22.16 7.56} collector:rst_rl_1",
+                   "cland_put_collector c0 {17.84 3.24 22.16 7.56} raw-copy-optional raw-copy")
+
+
+@needs_tcl
+def test_reset_raw_copy_exits_the_covering_macro():
+    head = EXITS % dict(MOVES=0, MX0=0, MX1=150000)
+    mock = (RAW % dict(OL=0, OU=150000)).replace("set ff_x1 40000", "set ff_x1 200000")
+    out = subprocess.run(["tclsh"], input=_procs() + head + mock, capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    assert "OT_CLAND raw-copy exits macro u_cland_collect_rst_rl_1/q (raw-copy-optional)" in out.stdout, out.stdout
+    x = int(re.search(r"LOC (\d+) (\d+)", out.stdout).group(1))
+    assert 150000 <= x <= 165000
+
+
+@needs_tcl
+def test_reset_raw_copy_free_window_unchanged_and_no_room_fails_closed():
+    head = EXITS % dict(MOVES=0, MX0=0, MX1=150000)
+    out = subprocess.run(["tclsh"], input=_procs() + head + RAW % dict(OL=0, OU=0), capture_output=True, text=True)
+    x = int(re.search(r"LOC (\d+) (\d+)", out.stdout).group(1))
+    assert 17840 <= x <= 22160 - 108 and "exits macro" not in out.stdout   # fits: identical to the plain grow
+    # every row taken everywhere (macro exit windows included): the same fail-closed error as before
+    out = subprocess.run(["tclsh"], input=_procs() + head + RAW % dict(OL=0, OU=100000), capture_output=True, text=True)
+    assert "ERR OT_CLAND no legal nonoverlapping row/site in reserved band for u_cland_collect_rst_rl_1/q" in out.stdout
+
+
+def test_macro_exit_procs_defined_before_the_optional_loop():
+    loop = TCL.index("foreach spec $cland_optional_groups {")
+    assert TCL.index("proc cland_macro_exits") < loop and TCL.index("proc cland_put_collector") < loop
+    assert "macro_moves.json" not in TCL[TCL.index("proc cland_put_collector"):loop]
