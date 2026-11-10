@@ -703,6 +703,9 @@ module dsdv_svc_att #(
         $display("SVC_ATT_WRST %m t=%0t sw_r=%0d sw_w=%0d wq_r=%06h rc=%0d", $time, tb_sw_r, tb_sw_w, tb_wq_r, tb_rc);
 `endif
 `endif
+`ifndef OT_SVC_ATT_MEM_MACRO
+    assign sw_nc = sw_n[sw_r[4:0]]; assign sw_bc = sw_base[sw_r[4:0]];   // flop form of the scanner entry's count / base
+`endif
     // ------------------------------------------------------------------ sequential
     integer k;
     always @(posedge clk) begin
