@@ -158,5 +158,18 @@ if { [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; } && [ $
   # KW-FIX-32 11-07 (FLOW-CHILD-ETM-CONTEXT at sign-off): parent flow tag for signed child ETMs (env, else K/flow_tag)
   FT=${OT_FLOW_TAG:-$(head -1 "$K/flow_tag" 2>/dev/null)}
   python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" ${FT:+--flow-tag "$FT"} || rc=1
+  # ROUTE-HOLD-PASS (DIE-HBM-97 11-10, COORD vecd-clkroot-r2): opt-in in-flow FF hold repair on the ROUTED RCX parasitics,
+  # one pass (tools/die_plan/route_hold_pass.py; generator --route-hold-pass on writes OT_ROUTE_HOLD_PASS = 1 and
+  # OT_ROUTE_HOLD_TOOLS).  Runs only when this sign-off's hold_ff FAILs on core-owned endpoints; the pass dir signs off
+  # with this runner's GOAL=post (never re-enters here).  Gates unchanged; a kit without the key: unchanged.
+  if { [ "$GOAL" = finish ] || [ "$GOAL" = route ]; } && [ -f "$SO/signoff.json" ] && \
+     grep -qE '^[[:space:]]*(override[[:space:]]+)?export[[:space:]]+OT_ROUTE_HOLD_PASS[[:space:]]*=[[:space:]]*1[[:space:]]*$' "$K/config.mk"; then
+    RHT=$(sed -nE 's/^[[:space:]]*(override[[:space:]]+)?export[[:space:]]+OT_ROUTE_HOLD_TOOLS[[:space:]]*=[[:space:]]*(.*[^[:space:]])[[:space:]]*$/\2/p' "$K/config.mk" | tail -1)
+    if [ -f "$RHT/route_hold_pass.py" ]; then
+      python3 -I "$RHT/route_hold_pass.py" run "$K" "$SO/signoff.json" --mem "$MEM" --cpus "$CPUS" --lec || rc=1
+    else
+      echo "ROUTE_HOLD_PASS ERROR: OT_ROUTE_HOLD_TOOLS='$RHT' has no route_hold_pass.py"; rc=1
+    fi
+  fi
 fi
 exit $rc

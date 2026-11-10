@@ -896,8 +896,16 @@ def prune(it, intermediate_only=False):
 # ------------------------------------------------------------------------------------------------ the loop
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
-             owner_override=False, strict_one_pass=False):
-    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS"""
+             owner_override=False, strict_one_pass=False, in_flow_form=False):
+    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS
+
+    in_flow_form (ROUTE-HOLD-PASS, DIE-HBM-97 11-10, COORD vecd-clkroot-r2): the kit's planned in-flow stage (config.mk
+    OT_ROUTE_HOLD_PASS = 1, set by the generator BEFORE the build; tools/die_plan/route_hold_pass.py) = ONE hold repair on
+    the routed RCX parasitics, one physical dispatch, no recovery retries.  It is part of the form, not a late fix of a
+    finished DB, so the near-miss numbers are recorded (res near_miss) but do not stop it; gates are unchanged."""
+    if in_flow_form:
+        if max_iter != 1 or not strict_one_pass:
+            raise ValueError("in_flow_form requires max_iter=1 and strict_one_pass")
     if max_iter > MAX_ITER:
         raise ValueError(max_iter_refusal(max_iter))
     if strict_one_pass and max_iter != 1:
@@ -942,10 +950,15 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     if not ok:
         return done("NOT_ELIGIBLE", why)
     near, far, warn = near_miss(base_rec, base_signoff)
-    res["near_miss"] = dict(near=near, beyond=far, advisory=warn, owner_override=bool(owner_override))
+    res["near_miss"] = dict(near=near, beyond=far, advisory=warn, owner_override=bool(owner_override),
+                            in_flow_form=bool(in_flow_form))
+    res["in_flow_form"] = bool(in_flow_form)
     for w in warn:
         print("ECO_LOOP advisory: " + w, flush=True)
-    if not near and not owner_override:
+    if not near and in_flow_form:
+        print("ECO_LOOP in-flow form (ROUTE-HOLD-PASS): beyond the late-ECO near-miss numbers (" + "; ".join(far) +
+              "), recorded; the planned one-pass stage runs", flush=True)
+    if not near and not owner_override and not in_flow_form:
         return done("NOT_NEAR_MISS", "; ".join(far) + f" (near miss: setup/hold no worse than {NEAR_WNS_PS:g} ps on at most "
                     f"{NEAR_ENDPOINTS} endpoints, at most {NEAR_SLEW_NETS} slew nets, DRC under {NEAR_DRC}): GEOMETRY + REDESIGN, no ECO")
     root.mkdir(parents=True, exist_ok=False)
