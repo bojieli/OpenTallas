@@ -15,6 +15,21 @@ D0=$(cd "$1" && pwd); CPUS=${2:-8}; MEM=${3:-32}; MAXP=${4:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# KW-FIX-44 11-10 (COORD): the pass / finish containers run as root (they patch ORFS inside the image) and chown /work
+# when they end; a prd_run.sh stopped mid-pass left their outputs root-owned (HEAD-92 hd_spn_end i1t).  On EXIT / TERM /
+# INT the current pass dir and the finish dir get the same root chown, only when a file there is not ours.  SIGKILL
+# is not covered.  TERM keeps rc 143 (eco_loop: stopped from outside), INT 130.
+prd_own_back() {
+  local d
+  for d in "${D:-}" "${FINAL:-}"; do
+    [ -n "$d" ] && [ -d "$d" ] || continue
+    [ -n "$(find "$d" ! -user "$(id -u)" -print -quit 2>/dev/null)" ] || continue
+    $DK run --rm -v "$d":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work >/dev/null 2>&1 || true
+  done
+}
+trap prd_own_back EXIT
+trap 'prd_own_back; trap - EXIT; exit 143' TERM
+trap 'prd_own_back; trap - EXIT; exit 130' INT
 SO=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["signoff_tools"])' $D0/PRD.json)
 V=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["variant"])' $D0/PRD.json)
 RES=$D0/prd_result.json; [ -n "${OT_PRD_FINAL_ONLY:-}" ] && RES=$D0/prd_result_final.json
@@ -41,7 +56,11 @@ print(f"{min(mem,24):g} {min(cpus,4)}")
 PY_COUNT_LIMITS
   ) || return 2
   read -r count_mem count_cpus <<< "$limits"
-  $DK run --rm --name prd-count-$2-$$ --cpus="$count_cpus" --memory="${count_mem}g" --memory-swap="${count_mem}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
+  # KW-FIX-44 11-10 (COORD): the count container runs as the host user, so a SPEF it extracts into /work is not
+  # root-owned (it has no chown after it).  The pass and finish containers stay root: they patch ORFS scripts inside
+  # the image (orfs_hold_mm.py on every two-mode kit, kwrs_busfit.py on util.tcl), which are root 0664 there, so
+  # --user would end them 'exit 9'; their output is chowned back by the container itself and by the chown run after.
+  $DK run --rm --user="$(id -u):$(id -g)" --name prd-count-$2-$$ --cpus="$count_cpus" --memory="${count_mem}g" --memory-swap="${count_mem}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
     -e ODB=/work/${B#$D/}/$(test -s $B/5_route.odb && echo 5_route.odb || echo 5_2_route.odb) -e SDC=/work/${B#$D/}/4_cts.sdc -e SPEF=/work/${B#$D/}/$4 -e TAG=$2 -e CHKPL=$5 "$IMAGE" bash -lc '
     source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
     M="make -s DESIGN_CONFIG=/work/config.mk WORK_HOME=/tmp/w FLOW_VARIANT=base"
