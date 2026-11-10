@@ -371,6 +371,18 @@ def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
             raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master)
 
 
+def frame_manifest():
+    """(source root, manifest) a frame schedule must hash-bind.  S81-PLAN-1 11-10: the FRAME sources (romq / gb_split
+    ROM elements, plan kits) come from the bind's own as-built manifest, which is not the slice-source selection
+    (OT_S81_SELECTED_ASBUILT_MANIFEST resolves slice internals that are not manifest files).  OT_S81_FRAME_ASBUILT_MANIFEST
+    / OT_S81_FRAME_SOURCE_ROOT name it separately (dv_layer_compile --bound-data sets them to the bind's manifest);
+    unset, the frame check binds the slice selection exactly as before."""
+    root = os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))
+    man = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST') or os.environ.get(
+        'OT_S81_SELECTED_ASBUILT_MANIFEST', 'physical/die_plan/s81/bind/asbuilt_b178_coll.json')
+    return Path(root), man
+
+
 def gb_provider_under_test():
     """TOK-ALL-15 bench-only admission: the native GB composition bench exercises the unqualified provider itself.
 
@@ -405,10 +417,7 @@ def source_frame_schedule(master):
                              + ', '.join(c.get('fails', [])[:8]))
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
-        qualify_frame_source(json.loads(path.read_text()), master,
-                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))),
-                             os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST',
-                                            'physical/die_plan/s81/bind/asbuilt_b178_coll.json'))
+        qualify_frame_source(json.loads(path.read_text()), master, *frame_manifest())
         return path
     if not master.endswith('_lp'):
         return None
