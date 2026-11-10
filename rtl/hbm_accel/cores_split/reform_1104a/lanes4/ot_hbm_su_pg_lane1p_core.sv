@@ -171,7 +171,7 @@ module ot_hbm_su_pg_lane1p_core #(
     wire [31:0] u_lane0__ro_x;
     wire u_lane0__fault;
     wire u_lane0__coll;
-    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LDCS(LDCS),.LD_COPY(1),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
+    ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(0),.MLAT(MLAT),.ALAT(ALAT),.LDCS(LDCS),.LD_COPY(1),.LID_COPY(1),.LEAF(1),.FETCH_EXTRA_EDGES(2)) u_lane0 (
         .clk_stage(u_lane0__clk_stage),
         .clk_insert(u_lane0__clk_insert),
         .rst_n(u_lane0__rst_n),

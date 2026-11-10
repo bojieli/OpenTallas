@@ -56,7 +56,8 @@ module ot_hbm_su_static_lane #(
     // LDCS = 1 (opt-in, HBM-GAPS-4-L1P 11-05; default 0 keeps g_ld3k): the LEAF offset load (K = 1) in carry-save
     // over the same three cycles: same offsets mod 2^AW, same edges, same banks (g_ld3c below)
     parameter integer LDCS = 0,
-    parameter integer LD_COPY = 0   // HBM-OPEN-A: 1 = each LDCS stream's p enable comes from its own pin-register copy of ld (ld_sc)
+    parameter integer LD_COPY = 0,  // HBM-OPEN-A: 1 = each LDCS stream's p enable comes from its own pin-register copy of ld (ld_sc)
+    parameter integer LID_COPY = 0  // HBM-COLLECT-1/LANE1P-C 11-09: 1 = each LDCS stream masks with its own registered copy of the static lane_id (g_ld3c only)
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -405,13 +406,32 @@ module ot_hbm_su_static_lane #(
                     if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
         for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
             wire [6*AW-1:0] cs1;                       // per group jj: sum row 2*jj, carry row 2*jj + 1
+            // HBM-COLLECT-1/LANE1P-C 11-09: lane_id (a constant at every instance) masks 120 AND terms per stream; the
+            // routed D2 chain from the pin register was 297 ps of buffers (TT -151.51).  LID_COPY = 1 gives each stream its
+            // own register stage, no reset (like d_q), no schedule change: the value is static.  LID_COPY = 0 is unchanged.
+            wire [LN-1:0] lid_s;
+            if (LID_COPY != 0) begin : g_lid
+                (* keep *) reg [LN-1:0] lid_r;
+`ifdef LID_MUT_NOSTAGE
+                always @* lid_r = lane_id[LN-1:0];
+`else
+                always @(posedge clk_stage[0]) lid_r <= lane_id[LN-1:0];
+`endif
+`ifdef LID_MUT_STREAM
+                assign lid_s = (ss == 1) ? {lid_r[LN-2:0], lid_r[LN-1]} : lid_r;
+`else
+                assign lid_s = lid_r;
+`endif
+            end else begin : g_nolid
+                assign lid_s = lane_id[LN-1:0];
+            end
             for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
                 localparam integer LO = (jj == 0) ? 0 : (jj == 1) ? G1 : G2;
                 localparam integer HI = (jj == 0) ? G1 : (jj == 1) ? G2 : LN;
                 wire [4*AW-1:0] t;
                 for (kk = 0; kk < 4; kk = kk + 1) begin : g_t
                     if (LO + kk < HI) begin : g_on
-                        assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
+                        assign t[kk*AW +: AW] = lid_s[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
                     end else begin : g_off
                         assign t[kk*AW +: AW] = {AW{1'b0}};
                     end
