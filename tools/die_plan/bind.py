@@ -1435,9 +1435,12 @@ class Binder:
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
         if k == "clock":
-            self.clk_dom[p].add(s[1])
+            # asbuilt.clock_merge {part: {domain: domain}} (DIE-QC-97 11-09, EDGE-CLOCK-LATE): die clock roots of one
+            # source and frequency (contract: related, phase 0) that this partition takes from one clock family.
+            d = (self.ab.get("clock_merge") or {}).get(p, {}).get(s[1], s[1])
+            self.clk_dom[p].add(d)
             cnt["clock"] += 1
-            return ("clk", s[1])
+            return ("clk", d)
         if k == "reset":
             cnt["reset"] += 1
             self.reset_age[p].append(s[2])
