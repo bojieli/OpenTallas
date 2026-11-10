@@ -7925,7 +7925,9 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_serdes": "KW-FIX-43 COORD 11-10 00:5x: HEAD-92 stopped a2 on purpose (20:37), the wave read exit 137 as INFRA and relaunched the unchanged form as a3. Held until HEAD-92's form 3 (epyc7 head-92/ser3) is the source. Revert: delete hold_items.hd_serdes."
+   },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
     "hd_spn_wshim_tx@2": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
@@ -8725,7 +8727,8 @@
    "gen_hosts_prev_kw43gen2": [
     "epyc7"
    ],
-   "work_root_prev_kw43gen2": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81_head/kit-wave"
+   "work_root_prev_kw43gen2": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81_head/kit-wave",
+   "hold_items_prev_kw43hdser": {}
   },
   "qwen_compute": {
    "enabled": true,
@@ -15848,7 +15851,8 @@
     "q_b102@11",
     "q_hub_ne@4",
     "q_su01@8",
-    "q_su11@10"
+    "q_su11@10",
+    "q_hub_ne@6"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
