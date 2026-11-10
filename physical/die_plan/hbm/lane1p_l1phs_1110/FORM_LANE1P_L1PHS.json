@@ -1,0 +1,21 @@
+{
+ "form": "lane1p L1P-HS",
+ "by": "HBM-COLLECT-1",
+ "base": "lane1p D2L kit (D2 physical form + LID_COPY lane_id stage, branch claude/hbm-collect-lane1p-c-1109 d866c25ff5), results reused through 3_2_place_iop",
+ "ruling": "COORD 11-10: structural form in parallel with the D2L over-limit ECO; hold-safe shift lines per CA safe-by-design; keep lane_id stage; first to sign off wins",
+ "change": [
+  "hold_pad_hops.tcl sourced at the end of face_flops.tcl (PRE_GLOBAL_PLACE, 3_3): one HB4xp67 dont_touch hold pad on the sink side of every zero-logic hop (flop D or macro data input driven by a flop output through <=2 BUF/INV); 7607 hops on the D2L floorplan DB (12512 flops)"
+ ],
+ "measured": {
+  "d2l_ff_sdc_hold": "port-start 591 worst -46.13, reg->outport 294, internal reg2reg 124 worst -13.59",
+  "internal_covered_by_hops": "118/124; 6 uncovered have 1-2 logic gates, worst -2.49 ps, left to the flow hold repair (scope nonport)",
+  "pad_ff_delay_est_ps": 37,
+  "pad_area_um2": 776
+ },
+ "rtl_change": false,
+ "pin_cycles": 0,
+ "outline_change": false,
+ "lec": "physical buffers only; routed lec.py required",
+ "open_risk": "D2L TT setup -43.3/27 is clock-tap skew (d_q[67] launch on ot_dtap_9 at 443 ps vs capture on ot_dtap_4 at 340 ps), not addressed by this form",
+ "do_not_count": "until signed off, routed LEC EQ, images viewed, READY-COUNT"
+}
