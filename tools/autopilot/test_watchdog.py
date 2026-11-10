@@ -188,6 +188,18 @@ class VerifyFakeDirTest(unittest.TestCase):
             self.assertEqual(v['progress_n'], 2)
             self.assertFalse(v['openroad'])
 
+    def _maxwire(self, text):
+        with tempfile.TemporaryDirectory() as d:
+            log = os.path.join(d, 'run_route.log')
+            with open(log, 'w') as f:
+                f.write(text)
+            return self.one(log=log)['maxwire']
+
+    def test_verify_maxwire_open_until_end_marker(self):
+        self.assertTrue(self._maxwire('OT_MAXWIRE repair_design -verbose -max_wire_length 100\n  1000 | +0.5%\n'))
+        self.assertFalse(self._maxwire('OT_MAXWIRE repair_design -verbose\n  1000 |\nOT_MAXWIRE leaf instances 5 -> 6\nnext\n'))
+        self.assertFalse(self._maxwire('[INFO GRT-0101] no marker\n'))
+
     def test_batch_keeps_order_and_shares_one_sample(self):
         with tempfile.TemporaryDirectory() as d:
             logs = [os.path.join(d, '%d.log' % i) for i in range(5)]
@@ -325,6 +337,27 @@ class MainTest(unittest.TestCase):
             r = row(stage='5_1_grt', idle_s=13 * H, age_s=20 * H)  # past the 12 h cap
             calls = self.run_main([r], dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=20), True, d)
             self.assertEqual(len(calls), 2)
+
+    MAXWIRE_V = dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=9)
+
+    def _maxwire_calls(self, idle_h, stage='5_1_grt', **verify):
+        with tempfile.TemporaryDirectory() as d:
+            return self.run_main([row(stage=stage, idle_s=idle_h * H, age_s=idle_h * H + 5 * H)], dict(self.MAXWIRE_V, **verify), True, d)
+
+    def test_busy_maxwire_repair_kept_between_6_and_12_h(self):
+        # KW43-63: leaf t30 stopped at 6 h 02 in this step, 984 nets from the end
+        self.assertEqual(self._maxwire_calls(7, maxwire=True), [])
+        self.assertEqual(self._maxwire_calls(11.5, maxwire=True), [])
+
+    def test_busy_maxwire_repair_stops_past_12_h(self):
+        self.assertTrue(self._maxwire_calls(13, maxwire=True))
+
+    def test_maxwire_idle_cpu_still_stops(self):
+        self.assertTrue(self._maxwire_calls(7, maxwire=True, cpu_delta_s=0.0))
+
+    def test_other_grt_and_drt_keep_their_limit(self):
+        self.assertTrue(self._maxwire_calls(7, maxwire=False))
+        self.assertTrue(self._maxwire_calls(7, stage='5_2_route.tmp', maxwire=True))
 
     LEC_V = dict(VERIFY_OK, openroad=False, tool=True, tail='', procs=['123 python3 -I /work/lec.py /work', '124 /tools/yosys-abc -f x'])
 

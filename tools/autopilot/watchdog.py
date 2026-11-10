@@ -18,6 +18,8 @@ Progress signal per step (WATCHDOG-1 11-03):
   GRT, DRT, ROUTE         FastRoute logs once per extra iteration and DRT once per 10%, and late ones take > 2 h, so a
                           busy job (tool CPU +--cpu-min-s in --cpu-sample-s) may stay silent for 3 x its mean progress
                           interval, between 6 h and 12 h; past that it is HUNG.  Without CPU: HUNG at 2 h.
+                          The post-GRT OT_MAXWIRE repair_design (open marker in the log, no end marker after it) is single-
+                          threaded and logs once per 1,000 nets: busy, it may stay silent for the full 12 h (KW43-63, COORD 11-10).
 Superseded (any log age; tools/autopilot/wave_jobs.py judge):
   STOP    wave row CANCELLED; attempt older than a live attempt of the same item on the current plan; running since before
           its row FAILED; an older second container on the same kit /work that has lost its ot-run client
@@ -196,6 +198,15 @@ def silent_limit_s(age_s, progress_n):
     return min(BUSY_CAP_S, max(BUSY_MIN_S, 3.0 * age_s / progress_n))
 
 
+def busy_limit_s(step, age_s, progress_n, maxwire=False):
+    """silent limit of a CPU-busy job in this step; a GRT job inside the OT_MAXWIRE repair_design gets the full cap"""
+    if step == 'SYNTH':
+        return BUSY_MIN_S
+    if step == 'GRT' and maxwire:
+        return BUSY_CAP_S
+    return silent_limit_s(age_s, progress_n)
+
+
 def duplicates(rows, verdicts):
     """{row id: (stop?, reason)} for all but the newest of the jobs on one kit /work, on any host, none of them already to
     stop.  stop only when the older job has lost its ot-run client: then nobody reads its result (a resubmit left it behind).
@@ -268,7 +279,8 @@ def check(a):
     try:
         with open(a['log'], 'rb') as fh:
             fh.seek(0, 2); sz = fh.tell(); fh.seek(max(0, sz - 8192)); r['tail'] = fh.read().decode('utf-8', 'replace')
-            fh.seek(max(0, sz - 2**27)); r['progress_n'] = len(PROGRESS.findall(fh.read()))
+            fh.seek(max(0, sz - 2**27)); body = fh.read(); r['progress_n'] = len(PROGRESS.findall(body))
+            r['maxwire'] = body.rfind(b'OT_MAXWIRE repair_design') > body.rfind(b'OT_MAXWIRE leaf instances')
     except (OSError, TypeError):
         r['tail'] = ''
     comms = []
@@ -545,7 +557,7 @@ def main(argv=None):
                 verdict, reason = 'REPORT', 'verify failed: %s' % failed[id(r)]
             elif verdict in ('ACT', 'FIX', 'STOP'):
                 busy = step in CPU_STEPS and a.cpu_sample_s and v.get('cpu_delta_s') is not None and v['cpu_delta_s'] >= a.cpu_min_s
-                limit = BUSY_MIN_S if step == 'SYNTH' else silent_limit_s(r.get('age_s'), v.get('progress_n'))
+                limit = busy_limit_s(step, r.get('age_s'), v.get('progress_n'), v.get('maxwire'))
                 lec_idle = (v.get('cpu_delta_s') is not None and v['cpu_delta_s'] < a.cpu_min_s and not v.get('tool_churn'))
                 if v.get('log_mtime') and now - v['log_mtime'] < a.idle_min * 60:
                     verdict, reason = 'REPORT', 'log written again at re-check'
