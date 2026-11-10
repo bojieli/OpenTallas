@@ -82,8 +82,10 @@ def test_stage_ends_are_die_top_ports():
     c.type_rtl("A", A_BODY); c.type_rtl("B", B_BODY)
     tt = c.top_rtl(TOP)
     assert "input wire pst_r2;" in tt and "output wire rs_r0;" in tt
-    assert "assign rs_r0 = clock_landing_tstart_a;" in tt
-    assert ".cland_tstart_in(pst_r2)" in tt and ".cland_tstart_in(clock_landing_tstart_a)" in tt
+    # KV-PLAN-2 11-09: the launch partition drives its single die-top output rs_r0 directly (no top alias assign)
+    assert "assign rs_r0" not in tt and "clock_landing_tstart_a" not in tt
+    assert ".cland_tstart_out(rs_r0)" in tt
+    assert ".cland_tstart_in(pst_r2)" in tt and ".cland_tstart_in(rs_r0)" in tt
 
 
 def test_undeclared_start_pin_and_wrong_capture_fail_closed():
@@ -162,8 +164,8 @@ def test_reset_wave_exports_registered_local_parent_reset():
     assert 'ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d(' in aa and '.q(cland_raw_reset_out));' in aa
     assert 'cland_raw_reset_q' not in aa and 'assign cland_raw_reset_out' not in aa
     tt=c.top_rtl(TOP)
-    assert 'output wire rraw_r0;' in tt and 'assign rraw_r0 = clock_landing_raw_reset_a;' in tt
-    assert '.cland_raw_reset_out(clock_landing_raw_reset_a)' in tt
+    assert 'output wire rraw_r0;' in tt and 'assign rraw_r0' not in tt and 'clock_landing_raw_reset_a' not in tt
+    assert '.cland_raw_reset_out(rraw_r0)' in tt
     variant=c.type_rtl('A_variant',A_BODY.replace('module A ', 'module A_variant '),base='A')
     assert 'output wire cland_raw_reset_out' in variant
     p,t=start_vehicle(stage=True)

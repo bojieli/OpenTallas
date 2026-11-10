@@ -1865,6 +1865,9 @@ class Landings:
         # that net directly instead of a clock_landing_* wire plus a top-level alias assign.  Same connectivity; the die
         # top stays pure wiring.  Several nets per source, or a net not declared in the top, keep the wire + assign.
         def _declared(net):
+            # the rs_* / rraw_* die-top output ports are emitted by this pass (ts_out); other nets must already be in the text
+            if net in ts_out:
+                return True
             return re.search(r"(?m)^\s*(?:output\s+wire|wire)\s+(?:\[[^\]]*\]\s*)?" + re.escape(net) + r"\s*[;,]",
                              text) is not None
 
