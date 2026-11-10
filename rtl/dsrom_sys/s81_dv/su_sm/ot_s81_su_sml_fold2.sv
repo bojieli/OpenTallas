@@ -3,6 +3,26 @@
 // schedule leaves at least one idle edge after each two-lane operand vector.
 // Logical-lane score stores and maxima remain independent; the parent rebuilds
 // the original 16-lane vector before its unchanged reduction tree.
+`ifdef OT_S81_SVC_CS
+// DIE-S81-85 svc census (opt-in -DOT_S81_SVC_CS): the box keeps its name and ports; its body is the census-safe
+// copy in rtl/dsrom_sys/s81_svc (same cycles; lock-step bench tools/s81_dv/svc_cs).  Without the define: unchanged.
+module ot_s81_su_sml_fold2 #(
+ parameter integer NVMAX=40, LM=5, LA=4, MUT=0
+)(
+ input wire clk, rst_in, sk_en, i_cv,
+ input wire [6:0] i_nv,
+ input wire [31:0] i_scale, i_sink,
+ input wire i_sv, input wire [63:0] i_s,
+ input wire i_mv, input wire [31:0] i_nmb,
+ output wire o_mxv, output wire [63:0] o_mx,
+ output wire o_ev, o_es, o_el, output wire [63:0] o_e,
+ output wire o_fault
+);
+ ot_s81_su_sml_fold2_cs #(.NVMAX(NVMAX),.LM(LM),.LA(LA),.MUT(MUT)) u_cs(.clk(clk),.rst_in(rst_in),.sk_en(sk_en),
+  .i_cv(i_cv),.i_nv(i_nv),.i_scale(i_scale),.i_sink(i_sink),.i_sv(i_sv),.i_s(i_s),.i_mv(i_mv),.i_nmb(i_nmb),
+  .o_mxv(o_mxv),.o_mx(o_mx),.o_ev(o_ev),.o_es(o_es),.o_el(o_el),.o_e(o_e),.o_fault(o_fault));
+endmodule
+`else
 module ot_s81_su_sml_fold2 #(
  parameter integer NVMAX=40, LM=5, LA=4, MUT=0
 )(
@@ -105,3 +125,4 @@ module ot_s81_su_sml_fold2 #(
   if(!rn)begin o_ev<=0;o_es<=0;o_el<=0;end
   else begin o_ev<=ev[DE]&&(es[DE]||ec[DE]);o_es<=ev[DE]&&es[DE];o_el<=ev[DE]&&el[DE];end
 endmodule
+`endif

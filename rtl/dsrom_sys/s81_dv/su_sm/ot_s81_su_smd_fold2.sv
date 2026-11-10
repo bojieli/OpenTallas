@@ -1,5 +1,20 @@
 `timescale 1ns/1ps
 // Two independent logical RoPE pairs share one divide/RoPE pipeline.
+`ifdef OT_S81_SVC_CS
+// DIE-S81-85 svc census (opt-in -DOT_S81_SVC_CS): the box keeps its name and ports; its body is the census-safe
+// copy in rtl/dsrom_sys/s81_svc (same cycles; lock-step bench tools/s81_dv/svc_cs).  Without the define: unchanged.
+module ot_s81_su_smd_fold2 #(
+    parameter integer LPH = 16, TAIL = 64, LM = 5, LA = 4, STALEDEN = 0
+) (
+    input  wire clk, rst_in, input wire [1:0] cfg_p, input wire i_pv, input wire [127:0] i_pa,
+    input  wire i_dv, input wire [31:0] i_den, input wire i_csv, input wire [4:0] i_csi, input wire [63:0] i_csd,
+    output wire o_ov, output wire [63:0] o_o, output wire [1:0] o_f
+);
+    ot_s81_su_smd_fold2_cs #(.LPH(LPH),.TAIL(TAIL),.LM(LM),.LA(LA),.STALEDEN(STALEDEN)) u_cs(.clk(clk),.rst_in(rst_in),
+        .cfg_p(cfg_p),.i_pv(i_pv),.i_pa(i_pa),.i_dv(i_dv),.i_den(i_den),.i_csv(i_csv),.i_csi(i_csi),.i_csd(i_csd),
+        .o_ov(o_ov),.o_o(o_o),.o_f(o_f));
+endmodule
+`else
 module ot_s81_su_smd_fold2 #(
     parameter integer LPH = 16, TAIL = 64, LM = 5, LA = 4, STALEDEN = 0
 ) (
@@ -110,3 +125,4 @@ module ot_s81_su_smd_fold2 #(
         if(!ctxd[DR])olo<=ob;else o_o<={ob,olo};
     end
 endmodule
+`endif

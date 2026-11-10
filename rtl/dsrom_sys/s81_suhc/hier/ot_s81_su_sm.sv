@@ -384,6 +384,19 @@ module ot_s81_su_sml #(
 endmodule
 
 // ======================================================================================================== SUM
+`ifdef OT_S81_SVC_CS
+// DIE-S81-85 svc census (opt-in -DOT_S81_SVC_CS): the box keeps its name and ports; its body is the census-safe
+// copy in rtl/dsrom_sys/s81_svc (same cycles; lock-step bench tools/s81_dv/svc_cs).  Without the define: unchanged.
+module ot_s81_su_smc #(
+    parameter integer LPH = 16, LA = 4
+) (
+    input  wire clk, rst_in, i_v, i_l, input wire [LPH*32-1:0] i_e,
+    output wire o_v, o_l, output wire [31:0] o_s
+);
+    ot_s81_su_smc_cs #(.LPH(LPH),.LA(LA)) u_cs(.clk(clk),.rst_in(rst_in),.i_v(i_v),.i_l(i_l),.i_e(i_e),.o_v(o_v),.o_l(o_l),
+        .o_s(o_s));
+endmodule
+`else
 module ot_s81_su_smc #(
     parameter integer LPH = 16, LA = 4
 ) (
@@ -444,8 +457,24 @@ module ot_s81_su_smc #(
                                            else begin o_v <= vtv[LA*LVI]; o_l <= vtl[LA*LVI]; end
     always @(posedge clk) o_s <= g_vt[LVI].x;
 endmodule
+`endif
 
 // ======================================================================================================== ROOT
+`ifdef OT_S81_SVC_CS
+// DIE-S81-85 svc census (opt-in -DOT_S81_SVC_CS): the box keeps its name and ports; its body is the census-safe
+// copy in rtl/dsrom_sys/s81_svc (same cycles; lock-step bench tools/s81_dv/svc_cs).  Without the define: unchanged.
+module ot_s81_su_smr #(
+    parameter integer LPH = 16, LA = 4, LTMAX = 6
+) (
+    input  wire clk, rst_in, i_cv, input wire [2:0] i_lt, input wire i_mxv, input wire [LPH*32-1:0] i_mx,
+    input  wire i_skv, input wire [31:0] i_sk, input wire i_vv, i_vl, input wire [31:0] i_vs,
+    output wire o_mv, output wire [31:0] o_nmb, output wire o_dv, output wire [31:0] o_den
+);
+    ot_s81_su_smr_cs #(.LPH(LPH),.LA(LA),.LTMAX(LTMAX)) u_cs(.clk(clk),.rst_in(rst_in),.i_cv(i_cv),.i_lt(i_lt),
+        .i_mxv(i_mxv),.i_mx(i_mx),.i_skv(i_skv),.i_sk(i_sk),.i_vv(i_vv),.i_vl(i_vl),.i_vs(i_vs),.o_mv(o_mv),
+        .o_nmb(o_nmb),.o_dv(o_dv),.o_den(o_den));
+endmodule
+`else
 module ot_s81_su_smr #(
     parameter integer LPH = 16, LA = 4, LTMAX = 6
 ) (
@@ -558,6 +587,7 @@ module ot_s81_su_smr #(
     always @(posedge clk or negedge rst_n) if (!rst_n) o_dv <= 1'b0; else o_dv <= dnv[LA];
     always @(posedge clk) if (dnv[LA]) o_den <= den_r;
 endmodule
+`endif
 
 // ======================================================================================================== DIVIDE
 module ot_s81_su_smd #(
