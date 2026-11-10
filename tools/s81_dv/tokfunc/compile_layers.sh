@@ -13,7 +13,12 @@ cd "$ROOT"
 # LP parents add per-path ages: never compile against stale flat/archive timing.
 # Explicit caller models remain subject to lower_xs source-hash validation.
 if [ -z "${OT_XS_FRAME_SCHEDULE_DIR:-}" ]; then
-  python3 tools/s81_dv/tokfunc/prepare_frame_schedules.py --tree "$T" --out "$O/frame_schedules" \
+  prep_bd=()
+  # TOK-VERIFY-1 11-10: under OT_BOUND_DATA the LP model prep reads the same bound die top as the compile
+  if [ -n "${OT_BOUND_DATA:-}" ]; then
+    prep_bd=(--bound-data "$OT_BOUND_DATA" --bound-data-manifest "${OT_BOUND_DATA_MANIFEST:?OT_BOUND_DATA needs OT_BOUND_DATA_MANIFEST}")
+  fi
+  python3 tools/s81_dv/tokfunc/prepare_frame_schedules.py --tree "$T" --out "$O/frame_schedules" "${prep_bd[@]}" \
     > "$O/frame_schedules.log" 2>&1 || exit $?
   export OT_XS_FRAME_SCHEDULE_DIR="$O/frame_schedules"
 fi

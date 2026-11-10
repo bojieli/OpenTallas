@@ -1113,6 +1113,11 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         # S81-PLAN-1 11-10: the statically scheduled control lanes (idx / TP4 / query / MU / svc unit) from the same bind
         from layer_prog import bound_ctl_lanes as BCL
         ctx['bound_ctl'] = BCL.load(B['bound'])
+        # TOK-VERIFY-1 11-10: record the control-lane depths this programme was compiled from (all 30 lanes, also the
+        # ones no op of this layer reads), so a programme can be checked against a bind without recompiling
+        (out / 'bound_ctl_lanes.json').write_text(json.dumps(dict(
+            schema='opentallas.s81_dv.bound_ctl_lanes.v1', bind_dir=str(B['bound']),
+            bind_latency_sha256=B['sha256']['bind_latency.json'], lanes=ctx['bound_ctl']), indent=1, sort_keys=True) + '\n')
         bad = BCL.svc_cross_check(ctx['bound_ctl'], {k: dict(v) for k, v in die.links.items() if k in BCL.SVC_LINKS})
         if bad:
             raise ValueError(f'--bound-data: svc unit link ages differ from the bind lane depths: {bad}')
