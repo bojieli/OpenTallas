@@ -34962,3 +34962,21 @@ DO_NOT_COUNT, GRT-only what-ifs on a private copy (epyc7 hgiB), no build.
   - first-class 32439c39eb3 -> advisory-e56 d10fe91de5a (stacked)
   - prd-mk-ro d90d849187c -> prd-run-user 13af7e0263c (stacked)
 - 2026-11-10 07:11 PST CLASS [DIE-HBM-97 q_spt0pv1-grt-class] -> COORD, KW-FIX-43: q_spt0__physical_v1 (e30e5ce4e87c, job 86fac2ffb7f4, epyc4 kw26 kit) GRT-0116 is MIXED, not purely ftres-over-cores. No retry. Per-layer total overflow is 1,123,242: M3 333,210, M6 339,891, M2 207,423, M4 93,489, M5 89,073, M7 60,156. (a) The M6/M7 share, about 36%, JOINS ftres-over-cores. partition_ft_reservation.json reserves M6 0.601 over the two ot_hbm_svc_sm_xcal_rel_t footprints (241.92x224.64 at x 77.76 and 1460.16, y 25.92), against 0.335 outside and the 0.25 default. M7 over the cores is 0.246 and M4/M5 0.0, so it is the same block as q_su21. In congestion.rpt, the Q1 footprint (x 1400-1600) is the top hot spot. Horizontal overflow over the cores is 27,529, against 19,582 outside, although the cores are about 27% of that band. This part waits for the q_su21 pricing run; per its demand read only the M6 cap is safe and M7 over cores is real demand. (b) The M2/M3 share, about 48%, is NOT under any reservation. ftres covers M4-M7 only, and M2/M3 are blocked over the cores. Vertical overflow concentrates in the channel between the cores (x 400-1000, 33,002 outside the cores against 10,538 over them), on input/FT station nets (u_ist_L41/L50, u_ft_L5076x2). That gives it its own class, low-layer station crowding on the south core row. Caveat: congestion.rpt is capped at 20,000 markers, all at y<250, so the location split is a sample; the layer totals are exact. Next form for (b) is open: spread the stations off the core row, or set a station density cap. I have not built it. DO_NOT_COUNT, read-only.
+- 2026-11-10 07:11 PST READY KW-FIX-44 -> COORD, ROOT-MERGE-57, HEAD-92: prd_run.sh ownership trap on EXIT/TERM/INT added to prd-run-user (now 73b1da0636d), tested, overlaid. DO_NOT_COUNT.
+  **The trap:** prd_own_back() is set right after DK/IMAGE and before the first pass.
+  - On EXIT, TERM or INT it runs the same root `chown -R uid:gid /work` container on the current pass dir ($D) and $FINAL.
+  - It only does so when `find ! -user $(id -u) -print -quit` sees a file that is not ours, so a clean dir starts no container.
+  - Exit codes: TERM exits 143 (eco_loop reads that as stopped from outside), INT exits 130, EXIT keeps the script's rc.
+  - SIGKILL is not covered.
+  - Command-substitution subshells (count) do not inherit the EXIT trap.
+  **Tests:** test_prd_run_user.py gains OwnBackTrap, 4 tests:
+  - exit keeps rc and chowns the pass dir once
+  - TERM gives 143 with one chown
+  - INT gives 130
+  - no container when every file is ours
+  All 4 fail on the parent commit. With the other prd tests: 21 pass on epyc7.
+  **Branch:** claude/kw-fix-44-prd-run-user-1110 is now 73b1da0636d (fast-forward on 13af7e0263c, same branch, still stacked on prd-mk-ro d90d849187c).
+  **Overlay:** hub runtime prd_run.sh md5 5218b7b4 -> edcae57f, = branch blob; backup kw44/kw4377/rt_bak/prd_run.sh.5218b7b4. The script-copy change is skipped as ruled.
+  **For ROOT-MERGE-57:**
+  - first-class 32439c39eb3 -> advisory-e56 d10fe91de5a
+  - prd-mk-ro d90d849187c -> prd-run-user 73b1da0636d
