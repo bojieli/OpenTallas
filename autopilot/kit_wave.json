@@ -4225,9 +4225,7 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc7",
-    "epyc2",
-    "intel1",
-    "epyc4"
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -7527,6 +7525,12 @@
     "epyc7",
     "epyc4",
     "epyc2"
+   ],
+   "gen_hosts_prev_kw44genfull": [
+    "epyc7",
+    "epyc2",
+    "intel1",
+    "epyc4"
    ]
   },
   "s81_head": {
@@ -7781,8 +7785,7 @@
     "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
    },
    "gen_hosts": [
-    "epyc7",
-    "epyc4"
+    "epyc7"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -8514,6 +8517,10 @@
     "epyc7",
     "epyc4",
     "epyc2"
+   ],
+   "gen_hosts_prev_kw44genfull": [
+    "epyc7",
+    "epyc4"
    ]
   },
   "qwen_compute": {
@@ -9726,9 +9733,7 @@
    },
    "gen_hosts": [
     "epyc7",
-    "epyc2",
-    "intel1",
-    "epyc4"
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -14235,6 +14240,12 @@
     "epyc7",
     "epyc4",
     "epyc2"
+   ],
+   "gen_hosts_prev_kw44genfull": [
+    "epyc7",
+    "epyc2",
+    "intel1",
+    "epyc4"
    ]
   },
   "hbm": {
@@ -17955,6 +17966,182 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
      "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_b001": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b001__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b002": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b002__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b003__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b011": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b011__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b012": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b012__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b013": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b013__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b100__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b102": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b102__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b103__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b110": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b110__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b111": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b111__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b112": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b112__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_spt0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -19209,7 +19396,32 @@
     "epyc7",
     "epyc4",
     "epyc2"
-   ]
+   ],
+   "item_inputs_prev_kw43qbp": {
+    "q_b001": null,
+    "q_b001__physical_v1": null,
+    "q_b002": null,
+    "q_b002__physical_v1": null,
+    "q_b003__physical_v1": null,
+    "q_b011": null,
+    "q_b011__physical_v1": null,
+    "q_b012": null,
+    "q_b012__physical_v1": null,
+    "q_b013": null,
+    "q_b013__physical_v1": null,
+    "q_b100__physical_v1": null,
+    "q_b102": null,
+    "q_b102__physical_v1": null,
+    "q_b103__physical_v1": null,
+    "q_b110": null,
+    "q_b110__physical_v1": null,
+    "q_b111": null,
+    "q_b111__physical_v1": null,
+    "q_b112": null,
+    "q_b112__physical_v1": null,
+    "q_spt0": null
+   },
+   "note_kw43_qbp": "KW-FIX-43 18:4x COORD 18:2x(1): 22 q_b*/q_spt0 items keyed onto p11t + bind_p11t_vK5d_c12 + vK5d_c12 (like q_b113). Cause of the 18:22 KIT_TOPOLOGY_BIND_STALE: items without item_inputs used die plan plan_r2_restore against the p11t bind. Revert: item_inputs[k] = item_inputs_prev_kw43qbp[k] (None = delete)."
   }
  },
  "place_prefer": [
@@ -19841,5 +20053,6 @@
   "epyc2",
   "epyc7"
  ],
- "note_kw44_store7": "KW-FIX-44 2026-11-09 18:2x PST COORD (OWNER: use all disks): epyc7 scratch2 (4.9 TB) = fleet store; epyc7 first in gen_hosts/hosts/place_prefer for every die, so new K are generated under the work_root on epyc7 real scratch2; sealed jobs on other hosts fetch K (sealed-wave place_fetch) and return outputs to K host. Revert: <key> <- <key>_prev_kw44store (top + per die); backup kit_wave.json.bak-kw44-store7."
+ "note_kw44_store7": "KW-FIX-44 2026-11-09 18:2x PST COORD (OWNER: use all disks): epyc7 scratch2 (4.9 TB) = fleet store; epyc7 first in gen_hosts/hosts/place_prefer for every die, so new K are generated under the work_root on epyc7 real scratch2; sealed jobs on other hosts fetch K (sealed-wave place_fetch) and return outputs to K host. Revert: <key> <- <key>_prev_kw44store (top + per die); backup kit_wave.json.bak-kw44-store7.",
+ "note_kw44_genfull": "KW-FIX-44 2026-11-09 18:4x PST COORD 18:3x: epyc4 (scratch2 77 GB; its kw43/kw27 wave roots are symlinks onto md0 root, 108 GB) and intel1 (scratch2 88 GB, 41 waiters) out of every die gen_hosts: new W/K on epyc7 (scratch2 4.6 TB) then epyc2. Revert: gen_hosts <- gen_hosts_prev_kw44genfull; backup kit_wave.json.bak-kw44-genfull."
 }
