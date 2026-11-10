@@ -1465,6 +1465,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
+# SUL0-PINFACE-1 (DIE-QC-97 11-10): per-hard-core pin-face chain (kit_istations.core_pin_stations)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
 # parameter values each clone binds; provenance only, gen ignores them.

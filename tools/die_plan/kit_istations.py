@@ -778,6 +778,142 @@ def soft_plan_cells(tn, t):
             if 'origin_um' in c and not c.get('lef') and c['inst'] not in hard]
 
 
+def core_pin_stations(tn, t, txt, man, tcl, rep):
+    """SUL0-PINFACE-1 (DIE-QC-97 11-10, COORD geom-1235-1110): per-hard-core pin-face station chains.
+    A bus whose face register serves several hard cores at different distances (QC su_lN: u_bin_x_su_c_i -> four
+    lane macros, lane3 1.27 mm away) cannot be fixed by one bus chain: its stations sit at one place.  Entries with
+    'core' (a hard_cores inst) and 'core_bits' (the bus bits that core reads / drives through this chain) get their
+    OWN chain u_ist_<bus>__<core>_<g>_<j> (ot_dp_st, full bus width; bits outside core_bits have no load / a 0 input
+    and synthesis drops them):
+      * in bus : face register (after bind pads) -> chain -> ONLY the core's instance reads <bus>_q[b], b in core_bits;
+      * out bus: core outputs -> chain -> u_bout_<bus>.d bit b (every d bit must belong to exactly one chain).
+    Every chain of one bus carries the SAME number of stations (len(regs_um)) so the bus keeps one latency (fail closed
+    otherwise); placement is the per_bit is_bits form (each bit on its own L from its face pin to leaf_um, the kit knee
+    rule, <= 403 um) with leaf_um at the core pin-face centroid of the chain's bits.  Returns the edited text."""
+    es = [e for e in t.get("internal_stations", []) if e.get("core")]
+    if not es:
+        return txt
+    cores = {c["inst"] for c in t.get("hard_cores", [])}
+    by = {}
+    for e in es:
+        if e.get("bit_route") != "per_bit" or "leaf_um" not in e or not e.get("conn", "").startswith("bus:"):
+            raise SystemExit(f"kit_istations: {tn}: core station {e.get('conn')} {e.get('core')}: needs bus conn, "
+                             "bit_route per_bit and leaf_um")
+        if e["core"] not in cores:
+            raise SystemExit(f"kit_istations: {tn}: core station on unknown hard core {e['core']}")
+        by.setdefault(e["conn"][4:], []).append(e)
+    for bus, bes in by.items():
+        b = next((x for x in t["buses"] if x["name"] == bus), None)
+        if b is None or "face" not in b:
+            raise SystemExit(f"kit_istations: {tn}: core station on unknown / faceless bus {bus}")
+        ns = {len(e["regs_um"]) for e in bes}
+        if len(ns) != 1 or 0 in ns:
+            raise SystemExit(f"kit_istations: {tn} {bus}: core chains carry unequal / zero depths {sorted(ns)} "
+                             "(one bus = one latency)")
+        k = ns.pop()
+        n = gen_rtl.sv_id(bus)
+        W = bound_bus_width(tn, b, txt, man)
+        if re.search(rf"\bu_ist_{re.escape(n)}_(\d+)\b", txt) or re.search(rf"\bu_ist_{re.escape(n)}__", txt):
+            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (run on a fresh kit-rtl copy)")
+        owner = {}
+        for gi, e in enumerate(bes):
+            for bit in e["core_bits"]:
+                if not 0 <= int(bit) < W:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: core_bits {bit} outside bound width {W}")
+                if b["dir"] == "out" and int(bit) in owner:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: out bit {bit} in two core chains")
+                owner.setdefault(int(bit), []).append(gi)
+        pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
+        decl, body, names_all = [], [], []
+        chains = []
+        for gi, e in enumerate(bes):
+            tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
+            chains.append([f"u_ist_{tag}_{j}" for j in range(k)])
+        if b["dir"] == "in":
+            q, eq = (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
+            lines = txt.split("\n")
+            for gi, e in enumerate(bes):
+                tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
+                cq, ceq = q, eq
+                for j in range(k):
+                    decl.append(f"    wire [{W - 1}:0] {tag}_s{j}_q;\n    wire {tag}_s{j}_eq;  // kit_istations core chain")
+                    body.append(f"    ot_dp_st #(.W({W})) u_ist_{tag}_{j} (.clk(clk), .rst_n(rst_n), .d({cq}), .ea({ceq}), "
+                                f".q({tag}_s{j}_q), .eq({tag}_s{j}_eq));  // kit_istations: FIRM core pin-face station")
+                    cq, ceq = f"{tag}_s{j}_q", f"{tag}_s{j}_eq"
+                want = {int(x) for x in e["core_bits"]}
+                rx = re.compile(rf"^\s*\w+\s+{re.escape(e['core'])}\s*\(")
+                hit = [i for i, ln in enumerate(lines) if rx.match(ln)]
+                if len(hit) != 1:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: {len(hit)} instance lines of core {e['core']}")
+                seen = set()
+
+                def sub(m, cq=cq, want=want, seen=seen):
+                    if m.group(1) is None:          # bare read: only a 1-bit bus ([0:0]) reads its bit 0 this way
+                        if W != 1:
+                            raise SystemExit(f"kit_istations: {tn} {bus}: bare whole-bus read of {q} by {e['core']}")
+                        bit = 0
+                    else:
+                        bit = int(m.group(1))
+                    if bit in want:
+                        seen.add(bit)
+                        return f"{cq}[{bit}]"
+                    return m.group(0)
+                lines[hit[0]] = re.sub(rf"\b{re.escape(q)}(?:\[(\d+)\]|(?![\w$\[]))", sub, lines[hit[0]])
+                if seen != want:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: core {e['core']} does not read bits "
+                                     f"{sorted(want - seen)[:8]} of core_bits")
+            txt = "\n".join(lines)
+            for ln in txt.split("\n"):      # every reader must now be a core chain
+                if (re.search(rf"\b{re.escape(q)}(?:\[\d+\]|(?![\w$\[]))", ln)
+                        and not re.search(rf"\bu_ist_{re.escape(n)}__|\bu_bin_{re.escape(n)}(_pad\d+)?\s*\(", ln)
+                        and not re.match(r"^\s*(wire|reg|logic)\b", ln)):
+                    raise SystemExit(f"kit_istations: {tn} {bus}: {q} still read outside the core chains: {ln.strip()[:120]}")
+        else:
+            m = re.search(rf"^(\s*ot_dp_ste?\s+#\(\.W\({W}\)\)\s+u_bout_{re.escape(n)}\s*\(.*?\.d\()(\{{[^}}]*\}}|[^)]*)"
+                          rf"(\),\s*\.ea\()([^)]*)(\).*)$", txt, re.M)
+            if not m:
+                raise SystemExit(f"kit_istations: {tn}: no u_bout_{n} face register line to feed")
+            d0, ea0 = m.group(2).strip(), m.group(4)
+            els = [x.strip() for x in (d0[1:-1] if d0.startswith("{") else d0).split(",")]
+            bits = []                          # MSB-first element per bit (expand part selects)
+            for el in els:
+                ps = re.fullmatch(r"([\w$]+)\s*\[(\d+):(\d+)\]", el)
+                if ps:
+                    bits += [f"{ps.group(1)}[{x}]" for x in range(int(ps.group(2)), int(ps.group(3)) - 1, -1)]
+                else:
+                    bits.append(el)
+            if len(bits) != W:
+                raise SystemExit(f"kit_istations: {tn} {bus}: u_bout d has {len(bits)} bits != {W} (whole-wire "
+                                 "references are not expanded; fail closed)")
+            miss = [W - 1 - i for i in range(W) if (W - 1 - i) not in owner]
+            if miss:
+                raise SystemExit(f"kit_istations: {tn} {bus}: u_bout d bits {miss[:8]} belong to no core chain")
+            fin = []
+            for gi, e in enumerate(bes):
+                tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
+                cd = "{" + ", ".join(bits[i] if owner[W - 1 - i] == [gi] else "1'b0" for i in range(W)) + "}"
+                cq, ceq = cd, ea0
+                for j in range(k):
+                    decl.append(f"    wire [{W - 1}:0] {tag}_s{j}_q;\n    wire {tag}_s{j}_eq;  // kit_istations core chain")
+                    body.append(f"    ot_dp_st #(.W({W})) u_ist_{tag}_{j} (.clk(clk), .rst_n(rst_n), .d({cq}), .ea({ceq}), "
+                                f".q({tag}_s{j}_q), .eq({tag}_s{j}_eq));  // kit_istations: FIRM core pin-face station")
+                    cq, ceq = f"{tag}_s{j}_q", f"{tag}_s{j}_eq"
+                fin.append((cq, ceq))
+            dfin = "{" + ", ".join(f"{fin[owner[W - 1 - i][0]][0]}[{W - 1 - i}]" for i in range(W)) + "}"
+            line = m.group(1) + dfin + m.group(3) + fin[0][1] + m.group(5)
+            line = re.sub(r"^(\s*)ot_dp_ste\b", r"\1ot_dp_st", line)
+            txt = txt[:m.start()] + line + txt[m.end():]
+        txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
+        for gi, e in enumerate(bes):
+            lx, ly = e["leaf_um"]
+            for j, nm in enumerate(chains[gi]):
+                # out chains run core -> face: is_bits stage j counts from the leaf for out, from the pin for in
+                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} ist:{bus}:{e['core']} 0")
+            rep.append(dict(conn=e["conn"], core=e["core"], planned=k, bound_pads=len(pads), inserted=k,
+                            stations=chains[gi], core_bits=len(e["core_bits"]), plan_width=b["width"], bound_width=W))
+    return txt
+
+
 def bus_entries(t):
     """Station entries of a type's buses, one per bus.  The planner lists one entry per capture group, but a bus has one
     chain (bind face register -> leaf): its depth is the deepest entry, stage j at the bits-weighted centroid of the
@@ -820,7 +956,8 @@ def main(argv):
     txt = bfile.read_text()
     tcl = [TCL_HEAD]
     rep = []
-    for e in bus_entries(t):           # core<->core: core_stations() below
+    txt = core_pin_stations(tn, t, txt, man, tcl, rep)      # SUL0-PINFACE-1 per-core chains
+    for e in bus_entries(dict(t, internal_stations=[x for x in t.get('internal_stations', []) if not x.get('core')])):           # core<->core: core_stations() below
         conn = e["conn"]
         bus = conn[4:]
         n = gen_rtl.sv_id(bus)
