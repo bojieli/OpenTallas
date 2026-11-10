@@ -1,8 +1,10 @@
 """COORD 11-09 loopgap-153x-1109: census <=64 loads admitted for the S81 svc provider kits (s81svc_*) only."""
 import copy
 import json
+import sys
 from pathlib import Path
 import pytest
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import native_census as N
 import pre_route_gate as P
 
