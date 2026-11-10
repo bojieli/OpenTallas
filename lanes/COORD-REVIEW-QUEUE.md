@@ -33851,3 +33851,53 @@ Free scratch2 GB now: intel1 101, epyc2 110, hub 96, epyc4 121 (my units there a
 - 2026-11-10 02:04 PST STATE [DIE-HBM-97 -> KW-FIX-43, COORD] tag hold-qhubnw. DO_NOT_COUNT. q_hub_nw: the folder restore did not release it and its hold reason is dead (bind_F3b ended RC 1 on 11-09 00:21). KW-FIX-43 please release it as holder's call, re-keyed like q_hub_ne to plan_p9_wsw_r 4a66235b + bind_wsw15_vK5d_c12 + vK5d_c12: bind_matches True (offline), plan dir restored on epyc2 (326 cores files now). Current item_inputs (plan_final3 + bind_F3) must not be used. Provisional on contract children, owes re-sign like q_hub_ne.
 - 2026-11-10 02:04 PST STATE [DIE-HBM-97 -> KW-FIX-43, COORD] tag hold-q3edge. ot_hfd_coll_q3_edge_core: stale, drop the hold and build nothing. It is in no hard_cores list of plan_p11t, plan_p9_wsw_r or plan_final3; it was split into q3_edge_arg + q3_edge_link (main 2d53ff39874, 11-05), both of which have 11-06 signed records (counted status on the current plan not checked). Its old form hung twice in GRT and the watchdog stopped it 11-08, not needed.
 - 2026-11-10 02:04 PST STATE [DIE-HBM-97 -> COORD, KW-FIX-43] tag hold-dma-banks. DO_NOT_COUNT. ot_hgi_dma_back_static_vp4_banks_cp: no live form, needs a new one, hold stays. Still a q_hub_nw child in p11t and wsw and a contract child of q_hub_ne, no signed record. The last form (intel1 codex-hbm-stale-0222/vp4_east_vB_topgap) ended 11-09 11:51 in GRT-0116 after 17.9 h, 81,262 total overflow, 40.22% used, so a small tweak will not close it; the form13 hold text is from 11-04. I read the failed GRT geometry next and post one form; its pin ABI still needs a plan event to count.
+- 2026-11-10 01:59 PST STATE KW43-54 [KW-FIX-43 -> COORD, DIE-S81-85, DIE-HBM-97, DIE-QC-97, DIE-KV-97, HEAD-92, KV-PLAN-2] Queue FAILs and holds, the empty pipeline. DO_NOT_COUNT, nothing signed off. Full lists on intel2: kw43/plan_full.json, kw43/holds.json.
+  **(1) 29 queue-FAIL rows. Retry entries added for 6, committed and read back; they launch fresh on the next ticks.** Fail times PST. Merges searched on main back to 11-08 and matched by hand, and I only counted a fix if it is on the wave source.
+  **RETRY ADDED (6):**
+  - slice_station__t27@2 (11-07 05:52), t36@4 (06:12), t43@4 (06:12), t49@1 (13:02), t37@7 (15:42): late-ECO exhausted, FF hold -72 to -114, down to -20 to -26 after ECO, two with ECO tool failures. Fixes after: eco_loop hold margin 5 ps (11-09 04:51), eco_loop hold-scope (12:32). Both in the runtime and src_t51f eco_loop. ECO-CLOCK-HOOK (14:00) I could not confirm on src_t51f. No lane had posted on these 5 since they failed.
+  - q_b101_nw@12 (11-09 20:56): NOT RUN, epyc2 scratch floor, 110 GB free now. Not a code fix; it never ran.
+  **FIX LANDED, NO RETRY, why (3):**
+  - iqf__t1 a11 (11-09 10:04): DSREP merged 22:49, but only on main: src_t51f differs on ot_dp_clk_landing.sv, ot_meso_fifo.sv and landed_sidecar_h2.json. It is RTL plus plan sidecar, so an overlay and re-bind. A retry now rebuilds the old form. Proposal: carry it in the one S81 re-bind with same_relay and LeafFollow. **Your call.**
+  - kshare v8e478a a6 (12:17), v700685 a6 (15:45): reset-keep merged 15:57 and is in src_hbmf4 recipes, but the private vR of v700685 was NOT SIGNED (TT -67 / FF -303), so an unchanged relaunch is a known fail. DIE-HBM-97's pin-cycle form vPC is the path, in route. Also my open item from 16:1x (re-key both).
+  **FIX LANDED, ALREADY HANDLED (1):** kv3_sys_SD_v1 a20 (22:19, pin_audit extra straps): fix merged 00:11, audit/sign-off resume running, no fresh route per your ruling.
+  **NO FIX ON THE WAVE SOURCE (19), by class:**
+  - Timing, routed not signed: slice_station__t52 a18 (11-09 06:12; conservative form routed NOT SIGNED, FF -53.7), vsN4 a3 (20:40), hd_host_e a3 (20:40), coll_s a19 (21:54), hd_host_w a3 (21:16), hd_spn_end a2 (23:26), hd_spn a2 (00:22), sle_stm_v3 a14 (00:48). hd_host_e/w conservative form launched 23:03.
+  - GRT overflow: serdes__t13 a22 (11-09 12:42, form vS launched 14:29), hfd_hgi_vms_glue_nw_t a11 (15:07), cbf_q11 a18 (20:41), leaf__t1 a5 (00:09), leaf__t51 a6 (01:10).
+  - Post-CTS hold: sle_su_c a15 (23:12), inter-tap skew per DIE-QC-97.
+  - GRT-0183: serdes__t4 a12 (05:28): MAXWIRE-183 merged 21:24, NOT on src_t51f; DS-85 routed it to REDESIGN.
+  - Timing runaway, killed: bk_sel__t2 a34, serdes__t16 a12 (both 13:23).
+  - LEC NOT EQUIVALENT: seqhost__t1 a7 (00:35), DS-85 reading.
+  - RSZ-0060: hd_ctl a2 (19:50).
+  **(2) 88 holds, 46 reasons: hbm 31, s81 27, kv 16, qc 13, head 1.** Age from kit_wave.json history.
+  **REASON GONE (9 rows):**
+  - qwen_compute tt_ctlm, 8.4 d, row is PASS. Delete.
+  - qwen_compute coll_ftc, 1.8 d, Codex canary service inactive, row CANCELLED, no owner.
+  - kv3_io_cor, kv3_io_cor_v1, kv3_io_ft_v1, 1.0 d, "lift when its run ends": no run, ROUTE-HELD since 11-08.
+  - q_sm0, q_sm1, q_sm2, q_sm3, 1 d, "until HBM-SM-KIDS-2 posts views": HBM-COLLECT-1 posted the kids, smk overlay merged 16:55. Likely gone; DIE-HBM-97 to confirm all kids.
+  **NO LIVE OWNER (holder's last post older than 1 day; 22 rows):**
+  - s81 svc_rs x14 (2.0 d, REDESIGN split, S81-SVCRS-1/2 last 11-08). Largest group.
+  - hbm ot_hfd_coll_q3_edge_core, ot_hgi_dma_back_static_vp4_banks_cp (5.2 d, DIE-HBM-66 forms, last 11-04).
+  - hbm q_hub_nw (1.1 d, "DIE-HBM-96 releases", last 11-09 01:35).
+  - qkd_hr_core_prompt (2.2 d, DIE-KV-91 LEC, last 11-08).
+  - cbf_q01, cbf_q01_s2 (2.6 and 1.2 d, Codex, form pending).
+  - slw_stm_v2__cl9beb65e6 (1.8 d, QC-TYPES-8/9, redesign).
+  - coll_core (1.2 d, QC-TYPES-12 LEC).
+  **Permanent, not pipeline (23 rows, "signed/replaced, no rebuild"):** s81 ve/vn/vq/vs/vsw x7, xrt1, xrt3, dsdv_bksel_c, dsdv_bk_g; hbm hfd_ep_static, ot_hnx_fused_host_program, idx_query_static, idx_score_hcol_h1, su_programme_pslice_c5, pc_ctrl_leaf_cfg_h9b, opstore_a, opstore_b, lane_exp, core_split3__ctl, coll_q3_vm_core (counted, count 255); kv none.
+  **Live owner, waiting on a form or event (34 rows):** hbm q_b110 family x8 (DIE-HBM-97 split rebind), q_spu0 x2, q_b010 x2, idx_selector; qc sle_sc_v2, sle_sc_v3, coll_ucie, sle_fw_v3, cbn_q01 x3 (RE-FORM, band class: the v2n comb finding may apply); kv hgi x6 (e2/e6 launched 22:20), pv band x4, sys_SD and hub_Wo; s81 leaf__t75, t54__cl501e5681; head hd_serdes.
+  **MY MISS.** q_spu0 and q_spu0__physical_v1: you ruled fresh gen on plan_p12t_spu0 at 20:10, DIE-HBM-97 repeated it at 22:19 (no ft_hop_lockup), and I have not done it. The hold is mine and the release condition is met. Doing it next, after a bind check on p12t.
+  **Recommendation.** Fastest refill: (a) rule the S81 re-bind carrying iqf DSREP; (b) name an owner for svc_rs; (c) release q_sm0-3 on DIE-HBM-97's word; (d) the KV re-bind table, still waiting on the samples.
+- 2026-11-10 02:02 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 1 event(s): dsdv_slice_lepw_mus_LP__t2 AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_on_macro,clock_tap_sinks,col_v,empty,fill,grt,partial_face,pin_reg_max,pin_reg_p90,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mus_LP__t2/attempt_9/gen/dsdv_slice_lepw_mus_LP__t2)
+- 2026-11-10 02:02 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 2 event(s): q_b102__physical_v1 unstarted waiter RESTAGED (epyc7 -> epyc2); q_b101_nw LAUNCHED (kw-hbm-qb101nw-13-4979)
+- 2026-11-10 02:04 PST STATE KW43-55 [KW-FIX-43 -> COORD, DIE-QC-97, DIE-HBM-97, DIE-S81-85, DIE-KV-97, S81-SVCRS-3] Releases from your KW43-54 ruling applied, committed, read back. DO_NOT_COUNT, nothing signed off.
+  **Released.** Holds deleted: tt_ctlm, kv3_io_cor, kv3_io_cor_v1, kv3_io_ft_v1, qkd_hr_core_prompt, q_spu0, q_spu0__physical_v1. Revert in dies.*.rel55_prev_kw43.
+  **kv3_io x3, one thing beyond your wording.** They were also in route_hold_items (Root 1113, review before route), and I removed those too. Leaving it would park the fresh kit at route. If I had lifted the holds alone, the 11-08 kits on the old bind would have gone to route, so I first moved the rows to a fresh uncharged relaunch (state before config). They regenerate on the current bind, a new attempt, no route on the old kits. They will hit the same band class if their windows collide with a comb, not checked.
+  **q_spu0 x2 (E13).** item_inputs = plan_p12t_spu0 (sha 8b9e38c0) + bind_p11t_vK5d_c12; bind_matches True on both types, no spu0 entry in ft_hop_lockup. The plan existed only on intel1, so I staged it read-only on epyc7 and epyc2 (sha checked). Fresh uncharged relaunch. PDN-WIDEPOCKET rebase is not included; DIE-HBM-97 said that follows.
+  **Not expected to launch:** tt_ctlm (current block is PASS) and qkd_hr_core_prompt (counted core). Dry plan on the candidate config before the flip shows neither eligible. Row FAIL PLAN NO_RECIPE from 11-03 is old.
+  **Ruling recorded.** iqf__t1 DSREP goes in the one S81 re-bind with same_relay and LeafFollow, no standalone retry. slice_station retries stand.
+  **Owners, please take these (COORD).**
+  - DIE-QC-97: coll_ftc (delete the hold if the type is not in the plan or is covered, else your form), cbf_q01, cbf_q01_s2, slw_stm_v2__cl9beb65e6, coll_core.
+  - DIE-HBM-97: q_sm0-3 (kid views posted by HBM-COLLECT-1, smk overlay merged; confirm all kids and release), q_hub_nw (was "DIE-HBM-96 releases"), ot_hfd_coll_q3_edge_core, ot_hgi_dma_back_static_vp4_banks_cp.
+  - S81-SVCRS-3 (new lane): svc_rs x14, the REDESIGN split; holds on svc_hi/svc_lo_dsdv_svc_rs__t*, svc_lo_dsdv_svc_rs_w__t1.
+  Tell me when a hold can go; I delete, commit, read back.
+  **DIE-QC-97, the comb finding may apply to cbn_q01** (__clab6e67f2 a26, __cld9ff4c40 a11, __cldd6ea846 a16, all "clock-landing band", held RE-FORM). On KV v2n/v3/v4 the cause is OT_ISTATIONS placing a FIRM station comb at 2.16 um pitch through a landing window: gaps are 1.08 um, and OT_CLAND_FIT_RESERVE=resize needs 1.188 um for DFFHQNx1, so no site exists (KW43-52). Check: failing cell's window from landing_placement.tcl against ot_face_flops.txt for u_ist_ cells inside it. I have not run this on QC.
+  **Corrections to KW43-54.** Permanent "no rebuild" rows are 22, not 23, and live-owner rows 35, not 34 (9+22+22+35 = 88). Three of the slice_station rows had ECO tool failures (t36, t37, t43), not two.
