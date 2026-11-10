@@ -2,6 +2,7 @@
 # usage: patch_cf2.py IN OUT [mutant]   Not cycle-exact: fault/configured/init_busy move +1 at the end of the scan; proved by bench.
 # mutant: M1 fin not shifted (old checking/last), M2 last-row compare skipped in bad, M3 rbd kill on the restart removed,
 #         M3 both restart kills removed (proved redundant, see prove_cf2.ys; survives by design)
+#         M6 (MUX only) core fault U.fault one extra register
 #         M4 reject gates not extended, M5 rd registered but check_row not (compare misaligned by one row)
 import re,sys
 src,dst=sys.argv[1],sys.argv[2]; mut=sys.argv[3] if len(sys.argv)>3 else ''
@@ -104,5 +105,10 @@ left=[l.strip()[:90] for l in s.split('\n') if ib in l]
 print('init_busy remaining refs',len(left),[x.replace(P,'P.')[:70] for x in left])
 tag='  reg _hcb_fin, _hcb_bad, _hcb_f0;\n'
 rep(tag,block+'  assign %s = %s|| _hcbr_ck;\n'%(ib,ibq)+'  wire _hcbr_p1 = (_027215_ && !_027256_) && (%s|| _hcbr_ck);\n  wire _hcbr_p2 = _hcbr_clr && _hcbr_ck;\n'%ck+tag)
+if mut=='MUX':   # M6: core fault U.fault delayed one more edge (2 after program_fault): must fail the bench
+    UF='\\u_body.g_q3.n_u_fj.u_fj.u.fault '
+    m=re.search(r'else '+re.escape(UF)+r' <= (_\d+_);',s); assert m,'U.fault reg'
+    s=s.replace(m[0],'else %s <= (_hcbr_mut==6) ? _hcbr_fd : %s;'%(UF,m[1]))
+    rep('  reg _hcbr_ck, _hcbr_last, _hcbr_clr;','  reg _hcbr_ck, _hcbr_last, _hcbr_clr;\n  reg _hcbr_fd; always @(posedge clk_program) _hcbr_fd <= %s;'%m[1])
 open(dst,'w').write(s)
 print('leaves',len(L),'rd',sum('rd[' in x for x in L),'row',sum('check_row' in x for x in L),'clones',len(C),'concat',len(conc),'mut',mut or '-')
