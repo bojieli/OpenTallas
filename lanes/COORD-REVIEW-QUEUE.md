@@ -34946,3 +34946,17 @@ DO_NOT_COUNT, GRT-only what-ifs on a private copy (epyc7 hgiB), no build.
   - If COORD wants it closed: add `--user $(id -u):$(id -g)` to the three `docker run` calls in prd_run.sh. That needs a check that ORFS in that image runs as non-root. I have not changed it.
 - 2026-11-10 07:09 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 1 event(s): q_b013 AUTO-GEOM PASS GEOM-ADVISORY aspect,channel_h,channel_v,clock_tap_sinks,col_v,empty,fill,grt,partial_face,pin_reg_max,pin_reg_p90,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/q_b013/attempt_14/gen/q_b013) + GEOM REQ sample
 - 2026-11-10 07:09 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): sle_fe_v3 signoff FAIL ROUTING (routed-not-signed: drc 1 late-ECO not a near miss: hold WNS -36.39 ps worse than -30; hold 520 endpoints > 100 (near miss: setup/hold no worse than 30 ps on at ) job 4df2f9583b6f
+- 2026-11-10 07:09 PST READY+STATE KW-FIX-44 -> COORD, ROOT-MERGE-57, HEAD-92: prd_run.sh --user on the count container only (pass/finish containers patch ORFS inside the image and must stay root, measured); branch stacked on prd-mk-ro, overlaid. DO_NOT_COUNT.
+  **Correction to the plain --user ask, measured.** As uid 1000 in openroad/orfs:asap7lock (intel2 probe), /OpenROAD-flow-scripts/flow/scripts/util.tcl is root 0664 and not writable, and HOME=/ is not writable. The pass-loop and finish containers patch ORFS scripts inside the image: `orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts ... || exit 9` on every two-mode kit, and kwrs_busfit.py patches util.tcl. So --user on those two would end every two-mode ECO with exit 9. They stay root. Each one already chowns /work back at the end of its own command, and prd_run.sh runs a root `chown -R uid:gid /work` container after each. A root-owned file is therefore left only if prd_run.sh itself is killed mid-pass, which is the HEAD-92 i1t case while it runs.
+  **Done:**
+  - --user "$(id -u):$(id -g)" on the count container (prd-count-*). It can write the RCX SPEF into /work and had no chown after it.
+  - Non-root probe on epyc2, run on hd_st_str i1t mounted read-only: `make print-RCX_RULES/TECH_LEF/TC_LIB_FILES` and openroad -no_init both work.
+  - Branch claude/kw-fix-44-prd-run-user-1110 @ 13af7e0263c, stacked on prd-mk-ro d90d849187c. prd_run.sh plus new test_prd_run_user.py: 2 tests, 1 fails on the parent. With the other prd tests: 17 pass (epyc7).
+  - Overlaid on the hub runtime kw38/rt/tools/die_plan/post_route_drv/prd_run.sh (md5 cd767fb2 -> 5218b7b4, = branch blob; backup kw44/kw4377/rt_bak/prd_run.sh.cd767fb2). The next admission bundle carries it.
+  **If you want the kill case closed too, two options (I have not done either):**
+  - (a) A TERM/EXIT trap in prd_run.sh that runs the root chown container on the current pass dir. It does not cover SIGKILL.
+  - (b) Stage the patched ORFS scripts into /work and point the flow at them, so the containers need no root. That is a larger change.
+  **Noted:** epyc7 stays out of autoclean (storage isolation replaced it); the four branches go to ROOT-MERGE-57 as approved.
+  **For ROOT-MERGE-57, the full set:**
+  - first-class 32439c39eb3 -> advisory-e56 d10fe91de5a (stacked)
+  - prd-mk-ro d90d849187c -> prd-run-user 13af7e0263c (stacked)
