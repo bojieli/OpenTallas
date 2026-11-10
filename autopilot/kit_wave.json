@@ -3399,7 +3399,8 @@
     "dsdv_slice_lepe_nh_mus_LP__t1@6",
     "dsdv_slice_lepe_mu_LP__t2@7",
     "dsdv_slice_lepw_mu_LP__t2@7",
-    "dsdv_slice_lepw_mus_LP__t2@8"
+    "dsdv_slice_lepw_mus_LP__t2@8",
+    "dsdv_slice_iq_C__t1@22"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4387,7 +4388,8 @@
     "ot_s81sl_leaf__t50@10": "KW-FIX-42 03:24 COORD RULINGS 03:2x: REDESIGN: macros moved, not a retry; escape-open, 18 macros, model 2.46->1.32 (DIE-S81-85 03:12); resume at floorplan, synth reused; PIN CYCLES 0",
     "dsdv_slice_lepe_nh_mus_C__t1@11": "DPL-0033 legalizer class fix: --dpl-diamond (KW-FIX-42, COORD NEWFAIL 04:0x); one retry, then DIE-S81-85 form",
     "svc_hi_dsdv_svc_pvso_entry__t1@6": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch FORCE: key does not move but bound RTL changed (bind6)",
-    "svc_hi_dsdv_svc_pvso_entry__t2@6": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch FORCE: key does not move but bound RTL changed (bind6)"
+    "svc_hi_dsdv_svc_pvso_entry__t2@6": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch FORCE: key does not move but bound RTL changed (bind6)",
+    "dsdv_slice_iq_C__t1@22": "KW-FIX-44 2026-11-10: COORD retry once after disk room (a22 INFRA no host with 60 GB at 03:29; epyc2 scratch2 now 118 GB after store GC)"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
