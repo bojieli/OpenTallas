@@ -87,7 +87,7 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
         raise ValueError(f'bound data mode needs a clean strict bind: n_errors {errs}, '
                          f'type_splits {len(rep.get("type_splits") or [])}')
     prov = json.loads((bound / 'provenance_bind.json').read_text()).get('provenance', {})
-    netlist_sha = None
+    netlist_sha = netlist_path = None
     if manifest is not None:
         if prov.get('manifest') != manifest:
             raise ValueError(f'bind manifest {prov.get("manifest")} != selected {manifest}')
@@ -95,12 +95,13 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
         nl = m['netlist'] if isinstance(m['netlist'], list) else [m['netlist']]
         if len(nl) != 1:
             raise ValueError(f'manifest names {len(nl)} netlists; bound data needs exactly one die top')
-        netlist_sha = file_sha(Path(root) / nl[0])
+        netlist_path = Path(root) / nl[0]
+        netlist_sha = file_sha(netlist_path)
     groups = json.loads((bound / 'bus_groups.json').read_text())
     lat = json.loads((bound / 'bind_latency.json').read_text())
     names = json.loads((bound / 'bind_names.json').read_text())
     return dict(bound=bound, clean=clean, n_errors=errs, type_splits=len(rep.get('type_splits') or []),
-                provenance=prov, netlist_sha256=netlist_sha, landing=groups['landing'], internal=groups.get('internal', []),
+                provenance=prov, netlist_sha256=netlist_sha, netlist_path=netlist_path, landing=groups['landing'], internal=groups.get('internal', []),
                 image_selectors=rep.get('instance_path_params', []),
                 lane_bound={b['lane']: b['bound_stages'] for b in lat['buses']}, names=names,
                 sha256={f: file_sha(bound / f) for f in ('bind_report.json', 'bus_groups.json', 'bind_latency.json',

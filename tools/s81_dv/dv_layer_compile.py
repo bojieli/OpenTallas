@@ -113,13 +113,60 @@ INST_RE = re.compile(r'^\s*(\w+)\s+(?:#\((.*?)\)\s+)?(\w+)\s*\((.*)\);\s*(?://.*
 CONN_RE = re.compile(r'\.(\w+)\(\{?([^(){}]*(?:\{[^{}]*\})?[^(){}]*)\}?\)')
 
 
-class Die:
-    """bind9 die.v: instances (master, params, port expressions, straps) and the relay / landing links"""
+LD_RE = re.compile(r'^\s*(dsfd_dvland\w*)\s+ld_(\w+)\s*\(.*\.k\(([^)]*)\)')
+ST_RE = re.compile(r'^\s*(dsfd_dvrlyh?\w*)\s+st_(\w+)\s*\(')
 
-    def __init__(self, tree):
+
+def transport_identity(text):
+    """the die's legacy transport skeleton: landings ld_<link> (master, K strap) and relay stations st_<link>_<k>"""
+    ld, st = {}, set()
+    for line in text.splitlines():
+        m = LD_RE.match(line)
+        if m:
+            ld[m.group(2)] = (m.group(1), m.group(3))
+        m = ST_RE.match(line)
+        if m:
+            st.add((m.group(1), m.group(2)))
+    return ld, st
+
+
+def check_transport_self(text):
+    """S81-PLAN-1 11-10: Die builds every link from the netlist itself (st_<link>_<k> stations, ld_<link> landing + K
+    strap), so a bind's own die top (die_b178.v) needs no bind9 die.v: it must be self-consistent instead.  Raise when a
+    landing has no literal K strap (the land-plan E fallback would silently price it) or a station chain has a gap."""
+    ld, st = transport_identity(text)
+    bad_k = sorted(k for k, (_, kv) in ld.items() if not re.fullmatch(r"\d+'[dh][0-9a-fA-F]+", kv.strip()))
+    chains = {}
+    for _, name in st:
+        m = re.fullmatch(r'(.+)_(\d+)', name)
+        chains.setdefault(m.group(1), []).append(int(m.group(2)))
+    gaps = sorted(lk for lk, ks in chains.items() if sorted(ks) != list(range(len(ks))))
+    if bad_k or gaps or not ld:
+        raise ValueError(f'bound die top transport not self-consistent: landings {len(ld)}, K not literal {bad_k[:6]}, '
+                         f'station chains with gaps {gaps[:6]}')
+    return dict(landings=len(ld), stations=len(st), links_with_stations=len(chains), transport_self_check='PASS')
+
+
+class Die:
+    """bind9 die.v: instances (master, params, port expressions, straps) and the relay / landing links.
+    netlist (S81-PLAN-1 11-10, --bound-data): the bind's OWN as-built die top (the manifest netlist, die_b178.v) replaces
+    bind9 die.v; its sha must equal the bind's and its transport must be self-consistent (fail closed).  The p4l plan
+    / land tables stay the block and E source; links come from the netlist as for bind9."""
+
+    def __init__(self, tree, netlist=None, netlist_sha=None, bound_rtl=None):
         self.tree = Path(tree)
         b = self.tree / 'results/arch/s81_dv_1016/bind9'
-        raw = gzip.decompress((b / 'die.v.gz').read_bytes()).decode()
+        legacy = gzip.decompress((b / 'die.v.gz').read_bytes()).decode()
+        self.die_source = dict(path=str(b / 'die.v.gz'))
+        if netlist is None:
+            raw = legacy
+        else:
+            raw = Path(netlist).read_bytes().decode()
+            sha = hashlib.sha256(raw.encode()).hexdigest()
+            if netlist_sha is None or sha != netlist_sha:
+                raise ValueError(f'bound die top {netlist} sha {sha[:12]} is not the bind netlist {str(netlist_sha)[:12]}')
+            self.die_source = dict(path=str(netlist), sha256=sha, legacy_sha256=hashlib.sha256(legacy.encode()).hexdigest(),
+                                   **check_transport_self(raw))
         self.die_sha = hashlib.sha256(raw.encode()).hexdigest()
         self.inst = {}
         for line in raw.splitlines():
@@ -131,7 +178,14 @@ class Die:
             for c in CONN_RE.finditer(body):
                 conns[c.group(1)] = c.group(2).strip()
             self.inst[name] = dict(master=master, params=params or '', conns=conns)
-        self.timing_contract = source_contract(tree, ROOT, self.inst)
+        xrt_form = None
+        if bound_rtl is not None:
+            # the bind's own emitted slice RTL names the XRT landing form (RF-J RING_LAND 2 on every bound S81 slice)
+            from xr_timing import bound_xrt_ring_land
+            xrt_form, n_xrt = bound_xrt_ring_land(bound_rtl)
+            self.die_source.update(xrt_ring_land=xrt_form, xrt_instances=n_xrt, bound_rtl=str(bound_rtl))
+        self.timing_contract = source_contract(tree, ROOT, self.inst, xrt_ring_land=xrt_form) if xrt_form is not None \
+            else source_contract(tree, ROOT, self.inst)
         self.plan = json.loads((self.tree / 'results/arch/s81_dv_1016/p4l/plan.json').read_text())
         self.land = json.loads((self.tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json').read_text())
         self.E = {l['link']: l for l in self.land['links']}
@@ -1022,14 +1076,20 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
-    die = Die(tree)
     bound_rec = None
-    if bound_data is not None:
+    if bound_data is None:
+        die = Die(tree)
+    else:
         # TOK-S81-2: data transports re-aged from ONE strict bind (layer_prog/bound_data.py); a link whose bound age is
         # not established raises on read, and every op that reads one is BLOCKED_BOUND (never the legacy/0 age)
         from layer_prog import bound_data as BD
         B = BD.load_bind(bound_data['dir'], bound_data['manifest'], ROOT, diagnostic=bound_data.get('diagnostic', False))
+        # S81-PLAN-1 11-10: every current S81 bind is made from die_b178.v (its manifest netlist), not bind9 die.v
+        die = Die(tree, netlist=B.get('netlist_path'), netlist_sha=B['netlist_sha256'],
+                  bound_rtl=Path(B['bound']) / 'rtl') if B.get('netlist_path') \
+            else Die(tree)
         bound_rec = BD.rebind_links(die, B, diagnostic=bound_data.get('diagnostic', False))
+        bound_rec['die_source'] = die.die_source
         (out / 'bound_data_links.json').write_text(json.dumps(bound_rec, indent=1) + '\n')
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
     sched = layer_schedule(tree, layer, wl)

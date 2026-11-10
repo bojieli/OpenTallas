@@ -184,6 +184,18 @@ def resolve(die, slice_inst, source_root=None):
         xr = next(x for x in xr_options if x.endswith('3' if hb != 0 else '1'))
     if xr is None:
         raise ValueError('selected source XR instance is unresolved')
+    # S81-PLAN-1 11-10: the selected XRT landing form (RING_LAND 1 = +1 edge on every V-CTL; 0 / 2 = 0 edges), from the
+    # u_xr parameter override or, absent one, the selected defines (OT_S81SL_XRT_RFJ -> 2, OT_S81SL_XRT_RLAND -> 1, else 0)
+    xr_ring_land = None
+    if xr.startswith('ot_s81sl_xrt'):
+        ov = set(re.findall(r'\b' + re.escape(xr) + r'\s*#\s*\(([^;]*?)\)\s*u_xr\s*\(', text, re.S))
+        vals = {int(m) for o in ov for m in re.findall(r'\.RING_LAND\s*\(\s*(\d+)\s*\)', o)}
+        if any(not re.search(r'\.RING_LAND\s*\(', o) for o in ov) or not ov:
+            d = selected_defines or set()
+            vals.add(2 if 'OT_S81SL_XRT_RFJ' in d else (1 if 'OT_S81SL_XRT_RLAND' in d else 0))
+        if len(vals) != 1:
+            raise ValueError(f'selected XRT ring landing form is ambiguous: {sorted(vals)}')
+        xr_ring_land = vals.pop()
     before = set(sources)
     body(xr)
     xr_paths = set(sources) - before
@@ -226,7 +238,7 @@ def resolve(die, slice_inst, source_root=None):
     result = dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
                 die_master=die.inst[slice_inst]['master'], wrapper_chain=chain,
                 xg=xg, ring=ring, streamer=streamer, capture=cap,
-                xr=xr, xr_source_path=xr_path,
+                xr=xr, xr_source_path=xr_path, xr_ring_land=xr_ring_land,
                 selected_hb=hb,
                 streamer_added_capture_edges=added, source_sha256=sources,
                 source_root=str(source_root), explicit_source_root=explicit, physical_binding_qualified=False,
