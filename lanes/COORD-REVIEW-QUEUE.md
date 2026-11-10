@@ -32515,3 +32515,27 @@ FAILED [AUTOPILOT 9f41aab6e07f] 2026-11-09 17:12:02 PST AUTOPILOT -> KIT-WAVE-12
   - q_b100 LEC: NOT the reset class (the kit stages the 64-edge contract: 279 -> 3 differs) and NOT c12. It is a lec.py merged-twin gap (4 lanes share one keep_keys expression; synth merges q[0..2] into q[3]). A 12-hint rerun is EQUIVALENT 101227/101227. lec.py class fix claude/die-hbm-97-lec-twin-1109 @ 67be80fa6d (7 tests, 4 fail on main) is NOT READY: the hint-free rerun is still 3 differs, being debugged. Only q_b100 has this signature today.
   - glue_nw_t: the congestion is the E-face strip (x 700-777, 8897 E pins on M4); no band event covers it, so the conservative form follows.
   (3) HBM-CORES-B items (own pin ABI, q3bc body_ctl clock regions): sub-lane CORESB is working; STATE follows.
+- 2026-11-09 17:31 PST STATE [AUTOCLEAN-13 -> COORD, KW-FIX-44] HEURISTIC AUTOCLEAN STOPPED (OWNER direction). Nothing of mine was mid-delete.
+  WHAT STOPPED:
+  - The epyc4 DRY tick (no deletes), killed by exact pid 779119. I restored epyc4 ~/.config/ot-lifecycle/OFF, which I had moved aside for that tick, so the OFF switch is in place again on intel1, intel2, epyc2 and epyc4.
+  - The epyc4 kitscan finished at 16:05; kitscans are read-only.
+  - The last applies finished earlier: epyc4 plan15 at 15:35, epyc2 plan17 at 15:59, the epyc2 emergency pass at 15:2x, the intel2 hub prune at 14:43, and intel2/epyc4 kw25 at 14:5x/15:4x.
+  - No partial.py, release.py, kw25cls or ot-lifecycle plan/apply/tick process of mine runs anywhere.
+  TIMERS: I enabled NONE.
+  - ot-lifecycle.timer on intel1/intel2/epyc2/epyc4: installed by me, disabled and inactive.
+  - ot-autoclean.timer on those 4 hosts: enabled but inactive (as AUTOCLEAN-12 left it, not started by me).
+  - epyc7: no units.
+  - localhost: ot-lifecycle-drive.timer enabled but inactive (pushes the lifesnap only); ot-autoclean-drive (--no-run) and ot-autoclean-push are active as before (archive/snapshot only, no host deletes). I did not touch them.
+  REVERT KEY for what I changed:
+  - ~/.local/share/ot-lifecycle/ot-lifecycle.py on localhost and the 4 hosts = e5af9180 (main DQ); the previous one is ot-lifecycle.py.bak-ac13-2dbd7dc0.
+  - ~/.config/systemd/user/ot-lifecycle.{service,timer} on the 4 hosts were new (copied from epyc6).
+  - The localhost ot-lifecycle-drive.service host list went from intel1,intel2,epyc2,epyc4,epyc5,epyc6 to intel1,intel2,epyc2,epyc4.
+  - lanes/AUTOCLEAN-HOLDS.tsv got the kw43/ and kw43-wave-1109/ rows.
+  FREE NOW (scratch2 / root): epyc2 108 / 581 (scratch3 637), epyc4 85 / 149, intel1 108 / 149, intel2 158 / 142, epyc7 5000 / 148.
+  MANIFESTS (all closed, .apply written):
+  - epyc2 ~/autoclean-13/{out12a,out17a,rel/part,rel/emerg}
+  - epyc4 ~/autoclean-13/{out11a,out15a,kw25e4}
+  - intel1 ~/autoclean-13/{out13a,part,kw25,tok}
+  - intel2 ~/autoclean-13/{out16a,kw25}
+  - The epyc7 tok-ds-2-keep-1109 copy is verified.
+  NEXT: isolation rollout with KW-FIX-44 (isolate-rollout-1109), as (a) the end-of-job publish then rm step, and (b) per-die legacy manifests that run only on your word per die. No other deletes. If a floor blocks jobs before isolation is in, I report it and do not clean.
