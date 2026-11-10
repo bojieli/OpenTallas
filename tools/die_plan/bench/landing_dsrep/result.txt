@@ -1,0 +1,9 @@
+form=default W=513 normal: TB_DSREP W=513 compared 2980 ready_cycles 2920 mismatches 0 fault 0 -> TB_DSREP PASS
+form=default W=513 mutant: TB_DSREP W=513 compared 2980 ready_cycles 2920 mismatches 2195 fault 0 -> TB_DSREP FAIL
+form=default W=514 normal: TB_DSREP W=514 compared 2980 ready_cycles 2920 mismatches 0 fault 0 -> TB_DSREP PASS
+form=default W=514 mutant: TB_DSREP W=514 compared 2980 ready_cycles 2920 mismatches 2195 fault 0 -> TB_DSREP FAIL
+form=wchk W=513 normal: TB_DSREP W=513 compared 2980 ready_cycles 2919 mismatches 0 fault 0 -> TB_DSREP PASS
+form=wchk W=513 mutant: TB_DSREP W=513 compared 2980 ready_cycles 2919 mismatches 2194 fault 0 -> TB_DSREP FAIL
+form=wchk W=514 normal: TB_DSREP W=514 compared 2980 ready_cycles 2919 mismatches 0 fault 0 -> TB_DSREP PASS
+form=wchk W=514 mutant: TB_DSREP W=514 compared 2980 ready_cycles 2919 mismatches 2194 fault 0 -> TB_DSREP FAIL
+BENCH rc=0

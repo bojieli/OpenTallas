@@ -404,7 +404,8 @@ module ot_meso_ring #(
     parameter bit TNEG     = 0,      // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
                                      // runs on the falling tclk edge: a static T/2 writer phase, which placement covers.
                                      // Source-synchronous inputs launched on rising tclk gain T/2 of write hold.
-    parameter int WCCB     = 64      // private conservative writer chunk width; appended for positional compatibility
+    parameter int WCCB     = 64,     // private conservative writer chunk width; appended for positional compatibility
+    parameter int DSREP    = 1       // DIE-S81-85 11-09: read-select copies per chunk (ot_meso_dsel SREP, DSREP-1); 1 = identical logic
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -551,7 +552,7 @@ module ot_meso_ring #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*WCH +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG), .SPLIT(RSPLIT)) u_dsel (.clk(rclk), .align(ONV ? r_align_v[c] : r_align), .on(ONV ? r_on_v[c] : r_on),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(RDREG), .SPLIT(RSPLIT), .SREP(DSREP)) u_dsel (.clk(rclk), .align(ONV ? r_align_v[c] : r_align), .on(ONV ? r_on_v[c] : r_on),
                                                       .place(rp_place[AW-1:0]), .sd(sd_c), .y(r_d[c*WCH +: WCH]));
     end
     logic r_v_c, r_lap_c;
