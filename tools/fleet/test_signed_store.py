@@ -128,6 +128,42 @@ def test_late_pass_refuses_changed_unit():
     finally:
         si.ss.late_provenance = orig
 
+
+def test_late_pass_alias_copy():
+    """11-09 HBM smk: the stored origin copy scans unversioned (its PROVENANCE names another host's DB); the alias copy on that host is
+    versioned -> selected, and its whole unit is the extra set (origin files are not in it)."""
+    try:
+        import signed_store_ingest as si
+    except ImportError:
+        print("SKIP test_late_pass_alias_copy"); return
+    import hashlib
+    so = '{"verdict": "SIGNED"}'
+    eid = hashlib.sha256(so.encode()).hexdigest()
+    e = dict(id=eid, origin="h7:/c/so/signoff/signoff.json", aliases=["h7:/c/so/signoff/signoff.json", "h1:/k/so/signoff/signoff.json"],
+             name="n", top="t", generated="g", scan=dict(name="n"), files=[["c/so/signoff/signoff.json", 5, "s1"]])
+    r = dict(scan_host="h1", path="/k/so/signoff/signoff.json", name="n", top="t", generated="g", prov_file="/k/so/PROVENANCE.json",
+             flow_tag="flow-x", src_commit="abc")
+    assert si.select_late([r], [e]) == [(e, r)]
+    assert si.select_late([dict(r, scan_host="h9")], [e]) == []                      # not a known copy
+    assert si.select_late([r], [dict(e, aliases=[e["origin"]])]) == []               # origin-only entry: alias path unknown
+    unit = dict(files=[["/k/so/signoff/signoff.json", 5], ["/k/so/PROVENANCE.json", 3], ["/k/run/6_final.odb", 9]])
+    good = {"/k/so/signoff/signoff.json": [5, "s1"], "/k/so/PROVENANCE.json": [3, "pp"], "/k/run/6_final.odb": [9, "db"]}
+    calls = []
+    orig = si.ss.late_provenance
+    si.ss.late_provenance = lambda *a, **k: calls.append(a) or True
+    try:
+        coll = lambda h, p: dict(signoff=so, prov='{"kind": "resign"}')
+        fails = []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=coll) == [eid] and not fails
+        assert [x[0] for x in calls[0][4]] == ["k/run/6_final.odb", "k/so/PROVENANCE.json", "k/so/signoff/signoff.json"]
+        fails = []
+        part = {k: v for k, v in good.items() if not k.endswith(".odb")}
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (part, {r["path"]: unit}), collect=coll) == [] and "unverified" in fails[0][2]
+        fails = []
+        assert si.late_pass([(e, r)], fails, archive=lambda h, c, f: (good, {r["path"]: unit}), collect=lambda h, p: dict(signoff=so + " ", prov="{}")) == []
+    finally:
+        si.ss.late_provenance = orig
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
