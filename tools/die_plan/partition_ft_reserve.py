@@ -255,12 +255,12 @@ PDN_WIN_COL_ROWS = 2
 # q_su11__physical_v1 with the same macros took 8 GB): a column that reaches the outline margin (x0 < core_x0 or
 # x1 > width - core_x0, e.g. q_su20 1995.84-2002.32 of a 2004.48 outline beside macro p0 ending at 1995.84) is not a gap
 # between two macros, so the window premise does not hold.  Its window puts an M5 strap pair into the 4.32-um core-edge
-# pocket.  The row stubs there (macro halo to core edge, 2.27 um) then connect at every rail except those under the
-# bridge M3/M4 of the other net, so pdngen sees one repair channel per 4.32 um of pocket height (q_su20: 141 of 287
-# channels at x 1997.89).  pdngen repairs one channel per x range per round, and each round re-runs makeVias without
-# freeing the old vias (OpenROAD pdn Shape::vias_ is never cleared), so memory grows ~0.37 GB per round.  Real pdngen
-# on the q_su20 2_3 DB with edge columns left plain: 287 -> 166 first-round channels, 2 in the pocket, PDNGEN OK, peak
-# 13.2 GB / 570 s.  q_b101_nw (left edge columns): PDNGEN OK both ways, 1.6 GB.
+# pocket, and the 2.27-um row stubs there become one pdngen repair channel per 4.32 um of pocket height (q_su20: 140 of
+# 278 listed channels at x 1997.89; an M5 strap in the pocket is enough, the same stubs appear with no reservation at
+# all; why individual rails stay unconnected is inferred, not traced).  pdngen repairs one channel per x range per round
+# and each round re-runs makeVias; Shape::vias_ is never cleared in the OpenROAD source, and memory grows ~0.39 GB per
+# round.  Real pdngen on the q_su20 2_3 DB: base 159 rounds, 57.1 GB, 2378 s; edge columns left plain 47 rounds, 13.2 GB,
+# 570 s; both PDNGEN OK, 0 PDN-0178.  q_su11 a10: 41 GB -> 8.8 GB.  q_b101_nw (left edge columns): OK both ways, 1.6 GB.
 PDN_CORE_INSET = 4.32
 
 
