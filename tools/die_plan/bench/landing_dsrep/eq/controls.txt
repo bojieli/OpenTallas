@@ -13,7 +13,7 @@ plus a parameter grid (ot_meso_fifo: all 8 bit parameters at W=64 and points at 
 PINREG; ot_meso_ring: all 7 bit parameters at W 64 and 513).  Largest W 4017.
 
 Negative controls (mutated gate, same flow, raw output below):
-  neg     SETTLE-1 mutant in the landing: UNPROVEN on all 4 sets tried with WNEG active
+  neg     SETTLE-1 mutant in the landing: UNPROVEN on all 4 sets tried (WNEG 0 and 1)
   neg2    .REG(1) added on the ring u_dsel: UNPROVEN on all 3 sets tried
   negtneg TNEG(1'b0) clock-polarity mutant: PROVED, see the blind spot below
 
