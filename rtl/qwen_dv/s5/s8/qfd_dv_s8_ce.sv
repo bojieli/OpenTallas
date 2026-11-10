@@ -777,10 +777,7 @@ module qfd_dv_s8_station_tail1_nb0 #(
     parameter integer HI_PAD    = 0,
     parameter integer NB_IN_PAD = 0,
     parameter integer RD_PAD    = 0,
-    parameter integer NB_PAD    = 0,
-    // DIE-QC-97 11-10: 1 = u_scale_wait registered-read form (SRAM read one edge earlier + flop on rd_out, same D and
-    // warm mask: PIN CYCLES 0); set per leaf by the qc_fabric_transport hook (asbuilt qc_scale_orq), default as built.
-    parameter integer SCALE_ORQ = 0
+    parameter integer NB_PAD    = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -1046,7 +1043,7 @@ end
         else bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0);
 
     wire [DW-1:0] fd3;
-    qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT), .ORQ(SCALE_ORQ)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
     wire fv3,ls3;wire[7:0] j3;
     qfd_dv_s8s_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [DW-1:0] y;

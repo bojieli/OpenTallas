@@ -71,12 +71,7 @@ module qfd_dv_s8s_sram_lookahead #(parameter integer W = 512, parameter integer 
     initial if (W > 546 || W < 1) $fatal(1, "SRAM_LOOKAHEAD_WIDTH");
 `endif
 endmodule
-// DIE-QC-97 11-10: ORQ = 1 is the registered-read form (qfd_dv_sram_delay_orq of qfd_dv_redstn2_gsafe.sv, QC-TYPES-12):
-// the SRAM is read one edge earlier (ra = wp - (D-2)) and rd_out lands in an unreset flop; external latency D and the
-// warm mask are unchanged (PIN CYCLES 0).  ORQ = 0 (default) elaborates to the unchanged form.  ORQ mutants: MUT 1 =
-// read address off by one, MUT 2 = flop bypassed.  The macro keeps its path u_m.g_bank[0].u_m in both forms.
-module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0, parameter integer G = 12,
-    parameter integer ORQ = 0) (
+module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0, parameter integer G = 12) (
     input wire ck, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
     reg [4:0] wp;
@@ -86,27 +81,19 @@ module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin wp <= 0; valid <= 0; end
         else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
-    wire [4:0] ra = wp - (D-1-ORQ) + (((ORQ == 0) ? (MUT != 0) : (MUT == 1)) ? 5'd1 : 5'd0);
+    wire [4:0] ra = wp - (D-1) + ((MUT != 0) ? 5'd1 : 5'd0);
     wire [W-1:0] mq;
     qfd_dv_sram_bank64 #(.W(W)) u_m (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mq),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(d), .w_mask_in({W{1'b1}}));
-    wire [W-1:0] qd;
-    generate if (ORQ != 0) begin : g_orq
-        reg [W-1:0] mq_r;
-        always @(posedge ck) mq_r <= mq;
-        assign qd = (MUT == 2) ? mq : mq_r;
-    end else begin : g_raw
-        assign qd = mq;
-    end endgenerate
     genvar g;
     generate for (g = 0; g < (W+G-1)/G; g = g + 1) begin : g_out
         localparam integer B = ((W-G*g) < G) ? W-G*g : G;
         wire warm_q;
         (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(mask_reset), .d(valid[D-2]), .q(warm_q));
-        assign q[G*g +: B] = warm_q ? qd[G*g +: B] : {B{1'b0}};
+        assign q[G*g +: B] = warm_q ? mq[G*g +: B] : {B{1'b0}};
     end endgenerate
 `ifndef SYNTHESIS
-    initial if (D < 3 || D > 27 || W > 546 || ORQ < 0 || ORQ > 1) $fatal(1, "SRAM_DELAY_CONFIG");
+    initial if (D < 3 || D > 27 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");
 `endif
 endmodule
 module qfd_dv_s8s_station_add_bounded #(parameter integer LAT=7,DRST=0,CV=1,ID=0,REPS=1)(input wire clk,rst_n,valid_in,input wire[31:0] a,b,output wire[31:0] y,output wire[1:0] err,output wire valid_out,output wire[1:0] valid_rep);

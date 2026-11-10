@@ -16,8 +16,6 @@ RD_PAD / NB_PAD align r_d and nb_od at their shared-valid join (the valid comes 
 received neighbour word by E(r) - E(0) so that the mode-2 result keeps the same region shape as modes 0/1.  The bt_q return
 needs no change when its lane shift equals E(r) - E(0); that is asserted."""
 
-import re
-
 SLICES = ["W5", "W4", "W3", "W2", "W1", "W0", "E0", "E1", "E2", "E3", "E4", "E5"]
 HOST = {(1, 0): (1, 0), (1, 1): (0, 1), (1, 2): (2, 0), (1, 3): (3, 1), (1, 4): (0, 2), (1, 5): (0, 3), (1, 6): (3, 2),
         (1, 7): (3, 3), (2, 0): (1, 1), (2, 1): (2, 1), (2, 2): (1, 3), (2, 3): (2, 3), (3, 0): (2, 2), (3, 1): (1, 2),
@@ -28,10 +26,6 @@ PORT = {"S": ".s_d", "N": ".n_d"}
 SKEW0 = 14                       # as-built near->far line of the station
 W_HEAD, W_HI, W_RD, W_NB = 516, 74, 64, 66
 MAX_COLUMN_PAD = 9
-# DIE-QC-97 11-10 (COORD): u_scale_wait registered-read form (SCALE_ORQ = 1, PIN CYCLES 0) on the station regions of
-# the sle_st_b_v2 types only (sl_E1/E3/E5_st_b = regions u_r4..u_r7 of dvs_E1/E3/E5): worst TT -364 ps there was the
-# scale_wait macro -> g_sc multiplier with no flop.  asbuilt.qc_scale_orq (a list of leaf paths) overrides; [] = none.
-SCALE_ORQ_LEAVES = [f"dvs_{s}.u_core.u_sub.u_r{r}" for s in ("E1", "E3", "E5") for r in range(4, 8)]
 
 
 class CtxView:
@@ -217,19 +211,7 @@ def _has_port(view, path, port):
     return port in ctx.F.cells[view.index[path]].ports
 
 
-def scale_orq(params, record, index, leaves):
-    """SCALE_ORQ = 1 on exactly the listed station leaves (fail closed on a missing or non-station path)."""
-    for u in leaves:
-        if u not in index or not re.fullmatch(r"dvs_[EW]\d\.u_core\.u_sub\.u_r[0-7]", u):
-            raise ValueError(f"{u}: SCALE_ORQ leaf is not a bound station region")
-        params.setdefault(u, {})["SCALE_ORQ"] = 1
-    record["scale_orq"] = dict(leaves=sorted(leaves), added_flops=W_RD * len(leaves), pin_cycles=0)
-    return params, record
-
-
 def regen(ctx):
     if not ctx.ab.get("qc_fabric_transport"):
         return {}, None
-    params, record = derive(CtxView(ctx))
-    leaves = ctx.ab.get("qc_scale_orq", SCALE_ORQ_LEAVES)
-    return scale_orq(params, record, ctx.cell_index(), leaves)
+    return derive(CtxView(ctx))
