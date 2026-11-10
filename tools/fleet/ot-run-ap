@@ -1,0 +1,41 @@
+#!/bin/bash
+# KW-FIX-10 2026-11-05, COORD ruling 04:1x: autopilot and wave units only (via AP_OT_RUN in the autopilot.service drop-in).
+# Second scratch root only for dirs that really live on scratch3 (or no --dir, e.g. --status). A kit on the full epyc4
+# KW-FIX-43 11-09 10:4x COORD 10:04 (3): + epyc2=50 (gen units whose dirs live only on epyc2; spill-in floor epyc2 140 unchanged). Revert: cp ot-run.bak-kw43-e2floor-1109 ot-run
+# scratch2 stays under the ordinary guard: admitted there it would die on ENOSPC. Revert: scratch2 >=250 GB (remove drop-in).
+# COORD 05:52: no second root for empty --dir: no new unit may land on scratch3; only kits already under those paths.
+# COORD 04:4x: epyc2 codex-s81-wave-1345 is a symlink to the root disk (owner floor 500): a kit under that name must not
+# spill there, so it stays on its own host.
+# KW-FIX-11 06:4x: owner floor 500 on epyc4 root: a wave job for a kit on scratch3 or e4 paths waits here while root <505
+# (kw11_disk.log, every 2 min; a log older than 10 min passes). The row waits, nothing fails.
+d=""; p=""
+for a in "$@"; do [ "$a" = "--" ] && break; [ "$p" = "--dir" ] && d="$a"; p="$a"; done
+case "$d" in
+  /srv/opentallas-scratch3/*|/srv/opentallas-scratch2/claude/*-wave-1105e4|/srv/opentallas-scratch2/claude/*-wave-1105e4/*|/srv/opentallas-scratch2/claude/*-wave-1104s3|/srv/opentallas-scratch2/claude/*-wave-1104s3/*|/srv/opentallas-scratch2/claude/kw-fix-8|/srv/opentallas-scratch2/claude/kw-fix-8/*)
+    L=$HOME/coord/autopilot/kw11_disk.log
+    while [ -n "$(find "$L" -mmin -10 2>/dev/null)" ]; do
+      r=$(tail -1 "$L" | sed -n "s/.*epyc4_root=\([0-9]*\).*/\1/p")
+      { [ -z "$r" ] || [ "$r" -ge 505 ]; } && break
+      sleep 120
+    done
+    export OT_RUN_ROOT_SCRATCH_ROOTS=/srv/opentallas-scratch3 ;;
+esac
+case "$d" in
+  /srv/opentallas-scratch2/claude/codex-s81-wave-1345|/srv/opentallas-scratch2/claude/codex-s81-wave-1345/*)
+    export OT_RUN_NO_SPILL=1 OT_RUN_NO_LOAD_SPILL=1 ;;
+esac
+# KW-FIX-30 11-07 13:5x (COORD URGENT 13:4x): same as kw23/ot-run: S81/QC kw26 kits (routes, LEC) count epyc6's root floor
+# as 200 GB, so no new one lands on the epyc6 root fs (53 GB free, floor 100). Revert: cp ot-run.bak-kw30-epyc6-1107 ot-run.
+case "$d" in /srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/*|/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/*)
+  : "${OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS=intel1=150,intel2=150,localhost=150}"
+  export OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS ;;
+esac
+# KW-FIX-44 11-10 09:5x (COORD 09:4x, OWNER 11-09 "remove the second disk check of the jobs"): the KW-FIX-12 client-side
+# disk-wait loop (OT_RUN_SCRATCH_DISK_FLOOR_GB=100 + --pick every 4-8 min for up to 6 h, KW12_DISK_WAIT) is removed for
+# all units.  The only disk check is ot-run's own per-disk admission floor (scratch disk 50 GB, per-host below; root
+# scratch intel1/intel2/localhost 150, epyc 500).  It disagreed with that admission (100 vs 50 on epyc2/epyc4/intel1)
+# and held review renders for hours.  Revert: cp ot-run.bak-kw44-noloop-1110 ot-run
+# KW-FIX-42 11-09 08:4x COORD 08:3x(1): epyc4 scratch floor 50 for autopilot route/finish/sign-off units. Revert: cp ot-run.bak-kw42-e4floor-1109 ot-run
+: "${OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=epyc4=50,intel1=50,epyc2=50}"
+export OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS
+exec /home/ubuntu/.local/lib/kw42/ot-run-base "$@"
