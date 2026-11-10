@@ -83,7 +83,8 @@ module ot_hbm_sm_kv_line #(
     // die-wide placed wire.  rev3 keeps NC = 4 IDENTICAL COPIES, one per bank column c (banks c and c + 4, bb qwords
     // 24c .. 24c + 23, sc bits 64c .. 64c + 63, dequantise lanes 16c .. 16c + 15), each with the same reset, the same
     // configure load and the same next state, so every copy equals the rev2 register in every cycle (sequential
-    // equivalence rev2 == rev3: kvpipe/kvline_rev3_eq.ys).  (* keep *) + the kit's SYNTH_CANONICALIZE_TCL hook
+    // equivalence rev2 == rev3: tools/hbm_sm_attention/kvpipe/kvline_rev3_eq.sh, step A = the copies stay equal
+    // (OT_KVLINE_EQ_COPIES), step B = the tied form == rev2 (OT_KVLINE_EQ_TIED); both hooks are off in the design).  (* keep *) + the kit's SYNTH_CANONICALIZE_TCL hook
     // (physical/common_flow/ot_keep_regs.tcl) stop opt_merge folding the copies; the kit guides copy c into its column
     // (physical/die_plan/hbm_arch_cores/reg_guides/ot_hbm_sm_kv_line.json).  The shared control (wr / wleft / wri / rf /
     // fn / full, the read sequencer, s_ready) uses copy CC = 3 (E face: s_ready, cfg_rows, fault).
@@ -120,14 +121,25 @@ module ot_hbm_sm_kv_line #(
     wire [NC*96*64-1:0] ins_dc;          // per column: in_q inserted at that copy's fill
     wire [NC*96-1:0]    ins_mc;
     // the per-column copies: h128 / wf4 / fill (qwords in bb) / in_v (in_q holds an accepted line, inserted this cycle)
+    // the register values of every copy (h128_q[c] = g_col[c].h128_r ...)
+    wire [NC-1:0]   h128_q, wf4_q, in_v_q;
+    wire [7*NC-1:0] fill_q;
     genvar cc;
     generate for (cc = 0; cc < NC; cc = cc + 1) begin : g_col
+`ifdef OT_KVLINE_EQ_TIED
+        localparam integer RC = CC;      // EQUIVALENCE STEP B ONLY (kvline_rev3_eq.sh): every column reads copy CC
+`else
+        localparam integer RC = cc;      // the design: column cc reads its own copy
+`endif
         (* keep *) reg       h128_r, wf4_r, in_v_r;
         (* keep *) reg [6:0] fill_r;
-        wire [6:0] rqw_l = h128_r ? 7'd16 : wf4_r ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
-        wire       emit_l = wgo && (fill_r >= rqw_l);
+        assign h128_q[cc] = h128_r; assign wf4_q[cc] = wf4_r; assign in_v_q[cc] = in_v_r; assign fill_q[7*cc +: 7] = fill_r;
+        wire       h128_u = h128_q[RC], wf4_u = wf4_q[RC], in_v_u = in_v_q[RC];
+        wire [6:0] fill_u = fill_q[7*RC +: 7];
+        wire [6:0] rqw_l = h128_u ? 7'd16 : wf4_u ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
+        wire       emit_l = wgo && (fill_u >= rqw_l);
         // next fill with / without the emit of this cycle, from registers only (emit just selects): vD STA
-        wire [7:0] fill_0 = {1'b0, fill_r} + (in_v_r ? 8'd17 : 8'd0);
+        wire [7:0] fill_0 = {1'b0, fill_u} + (in_v_u ? 8'd17 : 8'd0);
         wire [7:0] fill_1 = fill_0 - {1'b0, rqw_l};
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin h128_r <= 1'b0; wf4_r <= 1'b0; in_v_r <= 1'b0; fill_r <= 7'd0; end
@@ -139,14 +151,23 @@ module ot_hbm_sm_kv_line #(
                 in_v_r <= wacc;
                 if (emit_l) wf4_r <= (wri + 13'd1 >= n8);
             end
-        assign h128_c[cc] = h128_r; assign wf4_c[cc] = wf4_r; assign emit_c[cc] = emit_l;
-        assign tq_c[cc] = h128_r && qk;
+        assign h128_c[cc] = h128_u; assign wf4_c[cc] = wf4_u; assign emit_c[cc] = emit_l;
+        assign tq_c[cc] = h128_u && qk;
         assign room_c[cc] = emit_l ? (fill_1 <= 8'd79) : (fill_0 <= 8'd79);  // fill_n + 17 <= 96: the line accepted
                                                                               // now is inserted at fill_n next cycle
         // the insert log shifter of this column (only its 24 qwords are used; synthesis drops the rest)
-        assign ins_dc[96*64*cc +: 96*64] = {{(96-17)*64{1'b0}}, in_q} << {fill_r, 6'd0};
-        assign ins_mc[96*cc +: 96] = in_v_r ? ({79'd0, 17'h1ffff} << fill_r) : 96'd0;
+        assign ins_dc[96*64*cc +: 96*64] = {{(96-17)*64{1'b0}}, in_q} << {fill_u, 6'd0};
+        assign ins_mc[96*cc +: 96] = in_v_u ? ({79'd0, 17'h1ffff} << fill_u) : 96'd0;
     end endgenerate
+`ifdef OT_KVLINE_EQ_TIED
+    wire [6:0] fill = fill_q[7*CC +: 7];   // rev2 register names, for the step-B name match
+    wire       in_v = in_v_q[CC];
+`endif
+`ifdef OT_KVLINE_EQ_COPIES
+    // EQUIVALENCE STEP A ONLY: every copy equals copy 0 in every reachable state (k-induction from reset)
+    always @(*) assert (h128_q == {NC{h128_q[0]}} && wf4_q == {NC{wf4_q[0]}} && in_v_q == {NC{in_v_q[0]}} &&
+                        fill_q == {NC{fill_q[6:0]}});
+`endif
     wire             emit = emit_c[CC];
     assign s_ready = act && (wleft != 13'd0) && room_c[CC];
     assign wacc = s_valid && s_ready;
