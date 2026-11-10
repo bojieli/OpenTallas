@@ -86,27 +86,27 @@ while :; do
   # --direct): the job starts on real memory alone, past the gate's past-peak/reservation charge, DIE-RESERVE and the load
   # cap, while MemAvailable minus what earlier direct jobs have not used yet >= MEM + 32 GB.  It is charged its full
   # request, so later admissions see it.  Under the admission lock, so a burst cannot count the same free memory twice.
+  # DIRECT_MEMAVAIL_1110 (COORD 11-10: direct jobs on intel1 refused with 222 GB real MemAvailable because earlier
+  # direct jobs' unused requests, 147-179 GB, were subtracted): the owner rule is real MemAvailable >= MEM + 32 GB.  A
+  # started job's memory is already in MemAvailable, so an earlier direct record is charged its full request only while
+  # it is young (DIRECT_FRESH_S, default 300 s: not started or still loading), so a burst cannot count the same free
+  # memory twice; after that it counts at its measured use, which MemAvailable already holds.
   if [ "${OT_HEAVY_DIRECT:-}" = 1 ]; then
-    _avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo); _pend=0
+    _pend=0; _now=$(date +%s)
     for _f in "$D"/direct.*; do
       [ -e "$_f" ] || continue
       read -r _u _m < "$_f" || continue
-      systemctl --user is-active --quiet "$_u.scope" 2>/dev/null || { [ $(( $(date +%s) - $(stat -c %Y "$_f") )) -gt 120 ] && rm -f "$_f"; continue; }
-      _cur=$(systemctl --user show "$_u.scope" -p MemoryCurrent --value 2>/dev/null); case "$_cur" in ''|*[!0-9]*) _cur=0;; esac
-      _g=$(( _m - _cur / 1073741824 )); [ $_g -gt 0 ] && _pend=$(( _pend + _g ))
+      _age=$(( _now - $(stat -c %Y "$_f") ))
+      if ! systemctl --user is-active --quiet "$_u.scope" 2>/dev/null && [ $_age -gt 120 ]; then rm -f "$_f"; continue; fi
+      case "$_m" in ''|*[!0-9]*) continue;; esac
+      [ $_age -lt "${DIRECT_FRESH_S:-300}" ] && _pend=$(( _pend + _m ))
     done
-    # Docker is outside the scope: credit only fresh, uniquely identified live
-    # container cgroups. Keep the old scope-only charge if the helper fails.
-    if _live_pend=$(timeout 15 /usr/local/bin/ot-direct-pending 2>/dev/null) &&
-       [[ "$_live_pend" =~ ^[0-9]+$ ]]; then
-      _pend=$_live_pend
-    fi
     _avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
     if [ $(( _avail - _pend )) -ge $(( MEM + 32 )) ]; then
-      V=OK; RES=$MEM; _short=0; WHY="DIRECT_1107 available $_avail GB, growth charged $_pend GB (earlier direct jobs), past gate: $WHY"
+      V=OK; RES=$MEM; _short=0; WHY="DIRECT_1107 available $_avail GB, fresh earlier direct $_pend GB, past gate: $WHY"
       echo "$UNIT $MEM" > "$D/direct.$UNIT"
     else
-      V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - unused earlier direct $_pend GB < $MEM + 32 GB"
+      V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - fresh (<${DIRECT_FRESH_S:-300} s) earlier direct $_pend GB < $MEM + 32 GB"
     fi
   fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2

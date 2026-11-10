@@ -341,7 +341,15 @@ def scratch_disk(row, d, out, host=None):
     return row
 
 
-ROOTFS_DIR_AWARE_HOSTS = set(x.strip() for x in os.environ.get("OT_RUN_ROOTFS_DIR_AWARE_HOSTS", "epyc4,epyc7").split(",") if x.strip())
+# DISK-FLOOR-PER-TARGET 11-10 (COORD, owner rule: the floor is per target disk, 150 GB only on root): every host is
+# dir-aware by default ("*"), so the root floor refuses only a job whose --dir / job root is ON the root fs; a job on a
+# separate scratch disk meets that disk's own floor (SCRATCH_DISK_FLOOR_GB).  intel1 was refused 11-10 05:25 with
+# scratch2 at 109 GB because the root floor was read against it.  A host list in the env narrows it again.
+ROOTFS_DIR_AWARE_HOSTS = set(x.strip() for x in os.environ.get("OT_RUN_ROOTFS_DIR_AWARE_HOSTS", "*").split(",") if x.strip())
+
+
+def dir_aware(host):
+    return "*" in ROOTFS_DIR_AWARE_HOSTS or host in ROOTFS_DIR_AWARE_HOSTS
 
 
 def host_refusal(row):
@@ -361,7 +369,7 @@ def host_refusal(row):
     # root fs; a job whose dir is on the host's separate scratch disk writes nothing to root and is admitted (the owner's
     # 150 GB floor still protects root).  Hosts in OT_RUN_ROOTFS_DIR_AWARE_HOSTS (epyc4, epyc7: scratch2 is its own device).
     dir_off_root = (row.get("dir_onroot") is False and row.get("scratch_disk") and not row.get("scratch_second")
-                    and row.get("host_name") in ROOTFS_DIR_AWARE_HOSTS)
+                    and dir_aware(row.get("host_name")))
     if fl is not None and row.get("rootfs_free_gb") is not None and not dir_off_root:     # DISK-URGENT-4: free GB, not %
         if row["rootfs_free_gb"] < fl:
             return (f"ROOT FS {row['rootfs_free_gb']} GB free < floor {fl} GB (DISK GUARD, owner floor 150 GB 11-06; "
@@ -868,7 +876,7 @@ def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
     held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
-        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if h in ROOTFS_DIR_AWARE_HOSTS else None), hosts))   # KW-FIX-44 disks-all
+        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if dir_aware(h) else None), hosts))   # KW-FIX-44 disks-all
     out = []
     for h in hosts:
         if h in held:
