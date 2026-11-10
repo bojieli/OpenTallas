@@ -759,3 +759,10 @@ def test_src_overlay_hash_is_content_only(tmp_path):
     (s / "tools" / "__pycache__" / "a.pyc").write_text("z"); (s / "tools" / "a.py.bak-x").write_text("z"); assert h() == h0
     (s / "rtl" / "b.sv").write_text("y2"); assert h() != h0                           # an overlaid file is
     assert K.src_overlay_hash(str(tmp_path / "gone"), "localhost", "localhost") == ""
+
+
+def test_src_base_is_recorded_but_is_not_an_input(tmp_path):
+    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})
+    c["dies"]["s81"]["src_base"] = "685b58b80c3"
+    assert K.spec_for(dict(c, _otrun_status={}), "s81", "t1", "")["src_base"] == "685b58b80c3"
+    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # naming the base releases nothing
