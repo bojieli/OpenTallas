@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenTallas sealed-store GC, daily (ot_store.py gc-all --apply; KW-FIX-44 11-10, COORD-approved)
+# Keep set: every ref (through trees), every artifact record, counted files, objects < 24 h, objects with a second
+# hardlink.  Runs under the store's exclusive GC-LOCK (staging and publish hold it shared), so no object a job has
+# just named can go before its ref.  Deleted list: <store>/gc-log/<UTC time>.tsv.  Uses the deployed ot-job bundle's
+# ot_store.py.  Off switch: touch ~/.config/ot-store-gc/OFF.
+
+[Service]
+Type=oneshot
+ExecCondition=/bin/sh -c 'test ! -e %h/.config/ot-store-gc/OFF'
+ExecStart=/bin/sh -c 'exec /usr/bin/python3 -I "$(dirname "$(readlink -f %h/.local/bin/ot-job)")/ot_store.py" gc-all --apply'
+TimeoutStartSec=2h
+Nice=15
+IOSchedulingClass=idle

@@ -391,12 +391,15 @@ def run(spec, tag, cmd, bwrap=True):
     maps = [{"at": J + "/in", "real": J + "/in", "ro": True}, {"at": J, "real": J, "ro": False},
             {"at": J + "/.ot-job", "real": J + "/.ot-job", "ro": True},
             {"at": work_at, "real": J + "/work", "ro": False}]
-    try:
-        shas, staged = stage_all(spec, store, J, maps)
-    except Exception:
-        remove_job(J)                            # nothing ran and nothing was published: the dir is ours alone
-        raise
-    S.ref(store, "job-" + tag, shas, note=f"live inputs of ot-job {J} on {host}")
+    # GC-LOCK (KW-FIX-44 11-10): shared from the first put to the job-<tag> ref, so a gc --apply cannot delete an object
+    # this job has just named (a dedup put onto an old object) before the ref protects it; a running gc delays staging.
+    with S.lock(store):
+        try:
+            shas, staged = stage_all(spec, store, J, maps)
+        except Exception:
+            remove_job(J)                        # nothing ran and nothing was published: the dir is ours alone
+            raise
+        S.ref(store, "job-" + tag, shas, note=f"live inputs of ot-job {J} on {host}")
     return run_sealed(spec, meta, J, store, tag, cmd, maps, staged, work_at, bwrap)
 
 

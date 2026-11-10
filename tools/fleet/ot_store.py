@@ -24,8 +24,18 @@ an object survives if a ref (expanded through trees), a counted signed-store rec
   ot_store.py push SHA --to HOST [--store S]           copy missing objects to HOST's store (second copy of a live input)
   ot_store.py ref NAME SHA... | unref NAME
   ot_store.py gc [--store S] [--counted DIR] [--apply]
+  ot_store.py gc-all [--counted DIR] [--apply]        every scratch store on this host (the daily ot-store-gc.timer)
+
+GC-LOCK (KW-FIX-44 11-10, COORD): <store>/.gc.lock.  Staging (ot-job from the first put until its job-<tag> ref is
+written) and publish (put until the record is written) hold it SHARED; gc --apply holds it EXCLUSIVE from building the
+keep set to the last unlink.  So an object a job is about to name (a dedup put onto an old object) cannot be deleted
+between the put and the ref.  The keep set (the rule applied once on epyc2/epyc7 11-10): every ref (through trees),
+every artifact record of this store, counted signed-store files, objects younger than 24 h, and any object with a
+second hardlink (still staged in a job dir).  gc --apply writes the deleted list to <store>/gc-log/<UTC time>.tsv.
 """
 import argparse
+import contextlib
+import fcntl
 import gzip
 import hashlib
 import json
@@ -45,6 +55,7 @@ TREE_SCHEMA = "opentallas.ot_store.tree.v1"
 ARTIFACT_SCHEMA = "opentallas.ot_store.artifact.v1"
 REF_SCHEMA = "opentallas.ot_store.ref.v1"
 KEEP_YOUNG_S = 24 * 3600            # OWNER 11-08: hosts volatile, every hold/lifetime is 24 h
+LOCK_NAME = ".gc.lock"
 SCRATCH_STORES = ("/srv/opentallas-scratch2/ot-store", "/srv/opentallas-scratch3/ot-store")
 BUF = 1 << 20
 
@@ -281,8 +292,25 @@ def tree_files(store, kind, sha):
     return [[rel, v[1], v[0]] for rel, v in sorted(t["files"].items())]
 
 
+@contextlib.contextmanager
+def lock(store, exclusive=False):
+    """GC-LOCK: shared for writers that name objects (staging, publish), exclusive for gc --apply"""
+    _tmp(store)
+    fd = os.open(os.path.join(store, LOCK_NAME), os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+        yield
+    finally:
+        os.close(fd)
+
+
 def publish(store, path, name, producer=None, link=False):
     """put PATH, write an immutable artifact record naming its producer; -> the record"""
+    with lock(store):
+        return _publish(store, path, name, producer, link)
+
+
+def _publish(store, path, name, producer, link):
     kind, sha = put(store, path, link=link)
     bad = verify(store, sha)
     if bad:
@@ -345,30 +373,49 @@ def counted_shas(counted_store):
     return out
 
 
-def gc(store, counted_store=None, apply=False, now=None, young_s=KEEP_YOUNG_S):
-    """-> {"keep": n, "delete": [sha...], "freed": bytes}.  Keep = refs (through trees) + counted + age < young_s."""
+def gc(store, counted_store=None, apply=False, now=None, young_s=KEEP_YOUNG_S, log=None):
+    """-> {"objects", "keep", "delete": [sha...], "freed": bytes}.  See GC-LOCK in the module doc for the keep set;
+    with apply the whole pass runs under the exclusive lock and the deleted list goes to log (or gc-log/<time>.tsv)."""
+    if not apply:
+        return _gc(store, counted_store, False, now, young_s, None)
+    with lock(store, exclusive=True):
+        if log is None:
+            os.makedirs(os.path.join(store, "gc-log"), exist_ok=True)
+            log = os.path.join(store, "gc-log", time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + ".tsv")
+        return _gc(store, counted_store, True, now, young_s, log)
+
+
+def _gc(store, counted_store, apply, now, young_s, log):
     now = now or time.time()
     keep = set(counted_shas(counted_store))
     for r in refs(store).values():
         for s in r.get("shas", []):
             keep |= closure(store, s, missing_ok=True)
-    for e in records(store):                       # a record younger than 24 h keeps its whole tree
-        if now - e.get("published", 0) < young_s:
-            keep |= closure(store, e["sha"], missing_ok=True)
+    for e in records(store):                       # every artifact record of this store keeps its whole tree
+        keep |= closure(store, e["sha"], missing_ok=True)
     dele, freed, n = [], 0, 0
     od = os.path.join(store, "objects")
-    for dp, _dns, fns in os.walk(od):
-        for fn in fns:
-            p = os.path.join(dp, fn)
-            n += 1
-            st = os.lstat(p)
-            if fn in keep or now - st.st_mtime < young_s:
-                continue
-            dele.append(fn)
-            freed += st.st_size if st.st_nlink == 1 else 0    # a hardlink still staged in a job dir frees nothing yet
-            if apply:
-                os.unlink(p)
-    return {"objects": n, "keep": n - len(dele), "delete": sorted(dele), "freed": freed}
+    fh = open(log, "w") if log else None
+    try:
+        for dp, _dns, fns in os.walk(od):
+            for fn in fns:
+                p = os.path.join(dp, fn)
+                n += 1
+                try:
+                    st = os.lstat(p)
+                except FileNotFoundError:
+                    continue
+                if fn in keep or now - st.st_mtime < young_s or st.st_nlink > 1:
+                    continue
+                dele.append(fn)
+                freed += st.st_size
+                if apply:
+                    os.unlink(p)
+                    fh.write(f"{fn}\t{st.st_size}\t{int(now - st.st_mtime)}\n")
+    finally:
+        if fh:
+            fh.close()
+    return {"objects": n, "keep": n - len(dele), "delete": sorted(dele), "freed": freed, "log": log}
 
 
 # ---- between hosts --------------------------------------------------------------------------------------------------------
@@ -426,7 +473,7 @@ def main(argv=None):
     ap.add_argument("--counted")
     ap.add_argument("--apply", action="store_true")
     a = ap.parse_args(argv)
-    st = a.store or default_store(a.args[0] if a.op in ("put", "publish") and a.args else None)
+    st = a.store or (None if a.op == "gc-all" else default_store(a.args[0] if a.op in ("put", "publish") and a.args else None))
     if a.op == "put":
         print(*put(st, a.args[0], link=a.link))
     elif a.op == "stage":
@@ -449,6 +496,11 @@ def main(argv=None):
     elif a.op == "gc":
         r = gc(st, counted_store=a.counted, apply=a.apply)
         print(json.dumps(dict(r, delete=len(r["delete"]), applied=a.apply)))
+    elif a.op == "gc-all":
+        for st in SCRATCH_STORES:
+            if os.path.isdir(os.path.join(st, "objects")):
+                r = gc(st, counted_store=a.counted, apply=a.apply)
+                print(json.dumps(dict(r, store=st, delete=len(r["delete"]), applied=a.apply, at=time.time())), flush=True)
     else:
         ap.error(f"unknown op {a.op}")
     return 0
