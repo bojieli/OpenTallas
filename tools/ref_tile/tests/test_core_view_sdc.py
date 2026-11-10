@@ -51,6 +51,18 @@ class CoreViewSdc(unittest.TestCase):
         self.assertFalse(RT.core_view_sdc_applies({**SPEC, "sdc_extra": ["x.sdc"]}))
         self.assertTrue(RT.core_view_sdc_applies(SPEC))
 
+    def test_ff_hold_frame_matches_signoff(self):
+        t = RT.gen_core_view_ff_sdc(SPEC)
+        self.assertIn("set_clock_latency -source 202.5000 [get_clocks vclk]", t)
+        self.assertIn("set_input_delay -min -40.0000 -clock vclk [all_inputs -no_clocks]", t)
+        self.assertIn("set_output_delay -min 0.0000 -clock vclk [all_outputs]", t)
+        self.assertNotIn("get_ports", t)
+
+    def test_route_hold_reads_ff_frame(self):
+        spec = {**SPEC, "route": {}}
+        self.assertTrue(RT.route_hold_context(spec, "k")["OT_MM_FF_SDC"].endswith(" k/core_view_ff.sdc"))
+        self.assertNotIn("core_view_ff", RT.route_hold_context({**spec, "clock": "entries"}, "k")["OT_MM_FF_SDC"])
+
 
 if __name__ == "__main__":
     unittest.main()
