@@ -36627,3 +36627,53 @@ FAILED [AUTOPILOT 228aacdcf255] 2026-11-10 13:42:15 PST AUTOPILOT -> KIT-WAVE-3:
   Default if silent: (a). I will not edit face_guard.py.
   **ASK 2 (small internal hold residuals after the in-flow repair):** SMR has 2 endpoints at -3.18 and SMD 1 endpoint at -0.65, both internal reg-to-reg. They repaired to +10 at GRT and lost the margin in extraction. These boxes have had no ECO, so I propose one standard hold ECO iteration each (owner 11-07: real near misses, one iteration). The IRG pilot had its ECO, so it gets no second one: only the p4 structural result counts for it. Default if silent: one ECO on SMR and SMD after their face_guard fix.
   Output-port-only hold, the TRX class, is NEEDS_PARENT by the recipe-4 die hold budget (io_hold_parent); I am leaving it as it is.
+FAILED [AUTOPILOT b75dcb7bc485] 2026-11-10 13:52:07 PST AUTOPILOT -> KIT-WAVE-12: FAILED b75dcb7bc485 qwen_compute/sle_su_l0__cl7a55c676 (STRUCTURAL/routed-not-signed): late-ECO not a near miss: setup WNS -468.79 ps worse than -30; setup 1003 endpoints > 100 (near miss: setup/hold no worse than 30 ps on at most 100 endpoints, at most 20 slew nets, DRC under 50): GEOMETRY + REDESIGN, no ECO | setup_tt: FAIL WNS -468.79 ps, 1003 endpoints; hold_ff: FAIL WNS -28.58 ps | kit localhost:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_su_l0__cl7a55c676/attempt_19/gen/sle_su_l0__cl7a55c676 src claude/qc-transport-fix-4-1109@5333b7dca834 | review localhost:/srv/opentallas-scratch2/claude/autopilot/review/b75dcb7bc485 | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-10 13:53 PST STATE+READY KW-FIX-44 -> COORD, ROOT-MERGE-57: epyc8 in gen_hosts (5 dies, read back), input closure staging for the wave probe; epyc7/epyc4 full; intel2 now a sealed fetch host (deployed). DO_NOT_COUNT.
+  E8GEN-HUBFETCH-1110.
+  (1) epyc8 is in gen_hosts for all 5 dies, committed under kit_wave.lock and read back from origin:
+        - 13:43: hbm, qwen_compute, s81_head (commit efca6511636).
+        - 13:4x: qwen_kvsys, s81.
+      Checksum dry run (rsync -nc against epyc7) per die:
+        - hbm 8 paths, qwen_compute 20, s81_head 2, qwen_kvsys 9: 0 differing.
+        - s81 4 paths: 0 content differences. The one line is two identical files that are hardlinked on epyc7 and
+          separate copies on epyc8.
+      BUT the wave's own probe (KW-FIX-24 SRC-INCOMPLETE, 13:46) still drops epyc8 for hbm, qwen_compute and s81_head.
+      My list held the plan files, but the probe wants the whole plan dirs and the bind trees' symlink targets:
+        - hbm: die-hbm-97/plan_r2_restore (1/517 files), hbm-plan-1/sm1109/files.
+        - qwen_compute: qc-transport-fix-4/src_sw2.
+        - s81_head: kw42/prep_hp1/prep (1/59).
+      So nothing launched on a partial copy. Fix running now: the closure of every input the wave probe reads, taken
+      from kit_wave.src_inputs / deep_inputs / item_inputs plus the symlink targets under those dirs (2 rounds). That
+      is 111 paths, 91 GB total, most of it already on epyc8, copied from epyc7 (unit kw44-stage-src7). The next tick
+      after it ends should show no SRC-INCOMPLETE epyc8 line; I will confirm.
+  (2) Why epyc7 and epyc4 take no gens: ot-run --status 13:3x shows both have no memory free for a new job.
+        - epyc7: admits -4 GB, avail 67, waiters 17:824 GB, load 164/96 LOADCAP.
+        - epyc4: admits -48 GB, waiters 24:988 GB.
+      pick_gen_host skips a host that cannot admit the gen now, so with epyc2 and intel1 under the disk floor and these
+      two full, there was no gen host. That is why there was no launch after 12:56. It is not a config exclusion: both
+      are in gen_hosts for their dies.
+      Also seen: 6 qwen_kvsys rows have held "kit busy (container: False, logs 1100-1450 min old)" every tick for about
+      a day (64bc87ce60b7, 65af04fa9bd0, 314605598705, be9589de1a01, e763ed81d35d, 2c0715599779). That is a stale
+      busy marker, worth a separate look (KV owner or me).
+  (3) intel2 queue fullness: FIXED, deployed 13:49:17 between ticks. Cause: every autopilot route/finish job is sealed,
+      and the sealed wrapper's fetch hosts were epyc2/epyc4/intel1/epyc8. The hub could never be picked, for 3 reasons:
+        (a) no ot-job was installed on intel2.
+        (b) the wrapper probes hosts over ssh, and intel2 cannot ssh to its own name.
+        (c) fetch_ok refused any host that already holds a copy of K, and the hub holds sync_hub copies of wave kits.
+      It was neither a disk floor nor a host weight: ot-run admits 266 GB on localhost.
+      Fix:
+        - ot-job installed on intel2: the same 4 files as the fleet (isolate-1-kw44mt-0911130f0f, ot-job 49584088, with
+          the return-mtime fix), plus ~/.local/bin/ot-job. Smoke job OK: seed fetched from epyc7, docker shim OK, mtime
+          kept, job dir deleted.
+        - ot-run-sealed HUB-FETCH (b200f13c -> 7b08c06e, backup ot-run-sealed.bak-kw44-hubfetch-1110):
+            - hub probes and the copy-back run locally.
+            - ot-run gets --hosts localhost for the hub.
+            - a fetch host that already holds K returns into <job root>/.return/<pid>-<t>/<kit>, and the copy-back
+              sends that stage to the source and removes only the stage. The hub's own copy of K is never overwritten
+              or deleted.
+            - rehand excludes the hub under both names.
+        - sealed-ap.json ap_fetch_hosts += intel2 (backup sealed-ap.json.bak-kw44-hubfetch-1110).
+      Waiters on epyc7/epyc4 move at their next 600-s rehand round. Rounds already used up (12) stay where they are
+      unless re-queued.
+      READY -> ROOT-MERGE-57: claude/kw-fix-44-hub-fetch-1110 @ c4fc3434ae7154f042282f9e156cbf59ec70f0e3 on main
+      (ot-run-sealed + test_ot_run_sealed_ap.py, 4 new tests, 33 pass).
