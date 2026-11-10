@@ -53,3 +53,13 @@ def test_cmd_flag_only_when_spec_written(tmp_path):
     (tool / "region_guide.py").unlink()
     out = _sh(*K.region_guide_cmd(sp, True), tmp_path)
     assert "KW_NOTE no region_guide.py" in out and out.strip().endswith("ARGS")
+
+
+def test_no_guide_after_infra_watchdog_or_a_passed_geom():
+    """QC-FAIL-22 11-10: the INFRA path marks the record FAIL at stage geom before launch; only a real geom FAIL plans guides."""
+    prev = dict(status="FAIL", stage="geom", evidence=EV, reason="AUTO-GEOM rule FAIL (geometry)", **{"class": "PLAN"})
+    assert K.region_guide_geom(prev, "intel2") == "/w/items/x/attempt_7/geom"
+    assert K.region_guide_geom(dict(prev, **{"class": "INFRA"}), "intel2") is None
+    assert K.region_guide_geom(dict(prev, q_id="406ada361bad", q_status="FAIL"), "intel2") is None
+    assert K.region_guide_geom(dict(prev, q_status="FAIL"), "intel2") is None
+    assert K.region_guide_geom(dict(prev, reason="watchdog-stopped: exit 143: stopped by the hub WATCHDOG"), "intel2") is None

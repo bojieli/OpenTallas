@@ -2740,9 +2740,16 @@ def outline_cmd(K):
 def region_guide_geom(prev, gen_host):
     """FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D): the previous attempt's AUTO-GEOM dir when it FAILED at the geom
     stage on the gen host (its geom.tsv is read in place), else None.  region_guide.py plan itself writes a spec only
-    when that AUTO-GEOM r2r rule FAILED (class D), so every other relaunch gets no guide (kit unchanged)."""
+    when that AUTO-GEOM r2r rule FAILED (class D), so every other relaunch gets no guide (kit unchanged).
+    QC-FAIL-22 11-10 (COORD): no guide after an INFRA or watchdog relaunch, nor when that AUTO-GEOM passed.  The INFRA
+    relaunch path marks the record FAIL before launch while its stage is still geom, so a row that had passed geom
+    (advisory-only rule fails count as pass: the row reached the queue, q_id / q_status set) and then hung or was
+    stopped got guides on its retry (cbn_q11 a12, slw_fw_v1 a16: GPL-0307 on guides)."""
     ev = str(prev.get("evidence") or "")
     if prev.get("status") != "FAIL" or prev.get("stage") != "geom" or not ev.endswith("/auto_geom.json") or ":" not in ev:
+        return None
+    if str(prev.get("class") or "") == "INFRA" or prev.get("q_id") or prev.get("q_status") \
+            or "watchdog" in str(prev.get("reason") or "").lower():
         return None
     host, path = ev.split(":", 1)
     return path.rsplit("/", 1)[0] if host == gen_host and path.startswith("/") else None
