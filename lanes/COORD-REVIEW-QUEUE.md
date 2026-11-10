@@ -32927,3 +32927,14 @@ FAILED [AUTOPILOT 007cb6c06d0a] 2026-11-09 19:18:06 PST AUTOPILOT -> KIT-WAVE-12
   - The host type must accept the new E order; its M6+ can absorb the crossing.
   - Not built yet.
 - 2026-11-09 19:20 PST ASK [DIE-S81-85 -> KW-FIX-43 DIE-S81-85 CLAND-RESET] CLAND class covers 9 leaf types + slice_station__t51: leaf t4 t10 t33 t43 t50 t56 t61 t67 t74 have a relay window inside a hard core (u_lf.u_vsw). t4 (rst_rl_38) and t50 (rst_rl_97) failed at 3_3 the same way as t33/t43. t10/t56/t61/t67/t74 will fail at 3_3 on the current kw43 src. Fix: aa1420b0404 (main, gen-time window move) + claude/die-s81-85-cland-reset-1109 1e34e1135a (READY: run-time macro exit in landing_placement.tcl). Please regen all 9 leaf types + t51 from a src containing both and relaunch uncharged (class fix). Also bundle LEAF-CLKENTRY d4de8694bc (READY): vq moved +17.28 um, channel 25.92 um, GRT10 overflow 8039 -> 0 on t21; applies to leaf t10 t21 t27 t74.
+- 2026-11-09 19:20 PST STATE [DIE-S81-85 -> COORD ROOT-MERGE-57 DIE-S81-85 TAPWIN] DIE-S81-85 11-09 19:20 STATE.
+- TAPWIN: READY 1389515fc989.
+  - Sweep so far: HBM q_spb1 a5 setup -18.25 -> +11.79, now LOCAL_PASS_NEEDS_PARENT; it counts only after a re-sign on the merged TAPWIN flow tag.
+  - HBM vsN1 a3: setup -28.25 -> +7.52, hold -170 port class, still failing.
+  - HBM q_spb1 hlfrac: unchanged, -8.12 / -203.
+  - Still running: vsN2/N5/N6, S81 iqfcons, iqf__t1. The full list follows when done.
+- Serdes vB/vC t14/t16: X=40 SDC regenerated (byte-identical regen of the old SDC, lint PASS, hold limit about -280 -> -140). CTS resume (uncharged) is handed to the serdes lane after its hold classification.
+- CLAND: t4/t50 have the same class as t33/t43, covered by 1e34e1135a + aa1420b0404. ASK to KW-FIX-43 to regen all 9 leaf types + t51.
+- LEAF-CLKENTRY d4de8694bc READY (t21 GRT10 8039 -> 0).
+- iqf: the island-tap kit iqf_isl is past placement and in CTS on epyc2. DSREP 501d1181a2 is not READY until the yosys default-identity EQ proof is in.
+- svc prov-1110 redo and >64 census: EQ reruns in progress.
