@@ -1,0 +1,11 @@
+DIE-QC-97 WLIVE-1, 2026-11-10 (all MEASURED)
+Cause: pilot slw_fe_v2__cle312294d (intel1, unit oth-ubuntu-777416-1794328339, 09:09) FACE_GUARD FAIL land_slot 9:
+"cland_fstart_in_<bus>: ring start reaches non-writer flops [.. g_wreg.sl[i].ch[last].u_wen ..]" on the 9 of 14 WREG
+rings whose bundle W has W mod 64 in 1..32.  The cas pads W to 64-bit RW; WRITE_CHUNK 32 then makes a last write chunk
+that holds only padding, so its kept enable flop loads t_rst_n while writing no slot face_guard can prove (legacy
+WRITE_CHUNK 64: every chunk holds a live bit, so this never happened).
+Fix: ot_meso_ring_ca WLIVE (cas passes W): a padding-only chunk keeps its u_wen instance/name/site but takes D = 0.
+Proof: face_guard PASS 14191/14191 (and face_guard_odb PASS) on the fixed pilot kit, relaunched intel1 12:05 as
+oth-ubuntu-1446288-1794341119; KIT_PREFLIGHT, SELRANGE, PORT_BIND 14400/14400, DONT_USE, REG_FANOUT PASS.
+LEC (lec_rs.sh wl, tops_wl.sv): old vs WLIVE-1 at the pilot form, W=549 + W=33: 4940/4940 $equiv proven.
+Default-parameter LEC (tops_def.sv, legacy cas W=549 + plain ca W=40): see ../rstrep (5062/5062 on the RSTREP+WLIVE file).

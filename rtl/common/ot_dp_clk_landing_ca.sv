@@ -238,7 +238,7 @@ module ot_dp_clk_landing_cas #(
         end
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -281,7 +281,10 @@ module ot_meso_ring_ca #(
     parameter bit STATUS_REG = 0,
     parameter int WRITE_CHUNK = 64, // appended for positional compatibility; local write-enable fanout bound
     parameter bit WRITE_TAIL = 0, // optional bounded partial final write chunk; same cycles
-    parameter int READ_CHUNK = 0 // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    parameter int READ_CHUNK = 0, // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    // WLIVE-1 (DIE-QC-97): live bits of t_d (the cas bundle W before 64-bit padding); a write chunk wholly above it
+    // writes only constant padding, so its write-enable flop takes D = 0 (the start has no unproven sink).  Default W: every chunk.
+    parameter int WLIVE = W
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -332,8 +335,9 @@ module ot_meso_ring_ca #(
         wire [AW-1:0] slot_nx = fs_q ? tc[AW-1:0] + 1'b1 : '0;
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             for (genvar c = 0; c < WNC; c++) begin : ch
-                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(t_rst_n && (slot_nx == AW'(i))),
-                                                         .q(wen[i * WNC + c]));
+                // WLIVE-1: a padding-only chunk's enable flop keeps its name/site but takes D = 0 (no start load)
+                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk),
+                    .d((c * WWC < WLIVE) ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0), .q(wen[i * WNC + c]));
             end
         end
         assign t_go = fs_q;
