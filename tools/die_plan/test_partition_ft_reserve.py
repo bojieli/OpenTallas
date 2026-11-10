@@ -481,3 +481,39 @@ def test_m6_gap_where_both_nets_land_is_kept():
 def test_m6_sliver_at_macro_edge_still_closed_without_m7():
     fills, out = _sliver_fills([(579.012, 0.0, 700.0, 300.0)], [('M6', 572.832, 58.32, 578.88, 65.07)])
     assert fills == [(578.88, 58.32, 579.012, 65.07)] and 'm6_no_m7_close=0' in out
+
+
+def _pocket_receipt(x0=0.0, x1=25.92, width=786.24, own=4, m6=True):
+    rows=[dict(layer='M4',rect=[0.0,4.32,width,7.02])]
+    y=25.92
+    for _ in range(own):
+        rows.append(dict(layer='M4',rect=[x0,y,x1,y+2.7]));y+=10.8
+    rows.append(dict(layer='M5',rect=[x0,17.28,x1,285.12]))
+    if m6:rows.append(dict(layer='M6',rect=[x0,23.22,x1,25.92]))
+    return dict(rectangles_um=rows)
+
+
+def test_wide_edge_pocket_keeps_one_middle_m5_window():
+    # q_b001__physical_v1 a11: the outline-to-macro strip, M5 reserved whole, M4 rows of its own x extent
+    r=_pocket_receipt()
+    assert F.pdn_windows_edge_pocket(r)==[('M5',14.874,15.486,(0.0,17.28,25.92,285.12))]
+    m5=sorted(q for L,q in F.obstruction_rows(r) if L=='M5')
+    assert m5==[[0.0,17.28,14.874,285.12],[15.486,17.28,25.92,285.12]]
+    assert 'pdn_windows_edge_pocket=1' in F.tcl(r)
+
+
+def test_east_edge_pocket_window_stays_in_core():
+    w=829.44
+    r=_pocket_receipt(806.112,w,w)
+    wins=F.pdn_windows_edge_pocket(r)
+    assert len(wins)==1 and wins[0][2]<=w-F.PDN_CORE_INSET
+
+
+def test_edge_pocket_rule_leaves_other_columns_whole():
+    interior=_pocket_receipt(469.152,483.84)                      # between macros, not at the outline
+    no_rows=_pocket_receipt(own=1)                                # street, no own M4 rows
+    too_wide=_pocket_receipt(0.0,138.24)                          # not a measured failing form
+    narrow=_pocket_receipt(0.0,6.48)                              # the 4.32-um core margin: edge-column rule
+    for r in (interior,no_rows,too_wide,narrow):
+        assert F.pdn_windows_edge_pocket(r)==[]
+    assert 'pdn_windows_edge_pocket' not in F.tcl(interior)
