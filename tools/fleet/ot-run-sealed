@@ -555,7 +555,38 @@ def add(real, at, depth=0):
 for p in json.loads(sys.argv[1]):
     if os.path.lexists(p):
         add(p, p)
-print('INPUTS ' + json.dumps(out))
+# the work seed obeys the same store rule.  A work dir holding a link that leaves it is seeded child by child; each such
+# link becomes an input bound at its own path, and the top-level names holding one are not returned (their mount points
+# would overwrite the caller's links).
+def leaves(top):
+    for dp, dns, fns in os.walk(top):
+        for n in dns + fns:
+            q = os.path.join(dp, n)
+            if os.path.islink(q):
+                r = os.path.normpath(os.path.join(dp, os.readlink(q)))
+                if not (r == top or r.startswith(top.rstrip('/') + '/')):
+                    return True
+    return False
+work = None
+if len(sys.argv) > 2 and leaves(sys.argv[2]):
+    W = sys.argv[2].rstrip('/')
+    seeds, held = [], set()
+    def walk(d, rel):
+        for n in sorted(os.listdir(d)):
+            q, r = os.path.join(d, n), (rel + '/' + n if rel else n)
+            if os.path.islink(q):
+                held.add(r.split('/')[0])
+                t = os.path.realpath(q)
+                if os.path.exists(t):
+                    add(t, W + '/' + r)
+            elif os.path.isdir(q) and leaves(q):
+                held.add(r.split('/')[0])
+                walk(q, r)
+            else:
+                seeds.append({'path': q, 'into': r})
+    walk(W, '')
+    work = {'seed': seeds, 'return': sorted((set(os.listdir(W)) - held) | {'gen'})}
+print('INPUTS ' + json.dumps(out + ([{'_work': work}] if work else [])))
 """
 
 
@@ -563,7 +594,7 @@ def gen_ok(host, src, W, paths):
     """-> (ok, the declared paths that exist on host): src + W there, ot-job + bwrap usable"""
     sh = (f"test -d {shlex.quote(src)} && test -d {shlex.quote(W)} && test -x $HOME/.local/bin/ot-job "
           f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(GEN_OK_PY)} "
-          f"{shlex.quote(json.dumps([src] + paths))}")
+          f"{shlex.quote(json.dumps([src] + paths))} {shlex.quote(W)}")
     try:
         p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
                            capture_output=True, text=True, timeout=90)
@@ -578,12 +609,14 @@ def gen_ok(host, src, W, paths):
 
 def gen_spec(src, W, inputs):
     T = W.split("/items/", 1)[1].split("/", 1)[0] if "/items/" in W else os.path.basename(W)
+    work = next((i["_work"] for i in inputs if isinstance(i, dict) and "_work" in i), None)
+    inputs = [i for i in inputs if not (isinstance(i, dict) and "_work" in i)]
     return {"schema": "opentallas.ot_job.v1", "name": T + "-gen",
             "inputs": ([] if any((i.get("at") or i.get("path")) == src for i in inputs if isinstance(i, dict)) else [{"path": src}])
             + [i if isinstance(i, dict) else {"path": i} for i in inputs],
-            "work": {"at": W, "seed": [{"path": W}]},
+            "work": {"at": W, "seed": work["seed"] if work else [{"path": W}]},
             "publish": [{"name": f"kit-wave/{T}/gen", "path": "gen", "when": "always"}],
-            "return": {"to": W, "paths": ["."]}}
+            "return": {"to": W, "paths": work["return"] if work else ["."]}}
 
 
 def decide_gen(o, flags, cmd, gc, conf, passthru, check=None, exclude=()):

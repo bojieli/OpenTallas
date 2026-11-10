@@ -424,3 +424,23 @@ def test_gen_ok_splits_trees_with_escaping_symlinks(tmp_path):
     assert {"path": str(a / "plan.json")} in got and {"path": str(a / "sub")} in got and {"path": str(clean)} in got
     assert {"path": str(a / "plan.json"), "at": str(a / "rel")} in got          # an inside link is fine but split with its tree
     assert not any(i.get("path") == str(a) for i in got)
+
+
+def test_gen_work_with_escaping_link_is_seeded_by_child(tmp_path):
+    """the work seed obeys the store rule: a link leaving W becomes an input at its own path, and its top-level name is not returned"""
+    import json as _j, subprocess as _sp, sys as _s
+    W = tmp_path / "W"; (W / "prov" / "plan").mkdir(parents=True); (W / "rtl").mkdir(); (W / "rtl" / "a.f").write_text("x")
+    ext = tmp_path / "ext"; ext.mkdir(); (ext / "p.json").write_text("{}")
+    (W / "prov" / "plan" / "p.json").symlink_to(ext / "p.json"); (W / "prov" / "v.py").write_text("y")
+    (W / "plandir").mkdir(); (W / "plandir" / "self").symlink_to(W / "plandir" / "t"); (W / "plandir" / "t").write_text("z")
+    out = _sp.run([_s.executable, "-I", "-c", M.GEN_OK_PY, _j.dumps([]), str(W)], capture_output=True, text=True, check=True).stdout
+    inp = _j.loads(out.split("INPUTS ", 1)[1])
+    s = M.gen_spec("/src", str(W), inp)
+    assert {"path": str(ext / "p.json"), "at": str(W / "prov/plan/p.json")} in s["inputs"]
+    seeds = {x["into"]: x["path"] for x in s["work"]["seed"]}
+    assert seeds == {"plandir": str(W / "plandir"), "prov/v.py": str(W / "prov/v.py"), "rtl": str(W / "rtl")}
+    assert s["return"]["paths"] == ["gen", "plandir", "rtl"]
+    clean = tmp_path / "C"; clean.mkdir(); (clean / "f").write_text("1")
+    out = _sp.run([_s.executable, "-I", "-c", M.GEN_OK_PY, _j.dumps([]), str(clean)], capture_output=True, text=True, check=True).stdout
+    s = M.gen_spec("/src", str(clean), _j.loads(out.split("INPUTS ", 1)[1]))
+    assert s["work"]["seed"] == [{"path": str(clean)}] and s["return"]["paths"] == ["."]
