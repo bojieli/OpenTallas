@@ -14,7 +14,8 @@ def test_floor():
     m = load()
     assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 149})          # root floor 150 (OWNER 11-06 22:4x)
     assert not m.spill_dst_full("epyc2", {"rootfs_free_gb": 151})
-    assert m.spill_dst_full("intel1", {"scratch_disk_gb": 92})
+    assert m.spill_dst_full("intel1", {"scratch_disk_gb": 45})           # intel1 floor 50 (KW-FIX-42 11-09 COORD 08:5x)
+    assert not m.spill_dst_full("intel1", {"scratch_disk_gb": 92})
     assert m.spill_dst_full("localhost", {"scratch_disk_gb": 99})
     assert not m.spill_dst_full("epyc4", {"scratch_disk_gb": 40})      # no floor named
     assert not m.spill_dst_full("epyc2", {})                           # older probe: not refused
@@ -95,7 +96,8 @@ def test_stage_eco_uses_lower_epyc2_scratch_floor():
     assert not m.spill_dst_full("epyc2", r60, r, eco)
     assert m.spill_dst_full("epyc2", r40, r, eco)
     assert m.spill_dst_full("epyc2", r60, r, kit)
-    assert m.spill_dst_full("intel1", r60, r, eco)
+    assert m.spill_dst_full("intel1", r40, r, eco)                     # intel1 floor 50: 40 GB is full, 60 is not
+    assert not m.spill_dst_full("intel1", r60, r, eco)
     m.spill_lands_on_root = lambda host, roots: True
     assert not m.spill_dst_full("epyc2", r60, r, eco)                  # root above its floor
     assert m.spill_dst_full("epyc2", {"rootfs_free_gb": 149, "scratch_disk_gb": 60}, r, eco)  # the root floor stays
