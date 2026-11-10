@@ -1,0 +1,1255 @@
+{
+ "schema": "opentallas.s81_svc_v5_wave_event.v1",
+ "tool": "svc_v5_wave_event_1110.py",
+ "lane": "S81-SVCRS-3",
+ "ruling": "COORD 11-10: one batch plan event, v5 as the svc_rs binding",
+ "inputs": {
+  "wave": {
+   "path": "kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json (KW-FIX-43 wave src, c0c9a3de749a + pbp)",
+   "sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50"
+  },
+  "v5": {
+   "path": "physical/die_plan/s81/events/plan_h2_2249_svcprov_v5_517fbf9ecffb8b8f.json.gz",
+   "sha256": "44eccf1bfbfb79b62aa0a0472d5c8523b5f56439712a3744244067f8cb4c1ab1"
+  },
+  "main": {
+   "path": "physical/die_plan/s81/plan_h2_2249.json",
+   "sha256": "e596e9588e7256d59543d9b818803f056a163cd44c03dfb16bb9a5f08255ecb7"
+  }
+ },
+ "output": {
+  "path": "physical/die_plan/s81/events/plan_h2_2249_svcprov_v5wave_2a71703868939774.json.gz (gunzip -> plan_h2_2249.json)",
+  "sha256": "2a7170386893977413f748ba6ba82ac219e152057c3dc7068dfda5d57e71de83"
+ },
+ "taken_from_v5": [
+  "die",
+  "partitions",
+  "ports",
+  "reset",
+  "clock"
+ ],
+ "kept_from_wave": [
+  "lanes",
+  "latency",
+  "note",
+  "budgets",
+  "census",
+  "schema",
+  "191 non-svc_rs partition_types"
+ ],
+ "unchanged_other_types": 191,
+ "rows": {
+  "svc_hi_dsdv_svc_rs__t1": {
+   "old_block_sha": "4acd2561bb43fbe2a2b1a2225c1c6f11abeb00ef5d3e5a1bc382a8e90a8741d3",
+   "new_block_sha": "1d5c9f695f407074e74fa7a27a3a62afeee48166aa4899d857458dc93f58b869",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "old_block_sha": "b5c893a8e809aac798e30939d9fdd15d16fe654f06b984b72dee5d2a19834c22",
+   "new_block_sha": "d348f215ccd5d8be2098f253244a85c8022ce344977767583c979b9ffccfacff",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "old_block_sha": "9d583ce86763762dd3811cb2c1b505ce6c2e729827cb9a8ea5caac4812790540",
+   "new_block_sha": "094e114ecf8e11829166517524b5033e1915d8d96a269272aea5f0d53ccd5fc1",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "old_block_sha": "adfb8082b3cdc6fe4063e97dcebd448099ae59d33f22c5e613ef32fcd8451e1c",
+   "new_block_sha": "ee3947e85c5bf20b220b230d9a36e55ef9707a492d76365f0e65ad249d26eb28",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "old_block_sha": "7ec03586215f83f2be569c346f35c00a2aa644d8b4ff50be675bea33c4761bc7",
+   "new_block_sha": "4996a585f0b131d2797d25a575566f0d5f5a714ff8b8e301c4407dc62ca85231",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "old_block_sha": "10e82c02991417a67ddda85a445ac60b3275e01b6ce9b0f7e7e179443e79d363",
+   "new_block_sha": "c182c9e8f4414894cac1f13c0fd3cc146acf8b27fb5ccf981fc129f9dff036d2",
+   "old_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "new_outline_um": [
+    1442.88,
+    2747.52
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "old_block_sha": "b03e91859fe6c4bc446560a9224d4f5a5dd85ed82c8388095183dddf767f928a",
+   "new_block_sha": "5791d87f652f5cf10e5a92ac5c9c7c0928ac9098f4808fb8b35fcf8a38a32127",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "old_block_sha": "0a2cc85025ee5babc7fc65c1f98345a06a1b1548577cc7d9f88c7829482d7d3f",
+   "new_block_sha": "771fe0d3f8fb222d69b83d79d1218f736987ad878a7454e340616a9199b0fdf8",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "old_block_sha": "5b3470bb3ff2f84e9f41045b3d6c0a44a08d7d5976a46e5b6a5fe241ee3722c0",
+   "new_block_sha": "68ccb6dd5d7bf1732783644413b6db23f9073d0d121d3eeacbab8a439b4cce98",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "old_block_sha": "1c14b73b3c8d0b9f5a7db192e45ae751f5baa89626da3c1e1a939f1fb4f8d7c5",
+   "new_block_sha": "20046de9c8edba8e6b0e8503e486858e1f8fdca1d95e19f8f9417104427a3021",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "old_block_sha": "3278dff1aaa5d48e8f03438bce2a14cb7f81bca7d5a70afc16a0e5970cc60739",
+   "new_block_sha": "be17ab9d038e207145118c345cd9c61697923a544d0896e98c4770c11d308893",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "old_block_sha": "490c81c3d2109fc2192f03dc264dd0555929d1ee32cc037c429180eac6bba7e8",
+   "new_block_sha": "11beaf15f7dfa7d47de2a395213b4e1acd083af26616611464929a193c64c034",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "old_block_sha": "2bccb63022ef961a065d27472c93a84cfc0c69f98130f3b2849a36118c66d9ac",
+   "new_block_sha": "ef9578ee5280af479e58ec6499c34afa6dae7e5b799271e4a805691fe9c10ef3",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "old_block_sha": "08ba2a430c035fcd20990f6f76cb816f4432611f578149e9782ebe059e46d75c",
+   "new_block_sha": "b35376dac8bf6f1cf7d0d85118418638e3225d33313f003f787a8a251e8e433c",
+   "old_outline_um": [
+    1442.88,
+    2773.44
+   ],
+   "new_outline_um": [
+    1442.88,
+    2851.2
+   ],
+   "old_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_s81c_attn_hcore": 64
+   },
+   "new_hard_cores": {
+    "dsdv_svc_sx_hrow": 8,
+    "ot_hdc_v41x_attn_tr_x": 4,
+    "ot_s81_su_smc": 1,
+    "ot_s81_su_smd_fold2": 4,
+    "ot_s81_su_sml_fold2": 8,
+    "ot_s81_su_smr": 1,
+    "ot_s81_svc_idx_hslice_fp": 32,
+    "ot_s81_svc_merge_h4": 8,
+    "ot_s81c_attn_hcore": 32
+   },
+   "views": [
+    [
+     "dsdv_svc_sx_hrow",
+     "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+     "physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff0.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff0_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff16.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff16_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff24.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff24_tt.lib"
+    ],
+    [
+     "ot_hdc_v41x_attn_tr_x",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_hdc_v41x_attn_tr_x_xoff8.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_hdc_v41x_attn_tr_x_xoff8_tt.lib"
+    ],
+    [
+     "ot_s81_su_smc",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smc.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smc_tt.lib"
+    ],
+    [
+     "ot_s81_su_smd_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smd_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smd_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_sml_fold2",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_sml_fold2.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_sml_fold2_tt.lib"
+    ],
+    [
+     "ot_s81_su_smr",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_su_smr.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_su_smr_tt.lib"
+    ],
+    [
+     "ot_s81_svc_idx_hslice_fp",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_idx_hslice_fp.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_idx_hslice_fp_tt.lib"
+    ],
+    [
+     "ot_s81_svc_merge_h4",
+     "physical/die_plan/s81/cores/svc/prov_1109/ot_s81_svc_merge_h4.lef",
+     "physical/die_plan/s81/cores/svc/prov_1109/views/ot_s81_svc_merge_h4_tt.lib"
+    ],
+    [
+     "ot_s81c_attn_hcore",
+     "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+     "physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib"
+    ]
+   ]
+  }
+ },
+ "core_identity_note": "plan_block_identity also re-keys core dsdv_svc_sx_hrow (first-instance origin y 1140.48 -> 1175.04 in svc_lo_dsdv_svc_rs_w__t1) and adds 7 new core designs; no kit-wave row exists for any of them, so only the 14 svc_rs rows re-key",
+ "relaunch_gate": "DO NOT relaunch until every lef/lib in rows[*].views exists: the 10 provider designs under cores/svc/prov_1109 have no LEF/lib yet, so gen stops at WAIT-DEP"
+}
