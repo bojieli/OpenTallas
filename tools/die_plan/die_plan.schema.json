@@ -2615,6 +2615,89 @@
               }
              }
             },
+            "entries": {
+             "type": "array",
+             "minItems": 1,
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "name",
+               "xy_um",
+               "stations_um",
+               "cell",
+               "region_um",
+               "sink_pins",
+               "evidence"
+              ],
+              "properties": {
+               "name": {
+                "type": "string",
+                "minLength": 1
+               },
+               "xy_um": {
+                "type": "array",
+                "items": {
+                 "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+               },
+               "stations_um": {
+                "type": "array",
+                "items": {
+                 "type": "array",
+                 "items": {
+                  "type": "number"
+                 },
+                 "minItems": 2,
+                 "maxItems": 2
+                }
+               },
+               "cell": {
+                "type": "string",
+                "minLength": 1
+               },
+               "region_um": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                 "type": "array",
+                 "minItems": 4,
+                 "maxItems": 4,
+                 "items": {
+                  "type": "number"
+                 }
+                }
+               },
+               "sink_pins": {
+                "type": "array",
+                "items": {
+                 "type": "object",
+                 "additionalProperties": false,
+                 "required": [
+                  "module",
+                  "pin"
+                 ],
+                 "properties": {
+                  "module": {
+                   "type": "string",
+                   "minLength": 1
+                  },
+                  "pin": {
+                   "type": "string",
+                   "minLength": 1
+                  }
+                 }
+                }
+               },
+               "evidence": {
+                "type": "string",
+                "minLength": 1
+               }
+              }
+             }
+            },
             "data_outputs": {
              "type": "array",
              "minItems": 1,

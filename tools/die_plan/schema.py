@@ -1209,6 +1209,18 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
             "port": _name, "max_ps": {"type": "number"}, "min_ps": {"type": "number"}, "evidence": _name,
             # DIE-HEAD-74 11-06: optional same-edge eye capture (capture tree near one pad period).
             "capture": {"enum": ["same_edge"]}, "eye_hold_extra_ps": {"type": "number", "exclusiveMinimum": 0}}}}
+# S81 RCK2-1109 (COORD loopgap-155x-1109, opt-in): second entries of an input pad clock, each a plan-placed trunk
+# (stations_um, one cell per station, hops <= 405 um) to an entry driver whose net carries the sinks in region_um plus
+# the listed macro sink_pins (pad_clock.check_entries, pad_clock_entry.tcl PRE_CTS).  Absent = kit unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["entries"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+        "required": ["name", "xy_um", "stations_um", "cell", "region_um", "sink_pins", "evidence"], "properties": {
+            "name": _name, "xy_um": _xy, "stations_um": {"type": "array", "items": _xy}, "cell": _name,
+            "region_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                                      "items": {"type": "number"}}},
+            "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                          "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}},
+            "evidence": _name}}}
 # Output pad data uses the real exported PHY clock, retaining explicit budgets.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,

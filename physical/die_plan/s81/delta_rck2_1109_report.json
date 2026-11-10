@@ -1,0 +1,689 @@
+{
+ "event": "RCK2-1109",
+ "cell": "BUFx24_ASAP7_75t_R",
+ "hop_um": 400.0,
+ "face_band_um": 350.0,
+ "types": [
+  {
+   "type": "serdes__t12",
+   "pin": [
+    76.96,
+    1090.8
+   ],
+   "phy_region": [
+    59.184,
+    948.24,
+    2319.948,
+    1226.88
+   ],
+   "face_band_y": 820.8,
+   "decoder_bbox": [
+    864.0,
+    673.92,
+    1523.016,
+    812.16
+   ],
+   "entry_xy": [
+    1193.508,
+    829.44
+   ],
+   "stations": [
+    [
+     76.96,
+     936.24
+    ],
+    [
+     275.997,
+     829.44
+    ],
+    [
+     581.834,
+     829.44
+    ],
+    [
+     887.671,
+     829.44
+    ]
+   ],
+   "trunk_um": 1377.9,
+   "hops_um": [
+    154.6,
+    305.8,
+    305.8,
+    305.8,
+    305.8
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 820.8"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 820.8"
+   ]
+  },
+  {
+   "type": "serdes__t13",
+   "pin": [
+    332.704,
+    1090.8
+   ],
+   "phy_region": [
+    314.928,
+    948.24,
+    2575.692,
+    1226.88
+   ],
+   "face_band_y": 670.692,
+   "decoder_bbox": [
+    976.32,
+    432.0,
+    1626.6960000000001,
+    662.052
+   ],
+   "entry_xy": [
+    1301.508,
+    679.332
+   ],
+   "stations": [
+    [
+     332.704,
+     936.24
+    ],
+    [
+     382.224,
+     679.332
+    ],
+    [
+     688.652,
+     679.332
+    ],
+    [
+     995.08,
+     679.332
+    ]
+   ],
+   "trunk_um": 1380.3,
+   "hops_um": [
+    154.6,
+    306.4,
+    306.4,
+    306.4,
+    306.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 670.692"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 670.692"
+   ]
+  },
+  {
+   "type": "serdes__t14",
+   "pin": [
+    257.952,
+    1090.8
+   ],
+   "phy_region": [
+    240.192,
+    947.16,
+    2500.956,
+    1226.88
+   ],
+   "face_band_y": 597.16,
+   "decoder_bbox": [
+    898.56,
+    60.48,
+    1551.528,
+    198.72
+   ],
+   "entry_xy": [
+    1225.044,
+    328.82
+   ],
+   "stations": [
+    [
+     257.952,
+     935.16
+    ],
+    [
+     257.952,
+     541.802
+    ],
+    [
+     438.328,
+     328.82
+    ],
+    [
+     831.686,
+     328.82
+    ]
+   ],
+   "trunk_um": 1729.1,
+   "hops_um": [
+    155.6,
+    393.4,
+    393.4,
+    393.4,
+    393.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 597.16"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 597.16"
+   ]
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "pin": [
+    332.704,
+    1090.8
+   ],
+   "phy_region": [
+    314.928,
+    948.24,
+    2575.692,
+    1226.88
+   ],
+   "face_band_y": 598.24,
+   "decoder_bbox": [
+    967.68,
+    319.68,
+    1626.6960000000001,
+    457.92
+   ],
+   "entry_xy": [
+    1297.188,
+    475.2
+   ],
+   "stations": [
+    [
+     332.704,
+     936.24
+    ],
+    [
+     332.704,
+     579.859
+    ],
+    [
+     584.426,
+     475.2
+    ],
+    [
+     940.807,
+     475.2
+    ]
+   ],
+   "trunk_um": 1580.1,
+   "hops_um": [
+    154.6,
+    356.4,
+    356.4,
+    356.4,
+    356.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 598.24"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 598.24"
+   ]
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "pin": [
+    332.704,
+    1090.8
+   ],
+   "phy_region": [
+    314.928,
+    948.24,
+    2575.692,
+    1226.88
+   ],
+   "face_band_y": 598.24,
+   "decoder_bbox": [
+    967.68,
+    319.68,
+    1626.6960000000001,
+    457.92
+   ],
+   "entry_xy": [
+    1297.188,
+    475.2
+   ],
+   "stations": [
+    [
+     332.704,
+     936.24
+    ],
+    [
+     332.704,
+     579.859
+    ],
+    [
+     584.426,
+     475.2
+    ],
+    [
+     940.807,
+     475.2
+    ]
+   ],
+   "trunk_um": 1580.1,
+   "hops_um": [
+    154.6,
+    356.4,
+    356.4,
+    356.4,
+    356.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 598.24"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 598.24"
+   ]
+  },
+  {
+   "type": "serdes__t16",
+   "pin": [
+    332.704,
+    1090.8
+   ],
+   "phy_region": [
+    314.928,
+    948.24,
+    2575.692,
+    1226.88
+   ],
+   "face_band_y": 598.24,
+   "decoder_bbox": [
+    967.68,
+    319.68,
+    1626.6960000000001,
+    457.92
+   ],
+   "entry_xy": [
+    1297.188,
+    475.2
+   ],
+   "stations": [
+    [
+     332.704,
+     936.24
+    ],
+    [
+     332.704,
+     579.859
+    ],
+    [
+     584.426,
+     475.2
+    ],
+    [
+     940.807,
+     475.2
+    ]
+   ],
+   "trunk_um": 1580.1,
+   "hops_um": [
+    154.6,
+    356.4,
+    356.4,
+    356.4,
+    356.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 598.24"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 598.24"
+   ]
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "pin": [
+    257.952,
+    1090.8
+   ],
+   "phy_region": [
+    240.192,
+    947.16,
+    2500.956,
+    1226.88
+   ],
+   "face_band_y": 597.16,
+   "decoder_bbox": [
+    794.88,
+    60.48,
+    1711.368,
+    198.72
+   ],
+   "entry_xy": [
+    1253.124,
+    328.82
+   ],
+   "stations": [
+    [
+     257.952,
+     935.16
+    ],
+    [
+     257.952,
+     614.858
+    ],
+    [
+     292.217,
+     328.82
+    ],
+    [
+     612.519,
+     328.82
+    ],
+    [
+     932.822,
+     328.82
+    ]
+   ],
+   "trunk_um": 1757.2,
+   "hops_um": [
+    155.6,
+    320.3,
+    320.3,
+    320.3,
+    320.3,
+    320.3
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 597.16"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 597.16"
+   ]
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "pin": [
+    257.952,
+    1090.8
+   ],
+   "phy_region": [
+    240.192,
+    947.16,
+    2500.956,
+    1226.88
+   ],
+   "face_band_y": 597.16,
+   "decoder_bbox": [
+    794.88,
+    60.48,
+    1711.368,
+    198.72
+   ],
+   "entry_xy": [
+    1253.124,
+    328.82
+   ],
+   "stations": [
+    [
+     257.952,
+     935.16
+    ],
+    [
+     257.952,
+     614.858
+    ],
+    [
+     292.217,
+     328.82
+    ],
+    [
+     612.519,
+     328.82
+    ],
+    [
+     932.822,
+     328.82
+    ]
+   ],
+   "trunk_um": 1757.2,
+   "hops_um": [
+    155.6,
+    320.3,
+    320.3,
+    320.3,
+    320.3,
+    320.3
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 597.16"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 597.16"
+   ]
+  },
+  {
+   "type": "serdes__t2",
+   "pin": [
+    257.952,
+    1090.8
+   ],
+   "phy_region": [
+    240.192,
+    947.16,
+    2500.956,
+    1226.88
+   ],
+   "face_band_y": 597.16,
+   "decoder_bbox": [
+    898.56,
+    60.48,
+    1551.528,
+    198.72
+   ],
+   "entry_xy": [
+    1225.044,
+    328.82
+   ],
+   "stations": [
+    [
+     257.952,
+     935.16
+    ],
+    [
+     257.952,
+     541.802
+    ],
+    [
+     438.328,
+     328.82
+    ],
+    [
+     831.686,
+     328.82
+    ]
+   ],
+   "trunk_um": 1729.1,
+   "hops_um": [
+    155.6,
+    393.4,
+    393.4,
+    393.4,
+    393.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 597.16"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 597.16"
+   ]
+  },
+  {
+   "type": "serdes__t3",
+   "pin": [
+    257.952,
+    1090.8
+   ],
+   "phy_region": [
+    240.192,
+    947.16,
+    2500.956,
+    1226.88
+   ],
+   "face_band_y": 597.16,
+   "decoder_bbox": [
+    803.52,
+    311.04,
+    1711.368,
+    449.28000000000003
+   ],
+   "entry_xy": [
+    1257.444,
+    466.56
+   ],
+   "stations": [
+    [
+     257.952,
+     935.16
+    ],
+    [
+     257.952,
+     568.137
+    ],
+    [
+     523.398,
+     466.56
+    ],
+    [
+     890.421,
+     466.56
+    ]
+   ],
+   "trunk_um": 1623.7,
+   "hops_um": [
+    155.6,
+    367.0,
+    367.0,
+    367.0,
+    367.0
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 597.16"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 597.16"
+   ]
+  },
+  {
+   "type": "serdes__t4",
+   "pin": [
+    332.704,
+    1090.8
+   ],
+   "phy_region": [
+    314.928,
+    948.24,
+    2575.692,
+    1226.88
+   ],
+   "face_band_y": 682.56,
+   "decoder_bbox": [
+    967.68,
+    535.68,
+    1626.6960000000001,
+    673.92
+   ],
+   "entry_xy": [
+    1297.188,
+    691.2
+   ],
+   "stations": [
+    [
+     332.704,
+     936.24
+    ],
+    [
+     390.045,
+     691.2
+    ],
+    [
+     692.426,
+     691.2
+    ],
+    [
+     994.807,
+     691.2
+    ]
+   ],
+   "trunk_um": 1364.1,
+   "hops_um": [
+    154.6,
+    302.4,
+    302.4,
+    302.4,
+    302.4
+   ],
+   "root_keeps": [
+    "ot_s81_pma_rxm/pma_rck",
+    "std-cell sinks y >= 682.56"
+   ],
+   "entry_takes": [
+    "ot_s81_kp4_dchn/clk",
+    "ot_sram_1r1w2c_64x546_m1/wclk",
+    "ot_sram_1r1w2c_64x546_m1/rclk",
+    "ot_sram_1r1w_32x546_m1/clk",
+    "std-cell sinks y < 682.56"
+   ]
+  }
+ ]
+}
