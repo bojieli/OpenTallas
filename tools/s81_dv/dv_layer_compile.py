@@ -1369,6 +1369,12 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if p.is_file() and p.name != 'manifest.json':
             man['files'][str(p.relative_to(out))] = sha256(p)
     (out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
+    used = {}   # S81-PLAN-1 D: GB provider qualification records this programme used (lower_xs may load under two names)
+    for _n, _m in list(sys.modules.items()):
+        if _n.split('.')[-1] == 'lower_xs':
+            used.update(getattr(_m, 'GB_QUAL_USED', {}) or {})
+    if used:
+        (out / 'gb_provider_qualification_used.json').write_text(json.dumps(used, indent=1, sort_keys=True) + '\n')
     return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub)
 
 
