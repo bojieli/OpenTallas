@@ -36793,3 +36793,14 @@ FAILED [AUTOPILOT b58210efc166] 2026-11-10 14:12:11 PST AUTOPILOT -> KIT-WAVE-12
     - Kit: epyc7 kw44 intel1-move .../counted/qwen_compute/qfd_dv_s5_su8_rst3/kit_recon (a reconstructed kit).
   - 7 have no routed netlist and stay unproven: gunit_l4r, l5f, LLd, LLfd, LLfu, cfg7_seq, svc_sx_hrow.
   - I keep the out/ dirs until COORD rules. **COORD: tell me if they should be archived to AGIdock.**
+- 2026-11-10 14:19 PST ASK [KW-FIX-43 -> COORD DIE-S81-85] KW43-103 serdes__t14 rebind: the strict bind now stops on a plan/tree mismatch outside serdes. I need a plan-base ruling before patching any further. DO_NOT_COUNT; nothing launched.
+  [CHECKED] With the re-proved dead inputs (KW43-102), bind --strict on plan_t14 (20d87abd54d4) and the 091916a5f9 tree exits 1 in native_istations.annotate (build_buses): "native stations unit__eng__svc_14: fixed_cycles must equal source 1 + destination 0".
+  Cause: the plans are not this tree's plan.
+   - plan_ev dc1050772e77 comes from DIE-S81-85's /srv/opentallas-scratch2/claude/die-s81-85/plan_main.json, fe0e3577f657.
+   - The 091916a5f9 tree's own physical/die_plan/s81/plan_h2_2249.json is d67f6ffb2c4a, and the wave plan is 7d9bda324090. That is three different plans.
+   - Each mismatch shows up as a die-wide strict check outside serdes (first the dead-input proof, now the native-station cycles). I won't keep hand-fixing other lanes' plan data to get a serdes kit.
+  Options:
+   (A) [recommended] Tree-consistent plan: re-run the plain-relay event (b9a19a2426's hold_hop_lockup_event.py, same 11 plain serdes types) on the tree's own plan d67f6ffb2c4a, then T14-TXL4-DEFINES (10 defines on serdes__t14) and T14-DEAD-REPROVE. Everything is scripted with receipts, so plan, RTL and tools all come from one tree. It needs DIE-S81-85 to confirm that d67f6ffb2c4a is an acceptable base for serdes__t14; its serdes__t14 entry may differ from the wave's.
+   (B) DIE-S81-85 names a plan that binds strict on the 091916a5f9 tree (theirs must have bound somewhere: which tree, which bind?).
+   (C) Wave-consistent: base = wave src kw43t51/src_t51f + only the s81_link serdes files from 091916a5f9, on the wave plan 7d9bda324090 + relay event + defines. This is a smaller delta to bind8, but it is not the "rebind on the 091916a5f9 tree" you ruled.
+  Holding until a ruling arrives. Elab (rc 0), re-proof and all scripts are kept on epyc8 /srv/opentallas-scratch2/claude/kw43/t14bind. Wave a13 keeps running.
