@@ -5643,6 +5643,20 @@
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vq",
       "job": "COUNTED ot_s81sl_vq intel1:/srv/opentallas-scratch2/claude/s81ck7/vq_rt6e_hx3_resign_e-s81/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE, COORD via DIE-S81-85: view exported from the counted store record 7b85e57567b6, routed DB 6_final.odb sha 9e4df6ba54ba9220; LEF = write_abstract_lef + abstract_pin_stub.py, tt/ss/ff = write_timing_model of that DB (replaces the older-run kit view: OLD PG M5 recipe x0 2.46 pitch 2.7/5.4); archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vq)"
      }
+    ],
+    "ot_s81_cfg7_seq": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/ot_s81_cfg7_seq",
+      "job": "COUNTED ot_s81_cfg7_seq intel2:/srv/opentallas-scratch2/claude/tok-ds/bind178/plan_ff/s81/cores/views/ot_s81_cfg7_seq/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE (b), DIE-S81-85: counted SIGNED-LEGACY store record 5fa15c0e425e view; record LEF sha 2ada3d26ea505196 + abstract_pin_stub.py only (-> 1b1c96243b62c708, pins/PG unchanged), record tt/ff libs unchanged, no ss; replaces the closure-loop old-PG kit view; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/ot_s81_cfg7_seq)"
+     }
+    ],
+    "dsfd_node_NNfd": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd",
+      "job": "COUNTED dsfd_node_NNfd intel1:/srv/opentallas-scratch2/claude/counted/s81/dsfd_node_NNfd/view_legacy_record/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE (b), DIE-S81-85: counted SIGNED-LEGACY store record d374aee91e66 view; record LEF sha 246b093de77af1f3 + abstract_pin_stub.py only (-> abae33314d3d6284, pins/PG unchanged), record tt/ff libs unchanged, no ss; replaces the closure-loop old-PG kit view; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd)"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
