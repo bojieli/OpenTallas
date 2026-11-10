@@ -120,6 +120,9 @@ def ap_call(cmd, goals=()):
 
 def sealed_target(cmd, conf):
     """(K, stage) of a call this wrapper seals (place or autopilot), else None"""
+    gc = gen_call(cmd) if conf.get("gen") else None
+    if gc:
+        return gc[1], "gen"
     pc = place_call(cmd, conf.get("stages"))
     if pc:
         return pc[1], pc[2][0]
@@ -214,7 +217,10 @@ FETCH_DISK_GB = 60      # ot-run refuses a scratch disk under its 50 GB floor (k
 # KW-FIX-44 COORD 14:3x (OWNER 11-05 every disk is scratch): the job dir (ot-job spec "root", ot-run --dir) is the first of
 # these roots with >= FETCH_DISK_GB free on that host; scratch2 first, scratch3 when scratch2 is under the floor
 JOB_ROOTS = ("/srv/opentallas-scratch2/claude/ot-jobs", "/srv/opentallas-scratch3/claude/ot-jobs")
+# KW-FIX-44 11-09 18:5x: a scratch3 that IS the root fs is skipped (ot-run refuses a root-fs --dir: "no host qualifies";
+# the sealed gen pilot on epyc2, scratch2 54 GB, fell to scratch3 = root and was NOT RUN)
 JOB_ROOT_SH = ("for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $c ] || continue; "
+               "[ \"$(stat -c %d $c)\" = \"$(stat -c %d /)\" ] && continue; "
                "f=$(df --output=avail -BG $c | tail -1 | tr -dc 0-9); "
                f"if [ \"${{f:-0}}\" -ge {FETCH_DISK_GB} ]; then mkdir -p $r && echo JOBROOT=$r; break; fi; done")
 
@@ -473,6 +479,148 @@ def admits(backend, host, mem):
         return True
 
 
+# KW-FIX-44 COORD loopgap-181x-1109 (2) step 2b: the wave's GEN stage under ot-job.  kit_wave run_one gen:
+#   ot-run --mem M --threads 2 --dir W --hosts <gen hosts> -- bash -c "cd <src> && [env] python3 tools/die_plan/gen.py phys
+#          <plan> --out W/gen --types T ..."
+# Sealed when conf "gen" is true and W lies under conf "dirs".  Declared read-only inputs: the src tree, every absolute
+# path the command names (plan, bind, kit_rtl, item inputs) and the die's wave roots (kit_wave.json) that exist on the
+# host; work = a private copy of W at W's own path, returned to W; W/gen published.  Any failure of the sealed gen is
+# logged as an ISOLATE gap and rerun ONCE unsealed (the PLACE fallback, widened: a gen failure has no single ENOENT form).
+GEN_MARK = "tools/die_plan/gen.py phys "
+
+
+def gen_call(cmd):
+    """-> (src, W) of the wave's gen command, else None"""
+    if len(cmd) != 3 or cmd[:2] != ["bash", "-c"] or GEN_MARK not in cmd[2]:
+        return None
+    try:
+        w = shlex.split(cmd[2].split(" && ", 1)[0])
+    except ValueError:
+        return None
+    m = re.search(r"--out (\S+)/gen(?:\s|$)", cmd[2])
+    if len(w) != 2 or w[0] != "cd" or not m:
+        return None
+    try:
+        W = shlex.split(m.group(1))[0]
+    except (ValueError, IndexError):
+        return None
+    src = w[1]
+    if not (os.path.isabs(src) and os.path.isabs(W)):
+        return None
+    return src.rstrip("/"), W.rstrip("/")
+
+
+def gen_paths(text, src, W, extra=()):
+    """the absolute paths a gen command names + the wave roots, minus src / W and their insides, minus W's ancestors,
+    outermost first (an input inside another input is not listed twice)"""
+    cand = [m.group(1).rstrip(".,:;") for m in APATH.finditer(text)] + list(extra)
+    keep = []
+    for c in sorted(set(cand), key=lambda x: (x.count("/"), x)):
+        if under(c, [src, W]) or W.startswith(c.rstrip("/") + "/") or under(c, keep):
+            continue
+        keep.append(c)
+    return keep
+
+
+GEN_OK_PY = r"""
+import json, os, sys
+has = [p for p in json.loads(sys.argv[1]) if os.path.exists(p)]
+work = sys.argv[2:]
+def inside(q, roots):
+    return any(q == r or q.startswith(r.rstrip('/') + '/') for r in roots)
+# ot-job refuses an input tree with a symlink that leaves it ("declare its target as an input instead"): declare the targets
+extra, seen = [], 0
+for top in [p for p in has if os.path.isdir(p)] + work:
+    for dp, dns, fns in os.walk(top):
+        for n in dns + fns:
+            q = os.path.join(dp, n)
+            seen += 1
+            if seen > 400000 or not os.path.islink(q):
+                continue
+            hop, n = q, 0
+            while os.path.islink(hop) and n < 40:      # every hop of a symlink chain is checked by ot-job: declare each
+                hop = os.path.normpath(os.path.join(os.path.dirname(hop), os.readlink(hop)))
+                n += 1
+                if os.path.lexists(hop) and not inside(hop, has + work + extra):
+                    extra.append(hop)
+print('HAS ' + json.dumps(has + extra))
+"""
+
+
+def gen_ok(host, src, W, paths):
+    """-> (ok, the declared paths that exist on host): src + W there, ot-job + bwrap usable"""
+    sh = (f"test -d {shlex.quote(src)} && test -d {shlex.quote(W)} && test -x $HOME/.local/bin/ot-job "
+          f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(GEN_OK_PY)} "
+          f"{shlex.quote(json.dumps([src] + paths))} {shlex.quote(W)}")
+    try:
+        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
+                           capture_output=True, text=True, timeout=90)
+    except (OSError, subprocess.TimeoutExpired):
+        return False, []
+    has = [ln[4:] for ln in p.stdout.splitlines() if ln.startswith("HAS ")]
+    try:
+        return "SEALED_OK" in p.stdout and p.returncode == 0, (json.loads(has[0]) if has else [])
+    except ValueError:
+        return False, []
+
+
+def gen_spec(src, W, inputs):
+    T = W.split("/items/", 1)[1].split("/", 1)[0] if "/items/" in W else os.path.basename(W)
+    return {"schema": "opentallas.ot_job.v1", "name": T + "-gen",
+            "inputs": [{"path": src}] + [{"path": p} for p in inputs if p != src],
+            "work": {"at": W, "seed": [{"path": W}]},
+            "publish": [{"name": f"kit-wave/{T}/gen", "path": "gen", "when": "always"}],
+            "return": {"to": W, "paths": ["."]}}
+
+
+def decide_gen(o, flags, cmd, gc, conf, passthru, check=None, exclude=()):
+    src, W = gc
+    if not any(W.startswith(d.rstrip("/") + "/") for d in conf.get("dirs", [])):
+        return passthru, "not a pilot dir"
+    sealed_hosts = conf.get("hosts") or []
+    cands = [h for h in (o.get("hosts") or "").split(",") if h in sealed_hosts] if o.get("hosts") else list(sealed_hosts)
+    if not cands:
+        return passthru, f"gen: none of the gen hosts {o.get('hosts')} is a sealed host"
+    roots = wave_roots(W, conf["wave_conf"]) if conf.get("wave_conf") else []
+    paths = gen_paths(cmd[2], src, W, roots)
+    check = check or conf.get("gen_check") or gen_ok
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(len(cands), 1)) as ex:
+        res = dict(zip(cands, ex.map(lambda h: check(h, src, W, paths), cands)))
+    oks = {h: v for h, (okh, v) in res.items() if okh}
+    if not oks:
+        return passthru, f"gen: W/src/ot-job/bwrap not ready on {','.join(cands)}"
+    backend = backend_of(conf)
+    rows = status_rows(backend)
+    if rows is not None:
+        free = {h: v for h, v in oks.items() if h not in exclude} or oks
+        host = pick_host(rows, free, o["mem"])
+        if host is None and conf.get("gen_capacity_passthru"):
+            return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (gen unsealed)"
+        if host is None:        # gen never spills (--hosts pins it): wait SEALED where the queue is shortest; rehand re-places
+            hn = lambda h: h if h != os.environ.get("OT_HUB_NAME", "intel2") else "localhost"
+            host = max(free, key=lambda h: (lambda r: (r["admit"] - r["waiting_gb"]) if r and not r["held"] else -1e9)(rows.get(hn(h))))
+    else:
+        host = next((h for h in cands if h in oks and h not in exclude), next(h for h in cands if h in oks))
+    root = (conf.get("job_root_of") or job_root)(host) if conf.get("job_roots") else None
+    if conf.get("job_roots") and not root:
+        return passthru, f"gen: no job root with {FETCH_DISK_GB} GB free off the root fs on {host} (gen unsealed)"
+    fd, sp = tempfile.mkstemp(prefix="sealed-gen-", suffix=".json", dir=conf.get("spec_dir") or None)
+    with os.fdopen(fd, "w") as fh:
+        s = gen_spec(src, W, oks[host])
+        if root:
+            s["root"] = root
+        json.dump(s, fh)
+    out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "2"), "--hosts", host, "--job", sp]
+    if root:
+        out += ["--dir", root]
+    out += [f for f in flags if f != "--no-spill"]
+    for k in ("priority", "max-wait"):
+        if k in o:
+            out += ["--" + k, o[k]]
+    return out + ["--"] + cmd, f"SEALED gen on {host}: {W}"
+
+
 def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     """-> (argv to exec, why)"""
     backend = backend_of(conf)
@@ -483,6 +631,9 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     if not p:
         return passthru, "not a plain ot-run call"
     o, flags, cmd = p
+    gc = gen_call(cmd) if conf.get("gen") else None
+    if gc and "mem" in o:
+        return decide_gen(o, flags, cmd, gc, conf, passthru, exclude=exclude)
     pc = place_call(cmd, conf.get("stages"))
     ac = None if pc else ap_call(cmd, conf.get("ap_goals") or ())
     if not (pc or ac) or "mem" not in o:
@@ -668,6 +819,8 @@ def run_sealed(argv, conf, orig):
         return rc
     K, stage = tg
     gaps = gaps_in("".join(buf), K)
+    if not gaps and stage == "gen" and rc not in (75, 96) and "ot-run: NOT RUN" not in "".join(buf[-50:]):
+        gaps = [("(sealed gen rc %d)" % rc, (LAST_OUT[-1].strip() if LAST_OUT else "")[:300])]
     if not gaps:
         return rc
     for path, tool in gaps:

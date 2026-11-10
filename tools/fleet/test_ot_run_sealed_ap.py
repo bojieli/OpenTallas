@@ -330,3 +330,101 @@ def test_place_fetch_and_wave_roots(tmp_path, monkeypatch):
     assert {"path": "/srv/s/src_x/physical/a.lef", "host": "epyc2"} in s["inputs"]
     assert s["copy_back"] == {"from": "intel1", "to": "epyc2", "path": K}
     assert M.sealed_ap(out, c)                                     # re-hand applies to sealed place jobs too
+
+
+W = K.split("/gen/")[0]
+SRC = "/srv/opentallas-scratch2/claude/kw27/src_02909"
+PLAN = "/srv/opentallas-scratch2/claude/kw27/plan_s81/plan.json"
+
+
+def gen_argv(hosts="epyc2,epyc7"):
+    cmd = (f"cd {SRC} && OT_FLOW_TAG=x python3 tools/die_plan/gen.py phys {PLAN} --out {W}/gen --types ot_s81sl_leaf__t25 "
+           f"--bind /srv/opentallas-scratch2/claude/kw27/bind_s81/bind.f")
+    return ["--mem", "24", "--threads", "2", "--dir", W, "--hosts", hosts, "--", "bash", "-c", cmd]
+
+
+def test_gen_sealed_with_declared_inputs(tmp_path, monkeypatch):
+    """step 2b: the wave's gen call runs as an ot-job on a gen host: src + every named path + wave roots read-only,
+    work = W returned to W; the gen host order of the wave is kept"""
+    monkeypatch.setattr(M, "status_rows", lambda b: None)
+    seen = {}
+
+    def chk(h, src, w, paths):
+        seen[h] = paths
+        return True, [p for p in paths if "bind_s81" in p or "plan_s81" in p]
+    c = conf(spec_dir=str(tmp_path), gen=True, hosts=["epyc7", "epyc2"])
+    o, flags, cmd = M.parse(gen_argv())
+    out, why = M.decide_gen(o, flags, cmd, M.gen_call(cmd), c, ["/wave/ot-run"], check=chk)
+    assert why == f"SEALED gen on epyc2: {W}"
+    s = spec_of(out)
+    assert s["work"] == {"at": W, "seed": [{"path": W}]} and s["return"] == {"to": W, "paths": ["."]}
+    assert {"path": SRC} in s["inputs"] and {"path": PLAN} in s["inputs"]
+    assert {"path": "/srv/opentallas-scratch2/claude/kw27/bind_s81/bind.f"} in s["inputs"]
+    assert not any(i["path"].startswith(W) for i in s["inputs"])          # W is the work dir, never an input
+    assert out[out.index("--hosts") + 1] == "epyc2" and out[-3:-1] == ["bash", "-c"]
+    assert M.sealed_target(M.parse(gen_argv())[2], c) == (W, "gen")
+
+
+def test_gen_via_decide_and_off_by_default(tmp_path, monkeypatch):
+    monkeypatch.setattr(M, "status_rows", lambda b: None)
+    c = conf(spec_dir=str(tmp_path), gen=True, hosts=["epyc2"], gen_check=lambda h, s, w, p: (True, []))
+    out, why = M.decide(gen_argv(), c)
+    assert why.startswith("SEALED gen on epyc2")
+    out, why = M.decide(gen_argv(), conf(spec_dir=str(tmp_path)))
+    assert out[0] == "/wave/ot-run" and why == "not a place call"                      # no conf gen: unchanged
+    out, why = M.decide(gen_argv(hosts="intel1"), c)
+    assert out[0] == "/wave/ot-run" and "none of the gen hosts" in why                  # not a sealed host: unchanged
+
+
+def test_gen_sealed_failure_reruns_unsealed_once(tmp_path, monkeypatch):
+    """a mutant gen that reads an undeclared path fails inside the job; the shim logs the gap and reruns unsealed once"""
+    calls = []
+    gaps = tmp_path / "gaps.tsv"
+    c = conf(gen=True, gaps=str(gaps), log=str(tmp_path / "l.log"))
+    monkeypatch.setattr(M.sys, "argv", ["ot-run-sealed"] + gen_argv())
+    monkeypatch.setattr(M.subprocess, "call", lambda a: (calls.append(a), 0)[1])
+    sealed = ["/bin/sh", "-c", "echo 'cat: /srv/other-job/secret.v: Permission denied' >&2; exit 1"]
+    rc = M.run_sealed(sealed, c, gen_argv())
+    assert rc == 0 and calls == [["/wave/ot-run"] + gen_argv()]
+    assert "gen" in gaps.read_text()
+
+
+def test_gen_waits_sealed_when_no_gen_host_admits(tmp_path, monkeypatch):
+    rows = {"epyc2": dict(admit=-1, waiting_gb=100.0, load=1, ncpu=1, capped=False, held=False),
+            "epyc7": dict(admit=10, waiting_gb=0.0, load=1, ncpu=1, capped=False, held=False)}
+    monkeypatch.setattr(M, "status_rows", lambda b: rows)
+    c = conf(spec_dir=str(tmp_path), gen=True, hosts=["epyc2", "epyc7"], gen_check=lambda h, s, w, p: (True, []))
+    out, why = M.decide(gen_argv(), c)
+    assert why == f"SEALED gen on epyc7: {W}"                   # 24 GB fits nowhere now: the shorter queue, sealed
+    out, why = M.decide(gen_argv(), dict(c, gen_capacity_passthru=True))
+    assert out[0] == "/wave/ot-run" and why.startswith("capacity")
+
+
+def test_gen_ok_declares_symlink_targets_outside_inputs(tmp_path):
+    """ot-job refuses an input with a symlink leaving it: GEN_OK_PY lists the symlink target as an extra input"""
+    import subprocess, sys as _s
+    a, b, w = tmp_path / "plan", tmp_path / "other", tmp_path / "w"
+    for d in (a, b, w):
+        d.mkdir()
+    (b / "README.md").write_text("x")
+    (b / "README.md").rename(b / "real.md")
+    (b / "README.md").symlink_to(b / "real.md")
+    c = tmp_path / "third"
+    c.mkdir()
+    (c / "x.md").write_text("y")
+    (b / "real.md").unlink()
+    (b / "real.md").symlink_to(c / "x.md")
+    (a / "README.md").symlink_to(b / "README.md")
+    out = subprocess.run([_s.executable, "-I", "-c", M.GEN_OK_PY, json.dumps([str(a), str(tmp_path / "missing")]), str(w)],
+                         capture_output=True, text=True).stdout
+    has = json.loads(out.split("HAS ", 1)[1])
+    assert has == [str(a), str(b / "README.md"), str(b / "real.md"), str(c / "x.md")]     # every hop of the chain
+
+
+def test_gen_without_off_root_job_root_runs_unsealed(tmp_path, monkeypatch):
+    monkeypatch.setattr(M, "status_rows", lambda b: None)
+    c = conf(spec_dir=str(tmp_path), gen=True, hosts=["epyc2"], job_roots=True, job_root_of=lambda h: None,
+             gen_check=lambda h, s, w, p: (True, []))
+    out, why = M.decide(gen_argv(), c)
+    assert out[0] == "/wave/ot-run" and "no job root" in why
+    assert '"$(stat -c %d $c)" = "$(stat -c %d /)" ] && continue' in M.JOB_ROOT_SH
