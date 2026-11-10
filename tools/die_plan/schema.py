@@ -935,6 +935,11 @@ SCHEMA = {
         # forwarded bits, groups from BINDER2) split over several lanes.  lane_latency() pads every member to the
         # slowest; replicated consumers of one source (same source bus, same destination type + bus) are grouped
         # automatically (Plan.latency_groups()).
+        # Stations a post-plan kit step already built on an ft slot (relay_bay k -> k'): {type: {slot: extra}}.  It lives
+        # outside partition_types on purpose: a signed kit that already has these stages keeps its block identity.
+        # Counted as stations by lane_natural, the bind and the kit generator, so table, bound RTL and kit RTL agree.
+        "built_station_extra": {"type": "object", "additionalProperties": {
+            "type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}},
         "latency_groups": {"type": "array", "items": {
             "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
             "properties": {"name": _name, "kind": {"enum": ["bus", "replica", "landed"]},
@@ -1666,6 +1671,11 @@ def _id_strap_errors(obj):
 
 
 # ------------------------------------------------------------------------------------------------------- loader
+def built_station_extra(raw, type_name, slot):
+    """stations of ft slot `slot` of `type_name` already built beyond plan ft_slots[].stations (0 when none)"""
+    return int(((raw.get("built_station_extra") or {}).get(type_name) or {}).get(slot, 0))
+
+
 class Plan:
     """Loaded plan with defaults filled and lookup helpers.  `raw` is the JSON exactly as read."""
 
@@ -2031,7 +2041,7 @@ class Plan:
         st = 0
         for part, slot, _, _ in self.lane_crossings(lid):
             s = self.slot(part, slot) if slot else None
-            st += int(s.get("stations", 1)) if s else 1
+            st += (int(s.get("stations", 1)) + built_station_extra(self.raw, self.parts[part]["type"], slot)) if s else 1
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
@@ -2719,6 +2729,11 @@ def validate(raw):
         src = raw.get(k, {}).get("source")
         if src and src["part"] != DIE_PART and src["part"] not in P.parts:
             errs.append(f"{k}.source: unknown partition {src['part']}")
+    for tn, slots in (raw.get("built_station_extra") or {}).items():
+        names = {s["name"] for s in raw["partition_types"].get(tn, {}).get("ft_slots", [])}
+        for sn in slots:
+            if sn not in names:
+                errs.append(f"built_station_extra: {tn} has no ft slot '{sn}'")
     for g in raw.get("latency_groups", []):
         for lid in g["lanes"]:
             if lid not in P.lanes:

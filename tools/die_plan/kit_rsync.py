@@ -131,7 +131,8 @@ def _nearest_rsel(P, tn, taps, native_plan=None):
     except Exception:
         return lambda name: None
     cen = {k: (v[0] / v[2], v[1] / v[2]) for k, v in cen.items()}
-    slots = {gen_rtl.sv_id(s["name"]): int(s.get("stations", 1)) for s in P.types[tn].get("ft_slots", [])}
+    slots = {gen_rtl.sv_id(s["name"]): int(s.get("stations", 1)) + S.built_station_extra(P.raw, tn, s["name"])
+             for s in P.types[tn].get("ft_slots", [])}
 
     def near(x, y):
         return f"rst_n_t{min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))}"

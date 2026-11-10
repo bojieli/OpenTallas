@@ -32,13 +32,32 @@ def centre(t, face, win):
     return {"E": (w, m), "W": (0.0, m), "N": (m, h), "S": (m, 0.0)}[face]
 
 
+def inferred_in_window(tn, s):
+    """type-frame in window of a slot that declares none (QC ft slots): the die-frame window of the abutted port landing
+    on <slot>_i, mapped back through the instance origin / orientation.  All instances of the type must agree (1 um)."""
+    t, out = P.types[tn], []
+    for pr in P.ports.values():
+        d = pr["dst"]
+        if d["part"] == S.DIE_PART or d["bus"] != s["name"] + "_i" or P.parts[d["part"]]["type"] != tn or "window_um" not in pr:
+            continue
+        p = P.parts[d["part"]]; w, h = t["outline_um"]; o = p.get("orient", "R0"); a, b = pr["window_um"]
+        base, ext, flip = (p["origin_um"][1], h, o in ("MX", "R180")) if s["in_face"] in "EW" else (p["origin_um"][0], w, o in ("MY", "R180"))
+        a, b = a - base, b - base
+        out.append([ext - b, ext - a] if flip else [a, b])
+    if not out:
+        raise SystemExit(f"{tn} {s["name"]}: no in_window_um and no port window")
+    if max(abs(x[0] - out[0][0]) + abs(x[1] - out[0][1]) for x in out) > 1.0:
+        raise SystemExit(f"{tn} {s["name"]}: instances disagree on the in window")
+    return out[0]
+
+
 slots = {}
 for tn, t in sorted(P.types.items()):
     if not re.search(a.types, tn) or not t.get("ft_slots"):
         continue
     ring = {x.split("[")[0] for _c, sel in LC.ring_input_ports(P, tn) for x in sel}
     for s in t["ft_slots"]:
-        A, B = centre(t, s["in_face"], s["in_window_um"]), centre(t, s["out_face"], s["out_window_um"])
+        A, B = centre(t, s["in_face"], s.get("in_window_um") or inferred_in_window(tn, s)), centre(t, s["out_face"], s["out_window_um"])
         L = abs(A[0] - B[0]) + abs(A[1] - B[1])
         landed = s["name"] + "_i" in ring
         k = int(s.get("stations", 1)); n = math.ceil(L / a.max_hop - 1e-9)

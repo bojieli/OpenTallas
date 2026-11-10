@@ -1481,7 +1481,7 @@ class Binder:
                     self.errors.append(f"LANE_FT {ln['id']}: {part}.{ib} -> {ob} is not an ft slot of type {ptype[part]}")
                     st = 0
                 else:
-                    st = int(sl.get("stations", 0))
+                    st = int(sl.get("stations", 0)) + int((P.get("built_station_extra") or {}).get(ptype[part], {}).get(sl["name"], 0))
                 ft.append(dict(part=part, ibus=ib, obus=ob, stations=st, slot=sl["name"] if sl else ob))
             sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
             db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})

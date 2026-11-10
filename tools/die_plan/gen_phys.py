@@ -4921,7 +4921,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
     for s_ in t.get("ft_slots", []):
         regs = " ".join(f"{_um(x)} {_um(y)}" for x, y in s_.get("regs_um", []))
-        ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
+        ft.append(f"{s_['name']} {int(s_.get('stations', 1)) + S.built_station_extra(P.raw, tn, s_['name'])} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     from ft_bit_sites import table as ft_bit_sites_table
