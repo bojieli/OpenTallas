@@ -1,0 +1,231 @@
+[(('hbm', 'FLAG'), 57), (('hbm', 'ok'), 24), (('qwen_compute', 'FLAG'), 30), (('qwen_compute', 'ok'), 89), (('qwen_kvsys', 'FLAG'), 31), (('qwen_kvsys', 'ok'), 25), (('s81', 'FLAG'), 125), (('s81', 'ok'), 80), (('s81_head', 'FLAG'), 3), (('s81_head', 'ok'), 22)]
+[(('hbm', 'not built/finished'), 57), (('qwen_compute', 'not built/finished'), 30), (('qwen_kvsys', 'FAIL other class'), 6), (('qwen_kvsys', 'known GRT FAIL'), 1), (('qwen_kvsys', 'no kit-wave row'), 3), (('qwen_kvsys', 'not built/finished'), 21), (('s81', 'FAIL other class'), 20), (('s81', 'known GRT FAIL'), 14), (('s81', 'not built/finished'), 90), (('s81', 'wrong flag (PASS)'), 1), (('s81_head', 'no kit-wave row'), 1), (('s81_head', 'not built/finished'), 1), (('s81_head', 'wrong flag (PASS)'), 1)]
+hbm	q_su11__physical_v1	core_H	16.1	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core
+hbm	q_b010	street_V	14.369	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_su11	core_H	14.113	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core
+hbm	q_b010__physical_v1	street_V	14.038	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b102	core_V	13.537		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b102__physical_v1	street_V	13.291		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_su01	core_H	12.812	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core
+hbm	q_su01__physical_v1	core_H	12.812	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core
+hbm	q_su00__physical_v1	core_H	11.545	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core,ot_hbm_su_pg_lane_full_x_core
+hbm	q_su00	core_H	11.143	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core,ot_hbm_su_pg_lane_full_x_core
+hbm	q_b011__physical_v1	street_V	10.353	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.539	
+hbm	q_b000	street_V	10.268	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.875	
+hbm	q_b000__physical_v1	street_V	10.268	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b011	street_V	10.24	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.427	
+hbm	q_b100	street_V	10.176	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b100__physical_v1	street_V	10.175	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b103	street_V	10.044		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b103__physical_v1	core_V	9.022		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b001__physical_v1	core_V	8.877	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b001	core_V	8.824	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_hub_ne	street_H	8.398		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	hfd_hgi_vms_glue_nw_t,hnx_fused_lane_c,ot_hbm_svc_vm_kshare_
+hbm	q_b101	core_V	8.035	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b101_nw	core_V	8.035	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	root	street_V	7.444	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_idx_topk_link_static,ot_hgi_coll_tkm_m_tp192__root,ot
+hbm	q_hub_nw	street_H	7.075		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	hfd_hgi_vms_glue_nw_t,hnx_fused_lane_c,ot_hbm_svc_vm_kshare_
+hbm	q_b111	street_H	6.679	M2	wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_su10	core_H	5.587	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core,ot_hbm_su_pg_lane_full_x_core
+hbm	q_su10__physical_v1	street_V	5.277	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	ot_hbm_su_pg_lane1p_core,ot_hbm_su_pg_lane_full_x_core
+hbm	q_b110	street_V	4.456	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b110__physical_v1	street_V	4.456	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b003	street_V	4.384		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b003__physical_v1	street_V	4.31		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b113	street_H	3.755		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	ot_hgi_sfu_opsa_group0,ot_hgi_sfu_opsa_group1,ot_hgi_sfu_ops
+hbm	q_spb0	street_V	3.515	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.689	ot_pdie_serdes_rx_bm3_rest
+hbm	q_spb0__physical_v1	street_V	3.515	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.689	ot_pdie_serdes_rx_bm3_rest
+hbm	q_b111__physical_v1	core_H	2.98		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b113__physical_v1	street_H	2.887		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	ot_hgi_sfu_opsa_group0,ot_hgi_sfu_opsa_group1,ot_hgi_sfu_ops
+hbm	vsN0	core_V	2.749	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_pdie_serdes_rx_bm3_rest
+hbm	q_b002	core_V	2.671		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.682	
+hbm	q_b002__physical_v1	core_V	2.64		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.676	
+hbm	q_b012__physical_v1	core_V	2.154		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.521	
+hbm	q_b012	core_V	2.141		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.617	
+hbm	q_b013	street_V	2.137		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.469	
+hbm	q_b013__physical_v1	street_V	2.137		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.467	
+hbm	NE_io	core_V	2.136	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	ot_pdie_serdes_rx_bm3_rest
+hbm	NW_io	core_V	2.04	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.187	ot_pdie_serdes_rx_bm3_rest
+hbm	q_su20__physical_v1	street_V	1.979	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.146	
+hbm	q_su20	street_V	1.978	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.197	
+hbm	q_b112	core_V	1.879	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_b112__physical_v1	core_V	1.879	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_su30	face_H	1.496	M2	landing ring form / spread face pins (reshape outline along the face)	not built/finished: prelint LINT-ADVISORY	0.351	
+hbm	q_su30__physical_v1	core_H	1.257		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.312	
+hbm	q_su31__physical_v1	street_V	1.055		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+hbm	q_su31	core_V	1.041		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.0	
+hbm	q_spt0__physical_v1	face_H	1.015	M2	landing ring form / spread face pins (reshape outline along the face)	not built/finished: prelint LINT-ADVISORY	None	
+hbm	q_su21__physical_v1	street_V	1.012		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+hbm	q_su21	street_V	1.008		wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_compute	cbn_q00__cld7bf7197	core_H	4.123	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbn_q00__cl622f65d2	core_H	4.123	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbn_q00__cldbcda913	core_H	4.123	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbf_q01	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbf_q11	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbf_q01_s2	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbn_q01__cldd6ea846	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbn_q01__clab6e67f2	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbn_q01__cld9ff4c40	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbn_q11__cl5cc92dfe	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbn_q11__cl49ae4555	core_H	3.78	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.739	
+qwen_compute	cbf_q00_s2	core_H	3.777	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbf_q00__cl1b5a6458	core_H	3.777	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbf_q00__cl870de686	core_H	3.777	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.744	
+qwen_compute	cbx_q10__cl94a12200	core_H	3.419	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.547	
+qwen_compute	cbx_q10__cl89936551	core_H	3.419	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.547	
+qwen_compute	tt_ctlm	mstreet_H	1.862	M2	wider street / channel beside the SRAM/ROM macros	not built/finished: route RUNNING	-	
+qwen_compute	coll_core	mstreet_V	1.613	M3	wider street / channel beside the SRAM/ROM macros	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_compute	slw_su_l1__clcc9d0155	core_H	1.458		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+qwen_compute	slw_su_l1__cla2a78701	core_H	1.458		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+qwen_compute	sle_sc_v1__cl115da35f	core_V	1.185		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.079	
+qwen_compute	sle_sc_v1__cl7479a5ec	core_V	1.185		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.079	
+qwen_compute	sle_sc_v2	core_V	1.165		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.141	
+qwen_compute	sle_sc_v3	core_V	1.148		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_compute	slw_sc_v3	core_V	1.141		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.013	
+qwen_compute	slw_sc_v1__cl63e5a7a2	core_V	1.14		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.113	
+qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	core_V	1.14		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.113	
+qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	core_V	1.14		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.113	
+qwen_compute	slw_sc_v2	core_V	1.123		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	0.02	
+qwen_compute	sle_su_l1__cl5ea486db	core_H	1.108		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	
+qwen_kvsys	kv3_pv_v6n	core_H	4.424	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+qwen_kvsys	kv3_pv_v2n	core_H	4.417	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	None	
+qwen_kvsys	kv3_pv_v4n	core_H	4.413	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+qwen_kvsys	kv3_pv_v1n	core_H	4.412	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+qwen_kvsys	kv3_pv_v3n	core_H	4.412	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+qwen_kvsys	kv3_pv_v5n	core_H	4.412	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+qwen_kvsys	kv3_hg_v1p2	core_V	2.227	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: queue QUEUED	None	
+qwen_kvsys	kv3_hg_v1p3	core_V	2.227	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+qwen_kvsys	kv3_hg_v1p4	core_V	2.227	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: queue QUEUED	None	
+qwen_kvsys	kv3_hg_v1p5	core_V	2.227	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: queue QUEUED	None	
+qwen_kvsys	kv3_hg_v1p6	core_V	2.227	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: queue QUEUED	None	
+qwen_kvsys	kv3_pc_v3	street_V	1.645	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_kvsys	kv3_pc_v1__cl23f6a148	street_V	1.615	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_kvsys	kv3_pc_v1__cl7f648944	street_V	1.615	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_kvsys	kv3_pc_v1__cl4ea58a5c	street_V	1.615	M3	wider street (V) between hard cores	not built/finished: prelint LINT-ADVISORY	0.0	
+qwen_kvsys	kv3_pv_v6	street_H	1.407	M2	wider street (H) between hard cores	not built/finished: unit CANCELLED	0.559	
+qwen_kvsys	kv3_pv_v7	street_H	1.406	M2	wider street (H) between hard cores	not built/finished: gen_lint RETRY-INFRA	0.553	
+qwen_kvsys	kv3_pv_v2	street_H	1.4	M2	wider street (H) between hard cores	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	0.546	
+qwen_kvsys	kv3_pv_v12	street_H	1.4	M2	wider street (H) between hard cores	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	0.548	
+qwen_kvsys	kv3_pv_v3	street_H	1.399	M2	wider street (H) between hard cores	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	0.545	
+qwen_kvsys	kv3_pv_v4	street_H	1.396		wider street (H) between hard cores	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	0.546	
+qwen_kvsys	kv3_pv_v8	street_H	1.395		wider street (H) between hard cores	not built/finished: route RUNNING	0.541	
+qwen_kvsys	kv3_pv_v1	street_H	1.395	M2	wider street (H) between hard cores	FAIL other class: INFRA infra @place: ot-run: NOT RUN on epyc2: 	0.539	
+qwen_kvsys	kv3_pv_v5	street_H	1.395	M2	wider street (H) between hard cores	not built/finished: unit CANCELLED	0.542	
+qwen_kvsys	kv3_pv	street_H	1.394	M2	wider street (H) between hard cores	not built/finished: route RUNNING	0.539	
+qwen_kvsys	kv3_hub_Wi	street_H	1.346		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	0.712	
+qwen_kvsys	kv3_hgi_v8	street_V	1.292		wider street (V) between hard cores	no kit-wave row	0.0	
+qwen_kvsys	kv3_hgi_v4	street_V	1.125		wider street (V) between hard cores	no kit-wave row	0.0	
+qwen_kvsys	kv3_hgi_v6	street_V	1.106		wider street (V) between hard cores	not built/finished: geom_run CANCELLED	0.0	
+qwen_kvsys	kv3_hgi	core_V	1.022		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	no kit-wave row	0.0	
+s81	slice_station__t51	core_H	32.069	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: prelint LINT-ADVISORY	None	s81p_slice_station__t51_ot_s81_station_t51_native_w
+s81	col_h10_r2__t1__clac068e56	street_H	6.404	M2	wider street (H) between hard cores	not built/finished: gen RETRY-INFRA	None	
+s81	col_h10_r2__t1__cl8b686b3e	street_H	6.404	M2	wider street (H) between hard cores	not built/finished: route RUNNING	None	
+s81	col_h10_r2__t1__cl99efd374	street_H	6.404	M2	wider street (H) between hard cores	FAIL other class: FLOW watchdog-stopped: exit 143: stopped by t	None	
+s81	col_h10_r2__t1__cl1f5d6c2a	street_H	6.404	M2	wider street (H) between hard cores	not built/finished: place RUNNING	None	
+s81	col_h9_r2__t1__clc9ad8f7e	street_H	5.876	M2	wider street (H) between hard cores	not built/finished: route RUNNING	None	
+s81	col_h9_r2__t1__clb8d86cd5	street_H	5.876	M2	wider street (H) between hard cores	not built/finished: route RUNNING	None	
+s81	dsdv_slice_lepe_nh_mus_LP__t1	core_H	5.182	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	svc_hi_dsdv_svc_rs__t5	street_H	4.919		wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	col_h9_r0_p5__t1	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	col_h9_r0_p6__t1	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	col_h9_r0_p1__t1	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	col_h9_r0_p2__t1__cl9f71e63d	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	col_h9_r0_p2__t1__cl0045af7b	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	col_h9_r0_p3__t1__cl31d0dc4b	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: kit_rtl RUNNING	None	
+s81	col_h9_r0_p3__t1__cl8ce97bcb	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	col_h9_r0_p3__t1__cl0cd90c0e	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: kit_rtl RUNNING	None	
+s81	col_h9_r0_p4__t1__cl8ef405e8	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: gen RETRY-INFRA	None	
+s81	col_h9_r0_p4__t1__clcb2fbfe8	core_H	4.449	M6	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: gen RETRY-INFRA	None	
+s81	dsdv_slice_lepw_mus_LP__t2	core_H	4.248	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	dsdv_slice_lepe_mu_LP__t2	core_H	3.965	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	dsdv_slice_lepw_mu_LP__t2	core_H	3.96	M2	horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	svc_hi_dsdv_svc_rs__t6	ring_H	3.691	M2	landing ring form (stacked / y-column ring, or split the landing)	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_hi_dsdv_svc_pvso_entry__t1	ring_H	3.581	M2	landing ring form (stacked / y-column ring, or split the landing)	not built/finished: place RUNNING	None	
+s81	svc_hi_dsdv_svc_rs__t2	ring_H	3.541	M2	landing ring form (stacked / y-column ring, or split the landing)	FAIL other class: FLOW unclassified failure @place (see log): F	None	
+s81	ot_s81sl_leaf__t28	core_V	3.405		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	col_h10_r1__t1__cl95b37463	street_H	3.373		wider street (H) between hard cores	not built/finished: route RUNNING	None	
+s81	col_h10_r1__t1__cld01bb4ae	street_H	3.373		wider street (H) between hard cores	not built/finished: place RUNNING	None	
+s81	ot_s81sl_leaf__t61	core_V	3.249	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t66	core_V	3.149		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t57	core_V	3.142	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t46	core_V	3.105	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	ot_s81sl_leaf__t52	core_V	3.087		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t33	core_V	3.087		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t8	core_V	2.992		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t72	core_V	2.992		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t11	core_V	2.959	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.235	
+s81	ot_s81sl_leaf__t36	core_V	2.959	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	FAIL other class: ROUTING grt-overflow: drc 0 GRT-0116] Global rou	0.207	
+s81	ot_s81sl_leaf__t5	core_V	2.908	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.182	
+s81	ot_s81sl_leaf__t6	core_V	2.908	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.188	
+s81	svc_hi_dsdv_svc_rs__t3	ring_H	2.904	M2	landing ring form (stacked / y-column ring, or split the landing)	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	ot_s81sl_leaf__t26	core_V	2.87	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.175	
+s81	svc_hi_dsdv_svc_rs__t4	street_V	2.841		wider street (V) between hard cores	FAIL other class: FLOW unclassified failure @place (see log): F	None	
+s81	ot_s81sl_leaf__t50	core_V	2.785	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.216	
+s81	col_h10_r0_p1__t1__cl574cc59d	core_H	2.784		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	col_h10_r0_p1__t1__cl911743eb	core_H	2.784		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	col_h10_r0_p4__t1	core_H	2.779		horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)	not built/finished: gen RETRY-INFRA	None	
+s81	ot_s81sl_leaf__t40__clf8bbdae1	core_V	2.766	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.189	
+s81	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	core_V	2.766	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.166	
+s81	ot_s81sl_leaf__t30	core_V	2.74	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: kit_rtl RUNNING	0.17	
+s81	ot_s81sl_leaf__t54__cl706d9749	core_V	2.732	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: gen RETRY-INFRA	0.177	
+s81	ot_s81sl_leaf__t54__cl501e5681	core_V	2.732	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: gen RETRY-INFRA	0.177	
+s81	ot_s81sl_leaf__t41	core_V	2.701	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.279	
+s81	ot_s81sl_leaf__t2	street_V	2.694	M3	wider street (V) between hard cores	not built/finished: place RUNNING	0.035	
+s81	ot_s81sl_leaf__t69	core_V	2.681	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	FAIL other class: FLOW flow-error: exit 2	0.164	
+s81	ot_s81sl_leaf__t25__cl55642d17	core_V	2.681	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	FAIL other class: FLOW watchdog-stopped: exit 143: stopped by t	0.164	
+s81	ot_s81sl_leaf__t35	core_V	2.66	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.164	
+s81	ot_s81sl_leaf__t59	core_V	2.66	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.193	
+s81	ot_s81sl_leaf__t22	street_V	2.624	M3	wider street (V) between hard cores	not built/finished: route RUNNING	0.027	
+s81	svc_hi_dsdv_svc_rs__t1	ring_H	2.594	M2	landing ring form (stacked / y-column ring, or split the landing)	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_hi_dsdv_svc_pvso_entry__t2	ring_H	2.551	M2	landing ring form (stacked / y-column ring, or split the landing)	not built/finished: place RUNNING	None	
+s81	ot_s81sl_leaf__t56	street_V	2.439	M3	wider street (V) between hard cores	not built/finished: place RUNNING	0.475	
+s81	ot_s81sl_leaf__t17	core_V	2.423	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.658	
+s81	ot_s81sl_leaf__t42	core_V	2.423	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.0	
+s81	ot_s81sl_leaf__t70	core_V	2.411	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.665	
+s81	svc_lo_dsdv_svc_rs__t7	street_H	2.353		wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_lo_dsdv_svc_rs__t1	street_H	2.283		wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_lo_dsdv_svc_rs_w__t1	street_H	2.282		wider street (H) between hard cores	FAIL other class: INFRA infra @place: make[1]: *** [Makefile:297	None	
+s81	svc_lo_dsdv_svc_rs__t6	street_H	2.282		wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @place (see log): F	None	
+s81	svc_lo_dsdv_svc_rs__t2	street_H	2.282	M2	wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_lo_dsdv_svc_rs__t3	street_H	2.282	M2	wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_lo_dsdv_svc_rs__t4	street_H	2.282	M2	wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	svc_lo_dsdv_svc_rs__t5	street_H	2.282	M2	wider street (H) between hard cores	FAIL other class: FLOW unclassified failure @unit (see log): KW	None	
+s81	ot_s81sl_leaf__t55	core_V	2.206	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.279	
+s81	ot_s81sl_leaf__t9	core_V	2.103	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.39	
+s81	ot_s81sl_leaf__t32	core_V	2.103	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.32	
+s81	ot_s81sl_leaf__t73	core_V	2.103	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.39	
+s81	ot_s81sl_leaf__t45	street_H	2.008	M2	wider street (H) between hard cores	not built/finished: place RUNNING	None	
+s81	ot_s81sl_leaf__t12	core_V	1.889		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t53__clb66fa5cb	core_V	1.877	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.112	
+s81	ot_s81sl_leaf__t53__cl958451dd	core_V	1.877	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.112	
+s81	ot_s81sl_leaf__t29	core_V	1.833	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.087	
+s81	ot_s81sl_leaf__t67	core_V	1.771		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	None	
+s81	ot_s81sl_leaf__t62	core_V	1.771		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t23	core_V	1.771	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.377	
+s81	ot_s81sl_leaf__t43	street_V	1.77		wider street (V) between hard cores	not built/finished: route RUNNING	0.059	
+s81	ot_s81sl_leaf__t58	core_V	1.66	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.185	
+s81	ot_s81sl_leaf__t75	core_V	1.659		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	None	
+s81	ot_s81sl_leaf__t37	core_V	1.614	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.0	
+s81	ot_s81sl_leaf__t14	core_V	1.549	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.588	
+s81	ot_s81sl_leaf__t13	core_V	1.487		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.011	
+s81	ot_s81sl_leaf__t47	core_V	1.483		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.768	
+s81	ot_s81sl_leaf__t44__clf6cf8492	core_V	1.433		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.251	
+s81	ot_s81sl_leaf__t4	core_V	1.394		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.0	
+s81	ot_s81sl_leaf__t34	core_V	1.381		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.058	
+s81	ot_s81sl_leaf__t60	street_H	1.378		wider street (H) between hard cores	not built/finished: route RUNNING	0.34	
+s81	ot_s81sl_leaf__t74	core_V	1.363		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.106	
+s81	ot_s81sl_leaf__t10	core_V	1.363		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	FAIL other class: FLOW clock-landing band too small or blocked 	0.106	
+s81	ot_s81sl_leaf__t71	core_V	1.325		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.162	
+s81	ot_s81sl_leaf__t27	core_V	1.325	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.0	
+s81	ot_s81sl_leaf__t21	street_H	1.321	M2	wider street (H) between hard cores	not built/finished: route RUNNING	0.341	
+s81	ot_s81sl_leaf__t7	core_V	1.316		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: place RUNNING	0.0	
+s81	ot_s81sl_leaf__t51	core_V	1.316		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	FAIL other class: ROUTING grt-overflow: drc 0 GRT-0116] Global rou	0.0	
+s81	ot_s81sl_kv_leaf__t5	street_V	1.249	M3	wider street (V) between hard cores	not built/finished: geom CANCELLED	0.034	
+s81	ot_s81sl_leaf__t68	core_V	1.216	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.0	
+s81	ot_s81sl_leaf__t24__cl81374cd8	core_V	1.215		layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.0	
+s81	ot_s81sl_leaf__t39	street_V	1.115		wider street (V) between hard cores	not built/finished: route RUNNING	0.0	
+s81	ot_s81sl_leaf__t31	core_V	1.113	M7	layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)	not built/finished: route RUNNING	0.0	
+s81	eng__t1	street_H	1.101		wider street (H) between hard cores	not built/finished: prelint LINT-ADVISORY	None	
+s81	ot_s81sl_kv_leaf__t4	street_V	1.094	M3	wider street (V) between hard cores	not built/finished: geom CANCELLED	0.0	
+s81_head	hd_host	mem_H	1.321	M6	horizontal channel beside the SRAM/ROM macro column (macro blocks M1-M4/M5; M6 only H)	no kit-wave row	-	
+s81_head	hd_mesh	mem_V	1.066	M5	vertical channel beside the SRAM/ROM macros / layer reassignment	not built/finished: route RUNNING	-	
