@@ -45,3 +45,46 @@ class Heavy(unittest.TestCase):
         self.assertLess(s.index("LOADCAP_1101 (FLOW-21"), s.index('if [ "${OT_HEAVY_DIRECT:-}" = 1 ]'))
         self.assertLess(s.index('if [ "${OT_HEAVY_DIRECT:-}" = 1 ]'), s.index('if [ "$V" = OK ]; then\n    echo "$UNIT $RES"'))
         self.assertIn('-ge $(( MEM + 32 ))', s)
+
+
+class FreshOnly(unittest.TestCase):
+    """DIRECT_MEMAVAIL_1110: only young direct records are charged; started jobs are already in MemAvailable."""
+
+    def run_block(self, avail_gb, mem, records):
+        import subprocess, tempfile, time
+        s = (HERE / "ot-heavy").read_text()
+        a = s.index('  if [ "${OT_HEAVY_DIRECT:-}" = 1 ]; then')
+        b = s.index('  [ "$RES" != "$MEM" ]', a)
+        d = tempfile.mkdtemp()
+        for i, (req, age, active) in enumerate(records):
+            f = os.path.join(d, f"direct.u{i}{'a' if active else 'i'}")
+            open(f, "w").write(f"u{i}{'a' if active else 'i'} {req}\n")
+            t = time.time() - age
+            os.utime(f, (t, t))
+        bindir = tempfile.mkdtemp()
+        open(os.path.join(bindir, "systemctl"), "w").write('#!/bin/bash\ncase "$*" in *a.scope*) exit 0;; esac; exit 3\n')
+        open(os.path.join(bindir, "awk"), "w").write(f'#!/bin/bash\necho {avail_gb}\n')
+        for x in ("systemctl", "awk"): os.chmod(os.path.join(bindir, x), 0o755)
+        sh = f'D={d}; MEM={mem}; UNIT=new; V=NO; RES=0; WHY=gate; OT_HEAVY_DIRECT=1\n' + s[a:b] + 'echo "$V|$WHY"\n'
+        env = dict(os.environ, PATH=bindir + ":" + os.environ["PATH"])
+        out = subprocess.run(["bash", "-c", sh], capture_output=True, text=True, env=env).stdout.strip()
+        return out, sorted(os.listdir(d))
+
+    def test_old_direct_jobs_are_not_subtracted(self):
+        out, _ = self.run_block(222, 96, [(64, 3 * 3600, True), (96, 2 * 3600, True), (32, 1800, True)])
+        self.assertTrue(out.startswith("OK|"), out)
+
+    def test_fresh_record_is_charged_full(self):
+        out, _ = self.run_block(222, 96, [(96, 30, True)])
+        self.assertTrue(out.startswith("NO|"), out)           # 222 - 96 < 96 + 32
+        out, _ = self.run_block(222, 96, [(96, 30, False)])   # written but not started yet: still charged
+        self.assertTrue(out.startswith("NO|"), out)
+
+    def test_floor_is_32(self):
+        self.assertTrue(self.run_block(128, 96, [])[0].startswith("OK|"))
+        self.assertTrue(self.run_block(127, 96, [])[0].startswith("NO|"))
+
+    def test_stale_inactive_record_is_dropped(self):
+        out, left = self.run_block(222, 96, [(96, 600, False)])
+        self.assertTrue(out.startswith("OK|"), out)
+        self.assertEqual(left, ["direct.new"])
