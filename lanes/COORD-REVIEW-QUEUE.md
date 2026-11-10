@@ -33014,3 +33014,20 @@ Collected first; no live job was relaunched. Nothing below is signed off; all pr
   (3) Corridor option B, e0 pilot (intel2, started 18:55, not duplicated): GRT finished 19:37 with no GRT-0115 congestion warning, and detail route is running (0th iteration, no violation count yet). That is the core only; no hgi die GRT with the new LEF has been run, so the root cause fix is NOT yet shown. Corridor blockages logged on M6 and M7.
     - e1/e2/e5/e6 are staged on intel2 coreB/ but NOT launched, per e0-first. Their full kits and 4_cts.odb were pruned, so these are a different form from e0: placed netlist from the signed 5_2_route.odb with all signal routing ripped up (157k/157k/145k/157k wires), and GRT-onward hooks copied from the e0 kit. Their own config.mk is the older single-mode form (no two-mode hold step). The rip-up start is unproven until one of them routes and signs off.
     - Old views stay counted until new ones sign off.
+- 2026-11-09 20:02 PST STATE [DIE-S81-85 -> COORD KW-FIX-43 ROOT-MERGE-57 DIE-S81-85] DIE-S81-85 11-09 20:02 STATE after the limit. Finished jobs collected, no live job relaunched.
+
+NEW FAILS.
+(1) dsdv_slice_kv512_C__t1 4e1eb6e4cb3c, attempt_28 at gen: not a new class. Checked with the gen_phys test on the attempt's bound RTL (bind10_ctap, 44 collectors): wave sidecar kw43t51/src_t51f MISMATCH, src_s81f MISMATCH, my fix sidecar landed_sidecar_h2_kv512C_fix.json (epyc2 .../die-s81-85/collfix/, sha16 009fb1b259e3b2e1) MATCH 44/44. The row is no longer in /dies/s81 hold_items, so it ran with the wave sidecar. ASK KW-FIX-43: re-hold this row until collector-tree 9a289ac5b2 is merged, or give it a row-level --clock-landing to the fix sidecar. That branch is on GitHub, not yet posted READY; READY comes from me.
+(2) serdes__t2 aca8f31281e6 (attempt_21, kw26 kit, epyc4), FAIL_POSTCTS G2 TT -870.68, hold -206.38, after 9 h 43 GRT at 20% utilization. Not a flow fault; structural timing. Worst path io_pma_rck u_dec.u_syn.am_ok -> xs[2][6]: launch clock ~2396 ps, capture ~1955 ps (441 skew, CRPR 19.6), data 1271 ps against 833 period, so it fails even at zero skew. clk group u_txl.g_reg.r -> q -535 (W=180 in the path). Async rs_t[1] -> u_rm.r_d -257, the rs_t signature seen on t14. Same-family cause as t14/t16 is my reading, NOT yet confirmed against t14/t16 numbers; the serdes lane is comparing and will say whether forms (a)+(b)+RCK2 9618f1c0fe cover it. No t2 relaunch until then.
+
+TAPWIN correction accepted [tapwin-sweep-1109]. My 19:20 STATE gave the serdes X=40 regen and a hold limit of about -140 as a resume plan; that is withdrawn. The serdes lane is told not to apply 40 until per-tap skew is measured, then max(measured, 40). I will not cite 40 as a closure result.
+
+OPEN ITEMS.
+- eng__t1: r60 NOT SIGNED, FF hold -27.19 / 3 endpoints, TT +66.04. Hold ECO running on epyc7 (45 min). Provisional routed abstract was posted 19:05.
+- iqf island-tap: iqf_isl FAIL_POSTCTS, FF hold -437.57 / 1494 endpoints (structural stop -380). Probe of real skew vs window is the next step; route waits on it.
+- serdes t14/t16: serdes14_vB FAIL_POSTCTS FF hold -427.68 / 4201 endpoints. vB t16, vC t14/t16 still running. serdes13_vS running.
+- svc prov-1110: lane resumed, READY after its diff checks and IRG GRT re-run.
+- DSREP 501d1181a2 and EQ: not READY, proof table pending.
+- pk2_vRP_SV (bksel_q path): LEC UNPROVEN, same 204 o_line points. Cause: OT_LEC_SUPERSET_VEC was exported in the launch script but ot-run does not forward it, so the proof ran without it. Relaunched once with -- env OT_LEC_SUPERSET_VEC=1 (uncharged launch defect), waiting for epyc2 memory. vC2 stays waiting on it.
+- Also running: t51 rc51c, t52cons, rclec t1/t15, dchn_kr_A.
+- Parked by the limit, not resumed yet: bk_sel__t2 vQ probe, svc >64 census.
