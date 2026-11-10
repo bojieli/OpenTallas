@@ -1,0 +1,56 @@
+# S81 over-400k class table (advisory only, no gate; DO_NOT_COUNT). Latest 3_4 per type; counts may predate the current row. buf_share is of movable cells; blank = DB not readable. t5 row a15 2026-11-09. bk_sel__t2 is probably another form (36k synth on its current row).
+type	host	c21_floorplan	c33_afterGP	c34_placed	growth_c34_over_c21	buf	inv	logic	ff	buf_share_of_movable	ins_buffers_3_3	ins_buffers_3_4	long_wires_last_TD	place_density	repair_margin	OT_MAXWIRE_UM	die_um	hpwl_note
+dsdv_slice_c1x_C__t5	epyc2	311684	1429397	1722845	5.53	1314657	80045	117598	48002	0.843	977314	293448	219329	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t1	epyc7	292245	1131529	1197350	4.1	810247	64169	127602	46385	0.773	689853	65821	152301	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t7	epyc4	281543	1116173	1168610	4.15						719730	52437	164987	0.5	0	100		
+dsdv_slice_c1x_C__t4	intel1	297481	1067203	1153979	3.88	759927	72950	117608	48277	0.761	648185	86776	140438	0.5	0	100	1443x1227	
+dsdv_slice_lepw_mu_C__t1	epyc2	300708	544642	1073864	3.57	677206	70880	123827	53252	0.732	184890	529222	43602	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t6	epyc2	335457	591321	989936	2.95	560016	84652	129829	48426	0.681	137276	398615	42794	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t3	epyc2	297711	523774	952892	3.2	560810	66995	127744	46353	0.699	180321	429118	42091	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t9	epyc7	305776	742720	933487	3.05	532997	69132	131020	46276	0.684	373039	190767	121567	0.5	0	100	1443x1227	
+dsdv_slice_lepe_nh_mus_C__t1	epyc4	294576	516973	879116	2.98						173727	362143	39905	0.5	0	100		
+dsdv_slice_lepw_mus_C__t1	intel1	296477	526359	690164	2.33	297432	69721	122154	49480	0.552	176925	163805	41627	0.5	0	100	1443x1227	
+dsdv_slice_iq_C__t1	epyc2	383494	672528	672528	1.75	198727	76297	185290	42685	0.395	243316	0	54258	0.5	0	100	1443x1227	
+dsdv_slice_kv512_C__t1	epyc7	328110	585820	607337	1.85	187648	56199	173221	36649	0.414	185680	21517	43582	0.5	0	100	1443x1227	
+dsdv_slice_c1x_C__t8	epyc2	358199	588625	604097	1.69	152330	90836	138383	49405	0.353	183294	15472	39863	0.5	0	100	1443x1227	
+serdes__t3	epyc7	356615	596470	600923	1.69	50640	46557	222590	29826	0.145	82029	4453	22307	0.5	0	100	2886x1227	
+serdes__t15__cla3d02796	epyc2	353102	594924	597056	1.69	49314	46046	220196	29826	0.143	80812	2132	21706	0.5	0	100	2886x1227	
+dsdv_slice_c3x_C__t1	epyc2	317414	561265	574773	1.81	164185	69206	140191	50175	0.387	196212	13508	45428	0.5	0	100	1443x1227	
+serdes__t15__cla2127225	epyc4	321123	564584	566678	1.76						79405	2094	21647	0.5	0	100		
+serdes__t16	epyc2	328928	559437	561918	1.71	36098	38431	213303	36964	0.111	53479	2481	12988	0.5	0	100	2886x1227	
+dsdv_slice_c1x_C__t10	epyc2	320486	None	560780	1.75	145277	79235	126267	48952	0.363	194184	0	45751	0.5	0	100	1443x1227	
+serdes__t1__clfe1f0815	intel1	314018	548030	552635	1.76	43182	32392	210419	29826	0.137	60498	4605	14123	0.5	0	100	2886x1227	
+serdes__t4	epyc7	315311	546475	548603	1.74	37694	32828	211291	29313	0.121	43619	2128	10795	0.5	0	100	2886x1227	
+bk_sel__t2	epyc7	37049	520849	547258	14.77	249441	11128	12355	4865	0.898	240192	26409	60124	0.5	0	100	4329x1227	
+serdes__t13	intel1	317267	541034	546130	1.72						43863	5096	10728	0.35	0			
+serdes__t1__clb45db5be	intel2	296727	529741	535531	1.8						62178	5790	14839	0.35	0			
+dsdv_slice_lepe_mu_C__t1	epyc2	295504	522110	533851	1.81	142470	69068	122720	49402	0.371	181618	11741	40877	0.5	0	100	1443x1227	
+serdes__t14	epyc2	291155	513160	519454	1.78	29930	25809	202523	38054	0.101	27804	6294	4040	0.5	0	100	2886x1227	
+serdes__t12	intel1	273624	None	505453	1.85	32539	22584	193212	29313	0.117	39878	2100	9853	0.5	0	100	2886x1227	
+serdes__t2	epyc4	274702	499742	500871	1.82	28398	18929	200559	29826	0.102	32844	1129	4651	0.5	0	100	2886x1227	
+ot_s81sl_kv_leaf__t3	epyc2	296376	437935	441276	1.49						74065	3341	20973	0.5	0	100		
+seqhost__t1	epyc2	264328	427689	427789	1.62	49280	34224	156223	33700	0.18	53896	100	13634	0.5	0	100	1443x1227	
+ot_s81sl_kv_leaf__t4	epyc4	279346	412763	414571	1.48	29897	60391	137905	44950	0.109	59616	1808	16907	0.5	0	100	1443x1227	
+ot_s81sl_leaf__t72	intel2	216477	405547	409865	1.89						155333	4318	44137	0.5	0	100		
+ot_s81sl_leaf__t8	epyc4	216904	405015	409023	1.89	83383	79304	49208	4758	0.385	156525	4008	43891	0.5	0	100	1443x1227	
+ot_s81sl_leaf__t1	t1	154547	323042	325339	2.11	61056	55719	36410	4743	0.387	106794	2297	34082	0.5	0	100	1443x1227	
+
+# SECTION 2: routing/timing audit rows (KW43-58 + leaf t1/t51). Advisory; DO_NOT_COUNT.
+row	attempt	placed_3_4	grt0096_total	maxHV	layers	rpt_gcells	worst_region_um	batch_moves_carried	class	next_form
+ot_s81sl_leaf__t1 2173f5265455	a5	325339	31280	16/14	M4 7796,M5 8626,M6 12573,M7 2277,M2 8	37	x750-850 y850-900 (29/37)	n/a	M6-LARGEST-GRT	read M6 demand map first; no build
+ot_s81sl_leaf__t51 4afe22b87fb6	a6	233186	18160	15/9	M6 17799,M4 120,M5 116,M7 125	12	x42-46 y580-880 (left edge)	n/a	M6-LARGEST-GRT	read M6 demand map first; no build
+col_h9_r1__t1__cl49d7a23e	a17	188620	110195	26/15	M2 5,M3 17,M4 2744,M5 4046,M6 102028,M7 1355	86	400-500/0-100;400-500/1000-1100;500-600/1000-1100	n/a	M6-LARGEST-GRT	read M6 demand map first; no build
+col_h9_r1__t1__clf32cde8d	a17	187847	99523	27/13	M2 6,M3 13,M4 4399,M5 2680,M6 91817,M7 608	53	400-500/0-100;500-600/1000-1100;400-500/1000-1100	n/a	M6-LARGEST-GRT	read M6 demand map first; no build
+col_h9_r2__t1__cl87f3ff59	a2	165250	66467	28/15	M2 368,M3 32,M4 10900,M5 4901,M6 48672,M7 1594	3890	1000-1100/100-200;1000-1100/0-100;1000-1100/200-300	n/a	M6-LARGEST-GRT	read M6 demand map first; no build
+ot_s81sl_leaf__t24__cl2456157b	a6	225929	18607	21/10	M2 1,M3 22,M4 3179,M5 513,M6 14516,M7 376	642	400-500/200-300;400-500/100-200;200-300/200-300	NO (spec has no OT_MACRO_MOVES; t24 coord 483.84 absent in kit tcl)	M6-LARGEST-GRT	carry the batch moves (they were not applied here) via KW-FIX-43; no relaunch unchanged
+ot_s81sl_leaf__t40__cl86ea32b3	a10	166476	22215	14/14	M2 12,M3 487,M4 4304,M5 2002,M6 14325,M7 1085	3716	300-400/100-200;300-400/0-100;200-300/0-100	NO (spec has no OT_MACRO_MOVES)	M6-LARGEST-GRT	carry the batch moves (they were not applied here) via KW-FIX-43; no relaunch unchanged
+ot_s81sl_leaf__t44__clf4ea6d4b	a9	215892	19635	18/11	M4 288,M5 104,M6 19057,M7 186	13	800-900/500-600;0-100/600-700;0-100/500-600	NO (spec has no OT_MACRO_MOVES)	M6-LARGEST-GRT	carry the batch moves (they were not applied here) via KW-FIX-43; no relaunch unchanged
+ot_s81sl_leaf__t25__cl431c660f	a4	170719	0 (GRT0)	0/0		0		n/a	TIMING: GRT G2 setup_tt -715.99; u_rrl_90/q to u_cland_collect_rst_rl_90/fault_o, arrival 1615, required 899, 37 stages (reset-fault collector)	collector-tree form READY 9a289ac5b271 is the candidate; kit does not carry it, not yet shown to reach this path; no build
+
+# SECTION 3: slice_station HOLD_UNCHANGED rows (KW43-60)
+row	db_status	sign-off best known	near_miss	action
+slice_station__t27@2	epyc4 kit 6_final + eco i3 6_final present	i3: FF hold -19.74/43, TT +55.47, slew 17 TT/35 FF, DRC 0 (old tool)	yes by eco_loop numbers (slew nets not counted)	ECO queued on epyc7 from i3 DB, --lec, no override (log ~/ds85/eco_stt27.otrun.log)
+slice_station__t49@1	epyc4 kit 6_final + eco i3 6_final present	i3: FF hold -19.61/71, TT +11.16, FF slew 13, DRC 0 (old tool)	yes by eco_loop numbers (slew nets not counted)	ECO queued on epyc7 from i3 DB, --lec, no override (log ~/ds85/eco_stt49.otrun.log)
+slice_station__t36@4	DB GONE: not on epyc2/epyc4/epyc7/intel1/intel2 by path search (epyc5/6 terminated; AGIdock not checked)		cannot tell	no ECO possible; propose t52-style conservative form (ft +1 pin cycle, early-leaf pin registers, PD 0.45); synth 200062; not built
+slice_station__t37@7	DB GONE: not on epyc2/epyc4/epyc7/intel1/intel2 by path search (epyc5/6 terminated; AGIdock not checked)		cannot tell	no ECO possible; propose t52-style conservative form (ft +1 pin cycle, early-leaf pin registers, PD 0.45); synth 151788; not built
+slice_station__t43@4	DB GONE: not on epyc2/epyc4/epyc7/intel1/intel2 by path search (epyc5/6 terminated; AGIdock not checked)		cannot tell	no ECO possible; propose t52-style conservative form (ft +1 pin cycle, early-leaf pin registers, PD 0.45); synth 155615; not built
