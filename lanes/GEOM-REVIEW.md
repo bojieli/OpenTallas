@@ -6134,3 +6134,10 @@ QCcbf_q01a10 and KVsys_SD_v1a12 actualPNGsVIEWED; review/results at results/geom
 - **sle_su_l0__cl086d85ba** (review 8d9f0176f800, -630 TT): same floorplan. Worst setup path starts on a pin inside the third macro and zigzags across the whole height up to the top-left corner. Hold paths are short and local in the west strip.
 - **Class:** macro pins far from the logic strip. Paths cross the full core height (about 1.3 mm) with no stage. Neither a fanout nor an ECO class. The l0 structural form should either put a register stage at each macro's pin face, or interleave logic between the macro rows (a channel between macros), so no macro-to-logic hop exceeds about 400 um. Sent to DIE-QC-97 for the l0 form.
 - 2026-11-10 12:55 PST GEOM REQ [KIT-WAVE-1 sample s81/ot_s81sl_leaf__t50] 3_place epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t50/attempt_13/gen/ot_s81sl_leaf__t50 (event e9eda32d41c); AUTO-GEOM PASS epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t50/attempt_13/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
+
+## [geom-1340-1110] COORD hourly: QC slw_stm_v1__cl05fc43f7__cl2086fa2c (review 5af96681fa20, paths.png; TT -799)
+- Four small SRAMs sit in the middle of the core; the rest is std cells, with no macro wall.
+- Worst setup path #1 starts at a pin inside the upper-right SRAM, runs west past the SRAMs, then about 500 um north up the west column, then about 400 um east to the top-right corner, ending north. That's roughly 1.3 mm of wire with no stage, matching QC-FAIL-22's u_stream we_c to dupq read (880 ps of buffers).
+- Paths #3 and #4 start at east-face input ports and reach flops about 100 um inside, so they're short. They fail on arrival budget, not wire: a port-timing item for the parent.
+- Hold endpoints sit on the west face, at port inputs, so they're NEEDS_PARENT-class.
+- Class confirmed: the stm dupq gather pipeline form (af5a05b78501cf5e4 / stm sub-lane). No new class.
