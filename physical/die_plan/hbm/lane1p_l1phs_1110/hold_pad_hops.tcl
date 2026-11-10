@@ -1,7 +1,9 @@
 # HBM-COLLECT-1 L1P-HS 11-10 (COORD: hold-safe shift lines, CA safe-by-design): one HB4xp67 hold pad on the sink side of
 # every zero-logic hop (flop D or macro data input whose driver is a flop output through <=2 BUF/INV).
 # Physical buffer only, so LEC-neutral. PRE_GLOBAL_PLACE hook (sourced from face_flops.tcl). Idempotent: skips when
-# ot_hs_pad_0 exists. Pads are dont_touch so later repair never removes or resizes them.
+# ot_hs_pad_0 exists. Pads are NOT dont_touch: a dont_touch load pin makes RSZ insertBufferBeforeLoads fail hard
+# (L1P-HS a1: RSZ-3006 in timing-driven GPL on lane0_ld__fq[0]). Zero-logic hops are not setup-critical, so repair has no
+# reason to remove them; the routed pad count is checked after the run.
 namespace eval ::ot_hs {
   proc is_seq {inst} {
     set m [$inst getMaster]
@@ -69,7 +71,6 @@ namespace eval ::ot_hs {
       lassign [$sink getLocation] x y
       $b setLocation $x $y
       $b setPlacementStatus PLACED
-      $b setDoNotTouch 1
       incr k
     }
     puts "OT_HS_PAD inserted $k HB4xp67 hold pads on zero-logic hops"
