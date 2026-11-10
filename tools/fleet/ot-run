@@ -876,7 +876,7 @@ def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
     held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
-        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if dir_aware(h) else None), hosts))   # KW-FIX-44 disks-all
+        res = dict(ex.map(lambda h: probe(h, STATUS_DIR if dir_aware(h) else None), hosts))   # KW-FIX-44 disks-all: dir-aware hosts report as for a scratch2 job
     out = []
     for h in hosts:
         if h in held:
@@ -1179,6 +1179,14 @@ LAST_RUN = dict(connfail=False)
 RUN_T0 = time.time()
 
 
+def admission_unit(line, tag):
+ if 'OT_RUN_START' in line and tag in line:
+  m=re.search(r'\both-[A-Za-z0-9_-]+\b',line)
+  return m.group(0) if m else '?'
+ m=re.fullmatch(r'ot-heavy: admitted on [^\s]+ as (oth-[A-Za-z0-9_-]+) after [0-9]+ s(?: OT_RUN_START [^\s]+)?\s*',line)
+ return m.group(1) if m else None
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -1209,7 +1217,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         else:      # cancel the waiter, or it would start the command later with nobody listening
             subprocess.run(["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", "-o", "BatchMode=yes", host,
                             f"pkill -TERM -f -- '[-]-tag {tag} '"], capture_output=True, timeout=40, preexec_fn=unblock)
-            say(f"ot-run: interrupted (signal {sig} from {who}) while waiting for memory on {host}; waiter cancelled: NOT RUN")
+            say(f"ot-run: interrupted (signal {sig} from {who}); cancellation requested on {host}: START STATE UNKNOWN; verify canonical remote unit/payload before any successor")
         p.kill()
         os._exit(128 + sig)
 
@@ -1241,9 +1249,9 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             continue
         if not state["started"] and any(k in ln for k in SSH_CONNFAIL):
             state["connfail"] = True
-        if "OT_RUN_START" in ln and tag in ln:
+        if (seen_unit := admission_unit(ln, tag)) is not None:
             state["started"] = True
-            state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
+            state["unit"] = seen_unit
             if on_start:
                 on_start(state["unit"])
             ln = ln.split(" OT_RUN_START")[0] + "\n"
