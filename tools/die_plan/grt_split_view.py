@@ -6,9 +6,18 @@ saturating-demand probe on QC cbx_q10: a view 98 pct free on M7 reads 57 pct fre
 bimodal full/0).  A detailed (porous) abstract therefore loses most of its porosity in GRT, while DRT needs
 the real shapes.  The split form gives each stage its own view of the SAME child:
 
-  GRT  : the abstract with OBS removed on --layers, plus a GRT region adjustment over every instance of the
-         master equal to the measured blocked share of the detailed view plus --margin (priced average).
+  GRT  : the abstract with OBS removed on --layers; with --bands, the --band-layers get thin preferred-direction
+         OBS bands instead, spaced so GRT zeroes about calib*(blocked share + margin) of the gcell rows.  The view
+         only REMOVES capacity (pure OBS), so GRT can never see more than the track supply.
   DRT  : the detailed abstract, swapped in on the GRT result (dbInst swapMaster, guides kept).
+
+  region-tcl is DISABLED (exit 2): set_global_routing_region_adjustment over the children RAISED capacity in the
+  full flow (cbx_q10 M6 original 45.1M -> derated 132.1M, -193%; HBM q_su21 M4 -71%), although a 1-core probe
+  without the kit hooks reduced it monotonically (0.1/0.5/0.9 -> H cap 3/2/1 of 4).  Do not use it.
+
+  Band calibration (1-core saturating probe, ASAP7 gcell 0.57, M6 H, NK porous67): band share 0.251 -> GRT mean
+  free 0.65; 0.18 -> 0.795 (target 0.749), so --calib 0.8.  M7 (V) bands zero ~47 pct of V edges at any share
+  (unexplained), so M7 stays removed by default (optimistic by the detail M7 blocked share: NK 12.9, NL 2.2 pct).
 
 Commands (die-agnostic, any single-MACRO LEF):
   python3 -I grt_split_view.py grt-view --lef detail.lef --out grt.lef --layers M6,M7
@@ -54,6 +63,36 @@ def grt_view(text, layers):
     head, groups, tail = split_obs(text)
     keep = [g for g in groups if g[0] not in layers]
     body = [l for g in keep for l in g[1]]
+    return "\n".join(head + body + tail)
+
+
+def band_obs(text, shares, gcell, width=0.032):
+    """GRT-view OBS that GRT prices at the given blocked share without zeroing every gcell: one thin band along the
+    preferred direction every gcell/share um.  GRT zeroes each gcell row (H) / column (V) a band touches and leaves the
+    others whole, so about `share` of the rows/columns lose that layer and the rest keep full capacity."""
+    sx, sy = size_of(text)
+    out = []
+    for lay, sh in shares.items():
+        if sh <= 0:
+            continue
+        period = gcell / min(sh, 1.0)
+        h = DEF_DIR[lay] == "H"
+        ext = sy if h else sx
+        out.append("      LAYER %s ;" % lay)
+        c = period / 2.0
+        while c + width / 2 <= ext:
+            if h:
+                out.append("        RECT 0 %.3f %.3f %.3f ;" % (c - width / 2, sx, c + width / 2))
+            else:
+                out.append("        RECT %.3f 0 %.3f %.3f ;" % (c - width / 2, c + width / 2, sy))
+            c += period
+    return out
+
+
+def grt_view_bands(text, shares, gcell):
+    head, groups, tail = split_obs(text)
+    keep = [g for g in groups if g[0] not in shares]
+    body = [l for g in keep for l in g[1]] + band_obs(text, shares, gcell)
     return "\n".join(head + body + tail)
 
 
@@ -152,6 +191,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     a = sp.add_parser("grt-view"); a.add_argument("--lef", required=True); a.add_argument("--out", required=True); a.add_argument("--layers", default="M6,M7")
+    a.add_argument("--bands", action="store_true", help="price the detailed blocked share (+margin) with gcell bands instead of removing the OBS")
+    a.add_argument("--gcell", type=float, default=0.57); a.add_argument("--margin", type=float, default=0.05); a.add_argument("--pitch", default="")
+    a.add_argument("--band-layers", default="M6"); a.add_argument("--calib", type=float, default=0.8)
     b = sp.add_parser("share"); b.add_argument("--lef", required=True); b.add_argument("--layers", default="M6,M7"); b.add_argument("--pitch", default="")
     c = sp.add_parser("region-tcl"); c.add_argument("--lef", required=True); c.add_argument("--master", required=True)
     c.add_argument("--layers", default="M6,M7"); c.add_argument("--margin", type=float, default=0.05); c.add_argument("--pitch", default="")
@@ -162,11 +204,24 @@ def main(argv=None):
     lay = [x for x in getattr(ns, "layers", "").split(",") if x]
     pitch = {k: float(v) for k, v in (kv.split("=") for kv in getattr(ns, "pitch", "").split(",") if kv)}
     if ns.cmd == "grt-view":
-        t = open(ns.lef).read(); g = grt_view(t, set(lay)); open(ns.out, "w").write(g)
-        print(json.dumps({"lef": ns.lef, "out": ns.out, "layers_removed": lay, "ok": check(t, g, set(lay))}))
+        t = open(ns.lef).read()
+        if ns.bands:
+            bl = [x for x in ns.band_layers.split(",") if x and x in lay]
+            sh = share(t, lay, pitch)
+            shares = {l: (min(0.95, round(ns.calib * (sh[l]["blocked_share"] + ns.margin), 3)) if l in bl else 0.0) for l in lay}
+            g = grt_view_bands(t, shares, ns.gcell); open(ns.out, "w").write(g)
+            print(json.dumps({"lef": ns.lef, "out": ns.out, "mode": "bands", "gcell": ns.gcell, "calib": ns.calib, "detail_share": sh,
+                              "band_share": shares, "removed": [l for l in lay if l not in bl],
+                              "ok": grt_view(g, set(lay)) == grt_view(t, set(lay))}))
+        else:
+            g = grt_view(t, set(lay)); open(ns.out, "w").write(g)
+            print(json.dumps({"lef": ns.lef, "out": ns.out, "layers_removed": lay, "ok": check(t, g, set(lay))}))
     elif ns.cmd == "share":
         print(json.dumps(share(open(ns.lef).read(), lay, pitch)))
     elif ns.cmd == "region-tcl":
+        print("region-tcl disabled: set_global_routing_region_adjustment raised GRT capacity over the children in the "
+              "full flow (cbx_q10 M6 -193 pct, HBM M4 -71 pct); use grt-view --bands", file=sys.stderr)
+        return 2
         sh = share(open(ns.lef).read(), lay, pitch)
         adj = {l: min(0.95, round(sh[l]["blocked_share"] + ns.margin, 3)) for l in lay}
         open(ns.out, "w").write(region_tcl(ns.master, adj))

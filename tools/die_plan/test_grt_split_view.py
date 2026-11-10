@@ -58,8 +58,25 @@ def test_region_tcl_prices_share_plus_margin():
     assert "-layer M7 -adjustment 0.060" in t
 
 
-def test_main_region_tcl(tmp_path):
+def test_main_region_tcl_is_disabled(tmp_path):
     f = tmp_path / "c.lef"; f.write_text(LEF)
     out = tmp_path / "r.tcl"
-    assert G.main(["region-tcl", "--lef", str(f), "--master", "core", "--margin", "0.05", "--out", str(out)]) == 0
-    assert "-layer M6 -adjustment 0.55" in out.read_text()
+    assert G.main(["region-tcl", "--lef", str(f), "--master", "core", "--margin", "0.05", "--out", str(out)]) == 2
+    assert not out.exists()
+
+
+def test_bands_only_remove_capacity_and_keep_rest(tmp_path):
+    f = tmp_path / "c.lef"; f.write_text(LEF)
+    out = tmp_path / "g.lef"
+    assert G.main(["grt-view", "--bands", "--lef", str(f), "--out", str(out), "--gcell", "0.57", "--margin", "0.05"]) == 0
+    g = out.read_text()
+    # everything but M6/M7 OBS is byte-identical to the detailed view
+    assert G.grt_view(g, {"M6", "M7"}) == G.grt_view(LEF, {"M6", "M7"})
+    sh = G.share(g, ["M6", "M7"], {})
+    # M7 removed (default band layer is M6 only); M6 priced at calib*(0.5+0.05) by thin H bands, never above detail+margin
+    assert sh["M7"]["blocked_share"] == 0
+    m6 = [l.split() for l in g.splitlines() if l.strip().startswith("RECT") and l.split()[3] == "10.240"]
+    assert m6, "M6 bands span the full width"
+    period = 0.57 / round(0.8 * 0.55, 3)
+    assert len(m6) == int((6.4 - period / 2 + 0.016) // period) + 1
+    assert all(abs(float(r[4]) - float(r[2]) - 0.032) < 1e-9 for r in m6)
