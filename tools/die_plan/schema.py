@@ -1006,6 +1006,11 @@ SCHEMA = {
             # its ring input max becomes the T/2 budget (landing_contract.ring_input_sdc); "rise" / absent = today.
             # HEAD-RINGHOLD-1: "fall" also puts the count-aligned rings' writer on the falling edge (WFALL=1); the
             # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
+            # DIE-QC-97 CLAND-RING-FO (COORD 11-10): die fanout bound of every WREG count-aligned ring (write-enable /
+            # read-select register copies, kit set_max_fanout); 0 / absent = legacy.  landing_ring_status_reg: STATUS_REG=1
+            # on every count-aligned ring (+1 rv/lap fault cycle, data/ready cycles unchanged); absent = legacy.
+            "landing_ring_fanout_max": {"enum": [0, 1, 2, 4, 8, 16, 32, 64]},
+            "landing_ring_status_reg": {"type": "boolean"},
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
                                          "write_fall_types": {"type": "array", "items": {"type": "string"}},

@@ -243,10 +243,14 @@ def _native_role_config(tn, typ):
     return ('set ::cland_native_role_banks {}\n' + '\n'.join(rows) + '\n') if rows else ''
 
 
-def _local_chunk_config(typ):
-    """Only explicitly selected writer chunks or FREG ordering change placement."""
+def _local_chunk_config(typ, die_clock=None):
+    """Only explicitly selected writer chunks or FREG ordering change placement.  DIE-QC-97: die_clock (the plan clock
+    block) applies the die ring fanout bound (clock.landing_ring_fanout_max) exactly as the ring generator does."""
     clock = (typ or {}).get('clock', {})
     cfg = clock.get('landing_ring_wreg') or {}
+    if cfg and die_clock:
+        import clock_landings as CL
+        cfg = CL.ring_fanout_wreg_cfg(die_clock, cfg)
     wc = cfg.get('write_chunk', 64)
     numeric = cfg.get('freg_numeric_order', False) is True
     if wc == 64 and not numeric:
@@ -608,7 +612,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(P.types[tn])+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_placement_source(bool(role_config))
 
 
 def _dataflow_tcl(tn,c,t=None):

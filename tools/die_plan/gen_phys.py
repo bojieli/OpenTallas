@@ -2676,6 +2676,22 @@ def _density_cfg(t):
     return out
 
 
+RING_FANOUT_TAG = "# OT_CLAND_RING_FANOUT"
+
+
+def ring_fanout_sdc(P, tn):
+    """DIE-QC-97 CLAND-RING-FO (b): set_max_fanout F [current_design] in the kit SDC of a type with landed rings
+    (clock.landing_contract) when the plan sets the die bound clock.landing_ring_fanout_max = F > 0, so repair_design
+    builds fanout trees on the ring enable / select / reset nets instead of flat placement buffers.  A design rule, not
+    a timing exception (sdc_lint ring_fanout).  0 / absent or no landed ring: no line (byte-same kit SDC)."""
+    import clock_landings as CL
+    f = CL.ring_fanout_max(P.clock)
+    if not f or not P.types[tn].get("clock", {}).get("landing_contract"):
+        return ""
+    return (f"{RING_FANOUT_TAG} plan clock.landing_ring_fanout_max {f} (DIE-QC-97): ring nets built as fanout trees\n"
+            f"set_max_fanout {f} [current_design]\n")
+
+
 def sdc(P, tn, pins):
     """kit SDC.  Bus ports: IO_BUDGET x T each side (both ends register at the face).  ft slot ports (COORD 10-23 R3,
     hop share): the last station drives its out port over the slot's last L/k segment, so the out port keeps only the
@@ -2788,6 +2804,7 @@ def sdc(P, tn, pins):
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
+    out += ring_fanout_sdc(P, tn)
     import pad_clock as PC
     return PC.sdc(P, tn, out)
 
