@@ -2651,7 +2651,12 @@ def start_review(st, j):
     rbash(host, f"cat > {shlex.quote(rev)}/review.json <<'EOF'\n{json.dumps(meta)}\nEOF\n", timeout=60)
     unit = f"ap-{j['id']}-review"
     logf = AP_DIR / "jobs" / j["id"] / "review.log"
-    argv = [OT_RUN, "--mem", str(mem), "--threads", "2", "--dir", rev, "--no-spill", "--",
+    # KW-FIX-44 11-10 (COORD): a review render is a small read-only job (one routed ODB, 2 threads, an honest
+    # render_mem_gb request) that GEOM review waits on.  Queued as a normal job it sat behind 30-50 heavy waiters
+    # (epyc4 admits -84 GB, epyc7 9 GB; no PNG 04:19-07:0x).  It goes --direct: it starts at once while real
+    # MemAvailable >= mem + 32 GB on its host, and still waits there when that is not true.  AP_REVIEW_DIRECT=0 opts out.
+    direct = ["--direct"] if os.environ.get("AP_REVIEW_DIRECT", "1") != "0" else []
+    argv = [OT_RUN, "--mem", str(mem), "--threads", "2", "--dir", rev, "--no-spill", *direct, "--",
             "bash", f"{rev}/tools/render_review.sh", rev]
     if launch_unit(unit, logf, argv):
         j.update(review_dir=f"{host}:{rev}", review_unit=unit, review_log=str(logf), review_started=time.time())
