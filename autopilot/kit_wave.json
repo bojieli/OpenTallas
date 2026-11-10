@@ -259,7 +259,8 @@
     "kv3_hub_Ei@16",
     "kv3_sys_c@7",
     "kv3_hgi_v3@7",
-    "kv3_hgi_v6@9"
+    "kv3_hgi_v6@9",
+    "kv3_hgi_v6@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -539,7 +540,8 @@
     "kv3_hub_Ei@16": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -116.76 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
     "kv3_sys_c@7": "KV-PLAN-2 11-10 COORD-approved plan fix (DIE-KV-97 M7 pair): ROM clk pin and 4 D2D SRAM pins moved off the M7 VSS/VDD no-track gap (ROM 16 sites west, SRAMs 0.864 um west), item plan plan_kvfix1 md5 57c77c4b. Relaunch from floorplan (2_1), reuse synth.",
     "kv3_hgi_v3@7": "KV-PLAN-2 11-10 COORD: re-kit on the re-signed spread-pin e2 (item plan plan_e2s a3fbdf81)",
-    "kv3_hgi_v6@9": "KV-PLAN-2 11-10 COORD: re-kit on the re-signed spread-pin e2 (item plan plan_e2s a3fbdf81)"
+    "kv3_hgi_v6@9": "KV-PLAN-2 11-10 COORD: re-kit on the re-signed spread-pin e2 (item plan plan_e2s a3fbdf81)",
+    "kv3_hgi_v6@10": "KV-PLAN-2 11-10: KIT_TOPOLOGY_BIND_STALE was the plan_e2s core-tap edit (clock.taps is in the native reset digest); overlay rebuilt c289de61 without it, bind_matches 56/56"
    },
    "only_items": [
     "kv3_astk",
@@ -2114,79 +2116,79 @@
     },
     "kv3_hg": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1p2": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1p3": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1p4": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1p5": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v1p6": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hg_v3": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v1__cl141fc26e": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v1__cl42bc8b12": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v2__cl2862d491": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v2__cle0015330": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v3": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v4": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v5": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v6": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v7": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     },
     "kv3_hgi_v8": {
      "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json",
-     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 049982cd = wave plan kvr2 92370701 + the 38 kv3_head_eighth_e2 entries -> pins r26q4s + views_e2s detail-abstract lef (abstract_detail M6/M7, check PASS) / lib, 38 core taps insertion 237.80/189.25 from the new signoff, e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
+     "note": "KV-PLAN-2 11-10 COORD (e2 spread-pin re-kit, no merge wait): item plan = epyc7 /srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s/plan_c.json (md5 c289de61 = wave plan kvr2 92370701 + ONLY the 38 kv3_head_eighth_e2 hard_cores -> pins r26q4s + views_e2s detail-abstract lef / lib; core taps kept as kvr2 so the canonical bind bind_kvr2_9237b matches 56/56 (KIT_TOPOLOGY_BIND_STALE fix 12:3x), e2 re-SIGNED TT +58.87 FF +0.38); stage resume decides the start step (pins/LEF only). Revert: delete this item_inputs entry."
     }
    },
    "item_inputs_prev_kw43sd": {
