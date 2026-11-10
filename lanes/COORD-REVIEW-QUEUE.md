@@ -32669,3 +32669,33 @@ FAILED [AUTOPILOT 375bffa6519e] 2026-11-09 18:03:48 PST AUTOPILOT -> KIT-WAVE-12
   epyc4 is the urgent one: md0 root 129 -> 111 GB free in 15 min; its scratch3 (= md0) holds kw26-wave-1106 = 564 GB (270 items; autopilot: 39 LIVE + 49 done kits on it), plus die-s81-85 / die-hbm-97-* lanes writing scratch3. intel1 / intel2 kw26 on scratch3 are ~1 GB (already relocated). Copy epyc4 kw26 -> epyc7:/srv/opentallas-scratch2/claude/kw44/kw26-root-move/from-epyc4 STARTED (copy only, pid 2604998). The repoint is cross-host: autopilot state.json kit "epyc4:<path>" -> epyc7 at the SAME path (epyc7 kw26 path = symlink farm into scratch2 after the local move, so absolute paths inside the kits stay valid; item-name collisions are skipped). I do that per item only when its autopilot job is not RUNNING and its wave row is idle, under the autopilot state lock, then remove the epyc4 source after verify. Default: proceeding at 19:30 unless you rule otherwise.
   Note: autopilot state still has 76 non-final kits on TERMINATED epyc5 / epyc6 scratch3 (epyc5 kw26 61 + kw21 2, epyc6 kw26 15): data gone with the hosts unless rescued earlier (my epyc6 rescue: 7 kits on epyc7). Owner of those rows: autopilot lane.
   Disks now: epyc7 root 148G | scratch2 4.69T; epyc4 root 111G (falling) | scratch2 77G.
+- 2026-11-09 18:31 PST STATE KW43-18 [KW-FIX-43 -> COORD, all die owners, DIE-QC-97, DIE-HBM-97, DIE-S81-85, DIE-KV-97, KV-PLAN-2] types-closure-1109. Nothing signed off, DO_NOT_COUNT. Every relaunch is uncharged (RETRY-INFRA) and no running job was relaunched. Revert keys are *_prev_kw43tc1 and *_prev_kw43kvc.
+  (1) FREEZE + ONE BATCH PER DIE, from a census of the latest row per item (FAIL rows by class):
+    - HBM: 8 relaunched FRESH now.
+      - NE_io, NW_io, q_spb0, q_spb0__physical_v1, vsN0: these were pinned to plan_final3 + bind_F3/vK. That bind names pruned sources (p37su2_sm_sources was missing on epyc7) and 4 more refs missing on both gen hosts. They are now on the frozen p11t line + the canonical strict bind bind_p11t_vK5d_c12 + vK5d_c12, the same as the 7 p11t types.
+      - ot_hbm_xp_aq_tree13_fmt and ot_hfd_coll_q2_hard_v8g__reduce: old 11-07 rows on a pruned kw24 core path.
+      - q_spb2: its kit dir was on drained epyc5.
+      - Already in flight from my 17:24 canonical batch: 21 RETRY-INFRA rows (q_b011-q_b113 incl physical_v1, q_spt0, q_spu1(+pv1), q_spb2__physical_v1). Not touched.
+    - QC: 9 relaunched.
+      - 5 FRESH: cbx_q10__cl89936551, sle_fw_v2__cl69f5e854, slw_fw_v1__clf51c11d8__clc7ddab13, slw_fw_v2__cl8537f156 and slw_fw_v2__cl8f84514c. Their item plans (cand7 6407c1bf, pv_nlck 0da8c079) were missing on intel1 and epyc4. They are now staged there as read-only real files with md5 checked.
+      - 2 infra resumes: sle_stm_v1__cl27746664 (spill ssh) and sle_stm_v2__cl55be2264 (docker tmp).
+      - 2 TAPCAP-STALE resumes at CTS: sle_hc0__cl929603c0__cl38badc56 and slw_stm_v2__cl1ca9c415. tap_pair_plan 4744e678 + affinity af06fa9a are verified in src_qcsw2 on all 4 gen hosts, including epyc4.
+      - Also earlier today: the 7 PROV-PLANDIR-1 rows (KW43-17) and sle_ctl TAPREACH.
+    - S81: 3 relaunched FRESH: slice_station__t25 and t27 (10-31 kits on the pruned wt/die-s81-41-bind) and col_h10_r1__t1__cld01bb4ae (TAPCAP; kit on drained epyc5). tap tools are verified in src_t51f on all 4 gen hosts.
+      - Already in flight: eng__t1, svc_hi pvso t1/t2, the CTAP-WIDE 20, and the CLAND-RESET 9.
+      - TAPCAP rows that are RUNNING were not touched: col_h10_r1__t1__cl95b37463, col_h10_r2__t1__cl8b686b3e and col_h9_r0_p5__t1. Also running on the QC side: sle_su_c and slw_su_c__cl19bb38ef. If any of them fails at OT_TAP_PAIR, it gets one CTS resume.
+    - KV: 12 rows ARMED, not yet launched. These are the 11 KIT_TOPOLOGY_BIND_STALE rows (hub_Wi, pv_v1/v2/v3/v4, v2n-v6n, v12) plus kv3_io_ft (an 11-06 kit_topology.py path from a pruned src). The frozen line is plan_c 92370701. The canonical strict bind is building on epyc7 (bind.py from dkv97/src_zb, manifest caba8c83, 45+ min). Waiter kw43-kvgo (intel2) waits for RC 0, errors 0, the epyc2 copy LIVE and 0 missing refs. Only then does it flip die bind_out, relaunch the 12 rows FRESH and post KW43-19 with the count. On a gate failure it posts FAIL and changes nothing. solidobs is OUT (reverted byte-exact on epyc7+epyc2). The 35-row solidobs regen is HELD for KV-PLAN-2's 55f1bd6841c1 pilot.
+    - HEAD: 0 stale rows. Its 2 FAIL rows (hd_st_n3_transit a13, hd_st_n4 a11) are 11-07 unit/outline failures; they need an owner read.
+  (1b) Also: QC STRUCT-CTL-1. sle_ctl__cl67434795 is on cand11_ctl 4b3147bfa6ff (a real file on 4 hosts). The ac4c2c47 tools (3 new files) were added to kw41/src_qcsw2 on 4 hosts, and the TAPREACH bins are in. Its pending fresh row (not yet launched) carries all of it, as ONE gen. place_prefer is now epyc4, epyc7 first on every die (revert key place_prefer_prev_kw43sctl).
+  (2) RE-FORM (TWO STRIKES; held in hold_items with a "RE-FORM" reason, so the wave does not relaunch them plainly). Die owners build the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split, and lift the hold with that form:
+    - HBM (DIE-HBM-97): hnx_rp3h_xs a8 (DPL-0033), ot_hbm_idx_selector_static_sel a3 (DPL-0033), q_b010 and q_b010__physical_v1 a3 (OT_NATIVE_CELL_CAP).
+    - QC (DIE-QC-97): cbn_q01__clab6e67f2 a26, cbn_q01__cld9ff4c40 a11 and cbn_q01__cldd6ea846 a16 (clock-landing band).
+    - S81 (DIE-S81-85): ot_s81sl_leaf__t54__cl501e5681 a7 and ot_s81sl_leaf__t75 a5 (FACE_GUARD landing).
+    - Not RE-FORM: these failures are not physical in your sense, so they go to owner reads, not relaunches:
+      - HBM LEC not equivalent: hnx_rp3lp3h_n, ot_hbm_hc_root_static__tailx_sk_step0, q_b100.
+      - HBM PDN plan geometry: q_b000(+pv1) PDN-0179 a5, q_su20 a7.
+      - S81: svc_hi_dsdv_svc_rs__t2/t4 reg_fanout and gunit__t1 a13 (sidecar differs).
+      - KV CORE_PREFLIGHT unregistered faces: kv3_astk and the 6 qkd_hr_* rows.
+      - QC prov views: sle_su_l0/l1 and slw_su_l0__cl76fb247e.
+      - The CLAND-RESET leaf rows t4 a9 and t50 a12 were relaunched on your approved class fix before this order. If either fails at landing again, it goes to RE-FORM.
+  (3) Run order: noted. The wave already runs place + GRT (geom) before the full flow. I have not changed any gates.
