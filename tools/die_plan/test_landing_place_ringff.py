@@ -168,3 +168,38 @@ def test_tail_group_read_selector_stays_on_last_payload_bit():
     body = proc + "puts [cland_ffkey {%s} 0 64 520 0 64 0]\nputs [cland_ffkey {%s} 0 64 520 0 64 1]\n" % (nm, nm)
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
     assert keys == [nm, "u/u_ring.s_d|000000519|999999970|$_DFFE_PP_"]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_chunk_wire_storage_names_key_as_their_slot_and_bit():
+    # KV-PLAN-2 11-09 (kv3_hgi_v3 ft27_i): storage flops named by the chunk wire dch[c].sd_c[slot*WCH+i] take the key of
+    # s_d[slot][c*WCH+i] (bit-major, before that bit's read register), not a raw-name key (the START rekey then moved
+    # all 4,436 of them to one block).  Mutant control: the same names with wch 0 keep the raw-name key.
+    names = [r"u/u_ring.dch\[1\].u_dsel/y\[0\]$_DFF_P_", r"u/u_ring.dch\[1\].sd_c\[2\]$_DFFE_NP_",
+             r"u/u_ring.dch\[0\].u_dsel/y\[1\]$_DFF_P_", r"u/u_ring.dch\[0\].sd_c\[1\]$_DFFE_NP_",
+             r"u/u_ring.dch\[0\].sd_c\[3\]$_DFFE_NP_", r"u/u_ring.dch\[0\].u_dsel/y\[0\]$_DFF_P_",
+             r"u/u_ring.dch\[1\].sd_c\[0\]$_DFFE_NP_", r"u/u_ring.dch\[0\].sd_c\[0\]$_DFFE_NP_",
+             r"u/u_ring.dch\[0\].sd_c\[2\]$_DFFE_NP_", r"u/u_ring.dch\[1\].u_dsel/y\[1\]$_DFF_P_",
+             r"u/u_ring.dch\[1\].sd_c\[1\]$_DFFE_NP_", r"u/u_ring.dch\[1\].sd_c\[3\]$_DFFE_NP_"]
+    w, out = _keyed_order(names, 0)
+    assert w == "W=2"
+    short = [re.sub(r"\\|u/u_ring\.|\$_DFF\w*", "", o) for o in out]
+    # bit 0 = dch0 sd_c 0 (slot 0), 2 (slot 1); bit 1 = dch0 sd_c 1, 3; bit 2 = dch1 sd_c 0, 2; bit 3 = dch1 sd_c 1, 3
+    assert short == ["dch[0].sd_c[0]", "dch[0].sd_c[2]", "dch[0].u_dsel/y[0]",
+                     "dch[0].sd_c[1]", "dch[0].sd_c[3]", "dch[0].u_dsel/y[1]",
+                     "dch[1].sd_c[0]", "dch[1].sd_c[2]", "dch[1].u_dsel/y[0]",
+                     "dch[1].sd_c[1]", "dch[1].sd_c[3]", "dch[1].u_dsel/y[1]"]
+    _, rev = _keyed_order(names, 1)
+    assert [re.sub(r"\\|u/u_ring\.|\$_DFF\w*", "", o) for o in rev][:3] == \
+        ["dch[1].sd_c[1]", "dch[1].sd_c[3]", "dch[1].u_dsel/y[1]"]
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    nm = r"u/u_ring.dch\[1\].sd_c\[3\]$_DFFE_NP_"
+    pad = r"u/u_ring.dch\[1\].sd_c\[1\]$_DFFE_NP_"
+    body = proc + "puts [cland_ffkey {%s} 0 0]\nputs [cland_ffkey {%s} 0 2 3]\nputs [cland_ffkey {%s} 0 2 3]\n" % (nm, pad, nm)
+    keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
+    # wch 0: raw key (old path); bit 3 >= nbits 3: a pad/status bit keeps the raw key; bit 2 < 3 keys as storage
+    assert keys == [nm, pad, nm]
+    nm2 = r"u/u_ring.dch\[1\].sd_c\[2\]$_DFFE_NP_"
+    k2 = subprocess.run(["tclsh"], input=proc + "puts [cland_ffkey {%s} 0 2 3]\n" % nm2, capture_output=True, text=True,
+                        check=True).stdout.split()
+    assert k2 == ["u/u_ring.s_d|000000002|000000001|$_DFFE_NP_"]

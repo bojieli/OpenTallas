@@ -582,6 +582,19 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0}} 
   if {$rev} { set bit [expr {999999999-$bit}] }
   return [format {%s|%09d|%09d|%s} "${b}s_d" $bit $s $t]
  }
+ # KV-PLAN-2 11-09 (KV kv3_hgi_v3 ft27_i, GRT-0116 30448 gcells): synthesis may name a chunked ring's STORAGE flops by
+ # the chunk wire, dch[c].sd_c[k] (ot_dp_clk_landing_ca: sd_c[slot*WCH+i] = s_d[slot][c*WCH+i]), not s_d[slot][bit].
+ # Those names missed the [slot][bit] key, so the START control rekey moved ALL storage (4,436 of 5,493 ring flops) to
+ # one block after the START bit while each read register sat at its own bit: every bit's storage-to-read net crossed
+ # the band (3,315 ring nets cut the pocket centre).  Key each one as storage slot k/WCH of word bit c*WCH+k%WCH, the
+ # same key s_d[slot][bit] gets.  Bits at or above nbits keep the raw-name key, as for y; wch 0 is unchanged.
+ if {$wch > 0 && [regexp {^(.*[/.])dch\\?\[([0-9]+)\\?\]\.sd_c\\?\[([0-9]+)\\?\](.*)$} $nm -> b c k t]} {
+  set bit [expr {$c*$wch+$k%$wch}]
+  if {$nbits <= 0 || $bit < $nbits} {
+   if {$rev} { set bit [expr {999999999-$bit}] }
+   return [format {%s|%09d|%09d|%s} "${b}s_d" $bit [expr {$k/$wch}] $t]
+  }
+ }
  # Opt-in local-WREG form: each kept writer enable follows its own payload
  # group; replicated read-select flops follow their own read group. Their key
  # slot is below the legacy control-rekey range, so START packing cannot undo it.
