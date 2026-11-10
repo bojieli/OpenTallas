@@ -41,12 +41,12 @@ def test_explicit_root_exception_keeps_host_floor():
         assert row['scratch_second'] and row['disk_gb'] == 250
         assert not m.host_refusal(row)
 
-def test_submission_rechecks_actual_workdir_after_probe(tmp_path):
-    work, scratch = tmp_path / 'work', tmp_path / 'scratch'
-    work.mkdir(); (scratch / 'claude').mkdir(parents=True)
-    for dev, free, expected in [(1,400,97), (2,9,98), (2,90,0)]:
-        env = fake_bin(tmp_path, {str(work):dev, str(scratch):2}, {str(work):free,str(scratch):90}, 20)
-        snippet = f'OT_SCRATCH={scratch}; ' + m.disk_guard_sh('X', d=str(work)) + 'echo STARTED'
-        r = subprocess.run(['bash','-c',snippet],env=env,text=True,capture_output=True)
-        assert r.returncode == expected, (r.returncode,r.stdout,r.stderr)
-        assert ('STARTED' in r.stdout) == (expected == 0)
+
+def test_job_host_disk_guard_is_removed_hub_floor_stays():
+    """OWNER 11-09: one disk check only, the hub-side per-disk floor; no second check on the job host at launch"""
+    assert not hasattr(m, 'disk_guard_sh') and not hasattr(m, 'rootfs_floor_sh')
+    assert 'DISK GUARD: root fs' not in open(m.__file__).read().split('def host_refusal', 1)[0].split('# v12 SCRATCH2', 1)[0]
+    base = dict(rootfs_free_gb=100, rootfs_floor_gb=150, rootfs_pct=97, host_name='epyc4', scratch_disk='/s2', scratch_disk_gb=500,
+                scratch_second=False, free_gb=100, disk_gb=500)
+    assert m.host_refusal(dict(base, dir_onroot=True))                  # a job on root is refused below the floor
+    assert not m.host_refusal(dict(base, dir_onroot=False))             # a job on the separate scratch disk is admitted

@@ -122,22 +122,6 @@ class RemoteShell(unittest.TestCase):
         env = fake_bin(self.base, {str(self.s1): 1, str(self.s2): 1}, {str(self.s1): 3000, str(self.s2): 835}, 9)
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s1))
 
-    def test_disk_guard_refuses_full_root_and_low_scratch_disk(self):
-        (self.s2 / 'claude').mkdir(parents=True)
-        pre = f'OT_SCRATCH={self.s2}; '
-        env = fake_bin(self.base, {str(self.s2): 2}, {str(self.s2): 835}, 87)
-        r = self.sh(pre + m.disk_guard_sh('T1') + 'echo ADMITTED', env, roots=False)
-        self.assertEqual(r.returncode, 97)
-        self.assertIn('OT_RUN_ROOTFULL T1', r.stderr)
-        self.assertNotIn('ADMITTED', r.stdout)
-        env = fake_bin(self.base, {str(self.s2): 2}, {str(self.s2): 10}, 40)
-        r = self.sh(pre + m.disk_guard_sh('T2') + 'echo ADMITTED', env, roots=False)
-        self.assertEqual(r.returncode, 98)
-        self.assertIn('OT_RUN_SCRATCHLOW T2', r.stderr)
-        env = fake_bin(self.base, {str(self.s2): 1}, {str(self.s2): 10}, 40)     # md0: scratch on root, no floor
-        r = self.sh(pre + m.disk_guard_sh('T3') + 'echo ADMITTED', env, roots=False)
-        self.assertEqual((r.returncode, r.stdout.strip()), (0, 'ADMITTED'), r.stderr)
-
     def test_run_reports_refusal_as_not_run(self):
         env = fake_bin(self.base, {os.getcwd(): 1}, {}, 90)
         real_popen = subprocess.Popen
