@@ -119,5 +119,50 @@ class FaceHome(unittest.TestCase):
         self.assertEqual(json.dumps(new, sort_keys=True), json.dumps(p, sort_keys=True))
 
 
+    def test_type_declared_bus_without_sidecar_geometry_is_a_candidate(self):
+        # sle_st_a_v1 / slw_st_a_v1 (5 types): x_fw_i (258 bits) declares its S face/window on the TYPE bus, so the
+        # compose sidecar (seam/port-inferred windows only) has no bus_geometry row for it.  Filtering candidates on
+        # the sidecar kept it a fixed obstacle at [525.088,168.48,569.728,228.96] (168.48 um from its pins), which
+        # blocked the clamped E strip of b_hw_ctl_hc0_i, so nothing moved.  Its own declared geometry makes it a
+        # candidate: all three bands go home and stay legal.
+        p, side = _plan()
+        t = p["partition_types"]["slw"]
+        bands = t["clock"]["landing_contract"]["bands"]
+        bands["x_fw_ctl_i"]["rect_um"] = [385.728, 168.48, 478.496, 218.16]
+        bands["x_fw_i"] = dict(rect_um=[525.088, 168.48, 569.728, 228.96], width=258, instance="u_cland_x_fw_i",
+                               ring_place="ff")
+        t["buses"] = [dict(name="x_fw_i", dir="in", width=258, kind="data", face="S", window_um=[525.088, 569.728],
+                           layers=["M7", "M5"], order="lsb_low")]
+        geom = copy.deepcopy(GEOM)
+        geom["x_fw_ctl_i"] = dict(name="x_fw_ctl_i", face="S", window_um=[385.728, 478.496], width=536)
+        side["collector"]["types"]["slw"]["bus_geometry"] = geom
+        self.assertNotIn("x_fw_i", geom)
+        new, rep = CP.rehome_far_bands(p, side, ["slw"])
+        nb = new["partition_types"]["slw"]["clock"]["landing_contract"]["bands"]
+        self.assertEqual([r["bus"] for r in rep], ["b_hw_ctl_hc0_i", "x_fw_ctl_i", "x_fw_i"])
+        self.assertEqual(nb["b_hw_ctl_hc0_i"]["rect_um"], [557.28, 17.28, 604.8, 276.512])
+        self.assertEqual(nb["x_fw_ctl_i"]["rect_um"], [385.728, 17.28, 478.496, 66.96])
+        self.assertEqual(nb["x_fw_i"]["rect_um"], [512.64, 17.28, 557.28, 77.76])
+        tt = dict(t, _cland_geom=geom)
+        for bus, w in (("b_hw_ctl_hc0_i", 1573), ("x_fw_ctl_i", 536), ("x_fw_i", 258)):
+            r = nb[bus]["rect_um"]
+            self.assertAlmostEqual(CP.face_distance(tt, bus, r), 17.28, places=6)
+            dm, cap = CP.face_crossing(tt, bus, r, w)
+            self.assertLessEqual(dm, cap, bus)
+        names = sorted(nb)
+        for i, a in enumerate(names):
+            for b in names[i + 1:]:
+                self.assertFalse(_overlap(nb[a]["rect_um"], nb[b]["rect_um"]), (a, b))
+        btb = [449.28 - 4.32, 120.96 - 4.32, 449.28 + 94.824 + 4.32, 120.96 + 41.064 + 4.32]
+        for bus in names:
+            self.assertFalse(_overlap(nb[bus]["rect_um"], btb), bus)
+        # a band with no geometry anywhere (neither sidecar nor type bus) is still never a candidate
+        t["buses"] = []
+        new2, rep2 = CP.rehome_far_bands(p, side, ["slw"])
+        self.assertNotIn("x_fw_i", [r["bus"] for r in rep2])
+        self.assertEqual(new2["partition_types"]["slw"]["clock"]["landing_contract"]["bands"]["x_fw_i"],
+                         bands["x_fw_i"])
+
+
 if __name__ == "__main__":
     unittest.main()

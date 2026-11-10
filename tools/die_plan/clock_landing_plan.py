@@ -1353,7 +1353,8 @@ def face_home_types(plan):
 
 
 def rehome_far_bands(plan,sidecar,types=None,far_um=None):
-    """DIE-QC-97 11-10 (fix-only, opt-in: the named types, default budgets.cland_face_home_types).  Every ring band of
+    """DIE-QC-97 11-10 (fix-only, opt-in: the named types, default budgets.cland_face_home_types).  Every ring band
+    with pin geometry (sidecar-inferred seam/port window OR the type's own declared bus face/window) of
     >= RELOCATE_MIN_BITS bits that sits more than far_um from its own pin face, or covers less than half of its pin
     window along the face, is searched again as ONE set: widest first, the old rects of the set are no obstacle, every
     other band stays a byte-identical obstacle, with FACE_CROSSING and FACE_HOME (clamped corner-window face strip).  A
@@ -1378,7 +1379,7 @@ def rehome_far_bands(plan,sidecar,types=None,far_um=None):
                 b=bands[bus]
                 if (bus.startswith("monitor_") or not b.get("rect_um") or b.get("hard_core")
                         or any(k in b for k in ("rects_um","ff_rect_um","freg_rect_um","native_role_banks"))
-                        or int(b.get("width") or 0)<RELOCATE_MIN_BITS or bus not in tt["_cland_geom"]):continue
+                        or int(b.get("width") or 0)<RELOCATE_MIN_BITS or not _has_type_geom(tt,bus)):continue
                 dist=face_distance(tt,bus,b["rect_um"]);dm,_=face_crossing(tt,bus,b["rect_um"],int(b["width"]))
                 if dist>far+1e-6 or dm>RELOCATE_OFF_WINDOW*int(b["width"]):todo[bus]=(dist,dm)
             done=set()
