@@ -82,11 +82,17 @@ class DirectPending(unittest.TestCase):
         with patch.object(m, 'run', side_effect=OSError('bus down')):
             self.assertEqual(m.pending(self.root), 64)
 
-    def test_launcher_preserves_floor_and_fallback(self):
+    def test_launcher_admits_on_real_memavailable_with_fresh_claims(self):
+        # DIRECT_MEMAVAIL_1110 (COORD 11-10): --direct admits on real MemAvailable >= MEM + 32 GB.  An earlier direct
+        # job's request is charged only while its claim is fresh (< DIRECT_FRESH_S, 300 s): after that its memory is
+        # already in MemAvailable.  ot-heavy no longer subtracts ot-direct-pending's unused-request estimate.
+        # Behaviour: test_ot_run_direct.py FreshOnly.
         script = Path(__file__).with_name('ot-heavy').read_text()
-        self.assertIn('timeout 15 /usr/local/bin/ot-direct-pending', script)
+        self.assertNotIn('ot-direct-pending', script)
+        self.assertIn("_avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)", script)
         self.assertIn('_avail - _pend )) -ge $(( MEM + 32 ))', script)
-        self.assertIn('_pend + _g', script)
+        self.assertIn('[ $_age -lt "${DIRECT_FRESH_S:-300}" ] && _pend=$(( _pend + _m ))', script)
+        self.assertIn('echo "$UNIT $MEM" > "$D/direct.$UNIT"', script)
 
 
 if __name__ == '__main__':
