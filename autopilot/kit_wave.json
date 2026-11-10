@@ -311,7 +311,13 @@
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
+    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+    "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -2191,7 +2197,19 @@
    "note_kw43_kvc": "KW-FIX-43 11-09 19:xx COORD 17:01(1)+17:2x: KV KIT_TOPOLOGY_BIND_STALE class. Die bind_out -> kw43-canon/kv/bind_kvr2_9237b = strict bind.py (dkv97/src_zb, NO solidobs) on kw43/kvr2 plan 92370701; die asbuilt -> kw43-canon/kv/asbuilt_kvc_zb.json = plan_zbk caba8c83 with ONE change: param_regen.file dkv97/src_zbk/... (1-file dir, its kvbind1025/regen_kv_2350.py absent -> first bind PARAM_REGEN ENOENT) -> dkv97/src_zb/... (same blob 8440767e). errors 0, staged read-only epyc7+epyc2. kv3_pv_v1n/v7 (kits on plan_zbk) pinned to bind9 + caba8c83. Revert: kit_rtl.{bind_out,asbuilt} = kit_rtl_prev_kw43kvc; item_inputs[k] = item_inputs_prev_kw43kvc[k].",
    "gen_hosts_prev_kw43gen3": [
     "epyc7"
-   ]
+   ],
+   "hold_items_prev_kw43kvband": {
+    "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
+    "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+    "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
+   }
   },
   "s81": {
    "enabled": true,
