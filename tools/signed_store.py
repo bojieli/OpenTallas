@@ -148,7 +148,7 @@ def add_extra(eid, archive, files, note, store=None):
     return True
 
 
-def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_logs=()):
+def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_logs=(), pins=None):
     """COUNT-ARCHIVE-2 11-09: a re-sign writes PROVENANCE.json (and lec/) after signoff.json; an ingest that ran in between stored
     the record without them, so the counter saw it unversioned (QC NK nk_eco2_resign_fc, 02:08 vs 03:26).  Same sign-off (same id):
     take the scan fields and provenance once, and the new unit files as an archived extra set.  Only for an entry that is not
@@ -169,11 +169,36 @@ def late_provenance(eid, scan, prov_json, archive, files, store=None, changed_lo
             if scan.get(k) is not None:
                 e[k] = scan[k]
         e["provenance_json"] = blob(prov_json)
+        # 11-09 17:4x (HBM smk): an entry ingested from a copy without its routed DB has no pin table; the late copy's own
+        # pins (read on its host from the routed DEF it names) fill it, never replace one
+        if pins is not None and e.get("pins") is None:
+            e["pins"] = pins
         note = "late-provenance %s" % time.strftime("%F %T %Z")
         if files:
             e.setdefault("extra", []).append(dict(archive=archive, files=files, note=note))
         e["late_provenance"] = dict(time=time.strftime("%F %T %Z"), prov_file=scan["prov_file"], files=len(files or []),
                                     changed_logs_kept_first_version=list(changed_logs), replaced=replaced)
+        data = gzip.compress((json.dumps(e, sort_keys=True) + "\n").encode(), 9, mtime=0)
+        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".e.")
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(data)
+        os.replace(tmp, p)
+    return True
+
+
+def pins_doc(p):
+    """a fetch_rec_pins value as stored in an entry (shape tuples -> lists)"""
+    return dict(p, shapes={k: [list(q) for q in v] for k, v in p["shapes"].items()}) if p and p.get("shapes") else p
+
+
+def set_pins(eid, pins, store=None):
+    """fill an entry's missing pin table (11-09 backfill of late-provenance entries); an existing one is never replaced -> True when set"""
+    p = entry_path(eid, store)
+    with store_lock(store):
+        e = read_entry(p)
+        if e.get("pins") is not None or pins is None:
+            return False
+        e["pins"] = pins
         data = gzip.compress((json.dumps(e, sort_keys=True) + "\n").encode(), 9, mtime=0)
         fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p), prefix=".e.")
         with os.fdopen(fd, "wb") as fh:
