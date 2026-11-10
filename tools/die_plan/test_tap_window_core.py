@@ -21,7 +21,7 @@ def _plan(window=W):
     raw["partition_types"]["fa"]["hard_cores"] = [{"inst": "u_c", "origin_um": [200.0, 800.0], "outline_um": [200.0, 200.0]}]
     raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=80)
     if window is not None:
-        raw["clock"]["tap_window"] = dict(window_ps=window, note="test")
+        raw["clock"]["tap_window"] = dict(window_ps=window, related_pair_ps=window, note="test")
     return S.Plan(raw)
 
 

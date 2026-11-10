@@ -35,9 +35,9 @@ def test_no_window_no_contract_block():
 def test_windows_read_from_plan():
     legacy = R.kit_windows(dict(insertion_tol_ps=40))
     assert legacy["intra"]["ps"] == 0.0 and legacy["seam"]["ps"] == 40.0
-    w = R.kit_windows(dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=80)))
+    w = R.kit_windows(dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=80, related_pair_ps=80)))
     assert w["intra"]["ps"] == 80.0 and w["seam"]["ps"] == 80.0 and "clock.tap_window" in w["intra"]["basis"]
-    wi = R.kit_windows(dict(tap_window=dict(window_ps=80)), 120.0)
+    wi = R.kit_windows(dict(tap_window=dict(window_ps=80, related_pair_ps=80)), 120.0)
     assert wi["intra"]["ps"] == 120.0 and "WHAT-IF" in wi["intra"]["basis"]
 
 
@@ -749,13 +749,13 @@ def test_related_helpers_share_exact_period():
 def test_per_type_window_per_region():
     # DIE-S81-41: clock.tap_window.per_type_ps -> each region checked against its type's W (one function: gen_phys)
     pc = dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80),
-              tap_window=dict(window_ps=180, per_type_ps={"tq": 40}))
+              tap_window=dict(window_ps=180, related_pair_ps=180, per_type_ps={"tq": 40}))
     plan = dict(die=dict(period_ps=833.333), clock=pc,
                 partitions=[dict(name="p", type="tq"), dict(name="r", type="tr")])
     w = R.kit_windows(pc, None, plan)
     assert w["intra"]["ps"] == 180.0 and w["intra"]["per_region"] == {"p": 40.0, "r": 180.0}
     # without per_type_ps: no per_region key (output unchanged for every other plan)
-    pc0 = dict(pc, tap_window=dict(window_ps=180))
+    pc0 = dict(pc, tap_window=dict(window_ps=180, related_pair_ps=180))
     assert "per_region" not in R.kit_windows(pc0, None, dict(plan, clock=pc0))["intra"]
     taps, rng = _taps(), {"h0": 10.0}
     # a -> b damage 50 in region p (W 40): FAIL; same damage in region r (W 180): PASS

@@ -15,7 +15,7 @@ def plan(window=False):
     raw['partition_types']['fa'].setdefault('clock',{})['io_hold']='sender_min'
     if window:
         raw['clock']['seam_hold']=dict(sender_ps=25,seam_ps=80)
-        raw['clock']['tap_window']=dict(window_ps=80)
+        raw['clock']['tap_window']=dict(window_ps=80, related_pair_ps=80)
     return schema.Plan(raw)
 
 
