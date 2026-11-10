@@ -8,6 +8,9 @@
 # It runs after 3_3 global place and before 3_4 resize, so repair_design buffers the new hops and DPL legalises the rows;
 # rows stay PLACED, nothing is fixed.  A station inside a macro halo moves to the nearest free point (Manhattan rings); a bit
 # with no free point or an unresolved endpoint keeps its GPL location (logged).  FIRM/LOCKED rows are left alone.
+# The buffers / inverters of each hop (the QN polarity inverter of every row is one) move with it, evenly spaced on the
+# hop: pilot 11-10 moved rows only and left those cells at their GPL spot, so r[2] -> q ran 1136 -> 2170 -> 107 -> 587 um
+# through a 49-cell chain (TT -1326 ps at GRT, W=180).
 # Kit use: copy to the kit and add "export OT_TXL_MID = 1" and "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl".
 namespace eval ot_txl_mid {
   # n points at (k+1)/(n+1) of the segment a->b
@@ -73,6 +76,38 @@ namespace eval ot_txl_mid {
     }
     return {}
   }
+  # buffer / inverter cells from a D input up to its non-buffer driver, nearest the D first
+  proc up_cells {it} {
+    set out {}
+    for {set l 0} {$l < 40} {incr l} {
+      set n [$it getNet]; if {$n eq "NULL"} { return $out }
+      set o ""
+      foreach t [$n getITerms] { if {[[$t getMTerm] getIoType] eq "OUTPUT"} { set o $t } }
+      if {$o eq ""} { return $out }
+      set i [$o getInst]
+      if {![is_buf $i]} { return $out }
+      lappend out $i
+      set it ""
+      foreach t [$i getITerms] { if {[[$t getMTerm] getIoType] eq "INPUT" && [$t getNet] ne "NULL" && [[$t getNet] getSigType] ni {POWER GROUND}} { set it $t } }
+      if {$it eq ""} { return $out }
+    }
+    return $out
+  }
+  # move hop cells (nearest the receiver first) evenly onto the segment a->b; returns cells moved
+  proc place_hop {cells ax ay bx by macs core step maxr} {
+    set n [llength $cells]; if {!$n} { return 0 }
+    set k 0
+    foreach c [lreverse $cells] p [targets $ax $ay $bx $by $n] {
+      if {[$c getPlacementStatus] in {FIRM LOCKED COVER}} continue
+      lassign $p tx ty
+      set s [nearest_free $tx $ty $macs $core $step $maxr]
+      if {![llength $s]} continue
+      $c setLocation [expr {int([lindex $s 0])}] [expr {int([lindex $s 1])}]
+      $c setPlacementStatus PLACED
+      incr k
+    }
+    return $k
+  }
   # first non-buffer load of an output iterm: iterm or {}
   proc down {it} {
     for {set l 0} {$l < 40} {incr l} {
@@ -106,7 +141,7 @@ namespace eval ot_txl_mid {
       set nm [$i getName]
       if {[string first "u_txl.q" $nm] >= 0 && [regexp {u_txl\.q\\?\[[0-9]+\\?\]} $nm]} { lappend lasts $i }
     }
-    set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0
+    set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0
     foreach q $lasts {
       # rows oldest first, ending with q; src = enc driver output iterm
       set chain [list $q]; set src ""
@@ -130,10 +165,15 @@ namespace eval ot_txl_mid {
         lappend places $s
       }
       if {!$ok} { incr nofree; continue }
+      # hop cells first (walked on the netlist, independent of where the rows sit), then the rows
+      set hops {}
+      foreach r $chain { lappend hops [up_cells [iterm_of $r {D}]] }
+      set snkcells [up_cells $snk]
       set px $ax; set py $ay
-      foreach r $chain s $places {
+      foreach r $chain s $places hc $hops {
         lassign $s x y
-        if {[$r getPlacementStatus] in {FIRM LOCKED COVER}} continue
+        incr hcells [place_hop $hc $px $py $x $y $macs $core $step $maxr]
+        if {[$r getPlacementStatus] in {FIRM LOCKED COVER}} { set px $x; set py $y; continue }
         $r setLocation [expr {int($x)}] [expr {int($y)}]
         $r setPlacementStatus PLACED
         incr rows
@@ -141,11 +181,12 @@ namespace eval ot_txl_mid {
         if {$h > $hmax} { set hmax $h }
         set px $x; set py $y
       }
+      incr hcells [place_hop $snkcells $px $py $bx $by $macs $core $step $maxr]
       set h [expr {(abs($bx-$px)+abs($by-$py))/$dbu}]
       if {$h > $hmax} { set hmax $h }
       incr moved
     }
-    puts "OT_TXL_MID bits moved $moved of [llength $lasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, max hop [format %.0f $hmax] um"
+    puts "OT_TXL_MID bits moved $moved of [llength $lasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um"
     return [list $moved [llength $lasts] $hmax]
   }
 }
