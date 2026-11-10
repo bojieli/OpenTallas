@@ -22,7 +22,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw43/kvr2/plan_c.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/dkv97/src_zb",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_zb_lr",
    "src_sha": "e273bd37e4ee82e912c95a29d7e665173cd7ca4f",
    "kit_rtl": {
     "mode": "bind",
@@ -791,13 +791,16 @@
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_pv_v1": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v12": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v1n": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v2": {
      "OT_HOLD_STOP_PS": "-200"
@@ -809,25 +812,29 @@
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_pv_v3n": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v4": {
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_pv_v4n": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v5": {
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_pv_v5n": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v6": {
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_pv_v6n": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_LAND_RESERVE": "1"
     },
     "kv3_pv_v7": {
      "OT_HOLD_STOP_PS": "-200"
@@ -2226,7 +2233,32 @@
      },
      "note": "KW-FIX-43 15:1x COORD 15:0x KV bind9c2 APPROVED (KV-PLAN-2 15:00): strict 0 errors; only RTL change vs bind9 = kv3_sys_c u_d2d_kv .KV_RTT(511); asbuilt plan_zbr2. Plan stays the die plan. Staged epyc2 (origin) + epyc7."
     }
-   }
+   },
+   "src_prev_kw43lr": "/srv/opentallas-scratch2/claude/dkv97/src_zb",
+   "item_env_prev_kw43lr": {
+    "kv3_pv_v12": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v1": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v5n": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v6n": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v1n": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v3n": {
+     "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_pv_v4n": {
+     "OT_HOLD_STOP_PS": "-200"
+    }
+   },
+   "note_kw43lr": "KW-FIX-43 2026-11-10 PST (COORD: relaunch the seven LAND-RESERVE rows on the overlay, no merge wait): src = dkv97/src_zb hardlinks + tools/die_plan/{face_flops.tcl f7ae2142, landing_placement.tcl 332861cf, gen_phys.py fa593868}: opt-in OT_LAND_RESERVE=1 (gen_phys writes export OT_LAND_RESERVE = 1 into config.mk; face_flops.tcl reserves the non-ring landing windows before the station grid; landing_placement.tcl grows reader/writer-start and literal-local-reset windows). Unset = byte-identical kit tcl. Private pilot kv3_pv_v2n PLACE PASS (KW43-87). item_env OT_LAND_RESERVE=1 on the 7 rows only. Staged read-only md5-checked epyc7/epyc2 (gen hosts). Revert: src=src_prev_kw43lr, item_env rows from item_env_prev_kw43lr"
   },
   "s81": {
    "enabled": true,
