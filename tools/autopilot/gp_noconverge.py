@@ -19,13 +19,24 @@ floors kept falling by small amounts, so a flat stretch alone does not prove a r
 
 A stop by this rule, when enabled, is FLOW/no-converge, not INFRA: the kit is kept and the row is not retried unchanged.
 
+PLACE-NOCONVERGE gate (KW-FIX-44, COORD 11-10, acting): --gate LOG reads one finished 3_3_place_gp.log.  When OpenROAD
+stopped global placement at its built-in Nesterov iteration limit (GPL-1010, 5,000 in this image) and the last overflow
+row is still above --overflow (0.1, the ORFS target), the run ends at place: exit 3, the verdict line and, with
+--marker FILE, the same line in FILE.  gp_noconverge_gate.tcl (PRE_RESIZE_TCL) calls it before resize, so the buffering
+and DPL steps never run on a placement that did not converge (HBM kv_line vC: 0.370 at the cap, then +459k buffers and
+DPL-0038 at 153%).  A run that reached the cap at or below the overflow limit, or never reached it, passes.
+
 Usage: gp_noconverge.py [--hosts a,b,c] [--out FILE]
+       gp_noconverge.py --gate LOG [--overflow 0.1] [--marker FILE]
 """
 import argparse, json, os, re, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
 
 WINDOW, STREAK, CAP_ROWS = 2000, 3, 25000
 CLASS = "FLOW no-converge"
+PLACE_CLASS = "PLACE-NOCONVERGE"
+NOCONV_OVERFLOW = 0.1                                          # ORFS global placement target overflow
+GPL_CAP = re.compile(r"GPL-1010\]?\s+GPL reached the maximum number of iterations for nesterov\s+(\d+)")
 DEFAULT_HOSTS = "intel1,intel2,epyc2,epyc4,epyc7"
 HUB = os.environ.get("OT_HUB_NAME", "intel2")                  # the hub cannot ssh to its own name
 ROW = re.compile(r"^\s*(\d+) \|\s+([0-9.]+) \|")
@@ -53,6 +64,45 @@ def judge(series, window=WINDOW, streak=STREAK, cap_rows=CAP_ROWS):
         if run >= streak:
             return "STOP", f"no lower overflow floor for {run} blocks of {window} rows (fired at row {(i + 1) * window})"
     return "OK", f"{len(floors)} full blocks, longest streak {best} of {streak}"
+
+
+def gate(text, overflow=NOCONV_OVERFLOW):
+    """finished global-place log -> (verdict, why).  Each GPL-1010 closes one Nesterov pass (routability / timing-driven
+    runs restart the table); the first pass that stopped at the iteration cap with its last overflow row above
+    `overflow` gives 'STOP', the same reading as kit_wave.gpl_cap_noconverge (DIE-HBM-97 classifier).  'OK' otherwise."""
+    rows, capped = [], 0
+    for line in (text or "").splitlines():
+        m = GPL_CAP.search(line)
+        if m:
+            capped += 1
+            if rows and rows[-1] > overflow:
+                return "STOP", (f"{PLACE_CLASS}: global placement stopped at the {m.group(1)}-iteration Nesterov cap "
+                                f"(GPL-1010, capped pass {capped}) with overflow {rows[-1]:.4f} > {overflow:g} "
+                                f"(best {min(rows):.4f}, {len(rows)} rows)")
+            rows = []
+            continue
+        rows += overflows([line])
+    if not capped:
+        return "OK", "no GPL-1010: placement converged before the Nesterov iteration cap"
+    return "OK", f"{capped} capped pass(es), none above overflow {overflow:g}"
+
+
+def gate_main(log, overflow, marker=None):
+    try:
+        with open(log, errors="replace") as f:
+            text = f.read()
+    except OSError as e:
+        print(f"{PLACE_CLASS} gate NOT RUN: {e}")
+        return 0                                               # no log, no verdict: the flow goes on as before
+    verdict, why = gate(text, overflow)
+    if verdict == "STOP":
+        print(why)
+        if marker:
+            with open(marker, "a") as f:
+                f.write(why + "\n")
+        return 3
+    print(f"{PLACE_CLASS} gate OK: {why}")
+    return 0
 
 
 HOST_SCRIPT = r"""
@@ -108,7 +158,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--hosts", default=DEFAULT_HOSTS)
     ap.add_argument("--out")
+    ap.add_argument("--gate", metavar="LOG", help="PLACE-NOCONVERGE verdict on one finished 3_3_place_gp.log")
+    ap.add_argument("--overflow", type=float, default=NOCONV_OVERFLOW)
+    ap.add_argument("--marker", help="with --gate: append the STOP line to this file")
     a = ap.parse_args(argv)
+    if a.gate:
+        return gate_main(a.gate, a.overflow, a.marker)
     with ThreadPoolExecutor(8) as ex:
         results = list(ex.map(scan_host, a.hosts.split(",")))
     rows, errors = report(results)

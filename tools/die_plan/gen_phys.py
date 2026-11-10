@@ -4656,6 +4656,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # preserving the native placement deck and all following ORFS stages.
     import fully_fixed_macros as FFM
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
+    cfg += install_gp_noconverge_gate(kd, cfg)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -5146,6 +5147,19 @@ def type_verilog_defines(t, kit_defines=None):
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
         raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
     return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
+
+
+def install_gp_noconverge_gate(kd, cfg):
+    """KW-FIX-44 PLACE-NOCONVERGE (COORD 11-10): PRE_RESIZE_TCL gate that ends the run at place when global placement
+    stopped at the Nesterov iteration cap (GPL-1010) above overflow 0.1, before resize and DPL spend hours on it.
+    The kit keeps a PRE_RESIZE_TCL of its own (no gate then); OT_GPL_NOCONV = 0 in the kit config turns the gate off."""
+    if any(re.match(r"\s*(?:override\s+)?export\s+PRE_RESIZE_TCL\b", c) for c in cfg):
+        return []
+    here = Path(__file__).resolve().parent
+    shutil.copyfile(here / "gp_noconverge_gate.tcl", kd / "gp_noconverge_gate.tcl")
+    shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
+    return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
+            "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"]
 
 
 RUN_KIT = r"""#!/bin/bash
