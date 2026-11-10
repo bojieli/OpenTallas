@@ -428,7 +428,7 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
  assign meta_re=!meta_active&&meta_st_v&&!fault_g;
  assign ack_we=ack_pending&&!ack_full&&!fault_g;
  assign ack_re=srst&&!ack_empty&&!blk_fault;
- ot_hbm_accel_cdc_fifo #(.W(29),.AW(2)) u_ack(.wclk(hbm_clk),.wrst_n(hrst),.we(ack_we),.wdata(meta_q),.full(ack_full),.rd_freed(),
+ ot_hbm_accel_cdc_fifo_fq #(.W(29),.AW(2)) u_ack(.wclk(hbm_clk),.wrst_n(hrst),.we(ack_we),.wdata(meta_q),.full(ack_full),.rd_freed(),
   .rclk(stream_clk),.rrst_n(srst),.re(ack_re),.rdata(ack_data),.empty(ack_empty));
  // HBM-OPEN-B 11-08 H9 (H8+ECO routed TT -7.19/1 at stream_sticky: fill_bank -> base[] mux -> 32-bit add -> compare): the two per-bank
  // expected addresses are compared before the fill_bank select, so the bank mux is a late 2:1 on one bit. Same function, combinational.
@@ -750,13 +750,24 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
   wire ma_n=(meta_active||meta_re)&&!ack_we&&!fo_n;
   wire ap_n=!ack_we&&!meta_re&&(ack_pending||(ma0_w&&ack_eq_s));
   wire kg_n=ma_n&&!ap_n;
+  (* keep = "true" *) reg fo0_c;(* keep = "true" *) reg sa0_c;(* keep = "true" *) reg ma0_c;
   genvar c;
+  // HBM-CORES-B 11-09 H13 (MREG>=1 forms only; cycle-exact): H12 routed TT -20.38 / 15, all sa0_c -> g_c[*].kg_c: the ONE shared
+  // ma_n/kg_n cone (ma0_w -> setO/fo_n, ap_n) ended in an AOI211x1 whose net fans out to the 16 per-PC kg_c/ma_c copies along
+  // the strip (slew 174 ps, then BUFx3 fo18, OA21 fo16).  MREG>=1: each PC computes its own copy of the cone from the central
+  // flops in a keep_hierarchy leaf (ot_wbq_kg_leaf), so the fanout moves to the flop outputs and each kg_c D is a local gate.
+  // Same function per edge: the leaf evaluates the identical expressions (fo_n, ma_n, ap_n, kg_n, setA) on the same inputs.
   for(c=0;c<16;c=c+1)begin:g_c
+   if(MREG>=1)begin:g_l
+    ot_wbq_kg_leaf u_kg(.hbm_clk(hbm_clk),.hrst(hrst),.ma0_c(ma0_c),.sa0_c(sa0_c),.setH(setH),.kwd_any(|k_wr_done_q),
+     .hbm_sticky(hbm_sticky),.sf1(sf1),.meta_active(meta_active),.meta_re(meta_re),.ack_we(ack_we),.ack_pending(ack_pending),
+     .ack_eq_s(ack_eq_s),.ack_gt_s(ack_gt_s),.mah(mah_w[c]),.kg(kg_w[c]));
+   end else begin:g_r
    (* keep = "true" *) reg ma_c;(* keep = "true" *) reg kg_c;(* keep = "true" *) reg sa_c;
    always @(posedge hbm_clk or negedge hrst)if(!hrst)begin ma_c<=0;kg_c<=0;sa_c<=0;end else begin ma_c<=ma_n;kg_c<=kg_n;sa_c<=setA;end
    assign mah_w[c]=ma_c&&!sa_c;assign kg_w[c]=kg_c&&!sa_c;
+   end
   end
-  (* keep = "true" *) reg fo0_c;(* keep = "true" *) reg sa0_c;(* keep = "true" *) reg ma0_c;
   reg [3:0] as0_r,as1_r;
   always @(posedge hbm_clk or negedge hrst)begin
    if(!hrst)begin fo0_c<=0;sa0_c<=0;ma0_c<=0;as0_r<=0;as1_r<=0;end
@@ -934,3 +945,64 @@ module ot_wbq_root_grp_ps #(parameter integer G=0, parameter integer CRED=4, par
 endmodule
 
 `default_nettype wire
+
+// HBM-CORES-B 11-09 H12 (H11+ECO routed TT -76.82 / 119: u_ack wgray -> full compare -> 116 mem write enables, ~550 ps
+// of wire): the same Gray FIFO as ot_hbm_accel_cdc_fifo, but full is a REGISTER loaded with next cycle's compare
+// (gray(wbin_n) against rg_w1, which is next cycle's rg_w2). Cycle-exact: full_q == (wgray == {~rg_w2[AW:AW-1],
+// rg_w2[AW-2:0]}) in every cycle (both are 0 out of reset), so ports, latency and contents are unchanged.
+module ot_hbm_accel_cdc_fifo_fq #(parameter integer W = 32, parameter integer AW = 5) (
+  input  wire          wclk, wrst_n, input wire we, input wire [W-1:0] wdata, output wire full,
+  output wire [2:0]    rd_freed,
+  input  wire          rclk, rrst_n, input wire re, output wire [W-1:0] rdata, output wire empty
+);
+  localparam integer D = 1 << AW;
+  reg [W-1:0] mem [0:D-1];
+  reg [AW:0] wbin, wgray, rbin, rgray;
+  reg full_q;
+  (* async_reg = "true" *) reg [AW:0] rg_w1, rg_w2;   // read pointer in the write domain
+  (* async_reg = "true" *) reg [AW:0] wg_r1, wg_r2;   // write pointer in the read domain
+  function automatic [AW:0] g2b(input [AW:0] g);
+    for (integer i = AW; i >= 0; i = i - 1) g2b[i] = (i == AW) ? g[i] : g2b[i+1] ^ g[i];
+  endfunction
+  wire [AW:0] wbin_n = wbin + ((we && !full_q) ? 1'b1 : 1'b0);
+  wire [AW:0] wgray_n = wbin_n ^ (wbin_n >> 1);
+  wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
+  assign full  = full_q;
+  assign empty = (rgray == wg_r2);
+  assign rdata = mem[rbin[AW-1:0]];
+  reg [AW:0] rsync_bin_q;
+  wire [AW:0] rsync_bin = g2b(rg_w2);
+  assign rd_freed = 3'(rsync_bin - rsync_bin_q);
+  always @(posedge wclk or negedge wrst_n)
+    if (!wrst_n) begin wbin <= 0; wgray <= 0; rg_w1 <= 0; rg_w2 <= 0; rsync_bin_q <= 0; full_q <= 1'b0; end
+    else begin
+      if (we && !full_q) mem[wbin[AW-1:0]] <= wdata;
+      wbin <= wbin_n; wgray <= wgray_n;
+      rg_w1 <= rgray; rg_w2 <= rg_w1; rsync_bin_q <= rsync_bin;
+      full_q <= (wgray_n == {~rg_w1[AW:AW-1], rg_w1[AW-2:0]});
+    end
+  always @(posedge rclk or negedge rrst_n)
+    if (!rrst_n) begin rbin <= 0; rgray <= 0; wg_r1 <= 0; wg_r2 <= 0; end
+    else begin
+      rbin <= rbin_n; rgray <= rbin_n ^ (rbin_n >> 1);
+      wg_r1 <= wgray; wg_r2 <= wg_r1;
+    end
+endmodule
+
+// HBM-CORES-B 11-09 H13: per-PC copy of the g_f2 K-gate cone + its three flops (ot_wbq_sw__fcore MREG>=1).  keep_hierarchy so
+// synthesis cannot merge the 16 identical copies back into one cone (opt_merge folds identical logic, keep on wires does not stop it).
+(* keep_hierarchy *)
+module ot_wbq_kg_leaf(input wire hbm_clk,input wire hrst,input wire ma0_c,input wire sa0_c,input wire setH,input wire kwd_any,
+ input wire hbm_sticky,input wire sf1,input wire meta_active,input wire meta_re,input wire ack_we,input wire ack_pending,
+ input wire ack_eq_s,input wire ack_gt_s,output wire mah,output wire kg);
+ wire ma0_w=ma0_c&&!sa0_c;
+ wire setO=ma0_w?setH:kwd_any;
+ wire setA=ma0_w&&ack_gt_s;
+ wire fo_n=hbm_sticky||setO||sf1;
+ wire ma_n=(meta_active||meta_re)&&!ack_we&&!fo_n;
+ wire ap_n=!ack_we&&!meta_re&&(ack_pending||(ma0_w&&ack_eq_s));
+ wire kg_n=ma_n&&!ap_n;
+ reg ma_c,kg_c,sa_c;
+ always @(posedge hbm_clk or negedge hrst)if(!hrst)begin ma_c<=0;kg_c<=0;sa_c<=0;end else begin ma_c<=ma_n;kg_c<=kg_n;sa_c<=setA;end
+ assign mah=ma_c&&!sa_c;assign kg=kg_c&&!sa_c;
+endmodule

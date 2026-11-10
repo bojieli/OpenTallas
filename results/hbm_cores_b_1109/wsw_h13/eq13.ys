@@ -1,0 +1,70 @@
+read_verilog -sv -DSYNTHESIS /eq/rtl/ot_hbm_accel_cdc_fifo.sv /eq/rtl/ot_hbm_face_reg.sv /eq/rtl/ot_hbm_svc_pc_ctrl_leaf.sv /eq/rtl/ot_reset_sync.sv /eq/rtl/ot_wbq_sw__fshell.sv /eq/rtl/ot_wbq_split.sv
+hierarchy -top ot_wbq_sw
+proc; flatten; opt_clean
+rename ot_wbq_sw gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /eq/rtl/ot_hbm_accel_cdc_fifo.sv /eq/rtl/ot_hbm_face_reg.sv /eq/rtl/ot_hbm_svc_pc_ctrl_leaf.sv /eq/rtl/ot_reset_sync.sv /eq/rtl/ot_wbq_sw__fshell.sv /eq/ot_wbq_split_H13.sv
+hierarchy -top ot_wbq_sw
+setattr -mod -unset keep_hierarchy ot_wbq_kg_leaf
+proc; flatten; opt_clean
+cd ot_wbq_sw
+rename u_fcore.g_f2.g_c[0].g_l.u_kg.ma_c u_fcore.g_f2.g_c[0].ma_c
+rename u_fcore.g_f2.g_c[0].g_l.u_kg.kg_c u_fcore.g_f2.g_c[0].kg_c
+rename u_fcore.g_f2.g_c[0].g_l.u_kg.sa_c u_fcore.g_f2.g_c[0].sa_c
+rename u_fcore.g_f2.g_c[1].g_l.u_kg.ma_c u_fcore.g_f2.g_c[1].ma_c
+rename u_fcore.g_f2.g_c[1].g_l.u_kg.kg_c u_fcore.g_f2.g_c[1].kg_c
+rename u_fcore.g_f2.g_c[1].g_l.u_kg.sa_c u_fcore.g_f2.g_c[1].sa_c
+rename u_fcore.g_f2.g_c[2].g_l.u_kg.ma_c u_fcore.g_f2.g_c[2].ma_c
+rename u_fcore.g_f2.g_c[2].g_l.u_kg.kg_c u_fcore.g_f2.g_c[2].kg_c
+rename u_fcore.g_f2.g_c[2].g_l.u_kg.sa_c u_fcore.g_f2.g_c[2].sa_c
+rename u_fcore.g_f2.g_c[3].g_l.u_kg.ma_c u_fcore.g_f2.g_c[3].ma_c
+rename u_fcore.g_f2.g_c[3].g_l.u_kg.kg_c u_fcore.g_f2.g_c[3].kg_c
+rename u_fcore.g_f2.g_c[3].g_l.u_kg.sa_c u_fcore.g_f2.g_c[3].sa_c
+rename u_fcore.g_f2.g_c[4].g_l.u_kg.ma_c u_fcore.g_f2.g_c[4].ma_c
+rename u_fcore.g_f2.g_c[4].g_l.u_kg.kg_c u_fcore.g_f2.g_c[4].kg_c
+rename u_fcore.g_f2.g_c[4].g_l.u_kg.sa_c u_fcore.g_f2.g_c[4].sa_c
+rename u_fcore.g_f2.g_c[5].g_l.u_kg.ma_c u_fcore.g_f2.g_c[5].ma_c
+rename u_fcore.g_f2.g_c[5].g_l.u_kg.kg_c u_fcore.g_f2.g_c[5].kg_c
+rename u_fcore.g_f2.g_c[5].g_l.u_kg.sa_c u_fcore.g_f2.g_c[5].sa_c
+rename u_fcore.g_f2.g_c[6].g_l.u_kg.ma_c u_fcore.g_f2.g_c[6].ma_c
+rename u_fcore.g_f2.g_c[6].g_l.u_kg.kg_c u_fcore.g_f2.g_c[6].kg_c
+rename u_fcore.g_f2.g_c[6].g_l.u_kg.sa_c u_fcore.g_f2.g_c[6].sa_c
+rename u_fcore.g_f2.g_c[7].g_l.u_kg.ma_c u_fcore.g_f2.g_c[7].ma_c
+rename u_fcore.g_f2.g_c[7].g_l.u_kg.kg_c u_fcore.g_f2.g_c[7].kg_c
+rename u_fcore.g_f2.g_c[7].g_l.u_kg.sa_c u_fcore.g_f2.g_c[7].sa_c
+rename u_fcore.g_f2.g_c[8].g_l.u_kg.ma_c u_fcore.g_f2.g_c[8].ma_c
+rename u_fcore.g_f2.g_c[8].g_l.u_kg.kg_c u_fcore.g_f2.g_c[8].kg_c
+rename u_fcore.g_f2.g_c[8].g_l.u_kg.sa_c u_fcore.g_f2.g_c[8].sa_c
+rename u_fcore.g_f2.g_c[9].g_l.u_kg.ma_c u_fcore.g_f2.g_c[9].ma_c
+rename u_fcore.g_f2.g_c[9].g_l.u_kg.kg_c u_fcore.g_f2.g_c[9].kg_c
+rename u_fcore.g_f2.g_c[9].g_l.u_kg.sa_c u_fcore.g_f2.g_c[9].sa_c
+rename u_fcore.g_f2.g_c[10].g_l.u_kg.ma_c u_fcore.g_f2.g_c[10].ma_c
+rename u_fcore.g_f2.g_c[10].g_l.u_kg.kg_c u_fcore.g_f2.g_c[10].kg_c
+rename u_fcore.g_f2.g_c[10].g_l.u_kg.sa_c u_fcore.g_f2.g_c[10].sa_c
+rename u_fcore.g_f2.g_c[11].g_l.u_kg.ma_c u_fcore.g_f2.g_c[11].ma_c
+rename u_fcore.g_f2.g_c[11].g_l.u_kg.kg_c u_fcore.g_f2.g_c[11].kg_c
+rename u_fcore.g_f2.g_c[11].g_l.u_kg.sa_c u_fcore.g_f2.g_c[11].sa_c
+rename u_fcore.g_f2.g_c[12].g_l.u_kg.ma_c u_fcore.g_f2.g_c[12].ma_c
+rename u_fcore.g_f2.g_c[12].g_l.u_kg.kg_c u_fcore.g_f2.g_c[12].kg_c
+rename u_fcore.g_f2.g_c[12].g_l.u_kg.sa_c u_fcore.g_f2.g_c[12].sa_c
+rename u_fcore.g_f2.g_c[13].g_l.u_kg.ma_c u_fcore.g_f2.g_c[13].ma_c
+rename u_fcore.g_f2.g_c[13].g_l.u_kg.kg_c u_fcore.g_f2.g_c[13].kg_c
+rename u_fcore.g_f2.g_c[13].g_l.u_kg.sa_c u_fcore.g_f2.g_c[13].sa_c
+rename u_fcore.g_f2.g_c[14].g_l.u_kg.ma_c u_fcore.g_f2.g_c[14].ma_c
+rename u_fcore.g_f2.g_c[14].g_l.u_kg.kg_c u_fcore.g_f2.g_c[14].kg_c
+rename u_fcore.g_f2.g_c[14].g_l.u_kg.sa_c u_fcore.g_f2.g_c[14].sa_c
+rename u_fcore.g_f2.g_c[15].g_l.u_kg.ma_c u_fcore.g_f2.g_c[15].ma_c
+rename u_fcore.g_f2.g_c[15].g_l.u_kg.kg_c u_fcore.g_f2.g_c[15].kg_c
+rename u_fcore.g_f2.g_c[15].g_l.u_kg.sa_c u_fcore.g_f2.g_c[15].sa_c
+cd ..
+rename ot_wbq_sw gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+memory_map
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert

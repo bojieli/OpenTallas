@@ -1,0 +1,7 @@
+bench (iverilog, two clocks 416-422/512-522 ps, random we/re + per-domain async resets, 2 us each):
+5/5 seeds PASS errs 0 (about 740-790 writes, 1340-1410 full cycles each)
+mutant (full_q compare against rg_w2 instead of rg_w1): FAIL errs 2191
+yosys (eq_fq.ys, W29 AW2, equiv_simple/induct -seq 4):
+Found 186 $equiv cells in equiv:
+  Of those cells 186 are proven and 0 are unproven.
+  Equivalence successfully proven!
