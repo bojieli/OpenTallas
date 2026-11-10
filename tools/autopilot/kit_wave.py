@@ -495,7 +495,12 @@ def merge_auto_views(cfg, ap_dir, log=None):
             old = pvs.get(m) or []
             old = old if isinstance(old, list) else [old]
             dirs = {c["dir"] for c in new}
-            pvs[m] = new + [c for c in old if not (isinstance(c, dict) and c.get("dir") in dirs)]
+            rest = [c for c in old if not (isinstance(c, dict) and c.get("dir") in dirs)]
+            # DIE-HBM-97 11-09: a config entry with a detailed abstract is a proven fix for this module; a sidecar view
+            # without detail must not shadow it (ot_wbq_root_g1 and others kept their DRT-0073 LEF that way).
+            first = [] if any(c.get("detailed_lef") for c in new) else [
+                c for c in rest if isinstance(c, dict) and c.get("detailed_lef")]
+            pvs[m] = first + new + [c for c in rest if not any(c is f for f in first)]
             out.setdefault(die, []).append(m)
         if die in out:
             d["prov_view_sources"] = pvs

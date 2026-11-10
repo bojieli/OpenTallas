@@ -204,6 +204,64 @@ def lef_from_odb(die, rid, p, mod, cmd, out, log):
     return rc, so, se, res
 
 
+ABSTRACT_DETAIL = Path(__file__).resolve().parents[1] / "die_plan" / "abstract_detail.py"
+DETAIL_KEYS = ("detailed_lef", "detailed_receipt", "detail_bloat_factor", "detail_pg_layer")
+
+
+def view_detail(die, rid, p, mod, vdir, on_hub, log):
+    """DIE-HBM-97 11-09 (DRT-0073 class): a view whose abstract encloses a signal pin under its own OBS (M5 clock pin,
+    blanket or bloat-10 OBS on M5 and M6: write_abstract_lef defaults to -bloat_factor 10, ORFS generate_abstract uses
+    -bloat_occupied_layers) gets detail_view.lef + detail_receipt.json next to the signed files, spliced from the SAME
+    signed 6_final.odb.  The signed <mod>.lef stays as it was.  -> the wave's candidate fields, {} when none is needed.
+    A failure here never stops the export: it is logged and the view goes out as before."""
+    lef, q = f"{vdir}/{mod}.lef", shlex.quote
+    helper, stage = str(ABSTRACT_DETAIL), f"{VIEWS_ROOT}/{die}/_stage/{rid}_detail"
+    tool = helper if on_hub else f"{stage}/abstract_detail.py"       # this exporter's own helper, not a host copy
+    if not on_hub:
+        rc, so, se = run(SSH + [p["host"], f"rm -rf {q(stage)} && mkdir -p {q(stage)}"])
+        if not rc:
+            rc, so, se = run(["rsync", "-a", "-e", "ssh -o ControlPath=none -o BatchMode=yes", helper,
+                              f"{p['host']}:{tool}"])
+        if rc:
+            log(f"DETAIL-PLAN-FAIL {die} {mod} {p['host']} helper copy rc {rc}: {(se or so)[-200:]}")
+            return {}
+    cmd = f"cd / && python3 -I {q(tool)} plan --base {q(lef)}"
+    rc, so, se = run(["bash", "-c", cmd] if on_hub else SSH + [p["host"], cmd])
+    try:
+        plan = json.loads(so) if not rc else None
+    except ValueError:
+        plan = None
+    if not plan or not plan.get("needed"):
+        if not plan:
+            log(f"DETAIL-PLAN-FAIL {die} {mod} {p['host']} rc {rc}: {(se or so)[-200:]}")
+        if not on_hub:
+            run(SSH + [p["host"], f"rm -rf {q(stage)}"])
+        return {}
+    if on_hub:                                       # no OpenROAD on the hub, as for lef_from_odb
+        log(f"DETAIL-NEEDED-ON-HUB {die} {mod} {plan.get('enclosed')}: view published without detail")
+        return {}
+    bf, layers = plan["bloat_factor"], ",".join(plan["layers"])
+    sh = (f"cd / && T={q(stage)}; V={q(vdir)}; A={q(tool)}; "
+          f"O=$(realpath {q(p['base'] + '/6_final.odb')}) && test -s $O "
+          f"&& python3 -I $A tcl --odb /b/$(basename $O) --out /o/detail.lef --bloat-factor {bf} > $T/d.tcl "
+          f"&& printf 'puts OT_DETAIL_DONE\n' >> $T/d.tcl "
+          f"&& timeout 600 docker run --rm --memory 16g --user $(id -u):$(id -g) -v $(dirname $O):/b:ro -v $T:/o "
+          f"{ORFS_IMAGE} bash -lc '{OPENROAD} -no_init -exit /o/d.tcl' > $T/d.log 2>&1 "
+          f"&& grep -q OT_DETAIL_DONE $T/d.log "
+          f"&& python3 -I $A splice --base {q(lef)} --detail $T/detail.lef --out $V/detail_view.lef "
+          f"--layers {q(layers)} --bloat-factor {bf} > $V/detail_receipt.json; rc=$?; "
+          f"[ $rc = 0 ] || rm -f $V/detail_view.lef $V/detail_receipt.json; rm -rf $T; exit $rc")
+    rc, so, se = run(SSH + [p["host"], sh], timeout=900)
+    if rc:
+        log(f"DETAIL-FAIL {die} {mod} {p['host']}:{p['base']} rc {rc}: {(se or so)[-200:]}")
+        return {}
+    log(f"DETAIL {die} {mod} layers {layers} bloat {bf} enclosed {plan.get('enclosed')}")
+    out = dict(detailed_lef="detail_view.lef", detailed_receipt="detail_receipt.json", detail_bloat_factor=bf)
+    if plan.get("pg_layer"):
+        out["detail_pg_layer"] = True
+    return out
+
+
 def export_one(die, name, p, log):
     """export_view.py on the record's host -> candidate dict or None"""
     rid = rec_id(p)
@@ -231,6 +289,7 @@ def export_one(die, name, p, log):
         return None
     mod = res["module"]
     vdir = res["view"]
+    detail = view_detail(die, rid, p, mod, vdir, on_hub, log)
     if on_hub:
         dst = f"{VIEWS_ROOT}/{die}/{rid}/{mod}"
         rc1, _, e1 = run(SSH + [HUB_RELAY_HOST, f"mkdir -p {shlex.quote(dst)}"])
@@ -246,7 +305,7 @@ def export_one(die, name, p, log):
                 module=mod, counter_name=name, outline=outline, counter_hash=chash, flow_tag=p.get("flow_tag"),
                 signoff=f"{p['host']}:{p['signoff']}", pins_sha256=res.get("pins_sha256"),
                 lef_from_odb=bool(res.get("lef_from_odb")), verdict_needs_parent=needs_parent,
-                pins_canon_sha256=res.get("pins_canon_sha256"))
+                pins_canon_sha256=res.get("pins_canon_sha256"), **detail)
 
 
 def build_manifest(die, cfg, state, counter, export=True, log=print, only=None):
@@ -325,7 +384,7 @@ def publish_manifest(path, man):
         for m, e in sorted((man.get("modules") or {}).items()):
             new = [dict(host=c["host"], dir=c["dir"], job=c["job"], counted=True, signoff=c.get("signoff"),
                         outline=c.get("outline"), pins_sha256=c.get("pins_sha256"),
-                        plan_pin_match=c.get("plan_pin_match"))
+                        plan_pin_match=c.get("plan_pin_match"), **{k: c[k] for k in DETAIL_KEYS if k in c})
                    for c in e.get("candidates") or [] if c.get("dir") and c.get("host")]
             if new:
                 mods[m] = new

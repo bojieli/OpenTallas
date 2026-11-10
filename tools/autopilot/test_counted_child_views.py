@@ -1,14 +1,103 @@
 """KW-FIX-32: counted child views for WAIT types (record parse, outline names, candidate order, config merge)."""
+import json
 import sys
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+import abstract_detail as AD  # noqa: E402
 import counted_child_views as C  # noqa: E402
 
 REC = ("epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json src c092821dbb94 "
        "flow flow-20261107-dq-hbm RE-SIGN build 85dd231f8e8d db /srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1/"
        "run/results/asap7/hbc_ot_hbm_hc_bank128_pair_core/base/6_final.odb DESIGN-MATCH pins [pins from routed_def]")
+
+
+def lef(pin_rect="10 10 10.048 10.48", pg_layer="M5", obs=("M5", "M6")):
+    """one macro, one signal pin on M5, one PG pin, blanket OBS on the given layers"""
+    body = "".join(f"    LAYER {l} ;\n      RECT 0 0 100 100 ;\n" for l in obs)
+    return ("MACRO m\n  SIZE 100 BY 100 ;\n"
+            f"  PIN ck\n    DIRECTION INPUT ;\n    PORT\n      LAYER M5 ;\n        RECT {pin_rect} ;\n    END\n  END ck\n"
+            f"  PIN VDD\n    USE POWER ;\n    PORT\n      LAYER {pg_layer} ;\n        RECT 0 0 1 100 ;\n    END\n  END VDD\n"
+            f"  OBS\n{body}  END\nEND m\n").splitlines(keepends=True)
+
+
+class DetailPlan(unittest.TestCase):
+    def test_enclosed_centre_pin_above_pg_takes_exact_shapes(self):
+        p = AD.export_plan(lef())
+        self.assertEqual((p["needed"], p["layers"], p["bloat_factor"], p["pg_layer"], p["enclosed"]),
+                         (True, ["M6"], 0, False, ["ck"]))
+
+    def test_pg_on_top_obs_layer_takes_the_bloat_one_form(self):
+        p = AD.export_plan(lef(pg_layer="M6"))
+        self.assertEqual((p["needed"], p["layers"], p["bloat_factor"], p["pg_layer"]), (True, ["M6"], 1, True))
+
+    def test_edge_pin_or_open_layer_above_needs_nothing(self):
+        self.assertFalse(AD.export_plan(lef(pin_rect="0 10 0.048 10.48"))["needed"])
+        self.assertFalse(AD.export_plan(lef(obs=("M5",)))["needed"])
+
+    def test_pin_below_the_replaced_layers_is_not_claimed_fixable(self):
+        self.assertFalse(AD.export_plan(lef(pg_layer="M6", obs=("M5", "M6", "M7")))["needed"])
+
+
+class ExportDetail(unittest.TestCase):
+    P = dict(host="epyc2", kit="/k", base="/k/base", signoff="/k/s.json")
+
+    def fake(self, plan, rc=0):
+        calls = []
+
+        def run(argv, timeout=600, tries=4):
+            cmd = argv[-1]
+            if argv[0] == "rsync":
+                return 0, "", ""
+            calls.append(cmd)
+            if " plan --base " in cmd:
+                return 0, json.dumps(plan), ""
+            if "docker" not in cmd:
+                return 0, "", ""
+            return rc, "", "boom" if rc else ""
+        return run, calls
+
+    def go(self, plan, rc=0, on_hub=False):
+        run, calls = self.fake(plan, rc)
+        logs, orig = [], C.run
+        C.run = run
+        try:
+            out = C.view_detail("hbm", "r1", self.P, "m", "/v/m", on_hub, logs.append)
+        finally:
+            C.run = orig
+        return out, calls, logs
+
+    def test_needed_exports_the_wave_candidate_fields(self):
+        out, calls, _ = self.go(dict(needed=True, layers=["M6"], bloat_factor=0, pg_layer=False, enclosed=["ck"]))
+        self.assertEqual(out, dict(detailed_lef="detail_view.lef", detailed_receipt="detail_receipt.json",
+                                   detail_bloat_factor=0))
+        work = next(c for c in calls if "docker" in c)
+        self.assertIn("--bloat-factor 0", work)
+        self.assertIn("--layers M6", work)
+        self.assertIn("realpath /k/base/6_final.odb", work)
+
+    def test_pg_form_opts_in_explicitly(self):
+        out, _, _ = self.go(dict(needed=True, layers=["M6"], bloat_factor=1, pg_layer=True, enclosed=["ck"]))
+        self.assertIs(out["detail_pg_layer"], True)
+        self.assertEqual(out["detail_bloat_factor"], 1)
+
+    def test_not_needed_runs_nothing_more(self):
+        out, calls, _ = self.go(dict(needed=False))
+        self.assertEqual(out, {})
+        self.assertFalse(any("docker" in c for c in calls))
+
+    def test_failure_keeps_the_export_and_logs(self):
+        out, _, logs = self.go(dict(needed=True, layers=["M6"], bloat_factor=0, enclosed=["ck"]), rc=3)
+        self.assertEqual(out, {})
+        self.assertTrue(any(x.startswith("DETAIL-FAIL") for x in logs))
+
+    def test_hub_record_is_flagged_not_built(self):
+        out, calls, logs = self.go(dict(needed=True, layers=["M6"], bloat_factor=0, enclosed=["ck"]), on_hub=True)
+        self.assertEqual(out, {})
+        self.assertFalse(any("docker" in c for c in calls))
+        self.assertTrue(any(x.startswith("DETAIL-NEEDED-ON-HUB") for x in logs))
 
 
 class Names(unittest.TestCase):
