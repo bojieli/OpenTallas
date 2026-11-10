@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "smk_1109",
+ "plan": "d44v_gqi_cp1109_q3vm_smk",
+ "base": "d44v_gqi_cp1109_q3vm_opsb die_plan.json (sha256 0150e611c6a15d09590a0df13631a918f695ec8f3caf7102ce10c60a52fe063c)",
+ "source": "HBM wave plan p11 die_plan.json (sha256 2bd45422144211955d0cee482ae7865e0b09db64bc78a863b2a2dc5b08dce5b2), q_sm0..3 = restjrev_1109 6cc23d96 for these types",
+ "lane": "DIE-HBM-97/COUNT",
+ "date": "2026-11-09",
+ "types": [
+  "q_sm0",
+  "q_sm1",
+  "q_sm2",
+  "q_sm3"
+ ],
+ "type_keys_replaced": [
+  "cells",
+  "clock",
+  "contents",
+  "hard",
+  "hard_cores",
+  "note",
+  "reset"
+ ],
+ "hard_cores_old": 1408,
+ "hard_cores_new": 944,
+ "modules_removed": [
+  "hnx_rp3h_gn",
+  "hnx_rp3h_gs",
+  "hnx_rp3h_lc",
+  "hnx_rp3h_tl",
+  "hnx_rp3h_xs"
+ ],
+ "modules_added": [
+  "ot_hbm_accel_smh_bdc",
+  "ot_hbm_accel_smh_pt_e",
+  "ot_hbm_accel_smh_pt_w",
+  "ot_hbm_accel_smh_tcl_gu",
+  "ot_hbm_accel_smh_tct",
+  "ot_hbm_accel_smh_xs",
+  "ot_hbm_sm_attn_be__cd13",
+  "ot_hbm_sm_attn_be__cd16",
+  "ot_hbm_sm_attn_be__cd17",
+  "ot_hbm_sm_attn_be__cd9",
+  "ot_hbm_sm_attn_be_seed__cd20",
+  "ot_hbm_sm_attn_be_seed__cd21",
+  "ot_hbm_sm_attn_pstore",
+  "ot_hbm_sm_i8w_front",
+  "ot_hbm_sm_kv_line",
+  "ot_hbm_sm_pv_merge",
+  "ot_smh_static_front"
+ ],
+ "leaves_changed": 27533,
+ "leaves_outside_q_sm": 0,
+ "tables": [
+  {
+   "table": "cores/ot_hbm_accel_smh_bdc__120.96x120.96__smab1108.json",
+   "sha256": "84d4151d69622f62c199db675154a6701254b13cf26025033c6c086bccd2bb0b",
+   "pins": 1136
+  },
+  {
+   "table": "cores/ot_hbm_accel_smh_pt_e__613.44x198.72__smab1108.json",
+   "sha256": "d256d7dc28c6ce264963a7d816c517a373b51f8e69a99a2775cba9994327a2f6",
+   "pins": 7412
+  },
+  {
+   "table": "cores/ot_hbm_accel_smh_pt_w__613.44x829.44__smab1108.json",
+   "sha256": "2fd5d84a547449fdb57e09bb58fc8887f5aeae8a824d85269aed681f5f5728da",
+   "pins": 13212
+  },
+  {
+   "table": "cores/ot_hbm_accel_smh_tcl_gu__103.68x103.68__smab1108.json",
+   "sha256": "ecd4cf53a976d9fbfd65204876c6d55115da1f7ee5c01af657bd87cd83c57813",
+   "pins": 517
+  },
+  {
+   "table": "cores/ot_hbm_accel_smh_tct__112.32x112.32__smab1108.json",
+   "sha256": "289e8e8a97e1baf4bdbc84c0364cf9b2b18ebec18ede44ef7c8172d6d2c68d80",
+   "pins": 584
+  },
+  {
+   "table": "cores/ot_hbm_accel_smh_xs__250.56x250.56__smab1108.json",
+   "sha256": "2b4e61e0766ac668da01d95a9e572b5245cf6cec670ba2fd867f93bff16e9f96",
+   "pins": 4543
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be__cd13__120.96x120.96__smab1108.json",
+   "sha256": "1f92570f9bb9eaafabc89f57c5f09965d5756eca7c5fd3eeae763b1e49f060b8",
+   "pins": 556
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be__cd16__120.96x120.96__smab1108.json",
+   "sha256": "1f92570f9bb9eaafabc89f57c5f09965d5756eca7c5fd3eeae763b1e49f060b8",
+   "pins": 556
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be__cd17__120.96x120.96__smab1108.json",
+   "sha256": "1f92570f9bb9eaafabc89f57c5f09965d5756eca7c5fd3eeae763b1e49f060b8",
+   "pins": 556
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be__cd9__120.96x120.96__smab1108.json",
+   "sha256": "1f92570f9bb9eaafabc89f57c5f09965d5756eca7c5fd3eeae763b1e49f060b8",
+   "pins": 556
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be_seed__cd20__120.96x120.96__smab1108.json",
+   "sha256": "5bba6db439740f19dd1665dc575bae4330cac78a45e7947885eab05ee5ee0955",
+   "pins": 418
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_be_seed__cd21__120.96x120.96__smab1108.json",
+   "sha256": "5bba6db439740f19dd1665dc575bae4330cac78a45e7947885eab05ee5ee0955",
+   "pins": 418
+  },
+  {
+   "table": "cores/ot_hbm_sm_attn_pstore__112.32x233.28__smab1108.json",
+   "sha256": "e255936e53e50adc4e524d4c413beccad0b44b364bf37fdb1716d25cb5b25f40",
+   "pins": 2204
+  },
+  {
+   "table": "cores/ot_hbm_sm_i8w_front__1391.04x233.28__smab1108_i8w8.json",
+   "sha256": "36ccb095373e704e27d3ec7e4c59499d37e706ab45ef833d7e5f18b09c9706b3",
+   "pins": 14888
+  },
+  {
+   "table": "cores/ot_hbm_sm_kv_line__734.4x233.28__smab1108.json",
+   "sha256": "66bbd4863f300a2fca1dca1a22b042daaae7c9f92a998e504a830c9658bab7b7",
+   "pins": 2158
+  },
+  {
+   "table": "cores/ot_hbm_sm_pv_merge__198.72x198.72__smab1108.json",
+   "sha256": "98cd07ea3f11b48f4e1fe1fc7597a6780d7e0beb6092a30ab915c13fc117aac4",
+   "pins": 1128
+  },
+  {
+   "table": "cores/ot_smh_static_front__1814.4x233.28__smab1108.json",
+   "sha256": "2ce1579106dcf623e477b5bb2fd0d473c5cf8ddb1e652d00af822ce04893b32d",
+   "pins": 18749
+  }
+ ],
+ "plan_sha256": "a75de57e1e88e9e91412b1f53bd9617c984cc8c8f65f4213dbf1e86bae400f9c",
+ "not_changed": "partitions, ports, lanes, every other type, clock_entries/core_conns/core_macros sidecars"
+}
