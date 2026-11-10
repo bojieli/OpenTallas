@@ -679,6 +679,25 @@ def relay_reg_guide_spec(relays, pins, mguides, core_box, step_um=5.0):
     return out
 
 
+REG_GUIDES_DIR = Path(__file__).resolve().parent / "reg_guides"
+REG_GUIDES_SCHEMA = "opentallas.hbm_core_reg_guides.v1"
+
+
+def default_reg_guides(module, outline, d=None):
+    """DIE-HBM-97 KVPIPE rev3 (2026-11-10): a module's committed plan guide boxes, reg_guides/<module>.json (the
+    --reg-guide-boxes form + schema, module, outline_um), so every kit of the module gets them without a hand flag.
+    None when the module has no file; fail closed on a schema / module / outline mismatch (a stale plan)."""
+    f = Path(d or REG_GUIDES_DIR) / f"{module}.json"
+    if not f.is_file():
+        return None
+    doc = json.load(open(f))
+    if doc.get("schema") != REG_GUIDES_SCHEMA or doc.get("module") != module:
+        raise SystemExit(f"reg guides {f}: schema {doc.get('schema')!r} / module {doc.get('module')!r}")
+    if [round(float(v), 3) for v in doc["outline_um"]] != [round(float(v), 3) for v in outline]:
+        raise SystemExit(f"reg guides {f}: outline {doc['outline_um']} != view outline {list(outline)}")
+    return str(f)
+
+
 def reg_guide_boxes_spec(boxes, core_box):
     """DIE-HBM-57/PSLICE (opt-in --reg-guide-boxes): explicit plan guide boxes -> macro_reg_guide.tcl spec rows.
     Fail closed: a box outside core_box, two boxes that overlap, a duplicate name, or a prefix that nests with another
@@ -2473,6 +2492,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                                             indent=1) + "\n")
         rec["macro_reg_guide"] = dict(scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um, guides=len(mrg),
                                       relays=len(rly))
+    if not a.reg_guide_boxes and not a.macro_reg_guide and os.environ.get("OT_REG_GUIDES_DEFAULT", "1") != "0":
+        a.reg_guide_boxes = default_reg_guides(module, (w, h))   # DIE-HBM-97 KVPIPE rev3: committed per-module guides
     if a.reg_guide_boxes:
         # DIE-HBM-57/PSLICE: explicit plan guide boxes (the core plan places each register group: trunk stages, leaf
         # clusters, egress relays); same GPL guide mechanism as --macro-reg-guide.

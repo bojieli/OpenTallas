@@ -71,13 +71,26 @@ module ot_hbm_sm_kv_line #(
     output reg           fault
 );
     // ---------------- op state ----------------
-    reg act, qk, kv4, h128; reg [12:0] n8, wri;
+    reg act, qk, kv4; reg [12:0] n8, wri;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin act <= 1'b0; qk <= 1'b0; kv4 <= 1'b0; h128 <= 1'b0; n8 <= 13'd0; end
-        else if (cfg_v && !act) begin act <= 1'b1; qk <= cfg_qk; kv4 <= cfg_kv4 && !cfg_h128; h128 <= cfg_h128;
+        if (!rst_n) begin act <= 1'b0; qk <= 1'b0; kv4 <= 1'b0; n8 <= 13'd0; end
+        else if (cfg_v && !act) begin act <= 1'b1; qk <= cfg_qk; kv4 <= cfg_kv4 && !cfg_h128;
             n8 <= cfg_h128 ? cfg_rows : (cfg_kv4 ? 13'd0 : cfg_n8); end
         else if (act && op_done) act <= 1'b0;
-    wire tq = h128 && qk;                // transposed-by-step wave buffer (4 rows a beat)
+    // KVPIPE rev3 (DIE-HBM-97 2026-11-10, vD locality read): h128 / wf4 / fill / in_v were single registers whose
+    // loads span the whole 734-um core (the bb insert / shift selects over the north strip, the 8 bank controls, the sc
+    // writes, the 64 dequantise lanes): rev2 capped STA +92.7 .. +164.7 ps with unplaced RC, against a 100 - 150 ps
+    // die-wide placed wire.  rev3 keeps NC = 4 IDENTICAL COPIES, one per bank column c (banks c and c + 4, bb qwords
+    // 24c .. 24c + 23, sc bits 64c .. 64c + 63, dequantise lanes 16c .. 16c + 15), each with the same reset, the same
+    // configure load and the same next state, so every copy equals the rev2 register in every cycle (sequential
+    // equivalence rev2 == rev3: kvpipe/kvline_rev3_eq.ys).  (* keep *) + the kit's SYNTH_CANONICALIZE_TCL hook
+    // (physical/common_flow/ot_keep_regs.tcl) stop opt_merge folding the copies; the kit guides copy c into its column
+    // (physical/die_plan/hbm_arch_cores/reg_guides/ot_hbm_sm_kv_line.json).  The shared control (wr / wleft / wri / rf /
+    // fn / full, the read sequencer, s_ready) uses copy CC = 3 (E face: s_ready, cfg_rows, fault).
+    localparam integer NC = 4, CC = 3;
+    wire [NC-1:0]   h128_c, wf4_c, emit_c, room_c, tq_c;
+    wire            h128 = h128_c[CC];
+    wire tq = tq_c[CC];                  // transposed-by-step wave buffer (4 rows a beat)
     // ---------------- write side ----------------
     reg       wb;                        // wave buffer being written
     reg [4:0] wr;                        // row in wave
@@ -95,54 +108,83 @@ module ot_hbm_sm_kv_line #(
     // accepted line waits one cycle in the input register in_q and is inserted at the REGISTERED fill (before the row
     // shift), so the 96-qword insert is a log shifter on registers and the emit shift is a 4-way mux.  Accept latency
     // +1 cycle (a line accepted at k is in bb at k + 2); s_ready keeps one line of room for the line in flight.
-    reg         wf4;                     // format of the row being written (= wri >= n8, registered)
+    wire        wf4 = wf4_c[CC];         // format of the row being written (= wri >= n8, registered; copies in g_col)
     reg [12:0] wleft;
     wire [12:0] wleft_m1 = wleft - 13'd1;
     wire [12:0] wcap = tq ? 13'd32 : 13'd8;
     // ---- 512-dim rows: qword realigner ----
     reg  [96*64-1:0] bb;                 // pending bytes of the line stream, oldest at bit 0
-    reg  [6:0]       fill;               // qwords in bb
-    reg              in_v;               // in_q holds an accepted line (inserted this cycle)
     reg  [1087:0]    in_q;
-    wire [6:0]       rqw = h128 ? 7'd16 : wf4 ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
-    wire             emit = act && (wleft != 13'd0) && !full[wb] && (fill >= rqw);
-    // next fill with / without the emit of this cycle, from registers only (emit just selects): vD STA
-    wire [7:0]       fill_0 = {1'b0, fill} + (in_v ? 8'd17 : 8'd0);
-    wire [7:0]       fill_1 = fill_0 - {1'b0, rqw};
-    wire [7:0]       fill_n = emit ? fill_1 : fill_0;
-    wire             room = emit ? (fill_1 <= 8'd79) : (fill_0 <= 8'd79);  // fill_n + 17 <= 96: the line accepted
-                                                                         // now is inserted at fill_n next cycle
-    assign s_ready = act && (wleft != 13'd0) && room;
-    wire wacc = s_valid && s_ready;
+    wire             wgo = act && (wleft != 13'd0) && !full[wb];   // emit = wgo && fill >= rqw (per copy)
+    wire             wacc;
+    wire [NC*96*64-1:0] ins_dc;          // per column: in_q inserted at that copy's fill
+    wire [NC*96-1:0]    ins_mc;
+    // the per-column copies: h128 / wf4 / fill (qwords in bb) / in_v (in_q holds an accepted line, inserted this cycle)
+    genvar cc;
+    generate for (cc = 0; cc < NC; cc = cc + 1) begin : g_col
+        (* keep *) reg       h128_r, wf4_r, in_v_r;
+        (* keep *) reg [6:0] fill_r;
+        wire [6:0] rqw_l = h128_r ? 7'd16 : wf4_r ? 7'd36 : 7'd66;  // qwords of the next row (128 B / KV4 288 B / KV8 528 B)
+        wire       emit_l = wgo && (fill_r >= rqw_l);
+        // next fill with / without the emit of this cycle, from registers only (emit just selects): vD STA
+        wire [7:0] fill_0 = {1'b0, fill_r} + (in_v_r ? 8'd17 : 8'd0);
+        wire [7:0] fill_1 = fill_0 - {1'b0, rqw_l};
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin h128_r <= 1'b0; wf4_r <= 1'b0; in_v_r <= 1'b0; fill_r <= 7'd0; end
+            else if (cfg_v && !act) begin
+                h128_r <= cfg_h128; in_v_r <= 1'b0; fill_r <= 7'd0;
+                wf4_r <= cfg_h128 ? (cfg_rows == 13'd0) : (cfg_kv4 || (cfg_n8 == 13'd0));
+            end else begin
+                fill_r <= emit_l ? fill_1[6:0] : fill_0[6:0];
+                in_v_r <= wacc;
+                if (emit_l) wf4_r <= (wri + 13'd1 >= n8);
+            end
+        assign h128_c[cc] = h128_r; assign wf4_c[cc] = wf4_r; assign emit_c[cc] = emit_l;
+        assign tq_c[cc] = h128_r && qk;
+        assign room_c[cc] = emit_l ? (fill_1 <= 8'd79) : (fill_0 <= 8'd79);  // fill_n + 17 <= 96: the line accepted
+                                                                              // now is inserted at fill_n next cycle
+        // the insert log shifter of this column (only its 24 qwords are used; synthesis drops the rest)
+        assign ins_dc[96*64*cc +: 96*64] = {{(96-17)*64{1'b0}}, in_q} << {fill_r, 6'd0};
+        assign ins_mc[96*cc +: 96] = in_v_r ? ({79'd0, 17'h1ffff} << fill_r) : 96'd0;
+    end endgenerate
+    wire             emit = emit_c[CC];
+    assign s_ready = act && (wleft != 13'd0) && room_c[CC];
+    assign wacc = s_valid && s_ready;
     wire wrow_end = emit;
     wire wwave_end = wrow_end && ({1'b0, wr} == wn - 6'd1);
     wire [66*64-1:0] row = bb[66*64-1:0];
-    // insert in_q at qword fill (fill + 17 <= 96 by the room rule), then shift out the emitted row
-    wire [96*64-1:0] ins_d = {{(96-17)*64{1'b0}}, in_q} << {fill, 6'd0};
-    wire [95:0]      ins_m = in_v ? ({79'd0, 17'h1ffff} << fill) : 96'd0;
-    reg  [96*64-1:0] bb_i, bb_n;
-    integer iq;
+    // insert in_q at qword fill (fill + 17 <= 96 by the room rule), then shift out the emitted row; qword q uses the
+    // copy of its column q / 24
+    reg  [96*64-1:0] bb_i, bb_n, ins_d;
+    reg  [95:0]      ins_m;
+    integer iq, ic;
     always @(*) begin
-        for (iq = 0; iq < 96; iq = iq + 1) bb_i[64*iq +: 64] = ins_m[iq] ? ins_d[64*iq +: 64] : bb[64*iq +: 64];
-        bb_n = !emit ? bb_i : h128 ? (bb_i >> (16*64)) : wf4 ? (bb_i >> (36*64)) : (bb_i >> (66*64));
+        for (iq = 0; iq < 96; iq = iq + 1) begin
+            ic = iq / 24;
+            ins_d[64*iq +: 64] = ins_dc[96*64*ic + 64*iq +: 64];
+            ins_m[iq] = ins_mc[96*ic + iq];
+            bb_i[64*iq +: 64] = ins_m[iq] ? ins_d[64*iq +: 64] : bb[64*iq +: 64];
+        end
+        for (iq = 0; iq < 96; iq = iq + 1) begin
+            ic = iq / 24;
+            bb_n[64*iq +: 64] = !emit_c[ic] ? bb_i[64*iq +: 64] :
+                                h128_c[ic] ? ((iq + 16 < 96) ? bb_i[64*(iq + 16) +: 64] : 64'd0) :
+                                wf4_c[ic]  ? ((iq + 36 < 96) ? bb_i[64*(iq + 36) +: 64] : 64'd0) :
+                                             ((iq + 66 < 96) ? bb_i[64*(iq + 66) +: 64] : 64'd0);
+        end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wn <= 6'd0; wleft <= 13'd0; full <= 2'b00; flast <= 2'b00; wri <= 13'd0;
-            fill <= 7'd0; in_v <= 1'b0; wf4 <= 1'b0;
         end else begin
             if (cfg_v && !act) begin
-                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0; fill <= 7'd0; in_v <= 1'b0;
-                wf4 <= cfg_h128 ? (cfg_rows == 13'd0) : (cfg_kv4 || (cfg_n8 == 13'd0));
+                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0;
                 wn <= (cfg_rows > ((cfg_h128 && cfg_qk) ? 13'd32 : 13'd8)) ? ((cfg_h128 && cfg_qk) ? 6'd32 : 6'd8) : cfg_rows[5:0];
             end else begin
-                fill <= fill_n[6:0];
-                in_v <= wacc;
                 if (wrow_end) begin
                     wr <= wr + 5'd1;
                     wleft <= wleft - 13'd1;
                     wri <= wri + 13'd1;
-                    wf4 <= (wri + 13'd1 >= n8);
                 end
                 if (wwave_end) begin
                     wr <= 5'd0; wb <= ~wb;
@@ -155,14 +197,18 @@ module ot_hbm_sm_kv_line #(
             if (rwave_end) full[rb] <= 1'b0;
         end
     end
+    // row scales: sc bits 64c .. 64c + 63 and sc1 byte c written under copy c (rf: the control copy)
+    wire [255:0] sc_wd8 = row[8*256 +: 256], sc_wd4 = {128'd0, row[8*512 +: 128]};
+    integer is;
     always @(posedge clk) begin
         bb <= bb_n;
         in_q <= s_data;                  // no enable: in_q is read only when in_v (= accepted last cycle)
-        if (emit && !h128) begin
-            sc[{wb, wr[2:0]}] <= wf4 ? row[8*256 +: 256] : {128'd0, row[8*512 +: 128]};
-            rf[{wb, wr[2:0]}] <= wf4;
+        for (is = 0; is < NC; is = is + 1) begin
+            if (emit_c[is] && !h128_c[is])
+                sc[{wb, wr[2:0]}][64*is +: 64] <= wf4_c[is] ? sc_wd8[64*is +: 64] : sc_wd4[64*is +: 64];
+            if (emit_c[is] && h128_c[is]) sc1[{wb, wr}][8*is +: 8] <= 8'd127;
         end
-        if (emit && h128) sc1[{wb, wr}] <= {4{8'd127}};
+        if (emit && !h128) rf[{wb, wr[2:0]}] <= wf4;
     end
     // ---------------- wave buffer: eight 64x512 1R1W macros ----------------
     //   512-dim rows: bank t word {0, 0, wave, row} = beat t of the row (written from the realigner in one edge)
@@ -186,10 +232,12 @@ module ot_hbm_sm_kv_line #(
             assign bw4[4*jw +: 4] = row[8*(4*jw + k/2) + 4*(k%2) +: 4];
         end
         assign bw4[511:256] = 256'd0;
-        wire        we = emit && (!h128 || tq || k < 2);
-        wire [5:0]  wa = !h128 ? {2'b00, wb, wr[2:0]} : tq ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], 2'b00};
-        wire [511:0] wd = !h128 ? (wf4 ? bw4 : bw8) : tq ? {4{p128[128*k +: 128]}} : p128[512*(k % 2) +: 512];
-        wire [511:0] wm = tq ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
+        // rev3: bank k uses the copy of its column k % 4
+        wire        h128_k = h128_c[k % NC], tq_k = tq_c[k % NC], wf4_k = wf4_c[k % NC], emit_k = emit_c[k % NC];
+        wire        we = emit_k && (!h128_k || tq_k || k < 2);
+        wire [5:0]  wa = !h128_k ? {2'b00, wb, wr[2:0]} : tq_k ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], 2'b00};
+        wire [511:0] wd = !h128_k ? (wf4_k ? bw4 : bw8) : tq_k ? {4{p128[128*k +: 128]}} : p128[512*(k % 2) +: 512];
+        wire [511:0] wm = tq_k ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
         ot_sram_1r1w_64x512_m1_r2c2 u_b (.clk(clk), .r_ce_in(rce), .r_addr_in(raddr), .rd_out(rdat[512*k +: 512]),
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
@@ -234,13 +282,15 @@ module ot_hbm_sm_kv_line #(
             end else if (op_done) op_drain <= 1'b0;
         end
     end
+    integer ir;
     always @(posedge clk) begin
         if (can_rd) raddr <= h128 && !tq ? {rb, rs, 2'b00} : {2'b00, rb, rs};
         p1_h <= (MUT == 2) ? ~rt[0] : rt[0];
         p1_s <= rs; p1_t <= rt; p1_n <= rn; p1_last <= op_done_rd; p1_we <= rlast_beat;
         p1_sc <= sc[{rb, rs}]; p1_k4 <= rf[{rb, rs}];
-        p1_sc1 <= tq ? {sc1[{rb, rs, 2'd3}], sc1[{rb, rs, 2'd2}], sc1[{rb, rs, 2'd1}], sc1[{rb, rs, 2'd0}]}
-                     : {96'd0, sc1[{rb, 2'b00, rs}]};
+        // rev3: scale group q (lanes 16q .. 16q + 15) selected under copy q
+        for (ir = 0; ir < NC; ir = ir + 1)
+            p1_sc1[32*ir +: 32] <= tq_c[ir] ? sc1[{rb, rs, ir[1:0]}] : (ir == 0) ? sc1[{rb, 2'b00, rs}] : 32'd0;
     end
     // KVPIPE: the scale byte of each lane is selected on the p1 -> p2 edge (p2_ls: one byte a lane), so the dequantiser
     // of a lane reads only its own scale register (vB: one p2_sc1 byte drove 130 loads into dq8).
@@ -312,7 +362,9 @@ module ot_hbm_sm_kv_line #(
     generate for (j = 0; j < 64; j = j + 1) begin : g_lane
         localparam integer B8 = (MUT == 1) ? (j / 2) % 16 : j / 4;
         localparam integer Q = (MUT == 4) ? 3 - j / 16 : j / 16, JJ = j % 16;   // MUT 4: rows of a 4-row beat reversed
-        assign p1_ls[8*j +: 8] = tq ? p1_sc1[32*Q + 8*(JJ/4) +: 8] : h128 ? p1_sc1[8*(JJ/4) +: 8]
+        // rev3: lane j uses the copy of its column j / 16 (lanes sit lane-ordered under their m_data pins)
+        wire tq_j = tq_c[j / 16], h128_j = h128_c[j / 16];
+        assign p1_ls[8*j +: 8] = tq_j ? p1_sc1[32*Q + 8*(JJ/4) +: 8] : h128_j ? p1_sc1[8*(JJ/4) +: 8]
                                : p1_k4 ? p1_sc[8*(j/2) +: 8] : p1_sc[8*B8 +: 8];
         wire [7:0] ls = p3_ls[8*j +: 8];
         wire [7:0] c8 = p3_c8[8*j +: 8];
@@ -322,8 +374,8 @@ module ot_hbm_sm_kv_line #(
         wire        qv = ({p3_s, 2'b00} + Q) < {1'b0, p3_n};          // tq: row 4s + q exists
         wire [16:0] rq = dq8(tqd[128*Q + 8*JJ +: 8], ls);
         wire [16:0] rp = dq8(c8, ls);
-        assign bf[16*j +: 16] = tq ? (qv ? rq[15:0] : 16'd0) : h128 ? rp[15:0] : p3_k4 ? r4[15:0] : r8[15:0];
-        assign lf[j] = tq ? (qv && rq[16]) : h128 ? rp[16] : p3_k4 ? r4[16] : r8[16];
+        assign bf[16*j +: 16] = tq_j ? (qv ? rq[15:0] : 16'd0) : h128_j ? rp[15:0] : p3_k4 ? r4[15:0] : r8[15:0];
+        assign lf[j] = tq_j ? (qv && rq[16]) : h128_j ? rp[16] : p3_k4 ? r4[16] : r8[16];
     end endgenerate
     // ---------------- output FIFO (5 entries: the read pipeline is 3 deep, so 5 sustain one beat a cycle) ----------------
     // entries are plain registers (flat vectors, not an inferred memory: 5 x 1024 bits > SYNTH_MEMORY_MAX_BITS)
