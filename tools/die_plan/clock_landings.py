@@ -1859,19 +1859,40 @@ class Landings:
         fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
         decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
         tsw, tsi, trw = {}, {}, {}
+
+        # KV-PLAN-2 11-09 (KV bind9c2 die_port_bind: 174 TOP_ASSIGN, 174 undriven + 172 unread bits): a launch partition
+        # whose start / raw reset leaves the die top through exactly one DECLARED net (rs_* / rraw_* output port) drives
+        # that net directly instead of a clock_landing_* wire plus a top-level alias assign.  Same connectivity; the die
+        # top stays pure wiring.  Several nets per source, or a net not declared in the top, keep the wire + assign.
+        def _declared(net):
+            # the rs_* / rraw_* die-top output ports are emitted by this pass (ts_out); other nets must already be in the text
+            if net in ts_out:
+                return True
+            return re.search(r"(?m)^\s*(?:output\s+wire|wire)\s+(?:\[[^\]]*\]\s*)?" + re.escape(net) + r"\s*[;,]",
+                             text) is not None
+
+        def _direct(edges):
+            nets = defaultdict(set)
+            for e in edges:
+                nets[e["src_part"]].add(e["net"])
+            return {sp: next(iter(ns)) for sp, ns in nets.items() if len(ns) == 1 and _declared(next(iter(ns)))}
         if ts:
             # one start wire per launch partition (its single cland_tstart_out, fanned out here)
             tsw = {e["src_part"]: f"clock_landing_tstart_{ident(e['src_part'])}" for e in ts["plan_ports"] + ts["die_inputs"]}
-            decl += [f"    wire {w};" for w in sorted(set(tsw.values()))]
+            tsw.update(_direct(ts["die_inputs"]))
+            decl += [f"    wire {w};" for w in sorted(set(tsw.values())) if w.startswith("clock_landing_tstart_")]
             tsi = {e["dst_part"]: tsw[e["src_part"]] for e in ts["plan_ports"]}
             tsi.update({e["dst_part"]: e["net"] for e in ts["die_outputs"]})
             decl += [f"    assign {e['net']} = {tsw[e['src_part']]};"
-                     for e in sorted({e["net"]: e for e in ts["die_inputs"]}.values(), key=lambda e: e["net"])]
+                     for e in sorted({e["net"]: e for e in ts["die_inputs"]}.values(), key=lambda e: e["net"])
+                     if e["net"] != tsw[e["src_part"]]]
         if ts and ts.get("reset_wave"):
             trw = {pn:f"clock_landing_raw_reset_{ident(pn)}" for pn,p in self.parts.items()
                    if RAW_RESET_PIN_OUT in ts["type_pins"].get(p["type"],{})}
-            decl += [f"    wire {w};" for w in sorted(trw.values())]
-            decl += [f"    assign {e['net']} = {trw[e['src_part']]};" for e in ts.get('reset_inputs',[])]
+            trw.update({sp: n for sp, n in _direct(ts.get('reset_inputs', [])).items() if sp in trw})
+            decl += [f"    wire {w};" for w in sorted(trw.values()) if w.startswith("clock_landing_raw_reset_")]
+            decl += [f"    assign {e['net']} = {trw[e['src_part']]};" for e in ts.get('reset_inputs',[])
+                     if e["net"] != trw[e["src_part"]]]
         rpr = getattr(self, "ca_part_role", {}) if self.ca else {}
         rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
         decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
