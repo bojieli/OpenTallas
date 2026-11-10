@@ -1,0 +1,926 @@
+#!/usr/bin/env python3
+"""PLAN-ROUTE-1: plan-time routing supply-versus-demand check per partition type (ADVISORY, never a gate).
+
+    route_supply.py PLAN [--die NAME] [--repo ROOT] [--types T1,T2|--match RE] [--out DIR] [--bin 10.8]
+                         [--derate M6=0.31,...] [--core-conns PATH] [--calib JSON]
+
+OWNER 11-03 "targets, not gates": the check only reports; it never fails kit generation.  Exit code is 0 unless
+the plan cannot be read.  Its rows feed plan events (wider street, channel between macro rows, reshaped outline,
+landing-ring form, layer reassignment).
+
+WHAT IT READS (all from the plan and files the plan names; no kit, no netlist):
+  type outline_um; hard_cores (origin_um, outline_um, orient, lef, pins_file); buses (face, window_um, width);
+  ft_slots (in/out face, width, regs_um, bit_sites_um); internal_stations (from_um, regs_um, to_um, bits);
+  clock.landing_contract.bands (rect_um, width, padded_data_storage_flops); <die>/core_conns.json when present.
+
+SUPPLY (tracks per bin per layer, signal layers M2-M7, METHODOLOGY 12.1a: tiles never use M8/M9):
+  tracks_L(bin) = bin_um / pitch_L x (1 - derate_L) x (1 - obs_L(bin))
+  pitch: effective (drawn minus PG/rail blockage), MEASURED from GRT-0053 Original Resources of macro-free kits:
+         M2 0.0419, M3 0.0371, M4 0.048, M5 0.0503, M6 0.074, M7 0.0681 um; M2/M4/M6 H, M3/M5/M7 V (ASAP7).
+  derate_L = the flow's own GRT reduction, MEASURED from the kit GRT-0053 table (S81 leaf t15 a8: M2 29.14, M3 25.73,
+           M4 25.68, M5 25.99, M6 31.18, M7 32.39 %); --derate overrides (e.g. M7=0.8787 reproduces the old QC
+           conservative-kit cut).
+  obs_L(bin) = share of the bin under a hard core whose LEF has OBS on layer L (LEF OBS rect area / macro area,
+           capped at 1).  A LEF that blocks every layer M1..M7 with one full rect is a plan TEMPLATE (S81 *_tpl.lef);
+           the built core view obstructs only up to its ceiling, so OBS is capped at --core-ceiling (default M5,
+           METHODOLOGY 12.1a new-tile default; measured: every kit macro LEF in S81 leaf t15 a8 obstructs M1-M5,
+           the 512x128 SRAM M1-M4).
+  Over a macro that blocks M1-M5 the only horizontal layer is M6 and the only vertical one is M7.
+
+DEMAND (track-um per bin per direction, RUDY: each net puts its bbox half-perimeter wire uniformly over its bbox;
+the horizontal share is w / (w h) per um^2, the vertical one h / (w h)):
+  core nets      one 2-pin net per core pin bit: from the pin (pins_file, orient applied) to the partner the plan
+                 names in core_conns.json (core:B -> the B pins whose bus names core:A, else B's pin centroid;
+                 bus:X -> the type bus window; face:F -> the middle of face F).  Without core_conns the partner is
+                 the pin-weighted centroid of all OTHER hard cores ("fallback", flagged in the row).
+  bus / ft bits  every ft slot bit: face entry -> station sites -> exit, one net per hop; every internal_station
+                 bit: from -> regs -> to.
+  landing rings  every clock.landing_contract band: the ring storage spreads over
+                 A = max(band area, flops x ring_um2_per_flop) grown from the band away from its face; the ring
+                 puts ring_tracks_per_bit x width tracks across every cut of that area in both directions
+                 (calibrated on KV hgi_v3 u_cland_ft27: ~5,000 of 6,224 H tracks at x=120 for 1,056 bits).
+  glue pins      a core pin whose bus core_conns does not route to another core / type bus goes to the type's glue
+                 logic: a local escape net glue_um out of the nearest core face.
+  cell wiring    background: cell_fill x supply on M2-M5 of every bin that is not under a macro.
+RATIO: demand / supply per direction, after a box filter of --window bins (the router detours locally), by region
+  class: core (bin centre under a hard core), mem (under an SRAM/ROM macro, reported separately), street (between two hard cores within --street-um on opposite sides),
+  face (within --face-um of the outline), open.  Per type the worst region gives: ratio, direction, layer (the layer
+  that carries most of the supply there), hot bins (> 1), and the cheapest plan-level fix class.
+"""
+import argparse
+import gzip
+import json
+import math
+import os
+import re
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+
+SCHEMA = "opentallas.route_supply.v1"
+LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
+# Effective track pitch = drawn pitch after PG / rail blockage, MEASURED as the GRT-0053 "Original Resources" ratio
+# to M4 on macro-free kits (S81 slice_station__t46 / t24 / t49, HEAD hd_spn, HBM q_spt1: identical to 3 digits),
+# with M4 at its drawn 0.048 um (drawn: M2/M3 0.036, M4/M5 0.048, M6/M7 0.064).
+PITCH = {"M2": 0.0419, "M3": 0.0371, "M4": 0.048, "M5": 0.0503, "M6": 0.074, "M7": 0.0681}
+DIRN = {"M2": "H", "M3": "V", "M4": "H", "M5": "V", "M6": "H", "M7": "V"}
+# MEASURED: GRT-0053 "Resource Reduction" of S81 ot_s81sl_leaf__t15 a8 (flow default; same on every S81 GRT table
+# DIE-S81-85 read 11-10).
+DERATE = {"M2": 0.2914, "M3": 0.2573, "M4": 0.2568, "M5": 0.2599, "M6": 0.3118, "M7": 0.3239}
+DEFAULTS = dict(
+    bin_um=10.8,               # master_plan.py corridor gcell
+    window=3,                  # box filter, bins (router detour)
+    core_ceiling="M5",         # 12.1a new-tile default ceiling; measured kit LEFs M1-M5
+    cell_fill=0.25,            # background cell wiring share of M2-M5 outside macros (calibrated, see --calib)
+    ring_tracks_per_bit=2.5,   # calibrated: signed S81 stations (1,104-bit rings) <= ~1; KV ft27 squeezed street measured 4.7
+    ring_um2_per_flop=10.0,    # calibrated on signed stations; KV ft27 squeezed: ~232 x 104 um for 5,440 flops (4.4)
+    street_um=60.0,
+    face_um=21.6,
+    hot=1.0,
+    glue_um=21.6,
+    cell_um2=0.1,              # mean placed std-cell area for the fill ESTIMATE (ASAP7, ~0.09-0.12 um2)
+    detour_um=97.2,
+    margin_bins=2,             # free rows/cols beside a macro run that a crossing wire can use            # router detour across the direction of travel (9 bins), calibrated              # pin -> glue cell escape length (2 bins)
+)
+FIX = {
+    ("core", "H"): "horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)",
+    ("core", "V"): "layer reassignment / vertical channel (only M7 runs V over an M1-M5 hard core)",
+    ("mem", "H"): "horizontal channel beside the SRAM/ROM macro column (macro blocks M1-M4/M5; M6 only H)",
+    ("mem", "V"): "vertical channel beside the SRAM/ROM macros / layer reassignment",
+    ("mstreet", "H"): "wider street / channel beside the SRAM/ROM macros",
+    ("mstreet", "V"): "wider street / channel beside the SRAM/ROM macros",
+    ("street", "H"): "wider street (H) between hard cores",
+    ("street", "V"): "wider street (V) between hard cores",
+    ("face", "H"): "landing ring form / spread face pins (reshape outline along the face)",
+    ("face", "V"): "landing ring form / spread face pins (reshape outline along the face)",
+    ("open", "H"): "narrower/reshaped outline or lower cell density (open-area demand)",
+    ("open", "V"): "narrower/reshaped outline or lower cell density (open-area demand)",
+    ("ring", "H"): "landing ring form (stacked / y-column ring, or split the landing)",
+    ("ring", "V"): "landing ring form (stacked / y-column ring, or split the landing)",
+}
+
+
+# ----------------------------------------------------------------------------------------------------------- inputs
+_LEF_CACHE = {}
+
+
+def lef_obs(path):
+    """{layer: covered fraction of the macro} from a LEF OBS section (M1..M9), or None if unreadable."""
+    key = str(path)
+    if key in _LEF_CACHE:
+        return _LEF_CACHE[key]
+    out = None
+    try:
+        txt = Path(path).read_text(errors="replace")
+    except OSError:
+        txt = None
+    if txt is not None:
+        out = {}
+        m = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", txt)
+        area = float(m.group(1)) * float(m.group(2)) if m else None
+        i = txt.find("\n  OBS")
+        if i < 0:
+            i = txt.find("OBS")
+        sec = txt[i:txt.find("END", i + 4)] if i >= 0 else ""
+        cur = None
+        acc = defaultdict(float)
+        for ln in sec.splitlines():
+            mm = re.match(r"\s*LAYER\s+(\S+)", ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mm = re.match(r"\s*RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", ln)
+            if mm and cur:
+                x0, y0, x1, y1 = map(float, mm.groups())
+                acc[cur] += abs(x1 - x0) * abs(y1 - y0)
+        for L, a in acc.items():
+            if re.fullmatch(r"M\d", L) and area:
+                out[L] = min(1.0, a / area)
+    _LEF_CACHE[key] = out
+    return out
+
+
+_SIGNED_CACHE = {}
+
+
+def signed_view_lefs(die_dir):
+    """{module: lef} for repo core views that carry a SIGNED signoff.json next to the LEF (die_dir/cores/**)."""
+    key = str(die_dir)
+    if key in _SIGNED_CACHE:
+        return _SIGNED_CACHE[key]
+    out = {}
+    root = Path(die_dir) / "cores"
+    if root.is_dir():
+        for so in root.rglob("signoff.json"):
+            try:
+                txt = so.read_text(errors="replace")
+            except OSError:
+                continue
+            if "SIGNED" not in txt and '"signed": true' not in txt.lower():
+                continue
+            for lef in so.parent.glob("*.lef"):
+                out.setdefault(lef.stem.replace("_tpl", ""), str(lef))
+    _SIGNED_CACHE[key] = out
+    return out
+
+
+def macro_view(h, die_dir, repo, cfg):
+    """(obs {layer: frac}, kind core|mem, source, provisional) for one hard core / macro.
+
+    Order: (1) cfg views table (signed-view measurements, route_supply_views.json / --views), (2) a SIGNED repo core
+    view LEF, (3) the plan's lef (a TEMPLATE that blocks M1-M7 whole is capped at the core ceiling: the built view
+    obstructs only its own routing ceiling), (4) obs_max, (5) the ceiling.  kind = mem when nothing above M4 is
+    blocked (generated SRAM/ROM: M1-M4 only), else core -- from the LEF, never from the name."""
+    mod = h.get("module", "")
+    cap = int(cfg["core_ceiling"][1:])
+    v = (cfg.get("views") or {}).get(mod)
+    obs, src = None, None
+    if v:
+        if v.get("lef"):
+            obs = lef_obs(find_ref(v["lef"], repo))
+        if obs is None and v.get("obs_top"):
+            top = int(v["obs_top"][1:])
+            obs = {f"M{k}": float(v.get("coverage", 1.0)) for k in range(1, top + 1)}
+        src = "views:" + str(v.get("src", "table"))
+    if obs is None:
+        sl = signed_view_lefs(die_dir).get(mod)
+        if sl:
+            obs = lef_obs(sl)
+            src = "signed-repo"
+    if obs is None and h.get("lef"):
+        obs = lef_obs(find_ref(h["lef"], repo))
+        if obs is not None:
+            src = "plan-lef"
+            if all(obs.get(f"M{k}", 0) > 0.99 for k in range(1, 8)):
+                obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
+                src = "plan-template(capped M%d)" % cap
+    if obs is None and h.get("obs_max"):
+        top = min(int(str(h["obs_max"])[1:]), 9)
+        obs = {f"M{k}": 1.0 for k in range(1, top + 1)}
+        src = "plan-obs_max"
+    if obs is None:
+        obs = {f"M{k}": 1.0 for k in range(1, cap + 1)}
+        src = "assumed(ceiling M%d)" % cap
+    top = max([int(L[1:]) for L, f in obs.items() if f > 0.5] or [0])
+    kind = "mem" if 0 < top <= 4 else "core"
+    return obs, kind, src, not src.startswith(("views:", "signed"))
+
+
+def orient_pt(h, x, y):
+    w, hh = h["outline_um"]
+    o = h.get("orient", "R0")
+    X = w - x if o in ("MY", "R180") else x
+    Y = hh - y if o in ("MX", "R180") else y
+    return h["origin_um"][0] + X, h["origin_um"][1] + Y
+
+
+REF_DIRS = []      # plan dir + --ref-dirs: plan-relative pins_file / lef references
+
+
+def read_json(p):
+    p = Path(p)
+    if p.suffix == ".gz":
+        with gzip.open(p, "rt") as f:
+            return json.load(f)
+    return json.loads(p.read_text())
+
+
+def find_ref(rel, repo):
+    for d in REF_DIRS + [repo]:
+        c = Path(d) / rel
+        if c.is_file():
+            return c
+    return Path(repo) / rel
+
+
+def _pin_iter(d):
+    """(name, (x, y)) from the pin-table shapes in use: {pins: [{name, x, y} | {name, xy_um}]}, [..], {name: [x, y]}."""
+    pins = d.get("pins", d) if isinstance(d, dict) else d
+    if isinstance(pins, dict):
+        for k, v in pins.items():
+            if isinstance(v, (list, tuple)) and len(v) >= 2 and all(isinstance(a, (int, float)) for a in v[:2]):
+                yield k, v
+            elif isinstance(v, dict):
+                xy = v.get("xy_um") or v.get("xy") or ([v["x"], v["y"]] if "x" in v and "y" in v else None)
+                if xy:
+                    yield k, xy
+        return
+    for p in pins or []:
+        if not isinstance(p, dict) or "name" not in p:
+            continue
+        xy = p.get("xy_um") or p.get("xy") or ([p["x"], p["y"]] if "x" in p and "y" in p else None)
+        if xy and len(xy) >= 2:
+            yield p["name"], xy
+
+
+def core_pins(h, die_dir, repo):
+    """[(bus, x, y)] in the type frame."""
+    pf = h.get("pins_file")
+    cands = []
+    if pf:
+        cands = [Path(d) / pf for d in REF_DIRS] + [die_dir / pf, repo / pf]
+    for c in cands:
+        if c.is_file():
+            try:
+                d = read_json(c)
+            except (OSError, ValueError):
+                continue
+            out = []
+            for name, xy in _pin_iter(d):
+                bus = re.sub(r"\[\d+\]$", "", name)
+                out.append((bus,) + orient_pt(h, float(xy[0]), float(xy[1])))
+            return out
+    return []
+
+
+def escape(x, y, rect, L):
+    """point L um outside the core face nearest to pin (x, y)."""
+    x0, y0, x1, y1 = rect
+    d = {"W": x - x0, "E": x1 - x, "S": y - y0, "N": y1 - y}
+    f = min(d, key=d.get)
+    return {"W": (x0 - L, y), "E": (x1 + L, y), "S": (x, y0 - L), "N": (x, y1 + L)}[f]
+
+
+def face_point(W, H, face, window=None):
+    lo, hi = (window or (None, None))[:2] if window else (None, None)
+    if face in ("N", "S"):
+        x = (lo + hi) / 2 if lo is not None else W / 2
+        return (x, H if face == "N" else 0.0)
+    y = (lo + hi) / 2 if lo is not None else H / 2
+    return (W if face == "E" else 0.0, y)
+
+
+# ----------------------------------------------------------------------------------------------------------- model
+class Grid:
+    def __init__(self, W, H, b):
+        self.W, self.H, self.b = W, H, b
+        self.nx, self.ny = max(1, int(math.ceil(W / b))), max(1, int(math.ceil(H / b)))
+        self.dH = np.zeros((self.ny + 1, self.nx + 1))   # difference arrays (density per um^2)
+        self.dV = np.zeros((self.ny + 1, self.nx + 1))
+        self.wl = 0.0
+
+    def _rect(self, d, x0, y0, x1, y1, dens):
+        b = self.b
+        i0, i1 = int(np.clip(x0 // b, 0, self.nx - 1)), int(np.clip(x1 // b, 0, self.nx - 1)) + 1
+        j0, j1 = int(np.clip(y0 // b, 0, self.ny - 1)), int(np.clip(y1 // b, 0, self.ny - 1)) + 1
+        d[j0, i0] += dens
+        d[j0, i1] -= dens
+        d[j1, i0] -= dens
+        d[j1, i1] += dens
+
+    def net(self, pts, n=1.0):
+        """RUDY: n nets with these terminals."""
+        xs = [p[0] for p in pts]
+        ys = [p[1] for p in pts]
+        x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
+        w, h = max(x1 - x0, self.b), max(y1 - y0, self.b)   # a net shorter than a bin still fills that bin
+        x1, y1 = x0 + w, y0 + h
+        # H wire length (x1-x0 actual) spread over w x h; per um^2 = (actual w)/(w h)
+        aw, ah = max(xs) - min(xs), max(ys) - min(ys)
+        if aw > 0:
+            self._rect(self.dH, x0, y0, x1 - 1e-9, y1 - 1e-9, n * aw / (w * h))
+        if ah > 0:
+            self._rect(self.dV, x0, y0, x1 - 1e-9, y1 - 1e-9, n * ah / (w * h))
+        self.wl += n * (aw + ah)
+
+    def area_density(self, rect, dens_h, dens_v):
+        x0, y0, x1, y1 = rect
+        self._rect(self.dH, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_h)
+        self._rect(self.dV, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_v)
+
+    def demand(self):
+        """track-um per bin -> tracks per bin (divide by bin length along the direction = b)."""
+        a = self.b * self.b
+        DH = np.cumsum(np.cumsum(self.dH, 0), 1)[: self.ny, : self.nx] * a / self.b
+        DV = np.cumsum(np.cumsum(self.dV, 0), 1)[: self.ny, : self.nx] * a / self.b
+        return DH, DV
+
+
+def macro_rects(t):
+    out = []
+    for h in t.get("hard_cores", []) or []:
+        ox, oy = h["origin_um"]
+        w, hh = h["outline_um"]
+        out.append((ox, oy, ox + w, oy + hh, h))
+    return out
+
+
+def coverage(grid, rects):
+    """per-bin covered fraction for each rect list entry -> list of arrays (sparse via slices)."""
+    b = grid.b
+    xs = np.arange(grid.nx) * b
+    ys = np.arange(grid.ny) * b
+    res = []
+    for (x0, y0, x1, y1, h) in rects:
+        cx = np.clip(np.minimum(xs + b, x1) - np.maximum(xs, x0), 0, None) / b
+        cy = np.clip(np.minimum(ys + b, y1) - np.maximum(ys, y0), 0, None) / b
+        res.append((np.outer(cy, cx), h))
+    return res
+
+
+def run_pool(D, S, occ, axis, k, m):
+    """ratio pooled over each contiguous macro run along `axis` (+ m bins each side), k bins wide across it."""
+    if axis == 1:
+        return run_pool(D.T, S.T, occ.T, 0, k, m).T
+    ny, nx = D.shape
+    Dk = box(D, k, 1)
+    Sk = box(S, k, 1)
+    out = np.zeros_like(D)
+    for i in range(nx):
+        col = occ[:, i]
+        if not col.any():
+            continue
+        j = 0
+        while j < ny:
+            if not col[j]:
+                j += 1
+                continue
+            j1 = j
+            while j1 < ny and col[j1]:
+                j1 += 1
+            a, z = max(0, j - m), min(ny, j1 + m)
+            out[j:j1, i] = Dk[a:z, i].sum() / max(Sk[a:z, i].sum(), 1e-6)
+            j = j1
+    return out
+
+
+def box(a, k, ky=None):
+    """mean over a (ky rows x k cols) window, edge-padded."""
+    ky = k if ky is None else ky
+    if k <= 1 and ky <= 1:
+        return a
+    px, py = k // 2, ky // 2
+    s = np.pad(a, ((py, ky - 1 - py), (px, k - 1 - px)), mode="edge")
+    c = np.cumsum(np.cumsum(s, 0), 1)
+    c = np.pad(c, ((1, 0), (1, 0)))
+    return (c[ky:, k:] - c[:-ky, k:] - c[ky:, :-k] + c[:-ky, :-k])[: a.shape[0], : a.shape[1]] / (k * ky)
+
+
+def analyze_type(name, t, die_dir, repo, conns, cfg):
+    W, H = map(float, t["outline_um"])
+    b = cfg["bin_um"]
+    g = Grid(W, H, b)
+    notes = []
+    mrects = macro_rects(t)
+    cov = coverage(g, mrects)
+    # ---------------- supply
+    obs = {L: np.zeros((g.ny, g.nx)) for L in LAYERS}
+    macro_cov = np.zeros((g.ny, g.nx))
+    mem_cov = np.zeros((g.ny, g.nx))
+    obs_src = defaultdict(int)
+    h_kind = {}
+    provisional = set()
+    for (c, h) in cov:
+        o, kind, src, prov = macro_view(h, die_dir, repo, cfg)
+        obs_src[src] += 1
+        h_kind[h["inst"]] = kind
+        sm = cfg.get("signed_modules")
+        if kind == "core" and (prov if sm is None else h.get("module") not in sm):
+            provisional.add(h.get("module", "?"))
+        for L in LAYERS:
+            if o.get(L):
+                obs[L] = np.maximum(obs[L], c * o[L])
+        macro_cov = np.maximum(macro_cov, c)
+        if kind == "mem":
+            mem_cov = np.maximum(mem_cov, c)
+    sup = {}
+    for L in LAYERS:
+        sup[L] = b / PITCH[L] * (1 - cfg["derate"][L]) * (1 - np.clip(obs[L], 0, 1))
+    supH = sup["M2"] + sup["M4"] + sup["M6"]
+    supV = sup["M3"] + sup["M5"] + sup["M7"]
+    # ---------------- demand
+    pins = {}
+    for (_, _, _, _, h) in mrects:
+        pins[h["inst"]] = core_pins(h, die_dir, repo)
+    npins = sum(len(v) for v in pins.values())
+    if npins == 0 and mrects:
+        notes.append("no core pin files found")
+    bus_pt = {}
+    for bu in t.get("buses", []) or []:
+        if bu.get("face"):
+            bus_pt[bu["name"]] = face_point(W, H, bu["face"], bu.get("window_um"))
+    cc = conns.get(name) or conns.get(re.sub(r"__cl[0-9a-f]{8}.*$", "", name)) or conns.get(
+        re.sub(r"__.*$", "", name))
+    model = "core_conns" if cc else ("fallback" if npins else "none")
+    cen = {}
+    for inst, pl in pins.items():
+        if pl:
+            cen[inst] = (sum(p[1] for p in pl) / len(pl), sum(p[2] for p in pl) / len(pl))
+        else:
+            for (x0, y0, x1, y1, h) in mrects:
+                if h["inst"] == inst:
+                    cen[inst] = ((x0 + x1) / 2, (y0 + y1) / 2)
+    bus_cen = {}
+    for inst, pl in pins.items():
+        acc = defaultdict(list)
+        for bus, x, y in pl:
+            acc[bus].append((x, y))
+        bus_cen[inst] = {k: (sum(p[0] for p in v) / len(v), sum(p[1] for p in v) / len(v)) for k, v in acc.items()}
+    unresolved = 0
+    nglue = 0
+    # links carried by internal_stations (launch core:A.bus -> capture B): not counted again as a direct core net
+    st_pairs = set()
+    st_rev = defaultdict(set)
+    for s_ in t.get("internal_stations", []) or []:
+        la = str(s_.get("launch", ""))
+        if la.startswith("core:"):
+            ab = la[5:]
+            A, _, bus_ = ab.rpartition(".")
+            B = str(s_.get("capture", "")).split(".")
+            Bi = ".".join(B[:-1]) if B[-1] and str(s_.get("capture", "")).rsplit(".", 1)[0] in cen else str(
+                s_.get("capture", ""))
+            st_pairs.add((A, bus_, Bi))
+            # the capture end lists A as its destination on some input bus
+            for bb, dd in ((cc or {}).get(Bi, {}) or {}).items():
+                if ("core:" + A) in dd:
+                    st_rev[(Bi, bb)].add((A, Bi))
+    rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
+    for inst, pl in pins.items():
+        if not pl:
+            continue
+        if cc:
+            ci = cc.get(inst, {})
+            for bus, x, y in pl:
+                dl = ci.get(bus)
+                if not dl:
+                    # pin to type glue logic (not core-to-core): a local escape net from the pin out of the
+                    # core face, cfg glue_um long (the glue cells sit next to the core)
+                    g.net([(x, y), escape(x, y, rect_of[inst], cfg["glue_um"])])
+                    nglue += 1
+                    continue
+                pts = [(x, y)]
+                two_sided = True
+                for d in dl:
+                    k, _, v = str(d).partition(":")
+                    if k == "core" and v in cen:
+                        if (inst, bus, v) in st_pairs or (v, inst) in st_rev.get((inst, bus), ()):
+                            continue            # this link is routed by its internal_stations chain
+                        mate = [bb for bb, dd in (cc.get(v, {}) or {}).items() if ("core:" + inst) in dd]
+                        two_sided &= bool(mate)
+                        pts.append(bus_cen[v][mate[0]] if mate and mate[0] in bus_cen.get(v, {}) else cen[v])
+                    elif k == "bus" and v in bus_pt:
+                        pts.append(bus_pt[v])
+                    elif k == "face" and v in "NSEW":
+                        pts.append(face_point(W, H, v))
+                    else:
+                        unresolved += 1
+                if len(pts) > 1:
+                    # core_conns lists a core-to-core link at BOTH ends: count each end half
+                    g.net(pts, n=0.5 if two_sided and all(not str(d).startswith(("bus:", "face:")) for d in dl)
+                          else 1.0)
+        else:
+            others = [(cen[k], len(pins[k])) for k in pins if k != inst and pins[k]]
+            if not others:
+                continue
+            tw = sum(n for _, n in others)
+            px = sum(c[0] * n for c, n in others) / tw
+            py = sum(c[1] * n for c, n in others) / tw
+            for bus, x, y in pl:
+                g.net([(x, y), (px, py)])
+    if unresolved:
+        notes.append(f"{unresolved} core_conns destinations not placed in the type")
+    # ft slots
+    ft_bits = 0
+    for f in t.get("ft_slots", []) or []:
+        wbits = int(f.get("width", 1))
+        regs = [tuple(r) for r in (f.get("regs_um") or [])]
+        sites = f.get("bit_sites_um") or []
+        chain = []
+        if sites and isinstance(sites[0], list) and sites[0] and isinstance(sites[0][0], list):
+            for si, s in enumerate(sites):
+                pts = [tuple(p[:2]) for p in s]
+                ref = regs[si + 1] if si + 1 < len(regs) else None
+                if ref:
+                    cx = sum(p[0] for p in pts) / len(pts)
+                    cy = sum(p[1] for p in pts) / len(pts)
+                    if abs(cy - ref[0]) + abs(cx - ref[1]) < abs(cx - ref[0]) + abs(cy - ref[1]):
+                        pts = [(p[1], p[0]) for p in pts]   # sites stored (y, x) in this plan
+                chain.append(pts)
+        start = regs[0] if regs else face_point(W, H, f.get("in_face", "W"),
+                                                    f.get("in_window_um"))
+        end = face_point(W, H, f.get("out_face", "E"), f.get("out_window_um"))
+        prev = None
+        for st in chain:
+            n = len(st)
+            if prev is None:
+                for p in st[: wbits]:
+                    g.net([start, p])
+            else:
+                m = min(len(prev), n)
+                for i in range(m):
+                    g.net([prev[i], st[i]])
+            prev = st
+        if prev is None:
+            pts = [start] + [r for r in regs[1:]] + [end]
+            for a, c in zip(pts, pts[1:]):
+                g.net([a, c], n=wbits)
+        else:
+            for p in prev[: wbits]:
+                g.net([p, end])
+        ft_bits += wbits
+    st_bits = 0
+    # stations that share a launch pin are ONE driver net to all their first registers (a broadcast bus to 16
+    # lanes is a 17-pin net, not 16 two-pin nets); later hops are per link
+    fan = defaultdict(list)
+    for s in t.get("internal_stations", []) or []:
+        pts = [tuple(s["from_um"])] + [tuple(r) for r in s.get("regs_um", [])] + [tuple(s["to_um"])]
+        fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, s.get("bits", 1)))
+        st_bits += s.get("bits", 1)
+    for (_, _), lst in fan.items():
+        bits = max(n for _, n in lst)
+        g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits)
+        for pts, n in lst:
+            for a, c in zip(pts[1:], pts[2:]):
+                g.net([a, c], n=n)
+    # landing rings
+    ring_cells = np.zeros((g.ny, g.nx), dtype=bool)
+    lc = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
+    ring_bits = 0
+    for bn, bd in lc.items():
+        r = bd.get("rect_um")
+        if not r:
+            continue
+        x0, y0, x1, y1 = map(float, r)
+        flops = float(bd.get("padded_data_storage_flops") or bd.get("live_data_storage_flops") or 0)
+        bits = float(bd.get("width") or 0)
+        need = max((x1 - x0) * (y1 - y0), flops * cfg["ring_um2_per_flop"])
+        # the placer spreads the ring storage around its band into free (non-macro) area: grow the band one bin
+        # per side in turn, skipping a side whose new strip is mostly macro or outside the outline, until the free
+        # area holds the ring (KV hgi_v3 ft27: squeezed between e0/e2 it ran ~232 um along the street)
+        occm = macro_cov > 0.5
+
+        def free_area(r):
+            a0, b0 = int(max(0, r[0]) // b), int(max(0, r[1]) // b)
+            a1, b1 = int(math.ceil(min(W, r[2]) / b)), int(math.ceil(min(H, r[3]) / b))
+            return float((~occm[b0:b1, a0:a1]).sum()) * b * b
+
+        rr = [x0, y0, x1, y1]
+        for _ in range(2000):
+            if free_area(rr) >= need:
+                break
+            best_c = None
+            for side in (0, 1, 2, 3):
+                cand = list(rr)
+                cand[side] += -b if side < 2 else b
+                cand = [max(0.0, cand[0]), max(0.0, cand[1]), min(W, cand[2]), min(H, cand[3])]
+                if cand == rr:
+                    continue
+                strip = free_area(cand) - free_area(rr)
+                area_add = (cand[2] - cand[0]) * (cand[3] - cand[1]) - (rr[2] - rr[0]) * (rr[3] - rr[1])
+                if area_add <= 0 or strip < 0.5 * area_add:
+                    continue
+                w_, h_ = cand[2] - cand[0], cand[3] - cand[1]
+                asp = max(w_, h_) / max(min(w_, h_), 1e-6)     # the placer keeps the ring compact
+                if best_c is None or asp < best_c[0]:
+                    best_c = (asp, cand)
+            if best_c is None:
+                break
+            rr = best_c[1]
+        x0, y0, x1, y1 = rr
+        hgt, wid = max(y1 - y0, b), max(x1 - x0, b)
+        # ring_tracks_per_bit x bits wires cross every cut of the ring area, spread over the cut length
+        g.area_density((x0, y0, x1, y1), cfg["ring_tracks_per_bit"] * bits / hgt,
+                       cfg["ring_tracks_per_bit"] * bits / wid)
+        i0, i1 = int(x0 // b), int(math.ceil(x1 / b))
+        j0, j1 = int(y0 // b), int(math.ceil(y1 / b))
+        ring_cells[j0:j1, i0:i1] = True
+        ring_bits += bits
+    DH, DV = g.demand()
+    # background cell wiring outside macros
+    bgH = cfg["cell_fill"] * (sup["M2"] + sup["M4"]) * (1 - macro_cov)
+    bgV = cfg["cell_fill"] * (sup["M3"] + sup["M5"]) * (1 - macro_cov)
+    DH = DH + bgH
+    DV = DV + bgV
+    k = cfg["window"]
+    # anisotropic detour window: H traffic over a macro may shift up/down to a gap within detour_um, so the H
+    # ratio is pooled over (detour bins tall x window wide); V the transpose
+    kd = max(1, int(round(cfg["detour_um"] / b)) | 1)
+    rH = box(DH, k, kd) / np.maximum(box(supH, k, kd), 1e-6)
+    rV = box(DV, kd, k) / np.maximum(box(supV, kd, k), 1e-6)
+    # over a macro the cut that matters is ACROSS the whole blockage: an H wire over a macro may move anywhere
+    # along the macro run's height (plus margin_bins of free rows above/below) to cross it, so over macro bins the
+    # H ratio is pooled over the full macro run in that column (V: the run in that row)
+    occb = macro_cov > 0.5
+    rH = np.where(occb, run_pool(DH, supH, occb, 0, k, cfg["margin_bins"]), rH)
+    rV = np.where(occb, run_pool(DV, supV, occb, 1, k, cfg["margin_bins"]), rV)
+    # porous-abstract what-if (OWNER idea 11-10): signed cores with low cell fill leave most of M4/M5 inside their
+    # outline empty while the abstract blocks it.  need_free = the share of the blocked M4 (H) / M5 (V) over hard
+    # cores that would have to be free for the core-region p99 ratio to reach 1 (routing supply only: type cells
+    # still may not sit inside a core outline, 12.2a1).
+    kd_ = max(1, int(round(cfg["detour_um"] / b)) | 1)
+    core_only = (macro_cov > 0.5) & ~(mem_cov > 0.5)
+    porous = {}
+    for d, D, S, L, kx, ky in (("H", DH, supH, "M4", k, kd_), ("V", DV, supV, "M5", kd_, k)):
+        extra = b / PITCH[L] * (1 - cfg["derate"][L]) * np.clip(obs[L], 0, 1) * (macro_cov > 0.5)
+        if not core_only.any():
+            continue
+        bd = box(D, kx, ky)
+
+        def p99(f):
+            return float(np.percentile((bd / np.maximum(box(S + f * extra, kx, ky), 1e-6))[core_only], 99))
+        p0, p1 = p99(0.0), p99(1.0)
+        if p0 < 1.0:
+            need = 0.0
+        elif p1 >= 1.0:
+            need = None
+        else:
+            lo, hi = 0.0, 1.0
+            for _ in range(12):
+                mid = (lo + hi) / 2
+                lo, hi = (mid, hi) if p99(mid) >= 1.0 else (lo, mid)
+            need = round(hi, 3)
+        porous[d] = dict(layer=L, p99_now=round(p0, 3), p99_all_free=round(p1, 3), need_free=need)
+    # region classes
+    cls = np.full((g.ny, g.nx), "open", dtype=object)
+    fb = max(1, int(round(cfg["face_um"] / b)))
+    cls[:fb, :] = "face"
+    cls[-fb:, :] = "face"
+    cls[:, :fb] = "face"
+    cls[:, -fb:] = "face"
+    occ = macro_cov > 0.5
+    sb = max(1, int(round(cfg["street_um"] / b)))
+    if occ.any():
+        def near(a, axis, rev):
+            # a macro within sb bins on one side
+            out = np.zeros_like(a)
+            for s in range(1, sb + 1):
+                sh = np.roll(a, s if not rev else -s, axis=axis)
+                if axis == 0:
+                    if not rev:
+                        sh[:s, :] = False
+                    else:
+                        sh[-s:, :] = False
+                else:
+                    if not rev:
+                        sh[:, :s] = False
+                    else:
+                        sh[:, -s:] = False
+                out |= sh
+            return out
+        def between(a):
+            return (~occ) & ((near(a, 1, False) & near(a, 1, True)) | (near(a, 0, False) & near(a, 0, True)))
+        cls[between(occ)] = "mstreet"           # beside SRAM/ROM macros (M5-M7 free over them)
+        cls[between(occ & ~(mem_cov > 0.5))] = "street"   # between two HARD cores (M6/M7 only over them)
+    cls[ring_cells & ~occ] = "ring"
+    cls[occ] = "core"
+    cls[mem_cov > 0.5] = "mem"
+    # worst region
+    best = None
+    stats = {}
+    for c in ("core", "mem", "street", "mstreet", "face", "open", "ring"):
+        m = cls == c
+        if not m.any():
+            continue
+        for d, R in (("H", rH), ("V", rV)):
+            v = R[m]
+            p99 = float(np.percentile(v, 99))
+            hot = int((v > cfg["hot"]).sum())
+            mx = float(v.max())
+            stats[f"{c}_{d}"] = dict(p99=round(p99, 3), max=round(mx, 3), hot_bins=hot, bins=int(m.sum()))
+            key = (p99, mx)
+            if best is None or key > best[0]:
+                jj, ii = np.unravel_index(np.argmax(np.where(m, R, -1)), R.shape)
+                best = (key, c, d, int(ii), int(jj), hot)
+    if best is None:
+        return None
+    (_, mx), c, d, ii, jj, hot = best[0], best[1], best[2], best[3], best[4], best[5]
+    p99 = best[0][0]
+    lay = [L for L in LAYERS if DIRN[L] == d]
+    sh = {L: float(sup[L][jj, ii]) for L in lay}
+    tot = sum(sh.values()) or 1.0
+    main = max(sh, key=sh.get)
+    hot_all = int(((rH > cfg["hot"]) | (rV > cfg["hot"])).sum())
+    return dict(
+        type=name, outline_um=[W, H], model=model, bins=[g.nx, g.ny],
+        macros=len(mrects), mem_macros=sum(1 for v in h_kind.values() if v == "mem"),
+        provisional_children=sorted(provisional),
+        macro_area_frac=round(float(macro_cov.sum()) / (g.nx * g.ny), 3),
+        mem_area_frac=round(float(mem_cov.sum()) / (g.nx * g.ny), 3), glue_pins=nglue,
+        core_pins=npins, ft_bits=ft_bits, station_bits=st_bits, ring_bits=int(ring_bits),
+        wirelength_mm=round(g.wl / 1000, 1),
+        worst=dict(region=c, dir=d, p99=round(p99, 3), max=round(mx, 3),
+                   at_um=[round((ii + 0.5) * b, 1), round((jj + 0.5) * b, 1)],
+                   layer=main, layer_share={L: round(v / tot, 2) for L, v in sh.items()},
+                   hot_bins_region=hot),
+        hot_bins=hot_all, hot_area_um2=round(hot_all * b * b),
+        porous=porous, children=children_fill(mrects, h_kind, cfg),
+        fix=FIX.get((c, d), "?"), regions=stats, notes=notes, obs_src=dict(obs_src),
+        _maps=(rH, rV, cls),
+    )
+
+
+def children_fill(mrects, h_kind, cfg):
+    """child hard cores with cell fill: measured (--core-fill table) else plan 'cells' x cell_um2 (ESTIMATE)."""
+    tab = cfg.get("core_fill") or {}
+    out = {}
+    for (x0, y0, x1, y1, h) in mrects:
+        if h_kind.get(h["inst"]) != "core":
+            continue
+        m = h.get("module", "?")
+        e = out.setdefault(m, dict(module=m, n=0, area_um2=round((x1 - x0) * (y1 - y0)), fill=None, src=None,
+                                   free_M4=None, free_M5=None))
+        e["n"] += 1
+        if m in tab:
+            t = tab[m]
+            e.update(fill=t.get("fill"), free_M4=t.get("free_M4"), free_M5=t.get("free_M5"),
+                     src="measured:" + str(t.get("src", "table")))
+        elif h.get("cells") and e["fill"] is None:
+            e.update(fill=round(min(1.0, float(h["cells"]) * cfg["cell_um2"] / max(e["area_um2"], 1)), 3),
+                     src="ESTIMATE plan cells x %.3f um2" % cfg["cell_um2"])
+    return sorted(out.values(), key=lambda e: -e["area_um2"] * e["n"])
+
+
+def load_conns(die_dir, path=None):
+    p = Path(path) if path else die_dir / "core_conns.json"
+    try:
+        return json.loads(p.read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def _nf(r, d):
+    p = r.get("porous", {}).get(d)
+    if not p:
+        return "-"
+    return ">1" if p["need_free"] is None else p["need_free"]
+
+
+# FLAG thresholds on the region p99 ratio, CALIBRATED on the controls (calib/README in the lane post): the RUDY model
+# is close to measured GRT over hard cores and in streets between hard cores (the S81 M6 class), and over-predicts
+# beside / over SRAM-ROM, in landing rings and in open area (signed / GRT-pass types reach ~2-3 there).
+FLAG_AT = {"core": 1.0, "street": 1.0, "mstreet": 3.0, "mem": 3.0, "ring": 3.0, "open": 3.0, "face": 3.0}
+
+
+def verdict(r, scale=1.0):
+    """(FLAG|ok, [(region_dir, ratio/threshold)]) -- advisory."""
+    hits = []
+    for k, v in r["regions"].items():
+        reg, d = k.rsplit("_", 1)
+        t = FLAG_AT.get(reg, 3.0) * scale
+        if v["p99"] >= t:
+            hits.append((k, round(v["p99"] / t, 3)))
+    hits.sort(key=lambda h: -h[1])
+    return ("FLAG" if hits else "ok"), hits
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("plan")
+    ap.add_argument("--die")
+    ap.add_argument("--repo", default=".")
+    ap.add_argument("--types")
+    ap.add_argument("--match")
+    ap.add_argument("--out")
+    ap.add_argument("--bin", type=float, default=DEFAULTS["bin_um"])
+    ap.add_argument("--window", type=int, default=DEFAULTS["window"])
+    ap.add_argument("--derate", default="")
+    ap.add_argument("--core-ceiling", default=DEFAULTS["core_ceiling"])
+    ap.add_argument("--cell-fill", type=float, default=DEFAULTS["cell_fill"])
+    ap.add_argument("--ring-tracks-per-bit", type=float, default=DEFAULTS["ring_tracks_per_bit"])
+    ap.add_argument("--ring-um2-per-flop", type=float, default=DEFAULTS["ring_um2_per_flop"])
+    ap.add_argument("--detour-um", type=float, default=DEFAULTS["detour_um"])
+    ap.add_argument("--flag-ratio", type=float, default=1.0, help="scale on the calibrated FLAG_AT region thresholds")
+    ap.add_argument("--core-conns")
+    ap.add_argument("--core-fill", help="JSON {module: {fill, free_M4, free_M5, src}} measured by porous-abstract lanes")
+    ap.add_argument("--ref-dirs", nargs="*", default=[],
+                    help="extra dirs (relative to physical/die_plan) that plan-relative refs resolve against")
+    ap.add_argument("--release-cache", default=os.path.expanduser(
+        "~/.local/state/fleet-viz/release_tree_plan_cache.json"),
+        help="release-tree plan cache: its signed_cores/signed_designs name the children with a signed view")
+    ap.add_argument("--views", default=str(Path(__file__).with_name("route_supply_views.json")),
+                    help="signed-view blocked-layer table (JSON {views: {module: {lef|obs_top, coverage, src}}})")
+    ap.add_argument("--maps", action="store_true", help="write per-type ratio maps (npz)")
+    a = ap.parse_args(argv)
+    repo = Path(a.repo).resolve()
+    plan = Path(a.plan)
+    if not plan.is_absolute():
+        plan = repo / plan
+    P = read_json(plan)
+    REF_DIRS[:] = [str(plan.parent)] + [str(repo / "physical" / "die_plan" / r) for r in a.ref_dirs]
+    die = a.die or (P.get("die") or {}).get("name") or plan.parent.name
+    die_dir = repo / "physical" / "die_plan" / ({"s81_head": "s81_head"}.get(die, die))
+    if not die_dir.is_dir():
+        die_dir = plan.parent
+    der = dict(DERATE)
+    for kv in filter(None, a.derate.split(",")):
+        k, v = kv.split("=")
+        der[k] = float(v)
+    cfg = dict(DEFAULTS, bin_um=a.bin, window=a.window, derate=der, core_ceiling=a.core_ceiling,
+               cell_fill=a.cell_fill, ring_tracks_per_bit=a.ring_tracks_per_bit,
+               ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um)
+    conns = load_conns(die_dir, a.core_conns)
+    cfg["signed_modules"] = None
+    cfg["core_fill"] = {}
+    if a.core_fill:
+        cfg["core_fill"] = json.loads(Path(a.core_fill).read_text())
+    try:
+        rc = json.loads(Path(a.release_cache).read_text()).get("plans", {})
+        for k, v in rc.items():
+            if re.sub(r"\.gz$", "", str(plan)).endswith(re.sub(r"\.gz$", "", k)):
+                cfg["signed_modules"] = set(v.get("signed_cores", {})) | set(v.get("signed_designs", {}))
+    except (OSError, ValueError):
+        pass
+    try:
+        cfg["views"] = json.loads(Path(a.views).read_text()).get("views", {})
+    except (OSError, ValueError):
+        cfg["views"] = {}
+    T = P.get("partition_types", {})
+    names = list(T)
+    if a.types:
+        want = a.types.split(",")
+        names = [n for n in names if n in want]
+    if a.match:
+        names = [n for n in names if re.search(a.match, n)]
+    rows = []
+    for n in names:
+        t = T[n]
+        if not t.get("outline_um"):
+            continue
+        r = analyze_type(n, t, die_dir, repo, conns, cfg)
+        if r is None:
+            continue
+        r["verdict"], r["flag_regions"] = verdict(r, a.flag_ratio)
+        if r["flag_regions"]:
+            reg, d = r["flag_regions"][0][0].rsplit("_", 1)
+            r["fix"] = FIX.get((reg, d), r["fix"])
+            r["fix_region"] = r["flag_regions"][0][0]
+        maps = r.pop("_maps")
+        if a.maps and a.out:
+            Path(a.out).mkdir(parents=True, exist_ok=True)
+            np.savez_compressed(Path(a.out) / f"{die}__{n}.npz", rH=maps[0], rV=maps[1],
+                                cls=np.array(maps[2], dtype="U6"), bin_um=cfg["bin_um"])
+        rows.append(r)
+    rows.sort(key=lambda r: (r["verdict"] != "FLAG", -(r["flag_regions"][0][1] if r["flag_regions"] else 0),
+                             -r["worst"]["p99"]))
+    hdr = ["die", "type", "verdict", "flag_regions", "worst_region", "dir", "layer", "p99_ratio", "max_ratio", "hot_bins",
+           "at_um", "core_H", "core_V", "mem_H", "mem_V", "street_H", "street_V", "ring_H", "ring_V", "open_H",
+           "open_V", "macro_frac", "mem_frac", "model", "need_free_M4", "need_free_M5", "provisional_children", "fix"]
+    lines = ["\t".join(hdr)]
+    for r in rows:
+        w = r["worst"]
+        reg = [r["regions"].get(k, {}).get("p99", "") for k in
+               ("core_H", "core_V", "mem_H", "mem_V", "street_H", "street_V", "ring_H", "ring_V", "open_H", "open_V")]
+        lines.append("\t".join(map(str, [die, r["type"], r["verdict"],
+                                         ",".join(f"{k}:{v}" for k, v in r["flag_regions"]) or "-", w["region"], w["dir"], w["layer"], w["p99"],
+                                         w["max"], r["hot_bins"], "%s,%s" % tuple(w["at_um"])] + reg +
+                                    [r["macro_area_frac"], r["mem_area_frac"], r["model"],
+                                     _nf(r, "H"), _nf(r, "V"),
+                                     ",".join(r["provisional_children"]) or "-", r["fix"]])))
+    out = dict(schema=SCHEMA, advisory=True, plan=str(a.plan), die=die,
+               cfg={k: (sorted(v) if isinstance(v, set) else v) for k, v in cfg.items()}, rows=rows)
+    if a.out:
+        od = Path(a.out)
+        od.mkdir(parents=True, exist_ok=True)
+        (od / f"route_supply_{die}.tsv").write_text("\n".join(lines) + "\n")
+        (od / f"route_supply_{die}.json").write_text(json.dumps(out, indent=1))
+    print("\n".join(lines))
+    nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
+    print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}); ADVISORY, not a gate",
+          file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

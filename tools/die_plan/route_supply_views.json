@@ -1,0 +1,7 @@
+{
+ "schema": "opentallas.route_supply_views.v1",
+ "note": "Blocked layers of SIGNED child views where the plan only carries a contract/template LEF. route_supply.py reads this before any plan LEF. Add a row when a signed view is measured; remove it when the plan points at the signed LEF.",
+ "views": {
+  "qfd_tile_nk_a0c": {"obs_top": "M7", "coverage": 0.993, "src": "signed tile LEF blocks M1-M7 over 99.3% of its area (COORD/QC-FAIL-22 11-10; the provisional contract view blocks M1-M5 only)"}
+ }
+}
