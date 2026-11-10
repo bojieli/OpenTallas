@@ -894,10 +894,49 @@ def prune(it, intermediate_only=False):
 
 
 # ------------------------------------------------------------------------------------------------ the loop
+def route_hold_declared(kit):
+    """ROUTE-HOLD-PASS declared by the kit spec: freeze.json flow_defaults.route_hold_pass.on and config.mk
+    OT_ROUTE_HOLD_PASS = 1 (last assignment wins), both written by gen_core_kit_hbm --route-hold-pass on"""
+    kit = Path(kit)
+    try:
+        fz = json.loads((kit / "freeze.json").read_text())
+    except (OSError, ValueError):
+        return False
+    if not (((fz.get("flow_defaults") or {}).get("route_hold_pass") or {}).get("on") is True):
+        return False
+    v = None
+    try:
+        for line in (kit / "config.mk").read_text().splitlines():
+            m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?OT_ROUTE_HOLD_PASS\s*[:?]?=\s*(.*?)\s*$", line)
+            if m:
+                v = m[1]
+    except OSError:
+        return False
+    return v == "1"
+
+
+def route_hold_ran(kit):
+    """the declared pass has run on this kit (KIT/route_hold_pass.json run true)"""
+    try:
+        return bool(json.loads((Path(kit) / "route_hold_pass.json").read_text()).get("run"))
+    except (OSError, ValueError, AttributeError):
+        return False
+
+
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
-             owner_override=False, strict_one_pass=False):
-    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS"""
+             owner_override=False, strict_one_pass=False, route_hold_form=False):
+    """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS
+
+    route_hold_form (ROUTE-HOLD-PASS, DIE-HBM-97 11-10, COORD vecd-clkroot-r2 ruling (a)): run the kit's DECLARED in-flow
+    routed-RCX hold pass (tools/die_plan/route_hold_pass.py).  Honoured only when the kit's own spec declares it
+    (route_hold_declared: freeze.json flow_defaults.route_hold_pass.on AND config.mk OT_ROUTE_HOLD_PASS = 1, both written by
+    the generator before the build); then ONE hold repair on the routed RCX parasitics, one physical dispatch, no recovery
+    retry, and the near-miss numbers are recorded (res near_miss) without stopping it.  A caller flag on a kit that does
+    not declare the form is an ERROR.  Gates are unchanged.  A kit whose declared pass has run takes no ECO on top
+    (NOT_ELIGIBLE)."""
+    if route_hold_form and (max_iter != 1 or not strict_one_pass):
+        raise ValueError("route_hold_form requires max_iter=1 and strict_one_pass")
     if max_iter > MAX_ITER:
         raise ValueError(max_iter_refusal(max_iter))
     if strict_one_pass and max_iter != 1:
@@ -932,6 +971,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             return original_run(cmd, **kwargs)
     ok, why = eligible(base_rec)
     res["eligibility"] = why
+    declared = route_hold_declared(kit)
+    res["route_hold_form"] = dict(requested=bool(route_hold_form), declared=declared)
 
     def done(verdict, reason):
         res.update(verdict=verdict, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
@@ -939,13 +980,23 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
             (root / "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
         return res
 
+    if route_hold_form and not declared:
+        return done("ERROR", "route_hold_form requested but the kit spec does not declare ROUTE-HOLD-PASS "
+                    "(freeze.json flow_defaults.route_hold_pass.on + config.mk OT_ROUTE_HOLD_PASS = 1)")
+    if not route_hold_form and declared and route_hold_ran(kit):
+        return done("NOT_ELIGIBLE", "ROUTE-HOLD-PASS form: the declared in-flow hold pass has run; no further ECO on top "
+                    "(COORD vecd-clkroot-r2 (4))")
     if not ok:
         return done("NOT_ELIGIBLE", why)
     near, far, warn = near_miss(base_rec, base_signoff)
-    res["near_miss"] = dict(near=near, beyond=far, advisory=warn, owner_override=bool(owner_override))
+    res["near_miss"] = dict(near=near, beyond=far, advisory=warn, owner_override=bool(owner_override),
+                            route_hold_form=bool(route_hold_form))
     for w in warn:
         print("ECO_LOOP advisory: " + w, flush=True)
-    if not near and not owner_override:
+    if not near and route_hold_form:
+        print("ECO_LOOP declared ROUTE-HOLD-PASS form: beyond the late-ECO near-miss numbers (" + "; ".join(far) +
+              "), recorded; the kit's declared one-pass stage runs", flush=True)
+    if not near and not owner_override and not route_hold_form:
         return done("NOT_NEAR_MISS", "; ".join(far) + f" (near miss: setup/hold no worse than {NEAR_WNS_PS:g} ps on at most "
                     f"{NEAR_ENDPOINTS} endpoints, at most {NEAR_SLEW_NETS} slew nets, DRC under {NEAR_DRC}): GEOMETRY + REDESIGN, no ECO")
     root.mkdir(parents=True, exist_ok=False)

@@ -196,6 +196,20 @@ def stage_grt183(kd):
         shutil.copyfile(_common_flow_file(f, TOOL.parents[1]), Path(kd) / f)
 
 
+CLK_ROOT_CROSS_TCL, CLK_ROOT_CROSS_PY = "clk_root_cross.tcl", "clk_root_cross.py"
+CLK_ROOT_CROSS_SOURCE = "source /work/clk_root_cross.tcl\n"
+
+
+def stage_clk_root_cross(kd):
+    """CLK-ROOT-CROSS (DIE-HBM-97 11-10, COORD vecd-clkroot-gen): stage the root-repeater pass for clock ports boxed in
+    by macros (physical/common_flow/clk_root_cross.tcl + tools/die_plan/clk_root_cross.py) and return the line the
+    generator puts FIRST in its PRE_GLOBAL_ROUTE hook.  Geometry decides per port net at run time; a kit where no port
+    is boxed in gets no cell.  Opt out per kit: 'export OT_CLK_ROOT_CROSS = 0' in config.mk."""
+    shutil.copyfile(_common_flow_file(CLK_ROOT_CROSS_TCL, TOOL.parents[1]), Path(kd) / CLK_ROOT_CROSS_TCL)
+    shutil.copyfile(TOOL / CLK_ROOT_CROSS_PY, Path(kd) / CLK_ROOT_CROSS_PY)
+    return CLK_ROOT_CROSS_SOURCE
+
+
 # KW-FIX-24/LEAFOPT 11-06 (COORD 21:0x (1)): a kit whose plan owns the whole clock tree (S81 regional-tap kits, HBM /
 # S81 plan-built core trees with a planned spine; core_infra.kit_cts_hook) opts out of the default-on clk_leaf_repeat
 # through its generator.  Every other kit keeps the default.
