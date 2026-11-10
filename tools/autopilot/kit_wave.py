@@ -2165,6 +2165,8 @@ def workroot_low(AP, cfg, run=None):
     free_map.clear()
     alt_map = cfg.setdefault("_workroot_alt", {}) if isinstance(cfg, dict) else {}
     alt_map.clear()
+    lim_map = cfg.setdefault("_workroot_lim", {}) if isinstance(cfg, dict) else {}
+    lim_map.clear()
     cfg.pop("_alt_spent", None)
     alt_on = cfg.get("workroot_alt") is not False
     alt_lim = floor + int(cfg.get("gen_need_gb", GEN_NEED_GB))
@@ -2228,6 +2230,7 @@ def workroot_low(AP, cfg, run=None):
                         alt_map.setdefault(h, {})[die] = alt
                     elif gb < lim:
                         out.setdefault(h, {})[die] = gb
+                        lim_map.setdefault(h, {})[die] = lim
     return out
 
 
@@ -2835,6 +2838,82 @@ def work_alt_cmd(work, alt_lane):
             'fi; true')
 
 
+FUTURE_LEC_FILES = ("lec.py", "TOOL.json", "kit_resume.py", "run_kit_template.sh", "future_kit_lec.py")
+
+
+def future_lec_snapshot(snapshot, commit=None):
+    """write the future-LEC tool snapshot (lec.py, kit_resume.py, the gen_phys RUN_KIT template, future_kit_lec.py and
+    TOOL.json) into SNAPSHOT -> meta.  commit None: the scheduler checkout's HEAD, whose working lec.py / kit_resume.py
+    must equal the committed bytes (a new attempt, as before).  commit set: the bytes of that commit (KW-FIX-44 11-10:
+    run_item re-staging a spec's pinned snapshot)."""
+    import ast, hashlib
+    snapshot = Path(snapshot)
+    snapshot.mkdir(parents=True, exist_ok=True)   # an attempt whose launch failed before its unit started is taken again
+    repo = Path(__file__).resolve().parents[1] / "die_plan"
+    show = lambda c, f, text=False: subprocess.run(["git", "-C", str(repo), "show", f"{c}:{f}"], check=True,
+                                                   capture_output=True, text=text).stdout
+    if commit is None:
+        source = repo / "lec.py"
+        payload = source.read_bytes()
+        commit = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"],
+            check=True, capture_output=True, text=True).stdout.strip()
+        if payload != show(commit, "tools/die_plan/lec.py"):
+            raise ValueError("future LEC scheduler file differs from committed main tool")
+        resume_helper = Path(KR.__file__).read_bytes()
+        if resume_helper != show(commit, "tools/autopilot/kit_resume.py"):
+            raise ValueError("resume helper differs from pinned scheduler commit")
+    else:
+        payload = show(commit, "tools/die_plan/lec.py")
+        resume_helper = show(commit, "tools/autopilot/kit_resume.py")
+    tree = ast.parse(show(commit, "tools/die_plan/gen_phys.py", text=True))
+    template = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
+        and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets))
+    (snapshot / "kit_resume.py").write_bytes(resume_helper)
+    (snapshot / "run_kit_template.sh").write_text(template)
+    meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest(),
+        runner_template_sha256=hashlib.sha256(template.encode()).hexdigest(),
+        resume_helper_sha256=hashlib.sha256(resume_helper).hexdigest())
+    (snapshot / "lec.py").write_bytes(payload)
+    (snapshot / "TOOL.json").write_text(json.dumps(meta) + "\n")
+    (snapshot / "future_kit_lec.py").write_bytes(Path(__file__).with_name("future_kit_lec.py").read_bytes())
+    return meta
+
+
+def ensure_future_lec(out, meta):
+    """KW-FIX-44 11-10 (COORD, LEC-SNAP class: TYPE-SAFE-5 p4, st_b_v2 a2, sfw_proof a6 failed lec_tools_copy rsync rc 23
+    after their queue wait because the spec named a snapshot that was never staged next to it).  Before any stage: a
+    complete snapshot whose TOOL.json is the spec's meta is used as is; otherwise it is staged here from the spec's
+    commit and kept only when every sha equals the spec's.  -> '' (ready) or the reason to fail now."""
+    import shutil, tempfile
+    out = Path(out)
+    snap = out / "future_lec"
+    want = {k: meta.get(k) for k in ("commit", "sha256", "runner_template_sha256", "resume_helper_sha256")}
+    try:
+        have = json.loads((snap / "TOOL.json").read_text())
+    except (OSError, ValueError):
+        have = None
+    if have is not None and {k: have.get(k) for k in want} == want and all((snap / f).is_file() for f in FUTURE_LEC_FILES):
+        return ""
+    if not want["commit"]:
+        return f"spec future_lec names no commit; cannot stage {snap}"
+    tmp = Path(tempfile.mkdtemp(prefix=".future_lec-", dir=str(out)))
+    try:
+        got = future_lec_snapshot(tmp, commit=want["commit"])
+    except (subprocess.CalledProcessError, ValueError, StopIteration, OSError, SyntaxError) as e:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return f"future_lec snapshot {snap} missing/incomplete and commit {want['commit']} cannot be read here: {str(e)[:200]}"
+    bad = [k for k in want if got.get(k) != want[k]]
+    if bad:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return (f"future_lec snapshot {snap} missing/incomplete; re-staged from {want['commit']} but "
+                + ", ".join(f"{k} {str(got.get(k))[:12]} != spec {str(want[k])[:12]}" for k in bad))
+    if snap.exists():
+        snap.rename(out / f".future_lec.incomplete-{int(time.time())}")    # kept for diagnosis, never deleted here
+    tmp.rename(snap)
+    print(f"KW_FUTURE_LEC staged {snap} from {want['commit'][:12]} (sha {want['sha256'][:12]})", flush=True)
+    return ""
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -3023,6 +3102,10 @@ def run_item(spec_path):
     q = shlex.quote
     src, plan = sp["src"], sp["plan"]
     gh = [G]
+    if sp.get("future_lec"):                             # KW-FIX-44 11-10: before any queue wait, not at lec_tools_copy
+        why = ensure_future_lec(out, sp["future_lec"])
+        if why:
+            return fail("lec_tools_preflight", "KW_FUTURE_LEC FAIL " + why)
     time.sleep(max(0.0, float(sp.get("start_delay_s") or 0)))   # stagger a tick's burst of items (gen-host sshd)
     if svc_file.exists():
         # a restarted worker of this attempt: the saved PLACE service owns W/gen (and maybe a live proof);
@@ -3820,37 +3903,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     jd.mkdir(parents=True, exist_ok=True)
     # Snapshot current approved tool bytes into this new attempt, never another lane's kit.
     if opt(cfg, die, "future_lec") is not False:
-        import hashlib
-        snapshot = jd / "future_lec"
-        snapshot.mkdir(exist_ok=True)      # an attempt whose launch failed before its unit started is taken again
-        source = Path(__file__).resolve().parents[1] / "die_plan" / "lec.py"
-        payload = source.read_bytes()
-        commit = subprocess.run(["git", "-C", str(source.parent), "rev-parse", "HEAD"],
-            check=True, capture_output=True, text=True).stdout.strip()
-        tracked = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/die_plan/lec.py"],
-            check=True, capture_output=True).stdout
-        if payload != tracked:
-            raise ValueError("future LEC scheduler file differs from committed main tool")
-        import ast
-        generator = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/die_plan/gen_phys.py"],
-            check=True, capture_output=True, text=True).stdout
-        tree = ast.parse(generator)
-        template = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
-            and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets))
-        resume_helper = Path(KR.__file__).read_bytes()
-        committed_helper = subprocess.run(["git", "-C", str(source.parent), "show", f"{commit}:tools/autopilot/kit_resume.py"],
-            check=True, capture_output=True).stdout
-        if resume_helper != committed_helper:
-            raise ValueError("resume helper differs from pinned scheduler commit")
-        (snapshot / "kit_resume.py").write_bytes(resume_helper)
-        (snapshot / "run_kit_template.sh").write_text(template)
-        meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest(),
-            runner_template_sha256=hashlib.sha256(template.encode()).hexdigest(),
-            resume_helper_sha256=hashlib.sha256(resume_helper).hexdigest())
-        (snapshot / "lec.py").write_bytes(payload)
-        (snapshot / "TOOL.json").write_text(json.dumps(meta) + "\n")
-        (snapshot / "future_kit_lec.py").write_bytes(Path(__file__).with_name("future_kit_lec.py").read_bytes())
-        sp["future_lec"] = meta
+        sp["future_lec"] = future_lec_snapshot(jd / "future_lec")
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
@@ -4529,8 +4582,13 @@ def _step(AP, ap_dir):
     try:                                        # KW-FIX-30: the disk under each die's work_root
         cfg["_workroot_low"] = workroot_low(AP, cfg)
         for h, ds in sorted(cfg["_workroot_low"].items()):
-            AP.log(f"KIT-WAVE GEN-DISK-LOW work_root {h}: " + " ".join(f"{d}={g}" for d, g in sorted(ds.items()))
-                   + f" GB < {GEN_DISK_MIN_GB} (not a gen host for those dies while another has room; KW-FIX-30)")
+            # KW-FIX-44 11-10 (COORD): each die's own limit (a root-fs lane needs root_floor_gb + root_gen_room_gb,
+            # 150 + 40); the line used to print gen_disk_min_gb for all ('hbm=143 ... GB < 70')
+            lims = (cfg.get("_workroot_lim") or {}).get(h, {})
+            AP.log(f"KIT-WAVE GEN-DISK-LOW work_root {h}: " + " ".join(
+                       f"{d}={g}<{lims.get(d, GEN_DISK_MIN_GB)}" for d, g in sorted(ds.items()))
+                   + " GB free<needed (root-fs lane: root_floor_gb + root_gen_room_gb; scratch lane: gen_disk_min_gb;"
+                   " not a gen host for those dies while another has room; KW-FIX-30)")
     except Exception as e:                      # a diagnostic probe never stops the tick
         AP.log(f"KIT-WAVE work_root disk probe skipped: {e}")
     if cfg.get("_workroot_alt"):
