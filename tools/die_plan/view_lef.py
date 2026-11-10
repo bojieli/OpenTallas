@@ -105,77 +105,67 @@ def prune_lef_text(text, macro, keep):
     return text[:span[0]] + body + text[span[1]:], sorted(removed)
 
 
-# KV-PLAN-2 11-09 (kv3_hgi_v3 GRT-0116, 14305-30448 overflow): a signed hard core exports its own M6/M7 routing as
+# KV-PLAN-2 11-09 (kv3_hgi_v3 GRT-0116, 14305-30448 overflow): a signed hard core exports its own upper-layer routing as
 # OBS fragments (kv3_head_eighth_e0: 25094 M6 / 11112 M7 rects, 0.032 um wide, touching 87% / 82% of 2.88-um cells).
-# GRT sees a sieve over the core: partial capacity that ends in cap-0 GCells, so die nets detour over the core and
-# overflow there (every hgi_v3 overflow GCell lies inside a core outline, none in the channels).  The router cannot
-# use that space for real either.  Safe by construction: such a layer is staged as ONE solid OBS rect over the macro,
-# so die nets plan in the channels.  Layers already solid or lightly used (< SOLID_FRAC of the cells) stay as exported.
+# GRT sees a sieve over the core: partial capacity ending in cap-0 GCells, so die nets detour over the core and overflow
+# there (every hgi_v3 overflow GCell lies inside a core outline).  routed_obs_layers names those layers; gen_phys gives
+# them zero GRT capacity over the core (grt_core_shadow.tcl).  The LEF itself is NOT changed: the die PDN reaches the
+# core's M5 PG stripes through the M6/M7 gaps (a solid M6/M7 OBS stops pdn.tcl: PDN-0006), and the detailed router
+# keeps the exact shapes.
 SOLID_GRID_UM = 2.88
 SOLID_FRAC = 0.5
-_OBS = re.compile(r"^([ \t]*)OBS[ \t]*\r?\n(.*?)^([ \t]*)END[ \t]*\r?\n", re.M | re.S)
+_OBS = re.compile(r"^[ \t]*OBS[ \t]*\r?\n(.*?)^[ \t]*END[ \t]*\r?\n", re.M | re.S)
 _RECT = re.compile(r"^\s*RECT\s+(?:MASK\s+\d+\s+)?(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;", re.M)
-
-
-def _obs_layers(body):
-    """[(layer, [rect line, ...]), ...] in file order; a LAYER line starts a group"""
-    groups = []
-    for line in body.splitlines(keepends=True):
-        m = re.match(r"^\s*LAYER\s+(\S+)", line)
-        if m:
-            groups.append([m.group(1), []])
-        elif groups:
-            groups[-1][1].append(line)
-    return groups
 
 
 def cell_cover(rects, w, h, grid=SOLID_GRID_UM):
     """fraction of the macro's grid x grid cells that any rect touches"""
-    nx, ny = max(1, int(w // grid) + (w % grid > 1e-9)), max(1, int(h // grid) + (h % grid > 1e-9))
+    nx, ny = max(1, -(-w // grid)), max(1, -(-h // grid))
     cells = set()
     for a, b, c, d in rects:
-        for i in range(max(0, int(a // grid)), min(nx - 1, int(c // grid)) + 1):
-            for j in range(max(0, int(b // grid)), min(ny - 1, int(d // grid)) + 1):
+        for i in range(max(0, int(a // grid)), int(min(nx - 1, c // grid)) + 1):
+            for j in range(max(0, int(b // grid)), int(min(ny - 1, d // grid)) + 1):
                 cells.add((i, j))
     return len(cells) / (nx * ny)
 
 
-def solid_routed_obs(text, macro, frac=SOLID_FRAC, grid=SOLID_GRID_UM):
-    """-> (text, {layer: cover}) with each metal OBS layer of `macro` ABOVE its highest signal-pin layer that is routing
-    fragments covering >= frac of the grid cells replaced by one solid RECT 0 0 W H.  Pin layers and the layers under
-    them keep their exported shapes (their gaps are pin access); a layer that already has a full-outline rect is left
-    as is."""
+def routed_obs_layers(text, macro, frac=SOLID_FRAC, grid=SOLID_GRID_UM):
+    """-> ({metal layer: cover}, (w, h)) for the OBS layers of `macro` ABOVE its highest pin layer (signal or PG) that
+    are routing fragments touching >= frac of the grid cells.  A layer with a full-outline rect is a real wall GRT
+    already sees; it is not listed."""
     span = _macro_span(text, macro)
     if not span:
-        return text, {}
+        return {}, None
     body = text[span[0]:span[1]]
     s = re.search(r"^\s*SIZE\s+(\S+)\s+BY\s+(\S+)", body, re.M)
     o = _OBS.search(body)
-    if not s or not o:
-        return text, {}
+    if not s:
+        return {}, None
     w, h = float(s.group(1)), float(s.group(2))
-    plev = 0
-    for p in _PIN.finditer(body):
-        u = _USE.search(p.group(3))
-        if u and u.group(1).upper() in KEEP_USE:
+    if not o:
+        return {}, (w, h)
+    plev = max([0] + [int(x) for p in _PIN.finditer(body) for x in re.findall(r"^\s*LAYER\s+M(\d+)\b", p.group(3), re.M)])
+    groups = {}
+    cur = None
+    for line in o.group(1).splitlines():
+        m = re.match(r"^\s*LAYER\s+(\S+)", line)
+        if m:
+            cur = m.group(1)
+            groups.setdefault(cur, [])
             continue
-        plev = max([plev] + [int(x) for x in re.findall(r"^\s*LAYER\s+M(\d+)\b", p.group(3), re.M)])
-    ind = re.match(r"^([ \t]*)", o.group(2)).group(1) if o.group(2) else "    "
-    changed, out = {}, []
-    for layer, lines in _obs_layers(o.group(2)):
-        rects = [tuple(map(float, m.groups())) for m in _RECT.finditer("".join(lines))]
-        full = any(a <= 1e-6 and b <= 1e-6 and c >= w - 1e-6 and d >= h - 1e-6 for a, b, c, d in rects)
-        if re.fullmatch(r"M\d+", layer) and int(layer[1:]) > plev and rects and not full:
-            cov = cell_cover(rects, w, h, grid)
-            if cov >= frac:
-                changed[layer] = round(cov, 3)
-                out.append(f"{ind}LAYER {layer} ;\n{ind} RECT  0 0 {s.group(1)} {s.group(2)} ;\n")
-                continue
-        out.append(f"{ind}LAYER {layer} ;\n" + "".join(lines))
-    if not changed:
-        return text, {}
-    nb = body[:o.start(2)] + "".join(out) + body[o.end(2):]
-    return text[:span[0]] + nb + text[span[1]:], changed
+        r = _RECT.match(line)
+        if r and cur:
+            groups[cur].append(tuple(map(float, r.groups())))
+    out = {}
+    for layer, rects in groups.items():
+        if not re.fullmatch(r"M\d+", layer) or int(layer[1:]) <= plev or not rects:
+            continue
+        if any(a <= 1e-6 and b <= 1e-6 and c >= w - 1e-6 and d >= h - 1e-6 for a, b, c, d in rects):
+            continue
+        cov = cell_cover(rects, w, h, grid)
+        if cov >= frac:
+            out[layer] = round(cov, 3)
+    return out, (w, h)
 
 
 def own_lef_path(lib):
@@ -217,10 +207,9 @@ def _has_own(lib, resolve):
     return resolve(own_lef_path(lib)).is_file()
 
 
-def stage_kit_macros(kd, macros, resolve, prune=True, log=print, solid=False):
+def stage_kit_macros(kd, macros, resolve, prune=True, log=print):
     """macros = type_macros rows.  Prints one OT_VIEW_LEF line per master that disagrees; prunes kd/macros/<lef> when the
-    view has no LEF of its own; a metal OBS layer that is the core's own routing fragments is staged solid
-    (solid_routed_obs, OT_SOLID_OBS line).  Clean masters print nothing and their staged copy is untouched (byte-identical kits).
+    view has no LEF of its own.  Clean masters print nothing and their staged copy is untouched (byte-identical kits).
     Any read problem is reported, never raised: the kit keeps the plain copy and busfit still covers it."""
     seen, out = set(), []
     for _inst, mod, lef, lib, *_ in macros:
@@ -237,15 +226,7 @@ def stage_kit_macros(kd, macros, resolve, prune=True, log=print, solid=False):
                 new, removed = prune_lef_text(text, row["cell"], keep)
                 if removed:
                     staged.write_text(new)
-                    text = new
                     action = f"pruned {len(removed)} LEF-only pins"
-            if solid and row["cell"]:
-                new, cov = solid_routed_obs(text, row["cell"])
-                if cov:
-                    staged.write_text(new)
-                    text = new
-                    log("OT_SOLID_OBS " + json.dumps(dict(module=mod, lef=str(lef), layers=cov)))
-                    action = (action + "; " if action != "none" else "") + "solid OBS " + ",".join(sorted(cov))
         except Exception as e:  # noqa: BLE001 - advisory: never stop a gen
             log("OT_VIEW_LEF " + json.dumps(dict(module=mod, lef=str(lef), lib=str(lib), error=f"{type(e).__name__}: {e}")))
             continue
