@@ -9375,7 +9375,8 @@
    "gen_hosts": [
     "epyc2",
     "epyc7",
-    "intel1"
+    "intel1",
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -13783,7 +13784,13 @@
    "hold_items_prev_kw43ech1": {
     "slw_sc_v1__cl64543eaf__cl5e017c6f": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form"
    },
-   "note_kw43_ech1": "KW-FIX-43 15:5x: 5 slw_sc types -> cand10_class, OT_CONS_KIT dropped (normal kits), cl5e017c6f released from hold; cl4590432d route finishes first (fresh gen by waiter if it fails). Revert: *_prev_kw43ech1 (None = delete)."
+   "note_kw43_ech1": "KW-FIX-43 15:5x: 5 slw_sc types -> cand10_class, OT_CONS_KIT dropped (normal kits), cl5e017c6f released from hold; cl4590432d route finishes first (fresh gen by waiter if it fails). Revert: *_prev_kw43ech1 (None = delete).",
+   "gen_hosts_prev_kw43e4g_qc": [
+    "epyc2",
+    "epyc7",
+    "intel1"
+   ],
+   "note_kw43e4g_qc": "KW-FIX-43 16:0x COORD (1) YES: epyc4 added to gen_hosts; wave src + die kit_rtl inputs staged read-only on epyc4 scratch3 (same paths via scratch2 symlinks; file counts + md5 manifests equal to epyc7). Revert: gen_hosts = gen_hosts_prev_kw43e4g_qc."
   },
   "hbm": {
    "enabled": true,
