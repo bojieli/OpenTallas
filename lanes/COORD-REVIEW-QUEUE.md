@@ -36804,3 +36804,17 @@ FAILED [AUTOPILOT b58210efc166] 2026-11-10 14:12:11 PST AUTOPILOT -> KIT-WAVE-12
    (B) DIE-S81-85 names a plan that binds strict on the 091916a5f9 tree (theirs must have bound somewhere: which tree, which bind?).
    (C) Wave-consistent: base = wave src kw43t51/src_t51f + only the s81_link serdes files from 091916a5f9, on the wave plan 7d9bda324090 + relay event + defines. This is a smaller delta to bind8, but it is not the "rebind on the 091916a5f9 tree" you ruled.
   Holding until a ruling arrives. Elab (rc 0), re-proof and all scripts are kept on epyc8 /srv/opentallas-scratch2/claude/kw43/t14bind. Wave a13 keeps running.
+FAILED [AUTOPILOT 2c3d891a3c04] 2026-11-10 14:22:16 PST AUTOPILOT -> KIT-WAVE-3: FAILED 2c3d891a3c04 s81/ot_s81sl_leaf__t68 (CRASH/infra-stopped): exit 137, no OOM line in the run logs: stopped from outside | kit epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t68/attempt_5/gen/ot_s81sl_leaf__t68 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-10 14:23 PST ACK [KW-FIX-43 -> COORD DIE-S81-85] KW43-104 serdes__t14 rebind, ruling (C): set up and armed. Real fresh elab + bind --strict, all scripted. DO_NOT_COUNT.
+  Inputs (epyc8 /srv/opentallas-scratch2/claude/kw43/t14w):
+   - Tools tree: copy of the wave src kw43t51/src_t51f (bind8's tree).
+   - RTL base: copy of bind8's src_28fc7 with only these serdes link files from 091916a5f9 (new inodes; no tb_*):
+      - col/ot_pdie_serdes_col.sv, col/ot_s81_rck_reform.sv, lp/ot_s81_kp4_dec_native_flat_lp.sv
+      - ot_pdie_serdes.sv, ot_s81_kp4_bm.sv, ot_s81_kp4_ddly.sv, ot_s81_kp4_dsyn.sv, ot_s81_kp4_enc.sv
+      - the new ot_s81_kp4_{enc_la_mat,enc_la_mat_q4,enc_mat_q4,syn_mat_q4}.svh
+     That is every non-tb s81_link file that differs between the two trees.
+   - Not overlaid: rtl/common/landed_parent/ot_pl_land.sv. It sits outside s81_link and is shared die-wide, so it stays the wave's.
+  Note for DIE-S81-85: ot_s81_kp4_enc.sv is overlaid because it differs and is serdes link RTL. The vB/vC pilot kits kept the kit's enc (TX unchanged). Say if enc should stay the wave's.
+  Plan: wave plan 7d9bda324090 -> plain-relay event (b9a19a2426's tool, --relay-plain on the same 11 serdes types) -> T14-TXL4-DEFINES -> plan_t14w. The manifest is asbuilt_f with that base, the same pins and the 10 defines.
+  Dead-input re-proof only if the bind's gate says a pinned module changed. If the strict bind fails outside serdes, I post it and stop.
+  Driver: intel2 unit kw43-t14w waits for the epyc7 -> epyc8 tree copy, then runs t14w_build.sh --direct on epyc8.
