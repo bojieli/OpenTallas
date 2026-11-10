@@ -215,7 +215,11 @@ def per_bit_station_sites(t, pins):
         lx, ly = e["leaf_um"]
         n = len(e["regs_um"])
         d_in = buses[bus]["dir"] == "in"
+        # SUL0-PINFACE-1: a per-core chain keeps only the bits its core reads / drives (synthesis drops the rest)
+        keep = set(int(b) for b in e["core_bits"]) if e.get("core") else None
         for bit, (px, py, face) in sorted(at.get(bus, {}).items()):
+            if keep is not None and bit not in keep and bit != len(at.get(bus, {})) - 1:
+                continue
             cx, cy = (lx, py) if face in ("E", "W") else (px, ly)
             pts = [(px, py), (cx, cy), (lx, ly)] if d_in else [(lx, ly), (cx, cy), (px, py)]
             L = abs(px - cx) + abs(py - cy) + abs(cx - lx) + abs(cy - ly)

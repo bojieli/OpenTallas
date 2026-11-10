@@ -115,3 +115,17 @@ def test_must_fail_mutants(tmp_path, mut, msg):
 def test_bare_read_of_multibit_bus_fails(tmp_path):
     r, bf, _ = run(tmp_path, bound=BOUND.replace("x_q[1], x_q[0], f_q", "x_q, f_q"))
     assert r.returncode != 0 and "bare whole-bus read" in r.stderr
+
+
+def test_taps_sinks_only_core_bits():
+    """taps.per_bit_station_sites: a per-core chain contributes its core_bits (+ epoch) only, a bus chain every bit"""
+    sys.path.insert(0, str(HERE))
+    import taps
+    t = plan()["partition_types"]["t"]
+    pins = [("x", b, "M4", 0.0, 10.0 + b, "W") for b in range(5)] + [("f", b, "M4", 0.0, 30.0 + b, "W") for b in range(2)] \
+        + [("y", b, "M5", 10.0 + b, 100.0, "N") for b in range(4)]
+    got = len(taps.per_bit_station_sites(t, pins))
+    # x: A 2+1, B 3+1; f: A 1+1, B 1+1; y: A 1+1, B 2+1 (payload + epoch) -> 16 bit rows x 2 stations
+    assert got == 2 * 16
+    t2 = dict(t, internal_stations=[dict(e, core=None) for e in t["internal_stations"]])
+    assert len(taps.per_bit_station_sites(t2, pins)) == 2 * (2 * 5 + 2 * 2 + 2 * 4)
