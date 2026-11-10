@@ -26,9 +26,9 @@
    "src_sha": "e273bd37e4ee82e912c95a29d7e665173cd7ca4f",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json",
     "note": "KW-FIX-42 2026-11-09 07:14 PST KV bind9 = the KV small event (KV-PLAN-1 07:04 READY, COORD 07:1x GO): plan_zbk (plan_c 1035a005 = plan_zb6), asbuilt caba8c83, strict bind9 0 errors (160 partitions, 2545 crossings); .sv vs bind8 differs only in the 8 vport types (RT 63->95, pad D+1). Staged epyc7+epyc2 (363 files + 87 referenced paths, 0 missing). Revert *_prev_kw42b9 | KW-FIX-42 11-09 04:37 PST: KV ZB_ADD event (DIE-KV-97 04:30 READY, COORD 04:4x): plan_zb6 1035a005 (= plan_p6) + bind8 strict + asbuilt 9c17ef0e + src_zb (MD5_ZB_bind8 0 bad on epyc7/intel1); revert *_prev_kw42zb | KW-FIX-42 03:00: DIE-KV-97 02:24 THE ONE KV SWITCH (plan_p4 443dc48a, asbuilt 4e4ac233, bind5 strict 0) | KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE",
-    "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9"
+    "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/kv/bind_kvr2_9237b"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -1982,11 +1982,19 @@
     },
     "kv3_pv_v1n": {
      "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
-     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
+      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+     }
     },
     "kv3_pv_v7": {
      "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
-     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
+      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+     }
     },
     "kv3_sys_c": {
      "kit_rtl": {
@@ -2067,7 +2075,23 @@
    "gen_hosts_prev_kw44e2root": [
     "epyc7",
     "epyc2"
-   ]
+   ],
+   "kit_rtl_prev_kw43kvc": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9"
+   },
+   "item_inputs_prev_kw43kvc": {
+    "kv3_pv_v1n": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+    },
+    "kv3_pv_v7": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails."
+    }
+   },
+   "note_kw43_kvc": "KW-FIX-43 11-09 19:xx COORD 17:01(1)+17:2x: KV KIT_TOPOLOGY_BIND_STALE class. Die bind_out -> kw43-canon/kv/bind_kvr2_9237b = strict bind.py (dkv97/src_zb, NO solidobs) on kw43/kvr2 plan 92370701; die asbuilt -> kw43-canon/kv/asbuilt_kvc_zb.json = plan_zbk caba8c83 with ONE change: param_regen.file dkv97/src_zbk/... (1-file dir, its kvbind1025/regen_kv_2350.py absent -> first bind PARAM_REGEN ENOENT) -> dkv97/src_zb/... (same blob 8440767e). errors 0, staged read-only epyc7+epyc2. kv3_pv_v1n/v7 (kits on plan_zbk) pinned to bind9 + caba8c83. Revert: kit_rtl.{bind_out,asbuilt} = kit_rtl_prev_kw43kvc; item_inputs[k] = item_inputs_prev_kw43kvc[k]."
   },
   "s81": {
    "enabled": true,
