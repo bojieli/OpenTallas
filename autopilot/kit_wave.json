@@ -302,16 +302,12 @@
     "critical": true
    },
    "hold_items": {
-    "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix",
     "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
-    "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
     "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
     "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
@@ -1656,11 +1652,7 @@
    },
    "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
    "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
-   "route_hold_items": {
-    "kv3_io_cor": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
-    "kv3_io_cor_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
-    "kv3_io_ft_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release"
-   },
+   "route_hold_items": {},
    "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
    "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us.",
    "prov_view_sources_prev_kw36pc": {
@@ -2209,6 +2201,19 @@
     "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends"
+   },
+   "rel55_prev_kw43": {
+    "hold_items": {
+     "kv3_io_cor": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+     "kv3_io_cor_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+     "kv3_io_ft_v1": "KW-FIX-42 03:00: DIE-KV-97 02:24 KEEP running, no restart on the switch; lift when its run ends",
+     "qkd_hr_core_prompt": "KW-FIX-32 2026-11-07 22:10 PST: KV plan switch to main plan_c: core LEC open (DIE-KV-91); the plan switch is not its class fix"
+    },
+    "route_hold_items": {
+     "kv3_io_cor": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
+     "kv3_io_cor_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release",
+     "kv3_io_ft_v1": "Root 1113: geometry-only continuation; actual endpoint/structural review before route release"
+    }
    }
   },
   "s81": {
@@ -9960,7 +9965,6 @@
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
-    "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
@@ -15717,7 +15721,12 @@
     "epyc7",
     "epyc4",
     "epyc2"
-   ]
+   ],
+   "rel55_prev_kw43": {
+    "hold_items": {
+     "tt_ctlm": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): in flight on v4w_ctlmfq; keeps its row"
+    }
+   }
   },
   "hbm": {
    "enabled": true,
@@ -17064,8 +17073,6 @@
     "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
     "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
-    "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
-    "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
     "hnx_rp3h_xs": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a8 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "ot_hbm_idx_selector_static_sel": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "q_b010": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 OT_NATIVE_CELL_CAP (native cells over the kit run cap); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
@@ -20034,6 +20041,22 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
      "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_spu0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p12t_spu0/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
+    },
+    "q_spu0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p12t_spu0/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -21779,7 +21802,17 @@
     "q_su11@10",
     "q_hub_ne@6"
    ],
-   "note_kw43t54": "KW-FIX-43 COORD 11-10 02:0x standing rule: retry entries for queue FAIL rows whose class fix landed since. Revert: retry <- retry_prev_kw43t54."
+   "note_kw43t54": "KW-FIX-43 COORD 11-10 02:0x standing rule: retry entries for queue FAIL rows whose class fix landed since. Revert: retry <- retry_prev_kw43t54.",
+   "rel55_prev_kw43": {
+    "hold_items": {
+     "q_spu0": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0",
+     "q_spu0__physical_v1": "KW-FIX-43 15:5x DIE-HBM-97 15:06: hold both q_spu0 rows (no relaunch on the old plan) until E13-SPU0 (p12 rebased on p11s) READY after both GRT probes reach 0"
+    },
+    "item_inputs": {
+     "q_spu0": null,
+     "q_spu0__physical_v1": null
+    }
+   }
   }
  },
  "place_prefer": [
