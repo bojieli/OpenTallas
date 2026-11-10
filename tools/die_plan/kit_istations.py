@@ -789,7 +789,12 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
       * out bus: core outputs -> chain -> u_bout_<bus>.d bit b (every d bit must belong to exactly one chain).
     Every chain of one bus carries the SAME number of stations (len(regs_um)) so the bus keeps one latency (fail closed
     otherwise); placement is the per_bit is_bits form (each bit on its own L from its face pin to leaf_um, the kit knee
-    rule, <= 403 um) with leaf_um at the core pin-face centroid of the chain's bits.  Returns the edited text."""
+    rule, <= 403 um) with leaf_um at the core pin-face centroid of the chain's bits.
+    'core' may be a LIST of hard cores (DIE-QC-97 11-10, l1 east cws0_o strip): ONE chain serves them all (in bus: every
+    listed core reads its bits of core_bits from the chain's last station, so a bit two cores share crosses the strip
+    once), chain u_ist_<bus>__<core1>_<core2>.._<g>_<j>.  After insertion every core read of a chain is checked to be
+    the LAST station of a chain listing that core (check_core_delay: one bus = one latency per consumer).  Returns the
+    edited text."""
     es = [e for e in t.get("internal_stations", []) if e.get("core")]
     if not es:
         return txt
@@ -799,8 +804,9 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
         if e.get("bit_route") != "per_bit" or "leaf_um" not in e or not e.get("conn", "").startswith("bus:"):
             raise SystemExit(f"kit_istations: {tn}: core station {e.get('conn')} {e.get('core')}: needs bus conn, "
                              "bit_route per_bit and leaf_um")
-        if e["core"] not in cores:
-            raise SystemExit(f"kit_istations: {tn}: core station on unknown hard core {e['core']}")
+        cl = core_list(e)
+        if len(set(cl)) != len(cl) or any(c not in cores for c in cl):
+            raise SystemExit(f"kit_istations: {tn}: core station on unknown / repeated hard core {e['core']}")
         by.setdefault(e["conn"][4:], []).append(e)
     for bus, bes in by.items():
         b = next((x for x in t["buses"] if x["name"] == bus), None)
@@ -826,14 +832,14 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
         pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
         decl, body, names_all = [], [], []
         chains = []
+        tags = [f"{n}__" + "_".join(gen_rtl.sv_id(c) for c in core_list(e)) + f"_{gi}" for gi, e in enumerate(bes)]
         for gi, e in enumerate(bes):
-            tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
-            chains.append([f"u_ist_{tag}_{j}" for j in range(k)])
+            chains.append([f"u_ist_{tags[gi]}_{j}" for j in range(k)])
         if b["dir"] == "in":
             q, eq = (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
             lines = txt.split("\n")
             for gi, e in enumerate(bes):
-                tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
+                tag = tags[gi]
                 cq, ceq = q, eq
                 for j in range(k):
                     decl.append(f"    wire [{W - 1}:0] {tag}_s{j}_q;\n    wire {tag}_s{j}_eq;  // kit_istations core chain")
@@ -841,24 +847,29 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
                                 f".q({tag}_s{j}_q), .eq({tag}_s{j}_eq));  // kit_istations: FIRM core pin-face station")
                     cq, ceq = f"{tag}_s{j}_q", f"{tag}_s{j}_eq"
                 want = {int(x) for x in e["core_bits"]}
-                rx = re.compile(rf"^\s*\w+\s+{re.escape(e['core'])}\s*\(")
-                hit = [i for i, ln in enumerate(lines) if rx.match(ln)]
-                if len(hit) != 1:
-                    raise SystemExit(f"kit_istations: {tn} {bus}: {len(hit)} instance lines of core {e['core']}")
                 seen = set()
+                for core in core_list(e):
+                    hit = core_line(lines, core)
+                    if len(hit) != 1:
+                        raise SystemExit(f"kit_istations: {tn} {bus}: {len(hit)} instance lines of core {core}")
+                    got = set()
 
-                def sub(m, cq=cq, want=want, seen=seen):
-                    if m.group(1) is None:          # bare read: only a 1-bit bus ([0:0]) reads its bit 0 this way
-                        if W != 1:
-                            raise SystemExit(f"kit_istations: {tn} {bus}: bare whole-bus read of {q} by {e['core']}")
-                        bit = 0
-                    else:
-                        bit = int(m.group(1))
-                    if bit in want:
-                        seen.add(bit)
-                        return f"{cq}[{bit}]"
-                    return m.group(0)
-                lines[hit[0]] = re.sub(rf"\b{re.escape(q)}(?:\[(\d+)\]|(?![\w$\[]))", sub, lines[hit[0]])
+                    def sub(m, cq=cq, want=want, got=got, core=core):
+                        if m.group(1) is None:          # bare read: only a 1-bit bus ([0:0]) reads its bit 0 this way
+                            if W != 1:
+                                raise SystemExit(f"kit_istations: {tn} {bus}: bare whole-bus read of {q} by {core}")
+                            bit = 0
+                        else:
+                            bit = int(m.group(1))
+                        if bit in want:
+                            got.add(bit)
+                            return f"{cq}[{bit}]"
+                        return m.group(0)
+                    lines[hit[0]] = re.sub(rf"\b{re.escape(q)}(?:\[(\d+)\]|(?![\w$\[]))", sub, lines[hit[0]])
+                    if not got:
+                        raise SystemExit(f"kit_istations: {tn} {bus}: core {core} of shared chain {tag} reads none of "
+                                         "its core_bits")
+                    seen |= got
                 if seen != want:
                     raise SystemExit(f"kit_istations: {tn} {bus}: core {e['core']} does not read bits "
                                      f"{sorted(want - seen)[:8]} of core_bits")
@@ -890,7 +901,7 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
                 raise SystemExit(f"kit_istations: {tn} {bus}: u_bout d bits {miss[:8]} belong to no core chain")
             fin = []
             for gi, e in enumerate(bes):
-                tag = f"{n}__{gen_rtl.sv_id(e['core'])}_{gi}"
+                tag = tags[gi]
                 cd = "{" + ", ".join(bits[i] if owner[W - 1 - i] == [gi] else "1'b0" for i in range(W)) + "}"
                 cq, ceq = cd, ea0
                 for j in range(k):
@@ -904,14 +915,57 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
             line = re.sub(r"^(\s*)ot_dp_ste\b", r"\1ot_dp_st", line)
             txt = txt[:m.start()] + line + txt[m.end():]
         txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
+        if b["dir"] == "in":
+            check_core_delay(tn, bus, txt, [(tags[gi], core_list(e)) for gi, e in enumerate(bes)], k, q)
         for gi, e in enumerate(bes):
             lx, ly = e["leaf_um"]
             for j, nm in enumerate(chains[gi]):
                 # out chains run core -> face: is_bits stage j counts from the leaf for out, from the pin for in
-                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} ist:{bus}:{e['core']} 0")
+                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} "
+                           f"ist:{bus}:{'+'.join(core_list(e))} 0")
             rep.append(dict(conn=e["conn"], core=e["core"], planned=k, bound_pads=len(pads), inserted=k,
                             stations=chains[gi], core_bits=len(e["core_bits"]), plan_width=b["width"], bound_width=W))
     return txt
+
+
+def core_list(e):
+    """hard cores one core pin-face chain serves ('core': inst or [inst, ...])"""
+    return [e["core"]] if isinstance(e["core"], str) else list(e["core"])
+
+
+def core_line(lines, core):
+    rx = re.compile(rf"^\s*\w+\s+{re.escape(core)}\s*\(")
+    return [i for i, ln in enumerate(lines) if rx.match(ln)]
+
+
+def check_core_delay(tn, bus, txt, chains, k, q):
+    """fail closed unless every read of a core chain (outside the chain itself) is the LAST station (k-1) on the
+    instance line of a core that chain lists, and no listed core reads the face register q directly: a consumer at
+    any other stage would see the bus at a different latency"""
+    n = gen_rtl.sv_id(bus)
+    tags = {tag: set(cs) for tag, cs in chains}
+    lines = txt.split("\n")
+    for core in sorted({c for _, cs in chains for c in cs}):
+        hit = core_line(lines, core)
+        if len(hit) != 1:
+            raise SystemExit(f"kit_istations: {tn} {bus}: {len(hit)} instance lines of core {core}")
+        d = re.search(rf"\b{re.escape(q)}(?:\[\d+\]|(?![\w$\[]))", lines[hit[0]])
+        if d:
+            raise SystemExit(f"kit_istations: {tn} {bus}: core {core} reads {d.group(0)} off the face register "
+                             f"(stage 0 of {k}): wrong delay")
+    for ln in lines:
+        if re.match(r"^\s*(wire|reg|logic)\b", ln) or re.search(rf"\bu_ist_{re.escape(n)}__", ln):
+            continue
+        refs = [(m.group(0), m.group(1), int(m.group(2))) for m in re.finditer(rf"\b({re.escape(n)}__\w+?)_s(\d+)_q\b", ln)
+                if m.group(1) in tags]
+        if not refs:
+            continue
+        mi = re.match(r"^\s*\w+\s+([\w$]+)\s*\(", ln)
+        inst = mi.group(1) if mi else None
+        for ref, tag, j in refs:
+            if inst not in tags[tag] or j != k - 1:
+                raise SystemExit(f"kit_istations: {tn} {bus}: {inst or ln.strip()[:40]} reads {ref} (stage {j + 1} of {k}"
+                                 f"{'' if inst in tags[tag] else ', not a core of that chain'}): wrong delay")
 
 
 def bus_entries(t):

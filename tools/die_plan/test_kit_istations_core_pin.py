@@ -129,3 +129,88 @@ def test_taps_sinks_only_core_bits():
     assert got == 2 * 16
     t2 = dict(t, internal_stations=[dict(e, core=None) for e in t["internal_stations"]])
     assert len(taps.per_bit_station_sites(t2, pins)) == 2 * (2 * 5 + 2 * 2 + 2 * 4)
+
+
+def shared_plan(bits=(0, 1, 2, 3), cores=("A", "B")):
+    p = plan()
+    t = p["partition_types"]["t"]
+    t["internal_stations"] = [st("x", list(cores), list(bits))] + [e for e in t["internal_stations"] if e["conn"] != "bus:x"]
+    return p
+
+
+def run_plan(tmp_path, p):
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(p))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    bf = kd / "t_part_bound.sv"
+    bf.write_text(BOUND)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
+                       capture_output=True, text=True)
+    return r, bf, kd
+
+
+def test_shared_chain_two_cores(tmp_path):
+    """core: [A, B] -> ONE x chain; both cores read its last station (the broadcast bit 1 crosses once)"""
+    r, bf, kd = run_plan(tmp_path, shared_plan())
+    assert r.returncode == 0, r.stderr
+    txt = bf.read_text()
+    a = next(ln for ln in txt.splitlines() if re.match(r"\s*core_a A \(", ln))
+    b = next(ln for ln in txt.splitlines() if re.match(r"\s*core_b B \(", ln))
+    assert "x__A_B_0_s1_q[1], x__A_B_0_s1_q[0]" in a and "x_q" not in a
+    assert "x__A_B_0_s1_q[3], x__A_B_0_s1_q[2], x__A_B_0_s1_q[1]" in b and "x_q" not in b
+    assert len(re.findall(r"\bu_ist_x__\w+_\d+ \(", txt)) == 2          # one chain of 2, not two
+    assert re.search(r"u_ist_x__A_B_0_0 \(.*\.d\(x_q\), \.ea\(x_eq\)", txt)
+    tcl = (kd / "istations.tcl").read_text()
+    assert "ist:x:A+B 0" in tcl
+    rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
+    assert [e["core"] for e in rep if e.get("conn") == "bus:x"] == [["A", "B"]]
+
+
+@pytest.mark.parametrize("bits,cores,msg", [((0, 1, 2), ("A", "B"), "still read outside"),     # B reads bit 3 direct
+                                            ((0,), ("A", "B"), "reads none of its core_bits"),  # B reads no chain bit
+                                            ((0, 1, 2, 3), ("A", "A"), "repeated hard core")])
+def test_shared_chain_must_fail(tmp_path, bits, cores, msg):
+    r, bf, _ = run_plan(tmp_path, shared_plan(bits, cores))
+    assert r.returncode != 0 and msg in (r.stderr + r.stdout), r.stderr[-400:]
+    assert bf.read_text() == BOUND
+
+
+@pytest.mark.parametrize("old,new", [("x__A_B_0_s1_q[3]", "x__A_B_0_s0_q[3]"),     # B one stage early
+                                     ("x__A_B_0_s1_q[2]", "x_q[2]")])               # B straight off the face reg
+def test_shared_chain_consumer_wrong_delay_fails(tmp_path, old, new):
+    """must-fail: one consumer of a shared chain at the wrong delay"""
+    r, bf, _ = run_plan(tmp_path, shared_plan())
+    assert r.returncode == 0, r.stderr
+    sys.path.insert(0, str(HERE))
+    import kit_istations as KI
+    txt = bf.read_text()
+    KI.check_core_delay("t", "x", txt, [("x__A_B_0", ["A", "B"])], 2, "x_q")       # the applied text passes
+    lines = txt.split("\n")
+    i = next(i for i, ln in enumerate(lines) if re.match(r"\s*core_b B \(", ln))
+    assert old in lines[i]
+    lines[i] = lines[i].replace(old, new)
+    bad = "\n".join(lines)
+    with pytest.raises(SystemExit, match="wrong delay"):
+        KI.check_core_delay("t", "x", bad, [("x__A_B_0", ["A", "B"])], 2, "x_q")
+    with pytest.raises(SystemExit, match="wrong delay"):     # B reading A's (unshared) chain is not its chain
+        KI.check_core_delay("t", "x", txt, [("x__A_B_0", ["A"])], 2, "x_q")
+
+
+def test_shared_core_schema():
+    sys.path.insert(0, str(HERE))
+    import schema
+    sp = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]
+    assert {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 2,
+            "uniqueItems": True} in sp["items"]["properties"]["core"]["oneOf"]
+
+
+def test_taps_shared_chain_sinks():
+    sys.path.insert(0, str(HERE))
+    import taps
+    t = shared_plan()["partition_types"]["t"]
+    pins = [("x", b, "M4", 0.0, 10.0 + b, "W") for b in range(5)] + [("f", b, "M4", 0.0, 30.0 + b, "W") for b in range(2)] \
+        + [("y", b, "M5", 10.0 + b, 100.0, "N") for b in range(4)]
+    # x shared: 4+1 (was A 2+1 + B 3+1 = 7); f 4; y 5 -> 14 bit rows x 2 stations
+    assert len(taps.per_bit_station_sites(t, pins)) == 2 * 14
