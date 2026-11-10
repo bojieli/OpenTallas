@@ -257,7 +257,8 @@
     "kv3_pc_v3@7",
     "kv3_sys_SD_v1@13",
     "kv3_hub_Ei@16",
-    "kv3_sys_c@7"
+    "kv3_sys_c@7",
+    "kv3_sys_c@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -536,7 +537,8 @@
     "kv3_io_cor_v1@7": "KW-FIX-35-K 2026-11-08 07:57 PST: KV class plan event kvcls_1108 (C1 LANDING-RING-DENSITY + C2 io_ft_v1 ft_hop_lockup/landing_status_reg; KV-TYPES-4 READY 06:01, COORD 06:09): claude/kv-types-4-ringdens-1108@5178ea7aa2, plan ev/por md5 886ab8db, bind_kvcls strict 0; fresh kit, kit inputs change",
     "kv3_sys_SD_v1@13": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 8 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
     "kv3_hub_Ei@16": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -116.76 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
-    "kv3_sys_c@7": "KV-PLAN-2 11-10 COORD-approved plan fix (DIE-KV-97 M7 pair): ROM clk pin and 4 D2D SRAM pins moved off the M7 VSS/VDD no-track gap (ROM 16 sites west, SRAMs 0.864 um west), item plan plan_kvfix1 md5 57c77c4b. Relaunch from floorplan (2_1), reuse synth."
+    "kv3_sys_c@7": "KV-PLAN-2 11-10 COORD-approved plan fix (DIE-KV-97 M7 pair): ROM clk pin and 4 D2D SRAM pins moved off the M7 VSS/VDD no-track gap (ROM 16 sites west, SRAMs 0.864 um west), item plan plan_kvfix1 md5 57c77c4b. Relaunch from floorplan (2_1), reuse synth.",
+    "kv3_sys_c@9": "KW-FIX-44 2026-11-10 14:53 PST COORD (pruned bind): INFRA, not a rebind. a9 kit_rtl ran on epyc7, where the asbuilt base kv-plan-2/src_zbr held 485 of 320,867 files. Bind of record stays bind9c2 (COORD 11-09 15:0x approved; its only RTL change vs the die bind kvr2_9237b is kv3_sys_c u_d2d_kv .KV_RTT(511), so repointing at the die bind would drop it). src_zbr (excluding .git) copied from epyc2 to epyc8 (320,867 files, same count, rc 0) and epyc7 (copy in progress), add-only; bind9c2 + plan_zbr2 + plan_kvfix1 staged. Plan fix plan_kvfix1 (retry_fix @7) unchanged."
    },
    "only_items": [
     "kv3_astk",
