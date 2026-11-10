@@ -58,6 +58,7 @@ HEAD has no lane that composes a die plan event or switch. H1-H6 all need one, a
 | Q4 | su_idle status race (4a): SU compiler term (+23 is 9 short) | FUNC | DIE-QC-96 -> DIE-QC-97 | compiler only, READY 23:42 | compiler, no plan | none |
 | Q5 | HI_PAD 166k flops: compiler reschedule of N-half return could replace 127k of them | CAP | QC-TRANSPORT-FIX-4 | advisory estimate | would change Q2 values: decide BEFORE the switch | st types |
 | Q6 | FAIL\|PLAN: none on QC now (KIT_TOPOLOGY_BIND_STALE fixed by the v4t/v4s rebind) | | | | | |
+Q1 view link (COUNT-ARCHIVE-2 11-10, per COORD): the mem9 form of su_lane_w_l3 (l3s) is signed off and archived, store id dbdce3cc5a364050 (signoff), routed DB + kit in store id 570173901a488bc1 (eco1/i1), flow-20261109-fe-qc, routed LEC EQ. When Q1 switches: flip the HOLD row intel1:/srv/opentallas-scratch2/claude/dq97/l3s/resign_eco in lanes/COUNT-DO-NOT-COUNT.tsv to CLEARED in the same commit and force a count; l3 stays 1 design, count-flat. Until then the old l3 is the only credit.
 Not plan: cland window grow (landing_placement.tcl, DIE-QC-97), conservative forms for 9 attempt>=6 grt/hold rows.
 
 ## KV (qwen_kvsys). Planned switch: ONE switch plan_p4 + bind5 + src_p5 (DIE-KV-97 READY 02:24)
