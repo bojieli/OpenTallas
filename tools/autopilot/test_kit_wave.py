@@ -298,6 +298,26 @@ STATUS = ("ot-run status: epyc2 admits 713 GB (avail 845, reserve 0, fresh 0, pe
           "251 GB (avail 533) load 112/112 run 45 root 13% scratch 822 GB | next 16-thread 32 GB job -> epyc2")
 
 
+class RotateDies(unittest.TestCase):
+    """KW-FIX-43 11-09: no die is always last in a pass's launch order"""
+    ROWS = [("hbm", 1), ("hbm", 2), ("qwen_compute", 3), ("s81", 4)]
+
+    def order(self, n):
+        return KW.rotate_dies(self.ROWS, lambda r: r[0], n)
+
+    def test_pass_zero_or_missing_is_sorted(self):
+        self.assertEqual(self.order(0), self.ROWS)
+        self.assertEqual(self.order(None), self.ROWS)
+
+    def test_every_die_leads_once_per_cycle_and_keeps_its_rows_in_order(self):
+        self.assertEqual({self.order(n)[0][0] for n in range(3)}, {"hbm", "qwen_compute", "s81"})
+        self.assertEqual(self.order(2), [("s81", 4), ("hbm", 1), ("hbm", 2), ("qwen_compute", 3)])
+
+    def test_one_die_unchanged(self):
+        rows = [("s81", 2), ("s81", 1)]
+        self.assertEqual(KW.rotate_dies(rows, lambda r: r[0], 7), rows)
+
+
 class Capacity(unittest.TestCase):
     def test_parse_status(self):
         s = KW.parse_otrun_status(STATUS)

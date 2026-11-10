@@ -3521,6 +3521,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
         out.append((die, ok, why, picks, skip))
     # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
     # every per-tick slot so HEAD l46 never launched (KIT-WAVE-2 23:17).
+    if per_die:                                          # KW-FIX-43: no die is always first or last (rotate_dies)
+        k = int(st.get("pass_n") or 0) % len(per_die)
+        per_die = per_die[k:] + per_die[:k]
     room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
                       int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
     # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
@@ -3796,6 +3799,18 @@ def infra_attempts(cfg, die):
 def infra_used(rec):
     """attempts spent since the last design verdict (records before infra_base existed: all attempts)"""
     return int(rec.get("attempt") or 0) - int(rec.get("infra_base") or 0)
+
+
+def rotate_dies(rows, die_of, pass_n):
+    """KW-FIX-43 11-09 (COORD: S81 always last): the order of one pass's launches, the dies rotated by pass number.  Rows
+    were taken in sorted die order, and with one gen host each tick filled its load cap before reaching s81 (0 S81 launches
+    18:58-19:50, 50 rows waiting).  Stable within a die; pass 0 = sorted order."""
+    dies = sorted({die_of(x) for x in rows})
+    if len(dies) < 2:
+        return list(rows)
+    k = int(pass_n or 0) % len(dies)
+    rank = {d: (i - k) % len(dies) for i, d in enumerate(dies)}
+    return sorted(rows, key=lambda x: rank[die_of(x)])
 
 
 def infra_relaunch_due(cfg, rec):
@@ -4384,7 +4399,7 @@ def _step(AP, ap_dir):
             write_stages(st, ap_dir, cfg)
         return reload_step(AP, ap_dir)
     held = {}                                            # SCHED-1: rows left pending this tick, per die
-    for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
+    for key, rec in rotate_dies(list(st["items"].items()), lambda kv: kv[1]["die"], st.get("pass_n")):  # INFRA relaunch (up to infra_attempts)
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
