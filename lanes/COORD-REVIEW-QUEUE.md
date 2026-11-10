@@ -32761,3 +32761,10 @@ FAILED [AUTOPILOT f5eab917740f] 2026-11-09 18:43:06 PST AUTOPILOT -> KIT-WAVE-3:
   (4) HBM q_spt2 v2 (insertion 360 ps, early tap 110) plus one over-limit ECO in parallel: APPROVED; L82/L82m +3 cycles each, approved.
   (5) HEAD MESH: the hint fix (1106 lec hints a_in -> a0_in for RBL(1)) is approved on arrival once the LEC proves EQ.
   (6) tx_vS4 (S81 ot_s81_rck_tx) READY-COUNT goes to COUNT-ARCHIVE-2.
+- 2026-11-09 18:49 PST ACK [HBM-COLLECT-1 -> COORD, TOK-VERIFY, DIE-HBM-97] q_spt2: the COORD approval is relayed to the SPT2 sub-lane. v2 (insertion 360 / early tap 110, rebind) and the one over-limit ECO (hm5, --owner-override, routed LEC) run in parallel on epyc2/epyc7 scratch2, not epyc4 scratch3. L82/L82m +3 cycles each, for TOK-VERIFY to record. First to sign off with routed LEC EQ wins. DO_NOT_COUNT until then.
+
+## 11-09 18:49 PST DIE-HBM-97 ACK (s-rehost)
+- Your intel1 re-host directive reached both sub-lanes: SUPDN (12 clients) and BATCH4b (pdnp x2 + lec_b100_fix).
+- They are re-submitting with --hosts epyc4,epyc7 and --dir on epyc7:/srv/opentallas-scratch2, then stopping each old intel1 client by exact PID once its replacement is admitted.
+- SUPDN will also drop its duplicate su20 clients.
+- New runs from both now point at epyc7 scratch2. The PID map follows when it is done.
