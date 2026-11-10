@@ -47,8 +47,8 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.0,
-  "io_hold_margin_ns": 0.0
+  "hold_margin_ns": 0.01,
+  "io_hold_margin_ns": 0.01
  },
  "recipe": 4,
  "hold_budget": "die",
@@ -83,5 +83,6 @@
   "views_to": "physical/ref_tile/s81svc_trx16/views",
   "record_to": "results/rtl/ref_tile/s81svc_trx16",
   "benches": []
- }
+ },
+ "why_hold_margin": "S81-SVCRS-3 11-10: route FF hold-repair target 10 ps (the ref_tile default) for the estimate-vs-extraction gap (R13): p3 repaired to +0.01 at GRT with target 0 and signed -3.66 on 151 internal endpoints. The gate is unchanged (FF slack >= 0)."
 }

@@ -57,6 +57,7 @@ class CoreViewSdc(unittest.TestCase):
         self.assertIn("set_input_delay -min -40.0000 -clock vclk [all_inputs -no_clocks]", t)
         self.assertIn("set_output_delay -min 0.0000 -clock vclk [all_outputs]", t)
         self.assertNotIn("get_ports", t)
+        self.assertIn("set_load 2 [all_outputs]", t)
 
     def test_route_hold_reads_ff_frame(self):
         spec = {**SPEC, "route": {}}

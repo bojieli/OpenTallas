@@ -11,3 +11,6 @@ set_input_delay -max 166.6000 -clock vclk [all_inputs -no_clocks]
 set_input_delay -min -40.0000 -clock vclk [all_inputs -no_clocks]
 set_output_delay -max 166.6000 -clock vclk [all_outputs]
 set_output_delay -min 0.0000 -clock vclk [all_outputs]
+# the golden's port load / drive (the route SDC has set_load 80, which hid ~10 ps of output hold at FF)
+set_load 2 [all_outputs]
+set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y [all_inputs -no_clocks]

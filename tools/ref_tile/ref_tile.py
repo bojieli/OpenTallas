@@ -2208,7 +2208,10 @@ def gen_core_view_ff_sdc(s: dict) -> str:
             f"set_input_delay -max {fin * per:.4f} -clock vclk [all_inputs -no_clocks]\n"
             f"set_input_delay -min {-CORE_VIEW_TOL_PS:.4f} -clock vclk [all_inputs -no_clocks]\n"
             f"set_output_delay -max {fout * per:.4f} -clock vclk [all_outputs]\n"
-            "set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
+            "set_output_delay -min 0.0000 -clock vclk [all_outputs]\n"
+            "# the golden's port load / drive (the route SDC has set_load 80, which hid ~10 ps of output hold at FF)\n"
+            "set_load 2 [all_outputs]\n"
+            "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y [all_inputs -no_clocks]\n")
 
 
 def io_budget_env(s: dict) -> dict:
