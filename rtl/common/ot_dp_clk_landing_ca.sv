@@ -353,8 +353,9 @@ module ot_meso_ring_ca #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             for (genvar c = 0; c < WNC; c++) begin : ch
                 // WLIVE-1: a padding-only chunk's enable flop keeps its name/site but takes D = 0 (no start load)
-                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk),
-                    .d((c * WWC < WLIVE) ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0), .q(wen[i * WNC + c]));
+                localparam bit LIVE = (c * WWC) < WLIVE;
+                wire wen_d = LIVE ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0;
+                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(wen_d), .q(wen[i * WNC + c]));
             end
         end
         assign t_go = fs_q;
