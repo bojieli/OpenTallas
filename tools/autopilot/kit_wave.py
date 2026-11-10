@@ -1133,6 +1133,36 @@ ERROR_LINE = re.compile(r"Traceback \(most recent|^\w*(?:Error|Exception)\b|Erro
                         r"ot-run: NOT (?:RUN|COMPLETED)|Connection (?:reset|refused|closed)|kex_exchange|exit 137\b")
 
 
+def preflight_advisory(text):
+    """kit_preflight --out receipt text -> {check: {verdict, n, errors[:5]}} for every contract advisory that is not
+    PASS/NA (OWNER 11-03 targets, not gates: a report, never a stop); {'unread': why} when the receipt is unreadable.
+    A plan-less run ('no plan contents (pass --plan-dir)') is kept as it is: the wave always passes --plan-dir."""
+    s = text or ""
+    try:                                                 # the receipt is the one JSON object in the text (ssh chatter around)
+        rec = json.loads(s[s.index("{"):s.rindex("}") + 1])
+    except ValueError as e:
+        return {"unread": f"receipt not JSON: {e}"[:200]}
+    if not isinstance(rec, dict):
+        return {"unread": "receipt is not an object"}
+    out = {}
+    for name, row in sorted((rec.get("contract_advisory") or {}).items()):
+        if row.get("verdict") in ("PASS", "NA"):
+            continue
+        errs = row.get("errors") or []
+        out[name] = {"verdict": row.get("verdict"), "n": int(row.get("n_errors") or len(errs)),
+                     "errors": [str(e)[:300] for e in errs[:5]]}
+    return out
+
+
+def advisory_line(adv):
+    """one summary line of preflight_advisory(): 'macro_pin_grid 6 (macro X ...); macro_channels 2 (...)' or ''"""
+    if not adv:
+        return ""
+    if "unread" in adv:
+        return "receipt unread: " + adv["unread"][:120]
+    return "; ".join(f"{k} {v['n']} ({(v['errors'] or [''])[0][:140]})" for k, v in adv.items())[:600]
+
+
 def error_lines(text, n=16):
     """the last n error-looking lines of a whole stage log: classify() reads these first, so a long log whose decisive
     line (a Python exception, FACE_GUARD FAIL) sits before the kept tail is still classified (AUTOBUILD-PIPE-1 10-30:
@@ -3151,6 +3181,10 @@ def run_item(spec_path):
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc:
         return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/{pfo}")
+    # KW-FIX-44 11-10 (DIE-KV-97): the contract advisories of this --plan-dir run (macro_pin_grid, macro_channels ...)
+    # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
+    _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
+    res["preflight_advisory"] = preflight_advisory(rtxt)
     # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
     # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
     # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
@@ -3827,6 +3861,11 @@ def collect(AP, cfg, st, notices):
         rec["stage"] = res.get("stage")
         rec["evidence"] = res.get("evidence", "")
         rec["kit"] = res.get("kit", "")
+        if "preflight_advisory" in res:                  # KW-FIX-44 11-10: the kit's contract advisories, per attempt
+            rec["preflight_advisory"] = res["preflight_advisory"]
+            line = advisory_line(res["preflight_advisory"])
+            if line:
+                notices.setdefault(rec["die"], []).append(f"{rec['item']} PREFLIGHT-ADVISORY {line}")
         if res.get("provisional"):                      # KW-PROV-1: {child module: routed <job> | contract}
             # KW-FIX-35-V: a child built on its counted signed view ('signed') is final, not owed a re-sign
             rec["provisional"] = {m: (v.get("source") if isinstance(v, dict) else v)

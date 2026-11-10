@@ -411,6 +411,25 @@ REFUSED_THEN_RAN = ("ot-heavy: NOT RUN: no memory on dear-crayfish within 599 s 
                     "ot-run: RAN on epyc2 (unit oth-ubuntu-771973-1794291072): exit 2\nKW_PLACE_RC=2\n")
 
 
+class PreflightAdvisory(unittest.TestCase):
+    """KW-FIX-44 11-10 (DIE-KV-97): the --plan-dir preflight's contract advisories reach result.json / the row"""
+
+    def test_receipt_to_summary(self):
+        rec = {"verdict": "PASS", "contract_advisory": {
+            "macro_pin_grid": {"verdict": "FAIL", "n_errors": 6, "errors": [
+                "macro ot_rom_64x32_m2#5 at (302.4, 250.56) R0: 40 signal pin(s) off the make_tracks.tcl track grid"] * 6},
+            "macro_channels": {"verdict": "PASS", "errors": []}, "keep_hook": {"verdict": "NA", "errors": []}}}
+        adv = KW.preflight_advisory("Warning: ssh chatter\n" + json.dumps(rec) + "\n")
+        self.assertEqual(list(adv), ["macro_pin_grid"])
+        self.assertEqual(adv["macro_pin_grid"]["n"], 6)
+        self.assertEqual(len(adv["macro_pin_grid"]["errors"]), 5)
+        line = KW.advisory_line(adv)
+        self.assertTrue(line.startswith("macro_pin_grid 6 (macro ot_rom_64x32_m2#5"), line)
+        self.assertEqual(KW.advisory_line(KW.preflight_advisory(json.dumps({"contract_advisory": {}}))), "")
+        self.assertIn("unread", KW.preflight_advisory("cat: no such file"))
+        self.assertIn("unread", KW.advisory_line(KW.preflight_advisory("")))
+
+
 class FirstRealClassWins(unittest.TestCase):
     """KW43-77 11-10: a NOT RUN try retried by a try that RAN is superseded; the ran try's failure class decides, also
     when reclassify / auto-rejudge re-reads the whole stored stage log"""

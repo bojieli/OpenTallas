@@ -117,6 +117,30 @@ class ChainTest(unittest.TestCase):
         self.assertEqual(calls[0][1], str(source))
         self.assertFalse((k / "kit_preflight.py").exists())
 
+    def test_planless_preflight_keeps_gen_time_verdict_and_plan_dir_passes(self):
+        # KW-FIX-44 11-10 (DIE-KV-97): the run's plan-less preflight overwrote KIT/preflight.json (macro_pin_grid
+        # 'no plan contents (pass --plan-dir)'); it now keeps the gen-time verdict, and a given plan dir is passed on
+        k, b = self.vehicle()
+        source = k / "shared/kit_preflight.py"
+        source.parent.mkdir()
+        source.write_text("ap.add_argument('--no-emit')\nap.add_argument('--plan-dir')\n")
+        (k / "preflight.json").write_text("{}")
+        run, calls = self.runner(k, b)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run, preflight=source), 0)
+        self.assertIn("--no-emit", calls[0])
+        self.assertNotIn("--plan-dir", calls[0])
+        k2, b2 = self.vehicle()
+        run2, calls2 = self.runner(k2, b2)
+        self.assertEqual(continue_kit(k2, "runner.sh", "route", 48, 8, run2, preflight=source, plan_dir="/p/plandir"), 0)
+        self.assertEqual(calls2[0][calls2[0].index("--plan-dir") + 1], "/p/plandir")
+        self.assertNotIn("--no-emit", calls2[0])
+        # an old staged preflight without --no-emit is called as before (no unknown flag)
+        old = k / "shared/old_preflight.py"
+        old.write_text("ap.add_argument('--out')\n")
+        run3, calls3 = self.runner(*self.vehicle())
+        self.assertEqual(continue_kit(k, "runner.sh", "grt", 48, 8, run3, preflight=old), 0)
+        self.assertNotIn("--no-emit", calls3[0])
+
     def test_missing_explicit_shared_preflight_stops_before_runner(self):
         k, _ = self.vehicle()
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8,
