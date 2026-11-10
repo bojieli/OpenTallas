@@ -1006,6 +1006,8 @@ SCHEMA = {
             # on every count-aligned ring (+1 rv/lap fault cycle, data/ready cycles unchanged); absent = legacy.
             "landing_ring_fanout_max": {"enum": [0, 1, 2, 4, 8, 16, 32, 64]},
             "landing_ring_status_reg": {"type": "boolean"},
+            "landing_ring_write_chunk": {"enum": [0, 8, 16, 32, 64]},
+            "landing_ring_sdc_max_fanout": {"type": "boolean"},
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
                                          "write_fall_types": {"type": "array", "items": {"type": "string"}},

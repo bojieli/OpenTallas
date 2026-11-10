@@ -37,25 +37,41 @@ def ring_fanout_max(clock):
     """DIE-QC-97 CLAND-RING-FO (COORD 11-10): die-level clock.landing_ring_fanout_max = F (power of two <= 64; 0 /
     absent = legacy).  With F > 0 every WREG count-aligned ring has <= F loads per write-enable flop (write_chunk <= F)
     and per read-select copy (dsrep >= 64 / F on the legacy 64-bit read chunk), using the existing kept same-D register
-    copies (0 cycles, no K change), and gen_phys emits set_max_fanout F in the kit SDC.  Default 0: byte-same kits."""
+    copies (0 cycles, no K change), and gen_phys emits set_max_fanout F in the kit SDC.  Default 0: byte-same kits.
+    Pilot 1 (11-10 CTS): F drives the read-select copies (dsrep) and the reader START copies (RSTREP) only; the write
+    chunk bound is the separate opt-in clock.landing_ring_write_chunk (ring_write_chunk_max) and the SDC line the
+    separate opt-in clock.landing_ring_sdc_max_fanout (gen_phys.ring_fanout_sdc)."""
     f = (clock or {}).get("landing_ring_fanout_max", 0)
     if isinstance(f, bool) or not isinstance(f, int) or f not in RING_FANOUT_CHOICES:
         raise ValueError(f"clock.landing_ring_fanout_max must be one of {RING_FANOUT_CHOICES}, got {f!r}")
     return f
 
 
+RING_WRITE_CHUNK_CHOICES = (0, 8, 16, 32, 64)
+
+
+def ring_write_chunk_max(clock):
+    """Opt-in write-enable fanout bound clock.landing_ring_write_chunk = C (0 / absent / 64 = legacy 64-bit chunks).
+    Kept apart from landing_ring_fanout_max: halving the chunk doubles the enable flops on the forwarded start, and
+    pilot 1 measured the start -> enable T/2 path failing on a wide ring (st_ei -13.4 ps TT, 52 endpoints)."""
+    c = (clock or {}).get("landing_ring_write_chunk", 0)
+    if isinstance(c, bool) or not isinstance(c, int) or c not in RING_WRITE_CHUNK_CHOICES:
+        raise ValueError(f"clock.landing_ring_write_chunk must be one of {RING_WRITE_CHUNK_CHOICES}, got {c!r}")
+    return 0 if c == 64 else c
+
+
 def ring_fanout_wreg_cfg(clock, cfg):
     """The landing_ring_wreg cfg dict as built under the die fanout bound (a new dict; cfg itself when the bound is 0 or
     the type has no WREG cfg).  Read-select copies are raised only on the legacy 64-bit read chunk (read_chunk 0): a
     bounded read_chunk type keeps its own dsrep (ot_meso_dsel needs SREP | chunk width)."""
-    f = ring_fanout_max(clock)
-    if not f or not isinstance(cfg, dict) or not cfg:
+    f, cmax = ring_fanout_max(clock), ring_write_chunk_max(clock)
+    if not (f or cmax) or not isinstance(cfg, dict) or not cfg:
         return cfg
     out = dict(cfg)
     wc = out.get("write_chunk", 64)
-    if isinstance(wc, int) and not isinstance(wc, bool) and wc > f:
-        out["write_chunk"] = f
-    if not out.get("read_chunk"):
+    if cmax and isinstance(wc, int) and not isinstance(wc, bool) and wc > cmax:
+        out["write_chunk"] = cmax
+    if f and not out.get("read_chunk"):
         ds = out.get("dsrep", 1)
         if isinstance(ds, int) and not isinstance(ds, bool) and ds * f < 64:
             out["dsrep"] = 64 // f

@@ -2683,7 +2683,12 @@ def ring_fanout_sdc(P, tn):
     a timing exception (sdc_lint ring_fanout).  0 / absent or no landed ring: no line (byte-same kit SDC)."""
     import clock_landings as CL
     f = CL.ring_fanout_max(P.clock)
-    if not f or not P.types[tn].get("clock", {}).get("landing_contract"):
+    opt = (P.clock or {}).get("landing_ring_sdc_max_fanout", False)
+    if not isinstance(opt, bool):
+        raise ValueError("clock.landing_ring_sdc_max_fanout must be a boolean")
+    # pilot 1 (11-10 CTS): repair_design met the line with BUFx2 splits on long quasi-static nets (strap K -> dsel
+    # place, 103 ring slew violators on st_ei), so the line is its own opt-in (default off) beside the bound F
+    if not f or not opt or not P.types[tn].get("clock", {}).get("landing_contract"):
         return ""
     return (f"{RING_FANOUT_TAG} plan clock.landing_ring_fanout_max {f} (DIE-QC-97): ring nets built as fanout trees\n"
             f"set_max_fanout {f} [current_design]\n")

@@ -29,19 +29,27 @@ def test_helper_bounds():
     assert ring_fanout_wreg_cfg({}, cfg) is cfg                       # legacy: the cfg itself
     assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 0}, cfg) is cfg
     out = ring_fanout_wreg_cfg({"landing_ring_fanout_max": 32}, cfg)
-    assert out == dict(buses=["y"], dsrep=2, write_chunk=32) and cfg == dict(buses=["y"], dsrep=1)
+    assert out == dict(buses=["y"], dsrep=2) and cfg == dict(buses=["y"], dsrep=1)      # write chunk stays 64
+    # the write chunk bound is its own opt-in (pilot 1: start -> enable T/2 on wide rings)
+    assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 32, "landing_ring_write_chunk": 32}, cfg) == \
+        dict(buses=["y"], dsrep=2, write_chunk=32)
+    assert ring_fanout_wreg_cfg({"landing_ring_write_chunk": 32}, cfg) == dict(buses=["y"], dsrep=1, write_chunk=32)
+    assert ring_fanout_wreg_cfg({"landing_ring_write_chunk": 64}, cfg) is cfg
     # never loosens an explicit tighter choice
-    assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 32}, dict(buses=[], dsrep=4, write_chunk=8)) == \
-        dict(buses=[], dsrep=4, write_chunk=8)
+    assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 32, "landing_ring_write_chunk": 32},
+                                dict(buses=[], dsrep=4, write_chunk=8)) == dict(buses=[], dsrep=4, write_chunk=8)
     # a bounded read_chunk type keeps its own dsrep (SREP must divide its chunk width)
-    assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 16}, dict(buses=[], dsrep=1, read_chunk=48)) == \
-        dict(buses=[], dsrep=1, read_chunk=48, write_chunk=16)
+    assert ring_fanout_wreg_cfg({"landing_ring_fanout_max": 16, "landing_ring_write_chunk": 16},
+                                dict(buses=[], dsrep=1, read_chunk=48)) == dict(buses=[], dsrep=1, read_chunk=48, write_chunk=16)
 
 
 @pytest.mark.parametrize("bad", [3, 48, 128, -1, True, "32", 32.0])
 def test_bad_bound(bad):
+    from clock_landings import ring_write_chunk_max
     with pytest.raises(ValueError):
         ring_fanout_max({"landing_ring_fanout_max": bad})
+    with pytest.raises(ValueError):
+        ring_write_chunk_max({"landing_ring_write_chunk": bad})
 
 
 def test_ring_rtl_and_same_k():
@@ -53,9 +61,13 @@ def test_ring_rtl_and_same_k():
     _wreg(p2)
     p2.setdefault("clock", {})["landing_ring_fanout_max"] = 32
     rtl = Landings(p2, t2).type_rtl("B", B_BODY)
-    assert ".WREG(1), .DSREP(2), .WRITE_CHUNK(32)) u_cland_y" in rtl
-    assert rtl.replace(".DSREP(2), .WRITE_CHUNK(32))", ".DSREP(1))") == base_rtl     # only the two parameters
+    assert ".WREG(1), .DSREP(2)) u_cland_y" in rtl and "WRITE_CHUNK" not in rtl
+    assert rtl.replace(".DSREP(2))", ".DSREP(1))") == base_rtl                       # only the read-select copies
     assert CAB.strap_ties(t2["count_aligned"], p2) == base_k                        # register copies: no K change
+    assert "write_chunk" not in ring_write_reg(p2, "B", "y")
+    p2["clock"]["landing_ring_write_chunk"] = 32                                    # the separate opt-in
+    rtl32 = Landings(p2, t2).type_rtl("B", B_BODY)
+    assert ".WREG(1), .DSREP(2), .WRITE_CHUNK(32)) u_cland_y" in rtl32
     assert ring_write_reg(p2, "B", "y")["write_chunk"] == 32
 
 
@@ -82,7 +94,8 @@ def test_placement_chunks_follow_the_bound():
     _wreg(p)
     typ = p["partition_types"]["B"]
     assert _local_chunk_config(typ) == "" and _local_chunk_config(typ, {}) == ""
-    assert "{write 32 read 32}" in _local_chunk_config(typ, {"landing_ring_fanout_max": 32})
+    assert _local_chunk_config(typ, {"landing_ring_fanout_max": 32}) == ""        # write chunk 64: no rows
+    assert "{write 32 read 32}" in _local_chunk_config(typ, {"landing_ring_fanout_max": 32, "landing_ring_write_chunk": 32})
 
 
 def test_sdc_line_gated_and_linted(monkeypatch):
@@ -92,6 +105,8 @@ def test_sdc_line_gated_and_linted(monkeypatch):
     raw = copy.deepcopy(T.TINY)
     raw.setdefault("clock", {})["landing_ring_fanout_max"] = 32
     monkeypatch.setattr(T, "TINY", raw)
+    assert "set_max_fanout" not in _landing_kit()[0]                           # the bound alone: no SDC line
+    raw["clock"]["landing_ring_sdc_max_fanout"] = True                          # its own opt-in
     txt, ctx = _landing_kit()
     assert txt.endswith("set_max_fanout 32 [current_design]\n") or "set_max_fanout 32 [current_design]\n" in txt
     assert txt.replace(next(ln for ln in txt.splitlines(True) if ln.startswith(gen_phys.RING_FANOUT_TAG)), "") \
@@ -111,7 +126,8 @@ def test_sdc_line_gated_and_linted(monkeypatch):
 def test_schema_accepts_the_knobs():
     import test_sdc_lint as T
     raw = copy.deepcopy(T.TINY)
-    raw.setdefault("clock", {}).update(landing_ring_fanout_max=32, landing_ring_status_reg=True)
+    raw.setdefault("clock", {}).update(landing_ring_fanout_max=32, landing_ring_status_reg=True,
+                                       landing_ring_write_chunk=32, landing_ring_sdc_max_fanout=True)
     schema.validate(raw) if hasattr(schema, "validate") else schema.Plan(raw)
 
 
