@@ -3,12 +3,13 @@
 // loopback (pma_rx = pma_tx, pma_rck = pma_tck = clk, so rck and clk cycles are the same unit), LOCKSAFE=1, HOLD_EDGES=64.
 // Every clk a tagged beat (tag = clk count in bits 63:32) except one IDLE per 256; latency = clk count at rx - tag.
 // Build once per define set; the min / max latency difference between two builds is that form's added cycles (the TX
-// side of every form in the vB set is unchanged, so a loopback delta is an RX delta).
-module tb_s81_col_rlat;
+// side of every form in the vB set is unchanged, so a loopback delta is an RX delta).  OT_S81_SERDES_TXL4 adds 2 TX clk.
+// EXPECT_LAT != 0: PASS needs lat_min == lat_max == EXPECT_LAT (TXL mutant MUT=8 removes one u_txl row: must FAIL).
+module tb_s81_col_rlat #(parameter integer MUT = 0, parameter integer EXPECT_LAT = 0);
     reg clk = 0, rst = 0;
     always #416.5 clk = ~clk;
     reg [511:0] tx = 512'd2; wire [511:0] rx; wire [1:0] st; wire [543:0] pt; wire tc;
-    ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64)) u_c (.clk(clk), .rst(rst), .tx(tx), .rx(rx), .st(st), .pma_tx(pt),
+    ot_pdie_serdes_col #(.LOCKSAFE(1), .HOLD_EDGES(64), .MUT(MUT)) u_c (.clk(clk), .rst(rst), .tx(tx), .rx(rx), .st(st), .pma_tx(pt),
         .pma_tck(tc), .pma_rx(pt), .pma_rck(tc), .pma_lock(1'b1));
     integer cyc = 0, n = 0, lmin = 1 << 30, lmax = -1, bad = 0, lat;
     always @(negedge clk) begin
@@ -26,7 +27,7 @@ module tb_s81_col_rlat;
         repeat (8) @(posedge clk); #100 rst = 1;
         repeat (6000) @(posedge clk);
         $display("TB_S81_COL_RLAT beats=%0d bad=%0d lat_min=%0d lat_max=%0d st=%b", n, bad, lmin, lmax, st);
-        if (n > 4000 && bad == 0 && st == 2'b10) $display("TB_S81_COL_RLAT PASS"); else $display("TB_S81_COL_RLAT FAIL");
+        if (n > 4000 && bad == 0 && st == 2'b10 && (EXPECT_LAT == 0 || (lmin == EXPECT_LAT && lmax == EXPECT_LAT))) $display("TB_S81_COL_RLAT PASS"); else $display("TB_S81_COL_RLAT FAIL");
         $finish;
     end
 endmodule

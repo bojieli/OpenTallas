@@ -124,7 +124,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
     wire [544:0] l_q;
-    ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL - 1 : TXL)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
+`ifdef OT_S81_SERDES_TXL4
+    // S81-SERDES-TXL4 (DIE-S81-85 2026-11-09): opt-in, two more u_txl relay rows (TX +2 clk).  Measured on serdes 4_cts/G2 kits:
+    // the row 0 -> last row hop spans up to 2.2-2.4 mm and takes data 1020-1514 ps (833 ps period); wirelength-driven GPL
+    // leaves the rows at the encoder and at the pad.  Rows 1 and 2 are the hop stations (place at 1/3 and 2/3 of the span).
+    localparam integer TXL_N = TXL + 2;
+`else
+    localparam integer TXL_N = TXL;
+`endif
+    ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL_N - 1 : TXL_N)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
     wire [543:0] r_d;

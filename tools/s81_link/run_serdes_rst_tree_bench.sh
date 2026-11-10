@@ -4,7 +4,7 @@
 # loopback latency bench tb_s81_col_rlat.
 # usage: [RT_DEFS="+define+..."] run_serdes_rst_tree_bench.sh MODE OUTDIR
 #   MODE: tree (PASS) | tree_ls (PASS, LOCKSAFE=1) | mut_rt2 / mut_nocomp (FAIL; *_ls with LOCKSAFE=1) | col | col_ref |
-#         ref_col (PASS) | col_mut1 (FAIL) | rlat (PASS, prints lat_min / lat_max)
+#         ref_col (PASS) | col_mut1 (FAIL) | rlat (PASS, prints lat_min / lat_max) | rlat_mut8 (FAIL with RT_EXPECT)
 #   RT_DEFS: extra defines, e.g. the vB combined form "+define+OT_S81_KP4_AM_FACE3+OT_S81_RCK_RELAY4+OT_S81_KP4_SYN_LOCAL
 #            +OT_S81_RM_STAGED+OT_S81_RM_LOCAL4+OT_S81_RM_WFULL8" (RELAY4 needs LOCKSAFE=1: tree_ls / *_ls / rlat only).
 #   RT_TREE=0 drops +define+OT_S81_SERDES_RST_TREE (rlat reference builds).
@@ -21,7 +21,9 @@ case $mode in
   col) top=tb_s81_pdie_col; g="-GMODE=0";; col_ref) top=tb_s81_pdie_col; g="-GMODE=1";; ref_col) top=tb_s81_pdie_col; g="-GMODE=2";;
   col_mut1) top=tb_s81_pdie_col; g="-GMODE=0 -GMUT=1";;
   rlat) top=tb_s81_col_rlat; g="";;
+  rlat_mut8) top=tb_s81_col_rlat; g="-GMUT=8";;
   *) echo "RST_TREE BAD_MODE $mode"; exit 2;; esac
+[ -n "${RT_EXPECT:-}" ] && g="$g -GEXPECT_LAT=$RT_EXPECT"   # rlat modes: fixed latency required
 $VL --version > "$out/verilator.version" 2>&1
 $VL --binary --timing -j ${COL_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
   $d --top-module $top $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" \
