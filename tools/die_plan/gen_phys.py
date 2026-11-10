@@ -1924,11 +1924,29 @@ def seam_hold(P):
 # taps take the same window.  Each core tap port keeps its own early latency e (TT in the golden SDC, FF in
 # core_taps_ff.sdc) as its late value and gets early -(e + W) (core_tap_window_tcl), so a core <-> grid-tap or
 # core <-> other-core path sees the full W while CRPR still credits same-tap pairs at the common core tap port.
-def tap_window_ps(P, tn=None):
-    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged).
-    DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
-    value for type tn (12.24c block arrival contract per block, W_t from the die's measured related-pair damage of
-    that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W."""
+# TAPWIN-1109 (COORD ruling tapwin-1109, DIE-S81-85; OWNER 10-23 related-pair skew + CPPR, 11-03 insertion band at
+# die STA): the die window_ps is the declared die tap-to-tap ARRIVAL BAND (absolute insertion range over the die), not
+# the related-pair skew of one pair.  Charging it in full on every cross-tap reg2reg path (OpenSTA has no CRPR between
+# two different source ports, so -early -W / -late 0 on each tap port costs a cross-tap pair the whole W) failed S81
+# iqf__t1 on cross-tap paths only (1390 setup / 2319 hold violators, 10 / ~100 with W credited).  The shared part of
+# the band is common to every tap of the type and is credited by CPPR in a related-pair view, so the kit SDC charges
+# only the inter-tap related-pair budget X: tap_window_ps = min(window_ps, X) for every type without a MEASURED
+# window.  X = clock.tap_window.related_pair_ps, default TAP_RELATED_PAIR_PS 40 ps (measured routed die proofs: the
+# per-port worst-partner related-pair damage after CPPR, clock.tap_window.per_port_ps, has median 32 ps on S81 (1833
+# ports, 42 types, 67.5 % <= 40) and 30 ps on HEAD (220 ports, 62 % <= 40); the kit tap trees are balanced within
+# local_window_ps 20).  Measured windows are kept as they are: clock.tap_window.per_type_ps (ceil10 of the type's
+# measured related-pair damage) and per_port_ps (per-port measured damage) ARE the die clock's related-pair
+# prediction, not the band.  The band itself and every pair above X are checked at die STA (die_sta_related
+# W_intra reads this same function per region; damage > X fails there).  OpenSTA construct (probe tapwin_sta 11-09,
+# asap7lock): a clock-level -source -early/-late on [get_clocks clk] and a generated clock per tap with -source the
+# master port are NOT credited across ports (cross-tap still pays the full 180), so the per-port form with the
+# budget X is the one construct that gives cross-tap X and same-tap 0 (CRPR at the common port).
+TAP_RELATED_PAIR_PS = 40.0
+
+
+def tap_window_band_ps(P, tn=None):
+    """the plan's DECLARED window (ps): window_ps, or the type's per_type_ps entry; 0.0 without clock.tap_window.  This
+    is the die arrival band / measured type window before the related-pair budget (tap_window_ps applies X)."""
     tw = P.clock.get("tap_window")
     if not tw:
         return 0.0
@@ -1941,6 +1959,35 @@ def tap_window_ps(P, tn=None):
     if not P.clock.get("seam_hold"):
         raise ValueError("clock.tap_window needs clock.seam_hold (COORD 11:24: one declared window for intra AND seam)")
     return w
+
+
+def tap_related_pair_ps(P):
+    """the inter-tap related-pair budget X (ps) the kit SDC charges a cross-tap pair of an unmeasured type (TAPWIN-1109):
+    plan clock.tap_window.related_pair_ps, else TAP_RELATED_PAIR_PS."""
+    x = (P.clock.get("tap_window") or {}).get("related_pair_ps")
+    x = TAP_RELATED_PAIR_PS if x is None else float(x)
+    if not 0 <= x:
+        raise ValueError(f"clock.tap_window.related_pair_ps {x:g} < 0")
+    return x
+
+
+def tap_window_measured(P, tn):
+    """True when type tn carries a MEASURED window (per_type_ps entry or per_port_ps table): kept as declared."""
+    tw = P.clock.get("tap_window") or {}
+    return tn is not None and (tn in (tw.get("per_type_ps") or {}) or bool((tw.get("per_port_ps") or {}).get(tn)))
+
+
+def tap_window_ps(P, tn=None):
+    """the per-tap latency window W (ps) the kit SDC charges, 0.0 when absent (legacy kits unchanged).
+    DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
+    value for type tn (12.24c block arrival contract per block, W_t from the die's measured related-pair damage of
+    that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W.
+    TAPWIN-1109: an unmeasured type (and the die value, tn None) charges min(window_ps, related-pair budget X); the
+    full band is tap_window_band_ps."""
+    w = tap_window_band_ps(P, tn)
+    if not w or tap_window_measured(P, tn):
+        return w
+    return min(w, tap_related_pair_ps(P))
 
 
 # KW-FIX-4-SDC (COORD RULING 2026-11-03 10:49, plain-seam input-face class): MEASURED per-port window, opt-in plan
@@ -2019,6 +2066,10 @@ def tap_window_note(P, tn):
     if not w:
         return ""
     if not tap_window_port_table(P, tn):
+        if not tap_window_measured(P, tn) and tap_window_band_ps(P, tn) > w:
+            return (f"# tap window: related-pair budget {w:g} ps on every window port (TAPWIN-1109: die band "
+                    f"{tap_window_band_ps(P, tn):g} ps is common to every tap and checked at die STA; {tn} has no "
+                    "measured clock.tap_window.per_type_ps / per_port_ps)\n")
         return (f"# tap window: flat {w:g} ps on every window port (no measured clock.tap_window.per_port_ps for "
                 f"{tn}: FALLBACK to the plan window_ps / per_type_ps)\n")
     fb = tap_window_fallback_ports(P, tn)
@@ -2641,6 +2692,9 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
+              + (f"# TAPWIN-1109: W = related-pair budget {tap_window_ps(P, tn):g} ps (die band "
+                 f"{tap_window_band_ps(P, tn):g} ps common to every tap, CPPR-credited, checked at die STA)\n"
+                 if tap_window_band_ps(P, tn) > tap_window_ps(P, tn) else "")
               + (tap_window_note(P, tn) if tap_window_port_table(P, tn) else "")
               + tap_window_tcl(P, tn, core=False) if tap_window_ps(P, tn) else "") +
            f"# clock uncertainty: sign-off margin policy {_SL.margin_policy()} ({_SL.MARGIN_POLICY_RULE})\n"

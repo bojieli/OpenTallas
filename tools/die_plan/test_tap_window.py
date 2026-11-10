@@ -20,7 +20,7 @@ def _raw(window=80.0, seam=80.0):
     if seam is not None:
         raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=seam)
     if window is not None:
-        raw["clock"]["tap_window"] = dict(window_ps=window, note="COORD 11:24 W = 80 intra + seam")
+        raw["clock"]["tap_window"] = dict(window_ps=window, related_pair_ps=window, note="COORD 11:24 W = 80 intra + seam")
     return raw
 
 

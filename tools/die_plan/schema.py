@@ -986,7 +986,11 @@ SCHEMA = {
                                           "per_port_ps": {"type": "object", "additionalProperties": {
                                               "type": "object", "additionalProperties": _nonneg}},
                                           # DIE-HEAD-70 11-05: free-text provenance of per_port_ps (HEAD l48ue carries it)
-                                          "per_port_note": {"type": "string"}}},
+                                          "per_port_note": {"type": "string"},
+                                          # TAPWIN-1109 (COORD tapwin-1109): inter-tap related-pair budget X the kit
+                                          # SDC charges an UNMEASURED type instead of the die band window_ps
+                                          # (gen_phys.tap_related_pair_ps, default TAP_RELATED_PAIR_PS 40)
+                                          "related_pair_ps": _nonneg}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)

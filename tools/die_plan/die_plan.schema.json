@@ -5692,6 +5692,10 @@
       },
       "per_port_note": {
        "type": "string"
+      },
+      "related_pair_ps": {
+       "type": "number",
+       "minimum": 0
       }
      }
     },

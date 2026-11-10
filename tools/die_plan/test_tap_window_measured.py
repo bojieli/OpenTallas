@@ -19,7 +19,7 @@ PORTS = ["clk", "clk_t1", "clk_t2", "clk_t3", "clk_t4", "clk_t5", "clk_t6", "clk
 def _raw(per_port=None, window=80.0):
     raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
     raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=80)
-    raw["clock"]["tap_window"] = dict(window_ps=window, note="flat W")
+    raw["clock"]["tap_window"] = dict(window_ps=window, related_pair_ps=window, note="flat W")
     if per_port is not None:
         raw["clock"]["tap_window"]["per_port_ps"] = per_port
     return raw
@@ -142,7 +142,7 @@ def test_need_from_measured_arrivals_with_cppr_credit():
 
 def test_die_check_reads_per_port_windows():
     plan = {"partitions": [{"name": "a0", "type": "T"}, {"name": "b0", "type": "U"}], "die": {"period_ps": 833}}
-    pc = {"seam_hold": {"sender_ps": 0, "seam_ps": 40}, "tap_window": {"window_ps": 100, "per_port_ps": {"T": {"clk_t1": 48}}}}
+    pc = {"seam_hold": {"sender_ps": 0, "seam_ps": 40}, "tap_window": {"window_ps": 100, "related_pair_ps": 100, "per_port_ps": {"T": {"clk_t1": 48}}}}
     w = DSR.kit_windows(pc, None, plan)["intra"]
     assert w["ps"] == 100.0 and w["per_port"] == {"a0": {"clk_t1": 48.0}}
     assert "per port" in w["basis"]

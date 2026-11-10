@@ -19,7 +19,7 @@ def _plan(cfg, W, ring=()):
              "x1": {"src": {"part": "p0", "bus": "a_o"}, "dst": {"part": "p2", "bus": "a_i"}},
              "x2": {"src": {"part": "p0", "bus": "b_o"}, "dst": {"part": "p3", "bus": "a_i"}},   # landed receiver
              "x3": {"src": {"part": "p0", "bus": "b_o"}, "dst": {"part": "p1", "bus": "b_i"}}}
-    clock = {"ft_hop_in_share": 0.16, "tap_window": {"window_ps": 100.0, "per_type_ps": W},
+    clock = {"ft_hop_in_share": 0.16, "tap_window": {"window_ps": 100.0, "related_pair_ps": 100.0, "per_type_ps": W},
              "seam_hold": {"sender_ps": 0.0, "seam_ps": 40.0}}
     if cfg:
         clock["plain_seam_split"] = cfg

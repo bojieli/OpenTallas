@@ -2659,6 +2659,13 @@ def kit_windows(pc, intra_override=None, plan=None):
         shim = SimpleNamespace(clock=pc, die=(plan or {}).get("die", {"period_ps": float("inf")}))
         wintra = dict(ps=gen_phys.tap_window_ps(shim), basis="plan clock.tap_window.window_ps (gen_phys."
                       "tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)")
+        # TAPWIN-1109: an unmeasured type's kit charges only the related-pair budget X = min(window_ps,
+        # related_pair_ps); this contract check is where the die proves every real (routed proof) tap pair inside X
+        # (neg_pairs > 0 -> FAIL, OWNER 12.25).  band_ps = the declared die band, reported (common to every tap).
+        if gen_phys.tap_window_band_ps(shim) > wintra["ps"]:
+            wintra.update(band_ps=gen_phys.tap_window_band_ps(shim), related_pair_ps=gen_phys.tap_related_pair_ps(shim))
+            wintra["basis"] += (f"; TAPWIN-1109 related-pair budget {wintra['ps']:g} ps (die band "
+                                f"{wintra['band_ps']:g} ps common to every tap)")
         if pc["tap_window"].get("per_type_ps") and plan:
             wintra["per_region"] = {p["name"]: gen_phys.tap_window_ps(shim, p["type"])
                                     for p in plan.get("partitions", [])}

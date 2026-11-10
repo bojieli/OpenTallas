@@ -22,7 +22,7 @@ from test_sdc_lint import _errs  # noqa: E402
 def _windowed(P, sender=None):
     raw = copy.deepcopy(P.raw)
     raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=80)
-    raw["clock"]["tap_window"] = dict(window_ps=80)
+    raw["clock"]["tap_window"] = dict(window_ps=80, related_pair_ps=80)
     if sender is not None:
         raw["clock"]["ring_hold"] = dict(sender_ps=sender)
     return schema.Plan(raw)
