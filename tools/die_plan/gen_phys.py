@@ -669,6 +669,9 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
 
+PORT_BUF_AT_PIN_LINE = "\n# PORT-BUF-AT-PIN: output-port drivers onto their pin face, then DPL\nsource /work/port_buf_at_pin.tcl\n"
+
+
 def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
     pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
@@ -4726,6 +4729,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         body = hook.read_text()
         assert body.count(line) == 1, "cts_post.tcl: tap_balance line"
         hook.write_text(body.replace(line, line + "uplevel #0 [list source [file join $cp_dir clock_edge_balance.tcl]]\n"))
+    if t.get("port_buf_at_pin", False) is True:
+        # PORT-BUF-AT-PIN (S81-SVCRS-3 11-10, COORD ruling): at PRE_DETAIL_PLACE every output port's single BUF / INV
+        # driver more than 10 um from its pin is placed on the pin's face before DPL (placement only, 0 cycles, no
+        # new cells; a driver already within 10 um is not touched).  IRG hslice form route 532125bc -> 6878dbfe44:
+        # 47 ko_key port slews (worst 502 ps, limit 260; repair_design added 0) -> 0.  OPT-IN per plan type
+        # ("port_buf_at_pin": true): on signed S81 types it would move 332-2183 drivers by up to 57 um (dry run 11-10),
+        # placement churn on kits that close at the 2 fF IO load.  Appended right after the base hook.
+        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "port_buf_at_pin.tcl",
+                        kd / "port_buf_at_pin.tcl")
+        with (kd / "face_flops_release.tcl").open("a") as f:
+            f.write(PORT_BUF_AT_PIN_LINE)
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)
