@@ -1221,6 +1221,19 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
             "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                           "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}},
             "evidence": _name}}}
+# S81 LEAF-CLKENTRY-1109 (opt-in): core-clock REGIONAL entries of a tapped type.  Each is the RCK2 trunk form sourced at
+# an existing die-spine tap port (tap: clk / clk_t<k>): stations_um (one cell per station, hops <= 405 um) to an entry
+# driver at xy_um whose net takes the std-cell sinks inside region_um that the nearest-tap split left on any tap port of
+# take_taps (pad_clock.tap_entries, pad_clock_entry.tcl PRE_CTS).  Ports, RTL, SDC, reset tree and die top unchanged;
+# absent = kit unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_entries"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
+        "required": ["name", "tap", "take_taps", "xy_um", "stations_um", "cell", "region_um", "evidence"], "properties": {
+            "name": _name, "tap": _name, "take_taps": {"type": "array", "minItems": 1, "items": _name},
+            "xy_um": _xy, "stations_um": {"type": "array", "items": _xy}, "cell": _name,
+            "region_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                                      "items": {"type": "number"}}},
+            "evidence": _name}}}
 # Output pad data uses the real exported PHY clock, retaining explicit budgets.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_outputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,

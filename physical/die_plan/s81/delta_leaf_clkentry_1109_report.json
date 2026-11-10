@@ -1,0 +1,437 @@
+{
+ "event": "LEAF-CLKENTRY-1109",
+ "lane": "DIE-S81-85",
+ "finding": "COORD geom-1733-1109 (ot_s81sl_leaf__t21 attempt_20)",
+ "plan_in": {
+  "sha256": "c839c32358909222a4c27e9e9ce9534309a0508a3273d9ac0e5e29539572f9de",
+  "path": "../leafclk_plan/plan_base.json"
+ },
+ "plan_out": {
+  "sha256": "16dc326411ed1d7e78cc26915574b0364023721f14dafc20f1094fc09d0fc3b1",
+  "path": "../leafclk_plan/plan_new.json"
+ },
+ "rule": {
+  "left_x_um": 200.0,
+  "vq_x_um": [
+   250.0,
+   350.0
+  ],
+  "channel_um": 25.92,
+  "clear_um": 8.64,
+  "hop_um": 400.0,
+  "field_gap_um": [
+   17.28,
+   30.0
+  ],
+  "cell": "BUFx24_ASAP7_75t_R"
+ },
+ "mode": "channel",
+ "matched": [
+  "ot_s81sl_leaf__t10",
+  "ot_s81sl_leaf__t21",
+  "ot_s81sl_leaf__t27",
+  "ot_s81sl_leaf__t74"
+ ],
+ "field_entries": [],
+ "field_geometry_types": [
+  "ot_s81sl_leaf__t21",
+  "ot_s81sl_leaf__t27"
+ ],
+ "types": [
+  {
+   "type": "ot_s81sl_leaf__t10",
+   "left_column": true,
+   "vs_vq_gap_um": 8.64,
+   "vq_x0_um": 285.12,
+   "tap0": [
+    "clk",
+    180.36,
+    51.84
+   ],
+   "sw_root": true,
+   "channel": true,
+   "field": null,
+   "move": {
+    "vq_from": [
+     285.12,
+     440.64,
+     457.92,
+     570.24
+    ],
+    "vq_to": [
+     302.4,
+     440.64,
+     475.2,
+     570.24
+    ],
+    "dx_um": 17.28,
+    "vs_vq_gap_um": [
+     8.64,
+     25.92
+    ],
+    "right_neighbour": "u_lf.u_vn.u_a",
+    "right_gap_um": [
+     155.52,
+     138.24
+    ],
+    "min_clear_um": 25.92,
+    "min_clear_to": "u_lf.u_vs"
+   },
+   "moved_core_taps": [
+    "u_lf.u_vq.clk"
+   ],
+   "entries": [],
+   "field_why": "vn / vp field not in the t21 order (vn_b over vn_a, SRAM pair under it): no regional entry",
+   "grid_explicit_taps": "PASS"
+  },
+  {
+   "type": "ot_s81sl_leaf__t21",
+   "left_column": true,
+   "vs_vq_gap_um": 8.64,
+   "vq_x0_um": 328.32,
+   "tap0": [
+    "clk",
+    180.36,
+    153.36
+   ],
+   "sw_root": true,
+   "channel": true,
+   "field": {
+    "strip": [
+     552.96,
+     864.0,
+     900.72,
+     881.28
+    ],
+    "strip_xy": [
+     726.84,
+     872.64
+    ],
+    "band": [
+     552.96,
+     596.16,
+     895.128,
+     699.84
+    ],
+    "band_xy": [
+     724.044,
+     688.5
+    ],
+    "strip_gap_um": 17.28,
+    "band_gap_um": 22.68
+   },
+   "move": {
+    "vq_from": [
+     328.32,
+     596.16,
+     501.12,
+     725.76
+    ],
+    "vq_to": [
+     345.6,
+     596.16,
+     518.4,
+     725.76
+    ],
+    "dx_um": 17.28,
+    "vs_vq_gap_um": [
+     8.64,
+     25.92
+    ],
+    "right_neighbour": "u_lf.u_vn.u_a",
+    "right_gap_um": [
+     51.84,
+     34.56
+    ],
+    "min_clear_um": 25.92,
+    "min_clear_to": "u_lf.u_vs"
+   },
+   "moved_core_taps": [
+    "u_lf.u_vq.clk"
+   ],
+   "entries": [],
+   "field_why": "t21 field order; regional entries not applied (opt-in --field: probe max -23 ps only, entry sinks 345-386 ps, clk_t10 left under target)",
+   "grid_explicit_taps": "PASS"
+  },
+  {
+   "type": "ot_s81sl_leaf__t27",
+   "left_column": true,
+   "vs_vq_gap_um": 8.64,
+   "vq_x0_um": 259.2,
+   "tap0": [
+    "clk",
+    180.36,
+    153.36
+   ],
+   "sw_root": true,
+   "channel": true,
+   "field": {
+    "strip": [
+     509.76,
+     864.0,
+     866.16,
+     881.28
+    ],
+    "strip_xy": [
+     687.96,
+     872.64
+    ],
+    "band": [
+     509.76,
+     596.16,
+     866.16,
+     699.84
+    ],
+    "band_xy": [
+     687.96,
+     688.5
+    ],
+    "strip_gap_um": 17.28,
+    "band_gap_um": 22.68
+   },
+   "move": {
+    "vq_from": [
+     259.2,
+     656.64,
+     432.0,
+     786.24
+    ],
+    "vq_to": [
+     276.48,
+     656.64,
+     449.28,
+     786.24
+    ],
+    "dx_um": 17.28,
+    "vs_vq_gap_um": [
+     8.64,
+     25.92
+    ],
+    "right_neighbour": "u_lf.u_vn.u_a",
+    "right_gap_um": [
+     77.76,
+     60.48
+    ],
+    "min_clear_um": 25.92,
+    "min_clear_to": "u_lf.u_vs"
+   },
+   "moved_core_taps": [
+    "u_lf.u_vq.clk"
+   ],
+   "entries": [],
+   "field_why": "t21 field order; regional entries not applied (opt-in --field: probe max -23 ps only, entry sinks 345-386 ps, clk_t10 left under target)",
+   "grid_explicit_taps": "PASS"
+  },
+  {
+   "type": "ot_s81sl_leaf__t74",
+   "left_column": true,
+   "vs_vq_gap_um": 8.64,
+   "vq_x0_um": 285.12,
+   "tap0": [
+    "clk",
+    180.36,
+    51.84
+   ],
+   "sw_root": true,
+   "channel": true,
+   "field": null,
+   "move": {
+    "vq_from": [
+     285.12,
+     440.64,
+     457.92,
+     570.24
+    ],
+    "vq_to": [
+     302.4,
+     440.64,
+     475.2,
+     570.24
+    ],
+    "dx_um": 17.28,
+    "vs_vq_gap_um": [
+     8.64,
+     25.92
+    ],
+    "right_neighbour": "u_lf.u_vn.u_a",
+    "right_gap_um": [
+     155.52,
+     138.24
+    ],
+    "min_clear_um": 25.92,
+    "min_clear_to": "u_lf.u_vs"
+   },
+   "moved_core_taps": [
+    "u_lf.u_vq.clk"
+   ],
+   "entries": [],
+   "field_why": "vn / vp field not in the t21 order (vn_b over vn_a, SRAM pair under it): no regional entry",
+   "grid_explicit_taps": "PASS"
+  }
+ ],
+ "family_not_matched": [
+  {
+   "type": "ot_s81sl_leaf__t31",
+   "left_column": true,
+   "vs_vq_gap_um": 25.92,
+   "vq_x0_um": 302.4,
+   "tap0": [
+    "clk",
+    180.36,
+    153.36
+   ],
+   "sw_root": true,
+   "channel": false,
+   "field": null,
+   "why": "vs/vq gap 25.92 um, vq.x0 302.4 (needs <= 8.64 and x~300)"
+  },
+  {
+   "type": "ot_s81sl_leaf__t71",
+   "left_column": true,
+   "vs_vq_gap_um": 25.92,
+   "vq_x0_um": 276.48,
+   "tap0": [
+    "clk",
+    180.36,
+    153.36
+   ],
+   "sw_root": true,
+   "channel": false,
+   "field": null,
+   "why": "vs/vq gap 25.92 um, vq.x0 276.48 (needs <= 8.64 and x~300)"
+  }
+ ],
+ "scanned": 75,
+ "probe": {
+  "vehicle": "ot_s81sl_leaf__t21 attempt_20 (epyc4 kw43-wave-1109 kit-wave e9eda32d41c), 3_place.odb copy on epyc7 /srv/opentallas-scratch2/claude/die-s81-85/leafclk_probe/kit",
+  "flow": "pre_cts.tcl (nearest-tap split) + optional entry hook + TritonCTS -sink_clustering_enable -repair_clock_nets + dpl + cts_post.tcl tap_balance (target 250 ps); TT NLDM, placement RC; GRT M2-M7, adjustment 0.25, 10 congestion iterations; docker -m 64g",
+  "insertion_metric": "flop CLK pins on the 36 die-spine tap nets (+ entry nets), arrival max rise",
+  "variants": {
+   "base": {
+    "insertion_ps": {
+     "mean": 259.9,
+     "max": 408.5,
+     "min": 183.4,
+     "spread": 225.1
+    },
+    "deep_taps": {
+     "clk_t9": [
+      1595,
+      326.8,
+      408.5,
+      177
+     ],
+     "clk_t10": [
+      2485,
+      267.2,
+      354.7,
+      141
+     ],
+     "clk_t22": [
+      599,
+      284.9,
+      402.8,
+      142
+     ]
+    },
+    "grt10": {
+     "overflow_total": 8039,
+     "M5": 1528,
+     "M6": 6129,
+     "M7": 382,
+     "max_h": 7,
+     "max_v": 9,
+     "wirelength_um": 7214712,
+     "nets": 87785
+    },
+    "vs_vq_channel": {
+     "window_um": [
+      319.68,
+      328.32,
+      596.16,
+      725.76
+     ],
+     "vert_demand_mean": 0.482,
+     "vert_demand_max": 0.992,
+     "M5_max": 1.796
+    }
+   },
+   "field_only": {
+    "insertion_ps": {
+     "mean": 258.2,
+     "max": 385.9,
+     "min": 154.4,
+     "spread": 231.5
+    },
+    "entries": {
+     "clk_rgn0": [
+      1153,
+      368.5,
+      385.9,
+      37.4
+     ],
+     "clk_rgn1": [
+      1106,
+      357.2,
+      375.9,
+      30.9
+     ]
+    },
+    "entry_driver_in_ps": {
+     "clk_rgn0": 200.4,
+     "clk_rgn1": 146.6
+    },
+    "clk_t10_after_balance": "166-208 ps mean (under the 250 target)",
+    "grt10_first_hook_without_root_buffer": {
+     "overflow_total": 7930,
+     "M5": 1547,
+     "M6": 5983,
+     "M7": 390,
+     "max_h": 11,
+     "max_v": 11
+    }
+   },
+   "channel_plus_field": {
+    "vq_dx_um": 17.28,
+    "insertion_ps": {
+     "mean": 253.7,
+     "max": 385.1,
+     "min": 153.3,
+     "spread": 231.8
+    },
+    "grt10": {
+     "overflow_total": 0,
+     "max_h": 0,
+     "max_v": 0,
+     "wirelength_um": 7194272,
+     "nets": 87709
+    },
+    "vs_vq_channel": {
+     "window_um": [
+      319.68,
+      345.6,
+      596.16,
+      725.76
+     ],
+     "vert_demand_mean": 0.166,
+     "vert_demand_max": 0.789,
+     "M5_max": 1.123
+    }
+   },
+   "field_rgn1_from_t22": {
+    "insertion_ps": {
+     "max": 455.5
+    },
+    "clk_rgn1": [
+     1106,
+     438.3,
+     455.5,
+     29.1
+    ],
+    "verdict": "worse"
+   }
+  },
+  "geom_col_v_note": "auto_geom col_v 6.466 at (230, 597.5) is the macro-pin projection of 873 vs<->ve_m nets through vs; the base GRT guides route 0 nets in (225-245, 590-605)",
+  "decision": "CHANNEL applied (overflow 8039 -> 0); FIELD kept opt-in (--field): max -23 ps only, entry sinks 345-386 ps, clk_t10 left under target"
+ }
+}
