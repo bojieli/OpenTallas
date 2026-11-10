@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.qc_por_event.v1",
+ "event": "QC NK clock pin adoption on the plan of record (DIE-QC-97 11-09, COUNT-ARCHIVE-2 18:13 (2))",
+ "base_plan": "plan_qc52t.json",
+ "base_plan_sha256": "f28b87812c9e4439a47a0df7f22eb18e206a30ebd046404bdc133574a3e9972d",
+ "plan_output": "plan_qc52u.json",
+ "plan_output_sha256": "ae7f9eea9f917769cf664276096a789d25f7f82b691afbd6931670d96721f896",
+ "types": [
+  "cbf_q00__cl1b5a6458",
+  "cbf_q00__cl870de686",
+  "cbf_q00_s2",
+  "cbf_q01",
+  "cbf_q01_s2",
+  "cbf_q11",
+  "cbn_q00__cl622f65d2",
+  "cbn_q00__cld7bf7197",
+  "cbn_q00__cldbcda913",
+  "cbn_q01__clab6e67f2",
+  "cbn_q01__cld9ff4c40",
+  "cbn_q01__cldd6ea846",
+  "cbn_q11__cl49ae4555",
+  "cbn_q11__cl5cc92dfe",
+  "cbx_q10__cl89936551",
+  "cbx_q10__cl94a12200"
+ ],
+ "cores": 62,
+ "partition_instances": 192,
+ "module": "qfd_tile_nk_a0c",
+ "pins_file_old": "cores/a0_nk_pins.json",
+ "pins_file_old_sha256": "b6f25c2e0bb71fa60eebad65fa40e3b63844968128d81d3982ab0791b32abeea",
+ "pins_file_new": "cores/a0_nk_pins_ck1109.json",
+ "pins_file_new_sha256": "7a0da26470f55da248c975386f60bfa585a7b293ce11c15f9a21b90a6922388f",
+ "pin_change": {
+  "pin": "ck",
+  "old": [
+   "M4",
+   457.824,
+   668.076
+  ],
+  "new": [
+   "M5",
+   228.972,
+   578.88
+  ]
+ },
+ "other_pins_unchanged": 2583,
+ "signed_record": {
+  "name": "kq_qfd_tile_nk_a0c_vR7",
+  "resign": "intel1:/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc",
+  "flow_tag": "flow-20261109-fc-qc",
+  "routed_db_sha256": "bfa23d1f3970648140f3965ea90a5e66bf21a652a1baa7d6842e063ca845d145",
+  "ck_def": "M5 ( -24 -240 ) ( 24 240 ) FIXED ( 228972 578880 ) N, UNITS 1000"
+ },
+ "access_lef": "results/physical/qc_nk_clock_adoption_1109/access_v1/qfd_tile_nk_a0c.access.lef",
+ "access_lef_sha256": "1b69964aed6a1bb3967e798930628003def76fd8f5ca2278adad00a7cf471fdb",
+ "entry_stack_child": {
+  "via56": [
+   228.984,
+   578.772
+  ],
+  "via67": [
+   229.024,
+   578.772
+  ],
+  "m7_x": 229.024,
+  "m7_len_um": 0.768,
+  "why": "(child frame, chosen on the PARENT tracks for both R0 and MY at track_offset (0, 0.012)):\n  VIA56 (228.984, 578.772) on the real M5 pin, M6 bar y 578.772, VIA67 + M7 utility pin x 229.024.\n  The pin centre x 228.972 is not a parent M5 track and the parent M7 track over it (228.960) is taken by the\n  foreign NK M7 net15753 (228.928..228.960); the parent M6 tracks through the pin centre (578.836 / 578.900) are\n  within 32 nm of / on the foreign NK M6 net48959 (578.880..578.912).  578.772 / 229.024 is the nearest clear pair."
+ },
+ "insertion": {
+  "old_ps": [
+   665.8,
+   576.5
+  ],
+  "new_ps": [
+   733.25,
+   586.0
+  ],
+  "source": "epyc6:/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/signoff/signoff.json corners.{tt,ff}.insertion_pinflops.mean (n 2584, ff_vclk_reference pin_flop_mean 733.249323 / 585.995565; identical in the original i1/signoff/signoff.json)"
+ },
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "signed_view_changed": false,
+ "same_patch_as": "plan_qc53v4nS_mem9_vml_nkck.json (d5743d9ea53, qc53v4nS_nk_ck_event.json)",
+ "patch_source": "results/physical/qc_nk_clock_adoption_1109/access_v1/proposed_event.patch.json (all 310 test ops hold on qc52t)",
+ "preservation": "every other partition type and every top-level key byte-identical; in the 16 types only the patched paths differ (checked)"
+}
