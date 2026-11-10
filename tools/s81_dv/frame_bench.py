@@ -84,10 +84,22 @@ def frame_module_source(master):
     sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
     import bind_elab
     import slice_source
-    manifest = os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')
-    if manifest:
+    # S81-PLAN-1 11-10: a frame master is a FRAME source: with the frame manifest set (OT_S81_FRAME_ASBUILT_MANIFEST,
+    # a frame root made by layer_prog/frame_root.py from the bind's own manifest) it resolves there, the same selection
+    # the as-built frame schedule is tied to (lower_xs.frame_manifest); otherwise exactly as before
+    if os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST'):
+        manifest = os.environ['OT_S81_FRAME_ASBUILT_MANIFEST']
+        src_root = Path(os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
+    else:
+        manifest = os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')
         src_root = Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
-        _p, _ab, idx, prefer = slice_source.manifest_selection(src_root, manifest)
+    if manifest:
+        try:
+            _p, _ab, idx, prefer = slice_source.manifest_selection(src_root, manifest)
+        except ValueError as e:
+            raise ValueError(f'frame master {master}: frame manifest {manifest} is not usable under {src_root} ({e}); '
+                             'make a frame root with tools/s81_dv/layer_prog/frame_root.py and set '
+                             'OT_S81_FRAME_SOURCE_ROOT / OT_S81_FRAME_ASBUILT_MANIFEST') from None
         picked, ambiguous = bind_elab.pick(idx, master, prefer)
         if ambiguous:
             raise ValueError(f'frame master {master}: ambiguous selected definitions {idx.get(master)}')

@@ -426,8 +426,11 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
     if frame_schedule:
         import hashlib
         schedule = json.loads(Path(frame_schedule).read_text())
+        # S81-PLAN-1 11-10: the schedule's sources are the FRAME sources (lower_xs.frame_manifest root), not this tree
+        import os
+        sroot = Path(os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
         for f, sha in schedule['source_sha256'].items():
-            assert hashlib.sha256((ROOT/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+            assert hashlib.sha256((sroot/f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
         assert land_e is not None, 'landed frame schedule requires the actual cfifo landing E'
         assert schedule['topology']['master'] == master
         topo = schedule['topology']
