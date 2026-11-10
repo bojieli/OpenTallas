@@ -2040,6 +2040,7 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         # DIE-S81-46 spare (tied) outputs + DIE-KV-61/hr declared timed-face buses, as the face_guard CLI reads them
         spl = face_guard.kit_spare_list(kit_ctx_dir(disc, "spare_out.json")) if disc.get("kit") else []
         tml = face_guard.kit_timed_list(kit_ctx_dir(disc, "timed_face.json")) if disc.get("kit") else []
+        sml = face_guard.kit_seam_map(kit_ctx_dir(disc, "seam_face.json")) if disc.get("kit") else {}
         # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
         lf = kit_ctx_file(disc, "land_slots.json")
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
@@ -2052,7 +2053,7 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
         synth_text = Path(disc["synth"]).read_text(errors="replace")
         types = synth_types(disc["synth"], synth_text)
         r = face_guard.guard(synth_text, pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml,
+                             straps=sl, dead=dl, land=land, exports=exports, spare=spl, timed=tml, seam=sml,
                              pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
                              clocks=sorted({p['name'] for p in pad_clocks if p['dir'] == 'in'} | set(sdc_clocks)), types=types)
     except Exception as e:
@@ -2063,6 +2064,8 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
                 **({"spare_declared": len(r.get("spare_declared", []))} if spl else {}),
                 **({"timed_buses": tml, "timed_declared": len(r.get("timed_declared", [])),
                     "timed_first": r.get("timed_declared", [])[:5]} if tml else {}),
+                **({"seam_buses": sorted(sml), "seam_declared": len(r.get("seam_declared", [])),
+                    "seam_first": r.get("seam_declared", [])[:5]} if sml else {}),
                 netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
                 one_station_ft_slots=sorted(ft1))
 

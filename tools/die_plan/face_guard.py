@@ -670,6 +670,41 @@ def kit_timed_list(kitdir):
     return timed_face_list(json.loads(f.read_text())) if f.is_file() else []
 
 
+SEAM_SCHEMA = "opentallas.kit_seam_face.v1"
+# HBM-Q2NF-RF 11-10 (COORD ruling, Q2NF 2-way split): classes a declared intra-pair seam bus may carry.  A seam port
+# joins two sibling children of ONE parent core; the pair-level STA across both routed views times every seam path,
+# so the per-port face rule does not apply to it.  feedthrough, dropped, const and every die-facing bus keep the guard.
+SEAM_CLASSES = frozenset({"shared", "merged", "unregistered"})
+
+
+def seam_face_map(doc):
+    """kit seam_face.json -> {bus: frozenset(classes)}.  Fail-closed: schema, a partner child name, exact unique bus
+    names (no regex, no bit index), a non-empty class list per bus drawn from SEAM_CLASSES, a ruling and a reason."""
+    if not isinstance(doc, dict) or doc.get("schema") != SEAM_SCHEMA:
+        raise ValueError(f"seam_face.json: schema must be {SEAM_SCHEMA}")
+    if not isinstance(doc.get("partner"), str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", doc["partner"]):
+        raise ValueError("seam_face.json: partner must name the sibling child module")
+    buses = doc.get("buses")
+    if not isinstance(buses, dict) or not buses:
+        raise ValueError("seam_face.json: buses must be a non-empty {bus: [classes]} object")
+    out = {}
+    for b, cls in buses.items():
+        if not isinstance(b, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", b):
+            raise ValueError(f"seam_face.json: bus must be an exact port name: {b!r}")
+        if not isinstance(cls, list) or not cls or len(set(cls)) != len(cls) or not set(cls) <= SEAM_CLASSES:
+            raise ValueError(f"seam_face.json: {b}: classes must be a non-empty unique subset of {sorted(SEAM_CLASSES)}")
+        out[b] = frozenset(cls)
+    if not str(doc.get("ruling") or "").strip() or not str(doc.get("reason") or "").strip():
+        raise ValueError("seam_face.json: ruling and reason are required")
+    return out
+
+
+def kit_seam_map(kitdir):
+    """the kit's declared intra-pair seam buses (seam_face.json), {} when none."""
+    f = Path(kitdir) / "seam_face.json"
+    return seam_face_map(json.loads(f.read_text())) if f.is_file() else {}
+
+
 def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
@@ -776,7 +811,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), seam=None):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -916,9 +951,19 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     if timed:
         res["timed_declared"] = []
 
+    seam = dict(seam or {})
+    if seam:
+        res["seam_declared"] = []
+
+    def seam_cls(b):
+        return seam.get(re.sub(r"\[\d+\]$", "", str(b)), frozenset())
+
     def fail(cls, b, why):
         if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
             res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
+            return
+        if cls != "merged" and cls in seam_cls(b):
+            res["seam_declared"].append(f"{b}: {cls} {why}")    # HBM-Q2NF-RF 11-10: declared intra-pair seam bit
             return
         res["fails"][cls].append(f"{b}: {why}")
 
@@ -2036,6 +2081,13 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             res["ft1_stations"] = res.get("ft1_stations", 0) + 1
             pair_ok.update(bs)
             continue
+        sb = [b for b in bs if "merged" in seam_cls(b)]
+        if len(bs) > 1 and sb and len(bs) - len(sb) <= 1:
+            # HBM-Q2NF-RF 11-10: one flop registers at most ONE non-seam bit plus its declared seam copies; the
+            # non-seam (die-facing) bit still has a flop of its own among die bits, so it keeps the full guard.
+            for b in bs:
+                res["seam_declared"].append(f"{b}: merged flop {F.cells[ci][1]} with {[x for x in bs if x != b][:3]}")
+            continue
         if len(bs) > 1:
             for b in bs:
                 fail("merged", b, f"flop {F.cells[ci][1]} also registers {[x for x in bs if x != b][:3]}")
@@ -2116,8 +2168,9 @@ def main(argv=None):
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
     spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
     tml = kit_timed_list(Path(a.pins).parent) if a.pins else []
+    sml = kit_seam_map(Path(a.pins).parent) if a.pins else {}
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl, timed=tml, seam=sml,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:
