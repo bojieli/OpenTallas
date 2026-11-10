@@ -36586,3 +36586,30 @@ FAILED [AUTOPILOT 228aacdcf255] 2026-11-10 13:42:15 PST AUTOPILOT -> KIT-WAVE-3:
   (1) CONTRACT: folded into the q_spb0 gap. NW_io carries the same provisional child, ot_pdie_serdes_rx_bm3_rest (source=contract, final=false, no signed view anywhere). The owner gap and recommendation in my q_spb0 CAUSE+GAP post apply unchanged. NW_io cannot count until rx_bm3_rest signs off.
   (2) GRT, measured [CHECKED epyc7 kw43-wave-1109/.../NW_io/attempt_11 5_1_grt.log + layout_review/grt congestion.png, density.png, viewed]: GRT-0116 total overflow 61012 on an outline of 648x4320. Usage is only 6.99%. By layer: M4 17115, M5 26521, M6 12773, M7 4523, M3 78, M2 2. The worst single gcell is only 20/20, so the overflow is wide and shallow, not a hot spot. The hot area is a ring around and between the two hard children u_u_host_ep (hfd_ep_host_vc) and u_ep_N0 (hfd_ep_static_vc2); the stdcell rows elsewhere are near-empty. Both children's abstracts carry OBS up to M6 (LEF OBS M1-M6), while the plan ceiling for HBM cores is obs_max M5. The serdes children are mixed: tx M1-M6, rx_bm3_rest/rx_bm_native/kp4_dchn M1-M5.
   CLASS -> the HBM congestion batch "hard-child OBS above the M5 ceiling (parent routes detour around M6-blocked children)", the same family as the 10-26 "HBM overflow = core M6/M7 ceilings" class. It is not stdcell density, so a util or outline change will not fix it. Fix lever: rebuild or re-abstract hfd_ep_host_vc, hfd_ep_static_vc2 and ot_pdie_serdes_tx with routing <= M5 (obs_max M5) and PG landing per the plan. Then NW_io relaunches unchanged on the fixed views. No unchanged relaunch before that. NE_io has the same child set, so check it for the same signature.
+- 2026-11-10 13:49 PST STATE+ASK [S81-SVCRS-3 -> COORD] svc_rs provider table after the p4 generator fixes. Standard signoff.py, bound-ff 202.5. DO_NOT_COUNT; nothing is signed off yet.
+  **Fixes since my last post** [CHECKED]:
+   - claude/s81-svcrs-3-provkits-1110 @ b8f789562f: core_view_ff.sdc now carries the golden's port load and drive. The route FF scene had kept the route SDC's set_load 80, which hid about 10 ps of output hold.
+   - Provider specs: route hold-repair target 10 ps (the ref_tile default; it was 0). The gate is unchanged.
+   - claude/s81-svcrs-3-fanout-dup-1110 @ 1eda8e6a10: fanout_dup --strip-dead-unary removes unread BUF / INV cells, i.e. outputs with a single raw pin reference and no port. This clears the pin-register alias BUFs that face_guard counted (SMR: 6,241 dead cells removed; P&R had already dropped them from 6_final.v). Note: the shell ate a backquoted phrase in that commit message; the code and this post are correct.
+  | design | kit (host) | run | TT setup | FF hold (sign-off frame) | face_guard | DRC / ant / pg / sdc_lint / drv / fanout / clock |
+  | SMR | s81svc_smr (epyc8) | p4 | +140.59 | -3.99: 58 output ports + 2 internal (core -3.18) | PASS | 0 / 0 / PASS / PASS / PASS / PASS / PASS |
+  | SMD | s81svc_smd (epyc8) | p4 | +164.05 | -0.65: 1 internal endpoint | FAIL shared 1 (i_pv: replica pin register) | all PASS |
+  | TRX xoff16 | s81svc_trx16 (epyc8) | p4 | +416.13 | -5.33, output ports only: hold_ff PASS as NEEDS_PARENT (io_hold_parent) | FAIL shared 4 (w_g replicas) | all PASS |
+  | TRX xoff24 | s81svc_trx24 (epyc8) | p4 | +436.24 | -7.52, output ports only (NEEDS_PARENT) | FAIL shared 4 | all PASS |
+  | TRX xoff0 | s81svc_trx0 (epyc4) | p4 | +374.17 | -7.09, output ports only (NEEDS_PARENT) | FAIL shared 4 | all PASS |
+  | TRX xoff8 | s81svc_trx8 (epyc4) | p4 | +407.08 | -9.63 (same class, by the summary line) | FAIL shared 4 | DRC 0 |
+  | IRG (pin regs on) | s81svc_irg (epyc8) | p3 | +194.87 | -6.84: 252 input-port starts + 304 internal (repair target 0) | shared 274 (alias BUFs; unregistered 0) | all PASS |
+  | IRG | s81svc_irg | p4 | in CTS, then auto sign-off | | | |
+  | SMC / H4 | s81svc_smc / h4 | p4 | fill / CTS, then auto sign-off | | | |
+  | SML | s81svc_sml | p3 done; p4 queued, then sign-off | | | | |
+  The input-boundary hold class is gone everywhere: SMR went -24.12 on 808 endpoints -> -3.99 on 60; no input-port starts remain on p4.
+  **ASK 1 (face_guard: replica pin registers).** fanout_dup clones a pin register when its Q fans out to more than 64 loads, so the input port then drives D flops and face_guard reports 'shared'. Cases:
+   - SMD: i_pv, 1 bit, 5 groups.
+   - SML: i_sv, 1 bit, 3 groups.
+   - TRX x4: w_g[264/529/794/1059], 4 bits of 1060, 2 groups each, 148 loads.
+  face_guard already has this structure: the form "replica" (S81-GUNIT-FORM-1 11-07: D kept fan-out copies of a pin register, a flop-to-flop crossing with no added cycle). Your 11-07 rule keys it to a plan event listed in face_guard.REPLICA_PLANS; this lane may not add to that list. Proposal:
+   (a) RECOMMENDED: register the v5 provider event (s81/svc_prov_1109_v5) for ot_s81_su_smd_fold2, ot_s81_su_sml_fold2 and ot_hdc_v41x_attn_tr_x; the kits then write land_slots.json replica entries (i_pv D 5, i_sv D 3). The form is per bus with one uniform D, so for TRX fanout_dup would make every w_g bit D=2 (+1,056 flops, about 2% of the TRX area).
+   (b) Alternative: let the form take a per-bit D map.
+  Default if silent: (a). I will not edit face_guard.py.
+  **ASK 2 (small internal hold residuals after the in-flow repair):** SMR has 2 endpoints at -3.18 and SMD 1 endpoint at -0.65, both internal reg-to-reg. They repaired to +10 at GRT and lost the margin in extraction. These boxes have had no ECO, so I propose one standard hold ECO iteration each (owner 11-07: real near misses, one iteration). The IRG pilot had its ECO, so it gets no second one: only the p4 structural result counts for it. Default if silent: one ECO on SMR and SMD after their face_guard fix.
+  Output-port-only hold, the TRX class, is NEEDS_PARENT by the recipe-4 die hold budget (io_hold_parent); I am leaving it as it is.
