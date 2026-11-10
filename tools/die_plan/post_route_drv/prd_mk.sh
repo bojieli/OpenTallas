@@ -78,6 +78,11 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
   --exclude '/lec_async.on' --exclude '/lec_async.ready' --exclude '/lec_async.done' --exclude '/lec_async.rc' --exclude '/lec_async.stop' \
   --exclude '/lec_async.abort' --exclude '/lec_async.aborted' --exclude '/lec_async.pid' --exclude '/lec_async.identity' --exclude '/lec_async.source_identity' \
   --exclude '/lec_async.owner' --exclude '/lec_async.lock' --exclude '/lec_async.log' $KIT/ $OUT/
+# HEAD-92 11-10 (class fix): the tool copies below come from the read-only shared tools tree, so a pass dir's copies
+# are mode 0444; a second pass rsyncs them in with that mode and plain cp then fails ('Permission denied' on
+# prd_count.tcl, ds8): the ECO died as 'prd_mk.sh failed (pass dir not staged)'.  Every staged file is made writable
+# for its owner and each copy replaces the old file (cp --remove-destination: never written through a symlink).
+chmod -R u+w "$OUT"
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
 cp $RS/$SRC $B/4_cts.odb
@@ -89,14 +94,15 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp --remove-destination $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
-if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
-for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
+if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp --remove-destination "$SO/tools/die_plan/$f" $OUT/; done
+chmod u+w "$OUT"/*.tcl "$OUT"/*.py "$OUT"/*.sh 2>/dev/null || true
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
 if [ "${MM:-0}" = 1 ]; then
   # two-mode session (fix 1): the kit's own patcher if staged, else the repo's
-  for f in orfs_hold_mm.py orfs_hold_mm.tcl; do test -f $OUT/$f || cp "$SO/tools/$f" $OUT/; done
+  for f in orfs_hold_mm.py orfs_hold_mm.tcl; do test -f $OUT/$f || { cp --remove-destination "$SO/tools/$f" $OUT/; chmod u+w $OUT/$f; }; done
   [ ${V:0:1} = m ] || { echo "prd_mk: kit is two-mode (OT_HOLD_MM=1): use variant m<N>"; exit 2; }
 fi
 # The generated legacy core wrapper also contains a second, unbounded data
