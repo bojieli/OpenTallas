@@ -1195,6 +1195,10 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
     "type": "object", "additionalProperties": False,
     "properties": {"all": {"type": "boolean"}, "except": {"type": "array", "items": {"type": "string"}},
                    "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
+# FACEHOLD-S81 11-10: ft out-face lockup latch after the last station (gen_rtl.ft_face_lockup; absent = off)
+SCHEMA["properties"]["clock"]["properties"]["ft_face_lockup"] = {
+    "type": "object", "additionalProperties": False,
+    "properties": {"types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}

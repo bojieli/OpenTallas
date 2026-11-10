@@ -1,0 +1,243 @@
+{
+ "event": "FACEHOLD-S81",
+ "tool": "tools/die_plan/ft_face_lockup_item_event.py",
+ "form": "out-face latch",
+ "plan_in": "/tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/hub/plan_h2_2249.json",
+ "plan_in_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "plan_out": "/home/ubuntu/wt/ds85-facehold/results/die_s81_85_facehold_1110/s81/v3/plan_ftfl_57980c5fb87c.json",
+ "plan_out_sha256": "57980c5fb87cdf050b615cd367821871cd123a1653c442750cbe8587c6e4f14e",
+ "items": [
+  "slice_station__t24__cleece78ec",
+  "slice_station__t29__clc7772371",
+  "slice_station__t47"
+ ],
+ "ft_face_lockup_before": null,
+ "ft_face_lockup": {
+  "types": [
+   "slice_station__t24__cleece78ec",
+   "slice_station__t29__clc7772371",
+   "slice_station__t47"
+  ],
+  "note": "FACEHOLD-S81 (DIE-S81-85 11-10): out-face lockup latch on the three rows with out-face hold endpoints (t52 excluded: no out-face endpoint, TT ft10_o -49 with latch est.); 0 pin cycles; DO_NOT_COUNT until go-live"
+ },
+ "changed_keys": [
+  "clock.ft_face_lockup"
+ ],
+ "partition_types_unchanged": true,
+ "face_lockup_on": [
+  "slice_station__t24__cleece78ec",
+  "slice_station__t29__clc7772371",
+  "slice_station__t47"
+ ],
+ "face_lockup_on_before": [],
+ "hop_lockup_on": [],
+ "census": {
+  "slice_station__t24__cleece78ec": {
+   "slots": 4,
+   "latches": 4,
+   "latch_bits": 2056,
+   "per_slot": [
+    {
+     "slot": "ft0",
+     "stations": 4,
+     "out_port": "ft0_o",
+     "latch_inst": "u_fl_ft0_o_3",
+     "width": 512,
+     "latch_bits": 513
+    },
+    {
+     "slot": "ft1",
+     "stations": 4,
+     "out_port": "ft1_o",
+     "latch_inst": "u_fl_ft1_o_3",
+     "width": 512,
+     "latch_bits": 513
+    },
+    {
+     "slot": "ft2",
+     "stations": 5,
+     "out_port": "ft2_o",
+     "latch_inst": "u_fl_ft2_o_4",
+     "width": 514,
+     "latch_bits": 515
+    },
+    {
+     "slot": "ft3",
+     "stations": 5,
+     "out_port": "ft3_o",
+     "latch_inst": "u_fl_ft3_o_4",
+     "width": 514,
+     "latch_bits": 515
+    }
+   ]
+  },
+  "slice_station__t29__clc7772371": {
+   "slots": 11,
+   "latches": 11,
+   "latch_bits": 3695,
+   "per_slot": [
+    {
+     "slot": "ft0",
+     "stations": 5,
+     "out_port": "ft0_o",
+     "latch_inst": "u_fl_ft0_o_4",
+     "width": 1104,
+     "latch_bits": 1105
+    },
+    {
+     "slot": "ft1",
+     "stations": 5,
+     "out_port": "ft1_o",
+     "latch_inst": "u_fl_ft1_o_4",
+     "width": 1104,
+     "latch_bits": 1105
+    },
+    {
+     "slot": "ft2",
+     "stations": 5,
+     "out_port": "ft2_o",
+     "latch_inst": "u_fl_ft2_o_4",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft3",
+     "stations": 5,
+     "out_port": "ft3_o",
+     "latch_inst": "u_fl_ft3_o_4",
+     "width": 604,
+     "latch_bits": 605
+    },
+    {
+     "slot": "ft4",
+     "stations": 4,
+     "out_port": "ft4_o",
+     "latch_inst": "u_fl_ft4_o_3",
+     "width": 176,
+     "latch_bits": 177
+    },
+    {
+     "slot": "ft5",
+     "stations": 4,
+     "out_port": "ft5_o",
+     "latch_inst": "u_fl_ft5_o_3",
+     "width": 70,
+     "latch_bits": 71
+    },
+    {
+     "slot": "ft6",
+     "stations": 4,
+     "out_port": "ft6_o",
+     "latch_inst": "u_fl_ft6_o_3",
+     "width": 70,
+     "latch_bits": 71
+    },
+    {
+     "slot": "ft7",
+     "stations": 4,
+     "out_port": "ft7_o",
+     "latch_inst": "u_fl_ft7_o_3",
+     "width": 70,
+     "latch_bits": 71
+    },
+    {
+     "slot": "ft8",
+     "stations": 4,
+     "out_port": "ft8_o",
+     "latch_inst": "u_fl_ft8_o_3",
+     "width": 70,
+     "latch_bits": 71
+    },
+    {
+     "slot": "ft9",
+     "stations": 4,
+     "out_port": "ft9_o",
+     "latch_inst": "u_fl_ft9_o_3",
+     "width": 70,
+     "latch_bits": 71
+    },
+    {
+     "slot": "ft10",
+     "stations": 4,
+     "out_port": "ft10_o",
+     "latch_inst": "u_fl_ft10_o_3",
+     "width": 70,
+     "latch_bits": 71
+    }
+   ]
+  },
+  "slice_station__t47": {
+   "slots": 8,
+   "latches": 8,
+   "latch_bits": 1932,
+   "per_slot": [
+    {
+     "slot": "ft0",
+     "stations": 5,
+     "out_port": "ft0_o",
+     "latch_inst": "u_fl_ft0_o_4",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft1",
+     "stations": 5,
+     "out_port": "ft1_o",
+     "latch_inst": "u_fl_ft1_o_4",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft2",
+     "stations": 5,
+     "out_port": "ft2_o",
+     "latch_inst": "u_fl_ft2_o_4",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft3",
+     "stations": 5,
+     "out_port": "ft3_o",
+     "latch_inst": "u_fl_ft3_o_4",
+     "width": 1,
+     "latch_bits": 2
+    },
+    {
+     "slot": "ft4",
+     "stations": 4,
+     "out_port": "ft4_o",
+     "latch_inst": "u_fl_ft4_o_3",
+     "width": 267,
+     "latch_bits": 268
+    },
+    {
+     "slot": "ft5",
+     "stations": 4,
+     "out_port": "ft5_o",
+     "latch_inst": "u_fl_ft5_o_3",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft6",
+     "stations": 4,
+     "out_port": "ft6_o",
+     "latch_inst": "u_fl_ft6_o_3",
+     "width": 276,
+     "latch_bits": 277
+    },
+    {
+     "slot": "ft7",
+     "stations": 4,
+     "out_port": "ft7_o",
+     "latch_inst": "u_fl_ft7_o_3",
+     "width": 276,
+     "latch_bits": 277
+    }
+   ]
+  }
+ },
+ "pin_cycles_added": 0,
+ "zero_cycle_argument": "last station launches at rise 0; the transparent-low latch (ot_dp_lk) passes it at fall T/2; the neighbour's first station captures at rise T: one cycle per seam hop as before, pins and plan latency unchanged"
+}

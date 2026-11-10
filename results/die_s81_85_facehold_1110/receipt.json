@@ -1,0 +1,44 @@
+{
+ "event": "FACEHOLD-S81",
+ "lane": "DIE-S81-85 sub-lane (face-class hold form, COORD ask 11-10)",
+ "status": "DO_NOT_COUNT",
+ "method": "read-only copies of each row's latest routed DB on epyc8 facehold/<row>; the row's own signoff FF session cut before 'so_timing STD' (libs, odb, spef, golden sdc, uncertainty, vclk pin_flop_mean, overlay in_min -40 / out_min 0) + census_tail.tcl; classify.py per violating endpoint (register-launched violators hidden behind a worse port path counted CORE, as signoff 'reg')",
+ "rows": {
+  "slice_station__t24__cleece78ec": {
+   "db": "epyc4 kw26-wave-1106 e9eda32d41c attempt_14 6_final.odb (no late ECO: wave reason 'not a near miss, 109 endpoints')",
+   "IN_FACE": {"n": 550, "wns": -16.73, "worst": "ft2_i[98] -> u_ft_ft2_o_0 (HB4 44 ps already on the face)", "slack_at_in_min_0": 23.27, "contract_share_ps": 40},
+   "OUT_FACE": {"n": 106, "wns": -9.18, "worst": "u_ft_ft3_o_5 (clk_t17 early -78) -> ft3_o[461]", "slack_without_tap_early_latency": 68.82},
+   "CORE": {"n": 3, "wns": -2.07, "what": "u_cland_ft0_i/u_ring g2[k] -> g3[k] landing-ring sync hops, same tap clk_t18, INV only, different leaves (10.7 ps uncredited)"},
+   "verdict": "face classes = NEEDS_PARENT (port_only_hold); blocker = 3 CORE near-miss endpoints, not a face path"
+  },
+  "slice_station__t29__clc7772371": {
+   "db": "epyc4 kw26-wave-1106 e9eda32d41c attempt_14 6_final.odb (no late ECO)",
+   "IN_FACE": {"n": 1694, "wns": -47.57, "worst": "ft0_i[964] -> u_ft_ft0_o_0 (BUFx2 only, no hold pad)", "slack_at_in_min_0": -7.57, "contract_share_ps": 40},
+   "OUT_FACE": {"n": 148, "wns": -11.96, "worst": "u_ft_ft3_o_5 (clk_t2 early -50) -> ft3_o[537]; also u_rrl_25 -> rst_o_0 -5.45", "slack_without_tap_early_latency": 38.04},
+   "CORE": {"n": 4, "wns": -32.85, "what": "u_rrl_96 (clk_t17) -> u_rrl_99 (clk_t10) -32.85 cross-tap reset relay hop; u_rrl_11 -> u_cland_collect_rst_rl_11/ready_o -29.65 (clk_t6, early -33); ring n2->n3 -0.34; u_rrl_19 -> u_ft_ft2_o_5/eq RESETN removal -0.29"},
+   "verdict": "face classes = NEEDS_PARENT; blocker = reset-relay hops (reset.relay_lockup excludes slice_station*, SAFE-STATION-1), not a face path"
+  },
+  "slice_station__t47": {
+   "db": "epyc2 kw24-wave-1106 attempt_20 eco_20261107_100723 i2 6_final.odb (i3 DB pruned; i2 is the -0.54 record)",
+   "IN_FACE": {"n": 0},
+   "OUT_FACE": {"n": 1, "wns": -0.54, "worst": "u_ft_ft0_o_5 (clk_t17 early -75) -> ft0_o[70]", "slack_without_tap_early_latency": 74.46},
+   "CORE": {"n": 0},
+   "verdict": "only an out-face endpoint; the i2/i3 signoff records predate the S81-TYPES-5 oport census (they show 'other 1 reg 1'); current signoff.py counts it as port hold -> re-sign i2 expected LOCAL_PASS_NEEDS_PARENT"
+  },
+  "slice_station__t52": {
+   "db": "epyc7 die-s81-85/t52c_eco/i1 6_final.odb (conservative form t52cons, 1-iteration ECO)",
+   "IN_FACE": {"n": 4802, "wns": -53.80, "worst": "ft1_i[1069] -> u_ft_ft1_o_p (BUFx2 only)", "slack_at_in_min_0": -13.80, "contract_share_ps": 40},
+   "OUT_FACE": {"n": 0},
+   "CORE": {"n": 1, "wns": -2.21, "what": "u_ft_ft8_o_2 -> u_ft_ft8_o_3 internal ft hop (the FTLOCK-S81 ft_hop_lockup class)"},
+   "verdict": "face class = NEEDS_PARENT; blocker = 1 internal ft hop -> ft_hop_lockup (FTLOCK-S81 tool, add t52) or a near-miss ECO"
+  }
+ },
+ "form": {
+  "name": "ft_face_lockup (out-face lockup latch)",
+  "kind": "per-item kit-wave event plan, like FTLOCK-S81: plan clock.ft_face_lockup.types; item_inputs {plan, kit_rtl} for the named rows only",
+  "generator": "gen_rtl.ft_face_lockup + bind.py ft chain and spare chain: ot_dp_lk #(W+1) u_fl_<o>_<n-1> after the last station; absent key = byte-identical",
+  "pin_cycles_added": 0,
+  "in_face": "no in-type form: a lockup latch only fixes a hold race on the LAUNCH side; the in-face launch is the neighbour's last station, so the in-face fix (if the parent check fails) is this same event on the SENDER type",
+  "event_plan": "epyc8:/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/plan_ftfl_1fa0be68d678.json (s81/receipt.json)"
+ }
+}

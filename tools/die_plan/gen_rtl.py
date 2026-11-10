@@ -226,6 +226,28 @@ def ft_hop_lockup(raw, tn):
     return tn in set(cfg.get("types") or [])
 
 
+def ft_face_lockup(raw, tn):
+    """FACEHOLD-S81 11-10 (COORD, DIE-S81-85): True when type tn's ft slots get the ot_dp_lk negative-level lockup
+    latch AFTER THEIR LAST STATION, i.e. on the OUT face (W+1 bits incl. the epoch when the out port carries it).
+
+    Why: the zero-logic out-face hop last station -> out port -> neighbour's first station hangs its launch flop on a
+    kit tap port with an early source latency of up to the tap window (S81 slice_station t47 u_ft_ft0_o_5 on clk_t17
+    -75 ps -> ft0_o[70] FF hold -0.54 / -4.09 ps against the out_min 0 seam contract after late ECO), so the out face and
+    the neighbour's in face pay the window with no CRPR.  ft_hop_lockup latches only the INTERNAL hops (j -> j+1) and
+    leaves this hop as is.  The face latch is the LATCH-FACE 11-03 out-face form (face_flops.tcl output walker: face
+    flop -> ONE transparent-low latch on the flop's own clock -> port; lec.py phase-aware port class 'low'), emitted for
+    ft stations: the out port changes after the falling edge (T/2 + latch D->Q), so the out_min 0 check and the
+    neighbour's real seam hold gain ~T/2; the neighbour still captures at the next rising edge (0 pin cycles, plan
+    latency byte-identical).  Setup cost: the seam gets T/2 - W instead of T - W (checked by the type's out_max and the
+    die STA).  Instances u_fl_<slot>_s<k-1> (gen) / u_fl_<obus>_<n-1> (bind): the u_fl_ prefix puts the latch on its
+    launch (last) station's tap (clock_taps.tcl hop-latch follow-D pass), which is what ff_latch_ok wants.
+    Plan clock.ft_face_lockup (absent = off, legacy byte-identical): {"types": [types]}."""
+    cfg = ((raw or {}).get("clock") or {}).get("ft_face_lockup")
+    if not cfg:
+        return False
+    return tn in set(cfg.get("types") or [])
+
+
 def uses_relay_lockup(raw, form=None):
     """the plan opts in to reset.relay_lockup (of the given form: "negedge" needs LOCKUP_CELLS; the RLK-1108 "latch"
     form uses ot_dp_lk, already in CELLS)."""
@@ -521,9 +543,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
         lk = ft_hop_lockup(P.raw, tn)
+        fk = ft_face_lockup(P.raw, tn)
         for j in range(k):
             last = j == k - 1
-            if last:
+            if last and fk:
+                # FACEHOLD-S81 11-10 out-face lockup (ft_face_lockup): last station -> transparent-low latch -> port
+                q, eq = f"{n}_s{j}_q", f"{n}_s{j}_eq"
+                decl.append(f"    wire [{W - 1}:0] {q};\n    wire {eq};")
+            elif last:
                 q, eq = f"{n}_o[{W - 1}:0]", (f"{n}_o[{W}]" if ep_o else f"{n}_s{j}_eq")
                 if not ep_o:
                     decl.append(f"    wire {n}_s{j}_eq;")
@@ -538,6 +565,11 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 decl.append(f"    wire [{W}:0] {n}_s{j}_l;")
                 body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{n}_s{j} (.clk(clk), .d({{{eq}, {q}}}), .q({n}_s{j}_l));")
                 d, ea = f"{n}_s{j}_l[{W - 1}:0]", f"{n}_s{j}_l[{W}]"
+            if fk and last:
+                if ep_o:
+                    body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{n}_s{j} (.clk(clk), .d({{{eq}, {q}}}), .q({n}_o));")
+                else:
+                    body.append(f"    ot_dp_lk #(.W({W})) u_fl_{n}_s{j} (.clk(clk), .d({q}), .q({n}_o[{W - 1}:0]));")
     for nt in t.get("nets", []):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"

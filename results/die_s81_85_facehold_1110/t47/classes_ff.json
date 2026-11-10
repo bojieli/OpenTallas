@@ -1,0 +1,30 @@
+{
+ "census": "/home/ubuntu/wt/ds85-facehold/results/die_s81_85_facehold_1110/t47/census_ff.tsv",
+ "endpoints": 1,
+ "classes": {
+  "OUT_FACE": {
+   "last_station->ft0_o": {
+    "n": 1,
+    "wns": -0.54,
+    "worst_start": "u_bound.u_ft_ft0_o_5/q[70]$_DFF_P_/QN",
+    "worst_end": "ft0_o[70]",
+    "clocks": "clk->vclk"
+   }
+  }
+ },
+ "totals": {
+  "IN_FACE": {
+   "n": 0,
+   "wns": null
+  },
+  "OUT_FACE": {
+   "n": 1,
+   "wns": -0.54
+  },
+  "CORE": {
+   "n": 0,
+   "wns": null
+  }
+ },
+ "core_endpoints": []
+}

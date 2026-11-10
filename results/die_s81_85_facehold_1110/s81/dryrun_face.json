@@ -1,0 +1,77 @@
+{
+ "die": "s81",
+ "event": "e9eda32d41c",
+ "plan": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "rows": 271,
+ "changed": [
+  "slice_station__t24__cleece78ec",
+  "slice_station__t29__clc7772371",
+  "slice_station__t47",
+  "slice_station__t52"
+ ],
+ "key_changed": [],
+ "input_hash_changed": [
+  "slice_station__t24__cleece78ec",
+  "slice_station__t29__clc7772371",
+  "slice_station__t47",
+  "slice_station__t52"
+ ],
+ "named_unchanged": [],
+ "named_missing": [],
+ "blockers": [],
+ "ok": true,
+ "detail": [
+  {
+   "item": "slice_station__t24__cleece78ec",
+   "named": true,
+   "key_before": "s81|slice_station__t24__cleece78ec|b21d3d6d9537b",
+   "key_after": "s81|slice_station__t24__cleece78ec|b21d3d6d9537b",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": true,
+   "kit_rtl_changed": true,
+   "gen_args_changed": false
+  },
+  {
+   "item": "slice_station__t29__clc7772371",
+   "named": true,
+   "key_before": "s81|slice_station__t29__clc7772371|b8513629bf92d",
+   "key_after": "s81|slice_station__t29__clc7772371|b8513629bf92d",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": true,
+   "kit_rtl_changed": true,
+   "gen_args_changed": false
+  },
+  {
+   "item": "slice_station__t47",
+   "named": true,
+   "key_before": "s81|slice_station__t47|b706eea380878",
+   "key_after": "s81|slice_station__t47|b706eea380878",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": true,
+   "kit_rtl_changed": true,
+   "gen_args_changed": false
+  },
+  {
+   "item": "slice_station__t52",
+   "named": true,
+   "key_before": "s81|slice_station__t52|b0d40370ccba1",
+   "key_after": "s81|slice_station__t52|b0d40370ccba1",
+   "key_changed": false,
+   "input_hash_changed": true,
+   "plan_changed": true,
+   "kit_rtl_changed": true,
+   "gen_args_changed": false
+  }
+ ],
+ "kit_wave_py": "/srv/opentallas-scratch3/claude/die-s81-85/facehold/rt/tools/autopilot/kit_wave.py",
+ "kit_wave_py_sha256": "a39ac32379e8fdf23d80e3ae2b976584b574e09cdd6c49346190cf5f17d4cbd2",
+ "cfg": "/srv/opentallas-scratch3/claude/die-s81-85/facehold/in/kit_wave.json",
+ "cfg_sha256": "d76eb9071faf955af02cda35dc161ab60883235d6e7a1445561c24904a712312",
+ "state": "/srv/opentallas-scratch3/claude/die-s81-85/facehold/in/kit_wave_state.json",
+ "fragment": "/srv/opentallas-scratch3/claude/die-s81-85/facehold/in/frag_face.json",
+ "fragment_sha256": "bf10c2323d6c004ac0f02eb0828b78019c530f08ad37f83151b1332da00c0a22"
+}

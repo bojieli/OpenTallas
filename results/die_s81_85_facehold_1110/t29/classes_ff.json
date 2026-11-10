@@ -1,0 +1,129 @@
+{
+ "census": "/home/ubuntu/wt/ds85-facehold/results/die_s81_85_facehold_1110/t29/census_ff.tsv",
+ "endpoints": 1846,
+ "classes": {
+  "CORE": {
+   "reset_relay->u_bound.u_rrl_99": {
+    "n": 1,
+    "wns": -32.85,
+    "worst_start": "u_bound.u_rrl_96/q$_DFF_P_/QN",
+    "worst_end": "u_bound.u_rrl_99/q$_DFF_P_/D",
+    "clocks": "clk->clk"
+   },
+   "reset_relay->u_bound.u_cland_collect_rst_rl_11": {
+    "n": 1,
+    "wns": -29.65,
+    "worst_start": "u_bound.u_rrl_11/q$_DFF_P_/QN",
+    "worst_end": "u_bound.u_cland_collect_rst_rl_11/ready_o$_SDFF_PN0_/D",
+    "clocks": "clk->clk"
+   },
+   "landing_ring": {
+    "n": 1,
+    "wns": -0.34,
+    "worst_start": "u_bound.u_cland_ft4_i/u_ring.n2[1]$_DFF_P_/QN",
+    "worst_end": "u_bound.u_cland_ft4_i/u_ring.n3[1]$_DFF_P_/D",
+    "clocks": "clk->clk"
+   },
+   "reset_relay->station": {
+    "n": 1,
+    "wns": -0.29,
+    "worst_start": "u_bound.u_rrl_19/q$_DFF_P_/QN",
+    "worst_end": "u_bound.u_ft_ft2_o_5/eq$_DFF_PN0_/RESETN",
+    "clocks": "clk->clk"
+   }
+  },
+  "IN_FACE": {
+   "in_port->station0": {
+    "n": 1693,
+    "wns": -47.57,
+    "worst_start": "ft0_i[964]",
+    "worst_end": "u_bound.u_ft_ft0_o_0/q[964]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_rst_in": {
+    "n": 1,
+    "wns": -35.72,
+    "worst_start": "arst_n",
+    "worst_end": "u_bound.u_rst_in/q$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   }
+  },
+  "OUT_FACE": {
+   "last_station->ft3_o": {
+    "n": 92,
+    "wns": -11.96,
+    "worst_start": "u_bound.u_ft_ft3_o_5/q[537]$_DFF_P_/QN",
+    "worst_end": "ft3_o[537]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft0_o": {
+    "n": 9,
+    "wns": -6.95,
+    "worst_start": "u_bound.u_ft_ft0_o_5/q[523]$_DFF_P_/QN",
+    "worst_end": "ft0_o[523]",
+    "clocks": "clk->vclk"
+   },
+   "u_bound.u_rrl_25->out_port": {
+    "n": 1,
+    "wns": -5.45,
+    "worst_start": "u_bound.u_rrl_25/q$_DFF_P_/QN",
+    "worst_end": "rst_o_0[0]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft2_o": {
+    "n": 42,
+    "wns": -3.21,
+    "worst_start": "u_bound.u_ft_ft2_o_5/q[69]$_DFF_P_/QN",
+    "worst_end": "ft2_o[69]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft4_o": {
+    "n": 4,
+    "wns": -1.06,
+    "worst_start": "u_bound.u_ft_ft4_o_4/q[173]$_DFF_P_/QN",
+    "worst_end": "ft4_o[173]",
+    "clocks": "clk->vclk"
+   }
+  }
+ },
+ "totals": {
+  "IN_FACE": {
+   "n": 1694,
+   "wns": -47.57
+  },
+  "OUT_FACE": {
+   "n": 148,
+   "wns": -11.96
+  },
+  "CORE": {
+   "n": 4,
+   "wns": -32.85
+  }
+ },
+ "core_endpoints": [
+  [
+   -32.85,
+   "u_bound.u_rrl_96/q$_DFF_P_/QN",
+   "u_bound.u_rrl_99/q$_DFF_P_/D",
+   "reset_relay->u_bound.u_rrl_99"
+  ],
+  [
+   -29.65,
+   "u_bound.u_rrl_11/q$_DFF_P_/QN",
+   "u_bound.u_cland_collect_rst_rl_11/ready_o$_SDFF_PN0_/D",
+   "reset_relay->u_bound.u_cland_collect_rst_rl_11"
+  ],
+  [
+   -0.34,
+   "u_bound.u_cland_ft4_i/u_ring.n2[1]$_DFF_P_/QN",
+   "u_bound.u_cland_ft4_i/u_ring.n3[1]$_DFF_P_/D",
+   "landing_ring"
+  ],
+  [
+   -0.29,
+   "u_bound.u_rrl_19/q$_DFF_P_/QN",
+   "u_bound.u_ft_ft2_o_5/eq$_DFF_PN0_/RESETN",
+   "reset_relay->station"
+  ]
+ ]
+}

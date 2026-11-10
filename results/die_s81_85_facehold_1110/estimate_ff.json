@@ -1,0 +1,243 @@
+[
+ {
+  "row": "t24",
+  "out_face_violators": 106,
+  "out_face_wns": -9.18,
+  "ff_out_hold_worst_paths": [
+   {
+    "start": "u_bound.u_ft_ft3_o_5/q[461]$_DFF_P_",
+    "end": "ft3_o[461]",
+    "slack": -9.18,
+    "lc": 110.41,
+    "ckq": 54.62,
+    "arrival": 195.4,
+    "lc_to_port": 84.99,
+    "new_slack_est": 349.81
+   },
+   {
+    "start": "u_bound.u_ft_ft2_o_5/q[505]$_DFF_P_",
+    "end": "ft2_o[505]",
+    "slack": -9.06,
+    "lc": 107.64,
+    "ckq": 54.22,
+    "arrival": 195.51,
+    "lc_to_port": 87.87,
+    "new_slack_est": 347.05
+   },
+   {
+    "start": "u_bound.u_ft_ft2_o_5/q[73]$_DFF_P_",
+    "end": "ft2_o[73]",
+    "slack": -8.75,
+    "lc": 113.63,
+    "ckq": 51.59,
+    "arrival": 195.82,
+    "lc_to_port": 82.19,
+    "new_slack_est": 353.04
+   }
+  ],
+  "ff_out_hold_new_wns_bound": 346.93,
+  "ff_out_hold_bound_note": "worst old slack + T/2 + DLL ckq_min - max measured Lc->port span 87.87",
+  "ff_station_to_latch_hold_est": {
+   "skew_0": 28.04,
+   "skew_15": 13.04
+  },
+  "ff_station_ckq_min_measured": 51.59,
+  "tt_out_setup_now": {
+   "ft0_o": 431.53,
+   "ft1_o": 425.83,
+   "ft2_o": 444.7,
+   "ft3_o": 427.04
+  },
+  "tt_out_setup_with_latch_bound": {
+   "ft0_o": -35.39,
+   "ft1_o": -41.09,
+   "ft2_o": -22.22,
+   "ft3_o": -39.88
+  },
+  "tt_cost_bound_ps": 466.92
+ },
+ {
+  "row": "t29",
+  "out_face_violators": 148,
+  "out_face_wns": -11.96,
+  "ff_out_hold_worst_paths": [
+   {
+    "start": "u_bound.u_ft_ft3_o_5/q[537]$_DFF_P_",
+    "end": "ft3_o[537]",
+    "slack": -11.96,
+    "lc": 142.91,
+    "ckq": 34.36,
+    "arrival": 198.78,
+    "lc_to_port": 55.87,
+    "new_slack_est": 376.15
+   },
+   {
+    "start": "u_bound.u_ft_ft3_o_5/q[351]$_DFF_P_",
+    "end": "ft3_o[351]",
+    "slack": -11.61,
+    "lc": 142.52,
+    "ckq": 33.77,
+    "arrival": 199.13,
+    "lc_to_port": 56.61,
+    "new_slack_est": 375.76
+   },
+   {
+    "start": "u_bound.u_ft_ft3_o_5/q[539]$_DFF_P_",
+    "end": "ft3_o[539]",
+    "slack": -10.77,
+    "lc": 143.2,
+    "ckq": 34.66,
+    "arrival": 199.97,
+    "lc_to_port": 56.77,
+    "new_slack_est": 376.44
+   }
+  ],
+  "ff_out_hold_new_wns_bound": 375.25,
+  "ff_out_hold_bound_note": "worst old slack + T/2 + DLL ckq_min - max measured Lc->port span 56.77",
+  "ff_station_to_latch_hold_est": {
+   "skew_0": 10.22,
+   "skew_15": -4.78
+  },
+  "ff_station_ckq_min_measured": 33.77,
+  "tt_out_setup_now": {
+   "ft0_o": 456.05,
+   "ft10_o": 499.77,
+   "ft1_o": 447.04,
+   "ft2_o": 554.77,
+   "ft3_o": 479.92,
+   "ft4_o": 459.65,
+   "ft5_o": 502.52,
+   "ft6_o": 503.15,
+   "ft7_o": 503.06,
+   "ft8_o": 503.99,
+   "ft9_o": 500.32
+  },
+  "tt_out_setup_with_latch_bound": {
+   "ft0_o": -10.87,
+   "ft10_o": 32.85,
+   "ft1_o": -19.88,
+   "ft2_o": 87.85,
+   "ft3_o": 13.0,
+   "ft4_o": -7.27,
+   "ft5_o": 35.6,
+   "ft6_o": 36.23,
+   "ft7_o": 36.14,
+   "ft8_o": 37.07,
+   "ft9_o": 33.4
+  },
+  "tt_cost_bound_ps": 466.92
+ },
+ {
+  "row": "t47",
+  "out_face_violators": 1,
+  "out_face_wns": -0.54,
+  "ff_out_hold_worst_paths": [
+   {
+    "start": "u_bound.u_ft_ft0_o_5/q[70]$_DFF_P_",
+    "end": "ft0_o[70]",
+    "slack": -0.54,
+    "lc": 124.17,
+    "ckq": 53.8,
+    "arrival": 207.76,
+    "lc_to_port": 83.59,
+    "new_slack_est": 359.85
+   },
+   {
+    "start": "u_bound.u_ft_ft1_o_5/q[8]$_DFF_P_",
+    "end": "ft1_o[8]",
+    "slack": 0.02,
+    "lc": 117.69,
+    "ckq": 41.02,
+    "arrival": 208.32,
+    "lc_to_port": 90.63,
+    "new_slack_est": 353.37
+   },
+   {
+    "start": "u_bound.u_ft_ft0_o_5/q[71]$_DFF_P_",
+    "end": "ft0_o[71]",
+    "slack": 0.15,
+    "lc": 124.15,
+    "ckq": 55.04,
+    "arrival": 208.45,
+    "lc_to_port": 84.3,
+    "new_slack_est": 359.83
+   }
+  ],
+  "ff_out_hold_new_wns_bound": 352.81,
+  "ff_out_hold_bound_note": "worst old slack + T/2 + DLL ckq_min - max measured Lc->port span 90.63",
+  "ff_station_to_latch_hold_est": {
+   "skew_0": 17.47,
+   "skew_15": 2.47
+  },
+  "ff_station_ckq_min_measured": 41.02,
+  "tt_out_setup_now": {
+   "ft0_o": 469.53,
+   "ft1_o": 451.18,
+   "ft2_o": 460.28,
+   "ft3_o": 605.95,
+   "ft4_o": 450.89,
+   "ft5_o": 450.46,
+   "ft6_o": 417.15,
+   "ft7_o": 412.81
+  },
+  "tt_out_setup_with_latch_bound": {
+   "ft0_o": 2.61,
+   "ft1_o": -15.74,
+   "ft2_o": -6.64,
+   "ft3_o": 139.03,
+   "ft4_o": -16.03,
+   "ft5_o": -16.46,
+   "ft6_o": -49.77,
+   "ft7_o": -54.11
+  },
+  "tt_cost_bound_ps": 466.92
+ },
+ {
+  "row": "t52",
+  "out_face_violators": 0,
+  "out_face_wns": null,
+  "tt_out_setup_now": {
+   "ft0_o": 503.9,
+   "ft10_o": 354.07,
+   "ft11_o": 521.54,
+   "ft12_o": 407.17,
+   "ft13_o": 386.94,
+   "ft14_o": 385.47,
+   "ft15_o": 387.83,
+   "ft16_o": 386.67,
+   "ft17_o": 385.65,
+   "ft18_o": 388.27,
+   "ft1_o": 435.26,
+   "ft2_o": 530.09,
+   "ft3_o": 575.1,
+   "ft4_o": 509.32,
+   "ft5_o": 543.75,
+   "ft6_o": 522.2,
+   "ft7_o": 534.94,
+   "ft8_o": 365.42,
+   "ft9_o": 357.97
+  },
+  "tt_out_setup_with_latch_bound": {
+   "ft0_o": 36.98,
+   "ft10_o": -112.85,
+   "ft11_o": 54.62,
+   "ft12_o": -59.75,
+   "ft13_o": -79.98,
+   "ft14_o": -81.45,
+   "ft15_o": -79.09,
+   "ft16_o": -80.25,
+   "ft17_o": -81.27,
+   "ft18_o": -78.65,
+   "ft1_o": -31.66,
+   "ft2_o": 63.17,
+   "ft3_o": 108.18,
+   "ft4_o": 42.4,
+   "ft5_o": 76.83,
+   "ft6_o": 55.28,
+   "ft7_o": 68.02,
+   "ft8_o": -101.5,
+   "ft9_o": -108.95
+  },
+  "tt_cost_bound_ps": 466.92
+ }
+]

@@ -1,0 +1,95 @@
+{
+ "census": "/home/ubuntu/wt/ds85-facehold/results/die_s81_85_facehold_1110/t52/census_ff.tsv",
+ "endpoints": 4803,
+ "classes": {
+  "CORE": {
+   "ft_hop": {
+    "n": 1,
+    "wns": -2.21,
+    "worst_start": "u_bound.u_ft_ft8_o_2/q[28]$_DFF_P_/QN",
+    "worst_end": "u_bound.u_ft_ft8_o_3/q[28]$_DFF_P_/D",
+    "clocks": "clk->clk"
+   }
+  },
+  "IN_FACE": {
+   "in_port->u_bound.u_ft_ft1_o_p": {
+    "n": 1103,
+    "wns": -53.8,
+    "worst_start": "ft1_i[1069]",
+    "worst_end": "u_bound.u_ft_ft1_o_p/q[1069]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft0_o_p": {
+    "n": 1101,
+    "wns": -50.13,
+    "worst_start": "ft0_i[436]",
+    "worst_end": "u_bound.u_ft_ft0_o_p/q[436]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft2_o_p": {
+    "n": 275,
+    "wns": -48.21,
+    "worst_start": "ft2_i[150]",
+    "worst_end": "u_bound.u_ft_ft2_o_p/q[150]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft3_o_p": {
+    "n": 263,
+    "wns": -48.06,
+    "worst_start": "ft3_i[71]",
+    "worst_end": "u_bound.u_ft_ft3_o_p/q[71]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft4_o_p": {
+    "n": 515,
+    "wns": -44.81,
+    "worst_start": "ft4_i[39]",
+    "worst_end": "u_bound.u_ft_ft4_o_p/q[39]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft6_o_p": {
+    "n": 515,
+    "wns": -44.49,
+    "worst_start": "ft6_i[287]",
+    "worst_end": "u_bound.u_ft_ft6_o_p/q[287]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft5_o_p": {
+    "n": 515,
+    "wns": -44.22,
+    "worst_start": "ft5_i[503]",
+    "worst_end": "u_bound.u_ft_ft5_o_p/q[503]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_ft_ft7_o_p": {
+    "n": 515,
+    "wns": -40.6,
+    "worst_start": "ft7_i[512]",
+    "worst_end": "u_bound.u_ft_ft7_o_p/q[512]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   }
+  }
+ },
+ "totals": {
+  "IN_FACE": {
+   "n": 4802,
+   "wns": -53.8
+  },
+  "OUT_FACE": {
+   "n": 0,
+   "wns": null
+  },
+  "CORE": {
+   "n": 1,
+   "wns": -2.21
+  }
+ },
+ "core_endpoints": [
+  [
+   -2.21,
+   "u_bound.u_ft_ft8_o_2/q[28]$_DFF_P_/QN",
+   "u_bound.u_ft_ft8_o_3/q[28]$_DFF_P_/D",
+   "ft_hop"
+  ]
+ ]
+}

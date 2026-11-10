@@ -1,0 +1,51 @@
+{
+ "event": "FACEHOLD-S81",
+ "form": "out-face latch",
+ "die": "s81",
+ "items": [
+  "slice_station__t24__cleece78ec",
+  "slice_station__t29__clc7772371",
+  "slice_station__t47",
+  "slice_station__t52"
+ ],
+ "set": {
+  "item_inputs": {
+   "slice_station__t24__cleece78ec": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/plan_ftfl_1fa0be68d678.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/kit_rtl_ftfl.sh"
+    },
+    "note": "FACEHOLD-S81 out-face latch (DIE-S81-85 11-10): ft out-face seam hold, 0 pin cycles"
+   },
+   "slice_station__t29__clc7772371": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/plan_ftfl_1fa0be68d678.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/kit_rtl_ftfl.sh"
+    },
+    "note": "FACEHOLD-S81 out-face latch (DIE-S81-85 11-10): ft out-face seam hold, 0 pin cycles"
+   },
+   "slice_station__t47": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/plan_ftfl_1fa0be68d678.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/kit_rtl_ftfl.sh"
+    },
+    "note": "FACEHOLD-S81 out-face latch (DIE-S81-85 11-10): ft out-face seam hold, 0 pin cycles"
+   },
+   "slice_station__t52": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/plan_ftfl_1fa0be68d678.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/facehold/s81/kit_rtl_ftfl.sh"
+    },
+    "note": "FACEHOLD-S81 out-face latch (DIE-S81-85 11-10): ft out-face seam hold, 0 pin cycles"
+   }
+  }
+ },
+ "applied": false,
+ "note": "proposal only: kit_wave.json is not touched by this tool",
+ "retry_fix_template": {
+  "slice_station__t24__cleece78ec@<attempt>": "REDESIGN: FACEHOLD-S81 out-face latch on ft slots (0 pin cycles)",
+  "slice_station__t29__clc7772371@<attempt>": "REDESIGN: FACEHOLD-S81 out-face latch on ft slots (0 pin cycles)",
+  "slice_station__t47@<attempt>": "REDESIGN: FACEHOLD-S81 out-face latch on ft slots (0 pin cycles)",
+  "slice_station__t52@<attempt>": "REDESIGN: FACEHOLD-S81 out-face latch on ft slots (0 pin cycles)"
+ }
+}

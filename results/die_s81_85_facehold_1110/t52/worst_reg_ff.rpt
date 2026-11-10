@@ -1,0 +1,76 @@
+Startpoint: u_bound.u_ft_ft8_o_2/q[28]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bound.u_ft_ft8_o_3/q[28]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+ -64.00  -64.00   clock source latency
+   0.00  -64.00 ^ clk_t38 (in)
+   0.03  -63.97 ^ clk_t38_tb0_d0/A (BUFx4_ASAP7_75t_R)
+  16.58  -47.38 ^ clk_t38_tb0_d0/Y (BUFx4_ASAP7_75t_R)
+   0.81  -46.57 ^ clkbuf_0_clk_t38/A (BUFx24_ASAP7_75t_R)
+  18.89  -27.68 ^ clkbuf_0_clk_t38/Y (BUFx24_ASAP7_75t_R)
+   2.65  -25.03 ^ clkbuf_1_1_0_clk_t38/A (BUFx24_ASAP7_75t_R)
+  19.27   -5.76 ^ clkbuf_1_1_0_clk_t38/Y (BUFx24_ASAP7_75t_R)
+   5.11   -0.64 ^ clkbuf_3_5_0_clk_t38/A (BUFx24_ASAP7_75t_R)
+  20.83   20.19 ^ clkbuf_3_5_0_clk_t38/Y (BUFx24_ASAP7_75t_R)
+   3.03   23.22 ^ clkbuf_4_11__f_clk_t38/A (BUFx24_ASAP7_75t_R)
+  18.41   41.63 ^ clkbuf_4_11__f_clk_t38/Y (BUFx24_ASAP7_75t_R)
+   1.56   43.19 ^ clkbuf_leaf_4_clk_t38/A (BUFx24_ASAP7_75t_R)
+  19.17   62.36 ^ clkbuf_leaf_4_clk_t38/Y (BUFx24_ASAP7_75t_R)
+   2.00   64.36 ^ u_bound.u_ft_ft8_o_2/q[28]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  46.68  111.04 ^ u_bound.u_ft_ft8_o_2/q[28]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   2.87  113.91 ^ u_bound.u_ft_ft8_o_2/wire323773/A (BUFx3_ASAP7_75t_R)
+  20.99  134.90 ^ u_bound.u_ft_ft8_o_2/wire323773/Y (BUFx3_ASAP7_75t_R)
+   5.25  140.15 ^ u_bound.u_ft_ft8_o_2/_0997_/A (INVx1_ASAP7_75t_R)
+   7.26  147.41 v u_bound.u_ft_ft8_o_2/_0997_/Y (INVx1_ASAP7_75t_R)
+   0.04  147.46 v u_bound.u_ft_ft8_o_3/place111473/A (BUFx3_ASAP7_75t_R)
+  15.12  162.58 v u_bound.u_ft_ft8_o_3/place111473/Y (BUFx3_ASAP7_75t_R)
+   5.40  167.98 v u_bound.u_ft_ft8_o_3/wire300113/A (BUFx6f_ASAP7_75t_R)
+  16.77  184.75 v u_bound.u_ft_ft8_o_3/wire300113/Y (BUFx6f_ASAP7_75t_R)
+   4.62  189.37 v u_bound.u_ft_ft8_o_3/wire300112/A (BUFx6f_ASAP7_75t_R)
+  15.61  204.98 v u_bound.u_ft_ft8_o_3/wire300112/Y (BUFx6f_ASAP7_75t_R)
+   8.59  213.56 v u_bound.u_ft_ft8_o_3/wire300111/A (BUFx6f_ASAP7_75t_R)
+  18.70  232.27 v u_bound.u_ft_ft8_o_3/wire300111/Y (BUFx6f_ASAP7_75t_R)
+   3.54  235.81 v u_bound.u_ft_ft8_o_3/q[28]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         235.81   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_t49 (in)
+   0.04    0.04 ^ clk_t49_tb1_d0/A (BUFx4_ASAP7_75t_R)
+  14.37   14.41 ^ clk_t49_tb1_d0/Y (BUFx4_ASAP7_75t_R)
+   0.05   14.46 ^ clk_t49_tb0_d0/A (BUFx4_ASAP7_75t_R)
+  16.31   30.77 ^ clk_t49_tb0_d0/Y (BUFx4_ASAP7_75t_R)
+   0.05   30.82 ^ clk_t49_tb0_d1/A (BUFx4_ASAP7_75t_R)
+  16.34   47.16 ^ clk_t49_tb0_d1/Y (BUFx4_ASAP7_75t_R)
+   0.05   47.22 ^ clk_t49_tb0_d2/A (BUFx4_ASAP7_75t_R)
+  16.34   63.55 ^ clk_t49_tb0_d2/Y (BUFx4_ASAP7_75t_R)
+   0.05   63.61 ^ clk_t49_tb0_d3/A (BUFx4_ASAP7_75t_R)
+  16.34   79.95 ^ clk_t49_tb0_d3/Y (BUFx4_ASAP7_75t_R)
+   0.06   80.00 ^ clk_t49_tb0_d4/A (BUFx4_ASAP7_75t_R)
+  16.36   96.36 ^ clk_t49_tb0_d4/Y (BUFx4_ASAP7_75t_R)
+   0.05   96.41 ^ clk_t49_tb0_d5/A (BUFx4_ASAP7_75t_R)
+  21.80  118.21 ^ clk_t49_tb0_d5/Y (BUFx4_ASAP7_75t_R)
+   5.83  124.04 ^ clkbuf_0_clk_t49/A (BUFx24_ASAP7_75t_R)
+  23.16  147.19 ^ clkbuf_0_clk_t49/Y (BUFx24_ASAP7_75t_R)
+   1.16  148.35 ^ clkbuf_1_0__f_clk_t49/A (BUFx24_ASAP7_75t_R)
+  19.82  168.17 ^ clkbuf_1_0__f_clk_t49/Y (BUFx24_ASAP7_75t_R)
+   5.35  173.52 ^ clkbuf_leaf_4_clk_t49/A (BUFx24_ASAP7_75t_R)
+  23.46  196.99 ^ clkbuf_leaf_4_clk_t49/Y (BUFx24_ASAP7_75t_R)
+   3.78  200.77 ^ u_bound.u_ft_ft8_o_3/q[28]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.00  225.77   clock uncertainty
+   0.00  225.77   clock reconvergence pessimism
+  12.25  238.02   library hold time
+         238.02   data required time
+---------------------------------------------------------
+         238.02   data required time
+        -235.81   data arrival time
+---------------------------------------------------------
+          -2.21   slack (VIOLATED)
+
+

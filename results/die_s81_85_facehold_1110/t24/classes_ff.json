@@ -1,0 +1,95 @@
+{
+ "census": "/home/ubuntu/wt/ds85-facehold/results/die_s81_85_facehold_1110/t24/census_ff.tsv",
+ "endpoints": 659,
+ "classes": {
+  "CORE": {
+   "landing_ring": {
+    "n": 3,
+    "wns": -2.07,
+    "worst_start": "u_bound.u_cland_ft0_i/u_ring.g2[2]$_DFF_P_/QN",
+    "worst_end": "u_bound.u_cland_ft0_i/u_ring.g3[2]$_DFF_P_/D",
+    "clocks": "clk->clk"
+   }
+  },
+  "IN_FACE": {
+   "in_port->station0": {
+    "n": 549,
+    "wns": -16.73,
+    "worst_start": "ft2_i[98]",
+    "worst_end": "u_bound.u_ft_ft2_o_0/q[98]$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   },
+   "in_port->u_bound.u_rst_in": {
+    "n": 1,
+    "wns": -3.17,
+    "worst_start": "arst_n",
+    "worst_end": "u_bound.u_rst_in/q$_DFF_P_/D",
+    "clocks": "vclk->clk"
+   }
+  },
+  "OUT_FACE": {
+   "last_station->ft3_o": {
+    "n": 9,
+    "wns": -9.18,
+    "worst_start": "u_bound.u_ft_ft3_o_5/q[461]$_DFF_P_/QN",
+    "worst_end": "ft3_o[461]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft2_o": {
+    "n": 9,
+    "wns": -9.06,
+    "worst_start": "u_bound.u_ft_ft2_o_5/q[505]$_DFF_P_/QN",
+    "worst_end": "ft2_o[505]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft1_o": {
+    "n": 29,
+    "wns": -7.54,
+    "worst_start": "u_bound.u_ft_ft1_o_4/q[87]$_DFF_P_/QN",
+    "worst_end": "ft1_o[87]",
+    "clocks": "clk->vclk"
+   },
+   "last_station->ft0_o": {
+    "n": 59,
+    "wns": -6.25,
+    "worst_start": "u_bound.u_ft_ft0_o_4/q[291]$_DFF_P_/QN",
+    "worst_end": "ft0_o[291]",
+    "clocks": "clk->vclk"
+   }
+  }
+ },
+ "totals": {
+  "IN_FACE": {
+   "n": 550,
+   "wns": -16.73
+  },
+  "OUT_FACE": {
+   "n": 106,
+   "wns": -9.18
+  },
+  "CORE": {
+   "n": 3,
+   "wns": -2.07
+  }
+ },
+ "core_endpoints": [
+  [
+   -2.07,
+   "u_bound.u_cland_ft0_i/u_ring.g2[2]$_DFF_P_/QN",
+   "u_bound.u_cland_ft0_i/u_ring.g3[2]$_DFF_P_/D",
+   "landing_ring"
+  ],
+  [
+   -1.78,
+   "u_bound.u_cland_ft0_i/u_ring.g2[0]$_DFF_P_/QN",
+   "u_bound.u_cland_ft0_i/u_ring.g3[0]$_DFF_P_/D",
+   "landing_ring"
+  ],
+  [
+   -1.66,
+   "u_bound.u_cland_ft0_i/u_ring.g2[1]$_DFF_P_/QN",
+   "u_bound.u_cland_ft0_i/u_ring.g3[1]$_DFF_P_/D",
+   "landing_ring"
+  ]
+ ]
+}

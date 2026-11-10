@@ -722,6 +722,12 @@ def ft_hop_lockup(plan, tn):
     return gen_rtl.ft_hop_lockup(plan, tn)
 
 
+def ft_face_lockup(plan, tn):
+    """gen_rtl.ft_face_lockup on the bind plan (FACEHOLD-S81 out-face latch after the last station, see its docstring)."""
+    import gen_rtl
+    return gen_rtl.ft_face_lockup(plan, tn)
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -3070,7 +3076,8 @@ class Binder:
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
-        if (self.plan.get("clock") or {}).get("ft_hop_lockup") and "module ot_dp_lk " not in cells:
+        if ((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("ft_face_lockup")) \
+                and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
@@ -3625,9 +3632,10 @@ class Binder:
                 continue
             prev = i
             lk = ft_hop_lockup(self.plan, tn)
+            fk = ft_face_lockup(self.plan, tn)
             for k in range(n):
-                nxt = o if k == n - 1 else f"{o}_s{k}"
-                if k < n - 1:
+                nxt = o if (k == n - 1 and not fk) else f"{o}_s{k}"
+                if k < n - 1 or fk:
                     decl.append(f"    wire [{W}:0] {nxt};")
                 body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
                             f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
@@ -3637,6 +3645,9 @@ class Binder:
                     decl.append(f"    wire [{W}:0] {nxt}_l;")
                     body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{o}_{k} (.clk(clk), .d({nxt}), .q({nxt}_l));")
                     prev = f"{nxt}_l"
+                if fk and k == n - 1:
+                    # FACEHOLD-S81 11-10 out-face lockup (ft_face_lockup docstring): last station -> latch -> out port
+                    body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{o}_{k} (.clk(clk), .d({nxt}), .q({o}));")
         # intra-partition kept transport stages
         dly_w = {}
         for (sci, spn, st) in sorted(self.intra_dly[p], key=lambda x: (F.cells[x[0]].path, x[1], x[2])):
@@ -5474,9 +5485,10 @@ def cmd_kit_rtl(a):
         chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
         prev = f"{ni}[{hi - 1}:{lo}]"
         lk = ft_hop_lockup(raw, tn)
+        fk = ft_face_lockup(raw, tn)
         for j in range(k):
-            q = f"{no}[{hi - 1}:{lo}]" if j == k - 1 else f"sp_{no}_s{j}"
-            if j < k - 1:
+            q = f"{no}[{hi - 1}:{lo}]" if (j == k - 1 and not fk) else f"sp_{no}_s{j}"
+            if j < k - 1 or fk:
                 chain.append(f"    wire [{wd - 1}:0] {q};")
             chain.append(f"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), "
                          f".q({q}), .eq());")
@@ -5485,6 +5497,8 @@ def cmd_kit_rtl(a):
                 chain.append(f"    wire [{wd - 1}:0] {q}_l;")
                 chain.append(f"    ot_dp_lk #(.W({wd})) u_fl_spare_{no}_s{j} (.clk(clk), .d({q}), .q({q}_l));")
                 prev = f"{q}_l"
+            if fk and j == k - 1:      # FACEHOLD-S81 out-face lockup, as the bound stations (ft_face_lockup)
+                chain.append(f"    ot_dp_lk #(.W({wd})) u_fl_spare_{no}_s{j} (.clk(clk), .d({q}), .q({no}[{hi - 1}:{lo}]));")
         body[i:i + 1] = chain
         spare.remove(so)
         spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
