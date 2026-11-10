@@ -38,5 +38,57 @@ class ContainerUser(unittest.TestCase):
         self.assertIn("orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts", text)
 
 
+def trap_block():
+    t = (HERE / "prd_run.sh").read_text()
+    a = t.index("prd_own_back() {")
+    b = t.index("\n", t.index("trap 'prd_own_back; trap - EXIT; exit 130' INT"))
+    assert t.index('DK=docker;') < a < t.index("D=$D0; P=1"), "trap set after DK, before the first pass"
+    return t[a:b + 1]
+
+
+class OwnBackTrap(unittest.TestCase):
+    """the trap runs the root chown on the current pass dir (and FINAL) on EXIT / TERM / INT, only when needed"""
+
+    def run_case(self, body, foreign):
+        import os
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            t = Path(t)
+            log, d, fin, stub = t / "dk.log", t / "pass1", t / "fin", t / "bin"
+            d.mkdir(); fin.mkdir(); stub.mkdir()
+            (t / "dk").write_text(f'#!/bin/bash\necho "$@" >> {log}\n')
+            (t / "dk").chmod(0o755)
+            if foreign:      # a non-root test cannot make a root-owned file: find reports one
+                (stub / "find").write_text('#!/bin/bash\necho "$1/run/x"\n')
+                (stub / "find").chmod(0o755)
+            script = f'DK={t}/dk; IMAGE=img; D={d}; FINAL=\n' + trap_block() + body
+            env = dict(os.environ, PATH=f"{stub}:{os.environ['PATH']}")
+            p = subprocess.run(["bash", "-uo", "pipefail", "-c", script], env=env, capture_output=True, text=True,
+                               timeout=30)
+            calls = log.read_text().splitlines() if log.exists() else []
+            return p.returncode, calls, str(d)
+
+    def test_exit_chowns_current_pass_dir_and_keeps_rc(self):
+        rc, calls, d = self.run_case("exit 3\n", foreign=True)
+        self.assertEqual(rc, 3)
+        self.assertEqual(len(calls), 1, calls)
+        self.assertIn(f"run --rm -v {d}:/work img chown -R", calls[0])
+
+    def test_term_chowns_once_and_exits_143(self):
+        rc, calls, _ = self.run_case("kill -TERM $$\nsleep 5\nexit 0\n", foreign=True)
+        self.assertEqual(rc, 143)
+        self.assertEqual(len(calls), 1, calls)
+
+    def test_int_exits_130(self):
+        rc, calls, _ = self.run_case("kill -INT $$\nsleep 5\nexit 0\n", foreign=True)
+        self.assertEqual(rc, 130)
+        self.assertEqual(len(calls), 1, calls)
+
+    def test_no_container_when_every_file_is_ours(self):
+        rc, calls, _ = self.run_case("exit 0\n", foreign=False)
+        self.assertEqual((rc, calls), (0, []))
+
+
 if __name__ == "__main__":
     unittest.main()

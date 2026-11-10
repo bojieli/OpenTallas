@@ -15,6 +15,21 @@ D0=$(cd "$1" && pwd); CPUS=${2:-8}; MEM=${3:-32}; MAXP=${4:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# KW-FIX-44 11-10 (COORD): the pass / finish containers run as root (they patch ORFS inside the image) and chown /work
+# when they end; a prd_run.sh stopped mid-pass left their outputs root-owned (HEAD-92 hd_spn_end i1t).  On EXIT / TERM /
+# INT the current pass dir and the finish dir get the same root chown, only when a file there is not ours.  SIGKILL
+# is not covered.  TERM keeps rc 143 (eco_loop: stopped from outside), INT 130.
+prd_own_back() {
+  local d
+  for d in "${D:-}" "${FINAL:-}"; do
+    [ -n "$d" ] && [ -d "$d" ] || continue
+    [ -n "$(find "$d" ! -user "$(id -u)" -print -quit 2>/dev/null)" ] || continue
+    $DK run --rm -v "$d":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work >/dev/null 2>&1 || true
+  done
+}
+trap prd_own_back EXIT
+trap 'prd_own_back; trap - EXIT; exit 143' TERM
+trap 'prd_own_back; trap - EXIT; exit 130' INT
 SO=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["signoff_tools"])' $D0/PRD.json)
 V=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["variant"])' $D0/PRD.json)
 RES=$D0/prd_result.json; [ -n "${OT_PRD_FINAL_ONLY:-}" ] && RES=$D0/prd_result_final.json
