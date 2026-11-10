@@ -647,6 +647,12 @@ for k, p in pat.items():
         errors = re.findall(p, runlog) or re.findall(p, txt)
         if errors:
             out[k] = errors[-1][:300]
+            # KW-FIX-43 11-09: a gate FAIL printed after the last tool error is what stopped the run
+            # (hd_ctl: 10 caught RSZ-0060, then PIN_AUDIT FAIL).
+            at = runlog.rfind(errors[-1])
+            gates = re.findall(r"(?m)^[A-Z][A-Z0-9_]+ FAIL\b[^\n]*", runlog[at + len(errors[-1]):]) if at >= 0 else []
+            if gates:
+                out[k] = gates[-1][:300]
             out["orfs_errors"] = [e[:300] for e in errors[-5:]]
     else:
         m = re.search(p, alltxt)

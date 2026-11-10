@@ -1958,6 +1958,13 @@ class TestCrashTriage1025(unittest.TestCase):
                                capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
             return json.loads(o.split("AP_JSON ", 1)[1])
 
+    def test_gate_fail_after_caught_tool_error_is_the_reported_stop(self):
+        c = self.classify_probe("[ERROR RSZ-0060] Max buffer count reached.\nrepair continues\nPIN_AUDIT FAIL 4435/4435 extra 32\n")
+        self.assertIn("PIN_AUDIT FAIL", c["orfs_error"])
+        self.assertIn("RSZ-0060", c["orfs_errors"][0])
+        c = self.classify_probe("PIN_AUDIT FAIL early\n[ERROR DRT-0255] stop\n")
+        self.assertIn("DRT-0255", c["orfs_error"])
+
     def test_clock_source_exception_after_pass_is_infra_without_blind_retry(self):
         files = {
             "FAIL_POSTCTS": "legacy grt gate: TT global-routing insertion gate failed: PASS exit 1\n"
