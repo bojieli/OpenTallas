@@ -87,9 +87,7 @@ def build(manifest, root, name, extractor=True):
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps(out, indent=1) + '\n')
     import dv_layer_compile as C
-    ca, cb = C.manifest_content(manifest), C.manifest_content(dst)
-    ca.pop('frame_root_note', None), cb.pop('frame_root_note', None)
-    if ca != cb:
+    if C.manifest_content(manifest) != C.manifest_content(dst):
         raise ValueError('frame-root manifest does not select the original content')
     if extractor:
         t = root / 'tools/s81_dv/frame_schedule_asb.py'

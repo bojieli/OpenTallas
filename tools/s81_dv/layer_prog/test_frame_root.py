@@ -39,7 +39,7 @@ def test_build_and_select(tmp_path, monkeypatch):
     slice_source.manifest_selection(root, 'bind/frame.json')     # the slice lookup accepts it
     with pytest.raises(ValueError):
         slice_source.manifest_selection(base, str(m))           # the original is refused (outside root)
-    a, b = C.manifest_content(m), C.manifest_content(root / 'bind/frame.json'); b.pop('frame_root_note')
+    a, b = C.manifest_content(m), C.manifest_content(root / 'bind/frame.json')
     assert a == b
 
 

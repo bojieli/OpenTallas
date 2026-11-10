@@ -168,7 +168,7 @@ def manifest_content(path):
                 if r.is_file():
                     return ['FILE', r.name, hashlib.sha256(r.read_bytes()).hexdigest()]
         return v
-    return canon({k: v for k, v in m.items() if k != 'base'})
+    return canon({k: v for k, v in m.items() if k not in ('base', 'frame_root_note')})   # frame_root.py provenance note
 
 
 class Die:
