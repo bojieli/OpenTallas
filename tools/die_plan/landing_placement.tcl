@@ -1325,7 +1325,9 @@ foreach spec $cland_groups {
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
   # DIE-QC-97 11-09: reader/writer START relay windows take the status/collector grow (cland_put_start).
- if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } elseif {[info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1" && $tag eq "literal-local-reset"} { cland_put_grow $i $rect $tag literal-reset } else { cland_put $i $rect $tag };incr hit
+  # KW43 LAND-RESERVE (opt-in OT_LAND_RESERVE=1): a literal local reset window grows like local-reset; the dispatch below is unchanged
+ if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_put_grow $i $rect $tag literal-reset; incr hit; continue }
+ if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }
