@@ -1,0 +1,6 @@
+wsw H13 (HBM-CORES-B 11-09): ot_wbq_sw__fcore g_f2 per-PC K-gate leaf (ot_wbq_kg_leaf, keep_hierarchy), MREG>=1 only.
+Proof: yosys EQ, gold = wsw_H12 kit RTL (ot_wbq_split.sv sha 80d3f69c), gate = wsw_H13 kit RTL (sha 69378af6), top ot_wbq_sw
+(kit fshell .HREG(4),.SEL16(1),.RSYNC(1),.SCOPY(1),.MREG(1)), keep_hierarchy unset for the proof, 48 register renames
+g_c[c].g_l.u_kg.{ma_c,kg_c,sa_c} -> g_c[c].*, equiv_simple -seq 4 + equiv_induct -seq 4: "Equivalence successfully proven!",
+76794 $equiv cells, rc 0 (epyc7 /srv/opentallas-scratch2/claude/hbm-cores-b/wsw_eq13/eq13.log). Script: eq13.ys.
+This branch file (reform_1105b) carries the byte-identical diff (same 31 changed lines as the kit file).
