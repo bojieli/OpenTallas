@@ -15,12 +15,20 @@ driver at xy_um whose output net carries the sinks inside region_um plus the dec
 macro sink_pins.  The PRE_CTS hook pad_clock_entry.tcl builds it, so TritonCTS sees
 one local tree per entry (the pad net keeps the rest) under the same clock; SDC,
 ports and RTL are unchanged.  Absent "entries" = kit byte-identical.
+
+Core-clock regional entries (S81 LEAF-CLKENTRY-1109, opt-in clock.tap_entries): the same trunk form sourced at an
+existing die-spine tap port ("tap": clk / clk_t<k>).  After the nearest-tap split (clock_taps.tcl) the entry driver's
+net takes every std-cell clock sink inside region_um that sits on one of the "take_taps" ports, so a deep macro-field
+channel that one or two far taps used to reach gets its own local tree behind a <= 405-um trunk.  No port, RTL, SDC,
+reset-tree or die-top change; absent "tap_entries" = kit byte-identical.
 """
 import math
 import re
 
 ENTRY_HOP_UM = 405.0         # METHODOLOGY 12.1e: plan 405 um per hop (repeaters <= 450)
 ENTRY_KEYS = {'name', 'xy_um', 'stations_um', 'cell', 'region_um', 'sink_pins', 'evidence'}
+TAP_ENTRY_CLEAR_UM = 2.16      # a trunk / driver point is a std cell: >= 8 rows off every hard core (not the 8.64 tap-pin halo)
+TAP_ENTRY_KEYS = {'name', 'tap', 'take_taps', 'xy_um', 'stations_um', 'cell', 'region_um', 'evidence'}
 CDC_VALUES = ('synchronized',)
 CDC_RULE = ('COORD 10-31 ruling (3): synchronized plesiochronous pad clock -> asynchronous crossing, '
             'max delay one pad period (latency ignored), no hold check')
@@ -189,16 +197,90 @@ def _tcl_list(v):
                           (f'{x:.4f}' if isinstance(x, float) else str(x)) for x in v) + '}'
 
 
+def _region_ok(r):
+    return (isinstance(r, list) and len(r) == 4 and all(_finite_xy(r[i:i + 2]) for i in (0, 2))
+            and r[0] < r[2] and r[1] < r[3])
+
+
+def tap_entries(P, tn):
+    """[(tap port, entry)] of the type's core-clock regional entries (clock.tap_entries, validated), [] when none.
+
+    Fail closed: exact keys; a new identifier name that is no port, pad entry or other tap entry; `tap` and every
+    take_taps port a grid / added tap of the type (gen_phys.clock_pins, the kit's snapped tap pins) with `tap` among
+    take_taps; one library cell; trunk tap pin -> stations -> driver inside the outline, every hop <= ENTRY_HOP_UM
+    (12.1e), every trunk point >= TAP_ENTRY_CLEAR_UM off every hard core (a std-cell row, not the tap-pin halo);
+    nonempty, pairwise disjoint region rectangles; evidence."""
+    t = P.types[tn]
+    rows = t.get('clock', {}).get('tap_entries')
+    if rows is None:
+        return []
+    if not isinstance(rows, list) or not rows:
+        raise ValueError(f'{tn}: tap_entries needs a nonempty list')
+    import gen_phys
+    from placement_obstacles import placement_boxes
+    taps = {n: (float(x), float(y)) for n, x, y in gen_phys.clock_pins(P, tn)}
+    taken = set(taps) | {n for n, *_ in gen_phys.core_tap_pins(P, tn)} | {q['name'] for q in t.get('pads', [])}
+    taken |= {b['name'] for b in t.get('buses', [])} | {e['name'] for _, e in entries(P, tn)}
+    w, h = t['outline_um']
+    eps = 1e-8
+    boxes = list(placement_boxes(t, halo=TAP_ENTRY_CLEAR_UM).values())
+    names, regs = set(), []
+    for e in rows:
+        if not isinstance(e, dict) or set(e) != TAP_ENTRY_KEYS:
+            raise ValueError(f'{tn}: tap entry requires exactly {sorted(TAP_ENTRY_KEYS)}')
+        en = e['name']
+        if (not isinstance(en, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', en) or en in names
+                or en in taken):
+            raise ValueError(f'{tn}: duplicate, invalid or port-colliding tap entry name {en!r}')
+        names.add(en)
+        tk = e['take_taps']
+        if (e['tap'] not in taps or not isinstance(tk, list) or not tk or len(set(tk)) != len(tk)
+                or any(q not in taps for q in tk) or e['tap'] not in tk):
+            raise ValueError(f'{tn}.{en}: tap / take_taps must be grid or added tap ports of the type, tap among them')
+        if not isinstance(e['cell'], str) or not re.fullmatch(r'[A-Za-z0-9_]+', e['cell']):
+            raise ValueError(f'{tn}.{en}: entry cell must be one library cell name')
+        if not isinstance(e['evidence'], str) or not e['evidence'].strip():
+            raise ValueError(f'{tn}.{en}: entry evidence required')
+        st = e['stations_um']
+        if not isinstance(st, list) or not _finite_xy(e['xy_um']) or not all(_finite_xy(q) for q in st):
+            raise ValueError(f'{tn}.{en}: entry xy_um / stations_um must be finite [x, y] points')
+        chain = [list(taps[e['tap']])] + st + [e['xy_um']]
+        for x, y in chain[1:]:
+            if not (0.0 < x < w and 0.0 < y < h):
+                raise ValueError(f'{tn}.{en}: trunk point ({x}, {y}) outside the outline')
+            if any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes):
+                raise ValueError(f'{tn}.{en}: trunk point ({x}, {y}) within {TAP_ENTRY_CLEAR_UM} um of a hard core')
+        for a, b in zip(chain, chain[1:]):
+            hop = abs(a[0] - b[0]) + abs(a[1] - b[1])
+            if hop > ENTRY_HOP_UM + 1e-6:
+                raise ValueError(f'{tn}.{en}: trunk hop {hop:.1f} um > {ENTRY_HOP_UM:g} um (12.1e)')
+        reg = e['region_um']
+        if not isinstance(reg, list) or not reg or not all(_region_ok(r) for r in reg):
+            raise ValueError(f'{tn}.{en}: region_um must be a nonempty list of [x0, y0, x1, y1] (x0<x1, y0<y1)')
+        for r in reg:
+            if any(r[0] < q[2] and q[0] < r[2] and r[1] < q[3] and q[1] < r[3] for q in regs):
+                raise ValueError(f'{tn}.{en}: region {r} overlaps another tap entry region')
+        regs += reg
+    return [(e['tap'], e) for e in rows]
+
+
 def entries_tcl(P, tn):
-    """PRE_CTS data + hook call for the declared entries ('' when none): pad_clock_entry.tcl builds each trunk."""
+    """PRE_CTS data + hook call for the declared entries ('' when none): pad_clock_entry.tcl builds each trunk.
+    Pad-clock entries keep their 7-field rows (RCK2); core-clock tap entries add the take_taps ports as an 8th field."""
     rows = entries(P, tn)
-    if not rows:
+    trows = tap_entries(P, tn)
+    if not rows and not trows:
         return ''
     body = ''.join('  ' + _tcl_list([port, e['name'], e['cell'], [[float(a) for a in s] for s in e['stations_um']],
                                      [float(a) for a in e['xy_um']], [[float(a) for a in r] for r in e['region_um']],
                                      [[s['module'], s['pin']] for s in e['sink_pins']]]) + '\n' for port, e in rows)
+    body += ''.join('  ' + _tcl_list([port, e['name'], e['cell'], [[float(a) for a in s] for s in e['stations_um']],
+                                      [float(a) for a in e['xy_um']], [[float(a) for a in r] for r in e['region_um']],
+                                      [], list(e['take_taps'])]) + '\n' for port, e in trows)
+    tap_note = ('# + plan clock.tap_entries (LEAF-CLKENTRY-1109): tap port, 8th field = take_taps ports\n'
+                if trows else '')
     return ('# GENERATED by tools/die_plan/gen.py phys (plan clock.pad_clock pins[].entries, RCK2-1109): '
-            'port entry cell stations entry_xy regions macro_sinks\n'
+            'port entry cell stations entry_xy regions macro_sinks\n' + tap_note +
             'set ::pce_entries {\n' + body + '}\n'
             'uplevel #0 {source /work/pad_clock_entry.tcl}\n')
 
