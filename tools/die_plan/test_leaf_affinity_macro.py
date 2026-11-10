@@ -122,7 +122,7 @@ class HardMacroExclusion(unittest.TestCase):
 
     def test_missing_gate_guard_mutant_crosses_gates(self):
         source = SOURCE.read_text()
-        guard = '  if {$la_gx} { incr la_skip_gate; continue }\n'
+        guard = '  foreach it $mv { if {[la_groot [$it getNet]] ne $la_g0} { return gate } }\n'
         self.assertEqual(source.count(guard),1)
         out = self.run_fixture(source.replace(guard,''),hard=False,roots=('gck0','gck1'))
         self.assertIn('hard_clock=clock_soft moves=hardCK estimated=1',out)
