@@ -36050,3 +36050,38 @@ Trial on the vC t14 3_3 DB with 'u_txl u_dec.u_rck_transport4': 554/554 transpor
 Regen package (supersedes the hook sha in the 12:2x ASK): gen.py phys on event plan dc1050772e77, TXL4 RTL 836329ee64, hook 091916a5f9, plainrelay b9a19a2426. Kit config: -DOT_S81_SERDES_TXL4, OT_TXL_MID=1, OT_TXL_MID_CHAINS='u_txl u_dec.u_rck_transport4', POST_GLOBAL_PLACE_TCL=/work/txl_mid.tcl. No hand-edited contract files. vT2 (old hook c9b6b26e1e, txl only) is running as built on epyc8; its GRT class table follows.
 - 2026-11-10 12:15 PST STATE [DIE-HBM-97 kv_line KVPIPE] Re COORD step B: w8 reached no verdict (yosys 'No SAT model for async FF' after the async-reset rework), so the hand-built step-B script is STOPPED, no more patches. Step B moves to the repo LEC tool (tools/die_plan/lec.py md5 9d156919, sibling-twin aware): golden = rev2 kv_line RTL (vD kit config), revised = rev3 synthesised with -DOT_KVLINE_EQ_TIED (all consumers read copy 3) in kit vT (epyc7 die-hbm-97-kvline/vT, DO_NOT_COUNT, synth via ot-run queued). The run uses lec.py --netlist vT/1_2_yosys.v; copies 0..2 become unmatched kept flops that do not reach outputs in the tied form. Will report the proved compare-point count. Step A (4 copies equal in every reachable state, yosys sat -tempinduct) stays PROVED. Branch @ff3fd7fd.
 - 2026-11-10 12:16 PST [DIE-HBM-97 q_b100pv1-lec-proof] -> COORD, KW-FIX-43: q_b100__physical_v1 a13 pre-route LEC rerun (LEC-only, DO_NOT_COUNT) with fixed lec.py md5 9d156919e9f0aa3685f974f69241c301 (sibling_twin_search, = main f502d8a LEC-SIBLING-TWIN-X) on the unchanged a13 netlist 1_2_yosys.v (md5 027003d8) = EQUIVALENT cp=101250 proved=101250 differs=0 undecided=0, auto_twins proposed 15 kept 12 (incl gc_1_leaf_procdff_71556_q[0..2], the 3 a13 gold_only cones), t_total_s 468.9; same image openroad/orfs:asap7lock, same command as lec_async (python3 -I /work/lec.py /work --netlist ... --out /work/lec), -m 24g. The a13 FAIL (3 differs on u_bout_L5000_o.q[3302..3304], no counterexample, only unmatched merged-twin cones, auto_twins 3/0 under lec.py 01f9bacf) was a tool false negative. Copy epyc7:/srv/opentallas-scratch2/claude/die-hbm-97-b100lec/ (lec/lec.json + lec_run.log kept). NEXT: KW-FIX-43 moves the wave future_lec pin (now 3c6f29fb) to main >= f502d8a and resumes the row at place, no fresh kit (kit inputs unchanged).
+- 2026-11-10 12:16 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-78): 1 event(s): kv3_hgi_v6 FAIL PLAN (native source stage/reset realization differs: regenerate the canonical bind/kit @kit_topology: ValueError: KIT_TOPOLOGY_BIND_STALE: regenerate the canonical na) evid epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v6/attempt_10
+- 2026-11-10 12:16 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 1 event(s): slice_station__t45 AUTO-GEOM PASS GEOM-ADVISORY clock_tap_sinks,empty,fill,partial_face,pin_reg_p90,pin_unreg: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t45/attempt_13/gen/slice_station__t45)
+- 2026-11-10 12:16 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-79): 1 event(s): slw_stm_v1__cl05fc43f7__cl2086fa2c signoff FAIL TIMING (routed-not-signed: TT -799.45 FF -104.4 ps late-ECO not a near miss: setup WNS -799.45 ps worse than -30; setup 3594 endpoints > 100; hold WNS -94.91 ps worse t) job 5af96681fa20
+- 2026-11-10 12:16 PST READY+RESULT KW-FIX-44 -> COORD, ROOT-MERGE-57, TYPE-SAFE-5: GEN-DISK-LOW message fixed (check was right: epyc2 root lane 143<170); future_lec snapshot staged-or-fail before any queue; deployed, READY claude/kw-fix-44-lecsnap-gdl-1110@ffbb003de5a
+  LECSNAP-GDL-1110 (lec_tools_copy rc 23 class + GEN-DISK-LOW message). DO_NOT_COUNT.
+  1. GEN-DISK-LOW "hbm=143 ... GB < 70": the comparison is right and only the message was wrong. epyc2's work_root
+     /srv/opentallas-scratch3/claude/kw43-wave-1109 is on the epyc2 ROOT fs (scratch3 = /, 143 GB free, 96 %). KW-FIX-35
+     judges a root-fs lane against root_floor_gb + root_gen_room_gb, which is 170 with this config, not gen_disk_min_gb (70).
+     The scratch2 alternative has 56 GB, below its limit, so there was no WORKROOT-ALT either. So epyc2 really has no room
+     for new gens under the owner's 150-GB root floor. The line printed gen_disk_min_gb for every die.
+     Fixed: workroot_low records each die's limit, and the line now prints free<limit. First new line at 12:16:20:
+     "GEN-DISK-LOW work_root epyc2: hbm=143<170 qwen_compute=143<170 qwen_kvsys=143<170 s81=143<170 GB free<needed (...)".
+  2. lec_tools_copy rc 23. Cause: run_item rsyncs <spec dir>/future_lec. Only the wave launcher writes that dir, next to
+     the spec it writes. A private run that copies a spec elsewhere names the snapshot (meta in spec.future_lec) without
+     the dir, so rsync rc 23 happened late, after the queue wait.
+     Fix:
+     - The snapshot writer is one function, future_lec_snapshot(dir, commit=None). The launcher's behaviour is unchanged.
+     - run_item calls ensure_future_lec(out, meta) right after reading the spec, before mkdir or any ot-run.
+       - A complete snapshot whose TOOL.json equals the spec's meta is used as is.
+       - Otherwise it is staged into a temp dir from the spec's commit (git show of lec.py, kit_resume.py, gen_phys
+         RUN_KIT) and moved into place only if commit, sha256, runner_template_sha256 and resume_helper_sha256 all
+         equal the spec's. A partial dir is renamed aside, never deleted.
+       - Otherwise the run fails at once with stage lec_tools_preflight: "KW_FUTURE_LEC FAIL <which sha differs / commit
+         not readable>".
+     Tests: new tools/autopilot/test_kit_wave_future_lec.py, 7 passed: staged from the commit, a complete one left
+     alone, sha mismatch stages nothing, unknown commit, partial replaced and kept aside, order in run_item, GEN-DISK
+     limit. test_kit_wave*.py: 409 passed, 9 failed, the same 9 that fail on main in the git-less test tree.
+  3. Deployed on the hub runtime (kw38/rt kit_wave.py 43400996 -> 28135f0b, backup kw44/kw4377/rt_bak/kit_wave.py.43400996),
+     12:11 between ticks. The import is OK, and the 12:16 tick ran with it.
+     READY: claude/kw-fix-44-lecsnap-gdl-1110 @ ffbb003de5a1216e7e7eb5493f3702969901722c on main 9aedf25ac00
+     (kit_wave.py + the test; ls-remote read back).
+     The 3 failed private runs (TYPE-SAFE-5 p4, st_b_v2 a2, sfw_proof a6) can be relaunched by their lanes as they are.
+     run_item now stages the snapshot itself if their spec's commit is readable on the hub.
+  4. epyc8 src staging (REBAL-E8-1110 C) is running: about 10 of 83 GB at 12:14, so ETA about 13:30. rsync will end rc 23
+     on "failed to set times on /srv" (a permissions note only); I check with a checksum dry run before any gen_hosts edit.
