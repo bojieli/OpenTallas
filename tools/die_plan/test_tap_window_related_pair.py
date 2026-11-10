@@ -1,5 +1,5 @@
 """TAPWIN-1109 (COORD ruling tapwin-1109, DIE-S81-85): an unmeasured type's kit SDC charges a cross-tap pair the
-inter-tap related-pair budget X (gen_phys.tap_related_pair_ps, default 40 ps), not the full die band window_ps
+inter-tap related-pair budget X (gen_phys.tap_related_pair_ps, a plan value; without one window_ps is charged), not the full die band window_ps
 (S81 iqf__t1: 180 ps on every cross-tap reg2reg path).  Same-tap pairs keep CRPR at the common port; measured
 windows (per_type_ps / per_port_ps) are unchanged; the die STA kit contract checks every real tap pair against X.
 The OpenSTA test times a two-tap netlist with the exact emitted window lines (skipped without docker / the image)."""
@@ -18,7 +18,7 @@ import schema
 import sdc_lint
 
 HERE = Path(__file__).parent
-X = gen_phys.TAP_RELATED_PAIR_PS
+X = 40.0
 
 
 def _raw(window=180.0, **tw):
@@ -37,8 +37,8 @@ def _early(s):
 
 
 def test_unmeasured_type_charges_related_pair_budget_not_band():
-    P = schema.Plan(_raw())
-    assert X == 40.0 and gen_phys.tap_window_band_ps(P, "src") == 180.0
+    P = schema.Plan(_raw(related_pair_ps=X))
+    assert gen_phys.tap_window_band_ps(P, "src") == 180.0
     assert gen_phys.tap_window_ps(P, "src") == gen_phys.tap_window_ps(P) == X
     s = _sdc(P)
     assert _early(s) == [-X]
@@ -49,6 +49,19 @@ def test_unmeasured_type_charges_related_pair_budget_not_band():
     ctx = sdc_lint.kit_context(P, "src")
     assert ctx["tap_window_ps"] == X and sdc_lint.lint(s, **ctx) == []
     assert sdc_lint.lint(s.replace("-early -clock clk -40.0000", "-early -clock clk -180.0000"), **ctx)
+
+
+def test_no_plan_value_falls_back_to_window_not_40():
+    """TAPWIN-FIX-1109: no silent 40; an unmeasured type with no plan related_pair_ps charges window_ps."""
+    assert not hasattr(gen_phys, "TAP_RELATED_PAIR_PS")
+    P = schema.Plan(_raw())
+    assert gen_phys.tap_related_pair_ps(P) is None
+    assert gen_phys.tap_window_ps(P, "src") == gen_phys.tap_window_ps(P) == 180.0
+    s = _sdc(P)
+    assert _early(s) == [-180.0] and "TAPWIN-1109" not in s
+    assert s == _sdc(schema.Plan(_raw(related_pair_ps=180.0)))
+    wi = DSR.kit_windows(dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=180)))["intra"]
+    assert wi["ps"] == 180.0 and "band_ps" not in wi
 
 
 def test_override_and_byte_identical_when_budget_not_below_band():
@@ -62,7 +75,7 @@ def test_override_and_byte_identical_when_budget_not_below_band():
 
 
 def test_measured_windows_unchanged():
-    P = schema.Plan(_raw(per_type_ps={"src": 120.0}))
+    P = schema.Plan(_raw(per_type_ps={"src": 120.0}, related_pair_ps=X))
     assert gen_phys.tap_window_ps(P, "src") == 120.0 and _early(_sdc(P, "src")) == [-120.0]
     assert gen_phys.tap_window_ps(P, "mid") == X                               # unlisted type: budget
     ports = [n for n, _x, _y in gen_phys.clock_pins(P, "src")]
@@ -72,7 +85,7 @@ def test_measured_windows_unchanged():
 
 
 def test_die_sta_contract_checks_pairs_against_budget():
-    pc = dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=180))
+    pc = dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80), tap_window=dict(window_ps=180, related_pair_ps=X))
     wi = DSR.kit_windows(pc)["intra"]
     assert wi["ps"] == X and wi["band_ps"] == 180.0 and wi["related_pair_ps"] == X
     assert "TAPWIN-1109" in wi["basis"]
@@ -121,7 +134,7 @@ def test_opensta_two_tap_cross_pays_budget_same_tap_unchanged(tmp_path):
     img = _sta_image()
     if not img:
         pytest.skip("no docker / ORFS image for the OpenSTA two-tap run")
-    P = schema.Plan(_raw())
+    P = schema.Plan(_raw(related_pair_ps=X))
     win = [l.replace(re.search(r"\[get_ports \{([^}]*)\}\]", l).group(0), "[get_ports {clk clk_t1}]")
            for l in gen_phys.tap_window_tcl(P, "src", core=False).splitlines() if "-clock clk " in l]
     assert len(win) == 2 and "-early -clock clk -40.0000" in win[0] and "-late -clock clk 0.0000" in win[1]

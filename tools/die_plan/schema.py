@@ -989,7 +989,7 @@ SCHEMA = {
                                           "per_port_note": {"type": "string"},
                                           # TAPWIN-1109 (COORD tapwin-1109): inter-tap related-pair budget X the kit
                                           # SDC charges an UNMEASURED type instead of the die band window_ps
-                                          # (gen_phys.tap_related_pair_ps, default TAP_RELATED_PAIR_PS 40)
+                                          # (gen_phys.tap_related_pair_ps; no default: absent = window_ps)
                                           "related_pair_ps": _nonneg}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
