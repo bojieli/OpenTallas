@@ -11,9 +11,17 @@
 # adds -max_wire_length OT_MAXWIRE_UM.  Clock nets are untouched (repair_design skips them).  No limit, margin or
 # constraint changes.
 if {![info exists ::env(OT_MAXWIRE_UM)] || $::env(OT_MAXWIRE_UM) eq ""} { error "grt_maxwire.tcl: OT_MAXWIRE_UM unset" }
-if {[info procs repair_design_helper] ne "" && [info procs ot_orig_repair_design_helper] eq ""} {
-  rename repair_design_helper ot_orig_repair_design_helper
-  proc repair_design_helper {} {
+# DIE-S81-85 2026-11-09 MAXWIRE-183 (serdes14_vR 5_1_grt GRT-0183 inside 'OT_MAXWIRE repair_design', no OT_GRT183_RESUME_SAVED):
+# grt183_resume.tcl is sourced BEFORE this kit hook and wraps repair_design_helper (catch GRT-0183 -> save -> one fresh
+# re-run).  Renaming the helper here replaced that wrapper with a plain proc, so the incremental GRT-0183 of this
+# repair_design escaped the class resume.  When the wrapper is present, the max-wire body replaces the wrapped INNER helper
+# (ot_g183_orig_repair_design_helper) and the wrapper stays in front of it; without it, unchanged.
+set ot_mw_target repair_design_helper
+if {[llength [info commands ot_g183_orig_repair_design_helper]]} { set ot_mw_target ot_g183_orig_repair_design_helper }
+if {[info procs $ot_mw_target] ne "" && [info procs ot_orig_repair_design_helper] eq ""} {
+  rename $ot_mw_target ot_orig_repair_design_helper
+  if {$ot_mw_target ne "repair_design_helper"} { puts "OT_MAXWIRE under GRT183-RESUME: wrapper repair_design_helper kept, max-wire body in $ot_mw_target" }
+  proc $ot_mw_target {args} {
     set args [list -verbose -max_wire_length $::env(OT_MAXWIRE_UM)]
     if {[info exists ::env(CAP_MARGIN)] && $::env(CAP_MARGIN) ne ""} { lappend args -cap_margin $::env(CAP_MARGIN) }
     if {[info exists ::env(SLEW_MARGIN)] && $::env(SLEW_MARGIN) ne ""} { lappend args -slew_margin $::env(SLEW_MARGIN) }
