@@ -62,7 +62,7 @@ module ot_s81sl_leaf #(
     parameter integer CS_VE_D = 0,   // vs -> ve: ve_r* (reduce stream), ve_a* (add beats)            (u_cst_ve)
     parameter integer CS_VER_D = 0,  // ve -> vs: ve_p* (beat partials), ve_o*, ve_fi                  (u_cst_ver)
     parameter integer CS_PVS_D = 0,  // vp -> vs (and the KV bank): s_v / s_d, x_qv / x_qd            (u_cst_pvs)
-    parameter integer CS_VSP_D = 0   // vs (KV) -> vp: x_rv / x_ra, x_wv / x_wa / x_wm / x_wd          (u_cst_vsp)
+    parameter integer CS_VSP_D = 0, parameter integer VP_CFR = 0   // vs (KV) -> vp: x_rv / x_ra, x_wv / x_wa / x_wm / x_wd          (u_cst_vsp); VP_CFR: u_vp.CFR (0 cycles)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -175,7 +175,7 @@ module ot_s81sl_leaf #(
     end endgenerate
 
     ot_s81sl_vp #(.CS_HI_D(CS_HI_D), .CS_HI_GS(CS_HI_GS), .CS_HO_D(CS_HO_D), .CS_HO_GS(CS_HO_GS), .CS_H_G(CS_H_G),
-                  .HQX(CS_VNI_D + CS_VNO_D)) u_vp (
+                  .HQX(CS_VNI_D + CS_VNO_D), .CFR(VP_CFR)) u_vp (
         .clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .lo_v(lo_v), .lo_d(lo_d),
         .s_v(s_v_p), .s_d(s_d_p), .x_rv(x_rv_x), .x_ra(x_ra_x), .x_qv(x_qv_p), .x_qd(x_qd_p),

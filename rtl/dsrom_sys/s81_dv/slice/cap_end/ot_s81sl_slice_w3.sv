@@ -12,7 +12,7 @@ module ot_s81sl_slice_w3 #(
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
-    parameter integer VS_MUT = 0, parameter [19:0] LF_CS_HI_D = 20'd0, parameter [19:0] LF_CS_HI_GS = 20'd0, parameter [19:0] LF_CS_HO_D = 20'd0, parameter [19:0] LF_CS_HO_GS = 20'd0, parameter [19:0] LF_CS_H_G = {5{4'd4}}, parameter [19:0] LF_CS_VNI_D = 20'd0, parameter [19:0] LF_CS_VNO_D = 20'd0, parameter [19:0] LF_CS_Y_D = 20'd0, parameter [19:0] LF_CS_U_D = 20'd0, parameter [19:0] LF_CS_SW_D = 20'd0, parameter [19:0] LF_CS_SWR_D = 20'd0, parameter [19:0] LF_CS_RA_D = 20'd0, parameter [19:0] LF_CS_RAR_D = 20'd0, parameter [19:0] LF_CS_VE_D = 20'd0, parameter [19:0] LF_CS_VER_D = 20'd0, parameter [19:0] LF_CS_PVS_D = 20'd0, parameter [19:0] LF_CS_VSP_D = 20'd0  // VS_MUT: bench negative controls only (0 in every build). DIE-S81-70 11-06 (COORD 10:49 (2)): LF_CS_<class>[4k+:4] = leaf k's core<->core station depth, forwarded to lf[k].u_lf.CS_<class> as in ot_s81sl_slice; defaults = the leaf defaults (CS 0, H_G 4), so a w3 slice without overrides elaborates exactly as before (kept on this one line: no source line moves)
+    parameter integer VS_MUT = 0, parameter [19:0] LF_CS_HI_D = 20'd0, parameter [19:0] LF_CS_HI_GS = 20'd0, parameter [19:0] LF_CS_HO_D = 20'd0, parameter [19:0] LF_CS_HO_GS = 20'd0, parameter [19:0] LF_CS_H_G = {5{4'd4}}, parameter [19:0] LF_CS_VNI_D = 20'd0, parameter [19:0] LF_CS_VNO_D = 20'd0, parameter [19:0] LF_CS_Y_D = 20'd0, parameter [19:0] LF_CS_U_D = 20'd0, parameter [19:0] LF_CS_SW_D = 20'd0, parameter [19:0] LF_CS_SWR_D = 20'd0, parameter [19:0] LF_CS_RA_D = 20'd0, parameter [19:0] LF_CS_RAR_D = 20'd0, parameter [19:0] LF_CS_VE_D = 20'd0, parameter [19:0] LF_CS_VER_D = 20'd0, parameter [19:0] LF_CS_PVS_D = 20'd0, parameter [19:0] LF_CS_VSP_D = 20'd0, parameter [4:0] LF_VP_CFR = 5'd0  // VS_MUT: bench negative controls only (0 in every build). DIE-S81-70 11-06 (COORD 10:49 (2)): LF_CS_<class>[4k+:4] = leaf k's core<->core station depth, forwarded to lf[k].u_lf.CS_<class> as in ot_s81sl_slice; defaults = the leaf defaults (CS 0, H_G 4), so a w3 slice without overrides elaborates exactly as before (kept on this one line: no source line moves)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -48,7 +48,7 @@ module ot_s81sl_slice_w3 #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ), .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]), .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]), .CS_RA_D(LF_CS_RA_D[4 * k +: 4]), .CS_RAR_D(LF_CS_RAR_D[4 * k +: 4]), .CS_VE_D(LF_CS_VE_D[4 * k +: 4]), .CS_VER_D(LF_CS_VER_D[4 * k +: 4]), .CS_PVS_D(LF_CS_PVS_D[4 * k +: 4]), .CS_VSP_D(LF_CS_VSP_D[4 * k +: 4])) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ), .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]), .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]), .CS_RA_D(LF_CS_RA_D[4 * k +: 4]), .CS_RAR_D(LF_CS_RAR_D[4 * k +: 4]), .CS_VE_D(LF_CS_VE_D[4 * k +: 4]), .CS_VER_D(LF_CS_VER_D[4 * k +: 4]), .CS_PVS_D(LF_CS_PVS_D[4 * k +: 4]), .CS_VSP_D(LF_CS_VSP_D[4 * k +: 4]), .VP_CFR(LF_VP_CFR[k])) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
@@ -176,7 +176,7 @@ module ot_s81sl_slice_iq_w3 #(
     parameter integer DR = 6,
     parameter integer DX = 6,
     parameter integer VQ_XMEM = 2,
-    parameter integer VS_MUT = 0
+    parameter integer VS_MUT = 0, parameter [4:0] LF_VP_CFR = 5'd0  // LF_VP_CFR[k]: leaf k u_vp.CFR (TYPE-SAFE-5 11-10, 0 cycles)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -194,7 +194,7 @@ module ot_s81sl_slice_iq_w3 #(
     output wire            fault
 );
     wire [512:0] bo_c;
-    ot_s81sl_slice_w3 #(.HB(HB), .DL(DL), .DR(DR), .DX(DX), .VQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_sl (
+    ot_s81sl_slice_w3 #(.HB(HB), .DL(DL), .DR(DR), .DX(DX), .VQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .LF_VP_CFR(LF_VP_CFR)) u_sl (
         .clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w), .vi(vi), .vo(vo),
         .bi(bi), .bo(bo_c), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(fault));
     dsdv_idx_bsplit #(.BW(513)) u_bs (.ck(clk), .rst_n(rst_n), .i(bo_c), .o_s(bo), .o_i(iq));

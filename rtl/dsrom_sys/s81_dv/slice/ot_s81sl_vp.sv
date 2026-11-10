@@ -72,7 +72,7 @@ module ot_s81sl_vp #(
     parameter integer CS_HO_GS = 0,
     parameter integer CS_H_G = 4,
     parameter integer HQX = 0,
-    parameter integer SR = `OT_S81SL_VP_SR_DEFAULT
+    parameter integer SR = `OT_S81SL_VP_SR_DEFAULT, parameter integer CFR = 0  // CFR (TYPE-SAFE-5 11-10): the SR cf row-select flops alone (0 cycles; see g_cfs)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -273,7 +273,7 @@ module ot_s81sl_vp #(
     // cf row select (one-hot: [0] = post row -> cf[16 + k], [j] = comb row j - 1 -> cf[4 (j - 1) + k]).  SR: decoded one
     // edge early from the dv1 stage into 5 flops, so the dv / dop / dsi flops do not drive the 640-bit decode (G2 path)
     wire [4:0] cfs;
-    generate if (SR != 0) begin : g_cfs
+    generate if (SR != 0 || CFR != 0) begin : g_cfs  // CFR at SR 0: cfs_r(t) = f(dv1, dop1, dsi1)(t-1) = f(dv, dop, dsi)(t), cycle-exact
         reg [4:0] cfs_r;
         always @(posedge clk or negedge rs_s) if (!rs_s) cfs_r <= 5'd0;
             else for (int j = 0; j < 5; j = j + 1) cfs_r[j] <= dv1 && dop1 == OP_POST && dsi1 == j;
