@@ -3549,7 +3549,8 @@
     "dsdv_slice_lepw_mu_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
     "dsdv_slice_lepw_mus_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
     "svc_*_dsdv_svc_rs__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays.",
-    "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays."
+    "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays.",
+    "ot_s81sl_leaf__t53__clb66fa5cb": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (2): congestion row (full GRT 13h46, overflow 83,032, then incremental GRT hung 6h02); needs a form from DIE-S81-85, no wave relaunch. Queue job 8de931997954 (started 14:58 on intel1 before the ruling) left running. Lift = delete this key."
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -9076,7 +9077,41 @@
     "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-34 2026-11-08 01:53 PST (COORD 01:5x): SVC-RS FLAT 4M cells, REDESIGN R5, S81-SVCRS-2"
    },
    "note_kw43pbp": "KW-FIX-43 2026-11-10 PST (COORD ruling: 14 svc_rs rows adopt S81-SVCRS-3 plan event port_buf_at_pin, branch claude/s81-svcrs-3-rcpbp-1110@463b5b8af7, overlay, no merge wait): src/plan = kw43t51/src_t51f hardlinks + 3-way f58234cf45..463b5b8af7: gen_phys.py port_buf_at_pin hook (810b51a2), test_port_buf_at_pin_kit.py, physical/common_flow/port_buf_at_pin.tcl (bb7508cd), plan_h2_2249.json +port_buf_at_pin true on the 14 svc_rs types (342efdaa; block dry run: exactly those 14 re-key, 257 others unchanged), reset_contract.json = branch tip (+14 tops, proof unchanged). Staged read-only md5-checked epyc7/epyc4/epyc2. Released the two 11-08 SVC-RS FLAT holds so the 14 new blocks pick as one batch. Revert: src=src_prev_kw43pbp, plan=plan_prev_kw43pbp, hold_items += hold_items_prev_kw43pbp",
-   "note_kw43pbph": "KW-FIX-43 09:4x: re-held svc_rs (both globs) per COORD flat-cell check; the 14 pbp rows were stopped in kit_rtl (pre-place) and recorded CANCELLED RULING. Revert: pop the two svc_rs hold_items."
+   "note_kw43pbph": "KW-FIX-43 09:4x: re-held svc_rs (both globs) per COORD flat-cell check; the 14 pbp rows were stopped in kit_rtl (pre-place) and recorded CANCELLED RULING. Revert: pop the two svc_rs hold_items.",
+   "hold_items_prev_kw44h2": {
+    "ot_s81sl_xrt1": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
+    "ot_s81sl_xrt3": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
+    "dsdv_bksel_c": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
+    "dsdv_bk_g": "KW-FIX-8 23:2x I64: signed dsdv_bk_g, ruled not a stop, no rebuild (RM-31 22:03)",
+    "ot_v41_bf16_half": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
+    "ot_v41_bf_col3_c": "KW-FIX-8 23:2x: new core of half3, no rebuild (I63 READY)",
+    "ot_s81sl_ve_m": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_ve_s": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_vn_a": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_vn_b": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_vq": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_vs": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
+    "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
+    "ot_s81sl_leaf__t54__cl501e5681": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a7 FACE_GUARD (landing); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "ot_s81sl_leaf__t75": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a5 FACE_GUARD (landing); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "serdes__t1__clfe1f0815": "KW-FIX-43 11-10 03:3x COORD: RESET-KEY, owner DIE-S81-85. COORD ordered the a14 stop (exit 137); no INFRA auto-retry. Release: DIE-S81-85 after RESET-KEY, fresh.",
+    "dsdv_slice_c1x_C__t4": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t5": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t6": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t7": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t8": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t9": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c1x_C__t10": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_c3x_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_lepe_mu_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_lepe_nh_mus_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_lepw_mu_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "dsdv_slice_lepw_mus_C__t1": "one S81 re-bind. KW-FIX-43 11-10 04:0x COORD on KW43-65/66: J3 list (DIE-S81-85 21:17), owner DIE-S81-85; built once on the re-bind, no relaunch or INFRA auto-retry on the old bind. Release: DIE-S81-85 after COORD rules on the re-bind table.",
+    "svc_*_dsdv_svc_rs__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays.",
+    "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays."
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -17417,7 +17452,8 @@
     "q_b112": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b112__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b113": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
-    "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key."
+    "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b003": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (1): 3 strikes in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key."
    },
    "gen_hosts": [
     "epyc7",
@@ -22552,7 +22588,48 @@
     "q_hub_ne@6",
     "q_b101_nw@12"
    ],
-   "note_src_kw43m3": "KW-FIX-43 11-10 COORD (PDN-M3STREET-1 approved, no merge wait): src -> src_hbmf4_m3 = hard-link tree of the on-disk src_hbmf4 (recorded src_sha 4393753cf0b4 plus its earlier overlays, NOT 6267d6cac11b's tree) with exactly two files replaced by 3-way merge of 9e95c1facb6f..6267d6cac11b: tools/die_plan/gen_phys.py (md5 2134eff8dbf1, 1 line) and partition_ft_reserve.py (md5 c6df8ef41858, +58 -3). Branch is 371 commits ahead of src_sha; only these two hunks came over. src_sha/queue_src unchanged on purpose: they name the base. On epyc7 + epyc2 (gen_hosts), read-only dirs. Revert: *_prev_kw43m3."
+   "note_src_kw43m3": "KW-FIX-43 11-10 COORD (PDN-M3STREET-1 approved, no merge wait): src -> src_hbmf4_m3 = hard-link tree of the on-disk src_hbmf4 (recorded src_sha 4393753cf0b4 plus its earlier overlays, NOT 6267d6cac11b's tree) with exactly two files replaced by 3-way merge of 9e95c1facb6f..6267d6cac11b: tools/die_plan/gen_phys.py (md5 2134eff8dbf1, 1 line) and partition_ft_reserve.py (md5 c6df8ef41858, +58 -3). Branch is 371 commits ahead of src_sha; only these two hunks came over. src_sha/queue_src unchanged on purpose: they name the base. On epyc7 + epyc2 (gen_hosts), read-only dirs. Revert: *_prev_kw43m3.",
+   "hold_items_prev_kw44h2": {
+    "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hbm_su_pg_lane1_core": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hgi_sfu_split3_lane_core_bk": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hgi_sfu_split3_lane_core_ex": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hgi_sfu_split3_lane_core_fr": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
+    "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
+    "hfd_ep_static": "CODEX CLOSED: actualSIGNEDview epyc2:/srv/opentallas-scratch2/claude/ss27/resign/ep_k/signoff/signoff.json matchesplannedpins; oldECOliveownershipnoteobsolete. PreserveSIGNEDview; no rebuild.",
+    "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch",
+    "ot_hbm_su_programme_pslice_c5": "I61 part 8 removes this core; stopped per DIE-HBM-66, RM-31 21:03",
+    "ot_hbm_su_pcol_h": "I61: signed kit exists, plan matches its 769 pins; no rebuild, re-sign by SS29",
+    "ot_hfd_coll_q3_edge_core": "KW-FIX-8 21:4x: DIE-HBM-66 form q3e13 builds it on the part 13 outline",
+    "ot_hgi_dma_back_static_vp4_banks_cp": "KW-FIX-8 21:4x: DIE-HBM-66 form dma13 builds it on the part 13 outline",
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": "KW-FIX-8 21:4x: key moved at d44v11; held by form per DIE-HBM-63 03:59; no wave relaunch unless owner asks",
+    "ot_hgi_sfu_core_split3__ctl": "KW-FIX-8 21:4x: key moved at d44v11; held by form per DIE-HBM-63 03:59; no wave relaunch unless owner asks",
+    "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
+    "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
+    "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
+    "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+    "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d",
+    "q_hub_nw": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
+    "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
+    "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
+    "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
+    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
+    "hnx_rp3h_xs": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a8 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "ot_hbm_idx_selector_static_sel": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "q_b010": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 OT_NATIVE_CELL_CAP (native cells over the kit run cap); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "q_b010__physical_v1": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 OT_NATIVE_CELL_CAP; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "q_b110": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b110__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b111": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b111__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b112": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b112__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b113": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key."
+   }
   }
  },
  "place_prefer": [
