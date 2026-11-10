@@ -25,8 +25,22 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--tree', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--bound-data', type=Path, default=None,
+                    help='strict bind out dir: the die top is the bind manifest netlist (as dv_layer_compile --bound-data)')
+    ap.add_argument('--bound-data-manifest', default=None, help='the as-built manifest of that bind')
     a = ap.parse_args()
-    die = C.Die(a.tree)
+    if (a.bound_data is None) != (a.bound_data_manifest is None):
+        ap.error('--bound-data needs --bound-data-manifest')
+    if a.bound_data is None:
+        die = C.Die(a.tree)
+    else:
+        # TOK-VERIFY-1 11-10: the same die top as the compile (dv_layer_compile.compile_layer --bound-data): a b178
+        # bind's own netlist + its emitted XRT form; without it the LP model prep reads the main-tree XRT form 0 and
+        # refuses, so compile_layers.sh could never reach the bound compile
+        from layer_prog import bound_data as BD
+        B = BD.load_bind(a.bound_data, a.bound_data_manifest, C.ROOT)
+        die = C.Die(a.tree, netlist=B['netlist_path'], netlist_sha=B['netlist_sha256'],
+                    bound_rtl=Path(B['bound']) / 'rtl') if B.get('netlist_path') else C.Die(a.tree)
     selected = sorted({die.inst[f]['master'] for s in die.slices() for f in die.frames_of(s)
                        if die.inst[f]['master'].endswith('_lp')})
     directory = ROOT / 'results/arch/s81_dv_1016/frame_l4_cluster/compiler'
