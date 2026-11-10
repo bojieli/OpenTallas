@@ -7121,11 +7121,86 @@ def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108, exclu
         finally:
             for k in batch:
                 L.hyp.pop(("gold", k), None)
+    nsib = sibling_twin_search(L, [k for k in free if k not in found], found, rv, words, seed, exclude)
     hints = [["gold", k, ["eq", "gold", c, inv]] for k, (c, inv) in sorted(found.items())]
     if log is not None:
         log.append(f"scope twins: {len(free)} free gold-only registers, {len(trials)} with same-scope candidates, "
-                   f"{len(hints)} proposed {[h[1] + '=' + h[2][2] for h in hints[:6]]}")
+                   f"{len(hints)} proposed ({nsib} sibling-bit) {[h[1] + '=' + h[2][2] for h in hints[:6]]}")
     return hints
+
+
+def sibling_twin_search(L, rest, found, rv, words=16, seed=20261108, exclude=(), rounds=16):
+    """LEC-SIBLING-TWIN (DIE-HBM-97 11-09, q_b100 a9 NOT EQUIVALENT 3/101212: u_bout_L1200_o.q[3302..3304]).
+    The RTL drives several bits of one register from one shared expression (ot_hbm_idx_score_quarter_static_h:
+    keep_keys[l] = !ke_r || kb_r[bi_r] for all 4 lanes), so synthesis merges bits 0..2 into bit 3 of the same vector,
+    and does the same down a no-reset delay pipeline (4 stages of q[29:0]).  The twin then sits at ANOTHER bit index
+    of the same register, which the same-index scope search never tries; it proposed a wrong same-index register
+    instead, induction dropped it, and the bits stayed free.
+    Here each still-free gold-only register k is tried against the matched bits of its own vector (same name before
+    the index, other indices), by next-state signature under the current bindings: with Q(k') := Q(c') ^ inv' bound
+    for the registers already found, D(k) must simulate equal to D(c) ^ inv on every word, and reset values must
+    not disagree.  Found bindings stay applied for the next round, so a pipeline is found stage by stage (rounds <=
+    its depth).  Lowest index first, inv 0 first; only proposals: apply_hints proves them by the same simultaneous
+    induction as every hypothesis and drops any that fails (never a waiver).  Adds to found -> number added.
+    X words do not count (L.dxlit, the gold ternary X of each next state, the same don't-care rule as the compare
+    points): the shared expression reads kb_r[bi_r], an out-of-range part-select is X in the gold frontend with one
+    fresh $anyseq per cell, so the copies disagree exactly where they are X (q_b100: every random word differed)."""
+    if not rest:
+        return 0
+    by_vec = collections.defaultdict(list)
+    for c in L.matched:
+        if c.startswith("ff:") and "__" not in c and ("both", c) not in L.hyp:
+            a = IDX.match(c)
+            if a:
+                by_vec[a.group(1)].append(c)
+    idx = lambda c: [int(x) for x in re.findall(r"\d+", IDX.match(c).group(2))]
+    sibs = {}
+    for k in rest:
+        a = IDX.match(k)
+        if not a:
+            continue
+        cs = sorted((c for c in by_vec.get(a.group(1), []) if c != k
+                     and not (rv(k) is not None and rv(c) is not None and rv(k) != rv(c))), key=idx)
+        if cs:
+            sibs[k] = cs
+    if not sibs:
+        return 0
+    added, bound = 0, dict(found)
+    try:
+        for r in range(rounds):
+            for k, (c, inv) in bound.items():
+                L.hyp[("gold", k)] = ("eq", "gold", c, inv)
+            m, _ = L.build(with_compare=False, with_hyp=True)
+            val, mask = m.simulate(words, seed=seed + 7919 + r)
+            dx = getattr(L, "dxlit", {}) or {}
+            new = {}
+            for k, cs in sibs.items():
+                if k in bound:
+                    continue
+                dk = L.dlit.get(("gold", k))
+                if dk is None:
+                    continue
+                sk = lit_val(val, mask, dk)
+                xk = lit_val(val, mask, dx.get(k, 0))
+                for c in cs:
+                    dc = L.dlit.get(("gold", c))
+                    if dc is None:
+                        continue
+                    care = mask & ~(xk | lit_val(val, mask, dx.get(c, 0)))
+                    hit = [inv for inv in (0, 1) if (k, c, inv) not in exclude and care
+                           and not (sk ^ lit_val(val, mask, dc ^ inv)) & care]
+                    if hit:
+                        new[k] = (c, hit[0])
+                        break
+            if not new:
+                break
+            bound.update(new)
+            found.update(new)
+            added += len(new)
+    finally:
+        for k in bound:                                  # free registers had no hypothesis: trial bindings never stay
+            L.hyp.pop(("gold", k), None)
+    return added
 
 
 def auto_twins(L, rec, work, conflicts, log):
