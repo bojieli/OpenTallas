@@ -500,8 +500,8 @@ module qfd_dv_stream_tile_se0 #(
         reg rs3_m;                                          // MUT 43 only
         always @(posedge ck or negedge rst_n)
             if (!rst_n) begin rs1_g <= 7'd0; rs2_g <= 7'd0; rs3_m <= 1'b0; end
-            else begin rs1_g <= 7'h7F; rs2_g <= rs1_g; rs3_m <= rs2_g[1]; end
-        assign rn_g = (MUT == 43) ? {rs2_g[6:2], rs3_m, rs2_g[0]} : rs2_g;
+            else begin rs1_g <= 7'h7F; rs2_g <= rs1_g; rs3_m <= rs2_g[2]; end
+        assign rn_g = (MUT == 43) ? {rs2_g[6:3], rs3_m, rs2_g[1:0]} : rs2_g;
     end else begin: g_rn0
         assign rn_g = {7{rst_n}};
     end endgenerate

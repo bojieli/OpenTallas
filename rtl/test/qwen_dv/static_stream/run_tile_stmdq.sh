@@ -9,13 +9,14 @@
 set -uo pipefail
 OUT=${1:?out_dir}; M=${2:?MUT}; OLD=${3:-}; EDGES=${4:-200000}
 VL=${VERILATOR:-verilator}
+# VL_EXTRA: extra verilator options (e.g. a fast C++ build: --output-split 3000 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0")
 mkdir -p "$OUT"; $VL --version
 if [ -z "$OLD" ]; then git show 5333b7dca83:rtl/qwen_dv/qfd_dv_stream_tile.sv > "$OUT/old_src.sv" || exit 2; OLD="$OUT/old_src.sv"; fi
 sed 's/^module qfd_dv_stream_tile #(/module qfd_dv_stream_tile_old #(/' "$OLD" > "$OUT/qfd_dv_stream_tile_old.sv"
 grep -q '^module qfd_dv_stream_tile_old #(' "$OUT/qfd_dv_stream_tile_old.sv" || { echo "RENAME_FAIL"; exit 2; }
 SRC="rtl/test/qwen_dv/static_stream/tb_stream_tile_stmdq.sv $OUT/qfd_dv_stream_tile_old.sv rtl/qwen_dv/qfd_dv_stream_tile.sv"
 sha256sum $SRC "$OLD"
-$VL --binary --timing -j 4 -Wno-fatal +define+OT_QC_STMDQ --top-module tb_stream_tile_stmdq -GMUT="$M" -GEDGES="$EDGES" \
+eval $VL --binary --timing -j 8 -Wno-fatal ${VL_EXTRA:-} +define+OT_QC_STMDQ --top-module tb_stream_tile_stmdq -GMUT="$M" -GEDGES="$EDGES" \
   --Mdir "$OUT/obj" $SRC > "$OUT/build.log" 2>&1 || { echo "BUILD_FAIL MUT$M"; tail -20 "$OUT/build.log"; exit 2; }
 "$OUT/obj/Vtb_stream_tile_stmdq" 2>&1 | tee "$OUT/run.log"; code=${PIPESTATUS[0]}
 rm -rf "$OUT/obj"

@@ -10,7 +10,7 @@
 // other, undefined kinds late), own writes in four modes: back-to-back full 8-lane packs on one beat, random lane
 // subsets, duplicate slot addresses (two lanes on one slot in one cycle), lane-0-off / mixed-beat (beat fault) writes,
 // and idle gaps.  PASS line: STMDQ_EQ PASS ...; first mismatch: $fatal STMDQ_MISMATCH <port> edge MUT.
-// MUT (new tile only): 0 positive; 41 we_b never loads, 42 dup partial 3 one edge late, 43 config reset group one edge
+// MUT (new tile only): 0 positive; 41 we_b never loads, 42 dup partial 3 one edge late, 43 own-write reset group one edge
 // late -- each must FAIL.
 module qfd_dv_s5_rst2_tb (input wire ck, input wire rst_n, output wire rst);   // = qfd_dv_s5_rst2 (s5 leaves), verbatim
     reg rs1, rs2;
@@ -38,7 +38,9 @@ module tb_stream_tile_stmdq #(parameter integer MUT = 0, parameter integer EDGES
   .so_e(ne), .so_w(nw), .xw_we(we), .xw_addr(addr), .xw_data(data),
   .tw_we(ntw), .tw_kind(nk), .tw_addr(na), .tw_data_lo(ndl), .tw_data_hi(ndh),
   .xt_v(nxv), .xt_a(nxa), .xt_d_lo(nxl), .xt_d_hi(nxh), .xt_bad(nxb), .fault(nf));
- reg [31:0] seed = 32'h5f3a9c21; integer cycle = 0, rlen = 0, gap = 40, mode = 0, beat = 0;
+ // power-up: reset for the first 8 edges; comparison starts at edge 12 (past the power-up X of the reset-free pipeline
+ // words in a 4-state simulator), then runs on every edge including every later reset edge
+ reg [31:0] seed = 32'h5f3a9c21; integer cycle = 0, rlen = 8, gap = 40, mode = 0, beat = 0;
  integer nrst = 0, nfault = 0, ndup = 0, nbb = 0, nfull = 0, nemit = 0, nxt = 0, ntwc = 0, npass = 0, ncfg0 = 0;
  reg prev_rst = 0;
  function automatic [31:0] step(input [31:0] x);
@@ -103,7 +105,7 @@ module tb_stream_tile_stmdq #(parameter integer MUT = 0, parameter integer EDGES
   end
  end
  // compare on every edge (posedge + 1)
- always @(posedge ck) #1 begin
+ always @(posedge ck) #1 if (cycle >= 12) begin
   if (oe !== ne) $fatal(1, "STMDQ_MISMATCH so_e edge %0d MUT%0d", cycle, MUT);
   if (ow !== nw) $fatal(1, "STMDQ_MISMATCH so_w edge %0d MUT%0d", cycle, MUT);
   if ({otw, ok, oa, odh, odl} !== {ntw, nk, na, ndh, ndl}) $fatal(1, "STMDQ_MISMATCH tw edge %0d MUT%0d", cycle, MUT);
