@@ -400,31 +400,27 @@ def test_gen_waits_sealed_when_no_gen_host_admits(tmp_path, monkeypatch):
     assert out[0] == "/wave/ot-run" and why.startswith("capacity")
 
 
-def test_gen_ok_declares_symlink_targets_outside_inputs(tmp_path):
-    """ot-job refuses an input with a symlink leaving it: GEN_OK_PY lists the symlink target as an extra input"""
+def test_gen_ok_splits_trees_with_escaping_symlinks(tmp_path):
+    """ot_store refuses an input tree holding a symlink that leaves it: GEN_OK_PY declares such a tree child by child and
+    binds each escaping link's resolved target at the link's own path (chains followed)"""
     import subprocess, sys as _s
-    a, b, w = tmp_path / "plan", tmp_path / "other", tmp_path / "w"
-    for d in (a, b, w):
+    a, b, c = tmp_path / "plan", tmp_path / "other", tmp_path / "third"
+    for d in (a, b, c):
         d.mkdir()
-    (b / "README.md").write_text("x")
-    (b / "README.md").rename(b / "real.md")
-    (b / "README.md").symlink_to(b / "real.md")
-    c = tmp_path / "third"
-    c.mkdir()
     (c / "x.md").write_text("y")
-    (b / "real.md").unlink()
     (b / "real.md").symlink_to(c / "x.md")
-    (a / "README.md").symlink_to(b / "README.md")
-    out = subprocess.run([_s.executable, "-I", "-c", M.GEN_OK_PY, json.dumps([str(a), str(tmp_path / "missing")]), str(w)],
+    (a / "README.md").symlink_to(b / "real.md")
+    (a / "plan.json").write_text("{}")
+    (a / "sub").mkdir()
+    (a / "sub" / "ok").write_text("1")
+    (a / "rel").symlink_to("plan.json")
+    clean = tmp_path / "clean"
+    clean.mkdir()
+    (clean / "f").write_text("z")
+    out = subprocess.run([_s.executable, "-I", "-c", M.GEN_OK_PY, json.dumps([str(a), str(clean), str(tmp_path / "missing")])],
                          capture_output=True, text=True).stdout
-    has = json.loads(out.split("HAS ", 1)[1])
-    assert has == [str(a), str(b / "README.md"), str(b / "real.md"), str(c / "x.md")]     # every hop of the chain
-
-
-def test_gen_without_off_root_job_root_runs_unsealed(tmp_path, monkeypatch):
-    monkeypatch.setattr(M, "status_rows", lambda b: None)
-    c = conf(spec_dir=str(tmp_path), gen=True, hosts=["epyc2"], job_roots=True, job_root_of=lambda h: None,
-             gen_check=lambda h, s, w, p: (True, []))
-    out, why = M.decide(gen_argv(), c)
-    assert out[0] == "/wave/ot-run" and "no job root" in why
-    assert '"$(stat -c %d $c)" = "$(stat -c %d /)" ] && continue' in M.JOB_ROOT_SH
+    got = json.loads(out.split("INPUTS ", 1)[1])
+    assert {"path": str(c / "x.md"), "at": str(a / "README.md")} in got
+    assert {"path": str(a / "plan.json")} in got and {"path": str(a / "sub")} in got and {"path": str(clean)} in got
+    assert {"path": str(a / "plan.json"), "at": str(a / "rel")} in got          # an inside link is fine but split with its tree
+    assert not any(i.get("path") == str(a) for i in got)

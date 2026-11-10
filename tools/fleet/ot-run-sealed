@@ -524,26 +524,38 @@ def gen_paths(text, src, W, extra=()):
 
 GEN_OK_PY = r"""
 import json, os, sys
-has = [p for p in json.loads(sys.argv[1]) if os.path.exists(p)]
-work = sys.argv[2:]
-def inside(q, roots):
-    return any(q == r or q.startswith(r.rstrip('/') + '/') for r in roots)
-# ot-job refuses an input tree with a symlink that leaves it ("declare its target as an input instead"): declare the targets
-extra, seen = [], 0
-for top in [p for p in has if os.path.isdir(p)] + work:
+# -> INPUTS [{"path", "at"?}]: the declared paths that exist, split so that no input TREE holds a symlink leaving it
+# (ot_store refuses those: "declare its target as an input instead"): such a tree is declared child by child, and each
+# escaping symlink becomes its resolved target bound at the link's own path
+def escapes(top):
     for dp, dns, fns in os.walk(top):
         for n in dns + fns:
             q = os.path.join(dp, n)
-            seen += 1
-            if seen > 400000 or not os.path.islink(q):
-                continue
-            hop, n = q, 0
-            while os.path.islink(hop) and n < 40:      # every hop of a symlink chain is checked by ot-job: declare each
-                hop = os.path.normpath(os.path.join(os.path.dirname(hop), os.readlink(hop)))
-                n += 1
-                if os.path.lexists(hop) and not inside(hop, has + work + extra):
-                    extra.append(hop)
-print('HAS ' + json.dumps(has + extra))
+            if os.path.islink(q):
+                t = os.readlink(q)
+                r = os.path.normpath(os.path.join(dp, t))
+                if os.path.isabs(t) or not (r == top or r.startswith(top.rstrip('/') + '/')):
+                    return True
+    return False
+out = []
+def add(real, at, depth=0):
+    if os.path.islink(real):
+        r = os.path.realpath(real)
+        if os.path.exists(r):
+            add(r, at, depth + 1)
+        return
+    if os.path.isfile(real) or not os.path.isdir(real):
+        out.append({"path": real} if real == at else {"path": real, "at": at})
+        return
+    if depth > 30 or not escapes(real):
+        out.append({"path": real} if real == at else {"path": real, "at": at})
+        return
+    for n in sorted(os.listdir(real)):
+        add(os.path.join(real, n), os.path.join(at, n), depth + 1)
+for p in json.loads(sys.argv[1]):
+    if os.path.lexists(p):
+        add(p, p)
+print('INPUTS ' + json.dumps(out))
 """
 
 
@@ -551,13 +563,13 @@ def gen_ok(host, src, W, paths):
     """-> (ok, the declared paths that exist on host): src + W there, ot-job + bwrap usable"""
     sh = (f"test -d {shlex.quote(src)} && test -d {shlex.quote(W)} && test -x $HOME/.local/bin/ot-job "
           f"&& bwrap --ro-bind / / --dev /dev true && echo SEALED_OK && python3 -I -c {shlex.quote(GEN_OK_PY)} "
-          f"{shlex.quote(json.dumps([src] + paths))} {shlex.quote(W)}")
+          f"{shlex.quote(json.dumps([src] + paths))}")
     try:
         p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
                            capture_output=True, text=True, timeout=90)
     except (OSError, subprocess.TimeoutExpired):
         return False, []
-    has = [ln[4:] for ln in p.stdout.splitlines() if ln.startswith("HAS ")]
+    has = [ln[7:] for ln in p.stdout.splitlines() if ln.startswith("INPUTS ")]
     try:
         return "SEALED_OK" in p.stdout and p.returncode == 0, (json.loads(has[0]) if has else [])
     except ValueError:
@@ -567,7 +579,8 @@ def gen_ok(host, src, W, paths):
 def gen_spec(src, W, inputs):
     T = W.split("/items/", 1)[1].split("/", 1)[0] if "/items/" in W else os.path.basename(W)
     return {"schema": "opentallas.ot_job.v1", "name": T + "-gen",
-            "inputs": [{"path": src}] + [{"path": p} for p in inputs if p != src],
+            "inputs": ([] if any((i.get("at") or i.get("path")) == src for i in inputs if isinstance(i, dict)) else [{"path": src}])
+            + [i if isinstance(i, dict) else {"path": i} for i in inputs],
             "work": {"at": W, "seed": [{"path": W}]},
             "publish": [{"name": f"kit-wave/{T}/gen", "path": "gen", "when": "always"}],
             "return": {"to": W, "paths": ["."]}}
