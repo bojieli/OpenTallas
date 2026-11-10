@@ -77,7 +77,10 @@ def site_candidates(side, band_y, outline):
     col = [(x, y) for y in ys(2421.372 + G, 2630.0) for x in (1304.64, 1365.12)]
     corner = [(x, y) for y in ys(2691.372, 2830.0) for x in (1233.36, 1296.0, 1358.64)]
     slot = [(x, y) for y in ys(band_y[3] + 8.64, band_y[3] + 285.12 - 8.64 - outline[1]) for x in (1287.36, 1347.84)]
-    return (corner + col + slot) if outline[0] > 60 else (col + corner + slot)
+    far = []
+    if LO_PACK == "b":   # TRX3 takes x 1252.8-1313.28 of band 3: the last macros (qmem, then wq) go to band-0 SOFT0
+        far = [(1330.56, y) for y in ys(band_y[0] + 8.64, band_y[0] + 276.48 - 8.64 - outline[1])]
+    return (corner + col + slot + far) if outline[0] > 60 else (col + corner + slot + far)
 
 
 def first_fit(t, cands, outline, placed):
@@ -171,6 +174,8 @@ PARENT_RISK = dict(  # TT pre-route OpenSTA 833 ps, RVT, reset sync held inactiv
         "latency delta for the svc compiler (OWNER 11-03 pin cycles are a lever)",
         "pres (flop form only): ok in the macro form (+35.7)"])
 IRG_NOTE = "IRG fastpad first form at 0.516-0.532 (COORD 08:4x highest-fill-that-routes)"
+IRG_NOTE_B = ("IRG fallback (b): 77.76-wide box, fill 0.399 (COORD 11-09: the 60.48 pilot failed the mandatory native census "
+              "pre-gate, 482 drivers > 32 loads; census-safe hslice_fp (reset / q_we / pos_r replicated) needs the area)")
 FALLBACK_B = dict(note="svc_lo re-pack if the IRG pilot fails route / sign-off: every box <= 0.45 fill, x from 34.56, 8.64 gaps",
                   widths=dict(SML=103.68, H4=103.68, IRG=77.76, SMD=69.12, TRX=60.48, SMC=77.76, SMR=69.12),
                   x=dict(SML=[34.56, 146.88], H4=[259.2, 1062.72], IRG=[round(371.52 + 86.4 * j, 2) for j in range(8)], SMD=1175.04,
@@ -179,6 +184,12 @@ FALLBACK_B = dict(note="svc_lo re-pack if the IRG pilot fails route / sign-off: 
 LO_XY = {"TRX0": (0, LO_S0), "TRX1": (1, LO_S0), "TRX2": (2, LO_S0), "TRX3": (3, LO_S0),
          "SMC": (1, LO_S1), "SMR": (2, LO_S1)}
 LO_SOFT = [(0, LO_S1), (3, LO_S1)]
+# --lo-pack b (COORD 11-09 census decision: fallback (b) is the svc_lo form; the 60.48 IRG box at 0.532 is over 0.45 and
+# the census-safe hslice adds flops): FALLBACK_B widths / x, every box <= 0.45 fill.
+LO_PACK = "a"
+LO_XY_B = {"TRX0": (0, 1252.8), "TRX1": (1, 1252.8), "TRX2": (2, 1252.8), "TRX3": (3, 1252.8),
+           "SMC": (1, 1321.92), "SMR": (2, 1321.92)}
+LO_SOFT_B = [(0, 1321.92), (3, 1321.92)]
 
 
 def r3(v):
@@ -187,11 +198,15 @@ def r3(v):
 
 def boxes_for(side, band_y, band_hs, M):
     out = []
-    sml_x = [HCOL[c] for c in V1.HI_FIXED_COL["SML"]] if side == "hi" else V1.SML_X
-    h4_x = [HCOL[c] for c in V1.HI_FIXED_COL["H4"]] if side == "hi" else V1.H4_X
-    smd_x = HCOL[V1.HI_FIXED_COL["SMD"]] if side == "hi" else V1.SMD_X
+    pb = side == "lo" and LO_PACK == "b"
+    FB = FALLBACK_B
+    sml_x = [HCOL[c] for c in V1.HI_FIXED_COL["SML"]] if side == "hi" else (FB["x"]["SML"] if pb else V1.SML_X)
+    h4_x = [HCOL[c] for c in V1.HI_FIXED_COL["H4"]] if side == "hi" else (FB["x"]["H4"] if pb else V1.H4_X)
+    smd_x = HCOL[V1.HI_FIXED_COL["SMD"]] if side == "hi" else (FB["x"]["SMD"] if pb else V1.SMD_X)
+    irg_x = FB["x"]["IRG"] if pb else V1.IRG_X
     box = M["boxes"]
-    wid = lambda kind: SMD_W_HI if (kind == "SMD" and side == "hi") else PROV[kind]["w"]
+    wid = lambda kind: (FB["widths"][kind] if pb else
+                        SMD_W_HI if (kind == "SMD" and side == "hi") else PROV[kind]["w"])
 
     def add(kind, name, inst, b, x, extra=None):
         p = PROV[kind]
@@ -209,9 +224,9 @@ def boxes_for(side, band_y, band_hs, M):
             add("H4", f"H4_{b}{j}", f"u_rsv.u_att.u_eng.g_m[{b}].g_real.g_x.u_m.g_h4[{j}].u_h4", b, x)
         add("SMD", f"SMD{b}", f"u_rsv.u_sms.u_smh.g_p[{b}].u_smd", b, smd_x)
         if side == "lo":
-            for h, x in enumerate(V1.IRG_X):
+            for h, x in enumerate(irg_x):
                 add("IRG", f"IRG{b}_{h}", f"u_irg.g_ch[{b}].u_c.g_s[{h}].u_s", b, x)
-    xy = HI_XY if side == "hi" else LO_XY
+    xy = HI_XY if side == "hi" else (LO_XY_B if pb else LO_XY)
     for k in range(4):
         b, x = xy[f"TRX{k}"]
         add("TRX", f"TRX{k}", f"u_rsv.u_att.u_eng.g_tr[{k}].g_x.u_tr", b, x,
@@ -223,8 +238,8 @@ def boxes_for(side, band_y, band_hs, M):
         w, h = bx["outline_um"]
         bx["fill"] = round(bx["area_um2"] / ((w - 2 * HALO) * (h - 2 * HALO)), 3)
     soft = []
-    for i, (b, x) in enumerate(HI_SOFT if side == "hi" else LO_SOFT):
-        w = 157.68 if side == "hi" else 120.96
+    for i, (b, x) in enumerate(HI_SOFT if side == "hi" else (LO_SOFT_B if pb else LO_SOFT)):
+        w = 157.68 if side == "hi" else (77.76 if pb else 120.96)
         soft.append(dict(name=f"SOFT{i}", band=b, rect_um=[r3(x), band_y[b], r3(x + w), r3(band_y[b] + band_hs[b])]))
     return out, soft
 
@@ -328,7 +343,11 @@ def main():
     ap.add_argument("out")
     ap.add_argument("event")
     ap.add_argument("meas")
+    ap.add_argument("--lo-pack", choices=("a", "b"), default="a")
+    ap.add_argument("--rdpipe", action="store_true", help="add -DOT_SVC_ATT_RDPIPE (u_att read-data retime, 0 cycle delta)")
     a = ap.parse_args()
+    global LO_PACK
+    LO_PACK = a.lo_pack
     raw = Path(a.base).read_bytes()
     P = json.loads(raw)
     dump = V1._style(raw, P)
@@ -339,7 +358,8 @@ def main():
               owner=f"COORD 11-09 Decision: form A; {OWNER_G} (form G = svc_lo record)", lane="DIE-S81-85",
               base_plan=a.base, base_plan_sha256=hashlib.sha256(raw).hexdigest(), lo_form="G",
               rtl_defines=["OT_SVC_H8", "OT_SVC_H8_REUSE_RT2", "OT_SVC_MERGE_H4", "OT_SVC_ATT_MEM_MACRO", "OT_IDX_HSLICE_FASTPAD",
-                           "OT_IDX_HSLICE_HARD"],
+                           "OT_IDX_HSLICE_HARD"] + (["OT_SVC_ATT_RDPIPE"] if a.rdpipe else []),
+              lo_pack=a.lo_pack,
               rtl_defines_svc_lo_only=["OT_IDX_RG3_PRIME"],
               rtl_defines_note="COORD 11-09: OT_IDX_RG3_PRIME in the svc_lo kits only (VERILOG_DEFINES + LEC reference set; "
                                "u_irg on claude/die-s81-85-irg-prime-1109@7b4138bf30; 4 FF per reader, detection only, 0 cycle delta)",
@@ -351,7 +371,8 @@ def main():
                                   real="the first svc kit bind re-checks (kit preflight macro_instances fails the kit before "
                                        "place); the IRG pilot kit bind runs it first"),
               measured=M, types={}, pin_cycle_deltas={}, validation={},
-              irg_fastpad=dict(note=IRG_NOTE, fill_max=IRG_FILL_MAX, decision="COORD 11-09 (a)",
+              irg_fastpad=dict(note=IRG_NOTE if a.lo_pack == "a" else IRG_NOTE_B, fill_max=IRG_FILL_MAX if a.lo_pack == "a" else BOX_UTIL_MAX,
+                               decision="COORD 11-09 (a)" if a.lo_pack == "a" else "COORD 11-09 native census: option (1), fallback (b) geometry",
                                pilot="build ONE IRG hslice kit first, before the other svc_lo kits; on route / sign-off failure "
                                      "re-form with fallback_b", fallback_b=FALLBACK_B),
               parent_known_setup_risk=PARENT_RISK)

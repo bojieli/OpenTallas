@@ -2,10 +2,12 @@
 Context: a real svc_hi t4 bound module (codex_svc_hardening_1551 native_smd_c, bind of plan_h2_2249) + the leaves the
 bind emits for -DOT_SVC_ATT_MEM_MACRO: dsdv_svc_att and dsdv_svc_rs_c are in asbuilt.dissolve, so their non-dissolved
 children dsdv_svc_mem_la / dsdv_svc_mem_ar become leaves `// as-built <path>` + `<module> #(..) u_<sv_id(rel)> (`
-(bind.py emit, short_id('u_' + r, 90)).  usage: bind_gate.py REPO PLAN_OUT TYPE BOUND_SV OUT_JSON"""
+(bind.py emit, short_id('u_' + r, 90)).  usage: bind_gate.py REPO PLAN_OUT TYPE BOUND_SV OUT_JSON [SW_LEAF]
+SW_LEAF: the sw leaf module (dsdv_svc_mem_la; dsdv_svc_mem_lr under -DOT_SVC_ATT_RDPIPE, same instance paths)."""
 import json, re, sys
 from pathlib import Path
 repo, plan, tn, bsv, out = sys.argv[1:6]
+sw_leaf = sys.argv[6] if len(sys.argv) > 6 else "dsdv_svc_mem_la"
 sys.path.insert(0, f"{repo}/tools/die_plan")
 import bound_macro_paths as BMP
 from bind import short_id
@@ -16,7 +18,7 @@ root = sorted({a.rsplit(".u.u_att.", 1)[0] + ".u" for a in ab if ".u.u_att." in 
 assert len(root) == 1, root
 R = root[0]
 asb = re.compile(r"(?m)^([ \t]*// as-built )")
-leaves = [("dsdv_svc_mem_la", f"{R}.u_att.u_sw_mem")] + \
+leaves = [(sw_leaf, f"{R}.u_att.u_sw_mem")] + \
          [("dsdv_svc_mem_ar", f"{R}.u_att.g_wqm[{c}].g_pc[{p}].u_wq_mem") for c in range(3) for p in range(2)] + \
          [("dsdv_svc_mem_ar", f"{R}.u_att.u_qmem_mem"), ("dsdv_svc_mem_ar", f"{R}.u_pbuf_mem")]
 rel = lambda path: path.split(".", 1)[1] if "." in path else path
