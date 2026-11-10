@@ -34980,3 +34980,22 @@ DO_NOT_COUNT, GRT-only what-ifs on a private copy (epyc7 hgiB), no build.
   **For ROOT-MERGE-57:**
   - first-class 32439c39eb3 -> advisory-e56 d10fe91de5a
   - prd-mk-ro d90d849187c -> prd-run-user 73b1da0636d
+- 2026-11-10 07:14 PST STATE [KW-FIX-43 -> COORD, KW-FIX-44, DIE-S81-85] KW43-81 slice_station__t29__clc7772371 late-ECO LAUNCHED, first real iteration. BASE: I used the current row a14, not the 11-07 a11 kit of job 8fbecf5ddd84. a14 is the same plan block 8513629bf92d, job 6ef7bee1594b, and it is better: NOT SIGNED, TT +64.25, FF hold -47.57, drv 0, DRC 0 (a11: drv 626, FF -47.79). The a14 chain refused its ECO as NOT_NEAR_MISS (hold -32.85 ps < -30). eco_loop check: ECO_ELIGIBLE hold_ff; core-owned hold is only 8 endpoints at -32.85 ps, the rest are port-start or port-end (parent's). So this is one over-limit iteration under OWNER 11-08 standing yes: --owner-override, --strict-one-pass, --hold-margin 5, --lec. The kit (epyc4 kw26-wave-1106 ... attempt_14) is read only; output goes to epyc4 /srv/opentallas-scratch3/claude/kw43-eco-t29/eco1. Tools are the hub runtime die_plan + physical/common_flow, staged read-only: prd_mk.sh e9adb323 (KW-FIX-44 fix), eco_loop 9c25da5e. Run: ot-run --direct --mem 48 --threads 8 --hosts epyc4, unit kw43-dr-t29eco. NEAR-CLOSE row committed. FIRST STATE: admitted after 62 s. "prd pass dir ready eco1/i1 (1.9G)", so prd_mk staging, the step that failed on 11-07, passes. The ECO container prd-eco1-i1-911243 is running. (My first submit stopped at once on a missing physical/common_flow next to the staged tools; restaged and resubmitted.) dsdv_bk_g skipped per ruling: kit gone, no open form checked by me. Verdict posted when eco1.rc lands. DO_NOT_COUNT.
+- 2026-11-10 07:14 PST READY KW-FIX-44 -> ROOT-MERGE-57, COORD: direct-memavail unblocked: test_direct_pending asserts the new admission, new sha 1ca5afb17a5. DO_NOT_COUNT.
+  **New tip:** claude/kw-fix-44-direct-memavail-1110 is now 1ca5afb17a5 (fast-forward on ba2d012520d). One file changed, tools/fleet/test_direct_pending.py, +9/-3.
+  **Test change:** test_launcher_preserves_floor_and_fallback is replaced by test_launcher_admits_on_real_memavailable_with_fresh_claims, which asserts in ot-heavy:
+  - no ot-direct-pending call
+  - MemAvailable read from /proc/meminfo
+  - `_avail - _pend )) -ge $(( MEM + 32 ))`
+  - a claim counts only while `$_age -lt ${DIRECT_FRESH_S:-300}`
+  - each admission writes `direct.$UNIT` with its MEM
+  The behaviour itself stays covered by test_ot_run_direct.py FreshOnly. The other 7 ot-direct-pending helper tests are unchanged.
+  **Results** (epyc7, against the branch's own ot-heavy):
+  - old test: 1 failed / 7 passed, the merge lane's failure
+  - new test: 8 passed
+  **Unchanged:** the branch ot-heavy blob md5 is still e674a02e, = the live /usr/local/bin/ot-heavy on the 5 hosts, so nothing to redeploy. ot-direct-pending itself stays in the tree and in install_fleet_host.sh as an unused read-only helper; removing it is a separate cleanup if wanted.
+  **For ROOT-MERGE-57:**
+  - direct-memavail 1ca5afb17a5
+  - first-class 32439c39eb3 -> advisory-e56 d10fe91de5a
+  - prd-mk-ro d90d849187c -> prd-run-user 73b1da0636d
+  - store-gc c11d76aacb8 after seed-mtime 106c13e73b7 (unchanged)
