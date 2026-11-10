@@ -10,7 +10,11 @@ Reset relays are not launches here: the reset tree places them itself.
 A chain whose even hop is still above --reach cannot close at its present depth; it is listed in report.pin_cycles
 (cycles to add), and nothing is added to the plan by this tool.
 
+A site that falls inside a hard macro (grown by --macro-halo) moves to the macro's free boundary point with the smaller
+worst hop (relay_site_clear.py, TYPE-SAFE-5 11-10: leaf__t35 p3 legalised such a site 68 um off, 15 bits over 405).
+
   type_relay_sites.py SRC GEOM BASE_PLAN TYPE OUT_PLAN REPORT_JSON [--reach 380] [--firm FACE_FLOPS] [--extra BUS=N]
+                      [--macro-halo 6 (negative: off)]
 """
 import argparse, collections, json, math, re, sys
 from pathlib import Path
@@ -21,9 +25,12 @@ for a in "src geom base type out report".split():
 ap.add_argument("--reach", type=float, default=380.0)
 ap.add_argument("--firm", help="ot_face_flops.txt of the placed kit: with it, u_bin_ flops not listed there (ring-fed buses) are movable too")
 ap.add_argument("--extra", action="append", default=[], metavar="BUS=N", help="station bus BUS gets N more u_ist_ stages (pin cycles planned elsewhere); their bits are sited here")
+ap.add_argument("--macro-halo", type=float, default=6.0, help="sites inside a macro grown by this many um move to its boundary; negative = off")
 A = ap.parse_args()
 sys.path.insert(0, A.src + "/tools/autopilot")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import geom_rules as G  # noqa: E402
+from relay_site_clear import clear_sites  # noqa: E402
 
 RELAY = re.compile(r"^(?:u_bound\.)?((?P<lpad>u_lpad_\w+?)\.(?:q\[\d+\]|r\[\d+\]\[\d+\])"
                    r"|(?P<pd>u_pd\d+_\w+?_\d+)\.(?:r\[\d+\]|q)"
@@ -125,8 +132,10 @@ nxt = {c: next(iter(succ[c])) for c in relay if len(succ[c]) == 1 and len(C[c]) 
        and pred[next(iter(succ[c]))] == {c}}
 inner = set(nxt.values())
 sites, rep = {}, dict(reach_um=A.reach, skipped=collections.Counter(), hop=collections.defaultdict(float), chains=0,
-                      over405=0, over_reach=0, pin_cycles=collections.Counter())
+                      over405=0, over_reach=0, pin_cycles=collections.Counter(), macro_halo_um=A.macro_halo,
+                      sites_moved_off_macro=0)
 die = D.die
+rects = [tuple(v[2:6]) for v in D.cells.values() if v[0] == "M"] if A.macro_halo >= 0 else []
 for head in sorted(c for c in relay if c not in inner):
     ch = [head]
     while ch[-1] in nxt:
@@ -156,6 +165,9 @@ for head in sorted(c for c in relay if c not in inner):
     fr = [(first + step * j) / span if span else 0.5 for j in range(n)]
     path = [(round(min(max(a[0] + (b[0] - a[0]) * f, die[0]), die[2]), 3),
              round(min(max(a[1] + (b[1] - a[1]) * f, die[1]), die[3]), 3)) for f in fr]
+    if rects:
+        path, mv = clear_sites(path, pa, pb, rects, die, halo=A.macro_halo)
+        rep["sites_moved_off_macro"] += mv
     hops = [max(L1(path[0], p) for p in pa)] + [L1(path[j], path[j + 1]) for j in range(n - 1)] + \
            [max(L1(path[-1], p) for p in pb)]
     worst = max(hops)
