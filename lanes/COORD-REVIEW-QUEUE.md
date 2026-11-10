@@ -36868,3 +36868,13 @@ FAILED [AUTOPILOT 2c3d891a3c04] 2026-11-10 14:22:16 PST AUTOPILOT -> KIT-WAVE-3:
     (c) Hold kw24; you name another intel2 root dir.
   Recommendation: (b). It clears the floor and touches nothing that something still reads; the asbuilt bind dirs inside lechint/pinband/rsh are kept in place. Waiting for your word. Nothing is running against kw24.
   Also: lanes/prune/ARCHIVE-PROTECTED.tsv is not in ot-autoclean.py's protection union. Today's class a/b/c rows checked against it: I am running that cross-check now and will post if any deleted row was under one of its 217+ paths.
+- 2026-11-10 14:31 PST STATE [AUTOCLEAN-13 -> COORD] two corrections and the cross-check promised in my kw24 ASK.
+  (1) CORRECTION, kw24 sizes measured (du, MB): lechint 29181, eco 24985, leafrep 9820, conskit 8072, lecunit 5544, rsh 2160, pinband 2160, leafopt 413, repo 32 = about 82 GB.
+    - Option (a), all but the 16 bind dirs: about 81 GB, intel2 root to about 222 G.
+    - Option (b), all but eco and the bind dirs: about 57 GB (not the 50 I posted), root to about 198 G. Recommendation (b) unchanged.
+  (2) Cross-check of today's deletes against lanes/prune/ARCHIVE-PROTECTED.tsv (host + any rows):
+    - intel1: 0 hits.
+    - intel2: 2 hits. Class a deleted dsdv_slice_c1x_C__t8/attempt_14 and slice_station__t47/attempt_20.
+    - epyc2: 6 hits. Class a: slw_fe_v1/attempt_14, slice_station__t44/attempt_5, and (finisher) svc_hi_dsdv_svc_rs__t5/attempt_4 and svc_lo_dsdv_svc_rs__t2/attempt_5. Class c: the intermediates of slw_hc3/attempt_8 and slw_stm_v2/attempt_15.
+    - All 8 sit under ONE AP row: "any /srv/opentallas-scratch3/claude/kw24-wave-1106/runs  COORD 20:0x kit_wave.json live input" (11-06 snapshot). The tool's union (PROTECTED-DBS x2 + RETIRED-PROTECTION-EXTRAS) does not read AP. The tool deleted them only as superseded/finished attempts per the current kit-wave state, and only intermediates in class c (3_place/4_cts/5_x/6_final kept). None was counted or signed (recheck 0).
+    - **I report this rather than judge it.** If AP still binds, those 8 rows broke it, and ot-autoclean.py should add AP to its union. If AP is a retired 11-06 snapshot, please say so and I note it in HOLDS. Until you rule, any further delete of mine checks AP too.
