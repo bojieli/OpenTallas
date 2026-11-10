@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "n4ext1110",
+ "lane": "HBM-COLLECT-1 (N4-PLAN)",
+ "ruling": "COORD 11-10 (A): adopt the grown n4ext outline at the same origin by a die-local plan event; no rebuild",
+ "status": "READY (die-local)",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore",
+ "base_plan_sha256": "27e46e2d84777acfeb035f55080b505af33814372801dd27616ce52a41f15807",
+ "new_plan": "/srv/opentallas-scratch2/claude/hbm-collect-1/n4plan/plan_r2_n4ext",
+ "new_plan_sha256": "3b5d7518445503b00fedb56c95182ad0a6c78da11b8a30854348b73d0831431f",
+ "delta_tool": "mk_plan_n4rf.py (DIE-HBM-89-N4RF, unchanged), sha256 80e05afe1f577668d532bd2d8d9c51db1f44443c238c801d8cbcacb346bddc56",
+ "module": "ot_hnx_fused_hub_n4ext",
+ "inst": "root.u_mu_fused_root",
+ "origin_um": [
+  734.4,
+  5503.68
+ ],
+ "outline_um": {
+  "from": [
+   216.0,
+   207.36
+  ],
+  "to": [
+   293.76,
+   250.56
+  ]
+ },
+ "pins_file": "cores/ot_hnx_fused_hub_n4ext__293.76x250.56__n4rf.json",
+ "pins_file_sha256": "c756b86982b8092d261c63ac1c9b70b592b640afdd9c620cb756c79450d72fe1",
+ "pin_cycles_added": 0,
+ "delta": {
+  "view": "ot_hnx_fused_hub_n4ext@c756b86982b8",
+  "moved": {
+   "E": 444,
+   "N": 1,
+   "clk": 1
+  },
+  "stations": 2,
+  "fill_est": 0.384,
+  "clk": [
+   146.904,
+   120.96
+  ],
+  "macros": [
+   [
+    "u_fcore.u_native.u_scb",
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    99.456,
+    64.8
+   ],
+   [
+    "u_fcore.u_native.u_t5.u_pad.u_d",
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    99.456,
+    138.24
+   ],
+   [
+    "u_fcore.u_native.u_t5.u_pad.u_c",
+    "ot_sram_1r1w2c_32x64_m1",
+    130.896,
+    192.24
+   ]
+  ]
+ },
+ "files_changed": [
+  "die_plan.json(.gz)",
+  "clock_entries.json(.gz)",
+  "core_macros.json",
+  "cores/ot_hnx_fused_hub_n4ext__293.76x250.56__n4rf.json",
+  "SHA256SUMS"
+ ]
+}
