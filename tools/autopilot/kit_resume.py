@@ -74,7 +74,7 @@ RUNNER_ROOTS = {"orfs_hold_mm.py": "synth", "native_bb.py": "synth", "partition_
 GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
               "face_guard.py", "reg_fanout_gate.py", "hold_gate.tcl", "postcts_gate.tcl", "legacy_gate.py",
               "grt_policy.json", "pin_audit.py", "native_pin_contract.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_completed_transfer.py", "lec_options.json",
-              "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json",
+              "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json", "count_strap_evidence.json",
               "grt183_make.sh", "grt183_resume.tcl"}      # FLOW-28: inert unless a run stops on GRT-0183; a kit with no such stop rebuilds nothing
 # KW-FIX-24/LEAFREP 11-06: grt183_make.sh (a gate root) sources clk_leaf_repeat_default.tcl inside the CTS and GRT
 # steps (clock-tree repeaters): a physical input read at cts, not a gate

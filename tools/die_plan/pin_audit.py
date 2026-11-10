@@ -89,6 +89,37 @@ def declared_clock_ports(pins_path):
     return {name for name, role in roles.items() if role == "clk"}
 
 
+def accepted_count_strap_bits(evidence):
+    """{bit names} of parent-tied count straps, from the kit's count_strap_evidence.json (count_strap_evidence.py).
+
+    A strap counts only if the plan declares it in count_straps, it is a bound-only input of that width, and every
+    instance of the type ties it to a literal of that width.  Anything else stays an extra pin.
+    """
+    if not isinstance(evidence, dict) or not evidence.get("instances"):
+        return set()
+    bound = {r.get("port"): (r.get("dir"), r.get("width")) for r in evidence.get("bound_only_pins") or []}
+    bits = set()
+    for strap in evidence.get("plan_count_straps") or []:
+        name, width = strap.get("name"), strap.get("width")
+        ties = (evidence.get("parent_ties") or {}).get(name) or {}
+        if bound.get(name) != ("input", width):
+            continue
+        if not all(re.fullmatch(rf"{width}'[bBdDhH][0-9a-fA-F_]+", ties.get(i) or "") for i in evidence["instances"]):
+            continue
+        bits |= {f"{name}[{b}]" for b in range(width)}
+        if width == 1:
+            bits.add(name)
+    return bits
+
+
+def load_count_strap_evidence(pins_path):
+    try:
+        with open(os.path.join(os.path.dirname(pins_path), "count_strap_evidence.json")) as stream:
+            return json.load(stream)
+    except (OSError, ValueError):
+        return None
+
+
 def main():
     import odb  # noqa: E402  (OpenROAD python)
     db = odb.dbDatabase.create()
@@ -99,7 +130,8 @@ def main():
     W, H = die.xMax() / dbu, die.yMax() / dbu
     want = {pin_key(p): p for p in json.load(open(os.environ["PINS"]))}
     clock_ports = declared_clock_ports(os.environ["PINS"])
-    res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[])
+    tied_straps = accepted_count_strap_bits(load_count_strap_evidence(os.environ["PINS"]))
+    res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[], count_straps_accepted=[])
     seen = set()
     aliases = scalar_aliases(want, [bt.getName() for bt in block.getBTerms()])
     res["scalar_aliases"] = aliases
@@ -110,7 +142,7 @@ def main():
             # so are the 12.2a1 pushdown island feed-through ports (ft_ck_i/o, ft_rst_i/o, mp_isl*: die-owned, checked by
             # the ft_ports / pushdown gates, not by the face-pin table)
             if n not in clock_ports and not INTERIOR.match(n) and not bt.getSigType() in ("POWER", "GROUND"):
-                res["extra"].append(n)
+                res["count_straps_accepted" if n in tied_straps else "extra"].append(n)
             continue
         seen.add(n)
         p = want[n]
@@ -134,6 +166,7 @@ def main():
     for k in ("missing", "wrong_layer", "wrong_place", "extra"):
         res[k + "_n"] = len(res[k])
         res[k] = res[k][:20]
+    res["count_straps_accepted_n"] = len(res["count_straps_accepted"])
     res["verdict"] = "PASS" if res["ok"] == res["pins"] and not res["extra_n"] else "FAIL"
     json.dump(res, open(os.environ["OUT"], "w"), indent=1)
     print(f"PIN_AUDIT {res['verdict']} {res['ok']}/{res['pins']} missing {res['missing_n']} wrong_layer "
