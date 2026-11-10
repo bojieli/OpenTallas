@@ -1,0 +1,87 @@
+{
+ "name": "s81svc_irg",
+ "top": "ot_s81_svc_idx_hslice_fp",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_svc/ot_s81_svc_idx_hslice_fp.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/dsrom_sys/s81_svc/ot_s81_svc_fp32_add_lat_cs.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_reset_sync.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 77.76,
+  "h": 276.48,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "hid",
+   "first"
+  ],
+  "W": [
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "k_key",
+   "cs_in",
+   "cf_in"
+  ],
+  "E": [
+   "qo_v",
+   "qo_head",
+   "qo_codes",
+   "qo_sc",
+   "qo_w",
+   "ko_key",
+   "cs_out",
+   "cf_out"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.0
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inter": [],
+ "children": [],
+ "why_floorplan": "S81-SVCRS-3 11-10 svc_rs provider IRG (ot_s81_svc_idx_hslice_fp), rebuilt from the s81svc_irg_hsfp pilot with recipe-4 pin registers ON (COORD ruling 11-10: structural IO fix). The pilot was source-registered (pin_regs off): face_guard FAIL shared 832 (qo_codes output flops also feed their own next-state logic) + unregistered 1 (ql_v drives an AND2 before any flop), and FF hold -38.65 on 1156 IO endpoints in the sign-off frame. Every input and output now has its own pin register: +1 cycle in, +1 cycle out (svc compiler schedule moves by 2 on every IRG edge, pin-cycle lever). DIE-S81-85 svc provider form A, svc_lo fallback (b) IRG box (COORD 11-09 native-census decision): 77.76 x 276.48 exact (the band height), fill 0.399; the 8 slices of a chunk abut W->E at 86.4 pitch (8.64 seams), so the chain faces are W (ql / k_key / cs_in) and E (qo / ko_key / cs_out); clk / rst_n / hid / first straps from the chunk relay on N.  Census: drivers > 64 loads fixed structurally (q_we / pos_r kept copies, adder swap select SWREP 4, adder data cuts DRST 0 so the reset relay drives only valid bits); 33-64 load drivers stay (COORD loopgap-153x-1109 census exception, sign-off STA / slew decides).",
+ "job": {
+  "owner": "Claude:S81-SVCRS-3",
+  "branch": "claude/s81-svcrs-3-provkits-1110",
+  "tag": "prov_irg",
+  "purpose": "DIE-S81-85 svc provider form A: IRG fastpad hslice (ot_s81_svc_idx_hslice_fp) pilot kit, fallback (b) 77.76 box at fill 0.399, 32 per svc_lo type",
+  "views_to": "physical/ref_tile/s81svc_irg/views",
+  "record_to": "results/rtl/ref_tile/s81svc_irg",
+  "extra_paths": [
+   "results/rtl/svc_irg_fastpad_1109/bench"
+  ],
+  "benches": []
+ }
+}
