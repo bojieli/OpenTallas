@@ -1,0 +1,143 @@
+#!/usr/bin/python3 -I
+"""ot-run-lane-declare: ISOLATION step 3 (KW-FIX-44, COORD 17:3x).  Run by the ot-run frontend before every LANE job.
+
+A lane job DECLARES its inputs when every absolute host path it names -- in its command words and inside the shell /
+tcl scripts its command runs -- lies under its own --dir or one of its --stage paths (the dirs ot-run stages / spills
+with the job), or the job is a sealed ot-job (--job SPEC: inputs declared in the spec).  Comment lines and glob /
+variable patterns are not paths.  Mode (file ~/.config/ot-run/lane_declare, one word, default "auto"):
+  warn     report undeclared paths on stderr and in ~/.local/state/ot-run/lane-declare.tsv; the job runs
+  enforce  refuse the job: exit 96, every undeclared path in the message; nothing runs
+  auto     warn until ENFORCE_AT (2026-11-10 12:00 PST, COORD), enforce after
+  off      no check
+exit 0 = run the job, 96 = refused.  Calls without a command (--status, --cancel, ...) are never checked.
+"""
+import json
+import os
+import re
+import shlex
+import sys
+import time
+
+ENFORCE_AT = 1794340800          # 2026-11-10 12:00:00 PST (UTC-8)
+MODE_FILE = os.path.expanduser("~/.config/ot-run/lane_declare")
+LOG = os.path.expanduser("~/.local/state/ot-run/lane-declare.tsv")
+RX = re.compile(r"/(?:srv|home|mnt|archive|media)/[A-Za-z0-9_.+@%=,:-]+(?:/[A-Za-z0-9_.+@%=,:-]+)*")
+SCRIPT_EXT = (".sh", ".tcl", ".bash")
+SYSTEM_OK = ("/home/ubuntu/.local/", "/home/ubuntu/bin/", "/home/ubuntu/opentallas-tools/")   # tool dirs sealed jobs also see
+VALUE = {"--mem", "--threads", "--dir", "--stage", "--hosts", "--host", "--tag", "--max-wait", "--priority", "--job",
+         "--mem-hint", "--name", "--root", "--timeout", "--cpus"}
+
+
+def mode(now=None):
+    try:
+        m = open(MODE_FILE).read().split()[0].strip().lower()
+    except (OSError, IndexError):
+        m = "auto"
+    if m == "auto":
+        return "enforce" if (now or time.time()) >= ENFORCE_AT else "warn"
+    return m if m in ("warn", "enforce", "off") else "warn"
+
+
+def split(argv):
+    """-> (options {name: [values]}, command words) or None when there is no command"""
+    if "--" not in argv:
+        return None
+    i = argv.index("--")
+    opts, j = {}, 0
+    head = argv[:i]
+    while j < len(head):
+        a = head[j]
+        k, eq, v = a.partition("=")
+        if eq and k in VALUE:
+            opts.setdefault(k, []).append(v)
+        elif a in VALUE and j + 1 < len(head):
+            opts.setdefault(a, []).append(head[j + 1])
+            j += 1
+        else:
+            opts.setdefault(a, []).append(True)
+        j += 1
+    return opts, argv[i + 1:]
+
+
+def paths_in(text):
+    out = []
+    for ln in text.splitlines():
+        if ln.strip().startswith(("#", "//")):
+            continue
+        for m in RX.finditer(ln):
+            if ln[m.end():m.end() + 1] in ("*", "?", "[", "{", "$"):
+                continue
+            out.append(m.group(0).rstrip(".,:;"))
+    return out
+
+
+def named(cmd):
+    """every absolute host path the command names: its words (and bash -c strings), and inside scripts it runs"""
+    words = []
+    for w in cmd:
+        words.append(w)
+        if " " in w or ";" in w:
+            try:
+                words += shlex.split(w, comments=True)
+            except ValueError:
+                words += w.split()
+    refs = []
+    for w in words:
+        refs += paths_in(w)
+    for p in list(refs):
+        if p.endswith(SCRIPT_EXT) and os.path.isfile(p):
+            try:
+                if os.path.getsize(p) < (1 << 20):
+                    refs += [(q, p) for q in paths_in(open(p, errors="replace").read())]
+            except OSError:
+                pass
+    out = {}
+    for r in refs:
+        q, src = (r if isinstance(r, tuple) else (r, "command"))
+        out.setdefault(q, src)
+    return out
+
+
+def under(p, roots):
+    return any(p == r.rstrip("/") or p.startswith(r.rstrip("/") + "/") for r in roots)
+
+
+def check(argv):
+    """-> [(path, where)] undeclared, or None when this call is not a lane job"""
+    s = split(argv)
+    if not s:
+        return None
+    opts, cmd = s
+    if "--job" in opts:
+        return []                                  # a sealed ot-job: its spec declares every input
+    roots = [r for r in opts.get("--dir", []) + opts.get("--stage", []) if isinstance(r, str)]
+    return [(p, w) for p, w in sorted(named(cmd).items()) if not under(p, roots) and not p.startswith(SYSTEM_OK)]
+
+
+def main(argv):
+    m = mode()
+    if m == "off":
+        return 0
+    bad = check(argv)
+    if not bad:
+        return 0
+    lane = os.environ.get("OT_LANE") or os.environ.get("LANE") or "?"
+    try:
+        os.makedirs(os.path.dirname(LOG), exist_ok=True)
+        with open(LOG, "a") as fh:
+            for p, w in bad[:50]:
+                fh.write("\t".join([time.strftime("%Y-%m-%d %H:%M:%S %Z"), m, lane, os.getcwd(), p, w]) + "\n")
+    except OSError:
+        pass
+    msg = "; ".join(f"{p} (in {w})" for p, w in bad[:8]) + (f" (+{len(bad) - 8} more)" if len(bad) > 8 else "")
+    if m == "enforce":
+        print(f"ot-run: REFUSED (ISOLATION step 3): lane job names input paths outside its --dir/--stage: {msg}. "
+              "Declare them with --stage PATH (or run sealed with --job SPEC).", file=sys.stderr, flush=True)
+        return 96
+    print(f"ot-run: ISOLATION WARN (lane job; REFUSED from 2026-11-10 12:00 PST): input paths outside its --dir/--stage: "
+          f"{msg}. Declare them with --stage PATH.", file=sys.stderr, flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
