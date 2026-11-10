@@ -313,3 +313,19 @@ def test_kit_wave_does_not_read_aborted_lec_as_neq_or_infra():
            "the kit needs a fresh LEC\n[ERROR PDN-0006] bad grid\n")
     cls, why = kit_wave.classify("route", log)
     assert "PDN-0006" in why and "LEC" not in why, (cls, why)
+
+
+def test_finish_after_reused_proof_without_watcher_does_not_hang(tmp_path):
+    """DIE-S81-85 11-09 (pk2_vRP_SV hung 12 h): a scope that reused a finished proof has no lec_async.pid, and a copied
+    kit may have no lec_async.done; finish must return the flow rc instead of polling forever."""
+    k = tmp_path / "kit"
+    k.mkdir()
+    (k / "lec_async.sh").write_text(TOOL.read_text())
+    (k / "lec_async.ready").write_text("1\ntrue\n")
+    (k / "lec_async.identity").write_text("abc\n")
+    (k / "lec_async.on").write_text("")
+    (k / "lec_async.owner").write_text("oldowner\n")
+    env = dict(os.environ, OT_LEC_ASYNC_POLL="0.2")
+    r = subprocess.run(["bash", str(TOOL), "finish", str(k), "7", "5", "newscope", "finish"], env=env,
+                       capture_output=True, text=True, timeout=20)
+    assert r.returncode == 0 and r.stdout.strip().splitlines()[-1] == "7"

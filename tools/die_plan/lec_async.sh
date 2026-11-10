@@ -451,7 +451,9 @@ finish)
   fi
   [ -f "$K/lec_async.ready" ] || touch "$K/lec_async.abort"
   P=$(cat "$K/lec_async.pid" 2>/dev/null)
-  until [ -f "$K/lec_async.done" ] || { [ -n "$P" ] && ! kill -0 "$P" 2>/dev/null; }; do sleep "${OT_LEC_ASYNC_POLL:-5}"; done
+  # DIE-S81-85 11-09 (pk2_vRP_SV hung 12 h): a scope that REUSED a finished proof starts no watcher, so it has no
+  # lec_async.pid and may have no lec_async.done (copied kit).  With no recorded watcher there is nothing to wait for.
+  until [ -f "$K/lec_async.done" ] || [ -z "$P" ] || ! kill -0 "$P" 2>/dev/null; do sleep "${OT_LEC_ASYNC_POLL:-5}"; done
   # Keep identity/ready/on for exact proof reuse by later scopes.
   grep -h "^LEC_ASYNC\|^LEC WARNING" "$K/lec_async.log" 2>/dev/null | tail -2 >&2
   if [ -f "$K/lec_async.stop" ]; then echo "$SRC"; else echo "$RC"; fi
