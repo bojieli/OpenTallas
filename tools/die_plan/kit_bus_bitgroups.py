@@ -137,6 +137,13 @@ class Netlist:
         self.alias = {m.group(1): m.group(2).strip() for m in ASSIGN.finditer(txt) if re.fullmatch(ID, m.group(2).strip())}
         self.src = {}
         for ln in txt.split("\n"):
+            dm = re.match(r"^\s*ot_dp_dly\s+#\(.*?\)\s+u_\w+\s+\(.*?\.d\(([^()]*)\),\s*\.q\(([^()]*)\)\)\s*;", ln)
+            if dm:      # landing-pad delay: a pass-through (same bits, D cycles later), one bit per cell in the bound RTL
+                its = _items(dm.group(1).strip())
+                q = ITEM.match(dm.group(2).strip())
+                if its is not None and q and q.group(1) not in self.src:
+                    self.src[q.group(1)] = its
+                continue
             if re.match(r"^\s*ot_dp_\w+", ln):
                 continue
             for m in NBA.finditer(ln.split("//")[0]):

@@ -135,3 +135,11 @@ def test_end_to_end_ok_merged_chain_is_unchanged(tmp_path):
     assert "is_place_bits" not in tcl and "is_place {*u_ist_L_i_0[./]*}" in tcl
     kd2, _ = _kit(tmp_path, near, ["u_a", "u_b"], "ok2")      # forced off = byte-identical to auto when not violating
     assert (kd2 / "istations.tcl").read_text() == tcl
+
+
+def test_landing_pad_delay_is_pass_through():
+    txt = BOUND_IN.replace("    always @(posedge clk) g_c_ra_q <= L_i_q[3:0];\n",
+                           "    wire [0:0] pd_0;\n    ot_dp_dly #(.W(1), .D(2)) u_pd_0 (.clk(clk), .d(L_i_q[0]), .q(pd_0));  // landing pad\n"
+                           "    always @(posedge clk) g_c_ra_q <= {L_i_q[3:1], pd_0[0]};\n")
+    own = BG.in_bit_owners(txt, "L_i", ["u_a", "u_b"])
+    assert 0 in own and own[0] == {"u_a"}
