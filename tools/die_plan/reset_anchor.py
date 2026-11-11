@@ -82,6 +82,28 @@ def record(t, tree, root, tol_um):
                 relays={n: dict(depth=int(by[n]["depth"]), xy=[round(float(v), 3) for v in by[n]["xy"]]) for n in names})
 
 
+def snapshot(t):
+    """the solve-time reset tree a plan publishes with its landing contract (clock.landing_contract.collector_tree,
+    the reset_tree.for_type tree the landing names were picked on), or None"""
+    ct = ((t.get("clock") or {}).get("landing_contract") or {}).get("collector_tree")
+    rel = ct.get("relays") if isinstance(ct, dict) else None
+    if not rel or not all(isinstance(r, dict) and {"q", "depth", "xy"} <= set(r) for r in rel):
+        return None
+    return {"relays": rel}
+
+
+_BOUND_RELAY = re.compile(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*(rst_rl_\d+)\s*\)[^;]*\);[ \t]*//[^\n]*?"
+                          r"depth\s+(\d+)\s+@\s+\(([-\d.]+),\s*([-\d.]+)\)")
+
+
+def bound_tree(sv_text):
+    """the generated relays of a BOUND type body (bind rtl/<type>.sv, as reset_tree.rtl_lines comments each relay
+    'depth D @ (x, y)'): the tree a bind of record actually emitted, sites rounded to 0.1 um"""
+    rel = [dict(q=m.group(1), depth=int(m.group(2)), xy=[float(m.group(3)), float(m.group(4))])
+           for m in _BOUND_RELAY.finditer(sv_text)]
+    return {"relays": rel} if rel else None
+
+
 def _d(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
@@ -157,9 +179,12 @@ def resolve_plan(raw, P, root, tree_fn=None, ported_fn=ported):
 
 
 def main(argv):
-    """record: python3 reset_anchor.py record PLAN OUT [--types T1,T2] [--tol-um 405]
+    """record: python3 reset_anchor.py record PLAN OUT [--types T1,T2] [--tol-um 405] [--source tree|snapshot|auto]
     Anchors every type with START/local relay references against the tree of the plan as it stands (plan writers run
-    it on the plan they solved; a later in-place input change is then re-picked at bind)."""
+    it on the plan they solved; a later in-place input change is then re-picked at bind).  --source snapshot / auto
+    take the sites from the plan's own solve-time tree (landing_contract.collector_tree) instead, for a plan whose
+    names were picked before a later event or generator change renumbered the tree (auto: snapshot when it holds every
+    referenced name, else the tree)."""
     import argparse
     import sys
     ap = argparse.ArgumentParser(description=main.__doc__)
@@ -172,6 +197,10 @@ def main(argv):
     ap.add_argument("--solved-bins", action="append", default=[], metavar="TYPE=PATH",
                     help="the sink bins a type's plan was SOLVED with, when the file at its sink_bins_file has since "
                          "been replaced in place (the plan keeps its sink_bins_file; the anchor records that tree)")
+    ap.add_argument("--source", choices=["tree", "snapshot", "auto"], default="tree")
+    ap.add_argument("--bound-rtl", help="rtl/ of a bind of record: with --bound-plan, a type whose references equal "
+                                        "that plan's is anchored where that bind emitted the relays (first choice)")
+    ap.add_argument("--bound-plan", help="the plan the --bound-rtl bind bound")
     a = ap.parse_args(argv[1:])
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import schema
@@ -186,13 +215,32 @@ def main(argv):
     P = schema.Plan(raw, Path(a.plan).parent / "die_plan.json")     # as bind.Binder.wavefront_plan (pins_file paths)
     tol = a.tol_um if a.tol_um is not None else RT.relay_um(P)
     want = set(filter(None, a.types.split(",")))
+    bplan = json.loads(Path(a.bound_plan).read_text())["partition_types"] if a.bound_plan and a.bound_rtl else {}
     n = 0
     for tn, t in raw["partition_types"].items():
         if (want and tn not in want) or not refs(t):
             continue
-        t["clock"][KEY] = record(t, RT.for_type(P, tn), a.root, tol)
+        names = {c[k] for c, k in refs(t)}
+        has = lambda tr: tr is not None and names <= {r["q"] for r in tr["relays"]}  # noqa: E731
+        src, tree = None, None
+        if a.source == "auto" and tn in bplan and [c[k] for c, k in refs(bplan[tn])] == [c[k] for c, k in refs(t)]:
+            f = Path(a.bound_rtl) / f"{tn}.sv"
+            bt = bound_tree(f.read_text()) if f.is_file() else None
+            if has(bt):
+                src, tree = "bound", bt
+        if tree is None and a.source in ("tree", "auto"):
+            tt = RT.for_type(P, tn)
+            if a.source == "tree" or has(tt):
+                src, tree = "tree", tt
+        if tree is None:
+            snap = snapshot(t)
+            if a.source == "snapshot" or has(snap):
+                src, tree = "snapshot", snap
+        if tree is None:
+            raise AnchorError(f"{tn}: no source holds every referenced relay (bound / tree / snapshot)")
+        t["clock"][KEY] = record(t, tree, a.root, tol)
         n += 1
-        print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s), tol {tol:g} um")
+        print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um", flush=True)
     for tn, f in keep.items():
         raw["partition_types"][tn]["clock"]["sink_bins_file"] = f
     Path(a.out).write_text(json.dumps(raw, separators=(",", ":")))

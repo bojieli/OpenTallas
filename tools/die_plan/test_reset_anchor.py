@@ -130,3 +130,32 @@ def test_sle_ctl_tapreach_matches_the_cand12_hand_repick():
     assert got["rst_rl_228"] == "rst_rl_211"
     assert all(n in by and by[n]["depth"] == fx["anchor"]["relays"][o]["depth"]
                for o, n in got.items())
+
+
+def test_snapshot_is_the_solve_time_tree_and_anchors_like_it():
+    t = _type("rst_rl_1", "rst_rl_3")
+    assert RA.snapshot(t) is None
+    t["clock"]["landing_contract"] = {"collector_tree": dict(depth=3, relays=copy.deepcopy(OLD["relays"]))}
+    snap = RA.snapshot(t)
+    assert snap["relays"] == OLD["relays"]
+    assert RA.record(t, snap, HERE, 50.0) == RA.record(t, OLD, HERE, 50.0)
+    # the anchor taken from the snapshot re-picks onto a renumbered tree like one taken from the solve-time tree
+    t["clock"][RA.KEY] = RA.record(t, snap, HERE, 50.0)
+    RA.resolve("T", t, NEW, HERE, ported_fn=NOPORT)
+    assert _names(t) == ["rst_rl_2", "rst_rl_4", "rst_rl_2"]
+    t["clock"]["landing_contract"]["collector_tree"]["relays"][0].pop("xy")
+    assert RA.snapshot(t) is None
+
+
+def test_bound_tree_reads_the_relays_a_bind_of_record_emitted():
+    """plan_pv bind_pv rtl/sle_ctl__cl67434795.sv lines 4526-4530 (11-09): relay sites from the generator comments"""
+    sv = """    wire rst_rl_228;
+    ot_dp_rrelay u_rrl_228 (.clk(clk), .d(rst_rl_211), .q(rst_rl_228));  // raw pad tap None depth 5 @ (366.7, 946.1)
+    wire rn_rst_rl_228;
+    ot_dp_rrelay u_srl_228 (.clk(clk), .d(rn_rst_rl_211), .q(rn_rst_rl_228));  // run pad tap None depth 5 @ (366.7, 946.1)
+    ot_dp_rrelay u_rrl_229 (.clk(clk), .d(rst_rl_228), .q(rst_rl_229));  // raw wire tap None depth 6 @ (366.7, 946.1)
+    ot_dp_rrelay u_rrl_9 (.clk(clk), .d(rst_rl_8), .q(rst_n_t3));  // raw tap tap 3 depth 2 @ (1.0, 2.0)
+"""
+    bt = RA.bound_tree(sv)
+    assert bt["relays"] == [dict(q="rst_rl_228", depth=5, xy=[366.7, 946.1]), dict(q="rst_rl_229", depth=6, xy=[366.7, 946.1])]
+    assert RA.bound_tree("module m; endmodule") is None
