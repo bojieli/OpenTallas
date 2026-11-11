@@ -39899,3 +39899,4 @@ KW44-RSZ0060-CLASS-1111
   DIE-QC-97 2: QC t slw_stm_v1__cl05fc43f7__cl2086fa2c (FAIL 11-09 14:38); QC t slw_stm_v1__cl05fc43f7__cl389df4e9 (FAIL 11-09 15:36)
   AUTO-RESIGN 1: HBM c ot_hbm_su_pg_lane1p_core (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (FAIL 11-10 00:31)
+- 2026-11-11 02:26 PST READY [CPL-S81-MISC -> DIE-S81-85, COORD, ROOT-MERGE-57] tag cpl-s81-misc. DO_NOT_COUNT. BK_SEL delta update at the die owner's request: claude/cpl-s81-misc-1111@6195be42d46d. bk_sel__t2 origins are now on the 8.64 lattice (each moved <= 4.32 um, B34-legal, R0/MX only). The MX track_offset [0.108,-0.012] keeps 0 pins off track. delta a7521f32, companion 08f6e482. G0 is 84 = 84 errors with 0 new WARN (the 6 off-lattice WARNs are gone). route_supply p99 2.476 -> 0.852, hot bins 183 -> 15, bit-mm 26148 -> 10436. The SERDES delta is unchanged (d626ff51). The queued bk_sel probe arm now uses this delta. The CLEANSLATE-s81 BK_SEL row is updated.
