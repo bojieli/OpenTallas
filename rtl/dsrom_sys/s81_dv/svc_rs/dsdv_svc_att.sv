@@ -609,6 +609,13 @@ module dsdv_svc_att #(
 `else
     localparam integer E_SRX = 0;
 `endif
+// -DOT_SVC_NSTAGE=3 (SRX > 0 only): third staging buffer + mid job slot, covers the SRX round trip on back-to-back
+// jobs (S81-ARCH-RTL-2 11-11, COORD ruling); undefined = 2, as built.
+`ifdef OT_SVC_NSTAGE
+    localparam integer E_NSTAGE = `OT_SVC_NSTAGE;
+`else
+    localparam integer E_NSTAGE = 2;
+`endif
 `ifdef OT_SVC_SRXT
     localparam [1023:0] E_SRXT = `OT_SVC_SRXT;
 `else
@@ -620,7 +627,7 @@ module dsdv_svc_att #(
     ot_hdc_v41x_attn_s
 `endif
                        #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
-                         .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
+                         .ILV(1), .REPL(2), .NSTAGE(E_NSTAGE), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
                          .SC_CRED(0), .PV_CRED(0), .SRX(E_SRX), .SRXT(E_SRXT)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),

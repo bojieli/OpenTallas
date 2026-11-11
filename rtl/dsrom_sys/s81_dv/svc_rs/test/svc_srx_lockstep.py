@@ -12,7 +12,8 @@ vectors and checks, beat by beat:
     are NOT cycle-identical, the double buffer couples the front end to the later P.V drain, measured as end_cycle);
   * the RTL bank-set checker (OT_ATTN_SETCHECK) reports 0 errors.
 Each SRXMUT negative control (1 tags not delayed, 2 load line one stage short, 3 tile 0 fill one stage short) must
-FAIL.  Usage: svc_srx_lockstep.py --root <repo> --work <dir> --srx 7 [--srxt <hex>] [--dut hdc|s81] [--mut 1,2,3]
+FAIL.  Usage: svc_srx_lockstep.py --root <repo> --work <dir> --srx 7 [--srxt <hex>] [--dut hdc|s81] [--mut 1,2,3] [--nstage 3]
+With --nstage 3 the end_cycle pair should match (the third buffer covers the back-to-back slip).
 """
 import argparse, json, os, random, re, shlex, subprocess, sys, hashlib
 from pathlib import Path
@@ -41,10 +42,11 @@ def vectors(d: Path, seed: int):
 
 
 def build(a, srx, mut, nkv, np_):
-    tag = f"{a.dut}_srx{srx}_m{mut}"
+    ns = a.nstage if srx else 2
+    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "")
     if (a.work / f"build_{tag}.rc").is_file() and (a.work / f"build_{tag}.rc").read_text().strip() == "0":
         return tag
-    prm = dict(P, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
+    prm = dict(P, NSTAGE=ns, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
     if srx and a.srxt:
         prm["SRXT"] = f"1024'h{a.srxt}"
     r = "/work/root"
@@ -110,6 +112,7 @@ def main():
     ap.add_argument("--srxt", default="")
     ap.add_argument("--dut", choices=("hdc", "s81"), default="hdc")
     ap.add_argument("--mut", default="1,2,3")
+    ap.add_argument("--nstage", type=int, default=2, help="DUT NSTAGE (3 = third staging buffer); the SRX 0 reference stays 2")
     ap.add_argument("--seed", type=int, default=11)
     ap.add_argument("--image", default="verilator/verilator:v5.032")
     a = ap.parse_args()
@@ -121,7 +124,7 @@ def main():
         tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_), [(0, 0)] + [(a.srx, m) for m in muts]))
     ref_tag = tags[0]
     ref, rs = run(a, ref_tag)
-    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, srxt=a.srxt, seed=a.seed, params=P, T=TS,
+    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
     with ThreadPoolExecutor(len(muts)) as ex:
         res = list(ex.map(lambda t: run(a, t), tags[1:]))
@@ -134,7 +137,7 @@ def main():
         end = (ref["BPV"][-1][0], ev["BPV"][-1][0]) if ev["BPV"] and ref["BPV"] else None
         rec["runs"][tag] = dict(srxmut=mut, lockstep=lock, data_equal=data, first_job_shift_ok=first, end_cycle=end,
                                 setcheck_errors=setchk, summary=s, compare=c)
-    m0r = rec["runs"][f"{a.dut}_srx{a.srx}_m0"]
+    m0r = rec["runs"][tags[1]]
     caught = all(not r["data_equal"] for r in rec["runs"].values() if r["srxmut"])
     # PASS = every output / input stream bit-identical in value and order, the first job exactly +n / +2n, the bank-set
     # checker clean, every negative control breaks the data; strict per-beat lock-step (lockstep) is reported, not
