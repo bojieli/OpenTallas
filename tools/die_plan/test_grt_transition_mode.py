@@ -45,6 +45,8 @@ class GrtTransitionModeTest(unittest.TestCase):
         main = [l for l in LINES if '-w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc' in l]
         self.assertEqual(len(main), 1)
         self.assertEqual(sum('"${GRTD[@]}"' in l for l in LINES), 1)
+        # the stock docker-run prefix stays byte-identical (test_kit_resume RunKitChildContext reads it literally)
+        self.assertIn('-v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \\\n  -e HUID=', GP.RUN_KIT)
         # LEC and sign-off stay on the stock image
         self.assertTrue(any('lec_async.sh" start "$K" "$NAME" "$IMAGE"' in l for l in LINES))
         self.assertTrue(any('--image "$IMAGE" --corners' in l for l in LINES))
