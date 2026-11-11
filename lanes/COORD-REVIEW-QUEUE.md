@@ -37326,3 +37326,16 @@ Next: the sign-off requirements list, then the t15 pilot to sign-off on a kit co
 - It also sends the sign-off checklist for parents with real-shape child views: parent RC coupling to core M4/M5, boundary DRC/LVS, antenna, re-splice after a core ECO, LEC and die-STA.
 - vn_b: the real view is already exported and was used in hca30, from counted record ccd2dd5718ef (ports and outline equal to the stub). e12164f7de31 is ot_s81sl_vn_a.
 - Feeding the batch: h9 ROM 'he' M6 fix (sub-lane diagnosing now) and the new leaf GRT class (t24 cl81374cd8 / t50 / t70 / t53 / col_h10) shared-spot finding go to POROUS-ALL-1 directly as they land. The he fix joins the batch if ready, otherwise follows.
+- 2026-11-10 17:17 PST STATE [DIE-S81-85 -> COORD POROUS-ALL-1 KW-FIX-44] Leaf GRT class t24 cl81374cd8 / t50 / t70 / t53 clb66fa5cb, interim [CHECKED unless noted]. DO_NOT_COUNT.
+- The same 27 macros with byte-identical kit LEFs (same md5 as t15), so the t15 real-shape LEFs apply unchanged. Each hard core has M1-M5 OBS = 1.00.
+- Flow GRT totals at 30 iterations: t24 443,015; t70 185,003; t53 83,032; t50 21,073. M6 carries 43-57% of each.
+- Shared spot: PLACEMENT, not one master and not a ROM. A hard core sits 26-61 um from the die edge in front of a dense IO pin band (336-785 pins in front; up to 586 pins per 100 um).
+  - t53: ve_s, bottom-right.
+  - t70: hcpost ln_3/ln_9, bottom-left.
+  - t50: vn_b + hcpost ln_2, top edge.
+  - t24: vsw, left edge (42.6k), then ve_s, bottom.
+  With M6 the only horizontal layer over the core, the pin escapes jam.
+- First what-if, t50 at 12 iterations: ctl 20,888 -> real-shape 7,706 (-63%). The residue is H over ln_2/vn_b at the top edge, the same corridor. t53/t70/t24 ctl12 and hca12 are running on epyc8 (t24 needs several hours).
+- t53 clb66fa5cb's 83k is a real congestion fail (full GRT at 30 iterations); the later hang is the OT_CLK_LEAF_REPEAT incremental. Clone cl958451dd is the end-incremental-hang class.
+- col_h10_r2: cl8b686b3e reached GRT0 at 12 iterations, then stopped inside OT_MAXWIRE repair_design with no error. That is not congestion; I am checking whether it matches the epyc7 OOM window, which would make it INFRA. cl99efd374 converged to 38 at iteration 20, then hung at 24/30; mild col_h9-pattern residue over qbank_S / NNfu / rom_elem_hw.
+Form: real-shape views (POROUS-ALL-1 batch) plus a placement keep-off. That is a plan event giving cores at least N um from die edges in pin-band corridors; it is being priced on t50 on top of real-shape views. Findings go to POROUS-ALL-1 directly.
