@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1019" height="918" font-family="sans-serif" font-size="11">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1f4fd8"/></marker><marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b5480e"/></marker></defs>
+<rect x="40" y="40" width="639.36" height="838.08" fill="#fafafa" stroke="#000" stroke-width="2"/>
+<text x="40" y="18" font-size="14" font-weight="bold">kv3_hub_Wi intent layout (host link: serdes N face -> phy_adp comb -> phy_pad / cdc_pc -> host cores)</text>
+<rect x="52.96" y="100.48" width="181.44" height="181.44" fill="#c9daf5" stroke="#223"/>
+<text x="143.68" y="191.2" text-anchor="middle" font-size="10">ingest_eng</text>
+<rect x="243.04" y="117.76" width="164.16" height="164.16" fill="#c9daf5" stroke="#223"/>
+<text x="325.12" y="199.84" text-anchor="middle" font-size="10">core_order</text>
+<rect x="415.84" y="122.08" width="159.84" height="159.84" fill="#c9daf5" stroke="#223"/>
+<text x="495.76" y="202" text-anchor="middle" font-size="10">cdc_ch</text>
+<rect x="52.96" y="359.68" width="90.72" height="90.72" fill="#c9daf5" stroke="#223"/>
+<text x="98.32" y="405.04" text-anchor="middle" font-size="10">cdc_pc</text>
+<rect x="230.08" y="294.88" width="155.52" height="155.52" fill="#c9daf5" stroke="#223"/>
+<text x="307.84" y="372.64" text-anchor="middle" font-size="10">core_peer</text>
+<rect x="402.88" y="368.32" width="82.08" height="82.08" fill="#c9daf5" stroke="#223"/>
+<text x="443.92" y="409.36" text-anchor="middle" font-size="10">core_tx</text>
+<rect x="333.76" y="571.36" width="129.6" height="129.6" fill="#c9daf5" stroke="#223"/>
+<text x="398.56" y="636.16" text-anchor="middle" font-size="10">core_rx</text>
+<rect x="52.96" y="636.16" width="60.48" height="60.48" fill="#c9daf5" stroke="#223"/>
+<text x="83.2" y="666.4" text-anchor="middle" font-size="10">core_guard</text>
+<rect x="480.64" y="623.2" width="69.12" height="69.12" fill="#c9daf5" stroke="#223"/>
+<text x="515.2" y="657.76" text-anchor="middle" font-size="10">core_queue</text>
+<rect x="199.84" y="560.56" width="127.44" height="127.44" fill="#c9daf5" stroke="#223"/>
+<text x="263.56" y="624.28" text-anchor="middle" font-size="10">core_prompt</text>
+<rect x="493.6" y="748.48" width="69.12" height="69.12" fill="#c9daf5" stroke="#223"/>
+<text x="528.16" y="783.04" text-anchor="middle" font-size="10">cdc_hi</text>
+<rect x="424.48" y="752.8" width="64.8" height="64.8" fill="#c9daf5" stroke="#223"/>
+<text x="456.88" y="785.2" text-anchor="middle" font-size="10">cdc_ci</text>
+<rect x="78.88" y="770.08" width="43.2" height="47.52" fill="#c9daf5" stroke="#223"/>
+<text x="100.48" y="793.84" text-anchor="middle" font-size="10">phy_pad</text>
+<rect x="126.4" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="139.36" y="765.76" text-anchor="middle" font-size="8">a0</text>
+<rect x="204.16" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="217.12" y="765.76" text-anchor="middle" font-size="8">a1</text>
+<rect x="281.92" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="294.88" y="765.76" text-anchor="middle" font-size="8">a2</text>
+<rect x="359.68" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="372.64" y="765.76" text-anchor="middle" font-size="8">a3</text>
+<rect x="165.28" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="178.24" y="765.76" text-anchor="middle" font-size="8">a4</text>
+<rect x="243.04" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="256" y="765.76" text-anchor="middle" font-size="8">a5</text>
+<rect x="320.8" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="333.76" y="765.76" text-anchor="middle" font-size="8">a6</text>
+<rect x="394.24" y="713.92" width="25.92" height="103.68" fill="#f5d9c4" stroke="#223"/>
+<text x="407.2" y="765.76" text-anchor="middle" font-size="8">a7</text>
+<path d="M126.4,765.76 L123.4,765.76 L123.4,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M139.36,713.92 L139.36,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M204.16,765.76 L201.16,765.76 L201.16,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M217.12,713.92 L217.12,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M281.92,765.76 L278.92,765.76 L278.92,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M294.88,713.92 L294.88,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M359.68,765.76 L356.68,765.76 L356.68,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M372.64,713.92 L372.64,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M165.28,765.76 L162.28,765.76 L162.28,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M178.24,713.92 L178.24,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M243.04,765.76 L240.04,765.76 L240.04,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M256,713.92 L256,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M320.8,765.76 L317.8,765.76 L317.8,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M333.76,713.92 L333.76,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M394.24,765.76 L391.24,765.76 L391.24,683.92" stroke="#1f4fd8" stroke-width="2" fill="none" marker-end="url(#a)" opacity="0.7"/>
+<path d="M407.2,713.92 L407.2,693.92" stroke="#b5480e" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#b)"/>
+<path d="M125,793.08 L123.08,793.08" stroke="#1f4fd8" stroke-width="4" marker-end="url(#a)"/>
+<path d="M125,698.08 L98.32,451.4" stroke="#1f4fd8" stroke-width="4" marker-end="url(#a)"/>
+<text x="689.36" y="50">legend / intent:</text>
+<text x="689.36" y="64">8 phy_adp lanes, 51.84 x 207.36, pins on W face</text>
+<text x="689.36" y="78">(409/adp: c_d 128 -> cdc_pc, r_d 128 &lt;- phy_pad,</text>
+<text x="689.36" y="92">rx_flit 147) + tx_flit 147 on N face</text>
+<text x="689.36" y="106">blue: W-face escape into the gap, then up / west</text>
+<text x="689.36" y="120">orange dashed: tx/rx flits to the serdes windows (N)</text>
+<text x="689.36" y="134">rule: one lane per adp, lanes side by side;</text>
+<text x="689.36" y="148">gap sized from bits: 409 b / (44.6 V tracks/um x 0.8)</text>
+<text x="689.36" y="162">= 11.5 um minimum; 8.64 um before (ratio 1.06),</text>
+<text x="689.36" y="176">25.92 um now (6 gaps) + 17.28 um (adp3|adp7): 0.35-0.53</text>
+<text x="689.36" y="190">cdc_ci slides +103.68 um to make room (8.64 lattice)</text>
+<text x="689.36" y="204">phy_pad stays W of the comb (r_d/in_* partner),</text>
+<text x="689.36" y="218">cdc_pc stays NW (c_d partner); serdes on N face</text>
+<text x="689.36" y="232">no search: hand layout, legal.py 0, lattice-legal</text>
+</svg>
