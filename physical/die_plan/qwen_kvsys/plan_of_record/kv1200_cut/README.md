@@ -13,3 +13,6 @@ Gates measured (epyc4, nice 19):
   because the message carries the macro instance name (pvgN_pM) that the slot swap renames; keyed by type+slot, 0 new, 0 gone (same 24 'station cells intersect physical macros' errors as base).
 - hub_Wi needed scripts/tapfix.py: without it check.py aborts (ValueError kv3_hub_Wi: added tap clk_t70 violates outline/halo/tap spacing); CPL-KV-PV's 'G0 0 new' was not run on the composed plan.
 - station_lint.py: 0 INVERTED; 40 NONMONOTONE (advisory; base has the same class, e.g. kv3_pv_v6n ft slots).
+
+## BIND fix (11-11): final plan = step4 with kv3_sys_c from kvr2 (scripts/sysc_base.py)
+step4 (bfe4c242) fails strict bind: EMIT kv3_sys_c rst_n_t31 D=rst_rl_80 != rst_rl_64 (kvfix1 overlay shifts 6 sys_c contents by 0.864 um). With kvr2 sys_c: plan md5 5091ada33f141d199368685b1d225f91, strict bind RC 0, 0 errors, 160 partitions, 2545 crossings (epyc4 dkv98/bind_vA); base kvr2 also binds. G0 130 = base, slot-keyed 0 new. Asbuilt: strip the absolute dkv97/src_zbk/ prefix (asbuilt_rel.json) so regen scripts resolve inside the bound src.
