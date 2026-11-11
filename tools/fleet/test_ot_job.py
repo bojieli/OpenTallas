@@ -125,6 +125,37 @@ class SeedMtime(Tmp):
         self.assertEqual(os.stat(J + "/work/vclk_ff.sdc").st_mtime, self.OLD_SDC)
 
 
+class ReturnMtime(Tmp):
+    """RETURN-MTIME: copy_out (the return copy) keeps source mtimes, so restored checkpoints stay newer than inputs"""
+    OLD_V, OLD_SDC = 1_700_000_000, 1_600_000_000
+
+    def tree(self):
+        w = os.path.join(self.t, "work")
+        self.mk("run/results/3_5_place_dp.odb", "odb", w)
+        self.mk("rtl/a.sv", "rtl", w)
+        os.utime(w + "/run/results/3_5_place_dp.odb", (self.OLD_V, self.OLD_V))
+        os.utime(w + "/rtl/a.sv", (self.OLD_SDC, self.OLD_SDC))
+        return w
+
+    def test_returned_tree_keeps_source_mtimes(self):
+        w, K = self.tree(), os.path.join(self.t, "K")
+        JOB.copy_out(w, K)
+        self.assertEqual(os.stat(K + "/run/results/3_5_place_dp.odb").st_mtime, self.OLD_V)
+        self.assertEqual(os.stat(K + "/rtl/a.sv").st_mtime, self.OLD_SDC)
+        self.assertLess(os.stat(K + "/rtl/a.sv").st_mtime, os.stat(K + "/run/results/3_5_place_dp.odb").st_mtime)
+
+    def test_identical_dst_takes_source_date_unless_hardlinked(self):
+        w, K = self.tree(), os.path.join(self.t, "K")
+        self.mk("rtl/a.sv", "rtl", K)
+        self.mk("run/results/3_5_place_dp.odb", "odb", K)
+        os.link(K + "/run/results/3_5_place_dp.odb", os.path.join(self.t, "shared.odb"))
+        before = os.stat(K + "/run/results/3_5_place_dp.odb").st_mtime
+        JOB.copy_out(w, K)
+        self.assertEqual(os.stat(K + "/rtl/a.sv").st_mtime, self.OLD_SDC)
+        self.assertEqual(os.stat(K + "/run/results/3_5_place_dp.odb").st_mtime, before)
+        self.assertEqual(os.stat(os.path.join(self.t, "shared.odb")).st_nlink, 2)
+
+
 class Store(Tmp):
     def test_tree_dedup_stage_ro_and_copy(self):
         self.mk("a/x.txt", "same")

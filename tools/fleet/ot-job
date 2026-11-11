@@ -204,13 +204,21 @@ def _copy_file(src, dst):
             os.unlink(dst)
         os.symlink(os.readlink(src), dst)
         return
+    st = os.stat(src)
     if os.path.isfile(dst) and not os.path.islink(dst) and os.path.getsize(dst) == os.path.getsize(src) \
             and S.sha_file(dst) == S.sha_file(src):
+        d = os.stat(dst)
+        if d.st_nlink == 1 and d.st_mtime_ns != st.st_mtime_ns:     # a hardlinked dst is left alone (shared inode)
+            os.utime(dst, ns=(st.st_atime_ns, st.st_mtime_ns))
         return
     if os.path.lexists(dst):
         os.unlink(dst)
     shutil.copyfile(src, dst)
     shutil.copymode(src, dst)
+    # RETURN-MTIME (KW-FIX-44 11-10, COORD; HBM-COLLECT-1 q_spb0 ddfecd820a35 a2): the returned copy keeps the source
+    # date.  copyfile dated every returned file at return time in walk order, so a kit came back with rtl/ newer than
+    # its run/results checkpoints and the next resume stopped at RESYNTH-GUARD (exit 12).
+    os.utime(dst, ns=(st.st_atime_ns, st.st_mtime_ns))
 
 
 def copy_out(src, dst):
