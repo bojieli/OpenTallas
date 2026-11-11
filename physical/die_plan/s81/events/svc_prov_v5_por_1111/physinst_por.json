@@ -1,0 +1,362 @@
+{
+ "schema": "s81.svcprov_physinst_1111.v1",
+ "event": "SVCPROV-PHYSINST-1111",
+ "input": "physical/die_plan/s81/events/svc_prov_v5_por_1111/plan_h2_2249_por_v5_347ecb05070dbc68.json.gz (gunzip)",
+ "input_sha256": "347ecb05070dbc68ef66e8a25eb2b8cfa5dac4fa61d3017189bcac226d2c3c67",
+ "output_sha256": "4759c251d544a0f23b9ae66c8005e6b378a51f5048665e43a3e1a1426124a22b",
+ "n_added": 56,
+ "types": [
+  "svc_hi_dsdv_svc_rs__t1",
+  "svc_hi_dsdv_svc_rs__t2",
+  "svc_hi_dsdv_svc_rs__t3",
+  "svc_hi_dsdv_svc_rs__t4",
+  "svc_hi_dsdv_svc_rs__t5",
+  "svc_hi_dsdv_svc_rs__t6",
+  "svc_lo_dsdv_svc_rs__t1",
+  "svc_lo_dsdv_svc_rs__t2",
+  "svc_lo_dsdv_svc_rs__t3",
+  "svc_lo_dsdv_svc_rs__t4",
+  "svc_lo_dsdv_svc_rs__t5",
+  "svc_lo_dsdv_svc_rs__t6",
+  "svc_lo_dsdv_svc_rs__t7",
+  "svc_lo_dsdv_svc_rs_w__t1"
+ ],
+ "added": [
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff0"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[1].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff8"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[2].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff16"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "list": "hard_cores",
+   "inst": "u_rsv.u_att.u_eng.g_tr[3].g_x.u_tr",
+   "physical_master": "ot_hdc_v41x_attn_tr_x_xoff24"
+  }
+ ]
+}

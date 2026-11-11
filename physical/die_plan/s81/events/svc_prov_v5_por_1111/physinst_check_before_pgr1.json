@@ -1,0 +1,23 @@
+{
+ "plan": "before",
+ "types": 205,
+ "type_errors": {
+  "svc_hi_dsdv_svc_rs__t1": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_hi_dsdv_svc_rs__t2": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_hi_dsdv_svc_rs__t3": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_hi_dsdv_svc_rs__t4": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_hi_dsdv_svc_rs__t5": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_hi_dsdv_svc_rs__t6": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t1": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t2": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t3": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t4": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t5": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t6": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs__t7": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+  "svc_lo_dsdv_svc_rs_w__t1": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together"
+ },
+ "n_identity": 717,
+ "clock_taps_error": "ValueError: content u_rsv.u_att.u_eng.g_tr[0].g_x.u_tr: physical_inst and physical_master must be declared together",
+ "types_ok": 191
+}
