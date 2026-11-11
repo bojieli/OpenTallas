@@ -39417,3 +39417,4 @@ FAILED [AUTOPILOT b17ff8897de0] 2026-11-10 23:54:03 PST AUTOPILOT -> KIT-WAVE-12
 - Pin grid (KW-FIX-44): the snap generator has been live on all wave srcs since 21:52 and is in tc1111.
 - epyc4 HBM-TAPS cp -al tree shares 321,083 inodes with tc1111. 437 files that had been made writable were md5-checked and set back to a-w.
 DO_NOT_COUNT.
+- 11-11 00:04 ROOT-MERGE-57 MERGED: kw-fix-44 rc125 7428762f845c (+ wave-ops-1 915bc0b6 srccheck) -> main efb3be8feadd (jg-head jw-qc jc-kv kp-s81 lg-hbm); kw-fix-44 arhost bfe6bc47725a -> main 41d03b68367d (jh-head jx-qc jd-kv kq-s81 lh-hbm); ds85-s81-feedbal-only 02bc4a0da1b5 -> main e597413eb821 (kr-s81); kv-plan-2-reset-scope d2ade6f0b82d -> main 59f116ff277e (ji-head jy-qc je-kv ks-s81 li-hbm); die-hbm-97-taps-cyc 1788d8fc325c -> main c8b267ff3062 (lj-hbm). Sparse tests on epyc8: nothing new once BLOCKED pingrid and irg-el140 were removed; union check bad=0 on each.
