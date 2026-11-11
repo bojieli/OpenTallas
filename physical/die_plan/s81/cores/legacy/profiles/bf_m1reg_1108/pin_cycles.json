@@ -1,0 +1,6 @@
+{"schema": "s81_gunit_bf_m1reg.pin_cycles.v1", "module": "dsdv_gunit_l1f_bf", "form": "gf3",
+ "define": "OT_GUNIT_BF_M1REG",
+ "model": {"added_tx_clk_PIN_cycles": {"o_v": 1, "o_f": 1, "o_l": 1, "o_g": 1, "o_d[244:0]": 1, "o_flt": 1, "sv_lo": 0, "sv_hi": 0, "ctl_lo": 0, "ctl_hi": 0}, "inputs": 0},
+ "basis": "against gf2 (plan latency): every bf data/valid output is the gf2 output one edge later; sv_*/ctl_* untouched",
+ "proof": "lock-step bench bench/ (gold = gf2 module, outputs delayed one edge): 1500 cycles, 1477 compares, 0 mismatches; mutant OT_GUNIT_BF_M1REG_MUT (u_m1 reads unregistered c1) mismatches from cycle 6",
+ "owed": "compiler and token rescheduling of the bf consumer (+1 cycle) by the die owner, as for bksel rf7"}
