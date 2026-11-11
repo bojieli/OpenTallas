@@ -41067,6 +41067,31 @@ This is COORD (4): widen the macro streets on kv3_hgi* only. EQ-gated; the outli
   - Deliverables: the latency row + compiler reschedule, a TOK check, EQ with the cycle declared, and a pilot on cbn_q11 (the a14 kit inputs) measuring hold AND setup against baseline. Then cbx_q10. QC-NK-HOLD owns it.
   - The lec.py lockup rule (aed51a9468d6) still lands: it is a general correctness fix, tested, and default-off in bind.
   - General rule from this: when a fix trades setup against hold, prefer a pipeline cycle (pin cycles are cheap, owner 11-03).
+- 2026-11-11 07:46 PST READY [bind-subtype] BIND-SUBTYPE-2 -> COORD, DIE-HBM-98, KW-FIX-43 (DO_NOT_COUNT): SFU sub-type rebind, proven; recipe for the 12:00 canonical bind.
+  - Branch claude/bind-subtype-1111@de1e974cc5. The reusable pieces:
+    - tools/die_plan/bind_subtype.py: one-to-one renames join composition_alias, so partition pins, lane packing and the r8 table keep the native names.
+    - physical/die_plan/hbm/bind/subtype/run/hook_subtype.py: two exact anchors in bind.py.
+    - tools/die_plan/hbm_subtype_asbuilt.py: the manifest generator (rule + glue/sub-core files + sub_core_leaf_variants; sub_core_leaf is unchanged).
+    - tools/die_plan/subtype_wiring_check.py.
+    - run/bind_subtype.sh, the recipe.
+  - Bind: /srv/opentallas-scratch2/claude/bind-subtype-1111/bind_p11t_taps_cyc_vK5d_c12_subtype on epyc4 (built there), with copies on epyc7 and epyc8 (sha256 -c OK).
+    - Plan 29333b2b, strict, BIND_OK, 0 errors, 32 SFU leaves substituted.
+    - SHA256SUMS sha256 894430f483c71b708570723c71fd2749f679af0be21bd7d672cb0ab62f672d19; bind_report 4f9adc55c02561ca.
+    - Only epyc4 has the src_ov overlay that bind.f names. SRC was die-hbm-97-taps/src_hbmf4_m3 (SRC_VERIFIED).
+  - Wiring check, NEW vs the taps bind: 8/8 PASS. Substitutions per type, each also __physical_v1: q_b110 4, q_b111 5, q_b112 5, q_b113 2. The one-bit-swap negative FAILs.
+    - Against the taps bind, .sv files differ only in these 8 types plus comment-only lines in q_hub_ne/q_hub_nw. reset_tree.json differs only in the manifest path.
+  - lec.py q_b110, old bound vs new bound with the fr/ex/bk masters blackboxed: EQUIVALENT, 89288/89288 points. The negative is NOT EQUIVALENT (2 points: sfu_vi_q[0:1]).
+  - Recipe delta vs bind_taps.sh:
+    - Copy bind_subtype.py and run hook_subtype.py into OV tools.
+    - Run hbm_subtype_asbuilt.py BASE_AB -> AB, and copy the glue file.
+    - The bind out dir gets asbuilt.json as a real file (md5 checked), not a symlink.
+    - BST_L and BST_SRC may be overridden.
+    - This took 4 fixes to the bind, each shown by a failed strict bind: the missing asbuilt.json, an EMIT parent-ID strap mismatch, 60 R8_STALE/UNCOVERED errors, and lane packing that moved.
+  - Release: the "WAIT split rebind" hold on q_b110-112 is released in the canonical bind. They count only after the scheduler/token check on the +820 cycles. No pre-cut relaunch is requested. q_b113 is out of the batch: it binds and passes, but it is not asked for.
+  - Root (TKM, not in this READY):
+    - ctlrst root_core kit LEC is EQUIVALENT (14609/14609). dflt is NOT EQUIVALENT (6355 points differ), so the root uses ctlrst.
+    - Full-shape single-chain bench, ctlrst: full2048 PASS (4096/4096 gold words, 3507 cycles = exp1, shift 448) and part700 PASS (1400/1400 words, 2496 cycles = exp1). MUTU FAILs with 339 gold mismatches. MUTN FAILs, but through the tile's own assertion (stage C entered while the tile conveys), not the gold compare.
+    - The N-way root rule and its wiring/LEC have not started, so the root stays held for 12:00.
 - 2026-11-11 07:40 PST ASK [QC-NK-HOLD -> COORD (owner direction "pipeline cycle"); cc DIE-QC-99] A plain +1 rising-edge register next to the NK does NOT meet hold by construction, and the a14 baseline already proves it. The WORST baseline NK hold path (-357.2) is exactly that topology: a station flop in the pin strip (u_u_fab_u_x_3_3.u_st.tap_d[204], on fabric tap clk_t22) -> u_t33/n_?. Data delay is only 49 ps (clk->q + one INV), arrival 74.0. Required time is 431.3: NK ck at -190.5 (clk_c3 pre-skew -374 + 183 of tree/wire) + CRPR 25 + library hold 596.7. The NK hold arc (457-774) is larger than the clk_c pre-skew (416/566), so any rising-edge launch on the fabric clock lands 300-360 ps early, whatever the wire length. A register on clk_c instead is worse (the full arc, about -700). Evidence: scratchpad/coreplace/qc-nk-hold/base_a14_measure_ff.log.
 What the pipeline cycle DOES fix is setup: the long fabric wire gets a full cycle. That is the TT -1076 / 1321 latch-D cost of form A.
 RECOMMENDED (A+P): +1 pipeline register next to the NK on the nearest fabric tap, then the lockup latch (ot_dp_lk, transparent-low) between that register and the NK pin. The register owns setup: a full cycle on the long wire. The latch owns hold: +T/2, with no setup cost because reg->latch->NK is a short hop, so the data is at the latch well before T/2. Latency: +1 cycle on NK n_a/n_b/tap, declared as a pin-cycle row + compiler reschedule + TOK check (TOK-VERIFY-1) + EQ with the cycle declared. The latch stays cycle-neutral (lec bbi rule, aed51a9468d6).
