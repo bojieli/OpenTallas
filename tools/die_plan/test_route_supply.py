@@ -153,3 +153,26 @@ def test_grt_transition_halving_m6_over_m5_obs(tmp_path):
     assert obs["M7"][0, 0] == 1.0
     assert "M6" in rs.GRT_TRANSITION and "M2" not in rs.GRT_TRANSITION
     assert r1["regions"]["core_H"]["p99"] > 1.0 and rs_cfg["bin_um"] > 0
+
+
+def test_kit_lef_replaces_whole_block_template(tmp_path):
+    """a plan M1-M7 template defers to the kit's real view LEF (route_supply_kit_views.json) when one exists."""
+    plan(tmp_path, layers_a=("M1", "M2", "M3", "M4", "M5", "M6", "M7"), n=1500)
+    _, r0, _ = run(tmp_path)
+    kv = tmp_path / "kv.json"
+    kv.write_text(json.dumps({"tst": {"blk": {"obs": {"M1": .9, "M2": .9, "M3": .5, "M4": .4, "M5": .25,
+                                                      "M6": .1, "M7": .1}}}}))
+    _, r1, _ = run(tmp_path, "--kit-views", str(kv))
+    assert any(k.startswith("plan-template") for k in r0["obs_src"])
+    assert "kit-lef" in r1["obs_src"] and not any(k.startswith("plan-template") for k in r1["obs_src"])
+    assert r1["regions"]["core_H"]["p99"] < r0["regions"]["core_H"]["p99"]   # porous real view frees M4/M6
+
+
+def test_margin_default_and_what_if_options_run(tmp_path):
+    plan(tmp_path, n=2500)
+    assert rs.DEFAULTS["margin_bins"] == 9
+    _, r9, _ = run(tmp_path)
+    _, r2, _ = run(tmp_path, "--margin-bins", "2")
+    _, rw, _ = run(tmp_path, "--pin-escape", "--station-spread")
+    assert r9["regions"]["core_H"]["p99"] <= r2["regions"]["core_H"]["p99"] + 1e-9   # wider detour pool never worse
+    assert rw["verdict"] in ("FLAG", "ok")

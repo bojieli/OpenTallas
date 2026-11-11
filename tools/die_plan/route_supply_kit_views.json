@@ -1,0 +1,1228 @@
+{
+ "schema": "opentallas.route_supply_kit_views.v1",
+ "note": "MEASURED per-layer OBS area fraction of the macro LEFs the kit-wave kits hand to GRT (gen/<type>/macros/*.lef, latest by mtime per die x macro); read-only harvest by PLAN-ROUTE-1 2026-11-10. route_supply.py uses it for a core whose repo LEF is missing or a whole-block template.",
+ "hbm": {
+  "ot_sram_1r1w2c_32x64_m1": {
+   "obs": {},
+   "size": [
+    31.992,
+    17.304
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hnx_fused_hub_n4ext/attempt_16/gen/ot_hnx_fused_hub_n4ext_d54df49f3760/macros/ot_sram_1r1w2c_32x64_m1.lef"
+  },
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "obs": {},
+   "size": [
+    174.744,
+    70.488
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16/attempt_9/gen/hnx_vms_bank_q0_faces__vecd4ae_512b2172bf16/macros/ot_sram_1r1w_1024x256_m2_r2c2.lef"
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "obs": {},
+   "size": [
+    94.824,
+    41.064
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hnx_fused_hub_n4ext/attempt_16/gen/ot_hnx_fused_hub_n4ext_d54df49f3760/macros/ot_sram_1r1w_128x256_m1_r2c2.lef"
+  },
+  "ot_sram_1r1w_256x256_m2_r0c0_g256": {
+   "obs": {},
+   "size": [
+    169.368,
+    28.392
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hnx_idxn_keybuf_slice/attempt_4/gen/ot_hnx_idxn_keybuf_slice_cf0fd580a934/macros/ot_sram_1r1w_256x256_m2_r0c0_g256.lef"
+  },
+  "ot_sram_1r1w_256x256_m2_r2c2": {
+   "obs": {},
+   "size": [
+    172.824,
+    41.064
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_idx_rootctl_static_am/attempt_17/gen/ot_hbm_idx_rootctl_static_am_d3147e0cfabb/macros/ot_sram_1r1w_256x256_m2_r2c2.lef"
+  },
+  "ot_sram_1r1w_256x64_m2_r0c0_g64": {
+   "obs": {},
+   "size": [
+    53.16,
+    28.392
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hnx_idxn_keybuf_slice/attempt_4/gen/ot_hnx_idxn_keybuf_slice_cf0fd580a934/macros/ot_sram_1r1w_256x64_m2_r0c0_g64.lef"
+  },
+  "ot_sram_1r1w_512x256_m1_r2c2": {
+   "obs": {},
+   "size": [
+    96.552,
+    69.66
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sfu_programme_store_r10/attempt_12/gen/ot_hgi_sfu_programme_store_r10_67927302fa18/macros/ot_sram_1r1w_512x256_m1_r2c2.lef"
+  },
+  "w": {
+   "obs": {},
+   "size": [
+    96.552,
+    69.66
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sfu_programme_store_r10/attempt_12/gen/ot_hgi_sfu_programme_store_r10_67927302fa18/macros/ot_sram_1r1w_512x256_m1_r2c2.lef"
+  }
+ },
+ "qwen_compute": {
+  "d2d_sram_1r1w_64x137_m1_r2c2_p192": {
+   "obs": {},
+   "size": [
+    57.912,
+    45.672
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef"
+  },
+  "ot_qfd_ucie_x64_phy": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 0.9995
+   },
+   "size": [
+    777.6,
+    777.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ucie/attempt_10/gen/coll_ucie/macros/ot_qfd_ucie_x64_phy.lef"
+  },
+  "ot_rom_4096x266_m8": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9988
+   },
+   "size": [
+    121.848,
+    62.952
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v2__cl55be2264/attempt_16/gen/sle_stm_v2__cl55be2264/macros/ot_rom_4096x266_m8.lef"
+  },
+  "ot_rom_4096x72_m8": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9962
+   },
+   "size": [
+    38.04,
+    62.952
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/ot_rom_4096x72_m8.lef"
+  },
+  "ot_sram_1r1w2c_64x546_m1": {
+   "obs": {},
+   "size": [
+    178.632,
+    81.0
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_s/attempt_19/gen/coll_s/macros/ot_sram_1r1w2c_64x546_m1.lef"
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "obs": {},
+   "size": [
+    94.824,
+    41.064
+   ],
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_128x256_m1_r2c2.lef"
+  },
+  "ot_sram_1r1w_32x128_m1": {
+   "obs": {},
+   "size": [
+    51.408,
+    20.79
+   ],
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/tt_ctlm/attempt_11/gen/tt_ctlm/macros/ot_sram_1r1w_32x128_m1.lef"
+  },
+  "ot_sram_1r1w_32x512_m1": {
+   "obs": {},
+   "size": [
+    167.4,
+    52.92
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/native59/attempt_9/gen/native59/macros/ot_sram_1r1w_32x512_m1.lef"
+  },
+  "ot_sram_1r1w_32x64_m1": {
+   "obs": {},
+   "size": [
+    31.968,
+    17.28
+   ],
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_32x64_m1.lef"
+  },
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+   "obs": {},
+   "size": [
+    171.288,
+    77.784
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/ot_sram_1r1w_64x512_m1_r2c2.lef"
+  },
+  "w": {
+   "obs": {},
+   "size": [
+    94.824,
+    41.064
+   ],
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_128x256_m1_r2c2.lef"
+  }
+ },
+ "qwen_kvsys": {
+  "d2d_sram_1r1w_64x137_m1_r2c2_p288": {
+   "obs": {},
+   "size": [
+    57.912,
+    67.512
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_c/attempt_7/gen/kv3_sys_c/macros/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef"
+  },
+  "kv3_head_eighth_e0": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0,
+    "M6": 0.0338,
+    "M7": 0.0406
+   },
+   "size": [
+    216.0,
+    216.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5/macros/kv3_head_eighth_e0.lef"
+  },
+  "kv3_head_eighth_e1": {
+   "obs": {
+    "M1": 0.9693,
+    "M2": 0.9693,
+    "M3": 0.9693,
+    "M4": 0.9693,
+    "M5": 0.9693,
+    "M6": 0.0161,
+    "M7": 0.0123
+   },
+   "size": [
+    216.0,
+    216.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5/macros/kv3_head_eighth_e1.lef"
+  },
+  "kv3_head_eighth_e2": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0,
+    "M6": 0.0164,
+    "M7": 0.0175
+   },
+   "size": [
+    216.0,
+    216.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5/macros/kv3_head_eighth_e2.lef"
+  },
+  "kv3_head_eighth_e5": {
+   "obs": {
+    "M1": 0.98,
+    "M2": 0.98,
+    "M3": 0.98,
+    "M4": 0.98,
+    "M5": 0.98,
+    "M6": 0.0144,
+    "M7": 0.0127
+   },
+   "size": [
+    216.0,
+    216.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5/macros/kv3_head_eighth_e5.lef"
+  },
+  "kv3_head_eighth_e6": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0,
+    "M6": 0.025,
+    "M7": 0.0306
+   },
+   "size": [
+    216.0,
+    216.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5/macros/kv3_head_eighth_e6.lef"
+  },
+  "kv3_pv_pair": {
+   "obs": {
+    "M1": 0.9667,
+    "M2": 0.9667,
+    "M3": 0.9667,
+    "M4": 0.9667,
+    "M5": 0.9667,
+    "M6": 0.0146,
+    "M7": 0.012
+   },
+   "size": [
+    380.16,
+    190.08
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v8/attempt_11/gen/kv3_pv_v8/macros/kv3_pv_pair.lef"
+  },
+  "ot_qfd_serdes_112g_x6_phy_w521": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9997,
+    "M5": 1.0
+   },
+   "size": [
+    1848.96,
+    972.0
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_SD_v1/attempt_20/gen/kv3_sys_SD_v1/macros/ot_qfd_serdes_112g_x6_phy_w521.lef"
+  },
+  "ot_qfd_serdes_112g_x6_phy_w522": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9997,
+    "M5": 1.0
+   },
+   "size": [
+    1848.96,
+    972.0
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_SD/attempt_12/gen/kv3_sys_SD/macros/ot_qfd_serdes_112g_x6_phy_w522.lef"
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 0.9995
+   },
+   "size": [
+    777.6,
+    777.6
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_c/attempt_7/gen/kv3_sys_c/macros/ot_qkvd_ucie_x64_phy.lef"
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    172.8
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v8/attempt_11/gen/kv3_pv_v8/macros/ot_qwen_tp8_pv_join_t.lef"
+  },
+  "ot_rom_64x32_m2": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9837
+   },
+   "size": [
+    8.856,
+    9.192
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_c/attempt_7/gen/kv3_sys_c/macros/ot_rom_64x32_m2.lef"
+  },
+  "ot_sram_1r1w_256x128_m1_r2c2": {
+   "obs": {},
+   "size": [
+    57.048,
+    42.12
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/ot_sram_1r1w_256x128_m1_r2c2.lef"
+  },
+  "ot_sram_1r1w_64x128_m1_r2c2": {
+   "obs": {},
+   "size": [
+    55.32,
+    22.44
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/ot_sram_1r1w_64x128_m1_r2c2.lef"
+  },
+  "qkd_ectlk_q0": {
+   "obs": {
+    "M1": 0.9938,
+    "M2": 0.9938,
+    "M3": 0.9938,
+    "M4": 0.9938,
+    "M5": 0.9938
+   },
+   "size": [
+    216.0,
+    172.8
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/qkd_ectlk_q0.lef"
+  },
+  "qkd_ectlk_q1": {
+   "obs": {
+    "M1": 0.998,
+    "M2": 0.998,
+    "M3": 0.998,
+    "M4": 0.998,
+    "M5": 0.998
+   },
+   "size": [
+    243.648,
+    172.8
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/qkd_ectlk_q1.lef"
+  },
+  "qkd_ectlk_q2": {
+   "obs": {
+    "M1": 0.9986,
+    "M2": 0.9986,
+    "M3": 0.9986,
+    "M4": 0.9986,
+    "M5": 0.9986
+   },
+   "size": [
+    243.648,
+    172.8
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/qkd_ectlk_q2.lef"
+  },
+  "qkd_ectlk_q3": {
+   "obs": {
+    "M1": 0.9963,
+    "M2": 0.9963,
+    "M3": 0.9963,
+    "M4": 0.9963,
+    "M5": 0.9963
+   },
+   "size": [
+    216.0,
+    172.8
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg/macros/qkd_ectlk_q3.lef"
+  },
+  "qkd_hbm3e_phy_pc4": {
+   "obs": {
+    "M1": 0.9968,
+    "M2": 0.9968,
+    "M3": 0.9968,
+    "M4": 0.9968,
+    "M5": 0.9968,
+    "M6": 0.9968
+   },
+   "size": [
+    302.4,
+    1501.2
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_phy/attempt_11/gen/kv3_phy/macros/qkd_hbm3e_phy_pc4.lef"
+  },
+  "w": {
+   "obs": {},
+   "size": [
+    57.912,
+    67.512
+   ],
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_c/attempt_7/gen/kv3_sys_c/macros/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef"
+  }
+ },
+ "s81": {
+  "dsdv_bk_g": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    216.0,
+    172.8
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/macros/dsdv_bk_g.lef"
+  },
+  "dsdv_bksel_c": {
+   "obs": {
+    "M1": 0.9127,
+    "M2": 0.9305,
+    "M3": 0.917,
+    "M4": 0.5581,
+    "M5": 0.3315,
+    "M6": 0.2016
+   },
+   "size": [
+    388.8,
+    129.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/macros/dsdv_bksel_c.lef"
+  },
+  "dsdv_bksel_q": {
+   "obs": {
+    "M1": 0.9278,
+    "M2": 0.9531,
+    "M3": 0.5336,
+    "M4": 0.4051,
+    "M5": 0.2515,
+    "M6": 0.4249,
+    "M7": 0.3163
+   },
+   "size": [
+    648.0,
+    648.0
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/macros/dsdv_bksel_q.lef"
+  },
+  "dsdv_idx_tx_n32": {
+   "obs": {
+    "M1": 0.907,
+    "M2": 0.9386,
+    "M3": 0.5053,
+    "M4": 0.4719,
+    "M5": 0.2383
+   },
+   "size": [
+    626.4,
+    561.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/macros/dsdv_idx_tx_n32_clkm5_1101.lef"
+  },
+  "dsdv_idx_tx_n32_clkm5_1101": {
+   "obs": {
+    "M1": 0.907,
+    "M2": 0.9386,
+    "M3": 0.5053,
+    "M4": 0.4719,
+    "M5": 0.2383
+   },
+   "size": [
+    626.4,
+    561.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/macros/dsdv_idx_tx_n32_clkm5_1101.lef"
+  },
+  "dsfd_bf_front_roots": {
+   "obs": {
+    "M1": 0.9421,
+    "M2": 0.9472,
+    "M3": 0.9201,
+    "M4": 0.8595,
+    "M5": 0.7688
+   },
+   "size": [
+    116.64,
+    198.72
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_bf_front_roots.lef"
+  },
+  "dsfd_cfifo_crs4": {
+   "obs": {
+    "M1": 0.9233,
+    "M2": 0.9234,
+    "M3": 0.8564,
+    "M4": 0.3326,
+    "M5": 0.5279
+   },
+   "size": [
+    280.8,
+    69.12
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_cfifo_crs4.lef"
+  },
+  "dsfd_coll_lane_w_safe8_ntf": {
+   "obs": {
+    "M1": 0.9854,
+    "M2": 0.9854,
+    "M3": 0.9854,
+    "M4": 0.9854,
+    "M5": 0.9854,
+    "M6": 0.2109
+   },
+   "size": [
+    295.92,
+    444.96
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/macros/dsfd_coll_lane_w_safe8_ntf.lef"
+  },
+  "dsfd_node_LLd": {
+   "obs": {
+    "M1": 0.8502,
+    "M2": 0.8603,
+    "M3": 0.7477,
+    "M4": 0.3896,
+    "M5": 0.429
+   },
+   "size": [
+    43.2,
+    77.76
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl8b686b3e/attempt_21/gen/col_h10_r2__t1__cl8b686b3e/macros/dsfd_node_LLd.lef"
+  },
+  "dsfd_node_LLfd": {
+   "obs": {
+    "M1": 0.8502,
+    "M2": 0.8602,
+    "M3": 0.7388,
+    "M4": 0.4069,
+    "M5": 0.428
+   },
+   "size": [
+    43.2,
+    77.76
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_node_LLfd.lef"
+  },
+  "dsfd_node_LLfu": {
+   "obs": {
+    "M1": 0.8502,
+    "M2": 0.8595,
+    "M3": 0.7185,
+    "M4": 0.3997,
+    "M5": 0.4122
+   },
+   "size": [
+    43.2,
+    77.76
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_node_LLfu.lef"
+  },
+  "dsfd_node_NNfd": {
+   "obs": {
+    "M1": 0.8502,
+    "M2": 0.8503,
+    "M3": 0.7285,
+    "M4": 0.3284,
+    "M5": 0.4642
+   },
+   "size": [
+    43.2,
+    77.76
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_node_NNfd.lef"
+  },
+  "dsfd_node_NNfu": {
+   "obs": {
+    "M1": 0.9,
+    "M2": 0.9,
+    "M3": 0.9,
+    "M4": 0.9,
+    "M5": 0.9
+   },
+   "size": [
+    43.2,
+    77.76
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_node_NNfu.lef"
+  },
+  "dsfd_qbank_N": {
+   "obs": {
+    "M1": 0.4662,
+    "M2": 0.5718,
+    "M3": 0.4892,
+    "M4": 0.3813,
+    "M5": 0.599
+   },
+   "size": [
+    60.48,
+    8.64
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_qbank_N.lef"
+  },
+  "dsfd_qbank_S": {
+   "obs": {
+    "M1": 0.9821,
+    "M2": 0.9821,
+    "M3": 0.9821,
+    "M4": 0.9821,
+    "M5": 0.9821
+   },
+   "size": [
+    60.48,
+    25.92
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_qbank_S.lef"
+  },
+  "dsfd_rstg": {
+   "obs": {
+    "M1": 0.8889,
+    "M2": 0.8889,
+    "M3": 0.8889,
+    "M4": 0.8889,
+    "M5": 0.8889
+   },
+   "size": [
+    38.88,
+    34.56
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/dsfd_rstg.lef"
+  },
+  "dsfd_su_t_rxsb": {
+   "obs": {
+    "M1": 0.9507,
+    "M2": 0.9507,
+    "M3": 0.9507,
+    "M4": 0.9507,
+    "M5": 0.9507
+   },
+   "size": [
+    140.4,
+    140.4
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/dsfd_su_t_rxsb.lef"
+  },
+  "dsfd_su_t_rxsf": {
+   "obs": {
+    "M1": 0.9395,
+    "M2": 0.9411,
+    "M3": 0.8906,
+    "M4": 0.3594,
+    "M5": 0.222
+   },
+   "size": [
+    140.4,
+    140.4
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/dsfd_su_t_rxsf.lef"
+  },
+  "ot_dsrom_su_hcpost_lane_pr": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    114.48,
+    114.48
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_dsrom_su_hcpost_lane_pr.lef"
+  },
+  "ot_rom_4096x72_m8": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.9962
+   },
+   "size": [
+    38.04,
+    62.952
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_rom_4096x72_m8.lef"
+  },
+  "ot_s81_cfg7_seq": {
+   "obs": {
+    "M1": 0.6878,
+    "M2": 0.7021,
+    "M3": 0.6401,
+    "M4": 0.6428,
+    "M5": 0.6277
+   },
+   "size": [
+    17.28,
+    51.84
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_s81_cfg7_seq.lef"
+  },
+  "ot_s81_cfg7_seq_bfp": {
+   "obs": {
+    "M1": 0.7962,
+    "M2": 0.8115,
+    "M3": 0.65,
+    "M4": 0.5144,
+    "M5": 0.5229
+   },
+   "size": [
+    30.24,
+    60.48
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_s81_cfg7_seq_bfp.lef"
+  },
+  "ot_s81_kp4_dchn": {
+   "obs": {
+    "M1": 0.9867,
+    "M2": 0.9867,
+    "M3": 0.9867,
+    "M4": 0.9867,
+    "M5": 0.9867
+   },
+   "size": [
+    276.48,
+    138.24
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/macros/ot_s81_kp4_dchn.lef"
+  },
+  "ot_s81_mu72_lnland_nst": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    112.32,
+    112.32
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/macros/ot_s81_mu72_lnland_nst.lef"
+  },
+  "ot_s81_pma_rxm": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 0.908
+   },
+   "size": [
+    2246.4,
+    129.6
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/macros/ot_s81_pma_rxm.lef"
+  },
+  "ot_s81_pma_txm": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 0.908
+   },
+   "size": [
+    2246.4,
+    129.6
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/macros/ot_s81_pma_txm.lef"
+  },
+  "ot_s81_sstn_base566": {
+   "obs": {
+    "M1": 0.8138,
+    "M2": 0.8163,
+    "M3": 0.9095,
+    "M4": 0.266,
+    "M5": 0.8883
+   },
+   "size": [
+    84.24,
+    30.24
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_s81_sstn_base566.lef"
+  },
+  "ot_s81_sstn_payload536": {
+   "obs": {
+    "M1": 0.9745,
+    "M2": 0.9745,
+    "M3": 0.9745,
+    "M4": 0.9745,
+    "M5": 0.9745
+   },
+   "size": [
+    86.4,
+    25.92
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_s81_sstn_payload536.lef"
+  },
+  "ot_s81sl_ve_m": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    345.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_ve_m_tpl.lef"
+  },
+  "ot_s81sl_ve_m_tpl": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    345.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_ve_m_tpl.lef"
+  },
+  "ot_s81sl_ve_s": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    345.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_ve_s_tpl_w1728.lef"
+  },
+  "ot_s81sl_ve_s_tpl_w1728": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    345.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_ve_s_tpl_w1728.lef"
+  },
+  "ot_s81sl_vn_a": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    356.4,
+    164.16
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vn_a_tpl.lef"
+  },
+  "ot_s81sl_vn_a_tpl": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    356.4,
+    164.16
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vn_a_tpl.lef"
+  },
+  "ot_s81sl_vn_b": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    356.4,
+    172.8
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vn_b_tpl.lef"
+  },
+  "ot_s81sl_vn_b_tpl": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    356.4,
+    172.8
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vn_b_tpl.lef"
+  },
+  "ot_s81sl_vq": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    129.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vq_tpl.lef"
+  },
+  "ot_s81sl_vq_tpl": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    129.6
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vq_tpl.lef"
+  },
+  "ot_s81sl_vs": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    172.8,
+    172.8
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vs.lef"
+  },
+  "ot_s81sl_vsw": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    224.64,
+    224.64
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vsw_tpl.lef"
+  },
+  "ot_s81sl_vsw_tpl": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 1.0,
+    "M5": 1.0
+   },
+   "size": [
+    224.64,
+    224.64
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_s81sl_vsw_tpl.lef"
+  },
+  "ot_sram_1r1w2c_16x257_m1_p192": {
+   "obs": {},
+   "size": [
+    89.448,
+    76.968
+   ],
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/seqhost__t1/attempt_7/gen/seqhost__t1/macros/ot_sram_1r1w2c_16x257_m1_p192.lef"
+  },
+  "ot_sram_1r1w2c_16x289_m1_p192": {
+   "obs": {},
+   "size": [
+    99.144,
+    86.136
+   ],
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/seqhost__t1/attempt_7/gen/seqhost__t1/macros/ot_sram_1r1w2c_16x289_m1_p192.lef"
+  },
+  "ot_sram_1r1w2c_64x546_m1": {
+   "obs": {},
+   "size": [
+    178.632,
+    81.0
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/macros/ot_sram_1r1w2c_64x546_m1.lef"
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "obs": {},
+   "size": [
+    94.824,
+    41.064
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/macros/ot_sram_1r1w_128x256_m1_r2c2.lef"
+  },
+  "ot_sram_1r1w_32x128_m1": {
+   "obs": {},
+   "size": [
+    51.408,
+    20.79
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/macros/ot_sram_1r1w_32x128_m1.lef"
+  },
+  "ot_sram_1r1w_32x546_m1": {
+   "obs": {},
+   "size": [
+    177.768,
+    81.0
+   ],
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/macros/ot_sram_1r1w_32x546_m1.lef"
+  },
+  "ot_sram_1r1w_512x128_m4_r0c0": {
+   "obs": {},
+   "size": [
+    169.368,
+    29.16
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_sram_1r1w_512x128_m4_r0c0.lef"
+  },
+  "ot_sram_1r1w_512x128_m4_r2c2": {
+   "obs": {},
+   "size": [
+    174.12,
+    29.736
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/macros/ot_sram_1r1w_512x128_m4_r2c2.lef"
+  },
+  "ot_v41_bf16_half": {
+   "obs": {
+    "M1": 0.9413,
+    "M2": 0.9413,
+    "M3": 0.9413,
+    "M4": 0.9413,
+    "M5": 0.9413
+   },
+   "size": [
+    241.92,
+    95.04
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_v41_bf16_half.lef"
+  },
+  "ot_v41_bf_col3_c": {
+   "obs": {
+    "M1": 1.0,
+    "M2": 1.0,
+    "M3": 1.0,
+    "M4": 0.4482,
+    "M5": 0.0879,
+    "M6": 0.0574
+   },
+   "size": [
+    208.248,
+    198.72
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_v41_bf_col3_c.lef"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10_gb_he": {
+   "obs": {
+    "M1": 0.9739,
+    "M2": 0.9739,
+    "M3": 0.9739,
+    "M4": 0.9739,
+    "M5": 0.9739
+   },
+   "size": [
+    268.38,
+    221.4
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_v41_rom_elem_q_qxpq_w10_gb_he.lef"
+  },
+  "ot_v41_rom_elem_q_qxpq_w10_gb_hw": {
+   "obs": {
+    "M1": 0.9678,
+    "M2": 0.9678,
+    "M3": 0.9678,
+    "M4": 0.9678,
+    "M5": 0.9678
+   },
+   "size": [
+    268.38,
+    221.4
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/macros/ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef"
+  },
+  "w": {
+   "obs": {},
+   "size": [
+    169.368,
+    29.16
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38/macros/ot_sram_1r1w_512x128_m4_r0c0.lef"
+  }
+ },
+ "s81_head": {
+  "ot_s81hd_lep_pair": {
+   "obs": {
+    "M1": 0.9858,
+    "M2": 0.9858,
+    "M3": 0.9858,
+    "M4": 0.9858,
+    "M5": 0.9858,
+    "M6": 0.0473,
+    "M7": 0.0195
+   },
+   "size": [
+    777.6,
+    492.48
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/macros/ot_s81hd_lep_pair.lef"
+  },
+  "ot_sram_1r1w2c_256x64_m1": {
+   "obs": {},
+   "size": [
+    34.584,
+    41.352
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_e/attempt_3/gen/hd_host_e/macros/ot_sram_1r1w2c_256x64_m1.lef"
+  },
+  "ot_sram_1r1w2c_32x64_m1": {
+   "obs": {},
+   "size": [
+    31.992,
+    17.304
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_e/attempt_3/gen/hd_host_e/macros/ot_sram_1r1w2c_32x64_m1.lef"
+  },
+  "ot_sram_1r1w_128x256_m1_r0c0": {
+   "obs": {},
+   "size": [
+    91.8,
+    39.432
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/macros/ot_sram_1r1w_128x256_m1_r0c0.lef"
+  },
+  "ot_sram_1r1w_32x128_m1_r0c0": {
+   "obs": {},
+   "size": [
+    51.432,
+    20.808
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/macros/ot_sram_1r1w_32x128_m1_r0c0.lef"
+  },
+  "ot_sram_1r1w_512x128_m4_r0c0": {
+   "obs": {},
+   "size": [
+    169.368,
+    29.16
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/macros/ot_sram_1r1w_512x128_m4_r0c0.lef"
+  },
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+   "obs": {},
+   "size": [
+    171.288,
+    77.784
+   ],
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_ctl/attempt_2/gen/hd_ctl/macros/ot_sram_1r1w_64x512_m1_r2c2.lef"
+  },
+  "w": {
+   "obs": {},
+   "size": [
+    51.432,
+    20.808
+   ],
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/macros/ot_sram_1r1w_32x128_m1_r0c0.lef"
+  }
+ }
+}

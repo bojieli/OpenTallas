@@ -102,7 +102,7 @@ DEFAULTS = dict(
     glue_um=21.6,
     cell_um2=0.1,              # mean placed std-cell area for the fill ESTIMATE (ASAP7, ~0.09-0.12 um2)
     detour_um=97.2,
-    margin_bins=2,             # free rows/cols beside a macro run that a crossing wire can use            # router detour across the direction of travel (9 bins), calibrated              # pin -> glue cell escape length (2 bins)
+    margin_bins=9,   # bins beside a macro run pooled with it = the detour window (97.2 um); 2 over-weighted V along hard-core columns
 )
 FIX = {
     ("core", "H"): "horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)",
@@ -210,13 +210,27 @@ def macro_view(h, die_dir, repo, cfg):
         if sl:
             obs = lef_obs(sl)
             src = "signed-repo"
+    kv = None
+    kvt = cfg.get("kit_views") or {}
+    stem = Path(str(h.get("lef") or "")).stem
+    for key in (mod, stem):
+        if key and key in kvt:
+            kv = kvt[key]
+            break
     if obs is None and h.get("lef"):
         obs = lef_obs(find_ref(h["lef"], repo))
         if obs is not None:
             src = "plan-lef"
             if all(obs.get(f"M{k}", 0) > 0.99 for k in range(1, 8)):
-                obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
-                src = "plan-template(capped M%d)" % cap
+                if kv:
+                    obs, src = None, None          # whole-block template: the kit's real view LEF wins
+                else:
+                    obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
+                    src = "plan-template(capped M%d)" % cap
+    if obs is None and kv:
+        # repo LEF missing (or a template): the macro LEF the kit hands to GRT (route_supply_kit_views.json)
+        obs = {L: float(f) for L, f in kv["obs"].items()}
+        src = "kit-lef"
     if obs is None and h.get("obs_max"):
         top = min(int(str(h["obs_max"])[1:]), 9)
         obs = {f"M{k}": 1.0 for k in range(1, top + 1)}
@@ -313,6 +327,19 @@ def face_point(W, H, face, window=None):
     return (W if face == "E" else 0.0, y)
 
 
+def face_bit_point(W, H, win, rank):
+    """point of one bit on a face window: rank = (fraction along the window, bits)."""
+    face, (lo, hi) = win
+    f = rank[0]
+    a = lo + f * (hi - lo)
+    if face in ("N", "S"):
+        return (a, H if face == "N" else 0.0)
+    return (W if face == "E" else 0.0, a)
+
+
+SKIP = set(filter(None, os.environ.get("ROUTE_SUPPLY_SKIP", "").split(",")))
+
+
 # ----------------------------------------------------------------------------------------------------------- model
 class Grid:
     def __init__(self, W, H, b):
@@ -321,6 +348,7 @@ class Grid:
         self.dH = np.zeros((self.ny + 1, self.nx + 1))   # difference arrays (density per um^2)
         self.dV = np.zeros((self.ny + 1, self.nx + 1))
         self.wl = 0.0
+        self.cur = None      # demand category being added (ablation: env ROUTE_SUPPLY_SKIP=glue,core,ft,station,ring)
 
     def _rect(self, d, x0, y0, x1, y1, dens):
         b = self.b
@@ -331,12 +359,22 @@ class Grid:
         d[j1, i0] -= dens
         d[j1, i1] += dens
 
-    def net(self, pts, n=1.0):
-        """RUDY: n nets with these terminals."""
+    def net(self, pts, n=1.0, span=0.0):
+        """RUDY: n nets with these terminals.  span > 0: the box is at least span um wide across a long thin
+        net (the router places a bundle of buffered relay wires anywhere within its detour, not on one line)."""
+        if self.cur in SKIP:
+            return
         xs = [p[0] for p in pts]
         ys = [p[1] for p in pts]
         x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
         w, h = max(x1 - x0, self.b), max(y1 - y0, self.b)   # a net shorter than a bin still fills that bin
+        if span > 0:
+            if w < span:
+                x0 -= (span - w) / 2
+                w = span
+            if h < span:
+                y0 -= (span - h) / 2
+                h = span
         x1, y1 = x0 + w, y0 + h
         # H wire length (x1-x0 actual) spread over w x h; per um^2 = (actual w)/(w h)
         aw, ah = max(xs) - min(xs), max(ys) - min(ys)
@@ -347,6 +385,8 @@ class Grid:
         self.wl += n * (aw + ah)
 
     def area_density(self, rect, dens_h, dens_v):
+        if self.cur in SKIP:
+            return
         x0, y0, x1, y1 = rect
         self._rect(self.dH, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_h)
         self._rect(self.dV, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_v)
@@ -467,9 +507,12 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     if npins == 0 and mrects:
         notes.append("no core pin files found")
     bus_pt = {}
+    bus_win = {}
     for bu in t.get("buses", []) or []:
         if bu.get("face"):
             bus_pt[bu["name"]] = face_point(W, H, bu["face"], bu.get("window_um"))
+            if bu.get("window_um") and cfg.get("face_spread", True):
+                bus_win[bu["name"]] = (bu["face"], tuple(bu["window_um"][:2]))
     cc = conns.get(name) or conns.get(re.sub(r"__cl[0-9a-f]{8}.*$", "", name)) or conns.get(
         re.sub(r"__.*$", "", name))
     model = "core_conns" if cc else ("fallback" if npins else "none")
@@ -506,6 +549,25 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 if ("core:" + A) in dd:
                     st_rev[(Bi, bb)].add((A, Bi))
     rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
+    g.cur = "core"
+    # face pin band: the bits of a face bus land spread over its window, in the order of the core pins that drive
+    # them (no crossing), not at one point
+    face_rank = {}
+    if cc and bus_win:
+        groups = defaultdict(list)
+        for inst, pl in pins.items():
+            ci = cc.get(inst, {}) if pl else {}
+            for bus, x, y in pl:
+                for d in ci.get(bus) or []:
+                    k, _, v = str(d).partition(":")
+                    if k == "bus" and v in bus_win:
+                        groups[v].append((inst, bus, x, y))
+        for v, lst in groups.items():
+            along = 0 if bus_win[v][0] in ("N", "S") else 1
+            order = sorted(range(len(lst)), key=lambda i: lst[i][2 + along])
+            for r_, i in enumerate(order):
+                inst, bus, x, y = lst[i]
+                face_rank[(inst, bus, v, x, y)] = ((r_ + 0.5) / len(lst), len(lst))
     for inst, pl in pins.items():
         if not pl:
             continue
@@ -516,11 +578,22 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 if not dl:
                     # pin to type glue logic (not core-to-core): a local escape net from the pin out of the
                     # core face, cfg glue_um long (the glue cells sit next to the core)
+                    g.cur = "glue"
                     g.net([(x, y), escape(x, y, rect_of[inst], cfg["glue_um"])])
+                    g.cur = "core"
                     nglue += 1
                     continue
                 pts = [(x, y)]
                 two_sided = True
+                had_face = False
+                for d in dl:
+                    k, _, v = str(d).partition(":")
+                    if k == "bus" and v in bus_win:
+                        had_face = True
+                        fp = face_bit_point(W, H, bus_win[v], face_rank.get((inst, bus, v, x, y), (0.5, 1)))
+                        pts.append(fp)
+                        dl = [dd for dd in dl if dd != d]
+                        break
                 for d in dl:
                     k, _, v = str(d).partition(":")
                     if k == "core" and v in cen:
@@ -537,8 +610,22 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                         unresolved += 1
                 if len(pts) > 1:
                     # core_conns lists a core-to-core link at BOTH ends: count each end half
-                    g.net(pts, n=0.5 if two_sided and all(not str(d).startswith(("bus:", "face:")) for d in dl)
-                          else 1.0)
+                    w_ = 0.5 if two_sided and not had_face and all(not str(d).startswith(("bus:", "face:")) for d in dl) \
+                        else 1.0
+                    if cfg.get("pin_escape", False) and len(pts) == 2:
+                        # pin band: a core pin leaves its face along the face normal, so a 2-pin link is an L whose
+                        # first leg runs at the pin's own row (W/E face -> H leg at pin y, N/S -> V leg at pin x)
+                        (px_, py_), (qx_, qy_) = pts
+                        x0r, y0r, x1r, y1r = rect_of[inst]
+                        dd_ = {"W": px_ - x0r, "E": x1r - px_, "S": py_ - y0r, "N": y1r - py_}
+                        if min(dd_, key=dd_.get) in ("W", "E"):
+                            mid = (qx_, py_)
+                        else:
+                            mid = (px_, qy_)
+                        g.net([pts[0], mid], n=w_)
+                        g.net([mid, pts[1]], n=w_)
+                    else:
+                        g.net(pts, n=w_)
         else:
             others = [(cen[k], len(pins[k])) for k in pins if k != inst and pins[k]]
             if not others:
@@ -551,6 +638,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     if unresolved:
         notes.append(f"{unresolved} core_conns destinations not placed in the type")
     # ft slots
+    g.cur = "ft"
     ft_bits = 0
     for f in t.get("ft_slots", []) or []:
         wbits = int(f.get("width", 1))
@@ -590,6 +678,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 g.net([p, end])
         ft_bits += wbits
     st_bits = 0
+    g.cur = "station"
     # stations that share a launch pin are ONE driver net to all their first registers (a broadcast bus to 16
     # lanes is a 17-pin net, not 16 two-pin nets); later hops are per link
     fan = defaultdict(list)
@@ -597,13 +686,15 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         pts = [tuple(s["from_um"])] + [tuple(r) for r in s.get("regs_um", [])] + [tuple(s["to_um"])]
         fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, s.get("bits", 1)))
         st_bits += s.get("bits", 1)
+    sp = cfg["detour_um"] if cfg.get("station_spread", False) else 0.0
     for (_, _), lst in fan.items():
         bits = max(n for _, n in lst)
-        g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits)
+        g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits, span=sp)
         for pts, n in lst:
             for a, c in zip(pts[1:], pts[2:]):
-                g.net([a, c], n=n)
+                g.net([a, c], n=n, span=sp)
     # landing rings
+    g.cur = "ring"
     ring_cells = np.zeros((g.ny, g.nx), dtype=bool)
     lc = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
     ring_bits = 0
@@ -657,6 +748,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         ring_cells[j0:j1, i0:i1] = True
         ring_bits += bits
     DH, DV = g.demand()
+    g.cur = "cell"
     # background cell wiring outside macros
     bgH = cfg["cell_fill"] * (sup["M2"] + sup["M4"]) * (1 - macro_cov)
     bgV = cfg["cell_fill"] * (sup["M3"] + sup["M5"]) * (1 - macro_cov)
@@ -905,6 +997,13 @@ def main(argv=None):
     ap.add_argument("--ring-tracks-per-bit", type=float, default=DEFAULTS["ring_tracks_per_bit"])
     ap.add_argument("--ring-um2-per-flop", type=float, default=DEFAULTS["ring_um2_per_flop"])
     ap.add_argument("--detour-um", type=float, default=DEFAULTS["detour_um"])
+    ap.add_argument("--station-spread", action="store_true",
+                    help="what-if: station hops spread over the detour window (moves leaf V to H, 8/14 vs 6/15 FAIL "
+                         "directions right, but loses leaf t24; off by default)")
+    ap.add_argument("--pin-escape", action="store_true",
+                    help="what-if: 2-pin core links as an L whose first leg follows the pin face normal (off by default)")
+    ap.add_argument("--margin-bins", type=int, default=DEFAULTS["margin_bins"],
+                    help="bins beside a macro run pooled with it (the router's sideways detour off the macro)")
     ap.add_argument("--flag-ratio", type=float, default=1.0, help="scale on the calibrated FLAG_AT region thresholds")
     ap.add_argument("--core-conns")
     ap.add_argument("--core-fill", help="JSON {module: {fill, free_M4, free_M5, src}} measured by porous-abstract lanes")
@@ -916,6 +1015,8 @@ def main(argv=None):
     ap.add_argument("--views", default=str(Path(__file__).with_name("route_supply_views.json")),
                     help="signed-view blocked-layer table (JSON {views: {module: {lef|obs_top, coverage, src}}})")
     ap.add_argument("--maps", action="store_true", help="write per-type ratio maps (npz)")
+    ap.add_argument("--kit-views", default=str(Path(__file__).with_name("route_supply_kit_views.json")),
+                    help="per-die macro OBS fractions of the kit macros/*.lef (used when the repo LEF is missing)")
     ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
                     help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
@@ -935,7 +1036,8 @@ def main(argv=None):
         der[k] = float(v)
     cfg = dict(DEFAULTS, bin_um=a.bin, window=a.window, derate=der, core_ceiling=a.core_ceiling,
                cell_fill=a.cell_fill, ring_tracks_per_bit=a.ring_tracks_per_bit,
-               ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um)
+               ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
+               pin_escape=a.pin_escape, station_spread=a.station_spread)
     conns = load_conns(die_dir, a.core_conns)
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
@@ -952,6 +1054,10 @@ def main(argv=None):
         cfg["views"] = json.loads(Path(a.views).read_text()).get("views", {})
     except (OSError, ValueError):
         cfg["views"] = {}
+    try:
+        cfg["kit_views"] = json.loads(Path(a.kit_views).read_text()).get(die, {})
+    except (OSError, ValueError, AttributeError):
+        cfg["kit_views"] = {}
     T = P.get("partition_types", {})
     cells_of = load_cells(P, plan, die, a.cells)
     names = list(T)
