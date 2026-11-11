@@ -136,3 +136,20 @@ def test_flags_append_and_watch_skip_unchanged(tmp_path):
     pl.write_text(json.dumps({"die": "tst", "plan": "plan.json", "refs": []}) + "\n")
     W.main(["--repo", str(tmp_path), "--tsv", str(tsv), "--out-root", str(tmp_path / "w"), "--plans", str(pl)])
     assert len(tsv.read_text().splitlines()) == 2          # same plan sha: nothing re-run, nothing appended
+
+
+def test_grt_transition_halving_m6_over_m5_obs(tmp_path):
+    """OpenROAD halves M6 over a macro M5 OBS (adjustTransitionLayers): core_H doubles vs --no grt rules."""
+    plan(tmp_path, n=2500)
+    _, r1, _ = run(tmp_path)
+    rs_cfg = rs.DEFAULTS.copy()
+    obs = {L: rs.np.zeros((1, 1)) for L in rs.LAYERS}
+    obs["M5"][:] = 1.0
+    obs["M6"][:] = 0.0
+    rs.grt_macro_rules(obs)
+    assert obs["M7"][0, 0] == 0.0                      # M7 inherits M6 OBS only
+    obs["M6"][:] = 1.0
+    rs.grt_macro_rules(obs)
+    assert obs["M7"][0, 0] == 1.0
+    assert "M6" in rs.GRT_TRANSITION and "M2" not in rs.GRT_TRANSITION
+    assert r1["regions"]["core_H"]["p99"] > 1.0 and rs_cfg["bin_um"] > 0
