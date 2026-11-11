@@ -43031,3 +43031,8 @@ FAILED [AUTOPILOT 5221c5552d06] 2026-11-11 15:32:15 PST AUTOPILOT -> KIT-WAVE-3:
   - Records are base column form (OT_S81_BF_COL_FORM=base); under rfh3 the compiler adds bf_add.
   - Still unqualified: row tags, Q/BF overlap, activation residency, mission calendar.
   - Evidence: intel1 /srv/opentallas-scratch2/claude/s81-bfasb-1111/.
+- 2026-11-11 15:48 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, S81-FRAME-FIX-1, TOK-VERIFY-1, DIE-S81-87]
+  - claude/s81-bf-asb-meas-1111@a29d655ca4 is APPROVED: opt-in as-built BF records via OT_XS_BF_MEAS; xs_bf measure applies its replay-reproduced correction to as-built frames; prepare/collect fixes.
+    Its evidence: the replays reproduce every value with fault 0; both fault controls are caught; the compiler refuses the records on old-kit roots.
+    The records count for TOK only after DIE-S81-87 rebinds on main's fixed plan kits. Until then BF stays at the frame floor (AR 769.02).
+  - S81-FRAME-FIX-1 takes the next item: the root cause in frame_schedule_asb.py, which overstates BF return paths by 4-9 edges against the RTL. Fix it in the extractor so the measured correction becomes 0. Also extend the as-built x/nx checks from q leaves to BF leaves so this gap fails a test.
