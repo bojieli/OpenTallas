@@ -28294,6 +28294,22 @@
       "243.6",
       "--face-in-stage",
       "^(cw|in_line|thr|ties)$=1"
+     ],
+     "ot_hgi_sfu_split3_ctl_rest_1c": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--orfs-var",
+      "OT_FF_CHAIN_PIN=1"
+     ],
+     "ot_hgi_sfu_opsb_group": [
+      "--orfs-var",
+      "OT_FF_CHAIN_PIN=1"
      ]
     },
     "args": [
@@ -29160,7 +29176,8 @@
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
-    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)"
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
+    "ot_hgi_sfu_opsb_group": "KW-FIX-45 11-11 (HBM-CORES-B/DIE-HBM-100 batch): opsb_group RTL (-DOT_OPSG_GP -DOT_OPSG_ROT) is not on main; held until the merge and the branch@sha ASK"
    },
    "gen_hosts": [
     "epyc8",
@@ -29530,7 +29547,9 @@
     "ot_hgi_sfu_split3_lane_core_fr",
     "ot_hidx_s3_q",
     "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4",
-    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b"
+    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b",
+    "ot_hgi_sfu_split3_ctl_rest_1c",
+    "ot_hgi_sfu_opsb_group"
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
