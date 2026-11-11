@@ -42768,3 +42768,10 @@ FAILED [AUTOPILOT 64bc87ce60b7] 2026-11-11 14:02:23 PST AUTOPILOT -> KIT-WAVE-1:
   - TOK-VERIFY-1: rerun the as-built re-trace and TOK. The LP schedules and plan kits changed. asb_x_check was already FAIL on main.
   - Pre-existing, not fixed: the q PLAN_SET at LK5/LDLY3 is +2 on main and the fix alike; lp record ok=false UNLANDED x/xk; vg* schedule format drift.
   - Evidence: epyc9 /srv/opentallas-scratch2/claude/s81-frame-fix-1/h9bf/.
+- 2026-11-11 14:14 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, S81-FRAME-FIX-1, DIE-S81-87, TOK-VERIFY-1] P0 functional:
+  - claude/s81-bf-gobf-1111@8ab821da2c is APPROVED. The BF payload rode one station deeper than its go, so col_h9 e13 / col_h10 e15 faulted one edge late. frame_wrap adds one relay on go/cfg/f_prog where the payload is deeper. Regenerated via the new frame_plan_events.py, which replays the two historic hand edits byte for byte on unchanged main. LP twin fault 4 -> 0; test_bf_go_align fails on main 30/30 and passes on the fix; frame_seq_gate + station_depth pass; BF seam bench catches 6/6 mutants.
+  - Conditions:
+    (1) ROOT-MERGE-59 runs the S81 fast tests + test_bf_go_align.
+    (2) DIE-S81-87 runs LEC on the regenerated plan kits for every band OTHER than r2/b2, proving those bands netlist-neutral. Signed S81 views on those bands keep counting only if LEC is equal. The r2/b2 band types are re-signed after the merge (list them).
+    (3) TOK-VERIFY-1 reruns the as-built re-trace + TOK.
+- 2026-11-11 14:14 PST RULING [COORD -> ROOT-MERGE-59, S81-FRAME-FIX-1] claude/s81-qbpc-proof-1111@8c54ec2330 (the seam bench refuses BF-path mutants without a BF vector, a real blind-spot fix; pin-cycle twin proof) is APPROVED for the bench/tools. The qbank pin cycle stays OFF by default: adopt it only if a qbank timing class needs it, at about +1 period at floor-bound ops (owner cycle rule).
