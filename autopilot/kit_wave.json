@@ -19569,7 +19569,7 @@
   },
   "s81_head": {
    "enabled": true,
-   "event": "hcut1111",
+   "event": "l48uj",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -20578,7 +20578,9 @@
     "epyc7",
     "epyc9",
     "epyc2"
-   ]
+   ],
+   "event_prev_kw45_hcut": "hcut1111",
+   "event_note_kw45": "KW-FIX-45 11-11: wave gate GATE_EVENTS['s81_head'] is a code list (exact event labels); 'hcut1111' is not in it so the die was OFF ('not a COORD plan of record') since the 08:00 switch. Label set to the latest allowed label l48uj; the plan/src/sidecar/script paths are the HEAD cut (plan be4ec885a1d4 prepared ff97fa54b058, src_head_main_cdfb09eb84). Proper fix: add the cut label to GATE_EVENTS['s81_head'] (KW-FIX-46/ROOT-MERGE)."
   },
   "qwen_compute": {
    "enabled": true,
