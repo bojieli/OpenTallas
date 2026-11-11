@@ -179,6 +179,7 @@ class TypeModel:
                 st_pairs.add((A, bus_, str(s_.get("capture", ""))))
                 st_pairs.add((A, bus_, str(s_.get("capture", "")).rsplit(".", 1)[0]))
         L = []   # (endA, endB, bits, kind, max_len)
+        LL = self.Llab = []   # parallel labels (CPL-HBM-2 cycle deltas)
         if cc:
             for inst, ports in cc.items():
                 if inst not in self.idx:
@@ -204,15 +205,19 @@ class TypeModel:
                                 mu, mv = self.dim[j, 0] / 2, self.dim[j, 1] / 2
                             w_ = 0.5 if mate else 1.0
                             L.append(((i, (u, v)), (j, (mu, mv)), bits * w_, "core"))
+                            LL.append("%s.%s->%s" % (inst, bus, val))
                         elif k == "bus" and val in bus_pt:
                             L.append(((i, (u, v)), (None, bus_pt[val]), bits, "bus"))
+                            LL.append("%s.%s->bus:%s" % (inst, bus, val))
                         elif k == "face" and val in "NSEW":
                             L.append(((i, (u, v)), (None, RS.face_point(W, H, val)), bits, "face"))
+                            LL.append("%s.%s->face:%s" % (inst, bus, val))
         self.stations = []
         for si, s in enumerate(t.get("internal_stations", []) or []):
             a, b = self.end(s["from_um"]), self.end(s["to_um"])
             nreg = len(s.get("regs_um") or [])
             L.append((a, b, float(s.get("bits", 1)), "station"))
+            LL.append("station[%d] %s->%s" % (si, s.get("launch", ""), s.get("capture", "")))
             self.stations.append((si, len(L) - 1, nreg))
         self.L = L
         self.inc = collections.defaultdict(list)
@@ -1023,12 +1028,27 @@ def write_type(M, t_new, cfg, log):
             rep["regs_new"] += nold
             s["note"] = (s.get("note", "") + " | CORE-PLACE-1 re-sited (%s, %s um, %d regs kept)" %
                          (r["kind"], r["length_um"], nold))
+        elif r is not None and len(r["regs"]) != nold and cfg.get("allow_more_regs"):
+            # CPL-HBM-2: priced cycle event (owner: pin cycles are a lever) - take the routed station with more regs
+            nn = len(r["regs"])
+            rep["need_more_regs"] += 1
+            rep["regs_new"] += nn
+            rep.setdefault("cycle_delta", []).append(dict(station=st.index(s), launch=s.get("launch"),
+                                                          capture=s.get("capture"), bits=s.get("bits"),
+                                                          regs_old=nold, regs_new=nn, extra_cycles=nn - nold,
+                                                          length_um=r["length_um"], route=r["kind"]))
+            s["regs_um"] = [list(p) for p in r["regs"]]
+            s["note"] = (s.get("note", "") + " | CPL-HBM-2 cycle event: %+d regs (%s, %s um)" %
+                         (nn - nold, r["kind"], r["length_um"]))
         elif r is not None and len(r["regs"]) > nold:
             rep["need_more_regs"] += 1
             rep["regs_new"] += nold
         else:
             rep["failed"] += 1
             rep["regs_new"] += nold
+            rep.setdefault("failed_list", []).append(dict(station=st.index(s), launch=s.get("launch"),
+                                                         capture=s.get("capture"), regs=nold, from_um=s["from_um"],
+                                                         to_um=s["to_um"], routed=None if r is None else len(r["regs"])))
             if regs_free:
                 rep["kept_old_regs"] += 1
     return rep
@@ -1289,6 +1309,8 @@ def main(argv=None):
     ap.add_argument("--timing", choices=("link", "class"), default="link",
                     help="direct-link length limit: link = max(base length, 405) per link; class = max(405, the "
                     "longest base link of the same module-pair / module-face class)")
+    ap.add_argument("--allow-more-regs", action="store_true", help="CPL-HBM-2: stations that need more regs after a "
+                    "move take them (a priced cycle event, not EQ); report lists them as cycle_delta")
     ap.add_argument("--fixed", default="", help="regex of hard-core insts that never move")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
@@ -1315,7 +1337,8 @@ def main(argv=None):
         rs_cfg["kit_views"] = {}
     conns = RS.load_conns(die_dir, None, plan.parent, RS.REF_DIRS[1:])
     cfg = dict(gap=a.gap, sweeps=a.sweeps, topk=a.topk, lam=a.lam, reach=a.reach, grid_um=a.grid_um,
-               grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg, timing=a.timing)
+               grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg, timing=a.timing,
+               allow_more_regs=a.allow_more_regs)
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
@@ -1376,6 +1399,24 @@ def main(argv=None):
                                     after_orient=M.core_orient(i)) for i in range(M.n)])
             Path(Path(a.svg) / f"{tn}__view.json").write_text(json.dumps(dump))
         ok = not eqbad and nov == 0 and srep["need_more_regs"] == 0 and tviol_end == 0
+        if cfg.get("allow_more_regs"):
+            # CPL-HBM-2 cycle event: station reg-count diffs allowed (listed in cycle_delta); stations re-routed
+            # by hub_repack at full reach replace the 0.8-reach station tv check; direct links must still pass
+            cyc = {d["station"] for d in srep.get("cycle_delta", []) if "station" in d}
+            eq_other = [e for e in eqbad if not (re.search(r"internal_stations\[(\d+)\]", e) and
+                        ("regs" in e) and int(re.search(r"internal_stations\[(\d+)\]", e).group(1)) in cyc)]
+            tv_direct = 0
+            for q in range(len(M.L)):
+                if M.L[q][3] == "station" or M.llen(q) <= M.maxlen[q] + EPS:
+                    continue
+                if M.L[q][2] <= 8:   # narrow direct link: listed as a new registered hop (cycle event), not a blocker
+                    srep.setdefault("cycle_delta", []).append(dict(direct_link=M.Llab[q], bits=M.L[q][2],
+                        length_um=round(M.llen(q), 1), limit_um=round(M.maxlen[q], 1),
+                        extra_cycles=int(math.ceil((M.llen(q) - M.maxlen[q]) / (0.8 * cfg["reach"]))),
+                        note="new station on a direct link (HBM-TAPS)"))
+                else:
+                    tv_direct += 1
+            ok = not eq_other and nov == 0 and srep.get("failed", 0) == 0 and tv_direct == 0
         if ok:
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
