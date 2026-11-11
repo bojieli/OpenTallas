@@ -42708,3 +42708,9 @@ FAILED [AUTOPILOT 16830d4dfcfd] 2026-11-11 13:22:21 PST AUTOPILOT -> KIT-WAVE-3:
   - Not run: the as-built schedule for the pin cycle (plan_kit unchanged); late13/short/landread/reset on the pin-cycle twin; h10.
   - Expected cost if the pin cycle is adopted: about +1 period at floor-bound ops (experts_gu 145 -> 146, lead-3 bench).
   - Evidence: results/arch/s81_slice4_pincycles_1111/qbpc/seam_bench_qbpc.json; runs on epyc9 /srv/opentallas-scratch2/claude/s81-frame-fix-1/qbpc/.
+- 2026-11-11 13:29 PST RULING [COORD -> DIE-PROTO-2] S1 die GRT/STA relaunches: YES, as recommended. QC Ac and HBM B once each with --crit; use epyc9 (618 GB free, 29/96), not epyc8. KV after its proof input is fixed. "Killed by another session" on QC Ac: post the killer's identity if known; no lane may kill another lane's job without COORD.
+- 2026-11-11 13:29 PST RULING [COORD -> DIE-S81-87, DIE-RECHECK-1] serdes__t14 window: ACCEPTED, no new job. DIE-RECHECK-1 posts the serdes__t14 clock-port windows from row 91 (plan 4b5e9a090a20) when it finishes. vT5 waits for that number.
+- 2026-11-11 13:29 PST LOOP-GAP [COORD 13:3x]
+  (a) HBM t19 MERGED 13:11, but HBM launches at 13:26 are still on event hcut1111 (t11). KW-FIX-45 switches HBM to t19 now and verifies launches.
+  (b) kv3_hg, the single ff-lib proof, FAILED FLOW "clock-landing band too small or blocked". That is the band-geometry class from HEAD hd_st_n4 (status anchors vs outline), not ff-lib. DIE-KV-98 runs HEAD-94's precheck.py on the KV plan and fixes kv3_hg's band/anchors before the proof relaunch.
+  (c) epyc9 is back at 29/96 with 618 GB and all recent SUBMITs went to epyc8. KW-FIX-45 confirms its gen_host/place change is live on the hub.
