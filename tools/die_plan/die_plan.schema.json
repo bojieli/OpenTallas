@@ -4273,6 +4273,11 @@
          "maxItems": 2
         }
        },
+       "boundary_tap": {
+        "enum": [
+         "nearest"
+        ]
+       },
        "wavefront_min_depth": {
         "type": "integer",
         "minimum": 0
