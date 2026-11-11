@@ -148,9 +148,85 @@ grt_slack() {   # last slack figures the log carries (hold guard chunks / start,
   h=$(grep -oE 'OT_HOLD_GUARD_GRT (chunk [0-9]+|start): hold ws -?[0-9.]+' "$1" | tail -1 | sed 's/.*hold ws //')
   s=$(grep -oE '(setup|Setup)[^|]*WNS[^0-9-]*-?[0-9.]+' "$1" | tail -1 | grep -oE -- '-?[0-9.]+$')
   printf 'hold_ws_ps=%s setup_wns=%s' "${h:-unmeasured}" "${s:-unmeasured}"; }
+# KW-FIX-44 11-10 GRT-EARLY (COORD, owner: "fail fast is very important because many of the times you iterate on badly
+# congested stuff for 12 hours or more").  (c) early: INSIDE the full global route.  The flow GRT writes congestion-<N>.rpt
+# every 5 extra iterations (-congestion_report_iter_step 5); a report of THIS run whose summed 'congestion:' overflow meets
+# the rule stops the stage there (FLOW-TIME-1 grt_early_stop rule 15:10000,20:1000: across 2,594 kit logs no form above it
+# later reached overflow 0, DRT or sign-off).  t53__clb66fa5cb a7: congestion-15 = 23,535 at 01:13 -> stop then, instead
+# of the 13h46 full route (final 83,032) plus 6h02 of incremental reroute.  -allow_congestion forms are judged too (the
+# 1000 floor above already bounds KW-FIX-8).  The class line carries the H / V split and the densest 20-um tile (a
+# mid-route report has no per-layer split; the GRT-0096 per-layer table exists only at the end of the route) and its top
+# instance.  OT_GRT_EARLY_STOP = RULE (env or config.mk export) overrides the rule, 0 / off opts out.
+early_rule() { local v=${OT_GRT_EARLY_STOP:-}
+  [ -n "$v" ] || v=$(sed -n 's/^export OT_GRT_EARLY_STOP[[:space:]]*=[[:space:]]*\([0-9a-z:,]*\)[[:space:]]*$/\1/p' "$W/config.mk" 2>/dev/null | tail -1)
+  case "${v:-15:10000,20:1000}" in 0|off) ;; *) printf '%s' "${v:-15:10000,20:1000}";; esac; }
+EARLY_RULE=$(early_rule)
+early_check() {   # judge each congestion-<N>.rpt of this run once, when it is complete (20 s old); sets gstop=congested
+  local Rd f n
+  [ -n "$EARLY_RULE" ] || return 1
+  Rd=$(ls -d "$W"/run/reports/asap7/*/base 2>/dev/null | head -1); [ -n "$Rd" ] || return 1
+  for f in "$Rd"/congestion-[0-9]*.rpt; do
+    [ -f "$f" ] || continue
+    n=${f##*/congestion-}; n=${n%.rpt}
+    case " $early_done " in *" $n "*) continue;; esac
+    [ "$(stat -c %Y "$f")" -ge "$T0" ] || { early_done="$early_done $n"; continue; }
+    [ $(( $(date +%s) - $(stat -c %Y "$f") )) -ge "${OT_GRT_EARLY_SETTLE_S:-20}" ] || continue
+    early_done="$early_done $n"
+    line=$(python3 -I - "$f" "$n" "$EARLY_RULE" <<'OT_GRT_EARLY_PY'
+import collections, re, sys, time
+f, n, rule = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+thr = {}
+for part in rule.split(","):
+    m = re.fullmatch(r"\s*(\d+)\s*:\s*(\d+)\s*", part)
+    if not m:
+        sys.exit(0)                                   # a malformed rule never stops a run
+    thr[int(m[1])] = int(m[2])
+if n not in thr:
+    sys.exit(0)
+tot, hv, tiles, insts = 0, collections.Counter(), collections.Counter(), {}
+kind = srcs = None
+TILE = 20.0
+for ln in open(f, errors="replace"):
+    if ln.startswith("violation type:"):
+        kind = "H" if "Horizontal" in ln else "V" if "Vertical" in ln else "?"
+    elif ln.lstrip().startswith("srcs:"):
+        srcs = ln.split()[1:]
+    else:
+        m = re.search(r"congestion:(\d+)", ln)
+        if m:
+            c = int(m[1]); tot += c; hv[kind] += c; cur = c
+            continue
+        m = re.search(r"bbox = \(([-\d.]+), ([-\d.]+)\) - \(([-\d.]+), ([-\d.]+)\)", ln)
+        if m and kind:
+            x, y = (float(m[1]) + float(m[3])) / 2, (float(m[2]) + float(m[4])) / 2
+            t = (int(x // TILE), int(y // TILE)); tiles[t] += cur
+            for s in srcs or []:
+                h = re.sub(r"^net:", "", s).split("/")[0]
+                insts.setdefault(t, collections.Counter())[h] += 1
+if tot < thr[n]:
+    sys.exit(0)
+hot = ""
+if tiles:
+    (tx, ty), tc = tiles.most_common(1)[0]
+    top = insts.get((tx, ty), collections.Counter()).most_common(1)
+    hot = (f" hotspot ({tx * TILE:g},{ty * TILE:g})-({(tx + 1) * TILE:g},{(ty + 1) * TILE:g}) overflow {tc} of {tot}"
+           + (f" top {top[0][0]}" if top else ""))
+print(f"OT_GRT_CONGESTED_FAIL stage=grt early: congestion-{n} overflow {tot} >= {thr[n]} (rule {rule}) "
+      f"H {hv['H']} / V {hv['V']}{hot}; stopping inside the full global route (KW-FIX-44 GRT-EARLY) "
+      + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
+OT_GRT_EARLY_PY
+)
+    if [ -n "$line" ]; then echo "$line"; gstop=congested; return 0; fi
+  done
+  return 1
+}
 gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop and stops the stage
   local Tl=$1 pid=$2 now ov last
   [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
+  if [ -z "$tpost" ] && early_check; then
+    kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
+    return 0
+  fi
   if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
   now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
   if [ "$cong_seen" = 0 ]; then
@@ -172,8 +248,8 @@ gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop 
   return 0
 }
 watch_run() {
-  stall=0; gstop=""; tpost=""; cong_seen=0
-  if stall_off && cong_off && [ "$POST_MAX" -le 0 ]; then "$@"; return $?; fi
+  stall=0; gstop=""; tpost=""; cong_seen=0; early_done=""
+  if stall_off && cong_off && [ "$POST_MAX" -le 0 ] && [ -z "$EARLY_RULE" ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT
