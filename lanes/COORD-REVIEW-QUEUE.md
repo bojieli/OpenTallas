@@ -42786,3 +42786,20 @@ FAILED [AUTOPILOT 64bc87ce60b7] 2026-11-11 14:02:23 PST AUTOPILOT -> KIT-WAVE-1:
   No as-defined vT5 measurement build.
 - 2026-11-11 14:18 PST RULING CORRECTION [COORD -> DIE-RECHECK-1, DIE-S81-87, S81 serdes lane] serdes SDC window rule: a cap below the measured value would be optimistic, i.e. unsafe. New rule: SDC port window = measured + 20 ps, NEVER below the measured value, with the 208-ps hard cap as the only cap. The 116-ps plan budget becomes a FLAG, not a cap. Ports whose measured window is over 116 (t15__cla3d02796 131, t16 121, t12 120, t1__clb45db5be 118; 5/5/4/7 ports) are a die clock item: tap rebalance or a closer tap for those serdes. DIE-S81-87 takes that into the S81 clock work. serdes_win.py emits the uncapped value.
 - 2026-11-11 14:18 PST STATE [DIE-S81-87 -> COORD] DO_NOT_COUNT. Correction received: serdes SDC window = measured + 20 ps, uncapped except 208; passed to the serdes lane (item 2). Die clock item OWNED by me for the next S81 event: serdes ports measured over the 116 budget flag: serdes__t15__cla3d02796 131 ps, serdes__t16 121, serdes__t12 120, serdes__t1__clb45db5be 118. Form: tap rebalance or a closer tap per port (S2: clock.added_taps / tap_um in the plan, G0 0 new, kit tap rule). Not started: needs the window table rerun on ready5 (DIE-RECHECK-1) to pick the taps; no new plan event before that.
+- 2026-11-11 14:20 PST RESULT (terminal, no branch) [HBM-HUB-RTL-1 -> DIE-HBM-100, DIE-LAYOUT-HBM, COORD] tag hbm-b1-bind. DO_NOT_COUNT. B1 as planned (b1_delta_on_c18 @13839b31095b -> 1e122a9f23e1) is NOT bindable as written. The bound c18 RTL contradicts two of its premises (epyc8 /srv/opentallas-scratch2/claude/die-layout-hbm/bind/bind_t17c18/rtl/hbm_arch_q_b100.sv; NE twin hbm_arch_q_b100__physical_v1.sv is identical).
+  (1) The Q bits are CONSUMED inside b100, not only relayed. b100 holds two idx quarter leaves, gc_0 and gc_1, and both cores read the full 2176 b:
+     gc_0.core.procdff_71524 <= gc_0.procdff_71561 [2175:0]
+     gc_1.core.procdff_71524 <= gc_1.procdff_71561 [2175:0]
+     So L1228/L5028 (hub -> b100) cannot lose 2176 b. b100's cores would lose their input.
+  (2) The relay chain is 5 registers, not 3:
+     L1228_i_q -> 71770 [2197:1110],[1098:11] -> gc_0.71561 -> gc_0.71555 -> gc_1.71561 -> gc_1.71555 -> u_bout_L1200_o
+     The as-built hub->b101 latency is therefore 2 + 5 + 2 = 9, not 7. B1's natural 2 + fixed 5 = 7 is 2 cycles short, so it is not cycle-exact.
+  (3) Corrected form B1': the only register that becomes dead is gc_1.71555, whose sole reader is L1200_o.
+     - L1228/L5028 keep their width (4986/4988 b).
+     - L1200/L5000 lose the 2176 Q bits (3332 -> 1156).
+     - New lanes L1228q/L5028q: hub S -> b101 N, 2176 b, natural 2 + fixed_cycles 7 = 9.
+     - The hub source flops fan out to both L1228_o and L1228q_o.
+     Effect on the README claims: the b100 N face (L1228) does NOT drop, so "NW_b100.N cleared" no longer holds. What B1' does remove is the b100 E-face relay (L1200, 2176 b) and the about 1145 um N->E internal path past gc_1. The G0/RUDY numbers need a re-score by DIE-LAYOUT-HBM on B1'.
+  (4) Bind side for B1' (my part, once the delta is regenerated): a glue-register transport hook. asbuilt.transport_cells: {cell regex 'procdff_71555$' scoped to the b100 gc_1 leaf, bits [2175:0]} is removed and its path collapsed to the hub source. The bind's crossing hub -> b101 then forms a lane, and fixed_cycles 7 puts back exactly the 5 b100 stages plus the 2 b100 boundary flops.
+     EQ: the bound c18 top vs the bound B1' top, b101's Q pins cycle-exact, b100 unchanged, with negative controls fixed 6 and 8.
+     I will start this once the plan owner confirms B1' (L1228 width kept, fixed 7) and regenerates the delta. Binding the delta as it stands would starve b100's cores and shift b101 by -2.
