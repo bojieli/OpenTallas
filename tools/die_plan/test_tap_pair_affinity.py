@@ -222,3 +222,127 @@ def test_overfull_grow_export_is_opt_in_and_bounded():
     assert 'export OT_TAP_PAIR_OVERFULL_GROW = 0.1' in lines
     with pytest.raises(ValueError):
         tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'overfull_grow': 0.6})})
+
+
+# ---------------- DIE-QC-97 11-11 CHAINS: tap_chain_affinity-owned delay-pad chains join the pair graph ----------------
+def tcl(body):
+    res = subprocess.run([TCLSH], input=f'source {{{PLAN}}}\n{body}\n', capture_output=True, text=True, check=True)
+    return res.stdout.strip().splitlines()
+
+
+def ident_dict(rows):
+    """rows [(name, prefix, stage, bit)] -> a tcl dict literal."""
+    return '[dict create ' + ' '.join(f'{{{n}}} {{{p} {s} {b}}}' for n, p, s, b in rows) + ']'
+
+
+def chain_rows(tag, n=4, prefix=None):
+    """stages 0..n-1 of one scalar delay-pad chain plus its terminal stage."""
+    pre = prefix or f'u_pd10_{tag}.r'
+    return [(f'{tag}_s{i}', pre, str(i), 'scalar') for i in range(n)] + [(f'{tag}_t', pre, 'terminal', 'scalar')]
+
+
+def test_chain_bonds_link_consecutive_stages_and_the_terminal():
+    rows = chain_rows('a', 3) + chain_rows('b', 2) + [('g0', 'u_pd9_g.r', '0', 'scalar'), ('g2', 'u_pd9_g.r', '2', 'scalar')]
+    out = tcl(f'foreach e [::ot_tap_pair::chain_bonds {ident_dict(rows)}] {{puts $e}}')
+    assert sorted(out) == sorted(['0 a_s0 a_s1', '0 a_s1 a_s2', '0 a_s2 a_t', '0 b_s0 b_s1', '0 b_s1 b_t'])   # no gap bond g0-g2
+
+
+def test_skip_chain_owned_is_todays_rule_when_chains_is_off():
+    f = lambda c, a, i: tcl(f'puts [::ot_tap_pair::skip_chain_owned {c} {a} {{{i}}}]')[0]
+    assert f(0, 1, 'p 1 scalar') == '1'                                   # chain affinity on, owned flop: left alone (today)
+    assert f(1, 1, 'p 1 scalar') == '0'                                   # chains on: joins the pair graph
+    assert f(0, 0, 'p 1 scalar') == '0' and f(0, 1, '') == '0'            # chain affinity off / not a chain flop: never skipped
+
+
+CH_TAPS = {'t0': (0, 0), 't1': (30, 0), 't2': (60, 0)}
+
+
+def chain_case(split=False):
+    """producer p -> chain a_s0..a_s3 -> a_t -> consumer q; the chain and p share t0, q sits on t1 (the 2.2-um hold hop)."""
+    regs = {'p': (0, 0, 't0')}
+    for i in range(4):
+        regs[f'a_s{i}'] = (1 + i, 0, 't1' if (split and i >= 2) else 't0')
+    regs['a_t'] = (5, 0, 't1' if split else 't0')
+    regs['q'] = (6, 0, 't1')
+    pairs = [('p', 'a_s0', 1)] + [(f'a_s{i}', f'a_s{i + 1}', 1) for i in range(3)] + [('a_s3', 'a_t', 1), ('a_t', 'q', 1)]
+    return regs, pairs
+
+
+def chain_bond_edges(regs):
+    names = [n for n in regs if n.startswith('a_')]
+    rows = [(n, 'u_pd10_a.r', 'terminal' if n == 'a_t' else n[3:], 'scalar') for n in names]
+    out = tcl(f'foreach e [::ot_tap_pair::chain_bonds {ident_dict(rows)}] {{puts $e}}')
+    return [(e.split()[1], e.split()[2], 0) for e in out]
+
+
+def test_chain_and_consumer_land_on_one_tap_and_the_chain_stays_whole():
+    regs, pairs = chain_case()
+    # today: the chain flops are not in the pair graph, so the consumer has no partner and keeps its tap (the a_t -> q hop
+    # stays cross-tap)
+    lab0, _ = run({n: regs[n] for n in ('p', 'q')}, [], CH_TAPS, merge=128)
+    assert lab0['q'] != regs['a_t'][2]
+    lab, _ = run(regs, pairs + chain_bond_edges(regs), CH_TAPS, merge=128)
+    assert cross(lab, pairs) == 0
+    assert len({lab[n] for n in ['p', 'a_s0', 'a_s1', 'a_s2', 'a_s3', 'a_t', 'q']}) == 1
+
+
+def test_a_split_chain_is_joined_never_split_further():
+    regs, pairs = chain_case(split=True)
+    ident = ident_dict([(n, 'u_pd10_a.r', 'terminal' if n == 'a_t' else n[3:], 'scalar') for n in regs if n.startswith('a_')])
+    before = ' '.join(f'{{{n}}} {{o 0 0 {tp}}}' for n, (x, y, tp) in regs.items())
+    lab, _ = run(regs, pairs + chain_bond_edges(regs), CH_TAPS, merge=128)
+    after = ' '.join(f'{{{n}}} {{o 0 0 {lab[n]}}}' for n in regs)
+    rep = tcl(f'puts [::ot_tap_pair::chain_tap_report {ident} [dict create {before}] [dict create {after}]]')[0]
+    assert rep == '1 0 1 0'                                                 # one chain: split before, one tap after, none broken
+    assert len({lab[n] for n in regs}) == 1
+
+
+def test_other_chains_are_untouched_and_the_plan_is_idempotent():
+    regs, pairs = chain_case()
+    # chain b (all on t2 with its consumer) and a lone pair on t1: coherent, no cross pair, must not move
+    for i in range(4):
+        regs[f'b_s{i}'] = (61 + i, 0, 't2')
+    regs['b_t'] = (65, 0, 't2'); regs['bq'] = (66, 0, 't2')
+    bp = [(f'b_s{i}', f'b_s{i + 1}', 1) for i in range(3)] + [('b_s3', 'b_t', 1), ('b_t', 'bq', 1)]
+    bonds = chain_bond_edges(regs) + [(f'b_s{i}', f'b_s{i + 1}', 0) for i in range(3)] + [('b_s3', 'b_t', 0)]
+    lab, _ = run(regs, pairs + bp + bonds, CH_TAPS, merge=128)
+    assert all(lab[n] == 't2' for n in regs if n.startswith('b'))
+    assert len({lab[n] for n in ['p', 'q'] + [n for n in regs if n.startswith('a_')]}) == 1
+    # idempotent: planning again from the result moves nothing
+    regs2 = {n: (regs[n][0], regs[n][1], lab[n]) for n in regs}
+    lab2, passes = run(regs2, pairs + bp + bonds, CH_TAPS, merge=128)
+    assert lab2 == lab
+
+
+def test_chains_export_is_opt_in():
+    sys.path.insert(0, str(Path(__file__).parent))
+    from gen_phys import tap_pair_affinity_exports
+    base = {'tap_radius_um': 200, 'tap_max_sinks': 1200}
+    off = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={})})
+    assert tap_pair_affinity_exports({'clock': dict(base)}) == []
+    assert not any('CHAINS' in x for x in off)
+    assert tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'chains': False})}) == off
+    on = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'chains': True})})
+    assert on == off + ['export OT_TAP_PAIR_CHAINS = 1']
+    with pytest.raises(ValueError):
+        tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'chains': 1})})
+
+
+def test_chains_key_is_in_the_schema():
+    import json
+
+    def find(o):
+        if isinstance(o, dict):
+            if 'tap_pair_affinity' in o and isinstance(o['tap_pair_affinity'], dict):
+                return o['tap_pair_affinity']
+            for v in o.values():
+                r = find(v)
+                if r:
+                    return r
+        elif isinstance(o, list):
+            for v in o:
+                r = find(v)
+                if r:
+                    return r
+    spec = find(json.loads(Path(__file__).with_name('die_plan.schema.json').read_text()))
+    assert spec['additionalProperties'] is False and spec['properties']['chains'] == {'type': 'boolean'}

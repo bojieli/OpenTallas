@@ -250,4 +250,65 @@ namespace eval ::ot_tap_pair {
   return [dict create regs $regs load $load passes $passes moves $moves groupmoves $groupmoves \
    components [dict size $groups] largest $largest frozen $frozen converged $converged overfull $overfull]
  }
+ # DIE-QC-97 11-11 CHAINS (plan clock.tap_pair_affinity.chains -> OT_TAP_PAIR_CHAINS=1; default off): a tap_chain_affinity-owned
+ # delay-pad chain (u_pd<D>_ / u_d<D>_ / u_lpad_ / u_r8b_strap_ flops) is a named cohort that the short-pair graph leaves
+ # alone, so its last stage -> consumer hop (u_pd10_x_fw_p1_i_519 -> u_core.cmd_o[20], 2.2 um apart, -68.99 ps on QC
+ # slw_fe_v2: 60 such paths) keeps whatever tap boundary the chain join left.  With chains on, the chain flops are ordinary
+ # nodes of the pair graph plus a bond between consecutive stages, so the chain and its connected consumer / producer
+ # flops form ONE component that the merge phase puts on one tap; the stages that already shared a tap stay indivisible
+ # (the coherent-pair rule).  skip_chain_owned is today's exclusion and is exactly it when chains is off.
+ proc skip_chain_owned {chains chainaff ident} {
+  expr {$chainaff && !$chains && $ident ne {}}
+ }
+ # ident: dict register -> {prefix stage bit} (tap_chain_affinity identity; stage an integer or terminal).  Returns bond
+ # edges {0 a b} between the consecutive stages of every chain (terminal = last numeric stage + 1), names sorted.
+ proc chain_bonds {ident} {
+  set groups {}
+  dict for {name id} $ident {
+   lassign $id prefix stage bit
+   dict lappend groups "$prefix:$bit" [list $stage $name]
+  }
+  set edges {}
+  foreach key [lsort [dict keys $groups]] {
+   set rows [dict get $groups $key];set mx -1
+   foreach r $rows {set s [lindex $r 0];if {[string is integer -strict $s] && $s>$mx} {set mx $s}}
+   if {$mx<0} continue
+   set num {}
+   foreach r $rows {
+    lassign $r s name
+    if {$s eq "terminal"} {set s [expr {$mx+1}]} elseif {![string is integer -strict $s]} continue
+    lappend num [list $s $name]
+   }
+   set num [lsort -integer -index 0 $num]
+   for {set i 1} {$i<[llength $num]} {incr i} {
+    lassign [lindex $num [expr {$i-1}]] s0 a;lassign [lindex $num $i] s1 b
+    if {$s1==$s0+1 && $a ne $b} {lappend edges [list 0 $a $b]}
+   }
+  }
+  return $edges
+ }
+ # Chains are the keys of ident -> {prefix:bit -> members}.  Returns {chains single_before single_after broken}: broken = a
+ # chain whose stages shared one tap before the plan and no longer do (the planner cannot do this: the coherent-pair rule;
+ # the caller fails before any connection changes).
+ proc chain_tap_report {ident before after} {
+  set groups {}
+  dict for {name id} $ident {
+   lassign $id prefix stage bit
+   dict lappend groups "$prefix:$bit" $name
+  }
+  set n 0;set sb 0;set sa 0;set broken 0
+  dict for {key members} $groups {
+   set tb {};set ta {}
+   foreach m $members {
+    if {![dict exists $before $m] || ![dict exists $after $m]} continue
+    dict set tb [lindex [dict get $before $m] 3] 1;dict set ta [lindex [dict get $after $m] 3] 1
+   }
+   if {![dict size $tb]} continue
+   incr n
+   set b1 [expr {[dict size $tb]==1}];set a1 [expr {[dict size $ta]==1}]
+   incr sb $b1;incr sa $a1
+   if {$b1 && !$a1} {incr broken}
+  }
+  return [list $n $sb $sa $broken]
+ }
 }
