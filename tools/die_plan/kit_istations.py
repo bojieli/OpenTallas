@@ -36,6 +36,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import gen_rtl  # noqa: E402
+import kit_bus_bitgroups as BG  # noqa: E402
 
 
 def bound_bus_width(tn, bus, txt, manifest):
@@ -1227,13 +1228,16 @@ def bus_entries(t):
         deep = [e for e in es if len(e["regs_um"]) == n]
         w = sum(int(e.get("bits", 1)) for e in deep)
         regs = [[round(sum(e["regs_um"][j][k] * int(e.get("bits", 1)) for e in deep) / w, 3) for k in (0, 1)] for j in range(n)]
-        out.append(dict(deep[0], regs_um=regs, bits=sum(int(e.get("bits", 1)) for e in es), merged_entries=len(es)))
+        out.append(dict(deep[0], regs_um=regs, bits=sum(int(e.get("bits", 1)) for e in es), merged_entries=len(es), per_core_rows=es))
     return out
 
 
 def main(argv):
     apply = "--apply" in argv
-    argv = [a for a in argv if a != "--apply"]
+    # KIT-ISTATIONS 11-11: per-bit-group station sites of a multi-core bus (kit_bus_bitgroups); auto = only when the merged
+    # chain leaves a core group farther than the planning reach; --bit-groups forces, --no-bit-groups disables
+    bit_groups = "off" if "--no-bit-groups" in argv else ("force" if "--bit-groups" in argv else "auto")
+    argv = [a for a in argv if a not in ("--apply", "--bit-groups", "--no-bit-groups")]
     htree = (4, 0, 0)
     if "--h-tree" in argv:
         i = argv.index("--h-tree")
@@ -1303,6 +1307,14 @@ def main(argv):
         if need < 0:
             raise SystemExit(f"kit_istations: {tn} {bus}: bound module has {have} pad stages > {len(regs)} planned")
         names = [f"u_b{'in' if b['dir'] == 'in' else 'out'}_{n}_pad{j}" for j in pads] + [f"u_ist_{n}_{j}" for j in prev]
+        bgrp = None
+        if (bit_groups != "off" and e.get("merged_entries", 1) > 1 and exact is None
+                and not e.get("bit_route") and (bit_groups == "force" or t.get("bus_bit_groups")
+                or BG.merged_violates(e["per_core_rows"], regs, b["dir"] == "in"))):
+            hard = [h["inst"] for h in t.get("hard_cores", [])]
+            cores = sorted({BG.core_of_entry(r, hard) for r in e["per_core_rows"]} - {None})
+            owners = (BG.in_bit_owners(txt, n, cores) if b["dir"] == "in" else BG.out_bit_owners(txt, n, W, cores))
+            bgrp = BG.plan_groups(e["per_core_rows"], b["dir"] == "in", len(regs), W, owners, hard)
         if b["dir"] == "in":
             # the last bound stage on the bus: the pad chain end, else the face register
             q, eq = (f"{n}_is{prev[-1]}_q", f"{n}_is{prev[-1]}_eq") if prev else \
@@ -1375,11 +1387,18 @@ def main(argv):
             offset = max(0.0, min(15.0, box[0 if b["face"] in "EW" else 1] / 2.0 - 2.0))
             for k, nm in enumerate(names):
                 tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus} {offset:g}")
+        elif bgrp is not None:
+            if BG.BITS_TCL not in tcl:
+                tcl.append(BG.BITS_TCL)
+            tcl.extend(BG.tcl_lines(names, bgrp, regs, bus))
+            print(f"kit_istations: {tn} {bus}: per-bit-group sites for {len(bgrp['groups'])} cores (max planned hop "
+                  f"{max(g['hop_um'] for g in bgrp['groups'].values())} um, {bgrp['unresolved_bits']} bits keep the merged site)")
         else:
             for (x, y), nm in zip(regs, names):
                 tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names,
                         plan_width=b["width"], bound_width=W,
+                        **({"bit_groups": bgrp["groups"]} if bgrp is not None and exact is None else {}),
                         **({"exact_bank_sites": True} if exact is not None else {})))
     txt = core_stations(t, txt, apply, htree, tcl, rep)
     # plan cells with a FIRM site (no hard view): their flops at the site
