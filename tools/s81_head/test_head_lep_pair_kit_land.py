@@ -23,7 +23,9 @@ def test_current_main_face_guard_core():
     src = (ROOT / "physical/die_plan/hbm_arch_cores/face_guard_core.py").read_text()
     out = K.add_land_decl(src)
     assert out.count(K.LAND_ARG) == 1
-    assert "dead=FG.kit_dead_list(kd), " + K.LAND_ARG + ")" in out
+    assert "dead=FG.kit_dead_list(kd)," in out
+    # HEAD-92/H2 11-10: the core guard also passes the kit timed_face.json; land= is appended after it
+    assert "timed=FG.kit_timed_list(kd), " + K.LAND_ARG + ")" in out
     assert "straps=FG.kit_strap_list(kd)" in out
     # only the guard call changed
     assert out.replace(", " + K.LAND_ARG, "", 1) == src
