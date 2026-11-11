@@ -79,6 +79,8 @@ NEVER_TOUCH_SUBSTR = ("coro-train", "OpenRealtime", "Xilinx", "closed_archive")
 NEVER_TOUCH_PATHS = (os.path.join(HOME, ".codex"), os.path.join(HOME, "OpenTallas"), os.path.join(HOME, "coord"),
                      os.path.join(HOME, ".claude"))
 LOCAL_WT_IDLE_H = 12.0
+LOCAL_RESCUE_DIR = "/srv/opentallas-scratch/claude/rescue"   # wt-reaper default (scratch2/claude/rescue) is not writable on localhost
+STORE_INDEX = "store.json"   # snapshot: signed-store index {sha256(signoff.json): {"archive", "locs"}} (SRCCOPY_1111)
 
 
 def never_touch(p):
@@ -653,6 +655,152 @@ def scan_roots(roots, timeout=3600):
     return found
 
 
+def write_store_index(coord, out):
+    """SRCCOPY_1111: {id: {"archive": dir, "locs": [host:path, ...]}} of every signed-store entry (id = sha256 of signoff.json).
+    Missing / unreadable store -> no file (hosts then exempt nothing)."""
+    import glob
+    import gzip
+    rec = os.path.join(coord, "signed-store", "records")
+    idx = {}
+    try:
+        for f in glob.glob(os.path.join(rec, "*", "*.json.gz")):
+            with gzip.open(f, "rt") as fh:
+                e = json.load(fh)
+            v = str(e.get("verdict") or "")
+            if e.get("id") and (v == "SIGNED" or v.startswith("LOCAL_PASS")):
+                idx[e["id"]] = {"archive": e.get("archive") or "", "locs": [x for x in [e.get("origin")] + list(e.get("aliases") or []) if x]}
+    except (OSError, ValueError):
+        return 0
+    if not idx:
+        return 0
+    tmp = out + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(idx, fh)
+    os.replace(tmp, out)
+    return len(idx)
+
+
+def _git(top, *args, timeout=120):
+    return subprocess.run(["git", "-C", top] + list(args), capture_output=True, text=True, timeout=timeout,
+                          env=dict(os.environ, GIT_NO_LAZY_FETCH="1", GIT_TERMINAL_PROMPT="0"))
+
+
+class SourceCopy:
+    """SRCCOPY_1111 (COORD 11-11): a signed record is a SOURCE COPY (restorable from git, not a counted unit) only when ALL hold:
+      1. it is signoff.json inside a git checkout, tracked, and its record dir matches HEAD exactly (no modified, staged,
+         untracked or ignored file in the dir: git status --porcelain --ignored empty, git diff-index HEAD clean);
+      2. HEAD is an ancestor of a branch head origin has now (git ls-remote), after a fresh `git fetch origin` in THIS run;
+      3. its canonical copy is in the signed store (snapshot store.json, id = sha256 of the file) with an AGIdock archive dir,
+         and no store location of it lies inside this checkout;
+      4. every path the record names that lies inside the checkout is tracked and matches HEAD (named paths outside stay counted).
+    Any error, timeout or doubt = not a source copy (the record stays counted)."""
+
+    def __init__(self, store_file, host, fetch_timeout=600):
+        self.host = host
+        self.fetch_timeout = fetch_timeout
+        self.fetched = {}
+        self.onorigin = {}
+        try:
+            self.store = jl(store_file) if store_file and os.path.exists(store_file) else None
+        except (OSError, ValueError):
+            self.store = None
+
+    def _top(self, d):
+        r = _git(d, "rev-parse", "--show-toplevel", "--git-common-dir")
+        if r.returncode:
+            return None, None
+        top, common = r.stdout.splitlines()[:2]
+        return os.path.realpath(top), os.path.realpath(os.path.join(top, common))
+
+    def _fetched(self, top, common):
+        if common not in self.fetched:
+            try:
+                r = _git(top, "fetch", "--quiet", "--no-write-fetch-head", "origin", timeout=self.fetch_timeout)
+                self.fetched[common] = r.returncode == 0
+            except subprocess.TimeoutExpired:
+                self.fetched[common] = False
+        return self.fetched[common]
+
+    def _on_origin(self, top, common, head):
+        """HEAD is an ancestor of a branch head origin has NOW (git ls-remote, not the cached remote-tracking refs)"""
+        key = (common, head)
+        if key not in self.onorigin:
+            ok = False
+            try:
+                r = _git(top, "ls-remote", "--heads", "origin", timeout=self.fetch_timeout)
+                if r.returncode == 0:
+                    for sha in sorted({ln.split()[0] for ln in r.stdout.splitlines() if ln.strip()}):
+                        if sha == head or _git(top, "merge-base", "--is-ancestor", head, sha).returncode == 0:
+                            ok = True
+                            break
+            except subprocess.TimeoutExpired:
+                ok = False
+            self.onorigin[key] = ok
+        return self.onorigin[key]
+
+    def check(self, rec, text):
+        """None if rec is a source copy, else the reason it stays counted"""
+        try:
+            return self._check(rec, text)
+        except Exception as e:      # any doubt keeps it counted
+            return f"error {type(e).__name__}"
+
+    def _check(self, rec, text):
+        if self.store is None:
+            return "no signed-store index"
+        if os.path.basename(rec) != "signoff.json":
+            return "not signoff.json"
+        d = os.path.dirname(rec)
+        top, common = self._top(d)
+        if not top:
+            return "not in a git checkout"
+        rr = os.path.realpath(rec)
+        if not rr.startswith(top + "/"):
+            return "outside its checkout"
+        rel_dir = os.path.relpath(os.path.realpath(d), top)
+        rel = os.path.relpath(rr, top)
+        if _git(top, "ls-files", "--error-unmatch", "--", rel).returncode:
+            return "untracked"
+        st = _git(top, "status", "--porcelain", "--ignored", "--untracked-files=all", "--", rel_dir)
+        if st.returncode or st.stdout.strip():
+            return "record dir differs from HEAD"
+        if _git(top, "diff-index", "--quiet", "HEAD", "--", rel_dir).returncode:
+            return "diff-index not clean"
+        if not self._fetched(top, common):
+            return "fetch origin failed"
+        head = _git(top, "rev-parse", "HEAD").stdout.strip()
+        if not self._on_origin(top, common, head):
+            return "HEAD not on origin"
+        with open(rr, "rb") as fh:
+            sha = hashlib.sha256(fh.read()).hexdigest()
+        e = self.store.get(sha)
+        if not e:
+            return "not in signed store"
+        if not str(e.get("archive", "")).startswith("/archive/"):
+            return "store entry has no AGIdock archive"
+        for loc in e.get("locs", []):
+            pth = loc.partition(":")[2] if ":" in loc and not loc.startswith("/") else loc
+            for q in {pth, os.path.realpath(pth)}:
+                if q == top or q.startswith(top + "/"):
+                    return "store location inside this checkout"
+        named_in = sorted({os.path.relpath(os.path.realpath(x), top) for x in text_paths(text)
+                           if os.path.realpath(x).startswith(top + "/")})
+        for i in range(0, len(named_in), 200):
+            chunk = named_in[i:i + 200]
+            tracked = set(_git(top, "ls-files", "--", *chunk).stdout.splitlines())
+            for x in chunk:
+                if os.path.isdir(os.path.join(top, x)):
+                    continue
+                if os.path.lexists(os.path.join(top, x)) and x not in tracked:
+                    return "names an untracked path in the checkout: " + x
+            st = _git(top, "status", "--porcelain", "--ignored", "--untracked-files=all", "--", *chunk)
+            if st.returncode or st.stdout.strip():
+                return "a named path differs from HEAD"
+        self.top_of = getattr(self, "top_of", {})
+        self.top_of[rec] = top
+        return None
+
+
 def read_record(p):
     """(signed?, text) of a signoff.json / PROVENANCE.json; unreadable or unparsable counts as signed (fail safe)"""
     try:
@@ -840,14 +988,31 @@ class Job:
 
     def load_counted(self):
         rows, self.signed_records = [], []
+        sc = SourceCopy(os.path.join(self.a.snapshot, STORE_INDEX), self.host) if getattr(self.a, "srccopy", False) else None
+        self.srccopy_rows = []
         for r in self.found["record"]:
             signed, text = read_record(r)
             if not signed:
+                continue
+            why = sc.check(r, text) if sc else "srccopy off"
+            if why is None:
+                # source copy: the record dir and the paths it names INSIDE the checkout are git content; named paths
+                # outside the checkout stay counted
+                top = sc.top_of[r]
+                self.srccopy_rows.append(r)
+                for p in text_paths(text):
+                    if not os.path.realpath(p).startswith(top + "/"):
+                        rows.append((p, "named by signed " + r))
                 continue
             self.signed_records.append(self.paths.canon(r))
             rows.append((os.path.dirname(r), "signed record dir " + r))
             for p in text_paths(text):
                 rows.append((p, "named by signed " + r))
+        if sc:
+            say(f"SRCCOPY source-copy records {len(self.srccopy_rows)} (not counted); "
+                f"repos fetched {sum(sc.fetched.values())}/{len(sc.fetched)}")
+            with open(os.path.join(self.a.state, "srccopy.tsv"), "w") as fh:
+                fh.write("".join(r + "\n" for r in self.srccopy_rows))
         # lane-root (or shallower) citations never block whole trees: child match only below lane level
         self.counted = PathSet(rows, deep=self.deep, canon=self.paths.canon)
         self.signed_set = PathSet([(p, "signed record") for p in self.signed_records], canon=self.paths.canon)
@@ -1344,7 +1509,8 @@ class Job:
             union = os.path.join(a.state, "protected-union.txt")
             self.write_union(union)
             cmd = [sys.executable, "-I", a.wt_reaper, "--protected-dbs", union, "--protected-dbs-repo", "",
-                   "--idle-h", str(max(a.wt_reaper_idle_h, LOCAL_WT_IDLE_H) if self.host == "localhost" else a.wt_reaper_idle_h),
+                   "--idle-h", str(max(a.wt_reaper_idle_h, LOCAL_WT_IDLE_H) if self.host == "localhost" else a.wt_reaper_idle_h)] + (
+                   ["--rescue-dir", LOCAL_RESCUE_DIR] if self.host == "localhost" else []) + [
                    "--roots"] + dedupe_roots(self.roots + [os.path.join(HOME, "wt")]) + (["--apply"] if a.apply else [])
             try:
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=a.wt_reaper_timeout)
@@ -1580,6 +1746,8 @@ class Driver:
                 fh.write(kw)
         else:
             say("snapshot: kit-wave state unavailable; hosts skip class a")
+        n_store = write_store_index(a.coord, os.path.join(out, STORE_INDEX))
+        say(f"snapshot: signed-store index {n_store} entries")
         with open(os.path.join(out, "meta.json"), "w") as fh:
             json.dump({"created": now_s(), "created_h": time.strftime("%F %T %Z"), "by": socket.gethostname(),
                        "protected_rows": len(rows), "queue_paths": len(paths)}, fh)
@@ -1786,6 +1954,9 @@ def main(argv=None):
     r.add_argument("--queuename-skip-trim-c", action="store_true",
                    help="class c only: a bare queue-post name does not block the 2_x/3_x intermediate trim (a queue PATH "
                         "still does); COORD ruling")
+    r.add_argument("--srccopy", action="store_true",
+                   help="SRCCOPY_1111: git-tracked unmodified signed records whose HEAD is on origin and whose canonical copy is in "
+                        "the signed store are source copies, not counted (COORD 11-11)")
     r.add_argument("--union-real-sources-only", action="store_true",
                    help="do not read protect.d/protected-dbs.txt (this job's own union) back as a keep source; a path stays "
                         "only while a real source names it; finished ot-run spill records (spill_pending/*.done) stop holding "
