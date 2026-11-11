@@ -1429,6 +1429,16 @@ def refresh(log=lambda *a: None, old=None):
                 rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}
                 ent['signed_designs'], ent['design_unmatched'] = credit_designs(ent['designs'], design_rows.get(d) or {}, core_recs, rp)
                 ent['replica_sample'] = replica_sample(ent['designs'], ent['signed_designs'])
+                # COUNT-ARCHIVE-2 11-10 (COORD, owner review list): ADVISORY list of counted designs whose plan pin table
+                # changed since the last refresh (plan_pin_change.py); it never changes the count and never fails it
+                if not SKIP_G0C and not os.environ.get('OT_PIN_CHANGE_OFF'):
+                    try:
+                        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+                        import plan_pin_change
+                        ent['pin_changes'] = plan_pin_change.track(ent['die'], d, ent['designs'], design_rows.get(d) or {},
+                                                                   old, still=ent['signed_designs'], state=CACHE.parent)
+                    except Exception as e:
+                        log('plan_pin_change %s (advisory, ignored): %s' % (d, e))
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
             ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
     except Exception as e:
