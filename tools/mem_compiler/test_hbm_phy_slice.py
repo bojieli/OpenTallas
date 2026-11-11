@@ -37,3 +37,15 @@ def test_slice_rejects_split_channel():
     import pytest
     with pytest.raises(SystemExit):
         G.generate_rc_slice(None, 1, 8)
+
+
+def test_committed_e8p5_slices_byte_identical(tmp_path):
+    """DIE-HBM-100 11-11: the three PHY slice macros the HBM plan PHY_NC/NE/NW hard cores name (pc0_9, pc10_21, pc22_31) are
+    committed views of this generator (they used to exist only untracked in a wave src); regeneration must give the same bytes."""
+    for lo, hi in ((0, 9), (10, 21), (22, 31)):
+        s = G.generate_rc_slice(tmp_path, lo, hi, edge_mm=8.5)
+        ref = ROOT / "physical/asap7_memory_macros" / s["name"]
+        assert s["name"] == f"ot_hbm3e_phy_rc_e8p5_pc{lo}_{hi}"
+        for f in sorted(p.name for p in (tmp_path / s["name"]).iterdir()):
+            assert (tmp_path / s["name"] / f).read_bytes() == (ref / f).read_bytes(), (s["name"], f)
+        assert sorted(p.name for p in ref.iterdir()) == sorted(p.name for p in (tmp_path / s["name"]).iterdir())
