@@ -5552,6 +5552,9 @@ def normalize_gold_elements(L, elements, log):
         raise LecError("slang element names collide with another gold key point")
     changed = sum(k != v for k, v in ren.items())
     L.element_names = {v: v[len(IDX.match(v)[1]):] for v in ren.values()}
+    # HBM-VEC-LEC 11-11: passes that derive keys from gold.aliases.json net bits (json_alias_keys) number a
+    # slang-flattened array by FLAT bit; they translate through this map into the element names used here.
+    L.slang_flat = dict(elements)
     if not changed:
         return 0
     L.gp = {ren.get(k, k): v for k, v in L.gp.items()}
@@ -5588,6 +5591,14 @@ def json_alias_keys(L, log, work=None):
     bits = {}
     ambiguous = set()
     bit_of, bit_amb, scalar = {}, set(), set()     # key -> one net bit (mn, bit) for the scalar-alias pass below
+    # HBM-VEC-LEC 11-11 (exp_x __vec6b144f732b / __va8815b8d3cb4 NOT EQ 6): after normalize_gold_elements the gold
+    # keys of a slang-flattened unpacked array are ELEMENT names (rv[1..19]), but this net is the flat vector (bit f
+    # = element 19-f).  Keying it by flat index paired gate u_l1.vo (= element rv[1]) with gold "rv[18]" (element
+    # 18) and left rv[1]/rv[5] gold-only.  Translate every flat bit to its element key; a net whose elements are
+    # multi-dimensional, or only partly known, gives no keys at all (left to correspondence).
+    flat = getattr(L, "slang_flat", None)
+    if flat is None:
+        flat = slang_elements(Path(work) / "gold.aliases.json")
     for mn, mod in data.get("modules", {}).items():
         for nn, net in mod.get("netnames", {}).items():
             if net.get("hide_name") or net.get("upto"):
@@ -5595,10 +5606,13 @@ def json_alias_keys(L, log, work=None):
             name = GENBLK.sub("", nn.replace("\\", "").replace(" ", "").replace("/", "."))
             offset = int(net.get("offset", 0))
             vector = tuple(net.get("bits", ()))
+            elem = [flat.get(f"ff:{nn}[{f}]") for f in range(len(vector))]
+            if any(elem) and not all(e and e.count("[") == 1 for e in elem):
+                continue
             for i, bit in enumerate(vector):
                 if not isinstance(bit, int):
                     continue
-                keys = [f"ff:{name}[{i + offset}]"]
+                keys = [f"ff:{name}{elem[i]}" if elem[i] else f"ff:{name}[{i + offset}]"]
                 if len(net.get("bits", ())) == 1 and offset == 0:
                     keys.append(f"ff:{name}")
                 for key in keys:
