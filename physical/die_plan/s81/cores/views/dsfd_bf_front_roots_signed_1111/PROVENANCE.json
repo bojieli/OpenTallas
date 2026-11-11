@@ -1,0 +1,30 @@
+{
+ "as_run_note": "SS29-RESIGN re-sign flow-20261104-v-s81; copy of intel1 /srv/opentallas-scratch2/claude/die-s81-56/eco/run/bfr3/i1, odb sha cf4bae456ed11e9a equal, 548 files equal; DIE-S81-56 READY-COUNT 12:38+13:05; build from freeze.json repo_rev; 44 of 45 rtl blobs on it",
+ "build_commit": "8ee525918b8bdc302055a6feea7a26b9af1140c4",
+ "created": "2026-11-04 14:51 PST",
+ "flow_tag": "flow-20261104-v-s81",
+ "host": "dear-crayfish",
+ "kind": "resign",
+ "kit": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr",
+ "lane": "SS29-RESIGN",
+ "lec": "/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/lecrun/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "name": "kl_dsfd_bf_front_roots_s52a",
+ "original_signoff": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr/signoff/signoff.json",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/signoff/signoff.json",
+ "routed_db": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr/run/results/asap7/kl_dsfd_bf_front_roots_s52a/base/6_final.odb",
+ "routed_db_sha256": "cf4bae456ed11e9a60a72bbad99d574fb435b4e4b84af1ccfc641ca4417ba568",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "schema": "opentallas.resign_qualification.v1",
+ "src_commit": "f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
+ "tag_tools": {
+  "checked": "byte-identical to flow-20261104-v-s81",
+  "dir": "/srv/opentallas-scratch2/claude/ss29/resign/tools_uv/tools/die_plan",
+  "sha256": {
+   "lec.py": "6f1d42bafd90bc039d490518a1c8d366ee1ea54f5cc94105b0211d082ec46a1f",
+   "signoff.py": "a88907bee0469982f950c87a42d71c896ddbbc0aaeac52fcc32b5358351b4663"
+  }
+ },
+ "verdict": "SIGNED",
+ "writer": "tools/die_plan/resign.py"
+}
