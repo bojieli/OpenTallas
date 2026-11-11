@@ -1675,10 +1675,9 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
-            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item)),
-            # PLAN-GEN-RULES-1 rule C (OWNER 11-10, advisory): die option cell_check true -> after_place compares the
-            # measured synth cells with the plan outline (tools/die_plan/cell_check.py); absent = no key, no probe
-            **({"cell_check": True} if d.get("cell_check") and kind == "type" else {})}
+            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))} \
+        | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
+        | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {})  # PLAN-GEN-RULES-1 rule C (advisory)
 
 
 # ------------------------------------------------------------------------------------------------ KW-PROV-1 provisional views
@@ -3323,6 +3322,18 @@ def run_item(spec_path):
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
     core = sp.get("kind") == "core" and bool(sp.get("core_kit"))
+    ks_on = bool(sp.get("kit_store")) and kit_store_applies(sp)
+    if ks_on:
+        # KIT-INPUT-STORE-1: every input this kit reads -> W/kit_inputs (hardlinks from the per-host dedupe store); the
+        # rest of the pipeline sees only kit-local paths, so a pruned lane worktree can no longer break a relaunch
+        mp, why = kit_store_stage(sp, run, remote, res, W, plan)
+        if mp is None:
+            return fail("kit_store", why)
+        plan = plan0 = ks_map(plan, mp)
+        kr = ks_map(kr, mp)
+        sp["plan"], sp["kit_rtl"] = plan, kr
+        sp["gen_args"] = ks_map(list(sp.get("gen_args") or []), mp)
+        sp["gen_env"] = ks_map(dict(sp.get("gen_env") or {}), mp)
     # DIE-KV-69 11-04: die option prov_first_re names types whose planned children have no source under the manifest
     # roots (KV PCC / PCF, results/kv_host_regen_1/rtl_rf3).  bind kit-rtl finds such a child only through the view an
     # overlay plan row binds, so these types build the overlay first and run kit-rtl on it.  Every other type keeps
@@ -3381,11 +3392,23 @@ def run_item(spec_path):
                                                f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl", gh))
         if rc:
             return fail("kit_rtl", txt)
+        if ks_on:
+            rc, txt = run("kit_store_fl", remote(ks_cmd(f"localize-filelist {q(W)}/rtl/kit_rtl.f --kit-root {q(W)} "
+                                                        f"--kit-inputs {q(W)}/kit_inputs")), idempotent=True)
+            if rc:
+                return fail("kit_store", txt)
+            res["kit_store_fl"] = (txt.strip().splitlines() or [""])[-1][:400]
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     elif kr.get("mode") == "script":
         rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}", gh))
         if rc:
             return fail("kit_rtl", txt)
+        if ks_on:
+            rc, txt = run("kit_store_fl", remote(ks_cmd(f"localize-filelist {q(W)}/rtl/kit_rtl.f --kit-root {q(W)} "
+                                                        f"--kit-inputs {q(W)}/kit_inputs")), idempotent=True)
+            if rc:
+                return fail("kit_store", txt)
+            res["kit_store_fl"] = (txt.strip().splitlines() or [""])[-1][:400]
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     if sp.get("prov_views") and not core and not prov_first:
         # KW-PROV-1: build against PROVISIONAL child views (latest routed DRC-clean abstract, else the plan-contract
@@ -3607,6 +3630,94 @@ def run_item(spec_path):
     finally:
         if rs:
             run("resume_release", remote(kr_cmd(f"release {q(K)}")), idempotent=True)
+
+
+# ------------------------------------------------------------------------------------------------ KIT-INPUT-STORE-1
+# COORD 11-10 (+ amendment): kit-wave kits read plan / bind / kit_rtl recipe / asbuilt / sidecars from lane worktrees
+# that cleanup deletes (KV kv3_pv x6, S81 leaf t42, HEAD hd_ctl, 100 S81 types on a stale bind8).  Option kit_store
+# (die > global, default off; off = spec.json and every command byte-identical): the gen host hardlinks every input file
+# the kit reads into W/kit_inputs from its per-fs dedupe store (tools/autopilot/kit_store.py), recipes (bind.f, *.sh)
+# rewritten to the kit-local paths, json byte-identical; the kit is self-contained and the store is never a run-time
+# path.  The wave src checkout itself is not copied (rebuildable from src_sha; recorded in the manifest).
+KS_PATH = Path(__file__).resolve().parent / "kit_store.py"
+
+
+def ks_cmd(args):
+    """shell command running kit_store.py <args> on a gen host (source on stdin, like kr_cmd)"""
+    return f"python3 - {args} <<'KWKS_EOF'\n{KS_PATH.read_text()}\nKWKS_EOF"
+
+
+def kit_store_on(cfg, die, item):
+    """option kit_store (die > global): true = every item; a list = the items matching one of its fnmatch patterns
+    (pilot); absent / false = off"""
+    v = opt(cfg, die, "kit_store")
+    if isinstance(v, list):
+        return any(fnmatch.fnmatch(item, str(x)) for x in v)
+    return v is True
+
+
+def kit_store_applies(sp):
+    """hard cores (core_kit) and the event-shared prep bind (kit_rtl bind without bind_out) keep their own paths"""
+    kr = sp.get("kit_rtl") or {}
+    if sp.get("kind") == "core" and sp.get("core_kit"):
+        return False
+    return not (kr.get("mode") == "bind" and not kr.get("bind_out"))
+
+
+def ks_inputs(sp, plan):
+    """the input list of one kit: plan (+ its dir's own files and r8/), kit_rtl asbuilt (+ dir files) / bind_out /
+    script, prep_cmd paths, gen_args and gen_env paths; recipes are scanned for further inputs on the gen host"""
+    kr = sp.get("kit_rtl") or {}
+    ins = [{"role": "plan", "path": plan, "kind": "file", "required": True, "siblings": ["r8"]}]
+    if str(kr.get("asbuilt") or "").startswith("/"):
+        ins.append({"role": "asbuilt", "path": kr["asbuilt"], "kind": "file", "required": True, "siblings": []})
+    if str(kr.get("bind_out") or "").startswith("/"):
+        ins.append({"role": "bind_out", "path": kr["bind_out"], "kind": "dir", "required": True})
+    if str(kr.get("script") or "").startswith("/"):
+        ins.append({"role": "kit_rtl_script", "path": kr["script"], "kind": "file", "required": True})
+    for role, v in (("prep_cmd", kr.get("prep_cmd") or ""), ("gen_args", sp.get("gen_args") or []),
+                    ("gen_env", sp.get("gen_env") or {})):
+        for p in abs_paths(v):
+            if p.startswith("/srv/"):
+                ins.append({"role": role, "path": p, "required": False})
+    return ins
+
+
+def ks_map(v, mp):
+    """config value with every input path (whole path or a path prefix ending at a separator) -> its kit-local path"""
+    if not mp:
+        return v
+    if isinstance(v, str):
+        keys = sorted(mp, key=len, reverse=True)
+        return re.sub("(" + "|".join(re.escape(k) for k in keys) + r")(?=[/\s\"',;:=()$`<>|&]|$)",
+                      lambda m: mp[m.group(1)], v)
+    if isinstance(v, list):
+        return [ks_map(x, mp) for x in v]
+    if isinstance(v, dict):
+        return {k: (x if str(k).startswith("note") else ks_map(x, mp)) for k, x in v.items()}
+    return v
+
+
+def kit_store_stage(sp, run, remote, res, W, plan):
+    """-> ({orig: kit-local}, '') or (None, why).  Manifest W/kit_inputs/MANIFEST.json (+ store manifests/ for the
+    14-day retention rule) records each file's sha and the rebuild recipe (src_sha, queue_src, plan, kit_rtl)."""
+    import base64
+    q = shlex.quote
+    kr = {k: v for k, v in (sp.get("kit_rtl") or {}).items() if not str(k).startswith("note")}
+    spec = {"inputs": ks_inputs(sp, plan),
+            "rebuild": {"src": sp.get("src"), "src_sha": sp.get("src_sha"), "queue_src": sp.get("queue_src"),
+                        "plan": plan, "kit_rtl": kr, "gen_args": sp.get("gen_args"), "event": sp.get("event")},
+            "meta": {"die": sp.get("die"), "item": sp.get("item"), "attempt": os.path.basename(W), "work": W}}
+    b64 = base64.b64encode(json.dumps(spec).encode()).decode()
+    rc, txt = run("kit_store", remote(ks_cmd(f"snapshot --spec-b64 {q(b64)} --kit-inputs {q(W)}/kit_inputs")),
+                  idempotent=True)
+    got = [ln[len("KW_KIT_STORE "):] for ln in txt.splitlines() if ln.startswith("KW_KIT_STORE ")]
+    if rc or not got:
+        return None, "KIT-STORE snapshot failed (rc %s)\n%s" % (rc, txt[-3000:])
+    doc = json.loads(got[-1])
+    res["kit_store"] = {k: doc.get(k) for k in ("n_files", "bytes_copied", "blobs_new", "restored", "store")} \
+        | {"absent": len(doc.get("absent") or [])}
+    return doc["map"], ""
 
 
 def kr_cmd(args):
