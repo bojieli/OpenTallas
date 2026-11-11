@@ -1,0 +1,253 @@
+{
+ "tool": "qc_s1_reach.py",
+ "plan": "s8_sul1w.json",
+ "plan_sha256": "0041cc73bbc0",
+ "gate_um": 405.0,
+ "limit_um": 400.0,
+ "before": {
+  "bits_over": 190,
+  "ports_over": 11,
+  "max_hop_um": 422.6
+ },
+ "resite": [
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 23,
+   "moved": 23,
+   "max_move_um": 36.99,
+   "worst_before": 417.7,
+   "worst_after": 397.7,
+   "worst_prev_hop_after": 352.1,
+   "failed": [],
+   "instances": [
+    "sl_E0_sc",
+    "sl_E4_sc"
+   ]
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 23,
+   "moved": 23,
+   "max_move_um": 36.99,
+   "worst_before": 417.7,
+   "worst_after": 397.7,
+   "worst_prev_hop_after": 352.1,
+   "failed": [],
+   "instances": [
+    "sl_E2_sc"
+   ]
+  },
+  {
+   "type": "sle_sc_v2",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 23,
+   "moved": 23,
+   "max_move_um": 36.99,
+   "worst_before": 417.7,
+   "worst_after": 397.7,
+   "worst_prev_hop_after": 352.1,
+   "failed": [],
+   "instances": [
+    "sl_E1_sc",
+    "sl_E3_sc"
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 36,
+   "moved": 36,
+   "max_move_um": 38.07,
+   "worst_before": 422.6,
+   "worst_after": 399.8,
+   "worst_prev_hop_after": 357.2,
+   "failed": [],
+   "instances": [
+    "sl_W0_sc"
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 36,
+   "moved": 36,
+   "max_move_um": 38.07,
+   "worst_before": 422.6,
+   "worst_after": 399.8,
+   "worst_prev_hop_after": 357.2,
+   "failed": [],
+   "instances": [
+    "sl_W2_sc"
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 36,
+   "moved": 36,
+   "max_move_um": 38.07,
+   "worst_before": 422.6,
+   "worst_after": 399.8,
+   "worst_prev_hop_after": 357.2,
+   "failed": [],
+   "instances": [
+    "sl_W4_sc"
+   ]
+  },
+  {
+   "type": "slw_sc_v2",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 18,
+   "moved": 18,
+   "max_move_um": 25.38,
+   "worst_before": 417.0,
+   "worst_after": 398.7,
+   "worst_prev_hop_after": 347.8,
+   "failed": [],
+   "instances": [
+    "sl_W1_sc",
+    "sl_W3_sc"
+   ]
+  },
+  {
+   "type": "slw_sc_v3",
+   "slot": "x_fe_fw_p1",
+   "stage": 2,
+   "bits": 18,
+   "moved": 18,
+   "max_move_um": 25.38,
+   "worst_before": 417.0,
+   "worst_after": 398.7,
+   "worst_prev_hop_after": 347.8,
+   "failed": [],
+   "instances": [
+    "sl_W5_sc"
+   ]
+  }
+ ],
+ "lanes": {
+  "sl_W5_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W5_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_W4_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W4_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_W3_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W3_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_W2_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W2_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_W1_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W1_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_W0_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_W0_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_E0_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_E0_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_E1_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_E1_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_E2_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_E2_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_E3_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_E3_fe__x_fe_fw_p1__1"
+   ]
+  },
+  "sl_E4_fe__x_fe_fw_p1": {
+   "added_cycles": 0,
+   "form": "re-site last station (c)",
+   "ports": [
+    "sl_E4_fe__x_fe_fw_p1__1"
+   ]
+  }
+ },
+ "unfixed": [],
+ "margin_left": [
+  {
+   "port": "coll_core__out_err_re_wi__2",
+   "bit": 0,
+   "hop_um": 401.9,
+   "cls": "b/c",
+   "why": "A slot has no explicit bit sites"
+  },
+  {
+   "port": "coll_core__out_err_re_wi__2",
+   "bit": 1,
+   "hop_um": 401.9,
+   "cls": "b/c",
+   "why": "A slot has no explicit bit sites"
+  }
+ ],
+ "after": {
+  "bits_over": 0,
+  "ports_over": 0,
+  "max_hop_um": 401.9,
+  "over_ports": []
+ },
+ "out_sha256": "10877d531899",
+ "tok_verify": {
+  "sl_E0_fe__x_fe_fw_p1": 0,
+  "sl_E1_fe__x_fe_fw_p1": 0,
+  "sl_E2_fe__x_fe_fw_p1": 0,
+  "sl_E3_fe__x_fe_fw_p1": 0,
+  "sl_E4_fe__x_fe_fw_p1": 0,
+  "sl_W0_fe__x_fe_fw_p1": 0,
+  "sl_W1_fe__x_fe_fw_p1": 0,
+  "sl_W2_fe__x_fe_fw_p1": 0,
+  "sl_W3_fe__x_fe_fw_p1": 0,
+  "sl_W4_fe__x_fe_fw_p1": 0,
+  "sl_W5_fe__x_fe_fw_p1": 0
+ }
+}

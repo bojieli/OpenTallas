@@ -1,0 +1,9 @@
+QC 12:00 event plan s14_final sha256 7164829ac234 (DIE-QC-99, 2026-11-11)
+base: anchored head 08a1c69f4431. chain: stdir, s2_vis (st/stm/cbf), su_c, egap, sul1w, s1reach + CPL-QC-4 delta_cb_qc4 c913f7e32292
+reverted to s1_stdir: 16 st_a/st_b types (23 station-in-macro G0 errors), 11 stm types (G0C off-lattice)
+reverted sul1w in 9 sc types to s7_egap (strict bind of s12 failed R8_STALE kv_waddr 20 vs 19): held-improvement
+reverted cbn_q01 x3 to s9_reach cores (s13 bind: 4 RESET_ANCHOR/EMIT errors, relay > tol 405): held-improvement
+G0 268 = head (0 new); G0C 334 vs head 331 (+3 advisory core_faces); station_lint 27 INVERTED -> 0, 3 NONMONOTONE 19 um
+EQ: 9 sc types ft_slots bit_sites_um/regs_um positions only, station counts and latency block identical to head
+strict bind of s14 on epyc7 (anchored overlay v3, sidecar 499a1c76d58d): BIND_RC=0 errors 0, latency_consumers errors 0
+digests sha256: bind_report 2fa6b10453c64ce17b1a033e594212209586a3d1db7031d0eb57073cffca0585 bus_groups 8a538cc6eeb7a51a4bb26125a55ad6cf18743ce45e3aee9da3b4b196aae9ca63 bind_latency_consumers e28d9cc0d44e63d0b8e531728c19fdd8a25a9fb32c6c4d44853b3a7dd63a3b28 provenance_bind 063623b7110b370c319b0c122e3d384a9d25caf3143d597ab5464a2cb77c5da3
