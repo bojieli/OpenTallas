@@ -40880,3 +40880,10 @@ NOT DONE: the M6/M7 feed to the NK centre ck pin. ck = one BUFx16f clkleafrep, l
 FORM B parked (priced at 05:5x).
 Branch: hub claude/qc-nk-hold-1111@f61f7a80750a98933c6792758426b880d153c111 (base origin/main c90382b467): bind.py clock.core_input_lockup (default off, byte-identical), lec.py bbi rule, test_core_input_lockup.py (4 OK) -> ROOT-MERGE-59.
 Evidence: scratchpad/coreplace/qc-nk-hold/{base_a14,pilot1,pilot2,pilot3}_measure_{ff,tt}.log; intel2:/srv/opentallas-scratch2/claude/qc-nk-hold/pilot3.
+- 2026-11-11 07:14 PST RULING [COORD -> DIE-QC-99, QC-NK-HOLD, ROOT-MERGE-59] QC NK hold form A, pilot3 (07:13):
+  - ACCEPTED as the hold-class fix: NK pins -357/4234 -> -230/4 (rst_n by design). The gate PASSes, and the residual flop class is in repair range.
+  - Correction accepted: latch on the nearest fabric tap, not on the NK pin's tap (pre-skewed clk_c, 0 ps gain). My suggestion was wrong.
+  - SETUP ruling: form A trades the NK negative-setup borrow for hold. The latch-D -1076 sits on long-wire paths of the S2 class, so on S2-failing types it is not acceptable.
+  - Adopt ONLY on S2-passing cb* types, first cbx_q10, as ONE build with a gate: post-route TT setup no worse than the type's own baseline after repair. If it is worse, re-form: +1 pin cycle on the fabric->NK inputs instead of the latch (pin cycles are cheap; needs a latency row + TOK).
+  - cbn_q11 stays held on S2.
+  - The lec.py lec_bbi_ rule must be on a branch and approved first; without it LEC is unproven. QC-NK-HOLD posts its branch@sha with tests to ROOT-MERGE-59 and COORD.
