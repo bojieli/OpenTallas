@@ -3111,7 +3111,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp_por15c",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp_por15c_por36",
    "src_sha": "c0c9a3de749adaa0acf74a596fcf1c58c6ff0696",
    "kit_rtl": {
     "mode": "script",
@@ -4423,7 +4423,38 @@
     "slice_station__t7__cl945bc067@12",
     "slice_station__t8@12",
     "svc_hi_dsdv_svc_pvso_entry__t1@13",
-    "svc_hi_dsdv_svc_pvso_entry__t2@13"
+    "svc_hi_dsdv_svc_pvso_entry__t2@13",
+    "ot_s81sl_kv_leaf__t1@4",
+    "ot_s81sl_kv_leaf__t3@4",
+    "ot_s81sl_kv_leaf__t4@4",
+    "ot_s81sl_leaf__t10@5",
+    "ot_s81sl_leaf__t12@9",
+    "ot_s81sl_leaf__t13@5",
+    "ot_s81sl_leaf__t15@10",
+    "ot_s81sl_leaf__t23@4",
+    "ot_s81sl_leaf__t24__cl2456157b@7",
+    "ot_s81sl_leaf__t24__cl81374cd8@5",
+    "ot_s81sl_leaf__t26@27",
+    "ot_s81sl_leaf__t3@11",
+    "ot_s81sl_leaf__t31@12",
+    "ot_s81sl_leaf__t32@7",
+    "ot_s81sl_leaf__t36@7",
+    "ot_s81sl_leaf__t4@14",
+    "ot_s81sl_leaf__t40__cl86ea32b3@11",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@9",
+    "ot_s81sl_leaf__t40__clf8bbdae1@17",
+    "ot_s81sl_leaf__t41@8",
+    "ot_s81sl_leaf__t43@9",
+    "ot_s81sl_leaf__t46@11",
+    "ot_s81sl_leaf__t50@14",
+    "ot_s81sl_leaf__t53__cl958451dd@15",
+    "ot_s81sl_leaf__t60@9",
+    "ot_s81sl_leaf__t61@10",
+    "ot_s81sl_leaf__t65@8",
+    "ot_s81sl_leaf__t68@7",
+    "ot_s81sl_leaf__t71@5",
+    "ot_s81sl_leaf__t72@11",
+    "ot_s81sl_leaf__t74@13"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4505,13 +4536,38 @@
     "svc_*_dsdv_svc_rs__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays.",
     "svc_lo_dsdv_svc_rs_w__t*": "KW-FIX-43 2026-11-10 09:4x PST (COORD flat-cell check): svc_rs still flat above the 400k OpenROAD cap: plan binds only 64 ot_s81c_attn_hcore + 8 dsdv_svc_sx_hrow hard cores (no hslice cores); the same form's 11-07 post-synth probes (t2 a6, t4 a5, lo t6 a2) removed 590-742k dead instances and left 3.36-3.75 mm2 design area, of which only 2.91-3.07 mm2 is hard cores + SRAM: 0.45-0.69 mm2 live std-cell area, about 1.5-4.6M ASAP7 cells. Held before place until the S81-SVCRS-3 hslice redesign lands; the port_buf_at_pin overlay stays.",
     "ot_s81sl_leaf__t53__clb66fa5cb": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (2): congestion row (full GRT 13h46, overflow 83,032, then incremental GRT hung 6h02); needs a form from DIE-S81-85, no wave relaunch. Queue job 8de931997954 (started 14:58 on intel1 before the ruling) left running. Lift = delete this key.",
-    "ot_s81sl_leaf__t*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "col_h9_*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "col_h10_*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "ot_s81sl_kv_leaf__t1": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "ot_s81sl_kv_leaf__t3": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "ot_s81sl_kv_leaf__t4": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
-    "ot_s81sl_kv_leaf__t5": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key."
+    "ot_s81sl_leaf__t22": "DIE-S81-85 11-10 23:5x porous release: kit window needs > 208 ps (DS85 late-tap lane form pending)",
+    "ot_s81sl_leaf__t30": "DIE-S81-85 11-10 23:5x porous release: kit window needs > 208 ps (DS85 late-tap lane form pending)",
+    "ot_s81sl_leaf__t39": "DIE-S81-85 11-10 23:5x porous release: kit window needs > 208 ps (DS85 late-tap lane form pending)",
+    "ot_s81sl_leaf__t8": "DIE-S81-85 11-10 23:5x porous release: kit window needs > 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r0_p1__t1__cl574cc59d": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r1__t1__cl95b37463": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r1__t1__cld01bb4ae": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r2__t1__cl8b686b3e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r2__t1__cl99efd374": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r2__t1__clac068e56": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p1__t1": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p2__t1__cl0045af7b": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p2__t1__cl9f71e63d": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p3__t1__cl0cd90c0e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p3__t1__cl8ce97bcb": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p4__t1__cl8ef405e8": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p4__t1__clcb2fbfe8": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p5__t1": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p6__t1": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r1__t1__cl49d7a23e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r1__t1__clf32cde8d": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__cl774acf45": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__cl87f3ff59": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__clb8d86cd5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__clc9ad8f7e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__clce45cab5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "ot_s81sl_leaf__t16": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "ot_s81sl_leaf__t27": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "ot_s81sl_leaf__t42": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "col_h10_r0_p1__t1__cl911743eb": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "col_h10_r0_p4__t1": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "col_h9_r0_p3__t1__cl31d0dc4b": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind"
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -4537,7 +4593,7 @@
     "ot_s81sl_leaf__t21@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t22@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t23@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-    "ot_s81sl_leaf__t25__cl431c660f@4": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
+    "ot_s81sl_leaf__t25__cl431c660f@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t25__cl55642d17@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t26@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t27@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -4607,7 +4663,7 @@
     "ot_s81sl_leaf__t1@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t21@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t22@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
-    "ot_s81sl_leaf__t23@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
+    "ot_s81sl_leaf__t23@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t25__cl431c660f@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t25__cl55642d17@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t26@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
@@ -4640,7 +4696,7 @@
     "ot_s81sl_leaf__t10@6": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t11@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t12@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
-    "ot_s81sl_leaf__t13@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
+    "ot_s81sl_leaf__t13@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t14@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_leaf__t15@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t16@6": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
@@ -4660,7 +4716,7 @@
     "ot_s81sl_leaf__t33@6": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t34@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t37@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
-    "ot_s81sl_leaf__t38@5": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822); REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
+    "ot_s81sl_leaf__t38@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t39@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t3@5": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t43@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -4684,7 +4740,7 @@
     "ot_s81sl_leaf__t66@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t67@4": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a4 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
     "ot_s81sl_leaf__t68@3": "KW-FIX-37 18:3x: kit_rtl bound source missing on the gen host at 10:51/11:00 (codex-wave-bind-1106/src_28fc7 pruned from that host); now present on all S81 gen hosts [CHECKED intel1/epyc4/epyc5 test -f]; no design change, no P&R ran on the failed attempt",
-    "ot_s81sl_leaf__t69@4": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
+    "ot_s81sl_leaf__t69@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t6@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t70@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
     "ot_s81sl_leaf__t71@4": "DIE-S81-51 leaf face_guard spare class (dropped + land_slot spares -> declared dead_inputs with proof receipts): merged main d7a13f9fef6 (train G17, from claude/die-s81-51-spare-1103@638ff03889a) = wave src kw-fix-4-s81g17; COORD 10:4x batch relaunch",
@@ -4702,7 +4758,7 @@
     "dsdv_slice_kv512_C__t1@2": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_kv_leaf__t2@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_kv_leaf__t3@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-    "ot_s81sl_kv_leaf__t5@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "ot_s81sl_kv_leaf__t5@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t13@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t16@7": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t22@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -4734,8 +4790,8 @@
     "ot_s81sl_leaf__t66@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t67@5": "KW-FIX-35-S 2026-11-08 06:04 PST: S81-TYPES-7 05:36/05:47 CLASS A: reset-scope selected (7c731625b9) die-wide; packet (f51e05a4f9e) SELECTED_PASS on src_9d13c, receipt reproduced, only the 4 LP types moved [epyc4 scratch3/claude/kw35/pk/packet_kw35s4.json]; failed at kit_topology before any CAD",
     "ot_s81sl_leaf__t68@4": "KW-FIX-42 03:24 COORD RULINGS 03:2x: REDESIGN: macros moved, not a retry; escape-open, 9 pushes, model 2.62->0.97 (DIE-S81-85 03:16); resume at floorplan, synth reused; PIN CYCLES 0",
-    "ot_s81sl_leaf__t70@5": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822); REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
-    "ot_s81sl_leaf__t71@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "ot_s81sl_leaf__t70@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t71@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t73@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t74@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "seqhost__t1@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
@@ -4794,7 +4850,7 @@
     "ot_s81sl_leaf__t39@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_leaf__t46@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_leaf__t51@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
-    "ot_s81sl_leaf__t57@8": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
+    "ot_s81sl_leaf__t57@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "seqhost__t1@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "serdes__t12@2": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
     "serdes__t14@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
@@ -4851,10 +4907,10 @@
     "ot_s81sl_leaf__t24__cl81374cd8@8": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "ot_s81sl_leaf__t25__cl431c660f@9": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "ot_s81sl_leaf__t40__clf8bbdae1@5": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
-    "ot_s81sl_leaf__t44__clf4ea6d4b@10": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
-    "ot_s81sl_leaf__t44__clf6cf8492@7": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
+    "ot_s81sl_leaf__t44__clf4ea6d4b@10": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t44__clf6cf8492@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t54__cl706d9749@10": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
-    "ot_s81sl_leaf__t6@5": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822); REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
+    "ot_s81sl_leaf__t6@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t69@5": "CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "__batch_i2_rcore": "25 rows: CLASS RESET-CORE ef3c0b855a4 (reset_tree keeps a non-relay hard-core reset; OT_RESET_CORE_KEPT + RESULTS_DIR/ot_reset_core_kept.txt) on main 4b09653bef8 = wave src kw-fix-4-s81i2; batch I2-RCORE (KW-FIX-4 17:03)",
     "col_h10_r1__t1__cl95b37463@7": "I2-1103 RESET-CORE row CANCEL-VOLUME 17:21 by an OLD-src (39a2) col_h9_r1 OT_RESET_CORE fail (no old-src col/leaf attempt left running); relaunch on 4b09653bef8; class fix claude/kw-fix-4-pilotsrc-1103@6314af9340 (KW-FIX-4 17:27)",
@@ -4872,7 +4928,7 @@
     "serdes__t13@2": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t15__cla2127225@4": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t16@3": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
-    "col_h10_r0_p4__t1@13": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
+    "col_h10_r0_p4__t1@13": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "col_h10_r2__t1__cl99efd374@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
     "col_h9_r0_p3__t1__cl0cd90c0e@18": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "col_h9_r0_p3__t1__cl31d0dc4b@13": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
@@ -4889,10 +4945,10 @@
     "ot_s81sl_leaf__t23@8": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t25__cl55642d17@17": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t26@8": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
-    "ot_s81sl_leaf__t29@12": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
+    "ot_s81sl_leaf__t29@12": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t32@8": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
-    "ot_s81sl_leaf__t33@8": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
-    "ot_s81sl_leaf__t35@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
+    "ot_s81sl_leaf__t33@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t35@6": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t37@8": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t3@7": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@3": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
@@ -4900,13 +4956,13 @@
     "ot_s81sl_leaf__t4@6": "KW-FIX-35-S 2026-11-08 05:24 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: 004a51fc1b6 macro exit on the current src + reset-scope selected; a6 launched 05:09 on the old config before the item_env landed, stopped at kit_topology",
     "ot_s81sl_leaf__t52@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t53__clb66fa5cb@10": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
-    "ot_s81sl_leaf__t5@6": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
+    "ot_s81sl_leaf__t5@6": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t66@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t70@6": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "ot_s81sl_leaf__t7@5": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "serdes__t14@5": "LEC-EQCONST-RESTORE class (lecneq 298bfc55e92, main I8 34659669869, COORD 20:20): pre-route LEC NOT EQUIVALENT on synth-merged twins; one relaunch on fixed lec.py (KW-FIX-4 20:3x)",
     "col_h9_r2__t1__clb8d86cd5@3": "RESET-CORE stale gen: pre-ef3c0b855a src; fresh attempt regenerates gen/ on s81i8 (32-row batch 20:08 was the canary, class 37->5)",
-    "ot_s81sl_leaf__t1@5": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822); REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
+    "ot_s81sl_leaf__t1@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t42@3": "RESET-CORE stale gen: pre-ef3c0b855a src; fresh attempt regenerates gen/ on s81i8 (32-row batch 20:08 was the canary, class 37->5)",
     "ot_s81sl_leaf__t60@4": "RESET-CORE stale gen: pre-ef3c0b855a src; fresh attempt regenerates gen/ on s81i8 (32-row batch 20:08 was the canary, class 37->5)",
     "ot_s81sl_leaf__t8@4": "RESET-CORE stale gen: pre-ef3c0b855a src; fresh attempt regenerates gen/ on s81i8 (32-row batch 20:08 was the canary, class 37->5)",
@@ -4946,9 +5002,9 @@
     "ot_s81sl_leaf__t43@6": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t44__clf4ea6d4b@12": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t44__clf6cf8492@8": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-    "ot_s81sl_leaf__t47@7": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
+    "ot_s81sl_leaf__t47@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t50@7": "KW-FIX-35-S 2026-11-08 05:09 PST: REDESIGN: S81-TYPES-7-CLAND CLASS K: collector under moved macro -> 004a51fc1b6 macro exit (kit src abaf081 lacked it); fresh kit on current src",
-    "ot_s81sl_leaf__t51@7": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
+    "ot_s81sl_leaf__t51@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t52@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t53__clb66fa5cb@12": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t54__cl706d9749@11": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -4957,7 +5013,7 @@
     "ot_s81sl_leaf__t58@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t59@7": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t62@6": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-    "ot_s81sl_leaf__t67@9": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
+    "ot_s81sl_leaf__t67@9": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t69@6": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t7@6": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t74@9": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -5197,9 +5253,9 @@
     "dsdv_slice_lepw_mus_C__t1@7": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
     "slice_station__t47@13": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
     "slice_station__t8@8": "9f316/e0 relative-asbuilt/current emitted native authority +strict JSON recovery; actual canonical export/topology+GEN finite32912 PASS.",
-    "ot_s81sl_kv_leaf__t1@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
-    "ot_s81sl_kv_leaf__t3@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
-    "ot_s81sl_kv_leaf__t4@4": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
+    "ot_s81sl_kv_leaf__t1@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_kv_leaf__t3@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_kv_leaf__t4@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "slice_station__t52@14": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
     "slice_station__t17@10": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
     "slice_station__t18@9": "KW-FIX-24 14:5x one S81 batch: src -> kw24/src_c2bec = main c2becaa959 (incl. ROOT-MERGE-44 G6 kvnative2 e39248210f + rgfixed 32e316c6), hardlink of kw23/src_e9eda + 183 changed files, blob sha verified 0 mismatches on epyc5/epyc6/epyc2; kit_rtl.script -> die-s81-70/kit_rtl_s81_ds70_kvov.sh (COORD 13:2x (1)); kv_leaf t1/t3/t4/t5 holds released; t52@14 (rgfixed, item 9) and t17/t18/t24cl66/t28 (old src_2c705 lacked kit_topology.py, item 6) relaunched",
@@ -5542,7 +5598,33 @@
     "slice_station__t7__cl945bc067@12": "KW-FIX-43 11-10 23:5x COORD 23:04 + 23:4x (2): S81 63-type relaunch on 99f40d35071d (measured windows <=208 ps)",
     "slice_station__t8@12": "KW-FIX-43 11-10 23:5x COORD 23:04 + 23:4x (2): S81 63-type relaunch on 99f40d35071d (measured windows <=208 ps)",
     "svc_hi_dsdv_svc_pvso_entry__t1@13": "KW-FIX-43 11-10 23:5x COORD 23:04 + 23:4x (2): S81 63-type relaunch on 99f40d35071d (measured windows <=208 ps)",
-    "svc_hi_dsdv_svc_pvso_entry__t2@13": "KW-FIX-43 11-10 23:5x COORD 23:04 + 23:4x (2): S81 63-type relaunch on 99f40d35071d (measured windows <=208 ps)"
+    "svc_hi_dsdv_svc_pvso_entry__t2@13": "KW-FIX-43 11-10 23:5x COORD 23:04 + 23:4x (2): S81 63-type relaunch on 99f40d35071d (measured windows <=208 ps)",
+    "ot_s81sl_leaf__t10@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t12@9": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t15@10": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t24__cl2456157b@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t24__cl81374cd8@5": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t25__cl55642d17@2": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t26@27": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t3@11": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t31@12": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t32@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t36@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t4@14": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t40__cl86ea32b3@11": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@9": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t40__clf8bbdae1@17": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t41@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t43@9": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t46@11": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t50@14": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t53__cl958451dd@15": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t60@9": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t61@10": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t65@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t68@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t72@11": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "ot_s81sl_leaf__t74@13": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -8952,55 +9034,73 @@
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t10": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t11": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t12": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t13": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t14": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t15": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t2": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t21": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t22": {
      "kit_rtl": {
@@ -9012,91 +9112,121 @@
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t24__cl2456157b": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t24__cl81374cd8": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t25__cl431c660f": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t26": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t29": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t3": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t31": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t32": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t33": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t34": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t35": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t36": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t37": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t38": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t39": {
      "kit_rtl": {
@@ -9108,85 +9238,113 @@
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t40__cl86ea32b3": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t40__clf8bbdae1": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t41": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t43": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t44__clf4ea6d4b": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t44__clf6cf8492": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t46": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t47": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t5": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t50": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t51": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t53__cl958451dd": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t53__clb66fa5cb": {
      "kit_rtl": {
@@ -9204,97 +9362,129 @@
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t56": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t57": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t59": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t6": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t60": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t61": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t65": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t67": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t68": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t69": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t70": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t71": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t72": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t74": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "ot_s81sl_leaf__t9": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     },
     "slice_station__t51": {
      "kit_rtl": {
@@ -9509,6 +9699,70 @@
     "svc_hi_dsdv_svc_pvso_entry__t2": {
      "plan": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged"
+    },
+    "ot_s81sl_kv_leaf__t1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_kv_leaf__t3": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_kv_leaf__t4": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_kv_leaf__t5": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t17": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t25__cl55642d17": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t28": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t45": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t52": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t55": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t58": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t62": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t66": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t7": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "ot_s81sl_leaf__t73": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
+    },
+    "col_h10_r2__t1__cl1f5d6c2a": {
+     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged"
     }
    },
    "item_inputs_prev_kw43ctap": {
@@ -17961,85 +18215,22 @@
     "col_h9_r2__t1__clb8d86cd5": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "col_h9_r2__t1__clc9ad8f7e": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "col_h9_r2__t1__clce45cab5": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_kv_leaf__t1": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_kv_leaf__t3": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_kv_leaf__t4": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_kv_leaf__t5": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t1": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t10": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t11": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t12": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t13": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t14": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t15": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t16": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t17": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t2": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t21": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t22": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t23": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t24__cl2456157b": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t24__cl81374cd8": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t25__cl431c660f": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t25__cl55642d17": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t26": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t27": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t28": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t29": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t3": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t30": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t31": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t32": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t33": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t34": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t35": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t36": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t37": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t38": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t39": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t4": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t40__cl86ea32b3": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t40__clf8bbdae1": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t41": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t42": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t43": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t44__clf4ea6d4b": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t44__clf6cf8492": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t45": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t46": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t47": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t5": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t50": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t51": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t52": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t53__cl958451dd": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t53__clb66fa5cb": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t54__cl501e5681": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t54__cl706d9749": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t55": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t56": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t57": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t58": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t59": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t6": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t60": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t61": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t62": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t65": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t66": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t67": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t68": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t69": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t7": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t70": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t71": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t72": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t73": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t74": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t75": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "ot_s81sl_leaf__t8": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
-    "ot_s81sl_leaf__t9": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)"
+    "col_h10_r1__t1__cl95b37463": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h10_r2__t1__cl99efd374": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p2__t1__cl9f71e63d": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p5__t1": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r0_p6__t1": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "col_h9_r2__t1__cl774acf45": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)"
    },
    "route_hold_items_prev_kw43fb_added": [
     "col_h10_r0_p1__t1__cl574cc59d",
@@ -18141,7 +18332,498 @@
     "ot_s81sl_leaf__t8",
     "ot_s81sl_leaf__t9"
    ],
-   "note_kw43fb": "KW-FIX-43 11-10 23:5x COORD 23:4x: (1) route_hold_items = the 98 porous-held types (hold_items already held new builds; route hold stops finished kits being enqueued); (2) 52 of the 63 relaunch types on item_inputs plan 99f40d35071d + retry item@attempt, 13 counted stations in rebuild_counted; dsdv_slice_c1x_C__t5 is in hold_items; 10 types that build from their own plan+bind (c839 CORE-CTAP-WIDE x8, FTLOCK t27/t49) wait for DIE-S81-85's combined plan. Revert: drop the *_prev_kw43fb_added names from item_inputs/retry/rebuild_counted/route_hold_items."
+   "note_kw43fb": "KW-FIX-43 11-10 23:5x COORD 23:4x: (1) route_hold_items = the 98 porous-held types (hold_items already held new builds; route hold stops finished kits being enqueued); (2) 52 of the 63 relaunch types on item_inputs plan 99f40d35071d + retry item@attempt, 13 counted stations in rebuild_counted; dsdv_slice_c1x_C__t5 is in hold_items; 10 types that build from their own plan+bind (c839 CORE-CTAP-WIDE x8, FTLOCK t27/t49) wait for DIE-S81-85's combined plan. Revert: drop the *_prev_kw43fb_added names from item_inputs/retry/rebuild_counted/route_hold_items.",
+   "src_prev_kw43por36": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp_por15c",
+   "hold_items_prev_kw43por36_removed": {
+    "ot_s81sl_leaf__t*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "col_h9_*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "col_h10_*": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "ot_s81sl_kv_leaf__t1": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "ot_s81sl_kv_leaf__t3": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "ot_s81sl_kv_leaf__t4": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key.",
+    "ot_s81sl_kv_leaf__t5": "DIE-S81-85 COORD 11-10 23:1x: porous-view DRT-0073 class (pin's own-layer stub + adjacent OBS in DS85-HCA porous views ot_s81sl_vs/vn_a/vn_b/vq/hcpost_lane_pr/dsfd_qbank_S/N/cfg7_seq); kits on these views provably cannot route. Held until POROUS-ALL-1 posts the fixed views + map.json shas; released in one batch by DIE-S81-85. Revert: delete this key."
+   },
+   "hold_items_prev_kw43por36_added": [
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t8",
+    "col_h10_r0_p1__t1__cl574cc59d",
+    "col_h10_r1__t1__cl95b37463",
+    "col_h10_r1__t1__cld01bb4ae",
+    "col_h10_r2__t1__cl8b686b3e",
+    "col_h10_r2__t1__cl99efd374",
+    "col_h10_r2__t1__clac068e56",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1__cl0045af7b",
+    "col_h9_r0_p2__t1__cl9f71e63d",
+    "col_h9_r0_p3__t1__cl0cd90c0e",
+    "col_h9_r0_p3__t1__cl8ce97bcb",
+    "col_h9_r0_p4__t1__cl8ef405e8",
+    "col_h9_r0_p4__t1__clcb2fbfe8",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1__cl49d7a23e",
+    "col_h9_r1__t1__clf32cde8d",
+    "col_h9_r2__t1__cl774acf45",
+    "col_h9_r2__t1__cl87f3ff59",
+    "col_h9_r2__t1__clb8d86cd5",
+    "col_h9_r2__t1__clc9ad8f7e",
+    "col_h9_r2__t1__clce45cab5",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t42",
+    "col_h10_r0_p1__t1__cl911743eb",
+    "col_h10_r0_p4__t1",
+    "col_h9_r0_p3__t1__cl31d0dc4b"
+   ],
+   "item_inputs_prev_kw43por36": {
+    "ot_s81sl_kv_leaf__t1": null,
+    "ot_s81sl_kv_leaf__t3": null,
+    "ot_s81sl_kv_leaf__t4": null,
+    "ot_s81sl_kv_leaf__t5": null,
+    "ot_s81sl_leaf__t1": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t10": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t11": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t12": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t13": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t14": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t15": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t17": null,
+    "ot_s81sl_leaf__t2": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t21": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t23": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t24__cl2456157b": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t24__cl81374cd8": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t25__cl431c660f": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t25__cl55642d17": null,
+    "ot_s81sl_leaf__t26": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t28": null,
+    "ot_s81sl_leaf__t29": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t3": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t31": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t32": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t33": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t34": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t35": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t36": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t37": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t38": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t4": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t40__cl86ea32b3": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t40__clf8bbdae1": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t41": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t43": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t44__clf4ea6d4b": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t44__clf6cf8492": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t45": null,
+    "ot_s81sl_leaf__t46": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t47": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t5": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t50": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t51": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t52": null,
+    "ot_s81sl_leaf__t53__cl958451dd": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t54__cl706d9749": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t55": null,
+    "ot_s81sl_leaf__t56": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t57": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t58": null,
+    "ot_s81sl_leaf__t59": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t6": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t60": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t61": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t62": null,
+    "ot_s81sl_leaf__t65": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t66": null,
+    "ot_s81sl_leaf__t67": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t68": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t69": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t7": null,
+    "ot_s81sl_leaf__t70": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t71": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t72": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t73": null,
+    "ot_s81sl_leaf__t74": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "ot_s81sl_leaf__t9": {
+     "kit_rtl": {
+      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
+     },
+     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
+    },
+    "col_h10_r2__t1__cl1f5d6c2a": null
+   },
+   "route_hold_items_prev_kw43por36_removed": [
+    "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t4",
+    "ot_s81sl_kv_leaf__t5",
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24__cl2456157b",
+    "ot_s81sl_leaf__t24__cl81374cd8",
+    "ot_s81sl_leaf__t25__cl431c660f",
+    "ot_s81sl_leaf__t25__cl55642d17",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40__cl86ea32b3",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+    "ot_s81sl_leaf__t40__clf8bbdae1",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44__clf4ea6d4b",
+    "ot_s81sl_leaf__t44__clf6cf8492",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53__cl958451dd",
+    "ot_s81sl_leaf__t54__cl706d9749",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t9"
+   ],
+   "retry_prev_kw43por36_added": [
+    "ot_s81sl_kv_leaf__t1@4",
+    "ot_s81sl_kv_leaf__t3@4",
+    "ot_s81sl_kv_leaf__t4@4",
+    "ot_s81sl_leaf__t10@5",
+    "ot_s81sl_leaf__t12@9",
+    "ot_s81sl_leaf__t13@5",
+    "ot_s81sl_leaf__t15@10",
+    "ot_s81sl_leaf__t23@4",
+    "ot_s81sl_leaf__t24__cl2456157b@7",
+    "ot_s81sl_leaf__t24__cl81374cd8@5",
+    "ot_s81sl_leaf__t26@27",
+    "ot_s81sl_leaf__t3@11",
+    "ot_s81sl_leaf__t31@12",
+    "ot_s81sl_leaf__t32@7",
+    "ot_s81sl_leaf__t36@7",
+    "ot_s81sl_leaf__t4@14",
+    "ot_s81sl_leaf__t40__cl86ea32b3@11",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@9",
+    "ot_s81sl_leaf__t40__clf8bbdae1@17",
+    "ot_s81sl_leaf__t41@8",
+    "ot_s81sl_leaf__t43@9",
+    "ot_s81sl_leaf__t46@11",
+    "ot_s81sl_leaf__t50@14",
+    "ot_s81sl_leaf__t53__cl958451dd@15",
+    "ot_s81sl_leaf__t60@9",
+    "ot_s81sl_leaf__t61@10",
+    "ot_s81sl_leaf__t65@8",
+    "ot_s81sl_leaf__t68@7",
+    "ot_s81sl_leaf__t71@5",
+    "ot_s81sl_leaf__t72@11",
+    "ot_s81sl_leaf__t74@13"
+   ],
+   "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x + DIE-S81-85 RELEASE: src -> kw43/src_t51f_pbp_por15c_por36 (cp -al of por15c + porous_files_364106cfe6 a058adcc28ad, porous_views.py overlay --check OK, gen_phys unchanged; + 4 DS85 signed view dirs *_signed_1111 add-only; epyc7/epyc4/epyc8). Released 70 (69 leaf/kv_leaf + 4 col) on plan 39eae55ea90a; porous globs replaced by explicit holds: leaf t8/t22/t30/t39 + 22 col (>208 ps), leaf t16/t27/t42 (c839 own plan); earlier explicit holds t53__clb66fa5cb/t54__cl501e5681/t75 unchanged. 20 full-cover queue jobs kept running. Revert: *_prev_kw43por36*."
   },
   "s81_head": {
    "enabled": true,
