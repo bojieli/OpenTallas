@@ -27316,7 +27316,7 @@
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "slw_fw_v1__clf51c11d8__cl592e3d37": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: incremental GRT hang 6h06 after repair_design (full GRT overflow 0, NDR disabled on clknet_0_clk_t22/t34, then silent); hand to DIE-QC-97 for a form, no wave relaunch. Lift = delete this key."
    },
-   "hard_wrappers": [
+   "hard_wrappers_prev_kw45_1111": [
     "phy_serdes",
     "phy_serdes_b",
     "phy_ucie_kv"
