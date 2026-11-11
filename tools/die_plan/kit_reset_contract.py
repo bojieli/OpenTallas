@@ -178,6 +178,19 @@ def _lec_used(kd):
     return None, None
 
 
+def partition_type_die(kd):
+    """RESET-SCOPE 11-10: the die contract key of a gen_phys partition TYPE kit (freeze.json
+    opentallas.partition_freeze.v1 names its die), else None.  Such a kit is covered by its die contract by scope."""
+    try:
+        fz = json.loads((Path(kd) / "freeze.json").read_text())
+    except (OSError, ValueError):
+        return None
+    if fz.get("schema") != "opentallas.partition_freeze.v1":
+        return None
+    src = die_contract(fz.get("die"))
+    return next((k for k, v in DIE_CONTRACT.items() if v == src), None) if src else None
+
+
 def audit(kd, dies=None):
     """RESET-KEY 11-09: does the kit's top resolve in a die contract (exact or clone base) while its LEC ran at the
     default (or the kit holds no contract)?  -> report dict; miss=True is a kit to re-stage and re-LEC."""
@@ -195,6 +208,11 @@ def audit(kd, dies=None):
         if entry:
             rep.update(die=d, entry=entry, how=how, edges=int(json.loads(src.read_text())["edges"]))
             break
+    if not rep["entry"]:
+        d = partition_type_die(kd)
+        src = DIE_CONTRACT.get(d) if d else None
+        if src and src.is_file() and (dies is None or d in dies):
+            rep.update(die=d, entry=top, how="plan_type", edges=int(json.loads(src.read_text())["edges"]))
     rep["kit_contract"] = (kd / "reset_contract.json").is_file()
     rep["lec_used"], rep["lec_json"] = _lec_used(kd)
     rep["miss"] = bool(rep["entry"]) and (not rep["kit_contract"] or (rep["lec_used"] is not None
@@ -209,7 +227,7 @@ def restage(kd, die):
         sys.path.insert(0, str(TOOL))
     import lec
     top = lec.parse_config(str(kd))["DESIGN_NAME"]
-    got = stage(kd, top, DIE_CONTRACT[die], required_source=True)
+    got = stage(kd, top, DIE_CONTRACT[die], required_source=True, plan_type=partition_type_die(kd) == die)
     if got is None:
         raise SystemExit(f"{kd}: {die} reset contract does not cover {top}")
     return got

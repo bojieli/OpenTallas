@@ -248,3 +248,20 @@ def test_plan_type_scope_listed_type_is_a_byte_copy(tmp_path):
 
 def test_gen_phys_stages_types_by_scope():
     assert "plan_type=True" in (REPO / "tools/die_plan/gen_phys.py").read_text()
+
+
+def test_audit_and_restage_cover_a_partition_type_kit(tmp_path, monkeypatch):
+    """RESET-SCOPE 11-10: the batch re-sign path (audit -> restage, no rebuild) reaches an unlisted type kit."""
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    (kd / "config.mk").write_text("export DESIGN_NAME = new_type_part\nexport VERILOG_FILES = a.v\n")
+    (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.partition_freeze.v1", die="hbm_arch_B2o")))
+    monkeypatch.setitem(K.DIE_CONTRACT, "hbm", src)
+    rep = K.audit(kd)
+    assert rep["how"] == "plan_type" and rep["die"] == "hbm" and rep["miss"] is True
+    assert K.restage(kd, "hbm")["scope"] == "plan_type"
+    assert lec.reset_contract_gate(kd, "new_type_part", environ={})["used"] == 64
+    core = tmp_path / "core"
+    core.mkdir()
+    (core / "config.mk").write_text("export DESIGN_NAME = new_type_part\nexport VERILOG_FILES = a.v\n")
+    assert K.audit(core)["entry"] is None                                    # core kits: list rule unchanged
