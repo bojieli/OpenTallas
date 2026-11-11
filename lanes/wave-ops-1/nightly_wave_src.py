@@ -227,8 +227,9 @@ def plan(date, run_dir, cfg=None, queue_text=None):
         r['conflicts'] = detail['conflicts'][:60]
         r['merged'] = detail['merged'][:60]
         r['lag'] = detail['lag']                         # stale old git copies the new tree replaces by the commit
-        r['bind'] = bind_job(die, d, r['new_tree'], '%s/%s/%s.bind' % (OUT_ROOT, date, die),
-                             script_text=script_text(d))
+        st_ = script_text(d)
+        r['bind'] = bind_job(die, d, r['new_tree'], '%s/%s/%s.bind' % (OUT_ROOT, date, die), script_text=st_,
+                             bind_plan=record_plan(d, st_))
         res['dies'][die] = r
     json.dump(res, open(os.path.join(run_dir, 'plan.json'), 'w'), indent=1)
     open(os.path.join(run_dir, 'REPORT.md'), 'w').write(report(res))
@@ -253,7 +254,22 @@ def script_text(d):
         return ''
 
 
-def bind_job(die, d, new_tree, out, script_text=''):
+def record_plan(d, st_=''):
+    """the plan the strict bind of record was made with (its provenance_bind.json), read on the gen host; None when
+    unknown (11-10 HBM: the config plan plan_r2_restore != the bind's plan_p11t -> CompositionError on re-bind)"""
+    old = (d.get('kit_rtl') or {}).get('bind_out')
+    m = re.search(r'S81_BIND_OUT=(\S+)', st_ or '')
+    old = old or (m.group(1).strip('"\'') if m else None)
+    if not old:
+        return None
+    try:
+        pv = json.loads(ssh(d['gen_host'], 'cat %s/provenance_bind.json' % shlex.quote(old), 60))['provenance']
+        return pv.get('plan') if str(pv.get('plan') or '').startswith('/') else None
+    except Exception:
+        return None
+
+
+def bind_job(die, d, new_tree, out, script_text='', bind_plan=None):
     """the strict bind of record re-run on the new tree: same plan + same asbuilt (its RTL base stays pinned), new
     tools; DIE-S81-85 FTLOCK capped-container form (64g python + 32g sibling yosys, scratch mounted read-only)"""
     kr = d.get('kit_rtl') or {}
@@ -274,15 +290,26 @@ def bind_job(die, d, new_tree, out, script_text=''):
     else:
         # 'all' = elab (writes out/asbuilt.json; the sibling yosys container) + bind + verify; 'bind' alone needs a prior
         # elab (11-10 HBM: FileNotFoundError hbm.bind/asbuilt.json)
-        inner = 'python -I -B tools/die_plan/bind.py all %s --out %s --asbuilt %s --strict --mem %d' % (
-            d['plan'], out, asb, YOSYS_CAP_GB)
+        # fallback = the record's own form (kw43-canon/canon.sh): its out/asbuilt.json is a SEEDED elaboration and only
+        # 'bind' runs; 11-10 HBM: a fresh elab of that asbuilt fails identically on the old and the new tree
+        # (CompositionError sfucore_NE ... $procdff), so the record is not reproducible by elab -> FORM file says which
+        pl = shlex.quote(bind_plan or d['plan'])
+        q = shlex.quote
+        inner = ('sh -c ' + q(
+            'python -I -B tools/die_plan/bind.py all %s --out %s --asbuilt %s --strict --mem %d && echo elab+bind > %s/FORM || '
+            '{ echo "ELAB FAILED: seeded bind on the record elaboration"; mkdir -p %s/elab_failed && '
+            'find %s -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} %s/elab_failed/ \\; ; '
+            'cp -L %s/asbuilt.json %s/asbuilt.json && python -I -B tools/die_plan/bind.py bind %s --out %s '
+            '--asbuilt %s --strict --mem %d && echo seeded-bind > %s/FORM; }' % (
+                pl, q(out), q(asb), YOSYS_CAP_GB, q(out), q(out), q(out), q(out), q(old), q(out), pl, q(out), q(asb),
+                YOSYS_CAP_GB, q(out))))
     cname = 'waveops_bind_' + re.sub(r'[^A-Za-z0-9_.-]', '_', out.split('/wave-src/')[-1])[:80]   # unique per run + die
     cmd = ('docker run --rm --name %s -u $(id -u):$(id -g) --group-add $(stat -c %%g /var/run/docker.sock) '
            '-v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp '
            '-e PYTHONDONTWRITEBYTECODE=1 --memory %dg --memory-swap %dg --cpus 2 '
            '-v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro '
            '-v %s:%s -w %s python:3.14-slim %s' % (cname, BIND_CAP_GB, BIND_CAP_GB, out, out, new_tree, inner))
-    return dict(cmd=cmd, asbuilt=asb, old_bind=old, plan=d['plan'], out=out)
+    return dict(cmd=cmd, asbuilt=asb, old_bind=old, plan=bind_plan or d['plan'], out=out)
 
 
 def report(res):
@@ -648,6 +675,10 @@ def main(argv):
         if not os.path.exists(os.path.join(run_dir, 'build.json')) or os.path.exists(os.path.join(run_dir, 'POSTED')):
             return 0
         txt, done = advance(date, run_dir)
+        nxt = os.path.join(HERE, 'NEXT-POST.txt')            # hand notes queued for tonight's one result post
+        if done and os.path.exists(nxt):
+            txt += '\n' + open(nxt).read().strip()
+            os.replace(nxt, os.path.join(run_dir, 'NEXT-POST.posted.txt'))
         if done:
             rel = os.path.relpath(run_dir, COORD)
             open(os.path.join(run_dir, 'POSTED'), 'w').write(stamp + '\n')
