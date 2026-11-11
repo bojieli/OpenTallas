@@ -1,0 +1,111 @@
+{
+ "event": "LATETAP-PAD-1111",
+ "kind": "verification (DO_NOT_COUNT)",
+ "plan_sha256": "66466e86ebcd7450a7db52c3b8ae807926721845a2e64583dadc4c41da5b2a7f",
+ "fit": "events/latetap_pad_1111/tap_pad_fit_66466e.json",
+ "fit_sha256": "7d8255fbcacd17dee37936be9e825b41bb9fa0e761c6c776f1676c02a3e2dc83",
+ "recipe": "DIE-RECHECK-1 s81 auto recipe (cfg/s81_recheck_bal.yaml, feed_bal 66466e, ot_clk kit + clock-only combo GRT TT/FF + trial_tap_arrivals + die_sta_related --kit-window-out --core-insertion declared) + residual.tap_pad = fit",
+ "run": "epyc2 /srv/opentallas-scratch2/claude/ds85-latetap/s81/{ck,route,proof,sta}_pad1 (ot-run unit oth-ubuntu-2610630-1794385141, exit 0); tree.json meta.tap_pad taps 450 cells 593 max_per_tap 5",
+ "base_kitwin": "intel1 /srv/opentallas-scratch2/claude/die-recheck-1/s81/kitwin_auto_66466e86ebcd.json",
+ "result": {
+  "blocked_ports": 153,
+  "blocked_types": 27,
+  "blocked_ports_after_max_ps": 200.0,
+  "blocked_ports_after_over_208": 0,
+  "die_types_over_208_before": 27,
+  "die_types_over_208_after": 0,
+  "unpadded_type_ports_changed": 0,
+  "unpadded_type_ports": 10553,
+  "unpadded_tap_arrival_abs_max_ps": {
+   "TT": 0.488,
+   "FF": 0.438
+  }
+ },
+ "calibration_per_bufx24_pad_ps": {
+  "TT": {
+   "min": 21.41,
+   "median": 25.27,
+   "max": 32.53,
+   "by_count": {
+    "1": [
+     21.4,
+     25.4,
+     32.5
+    ],
+    "2": [
+     44.7,
+     50.0,
+     61.0
+    ],
+    "3": [
+     69.5,
+     71.5,
+     80.9
+    ],
+    "4": [
+     92.1,
+     96.6,
+     102.9
+    ],
+    "5": [
+     120.7,
+     120.7,
+     120.7
+    ]
+   }
+  },
+  "FF": {
+   "min": 16.51,
+   "median": 19.57,
+   "max": 25.91,
+   "by_count": {
+    "1": [
+     16.5,
+     19.7,
+     25.9
+    ],
+    "2": [
+     34.3,
+     38.7,
+     48.7
+    ],
+    "3": [
+     53.0,
+     55.3,
+     64.1
+    ],
+    "4": [
+     70.5,
+     74.6,
+     81.0
+    ],
+    "5": [
+     93.4,
+     93.4,
+     93.4
+    ]
+   }
+  },
+  "note": "model lower bound PAD_PS TT 20 / FF 16 holds on every padded tap"
+ },
+ "die_sta": {
+  "TT_intra_setup": [
+   386.41,
+   466.41
+  ],
+  "TT_intra_skew": [
+   295.48,
+   205.85
+  ],
+  "FF_intra_skew": [
+   241.28,
+   169.94
+  ],
+  "FF_kit_contract_neg": [
+   4471,
+   4438
+  ],
+  "landed": "unchanged (setup -911.92 TT, damage 1637.36: plan landed class, not touched)"
+ },
+ "not_measured": "LPS / arrivals steps 13-15/18 (DS85 type views not on epyc2); padded taps that are landing endpoints keep their CA class only if the landing phase table is re-run"
+}
