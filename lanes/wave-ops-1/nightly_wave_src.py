@@ -402,7 +402,7 @@ def advance(date, run_dir):
         lines.append('%s: kit-store %s' % (die, store_ingest(date, die, b['out'], mdir)))
     for die, r in res['dies'].items():          # COORD 11-10: say which conflicted files the new tree keeps live
         if r.get('conflicts'):
-            lines.append('%s: KEPT LIVE (conflicted with main+overlays, live bytes kept, not reproducible from git) %d file(s): %s'
+            lines.append('%s: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) %d file(s): %s'
                          % (die, len(r['conflicts']), ' '.join(r['conflicts'][:40]) + (' ...' if len(r['conflicts']) > 40 else '')))
     ok = os.path.exists(SWITCH_OK) and open(SWITCH_OK).read().strip() in ('standing', date)
     lines.append('switch: ' + ('ALLOWED by lanes/wave-ops-1/SWITCH-OK; KW-FIX-44 applies it at the next idle gap (new launches only)'
