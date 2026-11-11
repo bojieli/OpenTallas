@@ -39,9 +39,12 @@ b_hw_i [108.528,17.28,380.496,62.64] -> [17.28,17.28,289.248,62.64] and rs_n1 [1
    - Step 2 then treats each widened b_hw_i as off home.  Besides the old shape it tries equal-area bands that are
      longer and shallower (depth >= 1/3), ranked by: crossing within half the strip cap, then nearest the face, then
      deepest.
-   GRT-only probes on the 11-09 kits (adj 0.25, MEASURED): hc2 clcc5e3e61 5235 -> 0; hc1 cl7d360508 22032 -> 0
-   (widen + rows 4 + logic lift; see the HC-CLAND report for the per-arm table).
-    derive_hc_cland_1111.py PLAN.json OUT.json [--rows 3] [--bases sle_hc1,slw_hc1,sle_hc2,slw_hc2] [--widen]
+   --keep-band: a widened band that is still home keeps its rect (no re-site).
+   GRT-only probes on the 11-09 kits (adj 0.25, MEASURED): hc2 clcc5e3e61 5235 -> 0 (widen, rows 3, derived band);
+   hc1 cl7d360508 22032 -> 0 (widen, kit band kept, rows 4, no lift).  hc1 with the re-sited band: rows 3 -> 2192,
+   rows 3 + lift -> 647.  So the 11-11 form is two passes:
+     --bases sle_hc2,slw_hc2 --rows 3 --widen ;  then  --bases sle_hc1,slw_hc1 --rows 4 --widen --keep-band
+    derive_hc_cland_1111.py PLAN.json OUT.json [--rows 3] [--bases sle_hc1,slw_hc1,sle_hc2,slw_hc2] [--widen [--keep-band]]
         [--sidecar SIDECAR_IN SIDECAR_OUT]
        -> prints {keys, moved, widen, sha256_in, sha256_out[, sidecar_*]}; OUT keeps PLAN's JSON style
 """
@@ -352,7 +355,7 @@ def sync_sidecar(raw, side, rep):
 EXCLUDE_RE = re.compile(r"^(sle|slw)_fw_v1(__|$)")
 
 
-def apply(raw, rows=ROWS, bases=BASES, widen_face=False):
+def apply(raw, rows=ROWS, bases=BASES, widen_face=False, keep_band=False):
     bad = [b for b in bases if EXCLUDE_RE.match(b)]
     if bad:
         raise SystemExit(f"HC-CLAND: {bad} are excluded from this form (fw_v1 two strikes)")
@@ -373,7 +376,7 @@ def apply(raw, rows=ROWS, bases=BASES, widen_face=False):
         if not (raw["partition_types"][tn].get("clock") or {}).get("landing_contract"):
             continue
         ctx = TypeCtx(raw, plan_obj, tn)
-        if not ctx.off_home() and f"{tn}.{BUS}" not in wrep["windows"]:
+        if not ctx.off_home() and (keep_band or f"{tn}.{BUS}" not in wrep["windows"]):
             continue
         new = ctx.derive()
         for k, (rect, hop) in sorted(new.items()):
@@ -403,12 +406,15 @@ def main():
     p.add_argument("--rows", type=int, default=ROWS)
     p.add_argument("--bases", default=",".join(BASES))
     p.add_argument("--widen", action="store_true", help="HC-WIDEN: b_hw_i takes the free end of its face (both seam sides)")
+    p.add_argument("--keep-band", action="store_true",
+                   help="with --widen: a widened b_hw_i band that is still home (crossing within cap, >=half its bits over the band)"
+                        " keeps its rect (HC1 MEASURED winner: widen + kit band + rows 4)")
     p.add_argument("--sidecar", nargs=2, metavar=("SIDECAR_IN", "SIDECAR_OUT"),
                    help="copy the moved collector source xy into the sidecar (strict bind reads them there)")
     a = p.parse_args()
     src = Path(a.input).read_bytes()
     bases = tuple(x for x in a.bases.split(",") if x)
-    raw, moved, wrep = apply(json.loads(src), a.rows, bases, a.widen)
+    raw, moved, wrep = apply(json.loads(src), a.rows, bases, a.widen, a.keep_band)
     out = _dump(src, raw)
     Path(a.output).write_bytes(out)
     res = {"keys": {b: a.rows for b in bases}, "moved": moved, "widen": wrep,

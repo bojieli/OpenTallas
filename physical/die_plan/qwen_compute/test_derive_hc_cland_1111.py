@@ -171,6 +171,20 @@ class Widen(unittest.TestCase):
         self.assertEqual(rep2["windows"], {})
         self.assertEqual(json.dumps(out, sort_keys=True), json.dumps(again, sort_keys=True))
 
+    def test_widen_keep_band(self):
+        """HC1 MEASURED winner: widened windows, the kit band stays where it is once it is home, rows 4"""
+        p = widen_plan()
+        old = copy.deepcopy(bands(p, OFF[0]))
+        out, moved, rep = D.apply(p, rows=4, bases=("sle_hc1", "slw_hc1"), widen_face=True, keep_band=True)
+        self.assertIn(f"{OFF[0]}.b_hw_i", rep["windows"])
+        self.assertNotIn(OFF[0], moved)
+        self.assertEqual(bands(out, OFF[0]), old)
+        self.assertEqual(out["budgets"]["cland_strip_rows_types"]["sle_hc1"], 4)
+        again, moved2, _ = D.apply(copy.deepcopy(out), rows=4, bases=("sle_hc1", "slw_hc1"), widen_face=True,
+                                   keep_band=True)
+        self.assertEqual(moved2, {})
+        self.assertEqual(json.dumps(out, sort_keys=True), json.dumps(again, sort_keys=True))
+
     def test_widen_refuses_disagreeing_partner(self):
         p = widen_plan()
         p["partition_types"]["ctl_t"]["buses"][0]["window_um"] = [8.64, 280.608]
