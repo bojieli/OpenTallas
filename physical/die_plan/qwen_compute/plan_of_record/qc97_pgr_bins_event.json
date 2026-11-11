@@ -1,0 +1,85 @@
+{
+ "event": "DIE-QC-97 PLAN-GEN-RULES-1 rule B density rows -> sink bins",
+ "base": "/srv/opentallas-scratch2/claude/dq97/sfw/kwfix43_ra/cand23d_fh_hc0bins_stmdq_ra.json",
+ "base_sha256": "886a8ffae77499e54d3e84048867c8f7c1d21a8803f02f14334fcaae7deddaec",
+ "out": "/srv/opentallas-scratch2/claude/dq97/pgr/out_qc_1111_0348/step1_bins/plan_bins.json",
+ "out_sha256": "0a03227b34dc05804bcf99c45fa965187c24cd324265fe0f249e78f461804aeb",
+ "types": {
+  "sle_ctl__cl372cea1c": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_fw_v2__cl6740750e": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_st_a_v2": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_st_b_v1__pv0e7b1dcc": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_st_b_v1__pvc5a85fd4": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_st_b_v2__cl14c98df5": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_st_b_v2__clfde1249e": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_fe_v2__clf110fab2": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_fw_v2__cl8f84514c": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_st_b_v1__cl6357f1cc__pv6ace3e48": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_st_b_v1__cl6357f1cc__pvffd43fdc": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_st_b_v1__cle6023ec2": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_st_b_v2__pva66d0f22": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_st_b_v2__pvc2ec5bfb": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ]
+ },
+ "kept": {},
+ "rtl_change": false,
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "bins_sha256": {
+  "sle_ctl__cl372cea1c": "9b2c4b1cfee804cc4d7b97396cbad2656844eefd6fb310c493f08b8e0f57f761",
+  "sle_fw_v2__cl6740750e": "9386a7cf63d0bd703dc4c7ce3170cfb29cec4cea55de77eb5094fe5a8c5f0dae",
+  "sle_st_a_v2": "f106394841bcdede5cf41e1371c184206b9e9cd85e96895de838f5d5ef54c0ca",
+  "sle_st_b_v1__pv0e7b1dcc": "6fcd3965453e1e973fba592c18f1c0c10383ecd841cd50beff1f9f498b11653f",
+  "sle_st_b_v1__pvc5a85fd4": "5e5365a3bfa6c7e3fd395d22a1d58272b4f8cdf2bd38d1adc601bbc398aafffc",
+  "sle_st_b_v2__cl14c98df5": "718df88c28b5f5b0d75789c97bb6c921c7ac8affb6a808402a6d3bca022ab9fb",
+  "sle_st_b_v2__clfde1249e": "2ab3c3a0df04b0d152f6c6debba54e172d3eb34fee6d9214c5937adae196d57b",
+  "slw_fe_v2__clf110fab2": "e4fcf1a3fbeb13c4c79e2b1b6489c7fdbb5b5291a452ad1c0bccbd1e24976991",
+  "slw_fw_v2__cl8f84514c": "3f194c1ab4eac622f4805576aa044070cedd8a04208418d11008f5adf2b82dcb",
+  "slw_st_b_v1__cl6357f1cc__pv6ace3e48": "de4ef2206386d47f0854d52e16095f1865736f0d2bc63945165f9cbe4032f88e",
+  "slw_st_b_v1__cl6357f1cc__pvffd43fdc": "467728baf7241d95b58ffcae7476ad2f1b90300e772af8a4980b93f155e4bc84",
+  "slw_st_b_v1__cle6023ec2": "101aebccddef85512ac8497d0e16db66dd50a6b58e55f5c43870ee20f2650d11",
+  "slw_st_b_v2__pva66d0f22": "2441bd097dcfeb95bd962d3e44b0fa6c865d38531b9e7ace27db34cfebb54e7c",
+  "slw_st_b_v2__pvc2ec5bfb": "f4628978eef59dc0e85bcb4d670526c59b26b27b3209588bd3429dcd8bcd6dfa"
+ }
+}
