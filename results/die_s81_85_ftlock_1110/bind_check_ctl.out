@@ -1,0 +1,27 @@
+BIND rc=0 /srv/opentallas-scratch2/claude/die-s81-85/ftlock/bind_ctl
+ctl strict errors 0
+ctl u_fl_ files: 0
+=== ctl vs ftlk
+files 1486 1486 only_a [] only_b []
+differing files (bind root normalized) 171
+per-type digest changed: 2 unchanged: 203
+changed but not in event: 0 []
+in event but digest equal: []
+non-type differing files: ['rtl/bind_cells.sv', 'rtl/native_glue/ot_bind_native_0158c812471d0fb2954ece1b.log', 'rtl/native_glue/ot_bind_native_01d4e59d1daaf0dd6b8aa73f.log', 'rtl/native_glue/ot_bind_native_02594d85bd48c76ed866cc4a.log', 'rtl/native_glue/ot_bind_native_0260d72b66301a478341784f.log', 'rtl/native_glue/ot_bind_native_0345256bc94e41a6442d128f.log', 'rtl/native_glue/ot_bind_native_03738a0a8017556951d210df.log', 'rtl/native_glue/ot_bind_native_044df5c12ba3bed1d75a39f6.log', 'rtl/native_glue/ot_bind_native_04d87a1de4c63465bdd6b676.log', 'rtl/native_glue/ot_bind_native_04fa137069376ff1b6b601b8.log', 'rtl/native_glue/ot_bind_native_0723795539ef46d1a768d07c.log', 'rtl/native_glue/ot_bind_native_07be0615319f5c7d24047731.log', 'rtl/native_glue/ot_bind_native_0948ad703afa49e9870873ae.log', 'rtl/native_glue/ot_bind_native_095307ffbea013551f0b4c42.log', 'rtl/native_glue/ot_bind_native_0
+rc=0
+=== bind8 vs ctl
+files 1486 1486 only_a [] only_b []
+differing files (bind root normalized) 544
+per-type digest changed: 100 unchanged: 105
+changed but not in event: 100 ['col_h10_r0_p1__t1__cl574cc59d', 'col_h10_r0_p1__t1__cl911743eb', 'col_h10_r0_p4__t1', 'col_h10_r1__t1__cld01bb4ae', 'col_h10_r2__t1__cl8b686b3e', 'col_h10_r2__t1__cl99efd374', 'col_h10_r2__t1__clac068e56', 'col_h9_r0_p1__t1', 'col_h9_r0_p2__t1__cl0045af7b', 'col_h9_r0_p2__t1__cl9f71e63d', 'col_h9_r0_p3__t1__cl0cd90c0e', 'col_h9_r0_p3__t1__cl31d0dc4b', 'col_h9_r0_p3__t1__cl8ce97bcb', 'col_h9_r0_p4__t1__cl8ef405e8', 'col_h9_r0_p4__t1__clcb2fbfe8', 'col_h9_r0_p5__t1', 'col_h9_r0_p6__t1', 'col_h9_r1__t1__clf32cde8d', 'col_h9_r2__t1__cl774acf45', 'col_h9_r2__t1__cl87f3ff59', 'col_h9_r2__t1__clb8d86cd5', 'col_h9_r2__t1__clc9ad8f7e', 'dsdv_slice_c1x_C__t1', 'dsdv_slice_c1x_C__t10', 'dsdv_slice_c1x_C__t3', 'dsdv_slice_c1x_C__t4', 'dsdv_slice_c1x_C__t5', 'dsdv_slice_c1x_C__t6', 'dsdv_slice_c1x_C__t7', 'dsdv_slice_c1x_C__t8', 'dsdv_slice_c1x_C__t9', 'dsdv_slice_c3x_
+in event but digest equal: ['slice_station__t27', 'slice_station__t49']
+non-type differing files: ['bind.f', 'bind_report.json', 'rtl/native_glue/ot_bind_native_0158c812471d0fb2954ece1b.log', 'rtl/native_glue/ot_bind_native_0158c812471d0fb2954ece1b.ys', 'rtl/native_glue/ot_bind_native_01d4e59d1daaf0dd6b8aa73f.log', 'rtl/native_glue/ot_bind_native_01d4e59d1daaf0dd6b8aa73f.ys', 'rtl/native_glue/ot_bind_native_02594d85bd48c76ed866cc4a.log', 'rtl/native_glue/ot_bind_native_02594d85bd48c76ed866cc4a.ys', 'rtl/native_glue/ot_bind_native_0260d72b66301a478341784f.log', 'rtl/native_glue/ot_bind_native_0260d72b66301a478341784f.ys', 'rtl/native_glue/ot_bind_native_0345256bc94e41a6442d128f.log', 'rtl/native_glue/ot_bind_native_0345256bc94e41a6442d128f.ys', 'rtl/native_glue/ot_bind_native_03738a0a8017556951d210df.log', 'rtl/native_glue/ot_bind_native_03738a0a8017556951d210df.ys', 'rtl/native_glue/ot_bind_native_044df5c12ba3bed1d75a39f6.log', 'rtl/native_glue/ot_bind_nativ
+rc=0
+=== bind8 vs ftlk
+files 1486 1486 only_a [] only_b []
+differing files (bind root normalized) 549
+per-type digest changed: 102 unchanged: 103
+changed but not in event: 100 ['col_h10_r0_p1__t1__cl574cc59d', 'col_h10_r0_p1__t1__cl911743eb', 'col_h10_r0_p4__t1', 'col_h10_r1__t1__cld01bb4ae', 'col_h10_r2__t1__cl8b686b3e', 'col_h10_r2__t1__cl99efd374', 'col_h10_r2__t1__clac068e56', 'col_h9_r0_p1__t1', 'col_h9_r0_p2__t1__cl0045af7b', 'col_h9_r0_p2__t1__cl9f71e63d', 'col_h9_r0_p3__t1__cl0cd90c0e', 'col_h9_r0_p3__t1__cl31d0dc4b', 'col_h9_r0_p3__t1__cl8ce97bcb', 'col_h9_r0_p4__t1__cl8ef405e8', 'col_h9_r0_p4__t1__clcb2fbfe8', 'col_h9_r0_p5__t1', 'col_h9_r0_p6__t1', 'col_h9_r1__t1__clf32cde8d', 'col_h9_r2__t1__cl774acf45', 'col_h9_r2__t1__cl87f3ff59', 'col_h9_r2__t1__clb8d86cd5', 'col_h9_r2__t1__clc9ad8f7e', 'dsdv_slice_c1x_C__t1', 'dsdv_slice_c1x_C__t10', 'dsdv_slice_c1x_C__t3', 'dsdv_slice_c1x_C__t4', 'dsdv_slice_c1x_C__t5', 'dsdv_slice_c1x_C__t6', 'dsdv_slice_c1x_C__t7', 'dsdv_slice_c1x_C__t8', 'dsdv_slice_c1x_C__t9', 'dsdv_slice_c3x_
+in event but digest equal: []
+non-type differing files: ['bind.f', 'bind_report.json', 'rtl/bind_cells.sv', 'rtl/native_glue/ot_bind_native_0158c812471d0fb2954ece1b.log', 'rtl/native_glue/ot_bind_native_0158c812471d0fb2954ece1b.ys', 'rtl/native_glue/ot_bind_native_01d4e59d1daaf0dd6b8aa73f.log', 'rtl/native_glue/ot_bind_native_01d4e59d1daaf0dd6b8aa73f.ys', 'rtl/native_glue/ot_bind_native_02594d85bd48c76ed866cc4a.log', 'rtl/native_glue/ot_bind_native_02594d85bd48c76ed866cc4a.ys', 'rtl/native_glue/ot_bind_native_0260d72b66301a478341784f.log', 'rtl/native_glue/ot_bind_native_0260d72b66301a478341784f.ys', 'rtl/native_glue/ot_bind_native_0345256bc94e41a6442d128f.log', 'rtl/native_glue/ot_bind_native_0345256bc94e41a6442d128f.ys', 'rtl/native_glue/ot_bind_native_03738a0a8017556951d210df.log', 'rtl/native_glue/ot_bind_native_03738a0a8017556951d210df.ys', 'rtl/native_glue/ot_bind_native_044df5c12ba3bed1d75a39f6.log', 'rtl/nati
+rc=0
