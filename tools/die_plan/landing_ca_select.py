@@ -4,7 +4,8 @@
 COORD 11-10 (owner: "adding cycles is not a problem but a lever"): the phase sign on today's rebuilt die clock is not
 stable, so every landing whose margin is NEAR or EDGE in EITHER model becomes the CA form (ot_dp_clk_landing_ca, fixed
 latency K + 1 for every static phase in its window; METHODOLOGY 12.16) with ONE extra cycle over the bind's count, and
-the schedule absorbs it.  LEAD / LAG landings with clear margin in both models keep their measured count.
+the schedule absorbs it.  LEAD / LAG landings with clear margin in both models keep their measured count, except
+(--declared-to-ca, COORD 11-10) those whose insertion is DECLARED at both ends: they become CA until a real clock.
 
 Models, per landing and corner (TT, FF; a corner disagreement is NEAR, as landing_phase_sign):
   raw      d = t_local - t_fwd unwrapped, [lo, hi] = [d - p_dn, d + p_up]: LEAD hi <= -M, LAG lo >= M, else NEAR
@@ -57,18 +58,25 @@ def decide(raw, wr):
     return raw
 
 
-def run(lps, bind_latency, P=833.0, M=100.0, bind_cycles=3):
+def run(lps, bind_latency, P=833.0, M=100.0, bind_cycles=3, views=None, declared_to_ca=False):
+    views = views or {}
     rows = []
     for r in (lps['rows'] if 'rows' in lps else lps['landings']):
         cs = r['corners']
         raw = combine({k: raw_cls(cs[k], M) for k in cs})
         wr = combine({k: wrapped_cls(cs[k], P, M) for k in cs})
         dec = decide(raw, wr)
+        view = views.get(r['port'])
+        reason = None
+        if dec == 'CA':
+            reason = 'raw NEAR' if raw == 'NEAR' else f'wrapped {wr}' if wr in ('NEAR', 'EDGE') else 'sign flips between models'
+        elif declared_to_ca and view == 'both_declared':
+            dec, reason = 'CA', 'both ends declared'      # COORD 11-10: no measured end -> CA until a real clock
         new = {'CA': bind_cycles + 1, 'LEAD': bind_cycles, 'LAG': bind_cycles - 1}[dec]
         clear = min(max(-cs[k]['hi_ps'], cs[k]['lo_ps']) for k in cs)
         rows.append(dict(port=r['port'], lane=r['lane'], src=r['src'], dst=r['dst'], dst_bus=r.get('dst_bus'),
                          kind=r.get('kind'), wneg=r.get('wneg'), raw=raw, wrapped=wr, ds85_cls=r.get('cls'),
-                         decision=dec, bind_cycles=r.get('bind_cycles', bind_cycles), new_cycles=new,
+                         view=view, decision=dec, ca_reason=reason, bind_cycles=r.get('bind_cycles', bind_cycles), new_cycles=new,
                          delta=new - r.get('bind_cycles', bind_cycles), raw_clearance_ps=round(clear, 1),
                          TT_d_ps=cs['TT']['d_ps'], FF_d_ps=cs['FF']['d_ps']))
     lat = {b['lane']: b for b in bind_latency['buses']}
@@ -95,10 +103,21 @@ def main():
     ap.add_argument('--period-ps', type=float, default=833.0)
     ap.add_argument('--margin-ps', type=float, default=100.0)
     ap.add_argument('--ctl-lanes', default=None, help='comma list of control lanes to flag (S1 set)')
+    ap.add_argument('--detail', type=Path, default=None, help='arrivals_detail.json (src_view / dst_view per port)')
+    ap.add_argument('--declared-to-ca', action='store_true', help='COORD 11-10: a LEAD/LAG landing with BOTH ends '
+                    'DECLARED (no measured insertion) becomes CA too')
     a = ap.parse_args()
     lps = json.loads(a.lps.read_text())
     bl = json.loads((a.bind / 'bind_latency.json').read_text())
-    rows, lanes = run(lps, bl, a.period_ps, a.margin_ps)
+    views = {}
+    if a.detail:
+        det = json.loads(a.detail.read_text())
+        for r in det['corners']['TT']['rows']:
+            n = sum(v != 'DECLARED' for v in (r['src_view'], r['dst_view']))
+            views[r['port']] = {2: 'both_measured', 1: 'one_declared', 0: 'both_declared'}[n]
+    if a.declared_to_ca and not views:
+        raise SystemExit('--declared-to-ca needs --detail')
+    rows, lanes = run(lps, bl, a.period_ps, a.margin_ps, views=views, declared_to_ca=a.declared_to_ca)
     a.out.mkdir(parents=True, exist_ok=True)
     ctl = set((a.ctl_lanes or '').split(',')) - {''}
     cols = list(rows[0])
@@ -111,9 +130,9 @@ def main():
                 period_ps=a.period_ps, margin_ps=a.margin_ps, landings=len(rows),
                 decision=dict(Counter(x['decision'] for x in rows)),
                 raw=dict(Counter(x['raw'] for x in rows)), wrapped=dict(Counter(x['wrapped'] for x in rows)),
-                ca_reason=dict(Counter(('raw NEAR' if x['raw'] == 'NEAR' else f"wrapped {x['wrapped']}"
-                                        if x['wrapped'] in ('NEAR', 'EDGE') else 'sign flips between models')
-                                       for x in rows if x['decision'] == 'CA')),
+                declared_to_ca=a.declared_to_ca,
+                ca_reason=dict(Counter(x['ca_reason'] for x in rows if x['decision'] == 'CA')),
+                by_view=dict(Counter(f"{x['view']}:{x['decision']}" for x in rows)),
                 lanes=len(lanes), lanes_changed=sum(1 for x in lanes if x['delta']),
                 lane_delta_hist=dict(sorted(Counter(x['delta'] for x in lanes).items())),
                 total_added_cycles=sum(x['delta'] for x in rows if x['delta'] > 0),
