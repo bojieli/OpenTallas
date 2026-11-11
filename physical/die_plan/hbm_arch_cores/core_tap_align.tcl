@@ -91,6 +91,15 @@ set ta_tgt 0.0; dict for {n v} $m { set ta_tgt [expr {max($ta_tgt, [lindex $v 0]
 set ta_stp [dict create]
 # safety: a tap never takes more than ceil(r0 deficit / 12 ps) + 1 cells in total, and a round whose measurement does
 # not move (stale timing) stops the loop -- f790 v3c: a stale measure re-added the same deficit 4x -> 1.1 ns tree.
+# DIE-HBM-97 11-11 (vecd4ae v512b, tap 700011): a measured step under 1 ps is no measurement (the first cell can
+# unload the trunk and leave the tap where it was).  Clamping that to the 12 ps floor sized the next round at 12 ps
+# per cell against a real ~21.5 ps and overshot the target by ~185 ps (1047 vs 860), which the stale-round stop then
+# froze.  Such a tap is sized at the default 20 ps instead (-1 here); a real step keeps the 12..30 ps clamp.
+proc ta_step {now a0 nb} {
+  set st [expr {($now - $a0) / double($nb)}]
+  if {$st < 1.0} { return -1 }
+  return [expr {$st < 12.0 ? 12.0 : ($st > 30.0 ? 30.0 : $st)}]
+}
 set ta_cap [dict create]; set ta_used [dict create]
 dict for {n v} $m { dict set ta_cap $n [expr {int(ceil(($ta_tgt - [lindex $v 0]) / 12.0)) + 1}]; dict set ta_used $n 0 }
 for {set r 1} {$r <= $ta_rounds} {incr r} {
@@ -124,8 +133,9 @@ for {set r 1} {$r <= $ta_rounds} {incr r} {
   foreach {n nb a0} $added { if {abs([lindex [dict get $m $n] 0] - $a0) > 1.0} { set moved 1 } }
   if {!$moved} { puts "OT_DTAP_ALIGN WARN r$r: tap means did not move after [expr {[llength $added] / 3}] taps got delay cells (stale timing?) -- stop"; break }
   foreach {n nb a0} $added {
-    set st [expr {([lindex [dict get $m $n] 0] - $a0) / double($nb)}]
-    dict set ta_stp $n [expr {$st < 12.0 ? 12.0 : ($st > 30.0 ? 30.0 : $st)}]
+    set st [ta_step [lindex [dict get $m $n] 0] $a0 $nb]
+    if {$st < 0} { set st 20.0; puts "OT_DTAP_ALIGN WARN r$r: $n did not move after $nb cell(s); next round sizes it at the default 20 ps/cell" }
+    dict set ta_stp $n $st
   }
   puts "[ta_line "OT_DTAP_ALIGN r$r" $m] (target [format %.1f $ta_tgt])"
 }
