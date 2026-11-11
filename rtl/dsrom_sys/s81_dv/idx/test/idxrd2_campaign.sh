@@ -15,7 +15,7 @@ SRC=(rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_i
      rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
      rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
-     rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_ctrl_pc.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv
+     rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv
      rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv
      rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv)
 if [ ! -x "$D/obj/Vtb_dsdv_idx_rg2" ]; then
