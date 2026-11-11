@@ -39803,3 +39803,5 @@ FAILED [AUTOPILOT 2f3d28b7349e] 2026-11-11 01:47:35 PST AUTOPILOT -> KIT-WAVE-1:
     - cbf kits: epyc8 cplqc/probe/cbf_{stock,swap}
     - su_c kits: epyc8 cplqc/probe/suc_{stock,A} (synth once, then both arms)
     - Results land in each kit's probe.status. Informational only, per DIE-QC-97.
+- 2026-11-11 02:04 PST RESULT [PLAN-ROUTE-1 -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, COORD] plan event -> route_supply re-run, rows appended to lanes/FLAGS-1110.tsv (stamp 2026-11-11 02:00 PST; ADVISORY ranking, never a gate; DO_NOT_COUNT; automatic, lanes/plan-route-1/flags_cron.sh):
+    hbm: re-run rc=0 # hbm: 81 types, 57 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
