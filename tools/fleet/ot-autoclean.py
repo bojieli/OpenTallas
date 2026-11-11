@@ -18,7 +18,7 @@ Two halves, one file (the localhost driver copies this file to every host):
        Class c also never trims inside a kit-wave attempt < 24 h old whose row is FAIL (or unknown) and not
        superseded: the kit wave resumes it from its last valid stage (COORD 11-08).
     Every candidate is refused when: protected (union of lanes/PROTECTED-DBS.txt + PROTECTED-DBS.txt +
-    RETIRED-PROTECTION-EXTRAS.tsv + lanes/prune/ARCHIVE-PROTECTED.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
+    RETIRED-PROTECTION-EXTRAS.tsv + lanes/prune/ARCHIVE-PROTECTED.tsv; the 3 lists are REQUIRED, any missing/unreadable = no deletes, parent or child, under every bind-mount alias), counted (a path a SIGNED
     signoff.json / PROVENANCE.json on this host names, parent or child below lane level), kit-wave keep set,
     git alternates target, ot-run spill_pending record, wt-reaper protect.d line, named by a queue post of the
     last 25 h (path, or a row-specific dir name; with --queuename-skip-trim-c a bare name no longer blocks class c), live (/proc cmdline / cwd / open fd, docker mounts incl. stopped
@@ -64,7 +64,7 @@ TOOLS_DIR = os.path.join(HOME, ".local/share/ot-autoclean-auto")
 OFF_FILES = tuple(os.environ.get("OT_AUTOCLEAN_OFF_FILES", f"{HOME}/.config/ot-autoclean/OFF:{HOME}/.config/ot-autoclean-auto/OFF").split(":"))
 DEFAULT_ROOTS = ["/srv/opentallas-scratch/claude", "/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude",
                  os.path.join(HOME, "scratch-root/claude")]
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc7", "epyc8"]   # AUTOCLEAN-12 11-10: epyc5/6 terminated 11-09, + epyc7/8 (COORD)
 HOSTNAME_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2",
                   "aware-parakeet": "epyc4", "devoted-wren": "epyc5", "eager-sunfish": "epyc6"}
 AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
@@ -293,24 +293,60 @@ def parse_protected(text, source):
     return out
 
 
+REQUIRED_PROTECTED = ("lanes/PROTECTED-DBS.txt", "PROTECTED-DBS.txt", "lanes/prune/ARCHIVE-PROTECTED.tsv")
+OPTIONAL_PROTECTED = ("lanes/RETIRED-PROTECTION-EXTRAS.tsv",)
+REFUSE_LOG = os.path.join(HOME, ".local/state/ot-autoclean-auto/PROTECTED-LISTS-REFUSED.log")
+
+
+def refuse_lists(msg):
+    """a required protected list is missing / unreadable / empty: delete nothing, log loudly (COORD 2026-11-10, AUTOCLEAN-12)"""
+    line = f"{time.strftime('%F %T %Z')} {socket.gethostname()} ot-autoclean REFUSING, NOTHING DELETED: {msg}"
+    print("!!! " + line, file=sys.stderr, flush=True)
+    try:
+        os.makedirs(os.path.dirname(REFUSE_LOG), exist_ok=True)
+        with open(REFUSE_LOG, "a") as fh:
+            fh.write(line + "\n")
+    except OSError:
+        pass
+    raise RuntimeError(line)
+
+
 def protected_sources(coord):
-    """the first two must exist; the others are optional.  lanes/prune/ARCHIVE-PROTECTED.tsv (AUTOCLEAN-1 11-06:
-    asbuilt/bind inputs named by signed records, kit_wave live inputs) is the third protected list (COORD 2026-11-10,
-    AUTOCLEAN-13: 8 rows under it were deleted on 11-10 because the union did not read it)."""
-    return [os.path.join(coord, "lanes/PROTECTED-DBS.txt"), os.path.join(coord, "PROTECTED-DBS.txt"),
-            os.path.join(coord, "lanes/RETIRED-PROTECTION-EXTRAS.tsv"),
-            os.path.join(coord, "lanes/prune/ARCHIVE-PROTECTED.tsv")]
+    """the three protected lists are REQUIRED (COORD 2026-11-10: any missing or unreadable -> delete nothing, log loudly):
+    lanes/PROTECTED-DBS.txt, PROTECTED-DBS.txt, lanes/prune/ARCHIVE-PROTECTED.tsv (AUTOCLEAN-1 11-06: asbuilt/bind inputs
+    named by signed records, kit_wave live inputs; AUTOCLEAN-13: 8 rows under it were deleted on 11-10 because the union
+    did not read it).  RETIRED-PROTECTION-EXTRAS.tsv stays optional."""
+    return [os.path.join(coord, f) for f in REQUIRED_PROTECTED + OPTIONAL_PROTECTED]
 
 
 def build_protected_union(coord):
     rows = []
-    for i, f in enumerate(protected_sources(coord)):
+    for f in protected_sources(coord):
+        rel = os.path.relpath(f, coord)
+        req = rel in REQUIRED_PROTECTED
         try:
-            rows += parse_protected(rd(f), os.path.relpath(f, coord))
+            with open(f, errors="strict") as fh:
+                got = parse_protected(fh.read(), rel)
         except FileNotFoundError:
-            if i < 2:
-                raise
+            if req:
+                refuse_lists(f"required protected list missing: {f}")
+            continue
+        except (OSError, UnicodeDecodeError) as e:
+            if req:
+                refuse_lists(f"required protected list unreadable: {f}: {e}")
+            continue
+        if req and not got:
+            refuse_lists(f"required protected list has no path rows: {f}")
+        rows += got
     return rows
+
+
+def check_required_sources(rows, what):
+    """every required list must have contributed rows (the snapshot names each row's source list)"""
+    srcs = {w for _, w in rows}
+    miss = [r for r in REQUIRED_PROTECTED if r not in srcs]
+    if miss:
+        refuse_lists(f"{what} has no rows from required protected list(s) {', '.join(miss)}")
 
 
 # ------------------------------------------------------------------ queue posts
@@ -722,12 +758,17 @@ class Job:
 
     def load_protected(self):
         rows = []
-        for ln in rd(self.prot_file).splitlines():
+        try:
+            txt = rd(self.prot_file)
+        except OSError as e:
+            refuse_lists(f"protection union {self.prot_file} unreadable: {e}")
+        for ln in txt.splitlines():
             p, _, src = ln.rstrip("\n").partition("\t")
             if p.startswith("/"):
                 rows.append((p, src))
         if len(rows) < self.a.min_protected:
-            raise RuntimeError(f"protection union has {len(rows)} rows (< {self.a.min_protected}); refusing")
+            refuse_lists(f"protection union {self.prot_file} has {len(rows)} rows (< {self.a.min_protected})")
+        check_required_sources(rows, f"protection union {self.prot_file}")
         self.protected = PathSet(rows, canon=self.paths.canon)
 
     def load_local_keeps(self):
@@ -1471,6 +1512,7 @@ class Driver:
         a = self.a
         os.makedirs(out, exist_ok=True)
         rows = build_protected_union(a.coord)
+        check_required_sources(rows, "snapshot union")
         with open(os.path.join(out, "protected.tsv"), "w") as fh:
             fh.write("".join(f"{p}\t{w}\n" for p, w in rows))
         qf = os.path.join(a.coord, "lanes/COORD-REVIEW-QUEUE.md")

@@ -442,6 +442,9 @@ class Plan:
         pf = self.life.get("protected_full")
         if not a.__dict__.get("allow_no_protected_full") and not pf:
             raise SystemExit("lifesnap has no protected_full rows")
+        if pf and not any(str(r[2]).startswith("ARCHIVE-PROTECTED.tsv:") for r in pf):
+            raise SystemExit("!!! ot-lifecycle REFUSING, NOTHING DELETED: lifesnap protected_full has no ARCHIVE-PROTECTED.tsv rows "
+                             "(a lifesnap from before the 3-list rule); rebuild the lifesnap")
         for h, path, why in (pf or []):
             J.protected.add(path, f"strict row {h}: {why}")
         self.now = time.time()
@@ -1949,7 +1952,7 @@ def hold_main(a):
 
 
 # ------------------------------------------------------------------ localhost driver (lifesnap + collect + count guard), COORD 18:5x
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc7", "epyc8"]   # AUTOCLEAN-12 11-10: epyc5/6 terminated 11-09, + epyc7/8
 SSH = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
 LOG_TXT = os.path.expanduser("~/coord/autopilot/log.txt")
 
@@ -1957,10 +1960,17 @@ LOG_TXT = os.path.expanduser("~/coord/autopilot/log.txt")
 def strict_protected():
     """full-row parse of both coord lists (COORD input 4).  Accepted rows: 'host|any<TAB or SPACE>/abs/path ...' or free text holding
     host:/abs/path tokens.  Every whole path token is kept; a row with no absolute path, or a file that shrank, aborts."""
-    hosts = {"intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6", "localhost", "any"}
+    hosts = {"intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6", "epyc7", "epyc8", "localhost", "any"}
     rows = []
-    for f in (os.path.expanduser("~/coord/lanes/PROTECTED-DBS.txt"), os.path.expanduser("~/coord/PROTECTED-DBS.txt")):
-        with open(f, errors="strict") as fh:
+    # all three protected lists are REQUIRED (COORD 2026-11-10, AUTOCLEAN-12): missing / unreadable / empty aborts the lifesnap
+    for f in (os.path.expanduser("~/coord/lanes/PROTECTED-DBS.txt"), os.path.expanduser("~/coord/PROTECTED-DBS.txt"),
+              os.path.expanduser("~/coord/lanes/prune/ARCHIVE-PROTECTED.tsv")):
+        n0 = len(rows)
+        try:
+            fh = open(f, errors="strict")
+        except OSError as e:
+            raise SystemExit(f"!!! ot-lifecycle REFUSING, NOTHING DELETED: required protected list missing/unreadable: {f}: {e}")
+        with fh:
             for i, ln in enumerate(fh, 1):
                 ln = ln.rstrip("\n")
                 if not ln.strip() or ln.lstrip().startswith("#"):
@@ -1973,6 +1983,8 @@ def strict_protected():
                 if not toks:
                     raise ValueError(f"malformed protected row {f}:{i}: {ln[:120]!r}")
                 rows += [["any", os.path.normpath(q), f"{os.path.basename(f)}:{i}"] for q in toks]
+        if len(rows) == n0:
+            raise SystemExit(f"!!! ot-lifecycle REFUSING, NOTHING DELETED: required protected list has no rows: {f}")
     if len(rows) < 500:
         raise ValueError(f"protected rows too few: {len(rows)}")
     return rows
