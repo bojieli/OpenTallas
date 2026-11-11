@@ -1,0 +1,164 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/dsfd_node_NNfd/base_kit.lef",
+ "base_sha256": "240fb5cd7c053a7fa2323a3fe0052f712d10636af362aadc57b07e886af21fed",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/dsfd_node_NNfd/detail.lef",
+ "detail_sha256": "a5a98c2e610a75b257bfea636560a9a6ff55be2984843b08cfb76f06a1a7a580",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/dsfd_node_NNfd/detail0.lef",
+  "pins_match": true,
+  "sha256": "d807af39b632f6b8cd64c93d0efcd566b7914ec45fd45f110a8ae208aa5ec91a"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/dsfd_node_NNfd/dsfd_node_NNfd.lef",
+ "out_sha256": "37a8c80c021639ff336738156a5d637b5c0ec950ceb02703813c00c17c545458",
+ "pg_guard_rects": {
+  "M5": 16
+ },
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 66,
+   "via_up": 136
+  },
+  "pins": 202,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": [
+   "a[0]",
+   "a[10]",
+   "a[11]",
+   "a[12]",
+   "a[13]",
+   "a[14]",
+   "a[15]",
+   "a[16]",
+   "a[17]",
+   "a[18]",
+   "a[19]",
+   "a[1]",
+   "a[20]",
+   "a[21]",
+   "a[22]",
+   "a[23]",
+   "a[24]",
+   "a[25]",
+   "a[26]",
+   "a[27]",
+   "a[28]",
+   "a[29]",
+   "a[2]",
+   "a[30]",
+   "a[31]",
+   "a[32]",
+   "a[33]",
+   "a[34]",
+   "a[35]",
+   "a[36]",
+   "a[37]",
+   "a[38]",
+   "a[39]",
+   "a[3]",
+   "a[40]",
+   "a[41]",
+   "a[42]",
+   "a[43]",
+   "a[44]",
+   "a[45]",
+   "a[46]",
+   "a[47]",
+   "a[48]",
+   "a[49]",
+   "a[4]",
+   "a[50]",
+   "a[51]",
+   "a[52]",
+   "a[53]",
+   "a[54]"
+  ]
+ },
+ "pin_cover": {
+  "M4": 3,
+  "M5": 201
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": false,
+  "signal_pins": 202,
+  "size_base": [
+   43.2,
+   77.76
+  ],
+  "size_detail": [
+   43.2,
+   77.76
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 8256,
+  "M5": 1767
+ },
+ "source": {
+  "archive": "-",
+  "db_path": "-",
+  "odb_sha256": "0ba4441bfb4b38c800878ce8d333caf227fd39186e7a548bc506d4d728efd3cb",
+  "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+  "store_id": "(none: archived autopilot run intel2 autopilot/closed/s81/dsfd_node_NNfd__abcf698a79, signoff PASS 10-27)"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 207,
+   "M5": 207
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 316,
+    "rects_cut": 98,
+    "um2_cut": 0.65064
+   },
+   "M5": {
+    "exact_added": 218,
+    "rects_cut": 48,
+    "um2_cut": 3.071952
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

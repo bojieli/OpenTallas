@@ -1,0 +1,112 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_pdie_serdes_rx_bm_native/base_kit.lef",
+ "base_sha256": "39758e44687976d93dc9893dc307b34f1a8b162315d8eb448dfdd820ed5861de",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_pdie_serdes_rx_bm_native/detail.lef",
+ "detail_sha256": "c7adfcbd28f6032b3cd1af628034d62310febf11802a1fc4595900863bdfc962",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/ot_pdie_serdes_rx_bm_native/detail0.lef",
+  "pins_match": true,
+  "sha256": "2332e6848c53c448b5329356bfbb97483e04c2abb079dad72ef2f3fd76e50155"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/ot_pdie_serdes_rx_bm_native/ot_pdie_serdes_rx_bm_native.lef",
+ "out_sha256": "2cc8b2c998180bcb006b82fa2c43ffd3119f02b895d48d73b04c5fe7346212af",
+ "pg_guard_rects": {},
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 565,
+   "via_up": 61
+  },
+  "pins": 626,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": []
+ },
+ "pin_cover": {
+  "M4": 625,
+  "M5": 1
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 626,
+  "size_base": [
+   95.904,
+   106.56
+  ],
+  "size_detail": [
+   95.904,
+   106.56
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 30784,
+  "M5": 2405
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/epyc4",
+  "db_path": "srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2/run/results/asap7/hbc_ot_pdie_serdes_rx_bm_native/base/6_final.odb",
+  "odb_sha256": "ae12dd6b493b1e5cbc6a37f44ed3cf79a31a69c261f9141098ca31aeca154c83",
+  "origin": "signed store stage (sha-verified)",
+  "store_id": "6b1a821351392ed664e2009b422b2262708a2c688968316742a2e50638afcb03",
+  "verdict": "SIGNED"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 626,
+   "M5": 626
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 660,
+    "rects_cut": 678,
+    "um2_cut": 2.332944
+   },
+   "M5": {
+    "exact_added": 1,
+    "rects_cut": 1,
+    "um2_cut": 0.001104
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

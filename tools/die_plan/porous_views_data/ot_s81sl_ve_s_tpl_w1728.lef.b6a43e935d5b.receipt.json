@@ -1,0 +1,164 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_s81sl_ve_s/base_kit.lef",
+ "base_sha256": "76b41f3caf7cd698b56b8a7a5544ffc19b3585123a8a7f2983ad1277b9388304",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_s81sl_ve_s/detail.lef",
+ "detail_sha256": "d3d8f27f8cfea991bcc5f47519512effaa6faefe847794cd3908df97dddce058",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/ot_s81sl_ve_s/detail0.lef",
+  "pins_match": true,
+  "sha256": "76c5a78326497f5c4ac5061bc3034df2884073ddcb76974db60792f1789399cc"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/ot_s81sl_ve_s/ot_s81sl_ve_s_tpl_w1728.lef",
+ "out_sha256": "b6a43e935d5b273412b40de2361ac5b60e598c3a00a0deae797c6525059c9d20",
+ "pg_guard_rects": {
+  "M5": 152
+ },
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 0,
+   "via_up": 488
+  },
+  "pins": 488,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": [
+   "m_dd[0]",
+   "m_dd[100]",
+   "m_dd[101]",
+   "m_dd[102]",
+   "m_dd[103]",
+   "m_dd[104]",
+   "m_dd[105]",
+   "m_dd[106]",
+   "m_dd[107]",
+   "m_dd[108]",
+   "m_dd[109]",
+   "m_dd[10]",
+   "m_dd[110]",
+   "m_dd[111]",
+   "m_dd[112]",
+   "m_dd[113]",
+   "m_dd[114]",
+   "m_dd[115]",
+   "m_dd[116]",
+   "m_dd[117]",
+   "m_dd[118]",
+   "m_dd[119]",
+   "m_dd[11]",
+   "m_dd[120]",
+   "m_dd[121]",
+   "m_dd[122]",
+   "m_dd[123]",
+   "m_dd[124]",
+   "m_dd[125]",
+   "m_dd[126]",
+   "m_dd[127]",
+   "m_dd[12]",
+   "m_dd[13]",
+   "m_dd[14]",
+   "m_dd[15]",
+   "m_dd[16]",
+   "m_dd[17]",
+   "m_dd[18]",
+   "m_dd[19]",
+   "m_dd[1]",
+   "m_dd[20]",
+   "m_dd[21]",
+   "m_dd[22]",
+   "m_dd[23]",
+   "m_dd[24]",
+   "m_dd[25]",
+   "m_dd[26]",
+   "m_dd[27]",
+   "m_dd[28]",
+   "m_dd[29]"
+  ]
+ },
+ "pin_cover": {
+  "M4": 387,
+  "M5": 101
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 488,
+  "size_base": [
+   172.8,
+   345.6
+  ],
+  "size_detail": [
+   172.8,
+   345.6
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 131859,
+  "M5": 13137
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/intel2",
+  "db_path": "srv/opentallas-scratch2/claude/ss21-resign/ves_eco/i1/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.odb",
+  "odb_sha256": "cb9be51d939d5be99af44de23b52ac13b1352e860358b4f4a8abad4a24b67cb5",
+  "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+  "store_id": "0648c3e9a7fd3a2caf1d782ad22182afa351ff6ce14a0f88e86f7679d43de1a2"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 488,
+   "M5": 488
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 490,
+    "rects_cut": 518,
+    "um2_cut": 1.453824
+   },
+   "M5": {
+    "exact_added": 105,
+    "rects_cut": 106,
+    "um2_cut": 0.38016
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

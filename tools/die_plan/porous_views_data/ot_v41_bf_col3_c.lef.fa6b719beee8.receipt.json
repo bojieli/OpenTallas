@@ -1,0 +1,281 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M6",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_v41_bf_col3_c/base_kit.lef",
+ "base_sha256": "e4d242448770775b961e69ebac8449f17887f9420e2e8ddbaec992653c0227cd",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_v41_bf_col3_c/detail.lef",
+ "detail_sha256": "2df4c4936aa4ddd57f02874ba989c7c11eff1f46bc1daf13f1016a50f8dd8eb6",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/ot_v41_bf_col3_c/detail0.lef",
+  "pins_match": true,
+  "sha256": "e8a6352a71ca465ddcdacb3d1a779f4ac0acb0d9cf15e6df8646ff210fe9e712"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 49,
+  "cut": {
+   "M4": {
+    "exact_added": 83,
+    "rects_cut": 83,
+    "um2_cut": 0.271392
+   },
+   "M5": {
+    "exact_added": 130,
+    "rects_cut": 168,
+    "um2_cut": 0.53615
+   }
+  },
+  "pins": [
+   "i2x_q0[16]",
+   "i2x_q0[17]",
+   "i2x_q0[180]",
+   "i2x_q0[181]",
+   "i2x_q0[182]",
+   "i2x_q0[18]",
+   "i2x_q0[72]",
+   "i2x_q0[73]",
+   "i2x_q0[74]",
+   "i2x_q0[75]",
+   "i2x_q1[128]",
+   "i2x_q1[129]",
+   "i2x_q1[130]",
+   "i2x_q1[151]",
+   "i2x_q1[152]",
+   "i2x_q1[153]",
+   "i2x_q1[154]",
+   "so_n[2]",
+   "so_n[3]",
+   "so_n[4]",
+   "so_n[5]",
+   "so_row[107]",
+   "so_row[108]",
+   "so_row[109]",
+   "so_row[110]",
+   "so_row[111]",
+   "so_row[112]",
+   "so_row[113]",
+   "so_row[114]",
+   "so_row[115]",
+   "so_row[116]",
+   "so_row[117]",
+   "so_row[118]",
+   "so_row[119]",
+   "so_row[120]",
+   "so_row[121]",
+   "so_row[122]",
+   "so_row[123]",
+   "so_row[124]",
+   "so_row[125]",
+   "so_row[126]",
+   "so_row[127]",
+   "so_row[18]",
+   "so_row[19]",
+   "so_row[20]",
+   "so_row[54]",
+   "so_row[55]",
+   "so_row[56]",
+   "ze_d"
+  ],
+  "rounds": 1
+ },
+ "layers_detailed": [
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/ot_v41_bf_col3_c/ot_v41_bf_col3_c.lef",
+ "out_sha256": "fa6b719beee8049751703c5670d9f2810eaa708d088e141ab37668c921b65e36",
+ "pg_guard_rects": {},
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 49,
+   "via_down": 1,
+   "via_up": 1413
+  },
+  "pins": 1463,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [
+   "i2x_q0[16]",
+   "i2x_q0[17]",
+   "i2x_q0[180]",
+   "i2x_q0[181]",
+   "i2x_q0[182]",
+   "i2x_q0[18]",
+   "i2x_q0[72]",
+   "i2x_q0[73]",
+   "i2x_q0[74]",
+   "i2x_q0[75]",
+   "i2x_q1[128]",
+   "i2x_q1[129]",
+   "i2x_q1[130]",
+   "i2x_q1[151]",
+   "i2x_q1[152]",
+   "i2x_q1[153]",
+   "i2x_q1[154]",
+   "so_n[2]",
+   "so_n[3]",
+   "so_n[4]",
+   "so_n[5]",
+   "so_row[107]",
+   "so_row[108]",
+   "so_row[109]",
+   "so_row[110]",
+   "so_row[111]",
+   "so_row[112]",
+   "so_row[113]",
+   "so_row[114]",
+   "so_row[115]",
+   "so_row[116]",
+   "so_row[117]",
+   "so_row[118]",
+   "so_row[119]",
+   "so_row[120]",
+   "so_row[121]",
+   "so_row[122]",
+   "so_row[123]",
+   "so_row[124]",
+   "so_row[125]",
+   "so_row[126]",
+   "so_row[127]",
+   "so_row[18]",
+   "so_row[19]",
+   "so_row[20]",
+   "so_row[54]",
+   "so_row[55]",
+   "so_row[56]",
+   "ze_d"
+  ],
+  "without_count": 49,
+  "without_on_kit_lef": [
+   "i2x_q0[16]",
+   "i2x_q0[17]",
+   "i2x_q0[180]",
+   "i2x_q0[181]",
+   "i2x_q0[182]",
+   "i2x_q0[18]",
+   "i2x_q0[72]",
+   "i2x_q0[73]",
+   "i2x_q0[74]",
+   "i2x_q0[75]",
+   "i2x_q1[128]",
+   "i2x_q1[129]",
+   "i2x_q1[130]",
+   "i2x_q1[151]",
+   "i2x_q1[152]",
+   "i2x_q1[153]",
+   "i2x_q1[154]",
+   "so_n[2]",
+   "so_n[3]",
+   "so_n[4]",
+   "so_n[5]",
+   "so_row[107]",
+   "so_row[108]",
+   "so_row[109]",
+   "so_row[110]",
+   "so_row[111]",
+   "so_row[112]",
+   "so_row[113]",
+   "so_row[114]",
+   "so_row[115]",
+   "so_row[116]",
+   "so_row[117]",
+   "so_row[118]",
+   "so_row[119]",
+   "so_row[120]",
+   "so_row[121]",
+   "so_row[122]",
+   "so_row[123]",
+   "so_row[124]",
+   "so_row[125]",
+   "so_row[126]",
+   "so_row[127]",
+   "so_row[18]",
+   "so_row[19]",
+   "so_row[20]",
+   "so_row[54]",
+   "so_row[55]",
+   "so_row[56]",
+   "ze_d"
+  ]
+ },
+ "pin_cover": {
+  "M4": 1332,
+  "M5": 65
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 1463,
+  "size_base": [
+   208.248,
+   198.72
+  ],
+  "size_detail": [
+   208.248,
+   198.72
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 115944,
+  "M5": 30380,
+  "M6": 9620
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/intel1",
+  "db_path": "srv/opentallas-scratch2/claude/die-s81-56/eco/run/col3c6/i1/run/results/asap7/kl_ot_v41_bf_col3_c_rfh6/base/6_final.odb",
+  "odb_sha256": "9228721635f516867f592fc7ef8878d56432b5356622d938bca4cf77b62803e3",
+  "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+  "store_id": "08ba12e024c9301fb24830a699c40fa3b87840e11e3a6212e2ea92ca45172527"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 1463,
+   "M5": 1463,
+   "M6": 65
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 1486,
+    "rects_cut": 720,
+    "um2_cut": 12.11271
+   },
+   "M5": {
+    "exact_added": 433,
+    "rects_cut": 90,
+    "um2_cut": 2.116204
+   },
+   "M6": {
+    "exact_added": 1,
+    "rects_cut": 1,
+    "um2_cut": 0.005696
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115,
+   "M6": 0.131
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

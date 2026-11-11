@@ -1,0 +1,162 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/ds85-child/exp/out/dsfd_node_LLd_eco/base_kit.lef",
+ "base_sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/ds85-child/exp/out/dsfd_node_LLd_eco/detail.lef",
+ "detail_sha256": "758ef4dcc12ada677077a00d559e4c09e8056fb1c179427dd4b3d14026b71e67",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/dsfd_node_LLd/detail0.lef",
+  "pins_match": true,
+  "sha256": "d7c746eaa7e37416a76abe4c2c2e73ebc1066ea876508cfd817794be3f6b492d"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views_ll/ref/dsfd_node_LLd/dsfd_node_LLd.lef",
+ "out_sha256": "a5a84626686c4368ea4ab9db9d48a628fc7441e1778e5460afd96592dcf49278",
+ "pg_guard_rects": {
+  "M5": 16
+ },
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 126,
+   "via_up": 69
+  },
+  "pins": 195,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": [
+   "a[0]",
+   "a[10]",
+   "a[11]",
+   "a[12]",
+   "a[13]",
+   "a[14]",
+   "a[15]",
+   "a[16]",
+   "a[17]",
+   "a[18]",
+   "a[19]",
+   "a[1]",
+   "a[20]",
+   "a[21]",
+   "a[22]",
+   "a[23]",
+   "a[24]",
+   "a[25]",
+   "a[26]",
+   "a[27]",
+   "a[28]",
+   "a[29]",
+   "a[2]",
+   "a[30]",
+   "a[31]",
+   "a[32]",
+   "a[33]",
+   "a[34]",
+   "a[35]",
+   "a[36]",
+   "a[37]",
+   "a[38]",
+   "a[39]",
+   "a[3]",
+   "a[40]",
+   "a[41]",
+   "a[42]",
+   "a[43]",
+   "a[44]",
+   "a[45]",
+   "a[46]",
+   "a[47]",
+   "a[48]",
+   "a[49]",
+   "a[4]",
+   "a[50]",
+   "a[51]",
+   "a[52]",
+   "a[53]",
+   "a[54]"
+  ]
+ },
+ "pin_cover": {
+  "M4": 129,
+  "M5": 67
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": false,
+  "signal_pins": 195,
+  "size_base": [
+   43.2,
+   77.76
+  ],
+  "size_detail": [
+   43.2,
+   77.76
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 6755,
+  "M5": 773
+ },
+ "source": {
+  "odb_sha256": "218b0171982b48ecc955b2eeb8f700f98dda23a5218d54df629acb5ac32004e9",
+  "origin": "DS85 child sub-lane eco i1 export (a276df56f2a376803), signed store",
+  "store_id_prefix": "992d7994a2df"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 199,
+   "M5": 199
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 227,
+    "rects_cut": 162,
+    "um2_cut": 0.650514
+   },
+   "M5": {
+    "exact_added": 69,
+    "rects_cut": 14,
+    "um2_cut": 1.136448
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}
