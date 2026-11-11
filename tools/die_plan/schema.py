@@ -30,6 +30,7 @@ import bisect
 from fractions import Fraction
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -2618,6 +2619,26 @@ def _window_pins(port, layers, window, pins):
 def load(path):
     raw = json.loads(Path(path).read_text())
     return raw
+
+
+_TYPE_ERR = re.compile(r"^type (\S+?):")
+
+
+def scope_errors(errs, types=None):
+    """KW-FIX-45 11-11 (COORD): `gen phys --types T` validated the WHOLE plan, so one invalid type (slw_su_l1__clcc9d0155
+    in the QC 12:00 cut) aborted the gen of every other type ("gen phys: ERROR plan invalid").  With an explicit type
+    selection keep the errors of the selected types and every error that does not name a type (die level: ports,
+    lanes, partitions, ...); drop only the "type X: ..." errors of types that are not selected.  types None/empty =
+    unchanged (whole plan)."""
+    if not types:
+        return errs
+    keep = set(types)
+    out = []
+    for e in errs:
+        m = _TYPE_ERR.match(e)
+        if m is None or m.group(1) in keep:
+            out.append(e)
+    return out
 
 
 def validate(raw):
