@@ -600,15 +600,36 @@ module dsdv_svc_att #(
 `else
     localparam integer E_FPL = 4, E_FML = 6, E_TS = 1, E_NAR = 1, E_MF = 1, E_TRX = 1, E_F12 = 1, E_FX = 5;
 `endif
+    // S81-A1 (S81-ARCH-RTL 11-11): SRX relay stages on every engine tile input (ot_hdc_v41x_attn_s SRX / SRXT).  One
+    // compiled schedule serves every slice, so SRX is die-wide (-DOT_SVC_SRX=<n>; undefined = 0, as built) and the
+    // compiler moves PIO and KPV by SRX (scores +SRX, P.V +2 SRX a pass).  -DOT_SVC_SRXT=<1024-bit leader table> is the
+    // type's relay tree (its plan internal stations); undefined = one shared chain.
+`ifdef OT_SVC_SRX
+    localparam integer E_SRX = `OT_SVC_SRX;
+`else
+    localparam integer E_SRX = 0;
+`endif
+// -DOT_SVC_NSTAGE=3 (SRX > 0 only): third staging buffer + mid job slot, covers the SRX round trip on back-to-back
+// jobs (S81-ARCH-RTL-2 11-11, COORD ruling); undefined = 2, as built.
+`ifdef OT_SVC_NSTAGE
+    localparam integer E_NSTAGE = `OT_SVC_NSTAGE;
+`else
+    localparam integer E_NSTAGE = 2;
+`endif
+`ifdef OT_SVC_SRXT
+    localparam [1023:0] E_SRXT = `OT_SVC_SRXT;
+`else
+    localparam [1023:0] E_SRXT = 1024'd0;
+`endif
 `ifdef OT_SVC_MERGE_H4
     ot_s81_svc_attn_s
 `else
     ot_hdc_v41x_attn_s
 `endif
                        #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TR), .SRAM_MACRO(SRAM_MACRO), .PWORDS(2),
-                         .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
+                         .ILV(1), .REPL(2), .NSTAGE(E_NSTAGE), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
-                         .SC_CRED(0), .PV_CRED(0)) u_eng (
+                         .SC_CRED(0), .PV_CRED(0), .SRX(E_SRX), .SRXT(E_SRXT)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),

@@ -1,4 +1,32 @@
 `timescale 1ns/1ps
+// S81-A2 bk_sel__t2 relay stations (S81-ARCH-RTL-2 11-11, COORD ruling 11-11; S81-TRIAGE-3 relay sites): the
+// quarter <-> control hops are 852-1604 um, so the plan carries reset-less register stations on them: OT_BKSEL_RC on
+// t_c / t_cr (control -> quarter), OT_BKSEL_RS on t_s, OT_BKSEL_RO on t_o (quarter -> control), OT_BKSEL_RLN on the
+// four lanes ln0..ln3 (glue -> quarter).  The control's fixed-latency waits take the added round trip
+// (XDX + ceil((RC + RS) / 2)), the landing FIFO / initial credits grow by OT_BKSEL_DMX (control AND quarter), and
+// OT_BKSEL_SLX adds status latency.  All 0 = as built.  The stations are reset-less: they flush to the quarters'
+// reset zeros while rst is held (S81 boot holds rst_n >= 64 clk, more than any station depth).
+`ifndef OT_BKSEL_RC
+`define OT_BKSEL_RC 0
+`endif
+`ifndef OT_BKSEL_RS
+`define OT_BKSEL_RS 0
+`endif
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 0
+`endif
+`ifndef OT_BKSEL_RLN
+`define OT_BKSEL_RLN 0
+`endif
+`ifndef OT_BKSEL_DMX
+`define OT_BKSEL_DMX 0
+`endif
+`ifndef OT_BKSEL_XDM   // bench mutant only: the control under-counts the station round trip by XDM edges
+`define OT_BKSEL_XDM 0
+`endif
+`ifndef OT_BKSEL_SLX
+`define OT_BKSEL_SLX 0
+`endif
 // S81U-BK2 (2026-10-17): child leaf of dsdv_bk_sel (dsdv_bk_sel.sv).
 // select control leaf: dsfd_selt_c (SEARCH_PIPE, DM 4, PACE 2, MRG_PIPE, RQPIPE, SLAT 4, XDX 1: the control the closed
 // PIPE2 / QIO quarter tiles need) with per-face ports (a kit port sits on ONE face).
@@ -33,7 +61,8 @@ module dsdv_bksel_c #(
 `else
     always @(negedge ck[0]) rst_nf <= rst[0];
 `endif
-    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
+    dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4 + `OT_BKSEL_DMX), .PACE(2), .MRG_PIPE(1), .RQPIPE(1),
+        .SLAT(4 + `OT_BKSEL_SLX), .XDX(1 + (`OT_BKSEL_RC + `OT_BKSEL_RS + 1) / 2 - `OT_BKSEL_XDM)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
         .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
     // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins).  Every port bit leaves a flop (+ OLL latch)
     dsdv_bk_oll #(.W(367 + 4*CB + 4), .EN(OLL)) u_oll (.ck(ck[0]),
@@ -61,10 +90,10 @@ module dsdv_bksel_q #(
 `ifndef OT_S81PH_SEL_HQ_MUT
 `define OT_S81PH_SEL_HQ_MUT 0
 `endif
-    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr),
+    dsfd_selt_q_hq #(.DM(4 + `OT_BKSEL_DMX), .MUT(`OT_S81PH_SEL_HQ_MUT)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr),
         .t_s(t_s_f), .t_o(t_o_f));
 `else
-    dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst), .lane(lane),
+    dsfd_selt_q2 #(.DM(4 + `OT_BKSEL_DMX), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst), .lane(lane),
         .f_c(f_c), .f_cr(f_cr), .t_s(t_s_f), .t_o(t_o_f));
 `endif
 endmodule

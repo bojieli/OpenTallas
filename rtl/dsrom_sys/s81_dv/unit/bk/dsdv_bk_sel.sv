@@ -80,11 +80,30 @@ module dsdv_bk_sel #(
     wire [4*515-1:0] ln = {l3, l2, l1, l0};
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire [4*SB-1:0] fs; wire [4*OB-1:0] fo;
     genvar g;
+    // S81-A2 plan stations (dsdv_bksel_c.sv header): *_q = quarter side, *_c = control side
+    wire [4*CB-1:0] tc_q; wire [3:0] tcr_q; wire [4*SB-1:0] fs_c; wire [4*OB-1:0] fo_c; wire [4*515-1:0] ln_q;
+    dsdv_bk_stn #(.W(4*CB + 4), .D(`OT_BKSEL_RC)) u_stn_c (.ck(clk), .d({tc, tcr}), .q({tc_q, tcr_q}));
+    dsdv_bk_stn #(.W(4*SB), .D(`OT_BKSEL_RS)) u_stn_s (.ck(clk), .d(fs), .q(fs_c));
+    dsdv_bk_stn #(.W(4*OB), .D(`OT_BKSEL_RO)) u_stn_o (.ck(clk), .d(fo), .q(fo_c));
+    dsdv_bk_stn #(.W(4*515), .D(`OT_BKSEL_RLN)) u_stn_l (.ck(clk), .d(ln), .q(ln_q));
     generate for (g = 0; g < 4; g = g + 1) begin : g_q       // quarter 0 SW, 1 SE, 2 NW, 3 NE
-        dsdv_bksel_q u_q (.ck(clk), .rst(rst_n), .lane(ln[515 * g +: 515]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
+        dsdv_bksel_q u_q (.ck(clk), .rst(rst_n), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]), .f_cr(tcr_q[g]),
             .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
     end endgenerate
     dsdv_bksel_c u_c (.ck(clk), .rst(rst_n),
-        .f_s_s(fs[0 +: 2*SB]), .f_s_n(fs[2*SB +: 2*SB]), .f_o_s(fo[0 +: 2*OB]), .f_o_n(fo[2*OB +: 2*OB]),
+        .f_s_s(fs_c[0 +: 2*SB]), .f_s_n(fs_c[2*SB +: 2*SB]), .f_o_s(fo_c[0 +: 2*OB]), .f_o_n(fo_c[2*OB +: 2*OB]),
         .t_c_s(tc[0 +: 2*CB]), .t_c_n(tc[2*CB +: 2*CB]), .t_cr_s(tcr[1:0]), .t_cr_n(tcr[3:2]), .vd(vd));
+endmodule
+
+// S81-A2: D reset-less register stations (the plan internal_stations model; D = 0: wires)
+module dsdv_bk_stn #(parameter integer W = 1, parameter integer D = 0) (input wire ck, input wire [W-1:0] d,
+                                                                       output wire [W-1:0] q);
+    generate if (D == 0) begin : g_w
+        assign q = d;
+    end else begin : g_r
+        reg [W-1:0] r [0:D-1];
+        integer i;
+        always @(posedge ck) begin r[0] <= d; for (i = 1; i < D; i = i + 1) r[i] <= r[i-1]; end
+        assign q = r[D-1];
+    end endgenerate
 endmodule

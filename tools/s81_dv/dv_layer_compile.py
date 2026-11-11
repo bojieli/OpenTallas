@@ -1090,9 +1090,15 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError('fixture programmes require explicit --svc-timing-profile matching the selected service engine')
         defines = {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
         expected = 'legacy_fg3' if 'SVCQ_ENG_FG3' in defines else 'closing_allq'
+        # S81-A1: an SRX build (-DOT_SVC_SRX=<n>) runs the tile subsystem n edges later; only n = 0 / 7 have dates
+        srx = {int(d.split('=', 1)[1]) for d in defines if d.startswith('OT_SVC_SRX=')} or {0}
+        if len(srx) != 1 or not srx <= {0, 7}:
+            raise ValueError(f'OT_SVC_SRX {sorted(srx)} has no service timing dates (0 or 7)')
+        if srx == {7}:
+            expected += '_srx7'
         if svc_timing_profile != expected:
             raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
-        if svc_timing_profile == 'closing_allq':
+        if svc_timing_profile in ('closing_allq', 'closing_allq_srx7'):
             required = {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED', 'OT_SVC_ALLQ'}
             if not required <= defines:
                 raise ValueError('closing_allq timing requires selected source defines ' + ','.join(sorted(required)))
@@ -1447,7 +1453,7 @@ def main(argv=None):
                     help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
-    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq'), default=None,
+    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq', 'legacy_fg3_srx7', 'closing_allq_srx7'), default=None,
                     help='Service engine timing calendar; closing_allq requires actual ALLQ+SMT source')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
