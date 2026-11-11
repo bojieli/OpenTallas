@@ -1,0 +1,249 @@
+{
+ "schema": "opentallas.s81.pin_cycle_consumers.v1",
+ "tool": "tools/s81_dv/pin_cycle_consumers.py",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/out/v_fb2b/plan.json",
+ "plan": "/srv/opentallas-scratch3/claude/s81-arch-rtl-2/lanes/plan_s4_lat.json",
+ "event": "/srv/opentallas-scratch3/claude/s81-arch-rtl-2/lanes/event_s4.json",
+ "plan_sha256": "d3f79e603af52949168d6a8b67c56b05c3cc8d72acc41224f9dc4d6466d44abe",
+ "event_lanes": 61,
+ "event_pin_cycles": 61,
+ "checks": [
+  {
+   "check": "class map",
+   "classes": [
+    {
+     "cls": "dn_s_\\d[NS]_L\\d",
+     "lanes": 1,
+     "pin_cycles": 1,
+     "deltas": [
+      1
+     ],
+     "consumer": "layer_prog/leaf_transport (TS4 leaf offsets) -> lower_vpx LO, entry_norm, lower_vs; compose leaf_hub_rt",
+     "checked_by": "C3 leaf offsets + C1 table"
+    },
+    {
+     "cls": "fi_[EW]\\d_p\\d_r\\dr\\d",
+     "lanes": 60,
+     "pin_cycles": 60,
+     "deltas": [
+      1
+     ],
+     "consumer": "frame_schedule_asb.py (traced as-built band frame) -> lower_xs.source_frame_schedule; compose field_round",
+     "checked_by": "C4 frame schedule + C1 table"
+    }
+   ],
+   "unmapped": [],
+   "verdict": "PASS"
+  },
+  {
+   "check": "C0 plan latency",
+   "lanes": 873,
+   "mismatches": 0,
+   "first": [],
+   "verdict": "PASS"
+  },
+  {
+   "check": "C1 latency table",
+   "lanes": 873,
+   "mismatches": 0,
+   "first": [],
+   "verdict": "PASS",
+   "plan_digest": {
+    "table": "07dc25165b4d482a",
+    "plan": "07dc25165b4d482a"
+   }
+  },
+  {
+   "check": "C4 frame schedule (fi)",
+   "groups": [
+    {
+     "master": "col_h10",
+     "crossing": "r0->r1",
+     "lanes": 12,
+     "golden": [
+      11
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {}
+    },
+    {
+     "master": "col_h10",
+     "crossing": "r1->r0",
+     "lanes": 12,
+     "golden": [
+      2
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {}
+    },
+    {
+     "master": "col_h10",
+     "crossing": "r1->r2",
+     "lanes": 12,
+     "golden": [
+      6
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {}
+    },
+    {
+     "master": "col_h10",
+     "crossing": "r2->r1",
+     "lanes": 12,
+     "golden": [
+      2
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {}
+    },
+    {
+     "master": "col_h9",
+     "crossing": "r0->r1",
+     "lanes": 60,
+     "golden": [
+      12
+     ],
+     "deltas": [
+      1
+     ],
+     "uniform_per_master": true,
+     "schedules": {
+      "col_h9_nx": {
+       "traced": [
+        [
+         12
+        ]
+       ],
+       "verdict": "PASS"
+      },
+      "col_h9_x": {
+       "traced": [
+        [
+         12
+        ]
+       ],
+       "verdict": "PASS"
+      }
+     }
+    },
+    {
+     "master": "col_h9",
+     "crossing": "r1->r0",
+     "lanes": 60,
+     "golden": [
+      2
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {
+      "col_h9_nx": {
+       "traced": [
+        [
+         2
+        ]
+       ],
+       "verdict": "PASS"
+      },
+      "col_h9_x": {
+       "traced": [
+        [
+         2
+        ]
+       ],
+       "verdict": "PASS"
+      }
+     }
+    },
+    {
+     "master": "col_h9",
+     "crossing": "r1->r2",
+     "lanes": 60,
+     "golden": [
+      6
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {
+      "col_h9_nx": {
+       "traced": [
+        [
+         6
+        ]
+       ],
+       "verdict": "PASS"
+      },
+      "col_h9_x": {
+       "traced": [
+        [
+         6
+        ]
+       ],
+       "verdict": "PASS"
+      }
+     }
+    },
+    {
+     "master": "col_h9",
+     "crossing": "r2->r1",
+     "lanes": 60,
+     "golden": [
+      2
+     ],
+     "deltas": [
+      0
+     ],
+     "uniform_per_master": true,
+     "schedules": {
+      "col_h9_nx": {
+       "traced": [
+        [
+         2
+        ]
+       ],
+       "verdict": "PASS"
+      },
+      "col_h9_x": {
+       "traced": [
+        [
+         2
+        ]
+       ],
+       "verdict": "PASS"
+      }
+     }
+    }
+   ],
+   "fails": [],
+   "verdict": "PASS"
+  },
+  {
+   "check": "C5 compose lane terms",
+   "terms": {
+    "ring_link": 5,
+    "field_round": 175,
+    "leaf_hub_rt": 61,
+    "svc_to_hub": 31,
+    "link_end": 73
+   },
+   "mismatches": [],
+   "verdict": "PASS"
+  }
+ ],
+ "verdict": "PASS"
+}
