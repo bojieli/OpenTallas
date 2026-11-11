@@ -1,0 +1,28 @@
+[
+ {
+  "delta": "xtap_flop_t12_1111",
+  "delta_file": "/srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d10_xtap_flop_t12_1111.json",
+  "delta_sha256": "299af5d3f53e7c994bada31a2626c5e901bdf582d42664c02016543980a94066",
+  "files": {
+   "die_plan.json": {
+    "ops": 110,
+    "changed_leaf_paths": 110,
+    "noop_ops": 0,
+    "sha256": "56a1deccbafc77497a5031b36bb99bf6f08b86f24a24041b80e8e6ecc011499a"
+   }
+  }
+ },
+ {
+  "delta": "nwio_ep_w52",
+  "delta_file": "/srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d11_nwio_ep_w52.json",
+  "delta_sha256": "fd646c1143901247783c96a01269db31e65fb9e09c22c5f49f13f45db9388a79",
+  "files": {
+   "die_plan.json": {
+    "ops": 59,
+    "changed_leaf_paths": 59,
+    "noop_ops": 0,
+    "sha256": "378ab73fe34c9cc0aa08bb4e06e9e73f123339b1acebf74c902a4244cef32943"
+   }
+  }
+ }
+]
