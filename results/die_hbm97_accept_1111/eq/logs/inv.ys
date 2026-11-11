@@ -1,0 +1,4 @@
+read_verilog -sv -formal -DSYNTHESIS -DOT_DMA_ACCEPT_EARLY -DFORMAL  /eq/after.sv
+hierarchy -top ot_hgi_dma_back_static_vp4_controller
+proc; flatten; opt_clean; async2sync
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -maxsteps 30 -verify

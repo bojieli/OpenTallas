@@ -1,0 +1,983 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/eq/inv.ys' --
+
+1. Executing Verilog-2005 frontend: /eq/after.sv
+Parsing formal SystemVerilog input from `/eq/after.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_dma_back_static_vp4_banks'.
+Generating RTLIL representation for module `\ot_hgi_dma_back_static_vp4_controller'.
+Warning: Replacing memory \expect_mask with list of registers. See /eq/after.sv:430
+Warning: Replacing memory \rq_payload with list of registers. See /eq/after.sv:407
+Warning: Replacing memory \expect_tag with list of registers. See /eq/after.sv:405
+Warning: Replacing memory \p_hpart with list of registers. See /eq/after.sv:211
+Warning: Replacing memory \p_vpart with list of registers. See /eq/after.sv:210
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_dma_back_static_vp4_controller
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_hgi_dma_back_static_vp4_controller
+Removing unused module `\ot_hgi_dma_back_static_vp4_banks'.
+Removed 1 unused modules.
+Module ot_hgi_dma_back_static_vp4_controller directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/eq/after.sv:565$982 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 18 switch rules as full_case in process $proc$/eq/after.sv:420$358 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 6 switch rules as full_case in process $proc$/eq/after.sv:382$216 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 2 switch rules as full_case in process $proc$/eq/after.sv:366$203 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 1 switch rules as full_case in process $proc$/eq/after.sv:203$59 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 1 switch rules as full_case in process $proc$/eq/after.sv:179$54 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 1 switch rules as full_case in process $proc$/eq/after.sv:166$51 in module ot_hgi_dma_back_static_vp4_controller.
+Marked 1 switch rules as full_case in process $proc$/eq/after.sv:152$48 in module ot_hgi_dma_back_static_vp4_controller.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 53 redundant assignments.
+Promoted 255 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \local_rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:565$982'.
+Found async reset \local_rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+Found async reset \local_rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+Found async reset \local_rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+Found async reset \local_rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:166$51'.
+Found async reset \rst_n in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:152$48'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~63 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:176$1140'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:568$991'.
+     1/3: $assert$/eq/after.sv:574$1062_EN
+     2/3: $assert$/eq/after.sv:572$1059_EN
+     3/3: $assert$/eq/after.sv:571$1054_EN
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:565$982'.
+     1/1: $0\f_age[2:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+     1/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [31]
+     2/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [30]
+     3/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [30]
+     4/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [29]
+     5/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [29]
+     6/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [28]
+     7/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [28]
+     8/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [27]
+     9/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [27]
+    10/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [26]
+    11/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [26]
+    12/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [25]
+    13/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [25]
+    14/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [24]
+    15/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [24]
+    16/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [23]
+    17/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [23]
+    18/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [22]
+    19/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [22]
+    20/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [21]
+    21/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [21]
+    22/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [20]
+    23/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [20]
+    24/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [19]
+    25/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [19]
+    26/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [18]
+    27/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [18]
+    28/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [17]
+    29/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [17]
+    30/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [16]
+    31/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [16]
+    32/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [15:0]
+    33/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$538 [15:0]
+    34/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.step[31:0]$541
+    35/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.carry_in[31:0]$540
+    36/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$539 [31]
+    37/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.bit_index[31:0]$542
+    38/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.pref_g[31:0]$537
+    39/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.pref_p[31:0]$536
+    40/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.prop_bits[31:0]$535
+    41/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.carry_bits[31:0]$534
+    42/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.sum_bits[31:0]$533
+    43/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.inv_c[31:0]$532
+    44/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.subtrahend[31:0]$531
+    45/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.b[31:0]$530
+    46/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.a[31:0]$529
+    47/152: $3\add_total_sub_ack$func$/eq/after.sv:527$38.$result[31:0]$528
+    48/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.bit_index[31:0]$526
+    49/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.step[31:0]$525
+    50/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.carry_in[31:0]$524
+    51/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$523
+    52/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$522
+    53/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.pref_g[31:0]$521
+    54/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.pref_p[31:0]$520
+    55/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.prop_bits[31:0]$519
+    56/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.carry_bits[31:0]$518
+    57/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.sum_bits[31:0]$517
+    58/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.inv_c[31:0]$516
+    59/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.subtrahend[31:0]$515
+    60/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.b[31:0]$514
+    61/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.a[31:0]$513
+    62/152: $2\add_total_sub_ack$func$/eq/after.sv:527$38.$result[31:0]$512
+    63/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.bit_index[31:0]$399
+    64/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.step[31:0]$398
+    65/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.carry_in[31:0]$397
+    66/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.next_g[31:0]$396
+    67/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.next_p[31:0]$395
+    68/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.pref_g[31:0]$394
+    69/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.pref_p[31:0]$393
+    70/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.prop_bits[31:0]$392
+    71/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.carry_bits[31:0]$391
+    72/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.sum_bits[31:0]$390
+    73/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.inv_c[31:0]$389
+    74/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.subtrahend[31:0]$388
+    75/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.b[31:0]$387
+    76/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.a[31:0]$386
+    77/152: $1\add_total_sub_ack$func$/eq/after.sv:527$38.$result[31:0]$385
+    78/152: $0\quiet[0:0]
+    79/152: $0\pending_sectors[31:0]
+    80/152: $0\land_left[19:0]
+    81/152: $1\CONTROL.$fordecl_block$22.b[31:0]$384
+    82/152: $1\CONTROL.nland[31:0]
+    83/152: $0\first_drain_q[0:0]
+    84/152: $0\output_mask_q[7:0]
+    85/152: $0\read_mask_q[7:0]
+    86/152: $1\CONTROL.$fordecl_block$20.b[31:0]$383
+    87/152: $0\rr_valid[7:0] [7]
+    88/152: $0\rq_v[7:0] [7]
+    89/152: $0\rr_valid[7:0] [6]
+    90/152: $0\rq_v[7:0] [6]
+    91/152: $0\rr_valid[7:0] [5]
+    92/152: $0\rq_v[7:0] [5]
+    93/152: $0\rr_valid[7:0] [4]
+    94/152: $0\rq_v[7:0] [4]
+    95/152: $0\rr_valid[7:0] [3]
+    96/152: $0\rq_v[7:0] [3]
+    97/152: $0\rr_valid[7:0] [2]
+    98/152: $0\rq_v[7:0] [2]
+    99/152: $0\rr_valid[7:0] [1]
+   100/152: $0\rq_v[7:0] [1]
+   101/152: $0\rr_valid[7:0] [0]
+   102/152: $0\rq_v[7:0] [0]
+   103/152: $0\expect_mask[0][7:0]
+   104/152: $1\CONTROL.$fordecl_block$18.t[31:0]$382
+   105/152: $0\expect_mask[7][7:0]
+   106/152: $0\expect_mask[6][7:0]
+   107/152: $0\expect_mask[5][7:0]
+   108/152: $0\expect_mask[4][7:0]
+   109/152: $0\expect_mask[3][7:0]
+   110/152: $0\expect_mask[2][7:0]
+   111/152: $0\expect_mask[1][7:0]
+   112/152: $0\wb_fill_start[0:0]
+   113/152: $0\bank_read_en[7:0]
+   114/152: $0\cv_3[0:0]
+   115/152: $0\cv_2[0:0]
+   116/152: $0\cv_1[0:0]
+   117/152: $0\cv_0[0:0]
+   118/152: $0\wb_reserve_v[0:0]
+   119/152: $0\mv_done[0:0]
+   120/152: $0\mv_src[0:0]
+   121/152: $0\cv[0:0]
+   122/152: $1\CONTROL.$fordecl_block$16.b[31:0]$381
+   123/152: $1\CONTROL.$fordecl_block$14.t[31:0]$380
+   124/152: $0\src_sent[0:0]
+   125/152: $0\dirty[0:0]
+   126/152: $0\drain_column[7:0]
+   127/152: $0\drain_chunk_hbm[36:0]
+   128/152: $0\drain_row_hbm[36:0]
+   129/152: $0\hbm_stride[31:0]
+   130/152: $0\chunk_hbm[36:0]
+   131/152: $0\row_hbm[36:0]
+   132/152: $0\vm_stride[31:0]
+   133/152: $0\chunk_vm[16:0]
+   134/152: $0\row_vm[16:0]
+   135/152: $0\row_sectors[17:0]
+   136/152: $0\chunks_a[7:0]
+   137/152: $0\chunks_c[7:0]
+   138/152: $0\chunks_m[7:0]
+   139/152: $0\chunks_i[7:0]
+   140/152: $0\column[7:0]
+   141/152: $0\row_chunks[7:0]
+   142/152: $0\drain_index[7:0]
+   143/152: $0\issue_index[7:0]
+   144/152: $0\chunks[7:0]
+   145/152: $0\wb_reserve_base[31:0]
+   146/152: $0\wb_reserve_sectors[11:0]
+   147/152: $0\wb_fill_epoch[15:0]
+   148/152: $0\wb_reserve_epoch[15:0]
+   149/152: $0\wb_fill_bank[0:0]
+   150/152: $0\wb_reserve_bank[0:0]
+   151/152: $0\busy[0:0]
+   152/152: $0\mv_fault[0:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+     1/17: $2\inc32$func$/eq/after.sv:417$37.$result[31:0]$349
+     2/17: $2\inc32$func$/eq/after.sv:417$37.x[31:0]$350
+     3/17: $1\inc32$func$/eq/after.sv:417$37.x[31:0]$348
+     4/17: $1\inc32$func$/eq/after.sv:417$37.$result[31:0]$347
+     5/17: $2\inc32$func$/eq/after.sv:416$36.$result[31:0]$338
+     6/17: $2\inc32$func$/eq/after.sv:416$36.x[31:0]$339
+     7/17: $1\inc32$func$/eq/after.sv:416$36.x[31:0]$337
+     8/17: $1\inc32$func$/eq/after.sv:416$36.$result[31:0]$336
+     9/17: $2\inc32$func$/eq/after.sv:415$35.$result[31:0]$327
+    10/17: $2\inc32$func$/eq/after.sv:415$35.x[31:0]$328
+    11/17: $1\inc32$func$/eq/after.sv:415$35.x[31:0]$326
+    12/17: $1\inc32$func$/eq/after.sv:415$35.$result[31:0]$325
+    13/17: $0\ea_m2[31:0]
+    14/17: $0\fa_m2[31:0]
+    15/17: $0\nd_m3[31:0]
+    16/17: $0\nd_m2[31:0]
+    17/17: $0\ni_m2[31:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:381$214'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:366$203'.
+     1/2: $1\issue_sec[15:0]
+     2/2: $1\issue_mask[7:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+     1/4: $0\b_v[0:0]
+     2/4: $0\q_valid[0:0]
+     3/4: $0\p_valid[0:0]
+     4/4: $0\a_v[0:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+     1/3: $0\wa_q[11:0]
+     2/3: $0\wa_valid_q[0:0]
+     3/3: $0\cycle_valid_q[0:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:178$53'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:166$51'.
+     1/2: $0\response_check_q[0:0]
+     2/2: $0\expect_response_q[7:0]
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:159$50'.
+Creating decoders for process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:152$48'.
+     1/2: $0\reset_ready[0:0]
+     2/2: $0\reset_meta[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:176$26.$result' from process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:176$1140'.
+No latch inferred for signal `\ot_hgi_dma_back_static_vp4_controller.$fordecl_block$24.b' from process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:568$991'.
+No latch inferred for signal `\ot_hgi_dma_back_static_vp4_controller.\issue_mask' from process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:366$203'.
+No latch inferred for signal `\ot_hgi_dma_back_static_vp4_controller.\issue_sec' from process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:366$203'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\f_age' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:565$982'.
+  created $adff cell `$procdff$1845' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_valid_0' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1846' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_valid_1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1847' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_valid_2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1848' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_valid_3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1849' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_hbase_end' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1850' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_hend' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+  created $dff cell `$procdff$1851' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\mv_src' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1856' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\mv_done' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1861' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\mv_fault' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1866' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\quiet' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1871' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\busy' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1876' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_reserve_v' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1881' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_reserve_bank' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1886' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_fill_bank' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1891' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_reserve_epoch' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1896' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_fill_epoch' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1901' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_reserve_sectors' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1906' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_reserve_base' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1911' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_fill_start' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1916' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\bank_read_en' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1921' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_v' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1926' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cv' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1931' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunks' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1936' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\issue_index' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1941' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\drain_index' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1946' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\row_chunks' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$1953' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\column' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1958' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunks_i' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1963' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunks_m' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1968' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunks_c' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1973' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunks_a' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1978' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cv_0' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1983' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cv_1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1988' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cv_2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1993' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cv_3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$1998' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\row_sectors' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2005' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\land_left' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2010' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\row_vm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2017' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunk_vm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2024' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\vm_stride' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2031' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\row_hbm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2038' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\chunk_hbm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2045' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\hbm_stride' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2052' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\drain_row_hbm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2059' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\drain_chunk_hbm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2066' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\drain_column' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2073' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rr_valid' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2078' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\read_mask_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2083' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\output_mask_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2088' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\dirty' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2093' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\src_sent' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2098' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\first_drain_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2103' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\pending_sectors' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2108' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.nland' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2115' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.$fordecl_block$14.t' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2120' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.$fordecl_block$16.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2125' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.$fordecl_block$18.t' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2132' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.$fordecl_block$20.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2139' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\CONTROL.$fordecl_block$22.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $dff cell `$procdff$2146' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2151' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.a' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2156' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2161' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.subtrahend' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2166' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.inv_c' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2171' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.sum_bits' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2176' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.carry_bits' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2181' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.prop_bits' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2186' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.pref_p' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2191' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.pref_g' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2196' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.next_p' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2201' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.next_g' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2206' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.carry_in' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2211' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.step' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2216' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\add_total_sub_ack$func$/eq/after.sv:527$38.bit_index' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2221' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[0]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2226' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[1]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2231' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[2]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2236' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[3]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2241' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[4]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2246' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[5]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2251' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[6]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2256' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_mask[7]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+  created $adff cell `$procdff$2261' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\bank_read_addr' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2262' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_ci_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2263' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_cd_m1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2264' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_cd_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2265' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_cd_m3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2266' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_end_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2267' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_ihit' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2268' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_dhit' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2269' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_phit' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2270' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_fhit' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2271' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_ehit' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2272' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_ilead_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2273' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_lag_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2274' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_vok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2275' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_hok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2276' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_nchunk_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2277' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_hend_d' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2278' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_vend_d' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2279' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_nchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2280' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_rchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2281' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_total' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2282' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\c_static_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2283' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\ni_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2284' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\nd_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2285' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\nd_m3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2286' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\fa_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2287' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\ea_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2288' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\m_issue' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2289' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\m_drain' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2290' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\m_pre' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2291' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\m_fill' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2292' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\m_end' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2293' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cb' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2294' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\ce' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2295' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cm' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2296' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wb_ready_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2297' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.$fordecl_block$8.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2298' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$27.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2299' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$27.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2300' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$27.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2301' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$27.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2302' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$27.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2303' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$28.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2304' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$28.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2305' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$28.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2306' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$28.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2307' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$28.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2308' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$29.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2309' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$29.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2310' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$29.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2311' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$29.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2312' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$29.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2313' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$30.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2314' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$30.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2315' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$30.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2316' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$30.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2317' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$30.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2318' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$31.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2319' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$31.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2320' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$31.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2321' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$31.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2322' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$31.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2323' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$32.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2324' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$32.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2325' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$32.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2326' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$32.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2327' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$32.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2328' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$33.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2329' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$33.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2330' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$33.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2331' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$33.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2332' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$33.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2333' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$34.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2334' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$34.hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2335' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$34.hi1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2336' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$34.lo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2337' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cs_addr$func$/eq/after.sv:401$34.s' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2338' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.$fordecl_block$10.t' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2339' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.$fordecl_block$12.b' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2340' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:415$35.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2341' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:415$35.x' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2342' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:416$36.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2343' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:416$36.x' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2344' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:417$37.$result' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2345' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\inc32$func$/eq/after.sv:417$37.x' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2346' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[0]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2347' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[1]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2348' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[2]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2349' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[3]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2350' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[4]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2351' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[5]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2352' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[6]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2353' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_tag[7]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2354' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[0]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2355' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[1]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2356' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[2]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2357' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[3]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2358' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[4]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2359' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[5]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2360' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[6]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2361' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\rq_payload[7]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+  created $dff cell `$procdff$2362' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\ack_base_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:381$214'.
+  created $dff cell `$procdff$2363' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_mv' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2364' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_mv' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2365' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_ci' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2366' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_cd' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2367' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_ci' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2368' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cd' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2369' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_cb' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2370' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cb' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2371' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_ce' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2372' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_ce' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2373' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_vprod' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2374' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_hprod' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2375' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_nchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2376' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_rchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2377' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_total' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2378' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_static_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2379' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_mv' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2380' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_mv' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2381' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_ci' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2382' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_cd' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2383' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_ci' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2384' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_cd' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2385' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_cb' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2386' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_cb' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2387' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_ce' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2388' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_ce' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2389' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_vlo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2390' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_vhi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2391' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_hlo' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2392' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_hhi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2393' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_nchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2394' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_nchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2395' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_rchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2396' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_rchunk' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2397' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_nch_c' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2398' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_nch_wrap' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2399' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_total' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2400' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_total' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2401' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_static_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2402' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_static_ok' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2403' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_total_hi' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2404' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_vbase_end' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2405' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_hbase_end' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2406' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_ci_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2407' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_ci_m3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2408' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cd_m1' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2409' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cd_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2410' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cd_m3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2411' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_cd_m4' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2412' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_end_m2' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2413' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_end_m3' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2414' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.$fordecl_block$2.i' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2415' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_vpart[0]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2416' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_vpart[1]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2417' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_vpart[2]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2418' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_vpart[3]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2419' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_hpart[0]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2420' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_hpart[1]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2421' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_hpart[2]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2422' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_hpart[3]' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+  created $dff cell `$procdff$2423' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\a_v' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+  created $adff cell `$procdff$2428' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\p_valid' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+  created $adff cell `$procdff$2433' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\q_valid' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+  created $adff cell `$procdff$2438' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\b_v' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+  created $adff cell `$procdff$2443' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cycle_valid_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+  created $adff cell `$procdff$2448' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wa_valid_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+  created $adff cell `$procdff$2453' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\wa_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+  created $adff cell `$procdff$2458' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\cycle_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:178$53'.
+  created $dff cell `$procdff$2459' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\expect_response_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:166$51'.
+  created $adff cell `$procdff$2464' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\response_check_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:166$51'.
+  created $adff cell `$procdff$2469' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\stk_q' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:159$50'.
+  created $dff cell `$procdff$2470' with positive edge clock.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\reset_meta' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:152$48'.
+  created $adff cell `$procdff$2475' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_dma_back_static_vp4_controller.\reset_ready' using process `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:152$48'.
+  created $adff cell `$procdff$2480' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:176$1140'.
+Found and cleaned up 3 empty switches in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:568$991'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:568$991'.
+Found and cleaned up 1 empty switch in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:565$982'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:565$982'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:553$976'.
+Found and cleaned up 50 empty switches in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:420$358'.
+Found and cleaned up 7 empty switches in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:382$216'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:381$214'.
+Found and cleaned up 2 empty switches in `\ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:366$203'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:366$203'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:206$61'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:203$59'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:179$54'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:178$53'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:166$51'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:159$50'.
+Removing empty process `ot_hgi_dma_back_static_vp4_controller.$proc$/eq/after.sv:152$48'.
+Cleaned up 63 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_dma_back_static_vp4_controller.
+<suppressed ~306 debug messages>
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_dma_back_static_vp4_controller..
+Removed 351 unused cells and 1152 unused wires.
+<suppressed ~411 debug messages>
+
+6. Executing ASYNC2SYNC pass.
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1958 ($adff): ARST=\reset_ready, D=$0\column[7:0], Q=\column
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1963 ($adff): ARST=\reset_ready, D=$0\chunks_i[7:0], Q=\chunks_i
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1968 ($adff): ARST=\reset_ready, D=$0\chunks_m[7:0], Q=\chunks_m
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1973 ($adff): ARST=\reset_ready, D=$0\chunks_c[7:0], Q=\chunks_c
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1901 ($adff): ARST=\reset_ready, D=$0\wb_fill_epoch[15:0], Q=\wb_fill_epoch
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1978 ($adff): ARST=\reset_ready, D=$0\chunks_a[7:0], Q=\chunks_a
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1983 ($adff): ARST=\reset_ready, D=\b_v, Q=\cv_0
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1988 ($adff): ARST=\reset_ready, D=\b_v, Q=\cv_1
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1993 ($adff): ARST=\reset_ready, D=\b_v, Q=\cv_2
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1998 ($adff): ARST=\reset_ready, D=\b_v, Q=\cv_3
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2010 ($adff): ARST=\reset_ready, D=$0\land_left[19:0], Q=\land_left
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2078 ($adff): ARST=\reset_ready, D=\rr_valid_i, Q=\rr_valid
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2083 ($adff): ARST=\reset_ready, D=$0\read_mask_q[7:0], Q=\read_mask_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2088 ($adff): ARST=\reset_ready, D=\read_mask_q, Q=\output_mask_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1896 ($adff): ARST=\reset_ready, D=$0\wb_reserve_epoch[15:0], Q=\wb_reserve_epoch
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2093 ($adff): ARST=\reset_ready, D=$0\dirty[0:0], Q=\dirty
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2098 ($adff): ARST=\reset_ready, D=$0\src_sent[0:0], Q=\src_sent
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2103 ($adff): ARST=\reset_ready, D=$0\first_drain_q[0:0], Q=\first_drain_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1891 ($adff): ARST=\reset_ready, D=$0\wb_fill_bank[0:0], Q=\wb_fill_bank
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2108 ($adff): ARST=\reset_ready, D=$0\pending_sectors[31:0], Q=\pending_sectors
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2261 ($adff): ARST=\reset_ready, D=\expect_mask[6], Q=\expect_mask[7]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1936 ($adff): ARST=\reset_ready, D=$0\chunks[7:0], Q=\chunks
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1886 ($adff): ARST=\reset_ready, D=$0\wb_reserve_bank[0:0], Q=\wb_reserve_bank
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2475 ($adff): ARST=\rst_n, D=1'1, Q=\reset_meta
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1881 ($adff): ARST=\reset_ready, D=$0\wb_reserve_v[0:0], Q=\wb_reserve_v
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1931 ($adff): ARST=\reset_ready, D=\b_v, Q=\cv
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1876 ($adff): ARST=\reset_ready, D=$0\busy[0:0], Q=\busy
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2256 ($adff): ARST=\reset_ready, D=\expect_mask[5], Q=\expect_mask[6]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2464 ($adff): ARST=\reset_ready, D=\expect_mask[7], Q=\expect_response_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1926 ($adff): ARST=\reset_ready, D=$0\rq_v[7:0], Q=\rq_v
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1871 ($adff): ARST=\reset_ready, D=$0\quiet[0:0], Q=\quiet
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2428 ($adff): ARST=\reset_ready, D=\mv_v, Q=\a_v
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1921 ($adff): ARST=\reset_ready, D=$0\bank_read_en[7:0], Q=\bank_read_en
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1866 ($adff): ARST=\reset_ready, D=$0\mv_fault[0:0], Q=\mv_fault
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2433 ($adff): ARST=\reset_ready, D=\a_v, Q=\p_valid
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1916 ($adff): ARST=\reset_ready, D=$0\wb_fill_start[0:0], Q=\wb_fill_start
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1861 ($adff): ARST=\reset_ready, D=$0\mv_done[0:0], Q=\mv_done
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2438 ($adff): ARST=\reset_ready, D=\p_valid, Q=\q_valid
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2251 ($adff): ARST=\reset_ready, D=\expect_mask[4], Q=\expect_mask[5]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2469 ($adff): ARST=\reset_ready, D=1'1, Q=\response_check_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1911 ($adff): ARST=\reset_ready, D=$0\wb_reserve_base[31:0], Q=\wb_reserve_base
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1856 ($adff): ARST=\reset_ready, D=$0\mv_src[0:0], Q=\mv_src
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2443 ($adff): ARST=\reset_ready, D=\q_valid, Q=\b_v
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1906 ($adff): ARST=\reset_ready, D=$0\wb_reserve_sectors[11:0], Q=\wb_reserve_sectors
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1946 ($adff): ARST=\reset_ready, D=$0\drain_index[7:0], Q=\drain_index
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1941 ($adff): ARST=\reset_ready, D=$0\issue_index[7:0], Q=\issue_index
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2226 ($adff): ARST=\reset_ready, D=$0\expect_mask[0][7:0], Q=\expect_mask[0]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2453 ($adff): ARST=\reset_ready, D=1'1, Q=\wa_valid_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2231 ($adff): ARST=\reset_ready, D=\expect_mask[0], Q=\expect_mask[1]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2236 ($adff): ARST=\reset_ready, D=\expect_mask[1], Q=\expect_mask[2]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2480 ($adff): ARST=\rst_n, D=\reset_meta, Q=\reset_ready
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2241 ($adff): ARST=\reset_ready, D=\expect_mask[2], Q=\expect_mask[3]
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$1845 ($adff): ARST=\reset_ready, D=$0\f_age[2:0], Q=\f_age
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2458 ($adff): ARST=\reset_ready, D=\wa, Q=\wa_q
+Replacing ot_hgi_dma_back_static_vp4_controller.$procdff$2246 ($adff): ARST=\reset_ready, D=\expect_mask[3], Q=\expect_mask[4]
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 1256 cells to SAT database.
+Import proof for assert: $logic_or$/eq/after.sv:569$1036_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1040_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1044_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1048_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1052_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:571$1057_Y when $assert$/eq/after.sv:571$1054_EN.
+Import proof for assert: $eq$/eq/after.sv:572$1061_Y when $assert$/eq/after.sv:572$1059_EN.
+Import proof for assert: $logic_and$/eq/after.sv:574$1069_Y when $assert$/eq/after.sv:574$1062_EN.
+Import proof for assert: $logic_and$/eq/after.sv:575$1077_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:576$1085_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:577$1091_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1097_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1103_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1109_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1115_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1121_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1127_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1133_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1139_Y when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Imported 1256 cells to SAT database.
+No constraints for initial state found.
+
+Import proof for assert: $logic_or$/eq/after.sv:569$1036_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1040_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1044_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1048_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1052_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:571$1057_Y when $assert$/eq/after.sv:571$1054_EN.
+Import proof for assert: $eq$/eq/after.sv:572$1061_Y when $assert$/eq/after.sv:572$1059_EN.
+Import proof for assert: $logic_and$/eq/after.sv:574$1069_Y when $assert$/eq/after.sv:574$1062_EN.
+Import proof for assert: $logic_and$/eq/after.sv:575$1077_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:576$1085_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:577$1091_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1097_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1103_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1109_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1115_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1121_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1127_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1133_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1139_Y when 1'1.
+
+[base case 1] Solving problem with 67304 variables and 178948 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 1256 cells to SAT database.
+Import proof for assert: $logic_or$/eq/after.sv:569$1036_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1040_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:569$1044_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1048_Y when 1'1.
+Import proof for assert: $logic_or$/eq/after.sv:570$1052_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:571$1057_Y when $assert$/eq/after.sv:571$1054_EN.
+Import proof for assert: $eq$/eq/after.sv:572$1061_Y when $assert$/eq/after.sv:572$1059_EN.
+Import proof for assert: $logic_and$/eq/after.sv:574$1069_Y when $assert$/eq/after.sv:574$1062_EN.
+Import proof for assert: $logic_and$/eq/after.sv:575$1077_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:576$1085_Y when 1'1.
+Import proof for assert: $logic_and$/eq/after.sv:577$1091_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1097_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1103_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1109_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1115_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1121_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1127_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1133_Y when 1'1.
+Import proof for assert: $eq$/eq/after.sv:579$1139_Y when 1'1.
+
+[induction step 1] Solving problem with 146865 variables and 397346 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 5 unique messages, 5 total
+End of script. Logfile hash: 3dc53d0d8f, time: 3.05s, user: 2.97s, system: 0.15s, MEM: 188.53 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 81% 1x sat (2 sec), 12% 2x read_verilog (0 sec), ...

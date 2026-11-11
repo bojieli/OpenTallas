@@ -135,6 +135,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
 );
     wire [6:0] bank_read_slot,bank_write_slot;
     reg [255:0] bank_read_addr;
+`ifdef OT_DMA_ACCEPT_EARLY
+`define OT_ACC_SEL(e,o) e
+`else
+`define OT_ACC_SEL(e,o) o
+`endif
     assign bank_read_addr_s=bank_read_addr[95:0];
     assign bank_read_addr_w=bank_read_addr[159:96];
     assign bank_read_addr_n=bank_read_addr[255:160];
@@ -250,6 +255,13 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [7:0] rq_v;reg [15:0] rq_payload[0:7];
     reg cv,cb;reg [15:0] ce;reg [226:0] cm;
     reg [7:0] chunks,issue_index,drain_index,row_chunks,column;
+`ifdef OT_DMA_ACCEPT_EARLY
+    // (C) per-consumer copies; keep: same value, separate drivers (no merge back into one star net)
+    (* keep = "true" *) reg [7:0] chunks_i,chunks_m,chunks_c,chunks_a;
+    (* keep = "true" *) reg c_valid_0,c_valid_1,c_valid_2,c_valid_3;
+    (* keep = "true" *) reg cv_0,cv_1,cv_2,cv_3;
+    reg [40:0] q_hbase_end,b_hend;
+`endif
     reg [17:0] row_sectors;
     reg [19:0] land_left;
     reg [16:0] row_vm,chunk_vm;
@@ -259,6 +271,18 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // The compiler-ordered drain follows exactly the same row/column address recurrence as issue.
     reg [36:0] drain_row_hbm,drain_chunk_hbm;
     reg [7:0] drain_column;
+`ifdef OT_DMA_ACCEPT_EARLY
+    // (C) bank read address carry-select: one shared 29-bit increment instead of eight 32-bit adds
+    function automatic [31:0] cs_addr(input [28:0] hi, input [28:0] hi1, input [2:0] lo, input [3:0] k);
+        reg [3:0] s;
+        begin s={1'b0,lo}+k; cs_addr={s[3]?hi1:hi,s[2:0]}; end   // exact: lo+k <= 15, carry into hi is 0 or 1
+    endfunction
+`ifdef OT_DMA_ACCEPT_EARLY_NEG3
+    wire [28:0] dc_hi1=drain_chunk_hbm[36:8]+29'd2;
+`else
+    wire [28:0] dc_hi1=drain_chunk_hbm[36:8]+29'd1;
+`endif
+`endif
     wire [7:0] drain_mask=(drain_column==row_chunks-1 && row_sectors[2:0]!=0)?
                               ((8'd1<<row_sectors[2:0])-1'b1):8'hff;
     reg [7:0] expect_mask[0:7];reg [6:0] expect_tag[0:7];
@@ -297,9 +321,16 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [31:0] pending_sectors;
     reg [31:0] ack_base_q;
     wire observed_pending_zero=pending_sectors==32'(wa_q);
-    wire issue_slot=busy&&!cv&&issue_index<chunks&&m_issue;
+    wire issue_slot=busy&&!cv&&issue_index<`OT_ACC_SEL(chunks_i,chunks)&&m_issue;
     wire drain_slot=busy&&!cv&&drain_index<chunks&&m_drain;
+`ifdef OT_DMA_ACCEPT_EARLY
+    wire drain_slot_m=busy&&!cv&&drain_index<chunks_m&&m_drain;
+    wire drain_slot_c=busy&&!cv&&drain_index<chunks_c&&m_drain;
+    wire drain_slot_a=busy&&!cv&&drain_index<chunks_a&&m_drain;
+    wire valid_move=c_valid_0;
+`else
     wire valid_move=c_static_ok&&c_vok&&c_nchunk_ok&&c_hok&&c_ilead_ok&&c_lag_ok;
+`endif
     wire reload=cv&&valid_move;
     // Each command chunk receives its own copy of the existing C-cohort flags
     // and CV on their original edges. Payload and absolute issue/drain dates do
@@ -324,8 +355,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
             assign chunk_cv[g]=valid_q;
             assign chunk_valid[g]=&flags;
         end else begin:G_LEGACY
-            assign chunk_cv[g]=cv;
-            assign chunk_valid[g]=valid_move;
+            assign chunk_cv[g]=`OT_ACC_SEL((g<5?cv_0:g<9?cv_1:g<13?cv_2:cv_3),cv);
+            assign chunk_valid[g]=`OT_ACC_SEL((g<5?c_valid_0:g<9?c_valid_1:g<13?c_valid_2:c_valid_3),valid_move);
         end
         assign chunk_reload[g]=chunk_cv[g]&&chunk_valid[g];
     end endgenerate
@@ -366,20 +397,24 @@ module ot_hgi_dma_back_static_vp4_controller #(
         c_fhit<=cycle_q==b_cd_m2;                            // cycle(k)+1==cd+1
         c_ehit<=cycle_q==b_end_m3;                           // cycle(k)+1==cd+nchunk+1
         c_ci_m2<=b_ci_m2;c_cd_m1<=b_cd_m1;c_cd_m2<=b_cd_m2;c_cd_m3<=b_cd_m3;c_end_m2<=b_end_m2;
+`ifdef OT_DMA_ACCEPT_EARLY
+        for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=cs_addr(drain_chunk_hbm[36:8],dc_hi1,drain_chunk_hbm[7:5],4'(b)+((MUT==1&&b==1)?4'd1:4'd0));
+`else
         for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=drain_chunk_hbm[36:5]+32'(b)+((MUT==1&&b==1)?32'd1:32'd0);
+`endif
         for(integer t=1;t<8;t=t+1)expect_tag[t]<=expect_tag[t-1];
         expect_tag[0]<=issue_index[6:0];
         for(integer b=0;b<8;b=b+1) rq_payload[b]<={issue_sec[15:3],3'(b)};
         wb_ready_q<=wb_ready;
         // match registers: value of each absolute-cycle comparison at the next edge
         m_issue<=issue_slot?1'b1:chunk_reload[0]?c_ihit:(cycle_q==ni_m2);
-        m_drain<=drain_slot?1'b1:chunk_reload[0]?c_dhit:(cycle_q==nd_m2);
-        m_pre<=drain_slot?1'b0:chunk_reload[0]?c_phit:(cycle_q==nd_m3);
+        m_drain<=`OT_ACC_SEL(drain_slot_m,drain_slot)?1'b1:chunk_reload[0]?c_dhit:(cycle_q==nd_m2);
+        m_pre<=`OT_ACC_SEL(drain_slot_m,drain_slot)?1'b0:chunk_reload[0]?c_phit:(cycle_q==nd_m3);
         m_fill<=chunk_reload[0]?c_fhit:(cycle_q==fa_m2);
         m_end<=chunk_reload[0]?c_ehit:(cycle_q==ea_m2);
         if(chunk_reload[1])ni_m2<=c_ci_m2;else if(issue_slot)ni_m2<=inc32(ni_m2);
-        if(chunk_reload[2])nd_m2<=c_cd_m2;else if(drain_slot)nd_m2<=inc32(nd_m2);
-        if(chunk_reload[3])nd_m3<=c_cd_m3;else if(drain_slot)nd_m3<=inc32(nd_m3);
+        if(chunk_reload[2])nd_m2<=c_cd_m2;else if(`OT_ACC_SEL(drain_slot_m,drain_slot))nd_m2<=inc32(nd_m2);
+        if(chunk_reload[3])nd_m3<=c_cd_m3;else if(`OT_ACC_SEL(drain_slot_m,drain_slot))nd_m3<=inc32(nd_m3);
         if(chunk_reload[4])begin fa_m2<=c_cd_m1;ea_m2<=c_end_m2;end
     end
     always @(posedge clk or negedge local_rst_n) begin:CONTROL
@@ -389,14 +424,20 @@ module ot_hgi_dma_back_static_vp4_controller #(
             wb_reserve_v<=0;wb_reserve_sectors<=0;wb_reserve_base<=0;wb_fill_start<=0;wb_reserve_bank<=0;wb_fill_bank<=0;wb_reserve_epoch<=0;wb_fill_epoch<=0;bank_read_en<=0;read_mask_q<=0;output_mask_q<=0;rr_valid<=0;
             issue_index<=0;drain_index<=0;chunks<=0;column<=0;land_left<=0;first_drain_q<=0;
             pending_sectors<=0;
+`ifdef OT_DMA_ACCEPT_EARLY
+            chunks_i<=0;chunks_m<=0;chunks_c<=0;chunks_a<=0;cv_0<=0;cv_1<=0;cv_2<=0;cv_3<=0;
+`endif
             for(integer t=0;t<8;t=t+1)expect_mask[t]<=0;
             for(integer b=0;b<8;b=b+1)begin rq_v[b]<=0;end
         end else begin
             cv<=b_v;mv_src<=0;mv_done<=0;wb_reserve_v<=0;
+`ifdef OT_DMA_ACCEPT_EARLY
+            cv_0<=b_v;cv_1<=b_v;cv_2<=b_v;cv_3<=b_v;
+`endif
             bank_read_en<=0;
-            if(busy&&!cv&&drain_index<chunks)begin
-                if(drain_slot)begin
-                    if(drain_index+1'b1<chunks)begin
+            if(busy&&!cv&&drain_index<`OT_ACC_SEL(chunks_c,chunks))begin
+                if(`OT_ACC_SEL(drain_slot_c,drain_slot))begin
+                    if(drain_index+1'b1<`OT_ACC_SEL(chunks_c,chunks))begin
                         if((drain_column==row_chunks-1?8'd0:drain_column+1'b1)==row_chunks-1&&row_sectors[2:0]!=0)
                             bank_read_en<=(8'd1<<row_sectors[2:0])-1'b1;
                         else bank_read_en<=8'hff;
@@ -412,7 +453,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
                 rr_valid[b]<=rr_valid_i[b];
                 if(response_check_q && rr_valid[b]!==expect_response_q[b])mv_fault<=1;
             end
-            read_mask_q<=drain_slot?drain_mask:8'd0;
+            read_mask_q<=`OT_ACC_SEL(drain_slot_c,drain_slot)?drain_mask:8'd0;
             output_mask_q<=read_mask_q;
             if(issue_slot)begin
                 issue_index<=issue_index+1'b1;
@@ -422,9 +463,9 @@ module ot_hgi_dma_back_static_vp4_controller #(
                 end else begin column<=column+1'b1;chunk_vm<=chunk_vm+17'd64;chunk_hbm<=chunk_hbm+37'd256;end
                 if(MUT==2&&issue_index+1==chunks)begin mv_src<=1;src_sent<=1;end
             end
-            first_drain_q<=drain_slot&&drain_index==0;
+            first_drain_q<=`OT_ACC_SEL(drain_slot_c,drain_slot)&&drain_index==0;
             if(first_drain_q&&!wb_ready_q)mv_fault<=1;
-            if(drain_slot)begin
+            if(`OT_ACC_SEL(drain_slot_a,drain_slot))begin
                 drain_index<=drain_index+1'b1;
                 if(drain_column==row_chunks-1)begin
                     drain_column<=0;drain_row_hbm<=drain_row_hbm+37'(hbm_stride);
@@ -447,7 +488,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
             end
             if(chunk_cv[6])begin
                 if(!chunk_valid[6])begin end
-                else begin chunks<=8'(c_nchunk);row_chunks<=c_rchunk;row_sectors<=18'(cm[226:209]);land_left<=20'(c_total); end
+                else begin chunks<=8'(c_nchunk);row_chunks<=c_rchunk;
+`ifdef OT_DMA_ACCEPT_EARLY
+                    chunks_i<=8'(c_nchunk);chunks_m<=8'(c_nchunk);chunks_c<=8'(c_nchunk);chunks_a<=8'(c_nchunk);
+`endif
+row_sectors<=18'(cm[226:209]);land_left<=20'(c_total); end
             end
             if(chunk_cv[7])begin
                 if(!chunk_valid[7])begin end
@@ -491,6 +536,51 @@ module ot_hgi_dma_back_static_vp4_controller #(
             end
         end
     end
+`ifdef OT_DMA_ACCEPT_EARLY
+    // (C) acceptance one edge early from the same b-stage operands; the hend sum moves one stage earlier.
+    wire [18:0] e_vend=b_vbase_end+19'(b_vprod[16:0]);
+    wire e_static_ok=b_static_ok&&b_mv[44:22]==0&&b_vprod[40:17]==0;
+    wire e_vok=(b_mv[44:5]<65536&&41'(e_vend)<=65536)||(b_mv[44:5]>=65536&&41'(e_vend)<=98304);
+    wire e_hok=b_hend[40:37]==0&&b_hend[36:35]==stk_q&&{1'b0,b_hend[34:0]}<=STACK_BYTES;
+    wire e_nchunk_ok=b_nchunk>0&&b_nchunk<=128;
+    wire e_ilead_ok=$signed(b_ci_m2-cycle_q)>=1;
+    wire e_lag_ok=$signed(b_cd-b_ci)>=RR_RT+3;
+`ifdef OT_DMA_ACCEPT_EARLY_NEG
+    wire e_valid=e_static_ok&&e_vok&&e_nchunk_ok&&e_ilead_ok&&e_lag_ok;
+`else
+    wire e_valid=e_static_ok&&e_vok&&e_nchunk_ok&&e_hok&&e_ilead_ok&&e_lag_ok;
+`endif
+    always @(posedge clk) begin
+        q_hbase_end<={4'b0,p_mv[134:98]}+(41'(p_mv[219:206])<<2);
+`ifdef OT_DMA_ACCEPT_EARLY_NEG2
+        b_hend<=q_hbase_end+41'(q_hlo)+(41'(q_hhi)<<16)+41'd1;
+`else
+        b_hend<=q_hbase_end+41'(q_hlo)+(41'(q_hhi)<<16);
+`endif
+        c_valid_0<=e_valid;c_valid_1<=e_valid;c_valid_2<=e_valid;c_valid_3<=e_valid;
+    end
+`ifdef FORMAL
+    // Edges since local reset release (saturating); every pipeline valid bit implies its depth.
+    reg [2:0] f_age;
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)f_age<=0;else if(f_age!=3'd7)f_age<=f_age+3'd1;
+    wire f_valid_ref=c_static_ok&&c_vok&&c_nchunk_ok&&c_hok&&c_ilead_ok&&c_lag_ok;
+    always @* begin
+        assert(!a_v||f_age>=1); assert(!p_valid||f_age>=2); assert(!q_valid||f_age>=3);
+        assert(!b_v||f_age>=4); assert(!cv||f_age>=5);
+        if(f_age>=2)assert(q_hbase_end=={4'b0,q_mv[134:98]}+(41'(q_mv[219:206])<<2));
+        if(f_age>=3)assert(b_hend==b_hbase_end+b_hprod);
+        // valid_move/chunk_valid are only consumed under cv (or its copies, equal to cv)
+        if(cv)assert(c_valid_0==f_valid_ref&&c_valid_1==f_valid_ref&&c_valid_2==f_valid_ref&&c_valid_3==f_valid_ref);
+        assert(cv_0==cv&&cv_1==cv&&cv_2==cv&&cv_3==cv);
+        assert(chunks_i==chunks&&chunks_m==chunks&&chunks_c==chunks&&chunks_a==chunks);
+        assert(drain_slot_m==drain_slot&&drain_slot_c==drain_slot&&drain_slot_a==drain_slot);
+        for(integer b=0;b<8;b=b+1)
+            assert(cs_addr(drain_chunk_hbm[36:8],dc_hi1,drain_chunk_hbm[7:5],4'(b)+((MUT==1&&b==1)?4'd1:4'd0))==
+                   drain_chunk_hbm[36:5]+32'(b)+((MUT==1&&b==1)?32'd1:32'd0));
+    end
+`endif
+`endif
     // HBM-BANKLAT-DMA 10-19: RR_RT>7 (d4g lanes).  The 8-deep expect_tag/expect_mask above stay the closed RR_RT 7 path
     // (unused, swept, otherwise).  A long round trip delays only 2 bits per edge: 'issued' and 'last partial column';
     // the mask is rebuilt from row_sectors and the landing slot is a landing counter.  Exact under the static contract:
