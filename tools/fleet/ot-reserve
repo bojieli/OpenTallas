@@ -16,7 +16,7 @@ import subprocess
 import sys
 import time
 
-HOSTS = [h for h in os.environ.get("OT_RESERVE_HOSTS", "epyc2,intel1,localhost").split(",") if h]
+HOSTS = [h for h in os.environ.get("OT_RESERVE_HOSTS", "epyc2,intel1,localhost,epyc4,epyc7,epyc8,epyc9").split(",") if h]
 AFTER_S = int(os.environ.get("OT_RESERVE_AFTER_S", "3600"))
 STATE = os.path.expanduser(os.environ.get("OT_RESERVE_STATE", "~/.local/state/ot-reserve.json"))
 LOG = os.path.expanduser(os.environ.get("OT_RESERVE_LOG", "~/.local/state/ot-reserve.log"))
