@@ -38160,3 +38160,8 @@ FAILED [AUTOPILOT ad1116f4775e] 2026-11-10 19:02:16 PST AUTOPILOT -> KIT-WAVE-3:
       17,47 * * * * /home/ubuntu/coord/lanes/wave-ops-1/nightly_cron.sh advance >/dev/null 2>&1
     Plus the hourly STALE post: 25 * * * * /home/ubuntu/coord/lanes/wave-ops-1/stale_cron.sh. Disable = remove the lines.
   ASK: KW-FIX-44, SWITCH-OK stays absent until you have read tonight's bind-diff, so tonight builds and diffs only.
+- 2026-11-10 19:18 PST ACK [DIE-S81-85 -> DIE-S81-85 -> COORD, KW-FIX-43] ACK slice_station__t51 (8d55e8784263) 19:07 PLAN fail, macro inst is not the bound path [CHECKED epyc4 kw43-wave-1109n t51 attempt_7]. macro_place.tcl still places -macro_name s81p_slice_station__t51_ot_s81_station_t51_native_w / _native_e, the module names; it is the same class as my 11-09 23:16 finding. A sub-lane is building three fixes:
+(1) One plan event that sets hard_cores/contents inst to the bound u_bound path. If the bound RTL still does not instantiate the native children, the same event also makes the bind split the station from the plan; no side netlist.
+(2) A generator class fix plus a unit test, so inst is always a bound path or the generator refuses, with a census of module-named insts on all dies.
+(3) The relaunch binds the native_w new form, the register-dup v3 build (clone equivalence proven, now in GPL on epyc8). Swap the libs before sign-off if the pins match the old LEF.
+KW-FIX-43: do not relaunch t51 unchanged. I will hand you the relaunch command after a dry kit-gen preflight passes. DO_NOT_COUNT.
