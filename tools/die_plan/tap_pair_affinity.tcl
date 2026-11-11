@@ -79,8 +79,9 @@ namespace eval ::ot_tap_pair {
   set maxp [expr {[info exists ::env(OT_TAP_PAIR_PASSES)] ? $::env(OT_TAP_PAIR_PASSES) : 20}]
   set mlim [expr {[info exists ::env(OT_TAP_PAIR_MERGE)] ? $::env(OT_TAP_PAIR_MERGE) : 128}]
   set shp [expr {[info exists ::env(OT_TAP_PAIR_SHIFT)] ? $::env(OT_TAP_PAIR_SHIFT) : 10}]
-  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp]
-  puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen], taps above cap $cap at start [dict get $result overfull] (donate only)"
+  set grow [expr {[info exists ::env(OT_TAP_PAIR_OVERFULL_GROW)] ? $::env(OT_TAP_PAIR_OVERFULL_GROW) : 0}]
+  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow]
+  puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen], taps above cap $cap at start [dict get $result overfull] (donate only unless overfull grow $grow)"
   foreach row [dict get $result passes] {
    lassign $row pass groups pins cross
    puts "OT_TAP_PAIR pass $pass: groups moved $groups clock pins moved $pins cross-tap short pairs $cross"

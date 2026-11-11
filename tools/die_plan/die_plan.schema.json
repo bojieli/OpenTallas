@@ -2000,6 +2000,11 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 4
+         },
+         "overfull_grow": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.5
          }
         }
        },

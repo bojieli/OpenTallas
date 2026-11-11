@@ -2619,7 +2619,12 @@ def tap_pair_affinity_exports(t):
     merge = int(spec.get("merge_max", 128))
     pair_um = float(spec.get("pair_um", 60.))
     depth = int(spec.get("depth", 2))
+    # DIE-QC-97 11-10: overfull_grow (default 0 = donate-only): an over-full tap may receive pair components up to
+    # floor(initial load * grow) more sinks (tap_pair_plan.tcl OVERFULL ADMISSION; QC sle_hc0 density taps)
+    grow = float(spec.get("overfull_grow", 0.))
     cap = min(1200, _tap_cap(t))
+    if not 0 <= grow <= 0.5:
+        raise ValueError("tap_pair_affinity overfull_grow must be in [0, 0.5]")
     if not 0 < radius <= tap_r:
         raise ValueError("tap_pair_affinity radius must fit the declared tap radius")
     if not 2 <= group <= cap or not (merge == 0 or 2 <= merge <= cap):
@@ -2631,7 +2636,8 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_GROUP = {group}",
             f"export OT_TAP_PAIR_MERGE = {merge}",
             f"export OT_TAP_PAIR_UM = {pair_um:g}",
-            f"export OT_TAP_PAIR_DEPTH = {depth}"]
+            f"export OT_TAP_PAIR_DEPTH = {depth}"] + \
+        ([f"export OT_TAP_PAIR_OVERFULL_GROW = {grow:g}"] if grow > 0 else [])
 
 
 # COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
