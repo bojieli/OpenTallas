@@ -37,12 +37,27 @@
 //   Under OT_S81_RM_STAGED (+ RM_LOCAL4 / WFULL8, + RCK_RELAY4): u_rm is ot_s81_rate_match #(.RLEAF(1)) fed rn_t, its read-side
 //   leaves (control 1 + rsel 8 x 64) live inside it (ot_pdie_serdes.sv); the column keeps the u_enc / status leaves.  The same
 //   +1 clk edge for the whole clk domain; RELAY4's lock guard (LOCKSAFE=1, HOLD_EDGES >= 64) is unchanged and >> 1 edge.
+//   3 (form vC, default under `define OT_S81_SERDES_RST_TREE2) = TWO registered stages: rs_t[1] -> 2 kept mid flops (rt_me ->
+//   u_enc / status leaves, rt_mr -> u_rm read-side leaves) -> leaves; the whole clk domain +2 clk edges (serdes__t14 vB
+//   residual: the 1.1 mm rs_t -> u_rm leaf trunk, ECO probe -234).  4 = bench mutant (vC with u_enc rst_n on the mid stage).
+// RST_RT (form vC, default 1 under `define OT_S81_SERDES_RST_RETIME, LOCKSAFE != 0 only; 0 = unchanged): rs_t's clear is
+//   no longer the u_hold AND (lock_sync[1] & rst_sync[1] & hold_ready, pma_rck flops in region syn: attempt_11 TT
+//   lock_sync -> rs_t[0] recovery -83) but ONE kept pma_rck flop rq_t (async assert by that AND, release on the next
+//   pma_rck edge) beside rs_t: the clk domain releases one pma_rck edge later; rs_r and the rck domain are unchanged.
+//   0 data cycles (reset release only).
 module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
                             parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
-`ifdef OT_S81_SERDES_RST_TREE
-                            parameter integer RST_TREE = 1
+`ifdef OT_S81_SERDES_RST_TREE2
+                            parameter integer RST_TREE = 3,
+`elsif OT_S81_SERDES_RST_TREE
+                            parameter integer RST_TREE = 1,
 `else
-                            parameter integer RST_TREE = 0
+                            parameter integer RST_TREE = 0,
+`endif
+`ifdef OT_S81_SERDES_RST_RETIME
+                            parameter integer RST_RT = 1
+`else
+                            parameter integer RST_RT = 0
 `endif
                             ) (
     input  wire          clk,
@@ -72,37 +87,58 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         $error("TX PIN form requires LOCKSAFE=1 and HOLD_EDGES>=64");
 `endif
     // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
-    wire rst_g;
+    wire rst_g, rst_g_t;
     generate if (LOCKSAFE != 0) begin : g_locksafe
         wire hold_ready;
         ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
             (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+        if (RST_RT != 0) begin : g_rst_rt
+            (* keep *) reg rq_t;
+            always @(posedge pma_rck or negedge rst_g) if (!rst_g) rq_t <= 1'b0; else rq_t <= 1'b1;
+            assign rst_g_t = rq_t;
+        end else begin : g_rst_nort
+            assign rst_g_t = rst_g;
+        end
     end else begin : g_legacy
-        assign rst_g = rst;
+        if (RST_RT != 0) begin : g_rt_needs_ls
+            initial $error("RST_RT requires LOCKSAFE != 0");
+        end
+        assign rst_g = rst; assign rst_g_t = rst;
     end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
     reg [1:0] rs_t, rs_r;
-    always @(posedge clk or negedge rst_g) if (!rst_g) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
+    always @(posedge clk or negedge rst_g_t) if (!rst_g_t) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
     wire rn_t = rs_t[1], rn_r = rs_r[1];
     // ---- clk reset fan-out (RST_TREE): rn_te (TX encoder rst_n + tx_v), rn_ts (status), rn_tc / rn_td (u_rm read side)
     localparam integer RT_ND = 8;
-    wire rn_te, rn_te_rst, rn_ts, rn_tc; wire [RT_ND-1:0] rn_td;
+    wire rn_te, rn_te_rst, rn_ts, rn_tc, rn_trm; wire [RT_ND-1:0] rn_td;
     generate if (RST_TREE != 0) begin : g_rst_tree
+        wire rn_me, rn_mr;                                   // stage-1 sources: rn_t (1, 2) or the kept mid flops (3, 4)
+        if (RST_TREE >= 3) begin : g_mid
+            (* keep *) reg rt_me, rt_mr;
+            always @(posedge clk) begin rt_me <= rn_t; rt_mr <= rn_t; end
+            assign rn_me = rt_me; assign rn_mr = rt_mr;
+        end else begin : g_nomid
+            assign rn_me = rn_t; assign rn_mr = rn_t;
+        end
         (* keep *) reg rt_e, rt_s;
-        always @(posedge clk) begin rt_e <= rn_t; rt_s <= rn_t; end
+        always @(posedge clk) begin rt_e <= rn_me; rt_s <= rn_me; end
         assign rn_te = rt_e; assign rn_ts = rt_s;
 `ifdef OT_S81_RM_STAGED
-        assign rn_tc = rn_t; assign rn_td = {RT_ND{rn_t}};      // u_rm makes its own read-side leaves (RLEAF)
+        assign rn_tc = rn_mr; assign rn_td = {RT_ND{rn_mr}};    // u_rm makes its own read-side leaves (RLEAF) from rn_trm
 `else
         (* keep *) reg rt_c;
         (* keep *) reg [RT_ND-1:0] rt_d;
-        always @(posedge clk) begin rt_c <= rn_t; rt_d <= {RT_ND{rn_t}}; end
+        always @(posedge clk) begin rt_c <= rn_mr; rt_d <= {RT_ND{rn_mr}}; end
         assign rn_tc = rt_c; assign rn_td = rt_d;
 `endif
-        assign rn_te_rst = (RST_TREE == 2) ? rn_t : rt_e;   // 2 = bench mutant: encoder reset not moved with tx_v
+        assign rn_trm = rn_mr;
+        // 2 / 4 = bench mutants: encoder reset one stage early versus tx_v
+        assign rn_te_rst = (RST_TREE == 2) ? rn_t : (RST_TREE == 4) ? rn_me : rt_e;
     end else begin : g_rst_flat
         assign rn_te = rn_t; assign rn_te_rst = rn_t; assign rn_ts = rn_t; assign rn_tc = rn_t; assign rn_td = {RT_ND{rn_t}};
+        assign rn_trm = rn_t;
     end endgenerate
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;
@@ -124,7 +160,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
     wire [544:0] l_q;
-    ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL - 1 : TXL)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
+`ifdef OT_S81_SERDES_TXL4
+    // S81-SERDES-TXL4 (DIE-S81-85 2026-11-09): opt-in, two more u_txl relay rows (TX +2 clk).  Measured on serdes 4_cts/G2 kits:
+    // the row 0 -> last row hop spans up to 2.2-2.4 mm and takes data 1020-1514 ps (833 ps period); wirelength-driven GPL
+    // leaves the rows at the encoder and at the pad.  Rows 1 and 2 are the hop stations (place at 1/3 and 2/3 of the span).
+    localparam integer TXL_N = TXL + 2;
+`else
+    localparam integer TXL_N = TXL;
+`endif
+    ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL_N - 1 : TXL_N)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
     wire [543:0] r_d;
@@ -156,7 +200,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     wire rm_flt;
 `ifdef OT_S81_RM_STAGED
     ot_s81_rate_match #(.RLEAF((RST_TREE != 0) ? 1 : 0)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),
-        .rrst_n(rn_t), .r_d(rx), .fault(rm_flt));
+        .rrst_n(rn_trm), .r_d(rx), .fault(rm_flt));
 `elsif OT_S81_SERDES_RST_TREE
     // same instance name; with RST_TREE=0 every leaf input is rn_t (== ot_s81_rate_match, tb_s81_col_rst_tree RM compare)
     ot_s81_rate_match_rt #(.NRD(RT_ND)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),

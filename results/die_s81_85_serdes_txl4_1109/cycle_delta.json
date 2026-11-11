@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.private_cycle_delta.v1",
+  "scope": "S81 serdes u_txl form TXL4 (DIE-S81-85 2026-11-09): OT_S81_SERDES_TXL4 adds two ot_pl_pad relay rows to ot_pdie_serdes_col u_txl (TXL 2 -> 4 at the kit default). Opt-in define; default elaboration unchanged.",
+  "clk_period_ps": 833,
+  "added_rx_clk_PIN_cycles": 0,
+  "added_tx_clk_PIN_cycles": 2,
+  "measurement": {
+    "bench": "rtl/dsrom_sys/s81_link/col/tb_s81_col_rlat.sv via tools/s81_link/run_serdes_rst_tree_bench.sh rlat (Verilator 5.050, PMA loopback pma_rck = pma_tck = clk, LOCKSAFE=1, HOLD_EDGES=64; fixed latency, lat_min == lat_max in every build; RT_EXPECT enforces the value)",
+    "loopback_lat_clk": {
+      "released_column": 88,
+      "released_plus_TXL4": 90,
+      "vB": 99,
+      "vB_plus_TXL4": 101
+    },
+    "mutant": {
+      "MUT=8 with TXL4 (u_txl one row short), RT_EXPECT=90": "FAIL lat 89"
+    },
+    "two_die_col_bench": "tb_s81_pdie_col MODE=0 with TXL4 RT_TREE=0: PASS sent 6000 got 6000 bad 0",
+    "yosys_eq_default": "ot_pdie_serdes_col, origin/main d8f90c6a8c vs this form, default defines, async2sync; equiv_status -assert PASS (submodules as named cells)"
+  },
+  "tx": {
+    "data_latency_delta": 2,
+    "split": {
+      "u_txl relay rows": 2
+    },
+    "added_ps_nominal": 1666
+  },
+  "rx": {
+    "data_latency_delta": 0
+  },
+  "unaffected": [
+    "RX latency",
+    "PMA latency 4 both directions",
+    "reset trees (rst edges)",
+    "rate match occupancy and fault rules"
+  ],
+  "reschedule": [
+    "compiler TX pad date +2 clk",
+    "full end-to-end token composition +2 per TX traversal"
+  ],
+  "placement_requirement": "Rows must be spaced: 4_cts census shows GPL places row 0 at the encoder and the last row at the pad, so the wire falls on one hop. Hook tools/die_plan/txl_mid.tcl (OT_TXL_MID=1, POST_GLOBAL_PLACE, before 3_4 resize) moves the N rows to (k+1)/(N+1) of the enc-driver -> PMA-pin span, nearest free point outside macro halos. Trial on the vC t14 3_3_place_gp ODB with TXL=2: 545/545 bits moved, max hop 2354 -> 816 um, DPL and check_placement clean. Not yet run through a TXL=4 kit.",
+  "hop_estimate_after_staging_ps": {
+    "method": "TXL=4 is 5 hops enc->r0->r1->r2->q->pma per bit. Hook trial on vC t14 (TXL=2, 3 hops): worst span 2207 um, worst hop 816 um = 1.11 x span/hops. Scaled to 5 hops: 490 um; vC t16 / vB t16 use the census path sum /5 as an upper bound. Hop data ps = um x 0.49 (t2 G2 repaired-wire figure) + 60 ck-q + setup. skew = worst launch-capture on those bits from the census. W values are the tap window in the SDC: W180 = today's carried window, W0 = no-window bound. W for serdes is unmeasured; neither is a closure figure.",
+    "vC_t14": {
+      "worst_hop_um": 490,
+      "hop_data_ps": 300,
+      "W180": {
+        "slack_no_skew": 353,
+        "slack_after_worst_skew": 177
+      },
+      "W0": {
+        "slack_no_skew": 533,
+        "slack_after_worst_skew": 357
+      },
+      "worst_skew_ps": -176
+    },
+    "vC_t16": {
+      "worst_hop_um": 530,
+      "hop_data_ps": 320,
+      "W180": {
+        "slack_no_skew": 333,
+        "slack_after_worst_skew": 275
+      },
+      "W0": {
+        "slack_no_skew": 513,
+        "slack_after_worst_skew": 455
+      },
+      "worst_skew_ps": -58
+    },
+    "vB_t16": {
+      "worst_hop_um": 544,
+      "hop_data_ps": 327,
+      "W180": {
+        "slack_no_skew": 326,
+        "slack_after_worst_skew": 260
+      },
+      "W0": {
+        "slack_no_skew": 506,
+        "slack_after_worst_skew": 440
+      },
+      "worst_skew_ps": -66
+    },
+    "t2": {
+      "worst_hop_um": 490,
+      "hop_data_ps": 300,
+      "W180": {
+        "slack_no_skew": 353,
+        "slack_after_worst_skew": 183
+      },
+      "W0": {
+        "slack_no_skew": 533,
+        "slack_after_worst_skew": 363
+      },
+      "worst_skew_ps": -170
+    },
+    "includes": "The q->pma hop is one of the 5 equal hops. The PMA pin sits inside the PHY macro band, so the last hop has about 150 um over the macro edge (q station below the band, ring search off the line).",
+    "caveat": "Estimate only, from placement-RC census + trial on TXL=2. Not a closure result."
+  },
+  "not_adopted": true
+}

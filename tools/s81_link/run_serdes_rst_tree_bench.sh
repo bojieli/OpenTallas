@@ -4,7 +4,9 @@
 # loopback latency bench tb_s81_col_rlat.
 # usage: [RT_DEFS="+define+..."] run_serdes_rst_tree_bench.sh MODE OUTDIR
 #   MODE: tree (PASS) | tree_ls (PASS, LOCKSAFE=1) | mut_rt2 / mut_nocomp (FAIL; *_ls with LOCKSAFE=1) | col | col_ref |
-#         ref_col (PASS) | col_mut1 (FAIL) | rlat (PASS, prints lat_min / lat_max)
+#         ref_col (PASS) | col_mut1 (FAIL) | rlat (PASS, prints lat_min / lat_max) | rlat_mut8 (FAIL with RT_EXPECT) |
+#         vc_ls (PASS: RST_TREE=3 two leaf stages + RST_RT=1 retime, LOCKSAFE=1) | vc_mut_rt4 / vc_mut_short / vc_mut_nocomp (FAIL)
+#   RT_TREE=2 uses +define+OT_S81_SERDES_RST_TREE2+OT_S81_SERDES_RST_RETIME (rlat of form vC).
 #   RT_DEFS: extra defines, e.g. the vB combined form "+define+OT_S81_KP4_AM_FACE3+OT_S81_RCK_RELAY4+OT_S81_KP4_SYN_LOCAL
 #            +OT_S81_RM_STAGED+OT_S81_RM_LOCAL4+OT_S81_RM_WFULL8" (RELAY4 needs LOCKSAFE=1: tree_ls / *_ls / rlat only).
 #   RT_TREE=0 drops +define+OT_S81_SERDES_RST_TREE (rlat reference builds).
@@ -14,6 +16,7 @@ mode=${1:?mode}; out=${2:?fresh output directory}; mkdir -p "$out"
 R=$(cd "$(dirname "$0")/../.." && pwd); L=$R/rtl/dsrom_sys/s81_link; M=$R/physical/asap7_memory_macros
 VL=${VERILATOR:-verilator}
 d=${RT_DEFS:-}; [ "${RT_TREE:-1}" = 1 ] && d="+define+OT_S81_SERDES_RST_TREE $d"
+[ "${RT_TREE:-1}" = 2 ] && d="+define+OT_S81_SERDES_RST_TREE+OT_S81_SERDES_RST_TREE2+OT_S81_SERDES_RST_RETIME $d"
 case $mode in
   tree) top=tb_s81_col_rst_tree; g="-GRT=1";; tree_ls) top=tb_s81_col_rst_tree; g="-GRT=1 -GLS=1";;
   mut_rt2) top=tb_s81_col_rst_tree; g="-GRT=2";; mut_nocomp) top=tb_s81_col_rst_tree; g="-GRT=1 -GNOCOMP=1";;
@@ -21,7 +24,13 @@ case $mode in
   col) top=tb_s81_pdie_col; g="-GMODE=0";; col_ref) top=tb_s81_pdie_col; g="-GMODE=1";; ref_col) top=tb_s81_pdie_col; g="-GMODE=2";;
   col_mut1) top=tb_s81_pdie_col; g="-GMODE=0 -GMUT=1";;
   rlat) top=tb_s81_col_rlat; g="";;
+  vc_ls) top=tb_s81_col_rst_tree; g="-GRT=3 -GRTT=1 -GLS=1";;              # form vC: PASS
+  vc_mut_rt4) top=tb_s81_col_rst_tree; g="-GRT=4 -GRTT=1 -GLS=1";;         # FAIL: encoder reset on the mid stage
+  vc_mut_short) top=tb_s81_col_rst_tree; g="-GRT=3 -GRTT=1 -GLS=1 -GTXSHORT=1";;   # FAIL: retime edge not compensated
+  vc_mut_nocomp) top=tb_s81_col_rst_tree; g="-GRT=3 -GRTT=1 -GLS=1 -GNOCOMP=1";;   # FAIL
+  rlat_mut8) top=tb_s81_col_rlat; g="-GMUT=8";;
   *) echo "RST_TREE BAD_MODE $mode"; exit 2;; esac
+[ -n "${RT_EXPECT:-}" ] && g="$g -GEXPECT_LAT=$RT_EXPECT"   # rlat modes: fixed latency required
 $VL --version > "$out/verilator.version" 2>&1
 $VL --binary --timing -j ${COL_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
   $d --top-module $top $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" \
