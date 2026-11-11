@@ -1,0 +1,169 @@
+{
+ "event": "LEPW-EFACE-1111",
+ "DO_NOT_COUNT": true,
+ "base_plan_sha256": "99f40d35071d66bf2edd2b81f4d7046598f297bbf0b1b3884006252e85172eb9",
+ "delta_sha256": "5b8cafa1edb0a5605f10f28646a533c74a44fdddbfc02c8aec42dee2c9b39bd7",
+ "buses": {
+  "dsdv_slice_lepw_mus_LP__t2.lepk_i0": {
+   "face": "E",
+   "old": [
+    6.144,
+    246.108
+   ],
+   "new": [
+    596.16,
+    836.124
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "width": 1104
+  },
+  "dsdv_slice_lepw_mus_LP__t2.lepk_o0": {
+   "face": "E",
+   "old": [
+    247.296,
+    487.26
+   ],
+   "new": [
+    837.312,
+    1077.276
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "width": 1104
+  },
+  "dsdv_slice_lepw_mus_C__t1.lepk_o0": {
+   "face": "W",
+   "old": [
+    6.144,
+    246.108
+   ],
+   "new": [
+    596.16,
+    836.124
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "width": 1104
+  },
+  "dsdv_slice_lepw_mus_C__t1.lepk_i0": {
+   "face": "W",
+   "old": [
+    247.296,
+    487.26
+   ],
+   "new": [
+    837.312,
+    1077.276
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "width": 1104
+  }
+ },
+ "ports": {
+  "kd_s_0S__0": {
+   "old": [
+    10616.064,
+    10856.028
+   ],
+   "new": [
+    11206.08,
+    11446.044
+   ]
+  },
+  "ku_s_0S__0": {
+   "old": [
+    10857.216,
+    11097.18
+   ],
+   "new": [
+    11447.232,
+    11687.196
+   ]
+  }
+ },
+ "eq_gate": {
+  "rtl_change": false,
+  "netlist_change": false,
+  "pin_count_change": false,
+  "outline_change": false,
+  "core_origin_change": false,
+  "cycle_change": false,
+  "lane_change": false,
+  "changed_paths": [
+   "partition_types.dsdv_slice_lepw_mus_LP__t2.lepk_i0 window_um",
+   "partition_types.dsdv_slice_lepw_mus_LP__t2.lepk_o0 window_um",
+   "partition_types.dsdv_slice_lepw_mus_C__t1.lepk_o0 window_um",
+   "partition_types.dsdv_slice_lepw_mus_C__t1.lepk_i0 window_um",
+   "ports.kd_s_0S__0 window_um",
+   "ports.ku_s_0S__0 window_um"
+  ]
+ },
+ "output_plan_sha256": "c3d22064f68c3a19d5d861a630f0b443c443600d330920d9a230c3acf2555732",
+ "status": "DRAFT, DO_NOT_COUNT; delta for DIE-S81-85's combined S81 plan event (not landed/posted separately)",
+ "finding": {
+  "type": "dsdv_slice_lepw_mus_LP__t2",
+  "un3": {
+   "module": "dsfd_coll_lane_w_safe8_ntf",
+   "origin_um": [
+    1131.84,
+    129.6
+   ],
+   "outline_um": [
+    295.92,
+    444.96
+   ],
+   "orient": "R0",
+   "obs": "M1-M5 full rect; M6 19.3k shapes + M6 PG rails: 1741/6952 M6 tracks free across, mean 26% blocked"
+  },
+  "e_strip_um": 15.12,
+  "e_strip_core_um": 10.8,
+  "lep_logic_y_um": [
+   595,
+   1222
+  ],
+  "grt_before": {
+   "src": "epyc4 kw43-wave-1109n e9eda32d41c attempt_9 5_1_grt (post-CTS, M2-M7)",
+   "total": 463070,
+   "M2": 932,
+   "M3": 12728,
+   "M4": 6796,
+   "M5": 23115,
+   "M6": 291438,
+   "M7": 128061
+  },
+  "sister_mu_LP": "dsdv_slice_lepw_mu_LP__t2 (MX): un3 y 648-1093, lep logic y 0-630, lepk windows y 6-487 already clear of un3 and beside their logic: no change"
+ },
+ "options": {
+  "a_move": {
+   "chosen": true,
+   "change": "mus_LP E lepk_i0/o0 +590.016 um -> [596.16,836.124]/[837.312,1077.276]; mus_C W lepk_o0/i0 same; ports kd/ku_s_0S__0 follow",
+   "supply": "window escape west on M4+M6 (+M2) into free core area: M4 7455 + M6 5156 derated tracks for 2210 pins (~5.7x); no lane-core row to cross (logic in the same y band)",
+   "min_cut": "~5.7x (horizontal escape); before ~0.3x (10.8-um strip vertical cut, M3/M5/M7 ~485 derated tracks for ~1641 pins beside un3) to ~0.9x if every M6 hop onto un3's M7 is counted",
+   "neighbour": "mus_C (s_0S_C only) W windows move with it: from beside u_cap (ot_s81sl_capc5r, OBS to M7, 30-um strip) to beside its SRAM column (OBS M4 only); C's hbc<->xg 3-stage relay (D3) min span grows ~632 -> ~1222 um Manhattan, inside the 4x405 = 1620 um reach"
+  },
+  "b_split": {
+   "chosen": false,
+   "why": "a type bus has one window (schema: segments exist only on die ports; type pins come from one window), so a split is new generator code; any part left beside un3 keeps the problem, and the parts above un3 are option (a)"
+  },
+  "c_street": {
+   "chosen": false,
+   "why": "dropped by DIE-S81-85 scope change (core positions belong to CPL-S81-SLICE)"
+  }
+ },
+ "keep_clear_for_CPL_S81_SLICE": "in mus_LP keep hard cores (OBS >= M4) out of the E-face band x >= 1412.88 (30 um deep) over y [596.16, 1077.276] and keep un3 (or any lane core) top edge <= 574.56 (21.6-um street to the window); mus_C: keep x <= 30 um of its W face clear over the same y span; face-flop banks need ~1.9k um2 per window (~16-um band at 0.5 fill)",
+ "die_g0": "schema + check_geometry + check_abutment + check_faces on base and new plan (origin/main tools): identical 82 findings, none on s_0S_LP / s_0S_C / kd,ku_s_0S__0",
+ "relaunch": [
+  "dsdv_slice_lepw_mus_LP__t2 (fresh kit: pins change)",
+  "dsdv_slice_lepw_mus_C__t1 (fresh kit: pins change)"
+ ]
+}
