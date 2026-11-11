@@ -408,11 +408,18 @@ def sinks_table(raw, die, measured, plan_dir=None):
 
 # --------------------------------------------------------------------------------------------- event
 def _dumps_style(raw_bytes, P):
-    for f in (lambda p: json.dumps(p, separators=(",", ":")) + "\n", lambda p: json.dumps(p) + "\n",
-              lambda p: json.dumps(p, indent=1) + "\n", lambda p: json.dumps(p, indent=2) + "\n"):
-        if f(P).encode() == raw_bytes:
-            return f
-    return lambda p: json.dumps(p, indent=1) + "\n"
+    """(dumps, style name) reproducing the base file byte for byte, else (indent 1, 'indent=1 (base style not
+    reproducible)'): plan block identity hashes canonical JSON (plan_block_identity, sort_keys), so a re-serialized
+    plan moves no block sha."""
+    for ind in (None, 1, 2):
+        for nl in ("\n", ""):
+            for sep in ((",", ":"), None):
+                if ind is not None and sep is not None:
+                    continue
+                f = (lambda p, i=ind, n=nl, se=sep: json.dumps(p, indent=i, separators=se) + n)
+                if f(P).encode() == raw_bytes:
+                    return f, f"json indent={ind} separators={sep} newline={bool(nl)} (base style)"
+    return (lambda p: json.dumps(p, indent=1) + "\n"), "indent=1 (base style not reproducible; canonical content checked)"
 
 
 def _strip(t, keys):
@@ -463,14 +470,18 @@ def cmd_event(a):
     mc = load_measured_cores(a.measured_cores) if a.measured_cores else {}
     ex = tuple(x for x in (a.exclude_cores or "").split(",") if x)
     Q, rec = apply(P0, rules, sinks, mc, ex)
-    data = _dumps_style(raw, P0)(Q).encode()
+    if json.dumps(Q, sort_keys=True) == json.dumps(P0, sort_keys=True):
+        data, style = raw, "unchanged (base bytes)"
+    else:
+        f, style = _dumps_style(raw, P0)
+        data = f(Q).encode()
     out.write_bytes(data)
     aff = affected_types(P0, Q)
     cores = sorted((rec.get("A") or {}).get("cores", {}))
     r = dict(schema="opentallas.plan_gen_rules_event.v1", rule=RULE, die=die, rules=list(rules),
              base_plan=str(base), base_plan_sha256=hashlib.sha256(raw).hexdigest(),
              plan_output=str(out), plan_output_sha256=hashlib.sha256(data).hexdigest(),
-             affected_types=aff, affected_cores=cores,
+             serialization=style, affected_types=aff, affected_cores=cores,
              core_kit_args={m: ["--io-tt-ps", f"{v['tt']:g}", "--io-ff-ps", f"{v['ff']:g}"]
                             for m, v in (rec.get("A") or {}).get("cores", {}).items()},
              data_cycles=0, pin_cycles=0, rtl_change=False,

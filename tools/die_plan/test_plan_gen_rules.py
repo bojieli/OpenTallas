@@ -138,6 +138,19 @@ def test_rule_b_keeps_named_taps():
     assert rec["B"]["g"]["proposed_um"] and rec["B"]["g"]["taps_proposed"] >= 10
 
 
+def test_event_cli_keeps_base_bytes_and_style(tmp_path):
+    P0 = _plan()
+    for txt in (json.dumps(P0, indent=1), json.dumps(P0, indent=1) + "\n", json.dumps(P0, separators=(",", ":")) + "\n"):
+        b = tmp_path / "base.json"
+        b.write_text(txt)
+        R.main(["event", str(b), str(tmp_path / "o.json"), str(tmp_path / "r.json"), "--rules", "B"])
+        assert (tmp_path / "o.json").read_text() == txt                      # no change: the base bytes
+        R.main(["event", str(b), str(tmp_path / "o.json"), str(tmp_path / "r.json"), "--rules", "A"])
+        out = (tmp_path / "o.json").read_text()
+        assert out != txt and out.endswith("\n") == txt.endswith("\n") and ("\n " in out) == ("\n " in txt)
+        assert json.loads((tmp_path / "r.json").read_text())["affected_types"] == ["p"]
+
+
 def test_no_rules_no_sinks_byte_identical():
     P0 = _plan()
     Q, rec = R.apply(P0, rules=(), sinks={})
