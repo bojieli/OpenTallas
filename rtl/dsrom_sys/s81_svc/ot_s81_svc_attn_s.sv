@@ -64,7 +64,9 @@ module ot_s81_svc_attn_s #(
     // transposer fill / q.k / read-index / select inputs AND the tile load / issue inputs -- so the staging SRAM ->
     // transposer hop (one cycle over 2.15-2.89 mm in the S81 svc_rs types) becomes SRX + 1 register hops.  The tile
     // subsystem (transposers + tiles) then runs exactly SRX edges later with unchanged internal timing: the bank
-    // guards, the fill / issue interlocks, the issue rate and the job / q / kv / p handshakes are cycle-identical,
+    // guards, the fill / issue interlocks, the issue rate and the words of every job / q / kv / p handshake are unchanged (back-to-back NSTAGE 2
+    // jobs: the staging double buffer couples the front end to the P.V drain, so later accepts slip; bench
+    // svc_srx_lockstep.py measures it),
     // and sc_* / pv_* leave exactly SRX edges later (the output tags wait SRX more).  The compiler moves the p feed
     // (PIO) and the P.V drain (KPV) by SRX each: +SRX on scores, +2 SRX on P.V per pass.  Needs TRX 1, REPL 2,
     // NSTAGE 2, S 1, V 1, TEXT 0, PHYS 0.

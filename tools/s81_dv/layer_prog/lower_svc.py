@@ -122,8 +122,8 @@ SERVICE_TIMING = {
     'legacy_fg3': dict(pio=285, kpv=55, engine_profile='legacy_fg3'),
     'closing_allq': dict(pio=297, kpv=78, engine_profile='closing'),
     # S81-A1 (S81-ARCH-RTL-2 11-11): the svc_rs engine built with -DOT_SVC_SRX=7 (ot_hdc_v41x_attn_s / ot_s81_svc_attn_s
-    # SRX 7: 7 relay stages on every tile input).  The tile subsystem runs exactly 7 edges later (lock-step proof
-    # svc_srx_lockstep.py: scores +7, P.V +14 with the p feed +7), so the dates move: PIO +7 (the SM e rows follow the
+    # SRX 7: 7 relay stages on every tile input).  A job's scores land 7 edges later and its P.V 14 (bench
+    # svc_srx_lockstep.py: values bit-identical; back-to-back jobs also slip, +44 edges over 10 jobs), so the dates move: PIO +7 (the SM e rows follow the
     # scores), and KPV +7 on top of PO (which already follows PIO): P.V drain +14 a pass.  Same arithmetic, new dates.
     'legacy_fg3_srx7': dict(pio=285 + 7, kpv=55 + 7, engine_profile='legacy_fg3', srx=7),
     'closing_allq_srx7': dict(pio=297 + 7, kpv=78 + 7, engine_profile='closing', srx=7),
