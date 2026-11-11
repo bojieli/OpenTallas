@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "d3f29c0e2b3795b117680a2192c8755ef949794f",
+ "flow_tag": "flow-20261110-kd-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/sml/p4/work/orfs/results/asap7/opentallas_ot_s81_su_sml_fold2_asap7_ref_p4/base/6_final.odb",
+ "build_commit": "6d56b1396e542b1b16080976211429d37d8450d7",
+ "lec": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/sml_kd/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/sml_kd/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/sml/p4/work/orfs",
+ "original_signoff": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/sml/p4/work/orfs/signoff/signoff.json",
+ "name": "ot_s81_su_sml_fold2",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "outgoing-giraffe",
+ "created": "2026-11-11 09:17 UTC",
+ "routed_db_sha256": "3c2d9b6310989e75772e423122265a775d13651ddcc4add985366e7e3d40b871",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch3/claude/auto-resign/tools/flow-20261110-kd-s81/tools/die_plan",
+  "sha256": {
+   "signoff.py": "f0065258960ea161d0cec894b7f89bc670006b359c0cae0e01176b96c6178283",
+   "lec.py": "fc66b89ecdde2f0429137a737e48c6e19b330929d6a7316e76ece305347a5adf"
+  },
+  "checked": "byte-identical to flow-20261110-kd-s81"
+ },
+ "lane": "S81-SVCRS-3",
+ "as_run_note": "tag signoff.py frame bound-ff 202.5 (resign --auto ff-vclk auto gives ff_ref_missing on ref_tile kits); tag lec.py routed 6_final.v, pin_regs gold (p1 wrapper); S81 64-edge reset contract with ot_s81_su_sml_fold2 listed (branch claude/s81-svcrs-3-rstc-svc5-1111 7ee9bf938bd1, contract sha 7e84df78, receipt 21cf163f); at the 4-edge default 93 points differed on no-reset delay-line bits; run on a byte copy of the kit on epyc4; record refreshed after main e5cc5a2dc5 (el140 73492dd2, rstc-svc5 7ee9bf93 = kit reset_contract.json 7e84df78, svcprov-physinst 8a217dec)"
+}

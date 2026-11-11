@@ -1,30 +1,24 @@
 {
- "schema": "opentallas.resign_qualification.v1",
- "kind": "resign",
- "verdict": "SIGNED",
- "src_commit": "d3f29c0e2b3795b117680a2192c8755ef949794f",
- "flow_tag": "flow-20261110-kd-s81",
- "routed_db": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/smd/eco/work/orfs/results/asap7/opentallas_ot_s81_su_smd_fold2_asap7_ref_p4/base/6_final.odb",
- "build_commit": "6d56b1396e542b1b16080976211429d37d8450d7",
- "lec": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smd_kd/lec/lec.json",
- "lec_verdict": "EQUIVALENT",
- "resign_signoff": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smd_kd/signoff/signoff.json",
- "kit": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/smd/eco/work/orfs",
- "original_signoff": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/smd/eco/work/orfs/signoff/signoff.json",
- "name": "ot_s81_su_smd_fold2",
- "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
- "writer": "tools/die_plan/resign.py",
- "host": "outgoing-giraffe",
- "created": "2026-11-11 09:17 UTC",
- "routed_db_sha256": "8bddcae34a4b27317173e8b2d06ca6ec95115ead7b40c8a3fb483d92b8e4c8fc",
- "tag_tools": {
-  "dir": "/srv/opentallas-scratch3/claude/auto-resign/tools/flow-20261110-kd-s81/tools/die_plan",
-  "sha256": {
-   "signoff.py": "f0065258960ea161d0cec894b7f89bc670006b359c0cae0e01176b96c6178283",
-   "lec.py": "fc66b89ecdde2f0429137a737e48c6e19b330929d6a7316e76ece305347a5adf"
-  },
-  "checked": "byte-identical to flow-20261110-kd-s81"
+ "schema": "opentallas.s81.view_copy.v1",
+ "tag": "DS85-COMPOSE-1111 stage (d)",
+ "do_not_count": true,
+ "what": "COPIES of S81-SVCRS-3's durable view export (not a new export): epyc8 /srv/opentallas-scratch2/claude/s81-svcrs-3/durable/s81svc_smd_eco_011509/views (sha-checked copies also on epyc4/epyc7)",
+ "durable_dir": "epyc8:/srv/opentallas-scratch2/claude/s81-svcrs-3/durable/s81svc_smd_eco_011509/views",
+ "files": {
+  "ot_s81_su_smd_fold2.lef": "1b8979d0e4f2379a0d383bae53dc94373257766061e18faa3ba3b4811f76689f",
+  "ot_s81_su_smd_fold2_tt.lib": "7f07831ae9d87d808ce095acb04f533b6b7719905af5aec82714a4625aaad2a3",
+  "ot_s81_su_smd_fold2_ff.lib": "ce054929d511ec533d60b6cd2fac2c33913b94f7b43048347eec49c0531de091",
+  "view_export.abstract.json": "3949e33b463a322cef425da4d07a614abac26c9d4891cdf2ea913848a828558f",
+  "signoff.json": "321431e0b90ea6d139482fb11fe8b8d330cf130f5d995677193e603f9d56e017",
+  "resign_PROVENANCE.json": "8d6de6e3979668ac3a959289102da8f75f82fdd1b3de4da83538cada631716ae"
  },
- "lane": "S81-SVCRS-3",
- "as_run_note": "tag signoff.py frame bound-ff 202.5 (resign --auto ff-vclk auto gives ff_ref_missing on ref_tile kits); ECO kit: signoff --record for antenna; tag lec.py routed netlist = 6_final.v minus 336302 pin-less TAPCELL/FILLER instances (lec_netlist/6_final_lec.v), pin_regs gold (p1 wrapper); reset port rst_in declared via OT_LEC_RESET_PORTS=rst_in (active low, name pattern misses rst_in); S81 64-edge reset contract with ot_s81_su_smd_fold2 listed (branch claude/s81-svcrs-3-rstc-svc5-1111 7ee9bf938bd1, contract sha 7e84df78, receipt 21cf163f); run on a byte copy of the kit on epyc4; record refreshed after main e5cc5a2dc5 (el140 73492dd2, rstc-svc5 7ee9bf93 = kit reset_contract.json 7e84df78, svcprov-physinst 8a217dec)"
+ "signoff": {
+  "path": "outgoing-giraffe(epyc8):/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smd_kd/signoff/signoff.json",
+  "verdict": "SIGNED"
+ },
+ "resign_provenance": "resign_PROVENANCE.json (= epyc8 /srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smd_kd/PROVENANCE.json)",
+ "routed_db": "/srv/opentallas-scratch2/claude/s81-svcrs-3/prov/run/smd/eco/work/orfs/results/asap7/opentallas_ot_s81_su_smd_fold2_asap7_ref_p4/base/6_final.odb",
+ "routed_db_sha256": "8bddcae34a4b27317173e8b2d06ca6ec95115ead7b40c8a3fb483d92b8e4c8fc",
+ "lec_verdict": "EQUIVALENT",
+ "view_receipt": "ot_s81_su_smd_fold2.view.json (view_lef.bind: LEF pins == lib pins, 303 pins)"
 }
