@@ -42250,3 +42250,19 @@ FAILED [AUTOPILOT c4b2dd61643d] 2026-11-11 11:02:29 PST AUTOPILOT -> KIT-WAVE-3:
   - Fix candidate G, recommended. Tested on a bench copy only: one ot_s81_rly on u_e13 go/cfg/f_prog (the go path +1, stations untouched). Result: fault 0, XS_BF_MEASURE OK, pv e4/e8/e13 = 327/336/344 (record h9bf/measure_G.json).
     - At the source: tap u_s13 lc one register later, or add a register on its outputs, in frame_wrap / the c26l cluster (col_h*_l4.sv is generated). The same is needed for col_h10 e15.
   - Owner: DIE-S81-87 / frame RTL. After the RTL fix I re-measure the col_h9|E5 BF record. The current record is 1-flop and stale, and must not be used.
+- 2026-11-11 11:15 PST RESULT [TOK-VERIFY-1 -> COORD, S81-FRAME-FIX-1; cc DIE-S81-87] DO_NOT_COUNT. Price of claude/s81-frame-inband-1111@d563f890d5 against my baseline (AR 768.26 / MTP 2689.56): **AR +0.04% (768.58), MTP +0.04% (2690.55). Net faster, because down's floor drops 130 -> 127.** This is a model price, not compiled; the reason is the blocker below.
+  PER LAYER (my compiled phase counts: wq_b+idx.q pipeline 33, wo_b 6, shared_gu 6, down 35, wo_a 20, router 5):
+  - wq_b pipeline P126 -> 127: +32.
+  - wo_b P127 -> 128, tail 322 -> 336: +19.
+  - shared_gu P146 -> 145, tail 363 -> 377: +9.
+  - down P130 -> 127, tail 296 -> 307: -91.
+  - wo_a tail +9, router tail +1.
+  Per token: attn ops x 43, ffn ops x 40; MTP x 44 / 41. AR -660 cycles, MTP -681 per step.
+  RISK: down's -91 rests on one frame (u_f_0L01), P127..132 PASS. Without that gain the branch would cost AR -0.19% (766.8). The wq_b pipeline at P127 with PHASE_SPAN 223 is not benched on 2-flop stations, as S81-FRAME-FIX-1 says.
+  **BLOCKER (to S81-FRAME-FIX-1): the branch refuses every strict-bind layer compile.**
+  - Result: L0/L2/L14/L20 rc 1 (HEAD rc 0), in frame_return_plan.inband_shift: "landed schedule extracted at other station depths: re-extract".
+  - Cause: the as-built schedules from frame_schedule_asb.py, i.e. the OT_XS_ASB_SCHEDULE_DIR path that the strict-bind compile uses, carry no 'station_depth' key. Only frame_schedule.py's LP schedules (frame_l4_cluster/compiler/col_h*_schedule.json) carry it.
+  - The fingerprint itself agrees: station_depth.py gives the same depths on main RTL and on my frame root (cand bind).
+  - Fix needed before merge: frame_schedule_asb.py records SD.fingerprint() in its schedule, or inband_shift accepts as-built schedules, whose traced paths already include the real flops, and gives them extra = 0.
+  - Repro: intel1 tok-verify-1/ff/run_cc.sh with OUT=ff/cc_ib, code wt_ff @d563f890d5; errors in ff/cc_ib/cc_L2_su.err.
+  The baseline images stay the ones compiled on main ad60c8ed70 (ff/cc). My wt_ff worktree is now at d563f890d5, and its main-compile receipt is ff/cc_code.rev.
