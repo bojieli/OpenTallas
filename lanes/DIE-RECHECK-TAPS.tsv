@@ -1,0 +1,109 @@
+# DIE-RECHECK-TAPS (DIE-RECHECK-1, ADVISORY, DO_NOT_COUNT): designs whose measured pin-flop insertion is > 40 ps off the plan target -> per-core die tap needed (12.3 v5.0 early tap if e>0; designed entry trunk delay 12.8c / late tap if e<0). k_die 0.845.
+die	design	label	target_tt	ins_tt	ins_ff	e_tt	e_ff	xcorner_ff	port_hold_die_ff_nominal	signoff
+hbm	ot_hfd_coll_q3_body_ctl q3bc_CF2 build	NEAR-CLOSE	250.0	704.3	558.6	454.3	356.1	-27.8		epyc4:/srv/opentallas-scratch2/claude/hbm-cores-b/kits/q3bc_CF2/signoff/signoff.json
+hbm	ot_q2nf_rest split kit_bd2 (vG2 row select on bd half)	NEAR-CLOSE	250.0	599.4	474.8	349.4	272.3	-22.9		epyc7:/srv/opentallas-scratch2/claude/hbm-q2nf-rf/kit_bd2/signoff/signoff.json
+hbm	ot_smh_static_front_w SF-SPLIT W half (COORD form b)	NEAR-CLOSE	250.0	563.8	447.1	313.8	244.6	-20.5		epyc4:/srv/opentallas-scratch2/claude/hbm-collect-1/sfs/kits2/ot_smh_static_front_w_0ac230c58d27cec6/signoff/signoff.json
+hbm	ot_hgi_sfu_opsb_output	SIGNED	250.0	499.6	409.9	249.6	207.4	-3.5	-13.8	epyc4:/srv/opentallas-scratch2/claude/hbm-cores-b/opsb_PS2f_eco1/i1/resign_gd/signoff/signoff.json
+hbm	ot_hfd_coll_q3_vm_core	SIGNED	250.0	486.2	392.4	236.2	189.9	-9.7	-18.3	epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/q3vm_vF_eco1/i1/resign_gq/signoff/signoff.json
+hbm	ot_hfd_coll_q3_vm_core vL repeater pitch	NEAR-CLOSE	250.0	484.4	388.1	234.4	185.6	-12.5		epyc4:/srv/opentallas-scratch3/claude/hbm-hard-2/kits/q3vmL_mw100/signoff/signoff.json
+hbm	ot_hbm_idx_rootctl_static_am e1 ECO2	NEAR-CLOSE	250.0	461.9	370.1	211.9	167.6	-11.4		epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rootctl_e1/signoff/signoff.json
+hbm	ot_hbm_su_pg_lane1p_core D2L (D2 physical + LID_COPY)	NEAR-CLOSE	250.0	421.6	332.9	171.6	130.4	-14.5		epyc8:/srv/opentallas-scratch2/claude/hbm-collect-1/lane1pd/ot_hbm_su_pg_lane1p_core_d2l1110/signoff/signoff.json
+hbm	ot_hbm_su_pg_lane1p_core L1P-HS (D2L + HB4 pad per zero-logic hop, COORD structural form)	NEAR-CLOSE	250.0	409.4	322.2	159.4	119.7	-15.0		epyc8:/srv/opentallas-scratch2/claude/hbm-collect-1/l1phs/ot_hbm_su_pg_lane1p_core_l1phs1110/signoff/signoff.json
+hbm	ot_hbm_hc_bank128_pair_first_core	SIGNED	250.0	404.8	323.6	154.8	121.1	-9.7		epyc2:/srv/opentallas-scratch2/claude/die-hbm-74/resign/b128h1/signoff/signoff.json
+hbm	ot_hbm_su_pg_lane1_core	SIGNED	250.0	404.6	321.1	154.6	118.6	-12.1		epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_lane1_core__flow-20261106-o-hbm__3b717c4b/signoff/signoff.json
+hbm	ot_q2nf_qout	SIGNED	250.0	391.5	315.5	141.5	113.0	-6.6	-2.7	intel2:/srv/opentallas-scratch2/claude/codex-hbm-open-0222/qout_resign_fa_i2/signoff/signoff.json
+hbm	hfd_ep_static	SIGNED	250.0	384.4	304.6	134.4	102.1	-11.5		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hfd_ep_static__flow-20261106-cr-hbm__57373ed8/signoff/signoff.json
+hbm	ot_hbm_accel_smh_xs	SIGNED	250.0	376.5	300.1	126.5	97.6	-9.3	-8.0	epyc4:/srv/opentallas-scratch3/claude/hbm-collect-1/kfx6c/xs_mw_ecohm/i1/signoff/signoff.json
+hbm	ot_hgi_sm_xload_cl2_bfqg	SIGNED	250.0	370.1	294.5	120.1	92.0	-9.5		epyc4:/srv/opentallas-scratch3/claude/ss29/resign/bfqg_k/signoff/signoff.json
+hbm	ot_hbm_idx_rootctl_static_am	SIGNED	250.0	368.6	293.6	118.6	91.1	-9.2	-15.7	intel1:/srv/opentallas-scratch2/claude/hbm-open-a/rootctl_E_so/signoff/signoff.json
+hbm	ot_hbm_su_static_sfustore_hw	SIGNED	250.0	364.0	298.0	114.0	95.5	-0.8		epyc2:/srv/opentallas-scratch2/claude/ss25/resign/sfustore_b/signoff/signoff.json
+hbm	vsN4 formB (a3 placement + tap balance target 380 / window 60: pads short taps to the deep ones; latches on launch tap at midpoint; 0 pin cycles; DO_NOT_COUNT)	NEAR-CLOSE	250.0	362.1	284.6	112.1	82.1	-12.6		epyc4:/srv/opentallas-scratch2/claude/die-hbm-97-vsn4/formB/gen/vsN4/signoff/signoff.json
+hbm	ot_hgi_sm_xload_cl2_ctlx	SIGNED	250.0	358.2	292.4	108.2	89.9	-1.5		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/ctlx2_k/signoff/signoff.json
+hbm	ot_svgr_bk	SIGNED	250.0	350.5	279.6	100.5	77.1	-7.8	148.5	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json
+hbm	ot_hbm_host_cp_rxs	SIGNED	250.0	350.0	278.3	100.0	75.8	-8.7		epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	SIGNED	250.0	336.9	272.9	86.9	70.4	-3.0		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_sm_vm_wr_q_t_lanes4__flow-20261106-cr-hbm__11685eb6/signoff/signoff.json
+hbm	q_mca	SIGNED	250.0	335.7	259.6	85.7	57.1	-15.3		intel1:/srv/opentallas-scratch2/claude/hbm-cores-b/qmca_vSR3_eco1/i1/resign_hm/signoff/signoff.json
+hbm	ot_svgr_own	SIGNED	250.0	334.5	267.3	84.5	64.8	-6.6	108.4	epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/own_RF4T_eco1k/i1/resign_hm/signoff/signoff.json
+hbm	ot_hbm_accel_smh_pt_e	SIGNED	250.0	332.7	264.9	82.7	62.4	-7.4	7.0	intel1:/srv/opentallas-scratch2/claude/hbm-collect-1/smk/pt_e/so_ho/signoff/signoff.json
+hbm	ot_hbm_su_static_cxport_ij_q	SIGNED	250.0	329.9	262.4	79.9	59.9	-7.5		epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json
+hbm	ot_hbm_su_pcol_l	SIGNED	250.0	326.2	267.7	76.2	65.2	0.8		intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json
+hbm	ot_hbm_svc_sm_xcal_rel_t	SIGNED	250.0	325.1	263.0	75.1	60.5	-3.0		intel2:/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json
+hbm	ot_hbm_su_pcol_s	SIGNED	250.0	323.6	263.7	73.6	61.2	-1.0		epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json
+hbm	ot_hbm_su_pg_lane_exp_x_core	SIGNED	250.0	320.8	259.0	70.8	56.5	-3.3	-42.7	intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	SIGNED	250.0	319.5	250.3	69.5	47.8	-10.9		intel1:/srv/opentallas-scratch2/claude/hbm-hard-9/h9b_resign/so_gj/signoff/signoff.json
+hbm	ot_hfd_coll_q3_qcol4	SIGNED	250.0	309.6	250.3	59.6	47.8	-2.5	88.1	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json
+hbm	ot_hfd_coll_q3_edge_link	SIGNED	250.0	307.0	248.7	57.0	46.2	-2.0		epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hfd_coll_q3_edge_link__flow-20261106-dm-hbm__a0b2e7ee/signoff/signoff.json
+hbm	ot_hnx_idxn_keybuf_slice	SIGNED	250.0	306.8	246.4	56.8	43.9	-4.1		epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json
+hbm	ot_hgi_coll_inj_idx_join_rg	SIGNED	250.0	302.4	239.9	52.4	37.4	-6.9	100.2	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e2_resign_dq/signoff/signoff.json
+hbm	ot_hgi_sfu_split3_lane_core_fr	SIGNED	250.0	299.4	237.1	49.4	34.6	-7.2		epyc2:/srv/opentallas-scratch2/claude/die-hbm-82-b128/resign/fr_dc/signoff/signoff.json
+hbm	ot_hidx_s3_q	SIGNED	250.0	295.4	243.6	45.4	41.1	2.7	-39.0	intel1:/srv/opentallas-scratch2/claude/die-hbm-92-open/s3_eco_resign_fg/signoff/signoff.json
+hbm	ot_hfd_coll_q2_hard_v8g__reduce	SIGNED	250.0	294.8	230.6	44.8	28.1	-9.8		epyc4:/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr/signoff/signoff.json
+hbm	ot_hbm_svc_vmdel_lane_n	SIGNED	250.0	293.8	226.7	43.8	24.2	-12.8		epyc4:/srv/opentallas-scratch3/claude/ss29/resign/vm8_k/signoff/signoff.json
+hbm	ot_hgi_sfu_split3_lane_core_ex	SIGNED	250.0	293.7	237.4	43.7	34.9	-2.1		epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json
+hbm	ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50	SIGNED	250.0	291.6	234.5	41.6	32.0	-3.2		epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json
+hbm	ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7	SIGNED	250.0	290.1	234.1	40.1	31.6	-2.3		epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json
+qwen_compute	qfd_tile_nl_a0c	SIGNED	250.0	774.4	610.6	524.4	408.1	-35.0		epyc2:/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/signoff/signoff.json
+qwen_compute	NL ecow3 re-sign + routed LEC	NEAR-CLOSE	250.0	774.4	610.6	524.4	408.1	-35.0		epyc2:/srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/resign_cv/signoff/signoff.json
+qwen_compute	NL ecow3 routed LEC, gold + IDLE_UCK 1	NEAR-CLOSE	250.0	774.4	610.6	524.4	408.1	-35.0		epyc2:/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/signoff/signoff.json
+qwen_compute	NK vR7n nonport GRT hold from vR7 4_CTS (R1)	NEAR-CLOSE	250.0	733.2	586.0	483.2	383.5	-24.9		intel1:/srv/opentallas-scratch2/claude/dq92/qfd_tile_nk_a0c_vR7/signoff/signoff.json
+qwen_compute	qfd_dv_s8x_prog	SIGNED	250.0	479.7	369.1	229.7	166.6	-27.5		intel2:/srv/opentallas-scratch2/claude/dq92/resign_ed/qfd_dv_s8x_prog/signoff/signoff.json
+qwen_compute	sle_cland_w2_e_200	SIGNED	250.0	57.0	42.6	-193.0	-159.9	3.2		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w2_e_200/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l4	SIGNED	250.0	426.4	342.5	176.4	140.0	-9.0		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l4/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l5	SIGNED	250.0	426.4	342.5	176.4	140.0	-9.0		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l5/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l2	SIGNED	250.0	418.6	337.4	168.6	134.9	-7.6		intel1:/srv/opentallas-scratch2/claude/dq97/l2e/resign_fe/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l7	SIGNED	250.0	414.0	333.9	164.0	131.4	-7.2		intel1:/srv/opentallas-scratch2/claude/dq97/l7_eco_resign_fe/signoff/signoff.json
+qwen_compute	sle_cland_w515_s_200	SIGNED	250.0	87.1	69.5	-162.9	-133.0	4.6		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_200/signoff/signoff.json
+qwen_compute	sle_cland_w517_n_200	SIGNED	250.0	93.5	75.0	-156.6	-127.5	4.8		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w517_n_200/signoff/signoff.json
+qwen_compute	qfd_dv_s5_sc2_leaf	SIGNED	250.0	406.4	332.5	156.4	130.0	-2.1		epyc4:/srv/opentallas-scratch3/claude/dq92/resign_ed/qfd_dv_s5_sc2_leaf/signoff/signoff.json
+qwen_compute	sle_cland_w767_e_200	SIGNED	250.0	93.7	75.1	-156.3	-127.4	4.6		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w767_e_200/signoff/signoff.json
+qwen_compute	qfd_dv_s5_sc2_leaf_dn0	SIGNED	250.0	406.1	332.3	156.1	129.8	-2.2		epyc4:/srv/opentallas-scratch3/claude/dq92/resign_ed/qfd_dv_s5_sc2_leaf_dn0/signoff/signoff.json
+qwen_compute	qfd_dv_s5_sc2_leaf_up0	SIGNED	250.0	406.0	332.0	156.0	129.5	-2.4		epyc4:/srv/opentallas-scratch2/claude/dq78/rs_up0/out/signoff/signoff.json
+qwen_compute	sle_cland_w765_e_200	SIGNED	250.0	94.5	76.2	-155.5	-126.3	5.0		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w765_e_200/signoff/signoff.json
+qwen_compute	sle_cland_w515_s_201	SIGNED	250.0	97.7	78.5	-152.3	-124.0	4.7		intel2:/srv/opentallas-scratch2/claude/wt/rm25/physical/ref_tile/qc_sul1_split_1106/views/sle_cland_w515_s_201/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l6	SIGNED	250.0	401.2	323.0	151.2	120.5	-7.3		intel2:/srv/opentallas-scratch2/claude/dq97/l6/resign_eco/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l1	SIGNED	250.0	397.1	326.4	147.1	123.9	-0.4		epyc4:/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/resign_s_qc/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l0	SIGNED	250.0	397.1	327.2	147.1	124.7	0.4		epyc2:/srv/opentallas-scratch2/claude/dq68-sul-l0/e2/resign_s_qc/signoff/signoff.json
+qwen_compute	qfd_qc_su_lane_w_l3	SIGNED	250.0	393.4	319.3	143.4	116.8	-4.4		intel1:/srv/opentallas-scratch2/claude/ss24/l3_s_qc/signoff/signoff.json
+qwen_compute	ot_coll_fold_slice	SIGNED	250.0	208.2	170.8	-41.8	-31.7	3.5		epyc2:/srv/opentallas-scratch3/claude/qc-fold-2/resign_vB/signoff/signoff.json
+qwen_kvsys	qkd_hr_ingest_eng	SIGNED	250.0	340.4	273.1	90.4	70.6	-5.8		intel2:/srv/opentallas-scratch2/claude/codex-kv1209/fo8_cj/resign/signoff/signoff.json
+qwen_kvsys	qkd_hr_ingest_eng vE_fo8	NEAR-CLOSE	250.0	340.4	273.1	90.4	70.6	-5.8		epyc2:/srv/opentallas-scratch2/claude/kving7/vE_fo8/i1/signoff/signoff.json
+qwen_kvsys	qkd_hr_ingest_eng vE3	NEAR-CLOSE	250.0	340.4	273.1	90.4	70.6	-5.8		intel1:/srv/opentallas-scratch2/claude/kving7/vE3/eco/i1/signoff/signoff.json
+qwen_kvsys	qkd_hr_cdc_hi	SIGNED	250.0	163.6	131.8	-86.4	-70.7	2.4		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_chi_s_kv/signoff/signoff.json
+qwen_kvsys	qkd_hr_cdc_ci	SIGNED	250.0	166.4	134.0	-83.6	-68.5	2.1		intel1:/srv/opentallas-scratch2/claude/dkv66/hr/resign/cci_x/signoff/signoff.json
+qwen_kvsys	qkd_hr_core_queue	SIGNED	250.0	171.0	138.5	-79.0	-64.0	2.7		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cq_s_kv/signoff/signoff.json
+qwen_kvsys	qkd_kvs_pcf_h_head_p	SIGNED	250.0	185.3	148.6	-64.7	-53.9	0.8		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json
+qwen_kvsys	qkd_kvs_pcf	SIGNED	250.0	186.0	149.1	-64.0	-53.4	0.7		epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json
+qwen_kvsys	qkd_hr_core_guard	SIGNED	250.0	186.1	149.4	-63.9	-53.1	0.9		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cg_s_kv/signoff/signoff.json
+qwen_kvsys	qkd_hr_core_order	SIGNED	250.0	307.9	248.2	57.9	45.7	-3.3		intel1:/srv/opentallas-scratch2/claude/dkv79/ord/rs_o4f_c/signoff/signoff.json
+qwen_kvsys	qkd_hr_core_tx	SIGNED	250.0	193.2	155.7	-56.8	-46.8	1.2		intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json
+qwen_kvsys	qkd_hr_phy_pad	SIGNED	250.0	300.6	230.7	50.6	28.2	-14.5		intel2:/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff/signoff.json
+qwen_kvsys	qkd_hr_phy_adp	SIGNED	250.0	207.4	171.9	-42.6	-30.6	5.4		intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json
+qwen_kvsys	qkd_hr_cdc_pc	SIGNED	250.0	208.7	167.9	-41.3	-34.6	0.3		epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cpc_s_kv/signoff/signoff.json
+qwen_kvsys	ot_qwen_tp8_pv_join_t	SIGNED	250.0	209.9	169.6	-40.1	-32.9	1.0		epyc2:/srv/opentallas-scratch3/claude/dkv61/pvjoin/R0_A/prd_w60.resign_rkv.resign_rkv/signoff/signoff.json
+s81	dsdv_idx_tx_n32	SIGNED	250.0	677.1	562.3	427.1	359.8	-1.1		intel2:/srv/opentallas-scratch2/claude/s81-idx-b5/vg/resign_cp/signoff/signoff.json
+s81	dsdv_gunit_l5	SIGNED	250.0	494.1	395.2	244.1	192.8	-13.5		intel2:/srv/opentallas-scratch2/claude/ss29/resign/gl5_l/signoff/signoff.json
+s81	dsdv_gunit_l1f_ba1	SIGNED	250.0	455.5	367.0	205.5	164.5	-9.2	244.4	intel2:/srv/opentallas-scratch2/claude/die-s81-80/resign_eg/ba1gf3/signoff/signoff.json
+s81	dsdv_bksel_c	SIGNED	250.0	442.8	354.0	192.8	151.5	-11.4	66.1	origin/main:physical/die_plan/s81/cores/views/bksel_c3_1104/dsdv_bksel_c/signoff.json
+s81	ot_v41_bf_col3_c	SIGNED	250.0	434.6	333.9	184.6	131.4	-24.5		intel1:/srv/opentallas-scratch2/claude/ss29/resign/c_o/signoff/signoff.json
+s81	dsfd_coll_lane_e_safe8_ntf	SIGNED	250.0	424.6	336.3	174.6	133.8	-13.8	75.1	origin/main:physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/signoff.json
+s81	dsfd_coll_lane_w_safe8_ntf	SIGNED	250.0	424.6	336.3	174.6	133.8	-13.8	75.1	origin/main:physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/signoff.json
+s81	dsdv_bk_g	SIGNED	250.0	412.1	338.0	162.1	135.5	-1.5		intel1:/srv/opentallas-scratch2/claude/die-s81-71/bk_g_resign_cl/signoff/signoff.json
+s81	ot_s81sl_vn_b	SIGNED	250.0	410.9	335.9	160.9	133.4	-2.6		intel1:/srv/opentallas-scratch2/claude/s81ck11/vnb_hxh_g-s81/signoff/signoff.json
+s81	ot_s81sl_vn_a	SIGNED	250.0	404.9	329.8	154.9	127.3	-3.6		epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81/signoff/signoff.json
+s81	dsdv_gunit_l1f_ba0	SIGNED	250.0	397.2	322.0	147.2	119.5	-4.9	198.0	intel2:/srv/opentallas-scratch2/claude/die-s81-80/resign_eg/ba0gf3/signoff/signoff.json
+s81	dsdv_gunit_l0r	SIGNED	250.0	381.2	305.5	131.2	103.0	-7.8	178.3	epyc4:/srv/opentallas-scratch2/claude/ss24/l0r_w_s81/signoff/signoff.json
+s81	ot_s81sl_ve_m	SIGNED	250.0	374.1	304.6	124.1	102.1	-2.7		epyc2:/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81/signoff/signoff.json
+s81	ot_s81c_attn_hcore	SIGNED	250.0	364.0	291.6	114.0	89.1	-7.2		origin/main:physical/die_plan/s81/cores/holdeco_1030/ot_s81c_attn_hcore/signoff.json
+s81	ot_s81sl_xrt3	SIGNED	250.0	359.6	281.1	109.6	78.6	-14.0		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/xrt3_v/signoff/signoff.json
+s81	ot_s81dv_norm_finish	SIGNED	250.0	354.7	288.8	104.7	86.3	-2.2		intel2:/srv/opentallas-scratch2/claude/wt/die-s81-65-nf1/physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/signoff.json
+s81	ot_s81dv_eng_finish	SIGNED	250.0	352.9	289.2	102.9	86.7	-0.3		intel2:/srv/opentallas-scratch2/claude/ss32/resign/engf_s/signoff/signoff.json
+s81	ot_s81sl_vq	SIGNED	250.0	341.4	268.5	91.4	66.0	-11.2		origin/main:physical/die_plan/s81/cores/holdeco_1030/ot_s81sl_vq/signoff.json
+s81	ot_s81sl_xrt1	SIGNED	250.0	329.8	258.9	79.8	56.4	-11.0		origin/main:physical/die_plan/s81/cores/views/xrt_rfj_1104/ot_s81sl_xrt1/signoff.json
+s81	dsdv_gunit_l2	SIGNED	250.0	324.5	262.6	74.5	60.1	-2.9		epyc2:/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l2_ccA_s6M_B10h_h-s81/signoff/signoff.json
+s81	ot_v41_bf16_half	SIGNED	250.0	303.2	238.4	53.2	35.9	-9.1		epyc2:/srv/opentallas-scratch2/claude/ss29/resign/half_o/signoff/signoff.json
+s81	dsdv_gunit_l3	SIGNED	250.0	303.2	246.6	53.2	44.1	-0.9		intel1:/srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81/signoff/signoff.json
+s81	ot_s81sl_vsw	SIGNED	250.0	301.9	240.6	51.9	38.1	-5.7		epyc2:/srv/opentallas-scratch2/claude/ss21-resign/vsw_q_s81/signoff/signoff.json
+s81_head	ot_s81hd_elemB_cv	SIGNED	450.0	230.7	189.3	-219.3	-175.2	10.1		intel2:/srv/opentallas-scratch3/claude/s81-romq-b4/wt/results/head_core_clockfreeze_release/elemB_signed/signoff.json
+s81_head	ot_s81hd_elemA_cv	SIGNED	450.0	255.2	208.3	-194.8	-156.2	8.3		intel2:/srv/opentallas-scratch3/claude/s81-romq-b4/wt/results/head_core_clockfreeze_release/elemA_signed/signoff.json
+s81_head	ot_s81_kp4_dchn	SIGNED	450.0	288.5	229.7	-161.5	-134.8	1.7		intel2:/srv/opentallas-scratch3/claude/s81-romq-b4/wt/results/head_core_clockfreeze_release/kp4_e13a_signed/signoff.json
+s81_head	hd_host_n	SIGNED	450.0	374.3	288.6	-75.7	-53.4	10.5	106.1	intel2:/srv/opentallas-scratch2/claude/dh64/resign/host_n/signoff/signoff.json
