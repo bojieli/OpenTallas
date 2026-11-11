@@ -209,6 +209,7 @@ def main(argv):
     native_plan = json.loads(native_file.read_text()) if native_file.exists() else None
     rsel = _nearest_rsel(P, tn, taps, native_plan)
     leaf = reset_tree.leaf_tap(P, tn)
+    btap = (P.types[tn].get("reset") or {}).get("boundary_tap") == "nearest"
     out, ns, nfirm, nnear, nste, rr, conv, placed = [], None, 0, 0, 0, 0, None, False
     for ln in lines:
         # A native bind declares the old leaf reset with an initializer. Re-plan
@@ -252,8 +253,9 @@ def main(argv):
                 ln = re.sub(r"\.ea\(rst_n(_t\d+)?\)", f".ea({r})", ln)
                 ln = re.sub(r"^(\s*)ot_dp_st\b", r"\1ot_dp_ste", ln)
                 nste += 1
-        elif m and re.search(r"\.ea\(rst_n(_t\d+)?\)", ln):
-            # RSTN-TAP (bind.py boundary_reset_selector): a far face flop already names its same-depth tap rst_n_t<i>
+        elif m and re.search(r"\.ea\(rst_n(_t\d+)?\)" if btap else r"\.ea\(rst_n\)", ln):
+            # RSTN-TAP (bind.py boundary_reset_selector, opt-in reset.boundary_tap): a far face flop already names its
+            # same-depth tap rst_n_t<i>
             ln = re.sub(r"^(\s*)ot_dp_st\b", r"\1ot_dp_ste", ln)
             nste += 1
         out.append(ln)

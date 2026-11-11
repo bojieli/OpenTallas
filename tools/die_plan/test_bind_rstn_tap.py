@@ -27,9 +27,12 @@ def _buses(b, part, names_in, names_out):
         b.out_bus[part].append(dict(oname=n, width=8, src=part, dst="pb", items=[("fwd", L, k) for k in range(8)]))
 
 
-def _emit(tmp_path, raw, sites):
+def _emit(tmp_path, raw, sites, opt_in=True):
     raw = copy.deepcopy(raw)
     raw["partition_types"]["mid"]["relay_sites"] = sites
+    if opt_in:
+        raw["partition_types"]["mid"].setdefault("reset", {})["boundary_tap"] = "nearest"
+        assert schema.validate(raw) == []
     b = emitter(raw)
     _buses(b, "pm1", ["fx_i", "cfg_i"], ["fx_o", "cfg_o"])
     b.emit(tmp_path)
@@ -133,6 +136,8 @@ def test_kit_rsync_keeps_rstn_tap_epoch_flop_as_ste(tmp_path):
     import kit_rsync
     from test_reset_tree import PAIR, piped
     raw = piped(PAIR)
+    raw["partition_types"]["fa"].setdefault("reset", {})["boundary_tap"] = "nearest"
+    assert schema.validate(raw) == []
     P = schema.Plan(raw)
     (tmp_path / "plan.json").write_text(json.dumps(raw))
     kd = tmp_path / "kit"
@@ -150,3 +155,22 @@ def test_kit_rsync_keeps_rstn_tap_epoch_flop_as_ste(tmp_path):
     assert kit_rsync.main([str(tmp_path / "plan.json"), "fa", str(kd)]) == 0
     v = b.read_text()
     assert "ot_dp_ste #(.W(4)) u_bout_y (.clk(clk), .rst_n(rst_n_t1), .d(x), .ea(rst_n_t1)" in v
+
+
+def test_key_absent_far_regs_keep_todays_bytes(tmp_path):
+    """OPT-IN: without reset.boundary_tap the far-corner type emits exactly the pre-RSTN-TAP RTL and no receipt"""
+    raw = plan()
+    w, h = schema.Plan(raw).types["mid"]["outline_um"]
+    far = {"u_bin_fx_i/eq_reg": [20.0, 20.0], "u_bout_cfg_o/eq_reg": [w - 20.0, h - 20.0]}
+    _, text, regs, meta = _emit(tmp_path / "a", raw, far, opt_in=False)
+    assert meta is None and "RSTN-TAP" not in text and all(v[0] == "rst_n" for v in regs.values())
+    orig = bind.boundary_reset_selector
+    try:
+        bind.boundary_reset_selector = lambda *a: (lambda body, kind, n, W: "rst_n")
+        _, text0, _, _ = _emit(tmp_path / "b", raw, far, opt_in=False)
+    finally:
+        bind.boundary_reset_selector = orig
+    assert text == text0
+    for f in (tmp_path / "a").rglob("*"):
+        if f.is_file():
+            assert f.read_bytes() == (tmp_path / "b" / f.relative_to(tmp_path / "a")).read_bytes(), f

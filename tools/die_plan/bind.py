@@ -4184,8 +4184,11 @@ def boundary_reset_selector(b, P, tn, rtree):
     the delivered reset), so it takes the same tap net: same value on every cycle.  Every other user of rst_n (leaves,
     ft stations, pads, hard cores) is untouched.  Wavefront soft types only (rtree), unsplit types only (the tree
     frame is the plan type's); each move adds a `// RSTN-TAP` line above the instance and a row in
-    bind_reset_taps.json."""
-    if rtree is None or P is None or getattr(b, "types", {}).get(tn, {}).get("split_of", tn) != tn:
+    bind_reset_taps.json.  OPT-IN per type (plan partition_types.<t>.reset.boundary_tap = "nearest"): without the key
+    every byte of the bind output is unchanged (signed views / LEC receipts of other types stay valid)."""
+    bt = getattr(b, "types", {}).get(tn, {})
+    if rtree is None or P is None or bt.get("split_of", tn) != tn or \
+            (bt.get("reset") or {}).get("boundary_tap") != "nearest":
         return lambda body, kind, n, W: "rst_n"
     import reset_tree as RT
     try:

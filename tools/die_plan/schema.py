@@ -802,6 +802,9 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # RSTN-TAP (DIE-QC-97 11-11, opt-in): u_bin_* / u_bout_* epoch flops beyond reset.relay_um of
+                        # the leaf tap take the nearest same-depth same-role tap (bind.boundary_reset_selector)
+                        "boundary_tap": {"enum": ["nearest"]},
                         # Optional physical padding floor for a published wavefront release cohort.
                         "wavefront_min_depth": {"type": "integer", "minimum": 0},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
