@@ -109,3 +109,13 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
   - **hops 4:** L3003, L5056, L8300 and L8300m. Their slots (q_su00 L3003x1/L8300x4/L8300mx4, q_b103 L5056x1) already carry the same S0->S1 type rows in t11. The lane row reports the first bad slot, and the bank slot that used to come first is now legal.
   - **layers 2 and m89 2:** L7500_2/_4 (M9) and L7504_3 (M8) are the same pre-existing top-metal ports. Only the partner bank changed (NE_b002/NE_b013), plus the summary count row.
   - **cuts 15:** a real redistribution. 11 lines at 0.63-0.81 in b001/b010/b011 replace b000's 0.61-0.96 lines (b000 goes from 9 lines to 4) and NW_b103's 2 lines (gone). The cause is about 6-7 kb of su00/b113 N-entry transits descending to the hub-window heights. That traffic is the same in any bank arrangement, and the base carried it in b000 at worse ratios. No positions-only fix exists; it needs form d for those transits.
+
+## c17 (11-11): native internal-station bind rule
+- **Problem:** the strict bind rule `native_istations.annotate` requires `fixed_cycles == source chain + receiver chain` on every lane launched from a native internal-station bus (asbuilt `internal_stations_types`). c16 put the lat pads into `fixed_cycles`, so 16 of these 55 lanes violated the rule (`scripts/native_chk.py` replicates the rule over all lanes). t11 itself has 0 violations.
+- **Fix** (`scripts/fix_native.py`): these lanes keep `fixed_cycles` equal to the required value. The pad moves into extra FT stations on the lane's longest crossed slot, re-solved under the check.py station model. Only types the ladder already changes are used; q_b000 and untouched types are never touched.
+  - 13 lanes moved: L1253 +2 (NW_b001), L1275 +11 (NW_b011), L3006 +2 (NW_b012), L3007 +1 and L3008 +1 (NW_b013), L5055 +2 (NE_b012), L5093 +9 and L5094 +24 (NE_su00, dip lanes), L5095 +14 / L5096 +13 / L5099 +14 / L5100 +15 (NE_b001), L8006 +4 (NE_b010).
+  - All 13 are 1-279 b wide. Their cycles are unchanged.
+  - 3 lanes had a `fixed_cycles` below the required value in c16: the ladder had zeroed real native-station cycles on lanes whose route got longer. Restoring it raises their latency: L1252 20 -> 21, L5054 20 -> 28, L5056 21 -> 29 (they were 20->25 and 21->26 in c16).
+- **Delta of record:** `ladder_delta_c17.json.gz`. On t11 it gives **`291976a41c95`**. native_chk reports 0 of 55 violations.
+- **G0 with main's check.py:** identical to c16. 554 errors, 0 new and 0 lost against t11+c16; against t11 it is still the same 37 rows.
+- **EQ:** 17 latency-up lanes, which is the 16 from c13 (L5054/L5056 now +8) plus L1252 +1.
