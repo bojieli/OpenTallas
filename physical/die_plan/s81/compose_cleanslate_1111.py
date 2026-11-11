@@ -656,7 +656,12 @@ def legality(plan, types, gap, edge):
             own = nm.split("|")[1] if "|" in nm else None
             for i, (x0, y0, x1, y1) in cores:
                 if i != own and x0 + EPS < px < x1 - EPS and y0 + EPS < py < y1 - EPS:
-                    f[("site", nm.split("|")[0], i)] = f"{nm.split('|')[0]} at ({px:g},{py:g}) under core {i}"
+                    # a station / ft reg is keyed by its chain + site xy, not its list index: a chain reversal (stage e)
+                    # re-indexes the same sites and is not a new finding
+                    k_ = nm.split("|")[0]
+                    if " reg " in k_ and not k_.startswith("tap "):
+                        k_ = (k_.rsplit(" reg ", 1)[0], round(px, 3), round(py, 3))
+                    f[("site", k_, i)] =f"{nm.split('|')[0]} at ({px:g},{py:g}) under core {i}"
         out[tn] = f
     return out
 
