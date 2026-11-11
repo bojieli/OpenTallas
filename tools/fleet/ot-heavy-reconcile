@@ -150,7 +150,7 @@ FAST = re.compile(r"^(ref_gate_|view_export|run_case|relay_)")
 SEED = {"ref_gate_": 10}          # GB charged at first sight when the exact class has no measurement yet
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
-            "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
+            "docker.real", "bwrap", "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
 BUILD = {"cc1plus", "cc1", "g++", "gcc", "c++", "clang", "clang++", "ld", "collect2", "lto1", "as", "ar", "make", "ninja",
          "cmake", "verilator", "verilator_bin", "iverilog", "ivl", "yosys", "yosys-abc", "abc"}
 DRY, VERBOSE = "--dry-run" in sys.argv, "--verbose" in sys.argv or "--dry-run" in sys.argv
@@ -266,7 +266,34 @@ def containers():
     return _containers
 
 
+# SEALDOCK_1111 (KW-FIX-44, COORD 11-11 03:2x URGENT): sealed jobs (ot-job + bwrap) start their container with the
+# client copy .ot-job/docker.real, so p["comm"] == "docker" never saw it: the unit measured at its wrapper (0.08 GiB for
+# HBM q_spt2 v2 whose openroad reached 44 GiB), --free lowered q_spu0 route 48 -> 5 GB with a 36.7 GiB container, and
+# earlyoom killed q_spt2 on epyc8 (03:12 UTC) and a 47 GiB detail route on epyc7 (02:18 UTC).  Any docker client
+# (docker, docker.real, by argv[0] or comm) running `run` counts, and a container is matched by its --name first.
+DOCKER_CLIENTS = ("docker", "docker.real")
+
+
+def is_docker_run(p):
+    a = p["argv"]
+    return (p["comm"] in DOCKER_CLIENTS or (a and os.path.basename(a[0]) in DOCKER_CLIENTS)) and "run" in a[1:4]
+
+
+def _run_name(argv):
+    for i, x in enumerate(argv):
+        if x == "--name" and i + 1 < len(argv):
+            return argv[i + 1]
+        if x.startswith("--name="):
+            return x[7:]
+    return None
+
+
 def match_container(argv):
+    name = _run_name(argv)
+    if name:
+        byname = [c for c in containers() if c.get("Name", "").lstrip("/") == name]
+        if len(byname) == 1:
+            return byname[0]
     hit = []
     for c in containers():
         cmd = (c["Config"].get("Entrypoint") or []) + (c["Config"].get("Cmd") or [])
@@ -330,7 +357,7 @@ def classify(argv):
     """command class for the size table: script basename + first plain argument, numbers and hashes normalised"""
     a = list(argv)
     norm = lambda s: re.sub(r"[0-9a-f]{7,}|\d+", "#", s)
-    if a and os.path.basename(a[0]) == "docker" and "run" in a[:3]:
+    if a and os.path.basename(a[0]) in DOCKER_CLIENTS and "run" in a[:4]:
         img = next((i for i, x in enumerate(a) if x.startswith("openroad/") or "orfs" in x), None)
         tail = [os.path.basename(x) for x in (a[img + 1:] if img is not None else a[-2:]) if not x.startswith("-")]
         script = next((x for x in reversed(tail) if "." in x), tail[-1] if tail else "?")
@@ -497,6 +524,7 @@ def rebuild_sizes(st):
     t = {}
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
     rows = [(r[2], float(r[4]), int(r[3]), "done" if completed_peak_qualified(r) else "partial") for r in rows if len(r) >= 5]
+    st = {u: s for u, s in st.items() if int(s.get("dock_miss", 0)) < 2}   # SEALDOCK_1111: wrapper-only measurements
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
     rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak") and not completion_only_class(s["cls"])]
     for cls, peak, req, kind in rows:
@@ -558,8 +586,12 @@ def main():
             if x[2] and isinstance(x[2][0], list):
                 x[2] = sorted({os.path.basename(k[0]) for k in x[2]})
         ps = procs(cg)
-        cs = [c for c in (match_container(p["argv"]) for p in ps if p["comm"] == "docker" and "run" in p["argv"][:3]) if c]
-        ndock = sum(1 for p in ps if p["comm"] == "docker" and "run" in p["argv"][:3])
+        drun = [p for p in ps if is_docker_run(p)]
+        cs = [c for c in (match_container(p["argv"]) for p in drun) if c]
+        ndock = len(drun)
+        # SEALDOCK_1111: a unit whose docker run had no container on two passes measured its wrapper only; its peak
+        # does not go into the class table (peaks.tsv / live / proved rows)
+        s["dock_miss"] = int(s.get("dock_miss", 0)) + (1 if ndock > len(cs) else 0)
         cdirs = [d for d in map(cdir, cs) if d]
         cps = [p for d in cdirs for p in procs(d)]
         allp = ps + cps
@@ -673,7 +705,7 @@ def main():
         return
     for u in [u for u in st if u not in seen]:
         s = st.pop(u)
-        if s.get("cls") and s.get("age", 0) >= 240:       # finished: one row of history
+        if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
