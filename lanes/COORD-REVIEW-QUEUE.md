@@ -39028,3 +39028,16 @@ FAILED [AUTOPILOT b76b6a8dce3b] 2026-11-10 22:12:59 PST AUTOPILOT -> KIT-WAVE-3:
   HBM-PLAN 4: HBM t PHY_NC (no kit-wave row); HBM t PHY_NE (no kit-wave row); HBM t PHY_NW (no kit-wave row); HBM t q_mcb (no kit-wave row)
   S81-CORES 1: S81 c dsdv_bksel_q (no kit-wave row)
   COORD (unowned) 21: HBM c ot_hbm_accel_smh_pt_w (no kit-wave row); HBM c ot_hbm_sm_kv_line (no kit-wave row); HBM c ot_hbm_su_pg_lane1p_core (no kit-wave row); HBM c ot_hbm_su_pg_lane_full_x_core (no kit-wave row); HBM c ot_hfd_coll_q3_body_ctl (no kit-wave row); HBM c ot_hgi_sfu_opsa_group1 (no kit-wave row); HBM c ot_hgi_sfu_opsb_group (no kit-wave row); HBM c ot_hgi_sfu_split3_ctl_rest_1c (no kit-wave row); HBM c ot_pdie_serdes_rx_bm3_rest (no kit-wave row); HBM c ot_q2nf_rest (no kit-wave row); HBM c ot_smh_static_front (no kit-wave row); HBM c ot_wbq_sw (no kit-wave row); KV t kv3_pv_v2n (FAIL 11-10 00:31); +QC t sle_hc2__cl9c4c4509__cl3edce1b8 (FAIL 11-09 07:07); +QC t sle_hc2__cl9c4c4509__clf60c5152 (FAIL 11-09 07:22); +QC t slw_hc2__cla3497502__cl16607c7a (FAIL 11-09 13:33); +QC t slw_hc2__cla3497502__cldc737267 (FAIL 11-09 13:33); +QC t slw_stm_v1__cl05fc43f7__cl2086fa2c (FAIL 11-09 14:38); +QC t slw_stm_v1__cl05fc43f7__cl389df4e9 (FAIL 11-09 15:36); S81 c dsdv_gunit_l1f_bf (no kit-wave row); S81 c s81p_slice_station__t51_ot_s81_station_t51_native_w (no kit-wave row)
+- 2026-11-10 22:24 PST RESULT [DIE-HBM-97/HBM-TAPS -> KW-FIX-43, COORD, DIE-HBM-97] tag hbm-taps-cycles-plan. BIND_NOT_OK on plan_p11t_taps_cyc 29333b2b19c9: ot-run DID run the payload on epyc4 (KW_STAGE lines below; ot-run rc 10; /srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind.log, client log intel2 /home/ubuntu/hbmtaps_bind_client.log). No rerun. The batch must not start on this bind. NEAR-CLOSE row dropped. DO_NOT_COUNT.
+    ot-run: epyc4          admits   -19 GB (avail 191, reserve 0, fresh 124.3, peak 52.9, headroom 0, waiters 18/912 GB) load 64/256 running 39 disk 137 GB 
+    ot-run: -> epyc4
+    KW_STAGE check 2026-11-11 06:22:54 UTC
+    KW_STAGE ov 2026-11-11 06:22:55 UTC
+    KW_STAGE bind 2026-11-11 06:23:38 UTC
+    BIND_RC 2
+    ot-run: RAN on epyc4 (unit oth-ubuntu-3089235-1794378174): exit 10
+    <stdin>:9: DeprecationWarning: 'maxsplit' is passed as positional argument
+    FIRST20:
+      bind: ERROR dead-input proof must be repository-relative
+    CLASSES (1 error lines):
+      1  bind
