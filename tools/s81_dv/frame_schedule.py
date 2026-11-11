@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT/'tools/landed_parent'), str(ROOT/'tools/s81_dv')]
 import lp
 import frame_return_plan as RP
+import station_depth as SD
 
 
 def extract(specfile):
@@ -50,20 +51,12 @@ def extract(specfile):
                 upstream = back(bits(it['conns']['lc'])[0], i, 'station')
                 return dict(source=upstream['source'], flat_link_edges=flat, added_edges=add+upstream['added_edges'],
                             link_edges=flat+add+upstream['added_edges'], crossings=crossings+upstream['crossings'])
-            srcpin = None
-            if m.startswith('dsfd_rly') or m == 'dsfd_rstg':
-                srcpin = 'i'
-            elif m.startswith('dsfd_qbank') and pin.startswith('d_'):
-                srcpin = 'e_' + pin[2:]
-            elif m.startswith('dsfd_qbank') and pin.startswith('o_'):
-                srcpin = 'i_' + pin[2:]
-            elif m == 'ot_s81_sstn_payload536':
-                srcpin = 'i'
-            elif m.startswith('ot_s81_sstn'):
-                srcpin = {'xa':'xai', 'xb':'xbi', 'cc':'cci'}.get(pin)
-            if srcpin:
-                net, reader = bits(it['conns'][srcpin])[k], i
-                flat += 1
+            # S81-FRAME-FIX-1 11-11: the station wiring and its register depth come from station_depth (bound RTL);
+            # a 2-flop station (dc23a738 qbank / rstg / sstn) is 2 edges, not a constant 1
+            st = SD.step(m, pin)
+            if st:
+                net, reader = bits(it['conns'][st[0]])[k], i
+                flat += st[1]
                 continue
             if mode == 'return' and m == 'ot_v41_rom_elem_q_qxpq_w10':
                 # pv is MSB first: r1, r0.
@@ -113,7 +106,7 @@ def extract(specfile):
     materialized = 'rtl/dsrom_sys/s81_dv/frame_lp/'+spec['top']+'_lp.sv'
     if (ROOT/materialized).is_file():
         sources[materialized] = hashlib.sha256((ROOT/materialized).read_bytes()).hexdigest()
-    return dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=sources,
+    return dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=sources, station_depth=SD.fingerprint(),
                 spec=str(Path(specfile).relative_to(ROOT)), added_edges_per_crossing=p.A,
                 station_inputs=stations, topology=topo,
                 qualification='EXTRACTED ONLY: emission/go/reset alignment, legalised return calendar and actual frame bench required')

@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools/s81'))
 sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 import static_return_calendar as C  # noqa: E402
+import station_depth as SD  # noqa: E402  S81-FRAME-FIX-1: station register depth from the bound RTL
 
 SCHEMA = 'opentallas.s81_dv.frame_return_plan.v1'
 WIN, RST = 2, 1                   # dsfd_node_* (ot_s81_retn_static #(.WIN(2), .RST(1)))
@@ -62,10 +63,71 @@ EMISSION = ROOT / 'results/arch/s81_dv_1016/frame/return_plan/emission.json'
 def emission(master):
     """measured element emission constants (frame bench -DTB_PVTRACE, see the record's provenance):
     off[pair] = PV edge of pair - PV edge of pair 0 for the same single-element programme (x / go station skew);
-    e0 = PV edge of beat 0's class on pair 0 in the bench programme (go at the bench's fixed edge + element latency)"""
+    e0 = PV edge of beat 0's class on pair 0 in the bench programme (go at the bench's fixed edge + element latency)
+    S81-FRAME-FIX-1 (11-11): off and e0 were measured 10-17 with 1-flop pass-through stations (record field
+    station_depth_measured).  Every pair's emission moves by the register edges its x / go / cfg stations gained since,
+    read from the bound RTL (station_shift): off'[pair] = off[pair] + shift[pair] (e0 is pair 0's, so pair 0's shift
+    rides in off).  No constant: a station depth change in RTL moves the calendar here."""
     d = json.loads(EMISSION.read_text())
     m = d['masters'][master]
-    return {int(k): v for k, v in m['off'].items()}, d['e0_bench']
+    sh = station_shift(master, d['station_depth_measured'])
+    return {int(k): v + sh[int(k)] for k, v in m['off'].items()}, d['e0_bench']
+
+
+_SHIFT = {}
+
+
+def station_shift(master, measured):
+    """{pair: register edges the pair's element inputs (every xs_* bit, go, cfg_*) gained over the measured
+    station depths}, traced on the frame wrapper (frame_wrap.build): x through qbank_S / relays / sstn_base566 xa-xb
+    from the column FIFO, go / cfg through qbank_S, the cfg7 sequencer (lc) and the cc relay chain.  All inputs of one
+    element must move by the same edges (otherwise the element's x / go alignment changed: refused, not priced)."""
+    key = (master, json.dumps(measured, sort_keys=True), json.dumps(SD.fingerprint(), sort_keys=True))
+    if key in _SHIFT:
+        return _SHIFT[key]
+    import frame_wrap as W
+    import dsrom_s81_fulldie as F
+    idx = W.rtl_index()
+    pq = F._receipt_params(F.BOUND_VIEW_RECEIPTS['ot_v41_rom_elem_q_qxpq_w10'])
+    insts, names, _, _, _ = W.build(master, idx, pq, False, r1_skew=True)
+    drv = {}
+    for it in insts:
+        m_ = it['master']
+        for p, v in it['conns'].items():
+            d = ('output' if p in ('o', 'ck_o') else 'input') if m_ not in idx else W.port_dir(idx, m_, p)
+            if d == 'output':
+                for k, b in enumerate(v):
+                    drv[b] = (it, p, k)
+
+    def back(net):
+        add, seq = 0, False
+        while net in drv:
+            it, p, k = drv[net]
+            m_ = it['master']
+            st = SD.step(m_, p)
+            if st is None and m_.startswith('ot_s81_cfg7_seq') and not seq:
+                net, seq = it['conns']['lc'][0], True       # go / cfg: the slot station's lc.go drives the sequencer
+                continue
+            if st is None:
+                return add
+            src, dep = st
+            base = 'ot_s81_rly' if m_.startswith(('dsfd_rly', 'dsfd_dvrly')) else m_
+            add += dep - measured[base][p]
+            net = it['conns'][src][k]
+        return add
+    out = {}
+    for it in insts:
+        if it['master'] != 'ot_v41_rom_elem_q_qxpq_w10':
+            continue
+        adds = {back(b) for pin, v in it['conns'].items()
+                if pin.startswith('xs_') or pin in ('go', 'cfg_v', 'cfg_a', 'cfg_d') for b in v}
+        # go_tag leaves the sequencer straight to the element (no qbank_S): a level held between gos, not a timed
+        # beat, so it is not part of the emission alignment (its go skew is reported by station_depth audit)
+        nm = names[it['name']][2:]
+        assert len(adds) == 1, ('station depth change moved x and go/cfg of an element differently', master, nm, adds)
+        out[int(nm[1:])] = adds.pop()
+    _SHIFT[key] = out
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ topology
@@ -89,10 +151,9 @@ def topology(master, r1_skew=True):
         while net in drv:
             it, p, k = drv[net]
             m_ = it['master']
-            if m_.startswith('dsfd_rly') or m_ == 'dsfd_rstg':
-                net, n_ = it['conns']['i'][k], n_ + 1
-            elif m_.startswith('dsfd_qbank'):
-                net, n_ = it['conns']['e_' + p[2:]][k], n_ + 1
+            st = SD.step(m_, p) if (m_.startswith('dsfd_rly') or m_ in ('dsfd_rstg',) or m_.startswith('dsfd_qbank')) else None
+            if st is not None:          # S81-FRAME-FIX-1: register edges of the station from its RTL (rstg/qbank 2 since dc23a738)
+                net, n_ = it['conns'][st[0]][k], n_ + st[1]
             elif m_.startswith('dsfd_node'):
                 return names[it['name']][2:], n_
             elif m_ == 'ot_v41_rom_elem_q_qxpq_w10':
@@ -114,7 +175,8 @@ def topology(master, r1_skew=True):
     cf = next(i for i in insts if i['master'] == 'dsfd_cfifo_crs')
     root, root_link = back(cf['conns']['ri'][-1])
     assert root in nodes and root not in parent
-    return dict(master=master, r1_skew=r1_skew, win=WIN, rst=RST, cf=CF, nodes=nodes, root=root, root_link=root_link)
+    return dict(master=master, r1_skew=r1_skew, win=WIN, rst=RST, cf=CF, nodes=nodes, root=root, root_link=root_link,
+                station_depth=SD.fingerprint())
 
 
 def topo_record(master):
@@ -122,11 +184,19 @@ def topo_record(master):
 
 
 def load_topology(master):
-    """the recorded topology (compiler schedule data), refused if the frame wrapper RTL changed since"""
+    """the recorded topology (compiler schedule data), refused if the frame wrapper RTL changed since, or if any
+    pass-through station's register depth in the bound RTL differs from the depth the record's link edges counted
+    (S81-FRAME-FIX-1: dc23a738 made rstg / qbank 2 flops and the 10-17 record silently kept 1)"""
     import hashlib
+    import os
+    if os.environ.get('OT_S81_STATION_DEPTH_OVERRIDE'):
+        # negative control only (frame gate): a forced wrong station depth is traced live, never read from a record
+        return topology(master)
     t = json.loads(topo_record(master).read_text())
     rtl = ROOT / t['rtl']
     assert hashlib.sha256(rtl.read_bytes()).hexdigest() == t['rtl_sha256'], f'stale topology record for {master}'
+    assert t.get('station_depth') == SD.fingerprint(), \
+        f'stale topology record for {master}: station register depths {t.get("station_depth")} != RTL {SD.fingerprint()}'
     return t
 
 
