@@ -18,9 +18,11 @@ import json
 import math
 import os
 import re
+import sys
 from pathlib import Path
 
-import kit_contract as KC
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # CLI under python3 -I
+import kit_contract as KC  # noqa: E402
 
 SNAP_MAX_UM = 4.32
 ROW_UM, SITE_UM, MACRO_ROW_UM = 0.27, 0.054, 2.16
