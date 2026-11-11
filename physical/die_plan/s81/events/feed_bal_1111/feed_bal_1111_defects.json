@@ -1,0 +1,421 @@
+{
+ "schema": "opentallas.s81_plan_defects.v1",
+ "event": "FEED-BAL-1111",
+ "plan_sha256_prefix": "ebea5f5b8ade (same in the FEED-BAL-1111 output 66466e86ebcd: no landing_network / pin change)",
+ "source": "DIE-RECHECK-1 PLAN-DEFECT 11-10 18:10 (plan e596e9588e72), re-checked by DIE-S81-85 on ebea5f5b8ade",
+ "defects": [
+  {
+   "cls": "tap_leg_over_405",
+   "owner": "S81-PLAN-1 + S81 die clock config (DIE-S81-85)",
+   "fixed_in_event": false,
+   "why_not": "the leg is die-clock-tool region-tree geometry inside s_7N_x13 (s_7N_x13 is not in the s81 region-DME list: REGTREE-1 put it in the local 200-um H-tree); moving the tap = kit clock-port (pin) change",
+   "evidence": "DIE-RECHECK-1 epyc8 die-recheck-1/s81/ck_bal/kit/clock/tree.json (balanced feed, still present; actual_reach max 470 allowed)",
+   "fix_options": [
+    "put s_7N_x13 back in region.only (region DME, --region-dme-actual-max 405) in the S81 die clock config",
+    "or add one leaf driver between b2258 and the three taps (die clock reserved site in s_7N_x13)"
+   ],
+   "items": [
+    {
+     "part": "s_7N_x13",
+     "tap": "clk_t26",
+     "leg_um": 461.29,
+     "driver": "b2258",
+     "driver_xy": [
+      22553.154,
+      19503.72
+     ],
+     "tap_xy": [
+      22108.0,
+      19487.584
+     ]
+    },
+    {
+     "part": "s_7N_x13",
+     "tap": "clk_t17",
+     "leg_um": 457.58,
+     "driver": "b2258",
+     "driver_xy": [
+      22553.154,
+      19503.72
+     ],
+     "tap_xy": [
+      22139.36,
+      19459.936
+     ]
+    },
+    {
+     "part": "s_7N_x13",
+     "tap": "clk_t32",
+     "leg_um": 426.38,
+     "driver": "b2259",
+     "driver_xy": [
+      22553.154,
+      19657.08
+     ],
+     "tap_xy": [
+      22203.424,
+      19733.728
+     ]
+    }
+   ]
+  },
+  {
+   "cls": "landing_monitor_hop_over_405",
+   "owner": "S81-PLAN-1",
+   "fixed_in_event": false,
+   "why_not": "needs a pin move on the sender/receiver type face (pin change) or a relay station (new logic + boot cycle); neither is EQ-safe in this event",
+   "note": "DIE-RECHECK-1 listed the 5 clock hops; the same monitor chains' registered ctl ready/fault edges are also over (14 more), and fW0_p4_b1 -> fW0_p3_b0 / s_7S_x14 -> s_7S_x05 are over on ctl only. All are cland monitor (boot-time) chains crossing the 4104/6854-um svcband / frame channels.",
+   "items": [
+    {
+     "id": "cland_mon_fault__fW0_p4_b1",
+     "kind": "ctl",
+     "hop_um": 525.95,
+     "src": "fW0_p4_b1.cland_up_fault",
+     "src_type": "col_h10_r1__t1__cld01bb4ae",
+     "src_xy": [
+      4430.176,
+      3769.696
+     ],
+     "dst": "fW0_p3_b0.cland_dn_fault_1",
+     "dst_type": "col_h9_r0_p3__t1__cl31d0dc4b",
+     "dst_xy": [
+      4619.168,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__fW0_p4_b1",
+     "kind": "ctl",
+     "hop_um": 521.92,
+     "src": "fW0_p4_b1.cland_up_ready",
+     "src_type": "col_h10_r1__t1__cld01bb4ae",
+     "src_xy": [
+      4430.176,
+      3771.552
+     ],
+     "dst": "fW0_p3_b0.cland_dn_ready_1",
+     "dst_type": "col_h9_r0_p3__t1__cl31d0dc4b",
+     "dst_xy": [
+      4616.992,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__s_0S_x00",
+     "kind": "ctl",
+     "hop_um": 513.98,
+     "src": "s_0S_x00.cland_up_fault",
+     "src_type": "slice_station__t49",
+     "src_xy": [
+      10201.696,
+      3781.664
+     ],
+     "dst": "svc_1.cland_dn_fault_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t1",
+     "dst_xy": [
+      10390.688,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_clk__s_0S_x00",
+     "kind": "clock",
+     "hop_um": 513.98,
+     "src": "s_0S_x00.fclk_out_cland_up",
+     "src_type": "slice_station__t49",
+     "src_xy": [
+      10201.696,
+      3777.312
+     ],
+     "dst": "svc_1.fclk_in_cland_dn_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t1",
+     "dst_xy": [
+      10386.336,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__s_7S_x12",
+     "kind": "ctl",
+     "hop_um": 513.98,
+     "src": "s_7S_x12.cland_up_fault",
+     "src_type": "slice_station__t24__cl64811a5d",
+     "src_xy": [
+      21749.024,
+      3781.664
+     ],
+     "dst": "svc_15.cland_dn_fault_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t6",
+     "dst_xy": [
+      21560.032,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_clk__s_7S_x12",
+     "kind": "clock",
+     "hop_um": 513.98,
+     "src": "s_7S_x12.fclk_out_cland_up",
+     "src_type": "slice_station__t24__cl64811a5d",
+     "src_xy": [
+      21749.024,
+      3777.312
+     ],
+     "dst": "svc_15.fclk_in_cland_dn_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t6",
+     "dst_xy": [
+      21564.384,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__s_0S_x00",
+     "kind": "ctl",
+     "hop_um": 513.66,
+     "src": "s_0S_x00.cland_up_ready",
+     "src_type": "slice_station__t49",
+     "src_xy": [
+      10201.696,
+      3779.808
+     ],
+     "dst": "svc_1.cland_dn_ready_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t1",
+     "dst_xy": [
+      10388.512,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__s_7S_x12",
+     "kind": "ctl",
+     "hop_um": 513.66,
+     "src": "s_7S_x12.cland_up_ready",
+     "src_type": "slice_station__t24__cl64811a5d",
+     "src_xy": [
+      21749.024,
+      3779.808
+     ],
+     "dst": "svc_15.cland_dn_ready_0",
+     "dst_type": "svc_hi_dsdv_svc_rs__t6",
+     "dst_xy": [
+      21562.208,
+      4106.656
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__fE1_p1_b2",
+     "kind": "ctl",
+     "hop_um": 500.03,
+     "src": "fE1_p1_b2.cland_up_fault",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      23191.904,
+      6543.136
+     ],
+     "dst": "s_7S_x15.cland_dn_fault_0",
+     "dst_type": "slice_station__t26",
+     "dst_xy": [
+      23002.912,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__fW1_p1_b2",
+     "kind": "ctl",
+     "hop_um": 500.03,
+     "src": "fW1_p1_b2.cland_up_fault",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      8758.816,
+      6543.136
+     ],
+     "dst": "s_0S_x03.cland_dn_fault_0",
+     "dst_type": "slice_station__t50__cld84c9e24",
+     "dst_xy": [
+      8947.808,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__fE1_p1_b2",
+     "kind": "ctl",
+     "hop_um": 496.0,
+     "src": "fE1_p1_b2.cland_up_ready",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      23191.904,
+      6544.992
+     ],
+     "dst": "s_7S_x15.cland_dn_ready_0",
+     "dst_type": "slice_station__t26",
+     "dst_xy": [
+      23005.088,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__fW1_p1_b2",
+     "kind": "ctl",
+     "hop_um": 496.0,
+     "src": "fW1_p1_b2.cland_up_ready",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      8758.816,
+      6544.992
+     ],
+     "dst": "s_0S_x03.cland_dn_ready_0",
+     "dst_type": "slice_station__t50__cld84c9e24",
+     "dst_xy": [
+      8945.632,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_clk__fE1_p1_b2",
+     "kind": "clock",
+     "hop_um": 491.33,
+     "src": "fE1_p1_b2.fclk_out_cland_up",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      23191.904,
+      6547.488
+     ],
+     "dst": "s_7S_x15.fclk_in_cland_dn_0",
+     "dst_type": "slice_station__t26",
+     "dst_xy": [
+      23007.264,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_clk__fW1_p1_b2",
+     "kind": "clock",
+     "hop_um": 491.33,
+     "src": "fW1_p1_b2.fclk_out_cland_up",
+     "src_type": "col_h10_r2__t1__cl99efd374",
+     "src_xy": [
+      8758.816,
+      6547.488
+     ],
+     "dst": "s_0S_x03.fclk_in_cland_dn_0",
+     "dst_type": "slice_station__t50__cld84c9e24",
+     "dst_xy": [
+      8943.456,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__s_0S_x02",
+     "kind": "ctl",
+     "hop_um": 488.06,
+     "src": "s_0S_x02.cland_up_fault",
+     "src_type": "slice_station__t50__cl39451317",
+     "src_xy": [
+      10201.696,
+      6555.104
+     ],
+     "dst": "s_0S_x13.cland_dn_fault_0",
+     "dst_type": "slice_station__t8",
+     "dst_xy": [
+      10390.688,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_clk__s_0S_x02",
+     "kind": "clock",
+     "hop_um": 488.06,
+     "src": "s_0S_x02.fclk_out_cland_up",
+     "src_type": "slice_station__t50__cl39451317",
+     "src_xy": [
+      10201.696,
+      6550.752
+     ],
+     "dst": "s_0S_x13.fclk_in_cland_dn_0",
+     "dst_type": "slice_station__t8",
+     "dst_xy": [
+      10386.336,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_fault__s_7S_x14",
+     "kind": "ctl",
+     "hop_um": 488.06,
+     "src": "s_7S_x14.cland_up_fault",
+     "src_type": "slice_station__t24__cl66b71008",
+     "src_xy": [
+      21749.024,
+      6555.104
+     ],
+     "dst": "s_7S_x05.cland_dn_fault_0",
+     "dst_type": "slice_station__t22",
+     "dst_xy": [
+      21560.032,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__s_0S_x02",
+     "kind": "ctl",
+     "hop_um": 487.74,
+     "src": "s_0S_x02.cland_up_ready",
+     "src_type": "slice_station__t50__cl39451317",
+     "src_xy": [
+      10201.696,
+      6553.248
+     ],
+     "dst": "s_0S_x13.cland_dn_ready_0",
+     "dst_type": "slice_station__t8",
+     "dst_xy": [
+      10388.512,
+      6854.176
+     ],
+     "max_hop_um": 405
+    },
+    {
+     "id": "cland_mon_ready__s_7S_x14",
+     "kind": "ctl",
+     "hop_um": 487.74,
+     "src": "s_7S_x14.cland_up_ready",
+     "src_type": "slice_station__t24__cl66b71008",
+     "src_xy": [
+      21749.024,
+      6553.248
+     ],
+     "dst": "s_7S_x05.cland_dn_ready_0",
+     "dst_type": "slice_station__t22",
+     "dst_xy": [
+      21562.208,
+      6854.176
+     ],
+     "max_hop_um": 405
+    }
+   ]
+  },
+  {
+   "cls": "duplicate_landing_pin_position",
+   "owner": "DIE-S81-85",
+   "fixed_in_event": true,
+   "how": "raw landing_contract.pins (+ the moved edge_clocks tap) of serdes__t15__cla3d02796 (lk_EN0) and svc_lo_dsdv_svc_rs__t7 (svc_14) set to the sites schema.Plan._separate_landing_pins already gives every kit (DIE-QC-67 PINDUP); loaded P.types asserted identical, so no kit input changes. The die clock tool read the raw duplicates.",
+   "items": "feed_bal_1111_report.json pindup_fix"
+  }
+ ]
+}
