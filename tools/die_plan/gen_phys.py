@@ -4569,7 +4569,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cc_hook = ("\nif {[file exists /work/cell_census.tcl]} {uplevel #0 {source /work/cell_census.tcl}; ot_cell_census place}"
                " else {puts \"OT_CELL_CENSUS WARN stage=place: cell_census.tcl is not in the kit, no recount\"}\n")
     (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
-                                    + rsp_hook + pce_hook + cc_hook)
+                                    + cc_hook + rsp_hook + pce_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
