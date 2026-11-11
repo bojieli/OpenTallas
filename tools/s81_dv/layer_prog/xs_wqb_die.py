@@ -43,8 +43,14 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import xs_calendar as XC  # noqa: E402  (sys.path: tools, tools/s81_dv, tools/s81, tools/s81_static_control)
 
-PIPE_PERIOD, PIPE_CFG_LEAD = 126, 52
-PIPE_FLOOR = 126            # lowest measured PASS (p126c52); 124 / 50 FAIL (S81-RATEFIX, TOKSIM-S81C/WQBG)
+import xs_field_calendar as XF  # noqa: E402  (the measured floor table: single source)
+
+# S81-FRAME-FIX-1 11-11 (TOK-VERIFY-1 finding): the wq_b + idx.q row-batch pipeline took its floor from the 10-19 p126c52
+# record (1-flop stations), bypassing the re-measured FLOORS table (wq_b 127 on 2-flop stations, frame_seq_gate).  The
+# pipeline period / floor is now the slowest member op's measured floor in xs_field_calendar.FLOORS (no constant here).
+PIPE_OPS = ('attn.wq_b', 'attn.idx.q')
+PIPE_FLOOR = max(XF.FLOORS[o][1] for o in PIPE_OPS)
+PIPE_PERIOD, PIPE_CFG_LEAD = PIPE_FLOOR, 52
 SERIAL_PERIOD = 224         # measured serial minimum (TOKSIM-S81/FIELD: 223 FAIL)
 SERIAL_FLOOR = 224
 PHASE_SPAN = 223            # first capture -> last return beyond (n - 1) * P (fullsix: P126/P130/P224/P600 all exact)
@@ -101,7 +107,7 @@ def static_checks(cal, allow_below_floor=False):
         need('pipe_replay_period_ge_88', P >= 88)
         need('pipe_cfg_window_2P_ge_195_plus_cfg_lead', 2 * P >= 195 + cal['cfg_lead'], (P, cal['cfg_lead']))
         need('pipe_cfg_lead_ge_48', cal['cfg_lead'] >= 48)
-        need('period_ge_measured_floor_126', P >= PIPE_FLOOR, P)
+        need('period_ge_measured_floor_126', P >= PIPE_FLOOR, P)   # check name kept (consumers); value = PIPE_FLOOR
         need('launch_spacing_eq_period', all(b['abs_launch'] - a['abs_launch'] == P for a, b in zip(per, per[1:])))
     else:
         need('period_ge_measured_floor_224', P >= SERIAL_FLOOR, P)

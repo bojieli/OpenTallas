@@ -154,5 +154,15 @@ class InbandPricing(unittest.TestCase):
             P.inband_shift('col_h10', s)
 
 
+class PipelineFloor(unittest.TestCase):
+    def test_wqb_pipeline_floor_from_table(self):
+        # TOK-VERIFY-1 11-11: the wq_b + idx.q pipeline period must come from the measured FLOORS table
+        sys.path[:0] = [str(HERE / 'layer_prog'), str(HERE.parents[1])]
+        import xs_field_calendar as XF
+        import xs_wqb_die as WD
+        self.assertEqual(WD.PIPE_FLOOR, max(XF.FLOORS[o][1] for o in WD.PIPE_OPS))
+        self.assertGreaterEqual(WD.PIPE_PERIOD, XF.FLOORS['attn.wq_b'][1])
+
+
 if __name__ == '__main__':
     unittest.main()
