@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1410" height="403" font-family="monospace" font-size="10">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#c03"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="20" font-size="13" font-weight="bold">BK_SEL bk_sel__t2 INTENT: S-face rung -&gt; g -&gt; 4 quarters -&gt; c hub -&gt; g -&gt; tx -&gt; S face</text>
+<rect x="40.0" y="40.0" width="1000.0" height="283.43313373253494" fill="#fdf6e8" stroke="black" stroke-width="2"/>
+<rect x="315.89912767058473" y="320.43313373253494" width="13.610741480002943" height="6" fill="orange"/>
+<text x="324.70449841058627" y="337.43313373253494" font-size="8" fill="#a50">cb_i0</text>
+<rect x="329.7824720928513" y="320.43313373253494" width="13.876875877873879" height="6" fill="orange"/>
+<text x="338.7209100317883" y="337.43313373253494" font-size="8" fill="#a50">ca_i0</text>
+<rect x="343.9337990685296" y="320.43313373253494" width="13.830671989354663" height="6" fill="orange"/>
+<text x="352.8491350632069" y="337.43313373253494" font-size="8" fill="#a50">xtier_i0</text>
+<rect x="954.9765284246322" y="320.43313373253494" width="12.90104975234717" height="6" fill="orange"/>
+<text x="963.4270533008057" y="337.43313373253494" font-size="8" fill="#a50">tp_i0</text>
+<rect x="996.449138759518" y="320.43313373253494" width="13.87687587787393" height="6" fill="orange"/>
+<text x="1005.3875766984548" y="337.43313373253494" font-size="8" fill="#a50">xtier_i1</text>
+<rect x="1024.7499445553337" y="320.43313373253494" width="13.830671989354714" height="6" fill="orange"/>
+<text x="1033.6652805500112" y="337.43313373253494" font-size="8" fill="#a50">idx_i0</text>
+<rect x="302.1044947142752" y="320.43313373253494" width="13.25589561617503" height="6" fill="orange"/>
+<text x="310.7324425223627" y="337.43313373253494" font-size="8" fill="#a50">tl_o0</text>
+<rect x="358.0832778886671" y="320.43313373253494" width="13.830671989354663" height="6" fill="orange"/>
+<text x="366.99861388334443" y="337.43313373253494" font-size="8" fill="#a50">xtier_o0</text>
+<rect x="968.7711613809417" y="320.43313373253494" width="13.255895616175081" height="6" fill="orange"/>
+<text x="977.3991091890293" y="337.43313373253494" font-size="8" fill="#a50">tp_o0</text>
+<rect x="982.5657943372513" y="320.43313373253494" width="13.610741480003101" height="6" fill="orange"/>
+<text x="991.3711650772528" y="337.43313373253494" font-size="8" fill="#a50">tp_o1</text>
+<rect x="1010.6004657351963" y="320.43313373253494" width="13.830671989354505" height="6" fill="orange"/>
+<text x="1019.5158017298736" y="337.43313373253494" font-size="8" fill="#a50">xtier_o1</text>
+<rect x="37.0" y="318.6935388482295" width="6" height="3.3202114289938636" fill="orange"/>
+<text x="42.0" y="314.35364456272646" font-size="8" fill="#a50">flt_o0</text>
+<rect x="222.63473053892213" y="98.88223552894215" width="149.7005988023952" height="149.7005988023952" fill="#e4e4f4" stroke="#336"/>
+<text x="225.63473053892213" y="110.88223552894215" font-size="10">u_sel.g_q[0].u_q MX</text>
+<rect x="701.6766467065868" y="123.83233532934135" width="149.7005988023952" height="149.7005988023952" fill="#e4e4f4" stroke="#336"/>
+<text x="704.6766467065868" y="135.83233532934133" font-size="10">u_sel.g_q[1].u_q MX</text>
+<rect x="382.31536926147703" y="44.99001996007987" width="149.7005988023952" height="149.7005988023952" fill="#e4e4f4" stroke="#336"/>
+<text x="385.31536926147703" y="56.99001996007987" font-size="10">u_sel.g_q[2].u_q MX</text>
+<rect x="542.9940119760479" y="71.93612774451103" width="149.7005988023952" height="149.7005988023952" fill="#e4e4f4" stroke="#336"/>
+<text x="545.9940119760479" y="83.93612774451103" font-size="10">u_sel.g_q[3].u_q MX</text>
+<rect x="871.3373253493014" y="149.7804391217565" width="144.71057884231536" height="129.74051896207584" fill="#e4e4f4" stroke="#336"/>
+<text x="874.3373253493014" y="161.7804391217565" font-size="10">u_tx MX</text>
+<rect x="430.2195608782435" y="219.64071856287427" width="89.82035928143712" height="29.94011976047904" fill="#e4e4f4" stroke="#336"/>
+<text x="433.2195608782435" y="231.64071856287427" font-size="10">u_sel.u_c R0</text>
+<rect x="543.9920159680639" y="232.61477045908185" width="49.9001996007984" height="39.920159680638726" fill="#e4e4f4" stroke="#336"/>
+<text x="546.9920159680639" y="244.61477045908185" font-size="10">u_sel.u_g R0</text>
+<text x="534.001996007984" y="186.71656686626747" fill="#c0c" font-size="14">*</text>
+<line x1="350.8491350632069" y1="323.43313373253494" x2="568.942115768463" y2="252.57485029940122" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="462.895625415835" y="285.00399201596804" fill="#900" font-weight="bold">1</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="297.4850299401197" y2="173.73253493013974" stroke="#c03" stroke-opacity="0.75" stroke-width="3.5" marker-end="url(#a)"/>
+<text x="436.2135728542914" y="210.15369261477048" fill="#900" font-weight="bold">2</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="776.5269461077844" y2="198.68263473053895" stroke="#c03" stroke-opacity="0.75" stroke-width="3.5" marker-end="url(#a)"/>
+<text x="675.7345309381237" y="222.62874251497007" fill="#900" font-weight="bold">3</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="457.16566866267465" y2="119.84031936127748" stroke="#c03" stroke-opacity="0.75" stroke-width="3.5" marker-end="url(#a)"/>
+<text x="516.0538922155688" y="183.20758483033936" fill="#900" font-weight="bold">4</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="617.8443113772455" y2="146.78642714570861" stroke="#c03" stroke-opacity="0.75" stroke-width="3.5" marker-end="url(#a)"/>
+<text x="596.3932135728543" y="196.6806387225549" fill="#900" font-weight="bold">5</text>
+<line x1="297.4850299401197" y1="173.73253493013974" x2="475.1297405189621" y2="234.6107784431138" stroke="#c03" stroke-opacity="0.75" stroke-width="7.0" marker-end="url(#a)"/>
+<text x="389.3073852295409" y="201.17165668662676" fill="#900" font-weight="bold">6</text>
+<line x1="776.5269461077844" y1="198.68263473053895" x2="475.1297405189621" y2="234.6107784431138" stroke="#c03" stroke-opacity="0.75" stroke-width="7.0" marker-end="url(#a)"/>
+<text x="628.8283433133732" y="213.64670658682635" fill="#900" font-weight="bold">7</text>
+<line x1="457.16566866267465" y1="119.84031936127748" x2="475.1297405189621" y2="234.6107784431138" stroke="#c03" stroke-opacity="0.75" stroke-width="7.0" marker-end="url(#a)"/>
+<text x="469.1477045908183" y="174.22554890219564" fill="#900" font-weight="bold">8</text>
+<line x1="617.8443113772455" y1="146.78642714570861" x2="475.1297405189621" y2="234.6107784431138" stroke="#c03" stroke-opacity="0.75" stroke-width="7.0" marker-end="url(#a)"/>
+<text x="549.4870259481038" y="187.69860279441122" fill="#900" font-weight="bold">9</text>
+<line x1="475.1297405189621" y1="234.6107784431138" x2="297.4850299401197" y2="173.73253493013974" stroke="#c03" stroke-opacity="0.75" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="389.3073852295409" y="201.17165668662676" fill="#900" font-weight="bold">10</text>
+<line x1="475.1297405189621" y1="234.6107784431138" x2="568.942115768463" y2="252.57485029940122" stroke="#c03" stroke-opacity="0.75" stroke-width="2.8" marker-end="url(#a)"/>
+<text x="525.0359281437126" y="240.5928143712575" fill="#900" font-weight="bold">11</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="943.692614770459" y2="214.65069860279442" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="759.317365269461" y="230.61277445109783" fill="#900" font-weight="bold">12</text>
+<line x1="943.692614770459" y1="214.65069860279442" x2="308.7324425223627" y2="323.43313373253494" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="629.2125286464108" y="266.0419161676647" fill="#900" font-weight="bold">13</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="364.99861388334443" y2="323.43313373253494" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="469.97036482590374" y="285.00399201596804" fill="#900" font-weight="bold">14</text>
+<line x1="1003.3875766984548" y1="323.43313373253494" x2="568.942115768463" y2="252.57485029940122" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="789.164846233459" y="285.00399201596804" fill="#900" font-weight="bold">15</text>
+<line x1="568.942115768463" y1="252.57485029940122" x2="1017.5158017298736" y2="323.43313373253494" stroke="#c03" stroke-opacity="0.75" stroke-width="2.4" marker-end="url(#a)"/>
+<text x="796.2289587491684" y="285.00399201596804" fill="#900" font-weight="bold">16</text>
+<text x="1052.0" y="58.0" font-size="9">1. bus:xtier_i0 -> u_g 276b p2p ingress vi_s (relay u_rs; vmux ca/cb/idx)</text>
+<text x="1052.0" y="71.0" font-size="9">2. u_g -> u_q 515b p2p lane ln0 (per-quarter split)</text>
+<text x="1052.0" y="84.0" font-size="9">3. u_g -> u_q 515b p2p lane ln1 (per-quarter split)</text>
+<text x="1052.0" y="97.0" font-size="9">4. u_g -> u_q 515b p2p lane ln2 (per-quarter split)</text>
+<text x="1052.0" y="110.0" font-size="9">5. u_g -> u_q 515b p2p lane ln3 (per-quarter split)</text>
+<text x="1052.0" y="123.0" font-size="9">6. u_q -> u_c 1220b p2p gather t_s 865 + t_o 354 + f_cr</text>
+<text x="1052.0" y="136.0" font-size="9">7. u_q -> u_c 1220b p2p gather t_s 865 + t_o 354 + f_cr</text>
+<text x="1052.0" y="149.0" font-size="9">8. u_q -> u_c 1220b p2p gather t_s 865 + t_o 354 + f_cr</text>
+<text x="1052.0" y="162.0" font-size="9">9. u_q -> u_c 1220b p2p gather t_s 865 + t_o 354 + f_cr</text>
+<text x="1052.0" y="175.0" font-size="9">10. u_c -> u_q 66b p2p credit f_c (fixed-latency loop)</text>
+<text x="1052.0" y="188.0" font-size="9">11. u_c -> u_g 367b p2p vd</text>
+<text x="1052.0" y="201.0" font-size="9">12. u_g -> u_tx 276b p2p vo_s -> tx</text>
+<text x="1052.0" y="214.0" font-size="9">13. u_tx -> bus:tl_o0 276b p2p egress lo</text>
+<text x="1052.0" y="227.0" font-size="9">14. u_g -> bus:xtier_o0 276b p2p egress vo_s</text>
+<text x="1052.0" y="240.0" font-size="9">15. bus:xtier_i1 -> u_g 276b p2p ingress vi_n</text>
+<text x="1052.0" y="253.0" font-size="9">16. u_g -> bus:xtier_o1 276b p2p egress vo_n</text>
+</svg>

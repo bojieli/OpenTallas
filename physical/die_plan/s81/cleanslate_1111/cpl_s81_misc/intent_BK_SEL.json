@@ -1,0 +1,102 @@
+{
+ "type": "bk_sel__t2",
+ "title": "BK_SEL bk_sel__t2 INTENT: S-face rung -> g -> 4 quarters -> c hub -> g -> tx -> S face",
+ "chain": [
+  [
+   "bus:xtier_i0",
+   "u_bk_sel.u_sel.u_g",
+   276,
+   "p2p ingress vi_s (relay u_rs; vmux ca/cb/idx)"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "u_bk_sel.u_sel.g_q[0].u_q",
+   515,
+   "p2p lane ln0 (per-quarter split)"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "u_bk_sel.u_sel.g_q[1].u_q",
+   515,
+   "p2p lane ln1 (per-quarter split)"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "u_bk_sel.u_sel.g_q[2].u_q",
+   515,
+   "p2p lane ln2 (per-quarter split)"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "u_bk_sel.u_sel.g_q[3].u_q",
+   515,
+   "p2p lane ln3 (per-quarter split)"
+  ],
+  [
+   "u_bk_sel.u_sel.g_q[0].u_q",
+   "u_bk_sel.u_sel.u_c",
+   1220,
+   "p2p gather t_s 865 + t_o 354 + f_cr"
+  ],
+  [
+   "u_bk_sel.u_sel.g_q[1].u_q",
+   "u_bk_sel.u_sel.u_c",
+   1220,
+   "p2p gather t_s 865 + t_o 354 + f_cr"
+  ],
+  [
+   "u_bk_sel.u_sel.g_q[2].u_q",
+   "u_bk_sel.u_sel.u_c",
+   1220,
+   "p2p gather t_s 865 + t_o 354 + f_cr"
+  ],
+  [
+   "u_bk_sel.u_sel.g_q[3].u_q",
+   "u_bk_sel.u_sel.u_c",
+   1220,
+   "p2p gather t_s 865 + t_o 354 + f_cr"
+  ],
+  [
+   "u_bk_sel.u_sel.u_c",
+   "u_bk_sel.u_sel.g_q[0].u_q",
+   66,
+   "p2p credit f_c (fixed-latency loop)"
+  ],
+  [
+   "u_bk_sel.u_sel.u_c",
+   "u_bk_sel.u_sel.u_g",
+   367,
+   "p2p vd"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "u_bk_sel.u_tx",
+   276,
+   "p2p vo_s -> tx"
+  ],
+  [
+   "u_bk_sel.u_tx",
+   "bus:tl_o0",
+   276,
+   "p2p egress lo"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "bus:xtier_o0",
+   276,
+   "p2p egress vo_s"
+  ],
+  [
+   "bus:xtier_i1",
+   "u_bk_sel.u_sel.u_g",
+   276,
+   "p2p ingress vi_n"
+  ],
+  [
+   "u_bk_sel.u_sel.u_g",
+   "bus:xtier_o1",
+   276,
+   "p2p egress vo_n"
+  ]
+ ]
+}

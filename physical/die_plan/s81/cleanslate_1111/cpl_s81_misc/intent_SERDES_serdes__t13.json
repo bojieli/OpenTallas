@@ -1,0 +1,54 @@
+{
+ "type": "serdes__t13",
+ "title": "SERDES serdes__t13 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+ "chain": [
+  [
+   "PMA rx",
+   "SYN",
+   320,
+   "p2p PMA symbols -> u_syn (soft)"
+  ],
+  [
+   "SYN",
+   "u_core.u_dec.u_chn",
+   320,
+   "p2p k_* into chn W face"
+  ],
+  [
+   "u_core.u_dec.u_chn",
+   "OUT",
+   559,
+   "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+  ],
+  [
+   "dmem",
+   "OUT",
+   544,
+   "p2p delay-line data (SRAM W pins)"
+  ],
+  [
+   "u_core.u_dec.u_chn",
+   "OUT",
+   64,
+   "p2p status n_corr/n_unc"
+  ]
+ ],
+ "glue": {
+  "PMA rx": [
+   1442.472,
+   1017.3599999999999
+  ],
+  "SYN": [
+   1241.568,
+   664.092
+  ],
+  "OUT": [
+   1431.6480000000001,
+   608.052
+  ],
+  "dmem": [
+   1348.164,
+   621.552
+  ]
+ }
+}

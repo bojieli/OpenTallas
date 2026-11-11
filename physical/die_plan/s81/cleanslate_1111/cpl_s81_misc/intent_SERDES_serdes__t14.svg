@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1410" height="545" font-family="monospace" font-size="10">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#c03"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="40" y="20" font-size="13" font-weight="bold">SERDES serdes__t14 INTENT: PMA rx -&gt; u_syn -&gt; kp4 chn (W in, N out) -&gt; u_out beside dmem/cmem</text>
+<rect x="40.0" y="40.0" width="1000.0" height="425.1497005988024" fill="#fdf6e8" stroke="black" stroke-width="2"/>
+<rect x="1037.0" y="229.0344311377246" width="6" height="38.57701264138388" fill="orange"/>
+<text x="1042.0" y="242.3229374584165" font-size="8" fill="#a50">coll_i0</text>
+<rect x="1037.0" y="268.0203481925039" width="6" height="38.77938567309827" fill="orange"/>
+<text x="1042.0" y="281.410041029053" font-size="8" fill="#a50">coll_o0</text>
+<rect x="124.73885562208915" y="41.49700598802401" width="778.443113772455" height="44.91017964071856" fill="#ccc" stroke="#888"/><text x="126.73885562208915" y="51.49700598802401" font-size="8">u_ptx</text>
+<rect x="124.73885562208915" y="90.52395209580844" width="778.443113772455" height="44.91017964071856" fill="#ccc" stroke="#888"/><text x="126.73885562208915" y="100.52395209580844" font-size="8">u_prx</text>
+<rect x="450.1796407185629" y="415.37009314703926" width="61.90119760479042" height="28.0688622754491" fill="#ccc" stroke="#888"/><text x="452.1796407185629" y="425.37009314703926" font-size="8">u_dmem</text>
+<rect x="516.0479041916167" y="415.37009314703926" width="61.601796407185624" height="28.0688622754491" fill="#ccc" stroke="#888"/><text x="518.0479041916167" y="425.37009314703926" font-size="8">u_cmem</text>
+<rect x="339.4011976047904" y="384.311377245509" width="95.80838323353294" height="47.90419161676647" fill="#e4e4f4" stroke="#336"/>
+<text x="342.4011976047904" y="396.311377245509" font-size="10">u_dec.u_chn R180</text>
+<circle cx="513.9604125083167" cy="112.9790419161677" r="5" fill="#088"/><text x="519.9604125083167" y="108.9790419161677" fill="#088">PMA rx</text>
+<circle cx="444.19161676646706" cy="394.57834331337324" r="5" fill="#088"/><text x="450.19161676646706" y="390.57834331337324" fill="#088">SYN</text>
+<circle cx="510.0598802395209" cy="434.08266799733866" r="5" fill="#088"/><text x="516.0598802395209" y="430.08266799733866" fill="#088">OUT</text>
+<circle cx="481.13023952095807" cy="429.4045242847638" r="5" fill="#088"/><text x="487.13023952095807" y="425.4045242847638" fill="#088">dmem</text>
+<text x="535.0" y="257.5748502994012" fill="#c0c" font-size="14">*</text>
+<line x1="513.9604125083167" y1="112.9790419161677" x2="444.19161676646706" y2="394.57834331337324" stroke="#c03" stroke-opacity="0.75" stroke-width="4.4" marker-end="url(#a)"/>
+<text x="482.07601463739195" y="250.77869261477048" fill="#900" font-weight="bold">1</text>
+<line x1="444.19161676646706" y1="394.57834331337324" x2="387.3053892215569" y2="408.2634730538922" stroke="#c03" stroke-opacity="0.75" stroke-width="4.4" marker-end="url(#a)"/>
+<text x="418.74850299401203" y="398.4209081836328" fill="#900" font-weight="bold">2</text>
+<line x1="387.3053892215569" y1="408.2634730538922" x2="510.0598802395209" y2="434.08266799733866" stroke="#c03" stroke-opacity="0.75" stroke-width="7.0" marker-end="url(#a)"/>
+<text x="451.68263473053895" y="418.17307052561546" fill="#900" font-weight="bold">3</text>
+<line x1="481.13023952095807" y1="429.4045242847638" x2="510.0598802395209" y2="434.08266799733866" stroke="#c03" stroke-opacity="0.75" stroke-width="6.8" marker-end="url(#a)"/>
+<text x="498.5950598802395" y="428.7435961410512" fill="#900" font-weight="bold">4</text>
+<line x1="387.3053892215569" y1="408.2634730538922" x2="510.0598802395209" y2="434.08266799733866" stroke="#c03" stroke-opacity="0.75" stroke-width="1.7" marker-end="url(#a)"/>
+<text x="451.68263473053895" y="418.17307052561546" fill="#900" font-weight="bold">5</text>
+<text x="1052.0" y="58.0" font-size="9">1. PMA rx -> SYN 320b p2p PMA symbols -> u_syn (soft)</text>
+<text x="1052.0" y="71.0" font-size="9">2. SYN -> u_chn 320b p2p k_* into chn W face</text>
+<text x="1052.0" y="84.0" font-size="9">3. u_chn -> OUT 559b p2p cw_q/apply/o_ne/fs from chn N face -> u_out</text>
+<text x="1052.0" y="97.0" font-size="9">4. dmem -> OUT 544b p2p delay-line data (SRAM W pins)</text>
+<text x="1052.0" y="110.0" font-size="9">5. u_chn -> OUT 64b p2p status n_corr/n_unc</text>
+</svg>
