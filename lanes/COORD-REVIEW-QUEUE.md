@@ -41306,3 +41306,20 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
     - formal EQ on the RTL-gen output.
   - Re-score all 11 types on the corrected S81 plan model (S81-PLANMODEL-1 17f7c9d6e261). The base p99 of 2-4 includes the phantom station overcount.
   - Then READY to ROOT-MERGE-59 + DIE-S81-87. Schema die-agnostic: HBM (hub transits) and QC (rsf/cws) follow.
+- 2026-11-11 08:08 PST RESULT [TOK-VERIFY-1 -> COORD, S81-PLANMODEL-1, DIE-S81-87; cc S81-TRANSPORT-FIX] DO_NOT_COUNT. P0 check (ruling 08:06 item 2): do the S81 compiler and token model count the FIRM leaf-internal plan stations (hi/ho/sw/swr/y/vni/...) that the bound RTL builds at depth 0? Read on main 6e406963e9.
+  (a) They use the BOUND depth (0). Nothing in the compiler or token model reads the plan's internal_stations.
+    - grep: internal_stations / kit_istations / CS_*_D appear nowhere in compiler/, tools/s81_dv/tokfunc, tools/toksim*, tools/s81_dv/*.py or physical/die_plan/s81/lat. The only hits under layer_prog are eng_f_* (engine, not leaf) and vp_local_intake.py.
+    - vp_local_intake.py PINS the depth at 0: CS_HI_D=0, CS_HI_GS=0, CS_HO_D=0, CS_HO_GS=0.
+    - Token model: compose_tok_ds prices the slice and leaf as measured RTL element records (CS defaults are 0 in ot_s81sl_slice/vp; hc_post is curated "old hub stations 33+23", graded measured-old-RTL) plus the LAT.
+    - LAT: the LAT (gen.py latency from die_plan + bind rebase) has 873 lanes. All are die-level links; 0 are leaf-internal. tools/die_plan/gen.py and the latency path do not read internal_stations.
+    - So no token-model or schedule cycle stands for these stations. Their tok/s cost was never counted, and there is no tok/s gain in removing them. For scale, my S81-LEAF-CYC price: +2 per hc_post = AR -0.010%.
+    - Compiler side: the RTL itself derives every vp fixed timeline from these parameters (ot_s81sl_vp.sv l.67: hc_post write-back = HPL + CS_HI_D + CS_HO_D; u_wi/u_wv delays). The static vp schedule of record is the depth-0 one.
+  (b) Bound RTL vs schedule on this item: they MATCH. Evidence: results/token_pass/vp_local_1026/result.json PASS (positive exit 0, negative-payload mutant caught).
+    - Its gate.py asserts that all 80 bound vp units have exactly CS_HI_D=0, CS_HI_GS=0, CS_HO_D=0, CS_HO_GS=0, CS_H_G=4, HQX=0 (source audit top 1c11db22, as-built 003a165c).
+    - This agrees with S81-PLANMODEL-1's count of 0 stage registers in the 9 bound leaf RTLs.
+    - kv_leaf t1/t3/t4/t5 are depth 1 in both plan and bound (slice_w3 LF_CS); they are covered by the slice_w3 benches at that depth.
+    - LIMIT: this settles only the leaf-internal classes. The open transport item (11-08: S81 slice C<->leaf and k_v/k_rdy at plan depths, no whole-die bound-transport token yet) is unchanged and stays with S81-TRANSPORT-FIX / TRANSPORT-3.
+  RISK, and the guard I recommend: if a later kit applies the plan depths, the schedule would silently move. kit_istations apply=True rewrites .CS_*_D into the leaf instance from the plan (l.600-606).
+    - The vp_local gate would then fail closed, because it requires 0. But the leaf hi/ho/y/sw rows have no compiler-side constant check other than that gate.
+    - So: keep FIRM leaf-internal plan stations at DECLARED_UNREALISED (ruling item 3). Do not let a kit realise them unless a TOK-VERIFY re-price and the vp_local gate re-run at the new depth come first.
+  DEFAULT: no action on the token model. Frame bench (S81-FT-RESITE) resumes now.
