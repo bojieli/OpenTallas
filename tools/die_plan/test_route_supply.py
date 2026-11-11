@@ -363,3 +363,65 @@ def test_grt_halving_type_with_plan_route_4_defaults(tmp_path):
     assert r_u["verdict"] == "UNCHECKED" and r_u["unchecked_pins"] == 1600
     _, r_u0, _ = run(tmp_path, "--grt-halving-type", "t=edge_outline", "--empty-conns-glue")
     assert r_u0["glue_pins"] == 1600 and r_full["verdict"] == "FLAG"
+
+
+def test_delta_scores_before_after(tmp_path, capsys):
+    """--delta: a candidate positions delta is scored against the plan (bit-mm, worst H/V, p99 before/after)."""
+    plan(tmp_path, n=2000)
+    (tmp_path / "d.json").write_text(json.dumps({"types": {"t": {"hard_cores": {"u_b": {"origin_um": [60, 50]},
+                                                                                "u_m": {"origin_um": [150, 0]}}}}}))
+    out = tmp_path / "od"
+    rc = rs.main(["--plan", str(tmp_path / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+                  "--core-conns", str(tmp_path / "core_conns.json"), "--release-cache", str(tmp_path / "nope.json"),
+                  "--views", str(tmp_path / "noviews.json"), "--delta", str(tmp_path / "d.json"), "--types", "t"])
+    assert rc == 0
+    d = json.loads((out / "route_supply_tst_delta.json").read_text())
+    r = d["rows"][0]
+    assert r["type"] == "t" and r["bit_mm_after"] < 0.5 * r["bit_mm_before"]
+    assert r["worst_H_before"][1] > r["worst_H_after"][1]
+    assert "bit_mm_before" in capsys.readouterr().out
+    rows = [{"type": "t", "inst": "u_b", "origin_um": [60, 50]}]
+    T2 = rs.apply_delta(json.loads((tmp_path / "plan.json").read_text())["partition_types"], rows)
+    assert [h["origin_um"] for h in T2["t"]["hard_cores"] if h["inst"] == "u_b"] == [[60, 50]]
+
+
+def test_glue_destination_is_a_local_escape(tmp_path):
+    """core_conns_netlist writes ["glue"] for a port with no partner within its depth: scored, not UNCHECKED."""
+    plan(tmp_path, n=800)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {"d": ["glue"]}, "u_b": {"d": ["glue"]}}}))
+    _, r, _ = run(tmp_path)
+    assert r["glue_pins"] == 1600 and r["unchecked_pins"] == 0 and r["verdict"] != "UNCHECKED"
+    assert not any("not placed" in n for n in r["notes"])
+
+
+def test_core_conns_from_gate_netlist(tmp_path):
+    import core_conns_netlist as ccn
+    (tmp_path / "n.v").write_text("""module leaf(a, y);
+  input a; output y;
+endmodule
+module top(clk, bi, bo);
+  input clk;
+  input [1:0] bi;
+  output [1:0] bo;
+  wire [1:0] x;
+  wire [1:0] z;
+  BUFx2_ASAP7_75t_R _1_ (.A(bi[0]), .Y(x[0]));
+  BUFx2_ASAP7_75t_R _2_ (.A(bi[1]), .Y(x[1]));
+  cA \\u_w.u_a  (.clk(clk), .d({ x[1], x[0] }), .q({ z[1], z[0] }), .s(n1));
+  INVx1_ASAP7_75t_R _3_ (.A(z[0]), .Y(w0));
+  NAND2x1_ASAP7_75t_R _4_ (.A(w0), .B(z[1]), .Y(w1));
+  cB \\u_w.u_b  (.i(w1), .o(bo[0]));
+  INVx1_ASAP7_75t_R _5_ (.A(n1), .Y(n2));
+  leaf u_l (.a(n2), .y(n3));
+endmodule
+""")
+    P = {"partition_types": {"t": {"module": "top", "outline_um": [100, 100],
+                                   "buses": [{"name": "bi", "face": "W", "dir": "in"},
+                                             {"name": "bo", "face": "E", "dir": "out"}],
+                                   "hard_cores": [{"inst": "u_a"}, {"inst": "u_b"}]}}}
+    r = ccn.derive(P, "t", tmp_path / "n.v", top="top")
+    cc = r["core_conns"]["t"]
+    assert cc["u_a"]["d"] == ["bus:bi"]
+    assert cc["u_a"]["q"] == ["core:u_b.i"]
+    assert cc["u_b"]["i"] == ["core:u_a.q"] and cc["u_b"]["o"] == ["bus:bo"]
+    assert cc["u_a"]["s"] == ["glue"] and "clk" not in cc["u_a"]
