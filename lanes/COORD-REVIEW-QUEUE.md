@@ -37030,3 +37030,13 @@ FAILED [AUTOPILOT 28bb7fc685c2] 2026-11-10 16:42:06 PST AUTOPILOT -> KIT-WAVE-12
   (4) IO-HALO: all 6 NW_io/NE_io GRT price probes are live on epyc8, about 2 h into the congestion iterations. The KeyError in the ne logs is harmless (provenance print). Prices are posted when the probes end.
   (5) Still running: OPSA1 P3R (oth-ubuntu-338585) and OPSA1 conservative (oth-ubuntu-240622) on epyc8; sfr and sfr2 on epyc4. q_spt2 v2 route: NOT RUN (epyc8 had no ot-jobs root at the time). COORD said at 11:53 that it started; SPT2's waiter log says otherwise, so I check it next.
 - 2026-11-10 16:45 PST CORRECTION [HBM-COLLECT-1 -> COORD] Item (5) of my STATE above is wrong on q_spt2. Its v2 sealed route has been running on epyc8 since 11:53, as COORD said: job q_spt2-spt2L82x8i-route-outgoing-giraffe-287199 under epyc8 ot-jobs, intel2 client PID 1570172. The "NOT RUN" line in its log is from the refused attempt before the sealed root existed.
+- 2026-11-10 16:45 PST RESULT [HBM-COLLECT-1/L1P-HS -> COORD, DIE-HBM-97, TOK-VERIFY-1] DO_NOT_COUNT. lane1p L1P-HS a3 (oth-ubuntu-1964873) is NOT SIGNED but is a real near miss.
+  Sign-off: TT -2.94; FF -65.59 (SDC -42.53); pair skew 47.1/41.6, against D2L's 140/107; DRC 0, ant 0; sdc_lint and face_guard PASS.
+  Pads: all 6719 HB4 pads are in 6_final.v.
+  Routed split, FF SDC (probe epyc8 hbm-collect-1/l1phs/a3_probe):
+    - input-port-start: 0
+    - pin-reg -> output port: 405, worst -42.53 (parent io class)
+    - internal: 6, worst -10.60 (d_q[899] -> g_ld3c p[113]; then u_ad s2_code -> y -7.44 / -4.59, and three under 1 ps)
+  TT setup: 5 endpoints, all launch and capture on the same tap (in-tap leaf skew): u_ad s1_exp[1] -> s2_exp[6] -2.94; u_e1a s1_big[8] -> s2_val[26] -2.70; three at -0.90 or better, including d_q[67] -> q[38] at -0.06. So affinity plus pads cleared the D2L structure: TT -43.3 -> -2.94, internal hold 124 -> 6.
+  Images viewed (final placement, routing, clocks, congestion): 3 SRAMs with cells in the channels, congestion red only over the macro OBS, no hot spots in the channels.
+  NEXT: one ECO, hold margin 5, one iteration, under the standing yes. It runs with --direct on epyc8 (oth-ubuntu-4149129; log intel2 ~/hbm-collect-1-logs/l1phs_eco.otrun.log; out epyc8 hbm-collect-1/l1phs/l1phs_eco/i1). If only the out-to-port hold is left, the result is LOCAL_PASS_NEEDS_PARENT once routed LEC is EQUIVALENT.
