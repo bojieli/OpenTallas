@@ -167,7 +167,12 @@ def main():
             path = path if path.endswith('signoff.json') else path + '/signoff/signoff.json'
             jobs.append((f[0], f[1], 'near', None, [(f[2], path)], 'NEAR-CLOSE'))
     import hashlib
-    key = hashlib.sha256(json.dumps(sorted((j[0], j[1], j[4][0][0], j[4][0][1]) for j in jobs)).encode()).hexdigest()[:16]
+    # key = signed-view set + every plan file's sha: a plan event or a new sign-off re-runs, nothing else does
+    psha = {d: hashlib.sha256((Path(a.repo) / v['src']).read_bytes()).hexdigest()[:12] for d, v in plans.items()}
+    for d in plans:
+        plans[d]['sha'] = psha[d]
+    key = hashlib.sha256(json.dumps([sorted((j[0], j[1], j[4][0][0], j[4][0][1]) for j in jobs),
+                                     sorted(psha.items())]).encode()).hexdigest()[:16]
     if a.state and Path(a.state).exists() and json.loads(Path(a.state).read_text()).get('key') == key and not a.force:
         print('die_recheck: signed-view set unchanged (key %s) -> nothing to do' % key)
         return
@@ -257,7 +262,7 @@ def main():
         far = sorted([r for r in R if r.get('far_out')], key=lambda r: -abs(r['e_tt']))
         xc = sorted(R, key=lambda r: r['xcorner_ff'])
         unread = [r for r in rows if r['die'] == die and r.get('status') == 'UNREAD']
-        summ[die] = dict(plan=plans[die]['src'], designs=len(R), unread=len(unread), band_out=len(band), far_out=len(far),
+        summ[die] = dict(plan=plans[die]['src'], plan_sha=plans[die]['sha'], designs=len(R), unread=len(unread), band_out=len(band), far_out=len(far),
                          port_hold_designs=len(ph), port_hold_below0=len(neg), port_hold_below0_aocv=len(neg_aocv),
                          port_hold_below0_core_viol_endpoints=neg_ep,
                          worst_port_hold=(neg[0]['design'], neg[0]['die_hold_ff']) if neg else
@@ -286,7 +291,19 @@ def main():
                                                    (a.clock_note or {}).get(die, '-'),
                                                    'ESTIMATE k_die %.3f cq_ff %.0f' % (a.k_die, a.cq_ff))) + '\n')
     if a.state:
-        Path(a.state).write_text(json.dumps(dict(key=key, time=now)))
+        st = Path(a.state)
+        prev = json.loads(st.read_text()).get('summary', {}) if st.exists() else {}
+        F = ('plan_sha', 'designs', 'unread', 'far_out', 'max_early_tap', 'worst_xcorner', 'port_hold_designs',
+             'port_hold_below0', 'port_hold_below0_aocv', 'worst_port_hold')
+        for die, s in summ.items():
+            p = prev.get(die)
+            if p is None:
+                print('DELTA %s: first run' % die)
+                continue
+            ch = ['%s %s -> %s' % (f, json.dumps(p.get(f)), json.dumps(s.get(f))) for f in F
+                  if json.dumps(p.get(f)) != json.dumps(s.get(f))]
+            print('DELTA %s: %s' % (die, '; '.join(ch) if ch else 'no change'))
+        st.write_text(json.dumps(dict(key=key, time=now, summary=summ)))
     print(json.dumps(summ, indent=1))
 
 

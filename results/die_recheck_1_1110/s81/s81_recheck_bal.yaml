@@ -44,7 +44,7 @@ top:
   rep_um: 250
   site_legal: true
   site_slide: true
-  rep_reach_max: 400
+  rep_reach_max: 450   # OWNER repeater spacing 450 um (10-23)
   rep_actual_max: 470   # DS85 diagnostic: 3 tap legs at s_7N_x13 are 426-461 um (ck_fail2/kit/clock/actual_reach.json); reported, not fixed
   opts:
     dme_feed_centroid: 2

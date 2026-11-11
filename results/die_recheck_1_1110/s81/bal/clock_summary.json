@@ -1,0 +1,76 @@
+{
+ "sha": "e596e9588e72",
+ "sta": {
+  "TT_intra": {
+   "pairs": 1165952,
+   "setup": 386.41,
+   "setup_neg": 0,
+   "hold": -327.44,
+   "hold_neg": 452357,
+   "skew": 295.48
+  },
+  "TT_landed": {
+   "pairs": 2997681,
+   "setup": -911.92,
+   "setup_neg": 52716,
+   "hold": -1625.77,
+   "hold_neg": 1492949,
+   "skew": 1637.36,
+   "landing": {
+    "damage_max": 1637.36,
+    "verdict": "FAIL"
+   }
+  },
+  "FF_intra": {
+   "pairs": 1165952,
+   "setup": 482.67,
+   "setup_neg": 0,
+   "hold": -276.45,
+   "hold_neg": 590911,
+   "skew": 241.28,
+   "kit_contract": {
+    "hold": -127.49,
+    "window": 68.0,
+    "need": 195.49,
+    "neg": 31155
+   }
+  },
+  "FF_landed": {
+   "pairs": 2997681,
+   "setup": -614.36,
+   "setup_neg": 20829,
+   "hold": -1373.48,
+   "hold_neg": 1500031,
+   "skew": 1373.02,
+   "landing": {
+    "damage_max": 1373.02,
+    "verdict": "FAIL"
+   }
+  }
+ },
+ "metrics": {
+  "TT": {
+   "tap_arr_min": 451.0,
+   "tap_arr_max": 6991.6,
+   "unshared_stages_max": 188,
+   "window_need_max": 464.3,
+   "structural_over": 0,
+   "wrapped_clear_below0": 307
+  },
+  "FF": {
+   "tap_arr_min": 371.2,
+   "tap_arr_max": 5977.2,
+   "unshared_stages_max": 188,
+   "window_need_max": 383.2,
+   "structural_over": 0,
+   "wrapped_clear_below0": 264
+  }
+ },
+ "lps_wrapped": {
+  "NEAR": 324,
+  "LAG": 143,
+  "EDGE": 397,
+  "LEAD": 129
+ },
+ "kit_done": true
+}

@@ -9,9 +9,17 @@ the plan's clock.spine.root_um, with the parent of each part chosen among its mi
 (1) most plan landings (landing_network edges, any kind) between the two parts -> the crossing becomes a feed edge
     (METHODOLOGY 12.16b(i): a data link is a clock-tree edge),
 (2) shortest centre-to-centre distance.
-Taps on the middle of the shared edge (feed_a3 / DS85 convention).  Usage: feed_bal.py PLAN TOOLS OUT"""
+Taps on the middle of the shared edge (feed_a3 / DS85 convention).
+Hard-PHY partitions (type family serdes / phy, --leaf-re) are LEAVES: a feed leg through a PHY partition has no legal
+repeater site (ck_bal fail 1: lk_ES0 -> fE0_p2_b2 leg 994 um through the SerDes).  They are transit only when a part
+cannot be reached otherwise.  --avoid a->b,... drops feed edges (auto retry after a kit reach failure).
+--phy-parents FEED (conservative form after 2 reach failures, ck_bal fail 2: a north-edge tap into lk_ES1 left a 994-um
+leg to the SerDes clock pin): every PHY partition keeps its parent + tap from a proven feed (DS85 sb6, whose side-edge
+PHY->PHY chains routed), PHYs feed only those PHY children; the BFS balances all other parts.
+Usage: feed_bal.py PLAN TOOLS OUT [--leaf-re REGEX] [--avoid a->b,...] [--phy-parents FEED.json]"""
 import collections
 import json
+import re
 import sys
 
 sys.path.insert(0, sys.argv[2])
@@ -48,30 +56,63 @@ links = collections.Counter()
 for e in plan_raw['clock']['landing_network']['edges']:
     a, b = e['src']['part'], e['dst']['part']
     if a != b: links[frozenset((a, b))] += 1
-dep = {root: 0}
-q = collections.deque([root])
-while q:
-    u = q.popleft()
-    for v in nb[u]:
-        if v not in dep: dep[v] = dep[u] + 1; q.append(v)
-missing = set(parts) - set(dep)
-if missing: raise SystemExit('abutment graph disconnected: %s' % sorted(missing)[:10])
+arg = lambda k, d: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
+LEAF_RE = re.compile(arg('--leaf-re', r'^(serdes|phy)(__|$)'))
+avoid = set(tuple(x.split('->')) for x in arg('--avoid', '').split(',') if '->' in x)
+for a_, b_ in avoid:
+    nb[a_] = [m for m in nb[a_] if m != b_]; nb[b_] = [m for m in nb[b_] if m != a_]
+ptype = {p['name']: p['type'] for p in plan_raw['partitions']}
+leaf = {n for n in parts if LEAF_RE.search(ptype[n]) and n != root}
+
+
+def bfs(blocked):
+    d = {root: 0}; q = collections.deque([root])
+    while q:
+        u = q.popleft()
+        if u in blocked and u != root: continue        # reached, but feeds nothing
+        for v in nb[u]:
+            if v not in d: d[v] = d[u] + 1; q.append(v)
+    return d
+
+
+dep = bfs(leaf)
+transit_leaf = set()
+while set(parts) - set(dep):        # a part reachable only through a PHY: let the nearest PHY carry it
+    miss = set(parts) - set(dep)
+    opener = min((n for n in leaf - transit_leaf if n in dep and any(m in miss for m in nb[n])), key=lambda n: dep[n],
+                 default=None)
+    if opener is None: raise SystemExit('abutment graph disconnected: %s' % sorted(miss)[:10])
+    transit_leaf.add(opener); dep = bfs(leaf - transit_leaf)
+PP = json.load(open(arg('--phy-parents', ''))) if arg('--phy-parents', '') else None
+fixed = {}
+if PP:
+    fixed = {n: (PP['parent'][n], PP['tap']['%s->%s' % (PP['parent'][n], n)]) for n in leaf if PP['parent'].get(n)}
+    changed = True
+    while changed:              # PHY depth from its fixed parent (chains resolve in order)
+        changed = False
+        for n, (pp, _) in fixed.items():
+            if pp in dep and dep.get(n) != dep[pp] + 1 and (pp not in leaf or pp in fixed):
+                dep[n] = dep[pp] + 1; changed = True
 par = {root: None}
 for c in parts:
     if c == root: continue
-    cand = [m for m in nb[c] if dep[m] == dep[c] - 1]
+    if c in fixed:
+        par[c] = fixed[c][0]; continue
+    cand = [m for m in nb[c] if dep[m] == dep[c] - 1 and (m not in leaf or m in transit_leaf)]
     cx, cy = ctr(c)
     par[c] = max(cand, key=lambda m: (links[frozenset((m, c))], -(abs(ctr(m)[0] - cx) + abs(ctr(m)[1] - cy)), m))
 tap, short = {}, []
 for c, p in par.items():
     if p is None: continue
+    if c in fixed:
+        tap[f'{p}->{c}'] = fixed[c][1]; continue
     t, ov = shared(p, c)
     if ov <= 100: short.append((p, c, round(ov, 1)))
     tap[f'{p}->{c}'] = t
 hist = sorted(collections.Counter(dep.values()).items())
 on_edge = sum(n for k, n in links.items() if any(par.get(x) in k and x in k for x in k))
-print('root', root, 'max depth', max(dep.values()), 'hist', hist)
+print('root', root, 'max depth', max(dep.values()), 'hist', hist, 'leaf-only PHY parts', len(leaf), 'PHY transit', sorted(transit_leaf), 'PHY fixed parents', len(fixed), 'avoid', sorted(avoid))
 print('landings on a feed edge', on_edge, 'of', sum(links.values()), '; short overlap <=100um', short)
-json.dump(dict(root=root, parent=par, tap=tap, depth_hist=hist,
+json.dump(dict(root=root, parent=par, tap=tap, depth_hist=hist, leaf_only=sorted(leaf - transit_leaf), avoid=sorted(map(list, avoid)),
                note='DIE-RECHECK-1 balanced (min-depth BFS) abutment feed on the current plan; parent by landing count'),
           open(sys.argv[3], 'w'), indent=0)
