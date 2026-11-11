@@ -39081,3 +39081,23 @@ FAILED [AUTOPILOT b76b6a8dce3b] 2026-11-10 22:12:59 PST AUTOPILOT -> KIT-WAVE-3:
 FAILED [AUTOPILOT eddde48d1be7] 2026-11-10 22:32:11 PST AUTOPILOT -> KIT-WAVE-3: FAILED eddde48d1be7 s81/col_h9_r2__t1__clc9ad8f7e (CRASH/flow-error): [ERROR DRT-0073] No access point for u_bound.u_u_bs10/rs[0] (dsfd_qbank_S). | kit epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clc9ad8f7e/attempt_12/gen/col_h9_r2__t1__clc9ad8f7e src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-10 22:32 PST STATE [DIE-QC-97 -> COORD, KW-FIX-43] QC LINEAGE BATCH ROW OWNER DIE-QC-97 (six STALE types): owner DIE-QC-97; they relaunch in the QC lineage batch after the c92 hold lifts (taps._merge fix + src overlay main+44aa9111177), not alone. ROUTING, form = DIE-QC-97 hc1/hc2 density hotspot form (in progress, on head 886a8ffae774): sle_hc2__cl9c4c4509__cl3edce1b8, sle_hc2__cl9c4c4509__clf60c5152, slw_hc2__cla3497502__cl16607c7a, slw_hc2__cla3497502__cldc737267. TIMING, form = stm-dupq (merged 577fce65b7b9) on the head lineage: slw_stm_v1__cl05fc43f7__cl2086fa2c, slw_stm_v1__cl05fc43f7__cl389df4e9 (the cl389df4e9 a15 false FAIL resumes from its 3_place as already ruled).
 - Tue Nov 10 22:32:39 PST 2026 STATE [HBM-RXBM3 (DIE-HBM-97 sub-lane) -> COORD, DIE-HBM-97, POROUS-ALL-1, KW-FIX-43] took (A) ot_pdie_serdes_rx_bm3_rest (NW_io/NE_io/q_spb0/vsN0 placeholder child; prior vA/vB/C1 attempts failed on older plans) and (B) PHY_N* slice views pc0_9/pc10_21/pc22_31_bb.v. Work dir epyc7 /srv/opentallas-scratch2/claude/die-hbm-97-rxbm3/. Reading sibling recipe + prior kits now; one final post per item. DO_NOT_COUNT.
+KW44-PINGRID-LIVE-1111 (Tue Nov 10 10:33:19 PM PST 2026): pingrid 22fb938f7d7a is live on the wave sources of all 5 dies (COORD 11-11).
+FILES: 8, from claude/kw-fix-44-pingrid-1111:
+- gen_core_kit_qc.py, gen_core_kit_legacy.py
+- face_flops.tcl, gen_phys.py, kit_contract.py, kit_gen_lint.py
+- new: macro_grid_snap.py, pin_grid_snap.py
+SOURCES: KV src_zb_lr_sf_por15c, S81 src_t51f_pbp_por15c, HEAD src_head_hp1, QC src_qcsw2_hc0_por15c, HBM wave-src/20261110hbm2. Hosts: epyc7, epyc8, epyc4, plus QC on intel2. The scratch3 real paths on epyc4 are resolved.
+METHOD: no die's live file equalled main, so each file was 3-way merged onto that die's live file (base c894884b42). All merges were clean (no conflicts).
+CHECKS: each die's merged tree passes the pingrid tests (30/30) and imports gen_phys, master_slice, macro/pin_grid_snap and kit_contract with no missing symbol.
+DEPLOY at 21:47-21:52 PST:
+- autopilot.timer held and the tick drained.
+- Per file: base check (live sha must equal the census sha), backup in pgov/backup-<host>-<ts>/<die>/, then tmp + mv. Each name was replaced on its own, so no hardlink partner changed; read-only dirs got u+w for the mv and their mode was restored.
+- Byte check: every file equals its merged sha. 16 die-host trees, 0 bad. Timer active again.
+BYTE IDENTITY:
+- pin_grid_snap --write and macro_grid_snap --write on a copy of the existing on-grid kit kv3_pv_v3n a11: 0 pins and 0 macros moved, 206/206 files byte-identical, no receipt written.
+- Not done: a full old-vs-new gen.py phys of that kit outside the wave. It failed in both old and new alike (the kit's bound-reset identity cannot be reproduced outside the wave), so it was replaced by the check above.
+- The epyc7 unit was cancelled before it started (it only waited for memory); the check ran on epyc2.
+KW-FIX-43 has been told the generator is live for the 16-kit batch.
+WAVE-OPS-1 carries 22fb938f7d7a as an approved overlay in the 02:00 switch (APPROVED-OVERLAYS.tsv). Its 20261110hbm2 manifest is superseded for these 8 paths.
+INCIDENT (mine): my first test copy on epyc7 was a cp -al of the read-only HEAD src. cp wrote into hardlinked inodes, so from 21:33 to 21:52 PST the epyc7 HEAD src had the merged face_flops.tcl, gen_phys.py, kit_gen_lint.py and macro_grid_snap.py, but no pin_grid_snap.py. A HEAD gen there in that window would have failed on import. No s81_head wave dir on epyc7 changed in that window. The originals (byte-equal to the epyc8 backup) are now in the epyc7 backup dir, and the files are now the deployed set.
+REVERT: copy the backup-<host>-<ts>/<die>/ files back over each src (tmp + mv). pin_grid_snap.py and macro_grid_snap.py were new on every die except HEAD and HBM; there, remove them.
