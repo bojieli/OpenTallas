@@ -41295,3 +41295,14 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
   (5) CPL-S81-LEAF-4: the t35 plan change (0 GRT overflow vs 125) is ADOPTED for the next S81 event. The t17/t43 deltas are dropped. 11 leaves pass S2 at base. The t8 flank form is worse and declined; t8 goes to S81-LEAF-CYC (+1 cycle). t47/t52 H residuals are ft (S81-FT-RESITE).
 
 11-11 16:06 UTC DIE-HBM-97 vecd-clkroot-r2 RESULT v512b: FAIL (DO_NOT_COUNT; branch claude/die-hbm-97-clkroot-rep-1110 @65641467, route-hold-pass on). Failed gate: flow OT_HOLD_GATE at post-CTS (before route; stop wns -200 ps): core FF reg2reg wns -201.28 ps / 3975 endpoints (port paths 2061 ep wns -629.96, NEEDS_PARENT, not gated). clk_root_cross inserted 8 repeaters (clk, clk_e, clk_n/s/w cross; clk_macro0-2 enclosed). Same v512b WITHOUT repeaters: -99.14 ps / 3238 ep. Repeaters made pre-repair core hold 102 ps worse -> fix does NOT close vecd4ae; never reached GRT/route, so the route-hold pass never ran. DB kept: epyc7:/srv/opentallas-scratch2/claude/die-hbm-97-vecd/r2/v512b (4_1_cts.odb). No retry. vecd4ae -> conservative form. v32e0 r2 still running; result to follow. vecd-clkroot-gen stays READY only as a tool; do not enable it on the kit wave until a core passes.
+- 2026-11-11 08:06 PST RULING [COORD, owner delegated -> X-TIER-OTC, KW-FIX-45, DIE-S81-87, DIE-RECHECK-1] X-TIER-OTC form (d) ARCH: option (a) is APPROVED, with one change: X-TIER-OTC implements the schema/G0/RTL-gen/station_lint/latency/route_supply part ITSELF on a branch. It knows the form best.
+  - METHODOLOGY: the old 9.3 ban on signals on M8/M9 is superseded for DECLARED die-top nets (owner 11-11 "if the top-metal option works, go with it"). Conditions: hop reach 405, M7 entry pins <= 34/cell, bays clear of taps/reset by >= 21.6 um, and declared keep-outs (HBM bump/PHY escape, QC A0 bump field). G0 enforces all of these.
+  - Bind/kit: KW-FIX-45. Die-top routing + die GRT/STA: DIE-S81-87's composer.
+  - Owed before adoption:
+    - the forwarded-clock ring hold re-check (pipeline cycle if short, per owner);
+    - the shield rule measured against the PD9 routed clock guides;
+    - a leaf PG sim with bays (IR);
+    - DIE-RECHECK-1 clock/power;
+    - formal EQ on the RTL-gen output.
+  - Re-score all 11 types on the corrected S81 plan model (S81-PLANMODEL-1 17f7c9d6e261). The base p99 of 2-4 includes the phantom station overcount.
+  - Then READY to ROOT-MERGE-59 + DIE-S81-87. Schema die-agnostic: HBM (hub transits) and QC (rsf/cws) follow.
