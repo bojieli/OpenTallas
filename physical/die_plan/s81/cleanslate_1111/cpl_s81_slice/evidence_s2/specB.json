@@ -1,0 +1,225 @@
+{
+ "dsdv_slice_c1x_C__t10": {
+  "moves": {
+   "u_c.u_xr": [
+    17.28,
+    0
+   ]
+  },
+  "mode": "keep_regs"
+ },
+ "dsdv_slice_lepe_mu_C__t1": {
+  "moves": {
+   "u_c.u_xr": [
+    69.12,
+    0
+   ]
+  },
+  "mode": "keep_regs"
+ },
+ "dsdv_slice_c1x_C__t6": {
+  "abs": {
+   "u_c.u_xr": [
+    371.52,
+    1019.52,
+    "MX"
+   ],
+   "u_c.u_xf.g_cp[0].u_e": [
+    449.28,
+    293.76,
+    "MX"
+   ],
+   "u_c.u_xf.g_cp[1].u_e": [
+    639.36,
+    293.76,
+    "MX"
+   ],
+   "u_c.u_xf.u_f": [
+    829.44,
+    293.76,
+    "MX"
+   ],
+   "u_c.u_xf.g_cp[2].u_e": [
+    1019.52,
+    293.76,
+    "MX"
+   ],
+   "u_c.u_xf.g_cp[3].u_e": [
+    1209.6,
+    293.76,
+    "MX"
+   ]
+  },
+  "mode": "resite"
+ },
+ "dsdv_slice_lepw_mu_LP__t2": {
+  "abs": {
+   "u_bound.u_u_ln0": [
+    8.64,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl0": [
+    129.6,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln1": [
+    319.68,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl1": [
+    440.64,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln2": [
+    820.8,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl2": [
+    941.76,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln3": [
+    1131.84,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl3": [
+    1252.8,
+    509.76,
+    "MX"
+   ]
+  },
+  "mode": "rigid"
+ },
+ "dsdv_slice_lepw_mus_LP__t2": {
+  "abs": {
+   "u_bound.u_u_ln0": [
+    8.64,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl0": [
+    95.04,
+    613.44,
+    "R0"
+   ],
+   "u_bound.u_u_ln1": [
+    319.68,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl1": [
+    406.08,
+    613.44,
+    "R0"
+   ],
+   "u_bound.u_u_ln2": [
+    820.8,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl2": [
+    907.2,
+    613.44,
+    "R0"
+   ],
+   "u_bound.u_u_ln3": [
+    1131.84,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl3": [
+    1218.24,
+    613.44,
+    "R0"
+   ]
+  },
+  "mode": "rigid"
+ },
+ "dsdv_slice_lepe_mu_LP__t2": {
+  "abs": {
+   "u_bound.u_u_ln0": [
+    8.64,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl0": [
+    129.6,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln1": [
+    319.68,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl1": [
+    440.64,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln2": [
+    820.8,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl2": [
+    941.76,
+    509.76,
+    "MX"
+   ],
+   "u_bound.u_u_ln3": [
+    1131.84,
+    665.28,
+    "MX"
+   ],
+   "u_bound.u_u_lnl3": [
+    1252.8,
+    509.76,
+    "MX"
+   ]
+  },
+  "mode": "rigid"
+ },
+ "dsdv_slice_lepe_nh_mus_LP__t1": {
+  "abs": {
+   "u_bound.u_u_ln0": [
+    8.64,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl0": [
+    95.04,
+    613.44,
+    "R0"
+   ],
+   "u_bound.u_u_ln1": [
+    319.68,
+    120.96,
+    "R0"
+   ],
+   "u_bound.u_u_lnl1": [
+    406.08,
+    613.44,
+    "R0"
+   ]
+  },
+  "mode": "rigid",
+  "taps": {
+   "clk_t27": [
+    315.36,
+    112.28
+   ],
+   "clk_t28": [
+    397.44,
+    704.12
+   ]
+  }
+ }
+}
