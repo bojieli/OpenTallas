@@ -25508,7 +25508,7 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_hbm_tc1111",
    "src_sha": "aac286936589f567b335a3ff7337edc47f8a9ffb",
    "gate": {
     "g0c": "PASS",
@@ -26673,7 +26673,8 @@
     "q_hub_ne@7",
     "ot_svgr_top@3",
     "ot_hbm_sm_i8w_front@3",
-    "ot_hbm_sm_pv_merge@3"
+    "ot_hbm_sm_pv_merge@3",
+    "ot_hbm_sm_i8w_front@5"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -27021,7 +27022,8 @@
     "q_hub_ne@7": "INPUTS RESTAGED: epyc8 die-hbm-97 plan dirs (plan_p9_wsw_r cores now on every HBM host; 8 more plan_* dirs restaged)",
     "ot_svgr_top@3": "INFRA: hbm-plan-1/stage/p6_relay (core_clock_regions.json) was missing on epyc4 only; staged to epyc4+epyc2 20:1x",
     "ot_hbm_sm_i8w_front@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core",
-    "ot_hbm_sm_pv_merge@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core"
+    "ot_hbm_sm_pv_merge@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core",
+    "ot_hbm_sm_i8w_front@5": "KW-FIX-43 11-10 22:2x COORD (HBM-CORES-B READY+ASK 8d3230a3fa approved): a5 PORT_MISMATCH 'command' (face-shell drop deferred) fixed by gen_core_kit_hbm.py direct_port_check; relaunch from gen as INFRA"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -35468,7 +35470,9 @@
     "epyc8",
     "epyc4"
    ],
-   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b."
+   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b.",
+   "src_prev_kw43fsp": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm",
+   "note_kw43fsp": "KW-FIX-43 11-10 22:2x COORD: new HBM launches -> private src kw43/src_hbm_tc1111 = cp -a of wave-src/20261110hbm2 (aac2869) + gen_core_kit_hbm.py of 8d3230a3fa (md5 d98f30607a4c; only direct_port_check/PORT_DEFER hunks, same as HBM-CORES-B fsport_dry) + the COORD-ruled ftres/porous batch overlay (ftres_d54b96cc27.patch, porous c16a7f2655); same on epyc7/epyc8/epyc4 (read-only). src_sha/queue_src name the base. Retry ot_hbm_sm_i8w_front@5 INFRA. pv_merge untouched. Revert: src <- src_prev_kw43fsp."
   }
  },
  "place_prefer": [
