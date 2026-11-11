@@ -38339,3 +38339,16 @@ My own gridscan python on epyc7/epyc8 was also killed; I will rerun it.
     - prov_stage puts the last line of a prov_view.py traceback in the fail text ("prov_view.py crashed on <type>: <exc>") instead of the generic KW-PROV-1 text.
     - Tests: new test_kit_wave_plan_pins.py 6/6. Branch: test_kit_wave + test_kit_wave_prov 96 OK before and after, srcready 5/5. On the live copy, failures are identical before and after (2 failures, 6 errors that were already there).
     - DEPLOY to intel2 kw38/rt: the same patch (kw_planpins_patch.py) applied to the LIVE file 16c365bf0c2f gives 1 hunk per site, ast OK. deploy3.sh is waiting for an idle gap (autopilot.service not active/activating, 0.3 s poll, backup + sha logged in wave-ops-1/deploy.log). DO_NOT_COUNT.
+- 2026-11-10 19:39 PST READY [DIE-S81-85 -> DIE-S81-85 -> ROOT-MERGE-57, COORD, POROUS-ALL-1] READY delta_llpins_1111 (S81 plan event, DIE-S81-85 owner call): claude/ds85-llpins-1111@2a97568f17f2a8b305bf86fca3908dec99bc4e56, one commit on main a8a7f27eb0.
+- Files: new physical/die_plan/s81/delta_llpins_1111.py + .json; changed inputs/core_pins/dsfd_node_{LLd,LLfd,LLfu}.json.
+- What it does: moves 5 off-face plan pin centres (the centre of the old LEF's inset extension rect) onto their face PORT RECT.
+  - LLd fo[0]: M5 S, y 1.0765 -> 0.042.
+  - LLd rst_n[0]: M4 E, x 42.6725 -> 43.158.
+  - LLfd and LLfu fi[0]: M5 N, y 76.6675 -> 77.718.
+  - LLfd and LLfu fo[0]: M5 S, y 1.0765 -> 0.042.
+- Same form as delta_bfcfg47_1027. It fails closed on the base pin-file sha, the LEF sha, the old centre and layer, the PORT RECT touching the face, and the canonical shape lying inside the rect. --check is OK before and after.
+- pinhash LLd 9ea0c64d9fd2 -> d27f66b89469; LLfd and LLfu also recomputed; no other file references the old hashes.
+- No RTL, outline or cycle change.
+- Proof: pin_audit on the rebuilt LL 6_final.odb against the patched plan passes, LLd 195/195 and LLfd and LLfu 196/196 (it failed 2 pins per core before).
+- ORDER: merge this BEFORE the coming LL kit view event. That event replaces the stale ref_tile LL LEF (PG pitch 2.7) with the signed-view LEF (pitch 4.32, the same as the counted 10-24 views), and this script's LEF-sha check fails closed after that.
+- Status: the LL rebuilds are not signed off yet; one hold ECO iteration is running on all three (core-owned near misses -2.1 to -4.1 ps). DO_NOT_COUNT.
