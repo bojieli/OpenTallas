@@ -398,8 +398,11 @@ def _n(v: float, q: float) -> int:
 
 
 def write_lef_v41x_legal(w: float, h: float, plist: list[Pin], place: dict, npc: int, pitch: float,
-                         name: str) -> tuple[str, dict[str, Any]]:
-    """The V4.1 PHY abstract with every signal pin on the M5 track and PDN-reachable M4 power straps."""
+                         name: str, pin_shift_um: float = 0.0) -> tuple[str, dict[str, Any]]:
+    """The V4.1 PHY abstract with every signal pin on the M5 track and PDN-reachable M4 power straps.
+    pin_shift_um (rc_slice only, default 0 = unchanged bytes for every other variant): moves the PIN rects in x by that amount, the
+    OBS blankets stay 0 0 W H inside SIZE.  The kit's M5 tracks sit half a pitch off this generator's M5_TRACK_OFF_UM assumption, so
+    with origin 0 every pin missed its track by 0.012 um (OT_MACRO_GRID_SNAP: 7022/5852 off-track pins, DIE-HBM-99 probe)."""
     _n(w, JOINT_X_UM)
     _n(pitch, M5_TRACK_UM)
     win = math.floor(w / npc / M5_TRACK_UM) * M5_TRACK_UM          # window pitch on the track grid
@@ -436,7 +439,7 @@ def write_lef_v41x_legal(w: float, h: float, plist: list[Pin], place: dict, npc:
             xs.append(x)
             L += [f"  PIN {b}", f"    DIRECTION {p.direction.upper()} ;",
                   "    USE CLOCK ;" if p.kind == "clock" else "    USE SIGNAL ;", "    SHAPE ABUTMENT ;",
-                  "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;",
+                  "    PORT", "      LAYER M5 ;", f"      RECT {x + pin_shift_um:.3f} {h - pl:.3f} {x + pw + pin_shift_um:.3f} {h:.3f} ;",
                   "    END", f"  END {b}"]
     if off_track:
         raise SystemExit(f"{name}: {off_track} pin centres off the M5 track")
@@ -663,6 +666,9 @@ def rc_slice_name(lo: int, hi: int, edge_mm: float = V2_EDGE_BASIS["value_mm"]) 
     return f"{RC}_e{edge_mm:g}".replace(".", "p") + f"_pc{lo}_{hi}"
 
 
+SLICE_PIN_SHIFT_UM = 0.012        # DIE-HBM-100 11-11: slice pins on the kit's M5 tracks at origin 0 (pins only; OBS stays inside SIZE)
+
+
 def generate_rc_slice(out: Path | None, lo: int, hi: int, edge_mm: float = V2_EDGE_BASIS["value_mm"],
                       npc_full: int = 32) -> dict[str, Any]:
     """PHY-only abstract for pseudo-channels lo..hi (inclusive) of the rc macro."""
@@ -674,11 +680,12 @@ def generate_rc_slice(out: Path | None, lo: int, hi: int, edge_mm: float = V2_ED
     _n(w_um, JOINT_X_UM)
     name = rc_slice_name(lo, hi, edge_mm)
     plist, place = rc_pins(n)
-    lef, pin_info = write_lef_v41x_legal(w_um, h_um, plist, place, n, 0.192, name=name)
+    lef, pin_info = write_lef_v41x_legal(w_um, h_um, plist, place, n, 0.192, name=name, pin_shift_um=SLICE_PIN_SHIFT_UM)
     lef = lef.replace("--variant v41x_legal (v2): HBM3E PHY + controller",
                       f"--variant rc_slice (v1): HBM3E PHY ONLY, pseudo-channels {lo}-{hi}")
     lef = lef.replace("ABSTRACT for the adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv); controller-side pins only.",
                       "SLICE of the rc abstract at the row/column/data boundary of ot_hbm_svc_pc_ctrl_leaf.")
+    pin_info["pin_shift_um"] = SLICE_PIN_SHIFT_UM
     pin_info["matches"] = (f"ot_hbm3e_phy_rc pins of PCs {lo}-{hi}: local PC i = global PC {lo} + i")
     pin_info["placement"] = (f"local pseudo-channel i's row/column/data bits in [i*window + span]; clk, rst_n in window {n // 2} "
                              f"(global PC {lo + n // 2})")

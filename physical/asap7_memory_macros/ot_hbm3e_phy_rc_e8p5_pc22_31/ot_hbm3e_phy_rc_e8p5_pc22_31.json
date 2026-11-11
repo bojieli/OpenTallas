@@ -36,6 +36,7 @@
       0
     ],
     "pin_pitch_um": 0.192,
+    "pin_shift_um": 0.012,
     "pins_off_m5_track": 0,
     "placement": "local pseudo-channel i's row/column/data bits in [i*window + span]; clk, rst_n in window 5 (global PC 27)",
     "power": {
@@ -143,7 +144,7 @@
   },
   "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy_rc",
   "views": {
-    "ot_hbm3e_phy_rc_e8p5_pc22_31.lef": "50c51c4d279dd812a6fa72bd3041cc9f40a325d5792a9bf786b7ec5116f4f968",
+    "ot_hbm3e_phy_rc_e8p5_pc22_31.lef": "8c31027e753a4b8d6156c482487f47924ced7be19be93eb5fa5530aeebee1916",
     "ot_hbm3e_phy_rc_e8p5_pc22_31_bb.v": "4eac97433e6de48e63346c2d0f1690a5f1888cc484dcbe6a59c381edbb92251c",
     "ot_hbm3e_phy_rc_e8p5_pc22_31_ff.lib": "cd73fa3bf5f41cfb5ad793e0e253fb978f619fff6894778ab4a0dff70f9ba0c6",
     "ot_hbm3e_phy_rc_e8p5_pc22_31_ss.lib": "136e158e56919e2fb5bc7e8bb5454a1a740a11595860573c7cf343a045da6bad",
