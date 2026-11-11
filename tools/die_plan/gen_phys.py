@@ -6334,7 +6334,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
-        errs = S.validate(raw)
+        errs = S.scope_errors(S.validate(raw), types)
         if errs:
             raise gen_rtl.GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
         out.mkdir(parents=True, exist_ok=True)
@@ -6348,7 +6348,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                                   landing=None if land_decl_only else landing,
                                   emit_die_top=not (native_selected_only or
-                                                    (land_decl_only and gtypes == [])))
+                                                    (land_decl_only and gtypes == [])),
+                                  validate_types=types)
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
