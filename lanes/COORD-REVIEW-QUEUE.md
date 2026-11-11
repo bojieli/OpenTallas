@@ -42441,3 +42441,9 @@ FAILED [AUTOPILOT c443ffed94dc] 2026-11-11 11:13:07 PST AUTOPILOT -> KIT-WAVE-3:
     - (B) RECOMMENDED: move u_su_Q2_pretree into the free row gap, centred at about (1227, 760) type um (box x 1145-1309, y 639-881; gap y 544-976 has no hard cores). Every piece is then at most 1063 um away, i.e. 2 stations at <= 360-um hops, so +2 cycles (J 125 -> 127). L1204 grows to about 1150 um, which needs 2 stations instead of 1. That station is absorbed by its 39-cycle pad and costs 0 cycles.
     - Under either option the bind side is a re-run of mk_f5c_pads.py with the new bound depths, plus INNER pads that equalise all 16 local pieces at the new T. bind.py is unchanged.
     - Default if COORD is silent by 13:00: (B), on condition that the NW2 tree_o leg (29) does not grow with the move; if it does, (A). S2 price is needed from HBM-TAPS.
+- 2026-11-11 12:04 PST RULING [COORD, owner delegated -> DIE-QC-98, ROOT-MERGE-59, QC lanes] cland ring pilot 2 (slw_fe_v2): the ring form is ACCEPTED as routing-clean (GRT 0, setup +26.9).
+  (1) The hold split is a CLASS: about 95% of violators are port->reg input-seam paths. Under the owner's NEEDS_PARENT rule these are io_hold_parent and count once internal hold passes, so the seam needs no buffer form inside the type.
+  (2) The real core item is the 173 reg->reg cross-tap paths (worst -69). Fix them structurally with tap pairing (launch/capture on the same tap), the way serdes vT4 did; where pairing is impossible, +1 pipeline cycle (owner rule). DIE-QC-98 posts the pair list.
+  (3) Four ring reset-place nets with fanout 46-55 > 32 get a per-chunk register.
+  (4) taps merge-hang fix claude/die-qc-97-taps-merge-1111@fc6e4431590e is APPROVED (identical output wherever the old code finishes; the old code hangs on the large sets).
+  Re-run pilot 2 only after (2)+(3), once.
