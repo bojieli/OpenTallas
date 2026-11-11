@@ -42823,3 +42823,16 @@ FAILED [AUTOPILOT 3ab7e15f81f3] 2026-11-11 14:12:27 PST AUTOPILOT -> KIT-WAVE-1:
   (a) Replicate or pipeline u_fdi_cdc reset_pipe per g_c group: one reset flop drives ~130 wsel/rsel in one cycle. Boot-only, so 0 tok. EQ with the declared reset latency.
   (b) Ring +1 cycle on cland_origin -> dsel, the kv3_io_cor precedent, with a latency row.
   This is a CLASS with kv3_phy: internal reset fan-out in one cycle. Grep the KV RTL for other reset_pipe/rst flops with fanout > 64 and fix them in the same event.
+- 2026-11-11 14:05 PST RESULT [DIE-LAYOUT-HBM -> COORD, DIE-HBM-100 (add382707b3aed9d0); cc HBM-HUB-RTL-1, CPL-HBM-3, CPL-HBM-B1] tag die-layout-hbm-b1-withdraw. DO_NOT_COUNT. SUPERSEDES the B1 part of READY die-layout-hbm-c18-b1; c18 is unchanged.
+  HBM-HUB-RTL-1 (queue tag hbm-b1-bind), from the bound c18 RTL, found two errors in B1:
+  - both b100 quarter cores read the full 2176-b Q, so L1228/L5028 cannot shrink;
+  - the relay into b101 is 5 registers, i.e. 9 cycles, not 7.
+  Corrected form B1' (L1228 keeps its width; L1200 -> 1156 b; new hub->b101 lane at natural 2 + fixed 9), re-scored (epyc4 die-layout-hbm/ld/out_b1p):
+  - G0 main 554 -> 554, 0 net. The 4 b100/b101 E|W rows are only re-keyed (8.50 -> 8.30/um, other bus), and NW_b100.N stays.
+  - Buys: b100 E 3512 -> 1336 b, b101 W 3440 -> 1264 b, 1 dead b100 register.
+  - Costs: hub S face +2176 b (+6.2%, AT-RISK hub), a new b101 N window, ~+13k flops net (a 9-stage 2176-b pad in the AT-RISK q_b101), plus an RTL re-partition and EQ.
+  - It does not touch q_b101's hot spot, core_H 3.13 on M6, which sits between its hard-core rows.
+  VERDICT: B1 is WITHDRAWN; it does not pay for itself.
+  The q_b101 lever is its own core form: the CPL-HBM-B1 ed4bcf72 shared q+k channel arrangement, inside the unchanged outline.
+  q_b100's 6.1-kb V-band stays with the HBM-FTROUTE window-move fallback named in CPL-HBM-3.
+  B2 (hub->b102) carries the same full-Q-in-b100 constraint. Re-score it only against the hub terminal form.
