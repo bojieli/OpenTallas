@@ -490,6 +490,17 @@ module qfd_dv_s6_stm #(parameter integer HARD = 1, parameter integer MUT = 0, pa
     qfd_dv_s5_rst2 u_rl(.ck(ck),.rst_n(rst_n),.rst(rst));
     wire[7:0]su_x_we=(|vm_we&&vm_waddr[23:22]==2'b01)?vm_we:8'd0;
     wire s_we;wire[1:0]s_kind;wire[23:0]s_addr;wire[1023:0]s_data;
+`ifdef OT_QC_STMDQ
+    // STM-DQ (DIE-QC-97 11-10): u_stream lands the raw rst_n itself in per-group kept 2-stage copies (same release
+    // edge as u_rl.rst); u_rl keeps u_tload and the twv publication.  See qfd_dv_stream_tile.sv STM-DQ (c).
+    qfd_dv_stream_tile u_stream(.ck(ck),.rst_n(rst_n),.sid(sid),
+        .cfg_v(stm_cfg[30]),.cfg_dir(stm_cfg[29:28]),.cfg_tag(stm_cfg[27:0]),
+        .sw_lo(sw_i[543:0]),.sw_hi(sw_i[1086:544]),.sw_v(sw_i[1087]),
+        .se_lo(se_i[543:0]),.se_hi(se_i[1086:544]),.se_v(se_i[1087]),
+        .so_e(so_e),.so_w(so_w),.xw_we(su_x_we),.xw_addr(vm_waddr),.xw_data(vm_wdata),
+        .tw_we(s_we),.tw_kind(s_kind),.tw_addr(s_addr),.tw_data_lo(s_data[511:0]),.tw_data_hi(s_data[1023:512]),
+        .xt_v(xt_v),.xt_a(xt_a),.xt_d_lo(xt_d[511:0]),.xt_d_hi(xt_d[1023:512]),.xt_bad(xt_bad),.fault(stm_fault));
+`else
     qfd_dv_stream_tile u_stream(.ck(ck),.rst_n(rst),.sid(sid),
         .cfg_v(stm_cfg[30]),.cfg_dir(stm_cfg[29:28]),.cfg_tag(stm_cfg[27:0]),
         .sw_lo(sw_i[543:0]),.sw_hi(sw_i[1086:544]),.sw_v(sw_i[1087]),
@@ -497,6 +508,7 @@ module qfd_dv_s6_stm #(parameter integer HARD = 1, parameter integer MUT = 0, pa
         .so_e(so_e),.so_w(so_w),.xw_we(su_x_we),.xw_addr(vm_waddr),.xw_data(vm_wdata),
         .tw_we(s_we),.tw_kind(s_kind),.tw_addr(s_addr),.tw_data_lo(s_data[511:0]),.tw_data_hi(s_data[1023:512]),
         .xt_v(xt_v),.xt_a(xt_a),.xt_d_lo(xt_d[511:0]),.xt_d_hi(xt_d[1023:512]),.xt_bad(xt_bad),.fault(stm_fault));
+`endif
     wire j_we;wire[1:0]j_kind;wire[23:0]j_addr;wire[1023:0]j_data;
     qfd_dv_slice_tload
 `ifdef OT_S6_SIM
