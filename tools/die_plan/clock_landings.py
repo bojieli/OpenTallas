@@ -88,6 +88,17 @@ def ring_status_reg_all(clock):
     return v
 
 
+def ring_guard_reg_all(clock):
+    """CLAND-RING-NEGEDGE GUARD-REG-1 (COORD 11-11 09:47): die-level clock.landing_ring_guard_reg = true turns GUARD_REG=1
+    (and the STATUS_REG=1 it needs) on for every count-aligned ring: no logic on any half-cycle rclk path of the ring.
+    The guards keep their falling-edge sample and their cycles (0 added); data q and ready keep their cycles; a rv/lap
+    fault is seen one clk later (STATUS_REG).  Absent / false = legacy."""
+    v = (clock or {}).get("landing_ring_guard_reg", False)
+    if not isinstance(v, bool):
+        raise ValueError("clock.landing_ring_guard_reg must be a boolean")
+    return v
+
+
 def ring_reset_copies(clock, w, depth, dsrep=1, read_chunk=0):
     """DIE-QC-97 CLAND-RING-FO part (d), RSTREP-1: extra same-D copies of a count-aligned ring's last reader-START stage
     under clock.landing_ring_fanout_max F (0 = legacy, no copies).  The ring (ot_dp_clk_landing_cas RSTREP) keeps the
@@ -1169,6 +1180,15 @@ class Landings:
         # DIE-QC-97 (c): die-wide STATUS_REG on every count-aligned ring (plan clock.landing_ring_status_reg)
         if cat and ring_status_reg_all(self.plan.get("clock")):
             status_reg = True
+        # GUARD-REG-1 (CLAND-RING-NEGEDGE): guard compare off the half-cycle path; needs (and turns on) STATUS_REG
+        guard_reg = self.types[key].get("landing_guard_reg", False)
+        if not isinstance(guard_reg, bool):
+            raise LandingError(f"{tn}: landing_guard_reg must be a boolean")
+        if cat and ring_guard_reg_all(self.plan.get("clock")):
+            guard_reg = True
+        if guard_reg and not cat:
+            raise LandingError(f"{tn}: landing_guard_reg needs count-aligned rings")
+        status_reg = status_reg or guard_reg
         if status_reg and not cat:
             raise LandingError(f"{tn}: landing_status_reg needs count-aligned rings")
         if inst is not None:
@@ -1348,6 +1368,9 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .STATUS_REG(1))"
                     self.reset_placements[tn][b].update(status_reg=True, status_reg_added_data_cycles=0,
                                                         status_reg_added_fault_cycles=1)
+                if guard_reg:
+                    ring_mod = ring_mod[:-1] + ", .GUARD_REG(1))"
+                    self.reset_placements[tn][b].update(guard_reg=True, guard_reg_added_cycles=0)
                 # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):

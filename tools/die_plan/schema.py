@@ -472,6 +472,7 @@ SCHEMA = {
                     # Optional same-cycle private CA status drivers; emitted by clock_landings.
                     "landing_control_status_copy": {"type": "boolean"},
                     "landing_status_reg": {"type": "boolean"},
+                    "landing_guard_reg": {"type": "boolean"},   # GUARD-REG-1 (implies landing_status_reg)
                     "landing_relay_start_copy": {"type": "boolean"},
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
@@ -1038,8 +1039,11 @@ SCHEMA = {
             # DIE-QC-97 CLAND-RING-FO (COORD 11-10): die fanout bound of every WREG count-aligned ring (write-enable /
             # read-select register copies, kit set_max_fanout); 0 / absent = legacy.  landing_ring_status_reg: STATUS_REG=1
             # on every count-aligned ring (+1 rv/lap fault cycle, data/ready cycles unchanged); absent = legacy.
+            # landing_ring_guard_reg (GUARD-REG-1): GUARD_REG=1 + STATUS_REG=1 on every count-aligned ring, no logic on a
+            # half-cycle rclk path (guards 0 added cycles); absent = legacy.
             "landing_ring_fanout_max": {"enum": [0, 1, 2, 4, 8, 16, 32, 64]},
             "landing_ring_status_reg": {"type": "boolean"},
+            "landing_ring_guard_reg": {"type": "boolean"},
             "landing_ring_write_chunk": {"enum": [0, 8, 16, 32, 64]},
             "landing_ring_sdc_max_fanout": {"type": "boolean"},
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
