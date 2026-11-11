@@ -38120,3 +38120,4 @@ FAILED [AUTOPILOT ad1116f4775e] 2026-11-10 19:02:16 PST AUTOPILOT -> KIT-WAVE-3:
     - kv-plan-2 hglec (48 GB)
     - 4 hbm por15c kit-rtl (16 GB)
   When epyc2 scratch2 gets back above 170 GB (autoclean), they move oldest first with the retarget script. It now also refuses a target path that already exists on epyc2, a kit with OT_ASSUME_OLD and no synth netlist (the opsbg_C3 case), and -march=native lanes, and it rechecks both floors before each move. Unless you say otherwise, I am now on (3): kit_gen_lint pin/macro off-track lint plus the face_flops items.
+- 11-10 19:09 ROOT-MERGE-57 STATE stb-orq 55ab3d68df69 (GitHub; the hub branch is still at 72b51e, ff verified) built as n8=0a1461442d9b at the end; only the delta goes in (delta_stb_tapgroup_1110.py, asbuilt_sw2_pv.json, qfd_dv_s8_ce_orq3.sv, gen_phys.py, gen_s8_chain_end.py). It touches gen_phys, so it gets all 5 tags. Sparse on epyc4.
