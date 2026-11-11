@@ -1,0 +1,5 @@
+base 554 new plan 551 new msgs 2 lost msgs 5
+1 cuts | vertical cut at 4750: NW_b111 segment carries 12289 bits on 19963 tracks = 0.62 > 0.6
+1 cuts | horizontal cut at 5000: NW_b102 segment carries 6062 bits on 9857 tracks = 0.61 > 0.6
+--- lost by check Counter({'hops': 2, 'stations': 2, 'cuts': 1})
+--- new by check Counter({'cuts': 2})

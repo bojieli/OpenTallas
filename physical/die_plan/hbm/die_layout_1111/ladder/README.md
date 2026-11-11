@@ -154,3 +154,19 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
   - RUDY estimate: the b100 internal N->E relay of 2176 b over about 1145 um, about 2.5 M bit-um, is removed. That is about 36% of the 6.1 kb V-band forward.
   - The b101 entry moves from the W face to the N face.
 - **Open: RTL re-partition + EQ (bind owner).** The 3 relay registers leave b100's quarter leaf, the hub fans out its L1228 source flops, and a 5-stage pad goes at b101. Until that lands, B1 does not bind (the new hub ports have no as-built source).
+
+## r1 (11-11, HELD for a later event with A): L8340 / L8340m hub->sm2 off the bank row
+- **Change** (`scripts/r8340.py`, `KFORCE=6`): the route becomes hub S -> b102 N -> b102 S, straight down into sm2 N.
+  - The sm2 entry moves to local x 5420-5690 (5.98 b/um; type q_sm2 is shared by NW and NE, and the NE half is mirrored).
+  - The q_b111 and q_b103 slots are deleted.
+  - b102 gets 6 stations, placed off the cores by solve_slot/slot_dp with reach <= 405.
+  - `fixed_cycles` 4 keeps the lane cycle-exact at 12. The 4-cycle receiver pad is identical in NW_sm2 and NE_sm2, so there is no type split.
+- **Delta:** `r1_delta_on_c18.json.gz`. On c18 it gives fc4546b4b28e.
+- **Checks:**
+  - G0 with main's check.py: 554 -> 551 (`tables/g0main_r1_vs_c18.txt`).
+    - Lost: the L8340/L8340m b103 S0->S1 over-reach rows (655 / 636 um > 405), with their station rows.
+    - The NW_b111 vertical cut at 4750 improves from 0.70 to 0.62 (re-keyed).
+    - **New: 1 row,** the NW_b102 horizontal cut at y 5000: 6062 bits on 9857 tracks = 0.61 > 0.60.
+  - native_chk: 0 of 55 violations.
+  - Strict bind of t17d + c18 + r1 (7bb5da06e3c6), on main src_hbm_main_fe0002fac6: BIND_OK, n_errors 0.
+- **Why held:** the new cut row clears only when A halves the W-running su lanes that cross the same cut (L1278 1483, L1280 746, L1281 978, L3005 899). For example, L3005 alone at half width gives 0.57. So r1 is composed in the same event as A, and the c18 chain is left unchanged.
