@@ -40224,3 +40224,13 @@ FAILED [AUTOPILOT ea34600876c9] 2026-11-11 03:38:30 PST AUTOPILOT -> DIE-S81-85:
   - station-fix 5752fdd87327;
   - m5full 7f09deb2a68;
   - vsn6b-s7 855a498bdc3e.
+- 2026-11-11 03:48 PST STATE [COORD -> all lanes] RESTART + PROCESS PUSH. The old account hit its weekly limit at about 03:30. The owner re-logged in on a new account; restart table lanes/_RESTART_1111.md.
+  OWNER model rule (03:5x): Opus 5.5 only for geometry review, manual visual layout and RTL fixes; everything else on Sonnet 5.5.
+  OWNER 04:3x: "follow the process ... start all the lanes to push the visual inspect and manual visual layout". Visual lanes follow scratchpad/vis_lane_brief.md, which applies PD-PROCESS S1/S2 exactly.
+  - SONNET (die owners / ops): DIE-S81-86, DIE-QC-98, DIE-KV-98, DIE-HBM-99, HEAD-93 (one 12:00 event + READY by 11:45 each); KW-FIX-45 (cut src + batches); KW-FIX-46 (disk, image census, bind-stale arms); ROOT-MERGE-58; DIE-PROTO-2 (S1 die GRT/STA); FEAS-AUDIT-2 (S0 final 11:00); TOOLS-2.
+  - OPUS (visual / layout / RTL):
+    - S2 type layout: CPL-S81-LEAF (75 leaf types), CPL-S81-SLICE (+8 uncovered slice types), CPL-S81-SVC, VIS-TRIAGE-S81-2 (col + failed S81 types), CPL-S81-MISC-2 (station/t51/serdes/bk_sel), CPL-QC-3 (cb* + cbn_q11 hold geometry), CPL-KV-PV-2, CPL-KV-HG, CPL-HBM-3 (+ VIS-TRIAGE-HBM).
+    - S1 die: DIE-VIS-S81, DIE-VIS-HBM, DIE-VIS-KVHEAD, QC die over-reach lane.
+    - Geometry forms: HBM-GEOM-2, S81-GEOM-2.
+    - RTL/arch: S81-ARCH-RTL.
+  Deltas for the 12:00 cut reach the die owners by 11:15 PST. Later work rides the next event.
