@@ -459,7 +459,27 @@ LAND_FORMS = ("icg", "hold_mux")
 # face_guard_byte_same.py corpus receipt).
 REPLICA_PLANS = {
     "s81/delta_gunit_l1f_band_1107": ("dsdv_gunit_l1f_bf",),
+    # S81-SVCRS-3 11-10 (COORD ruling): the v5 svc provider boxes; fanout_dup.py copies a pin register whose Q drives
+    # more than 64 census loads (smd i_pv x5, sml i_sv x3, attn_tr_x w_g 4 bits x2), declared per bit ("bits").
+    "s81/svc_prov_1109_v5": ("ot_s81_su_smd_fold2", "ot_s81_su_sml_fold2", "ot_hdc_v41x_attn_tr_x"),
 }
+
+
+def replica_bits(v):
+    """the per-bit D map {bit index (int): D >= 2} of a replica spec {"bits": {...}, "form": "replica", "plan": P}
+    (S81-SVCRS-3 11-10, COORD ruling: only the copied bits carry D; every other bit of the bus keeps the ordinary
+    single face register check), or None for the uniform {"D": n, ...} form.  ValueError on a bad map."""
+    if not isinstance(v, dict) or "bits" not in v:
+        return None
+    b = v["bits"]
+    if not isinstance(b, dict) or not b:
+        raise ValueError(f"land_slots replica bits {b}: want a nonempty {{bit index: D >= 2}} map")
+    out = {}
+    for k, d in b.items():
+        if not str(k).isdigit() or isinstance(d, bool) or not isinstance(d, int) or d < 2:
+            raise ValueError(f"land_slots replica bits entry {k}: {d}: want bit index -> integer D >= 2")
+        out[int(k)] = d
+    return out
 
 
 def land_spec(v):
@@ -484,9 +504,11 @@ def land_spec(v):
         ring_spec(v)
         return 0, "ring_start"
     if isinstance(v, dict) and v.get("form") == "replica":
+        if set(v) == {"bits", "form", "plan"} and v["plan"] in REPLICA_PLANS:
+            return max(replica_bits(v).values()), "replica"
         if set(v) != {"D", "form", "plan"} or v["plan"] not in REPLICA_PLANS or int(v["D"]) < 2:
-            raise ValueError(f"land_slots replica spec {v}: want exactly {{D >= 2, form: replica, plan in "
-                             f"{sorted(REPLICA_PLANS)}}} (opt-in keyed by the plan)")
+            raise ValueError(f"land_slots replica spec {v}: want exactly {{D >= 2 | bits: {{bit: D >= 2}}, form: "
+                             f"replica, plan in {sorted(REPLICA_PLANS)}}} (opt-in keyed by the plan)")
         return int(v["D"]), "replica"
     if isinstance(v, dict):
         if set(v) - {"D", "form"} or v.get("form", "icg") not in LAND_FORMS:
@@ -1002,7 +1024,22 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         if T.dirs.get(x) != "input" or int(dd) < 2:
             fail("land_slot", x, f"declared landing bus is {T.dirs.get(x)} with D {dd} (want input, D >= 2)")
     # the ring START is a write-enable leaf of its own ring's slots (if (t_rst_n) s_d <= t_d): not a landing data bit
-    land_roots = {port_root[b] for x in land if x in T.ports and land_form[x] not in ("ring_start", "origin_start") for b in _bits_of(T, x)}
+    rep_bits = {x: replica_bits(land_raw[x]) for x in land if land_form[x] == "replica"}
+    for x, m in rep_bits.items():
+        if m is not None:
+            idx = {int(b_[len(x) + 1:-1]) for b_ in _bits_of(T, x) if b_ != x}
+            bad = sorted(k for k in m if k not in idx)
+            if bad:
+                fail("land_slot", x, f"replica bits {bad[:4]} are not bits of {x}")
+
+    def _land_bit(x, b_):
+        """False for a bit of a per-bit replica bus that the map does not list (it is an ordinary input bit)"""
+        m = rep_bits.get(x)
+        if m is None:
+            return True
+        return b_ != x and int(b_[len(x) + 1:-1]) in m
+
+    land_roots = {port_root[b] for x in land if x in T.ports and land_form[x] not in ("ring_start", "origin_start") for b in _bits_of(T, x) if _land_bit(x, b)}
     out_port_roots = {port_root[b] for x in T.ports if T.dirs.get(x) == "output" for b in _bits_of(T, x)}
     hard_proofs = {}
     hard_buses = {}
@@ -1911,6 +1948,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res.setdefault("reset_spine", []).append(b)
                 res["ok"] += 1
                 continue
+            # S81-SVCRS-3 11-10: an unlisted bit of a per-bit replica bus skips every land branch below and takes the
+            # ordinary input check (the final else)
+            lp = p in land and _land_bit(p, b)
             if d == "output":
                 cur, chain, ff = r, [], None
                 ok = True
@@ -1970,7 +2010,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
-            elif p in land and land_form[p] == 'hard_child':
+            elif lp and land_form[p] == 'hard_child':
                 why = hard_child(p, b, r)
                 if why:
                     fail('land_slot', b, why)
@@ -1978,7 +2018,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res['ok'] += 1
                 res['hard_landing_bits'] = res.get('hard_landing_bits', 0) + 1
                 continue
-            elif p in land and land_form[p] in ("ring_start", "origin_start"):
+            elif lp and land_form[p] in ("ring_start", "origin_start"):
                 origin = origin_spec(land_raw[p]) if land_form[p] == "origin_start" else None
                 copies = land_raw[p].get("copies", ()) if origin is not None else ()
                 stages = land_raw[p].get("stages", ()) if origin is not None else ()
@@ -1990,8 +2030,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res["ring_start_bits"] = res.get("ring_start_bits", 0) + 1
                 res["ok"] += 1
                 continue
-            elif p in land and land_form[p] == "replica":
-                why, rffs = replica_slot(b, r, int(land[p]))
+            elif lp and land_form[p] == "replica":
+                why, rffs = replica_slot(b, r, int(land[p]) if rep_bits.get(p) is None
+                                         else rep_bits[p][int(b[len(p) + 1:-1])])
                 if why:
                     fail("land_slot", b, why)
                     continue
@@ -2001,7 +2042,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res["land_replica_bits"] = res.get("land_replica_bits", 0) + 1
                 res["ok"] += 1
                 continue
-            elif p in land and land_form[p] == "hold_mux":
+            elif lp and land_form[p] == "hold_mux":
                 why, mffs, dep = land_mux(b, r, int(land[p]))
                 if why:
                     fail("land_slot", b, why)
@@ -2016,7 +2057,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res["land_mux_bits"] = res.get("land_mux_bits", 0) + 1
                 res["ok"] += 1
                 continue
-            elif p in land:
+            elif lp:
                 why = land_slot(b, r, int(land[p]))
                 if why:
                     fail("land_slot", b, why)

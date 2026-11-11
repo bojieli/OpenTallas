@@ -1467,7 +1467,7 @@ def test_land_replica_form(monkeypatch):
 def test_land_replica_opt_in_keyed_by_plan(monkeypatch):
     """COORD 11-07 23:3x: replica is opt-in, keyed by the plan; anything else fails closed and no other form moves."""
     assert "replica" not in face_guard.LAND_FORMS                                    # not a generic form
-    assert face_guard.REPLICA_PLANS == {_RP: ("dsdv_gunit_l1f_bf",)}
+    assert face_guard.REPLICA_PLANS[_RP] == ("dsdv_gunit_l1f_bf",)                  # v5 provider plan: own test
     net = _rep_net(_REP_OK)
     for bad in ({"D": 3, "form": "replica"}, _rep(3, "s81/other_plan"), dict(_rep(3), extra=1), _rep(1)):
         with pytest.raises(ValueError):
@@ -1483,3 +1483,48 @@ def test_land_replica_opt_in_keyed_by_plan(monkeypatch):
     assert face_guard.land_spec({"D": 2, "form": "hold_mux"}) == (2, "hold_mux")
     with pytest.raises(ValueError):
         face_guard.land_spec({"D": 2, "form": "hold_mux", "plan": _RP})
+
+
+# ---- S81-SVCRS-3 11-10 (COORD ruling): replica form with a per-bit D map ("bits"), keyed by the v5 provider plan
+_RPV5 = "s81/svc_prov_1109_v5"
+
+
+def _bits_net(copies_bit1):
+    """bus a[1:0]: bit 0 one face register, bit 1 in `copies_bit1` replica registers"""
+    regs = "".join(f"  DFFHQNx1{_X} r1_{k} (.CLK(clk), .D(a[1]), .QN(q1_{k}));\n" for k in range(copies_bit1))
+    qs = " ".join(f"wire q1_{k};" for k in range(copies_bit1))
+    ins = ", ".join([".A(q0)"] + [f".{'BCD'[k]}(q1_{k})" for k in range(copies_bit1)])
+    gate = {1: "AND2x2", 2: "AND3x1", 3: "AND4x1"}[copies_bit1]
+    return (f"module top(clk, a, o);\n  input clk; input [1:0] a; output o; wire q0; {qs} wire x; wire oq;\n"
+            f"  DFFHQNx1{_X} r0 (.CLK(clk), .D(a[0]), .QN(q0));\n" + regs +
+            f"  {gate}{_X} g ({ins}, .Y(x));\n"
+            f"  DFFHQNx1{_X} fo (.CLK(clk), .D(x), .QN(oq));\n  INVx3{_X} io (.A(oq), .Y(o));\nendmodule\n")
+
+
+def _rb(bits, plan=_RPV5):
+    return {"bits": bits, "form": "replica", "plan": plan}
+
+
+def test_land_replica_per_bit_map(monkeypatch):
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RPV5, ("top",))
+    net = _bits_net(2)
+    assert face_guard.guard(net, "top")["verdict"] == "FAIL"                        # plain rule: a[1] shared
+    r = face_guard.guard(net, "top", land={"a": _rb({"1": 2})})
+    assert r["verdict"] == "PASS" and r["land_replica_bits"] == 1, r["fails"]       # a[0] stays a plain face bit
+    assert face_guard.guard(net, "top", land={"a": _rb({"1": 3})})["verdict"] == "FAIL"   # wrong D
+    assert face_guard.guard(net, "top", land={"a": _rb({"0": 2, "1": 2})})["verdict"] == "FAIL"  # a[0] has 1 flop
+    assert face_guard.guard(net, "top", land={"a": _rb({"5": 2})})["verdict"] == "FAIL"   # not a bit of a
+    assert face_guard.guard(_bits_net(1), "top", land={"a": _rb({"1": 2})})["verdict"] == "FAIL"
+
+
+def test_land_replica_per_bit_fails_closed(monkeypatch):
+    monkeypatch.setitem(face_guard.REPLICA_PLANS, _RPV5, ("top",))
+    for bad in (_rb({}), _rb({"1": 1}), _rb({"x": 2}), _rb({"1": True}), _rb({"1": 2}, "s81/other_plan"),
+                dict(_rb({"1": 2}), D=2)):
+        with pytest.raises(ValueError):
+            face_guard.land_spec(bad)
+    assert face_guard.land_spec(_rb({"1": 2, "3": 5})) == (5, "replica")
+
+
+def test_replica_plans_v5_provider_tops():
+    assert face_guard.REPLICA_PLANS[_RPV5] == ("ot_s81_su_smd_fold2", "ot_s81_su_sml_fold2", "ot_hdc_v41x_attn_tr_x")

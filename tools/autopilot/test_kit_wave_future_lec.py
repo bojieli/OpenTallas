@@ -93,7 +93,11 @@ def test_launcher_and_run_item_use_the_helpers():
     body = src[src.index("def run_item(spec_path):"):]
     check = body.index("ensure_future_lec(out, sp[\"future_lec\"])")
     assert check < body.index('run("mkdir"') < body.index('run("lec_tools_copy"')
-    assert 'sp["future_lec"] = future_lec_snapshot(jd / "future_lec")' in src
+    # KW-FIX-43 11-10: the launcher snapshots through future_lec_for (option future_lec_commit pin), which still
+    # stages the bytes with future_lec_snapshot
+    assert 'sp["future_lec"] = future_lec_for(cfg, die, jd / "future_lec")' in src
+    helper = src[src.index("def future_lec_for(cfg, die, snapshot):"):]
+    assert "return future_lec_snapshot(snapshot, commit=" in helper[:helper.index("\ndef ")]
 
 
 def test_gen_disk_low_reports_the_limit_it_used():

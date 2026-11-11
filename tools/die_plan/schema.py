@@ -1014,6 +1014,8 @@ SCHEMA = {
             # on every count-aligned ring (+1 rv/lap fault cycle, data/ready cycles unchanged); absent = legacy.
             "landing_ring_fanout_max": {"enum": [0, 1, 2, 4, 8, 16, 32, 64]},
             "landing_ring_status_reg": {"type": "boolean"},
+            "landing_ring_write_chunk": {"enum": [0, 8, 16, 32, 64]},
+            "landing_ring_sdc_max_fanout": {"type": "boolean"},
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
                                          "write_fall_types": {"type": "array", "items": {"type": "string"}},
@@ -1479,6 +1481,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
+# RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 # S81-LNB-1 11-08 (opt-in, class LN-BROADCAST): per-lane kept copies of the S81 vp coefficient words and per-lane reset
 # relay bits in the private kit copy of the bound module (bind.py kit-rtl -> kit_ln_copies.py; 0 added cycles)

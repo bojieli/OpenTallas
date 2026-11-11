@@ -400,7 +400,9 @@ def function_value(tree, pins):
     return {'and': lambda: a & b, 'or': lambda: a | b, 'xor': lambda: a ^ b}[op]()
 
 
-def census(g, roles):
+def census(g, roles, expose=None):
+    """expose: optional dict filled with the load model (drivers, loads, ports, transparent, constants) that the
+    count below uses, so tools/ref_tile/fanout_dup.py splits drivers on exactly this model.  The result is unchanged."""
     drivers, loads, ports, transparent = {}, {}, {}, {}
     output_sources, constant_sources = {}, {}
     values, value_sources, errors = {}, {}, []
@@ -576,6 +578,8 @@ def census(g, roles):
         for ci, _, _ in loads.get(x, ()):
             if ci in transparent and transparent[ci][0] == x:
                 todo.append((transparent[ci][1], source, path + [g.cells[ci][1]]))
+    if expose is not None:
+        expose.update(drivers=drivers, loads=loads, ports=ports, transparent=transparent, constants=constants)
     violations, counts, max_loads, examined = [], [], 0, 0
     for net, driver in drivers.items():
         if net in constants or driver[0] in transparent:

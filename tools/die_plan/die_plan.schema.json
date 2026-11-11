@@ -5209,6 +5209,11 @@
        }
       }
      },
+     "reset_relay_names": {
+      "enum": [
+       "site"
+      ]
+     },
      "relay_sites": {
       "type": "object",
       "additionalProperties": {
@@ -5800,6 +5805,18 @@
      ]
     },
     "landing_ring_status_reg": {
+     "type": "boolean"
+    },
+    "landing_ring_write_chunk": {
+     "enum": [
+      0,
+      8,
+      16,
+      32,
+      64
+     ]
+    },
+    "landing_ring_sdc_max_fanout": {
      "type": "boolean"
     },
     "ring_hold": {
