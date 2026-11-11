@@ -1,0 +1,538 @@
+{
+ "type": "ot_s81sl_leaf__t30",
+ "chain": [
+  "leafdn_i0 (in)",
+  "vp.ln",
+  "vn_a/vn_b",
+  "vq",
+  "leafup_o0 (out)"
+ ],
+ "side": [
+  "vp.b0/b1 -x_-> vs",
+  "vs -u/um-> vq",
+  "vs <-> vsw",
+  "vs -> rxsf -> rxsb -> vs",
+  "vs <-> ve_m <-> ve_s",
+  "vs -e_-> leafup_o0",
+  "leafdn_i0 -g_/s_-> vs"
+ ],
+ "roles": {
+  "vp.ln": "vp leaf store lanes (16 x hcpost lane): h vectors, read by vn over hq",
+  "vp.b0": "vp leaf-store SRAM (ops 8..15 seam to vs)",
+  "vp.b1": "vp leaf-store SRAM (ops 8..15 seam to vs)",
+  "vn_a": "vn h/norm half A: gathers hq from all 16 lanes, feeds vq y",
+  "vn_b": "vn h/norm half B (same, other half)",
+  "vq": "act-quant: y from vn, u/um from vs, gather mode from the down bus; result out on leafup",
+  "vs": "SU lane engine: x_ seam to vp SRAMs, drives vq u/um, hub to vsw / rxsf-rxsb / ve; e_ out, g_ in",
+  "vsw": "hub SwiGLU lane (vs <-> vsw loop)",
+  "rxsf": "hub RA lane, front (vs -> rxsf)",
+  "rxsb": "hub RA lane, back (rxsf -> rxsb -> vs)",
+  "ve_m": "Engram mix main (vs op 14 ENG)",
+  "ve_s": "Engram mix side (ve_m <-> ve_s, partials to vs)"
+ },
+ "links": [
+  {
+   "a": "vn_b",
+   "b": "vp.ln",
+   "dir": "->",
+   "bits": 8368,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core",
+    "station"
+   ]
+  },
+  {
+   "a": "vn_a",
+   "b": "vp.ln",
+   "dir": "->",
+   "bits": 5497,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "face_W",
+   "b": "vp.ln",
+   "dir": "<->",
+   "bits": 1302,
+   "role": "face I/O",
+   "kinds": [
+    "station"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "face_W",
+   "dir": "<->",
+   "bits": 1208,
+   "role": "face I/O",
+   "kinds": [
+    "station"
+   ]
+  },
+  {
+   "a": "ve_m",
+   "b": "vs",
+   "dir": "<->",
+   "bits": 874,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vp.b0",
+   "b": "vs",
+   "dir": "<-",
+   "bits": 543,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vp.b1",
+   "b": "vs",
+   "dir": "<-",
+   "bits": 543,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "ve_m",
+   "b": "ve_s",
+   "dir": "<->",
+   "bits": 386,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "vn_a",
+   "dir": "<->",
+   "bits": 357,
+   "role": "face I/O",
+   "kinds": [
+    "bus",
+    "station"
+   ]
+  },
+  {
+   "a": "face_E",
+   "b": "vq",
+   "dir": "<->",
+   "bits": 352,
+   "role": "face I/O",
+   "kinds": [
+    "station"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "vq",
+   "dir": "<->",
+   "bits": 297,
+   "role": "face I/O",
+   "kinds": [
+    "bus"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "vs",
+   "dir": "<->",
+   "bits": 294,
+   "role": "face I/O",
+   "kinds": [
+    "bus"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "vn_b",
+   "dir": "<->",
+   "bits": 291,
+   "role": "face I/O",
+   "kinds": [
+    "bus",
+    "station"
+   ]
+  },
+  {
+   "a": "vq",
+   "b": "vs",
+   "dir": "<->",
+   "bits": 271,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_a",
+   "b": "vp.b0",
+   "dir": "->",
+   "bits": 261,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_a",
+   "b": "vp.b1",
+   "dir": "->",
+   "bits": 261,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_b",
+   "b": "vp.b0",
+   "dir": "->",
+   "bits": 261,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_b",
+   "b": "vp.b1",
+   "dir": "->",
+   "bits": 261,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vs",
+   "b": "vsw",
+   "dir": "<->",
+   "bits": 178,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "ve_s",
+   "b": "vs",
+   "dir": "<->",
+   "bits": 100,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "rxsb",
+   "b": "rxsf",
+   "dir": "<-",
+   "bits": 96,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_b",
+   "b": "vq",
+   "dir": "<->",
+   "bits": 68,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "face_E",
+   "b": "face_S",
+   "dir": "<->",
+   "bits": 65,
+   "role": "face I/O",
+   "kinds": [
+    "station"
+   ]
+  },
+  {
+   "a": "vn_a",
+   "b": "vn_b",
+   "dir": "<->",
+   "bits": 47,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core",
+    "station"
+   ]
+  },
+  {
+   "a": "face_S",
+   "b": "rxsb",
+   "dir": "<->",
+   "bits": 34,
+   "role": "face I/O",
+   "kinds": [
+    "station"
+   ]
+  },
+  {
+   "a": "rxsf",
+   "b": "vs",
+   "dir": "<-",
+   "bits": 33,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "rxsb",
+   "b": "vs",
+   "dir": "<->",
+   "bits": 16,
+   "role": "point-to-point",
+   "kinds": [
+    "core"
+   ]
+  },
+  {
+   "a": "vn_a",
+   "b": "vq",
+   "dir": "<->",
+   "bits": 0,
+   "role": "broadcast/gather (1 port -> >=3 cores)",
+   "kinds": [
+    "core"
+   ]
+  }
+ ],
+ "timing_critical": [
+  {
+   "pair": "rxsb - vs",
+   "kind": "direct",
+   "bits": 16,
+   "worst_len_um": 920.7,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -515.7
+  },
+  {
+   "pair": "vs - vp.b0",
+   "kind": "direct",
+   "bits": 543,
+   "worst_len_um": 708.5,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -303.5
+  },
+  {
+   "pair": "vs - vp.b1",
+   "kind": "direct",
+   "bits": 543,
+   "worst_len_um": 656.7,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -251.7
+  },
+  {
+   "pair": "vn_b - vn_a",
+   "kind": "direct",
+   "bits": 16,
+   "worst_len_um": 583.4,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -178.4
+  },
+  {
+   "pair": "vn_a - vp.ln",
+   "kind": "direct",
+   "bits": 2887,
+   "worst_len_um": 538.8,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -133.8
+  },
+  {
+   "pair": "vn_a - vn_b",
+   "kind": "direct",
+   "bits": 0,
+   "worst_len_um": 531.6,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -126.6
+  },
+  {
+   "pair": "vn_b - vp.ln",
+   "kind": "direct",
+   "bits": 1317,
+   "worst_len_um": 506.5,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -101.5
+  },
+  {
+   "pair": "vsw - vs",
+   "kind": "direct",
+   "bits": 32,
+   "worst_len_um": 481.8,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -76.8
+  },
+  {
+   "pair": "vq - vn_b",
+   "kind": "direct",
+   "bits": 66,
+   "worst_len_um": 476.0,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -71.0
+  },
+  {
+   "pair": "vs - rxsf",
+   "kind": "direct",
+   "bits": 16,
+   "worst_len_um": 419.1,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": -14.1
+  },
+  {
+   "pair": "vn_b - vp.b1",
+   "kind": "direct",
+   "bits": 261,
+   "worst_len_um": 392.6,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 12.4
+  },
+  {
+   "pair": "vn_a - vp.b0",
+   "kind": "direct",
+   "bits": 261,
+   "worst_len_um": 389.3,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 15.7
+  },
+  {
+   "pair": "vn_b -> vp.ln",
+   "kind": "station",
+   "bits": 4697,
+   "worst_len_um": 789.4,
+   "limit_um": 810.0,
+   "regs": 2,
+   "slack_um": 20.6
+  },
+  {
+   "pair": "rxsf - vs",
+   "kind": "direct",
+   "bits": 16,
+   "worst_len_um": 379.2,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 25.8
+  },
+  {
+   "pair": "face_W -> vp.ln",
+   "kind": "station",
+   "bits": 1302,
+   "worst_len_um": 751.6,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 58.4
+  },
+  {
+   "pair": "vn_b - vp.b0",
+   "kind": "direct",
+   "bits": 129,
+   "worst_len_um": 340.7,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 64.3
+  },
+  {
+   "pair": "vn_a - vp.b1",
+   "kind": "direct",
+   "bits": 132,
+   "worst_len_um": 337.5,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 67.5
+  },
+  {
+   "pair": "vn_b - vq",
+   "kind": "direct",
+   "bits": 2,
+   "worst_len_um": 334.5,
+   "limit_um": 405.0,
+   "regs": 0,
+   "slack_um": 70.5
+  },
+  {
+   "pair": "face_S -> face_S",
+   "kind": "station",
+   "bits": 591,
+   "worst_len_um": 713.2,
+   "limit_um": 810.0,
+   "regs": 2,
+   "slack_um": 96.8
+  },
+  {
+   "pair": "face_S -> face_W",
+   "kind": "station",
+   "bits": 162,
+   "worst_len_um": 682.1,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 127.9
+  },
+  {
+   "pair": "face_W -> face_W",
+   "kind": "station",
+   "bits": 523,
+   "worst_len_um": 630.7,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 179.3
+  },
+  {
+   "pair": "face_W -> face_S",
+   "kind": "station",
+   "bits": 1046,
+   "worst_len_um": 622.0,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 188.0
+  },
+  {
+   "pair": "face_S -> rxsb",
+   "kind": "station",
+   "bits": 33,
+   "worst_len_um": 605.6,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 204.4
+  },
+  {
+   "pair": "rxsb -> face_S",
+   "kind": "station",
+   "bits": 1,
+   "worst_len_um": 568.6,
+   "limit_um": 810.0,
+   "regs": 1,
+   "slack_um": 241.4
+  }
+ ],
+ "rationale": "Structure = the leaf dataflow of the RTL contract (ot_s81sl_leaf): leafdn bus face -> vp hcpost lane column(s) -> vn_a/vn_b gather hub (hq, broadcast/gather to all 16 lanes) -> vq -> leafup face; side loop vp SRAMs -x_-> vs engine -> vq u/um; vs hub ring vsw / rxsf->rxsb / ve_m<->ve_s around vs. The base already follows that order; this change keeps it and only re-seats cores along it: arm pure2 (fc120/fc80 = DS85 rule: lowest hcpost lane >= 120/80 um above the S face, Tetris sweep off the face with timing-clean spots only), then core_place B34 relocate/swap/flip to fine-tune bit-mm and the H/V cut shortage. No station changes its register count (EQ); no new pin, no re-pin of signed cores (flips only)."
+}
