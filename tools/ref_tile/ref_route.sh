@@ -76,7 +76,8 @@ SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
 # Synthesis is unlimited by default; positive SYNTH_TIMEOUT is an explicit opt-in cap.
 STO=${SYNTH_TIMEOUT:-unlimited}
 export OT_ORFS_NUM_CORES=${NC:-8} OT_SYNTH_TIMEOUT_SECONDS=$STO OT_FLOW_TIMEOUT_SECONDS=unlimited
-export OT_MM_FF_SDC=${OT_MM_FF_SDC:-$K/signoff.sdc}
+# core-view kits (ref_tile.py gen_core_view_ff_sdc): FF hold repair also reads the sign-off FF IO frame
+export OT_MM_FF_SDC=${OT_MM_FF_SDC:-$K/signoff.sdc$([ -s $K/core_view_ff.sdc ] && echo " $K/core_view_ff.sdc")}
 echo "$(date -Is) start $NAME kit=$K src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
@@ -100,6 +101,12 @@ rc=$?
 echo "flow_rc=$rc" > $W/status
 [ -n "$STOP" ] && { echo "$(date -Is) stop-after $STOP rc=$rc" >> $W/STATUS; exit $rc; }
 cp $K/signoff.sdc $W/signoff.sdc
+# core-view golden SDC (ref_tile.py gen_core_view_sdc): signoff.py's kit constraint.sdc; replaces
+# run_abi3_physical.py's Tcl placeholder there (config.mk SDC_FILE already points the flow at clock.sdc)
+[ -s $K/constraint.sdc ] && cp $K/constraint.sdc $W/work/orfs/constraint.sdc
+# sign-off TT libraries: the route times WC on TC NLDM (WC_NLDM_LIB_FILES override); declare TC_LIB_FILES (S81 core kit
+# config.mk form) so signoff.py resolves its exact TT library list
+grep -q '^export TC_LIB_FILES' $W/work/orfs/config.mk 2>/dev/null || printf '%s\n' 'export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)' >> $W/work/orfs/config.mk
 python3 tools/w18/corner_sta_ref.py --orfs-dir $W/work/orfs --extra-sdc $W/signoff.sdc "${M[@]}" \
   --output $W/corner_sta.json > $W/sta.log 2>&1
 src=$?
