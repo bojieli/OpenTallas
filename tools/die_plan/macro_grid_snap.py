@@ -18,9 +18,11 @@ import json
 import math
 import os
 import re
+import sys
 from pathlib import Path
 
-import kit_contract as KC
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # CLI under python3 -I
+import kit_contract as KC  # noqa: E402
 
 SNAP_MAX_UM = 4.32
 ROW_UM, SITE_UM, MACRO_ROW_UM = 0.27, 0.054, 2.16
@@ -210,3 +212,68 @@ def write_receipt(kd, rows):
     if rows:
         (Path(kd) / RECEIPT).write_text(json.dumps({"schema": "opentallas.macro_grid_snap.v1", "by": "KW-FIX-44",
                                                     "macros": rows}, indent=1) + "\n")
+
+
+# ---- core-kit CLI (DIE-QC-97 11-11, NK pin-face rebuild: 4 NK + 2 NL rawfault_m3 at x 299.856 / 191.376 had 51 M5
+# pins each 24 nm off the M5 tracks; DRC-clean but every V5 access via sat off track) ---------------------------------
+# A gen_core_kit_qc.py core kit places its hard children in macro_place.tcl blocks (one 'set hit {}' block per child:
+# master by name, setOrient, setLocation from the lower-left of the placed bbox).  --kit KIT reads those blocks, the
+# kit ADDITIONAL_LEFS / DIE_AREA / make_tracks.tcl, runs snap_all and prints the receipt (dry run); --write rewrites
+# the lower-left numbers of the moved children in macro_place.tcl (old file kept as macro_place.pre_mgs.tcl) and
+# writes macro_grid_snap.json.  Exit 2 when a macro stays unresolved.
+_BLOCK = re.compile(r"getName\] eq \"(?P<master>[^\"]+)\".*?error \"hard child (?P<inst>[^:\"]+):.*?"
+                    r"\$i setOrient (?P<o>\S+).*?round\((?P<x>[-\d.]+) \* \$dbu\) - \[\$bb xMin\]\}\] "
+                    r"\[expr \{round\((?P<y>[-\d.]+) \* \$dbu\) - \[\$bb yMin\]\}\]", re.S)
+
+
+def kit_placements(kd):
+    """[(placement dict, (x_span, y_span) of the numbers in macro_place.tcl, puts span or None)] of a core kit"""
+    kd = Path(kd)
+    cfg = (kd / "config.mk").read_text()
+    lefs = []
+    m = re.search(r"^export ADDITIONAL_LEFS\s*=\s*(.*)$", cfg, re.M)
+    for t in (m.group(1).split() if m else []):
+        p = kd / t[len("/work/"):] if t.startswith("/work/") else Path(t)
+        lefs.append(p)
+    da = re.search(r"^export DIE_AREA\s*=\s*" + r"\s+".join([KC._NUM] * 4), cfg, re.M)
+    outline = (float(da.group(3)) - float(da.group(1)), float(da.group(4)) - float(da.group(2)))
+    text = (kd / "macro_place.tcl").read_text()
+    rows = []
+    for b in _BLOCK.finditer(text):
+        lef = next((p for p in lefs if p.is_file() and lef_master(p, b.group("master"))), None)
+        rows.append((dict(inst=b.group("inst"), master=b.group("master"), lef=lef, x=float(b.group("x")),
+                          y=float(b.group("y")), o=b.group("o")), (b.span("x"), b.span("y"))))
+    return rows, outline, text
+
+
+def _fmt(v):
+    return ("%.4f" % v).rstrip("0").rstrip(".")
+
+
+def kit_main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="KW-FIX-44 macro grid snap for a core kit macro_place.tcl")
+    ap.add_argument("--kit", required=True)
+    ap.add_argument("--write", action="store_true")
+    a = ap.parse_args(argv)
+    kd = Path(a.kit)
+    rows, outline, text = kit_placements(kd)
+    mt = kd / "make_tracks.tcl"
+    tracks = tracks_for(mt.read_text() if mt.is_file() else None)
+    out, rec = snap_all([r[0] for r in rows], outline, tracks)
+    moved = [(rows[i], out[i]) for i in range(len(rows)) if (out[i]["x"], out[i]["y"]) != (rows[i][0]["x"], rows[i][0]["y"])]
+    print(json.dumps({"macros": len(rows), "off_track": len(rec), "moved": len(moved),
+                      "unresolved": sum(1 for r in rec if "unresolved" in r), "rows": rec}, indent=1))
+    if a.write and moved:
+        new = text
+        for (old, (xs, ys)), p in sorted(moved, key=lambda m: -m[0][1][0][0]):   # right to left keeps spans valid
+            new = new[:ys[0]] + _fmt(p["y"]) + new[ys[1]:]
+            new = new[:xs[0]] + _fmt(p["x"]) + new[xs[1]:]
+        (kd / "macro_place.pre_mgs.tcl").write_text(text)
+        (kd / "macro_place.tcl").write_text(new)
+        write_receipt(kd, rec)
+    return 2 if any("unresolved" in r for r in rec) else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(kit_main())

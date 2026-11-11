@@ -93,3 +93,43 @@ def test_gen_phys_writes_snapped_macro_place():
     src = (Path(__file__).resolve().parent / "gen_phys.py").read_text()
     assert "_MGS.snap_all(placed, (w, h), _MGS.tracks_for(make_tracks_tcl(P)))" in src
     assert "place_macro -macro_name {{{q['inst_db']}}}" in src
+
+
+def _kit(tmp_path, x):
+    kd = tmp_path / "kit"
+    (kd / "macros").mkdir(parents=True)
+    p = lef(tmp_path, pins_m4=(), pins_m5=(("m", 0.012, 0.0, 0.036, 0.192),))
+    (kd / "macros" / "pk.lef").write_text(p.read_text())
+    (kd / "config.mk").write_text("export DIE_AREA = 0 0 400 400\nexport ADDITIONAL_LEFS = /work/macros/pk.lef\n")
+    (kd / "make_tracks.tcl").write_text("make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n")
+    blk = ('set hit {}\nforeach i [$blk getInsts] { if {[[$i getMaster] getName] eq "PK" && [regexp {u_a$} [$i getName]]} '
+           '{ lappend hit $i } }\nif {[llength $hit] != 1} { error "hard child u_a: [llength $hit] matches" }\n'
+           'set i [lindex $hit 0]\n$i setOrient R0\n$i setLocation 0 0\nset bb [$i getBBox]\n'
+           f'$i setLocation [expr {{round({x} * $dbu) - [$bb xMin]}}] [expr {{round(21.6 * $dbu) - [$bb yMin]}}]\n'
+           '$i setPlacementStatus FIRM\n')
+    (kd / "macro_place.tcl").write_text("set blk [ord::get_db_block]\nset dbu [$blk getDbUnitsPerMicron]\n" + blk)
+    return kd
+
+
+def test_kit_cli_dry_run_and_write(tmp_path, capsys):
+    kd = _kit(tmp_path, 100.044)                    # pin centre 100.068: 12 nm off the 0.024 + n*0.048 M5 tracks
+    rows, outline, _ = M.kit_placements(kd)
+    assert outline == (400.0, 400.0) and rows[0][0]["inst"] == "u_a" and rows[0][0]["x"] == 100.044
+    before = (kd / "macro_place.tcl").read_text()
+    assert M.kit_main(["--kit", str(kd)]) == 0
+    assert json.loads(capsys.readouterr().out)["moved"] == 1 and (kd / "macro_place.tcl").read_text() == before
+    assert M.kit_main(["--kit", str(kd), "--write"]) == 0
+    new = (kd / "macro_place.tcl").read_text()
+    assert (kd / "macro_place.pre_mgs.tcl").read_text() == before and "round(21.6 * $dbu)" in new
+    x = M.kit_placements(kd)[0][0][0]["x"]
+    assert x != 100.044 and abs(x - 100.044) <= 0.024 + 1e-9
+    assert M.off_track(M.lef_master(kd / "macros" / "pk.lef", "PK"), x, 21.6, "R0", M.tracks_for(
+        (kd / "make_tracks.tcl").read_text())) == {"x": 0, "y": 0}
+    assert json.loads((kd / "macro_grid_snap.json").read_text())["macros"][0]["inst"] == "u_a"
+
+
+def test_kit_cli_on_grid_kit_untouched(tmp_path, capsys):
+    kd = _kit(tmp_path, 100.032)                    # pin centre 100.056 on track
+    before = (kd / "macro_place.tcl").read_text()
+    assert M.kit_main(["--kit", str(kd), "--write"]) == 0
+    assert (kd / "macro_place.tcl").read_text() == before and not (kd / "macro_grid_snap.json").exists()
