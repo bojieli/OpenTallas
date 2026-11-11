@@ -33,6 +33,8 @@ equivalence of every next-state / output function) plus register correspondence.
 Kept registers (fail-closed): every register bit the RTL declares kept ((* keep *) or a flop in a keep_hierarchy
         cell: pin flops, placement replicas) must be a flop of its own name in the netlist; one merged into its twin
         (opt_merge) passes correspondence, so it is counted here: KEEP FAIL (exit 1, the kit stops like NOT EQUIVALENT).
+        A kept no-reset bit that only ever loads one constant (opt_dff folds it to a tie cell even under keep) is
+        reported as constant_folded_proved once kept_constant_folds proves that, not failed (LEC-KEEP-CFOLD 11-11).
 Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
         the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
         induction and dropped if it fails, never a waiver (apply_hints).
@@ -3734,6 +3736,124 @@ def kept_merged_twins(L, missing, status):
         if ok and x != k and x.startswith("ff:") and x not in miss and (x in gate or x in renamed):
             out[k] = (x, inv)
     return out
+
+
+def _cfold_miter(L, val):
+    """combinational check AIG for kept_constant_folds: every gold register k in `val` is replaced by its constant
+    val[k] (logical value), every other gold register / input / X source is a free input; one output per k:
+    D(k) XOR val[k] (0 = D(k) is val[k] for every input and every value of every other register)."""
+    g = L.gold
+    I, NL, ands = g["I"], g["L"], g["ands"]
+    fixed = {}
+    for k, c in val.items():
+        lit = L.gp[k]
+        fixed[lit >> 1] = c ^ (lit & 1)
+    need, stack = set(), [L.gc[k] >> 1 for k in val]
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in need:
+            continue
+        need.add(v)
+        if v > I + NL and v not in fixed:
+            j = v - I - NL - 1
+            stack += (ands[2 * j] >> 1, ands[2 * j + 1] >> 1)
+    m = Aig()
+    tr = {0: 0}
+    for v in sorted(need):
+        if v in fixed:
+            tr[v] = fixed[v]
+        elif v <= I + NL:
+            tr[v] = m.add_input(f"v{v}")
+    for v in sorted(need):
+        if v in tr:
+            continue
+        j = v - I - NL - 1
+        a, b = ands[2 * j], ands[2 * j + 1]
+        tr[v] = m.AND(tr[a >> 1] ^ (a & 1), tr[b >> 1] ^ (b & 1))
+    for k in sorted(val):
+        n = L.gc[k]
+        m.outs.append(tr[n >> 1] ^ (n & 1) ^ val[k])
+        m.onames.append(k)
+    return m
+
+
+def kept_constant_folds(L, missing, work=None, conflicts=1000, log=None, cap=None, rounds=12):
+    """LEC-KEEP-CFOLD 11-11 (DIE-QC-97 helper; QC glue 7 = u_sys_face.cfg_data__ot_q[6..9,16,30,31], S81 dsdv
+    c1x_C t6/t7/t8 32 = u_xg.u_s.u_ctl.g_hq[k].h[5,15..17,21,31..33]): a kept no-reset register whose every load
+    writes the same constant c, directly or through other such registers.  Yosys opt_dff replaces it by a tie cell
+    (keep does not stop that fold: it extracts the enable to a new cell first, LEC-S81-3 11-10), so no flop of its
+    name exists.  It is the constant case of the kept check (no flop to keep), not a merge (a merge needs a live
+    surviving twin) and not a rename.
+    Proof (self-contained, adds no assumption to the miter): a set S of gold-only registers (the missing kept bits
+    plus the gold-only registers in their next-state cones, at most OT_LEC_KEEP_CFOLD_CAP, default 4096) with one
+    constant c(r) each is accepted when ONE combinational check proves D(r) == c(r) for every r in S with every
+    register of S at its constant and EVERY other register, input and X source free.  So S at c is closed under
+    the transition for every state and input: the gold run whose X power-up picks c for S keeps S at c forever,
+    each such register is a constant of the design, and the gate's tie is that constant.  Proposals start at 0;
+    a refuted register flips once, then leaves S; anything undecided leaves S; S is accepted only from a round in
+    which every remaining output proved (greatest fixpoint, fail closed).  A register with a live load (data, hold
+    relay, fan-out copy, pin register of a live bit) is refuted, so it stays missing.  -> {k: c} for k in missing."""
+    if not missing:
+        return {}
+    log = [] if log is None else log
+    cap = int(os.environ.get("OT_LEC_KEEP_CFOLD_CAP", "4096")) if cap is None else cap
+    g = L.gold
+    I, NL, ands = g["I"], g["L"], g["ands"]
+    gate = set(L.tp)
+    renamed = {h[2] for (sd, c), h in L.hyp.items()
+               if sd == "gate" and h and h[0] == "eq" and len(h) >= 4 and h[1] == "gold"}
+    var2key = {}
+    for k, lit in L.gp.items():
+        if k.startswith("ff:") and I < (lit >> 1) <= I + NL:
+            var2key.setdefault(lit >> 1, k)
+    gold_only = lambda k: k in L.gc and k not in gate and k not in renamed
+    cand, order = set(), []
+    for k in sorted(set(missing)):
+        if gold_only(k):
+            cand.add(k)
+            order.append(k)
+    i = 0
+    while i < len(order) and len(order) < cap:
+        seen, stack = set(), [L.gc[order[i]] >> 1]
+        while stack:
+            v = stack.pop()
+            if v == 0 or v in seen:
+                continue
+            seen.add(v)
+            if v > I + NL:
+                j = v - I - NL - 1
+                stack += (ands[2 * j] >> 1, ands[2 * j + 1] >> 1)
+            elif v > I:
+                u = var2key.get(v)
+                if u and u not in cand and gold_only(u) and len(order) < cap:
+                    cand.add(u)
+                    order.append(u)
+        i += 1
+    val = {k: 0 for k in order}
+    flipped = set()
+    for rnd in range(rounds):
+        if not val:
+            break
+        m = _cfold_miter(L, val)
+        sim, mask = m.simulate(4, seed=4711 + rnd)
+        refuted = {n for n, o in zip(m.onames, m.outs) if lit_val(sim, mask, o)}
+        if refuted:
+            st = {n: ("differs" if n in refuted else "left") for n in m.onames}
+        elif work is not None:
+            st = prove(m, work, conflicts, log, tag=f"keep_cfold{rnd}")
+        else:
+            st = {n: ("proved" if o == 0 else "undecided") for n, o in zip(m.onames, m.outs)}
+        bad = [n for n in m.onames if st.get(n) != "proved"]
+        log.append(f"keep constant folds round {rnd}: {len(val)} registers, {len(bad)} not proved")
+        if not bad:
+            return {k: val[k] for k in sorted(set(missing)) if k in val}
+        for n in bad:
+            if st.get(n) == "differs" and n not in flipped:
+                flipped.add(n)
+                val[n] ^= 1
+            elif st.get(n) != "left":
+                val.pop(n)
+    return {}
 
 
 def kept_wire_alias_copies(L, declared, aliases_file):
@@ -8157,14 +8277,26 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             kmiss = [k for k in kmiss if k not in set(ktwin)]
             kmerged = kept_merged_twins(L, kmiss, status)
             kmiss = [k for k in kmiss if k not in kmerged]
+            kfold = kept_constant_folds(L, kmiss, out, conflicts, log)
+            kmiss = [k for k in kmiss if k not in kfold]
+            if kfold:
+                (out / "kept_constant_folds.tsv").write_text(
+                    "kept_bit\tvalue\n" + "".join(f"{k}\t{c}\n" for k, c in sorted(kfold.items())))
             if kmerged:
                 (out / "kept_merged_twins.tsv").write_text(
                     "kept_bit\tsurviving_flop\tinverted\n" +
                     "".join(f"{k}\t{r}\t{i}\n" for k, (r, i) in sorted(kmerged.items())))
             rec["kept_registers"] = dict(declared=len(kdecl),
                                          in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree)
-                                         - len(ktwin) - len(kmerged),
-                                         constant_proved=lst(kconst), missing=lst(kmiss),
+                                         - len(ktwin) - len(kmerged) - len(kfold),
+                                         constant_proved=lst(kconst),
+                                         constant_folded_proved=lst([f"{k}={c}" for k, c in sorted(kfold.items())]),
+                                         constant_folded_reason="each kept no-reset bit, with the gold-only registers "
+                                             "it loads from, is proved (one combinational check, every other register "
+                                             "and input free) to load only its constant once it holds it: synthesis "
+                                             "folded it to a tie cell, no flop to keep, not a merge "
+                                             "(kept_constant_folds.tsv)" if kfold else None,
+                                         missing=lst(kmiss),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
                                                              "it in the gold AIG: dead logic, removal is not a merge" if kdead else None,
