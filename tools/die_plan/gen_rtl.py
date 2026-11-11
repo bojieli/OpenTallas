@@ -206,6 +206,57 @@ endmodule
 """
 
 
+# DIE-QC-97 HOLDFORM-1 11-10: structural hold pad on an in-boundary flop D (plan bus "hold_hb4": N).  An unlanded vclk
+# input whose pin register sits AT its pin (face_flops.tcl) gets only the seam contract's in_min (QC: 25 - 110 = -85 ps)
+# plus ~16 ps of wire: FF hold ~-111 ps on 2.9k bits of slw_fw_v3, which the in-flow HB4 repair could not pad (4,973
+# violators, +0.2 ps per chunk after 1,408 cells).  N kept HB4xp67 (~38 ps FF each, as rtl/lib/ot_hdly.sv) per bit,
+# data and epoch together; instance u_hdly_<bus> so the kit's PRE_FLOORPLAN dont_touch (hold_pad_dont_touch_tcl) keeps
+# them through remove_buffers and every repair pass.  Behavioural (non-SYNTHESIS) model = wire: no cycle change, LEC
+# sees Liberty buffers.  Kept out of CELLS: only plans with a hold_hb4 bus emit it (other cell files byte-identical).
+HOLD_CELLS = """module ot_dp_hd #(parameter integer W = 1, parameter integer N = 1) (
+    input  wire [W-1:0] a,
+    output wire [W-1:0] y
+);
+`ifdef SYNTHESIS
+    genvar b, k;
+    generate
+        for (b = 0; b < W; b = b + 1) begin : g_b
+            wire [N:0] c;
+            assign c[0] = a[b];
+            for (k = 0; k < N; k = k + 1) begin : g_k
+                (* keep *) HB4xp67_ASAP7_75t_R u_hb (.A(c[k]), .Y(c[k+1]));
+            end
+            assign y[b] = c[N];
+        end
+    endgenerate
+`else
+    assign y = a;
+`endif
+endmodule
+"""
+
+
+def hold_hb4(t, bus):
+    """HOLDFORM-1: the plan's HB4 count in front of in-bus <bus>'s boundary flop on type record t (0 = none)."""
+    for b in (t or {}).get("buses", []):
+        if b.get("name") == bus and b.get("dir") == "in":
+            return int(b.get("hold_hb4") or 0)
+    return 0
+
+
+def uses_hold_hb4(raw):
+    """any partition type of the plan declares a hold_hb4 in bus"""
+    return any(int(b.get("hold_hb4") or 0) > 0 and b.get("dir") == "in"
+               for t in ((raw or {}).get("partition_types") or {}).values() for b in t.get("buses", []))
+
+
+def hold_pad(n, src, width, N):
+    """(decl lines, body lines, padded wire) for HOLDFORM-1: ot_dp_hd #(width, N) u_hdly_<n> on expression src."""
+    w = f"{n}_hd"
+    return ([f"    wire [{width - 1}:0] {w};  // HOLDFORM-1 hold pad: {N} x HB4 per bit"],
+            [f"    ot_dp_hd #(.W({width}), .N({N})) u_hdly_{n} (.a({src}), .y({w}));"], w)
+
+
 def ft_hop_lockup(raw, tn):
     """TYPE-SAFE-1 11-06 (OWNER 18:5x, structurally hold-safe ft hops): True when type tn's internal ft station hops
     get the ot_dp_lk negative-level lockup latch (W+1 bits incl. the epoch) between station j and j+1.
@@ -483,7 +534,16 @@ def wrapper(P, tn, epochs, rtl_root=None):
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             r = rsel(b["name"])
             ea = f"{n}[{W}]" if b["ep"] else r
-            body.append(f"    {st(ea)} #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({n}[{W - 1}:0]), "
+            din = f"{n}[{W - 1}:0]"
+            nhb = int(b.get("hold_hb4") or 0)
+            if nhb:     # HOLDFORM-1: data (+ epoch) through N kept HB4 per bit into the boundary flop
+                hd, hb, w = hold_pad(n, f"{n}[{W}:0]" if b["ep"] else din, W + 1 if b["ep"] else W, nhb)
+                decl += hd
+                body += hb
+                din = f"{w}[{W - 1}:0]"
+                if b["ep"]:
+                    ea = f"{w}[{W}]"
+            body.append(f"    {st(ea)} #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({din}), "
                         f".ea({ea}), .q({n}_q), .eq({n}_eq));")
             q, eq = f"{n}_q", f"{n}_eq"
             for j in range(pad):
@@ -786,7 +846,8 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else ""))
+    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
+                                        + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

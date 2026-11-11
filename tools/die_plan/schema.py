@@ -450,6 +450,11 @@ SCHEMA = {
                                        # of the type, in any orient, derives its die window from it)
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
+                                       # DIE-QC-97 HOLDFORM-1 11-10 (opt-in, in buses only; absent / 0 = no change):
+                                       # N kept HB4xp67 delay cells per bit (data + epoch) in front of the in-boundary
+                                       # flop (gen_rtl.ot_dp_hd, instance u_hdly_<bus>, dont_touch in the kit), the
+                                       # structural pad for an unlanded vclk input under the seam in_min contract
+                                       "hold_hb4": {"type": "integer", "minimum": 0, "maximum": 8},
                                        "note": {"type": "string"}}}},
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)

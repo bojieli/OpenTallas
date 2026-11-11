@@ -2340,6 +2340,27 @@ def die_sta_sdc_lines(P, tn, side):
     return "\n".join(out) + "\n"
 
 
+def hold_pad_dont_touch_tcl(P, tn):
+    """HOLDFORM-1 (DIE-QC-97 11-10): PRE_FLOORPLAN text keeping the gen_rtl.ot_dp_hd hold-pad cells (u_hdly_<bus>
+    HB4xp67) through floorplan remove_buffers, timing-driven unbuffering and every repair / resizer pass, and failing the
+    kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
+    hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
+          if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
+    if not hb:
+        return ""
+    lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
+    return ("# HOLDFORM-1: keep the ot_dp_hd hold pads (gen_rtl.HOLD_CELLS)\n"
+            "set ot_hb {}\n"
+            "foreach i [[ord::get_db_block] getInsts] {\n"
+            "  if {[string match *u_hdly_* [$i getName]] && [string match HB*xp67* [[$i getMaster] getName]]} "
+            "{ lappend ot_hb $i }\n"
+            "}\n"
+            "foreach i $ot_hb { $i setDoNotTouch 1 }\n"
+            f"puts \"OT_HOLDPAD dont_touch [llength $ot_hb] hold-pad cells (plan {lo}..{hi})\"\n"
+            f"if {{[llength $ot_hb] < {lo} || [llength $ot_hb] > {hi}}} {{ error \"OT_HOLDPAD: netlist holds "
+            f"[llength $ot_hb] hold-pad cells, plan expects {lo}..{hi}\" }}\n")
+
+
 def input_hold_min(P, tn, structural=False):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
@@ -4457,7 +4478,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     shutil.copyfile(Path(__file__).with_name("native_cell_cap.tcl"), kd / "native_cell_cap.tcl")
     # COORD 11-04 06:00 (2): opt-in kit-level cap; without the option the file is byte-identical to before
     (kd / "pre_floorplan_type.tcl").write_text((f"set ::ot_native_cell_limit {int(native_cell_cap)}\n" if native_cell_cap else "")
-                                               + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n")
+                                               + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n"
+                                               + hold_pad_dont_touch_tcl(P, tn))
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
