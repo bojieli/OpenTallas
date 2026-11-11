@@ -752,6 +752,18 @@ def ft_hop_xtap(plan, tn, slot):
     return schema.ft_hop_xtap(plan, tn, slot)
 
 
+def core_input_pipe(plan, tn, module):
+    """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
+    default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
+    on the fabric clk.  The register gives the long fabric wire a full cycle (setup); the latch after it gives the
+    short reg -> core hop T/2 of hold.  The added cycles are DECLARED: bind writes bind_core_input_pipe.json
+    ({"<as-built leaf>.<port>": D}) and bind_verify adds D to the as-built stage count of those sinks (EQ with the cycle
+    declared); the compiler / TOK reschedule reads the same file.  Config key "pipe" (absent = 0, byte-identical)."""
+    if not core_input_lockup(plan, tn, module):
+        return 0
+    return int((((plan or {}).get("clock") or {}).get("core_input_lockup") or {}).get("pipe") or 0)
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -3922,6 +3934,15 @@ class Binder:
                     if pn in core_input_lockup(self.plan, tn, c.module):
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
                         decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
+                        npipe = core_input_pipe(self.plan, tn, c.module)
+                        if npipe:
+                            pq = short_id(f"pq_{sv_id(r)}_{pn}", 100)
+                            decl.append(f"    wire [{len(bits) - 1}:0] {pq};")
+                            body.append(f"    ot_dp_dly #(.W({len(bits)}), .D({npipe})) "
+                                        f"{short_id('u_pc_nk_' + sv_id(r) + '_' + pn, 100)} (.clk(clk), .d({_concat(e)}), "
+                                        f".q({pq}));  // core_input_lockup pipe: +{npipe} DECLARED cycle(s)")
+                            self.__dict__.setdefault("core_input_pipe", {})[f"{c.path}.{pn}"] = npipe
+                            e = [pq]
                         body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                     f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
                         e = [lk]
@@ -4571,6 +4592,8 @@ def cmd_bind(a):
                                   leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
                              for p, bs in sorted(bumps.items()) for b in bs]
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
+    if getattr(B, "core_input_pipe", None):      # QC-NK-HOLD A+P: declared added cycles (bind_verify / compiler / TOK)
+        (out / "bind_core_input_pipe.json").write_text(json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
     # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)
