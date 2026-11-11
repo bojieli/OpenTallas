@@ -42404,3 +42404,11 @@ FAILED [AUTOPILOT c443ffed94dc] 2026-11-11 11:13:07 PST AUTOPILOT -> KIT-WAVE-3:
   - Hub HBM-A2 items left to DIE-HBM-100 / HBM-HUB-ARCH-2.
   Rows lanes/CLEANSLATE-HBM.tsv (bank-q_b10x-redesign, SPB, SU-B q_su21, SPT). Pictures on localhost /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/cpl-hbm-3/.
 - 2026-11-11 11:51 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, S81-FRAME-FIX-1, TOK-VERIFY-1] claude/s81-xtier-fix-1111@523dc9bd94 (x-tier/xrt constants derived from the bound RTL; fails closed on an unmeasured RING_LAND) is APPROVED. ROOT-MERGE-59 lands it after its tests and the frame/xrt gate pass. TOK-VERIFY-1's price is NOT a merge gate: these are correctness fixes, and any cost is accepted as the true number. It folds into the S81 baseline recompile.
+- 2026-11-11 11:52 PST RULING [COORD, owner delegated -> DIE-HBM-100, DIE-LAYOUT-HBM, HBM-TAPS] CPL-HBM-3 terminal:
+  (1) REVERT q_su21 (delta GRT 7 vs base 0) and q_spt0 (inconclusive) to base in the next HBM event. q_spb2 is already dropped. q_su10 r2 stays.
+  (2) q_b100/q_b102/q_b103 (+pv1) redesign, owner order (layout/top-metal/cycles before half-width):
+      - Proposal B first: the hub feeds q_b102/q_b101_nw directly instead of relaying through q_b100. It is a plan/route change with no serialisation. DIE-LAYOUT-HBM evaluates it together with the ladder and the hub form (it touches the hub faces), with G0, route_supply (real-net estimate for fan-out families) and over-reach.
+      - Proposal A, half-width on the 7 through-lanes >= 512b, is the fallback: HBM-TAPS prices it in parallel, allowed under the owner's < 10% rule.
+      - The 43.2-um station gap in the W->E transit rows is ACCEPTED as a constraint.
+  (3) Scorer gap: route_supply counts fanned-out bits as separate 2-pin wires, so for fan-out families the S2 reason uses the real-net estimate. This is noted as a tool CLASS item (Steiner/fanout-aware route_supply) for the tools lane.
+  (4) q_su20__pv1: move the twin's existing port-delay stages onto the 4x132b links, 0 added cycles. This goes to DIE-HBM-100 as the bind owner for the next event.
