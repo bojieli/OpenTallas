@@ -755,6 +755,44 @@ class TestKitwave(unittest.TestCase):
         self.assertIn("epyc4:/srv/s2/claude/kw/src_x", out["keep"])
 
 
+class TestProtectedSources(unittest.TestCase):
+    """COORD 2026-11-10 (AUTOCLEAN-13): lanes/prune/ARCHIVE-PROTECTED.tsv is the third protected list"""
+    def setUp(self):
+        self.t = tempfile.mkdtemp(prefix="ac-src-")
+        self.coord = os.path.join(self.t, "coord")
+        os.makedirs(os.path.join(self.coord, "lanes/prune"))
+        with open(os.path.join(self.coord, "lanes/PROTECTED-DBS.txt"), "w") as f:
+            f.write("hx\t/srv/none/claude/a/b\tkit_root\n")
+        with open(os.path.join(self.coord, "PROTECTED-DBS.txt"), "w") as f:
+            f.write("hx /srv/none/claude/c/d note\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.t, ignore_errors=True)
+
+    def write_ap(self, text):
+        with open(os.path.join(self.coord, "lanes/prune/ARCHIVE-PROTECTED.tsv"), "w") as f:
+            f.write(text)
+
+    def test_archive_protected_rows_in_union(self):
+        self.write_ap("# ARCHIVE protected union\n"
+                      "any\t/srv/opentallas-scratch3/claude/kw24/eco/physical/die_plan/s81/bind\tasbuilt\n"
+                      "intel2\t/srv/opentallas-scratch3/claude/kw24-wave-1106/runs\tlive input | NOTE 2026-11-10 retired\n")
+        got = dict(ac.build_protected_union(self.coord))
+        self.assertEqual(got.get("/srv/opentallas-scratch3/claude/kw24/eco/physical/die_plan/s81/bind"),
+                         "lanes/prune/ARCHIVE-PROTECTED.tsv")
+        self.assertIn("/srv/opentallas-scratch3/claude/kw24-wave-1106/runs", got)
+        self.assertIn("/srv/none/claude/a/b", got)
+
+    def test_archive_protected_optional(self):
+        rows = ac.build_protected_union(self.coord)
+        self.assertEqual(sorted(p for p, _ in rows), ["/srv/none/claude/a/b", "/srv/none/claude/c/d"])
+
+    def test_first_two_still_required(self):
+        os.remove(os.path.join(self.coord, "PROTECTED-DBS.txt"))
+        with self.assertRaises(FileNotFoundError):
+            ac.build_protected_union(self.coord)
+
+
 class TestArchiveDriver(Base):
     def test_drive_archive_and_run(self):
         # a signed resign unit that cites a routed DB in a kit
