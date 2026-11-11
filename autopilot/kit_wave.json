@@ -20858,12 +20858,7 @@
     "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "sle_su_l0__cl7a55c676": "KW-FIX-45 11-11: s19 su_l0 row waits for the kit_wave.py deploy that honours item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73); lift then",
-    "sle_su_l0__cl086d85ba": "KW-FIX-45 11-11: s19 su_l0 row waits for the kit_wave.py deploy that honours item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73); lift then",
-    "slw_su_l0__cl76fb247e": "KW-FIX-45 11-11: s19 su_l0 row waits for the kit_wave.py deploy that honours item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73); lift then",
-    "slw_su_l0__cl1a1c1f8f": "KW-FIX-45 11-11: s19 su_l0 row waits for the kit_wave.py deploy that honours item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73); lift then",
-    "slw_su_l0__cl1e5219ea": "KW-FIX-45 11-11: s19 su_l0 row waits for the kit_wave.py deploy that honours item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73); lift then"
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -24886,26 +24881,26 @@
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "sle_su_l0__cl7a55c676": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
-     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
-     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
+     "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
-     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+     "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "sle_su_l0__cl086d85ba": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
-     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
-     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
+     "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
-     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+     "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "sle_su_l1__cl5ea486db": {
      "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
@@ -24916,15 +24911,15 @@
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
     },
     "slw_su_l0__cl76fb247e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
-     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
-     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
+     "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
-     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+     "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "slw_sc_v3": {
      "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
@@ -24971,26 +24966,26 @@
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
     },
     "slw_su_l0__cl1a1c1f8f": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
-     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
-     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
+     "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
-     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+     "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "slw_su_l0__cl1e5219ea": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
-     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
-     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
+     "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
-     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+     "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     }
    },
    "notes_kw42": {
@@ -27948,7 +27943,152 @@
     "slw_fw_v1__clf51c11d8__clc7ddab13",
     "slw_st_a_v2__cl9f076a5c",
     "slw_fw_v3"
-   ]
+   ],
+   "item_inputs_prev_kw45_s20": {
+    "sle_fw_v2__cl69f5e854": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
+    },
+    "cbx_q10__cl94a12200": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
+    },
+    "cbx_q10__cl89936551": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
+    },
+    "slw_fw_v3": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
+    },
+    "slw_fw_v2__cl8f84514c": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
+    },
+    "slw_fw_v2__cl8537f156": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
+    },
+    "cbf_q00__cl870de686": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
+    },
+    "cbf_q00__cl1b5a6458": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
+    },
+    "cbn_q00__cld7bf7197": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
+    },
+    "sle_su_l0__cl7a55c676": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
+     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    },
+    "sle_su_l0__cl086d85ba": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
+     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    },
+    "sle_su_l1__cl5ea486db": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
+    },
+    "sle_ctl__cl372cea1c": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
+    },
+    "slw_su_l0__cl76fb247e": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
+     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    },
+    "slw_sc_v3": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl63e5a7a2": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v2": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
+    },
+    "sle_ctl__cl67434795": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 21:2x COORD (2): cand12 44ad2835bc71 one generate (DIE-QC-97 READY 21:02); bind_out unset, strict bind in the wave root; revert item_inputs_prev_kw43s"
+    },
+    "sle_hc0__cl05696ed1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
+    },
+    "sle_hc0__cl929603c0__cl4baa7c9c": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
+    },
+    "slw_su_l0__cl1a1c1f8f": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
+     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    },
+    "slw_su_l0__cl1e5219ea": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
+     "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    }
+   }
   },
   "hbm": {
    "enabled": true,
