@@ -16,6 +16,10 @@ namespace eval ::ot_tap_pair {
   set rad_um [expr {[info exists ::env(OT_TAP_REASSIGN_UM)] && $::env(OT_TAP_REASSIGN_UM) ne "" ? $::env(OT_TAP_REASSIGN_UM) : 200.0}]
   if {[info exists ::env(OT_TAP_PAIR_RADIUS_UM)]} { set rad_um $::env(OT_TAP_PAIR_RADIUS_UM) }
   set pair [expr {$pair_um*$dbu}]; set rad [expr {$rad_um*$dbu}]
+  # DIE-QC-97 11-11 CHAINS (OT_TAP_PAIR_CHAINS=1, plan clock.tap_pair_affinity.chains): chain-owned delay-pad flops join the pair graph
+  set chains [expr {[info exists ::env(OT_TAP_PAIR_CHAINS)] && $::env(OT_TAP_PAIR_CHAINS) eq "1"}]
+  set chainaff [expr {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1" && [llength [info commands ::ot_tap_chain::identity]]}]
+  set idents {}
   # tap nets, their xy and load
   set tapxy {}; set load {}
   foreach tp $ct_taps {
@@ -36,8 +40,10 @@ namespace eval ::ot_tap_pair {
     if {[regexp {(^|[/.])(u_rsync_t[0-9]+|u_rst_root|u_rst_in|u_run_root|u_run_in|u_[rs]rl_[0-9]+(_[rgb])?)[/.]} [$inst getName]]} continue
     # A named-chain form owns those clocks, including long coherent runs that
     # this short-pair graph does not enumerate.  Never tear its separate cohort.
-    if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1" &&
-        [llength [info commands ::ot_tap_chain::identity]] && [::ot_tap_chain::identity [$inst getName]] ne {}} continue
+    set ident {}
+    if {$chainaff} {set ident [::ot_tap_chain::identity [$inst getName]]}
+    if {[::ot_tap_pair::skip_chain_owned $chains $chainaff $ident]} continue
+    if {$chains && $ident ne {}} {dict set idents [$inst getName] $ident}
     set bb [$inst getBBox]
     dict set regs [$inst getName] [list $it [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}] $nm]
    }
@@ -76,6 +82,17 @@ namespace eval ::ot_tap_pair {
     set front $next
    }
   }
+  if {$chains && [dict size $idents]} {
+   set seen {}
+   foreach e $pairs {lassign $e d a b;dict set seen "$a $b" 1;dict set seen "$b $a" 1}
+   set nb 0
+   foreach e [::ot_tap_pair::chain_bonds $idents] {
+    lassign $e d a b
+    if {![dict exists $regs $a] || ![dict exists $regs $b] || [dict exists $seen "$a $b"]} continue
+    lappend pairs $e;incr nb
+   }
+   puts "OT_TAP_PAIR chains: [dict size $idents] chain registers in the pair graph, $nb chain bonds added"
+  }
   set maxp [expr {[info exists ::env(OT_TAP_PAIR_PASSES)] ? $::env(OT_TAP_PAIR_PASSES) : 20}]
   set mlim [expr {[info exists ::env(OT_TAP_PAIR_MERGE)] ? $::env(OT_TAP_PAIR_MERGE) : 128}]
   set shp [expr {[info exists ::env(OT_TAP_PAIR_SHIFT)] ? $::env(OT_TAP_PAIR_SHIFT) : 10}]
@@ -85,6 +102,11 @@ namespace eval ::ot_tap_pair {
   foreach row [dict get $result passes] {
    lassign $row pass groups pins cross
    puts "OT_TAP_PAIR pass $pass: groups moved $groups clock pins moved $pins cross-tap short pairs $cross"
+  }
+  if {$chains && [dict size $idents]} {
+   lassign [::ot_tap_pair::chain_tap_report $idents $regs [dict get $result regs]] cn csb csa cbroken
+   puts "OT_TAP_PAIR chains $cn single-tap before $csb after $csa broken $cbroken"
+   if {$cbroken} {error "OT_TAP_PAIR a delay-pad chain left its tap"}
   }
   set changed 0
   dict for {name row} [dict get $result regs] {
