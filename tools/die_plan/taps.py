@@ -847,7 +847,7 @@ def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):
 
 
 _EXACT_INT = 1 << 51      # |a - b| + |c - d| of such ints stays exact in float64
-_ASSIGN_BLOCK = 1 << 21       # float64 cells per (sinks x taps) block
+_ASSIGN_BLOCK = 1 << 16       # float64 cells per (sinks x taps) block (cache-sized)
 
 
 def _plain(v):
@@ -877,11 +877,17 @@ def _assign_np(xy, sinks, cap, max_extra_um, max_distance_um):
     d = lambda s, j: abs(s[0] - xy[j][0]) + abs(s[1] - xy[j][1])
 
     def dist(rows):
-        return np.abs(sx[rows, None] - tx[None, :]) + np.abs(sy[rows, None] - ty[None, :])
+        # abs(sx - tx) + abs(sy - ty), the reference's operation order, in place (cache-sized blocks)
+        D = np.subtract.outer(sx[rows], tx)
+        np.abs(D, out=D)
+        E = np.subtract.outer(sy[rows], ty)
+        np.abs(E, out=E)
+        D += E
+        return D
     step = max(1, _ASSIGN_BLOCK // m)
     asgv = np.empty(n, dtype=np.int64)
     for a in range(0, n, step):
-        asgv[a:a + step] = np.argmin(dist(np.arange(a, min(n, a + step))), axis=1)
+        asgv[a:a + step] = dist(slice(a, a + step)).argmin(axis=1)
     asg = asgv.tolist()
     load = [0.0] * m
     for s, j in zip(sinks, asg):
