@@ -1,0 +1,24 @@
+# STM-DQ EQ gate (DIE-QC-97 11-10): sequential equivalence of the stm stream half, default vs OT_QC_STMDQ.
+# Inputs (stmdq_eq.sh): tile_def.sv / tile_dq.sv / se0_def.sv / se0_dq.sv (renamed modules) + stmdq_eq_wrap.sv.
+# Matched by name: ports + every u_t.* register/wire common to both (u_t.rst_n is blacklisted: it is the landed reset in
+# the default and the raw reset in the form).  Unmatched form-only state (we_b, dupv, the 7 reset copies) must follow
+# from the matched state within -seq 8 edges (se0 tw_we needs 8: at -seq 4 it is the only unproven pair).
+read_verilog -sv tile_def.sv
+read_verilog -sv -DOT_QC_STMDQ tile_dq.sv
+read_verilog -sv se0_def.sv
+read_verilog -sv -DOT_QC_STMDQ se0_dq.sv
+read_verilog -sv stmdq_eq_wrap.sv
+hierarchy -check
+proc
+flatten
+opt_clean
+async2sync
+opt -fast
+equiv_make -blacklist stmdq_eq.blacklist stm_half_def stm_half_dq eq_tile
+equiv_make -blacklist stmdq_eq.blacklist stm_half_se0_def stm_half_se0_dq eq_se0
+equiv_simple -seq 8 eq_tile eq_se0
+equiv_induct -seq 8 eq_tile eq_se0
+tee -o stmdq_eq_status_tile.txt equiv_status eq_tile
+tee -o stmdq_eq_status_se0.txt equiv_status eq_se0
+equiv_status -assert eq_tile
+equiv_status -assert eq_se0
