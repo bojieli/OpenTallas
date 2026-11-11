@@ -3,9 +3,26 @@
 # back to 3.1 GB one hour after a restart, about 3 GB/h).  From cron every 5 min: when its RSS passes
 # OT_UDEVD_MAX_GB (default 4), restart systemd-udevd and log the restart.  Nothing else is touched.
 #   ot-udevd-guard [--dry-run]       log: $OT_UDEVD_LOG (default /var/tmp/ot-heavy/udevd-guard.log)
+# UNITGUARD_1111 (KW-FIX-44, COORD 11-11 via KW-FIX-43: epyc4 systemd hit its unit limit with 130,302 leaked veth
+# device units; a daemon-reload brought it to 839): when the manager holds more than OT_UNITS_MAX (default 20000)
+# loaded unit names (systemctl show -p NNames), run systemctl reset-failed + daemon-reload (frees the stale device
+# units) and log the counts before / after.  Runs before the udevd check, every pass.
 set -u
 MAX_GB=${OT_UDEVD_MAX_GB:-4}
 LOG=${OT_UDEVD_LOG:-/var/tmp/ot-heavy/udevd-guard.log}
+UNITS_MAX=${OT_UNITS_MAX:-20000}
+nu=$(systemctl show -p NNames --value 2>/dev/null)
+case "$nu" in ''|*[!0-9]*) nu=0;; esac
+if [ "$nu" -gt "$UNITS_MAX" ]; then
+  if [ "${1:-}" = --dry-run ]; then
+    echo "would reset-failed + daemon-reload: $nu loaded units > $UNITS_MAX"
+  else
+    nv=$(systemctl list-units --all --no-legend --plain --type=device 2>/dev/null | grep -c veth)
+    if sudo -n systemctl reset-failed && sudo -n systemctl daemon-reload; then r=ok; else r="FAILED rc $?"; fi
+    na=$(systemctl show -p NNames --value 2>/dev/null)
+    echo "$(date -Is) $(hostname) RELOAD systemd: $nu loaded units > $UNITS_MAX ($nv veth device units): reset-failed + daemon-reload $r ($na after)" >> "$LOG"
+  fi
+fi
 pid=$(systemctl show -p MainPID --value systemd-udevd.service 2>/dev/null)
 case "$pid" in ''|0|*[!0-9]*) exit 0;; esac
 kb=$(awk '/^VmRSS:/{print $2}' "/proc/$pid/status" 2>/dev/null)
