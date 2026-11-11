@@ -4462,18 +4462,70 @@ def stage_disk_wait(live_log):
 #   R1  a RUNNING / LAUNCHING row whose unit is gone and that stayed RUNNING for more than N minutes (collect did not
 #       reach it: pass cut short, unit renamed, result unreadable): unit, PLACE client and fleet containers under its
 #       attempt root are stopped by exact name, and the row becomes FAIL INFRA (the infra budget decides the retry);
+#   R2  a RUNNING row whose unit is active but silent for N minutes while no process, container or ot-run command on any
+#       fleet host names its attempt root (a zombie holding one of the die's slots): same stop and terminal state as R1;
 #   R3  a RETRY-INFRA row that infra_relaunch_due() can never take again because its infra budget is spent (it was set
 #       while the budget was open): it stays RETRY-INFRA for ever, counted as in flight.  It becomes a terminal FAIL INFRA.
-# A row with an ACTIVE unit and no output for N minutes is only reported (SILENT: it may wait in the ot-run queue).
+# A silent row that is still named on the fleet (an ot-run waiter, a container) is only reported (SILENT).
 # Never touched: held rows (hold_items), arms handled by their own rules, rows whose unit is active.
 REAP_DEAD_MIN = 180
+LIVE_PROBE = r'''
+import json, os, subprocess, sys
+roots = [r.rstrip('/') for r in json.loads(sys.argv[1])]
+me = str(os.getpid())
+hit = {}
+for pid in filter(str.isdigit, os.listdir('/proc')):
+    if pid == me:
+        continue
+    try:
+        cl = open('/proc/%s/cmdline' % pid, 'rb').read().decode('utf-8', 'replace').replace('\0', ' ')
+        cwd = os.readlink('/proc/%s/cwd' % pid)
+    except OSError:
+        continue
+    if 'LIVE_PROBE' in cl or 'python3 -I -' in cl:
+        continue
+    for r in roots:
+        if (r + '/') in cl or cl.rstrip().endswith(r) or cwd == r or cwd.startswith(r + '/'):
+            hit.setdefault(r, []).append(pid)
+ids = subprocess.run(['docker', 'ps', '-q', '--no-trunc'], capture_output=True, text=True, timeout=60).stdout.split()
+if ids:
+    for c in json.loads(subprocess.run(['docker', 'inspect'] + ids, capture_output=True, text=True, timeout=120).stdout or '[]'):
+        for m in c.get('Mounts', []):
+            for r in roots:
+                if m.get('Type') == 'bind' and (m['Source'] == r or m['Source'].startswith(r + '/')):
+                    hit.setdefault(r, []).append('docker:' + c['Name'].lstrip('/'))
+print(json.dumps(hit))
+'''
+
+
+def live_on_fleet(AP, roots, hosts=None):
+    """{root: [pid | docker:name]} found on ANY fleet host (process cmdline/cwd or container bind mount naming the root);
+    None when a host could not be read (then nothing is reaped for silence)"""
+    roots = sorted({r for r in roots if r})
+    if not roots:
+        return {}
+    args = json.dumps(roots)
+    hub = AP.HUB_NAME
+    out = {}
+    for h in (hosts or WJ.FLEET):
+        cmd = ["python3", "-I", "-", args] if h in ("localhost", hub, os.uname().nodename) else \
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+        try:
+            rc, o, _ = AP.sh(cmd, timeout=240, input=LIVE_PROBE)
+            if rc != 0 or not (o or "").strip():
+                return None
+            for r, v in json.loads(o.strip().splitlines()[-1]).items():
+                out.setdefault(r, []).extend(f"{h}:{x}" for x in v)
+        except Exception:                                    # noqa: an unreadable host reaps nothing
+            return None
+    return out
 
 
 def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
     """-> [(key, kind, why)] (read-only)"""
     now = now or time.time()
     minutes = REAP_DEAD_MIN if minutes is None else minutes
-    out = []
+    out, silent = [], []
     for key, rec in sorted((st.get("items") or {}).items()):
         s = rec.get("status")
         age_m = (now - max(float(rec.get("updated") or 0), float(rec.get("started") or 0))) / 60.0
@@ -4485,7 +4537,7 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
                 except OSError:
                     newest = 0
                 if newest and (now - newest) / 60.0 > minutes:
-                    out.append((key, "SILENT", f"unit active, no output for {(now - newest) / 60:.0f} min (reported only)"))
+                    silent.append((key, rec, (now - newest) / 60.0))
                 continue
             if age_m <= minutes:
                 continue
@@ -4496,6 +4548,25 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
             if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
                 out.append((key, "R3", f"RETRY-INFRA with the infra budget spent ({infra_used(rec)} of "
                                        f"{infra_attempts(cfg, rec['die'])}): never relaunched, {age_m / 60:.1f} h"))
+    if silent:                                           # R2: an active unit with no output AND nothing alive on the fleet
+        roots = {key: attempt_root(rec) for key, rec, _ in silent}
+        hosts = list(WJ.FLEET)
+        for d_ in (cfg.get("dies") or {}).values():
+            for h in (d_.get("hosts") or cfg.get("hosts") or DEFAULTS["hosts"]) if isinstance(d_, dict) else []:
+                h = AP.HUB_NAME if h == "localhost" else h
+                if h not in hosts:
+                    hosts.append(h)
+        live = live_on_fleet(AP, list(roots.values()), hosts)
+        for key, rec, m in silent:
+            if live is None:
+                out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; fleet probe unreadable (reported only)"))
+            elif live.get(roots[key]):
+                out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: {','.join(live[roots[key]][:3])} (reported only)"))
+            elif not roots[key]:
+                out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; no attempt root (reported only)"))
+            else:
+                out.append((key, "R2", f"unit active but no output for {m:.0f} min and no process, container or ot-run command "
+                                       f"names {roots[key]} on any fleet host"))
     return out
 
 
@@ -4513,7 +4584,7 @@ def reap_dead(AP, cfg, st, notices, now=None):
         if AP.DRY:
             AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
             continue
-        if kind == "R1":
+        if kind in ("R1", "R2"):
             units = [rec.get("unit")]
             try:
                 units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])

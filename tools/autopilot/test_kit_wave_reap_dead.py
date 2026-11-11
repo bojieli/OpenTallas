@@ -15,14 +15,16 @@ class AP:
     DRY = False
     HUB_NAME = "intel2"
 
-    def __init__(self, active=()):
-        self.active, self.cmds, self.logs = set(active), [], []
+    def __init__(self, active=(), probe="{}", probe_rc=0):
+        self.active, self.cmds, self.logs, self.probe, self.probe_rc = set(active), [], [], probe, probe_rc
 
     def unit_active(self, u):
         return u in self.active
 
     def sh(self, cmd, timeout=0, input=None):
         self.cmds.append(cmd)
+        if input and "me = str(os.getpid())" in input:
+            return self.probe_rc, self.probe + "\n", ""
         return 0, '{"containers": [], "scopes": []}\n', ""
 
     def log(self, m):
@@ -83,10 +85,18 @@ class Reap(unittest.TestCase):
             old = time.time() - 600 * 60
             os.utime(lg, (old, old))
             st = {"items": {"a": r}}
-            ap = AP(active={"u-a"})
+            ap = AP(active={"u-a"}, probe=json.dumps({"/srv/kw/a": [4242]}))      # an ot-run waiter names the root
             self.assertEqual(KW.reap_dead(ap, CFG, st, {}), 0)
             self.assertEqual(st["items"]["a"]["status"], "RUNNING")
-            self.assertTrue(any("SILENT" in m for m in ap.logs))
+            self.assertTrue(any("SILENT" in m and "alive" in m for m in ap.logs))
+            ap = AP(active={"u-a"}, probe_rc=1)                                    # unreadable host: nothing reaped
+            self.assertEqual(KW.reap_dead(ap, CFG, st, {}), 0)
+            self.assertEqual(st["items"]["a"]["status"], "RUNNING")
+            ap = AP(active={"u-a"})                                                # nothing alive anywhere: a zombie, R2
+            self.assertEqual(KW.reap_dead(ap, CFG, st, {}), 1)
+            self.assertEqual((st["items"]["a"]["status"], st["items"]["a"]["class"]), ("FAIL", "INFRA"))
+            self.assertIn("REAP-DEAD R2", st["items"]["a"]["reason"])
+            self.assertIn(["systemctl", "--user", "stop", "u-a"], ap.cmds)
 
     def test_dry_and_off(self):
         with tempfile.TemporaryDirectory() as d:
