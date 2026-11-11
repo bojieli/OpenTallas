@@ -1730,6 +1730,16 @@ def prov_spec(AP, d, die, item, hub):
     return {"modules": mods, "cands": prov_sources(jobs, die, mods, d, hub)}
 
 
+def prov_tb_last(txt):
+    """the exception line closing the last Python traceback in txt ('' when there is none)"""
+    ls = (txt or "").splitlines()
+    i = max((k for k, ln in enumerate(ls) if ln.startswith("Traceback (most recent call last)")), default=-1)
+    if i < 0:
+        return ""
+    tail = [ln for ln in ls[i + 1:] if ln.strip() and not ln.startswith((" ", "\t", "PROV_JSON "))]
+    return tail[-1].strip()[:300] if tail else ""
+
+
 def prov_stage(sp, run, remote, fail, out, rtl=""):
     """run_item stage: stage prov_view.py + routed candidate files on the gen host, build the provisional views and the
     overlay plan -> (overlay plan path, {module: source}) or (None, fail rc)"""
@@ -1789,8 +1799,11 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                                        + (f" --rtl {q(rtl)}" if rtl else "")))
     js = next((json.loads(ln[9:]) for ln in reversed(txt.splitlines()) if ln.startswith("PROV_JSON ")), None)
     if rc or not js or not js.get("ok"):
-        return None, fail("prov_views", "PROVISIONAL view FAIL (KW-PROV-1): no provisional abstract for a child of "
-                          f"{T}\n" + txt, f"{G}:{P}")
+        # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B): a prov_view crash says what crashed (last traceback line)
+        tb = prov_tb_last(txt)
+        return None, fail("prov_views", (f"PROVISIONAL view FAIL (KW-PROV-1): prov_view.py crashed on {T}: {tb}\n"
+                                         if tb else "PROVISIONAL view FAIL (KW-PROV-1): no provisional abstract for a "
+                                         f"child of {T}\n") + txt, f"{G}:{P}")
     out["provisional"] = js.get("children") or {}
     out["prov_status"] = js.get("status") or "PROVISIONAL"
     return js["overlay_plan"], 0
@@ -2083,6 +2096,11 @@ def item_inputs(cfg, die):
             if isinstance(v, dict):
                 v = {k: x for k, x in v.items() if not str(k).startswith("note")}
             ps = abs_paths(v)
+            # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B q_hub_ne/epyc8): the plan's dir too (its pins_file / views are
+            # relative to it); the deep probe samples one pins_file of each probed plan json (ckp)
+            pl = v.get("plan") if key == "item_inputs" and isinstance(v, dict) else None
+            if isinstance(pl, str) and pl.startswith("/") and pl.endswith((".json", ".json.gz")):
+                ps.append(os.path.dirname(pl))
             if ps:
                 out.setdefault(item, [])
                 out[item] += [p for p in ps if p not in out[item]]
@@ -2130,7 +2148,11 @@ def _deep_probe_cmd(paths):
           "if [ -f \"$p/bind.f\" ]; then grep '^/' \"$p/bind.f\" | while read -r s; do [ -e \"$s\" ] || echo \"D $p $s\"; "
           "done | head -3; fi; fi; }; "
           f"ckj() {{ [ -f \"$1\" ] && python3 -I -c {shlex.quote(_ASBUILT_PY)} \"$1\" \"$2\" 2>/dev/null; }}; "
-          "ckd() { ck \"$1\"; case \"$1\" in *.json) ckj \"$1\" \"$1\";; esac; case \"$1\" in *.sh) [ -f \"$1\" ] && "
+          # WAVE-OPS-1 11-10: a plan json's first pins_file (relative = to the plan dir) must exist ('D <plan> <pins>')
+          "ckp() { [ -f \"$1\" ] || return; f=$(grep -o -m1 '\"pins_file\": *\"[^\"]*\"' \"$1\" 2>/dev/null | head -1 "
+          "| sed 's/.*: *\"//; s/\"$//'); [ -n \"$f\" ] || return; case \"$f\" in /*) g=$f;; *) g=$(dirname \"$1\")/$f;; "
+          "esac; [ -e \"$g\" ] || echo \"D $1 $g\"; }; "
+          "ckd() { ck \"$1\"; case \"$1\" in *.json) ckp \"$1\";; esac; case \"$1\" in *.json) ckj \"$1\" \"$1\";; esac; case \"$1\" in *.sh) [ -f \"$1\" ] && "
           "for s in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';)$]*' \"$1\" | sort -u); do "
           "ck \"$s\" | sed \"s#^M \\(.*\\)#D $1 \\1#; s#^D [^ ]* \\(.*\\)#D $1 \\1#\"; "
           "case \"$s\" in *.sh|*.json) [ -f \"$s\" ] && [ $(stat -c %s \"$s\") -lt 5000000 ] && "
