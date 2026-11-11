@@ -39,7 +39,9 @@ def reach_module(n):
 def reach_modules(ns):
     return ''.join(reach_module(n) for n in sorted(set(ns)))
 
-BOUT = r'^(    ot_dp_st #\(\.W\((\d+)\)\) u_bout_{port} \(\.clk\(clk\), \.rst_n\(rst_n\), \.d\()(.*?)(\), \.ea\()(.*?)(\), .*\);)$'
+# RSTN-TAP (bind.py boundary_reset_selector): a far face flop names its same-depth tap rst_n_t<i>; the reach stages
+# take the face flop's own reset net (group 3)
+BOUT = r'^(    ot_dp_st #\(\.W\((\d+)\)\) u_bout_{port} \(\.clk\(clk\), \.rst_n\((rst_n(?:_t\d+)?)\), \.d\()(.*?)(\), \.ea\()(.*?)(\), .*\);)$'
 EP = re.compile(r'^u_bound\.u_bout_([A-Za-z0-9_]+)/')
 
 
@@ -94,10 +96,11 @@ def transform(text, spec):
         found = bout_re(port).findall(text)
         assert len(found) == 1, f'u_bout_{port}: {len(found)} matches'
         m = bout_re(port).search(text)
-        head, w, dexpr, mid, ea, tail = m.group(1), int(m.group(2)), m.group(3), m.group(4), m.group(5), m.group(6)
+        head, w, rst, dexpr, mid, ea, tail = (m.group(1), int(m.group(2)), m.group(3), m.group(4), m.group(5),
+                                              m.group(6), m.group(7))
         stem = f'reach_{port}'
         rep = (f'    wire [{w-1}:0] {stem}; wire {stem}_eq;  // FACE-REACH +{n} PIN cycles (QC-TYPES-6s)\n'
-               f'    ot_qc_face_reach_n{n} #(.W({w})) u_{stem} (.clk(clk), .rst_n(rst_n), .d({dexpr}), .ea({ea}), '
+               f'    ot_qc_face_reach_n{n} #(.W({w})) u_{stem} (.clk(clk), .rst_n({rst}), .d({dexpr}), .ea({ea}), '
                f'.q({stem}), .eq({stem}_eq));\n'
                f'{head}{stem}{mid}{stem}_eq{tail}')
         text = text.replace(m.group(0), rep, 1)
@@ -139,13 +142,15 @@ def bench(out, olds, news, widths, spec, cells):
         ins[i] = max(his) + 1
     decl = ['input wire clk', 'input wire rst_n'] + [f'input wire [{w-1}:0] {n}' for n, w in ins.items()] + \
            [f'output wire [{w}:0] {p}' for p, w in widths.items()]
-    body_old = '\n'.join(olds)
-    body_new = '\n'.join(news)
+    # RSTN-TAP: a face flop on a same-depth tap net rst_n_t<i> (same release cycle) is driven by the bench reset
+    taps = ''.join(f'    wire {t} = rst_n;\n' for t in sorted(set(re.findall(r'\.rst_n\((rst_n_t\d+)\)', '\n'.join(olds)))))
+    body_old = taps + '\n'.join(olds)
+    body_new = taps + '\n'.join(news)
     ref = 'module old_adapter(' + ', '.join(decl) + ');\n' + body_old + '\nendmodule\n'
     cand = 'module new_adapter(' + ', '.join(decl) + ');\n' + body_new + '\nendmodule\n'
     (out / 'adapters.sv').write_text(ref + cand)
     # bit mutant: the first reach instance carries inverted data
-    (out / 'mut_bit.sv').write_text(ref + re.sub(r'(ot_qc_face_reach_n\d+ #\(\.W\(\d+\)\) u_\w+ \(\.clk\(clk\), \.rst_n\(rst_n\), \.d\()', r'\1~', cand, count=1))
+    (out / 'mut_bit.sv').write_text(ref + re.sub(r'(ot_qc_face_reach_n\d+ #\(\.W\(\d+\)\) u_\w+ \(\.clk\(clk\), \.rst_n\(rst_n(?:_t\d+)?\), \.d\()', r'\1~', cand, count=1))
     # skip mutant: every reach module one stage short (N-1 stages; N = 1 becomes a wire)
     short = []
     for n in sorted({int(v['stages']) for v in spec.values()}):

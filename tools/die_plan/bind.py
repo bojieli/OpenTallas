@@ -3155,6 +3155,9 @@ class Binder:
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
                 json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
+        if getattr(self, "_rstn_taps", None):
+            (out.parent / "bind_reset_taps.json").write_text(
+                json.dumps(dict(schema="opentallas.bind_reset_taps.v1", types=self._rstn_taps), indent=1) + "\n")
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
@@ -3402,6 +3405,7 @@ class Binder:
         else:
             body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                         f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+        brst = boundary_reset_selector(self, P, tn, rtree)
         core_reset = {}
         # DIE-HBM-89 11-07: (leaf ci, leaf pin) -> plan core_resets insts it serves, written to bind_core_resets.json so
         # the component proof reads the leaf instance the bind actually chose (sub_core_leaf, reset_from_master, alias).
@@ -3559,16 +3563,17 @@ class Binder:
                 body += hb
                 din, dea = f"{w}[{W - 1}:0]", f"{w}[{W}]"
             pad = lane_pad(L)
+            brn = brst(body, "bin", n, W)
             if pad > 0:
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({brn}), .d({din}), .ea({dea}), "
                             f".q({n}_b), .eq({n}_eb));")
                 body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
                             f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({brn}), .d({din}), .ea({dea}), "
                         f".q({n}_q), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
         drv_w = {}
@@ -3610,7 +3615,8 @@ class Binder:
                 body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
                 continue
             if L.get("plan"):
-                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
+                brn = brst(body, "bout", n, W)
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({brn}), .d(pb_{n}), .ea({brn}), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
                 continue
             if reg:
@@ -3625,7 +3631,8 @@ class Binder:
                 continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
+            brn = brst(body, "bout", n, W)
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({brn}), .d({d}), .ea({brn}), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
         for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
@@ -3919,7 +3926,8 @@ class Binder:
                     src.append(tap(f"{drv_w[(it[1], it[2])]}[{it[3]}]", f"{self.rel_of(it[1])}__{it[2]}_{it[3]}", U0))
                 else:
                     src.append(tap(f"{it[1]['iname']}_q[{it[2]}]", f"{it[1]['iname']}_{it[2]}", U0 - PT[(id(it[1]), it[2])]))
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({_concat(src)}), .ea(rst_n), "
+            brn = brst(body, "bout", n, W)
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({brn}), .d({_concat(src)}), .ea({brn}), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         emit_taps()
         if need_rst:
@@ -4162,6 +4170,70 @@ def _seg_summary(L, F):
         else:
             runs.append([k, 1])
     return [f"{k[1]}[{n}]" for k, n in runs]
+
+
+def boundary_reset_selector(b, P, tn, rtree):
+    """RSTN-TAP (DIE-QC-97 11-11, a20 slw_fw_v3: six 1-bit boundary epoch flops 469-847 um from the one leaf tap
+    rst_n_t0 / u_rrl_83, reg-to-reg rule <= reset.relay_um 405).  -> brst(body, kind, bus, W): the reset net of
+    u_<kind>_<bus> (kind bin / bout).  The epoch flop eq is the only flop of ot_dp_st on a reset; face_flops.tcl puts
+    it FIRM at the bus's epoch pin [W] (gen_phys.type_pins), or a plan relay_sites key u_<kind>_<bus>/eq.. names its
+    site.  reset_tree.boundary_reset_tap keeps `rst_n` (the leaf tap, today's bytes) whenever that site is within
+    reach of the leaf tap relay, else names the nearest same-depth same-role consumer tap net rst_n_t<i> directly
+    (equal release cycle; gen_rtl rsel / kit_rsync use the same rst_n_t<i> form, so reset_taps.tcl, kit_rsync,
+    reset_consumers and bind_verify read it unchanged).  A bout's .ea(rst_n) is the reset level itself (the out epoch =
+    the delivered reset), so it takes the same tap net: same value on every cycle.  Every other user of rst_n (leaves,
+    ft stations, pads, hard cores) is untouched.  Wavefront soft types only (rtree), unsplit types only (the tree
+    frame is the plan type's); each move adds a `// RSTN-TAP` line above the instance and a row in
+    bind_reset_taps.json."""
+    if rtree is None or P is None or getattr(b, "types", {}).get(tn, {}).get("split_of", tn) != tn:
+        return lambda body, kind, n, W: "rst_n"
+    import reset_tree as RT
+    try:
+        leaf = RT.leaf_tap(P, tn)
+        rs = dict(P.types[tn].get("relay_sites") or {})
+    except Exception:            # noqa: BLE001 - no tap geometry: today's form
+        return lambda body, kind, n, W: "rst_n"
+    reach = RT.relay_um(P)
+    pins = None
+    rows = []
+
+    def site(kind, n, W):
+        nonlocal pins
+        for k, xy in sorted(rs.items()):
+            m = re.match(r"^\\?(u_(?:bin|bout)_\w+?)[./\\](eq\w*)", k)
+            if m and m.group(1) == f"u_{kind}_{n}":
+                return float(xy[0]), float(xy[1]), "relay_sites"
+        if pins is None:
+            try:
+                import gen_phys
+                pins = {}
+                for bn, bit, _l, x, y, _f in gen_phys.type_pins(P, tn):
+                    pins.setdefault(bn, {})[bit] = (x, y)
+            except Exception:    # noqa: BLE001 - a plan without pin geometry: today's form
+                pins = {}
+        bp = pins.get(n) or {}
+        if W in bp:
+            return bp[W][0], bp[W][1], "epoch_pin"
+        if bp:
+            return (sum(v[0] for v in bp.values()) / len(bp), sum(v[1] for v in bp.values()) / len(bp), "pin_centroid")
+        return None
+
+    def brst(body, kind, n, W):
+        s = site(kind, n, W)
+        if s is None:
+            return "rst_n"
+        tap, d, dl = RT.boundary_reset_tap(rtree, leaf, s[:2], reach)
+        if tap == leaf or d is None:
+            return "rst_n"
+        net = f"rst_n_t{tap}"
+        row = dict(inst=f"u_{kind}_{n}", site_um=[round(s[0], 3), round(s[1], 3)], site_from=s[2], tap=tap, net=net,
+                   dist_um=round(d, 1), leaf_tap=leaf, leaf_dist_um=round(dl, 1), reach_um=reach)
+        rows.append(row)
+        body.append(f"    // RSTN-TAP u_{kind}_{n}: epoch flop at ({s[0]:.1f}, {s[1]:.1f}) {dl:.0f} um from leaf rst_n_t{leaf} "
+                    f"> {reach:g} -> same-depth {net} at {d:.0f} um")
+        b.__dict__.setdefault("_rstn_taps", {})[tn] = rows
+        return net
+    return brst
 
 
 def _bus_note(L, side):

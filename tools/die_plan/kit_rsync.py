@@ -252,7 +252,8 @@ def main(argv):
                 ln = re.sub(r"\.ea\(rst_n(_t\d+)?\)", f".ea({r})", ln)
                 ln = re.sub(r"^(\s*)ot_dp_st\b", r"\1ot_dp_ste", ln)
                 nste += 1
-        elif m and re.search(r"\.ea\(rst_n\)", ln):
+        elif m and re.search(r"\.ea\(rst_n(_t\d+)?\)", ln):
+            # RSTN-TAP (bind.py boundary_reset_selector): a far face flop already names its same-depth tap rst_n_t<i>
             ln = re.sub(r"^(\s*)ot_dp_st\b", r"\1ot_dp_ste", ln)
             nste += 1
         out.append(ln)
