@@ -18,3 +18,7 @@ ot_pg_connect_all cts_post
 ot_pg_require_bound cts_post
 # FWDCLK-1: stop the kit here when a forwarded clock output lost its driver in CTS (generated per kit by gen_phys).
 if {[file exists [file join $cp_dir landing_export_check.tcl]]} { uplevel #0 [list source [file join $cp_dir landing_export_check.tcl]] }
+# VSN6-B 11-11 S7: loud non-tap cell census against the 400k run cap (cell_census.tcl, ADVISORY)
+if {[file exists [file join $cp_dir cell_census.tcl]]} {
+  uplevel #0 [list source [file join $cp_dir cell_census.tcl]]; ot_cell_census cts
+} else { puts "OT_CELL_CENSUS WARN stage=cts: cell_census.tcl is not in the kit, no recount" }

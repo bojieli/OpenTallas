@@ -198,7 +198,8 @@ def test_postcts_helpers_have_global_scope_inside_orfs_proc(tmp_path):
     script = f"proc orfs_postcts {{}} {{ source {{{tmp_path / 'cts_post.tcl'}}} }}\norfs_postcts\nputs [read_tb_state]\nputs [read_la_d]\n"
     result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert result.returncode == 0 and not result.stderr, result.stderr
-    assert result.stdout.splitlines() == ["balanced", "data"]
+    # VSN6-B 11-11: the cell census line (cell_census.tcl absent here -> its WARN) is not helper state
+    assert [l for l in result.stdout.splitlines() if not l.startswith("OT_CELL_CENSUS")] == ["balanced", "data"]
     # The former bare-source hook must reproduce the reported missing variable.
     old = (tmp_path / "cts_post.tcl").read_text().replace("uplevel #0 [list source", "eval [list source")
     (tmp_path / "cts_post.tcl").write_text(old)

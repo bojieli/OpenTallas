@@ -392,6 +392,7 @@ if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap
 # (CRPR) and only the latch -> capture check crosses a port, with ~T/2 of hold margin.  No u_fl_ cell = no change.
+set ct_hlu {}; set ct_hcap {}
 if {[llength $ct_taps] >= 2} {
   set ct_hl 0; set ct_hlm 0; set ct_hlx 0
   foreach ct_i [$ct_blk getInsts] {
@@ -416,8 +417,11 @@ if {[llength $ct_taps] >= 2} {
       set ct_net $ct_nx
     }
     if {$ct_drv eq ""} { incr ct_hlx; continue }
-    set ct_tn [[ct_clk_iterm $ct_drv] getNet]
+    set ct_dit [ct_clk_iterm $ct_drv]
+    set ct_tn [$ct_dit getNet]
     if {[$ct_cit getNet] ne $ct_tn} { $ct_cit disconnect; $ct_cit connect $ct_tn; incr ct_hlm }
+    # VSN6-B 11-11: remember latch -> launch flop clock pin for the cap recheck below (they move as one unit)
+    dict set ct_hlu $ct_cit $ct_dit
     incr ct_hl
   }
   if {$ct_hl || $ct_hlx} { puts "OT_CLOCK_TAPS hop latches: $ct_hl on their launch station's tap ($ct_hlm re-hung), $ct_hlx without a tapped launch flop" }
@@ -439,7 +443,7 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && 
     set ct_cit [ct_clk_iterm $ct_i]
     if {$ct_cit eq ""} { lappend ct_clx $ct_nm; continue }
     # forward from Q through BUF/INV/HB to the clocked sinks; majority tap wins
-    set ct_front {}; set ct_seen {}; set ct_votes {}
+    set ct_front {}; set ct_seen {}; set ct_votes {}; set ct_vits {}
     foreach ct_it [$ct_i getITerms] { if {[[$ct_it getMTerm] getIoType] eq "OUTPUT" && [$ct_it getNet] ne "NULL"} { lappend ct_front [$ct_it getNet] } }
     while {[llength $ct_front]} {
       set ct_n [lindex $ct_front 0]; set ct_front [lrange $ct_front 1 end]
@@ -453,6 +457,7 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && 
           foreach ct_o [$ct_d getITerms] { if {[[$ct_o getMTerm] getIoType] eq "OUTPUT" && [$ct_o getNet] ne "NULL"} { lappend ct_front [$ct_o getNet] } }
         } elseif {[set ct_sk [ct_clk_iterm $ct_d]] ne ""} {
           dict incr ct_votes [[$ct_sk getNet] getName]
+          dict lappend ct_vits [[$ct_sk getNet] getName] $ct_sk
         }
       }
     }
@@ -462,8 +467,98 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && 
     if {[[$ct_cit getNet] getName] ne $ct_best} {
       $ct_cit disconnect; $ct_cit connect [$ct_blk findNet $ct_best]; incr ct_cl
     }
+    # VSN6-B 11-11: a capture-tap latch and the capture sinks it shares a tap with stay put in the cap recheck
+    dict set ct_hcap $ct_cit 1
+    foreach ct_sk [dict get $ct_vits $ct_best] { dict set ct_hcap $ct_sk 1 }
+    unset ct_vits
   }
   puts "OT_CLOCK_TAPS hop latches on capture tap (OT_HOP_LATCH_CAPTURE_TAP): $ct_cl re-hung, [llength $ct_clx] without a tapped capture: [lrange $ct_clx 0 9]"
+}
+# VSN6-B 11-11 S7 CAP RECHECK (HBM vsN6 form3: clk_t14 4,004 and clk_t12 3,044 sinks with cap 3,000, no WARN): the cap
+# pass above runs BEFORE the two hop-latch passes, which re-hang latches without looking at the cap (form3: 16,041 on
+# the launch tap, 31,739 on the capture tap).  Every tap is rechecked here.  An over-cap tap sheds MOVABLE UNITS to the
+# cheapest tap with room, under the same reach bound as the cap pass: a launch unit is a flop plus the hop latches
+# hung on its tap (they move together, so flop -> latch keeps its CRPR), else a single sink.  Never moved: latches on a
+# capture tap and the capture sinks they share it with, grouped/follower sinks, hard-macro clock pins.  A tap that
+# stays over the cap prints OT_CLOCK_TAPS WARN CAP_AFTER_HOP_LATCH and is listed in ot_clock_taps.json "over_cap".
+# OT_TAP_CAP_RECHECK=0: report only (no move).
+if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
+  set ct_rcm [expr {![info exists ::env(OT_TAP_CAP_RECHECK)] || $::env(OT_TAP_CAP_RECHECK) ne "0"}]
+  set ct_by {}
+  foreach tp $ct_taps {
+    set l {}
+    foreach it [[lindex $tp 1] getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it } }
+    dict set ct_by [lindex $tp 0] $l
+  }
+  # launch units: flop clock pin -> its latches (only latches still on the flop's tap)
+  set ct_ul {}; set ct_inu {}
+  dict for {lat drv} $ct_hlu {
+    if {[dict exists $ct_hcap $lat] || [$lat getNet] ne [$drv getNet]} continue
+    dict lappend ct_ul $drv $lat; dict set ct_inu $lat 1
+  }
+  set ct_pre {}
+  foreach tp $ct_taps { set n [llength [dict get $ct_by [lindex $tp 0]]]; if {$n > $ct_cap} { lappend ct_pre "[lindex $tp 0] $n" } }
+  set ct_rmv 0; set ct_rstuck {}
+  if {![llength $ct_pre]} {
+    puts "OT_CLOCK_TAPS cap recheck after hop latches: all [llength $ct_taps] taps <= cap $ct_cap"
+  } else {
+    puts "OT_CLOCK_TAPS WARN cap recheck after hop latches: [llength $ct_pre] taps over cap $ct_cap: [join $ct_pre {, }]"
+  }
+  for {set pass 0} {$ct_rcm && [llength $ct_pre] && $pass < 8 * [llength $ct_taps]} {incr pass} {
+    set over ""
+    foreach tp $ct_taps {
+      if {[lindex $tp 0] ni $ct_rstuck && [llength [dict get $ct_by [lindex $tp 0]]] > $ct_cap} { set over $tp; break }
+    }
+    if {$over eq ""} break
+    set on [lindex $over 0]
+    set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
+    set cand {}
+    foreach it [dict get $ct_by $on] {
+      if {[dict exists $ct_pinned $it] || [dict exists $ct_hcap $it] || [dict exists $ct_inu $it]} continue
+      if {![catch {[[$it getInst] getMaster] isBlock} ct_isb] && $ct_isb eq "1"} continue
+      set mem [list $it]
+      if {[dict exists $ct_ul $it]} {
+        foreach lat [dict get $ct_ul $it] { if {[$lat getNet] eq [$it getNet]} { lappend mem $lat } }
+      }
+      set sz [llength $mem]
+      lassign [[$it getInst] getLocation] x y
+      set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
+      set best ""; set bd 0
+      foreach tp $ct_taps {
+        if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] + $sz > $ct_cap} continue
+        set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
+        if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_maxx} continue
+        if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+      }
+      if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $mem $best] }
+    }
+    if {![llength $cand]} {
+      puts "OT_CLOCK_TAPS WARN CAP_AFTER_HOP_LATCH $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no movable unit has a tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um"
+      lappend ct_rstuck $on
+      continue
+    }
+    set cand [lsort -real -index 0 $cand]
+    set tgt [lindex $cand 0 2]; set tn [lindex $tgt 0]
+    set room [expr {$ct_cap - [llength [dict get $ct_by $tn]]}]
+    set n 0; set gone {}
+    foreach c $cand {
+      if {$n >= $excess} break
+      if {[lindex $c 2 0] ne $tn} continue
+      set mem [lindex $c 1]
+      if {[llength $mem] > $room - $n} continue
+      foreach it $mem { $it disconnect; $it connect [lindex $tgt 1]; dict set gone $it 1 }
+      incr n [llength $mem]
+    }
+    set keep {}
+    foreach it [dict get $ct_by $on] { if {![dict exists $gone $it]} { lappend keep $it } }
+    dict set ct_by $on $keep; dict set ct_by $tn [concat [dict get $ct_by $tn] [dict keys $gone]]
+    incr ct_rmv $n
+  }
+  set ct_over {}
+  foreach tp $ct_taps { set n [llength [dict get $ct_by [lindex $tp 0]]]; if {$n > $ct_cap} { lappend ct_over "[lindex $tp 0] $n" } }
+  if {[llength $ct_pre]} {
+    puts "OT_CLOCK_TAPS cap recheck after hop latches: $ct_rmv sinks re-assigned in [dict size $ct_ul] launch units + single sinks; over cap now: [expr {[llength $ct_over] ? [join $ct_over {, }] : {none}}]"
+  }
 }
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
@@ -471,16 +566,20 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && 
 if {[llength $ct_taps] >= 2} {
   set ct_js {}
   set ct_empty {}
+  set ct_oc {}
   foreach tp $ct_taps {
     set k 0
     foreach it [[lindex $tp 1] getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { incr k } }
     lappend ct_js "\"[lindex $tp 0]\": $k"
     if {$k == 0} { lappend ct_empty "\"[lindex $tp 0]\"" }
+    if {$k > $ct_cap} { lappend ct_oc "\"[lindex $tp 0]\"" }
   }
   if {[info exists ::env(RESULTS_DIR)]} {
     set fh [open $::env(RESULTS_DIR)/ot_clock_taps.json w]
-    puts $fh "{\"sinks\": {[join $ct_js {, }]}, \"dropped\": \[[join $ct_empty {, }]\]}"
+    puts $fh "{\"sinks\": {[join $ct_js {, }]}, \"dropped\": \[[join $ct_empty {, }]\], \"cap\": $ct_cap, \"over_cap\": \[[join $ct_oc {, }]\]}"
     close $fh
   }
   puts "OT_CLOCK_TAPS per-tap sinks: [join $ct_js {, }]; dropped (no sinks): [llength $ct_empty] [join $ct_empty { }]"
+  # VSN6-B 11-11 S7: the final count never passes silently over the cap
+  if {[llength $ct_oc]} { puts "OT_CLOCK_TAPS WARN OVER_CAP [llength $ct_oc] taps > cap $ct_cap sinks in the final assignment: [join $ct_oc { }]" }
 }

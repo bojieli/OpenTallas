@@ -21,3 +21,7 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
 uplevel #0 [list source [file join $gq_dir pg_connect.tcl]]
 ot_pg_connect_all grt_post
 ot_pg_require_bound grt_post
+# VSN6-B 11-11 S7: loud non-tap cell census against the 400k run cap (cell_census.tcl, ADVISORY)
+if {[file exists [file join $gq_dir cell_census.tcl]]} {
+  uplevel #0 [list source [file join $gq_dir cell_census.tcl]]; ot_cell_census grt
+} else { puts "OT_CELL_CENSUS WARN stage=grt: cell_census.tcl is not in the kit, no recount" }
