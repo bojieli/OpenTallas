@@ -85,7 +85,7 @@ def test_die_view(tmp_path):
     assert rec['schema'] == 'opentallas.dataflow.links.v1'
     (l,) = rec['links']
     assert l['s'] == 2 and l['b'] == 64 and l['via'] == ['p1']
-    assert l['L'] == 701.0 and l['mh'] == 300.5          # crossings (700, 100.5) / (1400, 100.5), regs at 1000 / 1200
+    assert l['L'] == 700.0 and l['mh'] == 300.0          # crossings clamp to the regs' y=100 inside windows [100, 101]
     assert l['x'] == 0                                    # its own ft partition is not a bypass
     for ext in ('png', 'svg', 'links.tsv'):
         assert (out / ('die_testdie.' + ext)).stat().st_size > 0

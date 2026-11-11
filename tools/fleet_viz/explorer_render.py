@@ -279,6 +279,19 @@ def face_pt(W, H, face, win):
 
 
 # ================================================================ DIE VIEW
+def ft_slot_regs(f):
+    """station sites of an ft slot in the type frame: regs_um, else the centroid of each station's bit_sites_um
+    (HBM vsN* slots carry only bit sites)"""
+    if f.get('regs_um'):
+        return [tuple(r[:2]) for r in f['regs_um']]
+    out = []
+    for site in f.get('bit_sites_um') or []:
+        pts = [q for q in site if isinstance(q, (list, tuple)) and len(q) >= 2 and isinstance(q[0], (int, float))]
+        if pts:
+            out.append((sum(q[0] for q in pts) / len(pts), sum(q[1] for q in pts) / len(pts)))
+    return out
+
+
 def build_die(P, reach=None):
     T = P['partition_types']
     B = DL.Builder()
@@ -330,7 +343,8 @@ def build_die(P, reach=None):
         base = re.sub(r'_(i|o|in|out)$', '', bus or '')
         for f in t.get('ft_slots') or []:
             if f.get('name') == base:
-                return [to_die(pn, r) for r in (f.get('regs_um') or [])]
+                r = [to_die(pn, r) for r in ft_slot_regs(f)]
+                return r if r else (int(f.get('stations') or 0) or [])
         return None
 
     via_of = {}
@@ -346,8 +360,7 @@ def build_die(P, reach=None):
         qs = [qs[k] for k in keep]
         pts = [cr[k][0] for k in keep]
         pkind = [cr[k][1] for k in keep]
-        hops, chain, stages, known = [], [pts[0]], 0, True
-        via = []
+        stages, known, via, segs_regs, spread = 0, True, [], [], []
         for k in range(len(qs) - 1):
             pn = qs[k]['dst']['part']
             via.append(pn)
@@ -355,8 +368,38 @@ def build_die(P, reach=None):
             if regs is None:
                 known = False
                 regs = []
+            if isinstance(regs, int):     # the slot names a station count but no sites: spread them evenly
+                spread.append(k)
+                stages += regs
+                segs_regs.append(regs)
+                continue
             stages += len(regs)
-            chain += regs + [pts[k + 1]]
+            segs_regs.append(regs)
+        # a wide face window carries the bus bits spread along it: each crossing sits at the window point nearest
+        # its neighbours on the chain (the window clamp of their mean), not at the window centre
+        for k, q in enumerate(qs):
+            w_ = q.get('window_um')
+            if not w_ or q.get('face') not in ('N', 'S', 'E', 'W') or pkind[k] != 'pin':
+                continue
+            nb = []
+            if k > 0 and isinstance(segs_regs[k - 1], list):
+                nb.append(segs_regs[k - 1][-1] if segs_regs[k - 1] else None)
+            if k < len(qs) - 1 and isinstance(segs_regs[k], list):
+                nb.append(segs_regs[k][0] if segs_regs[k] else None)
+            nb = [x for x in nb if x is not None]
+            if not nb:
+                continue
+            ax_ = 1 if q['face'] in 'EW' else 0
+            m_ = sum(x[ax_] for x in nb) / len(nb)
+            v = min(max(m_, min(w_)), max(w_))
+            pts[k] = (pts[k][0], v) if ax_ == 1 else (v, pts[k][1])
+        hops, chain = [], [pts[0]]
+        for k in range(len(qs) - 1):
+            sr = segs_regs[k]
+            if isinstance(sr, int):
+                a_, b_ = pts[k], pts[k + 1]
+                sr = [(a_[0] + (b_[0] - a_[0]) * j / (sr + 1), a_[1] + (b_[1] - a_[1]) * j / (sr + 1)) for j in range(1, sr + 1)]
+            chain += sr + [pts[k + 1]]
         for a, b in zip(chain, chain[1:]):
             hops.append((a[0], a[1], b[0], b[1], max(q.get('width') or 0 for q in qs)))
         bits = max(q.get('width') or 0 for q in qs) or None
@@ -364,7 +407,8 @@ def build_die(P, reach=None):
         ends = [(parts[s0['part']][3], s0['bus'], pts[0], 'pin' if pkind[0] == 'pin' else 'box'),
                 (parts[d0['part']][3], d0['bus'], pts[-1], 'pin' if pkind[-1] == 'pin' else 'box')]
         B.link(lane['id'], qs[0].get('kind') or 'data', bits, ends, True, hops=hops if hops else None,
-               stages=stages if known else None, note=(lane.get('note') or '')[:200] or None,
+               stages=stages if known else None,
+               note=(((lane.get('note') or '')[:200]) + (' | stations spread evenly in %s (slot has a count, no sites)' % ','.join(via[k] for k in spread) if spread else '')).strip(' |') or None,
                extra=dict(cyc=lane.get('fixed_cycles'), via=via or None))
         if hops:
             B.links[-1]['path_um'] = sum(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops)
@@ -415,7 +459,7 @@ def cmd_die(a):
     fills = {i: '#2a2350' for i, m in enumerate(rec['blocks']['master']) if m in hl}
     ids, worst = draw_record(ax, rec, dict(top=a.top, block_labels=tlab, block_fill=fills, label_fs=a.label_fs, arrows_max=0, reg_s=1.2))
     s = summary(rec)
-    fig.text(0.04, 0.965, '%s  |  %s  |  reach %.0f um' % (meta['label'], Path(a.plan).name, reach), color=INK, fontsize=11, fontweight='bold')
+    fig.text(0.04, 0.965, '%s  |  %s  |  reach %.0f um' % (meta['label'][:70], Path(a.plan).name, reach), color=INK, fontsize=11, fontweight='bold')
     fig.text(0.04, 0.945, summary_text(s) + '  |  #N = worst links (hop>reach first, then bits x hop): see %s.links.tsv' % name,
              color=LABEL, fontsize=8)
     legend(fig, rec)
@@ -771,10 +815,10 @@ def build_type(tname, t, rs, die_dir, repo, conns_t, reach, base=None, per_port=
     for f in t.get('ft_slots') or []:
         a0 = face_pt(W, H, f.get('in_face'), f.get('in_window_um'))
         b0 = face_pt(W, H, f.get('out_face'), f.get('out_window_um'))
-        chain = [a0] + [tuple(r) for r in (f.get('regs_um') or [])] + [b0]
+        chain = [a0] + ft_slot_regs(f) + [b0]
         hops = [(p[0], p[1], q[0], q[1], f.get('width') or 0) for p, q in zip(chain, chain[1:])]
         B.link('ft:%s' % f['name'], 'ft', f.get('width'), [(None, 'ft_in', a0, 'pin'), (None, 'ft_out', b0, 'pin')], True,
-               hops=hops, stages=len(f.get('regs_um') or []))
+               hops=hops, stages=len(chain) - 2)
         B.links[-1]['path_um'] = sum(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops)
     blocks, recs = B.finish()
     # pipeline rank over directed core links (inputs first); cycles broken in DFS order
