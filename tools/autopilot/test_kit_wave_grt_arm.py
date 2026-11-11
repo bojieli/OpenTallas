@@ -171,6 +171,14 @@ class Probe(unittest.TestCase):
             self.assertEqual(KW.grt_arm_launches(AP(d), cfg(ARM, hold_items={"sle_*": "owner hold"}), st, {}, d), 0)
             self.assertEqual(list(st["items"]), [base])
 
+    def test_only_items_restrict_the_arm(self):
+        """KW-FIX-45 11-11: only_items=[] (a paused die) must stop arm launches and repin relaunches too"""
+        for only, want in (([], 0), (["other_item"], 0), ([ITEM], 1), (None, 1)):
+            with tempfile.TemporaryDirectory() as d:
+                st, _ = state(d)
+                c = cfg(ARM) if only is None else cfg(ARM, only_items=only)
+                self.assertEqual(KW.grt_arm_launches(AP(d), c, st, {}, d), want, f"only_items={only}")
+
     def test_stop_rule_final_no_retry(self):
         with tempfile.TemporaryDirectory() as d:
             st, base = state(d)

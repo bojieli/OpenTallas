@@ -660,6 +660,11 @@ def macro_boxes(typ):
 # M3 keeps the wholly-reserved test: the M3 bridges are not cut inside a street, so their piece is the whole street.  On
 # the q_b102 tapcell DB the one M6 window (446.778-447.75) gave 0 PDN-0178 / 0 PDN-0179.  M7 needs no street rule: a
 # horizontal street is crossed by the vertical M7 grid, and M6 pieces under reserved M7 are closed by SLIVER_TCL.
+# DIE-HBM-PDN-1 11-11 (q_b103 PDN-0179, 20 PDN-0178 M5 channels 8.95 x 2.8 um at y 195.84-198.65 along the 11.62-um street between
+# hcol h1 (top 195.74) and the h0 ra/rb row above (bottom 207.36); q_b102/q_b103 share the layout): the same M5 islands as
+# the 3.456-um q_b102 street, but the street rule stopped at PDN_WIN_MIN (8.64 um).  Streets up to 2 * PDN_WIN_MIN get it
+# too; the rule still adds a window only where _m5_street_islands finds an island piece (M6) or M4 is wholly reserved.
+PDN_STREET_MAX = 2 * PDN_WIN_MIN
 STREET_LAYERS = ('M4', 'M6')               # strap layer over the layer it partners in a street: M4 over M3, M6 over M5
 
 
@@ -732,13 +737,78 @@ def _m5_wholly_reserved(receipt, width, boxes, core=PDN_CORE_INSET):
     return free < PDN_M5_FREE_MIN * (cx1 - cx0) * (cy1 - cy0)
 
 
+# DIE-HBM-PDN-1 11-11 (q_b011__physical_v1 PDN-0179, 117 PDN-0178 M4 channels, 113 of them with no free M5 anywhere in the
+# channel; q_b011 and the other ra-column types would follow): the same starvation as above, but LOCAL.  The die reserves
+# M5 over whole strips beside the hard cores (q_b011: x 276.48-380.16 beside every bank macro, x 239.76-380.16 beside every
+# hcol h1, x 0-25.76 along the west edge, 194-292 um tall), while some other part of the type keeps free M5, so the
+# type-wide test (_m5_wholly_reserved) does not fire.  Every M4 bridge strap that lands in an M4 gap between the FT rows
+# of such a strip has no M4-M5 via and pdngen reports a channel it cannot repair.  A wide, tall M5 rect with an M4 gap
+# inside it (PDN_POCKET_MIN) and no strap window from any other rule keeps the same every-PDN_WIN_EVERY_M5 window grid.
+# Wide M5 rects that hold no M4 gap, short rows (streets, teeth) and rects another rule already windowed are unchanged.
+PDN_POCKET_MIN = 2.0
+PDN_ROW_MIN = 4.32                              # thinner rows keep their M5 whole: a strap piece in them has no partner layer
+
+
+def _m5_windowed(receipt):
+    """{rect: [(lo, hi)]} the strap windows the comb / column / strip / edge-pocket rules cut into each M5 receipt rect."""
+    out = {}
+    for fn in (pdn_windows_comb, pdn_windows_col, pdn_windows_strip_m5, pdn_windows_edge_pocket):
+        for L, lo, hi, rr in fn(receipt):
+            if L == 'M5':
+                out.setdefault(tuple(rr), []).append((lo, hi))
+    return out
+
+
+def _m5_starved_rects(receipt):
+    """{rect: None | [(lo, hi)]} the wide, tall M5 receipt rects holding an M4 gap (a y-run of at least PDN_POCKET_MIN not
+    covered by an M4 row spanning 90 % of the rect's width, at least one such row present) and no strap window from the
+    comb / column / strip / edge-pocket rules (None: the global window grid), plus the short wide rows (PDN_ROW_MIN to
+    2 * PDN_WIN_MIN tall, no wider than the strip + PDN_WIN_MIN) that stack on a starved or already windowed strip: they
+    carry the strip's windows on (the grid, or the windows of the strip they stack on) so its straps run through them."""
+    rects = [tuple(r['rect']) for r in receipt['rectangles_um'] if r['layer'] == 'M5']
+    m4 = [tuple(r['rect']) for r in receipt['rectangles_um'] if r['layer'] == 'M4']
+    done = _m5_windowed(receipt)
+    out = {}
+    for x0, y0, x1, y1 in rects:
+        if x1 - x0 <= PDN_WIN_MIN + 1e-6 or y1 - y0 <= 2 * PDN_WIN_MIN + 1e-6 or (x0, y0, x1, y1) in done:
+            continue
+        rows = sorted((max(b[1], y0), min(b[3], y1)) for b in m4 if b[1] < y1 and b[3] > y0 and b[0] < x1 and b[2] > x0
+                      and min(b[2], x1) - max(b[0], x0) >= 0.9 * (x1 - x0))
+        if not rows:
+            continue                            # no FT M4 pattern in the rect: not the strip case
+        cur, gap = rows[0][1], False
+        for a, b in rows[1:]:
+            gap = gap or a - cur >= PDN_POCKET_MIN - 1e-6
+            cur = max(cur, b)
+        if gap or rows[0][0] - y0 >= PDN_POCKET_MIN - 1e-6 or y1 - cur >= PDN_POCKET_MIN - 1e-6:
+            out[(x0, y0, x1, y1)] = None
+    if out:
+        todo = [q for q in rects if q not in out and q not in done and q[2] - q[0] > PDN_WIN_MIN + 1e-6
+                and PDN_ROW_MIN - 1e-6 <= q[3] - q[1] <= 2 * PDN_WIN_MIN + 1e-6]
+        grow = True
+        while grow:
+            grow = False
+            for q in todo:
+                if q in out:
+                    continue
+                for t in sorted(set(out) | set(done)):
+                    if ((abs(q[3] - t[1]) < 1e-6 or abs(q[1] - t[3]) < 1e-6) and min(q[2], t[2]) - max(q[0], t[0]) > PDN_WIN_MIN
+                            and q[0] >= t[0] - PDN_WIN_MIN and q[2] <= t[2] + PDN_WIN_MIN):
+                        out[q] = list(done[t]) if t in done else out[t]
+                        grow = True
+                        break
+    return out
+
+
 def pdn_windows_m5_full(receipt, width=None, core_x0=PDN_CORE_INSET, boxes=None):
-    """[(layer, x0, x1, rect)] M5 strap-pair windows on a global every-PDN_WIN_EVERY_M5 grid, only when the receipt leaves
-    no free M5 outside the hard cores (macro boxes required; without them nothing changes)."""
+    """[(layer, x0, x1, rect)] M5 strap-pair windows on a global every-PDN_WIN_EVERY_M5 grid: in every wide M5 rect when
+    the receipt leaves no free M5 outside the hard cores, else only in the starved rects (_m5_starved_rects).  Macro boxes
+    required; without them nothing changes."""
     if receipt is None or not boxes or not any(r['layer'] == 'M5' for r in receipt['rectangles_um']):
         return []
     width = _width(receipt, width)
-    if not _m5_wholly_reserved(receipt, width, boxes):
+    only = None if _m5_wholly_reserved(receipt, width, boxes) else _m5_starved_rects(receipt)
+    if only is not None and not only:
         return []
     off, wd, sp, pitch = PDN_WIN_COMB['M5']
     lo_of = lambda k: core_x0 + off + k * pitch - PDN_WIN_MARGIN
@@ -754,7 +824,12 @@ def pdn_windows_m5_full(receipt, width=None, core_x0=PDN_CORE_INSET, boxes=None)
         if r['layer'] != 'M5':
             continue
         x0, y0, x1, y1 = r['rect']
-        if x1 - x0 <= PDN_WIN_MIN + 1e-6:
+        if x1 - x0 <= PDN_WIN_MIN + 1e-6 or (only is not None and (x0, y0, x1, y1) not in only):
+            continue
+        if only is not None and only[(x0, y0, x1, y1)] is not None:       # a row stacked on a windowed strip: that strip's windows
+            for lo, hi in sorted(only[(x0, y0, x1, y1)]):
+                if lo >= x0 - 1e-9 and hi <= x1 + 1e-9:
+                    out.append(('M5', lo, hi, tuple(r['rect'])))
             continue
         k = max(0, int((x0 - core_x0 - off) // pitch))
         while True:
@@ -779,7 +854,7 @@ def pdn_windows_street(receipt, width=None, core_y0=4.32, boxes=None, existing=(
     for a in boxes:
         for b in boxes:
             xa, xb = max(a[0], b[0]), min(a[2], b[2])
-            if 0 < b[1] - a[3] <= PDN_WIN_MIN + 1e-6 and xb - xa >= 0.5 * min(a[2] - a[0], b[2] - b[0]):
+            if 0 < b[1] - a[3] <= PDN_STREET_MAX + 1e-6 and xb - xa >= 0.5 * min(a[2] - a[0], b[2] - b[0]):
                 old = streets.get((a[3], b[1]))
                 streets[(a[3], b[1])] = (min(xa, old[0]), max(xb, old[1])) if old else (xa, xb)
     rects = [(r['layer'], *r['rect']) for r in receipt['rectangles_um']]

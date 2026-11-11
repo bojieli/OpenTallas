@@ -610,3 +610,67 @@ def test_m5_with_free_area_or_without_boxes_is_unchanged():
     assert F.pdn_windows_m5_full(_m5_full_receipt()) == []
     assert 'pdn_windows_m5_full' not in F.tcl(_m5_full_receipt())
     assert F.tcl(free, M5_FULL_BOXES) == F.tcl(free)
+
+
+# DIE-HBM-PDN-1 11-11 (q_b011__physical_v1 PDN-0179): M5 reserved over a whole strip beside the hard cores while the type keeps
+# free M5 elsewhere.  The strip's M4 gaps (FT rows leave 2.7 um every 10.8) get M4 bridge straps with no M5 above them.
+STARVED_BOXES = [(25.92, 17.28, 276.48, 285.12)]
+
+
+def _starved_receipt(strip_top=285.12, gap=True):
+    rows = [('M5', [276.48, 17.28, 380.16, strip_top]), ('M5', [0, 300.0, 100.0, 400.0]), ('M4', [0, 300.0, 100.0, 400.0])]
+    y = 17.28
+    while y + 8.1 <= strip_top + 1e-9:
+        rows.append(('M4', [235.872, y, 380.16, y + (8.1 if gap else 10.8)]))
+        y += 10.8
+    return dict(rectangles_um=[dict(layer=L, rect=r) for L, r in rows])
+
+
+def test_starved_m5_strip_with_m4_gaps_gets_local_windows():
+    r = _starved_receipt()
+    assert not F._m5_wholly_reserved(r, 380.16, STARVED_BOXES)
+    wins = F.pdn_windows_m5_full(r, 380.16, boxes=STARVED_BOXES)
+    assert wins and {rr for _, _, _, rr in wins} == {(276.48, 17.28, 380.16, 285.12)}
+    assert sorted({(a, b) for _, a, b, _ in wins}) == [(278.394, 279.006), (282.714, 283.326), (299.994, 300.606), (317.274, 317.886),
+                                                (334.554, 335.166), (351.834, 352.446), (369.114, 369.726)]   # core-edge straps + the k%4 grid
+    rows = [q for L, q in F.obstruction_rows(r, 380.16, macro_boxes=STARVED_BOXES) if L == 'M5' and q[1] == 17.28]
+    assert [276.48, 17.28, 278.394, 285.12] in rows and [279.006, 17.28, 282.714, 285.12] in rows
+    assert f'pdn_windows_m5_full={len(wins)}' in F.tcl(r, STARVED_BOXES)
+
+
+def test_m5_strip_without_m4_gap_short_or_without_boxes_is_unchanged():
+    assert F.pdn_windows_m5_full(_starved_receipt(gap=False), 380.16, boxes=STARVED_BOXES) == []      # M4 reserved whole: no strap piece
+    assert F.pdn_windows_m5_full(_starved_receipt(strip_top=30.0), 380.16, boxes=STARVED_BOXES) == []   # a short row is a street / tooth
+    assert F.pdn_windows_m5_full(_starved_receipt(), 380.16) == []
+    assert F.tcl(_starved_receipt()) == F.tcl(_starved_receipt(), None)
+    assert 'pdn_windows_m5_full' not in F.tcl(_starved_receipt(gap=False), STARVED_BOXES)
+
+
+# q_b103 street 195.74-207.36 (11.62 um, over the 8.64 limit of q_b102's 3.456-um street) between hcol h1 and the h0 ra/rb row:
+# M6 reserved 196.02-198.72, M4 198.72-201.42 and a 0.648-um row at 196.128, M5 comb teeth from 198.72 up.
+B103_BOXES = [(8.64, 8.26, 227.232, 195.74), (8.64, 207.36, 114.912, 497.66), (120.96, 207.36, 227.232, 497.66)]
+
+
+def _b103_street_receipt():
+    rows = [('M4', [0, 198.72, 239.76, 201.42]), ('M4', [12.96, 196.128, 228.96, 196.776]), ('M6', [0, 196.02, 241.92, 198.72])]
+    rows += [('M5', [23.76 + 10.8 * k, 198.72, 25.11 + 10.8 * k, 207.36]) for k in range(20)]
+    return dict(rectangles_um=[dict(layer=L, rect=r) for L, r in rows])
+
+
+def test_11_62_um_street_island_gets_m6_window():
+    r = _b103_street_receipt()
+    assert F.pdn_windows_street(r, boxes=B103_BOXES) == [('M6', 196.218, 197.19)]
+    wide = [(8.64, 8.26, 227.232, 195.74), (8.64, 195.74 + 17.4, 227.232, 497.66)]
+    assert F.pdn_windows_street(r, boxes=wide) == []                                   # a 17.4-um gap is no street
+
+
+def test_short_rows_stacked_on_a_starved_strip_carry_its_windows_on():
+    # the closing row of the strip (8.64 um) gets the strip's grid windows; a 2.16-um sliver and a row far wider than the strip do not
+    r = _starved_receipt()
+    r['rectangles_um'] += [dict(layer='M5', rect=[272.16, 285.12, 380.16, 293.76]), dict(layer='M5', rect=[235.872, 293.76, 380.16, 295.92]),
+                           dict(layer='M5', rect=[164.16, 295.92, 380.16, 304.56])]
+    wins = F.pdn_windows_m5_full(r, 380.16, boxes=STARVED_BOXES)
+    rr = {w[3] for w in wins}
+    assert (272.16, 285.12, 380.16, 293.76) in rr and (235.872, 293.76, 380.16, 295.92) not in rr and (164.16, 295.92, 380.16, 304.56) not in rr
+    strip = sorted((a, b) for _, a, b, q in wins if q == (276.48, 17.28, 380.16, 285.12))
+    assert sorted((a, b) for _, a, b, q in wins if q == (272.16, 285.12, 380.16, 293.76)) == strip
