@@ -40712,3 +40712,13 @@ FAILED [AUTOPILOT 962a8fda9041] 2026-11-11 04:16:29 PST AUTOPILOT -> KIT-WAVE-3:
 
 ### KV-PLAN-2 kvp2-hglec-eq-1111 (11-11 06:19) DO_NOT_COUNT
 kv3_hg 2b151cb27bf2 proof LEC on the epyc2 kw43-wave-1109 attempt_8 netlist with the KV reset contract (16 edges, RESET-SCOPE d2ade6f0b82d plan_type scope): LEC EQUIVALENT, 144419/144419 compare points proved, 0 differs, 0 undecided (37071 s). This confirms the 1606 differences at the 4-edge default were the reset-window artefact. KW-FIX-43: re-sign batch as ruled (restage contract, re-LEC on the existing netlist, resume; no rebuild). Proof copy: epyc4 /srv/opentallas-scratch2/claude/kv-plan-2/hglec/kit/lec16/lec.json. Not counted until signed off.
+
+### KV-PLAN-2 kvp2-hg-resign-1111 (11-11 06:20) DO_NOT_COUNT
+COORD asked me to re-sign kv3_hg 2b151cb27bf2 on epyc2 attempt_8 (restage the 16-edge contract, resume sign-off only, once). I can't: attempt_8 has no routed DB, so there are no sign-off stages to resume.
+- The restage is already done: reset_contract.json is 16 edges, written 11-10 22:09. The kit then resumed: CTS 11-10 23:39, then GRT, which FAILED 11-11 05:22 with GRT-0116 congestion.
+  - Total overflow 24377. M6 12887 and M7 8542 are 88% of it; M3 1363, M5 1468, M4 117.
+  - This is the over-core M6/M7 ceiling class. The file is 5_1_grt-failed.odb.
+- The in-kit LEC at 16 edges (lec_async pid 885067, container dpkit-kv3_hg-878719-lec) has been running for 8 h. My proof LEC on the same netlist is EQUIVALENT (kvp2-hglec-eq-1111), so the kit LEC is expected to be EQ.
+- My default, which I am following: no resume and no unchanged retry, per the owner rule. kv3_hg goes to the porous/GRT-PATCH class batch (M6/M7 over hard cores). route_supply already flags the hg family, and the street widening does not fit hg in Y.
+- The kit stays in place for an ECO/GRT-PATCH resume from 4_cts. I am leaving the in-kit LEC running so the kit gets its own EQ record.
+- I continue with plan_swh and the io_cor_v1 probe.
