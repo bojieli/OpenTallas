@@ -16,3 +16,6 @@ Gates measured (epyc4, nice 19):
 
 ## BIND fix (11-11): final plan = step4 with kv3_sys_c from kvr2 (scripts/sysc_base.py)
 step4 (bfe4c242) fails strict bind: EMIT kv3_sys_c rst_n_t31 D=rst_rl_80 != rst_rl_64 (kvfix1 overlay shifts 6 sys_c contents by 0.864 um). With kvr2 sys_c: plan md5 5091ada33f141d199368685b1d225f91, strict bind RC 0, 0 errors, 160 partitions, 2545 crossings (epyc4 dkv98/bind_vA); base kvr2 also binds. G0 130 = base, slot-keyed 0 new. Asbuilt: strip the absolute dkv97/src_zbk/ prefix (asbuilt_rel.json) so regen scripts resolve inside the bound src.
+
+## FINAL (11-11): plan vD md5 1791c1e2eb477ac170b73a0c0dd613c4 (scripts/mkvD.py on vA)
+kv3_sys_c = kvr2 + only the u_profile ROM move (-0.864 um; DRT-0255 fix); kv3_hg = kvr2 geometry (OT_CLAND ft1_i band failure after the hg delta). Strict bind RC 0, 0 errors (epyc4 dkv98/bind_vD, bind_report sha256 55882b917eb5325b); G0 130 = base, slot-keyed 0 new/0 gone.
