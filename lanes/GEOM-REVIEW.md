@@ -6371,3 +6371,13 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - Hard-core rows are fine. The problem is that the glue logic has no anchor in the middle, so it lands on the face pins.
   - HOLD routing of this attempt. Root cause to DIE-HBM-100: per-tap sink assignment (taps by placement, not by fan-out) + relay sites for E-face lanes.
 - 2026-11-11 14:42 PST GEOM [COORD hourly] hbm/hnx_vms_bank_q0_faces__vecd4ae__v512b GRT-ARM attempt_11: OK as an arm. GRT ov 0, fill 0.087, cells banked along the S and W faces around 3 macros; one clock tap with the farthest sink 370 um. No new smell; the arm data goes to GRT-PATCH-1.
+- 2026-11-11 15:32 PST GEOM [COORD hourly] hbm/q_b012 attempt_2 3_place (epyc9 kw43 hcut1111): BAD, the SAME class as q_b003__pv1 (bank chain).
+  - 864x2480 (aspect 2.87), fill 0.046; relay_collapse 2892, r2r 1288 um; long wedge smears from the faces into the hard-core streets.
+  - Taps unbalanced: clk_t5 10931 / t9 9760 / t11 9063 vs t1 722 / t17 410 sinks; the farthest sink is 3012 um from its driver.
+  - It is one of the 14 held bank types and was launched at 13:26, before the hold. Stop its route; it relaunches with the istations-2 fix once the q_b003__pv1 pilot is clean.
+- 2026-11-11 15:32 PST GEOM [COORD hourly] hbm/q_su21__physical_v1 attempt_2 3_place (epyc9): BAD, a NEW smell.
+  - 1892x1555, fill 0.013 (empty 0.93). Almost all glue sits in one NE cluster (x 1250-1600, y 1350-1500) plus the E-face pin column.
+  - pin_unreg FAIL 568: unregistered pins, a functional/seam item, not geometry.
+  - Taps: clk_t18 4109 / t14 3121 / t9 2633 vs most taps 1-30.
+  - The 16 hard cores' rows are fine; the glue has no anchor between the rows.
+  - HOLD routing. To DIE-HBM-100: (a) why 568 pins are unregistered (missing pin cycles or a port-to-port path); (b) the same tap-assignment class as q_b003.
