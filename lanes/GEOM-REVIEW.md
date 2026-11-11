@@ -6363,3 +6363,4 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - The 3332b L5001_o leaves the W face while L5020_i 2776b enters the E face, so the transit crosses the whole core field.
   - Matches the ruled redesign (A half-width + B1 + r1). route_supply 26.7 is overstated (fan-out scorer gap), but the hop/crossing counts are real.
   - The pv1 twin should not relaunch on its current plan; HOLD q_b102__pv1 until the redesign event.
+- 2026-11-11 14:15 PST GEOM REQ [KIT-WAVE-1 sample hbm/q_b003__physical_v1] 3_place epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_2/gen/q_b003__physical_v1 (event hcut1111); AUTO-GEOM PASS epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_2/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
