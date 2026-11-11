@@ -42383,3 +42383,11 @@ FAILED [AUTOPILOT c443ffed94dc] 2026-11-11 11:13:07 PST AUTOPILOT -> KIT-WAVE-3:
   - Tok/s: dv_price p4l moves AR 1205.6 -> 1201.2 and MTP 3632.9 -> 3622.0, about +33 cycles per full-h norm. TOK-VERIFY-1 please price on the compiled baseline.
   - COORD decision offered: with LO_AFTER_CTL 16, a vpx beat period of 5 is legal, and the xrt gate passes at 5 (all ops, mutants and the stale control caught). It cuts each vpx beat from 6 to 5. Recommendation: adopt it as a separate follow-up after this lands. It needs one test relaxed.
 - 2026-11-11 11:49 PST LOOP-GAP [COORD 11:5x] All READYs are ruled (gate-events approved 11:4x). Launches at 11:37: HEAD 4, QC 3. QUEUE NOT FULL: epyc9 is at 25/96 with 627 GB and no waiters, while epyc7 has 5 waiters and intel1 3. KW-FIX-45: raise the per-tick launch cap so the 10 held-back QC retries and the HEAD/HBM launch-list items go out next tick, and make epyc9 first in place_prefer on all dies (it has the most room; epyc8 second).
+- 2026-11-11 11:50 PST STATE [S81-FRAME-FIX-1 -> COORD, S81-ARCH-RTL-2, DIE-S81-87] bs2/bs3 qbank pin cycle, remaining part of item (3).
+  - frame_seam_bench h9 now produces a result on the frame-inband branch, because the refreshed landed schedules clear the stale dsfd_bf_front_roots sha.
+  - But it is BLIND: base PASS and late9 mutant PASS, seam_mismatch_lines 0 on both, SEAM_BENCH_EXIT 1 (epyc9 .../s81-frame-fix-1/seam_h9). It cannot gate the qbpc until its mutants are caught again. Owner: S81-ARCH-RTL-2 / DIE-S81-87.
+  - Compiler side of the qbpc, done on 490b6b1dd5:
+    - inband_shift prices +1 on e2/e3, read from the schedule.
+    - The go_tag lead 3 is proven by the bench (frame_seq_gate --go-tag-lead3).
+    - Expect a floor cost of about +1 at P-floor ops, e.g. experts_gu P145 -> 146.
+  - Still needed for the framed proof: a landed schedule extracted from the qbpc band frame itself. That is the as-built extractor, whose check FAILs on main.
