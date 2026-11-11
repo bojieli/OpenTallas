@@ -1,5 +1,5 @@
 # GENERATED-COPY of tools/die_plan/reset_follow_clock.tcl (VSN2-HOLD 11-11, DIE-HBM-97; opt-in plan
-# reset.follow_clock_tap {"types": [...]}, gen_phys.reset_follow_clock_tap).  Sourced by pre_cts.tcl right after the
+# clock.reset_follow_clock_tap {"types": [...]}, gen_phys.reset_follow_clock_tap).  Sourced by pre_cts.tcl right after the
 # post-place reset_taps.tcl leaf check, i.e. after clock_taps.tcl has fixed every clock pin (nearest / cap /
 # follower / hop-latch passes), in the same scope (it reads reset_taps.tcl's rt_* tables and procs).
 # Why: reset_taps.tcl points each placed control sink (station eq / epoch flops) at its NEAREST tap's reset terminal;

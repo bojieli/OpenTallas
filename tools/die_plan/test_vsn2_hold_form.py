@@ -11,8 +11,8 @@ import gen_phys
 HOOK = Path(__file__).with_name("reset_follow_clock.tcl")
 
 
-def _p(name, clock=None, reset=None):
-    return types.SimpleNamespace(die={"name": name}, clock=clock or {}, reset=reset or {})
+def _p(name, clock=None):
+    return types.SimpleNamespace(die={"name": name}, clock=clock or {})
 
 
 def test_launch_tap_type_has_no_capture_tap_line(monkeypatch):
@@ -37,7 +37,7 @@ def test_env_still_wins(monkeypatch):
 
 
 def test_reset_follow_flag():
-    P = _p("hbm_arch_B2o", reset={"follow_clock_tap": {"types": ["vsN2"]}})
+    P = _p("hbm_arch_B2o", clock={"reset_follow_clock_tap": {"types": ["vsN2"]}})
     assert gen_phys.reset_follow_clock_tap(P, "vsN2")
     assert not gen_phys.reset_follow_clock_tap(P, "vsN1")
     assert not gen_phys.reset_follow_clock_tap(_p("hbm_arch_B2o"), "vsN2")

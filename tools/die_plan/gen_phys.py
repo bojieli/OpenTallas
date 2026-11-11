@@ -2706,12 +2706,12 @@ def _hop_latch_capture_tap(P, tn=None):
 
 
 def reset_follow_clock_tap(P, tn):
-    """VSN2-HOLD 11-11: True when plan reset.follow_clock_tap.types lists type tn.  vsN2 a11 FF removal -19.1 ps on
+    """VSN2-HOLD 11-11: True when plan clock.reset_follow_clock_tap.types lists type tn.  vsN2 a11 FF removal -19.1 ps on
     u_rrl_9 (rst_n_t7, clk_t7) -> u_ft_L201x2_o_2/eq (clk_t2): reset_taps.tcl picks the nearest tap's terminal before
     GPL, clock_taps.tcl may clock the sink from another port, and a cross-port pair carries the whole window W.  After
     CTS assignment reset_follow_clock.tcl re-points such sinks to a terminal launched on their own clock net."""
-    reset = getattr(P, "reset", None) or {}
-    cfg = reset.get("follow_clock_tap") or {}
+    clock = getattr(P, "clock", None) or {}     # under clock, not reset: the native reset contract stays unchanged
+    cfg = clock.get("reset_follow_clock_tap") or {}
     return tn is not None and tn in set(cfg.get("types") or [])
 
 
@@ -4529,7 +4529,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-20 11-01: a hard wrapper's reset is the delivered port (bind.py `wire rst_n = arst_n`, no in-kit
         # terminal): reset_taps.tcl measures + reports that hop from the port instead of failing on the missing net
         port = "set rt_port_reset arst_n\n" if P.types[tn].get("hard") else ""
-        # VSN2-HOLD 11-11 (opt-in plan reset.follow_clock_tap): control sinks then follow their CTS clock tap's
+        # VSN2-HOLD 11-11 (opt-in plan clock.reset_follow_clock_tap): control sinks then follow their CTS clock tap's
         # reset terminal (reset_follow_clock.tcl); absent = pre_cts.tcl byte-identical and no file in the kit.
         rfc = ""
         if reset_follow_clock_tap(P, tn):
