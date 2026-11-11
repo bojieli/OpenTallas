@@ -51,8 +51,47 @@ def split(text):
     return "".join(rest), insts
 
 
+_ID = re.compile(r"^(\\\S+|\w+)(\[[^\]]*\])?$")
+
+
+def net_renames(o, n, rule):
+    """{NEW net: OLD net} read off the substituted instances only: a renamed port whose NEW and OLD expressions are the
+    same bit range of two differently named nets (the binder names a leaf output net after the leaf port, e.g.
+    w_<inst>_sfu_coll vs w_<inst>_lane_coll).  ({}, errors) on a conflicting pair."""
+    rename, share, nmap, errs = rule.get("rename", {}), rule.get("share", {}), {}, []
+    for name in sorted(set(o) & set(n)):
+        (om, _op, oc), (nm, _np, nc) = o[name], n[name]
+        if om != rule["native"] or nm != rule["top"]:
+            continue
+        for tp, e in nc.items():
+            src = share.get(tp) or rename.get(tp, tp)
+            a, b = _ID.match(e), _ID.match(oc.get(src, ""))
+            if a and b and a.group(2) == b.group(2) and a.group(1) != b.group(1):
+                if nmap.setdefault(a.group(1), b.group(1)) != b.group(1):
+                    errs.append(f"net {a.group(1)} maps to {nmap[a.group(1)]} and {b.group(1)}")
+    return nmap, errs
+
+
+def apply_renames(text, nmap):
+    """NEW text with whole identifiers renamed; errors when an OLD name is already a different NEW identifier."""
+    idents = set(re.findall(r"\b\w+\b", text))
+    errs = [f"rename collision: {k} -> {v} but {v} is already a NEW identifier" for k, v in nmap.items() if v in idents]
+    if nmap and not errs:
+        rx = re.compile(r"\b(" + "|".join(sorted(map(re.escape, nmap), key=len, reverse=True)) + r")\b")
+        text = rx.sub(lambda m: nmap[m.group(1)], text)
+    return text, errs
+
+
 def check(old_text, new_text, rule):
+    """Comments are dropped on both sides (the binder annotates lanes with sink port names); every NEW net that a
+    renamed port names differently is renamed back (net_renames, bijective, collision-checked); then exact."""
     errs, n_sub = [], 0
+    old_text = re.sub(r"//[^\n]*", "", old_text)
+    new_text = re.sub(r"//[^\n]*", "", new_text)
+    nmap, e1 = net_renames(split(old_text)[1], split(new_text)[1], rule)
+    new_text, e2 = apply_renames(new_text, nmap)
+    errs += e1 + e2
+    check.renamed_nets = len(nmap)
     o_rest, o = split(old_text)
     n_rest, n = split(new_text)
     if o_rest != n_rest:
@@ -98,10 +137,11 @@ def main():
     errs, n_sub = check(Path(a.old).read_text(), Path(a.new).read_text(), rule)
     ok = not errs and n_sub > 0
     rec = dict(schema="opentallas.die_plan.subtype_wiring.v1", old=a.old, new=a.new, native=rule["native"],
-               top=rule["top"], substituted=n_sub, verdict="PASS" if ok else "FAIL", errors=errs[:50])
+               top=rule["top"], substituted=n_sub, renamed_nets=getattr(check, "renamed_nets", 0),
+               verdict="PASS" if ok else "FAIL", errors=errs[:50])
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
-    print(rec["verdict"], n_sub, errs[:5])
+    print(rec["verdict"], n_sub, "renamed_nets", rec["renamed_nets"], errs[:5])
     sys.exit(0 if ok else 1)
 
 
