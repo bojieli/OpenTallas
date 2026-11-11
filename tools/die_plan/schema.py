@@ -771,6 +771,18 @@ SCHEMA = {
                                        # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
                                        # obstructs M1..obs_max, default partition_signal_max when absent)
                                        "obs_max": _layer,
+                                       # DIE-QC-97 11-10 (COORD, cbx NK u_t21): parent route channels reserved
+                                       # THROUGH this core (core frame R0; EW = full-width y span, NS = full-height x
+                                       # span).  The core's own routing stays off `layers` there (master-plan slice
+                                       # route_channel keepout), so its abstract carries no OBS on them in the band.
+                                       # Every entry of one module must declare the same list (core_route_channel).
+                                       "route_channels": {"type": "array", "items": {
+                                           "type": "object", "required": ["dir", "span_um", "layers", "reason"],
+                                           "additionalProperties": False,
+                                           "properties": {"dir": {"enum": ["EW", "NS"]}, "span_um": _win,
+                                                          "layers": {"type": "array", "items": _layer,
+                                                                     "minItems": 1},
+                                                          "reason": {"type": "string", "minLength": 3}}}},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},

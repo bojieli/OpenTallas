@@ -43,7 +43,8 @@ from pathlib import Path
 
 SCHEMA = "opentallas.master_plan_slice.v1"
 KINDS = ("partition", "core")
-KEEPOUT_KINDS = ("island", "in_core_bay", "clock_shield", "hard_core")
+KEEPOUT_KINDS = ("island", "in_core_bay", "clock_shield", "hard_core",
+                 "route_channel")   # DIE-QC-97 11-10: parent channel through a core (layers only, core_route_channel)
 BAY_KINDS = ("station", "repeater")
 OUTLINE_TOL_UM = 1e-3
 TRIAL = "TRIAL-NO-SLICE"

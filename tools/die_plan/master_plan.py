@@ -78,6 +78,7 @@ sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
 import infra_sites as IS  # noqa: E402
 import master_rulings as MR  # noqa: E402
+import core_route_channel as CRC  # noqa: E402
 
 G = 10.8
 ROW = 0.27
@@ -2549,7 +2550,10 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                   plan_sha256=plan_sha, master_plan_sha256=mp_sha, frozen=False, outline_um=c["outline_um"],
                   keepouts=[dict(name="clock_entry_island", rect_um=e["island"], kind="island", use=["placement"])]
                   + [dict(name=f"in_core_bay{i}", rect_um=b["core_local_um"], kind="in_core_bay",
-                          use=["placement"]) for i, b in enumerate(ic)],
+                          use=["placement"]) for i, b in enumerate(ic)]
+                  # DIE-QC-97 11-10: parent route channels through the core (plan hard_cores[].route_channels):
+                  # routing obstruction on the channel layers only, the core's cells still place under them
+                  + CRC.slice_keepouts(c["uses"], c["outline_um"]),
                   islands=[dict(name="clock_entry", rect_um=e["island"], centre_um=e["xy"],
                                 use="clock_driver+reset", via_stack=["M9", "M5"],
                                 clock_pin=dict(layer="M5", xy_um=e["xy"]),
