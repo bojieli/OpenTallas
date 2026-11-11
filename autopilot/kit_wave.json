@@ -21,21 +21,21 @@
     "clock": "PASS",
     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw43/kvr2/plan_c.json",
-   "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw43/src_zb_lr_sf_por15c_rh",
-   "src_sha": "e273bd37e4ee82e912c95a29d7e665173cd7ca4f",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "gen_host": "epyc8",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb",
+   "src_sha": "2041e424bb56fc9dc4aad7e1162f164fa8cfd41a",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json",
     "note": "KW-FIX-42 2026-11-09 07:14 PST KV bind9 = the KV small event (KV-PLAN-1 07:04 READY, COORD 07:1x GO): plan_zbk (plan_c 1035a005 = plan_zb6), asbuilt caba8c83, strict bind9 0 errors (160 partitions, 2545 crossings); .sv vs bind8 differs only in the 8 vport types (RT 63->95, pad D+1). Staged epyc7+epyc2 (363 files + 87 referenced paths, 0 missing). Revert *_prev_kw42b9 | KW-FIX-42 11-09 04:37 PST: KV ZB_ADD event (DIE-KV-97 04:30 READY, COORD 04:4x): plan_zb6 1035a005 (= plan_p6) + bind8 strict + asbuilt 9c17ef0e + src_zb (MD5_ZB_bind8 0 bad on epyc7/intel1); revert *_prev_kw42zb | KW-FIX-42 03:00: DIE-KV-97 02:24 THE ONE KV SWITCH (plan_p4 443dc48a, asbuilt 4e4ac233, bind5 strict 0) | KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows. | KW-FIX-16 12:5x I126 tag flow-20261106-b-kv: src_k -> src_o main f649a3eb9a3 (KV PV taps, 15 types), asbuilt_kv_o base src_o, strict --all-gaps bind_kv_o errors 0, 2545 crossings (KW-FIX-15 bind 12:16 PST). | KW-FIX-15 11-05 11:3x: KV src_h -> src_k main 714dd1ea120 (tag flow-20261106-a-kv), asbuilt_kv_k base src_k, strict --all-gaps bind_kv_k errors 0, 2545 crossings (KW-FIX-13 09:48); plan_c + eW_sidecar byte-equal to src_h. | KW-FIX-11 06:5x I93 hgi taps: src_h main 517c80a6704, asbuilt base src_h, strict --all-gaps bind_kv_h errors 0, 2545 crossings; kv37 pad table copied from src_e (untracked there). | KW-FIX-8 17:1x I52: src_v 86bdf758742; asbuilt_v base src_v reads the tag eW_sidecar; strict bind_v; kv3_pv_v8 pilot one row. KW-FIX-8 I46: src_s main c512ffc3a94, plan_c 76de518 astk on bind_o (DIE-KV-70: kit-rtl rc 0 on it) | KW-FIX-8 10:0x I36 tag o-kv: asbuilt_s6 base src_n, strict --all-gaps bind_o errors 0, 2545 crossings; vs bind_e2 rtl differs only PC family, hub_Wi, top | KW-FIX-6 05:4x: KV event, bind_e2 strict 0 errors (DIE-KV-66 05:18), inputs copied intel1 -> epyc4 same paths; kit-rtl kv3_pv_v8 rc 0 on epyc4. | 16:58 KW-FIX-4 (DIE",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/kv/bind_kvr2_9237b"
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw32/src_27db6/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -575,10 +575,102 @@
     "kv3_io_cor_v1@9": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold"
    },
-   "only_items": [],
+   "only_items": [
+    "kv3_astk",
+    "kv3_head_eighth_e0",
+    "kv3_head_eighth_e1",
+    "kv3_head_eighth_e2",
+    "kv3_head_eighth_e5",
+    "kv3_head_eighth_e6",
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8",
+    "kv3_hroot",
+    "kv3_hub_C",
+    "kv3_hub_Ei",
+    "kv3_hub_Eo",
+    "kv3_hub_Wi",
+    "kv3_hub_Wo",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_io_ft",
+    "kv3_io_ft_v1",
+    "kv3_pc__cl254f2e73",
+    "kv3_pc__cl5a95b461",
+    "kv3_pc_v3",
+    "kv3_phy",
+    "kv3_phy_v1",
+    "kv3_pv",
+    "kv3_pv_pair",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_pv_v3n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v5",
+    "kv3_pv_v5n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_pv_v8",
+    "kv3_sys_SD",
+    "kv3_sys_SD_v1",
+    "kv3_sys_c",
+    "ot_qwen_tp8_pv_join_t",
+    "qkd_ahub",
+    "qkd_ectlk_q0",
+    "qkd_ectlk_q1",
+    "qkd_ectlk_q2",
+    "qkd_ectlk_q3",
+    "qkd_hr_cdc_ch",
+    "qkd_hr_cdc_ci",
+    "qkd_hr_cdc_hi",
+    "qkd_hr_cdc_pc",
+    "qkd_hr_core_guard",
+    "qkd_hr_core_order",
+    "qkd_hr_core_peer",
+    "qkd_hr_core_prompt",
+    "qkd_hr_core_queue",
+    "qkd_hr_core_rx",
+    "qkd_hr_core_tx",
+    "qkd_hr_host_qm",
+    "qkd_hr_ingest_eng",
+    "qkd_hr_phy_adp",
+    "qkd_hr_phy_pad",
+    "qkd_kvs_ctl",
+    "qkd_kvs_pc",
+    "qkd_kvs_pc_h_head_p",
+    "kv3_pc_v1__cl23f6a148",
+    "kv3_pc_v1__cl7f648944",
+    "kv3_pc_v1__cl4ea58a5c",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hgi_v1__cl141fc26e",
+    "kv3_hgi_v1__cl42bc8b12",
+    "kv3_hgi_v2__cl2862d491",
+    "kv3_hgi_v2__cle0015330",
+    "kv3_pc",
+    "kv3_pc_v1"
+   ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "claude/kv-plan-2-kvrtt-wave-1109@6d044488624b",
+   "queue_src": "main@2041e424bb56",
    "hold_items_released": {
     "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -617,16 +709,12 @@
     "kv3_hroot": "KW-FIX-42 03:05 COORD NEWFAIL: GRT congestion (d2a1629e48b0); owner decides the form, no unchanged relaunch | DIE-KV-97 02:24 KEEP running | RELEASED KW-FIX-42 11-09 04:38: plan_zb6 geometry (SD macro origin [6.48,58.32] + E/S pin spread; hroot S-face pin spread), COORD 04:4x"
    },
    "hosts": [
-    "epyc7",
-    "epyc9",
-    "intel2",
-    "epyc2"
+    "epyc8",
+    "epyc9"
    ],
    "gen_hosts": [
-    "epyc7",
     "epyc8",
-    "epyc9",
-    "epyc2"
+    "epyc9"
    ],
    "place_prefer": [
     "epyc7",
@@ -2015,184 +2103,184 @@
    "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv.",
    "item_inputs": {
     "kv3_sys_SD": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_sys_SD_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvrs_rh/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7).",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     },
     "kv3_pv_v12": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v5n": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v6n": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v1n": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      }
     },
     "kv3_pv_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      }
     },
     "kv3_sys_c": {
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/bind9c2",
-      "asbuilt": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/plan_zbr2/asbuilt.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KW-FIX-43 15:1x COORD 15:0x KV bind9c2 APPROVED (KV-PLAN-2 15:00): strict 0 errors; only RTL change vs bind9 = kv3_sys_c u_d2d_kv .KV_RTT(511); asbuilt plan_zbr2. Plan stays the die plan. Staged epyc2 (origin) + epyc7. | KV-PLAN-2 11-10 (COORD approved one-block fix on frozen 92370701): item plan = plan_kvfix1 (md5 57c77c4b; = plan_sysc1 5a0e15c6 ROM u_bound.u_dcal.u_profile x 302.4->301.536 + 4 D2D SRAMs x 596.16->595.296, plus kv3_hub_C pad / kv3_hub_Wi physical_inst edits that do not touch kv3_sys_c); staged epyc2+epyc7; G0 vs 92370701: 1 new advisory WARN geom_clock_reach 194.16->232.89 (reset relay u_rrl_175), 0 errors added",
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_kvfix1/plan_c.json"
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
     },
     "kv3_hg": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p2": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p4": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p5": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p6": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v1__cl141fc26e": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v1__cl42bc8b12": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v2__cl2862d491": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v2__cle0015330": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v4": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v6": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v8": {
-     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_io_cor": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     },
     "kv3_io_cor_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     }
    },
@@ -3156,7 +3244,204 @@
     "epyc7",
     "epyc9",
     "epyc2"
-   ]
+   ],
+   "item_inputs_prev_kw45_1111": {
+    "kv3_sys_SD": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_sys_SD_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvrs_rh/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7).",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
+    },
+    "kv3_pv_v12": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v5n": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v6n": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    },
+    "kv3_pv_v1n": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
+      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+     }
+    },
+    "kv3_pv_v7": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/plan_c.json",
+     "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/dkv97/bind9",
+      "asbuilt": "/srv/opentallas-scratch2/claude/dkv97/plan_zbk/asbuilt.json"
+     }
+    },
+    "kv3_sys_c": {
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/bind9c2",
+      "asbuilt": "/srv/opentallas-scratch3/claude/kv-plan-2/ev/plan_zbr2/asbuilt.json"
+     },
+     "note": "KW-FIX-43 15:1x COORD 15:0x KV bind9c2 APPROVED (KV-PLAN-2 15:00): strict 0 errors; only RTL change vs bind9 = kv3_sys_c u_d2d_kv .KV_RTT(511); asbuilt plan_zbr2. Plan stays the die plan. Staged epyc2 (origin) + epyc7. | KV-PLAN-2 11-10 (COORD approved one-block fix on frozen 92370701): item plan = plan_kvfix1 (md5 57c77c4b; = plan_sysc1 5a0e15c6 ROM u_bound.u_dcal.u_profile x 302.4->301.536 + 4 D2D SRAMs x 596.16->595.296, plus kv3_hub_C pad / kv3_hub_Wi physical_inst edits that do not touch kv3_sys_c); staged epyc2+epyc7; G0 vs 92370701: 1 new advisory WARN geom_clock_reach 194.16->232.89 (reset relay u_rrl_175), 0 errors added",
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_kvfix1/plan_c.json"
+    },
+    "kv3_hg": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v1p2": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v1p4": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v1p5": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v1p6": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hg_v3": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v1__cl141fc26e": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v1__cl42bc8b12": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v2__cl2862d491": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v2__cle0015330": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v4": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v6": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v7": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_hgi_v8": {
+     "plan": "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-2/bind_e2s",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+     },
+     "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_io_cor": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
+    },
+    "kv3_io_cor_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
+    }
+   },
+   "cancel_superseded": true,
+   "hosts_prev_kw45_1111": [
+    "epyc7",
+    "epyc9",
+    "intel2",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw45_1111": [
+    "epyc7",
+    "epyc8",
+    "epyc9",
+    "epyc2"
+   ],
+   "plan_note_kw45": "KW-FIX-45 11-11: KV 12:00 cut REVISED plan 5091ada33f14 (sha256 dfbbd3a9dd3d; DIE-KV-98 BIND_OK epyc4 a5e8c5aa6b2d716b) installed in the cut tree plan_of_record/plan_c.json; GATE (b) strict bind on the cut tree (pure main 2041e424bb56, epyc9, asbuilt_rel with kw32 src path -> scratch3/kw32src): BIND_RC 0, 0 errors, 160 partitions, 2545 crossings, 429,530 bits, 3094 straps (= DIE-KV-98). bus_groups a03ea3e3."
   },
   "s81": {
    "enabled": true,
@@ -20339,7 +20624,10 @@
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
-    "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x."
+    "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
+    "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
+    "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -21560,9 +21848,6 @@
     "coll_ftm",
     "coll_ftn",
     "coll_n",
-    "phy_serdes",
-    "phy_serdes_b",
-    "phy_ucie_kv",
     "sle_fe_v2",
     "sle_fw_v1__cl9d029624",
     "sle_hc0__cl929603c0__cl38badc56",
@@ -27313,10 +27598,32 @@
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "slw_fw_v1__clf51c11d8__cl592e3d37": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: incremental GRT hang 6h06 after repair_design (full GRT overflow 0, NDR disabled on clknet_0_clk_t22/t34, then silent); hand to DIE-QC-97 for a form, no wave relaunch. Lift = delete this key."
    },
-   "hard_wrappers": [
+   "hard_wrappers_prev_kw45_1111": [
     "phy_serdes",
     "phy_serdes_b",
     "phy_ucie_kv"
+   ],
+   "only_items_with_phy_prev_kw45": [
+    "coll_ftc",
+    "coll_ftm",
+    "coll_ftn",
+    "coll_n",
+    "phy_serdes",
+    "phy_serdes_b",
+    "phy_ucie_kv",
+    "sle_fe_v2",
+    "sle_fw_v1__cl9d029624",
+    "sle_hc0__cl929603c0__cl38badc56",
+    "sle_hc1__cl22c1ff36",
+    "sle_hc1__cl7d360508",
+    "sle_hc2__cl9c4c4509__cl3edce1b8",
+    "sle_hc2__cl9c4c4509__clf60c5152",
+    "sle_hc2__clcc5e3e61",
+    "slw_fw_v1__cl51d45468",
+    "slw_fw_v1__clf51c11d8__cl592e3d37",
+    "slw_fw_v1__clf51c11d8__clc7ddab13",
+    "slw_st_a_v2__cl9f076a5c",
+    "slw_fw_v3"
    ]
   },
   "hbm": {
