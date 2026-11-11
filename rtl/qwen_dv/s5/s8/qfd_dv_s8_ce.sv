@@ -429,9 +429,19 @@ module qfd_dv_s6_stm_se0 #(parameter integer CE_MUT = 0, parameter integer HARD 
         .xt_v(xt_v),.xt_a(xt_a),.xt_d_lo(xt_d[511:0]),.xt_d_hi(xt_d[1023:512]),.xt_bad(xt_bad),.fault(stm_fault));
 `endif
     wire j_we;wire[1:0]j_kind;wire[23:0]j_addr;wire[1023:0]j_data;
+    // TLOAD-ROMSTAGE (DIE-QC-97 11-11, opt-in per plan type: verilog_defines OT_QC_TLCAP; default OFF = netlist unchanged).
+    // Routed sle_stm_v2__cl7b3062fa a14 (flattened u_tload, CAPTURE_STAGE 0): ROM m3 clk->q 598 ps, then the metadata
+    // invalid reduction (OR4/OR4/OR4/AOI/AND) and a 13-buffer fanout to g_wek.cp[31] 350..663 um away: TT -1046 ps,
+    // 3093 endpoints.  OT_QC_TLCAP selects the CLOSED ns4 profile (CAPTURE_STAGE 1 + LOCAL_JOIN 1, the same parameters
+    // the OT_S6_SIM benches already simulate): every ROM output lands in one register (payload + 4 metadata copies)
+    // before any logic, so ROM -> register is wire only; the reduction and the select fanout move to the next edge.
+    // Price: +1 edge on every loader table write / done / fault and on busy release (first VM write +4, last +91 after
+    // the loader sample instead of +3 / +90); the stream (s_*) path and all other ports are unchanged.
     qfd_dv_slice_tload
 `ifdef OT_S6_SIM
         #(.SLICE(TSLICE),.CAPTURE_STAGE(1),.LOCAL_JOIN(1))   // the CLOSED ns4 view's baked parameters (sim only: a hard view has none)
+`elsif OT_QC_TLCAP
+        #(.CAPTURE_STAGE(1),.LOCAL_JOIN(1))                    // TLOAD-ROMSTAGE: same profile in the synthesised (flattened) form
 `endif
         u_tload(
         .ck(ck),.rst_n(rst),.treq(treq_i),.s_we(s_we),.s_kind(s_kind),.s_addr(s_addr),.s_data(s_data),
