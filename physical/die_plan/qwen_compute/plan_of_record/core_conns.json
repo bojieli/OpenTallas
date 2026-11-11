@@ -5,8 +5,58 @@
     "bus:nb_i00"
    ]
   },
-  "u_t01": {},
-  "u_t10": {},
+  "u_t01": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t10": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t11": {
    "n_a": [
     "core:u_t10.n_y"
@@ -28,8 +78,58 @@
     "bus:nb_i00"
    ]
   },
-  "u_t01": {},
-  "u_t10": {},
+  "u_t01": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t10": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t11": {
    "n_a": [
     "core:u_t10.n_y"
@@ -74,16 +174,216 @@
   }
  },
  "cbf_q01": {
-  "u_t02": {},
-  "u_t03": {},
-  "u_t12": {},
-  "u_t13": {}
+  "u_t02": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t03": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t12": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "bus:y_o12"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t13": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  }
  },
  "cbf_q01_s2": {
-  "u_t02": {},
-  "u_t03": {},
-  "u_t12": {},
-  "u_t13": {}
+  "u_t02": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t03": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t12": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "bus:y_o12"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t13": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  }
  },
  "cbf_q11": {
   "u_t22": {
@@ -122,8 +422,58 @@
     "bus:nb_i00"
    ]
   },
-  "u_t01": {},
-  "u_t10": {},
+  "u_t01": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o01"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t10": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t11": {
    "n_a": [
     "core:u_t10.n_y"
@@ -173,8 +523,58 @@
     "bus:nb_i00"
    ]
   },
-  "u_t01": {},
-  "u_t10": {},
+  "u_t01": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o01"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t10": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t11": {
    "n_a": [
     "core:u_t10.n_y"
@@ -188,8 +588,58 @@
   }
  },
  "cbn_q01__clab6e67f2": {
-  "u_t02": {},
-  "u_t03": {},
+  "u_t02": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t03": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t12": {
    "n_a": [
     "core:u_t13.n_y"
@@ -205,8 +655,58 @@
   }
  },
  "cbn_q01__cld9ff4c40": {
-  "u_t02": {},
-  "u_t03": {},
+  "u_t02": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
+  "u_t03": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "glue"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t12": {
    "n_a": [
     "core:u_t13.n_y"
@@ -309,7 +809,34 @@
   }
  },
  "cbx_q10__cl89936551": {
-  "u_t20": {},
+  "u_t20": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o21",
+    "bus:bc_o31",
+    "bus:y_o21"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t21": {
    "n_a": [
     "core:u_t20.n_y"
@@ -318,7 +845,25 @@
     "core:u_t31.n_y"
    ]
   },
-  "u_t30": {},
+  "u_t30": {
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o21",
+    "bus:bc_o31",
+    "bus:y_o21"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t31": {
    "n_a": [
     "core:u_t21.t_out"
@@ -326,7 +871,34 @@
   }
  },
  "cbx_q10__cl94a12200": {
-  "u_t20": {},
+  "u_t20": {
+   "n_a": [
+    "glue"
+   ],
+   "n_b": [
+    "glue"
+   ],
+   "n_y": [
+    "glue"
+   ],
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o21",
+    "bus:bc_o31",
+    "bus:y_o21"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t21": {
    "n_a": [
     "core:u_t20.n_y"
@@ -335,7 +907,25 @@
     "core:u_t31.n_y"
    ]
   },
-  "u_t30": {},
+  "u_t30": {
+   "t_out": [
+    "glue"
+   ],
+   "tap": [
+    "bus:bc_o21",
+    "bus:bc_o31",
+    "bus:y_o21"
+   ],
+   "tie_hi": [
+    "glue"
+   ],
+   "tie_lo": [
+    "glue"
+   ],
+   "tile_id": [
+    "glue"
+   ]
+  },
   "u_t31": {
    "n_a": [
     "core:u_t21.t_out"
@@ -351,27 +941,765 @@
   "g_xf_1": {},
   "g_xf_2": {},
   "g_xf_3": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.u_rx.u_mem": {},
-  "u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem": {},
-  "u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx.u_mem": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m": {},
-  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m": {}
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.u_rx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "bus:fltv_o"
+   ],
+   "w_ce_in": [
+    "bus:fltv_o"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "bus:fltv_o"
+   ],
+   "w_ce_in": [
+    "bus:fltv_o"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "glue"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "glue"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.r_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.rd_out",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.w_addr_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m.wd_in",
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m": {
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.rd_out"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m": {
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.rd_out"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m": {
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.rd_out"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.wd_in"
+   ]
+  },
+  "u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m": {
+   "r_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.rd_out"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.wd_in"
+   ]
+  }
  },
  "coll_n": {
   "u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram": {},
@@ -382,26 +1710,712 @@
   "u_bound.u_core.u_tx.u_mem": {}
  },
  "coll_s": {
-  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {},
-  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {},
-  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {},
-  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {},
-  "u_bound.u_g_face_3_u_face.u_rx.u_mem": {},
-  "u_bound.u_g_face_3_u_face.u_tx.u_mem": {},
-  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {},
-  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {},
-  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {},
-  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {},
-  "u_bound.u_g_face_4_u_face.u_rx.u_mem": {},
-  "u_bound.u_g_face_4_u_face.u_tx.u_mem": {}
+  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_3_u_face.u_rx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rclk": [
+    "glue"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "glue"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wclk": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_g_face_3_u_face.u_tx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:rec_rx_s2",
+    "core:u_bound.u_g_face_4_u_face.u_tx.u_mem.r_ce_in"
+   ],
+   "rclk": [
+    "glue"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wclk": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.u_rx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o"
+   ],
+   "rclk": [
+    "glue"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "glue"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wclk": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_g_face_4_u_face.u_tx.u_mem": {
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:fltv_o",
+    "core:u_bound.u_g_face_3_u_face.u_tx.u_mem.r_ce_in"
+   ],
+   "rclk": [
+    "glue"
+   ],
+   "rd_out": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_g_face_3_u_face.u_tx.u_mem.w_ce_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_g_face_3_u_face.u_tx.u_mem.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wclk": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  }
  },
  "glue": {
-  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram": {},
-  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram": {},
-  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram": {},
-  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram": {},
-  "u_bound.u_embed_prov.store.codes": {},
-  "u_bound.u_sys_face.u_ot_pr_core.u_rom": {}
+  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.r_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.r_addr_in"
+   ],
+   "r_ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.rd_out",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.rd_out"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_addr_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_addr_in"
+   ],
+   "w_ce_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_ce_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_ce_in"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.wd_in",
+    "core:u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.wd_in"
+   ]
+  },
+  "u_bound.u_embed_prov.store.codes": {
+   "cr_en": [
+    "glue"
+   ],
+   "cr_sel": [
+    "glue"
+   ],
+   "r_addr_in": [
+    "glue"
+   ],
+   "r_ce_in": [
+    "bus:embed_prov__embed_code_q"
+   ],
+   "rd_out": [
+    "bus:embed_prov__embed_code_q"
+   ],
+   "rr_addr": [
+    "glue"
+   ],
+   "rr_en": [
+    "glue"
+   ],
+   "w_addr_in": [
+    "glue"
+   ],
+   "w_ce_in": [
+    "glue"
+   ],
+   "w_mask_in": [
+    "glue"
+   ],
+   "wd_in": [
+    "glue"
+   ]
+  },
+  "u_bound.u_sys_face.u_ot_pr_core.u_rom": {
+   "addr_in": [
+    "glue"
+   ],
+   "ce_in": [
+    "glue"
+   ],
+   "rd_out": [
+    "glue"
+   ]
+  }
  },
  "sle_sc_v1__cl115da35f": {
   "u_core": {
@@ -876,22 +2890,202 @@
   "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m": {}
  },
  "sle_stm_v1__cl27746664": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ]
+  }
  },
  "sle_stm_v1__clbe630b9c": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in"
+   ]
+  }
  },
  "sle_stm_v2__cl55be2264": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ]
+  }
  },
  "sle_stm_v2__cl7b3062fa": {
   "u_bound.u_core.u_tload.u_ld.m0": {},
@@ -900,21 +3094,454 @@
   "u_bound.u_core.u_tload.u_ld.m3": {}
  },
  "sle_stm_v3": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ]
+  }
  },
  "sle_su_c": {
-  "u_red_u_core": {},
-  "u_suvm_u_su8": {},
-  "u_suvm_u_vm8q_u_bt": {},
-  "u_suvm_u_vm8q_u_ch": {},
-  "u_suvm_u_vm8q_u_cl": {},
-  "u_suvm_u_vm8q_u_pg": {},
-  "u_suvm_u_vm8q_u_va": {},
-  "u_suvm_u_vm8q_u_vb": {},
-  "u_suvm_u_vm8q_u_vc": {}
+  "u_red_u_core": {
+   "busy": [
+    "core:u_suvm_u_su8.red_busy"
+   ],
+   "fault": [
+    "core:u_suvm_u_su8.red_fault"
+   ],
+   "l_last0": [
+    "glue"
+   ],
+   "l_out": [
+    "glue"
+   ],
+   "l_ov": [
+    "glue"
+   ],
+   "l_raddr0": [
+    "glue"
+   ],
+   "l_red0": [
+    "glue"
+   ],
+   "l_redsq0": [
+    "glue"
+   ],
+   "rd_v": [
+    "glue"
+   ],
+   "red_addr": [
+    "glue"
+   ],
+   "red_data": [
+    "glue"
+   ],
+   "red_we": [
+    "core:u_suvm_u_su8.rd_v"
+   ]
+  },
+  "u_suvm_u_su8": {
+   "gb": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "gv": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "kv_we": [
+    "glue"
+   ],
+   "l_fault": [
+    "glue"
+   ],
+   "l_last": [
+    "glue"
+   ],
+   "l_retire": [
+    "glue"
+   ],
+   "lv1": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "lvm_we": [
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "pd1": [
+    "bus:x_su_l1_o",
+    "bus:x_su_l0_o",
+    "bus:x_su_l0_p1_o"
+   ],
+   "rd_v": [
+    "core:u_red_u_core.red_we"
+   ],
+   "red_busy": [
+    "core:u_red_u_core.busy"
+   ],
+   "red_fault": [
+    "core:u_red_u_core.fault"
+   ],
+   "si": [
+    "core:u_suvm_u_vm8q_u_pg.p_q"
+   ],
+   "start": [
+    "core:u_red_u_core.red_we"
+   ],
+   "su_fault": [
+    "bus:x_ctl_o"
+   ],
+   "su_idle": [
+    "bus:x_ctl_o"
+   ],
+   "su_nr": [
+    "bus:x_ctl_o"
+   ],
+   "su_prog": [
+    "bus:x_ctl_o"
+   ],
+   "su_rows": [
+    "bus:x_ctl_o"
+   ]
+  },
+  "u_suvm_u_vm8q_u_bt": {
+   "bs_addr": [
+    "glue"
+   ],
+   "bs_q": [
+    "glue"
+   ],
+   "bs_re": [
+    "glue"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_pg.tw_addr"
+   ],
+   "tw_data": [
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_pg.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_pg.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_ch": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_cl.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_cl.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_cl.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_cl.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_cl.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_cl": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_ch.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_ch.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_ch.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_ch.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_ch.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_pg": {
+   "p_idx": [
+    "glue"
+   ],
+   "p_q": [
+    "core:u_suvm_u_su8.si"
+   ],
+   "p_re": [
+    "core:u_red_u_core.red_we",
+    "core:u_suvm_u_su8.rd_v"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_bt.tw_addr"
+   ],
+   "tw_d0": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_d1": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_bt.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_bt.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_va": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_vb.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_vb.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_vb.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_vb.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_vb.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vb": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vc": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_vm8q_u_vb.fault"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vb.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vb.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vb.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vb.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vb.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vb.w1_we"
+   ]
+  }
  },
  "slw_sc_v1__cl63e5a7a2": {
   "u_core": {
@@ -1489,34 +4116,334 @@
   "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m": {}
  },
  "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ]
+  }
  },
  "slw_stm_v1__cl05fc43f7__cl389df4e9": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ]
+  }
  },
  "slw_stm_v1__cle34a73c3": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ]
+  }
  },
  "slw_stm_v2__cl1ca9c415": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ]
+  }
  },
  "slw_stm_v2__cl9beb65e6": {
-  "u_bound.u_core.u_tload.u_ld.m0": {},
-  "u_bound.u_core.u_tload.u_ld.m1": {},
-  "u_bound.u_core.u_tload.u_ld.m2": {},
-  "u_bound.u_core.u_tload.u_ld.m3": {}
+  "u_bound.u_core.u_tload.u_ld.m0": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m1": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m2.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m0.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m2": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m3.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m3.rd_out",
+    "core:u_bound.u_core.u_tload.u_ld.m1.rd_out"
+   ]
+  },
+  "u_bound.u_core.u_tload.u_ld.m3": {
+   "addr_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ],
+   "ce_in": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.ce_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.ce_in"
+   ],
+   "rd_out": [
+    "core:u_bound.u_core.u_tload.u_ld.m0.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m1.addr_in",
+    "core:u_bound.u_core.u_tload.u_ld.m2.addr_in"
+   ]
+  }
  },
  "slw_stm_v3": {
   "u_bound.u_core.u_tload.u_ld.m0": {},
@@ -1525,26 +4452,772 @@
   "u_bound.u_core.u_tload.u_ld.m3": {}
  },
  "slw_su_c__cl19bb38ef": {
-  "u_red_u_core": {},
-  "u_suvm_u_su8": {},
-  "u_suvm_u_vm8q_u_bt": {},
-  "u_suvm_u_vm8q_u_ch": {},
-  "u_suvm_u_vm8q_u_cl": {},
-  "u_suvm_u_vm8q_u_pg": {},
-  "u_suvm_u_vm8q_u_va": {},
-  "u_suvm_u_vm8q_u_vb": {},
-  "u_suvm_u_vm8q_u_vc": {}
+  "u_red_u_core": {
+   "busy": [
+    "core:u_suvm_u_su8.red_busy"
+   ],
+   "fault": [
+    "core:u_suvm_u_su8.red_fault"
+   ],
+   "l_last0": [
+    "glue"
+   ],
+   "l_out": [
+    "glue"
+   ],
+   "l_ov": [
+    "glue"
+   ],
+   "l_raddr0": [
+    "glue"
+   ],
+   "l_red0": [
+    "glue"
+   ],
+   "l_redsq0": [
+    "glue"
+   ],
+   "rd_v": [
+    "glue"
+   ],
+   "red_addr": [
+    "glue"
+   ],
+   "red_data": [
+    "glue"
+   ],
+   "red_we": [
+    "core:u_suvm_u_su8.rd_v"
+   ]
+  },
+  "u_suvm_u_su8": {
+   "gb": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "gv": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "kv_we": [
+    "glue"
+   ],
+   "l_fault": [
+    "glue"
+   ],
+   "l_last": [
+    "glue"
+   ],
+   "l_retire": [
+    "glue"
+   ],
+   "lv1": [
+    "bus:x_su_l1_o",
+    "bus:x_su_l0_o"
+   ],
+   "lvm_we": [
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "pd1": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o",
+    "bus:x_su_l0_p1_o"
+   ],
+   "rd_v": [
+    "core:u_red_u_core.red_we"
+   ],
+   "red_busy": [
+    "core:u_red_u_core.busy"
+   ],
+   "red_fault": [
+    "core:u_red_u_core.fault"
+   ],
+   "si": [
+    "core:u_suvm_u_vm8q_u_pg.p_q"
+   ],
+   "start": [
+    "core:u_red_u_core.red_we"
+   ],
+   "su_fault": [
+    "bus:x_ctl_o"
+   ],
+   "su_idle": [
+    "bus:x_ctl_o"
+   ],
+   "su_nr": [
+    "bus:x_ctl_o"
+   ],
+   "su_prog": [
+    "bus:x_ctl_o"
+   ],
+   "su_rows": [
+    "bus:x_ctl_o"
+   ]
+  },
+  "u_suvm_u_vm8q_u_bt": {
+   "bs_addr": [
+    "glue"
+   ],
+   "bs_q": [
+    "glue"
+   ],
+   "bs_re": [
+    "glue"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_pg.tw_addr"
+   ],
+   "tw_data": [
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_pg.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_pg.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_ch": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_cl.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_cl.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_cl.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d1"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_cl.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_cl.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_cl": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_ch.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_ch.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_ch.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_ch.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_ch.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_pg": {
+   "p_idx": [
+    "glue"
+   ],
+   "p_q": [
+    "core:u_suvm_u_su8.si"
+   ],
+   "p_re": [
+    "core:u_red_u_core.red_we",
+    "core:u_suvm_u_su8.rd_v"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_bt.tw_addr"
+   ],
+   "tw_d0": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_d1": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_bt.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_bt.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_va": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_vb.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_vb.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_vb.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_vb.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_vb.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vb": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vc": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_vm8q_u_vb.fault"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vb.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vb.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vb.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vb.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vb.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vb.w1_we"
+   ]
+  }
  },
  "slw_su_c__cl92142dac": {
-  "u_red_u_core": {},
-  "u_suvm_u_su8": {},
-  "u_suvm_u_vm8q_u_bt": {},
-  "u_suvm_u_vm8q_u_ch": {},
-  "u_suvm_u_vm8q_u_cl": {},
-  "u_suvm_u_vm8q_u_pg": {},
-  "u_suvm_u_vm8q_u_va": {},
-  "u_suvm_u_vm8q_u_vb": {},
-  "u_suvm_u_vm8q_u_vc": {}
+  "u_red_u_core": {
+   "busy": [
+    "core:u_suvm_u_su8.red_busy"
+   ],
+   "fault": [
+    "core:u_suvm_u_su8.red_fault"
+   ],
+   "l_last0": [
+    "glue"
+   ],
+   "l_out": [
+    "glue"
+   ],
+   "l_ov": [
+    "glue"
+   ],
+   "l_raddr0": [
+    "glue"
+   ],
+   "l_red0": [
+    "glue"
+   ],
+   "l_redsq0": [
+    "glue"
+   ],
+   "rd_v": [
+    "glue"
+   ],
+   "red_addr": [
+    "glue"
+   ],
+   "red_data": [
+    "glue"
+   ],
+   "red_we": [
+    "core:u_suvm_u_su8.rd_v"
+   ]
+  },
+  "u_suvm_u_su8": {
+   "gb": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "gv": [
+    "bus:x_su_l0_o",
+    "bus:x_su_l1_o"
+   ],
+   "kv_we": [
+    "glue"
+   ],
+   "l_fault": [
+    "glue"
+   ],
+   "l_last": [
+    "glue"
+   ],
+   "l_retire": [
+    "glue"
+   ],
+   "lv1": [
+    "bus:x_su_l1_o",
+    "bus:x_su_l0_o"
+   ],
+   "lvm_we": [
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "pd1": [
+    "bus:x_su_l1_o",
+    "bus:x_su_l0_o",
+    "bus:x_su_l0_p1_o"
+   ],
+   "rd_v": [
+    "core:u_red_u_core.red_we"
+   ],
+   "red_busy": [
+    "core:u_red_u_core.busy"
+   ],
+   "red_fault": [
+    "core:u_red_u_core.fault"
+   ],
+   "si": [
+    "core:u_suvm_u_vm8q_u_pg.p_q"
+   ],
+   "start": [
+    "core:u_red_u_core.red_we"
+   ],
+   "su_fault": [
+    "bus:x_ctl_o"
+   ],
+   "su_idle": [
+    "bus:x_ctl_o"
+   ],
+   "su_nr": [
+    "bus:x_ctl_o"
+   ],
+   "su_prog": [
+    "bus:x_ctl_o"
+   ],
+   "su_rows": [
+    "bus:x_ctl_o"
+   ]
+  },
+  "u_suvm_u_vm8q_u_bt": {
+   "bs_addr": [
+    "glue"
+   ],
+   "bs_q": [
+    "glue"
+   ],
+   "bs_re": [
+    "glue"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_pg.tw_addr"
+   ],
+   "tw_data": [
+    "core:u_suvm_u_vm8q_u_pg.tw_d1"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_pg.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_pg.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_ch": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_cl.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_cl.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_cl.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d0"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_cl.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_cl.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_cl": {
+   "cr_addr": [
+    "core:u_suvm_u_vm8q_u_ch.cr_addr"
+   ],
+   "cr_re": [
+    "core:u_suvm_u_vm8q_u_ch.cr_re"
+   ],
+   "fault": [
+    "glue"
+   ],
+   "q": [
+    "glue"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_ch.tw_addr"
+   ],
+   "tw_d": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data",
+    "core:u_suvm_u_vm8q_u_pg.tw_d1"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_ch.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_ch.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_pg": {
+   "p_idx": [
+    "glue"
+   ],
+   "p_q": [
+    "core:u_suvm_u_su8.si"
+   ],
+   "p_re": [
+    "core:u_red_u_core.red_we",
+    "core:u_suvm_u_su8.rd_v"
+   ],
+   "tw_addr": [
+    "core:u_suvm_u_vm8q_u_bt.tw_addr"
+   ],
+   "tw_d0": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_d1": [
+    "core:u_suvm_u_vm8q_u_bt.tw_data"
+   ],
+   "tw_kind": [
+    "core:u_suvm_u_vm8q_u_bt.tw_kind"
+   ],
+   "tw_we": [
+    "core:u_suvm_u_vm8q_u_bt.tw_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_va": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_vb.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_vb.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_vb.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_vb.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_vb.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_vb.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vb": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_su8.su_rows"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vc.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vc.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vc.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vc.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vc.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vc.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vc.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vc.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vc.w1_we"
+   ]
+  },
+  "u_suvm_u_vm8q_u_vc": {
+   "addr": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "fault": [
+    "bus:x_ctl_o",
+    "core:u_suvm_u_vm8q_u_va.fault",
+    "core:u_suvm_u_vm8q_u_vb.fault"
+   ],
+   "q": [
+    "bus:x_su_l0_p1_o",
+    "bus:x_su_l1_p1_o",
+    "core:u_suvm_u_su8.pd1"
+   ],
+   "re": [
+    "bus:x_su_l0_p1_i",
+    "bus:x_su_l1_p1_i"
+   ],
+   "vm_waddr": [
+    "core:u_suvm_u_vm8q_u_va.vm_waddr",
+    "core:u_suvm_u_vm8q_u_vb.vm_waddr"
+   ],
+   "vm_wdata": [
+    "core:u_suvm_u_vm8q_u_va.vm_wdata",
+    "core:u_suvm_u_vm8q_u_vb.vm_wdata"
+   ],
+   "vm_we": [
+    "core:u_suvm_u_su8.lvm_we",
+    "core:u_suvm_u_vm8q_u_va.vm_we",
+    "core:u_suvm_u_vm8q_u_vb.vm_we"
+   ],
+   "w16_addr": [
+    "core:u_suvm_u_vm8q_u_va.w16_addr",
+    "core:u_suvm_u_vm8q_u_vb.w16_addr"
+   ],
+   "w16_data": [
+    "core:u_suvm_u_vm8q_u_va.w16_data",
+    "core:u_suvm_u_vm8q_u_vb.w16_data"
+   ],
+   "w16_we": [
+    "core:u_suvm_u_vm8q_u_va.w16_we",
+    "core:u_suvm_u_vm8q_u_vb.w16_we"
+   ],
+   "w1_addr": [
+    "core:u_suvm_u_vm8q_u_va.w1_addr",
+    "core:u_suvm_u_vm8q_u_vb.w1_addr"
+   ],
+   "w1_data": [
+    "core:u_suvm_u_vm8q_u_va.w1_data",
+    "core:u_suvm_u_vm8q_u_vb.w1_data"
+   ],
+   "w1_we": [
+    "core:u_suvm_u_vm8q_u_va.w1_we",
+    "core:u_suvm_u_vm8q_u_vb.w1_we"
+   ]
+  }
  },
  "tt_ctlm": {
   "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1": {},

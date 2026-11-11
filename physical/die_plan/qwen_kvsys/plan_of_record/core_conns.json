@@ -110,10 +110,130 @@
   "head1_e7": {}
  },
  "kv3_pv_v1n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p1.s1__fault",
+    "core:pvg0_p0.s1__fault",
+    "core:pvg0_p2.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p1.s0__fault",
+    "core:pvg1_p3.s0__fault",
+    "core:pvg1_p0.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p0.s1__fault",
+    "core:pvg2_p2.s1__fault",
+    "core:pvg2_p3.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p1.s1__fault",
+    "core:pvg3_p3.s1__fault",
+    "core:pvg3_p2.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
@@ -540,10 +660,130 @@
   }
  },
  "kv3_pv_v2n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p3.s1__fault",
+    "core:pvg0_p2.s0__fault",
+    "core:pvg0_p1.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p1.s0__fault",
+    "core:pvg1_p0.s0__fault",
+    "core:pvg1_p2.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p3.s1__fault",
+    "core:pvg2_p0.s1__fault",
+    "core:pvg2_p2.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p3.s1__fault",
+    "core:pvg3_p2.s0__fault",
+    "core:pvg3_p0.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
@@ -994,10 +1234,130 @@
   }
  },
  "kv3_pv_v3n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p3.s1__fault",
+    "core:pvg0_p2.s0__fault",
+    "core:pvg0_p1.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p2.s1__fault",
+    "core:pvg1_p1.s1__fault",
+    "core:pvg1_p0.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p0.s0__fault",
+    "core:pvg2_p1.s1__fault",
+    "core:pvg2_p3.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p3.s0__fault",
+    "core:pvg3_p2.s1__fault",
+    "core:pvg3_p0.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
@@ -1424,10 +1784,130 @@
   }
  },
  "kv3_pv_v4n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p2.s1__fault",
+    "core:pvg0_p1.s1__fault",
+    "core:pvg0_p3.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p2.s1__fault",
+    "core:pvg1_p1.s0__fault",
+    "core:pvg1_p3.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p0.s1__fault",
+    "core:pvg2_p3.s0__fault",
+    "core:pvg2_p2.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p0.s1__fault",
+    "core:pvg3_p1.s0__fault",
+    "core:pvg3_p2.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
@@ -1870,10 +2350,130 @@
   }
  },
  "kv3_pv_v5n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p1.s0__fault",
+    "core:pvg0_p2.s1__fault",
+    "core:pvg0_p3.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p2.s0__fault",
+    "core:pvg1_p0.s0__fault",
+    "core:pvg1_p3.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p3.s0__fault",
+    "core:pvg2_p0.s1__fault",
+    "core:pvg2_p2.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p1.s1__fault",
+    "core:pvg3_p2.s1__fault",
+    "core:pvg3_p0.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
@@ -2300,10 +2900,130 @@
   }
  },
  "kv3_pv_v6n": {
-  "pv__u_g0_j": {},
-  "pv__u_g1_j": {},
-  "pv__u_g2_j": {},
-  "pv__u_g3_j": {},
+  "pv__u_g0_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g2_j.join_go"
+   ],
+   "sf": [
+    "core:pvg0_p3.s1__fault",
+    "core:pvg0_p2.s0__fault",
+    "core:pvg0_p1.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg0_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg0_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg0_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg0_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g1_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g3_j.join_go"
+   ],
+   "sf": [
+    "core:pvg1_p1.s1__fault",
+    "core:pvg1_p3.s1__fault",
+    "core:pvg1_p0.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg1_p0.s0__ts"
+   ],
+   "ts1": [
+    "core:pvg1_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg1_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg1_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g2_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g0_j.join_go"
+   ],
+   "sf": [
+    "core:pvg2_p1.s0__fault",
+    "core:pvg2_p2.s0__fault",
+    "core:pvg2_p0.s1__fault"
+   ],
+   "ts0": [
+    "core:pvg2_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg2_p1.s1__ts"
+   ],
+   "ts2": [
+    "core:pvg2_p2.s1__ts"
+   ],
+   "ts3": [
+    "core:pvg2_p3.s1__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
+  "pv__u_g3_j": {
+   "fault": [
+    "glue"
+   ],
+   "join_go": [
+    "core:pv__u_g1_j.join_go"
+   ],
+   "sf": [
+    "core:pvg3_p2.s0__fault",
+    "core:pvg3_p1.s1__fault",
+    "core:pvg3_p0.s0__fault"
+   ],
+   "ts0": [
+    "core:pvg3_p0.s1__ts"
+   ],
+   "ts1": [
+    "core:pvg3_p1.s0__ts"
+   ],
+   "ts2": [
+    "core:pvg3_p2.s0__ts"
+   ],
+   "ts3": [
+    "core:pvg3_p3.s0__ts"
+   ],
+   "y": [
+    "glue"
+   ],
+   "y_valid": [
+    "glue"
+   ]
+  },
   "pvg0_p0": {
    "s0__bc": [
     "bus:i_pvw__u_ctl_cmd"
