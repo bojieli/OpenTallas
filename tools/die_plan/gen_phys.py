@@ -2674,18 +2674,45 @@ def tap_pair_affinity_exports(t):
 HOP_LATCH_CAPTURE_TAP_DEFAULT = {"hbm": "u_fl_rst_ u_fl_L201x"}
 
 
-def _hop_latch_capture_tap(P):
+# VSN2-HOLD 11-11 (DIE-HBM-97, vsN2 a11 FF hold: u_rrl_38 -> u_fl_rst_39 -38.1 ps on a capture-tap latch): a latch
+# hung on its CAPTURE tap is checked for hold against the closing rise edge -- the SAME edge that launches its D -- so
+# the launch -> latch hop crosses the tap ports with the whole plan window W and no phase credit (hold needs ~W of
+# pad, the GRT repair).  On the LAUNCH tap (TYPE-SAFE-1, the clock_taps.tcl default) launch -> latch shares the port
+# (CRPR) and latch -> capture has T/2 - W of hold by construction; setup pays T/2 - W - tap skew on the half hop.
+# Plan clock.hop_latch_launch_tap {"types": [...]} keeps the listed types on the launch tap (no OT_HOP_LATCH_CAPTURE_TAP
+# line, so no HOPLATCH-HOLD pad either); absent = every kit byte-identical.
+def hop_latch_launch_tap(P, tn):
+    """True when plan clock.hop_latch_launch_tap.types lists type tn."""
+    clock = getattr(P, "clock", None) or {}
+    cfg = clock.get("hop_latch_launch_tap") or {}
+    return tn is not None and tn in set(cfg.get("types") or [])
+
+
+def _hop_latch_capture_tap(P, tn=None):
     """OT_HOP_LATCH_CAPTURE_TAP value (space-separated regexes) or None.  GEN env OT_HOP_LATCH_CAPTURE_TAP (wave
-    item_env, commas for spaces) wins; "0" or "off" = no line.  Else the die default (HBM dies: u_fl_rst_)."""
+    item_env, commas for spaces) wins; "0" or "off" = no line.  Else none for a plan clock.hop_latch_launch_tap type,
+    else the die default (HBM dies: u_fl_rst_)."""
     env = os.environ.get("OT_HOP_LATCH_CAPTURE_TAP")
     if env is not None:
         v = " ".join(env.replace(",", " ").split())
         return None if v in ("", "0", "off") else v
+    if hop_latch_launch_tap(P, tn):
+        return None
     name = str(P.die.get("name") or "").lower()
     for pre, v in HOP_LATCH_CAPTURE_TAP_DEFAULT.items():
         if name.startswith(pre):
             return v
     return None
+
+
+def reset_follow_clock_tap(P, tn):
+    """VSN2-HOLD 11-11: True when plan reset.follow_clock_tap.types lists type tn.  vsN2 a11 FF removal -19.1 ps on
+    u_rrl_9 (rst_n_t7, clk_t7) -> u_ft_L201x2_o_2/eq (clk_t2): reset_taps.tcl picks the nearest tap's terminal before
+    GPL, clock_taps.tcl may clock the sink from another port, and a cross-port pair carries the whole window W.  After
+    CTS assignment reset_follow_clock.tcl re-points such sinks to a terminal launched on their own clock net."""
+    reset = getattr(P, "reset", None) or {}
+    cfg = reset.get("follow_clock_tap") or {}
+    return tn is not None and tn in set(cfg.get("types") or [])
 
 
 def _tap_cap(t):
@@ -4502,8 +4529,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-20 11-01: a hard wrapper's reset is the delivered port (bind.py `wire rst_n = arst_n`, no in-kit
         # terminal): reset_taps.tcl measures + reports that hop from the port instead of failing on the missing net
         port = "set rt_port_reset arst_n\n" if P.types[tn].get("hard") else ""
+        # VSN2-HOLD 11-11 (opt-in plan reset.follow_clock_tap): control sinks then follow their CTS clock tap's
+        # reset terminal (reset_follow_clock.tcl); absent = pre_cts.tcl byte-identical and no file in the kit.
+        rfc = ""
+        if reset_follow_clock_tap(P, tn):
+            shutil.copyfile(Path(__file__).with_name("reset_follow_clock.tcl"), kd / "reset_follow_clock.tcl")
+            rfc = "source /work/reset_follow_clock.tcl\n"
         leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n{port}"
-                      "source /work/reset_taps.tcl\nunset rt_postplace\n")
+                      "source /work/reset_taps.tcl\n" + rfc + "unset rt_postplace\n")
     group_hook = ""
     if grouped["groups"]:
         (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")
@@ -4655,7 +4688,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
-           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P)}"] if _hop_latch_capture_tap(P) else []),
+           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P, tn)}"] if _hop_latch_capture_tap(P, tn) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
