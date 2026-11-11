@@ -1,0 +1,5 @@
+# CLEANSLATE-HBM split (agreed 2026-11-11 01:01 PST CPL-HBM-2 abe27818a9f92c359 <-> VIS-TRIAGE-HBM afb7fffbbb972b85e). Base plan plan_p11t_taps_cyc 29333b2b19c9, unless DIE-HBM-98 names another plan (ftres-fix DIE-HBM-97/98).
+# CPL-HBM-2: SU-A q_su00/01/10/11, SU-B q_su20/21/30/31 (q_su21 class F, die ft share), SPB/SPT/SPU q_spb0/1/2 q_spt0/1/2 q_spu0/1 (+__physical_v1 twins).
+# VIS-TRIAGE-HBM: IO NE_io/NW_io/vsN0, root, SM q_sm0-3, HUB q_hub_ne/nw (B34 baseline, kept unless beaten), soft 0-core families PHY_NC/NE/NW, q_mca/q_mcb, vsN1/2/4/5/6 (render+check only).
+# CPL-HBM-B1 a87f1744d828fe9d1: ALL q_b* (q_b0xx, q_b100-103, q_b101_nw, q_b110-113, +pv1) per COORD 02:0x; REDESIGN q_b100/102/103 posted 00:53 -> DIE-HBM-98.
+family	types	delta_path	sha256	bitmm_before	bitmm_after	worst_cut	grt_ov_before	grt_ov_after	verdict
