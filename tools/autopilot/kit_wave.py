@@ -1616,7 +1616,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))} \
-        | ({"kit_store": True} if opt(cfg, die, "kit_store") else {})
+        | ({"kit_store": True} if kit_store_on(cfg, die, item) else {})
 
 
 # ------------------------------------------------------------------------------------------------ KW-PROV-1 provisional views
@@ -3465,6 +3465,15 @@ KS_PATH = Path(__file__).resolve().parent / "kit_store.py"
 def ks_cmd(args):
     """shell command running kit_store.py <args> on a gen host (source on stdin, like kr_cmd)"""
     return f"python3 - {args} <<'KWKS_EOF'\n{KS_PATH.read_text()}\nKWKS_EOF"
+
+
+def kit_store_on(cfg, die, item):
+    """option kit_store (die > global): true = every item; a list = the items matching one of its fnmatch patterns
+    (pilot); absent / false = off"""
+    v = opt(cfg, die, "kit_store")
+    if isinstance(v, list):
+        return any(fnmatch.fnmatch(item, str(x)) for x in v)
+    return v is True
 
 
 def kit_store_applies(sp):

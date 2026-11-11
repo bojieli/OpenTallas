@@ -203,6 +203,10 @@ class WaveHook(unittest.TestCase):
         c = self.cfg()
         c["kit_store"] = True                            # global switch
         self.assertTrue(KW.spec_for(c, "qwen_kvsys", "kv3_pc", "intel2")["kit_store"])
+        pil = self.cfg(kit_store=["kv3_pv*"])            # pilot: item patterns
+        self.assertTrue(KW.spec_for(pil, "qwen_kvsys", "kv3_pv_v12", "intel2")["kit_store"])
+        self.assertNotIn("kit_store", KW.spec_for(pil, "qwen_kvsys", "kv3_pc", "intel2"))
+        self.assertNotIn("kit_store", KW.spec_for(self.cfg(kit_store=False), "qwen_kvsys", "kv3_pc", "intel2"))
 
     def test_map_and_inputs(self):
         mp = {"/srv/a/bind9": "/w/kit_inputs/srv/a/bind9", "/srv/p/plan_c.json": "/w/kit_inputs/srv/p/plan_c.json"}
