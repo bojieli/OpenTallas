@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.t41form.fanout_census.v1",
+ "netlist": "gen/slice_station__t41/run/results/asap7/dp_slice_station__t41/base/1_2_yosys.v",
+ "modules": 18,
+ "cells": 60125,
+ "nets_with_loads": 61246,
+ "limit": 24,
+ "nets_over": 15,
+ "max_fanout": 2077,
+ "by_class": {
+  "clock": {
+   "n": 15,
+   "max": 2077,
+   "top": [
+    [
+     "\\$paramod$a2fd1633ea780ef76119557698e27a205cb3ba29\\ot_dp_clk_landing:fclk",
+     2077,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$694d64d178ba54448711b06e92209c0f5ca58d1c\\ot_dp_clk_landing:fclk",
+     1125,
+     "port/assign"
+    ],
+    [
+     "\\$paramod\\ot_dp_st\\W=s32'00000000000000000000010001010000:clk",
+     1105,
+     "port/assign"
+    ],
+    [
+     "\\$paramod\\ot_dp_st\\W=s32'00000000000000000000001000000010:clk",
+     515,
+     "port/assign"
+    ],
+    [
+     "\\$paramod\\ot_dp_st\\W=s32'00000000000000000000001000000000:clk",
+     513,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$ab8c294e3c96b0ea1be934a2c215ced44e4e7e1b\\ot_dp_clk_landing:fclk",
+     301,
+     "port/assign"
+    ],
+    [
+     "\\$paramod\\ot_dp_st\\W=s32'00000000000000000000000100010100:clk",
+     277,
+     "port/assign"
+    ],
+    [
+     "s81p_slice_station__t41:clk",
+     268,
+     "port/assign"
+    ],
+    [
+     "\\$paramod\\ot_dp_st\\W=s32'00000000000000000000000001000110:clk",
+     71,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$9b0973b28f76154c677f51e166d79bbbaa850fff\\ot_meso_dsel:clk",
+     64,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$ab8c294e3c96b0ea1be934a2c215ced44e4e7e1b\\ot_dp_clk_landing:clk",
+     51,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$a2fd1633ea780ef76119557698e27a205cb3ba29\\ot_dp_clk_landing:clk",
+     51,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$694d64d178ba54448711b06e92209c0f5ca58d1c\\ot_dp_clk_landing:clk",
+     51,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$58301a53488e76c65fa4c0605147c7032f9fa533\\ot_dp_clk_landing:clk",
+     51,
+     "port/assign"
+    ],
+    [
+     "\\$paramod$58301a53488e76c65fa4c0605147c7032f9fa533\\ot_dp_clk_landing:fclk",
+     25,
+     "port/assign"
+    ]
+   ]
+  }
+ },
+ "hist": {
+  "1": 58642,
+  "2-8": 1491,
+  "9-24": 1098,
+  "25-64": 6,
+  "65-256": 1,
+  ">256": 8
+ }
+}

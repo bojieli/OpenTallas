@@ -1,0 +1,40 @@
+T41FORM: conservative form for S81 slice_station__t41 (DIE-S81-85 sub-lane, 2026-11-10, second strike, COORD order). DO_NOT_COUNT until signed off.
+
+Kit:  epyc8 /srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41 (runner ../run_kit.sh, unchanged)
+Base: epyc7 /srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t41/attempt_4/gen
+      (the files as generated 2026-11-09 13:34; no run outputs, no eco, no stage resume: a fresh kit from synth)
+Base verdict (attempt_4 + ECO i1 ERROR): routed NOT SIGNED, TT +51.05, FF hold -66.78 (4478 ends), DRV 485 TT / 348 FF slew, DRC 0.
+
+Changes (all other kit files byte-identical to the base):
+1. DRV, set_max_fanout 24 (Tcl hooks; sdc_lint fails closed on set_max_fanout in constraint.sdc, so the golden SDC is unchanged):
+   config.mk PRE_FLOORPLAN_TCL  pre_floorplan_type.tcl -> t41form_pre_floorplan.tcl (sources pre_floorplan_type.tcl, then set_max_fanout 24)
+   config.mk PRE_GLOBAL_ROUTE_TCL hold_repair_pre.tcl -> t41form_pre_grt.tcl (set_max_fanout 24, then sources hold_repair_pre.tcl)
+   config.mk + PRE_RESIZE_TCL = t41form_maxfanout.tcl (set_max_fanout 24 before 3_4 repair_design)
+   Why: floorplan unbuffer / GPL remove_buffers merge the synth buffer trees back into one net; 3_4 repair_design then rebuilt
+   them with BUFx6f/BUFx16f drivers of 95-149 loads (attempt_4 slew pins all on 12 such nets).
+2. DRV, cland ring read select duplicated per byte group (RTL, equivalent logic):
+   rtl/ot_meso_fifo.sv     ot_meso_ring + parameter DSREP (default 1 = unchanged) -> ot_meso_dsel .SREP(DSREP) (DSREP-1 kept copies)
+   rtl/ot_dp_clk_landing.sv + parameter DSREP (default 1) -> u_ring .DSREP(DSREP)
+   rtl/s81p_slice_station__t41_bound.sv  all 12 ot_dp_clk_landing instances .DSREP(8): each 64-bit chunk gets 8 kept copies
+   of its one-hot select, each driving 8 bits (was one di[i] / INVx2 driving 64-67 loads).
+   Equivalence: yosys sequential equivalence ot_meso_dsel W=64 DEPTH=4 REG=1 SREP=1 vs SREP=8, 549 $equiv cells proven
+   (equiv_simple -seq 5 + equiv_induct, 8 copy registers declared equal to the gold select): eq_dsel_run.sh / eq_dsel.log.
+3. HOLD, vclk ft slot input class (ft0 ft1 ft7 ft8 ft9 ft10 ft11 ft12, 4816 bits):
+   rtl/s81p_slice_station__t41_bound.sv: new module ot_t41_hpad; u_hp_<slot> puts 8 kept BUFx2_ASAP7_75t_R per bit between
+   the port and u_ft_<slot>_o_0 (station 0).  0 cycles, 0 pin-cycle latency delta (nothing for TOK-VERIFY-1).
+   38528 pad cells; dont_touch set at PRE_FLOORPLAN (fails closed if the count differs).
+   Sizing: attempt_4 FF worst -66.78 (port -> BUFx2 -> station 0; vclk FF 205.3 - in_min 40 vs capture insertion 220.3
+   + 12.5 unc + 13.6 lib).  BUFx2 FF 12.8-14.4 ps / TT 17.1-18.9 ps per stage (liberty, light load): 8 stages >= ~104 ps FF
+   (est. worst hold ~ +37), ~145 ps TT on a port path with est. ~+360 ps TT setup slack (vclk 250 + in_max 440).
+   Output-port ends (356, worst -20.27) and 18 reg-to-reg ends: unchanged standard GRT repair_timing -hold, HOLD_SLACK_MARGIN 5.
+   ft_hop_lockup (claude/ds85-ft-hop-lockup-1110 @ bc6a24d607) does NOT fit: gen_rtl inserts u_fl_<slot>_s<j> only between
+   station j and j+1 (j < k-1, internal hops, selected per type by clock.ft_hop_lockup); the failing class is port -> station 0,
+   which no hop latch touches, and a latch (or any rising-edge pin-cycle register) at the face sees the same vclk-vs-insertion
+   hold check, so a pin cycle alone would not move it.
+
+Pre-build check (synth only, epyc8 capped docker 24 GB): SDC_LINT, RTL_LINT, DONT_USE_CHECK, SELRANGE, PORT_BIND, FACE_GUARD
+(15163/15163), REG_FANOUT PASS.  Fanout census of 1_2_yosys.v (fanout_census.py, per module): 15 nets > 24 loads, all clock
+(clk / fclk); 0 data, control, select or reset nets > 24.
+
+Build: epyc8 ot-heavy --mem 64 --tag t41form-route-1110 -- bash gen/run_kit.sh gen/slice_station__t41 route 64 16
+       (queued 2026-11-11 03:12 UTC, pid 3173713, log t41form/route_job.log); LEC runs beside the flow (lec_async).
