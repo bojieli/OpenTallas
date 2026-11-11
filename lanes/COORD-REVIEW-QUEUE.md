@@ -37469,3 +37469,27 @@ Hosts: epyc7/epyc8 scratch2 and epyc2 scratch3, capped or admitted. I post each 
 - 2026-11-10 17:37 PST RULING [COORD -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, KW-FIX-43] Owner rule 11-10 (rank forms by route flags): use the newest block per die in lanes/FLAGS-1110.tsv. A FAILING type that is flagged gets its suggested plan change first (street/channel, porous M4/M5, outline, ring form), together with real-shape child views (POROUS-ALL-1), batched per die with no pilot, before any further P&R on the same plan. S81 leaf rows take the H fix (M6 H overflow measured). Unflagged failing types go to timing/hold forms. Advisory, never a gate. Fail fast: GRT overflow >=1000 stops the run (KW-FIX-44).
 - 2026-11-10 17:38 PST ROOT-MERGE-57 STATE: PLAN-ROUTE-2 9fa12c19ba5d (route_supply.py, _flags, _watch, _cells.json and test; advisory, not wired into kits) is train ka bbde1f60740c, at the end after knee-1 k9, sparse on epyc4.
 - 2026-11-10 17:39 PST ROOT-MERGE-57 STATE: HEAD-92 ctl-start-q 8d4bcc6b8734 (ot_s81hd_ctl_hsf0_static.sv under OT_S81HD_CTL_START_Q, plus bench and tb; GitHub only, fetched via the scratch bare repo) is train kb a30612d30b11, at the end after plan-route-2 ka, sparse on epyc4.
+- 2026-11-10 17:42 PST RESULT [TOK-VERIFY-1 -> S81-PLAN-1, DIE-S81-85, COORD] S81 landings to count-aligned +1, per COORD's new direction. Landing list and per-lane cycle deltas for the compiler. DO_NOT_COUNT, nothing signed off.
+  - Rule, as given:
+    - A landing becomes CA (ot_dp_clk_landing_ca, K = 3, fixed latency K+1 = 4 = bind 3 + 1, for every phase in its window; METHODOLOGY 12.16) if it is NEAR in the raw model, or NEAR/EDGE in the wrapped model.
+    - LEAD/LAG landings that are clear in both models keep their measured count: LEAD 3 (= bind, delta 0), LAG 2 (delta -1).
+    - One reading of mine: 27 landings are clear in both models but with opposite signs (LEAD raw, LAG wrapped, or the reverse). I made them CA too, since the sign itself is what is unstable. Say if you want them kept.
+  - Input: DIE-S81-85's 13:30 lps.json (epyc8 clkdie/out, sha dc7c4c1e..., copied to intel1 tok-verify-1/ca/ds85_out). My tool reproduces both of their tables exactly: raw NEAR 180 / LEAD 513 / LAG 300, and wrapped NEAR 301 / EDGE 448 / LEAD 76 / LAG 168, both with TT+FF combined, corner disagreement NEAR, margin 100 ps, P 833 ps.
+  - **Result, 993 landings: CA 776, LEAD 74, LAG 143.**
+    - CA reasons: raw NEAR 180, wrapped EDGE 439, wrapped NEAR 130, sign flip 27.
+    - By measurement: both ends measured CA 405 / LEAD 36 / LAG 68; one end declared 233 / 35 / 50; both ends declared 138 / 3 / 25. The 28 both-declared LEAD/LAG rows keep a count that rests on declared insertion only. I recommend CA for them until DIE-RECHECK-1's clock lands; your call.
+    - By kind: ctl 25 / 3 / 6, data 751 / 71 / 137.
+  - **Per lane (440 lanes, all in bind_latency): 408 change.**
+    - Delta histogram: -3:2, -2:1, -1:37, 0:32, +1:225, +2:48, +3:49, +4:24, +5:18, +6:4. Total +776 / -143 cycles.
+    - Largest: +6 on coll__s_0S_LP__lk_WS2, rt_E3_out_1, rt_E3_out_2 and xtier__s_6N_C__eng. Smallest: -3 on unit__seqhost__s_7S_LP and xtier__s_2S_C__s_2N_C.
+    - The compiler adds the delta to the lane's bound depth: lanes.tsv has new_bound_stages = bound_stages + delta.
+  - The 30 S1 control lanes (old -> new): unit__seqhost__gunit 73->77, unit__seqhost__eng 54->54, tl__bk_sel__s_0N_LP 67->72, ql__s_0N_LP__iqf 87->92, qc__iqf__s_0N_LP 88->91, tp__bk_sel__s_7S_LP 84->89, unit__s_7N_LP__seqhost 98->103, idx__svc_14__bk_sel 104->104, unit__seqhost__s_7S_LP 59->56, unit__seqhost__s_7N_LP 100->99; full set in lanes.tsv (s1_ctl=1).
+  - Files on coord/state:
+    - lanes/TOK-VERIFY-1-landing-ca-1110-landings.tsv, 993 rows: port, lane, src, dst, dst_bus, kind, wneg, raw, wrapped, decision, bind/new cycles, delta, clearance, d.
+    - lanes/TOK-VERIFY-1-landing-ca-1110-lanes.tsv, 440 rows: lane, landings, CA/LEAD/LAG, delta, bound -> new, ports, s1_ctl.
+    - Tool: tools/die_plan/landing_ca_select.py on claude/tok-verify-1-bound-prep-1110 head 758d5c0f97, READY for ROOT-MERGE-57; supersedes 5c3732eec1. Full JSON: intel1 tok-verify-1/ca/sel/ca_select.json.
+  - What it needs:
+    - S81-PLAN-1: take the per-lane deltas into the compiler.
+    - DIE-S81-85 / bind: emit ot_dp_clk_landing_ca (K 3, t_rst_n forwarded with fclk, count origin per 12.16 b(iv)) at the 776 CA ports, and set the bind's per-landing count to 4 / 3 / 2 so bind_latency equals new_bound_stages.
+    - Then I rerun S1 lane_arrival on the new bind; lane_arrival needs a CA cell model, which I am adding now.
+  - When DIE-RECHECK-1's (add11e7bf758e52da) clock lands, the same tool re-sorts LEAD/LAG from its lps.json in one command.
