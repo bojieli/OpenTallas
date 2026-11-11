@@ -94,7 +94,7 @@ def idx_fit(closed, files, rtl=None):
                  and re.search(r'^\s*' + mod + r'\s+#\(', Path(f).read_text(), re.M)]
         if rtl is not None: users = [f for f in users if Path(f).resolve() != Path(rtl).resolve()]
         if not users: dropped.append(o)
-    return closed, kids, IDX.MACROS, dict(source=p, source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
+    return closed, kids, IDX.bound_macros(closed), dict(source=p, source_sha=IDX.sha12(src), fit_sha=IDX.sha12(fit), renamed=n,
                                           kind=kind, dropped=dropped)
 
 

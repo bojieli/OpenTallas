@@ -18,7 +18,12 @@ module ot_s81_svc_idx_hslice_fp #(
     parameter integer NB  = 4,
     parameter integer FPL = 7,
     parameter integer FML = 5,
-    parameter integer QL  = 5
+    parameter integer QL  = 5,
+    // S81-SVCRS-3 11-10 (COORD ruling): PR = 1 models the recipe-4 pin registers of the physical svc_lo IRG box
+    // (physical/ref_tile/s81svc_irg_hsfp/pin_regs.json enable): one more flop on every data input and every data
+    // output (clk / rst_n excluded), +2 edges a hop, +16 a chain (the reader's EL 124 -> 140 in the SAME bind).
+    // PR = 0 (default): this netlist is unchanged.
+    parameter integer PR  = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -30,19 +35,19 @@ module ot_s81_svc_idx_hslice_fp #(
     input  wire [NB*128-1:0] ql_codes,
     input  wire [NB*8-1:0]   ql_sc,
     input  wire [15:0]       ql_w,
-    output reg               qo_v,
-    output reg  [7:0]        qo_head,
-    output reg  [NB*128-1:0] qo_codes,
-    output reg  [NB*8-1:0]   qo_sc,
-    output reg  [15:0]       qo_w,
+    output wire              qo_v,
+    output wire [7:0]        qo_head,
+    output wire [NB*128-1:0] qo_codes,
+    output wire [NB*8-1:0]   qo_sc,
+    output wire [15:0]       qo_w,
     // key in / out
     input  wire [NB*136-1:0] k_key,
     output wire [NB*136-1:0] ko_key,
     // running sum in / out
     input  wire [31:0]       cs_in,
     input  wire              cf_in,
-    output reg  [31:0]       cs_out,
-    output reg               cf_out
+    output wire [31:0]       cs_out,
+    output wire              cf_out
 );
     localparam integer KW = NB * 136;
     localparam integer LAT_SC = QL + FPL * (NB - 1);
@@ -53,14 +58,42 @@ module ot_s81_svc_idx_hslice_fp #(
     // reset standard: the port drives only the relay
     wire [0:0] srr; wire rs = srr[0];
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(srr));
+    // ---- PR pin-register stage (S81-SVCRS-3 11-10): inputs i_*, core outputs c_* -> ports
+    wire [7:0] hid_i; wire first_i; wire qlv_i; wire [7:0] qlh_i; wire [NB*128-1:0] qlc_i; wire [NB*8-1:0] qls_i;
+    wire [15:0] qlw_i; wire [NB*136-1:0] key_i; wire [31:0] csi_i; wire cfi_i;
+    reg qo_v_c; reg [7:0] qo_head_c; reg [NB*128-1:0] qo_codes_c; reg [NB*8-1:0] qo_sc_c; reg [15:0] qo_w_c;
+    reg [31:0] cs_out_c; reg cf_out_c; wire [NB*136-1:0] ko_key_c;
+    if (PR == 0) begin : g_pr0
+        assign {hid_i, first_i, qlv_i, qlh_i, qlc_i, qls_i, qlw_i, key_i, csi_i, cfi_i} =
+               {hid, first, ql_v, ql_head, ql_codes, ql_sc, ql_w, k_key, cs_in, cf_in};
+        assign {qo_v, qo_head, qo_codes, qo_sc, qo_w, ko_key, cs_out, cf_out} =
+               {qo_v_c, qo_head_c, qo_codes_c, qo_sc_c, qo_w_c, ko_key_c, cs_out_c, cf_out_c};
+    end else if (PR == 1) begin : g_pr1
+        reg [7:0] hid_r; reg first_r; reg qlv_r; reg [7:0] qlh_r; reg [NB*128-1:0] qlc_r; reg [NB*8-1:0] qls_r;
+        reg [15:0] qlw_r; reg [NB*136-1:0] key_r; reg [31:0] csi_r; reg cfi_r;
+        reg qo_v_r; reg [7:0] qo_head_r; reg [NB*128-1:0] qo_codes_r; reg [NB*8-1:0] qo_sc_r; reg [15:0] qo_w_r;
+        reg [NB*136-1:0] ko_key_r; reg [31:0] cs_out_r; reg cf_out_r;
+        always @(posedge clk) begin
+            {hid_r, first_r, qlv_r, qlh_r, qlc_r, qls_r, qlw_r, key_r, csi_r, cfi_r} <=
+                {hid, first, ql_v, ql_head, ql_codes, ql_sc, ql_w, k_key, cs_in, cf_in};
+            {qo_v_r, qo_head_r, qo_codes_r, qo_sc_r, qo_w_r, ko_key_r, cs_out_r, cf_out_r} <=
+                {qo_v_c, qo_head_c, qo_codes_c, qo_sc_c, qo_w_c, ko_key_c, cs_out_c, cf_out_c};
+        end
+        assign {hid_i, first_i, qlv_i, qlh_i, qlc_i, qls_i, qlw_i, key_i, csi_i, cfi_i} =
+               {hid_r, first_r, qlv_r, qlh_r, qlc_r, qls_r, qlw_r, key_r, csi_r, cfi_r};
+        assign {qo_v, qo_head, qo_codes, qo_sc, qo_w, ko_key, cs_out, cf_out} =
+               {qo_v_r, qo_head_r, qo_codes_r, qo_sc_r, qo_w_r, ko_key_r, cs_out_r, cf_out_r};
+    end else begin : g_pr_bad
+        initial $fatal(1, "ot_s81_svc_idx_hslice_fp: PR must be 0 or 1");
+    end
     // ---- pin flops
     reg rn_p; reg [7:0] hid_p; reg first_p;
     reg qv_p; reg [7:0] qh_p; reg [NB*128-1:0] qc_p; reg [NB*8-1:0] qs_p; reg [15:0] qw_p;
     reg [KW-1:0] key_p; reg [31:0] csi_p; reg cfi_p;
     always @(posedge clk) begin
-        rn_p <= rs; hid_p <= hid; first_p <= first;
-        qv_p <= ql_v && rn_p; qh_p <= ql_head; qc_p <= ql_codes; qs_p <= ql_sc; qw_p <= ql_w;
-        key_p <= k_key; csi_p <= cs_in; cfi_p <= cf_in;
+        rn_p <= rs; hid_p <= hid_i; first_p <= first_i;
+        qv_p <= qlv_i && rn_p; qh_p <= qlh_i; qc_p <= qlc_i; qs_p <= qls_i; qw_p <= qlw_i;
+        key_p <= key_i; csi_p <= csi_i; cfi_p <= cfi_i;
     end
     // static local position, registered once more from the registered strap before it selects the pad tap.
     // DIE-S81-85 11-09 native census (<= 32 load pins per dynamic driver): PRC kept copies, copy j selects pad bits
@@ -88,12 +121,12 @@ module ot_s81_svc_idx_hslice_fp #(
     always @(*) {qw, qs, qc} = qa;
     // ---- q beat pass-through: 2 edges pin to pin (pin flop + output flop), same as the key
     always @(posedge clk) begin
-        qo_v <= qv_p && rn_p; {qo_head, qo_codes, qo_sc, qo_w} <= {qh_p, qc_p, qs_p, qw_p};
+        qo_v_c <= qv_p && rn_p; {qo_head_c, qo_codes_c, qo_sc_c, qo_w_c} <= {qh_p, qc_p, qs_p, qw_p};
     end
     // ---- key pass-through: 2 edges pin to pin
     reg [KW-1:0] key_o;
     always @(posedge clk) key_o <= key_p;
-    assign ko_key = key_o;
+    assign ko_key_c = key_o;
     // ---- the head term (chunk_l g_head arithmetic, unchanged)
     wire [NB*128-1:0] kc; wire [NB*8-1:0] ks;
     genvar bb;
@@ -161,7 +194,7 @@ module ot_s81_svc_idx_hslice_fp #(
     wire pf;
     ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(1'b1), .d(cfi_p || tf), .q(pf));
     always @(posedge clk) begin
-        cs_out <= first_p ? seed_d[31:0] : sum;
-        cf_out <= first_p ? seed_d[32] : (pf || (err != 2'd0));
+        cs_out_c <= first_p ? seed_d[31:0] : sum;
+        cf_out_c <= first_p ? seed_d[32] : (pf || (err != 2'd0));
     end
 endmodule

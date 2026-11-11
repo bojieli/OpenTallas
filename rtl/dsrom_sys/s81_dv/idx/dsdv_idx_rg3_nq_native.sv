@@ -48,7 +48,10 @@ module dsdv_idx_rg3_nq_native #(
     // the query codes are one kept copy a chunk column (ql_c was merged by synthesis into the OH relay qh[0] next to the
     // E pins: qo[*] -> hslice ql_codes -624 ps over 1,286 paths).
     parameter integer IH = 0,
-    parameter integer KR = 0
+    parameter integer KR = 0,
+    // S81-SVCRS-3 11-10: PR = IRG pin-register stages in the chunk slices (dsdv_idx_rg2_chunk PR): engine
+    // latency +16 PR, so EL = 124 + 16 PR (svc_lo bind: .EL(140), .PR(1)); default 0 = netlist unchanged.
+    parameter integer PR = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -942,12 +945,16 @@ module dsdv_idx_rg3_nq_native #(
             assign kk_c = kr[KR - 1]; assign qc_c = cr[KR - 1]; assign qh_c = hr[KR - 1][55:48]; assign qs_c = hr[KR - 1][47:0];
             assign qv_c = vr[KR - 1];
         end
-        dsdv_idx_rg2_chunk u_c (.clk(ck), .rst_n(rl[26 + gc]), .hb(8'(8 * gc)), .ql_v(qv_c), .ql_head(qh_c),
+        dsdv_idx_rg2_chunk #(.PR(PR)) u_c (.clk(ck), .rst_n(rl[26 + gc]), .hb(8'(8 * gc)), .ql_v(qv_c), .ql_head(qh_c),
             .ql_codes(qc_c), .ql_sc(qs_c[31:0]), .ql_w(qs_c[47:32]), .k_key(kk_c), .c_sum(csum[gc]), .c_fault(cfl[gc]));
     end endgenerate
     wire [15:0] o_s;
     wire        o_f;
     dsdv_idx_rg2_tail u_t (.clk(ck), .i_sum({csum[3], csum[2], csum[1], csum[0]}), .i_fault(cfl), .o_score(o_s), .o_fault(o_f));
+    // S81-SVCRS-3 11-10 (COORD ruling): the IRG pin stages and the ring offset move together, never one alone
+    if ((PR != 0 && EL != 124 + 16 * PR) || (PR == 0 && EL == 140)) begin : g_el_pr_bad
+        initial $fatal(1, "dsdv_idx_rg3: EL %0d with PR %0d (IRG pin stages need EL = 124 + 16 PR)", EL, PR);
+    end
 
     // ================================================================== metadata ring: written every edge, read EL - 1 behind
     reg  [9:0]  mw;
