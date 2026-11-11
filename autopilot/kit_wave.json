@@ -40044,13 +40044,11 @@
  "note_substep_1105": "KW-FIX-14 COORD 11:2x: SUBSTEP-1 off until the hook reads the PROTECTED union (lanes/ + root PROTECTED-DBS.txt) | 11-05 11:2x KW-FIX-15: back on after protunion I122 (main 692b0ef4c36) on origin, COORD 11:17.",
  "hosts_base": [
   "epyc2",
-  "intel1",
   "intel2",
   "epyc4"
  ],
  "place_prefer_base": [
   "epyc2",
-  "intel1",
   "intel2",
   "epyc4"
  ],
@@ -40677,5 +40675,17 @@
  "future_lec_commit": "9aedf25ac00cca10da314ad3d6125fd1b26ccd89",
  "note_kw43fl": "KW-FIX-43 2026-11-10 PST (COORD class fix: the wave's future_lec pin 3c6f29fb gives false LEC NOT EQUIVALENT; q_b100__physical_v1 a13 proves EQUIVALENT 101,250/101,250 with main's lec.py >= f502d8a): future_lec_commit = main 9aedf25ac00c (contains f502d8adda2 HBM LEC sibling twin). Only lec.py differs from 3c6f29fb (kit_resume.py and the RUN_KIT template are byte-identical). Runtime kit_wave.py reads it at attempt launch (overlay, backup kw43/kit_wave.py.bak-kw43-fl-1794341879). Revert: delete future_lec_commit.",
  "note_kw44_e8gen": "KW-FIX-44 2026-11-10 13:43 PST COORD 11-10: epyc8 added to gen_hosts of hbm, qwen_compute, s81_head (checksum dry run vs epyc7 clean: hbm 8 paths, qwen_compute 20, s81_head 2, 0 differing) | KW-FIX-44 2026-11-10 13:46 PST COORD 11-10: epyc8 added to gen_hosts of qwen_kvsys, s81 (checksum dry run vs epyc7 clean: qwen_kvsys 9 paths 0 differing; s81 4 paths 0 content differences (1 hardlink-only line))",
- "note_ops3_epyc9": "OPS-3 11-11 COORD 05:4x: epyc9 (7443, 965 GB) added after epyc7 to hosts and place_prefer (top level and every die); gen_hosts already had it (ONBOARD-EPYC9). Revert: remove epyc9 from those lists."
+ "note_ops3_epyc9": "OPS-3 11-11 COORD 05:4x: epyc9 (7443, 965 GB) added after epyc7 to hosts and place_prefer (top level and every die); gen_hosts already had it (ONBOARD-EPYC9). Revert: remove epyc9 from those lists.",
+ "hosts_base_prev_kw45_intel1": [
+  "epyc2",
+  "intel1",
+  "intel2",
+  "epyc4"
+ ],
+ "place_prefer_base_prev_kw45_intel1": [
+  "epyc2",
+  "intel1",
+  "intel2",
+  "epyc4"
+ ]
 }
