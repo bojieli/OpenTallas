@@ -26,7 +26,10 @@ fixed chain timeline), or when the RTL depth of the class (the CS_* override on 
 absent) differs from the plan's count.  --apply writes the plan's depths onto the leaf instance first (h trees:
 --h-tree G,GS_IN,GS_OUT, default 4,0,0).  Stage j of a chain is FIRM at the bits-weighted centroid of its entries'
 regs_um[j] (ordered from the RTL launch side; regs_um is reversed where the plan's launch pin is the RTL's capture side).
-usage: kit_istations.py PLAN.json TYPE KIT_RTL_DIR [--apply] [--h-tree G,GSI,GSO]
+KIT-ISTATIONS 11-10: --hbm-core (or plan partition_types[T].hbm_core_stations = true; opt-in, off by default) realises
+the HBM core<->core entries on the bound native leaf links instead (kit_hbm_cstations.py: one depth per link class,
+receipt kit_rtl.json kit_hbm_core_stations, per-chain hcs_chains.json, proof hbm_cstation_proof.py).
+usage: kit_istations.py PLAN.json TYPE KIT_RTL_DIR [--apply] [--h-tree G,GSI,GSO] [--hbm-core]
        ->  KIT_RTL_DIR/istations.tcl + edited bound module"""
 import json
 import re
@@ -802,7 +805,8 @@ def bus_entries(t):
 
 def main(argv):
     apply = "--apply" in argv
-    argv = [a for a in argv if a != "--apply"]
+    hbm_core = "--hbm-core" in argv
+    argv = [a for a in argv if a not in ("--apply", "--hbm-core")]
     htree = (4, 0, 0)
     if "--h-tree" in argv:
         i = argv.index("--h-tree")
@@ -940,7 +944,19 @@ def main(argv):
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names,
                         plan_width=b["width"], bound_width=W,
                         **({"exact_bank_sites": True} if exact is not None else {})))
-    txt = core_stations(t, txt, apply, htree, tcl, rep)
+    import kit_hbm_cstations as HCS
+    if HCS.enabled(t, hbm_core):
+        # KIT-ISTATIONS 11-10 (opt-in): HBM core<->core plan stations on the bound native leaf links; this path owns
+        # every core<->core entry of the type (core_stations' S81 classes do not apply to a native HBM bind)
+        (kd / "hcs_base.sv.txt").write_text(txt)     # the proof's golden base (bound text before the HBM stations)
+        txt, hcs_tcl, hcs_rep, hcs_chains = HCS.realise(t, txt, tn)
+        tcl.extend(hcs_tcl)
+        rep.append(dict(hbm_core_stations={k: v for k, v in hcs_rep.items() if k != "classes"}))
+        man["kit_hbm_core_stations"] = dict(classes=hcs_rep["classes"], max_depth=hcs_rep["max_depth"],
+                                            register_bits=hcs_rep["register_bits"], chains=hcs_rep["chains"])
+        (kd / "hcs_chains.json").write_text(json.dumps(hcs_chains, indent=1))
+    else:
+        txt = core_stations(t, txt, apply, htree, tcl, rep)
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in soft_plan_cells(tn, t):
         ox, oy = c["origin_um"]
