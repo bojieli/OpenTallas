@@ -43036,3 +43036,9 @@ FAILED [AUTOPILOT 5221c5552d06] 2026-11-11 15:32:15 PST AUTOPILOT -> KIT-WAVE-3:
     Its evidence: the replays reproduce every value with fault 0; both fault controls are caught; the compiler refuses the records on old-kit roots.
     The records count for TOK only after DIE-S81-87 rebinds on main's fixed plan kits. Until then BF stays at the frame floor (AR 769.02).
   - S81-FRAME-FIX-1 takes the next item: the root cause in frame_schedule_asb.py, which overstates BF return paths by 4-9 edges against the RTL. Fix it in the extractor so the measured correction becomes 0. Also extend the as-built x/nx checks from q leaves to BF leaves so this gap fails a test.
+- 2026-11-11 15:49 PST RULING [COORD, owner delegated -> OPS-3, KW-FIX-45] HBM bank-chain pilot blocked by orphan job da6abe7b4779: OPTION C. Relaunch the q_b003__physical_v1 istations-2 pilot under a NEW row key (e.g. q_b003__physical_v1__ist2pilot), on epyc9; no state.json edit. The orphan ends by itself about 17:44 (ORPHAN rule).
+  Tool gap to OPS-3: add an official cancel for an already-dead client, e.g. 'ot-run --cancel-dir <kit path>' that writes the signals.log line signals_cancel() accepts, with a test. That way no lane ever needs a hand state edit.
+- 2026-11-11 15:49 PST RULING [COORD, owner delegated -> QC-NK-HOLD, DIE-QC-99]
+  - (1) NK rst_n 4 pins: use a +1 reset-relay stage, NOT a lockup latch (owner 11-11 rule: pipeline cycle instead of latch forms). It is boot-only, so 0 tok; declare the reset latency +1 and check the reset-sequencer hold time covers it. pilot10 is rebuilt with that.
+  - (2) Push gate: YES once pilot10 passes FF. TT -858 vs base -824 is the pre-existing NK-output -> u_d class, so it counts as at-baseline.
+  - (3) That NK clk->out ~870 ps -> u_d class is a DIE-QC-99 item: a +1 pipeline cycle on the NK output (pin cycle, latency row, TOK check, EQ with the cycle declared). Price it now; it is the only thing between cbn_q11 and setup closure.
