@@ -1,0 +1,113 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/dsfd_qbank_N/base_kit.lef",
+ "base_sha256": "68732dce65a36221d1b0e6a47bf6ef66c5a2f862af5237137760b4195a74e9fa",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/dsfd_qbank_N/detail.lef",
+ "detail_sha256": "76c6724e7bd60093be30c2962d92c18d1ef7a0629a252f1806de69157268dc53",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/dsfd_qbank_N/detail0.lef",
+  "pins_match": true,
+  "sha256": "8041d25fd8142c9f811f3d06eb5f10be882c91de6604ad6811c1fb6b2a7b1e5a"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/dsfd_qbank_N/dsfd_qbank_N.lef",
+ "out_sha256": "6e387979473e9aa0131a1599bd86db6675174706ff30f68cbc27e2bce59af207",
+ "pg_guard_rects": {
+  "M5": 31
+ },
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 129,
+   "via_up": 129
+  },
+  "pins": 258,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": []
+ },
+ "pin_cover": {
+  "M4": 1,
+  "M5": 257
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": false,
+  "signal_pins": 258,
+  "size_base": [
+   60.48,
+   8.64
+  ],
+  "size_detail": [
+   60.48,
+   8.64
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 2219,
+  "M5": 654
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/intel2",
+  "db_path": "srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13B/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb",
+  "odb_sha256": "7c9b7c86b8e8996a5a41bb1fb35c34e68a22ee40ec97ab932e064a8a635ad247",
+  "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+  "store_id": "045c83c5362683d4b4d06d6457097d0735e6e9dd74be388dd891066c457d494e"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 258,
+   "M5": 258
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 17,
+    "rects_cut": 15,
+    "um2_cut": 0.04596
+   },
+   "M5": {
+    "exact_added": 258,
+    "rects_cut": 259,
+    "um2_cut": 1.016592
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

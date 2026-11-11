@@ -1,0 +1,237 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_hbm_su_pg_lane1_core/base_kit.lef",
+ "base_sha256": "5154e6236b9c1786e755942d7237da9ca2634cf5ccb9bb18144e749517101dc1",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_hbm_su_pg_lane1_core/detail.lef",
+ "detail_sha256": "232341e70cd5738c5ec6f3399ec2787f4a77ce8ed3c261c53cf280d8869f56a8",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/ot_hbm_su_pg_lane1_core/detail0.lef",
+  "pins_match": true,
+  "sha256": "32cc1084ea1f12369e5992a2c4ce8c416841104f4af53a2a4e6791595ebb5d54"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 36,
+  "cut": {
+   "M4": {
+    "exact_added": 61,
+    "rects_cut": 64,
+    "um2_cut": 0.083295
+   },
+   "M5": {
+    "exact_added": 73,
+    "rects_cut": 53,
+    "um2_cut": 0.184032
+   }
+  },
+  "pins": [
+   "lane0_kv_wdata[8]",
+   "lane0_kv_wdata[9]",
+   "lane0_ld_c[366]",
+   "lane0_ld_c[367]",
+   "lane0_ld_c[368]",
+   "lane0_ld_c[369]",
+   "lane0_ld_c[370]",
+   "lane0_ld_c[371]",
+   "lane0_ld_c[372]",
+   "lane0_ld_c[373]",
+   "lane0_ld_c[374]",
+   "lane0_ld_c[375]",
+   "lane0_ld_c[376]",
+   "lane0_ld_c[377]",
+   "lane0_ld_c[378]",
+   "lane0_ld_c[379]",
+   "lane0_ld_c[380]",
+   "lane0_ld_c[381]",
+   "lane0_ld_c[382]",
+   "lane0_ld_c[383]",
+   "lane0_ld_c[384]",
+   "lane0_ld_c[385]",
+   "lane0_ld_c[386]",
+   "lane0_ld_c[387]",
+   "lane0_ld_c[388]",
+   "lane0_ld_c[389]",
+   "lane0_ld_c[390]",
+   "lane0_ld_c[391]",
+   "lane0_ld_c[392]",
+   "lane0_ld_c[393]",
+   "lane0_ld_c[394]",
+   "lane0_ld_c[395]",
+   "lane0_ld_c[396]",
+   "lane0_ld_c[408]",
+   "lane0_ld_c[409]",
+   "lane0_ld_c[410]"
+  ],
+  "rounds": 14
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/ot_hbm_su_pg_lane1_core/ot_hbm_su_pg_lane1_core.lef",
+ "out_sha256": "f4426c7011e9eb8a2a3adf6234822b62912425f83e32e568e9a407f6bd6dbfa6",
+ "pg_guard_rects": {},
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 30,
+   "via_down": 1040,
+   "via_up": 941
+  },
+  "pins": 2017,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [
+   "lane0_kv_wdata[8]",
+   "lane0_kv_wdata[9]",
+   "lane0_ld_c[366]",
+   "lane0_ld_c[367]",
+   "lane0_ld_c[368]",
+   "lane0_ld_c[369]",
+   "lane0_ld_c[370]",
+   "lane0_ld_c[371]",
+   "lane0_ld_c[372]",
+   "lane0_ld_c[373]",
+   "lane0_ld_c[374]",
+   "lane0_ld_c[375]",
+   "lane0_ld_c[376]",
+   "lane0_ld_c[377]",
+   "lane0_ld_c[378]",
+   "lane0_ld_c[379]",
+   "lane0_ld_c[380]",
+   "lane0_ld_c[381]",
+   "lane0_ld_c[382]",
+   "lane0_ld_c[383]",
+   "lane0_ld_c[384]",
+   "lane0_ld_c[385]",
+   "lane0_ld_c[386]",
+   "lane0_ld_c[387]",
+   "lane0_ld_c[388]",
+   "lane0_ld_c[389]",
+   "lane0_ld_c[390]",
+   "lane0_ld_c[391]",
+   "lane0_ld_c[392]",
+   "lane0_ld_c[393]",
+   "lane0_ld_c[394]",
+   "lane0_ld_c[395]",
+   "lane0_ld_c[396]",
+   "lane0_ld_c[408]",
+   "lane0_ld_c[409]",
+   "lane0_ld_c[410]"
+  ],
+  "without_count": 36,
+  "without_on_kit_lef": [
+   "bank0_read_data[16]",
+   "bank0_read_data[9]",
+   "lane0_kv_wdata[8]",
+   "lane0_kv_wdata[9]",
+   "lane0_ld_c[167]",
+   "lane0_ld_c[175]",
+   "lane0_ld_c[260]",
+   "lane0_ld_c[265]",
+   "lane0_ld_c[281]",
+   "lane0_ld_c[290]",
+   "lane0_ld_c[366]",
+   "lane0_ld_c[396]",
+   "lane0_ld_c[408]",
+   "lane0_ld_c[410]",
+   "lane0_ld_c[501]",
+   "lane0_ld_c[513]",
+   "lane0_ld_c[550]",
+   "lane0_ld_c[563]",
+   "lane0_ld_c[587]",
+   "lane0_ld_c[595]",
+   "lane0_ld_c[605]",
+   "lane0_ld_c[621]",
+   "lane0_ld_c[635]",
+   "lane0_ld_c[641]",
+   "lane0_ld_c[658]",
+   "lane0_ld_c[665]",
+   "lane0_ld_c[700]",
+   "lane0_ld_c[730]",
+   "lane0_ld_c[741]",
+   "lane0_ld_c[756]",
+   "lane0_ld_c[771]",
+   "lane0_ld_c[774]",
+   "lane0_ld_c[784]",
+   "lane0_ld_c[800]",
+   "lane0_rd_addr[22]",
+   "lane0_rd_addr[75]",
+   "lane0_rd_q[37]",
+   "lane0_rd_q[41]",
+   "lane0_rd_q[76]",
+   "lane0_rd_q[92]"
+  ]
+ },
+ "pin_cover": {
+  "M5": 2017
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 2017,
+  "size_base": [
+   190.08,
+   311.04
+  ],
+  "size_detail": [
+   190.08,
+   311.04
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 82554,
+  "M5": 18470
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/epyc4",
+  "db_path": "srv/opentallas-scratch3/claude/hbm-form-timing/eco/l1r5/run/i3/run/results/asap7/hbc_ot_hbm_su_pg_lane1_core/base/6_final.odb",
+  "odb_sha256": "3b717c4bceb6aebaec1f1fbdd08ccb6f20de130de6218e284aa92ee86a23dfb1",
+  "origin": "signed store stage (sha-verified)",
+  "store_id": "f0fe213bbd6e2a5f70d71b0d3d9da87b8caab9d7a618187514c06d65d6dfc592",
+  "verdict": "SIGNED"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 2017,
+   "M5": 2017
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 1929,
+    "rects_cut": 525,
+    "um2_cut": 4.871904
+   },
+   "M5": {
+    "exact_added": 2202,
+    "rects_cut": 423,
+    "um2_cut": 26.152536
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}
