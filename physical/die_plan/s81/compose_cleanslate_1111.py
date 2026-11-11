@@ -21,6 +21,8 @@ Applies to BASE_1200 (64eb2c89 SVCPROV-PHYSINST -> FEED-BAL-2 -> DS85-VIEWS), in
         - matched neighbour: for every ports[] row touching a changed (type, bus) on any partition of the type, the
           die-frame windows of both ends coincide after the delta (both ends must be changed together); a port's own
           window_um that equalled the old die-frame window follows the new one (derived, reported).
+  (d) optional signed box heights (--resize spec; applied after (b), before (c)): svc provider rows take the signed
+      SIZE + signed view, origin kept; view/pins sha, pins inside, taps/regs inside, top-edge abutment checked.
   (c) optional late-tap pad delta (DS85-LATETAP-1111 pads_delta.json), applied by
         delta_latetap_pad_1111.py apply-delta PLAN_IN PLAN_OUT PADS_DELTA [REPORT]  (adds clock.cohort.tap_pad only).
         OFF unless --pad is given.
@@ -306,8 +308,74 @@ def keep_clear(plan, path):
     return dict(pass_=not bad, rules=path, rules_sha256=fsha(path), violations=bad)
 
 
+# ------------------------------------------------------------------------------------------- (d) signed box heights
+def lef_size(path, macro):
+    import re
+    txt = Path(path).read_text()
+    m = re.search(r"^MACRO\s+%s\s*$(.*?)^END\s+%s" % (re.escape(macro), re.escape(macro)), txt, re.S | re.M)
+    z = re.search(r"^\s*SIZE\s+(\S+)\s+BY\s+(\S+)\s*;", m.group(1), re.M)
+    return [float(z.group(1)), float(z.group(2))]
+
+
+def apply_resize(plan, spec_path):
+    """stage (d): rows of a module whose width == the signed width and height in from_heights take the signed SIZE and
+    the signed view; origin kept.  Checks per row: view sha + LEF SIZE, pins table sha + every pin inside the new box,
+    every core tap / ft reg / station reg / plain tap that was inside the old box is inside the new one, and no core
+    that abutted the old box's top edge (it would lose its abutment)."""
+    spec = json.loads(Path(spec_path).read_text())
+    problems, rec = [], {}
+    for r in spec["rows"]:
+        for k, f in (("lef_sha256", "lef"), ("lib_sha256", "lib")):
+            if fsha(REPO / r[f]) != r[k]:
+                problems.append(f"resize: {r[f]} sha != {r[k][:12]}")
+        size = lef_size(REPO / r["lef"], r["module"])
+        if abs(size[0] - r["width"]) > EPS or abs(size[1] - r["to_height"]) > EPS:
+            problems.append(f"resize: {r['module']} LEF SIZE {size} != {r['width']} x {r['to_height']}")
+        pt = HERE / r["pins_file"]
+        if not pt.is_file() or fsha(pt) != r["pins_table_sha256"]:
+            problems.append(f"resize: pins table {r['pins_file']} missing or sha != {r['pins_table_sha256'][:12]}")
+            pins = []
+        else:
+            pj = json.loads(pt.read_text())
+            pins = pj.get("pins", pj) if isinstance(pj, dict) else pj
+        for pn in pins if isinstance(pins, list) else []:
+            xy = pn.get("xy") or pn.get("xy_um")
+            if xy and not (-EPS <= xy[0] <= r["width"] + EPS and -EPS <= xy[1] <= r["to_height"] + EPS):
+                problems.append(f"resize: {r['module']} pin {pn.get('name')} {xy} outside {r['width']}x{r['to_height']}")
+        for tn, t in sorted(plan["partition_types"].items()):
+            hcs = t.get("hard_cores") or []
+            for e in hcs:
+                w, h = e["outline_um"]
+                if e["module"] != r["module"] or abs(w - r["width"]) > EPS or not any(abs(h - x) < EPS for x in r["from_heights"]):
+                    continue
+                b0 = box(e)
+                if e.get("orient", "R0") not in ("R0", "MY"):
+                    problems.append(f"resize: {tn} {e['inst']} orient {e.get('orient')}: origin-kept shrink is not top-edge")
+                e["outline_um"] = [r["width"], r["to_height"]]
+                e["lef"], e["lib"] = r["lef"], r["lib"]
+                b1 = box(e)
+                inside = lambda q, b: b[0] - EPS <= q[0] <= b[2] + EPS and b[1] - EPS <= q[1] <= b[3] + EPS  # noqa: E731
+                pts = [(f"tap {tp['name']}", tp["xy"]) for tp in (t.get("clock") or {}).get("taps", []) or []]
+                pts += [(f"ft {f_['name']} reg {i}", q) for f_ in t.get("ft_slots") or [] for i, q in enumerate(f_.get("regs_um") or [])]
+                pts += [(f"istation {st.get('conn', j)} reg {i}", q) for j, st in enumerate(t.get("internal_stations") or [])
+                        for i, q in enumerate(st.get("regs_um") or [])]
+                for nm, q in pts:
+                    if inside(q, b0) and not inside(q, b1):
+                        problems.append(f"resize: {tn} {e['inst']}: {nm} at {q} was inside the old box, outside the new one")
+                for o in hcs:
+                    if o is e:
+                        continue
+                    ob = box(o)
+                    if abs(ob[1] - b0[3]) < EPS and min(ob[2], b0[2]) - max(ob[0], b0[0]) > EPS:
+                        problems.append(f"resize: {tn} {e['inst']}: {o['inst']} abutted the old top edge (y {b0[3]:g}); "
+                                        f"it would sit {b0[3] - b1[3]:g} um off")
+                rec.setdefault(tn, []).append(dict(inst=e["inst"], module=e["module"], from_=[w, h], to=e["outline_um"]))
+    return dict(spec=str(spec_path), spec_sha256=fsha(spec_path), types=rec,
+                rows=sum(len(v) for v in rec.values())), problems
+
+
 # ------------------------------------------------------------------------------------------- EQ gate
-def eq_gate(base, out, pos_rec, face_rec, pad_on):
+def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None):
     """restore every key the event may move from BASE and compare: anything else moved = FAIL."""
     x = json.loads(json.dumps(out))
     T, B = x["partition_types"], base["partition_types"]
@@ -338,6 +406,12 @@ def eq_gate(base, out, pos_rec, face_rec, pad_on):
             for f in ("window_um", "layers"):
                 if f in bp[q["id"]]:
                     q[f] = copy.deepcopy(bp[q["id"]][f])
+    for tn, rows in (resize_rec or {}).get("types", {}).items():
+        bi = {e["inst"]: e for e in B[tn].get("hard_cores") or []}
+        for e in T[tn].get("hard_cores") or []:
+            if e["inst"] in {r["inst"] for r in rows}:
+                for f in ("outline_um", "lef", "lib"):
+                    e[f] = copy.deepcopy(bi[e["inst"]][f])
     if pad_on:
         x["clock"]["cohort"].pop("tap_pad", None)
     bad = [k for k in set(x) | set(base) if x.get(k) != base.get(k)]
@@ -532,6 +606,15 @@ def compose(a):
                            types=sorted(face_rec["types"]), ports_derived=len(face_rec["ports_derived"]),
                            script_cross_check=cross))
         cur = s_out
+    resize_rec = None
+    if getattr(a, "resize", None):
+        resize_rec, pr = apply_resize(plan, a.resize)
+        problems += pr
+        s_out = sha(dump(plan).encode())
+        stages.append(dict(stage="d_signed_box_height", inputs=[dict(path=a.resize, sha256=fsha(a.resize))],
+                           in_sha256=cur, out_sha256=s_out, rows=resize_rec["rows"],
+                           per_type={t: len(v) for t, v in resize_rec["types"].items()}))
+        cur = s_out
     text = dump(plan).encode()
     if a.pad:
         if problems:
@@ -552,8 +635,8 @@ def compose(a):
         plan = json.loads(text)
         cur = sha(text)
     out_sha = sha(text)
-    changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})))
-    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad))
+    changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})) | set((resize_rec or {}).get("types", {})))
+    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad), resize_rec)
     leg = legality_diff(base, plan, changed_types, a.gap, a.edge)
     if a.keep_clear:
         kc = keep_clear(plan, a.keep_clear)
@@ -562,12 +645,12 @@ def compose(a):
     rec = dict(schema="opentallas.s81.compose_cleanslate.v1", event=TAG, do_not_count=True,
                created=time.strftime("%Y-%m-%d %H:%M:%S %Z"), base=str(a.base), base_plan_sha256=bsha,
                serialisation=form, args=dict(pos=a.pos or [], face=a.face, face_script=a.face_script,
-                                             keep_clear=a.keep_clear,
+                                             keep_clear=a.keep_clear, resize=getattr(a, "resize", None),
                                              pad=a.pad, pad_script=a.pad_script if a.pad else None,
                                              gap=a.gap, edge=a.edge),
                stages=stages, output_plan_sha256=out_sha, changed_types=changed_types,
                eq_gate=dict(eq, rtl_change=False, pin_change=False, outline_change=False, cycle_change=False),
-               legality=leg, problems=problems, positions=pos_rec, face=face_rec)
+               legality=leg, problems=problems, positions=pos_rec, face=face_rec, resize=resize_rec)
     if not a.dry_run:
         (out_dir / "plan.json").write_bytes(text)
     if not a.no_g0:
@@ -618,7 +701,7 @@ def check(out_dir):
             assert fsha(i["path"]) == i["sha256"], (s["stage"], i["path"], "input changed")
     tmp = out_dir / "check_rederive"
     ns = argparse.Namespace(base=rec["base"], out_dir=str(tmp), pos=ar["pos"], face=ar["face"], pad=ar["pad"],
-                            face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"),
+                            face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"), resize=ar.get("resize"),
                             pad_script=ar["pad_script"], base_sha=[rec["base_plan_sha256"]], no_g0=True, phys=False,
                             dry_run=False, gap=ar["gap"], edge=ar["edge"])
     compose(ns)
@@ -641,6 +724,7 @@ def main():
                                           "its output must equal the generic apply")
     ap.add_argument("--keep-clear", help="keep-clear rules JSON [{type, rect_um, obs_min?, why}, "
                                          "{type, module_re, max_top_um, why}]")
+    ap.add_argument("--resize", help="stage (d) signed box heights spec (events/compose_cleanslate_1111/resize_svcprov_1111.json)")
     ap.add_argument("--pad", help="DS85-LATETAP-1111 pads_delta.json (optional stage c, default OFF)")
     ap.add_argument("--pad-script", default=str(HERE / "delta_latetap_pad_1111.py"))
     ap.add_argument("--base-sha", action="append", help="accepted base sha256 (in addition to BASES)")
@@ -653,7 +737,7 @@ def main():
     a = ap.parse_args()
     if a.pos:
         a.pos = ["::".join(str(Path(x).resolve()) for x in split_sheet(p) if x) for p in a.pos]
-    for k in ("face", "face_script", "keep_clear", "pad", "base"):
+    for k in ("face", "face_script", "keep_clear", "resize", "pad", "base"):
         if getattr(a, k):
             setattr(a, k, str(Path(getattr(a, k)).resolve()))
     a.pad_script = str(Path(a.pad_script).resolve())

@@ -1,0 +1,78 @@
+{
+ "event": "SVCPROV-SIGNED-HEIGHT-1111 (COORD 03:1x via DIE-S81-85, stage d)",
+ "do_not_count": true,
+ "rule": "rows of module M whose outline width == the signed SIZE width and height in from_heights get outline_um = signed SIZE, lef/lib = the signed view; origin_um kept (the box shrinks from the top)",
+ "source": "S81-SVCRS-3 durable views epyc8 /srv/opentallas-scratch2/claude/s81-svcrs-3/durable/<dir>/views (sha = S81-SVCRS-3 11-11 list); pins tables main 274aaaa2b61f",
+ "rows": [
+  {
+   "module": "ot_s81_su_smc",
+   "width": 77.76,
+   "from_heights": [
+    276.48
+   ],
+   "to_height": 259.2,
+   "lef": "physical/die_plan/s81/cores/views/ot_s81_su_smc_svcprov_signed_1111/ot_s81_su_smc.lef",
+   "lib": "physical/die_plan/s81/cores/views/ot_s81_su_smc_svcprov_signed_1111/ot_s81_su_smc_tt.lib",
+   "lef_sha256": "2f96bfb57f80d80087792af8d85bccd5e075f99238979d7bd9c90557dad1ecc9",
+   "lib_sha256": "42fe9e274a973bcf50517fd1a92011b7ae77e65c7b178675a213809bc3667392",
+   "ff_lib_sha256": "09474525237bf1052a2c0ceb4800d9de3e78f3071998f14e35d6c8aab647a18c",
+   "pins_file": "inputs/core_pins/ot_s81_su_smc.json",
+   "pins_table_sha256": "ce17c3e6384a062e00ef24217161ca365ac1ca23f55846151974fcd8efc27a64",
+   "record": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smc_kd/signoff/signoff.json",
+   "routed_db_sha256": "36d32601c270730c30f7f7347812de7fc1920744cb03ebe858bf8e2919a0950f"
+  },
+  {
+   "module": "ot_s81_su_smr",
+   "width": 69.12,
+   "from_heights": [
+    276.48
+   ],
+   "to_height": 259.2,
+   "lef": "physical/die_plan/s81/cores/views/ot_s81_su_smr_svcprov_signed_1111/ot_s81_su_smr.lef",
+   "lib": "physical/die_plan/s81/cores/views/ot_s81_su_smr_svcprov_signed_1111/ot_s81_su_smr_tt.lib",
+   "lef_sha256": "7f348657e57ac650d034d6147617b64c580e598086c5edc84f196ec785d4cc7d",
+   "lib_sha256": "1a82a626df785ae873ca118fd574e6bab4bd49c36bd5877ff9d3ea4e3bd90255",
+   "ff_lib_sha256": "954a8032e540f5a45730390ef20596da9df52555e6647244b5066ff663e43dd0",
+   "pins_file": "inputs/core_pins/ot_s81_su_smr.json",
+   "pins_table_sha256": "112e25a340147b72e1c85e1e5eda49ee07e0e43b395862e74bd4f95a0817adf4",
+   "record": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smr_kd/signoff/signoff.json",
+   "routed_db_sha256": "1fe5c8c764efd817f0d5227492c1d408d12b112b954841142b30540f92f63cdf"
+  },
+  {
+   "module": "ot_s81_su_sml_fold2",
+   "width": 103.68,
+   "from_heights": [
+    276.48,
+    285.12
+   ],
+   "to_height": 259.2,
+   "lef": "physical/die_plan/s81/cores/views/ot_s81_su_sml_fold2_svcprov_signed_1111/ot_s81_su_sml_fold2.lef",
+   "lib": "physical/die_plan/s81/cores/views/ot_s81_su_sml_fold2_svcprov_signed_1111/ot_s81_su_sml_fold2_tt.lib",
+   "lef_sha256": "cbef3bdade35dba1b91e5c2a67ff5268404178174b2ed9ab2ce70269ab5d04c2",
+   "lib_sha256": "4f4a2f00ee6f655762c35b2a134b503548737d2c644cb400cebea08f69e1a160",
+   "ff_lib_sha256": "27230cc8d4abf29e46924459174394f2257212a23d326bca32fb2527f8491e8f",
+   "pins_file": "inputs/core_pins/ot_s81_su_sml_fold2.json",
+   "pins_table_sha256": "362b2a70330616ac4dcc15c4c6b895a4816bb3a32a2107e64f315640540a67db",
+   "record": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/sml_kd/signoff/signoff.json",
+   "routed_db_sha256": "3c2d9b6310989e75772e423122265a775d13651ddcc4add985366e7e3d40b871"
+  },
+  {
+   "module": "ot_s81_su_smd_fold2",
+   "width": 69.12,
+   "from_heights": [
+    276.48,
+    285.12
+   ],
+   "to_height": 259.2,
+   "lef": "physical/die_plan/s81/cores/views/ot_s81_su_smd_fold2_svcprov_signed_1111/ot_s81_su_smd_fold2.lef",
+   "lib": "physical/die_plan/s81/cores/views/ot_s81_su_smd_fold2_svcprov_signed_1111/ot_s81_su_smd_fold2_tt.lib",
+   "lef_sha256": "1b8979d0e4f2379a0d383bae53dc94373257766061e18faa3ba3b4811f76689f",
+   "lib_sha256": "7f07831ae9d87d808ce095acb04f533b6b7719905af5aec82714a4625aaad2a3",
+   "ff_lib_sha256": "ce054929d511ec533d60b6cd2fac2c33913b94f7b43048347eec49c0531de091",
+   "pins_file": "inputs/core_pins/ot_s81_su_smd_fold2.json",
+   "pins_table_sha256": "5c20795c1dbb2fdaa43e907ccbb835799e437c8f3bfebf1dca8e0eb8e2cd979a",
+   "record": "/srv/opentallas-scratch2/claude/s81-svcrs-3/resign/smd_kd/signoff/signoff.json",
+   "routed_db_sha256": "8bddcae34a4b27317173e8b2d06ca6ec95115ead7b40c8a3fb483d92b8e4c8fc"
+  }
+ ]
+}
