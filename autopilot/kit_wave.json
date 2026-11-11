@@ -4454,7 +4454,9 @@
     "ot_s81sl_leaf__t68@7",
     "ot_s81sl_leaf__t71@5",
     "ot_s81sl_leaf__t72@11",
-    "ot_s81sl_leaf__t74@13"
+    "ot_s81sl_leaf__t74@13",
+    "slice_station__t27@7",
+    "slice_station__t49@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -5624,7 +5626,9 @@
     "ot_s81sl_leaf__t65@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t68@7": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t72@11": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
-    "ot_s81sl_leaf__t74@13": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)"
+    "ot_s81sl_leaf__t74@13": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "slice_station__t27@7": "KW-FIX-43 11-10 23:5x DIE-S81-85: FTLOCK on 99f40d = plan ffe10641e938 + bind_ftlk t27/t49 RTL",
+    "slice_station__t49@5": "KW-FIX-43 11-10 23:5x DIE-S81-85: FTLOCK on 99f40d = plan ffe10641e938 + bind_ftlk t27/t49 RTL"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -8957,18 +8961,20 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "slice_station__t27": {
-     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
      },
-     "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed."
+     "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed.",
+     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json"
     },
     "slice_station__t49": {
-     "plan": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
      },
-     "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed."
+     "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed.",
+     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json"
     },
     "col_h10_r1__t1__cld01bb4ae": {
      "kit_rtl": {
@@ -18946,7 +18952,8 @@
     "ot_s81sl_leaf__t74@13"
    ],
    "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x + DIE-S81-85 RELEASE: src -> kw43/src_t51f_pbp_por15c_por36 (cp -al of por15c + porous_files_364106cfe6 a058adcc28ad, porous_views.py overlay --check OK, gen_phys unchanged; + 4 DS85 signed view dirs *_signed_1111 add-only; epyc7/epyc4/epyc8). Released 70 (69 leaf/kv_leaf + 4 col) on plan 39eae55ea90a; porous globs replaced by explicit holds: leaf t8/t22/t30/t39 + 22 col (>208 ps), leaf t16/t27/t42 (c839 own plan); earlier explicit holds t53__clb66fa5cb/t54__cl501e5681/t75 unchanged. 20 full-cover queue jobs kept running. Revert: *_prev_kw43por36*.",
-   "note_kw43pdir": "KW-FIX-43 11-10 23:5x: gunit__t1 a14 prov_views FileNotFoundError out2/inputs/core_pins/dsdv_gunit_l5.json: the plan resolves inputs/, cores/, h2_2249/ next to the plan file. Same sha-checked plan copies in kw43/s81p99f (99f40d35071d) and kw43/s81p39e (39eae55ea90a) with those three as symlinks into src _por36 physical/die_plan/s81 (epyc7/epyc4/epyc8); 122 item_inputs repointed. Revert: plan <- plan_prev_kw43pdir."
+   "note_kw43pdir": "KW-FIX-43 11-10 23:5x: gunit__t1 a14 prov_views FileNotFoundError out2/inputs/core_pins/dsdv_gunit_l5.json: the plan resolves inputs/, cores/, h2_2249/ next to the plan file. Same sha-checked plan copies in kw43/s81p99f (99f40d35071d) and kw43/s81p39e (39eae55ea90a) with those three as symlinks into src _por36 physical/die_plan/s81 (epyc7/epyc4/epyc8); 122 item_inputs repointed. Revert: plan <- plan_prev_kw43pdir.",
+   "note_kw43ftlk2": "KW-FIX-43 11-10 23:5x DIE-S81-85 (combined plans): slice_station t27/t49 -> plan ffe10641e938 (99f40d + clock.ft_hop_lockup; kw43/s81pffe with inputs/cores/h2_2249 symlinks, epyc7/epyc4/epyc8 sha-checked), kit_rtl_ftlk.sh unchanged: the 52's bind (bind8) t27/t49 RTL equals bind_ctl's; bind_ftlk t27/t49 = bind8 + hop latches, used as is. Old rows a7 (queue ap-353f59f57657) / a5 (gen) stopped, retry t27@7 t49@5. Revert: plan <- plan_prev_kw43ftlk2."
   },
   "s81_head": {
    "enabled": true,
