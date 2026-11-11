@@ -53,6 +53,7 @@ def test_style_preserved():
     for kw in (dict(separators=(",", ":")), dict(separators=(", ", ": ")), dict(indent=1)):
         text = json.dumps(P, **kw) + "\n"
         assert E.dumps_like(P, text) == text
+    assert E.dumps_like(P, json.dumps(P, indent=1)) == json.dumps(P, indent=1)      # no trailing newline kept
     with pytest.raises(ValueError):
         E.dumps_like(P, json.dumps(P, indent=3))
 

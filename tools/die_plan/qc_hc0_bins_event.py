@@ -57,8 +57,9 @@ def dumps_like(P, text):
     """re-serialise P in the style the input file used (plan-of-record compact / spaced, or kit-wave indent=1)"""
     R = json.loads(text)
     for kw in (dict(separators=(",", ":")), dict(separators=(", ", ": ")), dict(indent=1), dict(indent=2)):
-        if json.dumps(R, **kw) + "\n" == text:
-            return json.dumps(P, **kw) + "\n"
+        for nl in ("\n", ""):        # ctlch candidate plans (cand23d_fh) end without a newline
+            if json.dumps(R, **kw) + nl == text:
+                return json.dumps(P, **kw) + nl
     raise ValueError("base plan is not in a known JSON style")
 
 
