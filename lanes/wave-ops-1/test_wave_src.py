@@ -134,7 +134,7 @@ def test_rebind_cmd_and_asbuilt():
     d = dict(plan='/p/plan.json', kit_rtl=dict(mode='bind', asbuilt='/a/asb.json', bind_out='/b/old'))
     c = N.bind_job('qwen_kvsys', d, '/new/tree', '/out/bind')
     assert c['asbuilt'] == '/a/asb.json' and c['plan'] == '/p/plan.json'
-    assert 'tools/die_plan/bind.py bind /p/plan.json --out /out/bind --asbuilt /a/asb.json --strict' in c['cmd']
+    assert 'tools/die_plan/bind.py all /p/plan.json --out /out/bind --asbuilt /a/asb.json --strict --mem 32' in c['cmd']
     assert '--memory 64g' in c['cmd'] and '-v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro' in c['cmd']
     s = N.bind_job('s81', dict(plan='/p', kit_rtl=dict(mode='script', script='/s.sh')), '/n', '/o',
                    script_text='export S81_BIND_OUT=/x/bind8\nS81_ASBUILT=/y/asb.json\n')
@@ -176,6 +176,54 @@ def test_src_check_categories():
         lm = R.manifest(live); bv = R.ls_tree(r, main)
         c = R.src_check(lm, bv, bv, R.path_history(r, [main], sorted(lm)))
         assert c == dict(stale=['a.txt'], modified=['b.txt'], live_only=['run.json'], missing=1), c
+
+
+def test_switch_checks():
+    # COORD 11-10 21:22 standing SWITCH-OK: (a) tests + KEPT LIVE owners, (b) re-bind, (c) running kits, (e) provenance
+    calls = []
+    def fake_ssh(host, cmd, timeout=600, check=True, input=None):
+        calls.append(cmd)
+        if ' owners ' in cmd:
+            return '{"tools/x.py": "KW-FIX-44", "tools/y.py": ""}\n'
+        if 'ls-remote' in cmd:
+            return 'abc123 refs/heads/wave-src/d/s81\n'
+        return ''
+    o_ssh, o_tag, o_hand = N.ssh, N.flow_tag_for, N.hand_owners
+    try:
+        N.ssh = fake_ssh; N.flow_tag_for = lambda sha, die: 'flow-20261111-a-s81'
+        N.hand_owners = lambda: {('s81', 'tools/y.py'): 'S81-SVCRS-3'}
+        r = dict(conflicts=['tools/x.py', 'tools/y.py'], src='/l', new_sha='abc123', bind_state='ok', rebound=['t1'])
+        cfg = {'dies': {'s81': {'retry': ['a@1', 'b@2']}}}
+        st = {'items': {'k': {'die': 's81', 'item': 'b', 'attempt': 3, 'status': 'RUNNING'}}}
+        ok, cl, owner = N.switch_checks('d', 's81', r, cfg, st, (True, '8 passed'))
+        assert ok and owner is None, cl
+        assert r['kept_live_owners'] == {'tools/x.py': 'KW-FIX-44', 'tools/y.py': 'S81-SVCRS-3'}
+        assert any('KW-FIX-43 re-bind batch' in c for c in cl)
+        st['items']['k']['attempt'] = 2                    # a retry entry names a live attempt -> (c) fails
+        ok, cl, owner = N.switch_checks('d', 's81', r, cfg, st, (True, '8 passed'))
+        assert not ok and owner == 'KW-FIX-43', cl
+        N.hand_owners = lambda: {}                          # an unowned KEPT LIVE file -> (a) fails first
+        st['items']['k']['attempt'] = 3
+        ok, cl, owner = N.switch_checks('d', 's81', r, cfg, st, (True, '8 passed'))
+        assert not ok and owner == 'COORD' and any('no owner for tools/y.py' in c for c in cl), cl
+        N.flow_tag_for = lambda sha, die: ''
+        N.hand_owners = lambda: {('s81', 'tools/y.py'): 'X-1'}
+        ok, cl, owner = N.switch_checks('d', 's81', r, cfg, st, (True, '8 passed'))
+        assert not ok and owner == 'ROOT-MERGE-57', cl
+        r['bind_state'] = 'failed'
+        ok, cl, owner = N.switch_checks('d', 's81', r, cfg, st, (True, '8 passed'))
+        assert not ok and owner == 'S81 die owner', cl
+    finally:
+        N.ssh, N.flow_tag_for, N.hand_owners = o_ssh, o_tag, o_hand
+
+
+def test_kept_owner_tags():
+    with tempfile.TemporaryDirectory() as t:
+        r, base, main, ov, bad = repo(t)
+        live = os.path.join(t, 'live'); os.makedirs(os.path.join(live, 'tools'))
+        open(os.path.join(live, 'tools/x.py'), 'w').write('l1\n# KW-FIX-44 11-10 hand fix\nx = 1  # KW-FIX-44\n# DIE-KV-97 note\n')
+        o = R.kept_owners(r, live, main, ['tools/x.py', 'tools/none.py'])
+        assert o['tools/x.py']['owner'] == 'KW-FIX-44' and o['tools/none.py']['owner'] == '', o
 
 
 if __name__ == '__main__':

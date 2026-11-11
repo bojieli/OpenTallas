@@ -272,12 +272,16 @@ def bind_job(die, d, new_tree, out, script_text=''):
         inner = kr['prep_cmd'].format(plan=shlex.quote(d['plan']), bind=shlex.quote(out), asbuilt=shlex.quote(asb),
                                       src=shlex.quote(new_tree))
     else:
-        inner = 'python -I -B tools/die_plan/bind.py bind %s --out %s --asbuilt %s --strict' % (d['plan'], out, asb)
-    cmd = ('docker run --rm --name waveops_bind_%s -u $(id -u):$(id -g) --group-add $(stat -c %%g /var/run/docker.sock) '
+        # 'all' = elab (writes out/asbuilt.json; the sibling yosys container) + bind + verify; 'bind' alone needs a prior
+        # elab (11-10 HBM: FileNotFoundError hbm.bind/asbuilt.json)
+        inner = 'python -I -B tools/die_plan/bind.py all %s --out %s --asbuilt %s --strict --mem %d' % (
+            d['plan'], out, asb, YOSYS_CAP_GB)
+    cname = 'waveops_bind_' + re.sub(r'[^A-Za-z0-9_.-]', '_', out.split('/wave-src/')[-1])[:80]   # unique per run + die
+    cmd = ('docker run --rm --name %s -u $(id -u):$(id -g) --group-add $(stat -c %%g /var/run/docker.sock) '
            '-v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp '
            '-e PYTHONDONTWRITEBYTECODE=1 --memory %dg --memory-swap %dg --cpus 2 '
            '-v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro '
-           '-v %s:%s -w %s python:3.14-slim %s' % (die, BIND_CAP_GB, BIND_CAP_GB, out, out, new_tree, inner))
+           '-v %s:%s -w %s python:3.14-slim %s' % (cname, BIND_CAP_GB, BIND_CAP_GB, out, out, new_tree, inner))
     return dict(cmd=cmd, asbuilt=asb, old_bind=old, plan=d['plan'], out=out)
 
 
@@ -317,6 +321,22 @@ def report(res):
 
 
 # ------------------------------------------------------------------------------------------------- build / advance
+def bind_host(hosts, b):
+    """the gen host (it holds the new tree) with the most MemAvailable that has the bind of record and asbuilt
+    (11-10: epyc8 had 54 GB free, under the 128 GB the capped bind needs)"""
+    best, bm = CHOST, -1
+    for h in hosts:
+        try:
+            o = ssh(h, "test -d %s && test -e %s && awk '/MemAvailable/{print $2}' /proc/meminfo" % (
+                shlex.quote(b['old_bind']), shlex.quote(b['asbuilt'])), 60, check=False).strip()
+            m = int(o.split()[-1]) if o else -1
+        except Exception:
+            m = -1
+        if m > bm:
+            best, bm = h, m
+    return best
+
+
 def build(date, run_dir):
     res = plan(date, run_dir)
     mdir = '%s/runs/%s' % (LANE, date)
@@ -349,10 +369,12 @@ def build(date, run_dir):
         if b.get('cmd') and all('"ok": true' in v for v in r['hosts'].values()):
             rc = '%s.rc' % b['out']
             need = (BIND_CAP_GB + YOSYS_CAP_GB + 32) * 1024 * 1024
+            bh = bind_host(r['gen_hosts'], b)
+            b['host'] = bh
             job = ('mkdir -p %s; for i in $(seq 1 720); do [ $(awk \'/MemAvailable/{print $2}\' /proc/meminfo) -ge %d ] && break; '
                    'sleep 60; done; %s > %s.log 2>&1; echo "BIND rc=$? %s" > %s' % (b['out'], need, b['cmd'], b['out'], b['out'], rc))
             # the parentheses: a backgrounded 'cd / && ...' list keeps ssh's stdout open (11-10 HBM run hung 60 s)
-            ssh(CHOST, '(nohup setsid bash -c %s >/dev/null 2>&1 < /dev/null &)' % shlex.quote(job), 60)
+            ssh(bh, '(nohup setsid bash -c %s >/dev/null 2>&1 < /dev/null &)' % shlex.quote(job), 60)
             b['launched'] = time.strftime('%Y-%m-%d %H:%M %Z')
             rows.append('any\t%s\tWAVE-OPS-1 %s nightly strict bind %s' % (b['out'], date, die))
     if rows:
@@ -365,13 +387,13 @@ def build(date, run_dir):
 KIT_STORE = '/srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_store.py'   # KIT-INPUT-STORE-1 11-10 (on intel2)
 
 
-def store_ingest(date, die, bind_out, mdir):
+def store_ingest(date, die, bind_out, mdir, host=CHOST):
     """KIT-INPUT-STORE-1 11-10: strict binds + manifests go through the kit store (sparse: full src trees do not;
     they rebuild from their git sha).  The holding dir's hardlinks keep the blobs alive.  -> one status word/line"""
     try:
         src = ssh(HUB, 'cat ' + KIT_STORE, 120)
         hold = '%s/kit_inputs/%s_%s' % (LANE, date, die)
-        out = ssh(CHOST, 'mkdir -p %s && python3 -I - ingest %s/bind.f %s/live_%s.tsv %s/expect_%s.tsv --kit-inputs %s '
+        out = ssh(host, 'mkdir -p %s && python3 -I - ingest %s/bind.f %s/live_%s.tsv %s/expect_%s.tsv --kit-inputs %s '
                          '--tag wave-src-%s-%s' % (hold, bind_out, mdir, die, mdir, die, hold, date, die),
                   3600, check=False, input=src)
         m = re.search(r'KW_KIT_STORE (\{.*\})', out)
@@ -388,34 +410,201 @@ def advance(date, run_dir):
     done, lines = True, []
     for die, r in res['dies'].items():
         b = r.get('bind') or {}
+        verified = bool(r.get('hosts')) and all('"ok": true' in v for v in r['hosts'].values())
         if not b.get('launched'):
             lines.append('%s: %s' % (die, 'not re-bound: ' + (b.get('why') or 'tree not verified on every gen host')))
+            r['bind_state'] = 'na' if (not b.get('cmd') and verified) else 'failed'
             continue
-        rc = ssh(CHOST, 'cat %s.rc 2>/dev/null; true' % b['out'], 60).strip()
+        BH = b.get('host') or CHOST
+        rc = ssh(BH, 'cat %s.rc 2>/dev/null; true' % b['out'], 60).strip()
         if not rc:
             done = False; lines.append('%s: bind running' % die); continue
         if 'rc=0' not in rc:
+            r['bind_state'] = 'failed'
             lines.append('%s: strict bind FAILED (%s), log %s.log; wave stays on the old tree' % (die, rc, b['out'])); continue
+        r['bind_state'] = 'ok'
         if not os.path.exists(os.path.join(run_dir, 'binddiff_%s.json' % die)):
-            ssh(CHOST, 'echo \'{"types": []}\' > %s/ev_empty.json; cd %s && nice python3 -I %s/binddiff.py %s %s %s %s/ev_empty.json '
-                       '%s/binddiff_%s.json > %s/binddiff_%s.out 2>&1' % (mdir, TOOLS, TOOLS, b['old_bind'], b['out'], b['plan'],
-                                                                         mdir, mdir, die, mdir, die), 7200, check=False)
-            ssh(CHOST, 'cat %s/binddiff_%s.json' % (mdir, die), 120)
-            open(os.path.join(run_dir, 'binddiff_%s.json' % die), 'w').write(ssh(CHOST, 'cat %s/binddiff_%s.json' % (mdir, die), 120))
+            if BH != CHOST:
+                ssh(BH, 'mkdir -p %s %s' % (TOOLS, mdir), 60)
+                ssh(CHOST, 'timeout 300 scp -q -o BatchMode=yes %s/binddiff.py %s:%s/' % (TOOLS, BH, TOOLS), 330)
+            ssh(BH, 'echo \'{"types": []}\' > %s/ev_empty.json; cd %s && nice python3 -I %s/binddiff.py %s %s %s %s/ev_empty.json '
+                    '%s/binddiff_%s.json > %s/binddiff_%s.out 2>&1' % (mdir, TOOLS, TOOLS, b['old_bind'], b['out'], b['plan'],
+                                                                      mdir, mdir, die, mdir, die), 7200, check=False)
+            open(os.path.join(run_dir, 'binddiff_%s.json' % die), 'w').write(ssh(BH, 'cat %s/binddiff_%s.json' % (mdir, die), 120))
         bd = json.load(open(os.path.join(run_dir, 'binddiff_%s.json' % die)))
         lines.append('%s: strict bind rc 0; bound RTL changed on %d types (re-bound): %s' % (
             die, len(bd['changed']), ' '.join(bd['changed'][:30]) + (' ...' if len(bd['changed']) > 30 else '')))
         r['rebound'] = bd['changed']
-        lines.append('%s: kit-store %s' % (die, store_ingest(date, die, b['out'], mdir)))
+        lines.append('%s: kit-store %s' % (die, store_ingest(date, die, b['out'], mdir, BH)))
     for die, r in res['dies'].items():          # COORD 11-10: say which conflicted files the new tree keeps live
         if r.get('conflicts'):
             lines.append('%s: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) %d file(s): %s'
                          % (die, len(r['conflicts']), ' '.join(r['conflicts'][:40]) + (' ...' if len(r['conflicts']) > 40 else '')))
-    ok = os.path.exists(SWITCH_OK) and open(SWITCH_OK).read().strip() in ('standing', date)
-    lines.append('switch: ' + ('ALLOWED by lanes/wave-ops-1/SWITCH-OK; KW-FIX-44 applies it at the next idle gap (new launches only)'
-                               if ok else 'NOT applied (no SWITCH-OK for %s): config unchanged, the new trees wait' % date))
+    ok = os.path.exists(SWITCH_OK) and (open(SWITCH_OK).read().split() or [''])[0] in ('standing', date)
+    if not done:
+        return '\n'.join(lines), done
+    if not ok:
+        lines.append('switch: NOT applied (no SWITCH-OK for %s): config unchanged, the new trees wait' % date)
+    else:
+        lines += switch_dies(date, res)
     json.dump(res, open(os.path.join(run_dir, 'advance.json'), 'w'), indent=1)
     return '\n'.join(lines), done
+
+
+# ------------------------------------------------------------------------------------------------- switch (COORD 21:22)
+OWNERS_TSV = os.path.join(HERE, 'KEPT-LIVE-OWNERS.tsv')     # die<TAB>path<TAB>owner (hand entries; override the tag scan)
+CFG_LOCAL = os.path.join(COORD, 'autopilot/kit_wave.json')  # coord/state copy the hub syncs (KW-FIX-43 switched HBM so)
+
+
+def ok_die(die):
+    """SWITCH-OK 'standing' (all dies) or 'standing -<die> ...' to hold dies out"""
+    try:
+        return '-' + die not in open(SWITCH_OK).read().split()
+    except OSError:
+        return False
+
+
+def tests_pass():
+    p = subprocess.run([sys.executable, '-I', os.path.join(HERE, 'test_wave_src.py')], capture_output=True, text=True,
+                       timeout=900)
+    return p.returncode == 0, (p.stdout + p.stderr).strip()[-200:]
+
+
+def hand_owners():
+    out = {}
+    try:
+        for ln in open(OWNERS_TSV):
+            f = ln.rstrip('\n').split('\t')
+            if len(f) >= 3 and not ln.startswith('#'):
+                out[(f[0], f[1])] = f[2]
+    except OSError:
+        pass
+    return out
+
+
+def flow_tag_for(sha, die):
+    """the queue's resolve_provenance on CHOST (hub tags + main canaries.json): the newest flow tag covering die whose
+    watched flow files equal sha's, or ''"""
+    code = r'''
+import json, subprocess, fnmatch, re, sys
+sha, die = sys.argv[1], sys.argv[2]
+g = lambda *a: subprocess.run(['git'] + list(a), capture_output=True, text=True).stdout
+c = json.loads(g('show', 'origin/main:tools/flow_canary/canaries.json'))
+watch, exc = c['watch'], c.get('watch_exclude') or []
+own = (c.get('die_plans') or {}).get({'cp1': 's81', 'kv': 'qwen_kvsys'}.get(die, die))
+key = {'qwen_compute': 'qc', 's81': 's81', 's81_head': 'head', 'qwen_kvsys': 'kv', 'hbm': 'hbm'}.get(die)
+R = re.compile(r'^flow-\d{8}-[a-z]+(?:-(qc|s81|head|kv|hbm))?$')
+tags = [t for t in g('for-each-ref', '--sort=-creatordate', '--format=%(refname:short)', 'refs/tags/flow-*').split()
+        if R.match(t) and R.match(t).group(1) in (None, key)][:30]
+for t in tags:
+    ch = [p for p in g('diff', '--no-renames', '--name-only', t, sha).splitlines()
+          if any(fnmatch.fnmatch(p, w) for w in watch) and not any(fnmatch.fnmatch(p, x) for x in exc)
+          and not (own is not None and p.startswith('physical/die_plan/') and p[18:].split('/', 1)[0] not in own)]
+    if not ch:
+        print(t); break
+'''
+    ssh(CHOST, 'git -C %s fetch -q origin "+refs/tags/flow-*:refs/tags/flow-*" 2>/dev/null; true' % REPO, 300)
+    return ssh(CHOST, 'cd %s && python3 -I - %s %s' % (REPO, sha, die), 600, input=code, check=False).strip()
+
+
+def switch_checks(date, die, r, cfg, st, tests):
+    """-> (ok, [check lines], owner of the first failure)"""
+    out, fail_owner = [], None
+    def chk(name, good, text, owner='COORD'):
+        nonlocal fail_owner
+        out.append('%s %s %s' % (name, 'PASS' if good else 'FAIL', text))
+        if not good and fail_owner is None:
+            fail_owner = owner
+    chk('(a) tests', tests[0], 'test_wave_src.py: ' + tests[1].splitlines()[-1] if tests[1] else '', 'WAVE-OPS-1')
+    hand, kl = hand_owners(), r.get('conflicts') or []
+    ow = {}
+    if kl:
+        try:
+            ow = json.loads(ssh(CHOST, 'nice python3 -I %s/wave_src_remote.py owners %s %s %s %s/runs/%s/owners_%s.json %s' % (
+                TOOLS, REPO, r['src'], r['new_sha'], LANE, date, die, ' '.join(shlex.quote(p) for p in kl)), 900)
+                .strip().splitlines()[-1])
+        except Exception:
+            ow = {}
+    named = {p: hand.get((die, p)) or ow.get(p) or '' for p in kl}
+    r['kept_live_owners'] = named
+    miss = [p for p, o in named.items() if not o]
+    chk('(a) KEPT LIVE owners', not miss, ('%d kept live, all named: ' % len(kl) + '; '.join('%s=%s' % kv for kv in
+        named.items())) if not miss else 'no owner for %s (add die/path/owner to lanes/wave-ops-1/KEPT-LIVE-OWNERS.tsv)'
+        % ' '.join(miss), 'COORD')
+    bs = r.get('bind_state')
+    chk('(b) re-bind', bs in ('ok', 'na'), {'ok': 'bound RTL changed on %d type(s)%s' % (
+        len(r.get('rebound') or []), ' -> KW-FIX-43 re-bind batch' if r.get('rebound') else ''),
+        'na': 'no strict bind of record (tree byte-checked only)'}.get(bs, 'strict bind failed or tree not verified'),
+        die.upper() + ' die owner')
+    live = {(v.get('item'), v.get('attempt')) for v in (st.get('items') or {}).values()
+            if v.get('die') == die and str(v.get('status') or '').upper() in ('RUNNING', 'LAUNCHING')}
+    hit = [x for x in (cfg['dies'][die].get('retry') or []) if isinstance(x, str) and '@' in x
+           and (x.rsplit('@', 1)[0], int(x.rsplit('@', 1)[1]) if x.rsplit('@', 1)[1].isdigit() else -1) in live]
+    chk('(c) running kits', not hit, 'untouched (pinned specs; no retry entry names a live attempt)' if not hit else
+        'retry entries name live attempts (would FAIL as superseded): ' + ' '.join(hit[:10]), 'KW-FIX-43')
+    br = 'wave-src/%s/%s' % (date, die)
+    try:
+        ssh(CHOST, 'git -C %s push -q origin %s:refs/heads/%s' % (REPO, r['new_sha'], br), 600)
+        pushed = r['new_sha'] in ssh(CHOST, 'git -C %s ls-remote origin refs/heads/%s' % (REPO, br), 120)
+    except Exception:
+        pushed = False
+    tag = flow_tag_for(r['new_sha'], die) if pushed else ''
+    r['flow_tag'] = tag
+    chk('(e) queue provenance', bool(pushed and tag), ('hub branch %s, flow tag %s' % (br, tag)) if tag else
+        ('hub branch %s %s, no flow tag carries its flow' % (br, 'pushed' if pushed else 'NOT pushed')), 'ROOT-MERGE-57')
+    return fail_owner is None, out, fail_owner
+
+
+def switch_dies(date, res):
+    subprocess.run(['git', '-C', COORD, 'fetch', '-q', 'origin', 'coord/state'], timeout=300)
+    orig = subprocess.run(['git', '-C', COORD, 'show', 'origin/coord/state:autopilot/kit_wave.json'], capture_output=True,
+                          text=True, timeout=120).stdout or open(CFG_LOCAL).read()
+    cfg = json.loads(orig)
+    st = json.loads(ssh(HUB, 'cat /home/ubuntu/coord/autopilot/kit_wave_state.json', 120))
+    tests = tests_pass()
+    lines, switched = [], []
+    for die, r in res['dies'].items():
+        if r.get('error') or die not in cfg.get('dies', {}):
+            continue
+        d = cfg['dies'][die]
+        old = (d.get('src_sha') or '')[:12]
+        if d.get('src') == r['new_tree']:
+            lines.append('%s: already on %s' % (die, r['new_tree'])); continue
+        if not ok_die(die):
+            lines.append('%s: NOT switched: die excluded by lanes/wave-ops-1/SWITCH-OK' % die); continue
+        ok, cl, owner = switch_checks(date, die, r, cfg, st, tests)
+        lines += ['  %s %s' % (die, c) for c in cl]
+        if not ok:
+            lines.append('%s: NOT switched (stays on %s @%s; new %s @%s waits); failing check -> %s' % (
+                die, d.get('src'), old, r['new_tree'], r['new_sha'][:12], owner)); continue
+        k = 'wos' + date
+        for key in ('src', 'src_sha', 'queue_src'):
+            d['%s_prev_%s' % (key, k)] = d.get(key)
+        d.update(src=r['new_tree'], src_sha=r['new_sha'], queue_src='wave-src/%s/%s@%s' % (date, die, r['new_sha'][:12]))
+        d['note_src_' + k] = ('WAVE-OPS-1 %s nightly wave src (COORD 11-10 21:22 standing SWITCH-OK): NEW launches only; '
+                              'running kits keep their pinned spec; flow tag %s; revert: src/src_sha/queue_src <- '
+                              '*_prev_%s' % (date, r.get('flow_tag'), k))
+        switched.append(die)
+        lines.append('%s: SWITCHED %s @%s -> %s @%s (new launches only; revert keys *_prev_%s)%s' % (
+            die, d['%s_prev_%s' % ('src', k)], old, r['new_tree'], r['new_sha'][:12], k,
+            ('; re-bind batch to KW-FIX-43: ' + ' '.join(r['rebound'][:40])) if r.get('rebound') else ''))
+    if switched:
+        txt = json.dumps(cfg, indent=1)                   # the file's own format (byte-identical round trip)
+        json.loads(txt)
+        if subprocess.run(['git', '-C', COORD, 'diff', '--quiet', '--', 'autopilot/kit_wave.json']).returncode:
+            lines.append('config: autopilot/kit_wave.json has another lane\'s uncommitted edit here: switch NOT applied')
+            return lines
+        open(CFG_LOCAL + '.wos.tmp', 'w').write(txt)
+        os.replace(CFG_LOCAL + '.wos.tmp', CFG_LOCAL)
+        p = subprocess.run([os.path.join(COORD, 'bin/coord-commit.sh'), 'WAVE-OPS-1 %s nightly wave src switch: %s '
+                            '(new launches only; DO_NOT_COUNT)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>'
+                            % (date, ' '.join(switched)), 'autopilot/kit_wave.json'], cwd=COORD, capture_output=True,
+                           text=True, timeout=600)
+        if p.returncode != 0:
+            open(CFG_LOCAL, 'w').write(orig)              # nothing half-applied: back to the bytes we read
+        lines.append('config commit: ' + ('on origin coord/state' if p.returncode == 0 else
+                                          'FAILED (%s): switch NOT applied, config restored' % (p.stderr or p.stdout)[-200:]))
+    return lines
 
 
 def post(text, files=()):
@@ -439,7 +628,12 @@ def main(argv):
         if os.path.exists(os.path.join(run_dir, 'build.json')):
             print('already built ' + date); return 0
         res, rows = build(date, run_dir)
-        if os.environ.get('WOS_NOPOST'):
+        if os.environ.get('WOS_NOPOST') or os.path.exists(SWITCH_OK):   # COORD 21:22: ONE result post per night (advance)
+            subprocess.run([os.path.join(COORD, 'bin/coord-commit.sh'), 'WAVE-OPS-1 %s nightly wave src built (DO_NOT_COUNT)'
+                            '\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>' % date,
+                            os.path.relpath(PROTECTED, COORD)] + [os.path.join(os.path.relpath(run_dir, COORD), f)
+                                                                  for f in ('REPORT.md', 'plan.json', 'build.json')],
+                           cwd=COORD, timeout=600)
             print(open(os.path.join(run_dir, 'REPORT.md')).read()); return 0
         rel = os.path.relpath(run_dir, COORD)
         post('- %s STATE [WAVE-OPS-1 -> COORD, KW-FIX-44, ROOT-MERGE-57, KIT-INPUT-STORE-1] nightly wave src %s BUILT '

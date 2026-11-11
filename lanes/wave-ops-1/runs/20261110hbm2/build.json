@@ -397,18 +397,20 @@
     "tools/uarch_model.py"
    ],
    "bind": {
-    "cmd": "docker run --rm --name waveops_bind_hbm -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind:/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind -w /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm python:3.14-slim python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json --strict",
+    "cmd": "docker run --rm --name waveops_bind_hbm -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind2:/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind2 -w /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm python:3.14-slim python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind2 --asbuilt /srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json --strict --mem 32",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json",
     "old_bind": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
-    "out": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind",
-    "launched": "2026-11-10 20:56 PST"
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind2",
+    "host": "epyc4",
+    "launched": "relaunch 21:5x all-form"
    },
    "hosts": {
     "epyc7": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}",
     "epyc8": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}",
     "epyc4": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}"
-   }
+   },
+   "bind_prev_rc1": "hbm.bind rc=1 (bind without elab)"
   }
  }
 }

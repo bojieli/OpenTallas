@@ -20,7 +20,7 @@
                                       expected manifest of the new tree
 Nothing here deletes outside a NEW tree it created, kills a process or edits a live tree.
 """
-import hashlib, json, os, shutil, stat, subprocess, sys, tarfile, tempfile, time
+import re, hashlib, json, os, shutil, stat, subprocess, sys, tarfile, tempfile, time
 
 MODE_X, MODE_F, MODE_L = '100755', '100644', '120000'
 
@@ -341,6 +341,31 @@ def src_check(live, base, new, hist):
     return out
 
 
+LANE_TAG = re.compile(r'\b([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-\d{1,3})\b')
+
+
+def kept_owners(repo, live_root, new, paths):
+    """{path: {owner, lines, tags}}: the lane tags (KW-FIX-44, DIE-KV-97, S81-SVCRS-3 ...) named in the live lines of a
+    KEPT LIVE file that the new tree lacks; owner = the most named tag ('' when none: the owner must come from
+    lanes/wave-ops-1/KEPT-LIVE-OWNERS.tsv)"""
+    out = {}
+    for p in paths:
+        try:
+            lv = open(os.path.join(live_root, p), errors='replace').read().splitlines()
+        except OSError:
+            out[p] = dict(owner='', lines=0, tags={}); continue
+        nb = subprocess.run(['git', '-C', repo, 'show', '%s:%s' % (new, p)], capture_output=True, text=True,
+                            errors='replace').stdout.splitlines()
+        ns = set(nb)
+        add = [l for l in lv if l not in ns and len(l.strip()) > 3]
+        tags = {}
+        for l in add:
+            for t in LANE_TAG.findall(l):
+                tags[t] = tags.get(t, 0) + 1
+        out[p] = dict(owner=max(tags, key=tags.get) if tags else '', lines=len(add), tags=tags)
+    return out
+
+
 def expected_manifest(live, actions):
     m = dict(live)
     for a in actions:
@@ -444,6 +469,9 @@ def main(argv):
         json.dump(r, open(out, 'w'))
         print(json.dumps(dict(stale=len(r['stale']), modified=len(r['modified']), live_only=len(r['live_only']),
                               missing=r['missing'])))
+    elif cmd == 'owners':                               # owners repo live_root new_sha out.json path...
+        r = kept_owners(argv[2], argv[3], argv[4], argv[6:])
+        json.dump(r, open(argv[5], 'w')); print(json.dumps({p: v['owner'] for p, v in r.items()}))
     elif cmd == 'pack':
         pack(argv[2], json.load(open(argv[3]))['actions'], argv[4]); print('packed')
     elif cmd == 'expect':
