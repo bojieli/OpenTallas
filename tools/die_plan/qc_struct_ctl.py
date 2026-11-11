@@ -27,6 +27,8 @@ REACH = float(sys.argv[sys.argv.index("--reach") + 1]) if "--reach" in sys.argv 
 sys.path.insert(0, SRC + "/tools/autopilot")
 sys.path.insert(0, SRC + "/tools/die_plan")
 import geom_rules as G  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import istation_knee as KN  # noqa: E402
 
 K = Path(KIT)
 pins = json.loads((K / "pins.json").read_text())
@@ -162,13 +164,32 @@ def ring_centre(bus):
     return ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2)
 
 
+raw_bytes = Path(BASE).read_bytes()
+raw = json.loads(raw_bytes)
+t = raw["partition_types"][TN]
+assert "internal_stations" not in t and "relay_sites" not in t, "type already carries stations / relay sites"
+# KNEE-1 11-10: a per_bit chain is placed by the kit's knee rule (istation_knee mirrors kit_istations
+# is_knee_site: bbox of ALL the bus's pins, one shared integer stage split, leaf offset); the straight L1/(n+1) estimate
+# left 10 chains of sle_ctl__cl67434795 over the kit's 403 um stop (x_hc1_i 924 um with 1 station).
+BUSREC = {b["name"]: b for b in t["buses"]}
+CORNERS = {b: [(min(x for x, _ in v), min(y for _, y in v)), (max(x for x, _ in v), max(y for _, y in v))]
+           for b, v in byb.items()}           # legs() reads only the bbox of the pins
+
+
+def knee_n(n, c, bus, direction):
+    if n <= 0 or bus not in BUSREC:
+        return n
+    rec = BUSREC[bus]
+    return KN.stations_needed(rec["face"], direction, c, CORNERS[bus], n, KN.PLAN_MARGIN_UM, KN.leaf_offset(t, rec))
+
+
 def n_out(c, bus):
-    return max(0, math.ceil(L1(c, PC[bus]) / REACH) - 1)
+    return knee_n(max(0, math.ceil(L1(c, PC[bus]) / REACH) - 1), c, bus, "out")
 
 
 def n_in(c, bus):
     free = 2 + LPAD.get(bus, 0)
-    return max(0, math.ceil(L1(c, ring_centre(bus)) / REACH) - free)
+    return knee_n(max(0, math.ceil(L1(c, ring_centre(bus)) / REACH) - free), c, bus, "in")
 
 
 def cost(o, c):
@@ -193,10 +214,6 @@ for o in ("ctl", "tap"):
     best[o] = (float(c[1]), float(c[2]))
     print(f"box {o}: centre {best[o]} added station flops {cmin:g}")
 
-raw_bytes = Path(BASE).read_bytes()
-raw = json.loads(raw_bytes)
-t = raw["partition_types"][TN]
-assert "internal_stations" not in t and "relay_sites" not in t, "type already carries stations / relay sites"
 stations, report = [], dict(reach_um=REACH, boxes=best, out=[], inn=[], hops={})
 
 
