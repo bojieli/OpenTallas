@@ -37814,3 +37814,4 @@ Exports go to POROUS-ALL-1 with a pincheck as each lands.
      - the docker -lec waiters: inside running sealed jobs.
    - udevd RSS: epyc7 13 MB, epyc8 17 MB, epyc4 2.5 GB now (it had leaked to 114 GB before).
 5. Queued, not started: the STALE list in failure_breakdown, the only_items loud log, and the nightly wave-source rebuild.
+- 11-10 18:25 ROOT-MERGE-57 STATE kw-fix-44 trio built at end of stack on l5, all merges clean, sparse queued on epyc4: m1 = grt-early b6d8a28df457 (grt183_make.sh + test); m2 = macro-grid a1583449d1cd (gen_phys.py + macro_grid_snap.py + test); m3 = script-inputs at its newest head 7f74544b0d76 (contains ad59b36619cb; kit_wave.py + test). All get 5 tags. k3 he-epc is out of the stack per the owner rule; the trains behind it are rebuilt on live main at landing.
