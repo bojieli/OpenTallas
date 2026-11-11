@@ -1660,6 +1660,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
     ap.add_argument("--io-tt-ps", type=float, default=None, help="Measured TT boundary pin-register clock insertion; overrides historical core table")
     ap.add_argument("--io-ff-ps", type=float, default=None, help="Measured FF boundary pin-register insertion; default FLOW calibrated 0.81 x TT budget")
+    ap.add_argument("--io-insertion", choices=("default", "plan"), default="default",
+                    help="PLAN-GEN-RULES-1 rule A (OWNER 11-10, opt-in): 'plan' binds the IO vclk to the parent plan's core-tap "
+                         "insertion of this module (tools/die_plan/plan_gen_rules.core_io_insertion: measured view or the "
+                         "12.9d planned value; FF 0.81 x TT unless the tap states FF) when no --io-tt-ps and no MEASURED "
+                         "--core-insertion row apply.  'default' (and a module no non-default tap names) = unchanged kit.")
     ap.add_argument("--no-pre-route-ff-hold", dest="pre_route_ff_hold", action="store_false",
                     help="drop the pre-DRT gate (default ON: FF GRT hold >= 0 on the F2 RC + F1 FF vclk, GEOM 05:35)")
     ap.add_argument("--clock-taps", default="off", choices=["off", "density"],
@@ -2086,6 +2091,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             ce_ff = ce.get("insertion_ff_mean_ps")
             if ce["insertion_mean_ps"] > common:
                 ins = float(ce["insertion_mean_ps"])
+    io_plan = None
+    if a.io_insertion == "plan" and a.io_tt_ps is None and not contract:
+        sys.path.insert(0, str(TOOL))
+        import plan_gen_rules as PGR
+        import schema as PSC
+        io_plan = PGR.core_io_insertion(PSC.Plan(plan), module)
+        if io_plan:
+            a.io_tt_ps = io_plan[0]
+            if a.io_ff_ps is None:
+                a.io_ff_ps = io_plan[1]
+            print(f"IO_INSERTION plan {module}: TT {io_plan[0]:g} FF {io_plan[1]:g} ({io_plan[2]})", flush=True)
     if a.io_tt_ps is not None:
         ins = a.io_tt_ps
     # F1 (HBM 10-25 restart): per-corner IO vclk binding (tools/die_plan/vclk_corner.tcl): the FF-only GRT hold repair,

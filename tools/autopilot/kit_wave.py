@@ -1641,7 +1641,10 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
-            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))}
+            "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item)),
+            # PLAN-GEN-RULES-1 rule C (OWNER 11-10, advisory): die option cell_check true -> after_place compares the
+            # measured synth cells with the plan outline (tools/die_plan/cell_check.py); absent = no key, no probe
+            **({"cell_check": True} if d.get("cell_check") and kind == "type" else {})}
 
 
 # ------------------------------------------------------------------------------------------------ KW-PROV-1 provisional views
@@ -3073,6 +3076,16 @@ def run_item(spec_path):
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
                 if type(count.get("limit")) is int:
                     res["cells_limit"] = min(count["limit"], CELL_CAP_MAX)
+        if sp.get("cell_check") and res["cells"]:
+            cc_cmd = (f"cd / && python3 -I {q(src)}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
+                      f"--cells {int(res['cells'])} --stat \"$(ls {q(K)}/run/reports/asap7/*/base/synth_stat.txt | head -1)\"")
+            _, cct = run("cell_check", remote(cc_cmd), idempotent=True)
+            m = re.search(r"(?m)^CELL_CHECK (\{.*\})$", cct)
+            if m:
+                try:
+                    res["cell_check"] = json.loads(m.group(1))
+                except ValueError:
+                    pass
         if rc or not odb:
             return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
         if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
@@ -4060,6 +4073,7 @@ def collect(AP, cfg, st, notices):
         rec["stage"] = res.get("stage")
         rec["evidence"] = res.get("evidence", "")
         rec["kit"] = res.get("kit", "")
+        cell_check_note(AP, st, rec, res, notices)
         if "preflight_advisory" in res:                  # KW-FIX-44 11-10: the kit's contract advisories, per attempt
             rec["preflight_advisory"] = res["preflight_advisory"]
             line = advisory_line(res["preflight_advisory"])
@@ -4095,6 +4109,30 @@ def collect(AP, cfg, st, notices):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
+
+
+CELL_FLAGS_REL = "lanes/FLAGS-CELLCHECK.tsv"
+
+
+def cell_check_note(AP, st, rec, res, notices):
+    """PLAN-GEN-RULES-1 rule C (OWNER 11-10, advisory, never a verdict): the first flagged cell check of an item in a
+    die event becomes one PLAN-CHANGE notice for the die owner (the grouped KIT-WAVE queue line) and one FLAGS-shaped row
+    in lanes/FLAGS-CELLCHECK.tsv.  Later attempts of the same item/event post nothing (first synthesis only)."""
+    cc = res.get("cell_check")
+    if not isinstance(cc, dict) or not cc.get("flags"):
+        return
+    seen = st.setdefault("cell_check_posted", {})
+    key = f"{rec.get('die')}/{rec.get('event', '')}/{rec.get('item')}"
+    if key in seen:
+        return
+    seen[key] = time.time()
+    notices.setdefault(rec["die"], []).append(f"{rec['item']} PLAN-CHANGE (rule C) {'; '.join(cc['flags'])}: "
+                                              f"{(cc.get('plan_change') or '')[:300]}")
+    AP.coord_append(CELL_FLAGS_REL, "\t".join(str(x) for x in (
+        now_s(), "-", rec.get("die"), rec.get("event", ""), "-", cc.get("type"), "yes", "cells", "A", "-",
+        cc.get("density"), round(max((cc["density"] / cc["density_flag"]) if cc.get("density") else 0.0,
+                                     (cc["ratio"] / cc["ratio_flag"]) if cc.get("ratio") else 0.0), 3),
+        "; ".join(cc["flags"]), cc.get("plan_change") or "-", "-", "-")))
 
 
 def infra_attempts(cfg, die):
