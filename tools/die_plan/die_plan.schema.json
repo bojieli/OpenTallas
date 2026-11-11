@@ -5075,8 +5075,17 @@
         "leg_order": {
          "enum": [
           "normal_first",
-          "along_first"
+          "along_first",
+          "channel"
          ]
+        },
+        "channel_um": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 2,
+         "items": {
+          "type": "number"
+         }
         },
         "core_bits": {
          "type": "array",
