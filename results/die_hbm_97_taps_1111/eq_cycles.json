@@ -1,0 +1,56 @@
+{
+ "ot_hbm_su_pg_lane_exp_x_core": {
+  "signed_shell_reproduced": true,
+  "staged_buses": 51,
+  "mutant_bus": "bank_read_addr",
+  "PASS": {
+   "rc": 0,
+   "proved": true,
+   "induction": true,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hbm_su_pg_lane_exp_x_core/pass/yosys.log",
+   "tail": ""
+  },
+  "NEG_in_short": {
+   "rc": 1,
+   "proved": false,
+   "induction": false,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hbm_su_pg_lane_exp_x_core/neg_in_short/yosys.log",
+   "tail": "ERROR: Called with -verify and proof did fail!\n"
+  },
+  "NEG_no_delay": {
+   "rc": 1,
+   "proved": false,
+   "induction": false,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hbm_su_pg_lane_exp_x_core/neg_no_delay/yosys.log",
+   "tail": "ERROR: Called with -verify and proof did fail!\n"
+  },
+  "verdict": "EQ_CYCLE_SHIFTED"
+ },
+ "ot_hidx_s3_q": {
+  "signed_shell_reproduced": true,
+  "staged_buses": 4,
+  "mutant_bus": "cw",
+  "PASS": {
+   "rc": 0,
+   "proved": true,
+   "induction": true,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/pass/yosys.log",
+   "tail": ""
+  },
+  "NEG_in_short": {
+   "rc": 1,
+   "proved": false,
+   "induction": false,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_in_short/yosys.log",
+   "tail": "ERROR: Called with -verify and proof did fail!\n"
+  },
+  "NEG_no_delay": {
+   "rc": 1,
+   "proved": false,
+   "induction": false,
+   "log": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_no_delay/yosys.log",
+   "tail": "ERROR: Called with -verify and proof did fail!\n"
+  },
+  "verdict": "EQ_CYCLE_SHIFTED"
+ }
+}
