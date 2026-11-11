@@ -18,5 +18,5 @@ python3 -I $K/scripts/apply_cs.py $OUT/step3.json $OUT/step4.json $VT/hgi_ft/del
 cp $OUT/step4.json $OUT/plan_c.json
 python3 -I $K/scripts/eq_diff.py $OUT/step0.json $OUT/plan_c.json || true
 nice -n 19 python3 -I tools/die_plan/check.py $OUT/plan_c.json --out $OUT/g0 > $OUT/g0.log 2>&1 || true
-python3 -I $K/scripts/g0_new.py $S/dkv98/g0_base_kvr2 $OUT/g0   # compare slot-level: see README
+python3 -I $K/scripts/g0_slot.py $S/dkv98/g0_base_kvr2 $OUT/g0   # slot-keyed (g0_new.py keys on the macro name)
 md5sum $OUT/plan_c.json; sha256sum $OUT/plan_c.json
