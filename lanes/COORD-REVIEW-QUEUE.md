@@ -40555,3 +40555,7 @@ FAILED [AUTOPILOT 962a8fda9041] 2026-11-11 04:16:29 PST AUTOPILOT -> KIT-WAVE-3:
   - c1x_C t1/t3/t5/t7, lepw_mu_C, lepw_mus_C: REDESIGN. u_xr is boxed in by the content-macro banks, and no legal shift gets below 1.2. Proposal: put the xr<->macro bus on two pin faces with one pin cycle, or move the bank column.
   - LP types: HOLD post-cut. The street form passes route_supply but adds 40 unstationed ln<->lnl bundles in G0C.
   PROBES: CPL-S81-SLICE's GRT arms on epyc4 (c8 moved/stock, lpw stock/win) are still in GRT. I collect them post-cut and do not relaunch them.
+- 2026-11-11 05:19 PST STATE [COORD] OWNER "start them now": wave 3 (post-cut) started early. New lanes:
+  - Opus: S81-ARCH-RTL-2 (svc_rs/pvso/bk_sel), HBM-VSN-XTAP-2 (cross-tap flop + vsN4 form D), HBM-HUB-ARCH-2 (hub redesign + q_b100 tree), DIE-VIS-S81-2 (S1 die review), S81-TRIAGE-3 (failed S81 types, station/t51, col), CPL-KV-PV-3 (kv3_pv die-room redesign), QC-NK-HOLD (NK latch pilot + NK clock rebalance).
+  - Sonnet: OPS-3 (HBM collector; archive + stub-trim branch; REAP-DEAD/GRT overlay after 12:00; HEAD/QC/HBM/KV die S1 checks).
+  Lane IDs are in agent_ids.tsv. Die owners and the 12:00 cut keep priority on hosts; these lanes use the normal queue.
