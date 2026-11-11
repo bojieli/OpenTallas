@@ -18,7 +18,7 @@ Two halves, one file (the localhost driver copies this file to every host):
        Class c also never trims inside a kit-wave attempt < 24 h old whose row is FAIL (or unknown) and not
        superseded: the kit wave resumes it from its last valid stage (COORD 11-08).
     Every candidate is refused when: protected (union of lanes/PROTECTED-DBS.txt + PROTECTED-DBS.txt +
-    RETIRED-PROTECTION-EXTRAS.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
+    RETIRED-PROTECTION-EXTRAS.tsv + lanes/prune/ARCHIVE-PROTECTED.tsv, parent or child, under every bind-mount alias), counted (a path a SIGNED
     signoff.json / PROVENANCE.json on this host names, parent or child below lane level), kit-wave keep set,
     git alternates target, ot-run spill_pending record, wt-reaper protect.d line, named by a queue post of the
     last 25 h (path, or a row-specific dir name; with --queuename-skip-trim-c a bare name no longer blocks class c), live (/proc cmdline / cwd / open fd, docker mounts incl. stopped
@@ -294,8 +294,12 @@ def parse_protected(text, source):
 
 
 def protected_sources(coord):
+    """the first two must exist; the others are optional.  lanes/prune/ARCHIVE-PROTECTED.tsv (AUTOCLEAN-1 11-06:
+    asbuilt/bind inputs named by signed records, kit_wave live inputs) is the third protected list (COORD 2026-11-10,
+    AUTOCLEAN-13: 8 rows under it were deleted on 11-10 because the union did not read it)."""
     return [os.path.join(coord, "lanes/PROTECTED-DBS.txt"), os.path.join(coord, "PROTECTED-DBS.txt"),
-            os.path.join(coord, "lanes/RETIRED-PROTECTION-EXTRAS.tsv")]
+            os.path.join(coord, "lanes/RETIRED-PROTECTION-EXTRAS.tsv"),
+            os.path.join(coord, "lanes/prune/ARCHIVE-PROTECTED.tsv")]
 
 
 def build_protected_union(coord):
