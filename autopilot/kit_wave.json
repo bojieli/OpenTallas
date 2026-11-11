@@ -28513,8 +28513,7 @@
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc4",
-    "epyc2"
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -37265,7 +37264,8 @@
    "gen_hosts_prev_kw43e2": [
     "epyc7",
     "epyc8",
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2.",
    "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK).",
@@ -39260,7 +39260,8 @@
     "PHY_NE",
     "PHY_NW"
    ],
-   "note_kw43phyn": "KW-FIX-43 11-11 DIE-HBM-98 (WAVE-OPS-1 STALE 'no kit-wave row'): PHY_NC/NE/NW were never picked: the plan marks them hard and the wave skipped them ('plan entry: hard type ... unless hard_wrappers names it'). Added to hard_wrappers so gen builds them (--hard-wrappers) on item_inputs taps plan_p11t_taps_cyc + bind vK5d_c12. Revert: hard_wrappers <- hard_wrappers_prev_kw43phyn."
+   "note_kw43phyn": "KW-FIX-43 11-11 DIE-HBM-98 (WAVE-OPS-1 STALE 'no kit-wave row'): PHY_NC/NE/NW were never picked: the plan marks them hard and the wave skipped them ('plan entry: hard type ... unless hard_wrappers names it'). Added to hard_wrappers so gen builds them (--hard-wrappers) on item_inputs taps plan_p11t_taps_cyc + bind vK5d_c12. Revert: hard_wrappers <- hard_wrappers_prev_kw43phyn.",
+   "gen_hosts_note_kw43e2": "KW-FIX-43 11-11 COORD 03:1x: epyc2 is place/route only for HBM (no HBM src there; SRC-INCOMPLETE src_hbm_tc1111p 0/26372 every tick) -> removed from gen_hosts; hosts/place_prefer keep epyc2. Revert: gen_hosts_prev_kw43e2."
   }
  },
  "place_prefer": [
