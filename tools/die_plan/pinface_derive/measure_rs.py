@@ -25,6 +25,36 @@ if "--nbus" in sys.argv:
             NB[r_["bus"]] = max(NB.get(r_["bus"], 0), r_["n_kit_sim"])
 from collections import defaultdict as _dd
 GV, GH = _dd(float), _dd(float)
+# KIT-CHAN-1 (DIE-QC-97 11-11) --channel FACE:LO:HI (repeatable): chains of a FACE bus also try plan leg_order "channel"
+# with channel_um [LO, HI] (istation_channel.py: per-bit Z route through column LO + (HI - LO) (b + 0.5) / nbits), ranked
+# with the other orders by the same key; the row then carries leg_order "channel" + channel_um.
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent.parent))
+import istation_channel as IC
+CHAN = {}
+for i_, a_ in enumerate(sys.argv):
+    if a_ == "--channel":
+        f_, lo_, hi_ = sys.argv[i_ + 1].split(":")
+        CHAN[f_] = (float(lo_), float(hi_))
+NCHS = 4          # channel traffic is priced on NCHS sample columns, each carrying 1/NCHS of the chain's bits
+
+
+def _samples(a, leaf, cc, face_ew, order, face_=None):
+    """[(legs, weight)] of a chain for the traffic grid: one representative route, or NCHS channel columns"""
+    if order != "channel":
+        return [(_legs(a, None, leaf, cc, face_ew, order), 1.0)]
+    lo, hi = CHAN[face_]
+    out = []
+    for s in range(NCHS):
+        col = lo + (hi - lo) * (s + 0.5) / NCHS
+        k1, k2 = ((col, a[1]), (col, leaf[1])) if face_ew else ((a[0], col), (leaf[0], col))
+        legs = []
+        for p, q in ((a, k1), (k1, k2), (k2, leaf), (leaf, (leaf[0], cc[1])), ((leaf[0], cc[1]), cc)):
+            if abs(p[0] - q[0]) > 1e-6:
+                legs.append(("H", p[1], min(p[0], q[0]), max(p[0], q[0])))
+            elif abs(p[1] - q[1]) > 1e-6:
+                legs.append(("V", p[0], min(p[1], q[1]), max(p[1], q[1])))
+        out.append((legs, 1.0 / NCHS))
+    return out
 
 
 def _legs(a, c, leaf, cc, face_ew, order):
@@ -239,7 +269,12 @@ def sim(bn, b, bp, n, leaf, order="normal"):
     for bit, inst, pin in bp:
         P = fp[bit]; C = lanes[inst]["pins"][pin]
         pts = []
-        for k in range(n):
+        if order == "channel":                       # KIT-CHAN-1: kit is_chan_site, per-bit arclength split
+            lo, hi = CHAN[b["face"]]
+            if n:
+                worst = max(worst, IC.worst_hop(P[0], P[1], leaf[0], leaf[1], b["face"], b["dir"], lo, hi, bit, len(fp), n))
+            pts = IC.sites(P[0], P[1], leaf[0], leaf[1], b["face"], b["dir"], lo, hi, bit, len(fp), n)
+        for k in range(n if order != "channel" else 0):
             xy, w = site(P[0], P[1], leaf[0], leaf[1], b["face"], k + 1, n + 1, b["dir"], geo, order)
             worst = max(worst, w); pts.append(xy)
         P1 = TRUE_START.get(bn, {}).get(bit, P)     # the real launch point (landing q pin) prices the first hop
@@ -264,7 +299,10 @@ def legs_hit(b, bp, leaf, order="normal"):
     for bit in {x[0] for x in bp} | {len(face[b["name"]]) - 1}:     # + the epoch bit (kept by synthesis)
         px, py = face[b["name"]][bit]
         c = (lx, py) if (b["face"] in "EW") != (order == "along") else (px, ly)
-        for (ax, ay), (cx_, cy_) in (((px, py), c), (c, (lx, ly))):
+        segs = (((px, py), c), (c, (lx, ly)))
+        if order == "channel":
+            segs = IC.legs(px, py, lx, ly, b["face"], *CHAN[b["face"]], bit, len(face[b["name"]]))
+        for (ax, ay), (cx_, cy_) in segs:
             x0, x1, y0, y1 = min(ax, cx_), max(ax, cx_), min(ay, cy_), max(ay, cy_)
             for nm, (bx0, by0, bx1, by1) in BOXES.items():
                 if x0 < bx1 - TOL and x1 > bx0 + TOL and y0 < by1 - TOL and y1 > by0 + TOL:
@@ -339,7 +377,7 @@ def clear_leaf(bn, b, bp, side, cc):
             if not tail_clear(bp, leaf):
                 tried.append((how, leaf, "tail"))
                 continue
-            for order in ("normal", "along"):
+            for order in ("normal", "along") + (("channel",) if b["face"] in CHAN else ()):
                 lh = legs_hit(b, bp, leaf, order)
                 if lh:
                     tried.append((how, leaf, order, lh))
@@ -350,7 +388,10 @@ def clear_leaf(bn, b, bp, side, cc):
                     if kw <= MAR and hm <= MAR:
                         break
                     n += 1
-                ld = _load(_legs(FC, None, leaf, cc, b["face"] in "EW", order)) if SPREAD else 0.0
+                # with --channel the key is the peak AFTER adding this chain (a channel splits its bits over NCHS
+                # columns); the + bits shift is the same for every non-channel candidate, so their ranking is unchanged
+                ld = max(_load(l_) + (_w * len(bp) if CHAN else 0.0)
+                         for l_, _w in _samples(FC, leaf, cc, b["face"] in "EW", order, b["face"])) if SPREAD else 0.0
                 key = ((n, ld, hm, order != "normal") if not (SPREAD and bn in NB) else
                        ((0 if n <= NB[bn] else 1), ld, n, hm, order != "normal"))
                 if best is None or key < best[0]:
@@ -402,7 +443,8 @@ for bn, b in buses.items():
             FC = fc
             leaf, ns, leaf_how, order = clear_leaf(bn, b, bp, side, cc)
             if SPREAD:
-                _add(_legs(fc, None, leaf, cc, b["face"] in "EW", order), float(len(bp)))
+                for l_, w_ in _samples(fc, leaf, cc, b["face"] in "EW", order, b["face"]):
+                    _add(l_, float(len(bp)) * w_)
         else:
             leaf, leaf_how, order = leaf0, "pin centroid", "normal"
             ns = 0
@@ -430,6 +472,7 @@ for bn, b in buses.items():
                          n_need_400=nm, n_need_403=nl, knee_worst_at_n=round(knee(first, second, nm + 1)[0], 1),
                          l1_over_edges=round(max(hop) / (nm + 1), 1), leaf_um=list(leaf), leaf_how=leaf_how, start_core=START.get(bn), start_um=([list(face[bn][k]) for k in range(len(face[bn]))] if bn in START else None), face_start_priced_from=('landing q' if bn in TRUE_START else None),
                          leaf_legs_in_macro=legs_hit(b, bp, leaf, order), leg_order=order, n_kit_sim=ns,
+                         **({"channel_um": list(CHAN[b["face"]])} if order == "channel" else {}),
                          sim_by_n={k: list(v) for k, v in sims.items()}))
 json.dump(dict(type=TN, margin=MAR, rows=rows, nonlane_out_bits={k: len(v) for k, v in nonlane.items()},
                nonlane_examples={k: v[:5] for k, v in nonlane.items()},
