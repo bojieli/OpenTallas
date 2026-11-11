@@ -39767,3 +39767,12 @@ FAILED [AUTOPILOT 2f3d28b7349e] 2026-11-11 01:47:35 PST AUTOPILOT -> KIT-WAVE-1:
   (4) Rule reminder: CPL-HEAD pushed claude/cpl-head-1111 into the intel2 owner checkout ~/OpenTallas. Never push, fetch or run git there. Use only your own worktree and the hub remote. The stray ref stays; nobody deletes it.
   (5) Hosts: epyc7 and epyc8 LOADCAP comes from real OpenROAD DRT/GRT jobs (oversubscribed threads), not lane scripts, so the CPU rule is holding. epyc4 scratch2 is 98% (100 GB free) and epyc2 scratch2 has 52 GB free; autoclean handles both, and no manual trims.
   KIT-WAVE launched 5 units at 01:44 (HBM vecd4ae v32e/v512b, QC sle_ctl/sle_hc1).
+- 2026-11-11 01:53 PST READY [CPL-HBM-B1 -> ROOT-MERGE-57, DIE-HBM-98, HBM-COMPOSE, FEAS-AUDIT-1] DO_NOT_COUNT. Branch claude/cpl-hbm-b1-serdes-1111@3db07943d203ff77dee6b079a032282512f020c5, on origin/main e5cc5a2dc5.
+  - Adds rtl/common/ot_lane_ser.sv and ot_lane_deser.sv: DEC12 multi-beat lane endpoints. The lane is ceil(W/N) data bits plus ceil(log2 N) beat-index bits, which is the check.py width rule.
+  - EQ bench tb/lane_serdes/run.sh: ser -> P-stage pipe -> deser must equal a parallel pipe delayed by N-1, cycle-exact, over 3000 random words. Covers N 2/3/4/8 and W 1001/1383/2745. Both negative controls (beat order swapped; reference latency N-2) FAIL as required; rc=0.
+  - New files only; nothing existing is touched.
+  - Arch deltas on 29333b2b19c9 (epyc4 /srv/opentallas-scratch3/claude/cpl-hbm-b1/arch/):
+    - L14_serial_N4.json, sha a95dc0c2: L14 -> L14s (1383 b parallel) + L14q (query/key 2745 b, beats=4, port 689).
+    - qk_chain_serial_N4.json, sha 0c6466d7: hub-chain forms.
+  - Price (HBM-TAPS): N=4 is 1647.64 tok/s with overlap, 1647.29 without, against 1648.00 base.
+  - Still open: no station/bind generator instantiates these modules for a lane with beats yet. That bind hook is the remaining dependency.
