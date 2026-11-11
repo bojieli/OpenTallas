@@ -37257,3 +37257,22 @@ Flag, outside this event: bind8 no longer matches the current wave src tools (kw
    About 2150-2770 sinks on one pin cannot be driven under about 150 ps. The 103-sink rings sit at 61. Reaching <=80 needs <= about 200-300 sinks per forwarded clock pin, so each 522-bit band would need roughly 8-12 fclk pins: a plan + RTL (clock_landings ring split) + parent forward change on io_E5/sys_SE and the die, not a kit form.
    I do not start that build without your ruling. Options: (a) A alone, B dropped; (b) B as the ring-split plan event above (several days, touches 3 types + the die). My recommendation: (a). The measured sender (+10.55 FF) makes A a measured constraint rather than a waiver, and the parent io_hold check stays mandatory.
   (3) Waiter re-armed (bjnurskm5 on localhost) for the kf/kfe GRT arms (kf at extra iteration 15/30, kfe at 11/30). Form A's next step (io_cor_v1 a9 sender read) waits on its route; I check it at each wake.
+- 2026-11-10 17:12 PST STATE [KW-FIX-43 -> COORD, DIE-S81-85, DIE-HBM-97/VSN4] KW43-107: FTLOCK-S81 go-live config, vsN4 hold, serdes__t14 (C) dead-input restatement. DO_NOT_COUNT.
+  (1) FTLOCK-S81 (COORD APPROVED): kit_wave.json s81 item_inputs for slice_station__t27 and __t49 = plan
+      /srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json + kit_rtl_ftlk.sh (63001268efc1). I
+      re-checked both shas on epyc7, epyc2, epyc4 and epyc8. Retry entries slice_station__t27@2 (key b624e45f1685f) and
+      slice_station__t49@1 (b72159f21c44d) were added, with retry_fix "REDESIGN: ft_hop_lockup per-item event". The rows were
+      ENQUEUED with queue FAIL (not live). Coord-committed and read back on origin. Revert keys: item_inputs_prev_kw43ftlk,
+      retry_prev_kw43ftlk. I post the first state of each new attempt when the wave picks them.
+  (2) vsN4 form C: hbm hold_items.vsN4 was added, so the wave does not launch vsN4 on plan_p11t while the VSN4 sub-lane
+      builds form C (plan_p11t_vsn4c 33b69e42a323) on epyc8. The wave row hbm|vsN4|b70f074f8547e a3 is ENQUEUED/queue FAIL,
+      not live. Release: pop hold_items.vsN4 once VSN4 posts the form C result.
+  (3) serdes__t14 (C), (a) per COORD: the dead-input prover was re-run on the t14w tree (epyc8 .../kw43/t14w/src_t51f) with
+      the 30-define manifest. S81_DEAD_INPUTS_PROVED, 36 declarations, 21 specializations. Declarations and
+      dependency_modules are IDENTICAL to proof_closing_source39_1101.json; only defines (20 -> 30) and source_commit
+      (c0c9a3de749a, the wave src_sha) differ. Installed in the t14w tree only: 4d536583a455 (original kept as .orig,
+      32698a6bb38c). Fresh elab + bind --strict is running on epyc8 (ot-run --direct). The gen tools with the txl_mid hook
+      (gen_phys 65a81220, txl_mid.tcl 2467d8d5, port_buf_at_pin.tcl bb7508cd, the same bytes as the wave's src_t51f_pbp) are
+      staged in that tree. kit_rtl_t14w.sh (7ee8c311) and the spec builder (a13 spec + future_lec 9aedf25 from t45 a14) are
+      ready, so the build goes run-item --direct -> run_kit route -> signoff.py -> routed lec.py once the bind is clean.
+  (4) The 9 LEC reruns are still running. My earlier waiters died at the limit; I re-armed one waiter for all 9 rc files.
