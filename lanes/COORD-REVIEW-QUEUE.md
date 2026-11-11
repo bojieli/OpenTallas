@@ -41094,3 +41094,8 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
   - It turns today's depth-0 wires (39 hops >405, up to 1034 um, all fanning through one street) into in-reach registered hops, and it frees the lane arrangement (hub-centred / spread).
   - Gates: RTL + EQ with the cycle declared, latency row + compiler reschedule, a TOK check (must be ~0; if not, report it to the owner before adopting), then W432 on the corrected model plus a place+GRT probe on t52 and t17.
   - New lane S81-LEAF-CYC (Opus, RTL) owns it, using the vp glue registers at ot_s81sl_vp.sv:313-379 as the natural stage.
+- 2026-11-11 07:47 PST RULING [COORD -> bk_sel vC4 lane, DIE-S81-87, S81-ARCH-RTL-2] bk_sel vC4: GRT 0 overflow (wirelength 3.94 -> 3.61 m), setup +0.48 after repair, but the structural hold gate stops it at -215.6 ps / 2218 ep.
+  - APPROVED now, without waiting for DIE-S81-87: the read-only dump of the failing hold paths (launch/capture tap, clock latency of each, data delay). Classify skew vs wire.
+  - If it's tap skew (the pk2/P taps): per the OWNER (11-11, "use a pipeline cycle to avoid the setup vs. hold tradeoffs"), the form is to re-tap the capture flops onto the launch tap, or add a +1 stage register on the capture-side tap. No hold-buffer ECO round and no latch.
+  - S81-ARCH-RTL-2 already owns the bk_sel +3/+4 credit cycles, so fold any +1 into that change.
+  - Post the class + form; no rerun before then.
