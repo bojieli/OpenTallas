@@ -1387,6 +1387,19 @@ _CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["prop
 _CKPROPS["landing_writer_start"]["properties"]["reuse_relay_origin"] = {"type": "boolean"}
 # KV-TYPES-3 11-07: optional FIRM home of the whole START origin (landing_place._origin_home_groups).
 _CKPROPS["landing_origin_rect_um"] = {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+# RELAY-ANCHOR (DIE-QC-97 11-10, reset_anchor.py): the site of every generated relay the START transport / local
+# resets name, and the reset-tree input shas it was recorded on; bind re-picks a renumbered name by site.
+_ANCHOR_SHA = {"type": "string"}
+_CKPROPS["reset_tree_anchor"] = {
+    "type": "object", "additionalProperties": False, "required": ["inputs", "tol_um", "relays"],
+    "properties": {
+        "inputs": {"type": "object", "additionalProperties": False,
+                   "properties": {"sink_bins": _ANCHOR_SHA, "ft_slots": _ANCHOR_SHA, "taps": _ANCHOR_SHA}},
+        "tol_um": {"type": "number", "minimum": 0},
+        "relays": {"type": "object", "propertyNames": {"pattern": "^rst_rl_\\d+$"}, "additionalProperties": {
+            "type": "object", "additionalProperties": False, "required": ["depth", "xy"],
+            "properties": {"depth": {"type": "integer", "minimum": 0},
+                           "xy": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}}}}}
 _CKPROPS["landing_raw_branches"] = {
     "type": "array", "minItems": 1, "items": {
         "type": "object", "additionalProperties": False,
@@ -1501,6 +1514,16 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
+# SUL0-PINFACE-1 (DIE-QC-97 11-10): per-hard-core pin-face chain (kit_istations.core_pin_stations)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core"] = {"oneOf": [
+    {"type": "string", "minLength": 1},
+    {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 2, "uniqueItems": True}]}
+# SUL0-PINFACE-1 11-11: a landed bus's chain starts at its landing macro's output pins (kit_istations.chain_starts)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_core"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_port"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_um"] = {"type": "array", "minItems": 2, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first"]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
 # parameter values each clone binds; provenance only, gen ignores them.
@@ -2610,6 +2633,12 @@ def validate(raw):
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")
+        if any(e.get("core") for e in t.get("internal_stations", [])):   # SUL0-PINFACE-1 macro-clear chain gate
+            import kit_istations as KI
+            try:
+                errs += KI.core_chain_geometry_errors(P, tn, Path(P.path).resolve().parent if getattr(P, "path", None) else None)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f"type {tn}: core chain geometry: {exc}")
         import core_clock_groups as CG
         try:
             CG.groups(P, tn)

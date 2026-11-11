@@ -4374,6 +4374,18 @@ def cmd_bind(a):
     B.source_plan = Path(a.plan).resolve()
     B.strict_types = bool(getattr(a, "strict", False))
     B.collect_gaps = bool(getattr(a, "all_gaps", False))
+    # RELAY-ANCHOR (DIE-QC-97 11-10): plan START/local reset names anchored by site are re-picked onto the tree this
+    # bind builds before the landings read them (reset_anchor.py); no anchor in the plan = no change, no receipt.
+    if any("reset_tree_anchor" in (t.get("clock") or {}) for t in raw.get("partition_types", {}).values()):
+        import reset_anchor
+        import taps as _taps
+        receipts, ra_err = reset_anchor.resolve_plan(raw, B.wavefront_plan(), _taps._root())
+        B.errors.extend(ra_err)
+        for r in receipts:
+            for m in (r or {}).get("remaps", []):
+                print(f"   RESET_ANCHOR {r['type']}: {m['name']} -> {m['to']} (depth {m['depth']}, moved {m['moved_um']} um; "
+                      f"inputs changed: {','.join(r['changed_inputs']) or 'none'})")
+        (out / "bind_reset_anchor.json").write_text(json.dumps(dict(receipts=receipts, errors=ra_err), indent=1) + "\n")
     if B.ab.get("clock_landing_table"):
         import clock_landings as CL
         landing_base = Path(B.base).resolve()
