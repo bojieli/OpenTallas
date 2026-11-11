@@ -34,6 +34,9 @@ recipe takes the sidecar events/latetap_pad_1111/tap_pad.json with residual.tap_
 usage: delta_latetap_pad_1111.py derive PROOF_DIR PLAN OUT_PAD.json         (fit the table on a routed recheck proof)
        delta_latetap_pad_1111.py apply PLAN_IN PLAN_OUT [REPORT.json]        (record events/.../tap_pad.json in the plan)
        delta_latetap_pad_1111.py --check PLAN_IN PLAN_OUT                    (re-apply, assert byte-identical output)
+       delta_latetap_pad_1111.py delta FIT.json PADS_DELTA.json                (tap-keyed, base-agnostic delta from a fit)
+       delta_latetap_pad_1111.py apply-delta PLAN_IN PLAN_OUT PADS_DELTA.json [REPORT.json]
+                                    (any base: asserts every tap's partition/type and that only clock.cohort.tap_pad moves)
 Re-basing onto another plan (e.g. the SVCPROV-V5 combined plan): derive on that plan's routed recheck proof, replace the
 sidecar + BASE_SHA, apply.  derive needs tools/die_plan (die_sta_related, schema, gen_phys) and git on PATH.
 Optional events/latetap_pad_1111/kitwin_after.json (die_sta_related --kit-window-out on the PADDED tree of the fit plan):
@@ -275,12 +278,80 @@ def apply(plan_in, plan_out, report=None, check=False):
     print(json.dumps({k: rep[k] for k in ("base_plan_sha256", "output_plan_sha256", "padded_taps", "pad_cells")}))
 
 
+def make_delta(fit, out):
+    """tap-keyed, base-agnostic pad delta from a derive fit: {type: {die tap port: pads}} (COORD 02:0x freeze: delivered
+    for DIE-S81-85's combined event, re-applies onto any plan whose partitions / types carry these taps)."""
+    s = json.loads(Path(fit).read_text())
+    types = defaultdict(dict)
+    for r in s["rows"]:
+        types[r["type"]][r["port"]] = r["pads"]
+    d = dict(event=EVENT, keyed_by="die tap port t_<partition>__<kit clock port>, grouped by partition type",
+             changes="adds clock.cohort.tap_pad only (die-clock record read by the die clock recipe as residual.tap_pad); "
+                     "no partition type, partition, port, window or latency key moves",
+             cell=s["cell"], form=s["form"], rule=s["rule"], fit_plan_sha256=s["plan_sha256"], fit_proof=s["proof"],
+             fit_sha256=sha256(fit), taps=s["taps"], cells=s["cells"],
+             types={t: dict(sorted(v.items())) for t, v in sorted(types.items())})
+    Path(out).write_text(json.dumps(d, indent=1) + "\n")
+    print(json.dumps(dict(types=len(d["types"]), taps=d["taps"], cells=d["cells"])))
+
+
+def apply_delta(plan_in, plan_out, delta, report=None):
+    """base-agnostic apply: every pad tap must name a partition of the delta's type in PLAN_IN; adds clock.cohort.
+    tap_pad (+ the residual.tap_pad sidecar {pad: ...} next to PLAN_OUT); asserts nothing else in the plan moves."""
+    raw = Path(plan_in).read_bytes()
+    plan = json.loads(raw)
+    nl = b"\n" if raw.endswith(b"\n") else b""
+    fmt = next((kw for kw in (dict(indent=1), dict()) if json.dumps(plan, **kw).encode() + nl == raw), None)
+    if fmt is None:
+        raise SystemExit("plan is in neither canonical json.dumps form (indent=1 / default)")
+    d = json.loads(Path(delta).read_text())
+    ptype = plan_types(plan)
+    miss = []
+    pad = {}
+    for t, taps in d["types"].items():
+        if t not in plan["partition_types"]:
+            miss.append(f"type {t}")
+            continue
+        for port, n in taps.items():
+            part = port[2:].split("__")[0]
+            if ptype.get(part) != t:
+                miss.append(f"{port}: partition {part} is {ptype.get(part)}, not {t}")
+            pad[port] = int(n)
+    if miss:
+        raise SystemExit("delta does not fit this plan: " + "; ".join(miss[:10]) + f" ({len(miss)} total)")
+    cohort = plan["clock"].setdefault("cohort", None)
+    if cohort is None or "tap_pad" in cohort:
+        raise SystemExit("clock.cohort missing or already has tap_pad")
+    base = json.loads(raw)
+    cohort["tap_pad"] = dict(id="s81_latetap_pad_1111", event=EVENT, cell=d["cell"], form=d["form"], rule=d["rule"],
+                             delta_sha256=sha256(delta), fit_plan_sha256=d["fit_plan_sha256"], taps=len(pad),
+                             cells=sum(pad.values()), pad=dict(sorted(pad.items())))
+    assert all(plan[k] == base[k] for k in base if k != "clock") and set(plan) == set(base)
+    assert all(plan["clock"][k] == base["clock"][k] for k in base["clock"] if k != "cohort")
+    assert {k: v for k, v in plan["clock"]["cohort"].items() if k != "tap_pad"} == base["clock"]["cohort"]
+    out = json.dumps(plan, **fmt).encode() + nl
+    Path(plan_out).write_bytes(out)
+    side = Path(plan_out).with_name("tap_pad_residual.json")
+    side.write_text(json.dumps(dict(pad=dict(sorted(pad.items()))), indent=1) + "\n")
+    rep = dict(event=EVENT, base_plan_sha256=hashlib.sha256(raw).hexdigest(),
+               output_plan_sha256=hashlib.sha256(out).hexdigest(), changed_keys=["clock.cohort.tap_pad"],
+               partition_types_changed=0, taps=len(pad), cells=sum(pad.values()), residual_sidecar=str(side),
+               residual_sidecar_sha256=sha256(side))
+    if report:
+        Path(report).write_text(json.dumps(rep, indent=1) + "\n")
+    print(json.dumps(rep))
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
     if a[:1] == ["derive"] and len(a) == 4:
         derive(*a[1:])
     elif a[:1] == ["apply"] and len(a) in (3, 4):
         apply(*a[1:])
+    elif a[:1] == ["delta"] and len(a) == 3:
+        make_delta(*a[1:])
+    elif a[:1] == ["apply-delta"] and len(a) in (4, 5):
+        apply_delta(*a[1:])
     elif a[:1] == ["--check"] and len(a) == 3:
         apply(a[1], a[2], check=True)
     else:
