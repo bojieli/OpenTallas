@@ -254,3 +254,38 @@ def test_flat_core_folded_underscores():
     rows = {r["inst"]: r for r in BMP.resolve(t, bound)}
     assert rows["u_hb_idx__s_Q2_r0c0_k0h1"]["physical_inst"] == "u_bound.u_u_hb_idx_s_Q2_r0c0_k0h1"
     assert "u_a__b" not in rows                      # folded name of another module: no row
+
+
+WRAP = """module s81p_x__t1 (input wire clk);
+    // plan wrapper: s81p_x__t1_ot_native_w would be named in this comment only
+    s81p_x__t1_bound u_bound (
+        .clk(clk)
+    );
+endmodule
+"""
+
+
+def test_unplaceable_module_name_inst_refused():
+    # T51-INST 11-10: S81 t51 native_w/_e placed by module name over the unsplit bound station
+    m = "s81p_x__t1_ot_native_w"
+    t = dict(hard_cores=[_core(m, m), _core("u_bound.u_u_r0_u_bn0", "dsfd_qbank_N")])
+    err = BMP.unplaceable("x__t1", t, WRAP, BOUND, source="kit RTL s81p_x__t1.sv")
+    assert len(err) == 1 and f"placed macro {m}" in err[0] and "is the module name" in err[0], err
+
+
+def test_unplaceable_bound_leaf_missing_refused():
+    t = dict(hard_cores=[_core("u_bound.u_nope", "m"), _core("u_bound.u_u_r0_u_e1e.u_view", "ot_v41_bf_col")])
+    err = BMP.unplaceable("x__t1", t, WRAP, BOUND)
+    assert len(err) == 1 and "'u_bound.u_nope'" in err[0], err
+
+
+def test_unplaceable_leaves_uncertain_to_preflight():
+    # physical identity, physical_parts, escaped flat names and generate-indexed leaves are not refused here
+    flat = BOUND.replace("endmodule", "    m \\u_c.u_b.g_w[1].u_m  (.ck(clk));\nendmodule")
+    t = dict(hard_cores=[_core("u_r0.u_k", "m", physical_inst="u_bound.u_u_r0_u_x", physical_master="other_mod"),
+                         _core("u_bound.u_c.u_b.g_w[1].u_m", "m"),
+                         dict(inst="u_nolef", module="m")],                       # no lef: never placed
+             contents=[dict(inst="u_s", module="s", physical_parts=[
+                 dict(physical_inst="u_bound.u_u_r0_u_e0", physical_master="ot_v41_rom_elem_q_qxpq_w10_gb")])])
+    assert BMP.unplaceable("x__t1", t, WRAP, flat) == []
+    assert BMP.unplaceable("x__t1", t, WRAP, None) == []          # no bound file: only the top component is checked

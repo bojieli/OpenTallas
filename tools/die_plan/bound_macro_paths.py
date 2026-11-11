@@ -247,6 +247,57 @@ def project(raw, kit_rtl):
     return result, receipts
 
 
+def placed_paths(t):
+    """[(placed instance path, master)] the kit's macro_place.tcl names for plan type t (gen_phys.type_macros order and
+    identity rules, no view resolution): hard_cores with a lef, contents physical_parts, contents with a lef."""
+    out, cores = [], {c["inst"] for c in t.get("hard_cores", []) or []}
+    for c in t.get("hard_cores", []) or []:
+        if c.get("lef"):
+            out.append((c.get("physical_inst", c["inst"]), c.get("physical_master", c.get("module", c["inst"]))))
+    for c in t.get("contents", []) or []:
+        for q in c.get("physical_parts", []) or []:
+            out.append((q["physical_inst"], q["physical_master"]))
+        if c.get("lef") and c["inst"] not in cores:
+            out.append((c.get("physical_inst", c["inst"]), c.get("physical_master", c.get("module"))))
+    return out
+
+
+def _words(text):
+    """identifier tokens of Verilog text outside comments (escaped names split at their . and [ ])."""
+    text = re.sub(r"/\*.*?\*/|//[^\n]*", " ", text, flags=re.S)
+    return set(re.findall(r"[A-Za-z_][A-Za-z0-9_$]*", text))
+
+
+def unplaceable(tn, t, top_text, bound_text=None, source="kit source"):
+    """T51-INST 11-10 (DIE-S81-85 sub-lane, class: plan hard core inst names a module the kit source never instantiates;
+    S81 slice_station__t51 native_w/_e placed by module name over the unsplit bound station, KIT_PREFLIGHT
+    macro_instances FAIL at 19:07 after a full kit-gen).  Gen-time refusal for the CERTAIN cases only: the first path
+    component is no identifier of the kit top text at all, or the component below u_bound is no identifier of the
+    bound module.  Anything that might resolve (generate blocks, escaped flat names, deeper levels) is left to
+    kit_contract.macro_instances, which stays the full check.  -> [error]"""
+    top_w = _words(top_text)
+    bound_w = _words(bound_text) if bound_text is not None else None
+    err = []
+    for path, master in placed_paths(t):
+        parts = path.split(".")
+        head = re.sub(r"(\[[^\]]*\])+$", "", parts[0]).lstrip("\\")
+        bad = None
+        if head not in top_w:
+            bad = head
+        elif head == "u_bound" and len(parts) > 1 and bound_w is not None:
+            sub = re.sub(r"(\[[^\]]*\])+$", "", parts[1]).lstrip("\\")
+            if sub not in bound_w:
+                bad = "u_bound." + sub
+        if bad is None:
+            continue
+        hint = (" (the plan inst is the module name: the kit source has no instance of that module, e.g. a split"
+                " that exists only as a side netlist; bind the split or give the type a kit netlist source)"
+                if path.split(".")[-1] == master else "")
+        err.append(f"type {tn}: placed macro {path} ({master}): {bad!r} is not an instance in the {source}; a plan "
+                   f"hard_cores/contents inst must be the kit netlist path (u_bound.<bound leaf>){hint}")
+    return err
+
+
 def overlay(kd, entries):
     """kit_contract._plan_contents helper: add {physical_inst: entry} for the kit's receipt rows (no-op without one)."""
     p = Path(kd) / RECEIPT

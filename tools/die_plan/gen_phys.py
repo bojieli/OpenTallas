@@ -6291,6 +6291,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             dup = sorted({n for n in names if names.count(n) > 1})
             if dup:
                 raise gen_rtl.GenError(f"type {tn}: kit-rtl files share a basename {dup[:5]} (the kit flattens rtl/)")
+            # T51-INST 11-10: refuse a placed macro the kit source certainly lacks (was a KIT_PREFLIGHT FAIL after kit-gen)
+            bf = BMP._bound_file(kit_rtl[tn])
+            bad = BMP.unplaceable(tn, t, fl[0].read_text(errors="replace"),
+                                  bf.read_text(errors="replace") if bf else None, source=f"kit RTL {fl[0].name}")
+            if bad:
+                raise gen_rtl.GenError("\n  ".join(bad))
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
