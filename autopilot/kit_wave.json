@@ -3123,7 +3123,15 @@
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     }
    },
-   "note_kw43kvrh": "KW-FIX-43 11-11 00:3x COORD: KV src -> kw43/src_zb_lr_sf_por15c_rh = cp -al of por15c + 17002ccba5e tool files (landing_contract 9381b598, sdc_lint 9452ee88, schema.py 5367f66c, die_plan.schema.json 2869bb92 = branch tip bytes; landing_contract/sdc_lint equal to main) on epyc7/epyc2/epyc4/epyc8; kv3_io_cor/_v1 on kvr2_rh plan_c 6e1ad24c, kv3_sys_SD_v1 on kvrs_rh plan_c 4afd5f88 (staged epyc7/epyc2/epyc4/epyc8), retries kv3_io_cor@8 kv3_io_cor_v1@9 kv3_sys_SD_v1@20. Revert: src <- src_prev_kw43kvrh, item_inputs <- item_inputs_prev_kw43kvrh."
+   "note_kw43kvrh": "KW-FIX-43 11-11 00:3x COORD: KV src -> kw43/src_zb_lr_sf_por15c_rh = cp -al of por15c + 17002ccba5e tool files (landing_contract 9381b598, sdc_lint 9452ee88, schema.py 5367f66c, die_plan.schema.json 2869bb92 = branch tip bytes; landing_contract/sdc_lint equal to main) on epyc7/epyc2/epyc4/epyc8; kv3_io_cor/_v1 on kvr2_rh plan_c 6e1ad24c, kv3_sys_SD_v1 on kvrs_rh plan_c 4afd5f88 (staged epyc7/epyc2/epyc4/epyc8), retries kv3_io_cor@8 kv3_io_cor_v1@9 kv3_sys_SD_v1@20. Revert: src <- src_prev_kw43kvrh, item_inputs <- item_inputs_prev_kw43kvrh.",
+   "grt_halving_arm": {
+    "items": [
+     "kv3_hgi_v3"
+    ],
+    "mode": "off",
+    "gen_host": "epyc8",
+    "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
+   }
   },
   "s81": {
    "enabled": true,
@@ -27005,7 +27013,28 @@
    ],
    "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b.",
    "note_kw43sle": "KW-FIX-43 11-10 22:0x: retry sle_sc_v3@30 (DIE-QC-97, infra disk-full). Revert: drop the retry entry.",
-   "note_kw43qcnk": "KW-FIX-43 11-11 COORD 00:3x (DIE-QC-97 RESULT 23:55): cb* rows on plan 72b74c858d whose NK child was the PROVISIONAL contract LEF f922482c11b9 (spec had 0 NK candidates: launched 11-09 11:16..11-10 05:18, before prov_view_sources.qfd_tile_nk_a0c = nk_p1 signed view, detail_view.lef sha256 53a7be5c8092, 4 hosts checked) superseded and relaunched: cbf_q00_s2@22 cbn_q11__cl5cc92dfe@11 cbn_q11__cl49ae4555@13 cbx_q10__cl94a12200@21. Every attempt launched since picks the signed view (cbx_q10__cl89936551 a26, cbn_q00__cl622f65d2 a20, cbf_q11 a19, cbn_q00__cldbcda913 a25). cbn_q01__clab6e67f2 a26 (contract) stays on its RE-FORM hold."
+   "note_kw43qcnk": "KW-FIX-43 11-11 COORD 00:3x (DIE-QC-97 RESULT 23:55): cb* rows on plan 72b74c858d whose NK child was the PROVISIONAL contract LEF f922482c11b9 (spec had 0 NK candidates: launched 11-09 11:16..11-10 05:18, before prov_view_sources.qfd_tile_nk_a0c = nk_p1 signed view, detail_view.lef sha256 53a7be5c8092, 4 hosts checked) superseded and relaunched: cbf_q00_s2@22 cbn_q11__cl5cc92dfe@11 cbn_q11__cl49ae4555@13 cbx_q10__cl94a12200@21. Every attempt launched since picks the signed view (cbx_q10__cl89936551 a26, cbn_q00__cl622f65d2 a20, cbf_q11 a19, cbn_q00__cldbcda913 a25). cbn_q01__clab6e67f2 a26 (contract) stays on its RE-FORM hold.",
+   "grt_halving_arm": {
+    "items": [
+     "sle_ctl__cla4f6f12f",
+     "sle_hc1__cl22c1ff36",
+     "sle_hc1__cl7d360508",
+     "sle_hc2__cl9c4c4509__cl3edce1b8",
+     "sle_hc2__cl9c4c4509__clf60c5152",
+     "sle_hc2__clcc5e3e61",
+     "sle_st_a_v1__cl67389ecd",
+     "sle_st_a_v2",
+     "slw_hc1__cl3449ea95",
+     "slw_hc1__cl68f9248e__cl144ee7b3",
+     "slw_hc2__cl6bcaba89",
+     "slw_hc2__cla3497502__cl16607c7a",
+     "slw_hc2__cla3497502__cldc737267",
+     "slw_st_a_v2__cl9f076a5c"
+    ],
+    "mode": "off",
+    "gen_host": "epyc8",
+    "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
+   }
   },
   "hbm": {
    "enabled": true,
@@ -39172,7 +39201,17 @@
     "ot_hidx_s3_q"
    ],
    "note_kw43h98": "KW-FIX-43 11-10 23:3x (COORD 23:10 (5), FTRES 23:10 ROW AMENDMENT, DIE-HBM-98 list): src -> kw43/src_hbm_tc1111p = cp -al of tc1111 (read-only) + phy_slices_overlay.tar.gz 958c77ef51b4 (21 files added, none replaced; epyc7/epyc8/epyc4); q_spu1/pv1 plan -> plan_p11t_taps_spu1 70c3e990f40e (staged epyc4, SHA256SUMS OK); PHY_NC/NE/NW + q_mcb rows on the taps plan+bind; root HELD (split-rebind, DIE-HBM-98), root@5 retry dropped; ot_hidx_s3_q in rebuild_counted (COORD 22:5x released the taps cycle core; its counted block is unchanged so the wave skipped it). Revert: src <- src_prev_kw43h98, plan <- plan_prev_kw43h98, drop the *_prev_kw43h98_added names, re-add root@5, drop hold root.",
-   "note_kw43mcb": "KW-FIX-43 11-11 00:2x DIE-HBM-98: hold q_mcb (a1 kit_rtl FAIL 2 instances differ S_u_refcfg_Q_tgt), no retry."
+   "note_kw43mcb": "KW-FIX-43 11-11 00:2x DIE-HBM-98: hold q_mcb (a1 kit_rtl FAIL 2 instances differ S_u_refcfg_Q_tgt), no retry.",
+   "grt_halving_arm": {
+    "items": [
+     "hfd_hgi_vms_glue_nw_t",
+     "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
+     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
+    ],
+    "mode": "off",
+    "gen_host": "epyc8",
+    "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
+   }
   }
  },
  "place_prefer": [
