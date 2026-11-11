@@ -132,6 +132,27 @@
    ],
    "method": "yosys flatten+async2sync+opt_dff, equiv_make/equiv_struct/equiv_induct -seq 4/equiv_simple -seq 8/equiv_induct -seq 8/equiv_status -assert",
    "kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_hub_ne/rtl/kit_rtl.f"
+  },
+  {
+   "module": "ot_hgi_coll_reduce_static",
+   "pick_tree": "rtl",
+   "twin_tree": "bundle",
+   "pick_files": {
+    "rtl:hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "e2de9e1f685fb8a87ecc40f5db2a3ff20c49b23718ed2900bb6b6a811088f58a",
+    "bundle:hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514"
+   },
+   "twin_files": {
+    "bundle:hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "bundle:hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514"
+   },
+   "domain": {},
+   "results": [
+    {
+     "params": {},
+     "proven": true
+    }
+   ],
+   "method": "yosys 0.68 module-level equiv: shared child ot_hgi_coll_pring_static_add_lane as -lib blackbox, state_lane flattened, async2sync, equiv_make/struct/simple/induct, equiv_status -assert: 11976 proven 0 unproven; one-bit mutants (local_tag^1, ~bf16) fail -assert"
   }
  ]
 }
