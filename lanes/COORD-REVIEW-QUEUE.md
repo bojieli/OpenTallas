@@ -38538,3 +38538,4 @@ FAILED [AUTOPILOT 18bacb5aa666] 2026-11-10 20:08:05 PST AUTOPILOT -> KIT-WAVE-3:
   - Type denominators: s81 204 (205 incl. HARD-IP phy__t1), head 25, qc 116 (119 incl. phy_serdes, phy_serdes_b, phy_ucie_kv), kv 56, hbm 81. All dies 482, was 486.
   - G0C-clean is now over the same lists: s81 196/204, head 25/25, qc 113/116, kv 48/56 (KV check.py timed out again; last good G0C carried), hbm 42/81.
   - Numerators unchanged: types 34/19/2/1/1, designs 61/4/26/32/88. Count total 268.
+- 11-10 20:10 ROOT-MERGE-57 QUEUED (LOOP-GAP 20:1x), sparse on epyc8: ds85-pgr1-s81 c71cc44fbce6 -> q1; die-qc-97-pgr 6ee49203768a -> q2; ds85-s81-plan-of-record f105859379c2 -> q3 (all at the end); plan-route-3 d196edc9f137 replaces n6 in place (ff on ad8dc659), still right after plan-route-2.
