@@ -107,6 +107,19 @@ def pdn_text(top_layer="M5", macros=False):
     return text + (PDN_MACRO if macros else "")
 
 
+def dpl_cfg_lines(mode, orfs_vars):
+    """HBM core kits legalise with the diamond DPL by default (DIE-HBM-100 11-11, COORD 06:xx; ot_svgr_top 5b1b2d476ef8:
+    NegotiationLegalizer DPL-0701 did not converge, then detail_place.tcl 'bad optional access', the 11-09 class that type kits
+    already avoid through gen_phys._dpl_args).  mode 'diamond' (default) -> one DETAIL_PLACEMENT_ARGS line; mode 'default' keeps
+    the ORFS negotiation legalizer (item opt-out).  An --orfs-var that sets DETAIL_PLACEMENT_ARGS itself wins (no second line).
+    Only newly generated kits change; a resumed or signed kit keeps its config.mk."""
+    if mode not in ("diamond", "default"):
+        raise SystemExit(f"gen core kit: --dpl-legalizer {mode!r} is not 'diamond' or 'default'")
+    if mode == "default" or any(kv.split("=", 1)[0] == "DETAIL_PLACEMENT_ARGS" for kv in orfs_vars):
+        return []
+    return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -1682,6 +1695,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="HBM-COLLECT-1/PTW-C 11-09 (opt-in): repeater pitch on every signal net at the post-GRT repair_design "
                          "(tools/die_plan/grt_maxwire.tcl sourced from core_grt_pre.tcl, export OT_MAXWIRE_UM); same remedy as gen.py "
                          "phys --max-wire-um.  Without it the kit is unchanged.")
+    ap.add_argument("--dpl-legalizer", choices=["diamond", "default"], default="diamond",
+                    help="detail-placement legalizer: diamond (default, matches the type kits) or default (ORFS negotiation, item opt-out)")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
@@ -2644,6 +2659,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         cfg += ["override export PRE_RESIZE_TCL = /work/core_pre_resize.tcl",
                 f"export OT_RELAY_LINE_PORTS = {','.join(relay_line(a)[0])}",
                 f"export OT_RELAY_LINE_DEPTH = {relay_line(a)[1]}"]
+    cfg += dpl_cfg_lines(a.dpl_legalizer, a.orfs_var)
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     if a.prects_estimate:
         flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)

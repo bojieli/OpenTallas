@@ -138,14 +138,14 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc7", "epyc8"]   # ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc7", "epyc8", "epyc9"]   # ONBOARD-EPYC9 11-11: + epyc9 (renewed-glider, EPYC 7443, 1 TB). ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"epyc2": "normal", "epyc4": "normal", "epyc5": "normal", "epyc6": "normal", "epyc7": "normal", "epyc8": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+HOST_ROLE = {"epyc2": "normal", "epyc4": "normal", "epyc5": "normal", "epyc6": "normal", "epyc7": "normal", "epyc8": "normal", "epyc9": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
 # 2026-10-24 COORD (owner order): old-fleet nvme0n1 wiped -> /srv/opentallas-scratch2 (intel1/intel2 3.4 TB, epyc2 879 GB); intel1/intel2 no longer smalldisk.
 # FLEET-NEW3 2026-10-24: epyc2 (2x EPYC 7543) / epyc3 (2x EPYC 7443; RETIRED by the owner 2026-10-25 ~20:15, removed from every table) are the die-level hosts (normal); intel1/intel2
 # (2x Xeon Gold 6330, ~400 GB root disk) are smalldisk; localhost (EPYC 9754, shared with ~10 agent sessions) is "coord":
@@ -231,7 +231,7 @@ def probe(host, d, spill_ok=False):
 ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "150"))   # OWNER 11-06 22:4x "use 150GB for floor decisions" (was 500)
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
-    "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100,epyc7=150,epyc8=150").split(",")) if k.strip() and v.strip()}
+    "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100,epyc7=150,epyc8=150,epyc9=150").split(",")) if k.strip() and v.strip()}
 
 
 def root_floor(host=None):
@@ -274,7 +274,7 @@ ROOTFS_MAX_PCT_SCRATCH = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT_SCRATCH", "95
 # DISK-URGENT-4 11-08 (COORD 18:2x, owner floor 150 GB 11-06): a 3.5 TB root at 95 % still has 176 GB free, stricter than the
 # owner's root floor.  Hosts named here refuse on root fs FREE GB instead of the percentage: "host=gb,host=gb".
 ROOTFS_MIN_FREE_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
-    "OT_RUN_ROOTFS_MIN_FREE_GB_HOSTS", "epyc2=150,epyc4=150,epyc7=150,epyc8=150").split(",")) if k.strip() and v.strip()}
+    "OT_RUN_ROOTFS_MIN_FREE_GB_HOSTS", "epyc2=150,epyc4=150,epyc7=150,epyc8=150,epyc9=150").split(",")) if k.strip() and v.strip()}
 
 
 def scratch2_on():
