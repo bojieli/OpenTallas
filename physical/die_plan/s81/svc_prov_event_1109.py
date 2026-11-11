@@ -309,6 +309,9 @@ def split_type(t, side, grow, M):
         if "params" in b:
             e["params"] = b["params"]
             e["physical_master"] = pm
+            # SVCPROV-PHYSINST-1111: gen_phys.content_physical_identity needs physical_inst with physical_master; the
+            # provider box sits at its own logical instance (delta_svcprov_physinst_1111.py fixed the composed plans)
+            e["physical_inst"] = b["inst"]
         keep.append(e)
     t["hard_cores"] = keep
     macros = add_new_macros(t, side, band_y, band_hs)
