@@ -22750,7 +22750,12 @@
     "q_b100__physical_v1@14",
     "q_b113__physical_v1@4",
     "NW_io@11",
-    "q_spt0__physical_v1@1"
+    "q_spt0__physical_v1@1",
+    "q_b011__physical_v1@16",
+    "q_b100@10",
+    "q_b100__physical_v1@15",
+    "q_b101_nw@15",
+    "q_b102@22"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -23086,7 +23091,12 @@
     "q_b100__physical_v1@14": "REDESIGN: macros (DRT-0073 detail child views view_detail_1110, HBM-CORES-B, c7c152ae1c pin-window fix)",
     "q_b113__physical_v1@4": "REDESIGN: macros (DRT-0073 detail child views view_detail_1110, HBM-CORES-B, c7c152ae1c pin-window fix)",
     "NW_io@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
-    "q_spt0__physical_v1@1": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)"
+    "q_spt0__physical_v1@1": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
+    "q_b011__physical_v1@16": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
+    "q_b100@10": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
+    "q_b100__physical_v1@15": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
+    "q_b101_nw@15": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
+    "q_b102@22": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -24092,6 +24102,26 @@
       "job": "HBM-CORES-B DRT-0073 detail view b532555f8808 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
      },
      {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/f0fdec18b8e1/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view f0fdec18b8e1 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/f0fdec18b8e1/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view f0fdec18b8e1 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/b532555f8808/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view b532555f8808 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/b532555f8808/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view b532555f8808 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
       "host": "epyc4",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f0fdec18b8e1/ot_hbm_su_pcol_s",
       "job": "COUNTED ot_hbm_su_pcol_s epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json (KW-FIX-32 export_view)"
@@ -24320,6 +24350,16 @@
       "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
      },
      {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
       "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
@@ -24430,6 +24470,16 @@
      },
      {
       "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
+      "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
+      "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc8",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
       "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
      }
@@ -30333,7 +30383,934 @@
     "q_b100__physical_v1@14",
     "q_b113__physical_v1@4"
    ],
-   "note_kw43por": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT. Revert: src/item_env/retry/item_inputs/hold_items <- *_prev_kw43por."
+   "note_kw43por": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT. Revert: src/item_env/retry/item_inputs/hold_items <- *_prev_kw43por.",
+   "prov_view_sources_prev_kw43hfx": {
+    "hfd_ep_static": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e808e110f4ba/hfd_ep_static",
+      "job": "COUNTED hfd_ep_static epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hfd_ep_static__flow-20261106-cr-hbm__57373ed8/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "hnx_fused_lane_elp": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/48380e2835a8/hnx_fused_lane_elp",
+      "job": "COUNTED hnx_fused_lane_elp epyc4:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/elp2_h/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_bank128_pair_core": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3bc2ed875db6/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/7eaeff6b21f398a7 epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_hc_bank128_pair_core__flow-20261106-cr-hbm__aad36c4a/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_bank128_pair_first_core": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/110fc07cb54f/ot_hbm_hc_bank128_pair_first_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_first_core epyc2:/srv/opentallas-scratch2/claude/die-hbm-74/resign/b128h1/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/58a02cd75397/ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566",
+      "job": "COUNTED ot_hbm_hc_root_static__tailx_rest_fsr__v4f4566 epyc2:/srv/opentallas-scratch2/claude/die-hbm-73/resign/rfsr4f2/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0cac3fdc9fcc/ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2",
+      "job": "COUNTED ot_hbm_hc_root_static__tailx_rest_fsr__v6bc7f2 intel1:/srv/opentallas-scratch2/claude/die-hbm-73/resign/rfsr6e3/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_root_static__tailx_sk_fsr": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d19a61a21f36/ot_hbm_hc_root_static__tailx_sk_fsr",
+      "job": "COUNTED ot_hbm_hc_root_static__tailx_sk_fsr epyc4:/srv/opentallas-scratch2/claude/die-hbm-73/resign/skfe2/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_hc_subtree32_core": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/affad73c15be/ot_hbm_hc_subtree32_core",
+      "job": "COUNTED ot_hbm_hc_subtree32_core epyc4:/srv/opentallas-scratch3/claude/die-hbm-82-stale/resign/sub5_dm/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_host_cp_rxs": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/315bfd85f74e/ot_hbm_host_cp_rxs",
+      "job": "COUNTED ot_hbm_host_cp_rxs epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_idx_score_hcol_h1": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/588abcb6d72d/ot_hbm_idx_score_hcol_h1",
+      "job": "COUNTED ot_hbm_idx_score_hcol_h1 epyc2:/srv/opentallas-scratch3/claude/ss23/hcol_w90_r_hbm/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_idx_tail_native": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/7a458142ee36/ot_hbm_idx_tail_native",
+      "job": "COUNTED ot_hbm_idx_tail_native#218.592x187.488/6b243813dbe5dc21 epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-15/tail_native/rs_j/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/20ef077ea145/ot_hbm_idx_tail_native",
+      "job": "COUNTED ot_hbm_idx_tail_native#218.592x187.488/b5e0e7076e68a01a intel2:/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_pcol_l": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pcol_l",
+      "job": "COUNTED ot_hbm_su_pcol_l intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pcol_l",
+      "job": "COUNTED ot_hbm_su_pcol_l intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pcol_l",
+      "job": "COUNTED ot_hbm_su_pcol_l intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/fb2c88e4e8fb/ot_hbm_su_pcol_l",
+      "job": "COUNTED ot_hbm_su_pcol_l intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_pcol_s": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/f0fdec18b8e1/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view f0fdec18b8e1 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/f0fdec18b8e1/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view f0fdec18b8e1 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/b532555f8808/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view b532555f8808 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/b532555f8808/ot_hbm_su_pcol_s",
+      "job": "HBM-CORES-B DRT-0073 detail view b532555f8808 (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f0fdec18b8e1/ot_hbm_su_pcol_s",
+      "job": "COUNTED ot_hbm_su_pcol_s epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_pg_lane1_core": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/a7d3ed60dbef/ot_hbm_su_pg_lane1_core",
+      "job": "COUNTED ot_hbm_su_pg_lane1_core epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_lane1_core__flow-20261106-o-hbm__3b717c4b/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_pg_sfu_s_core": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e83a285719ac/ot_hbm_su_pg_sfu_s_core",
+      "job": "COUNTED ot_hbm_su_pg_sfu_s_core epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_sfu_s_core__flow-20261106-c-hbm__3ab03a21/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_static_cxport_ij_q": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/255204427739/ot_hbm_su_static_cxport_ij_q",
+      "job": "COUNTED ot_hbm_su_static_cxport_ij_q epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_static_pgslice_lg__pretree": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/442f17ceb3e3/ot_hbm_su_static_pgslice_lg__pretree",
+      "job": "COUNTED ot_hbm_su_static_pgslice_lg__pretree epyc2:/srv/opentallas-scratch3/claude/ss24/pgslice_r_hbm/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hfd_coll_q2_hard_v8g__reduce": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/b49eb0e218e1/ot_hfd_coll_q2_hard_v8g__reduce",
+      "job": "COUNTED ot_hfd_coll_q2_hard_v8g__reduce epyc4:/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hfd_coll_q2_hard_v8g__ring_ag": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/2a2ea96b53f6/ot_hfd_coll_q2_hard_v8g__ring_ag",
+      "job": "COUNTED ot_hfd_coll_q2_hard_v8g__ring_ag intel1:/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hfd_coll_q3_edge_arg": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f3da7ebbaa63/ot_hfd_coll_q3_edge_arg",
+      "job": "COUNTED ot_hfd_coll_q3_edge_arg epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/q3/ot_hfd_coll_q3_edge_arg_vE/ot_hfd_coll_q3_edge_arg_9ae65807400d/eco_hg9/i2/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hfd_coll_q3_edge_link": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/921a1867fc62/ot_hfd_coll_q3_edge_link",
+      "job": "COUNTED ot_hfd_coll_q3_edge_link epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hfd_coll_q3_edge_link__flow-20261106-dm-hbm__a0b2e7ee/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_coll_tkm_tp192_htile_core": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/96e2271b1499/ot_hgi_coll_tkm_tp192_htile_core",
+      "job": "COUNTED ot_hgi_coll_tkm_tp192_htile_core epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hgi_coll_tkm_tp192_htile_core__flow-20261106-f-hbm__8d8236ff/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_qw_dec": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/166752c7115e/ot_hgi_qw_dec",
+      "job": "COUNTED ot_hgi_qw_dec epyc4:/srv/opentallas-scratch3/claude/ss29/resign/qw_dec_k/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sfu_opsa_rest": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hgi_sfu_opsa_rest",
+      "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hgi_sfu_opsa_rest",
+      "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hgi_sfu_opsa_rest",
+      "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/2cf244a7b526/ot_hgi_sfu_opsa_rest",
+      "job": "COUNTED ot_hgi_sfu_opsa_rest intel1:/srv/opentallas-scratch2/claude/hbm-hard-2/resign/opsaC2_du/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sfu_split3_ctl_pipe_1c": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c",
+      "job": "COUNTED ot_hgi_sfu_split3_ctl_pipe_1c epyc5:/srv/opentallas-scratch2/claude/hbm-form-timing-12/pipe_vA_resign_cz/signoff/signoff.json (COUNT-ARCHIVE-2 11-10 E56 re-export from AGIdock store 0ea093c4040d: tt/ff ETM regenerated from the archived signed 6_final.odb with the kit corners_hbm.tcl + write_abstract_lef, no re-sign; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/e56views_v20261110/views/hbm/ot_hgi_sfu_split3_ctl_pipe_1c)"
+     }
+    ],
+    "ot_hgi_sfu_split3_lane_core_bk": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/dd84fed82aa9/ot_hgi_sfu_split3_lane_core_bk",
+      "job": "COUNTED ot_hgi_sfu_split3_lane_core_bk epyc4:/srv/opentallas-scratch3/claude/ss29/resign/bk2_m/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sfu_split3_lane_core_ex": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/bd2d47224584/ot_hgi_sfu_split3_lane_core_ex",
+      "job": "COUNTED ot_hgi_sfu_split3_lane_core_ex epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sfu_split3_lane_core_fr": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/77c63da38f32/ot_hgi_sfu_split3_lane_core_fr",
+      "job": "COUNTED ot_hgi_sfu_split3_lane_core_fr epyc2:/srv/opentallas-scratch2/claude/die-hbm-82-b128/resign/fr_dc/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sm_xload_cl2_bdring": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d088d47612f5/ot_hgi_sm_xload_cl2_bdring",
+      "job": "COUNTED ot_hgi_sm_xload_cl2_bdring intel1:/srv/opentallas-scratch3/claude/codex-hbm-forms-1105/resign/brmw/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hnx_idxn_keybuf_slice": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/af06bcfd74b9/ot_hnx_idxn_keybuf_slice",
+      "job": "COUNTED ot_hnx_idxn_keybuf_slice epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_pdie_serdes_rx_bm_native": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/85e7636a1bb5/ot_pdie_serdes_rx_bm_native",
+      "job": "COUNTED ot_pdie_serdes_rx_bm_native epyc4:/srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2/resign_cs/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_pdie_serdes_tx": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-96/view_detail/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-96 detail M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-96/view_detail/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-96 detail M6 OBS (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/193983caf299/ot_pdie_serdes_tx",
+      "job": "COUNTED ot_pdie_serdes_tx epyc4:/srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/resign_da/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_s81_kp4_dchn": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/ab671cd72adf/ot_s81_kp4_dchn",
+      "job": "COUNTED ot_s81_kp4_dchn epyc2:/srv/opentallas-scratch2/claude/signoff-sprint-19/kp4_e13a_n/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_wbq_root_g0": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_wbq_root_g0",
+      "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_wbq_root_g0",
+      "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_wbq_root_g0",
+      "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f7c52b6e8e47/ot_wbq_root_g0",
+      "job": "COUNTED ot_wbq_root_g0 epyc4:/srv/opentallas-scratch2/claude/die-hbm-91-open/g0_resign_ew/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_idx_score_hcol_h0_ra": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_idx_score_hcol_h0_rb": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d2a951a399f5/ot_hbm_idx_score_hcol_h0_rb",
+      "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hbm_su_pg_lane_exp_x_core": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pg_lane_exp_x_core",
+      "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pg_lane_exp_x_core",
+      "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_hbm_su_pg_lane_exp_x_core",
+      "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/0cf82fc12be8/ot_hbm_su_pg_lane_exp_x_core",
+      "job": "COUNTED ot_hbm_su_pg_lane_exp_x_core intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hfd_coll_q3_qcol4": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3ee982e867bc/ot_hfd_coll_q3_qcol4",
+      "job": "COUNTED ot_hfd_coll_q3_qcol4 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_gq_aq_tile": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/68d94ad54960/ot_hgi_gq_aq_tile",
+      "job": "COUNTED ot_hgi_gq_aq_tile epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/gq_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_hgi_sfu_split3_ctl_rest_1c": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/f592d661abc6/ot_hgi_sfu_split3_ctl_rest_1c",
+      "job": "COUNTED ot_hgi_sfu_split3_ctl_rest_1c epyc4:/srv/opentallas-scratch3/claude/hbm-hard-3/resign/rest1c_e1_ea/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_svgr_bk": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_svgr_bk",
+      "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access; spliced from die-hbm-85/eco/svgrbk_e2 6_final.odb, identity with the counted ODB unverified)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_svgr_bk",
+      "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access; spliced from die-hbm-85/eco/svgrbk_e2 6_final.odb, identity with the counted ODB unverified)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/ot_svgr_bk",
+      "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access; spliced from die-hbm-85/eco/svgrbk_e2 6_final.odb, identity with the counted ODB unverified)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/4009df45a278/ot_svgr_bk",
+      "job": "COUNTED ot_svgr_bk epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "ot_q2nf_qout": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/codex-hbm-open-1113/qout_export/ot_q2nf_qout",
+      "job": "COUNTED QOUT exact qout_resign_fa_i2; native LEF from same final DB, routed LEC EQ42882; existing LOCAL_PASS_NEEDS_PARENT rule"
+     }
+    ],
+    "ot_hgi_sfu_opsb_output": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
+      "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
+      "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+     }
+    ]
+   },
+   "retry_prev_kw43hfx": [
+    "hfd_ep_static@1",
+    "hfd_hgi_vm_calendar_f20@1",
+    "hnx_rp3lp3h_s@1",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@1",
+    "ot_hbm_su_static_sfustore_hw@1",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@1",
+    "ot_hbm_svc_vmdel_lane_n@1",
+    "ot_hgi_sfu_programme_store_r10@1",
+    "ot_hgi_sfu_split3_lane_core__idpin@1",
+    "ot_hgi_sm_xload_cl2_bfqg@1",
+    "ot_hnx_fused_hub_n4ext@1",
+    "hnx_rp3lp3h_s@2",
+    "ot_hgi_sfu_programme_store_r10@2",
+    "hfd_ep_static@2",
+    "hfd_ep_static@3",
+    "hfd_ep_static@4",
+    "hnx_vms_bank_q0_faces__vec6293@1",
+    "hnx_vms_bank_q0_faces__vecd4ae@1",
+    "ot_hbm_idx_tail_native@1",
+    "hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e@1",
+    "hnx_vms_bank_q0_faces__vec6293__vf50d62432a5f@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046@1",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@1",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@1",
+    "ot_hbm_hc_root_static__tailx_sk_step0@1",
+    "ot_hbm_hc_subtree32_core@1",
+    "ot_hbm_idx_tail_native__v9496b22d4b49@1",
+    "ot_hbm_idx_tail_native__vf56d1f72f3f3@1",
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691@1",
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77@1",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526@1",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@1",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@1",
+    "ot_hfd_coll_q3_edge_core@1",
+    "ot_hnx_fused_hub_n4ext@2",
+    "ot_hnx_fused_tnode@1",
+    "ot_hgi_sm_xload_cl2_bfqg@2",
+    "hfd_ep_static@5",
+    "hfd_hgi_vm_calendar_f20@2",
+    "hnx_vms_bank_q0_faces__vec6293@2",
+    "hnx_vms_bank_q0_faces__vecd4ae@2",
+    "ot_hbm_idx_query_static@1",
+    "ot_hbm_idx_score_hcol_h0@1",
+    "ot_hbm_idx_tail_native@2",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@2",
+    "ot_hbm_su_static_sfustore_hw@2",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@2",
+    "ot_hbm_svc_vmdel_lane_n@2",
+    "ot_hfd_coll_q2n2_vm_core@1",
+    "ot_hgi_sfu_programme_store_r10@3",
+    "ot_hgi_sfu_split3_lane_core__idpin@2",
+    "ot_hgi_sm_xload_cl2_bdring@1",
+    "hfd_hgi_vm_calendar_f20@3",
+    "ot_hbm_idx_query_static@2",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@3",
+    "ot_hbm_su_static_sfustore_hw@3",
+    "hnx_rp3lp3h_s@3",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@2",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@2",
+    "hfd_ep_static@6",
+    "ot_hbm_su_static_sfustore_hw@4",
+    "hfd_ep_static@7",
+    "hfd_hgi_vms_glue_nw_t@1",
+    "hnx_rp3lp3h_s@4",
+    "ot_hbm_hc_bank128_pair_first_core@1",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@3",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@3",
+    "ot_hbm_idx_rootctl_static_am@1",
+    "ot_hbm_idx_vm_query_static_n12@1",
+    "ot_hbm_su_static_pgslice_lg__lane_exp0_id@1",
+    "ot_hbm_su_static_qcore_r13@1",
+    "ot_hbm_svc_sm_xcal_rel_t@1",
+    "ot_hfd_coll_q2_hard_v8g__reduce@1",
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@1",
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@1",
+    "ot_pdie_serdes@1",
+    "ot_hgi_qw_dec@3",
+    "ot_hfd_coll_q3_body_core@4",
+    "ot_hfd_coll_q3_vm_core@5",
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@7",
+    "ot_hgi_sfu_core_split3__ctl@2",
+    "hnx_rp3lp3h_n@6",
+    "ot_hbm_su_static_cxport_ij_q@2",
+    "ot_hnx_idxn_keybuf_slice@3",
+    "hnx_fused_lane@7",
+    "ot_hbm_host_cp_rxs@2",
+    "ot_hgi_sm_xload_cl2_ctlx@1",
+    "ot_hbm_idx_score_hcol_h1@1",
+    "hfd_hgi_vms_glue_nw_t@2",
+    "ot_hbm_su_static_pgslice_lg__lane_exp0_id@2",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@2",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@2",
+    "ot_hnx_fused_hub_n4ext@3",
+    "ot_hbm_idx_rootctl_static_am@2",
+    "hnx_rp3lp3h_s@5",
+    "ot_hbm_argmax_static_sw_vm_r2@1",
+    "ot_hbm_hc_bank128_pair_first_core@2",
+    "ot_hbm_hc_root_static__hcp_sys1@1",
+    "ot_hbm_hc_root_static__tailx_sk_step0@3",
+    "ot_hbm_hc_subtree32_core@2",
+    "ot_hbm_idx_qctl_static@1",
+    "ot_hbm_idx_score_hcol_h0@2",
+    "ot_hbm_idx_tail_native__v9496b22d4b49@2",
+    "ot_hbm_idx_tail_native__vf56d1f72f3f3@2",
+    "ot_hbm_su_static_pgslice_lg__pretree@1",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@4",
+    "ot_hbm_svc_sm_xcal_rel_t@2",
+    "ot_hbm_svc_vmdel_lane_n@3",
+    "ot_hbm_xp_aq_tree13_fmt@1",
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@2",
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@2",
+    "ot_hnx_fused_tnode@2",
+    "hfd_hgi_vms_glue_nw_t@3",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@1",
+    "ot_hbm_su_static_cxport_ij_q@3",
+    "ot_hbm_su_static_qcore_r13@2",
+    "ot_hbm_xp_aq_tree13_fmt@3",
+    "ot_hfd_coll_q2n2_vm_core@3",
+    "ot_hgi_qw_dec@2",
+    "ot_hbm_hc_bank128_pair_core__v7d149b37532c@1",
+    "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d@4",
+    "ot_hbm_hc_bank128_pair_first_core@3",
+    "ot_hbm_hc_root_static__tailx_rest__v4f4566@4",
+    "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@5",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@3",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v5d4099d7f96c@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@4",
+    "ot_hbm_idx_vm_query_static_n12@4",
+    "ot_hbm_svc_vmdel_lane_n@8",
+    "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a@1",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@4",
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap@5",
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap@3",
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77@5",
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526@2",
+    "ot_hgi_sm_xload_cl2_bfqg@3",
+    "ot_hbm_hc_subtree32_core@4",
+    "ot_hfd_coll_q2_hard_v8g__reduce@2",
+    "ot_hbm_host_cp_rxs@3",
+    "ot_hgi_dma_back_static_vp4_banks_cp@1",
+    "ot_hgi_coll_tkm_m_tp192__root@1",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@4",
+    "ot_hbm_argmax_static_sw_vm_r2@3",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@5",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@3",
+    "ot_hgi_dma_back_static_vp4_banks_cp@2",
+    "ot_hbm_su_static_pgslice_lg__lane_exp0_id@3",
+    "ot_hgi_coll_tkm_m_tp192__root@2",
+    "ot_hgi_coll_tkm_m_tp192__root@3",
+    "ot_hgi_dma_back_static_vp4_banks_cp@3",
+    "ot_hfd_coll_q2n2_body_core@6",
+    "ot_hgi_sfu_programme_store_r10@5",
+    "ot_hgi_sfu_programme_store_r10@6",
+    "ot_hbm_hc_root_static__hcp_sys1@2",
+    "ot_hbm_idx_rootctl_static_am@6",
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@8",
+    "ot_hfd_coll_q2n2_body_core@7",
+    "ot_hgi_coll_tkm_m_tp192__root@4",
+    "ot_hgi_sfu_split3_lane_core__idpin@4",
+    "ot_hnx_fused_hub_n4ext@4",
+    "ot_hnx_fused_hub_n4ext@5",
+    "ot_hbm_idx_rootctl_static_am@8",
+    "hfd_hgi_vms_glue_nw_t@4",
+    "hnx_rp3h_xs@1",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@6",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@3",
+    "hfd_hgi_vms_glue_nw_t@5",
+    "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a@2",
+    "hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9@5",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@5",
+    "hnx_vms_bank_q0_faces__vecd4ae__v5d4099d7f96c@3",
+    "hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f@5",
+    "hnx_vms_bank_q0_faces__vecd4ae__vb64bbf321780@4",
+    "ot_hbm_hc_bank128_pair_first_core@5",
+    "ot_hbm_hc_subtree32_core@5",
+    "ot_hbm_host_cp_rxs@4",
+    "ot_hbm_idx_rootctl_static_am@11",
+    "ot_hbm_idx_vm_query_static_n12@7",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@5",
+    "ot_hbm_su_static_cxport_ij_q@4",
+    "ot_hbm_su_static_qcore_r13@3",
+    "ot_hbm_su_static_sfustore_hw@5",
+    "ot_hbm_svc_vmdel_lane_n@9",
+    "ot_hfd_coll_q2n2_vm_core@5",
+    "ot_hfd_coll_q3_vm_core@4",
+    "ot_hgi_coll_gq_land__v25778639ea1b@1",
+    "ot_hgi_coll_gq_land__vac72b8c34f86@1",
+    "ot_hgi_coll_inj_idx_join_rg@1",
+    "ot_hgi_coll_tkm_m_tp192__root@8",
+    "ot_hgi_qw_dec@5",
+    "ot_hgi_sm_xload_cl2_bfqg@4",
+    "ot_hgi_sm_xload_cl2_ctlx@2",
+    "ot_hnx_fused_hub_n4ext@8",
+    "ot_hnx_idxn_keybuf_slice@4",
+    "hfd_hgi_vms_glue_nw_t@7",
+    "hnx_rp3h_xs@4",
+    "ot_hbm_idx_rootctl_static_am@14",
+    "q_spu0__physical_v1@1",
+    "q_spu1__physical_v1@1",
+    "q_b000@1",
+    "q_b000__physical_v1@1",
+    "q_b001@1",
+    "q_b001__physical_v1@1",
+    "ot_hbm_su_static_qcore_r13@4",
+    "q_su31__physical_v1@1",
+    "q_su31__physical_v1@2",
+    "q_su31@1",
+    "q_su31@2",
+    "q_spu0__physical_v1@2",
+    "q_spu0@1",
+    "q_spu1__physical_v1@2",
+    "q_spu1@1",
+    "q_b013__physical_v1@1",
+    "q_b013@2",
+    "NE_io@1",
+    "NW_io@1",
+    "q_spb0__physical_v1@1",
+    "q_spb0@1",
+    "vsN0@1",
+    "root@1",
+    "q_su31@3",
+    "q_su31__physical_v1@3",
+    "q_su30@1",
+    "q_su30__physical_v1@1",
+    "q_su11@1",
+    "q_su11__physical_v1@1",
+    "q_su01@1",
+    "q_su01__physical_v1@1",
+    "q_b110@1",
+    "q_b110__physical_v1@1",
+    "q_su20@1",
+    "q_su20__physical_v1@1",
+    "q_su21@1",
+    "q_su21__physical_v1@1",
+    "NE_io@2",
+    "q_b000@2",
+    "q_b000__physical_v1@2",
+    "q_b001@2",
+    "q_b001__physical_v1@2",
+    "q_spb0@2",
+    "q_spb0__physical_v1@2",
+    "q_su01@2",
+    "q_su01__physical_v1@2",
+    "q_su11@2",
+    "vsN0@2",
+    "NW_io@2",
+    "q_mca@1",
+    "q_spb1@1",
+    "vsN1@1",
+    "vsN2@1",
+    "q_su01@3",
+    "q_su01__physical_v1@3",
+    "q_su11@3",
+    "q_b013__physical_v1@2",
+    "q_su20@2",
+    "q_su20__physical_v1@2",
+    "q_su21@2",
+    "q_su21__physical_v1@2",
+    "q_su30@2",
+    "q_su30__physical_v1@2",
+    "q_su31@4",
+    "q_su31__physical_v1@4",
+    "q_b000@3",
+    "q_b000__physical_v1@3",
+    "q_b001@3",
+    "q_b001__physical_v1@3",
+    "q_su01@4",
+    "q_su01__physical_v1@4",
+    "q_su11@4",
+    "q_su11__physical_v1@2",
+    "q_b000@4",
+    "q_b000__physical_v1@4",
+    "q_b001@4",
+    "q_b001__physical_v1@4",
+    "q_b002@1",
+    "q_b002__physical_v1@1",
+    "q_su01@5",
+    "q_su01__physical_v1@5",
+    "q_su11@5",
+    "q_su11__physical_v1@3",
+    "q_b100@1",
+    "q_b100__physical_v1@1",
+    "q_b101@1",
+    "q_b101_nw@1",
+    "q_b102@1",
+    "q_b102__physical_v1@1",
+    "q_b103@1",
+    "q_b103__physical_v1@1",
+    "q_b013@3",
+    "vsN4@1",
+    "vsN5@1",
+    "vsN6@1",
+    "q_spt1@1",
+    "q_spt2@1",
+    "q_su00@1",
+    "q_su00__physical_v1@1",
+    "q_su10@1",
+    "q_su10__physical_v1@1",
+    "q_su11@6",
+    "q_su20@3",
+    "q_su20__physical_v1@3",
+    "q_b002@2",
+    "q_b002__physical_v1@2",
+    "q_b013__physical_v1@3",
+    "q_su21@3",
+    "q_su21__physical_v1@3",
+    "q_su30@3",
+    "q_su30__physical_v1@4",
+    "q_su31@5",
+    "q_su31__physical_v1@5",
+    "q_b100@2",
+    "q_b100__physical_v1@2",
+    "q_b101@2",
+    "q_b102@2",
+    "q_b102__physical_v1@2",
+    "q_b103@2",
+    "q_b103__physical_v1@2",
+    "vsN2@2",
+    "q_spb0@3",
+    "q_spb0__physical_v1@3",
+    "NE_io@3",
+    "NW_io@3",
+    "vsN0@3",
+    "q_b100@3",
+    "q_b100__physical_v1@3",
+    "q_b101@3",
+    "q_b101_nw@2",
+    "q_b102@3",
+    "q_b102__physical_v1@3",
+    "q_b103@3",
+    "q_b103__physical_v1@3",
+    "q_b003@2",
+    "q_sm0@2",
+    "q_sm3@2",
+    "q_spt0@1",
+    "NW_io@4",
+    "NE_io@8",
+    "vsN0@7",
+    "q_spb0@8",
+    "q_spb0__physical_v1@8",
+    "q_b011@1",
+    "q_b011__physical_v1@1",
+    "q_b012__physical_v1@1",
+    "q_b013__physical_v1@4",
+    "q_spb1@2",
+    "q_b012@1",
+    "q_b013@4",
+    "q_b102@9",
+    "q_b102__physical_v1@7",
+    "q_b111@1",
+    "q_b111__physical_v1@1",
+    "q_spb1@4",
+    "q_sm0@3",
+    "q_sm1@1",
+    "q_sm2@2",
+    "q_sm3@5",
+    "q_b100__physical_v1@4",
+    "root@2",
+    "q_b102@10",
+    "q_spt1@2",
+    "q_b003__physical_v1@1",
+    "NE_io@12",
+    "q_spb0@11",
+    "vsN0@10",
+    "q_spb0__physical_v1@12",
+    "NW_io@8",
+    "ot_hbm_svc_vm_kshare_splitstrap__v700685@4",
+    "ot_hbm_svc_vm_kshare_splitstrap__v8e478a@4",
+    "q_b011@5",
+    "q_b103@10",
+    "q_b103__physical_v1@11",
+    "q_su00__physical_v1@4",
+    "q_b002__physical_v1@4",
+    "q_b013@8",
+    "q_b002__physical_v1@5",
+    "q_b011__physical_v1@6",
+    "q_b101@11",
+    "q_b101_nw@10",
+    "q_b100@6",
+    "q_b100__physical_v1@5",
+    "q_b003@6",
+    "q_su00@4",
+    "q_b102__physical_v1@8",
+    "q_b101@12",
+    "q_b101_nw@11",
+    "q_b011@6",
+    "q_b100@7",
+    "q_b100__physical_v1@6",
+    "q_b102@11",
+    "q_hub_ne@4",
+    "q_su01@8",
+    "q_su11@10",
+    "q_hub_ne@6",
+    "q_b101_nw@12",
+    "q_b000@9",
+    "q_b000__physical_v1@8",
+    "q_b010@3",
+    "q_b100@9",
+    "q_b102@21",
+    "q_b113@5",
+    "q_b101_nw@14",
+    "q_b010__physical_v1@3",
+    "q_b011__physical_v1@15",
+    "q_b100__physical_v1@14",
+    "q_b113__physical_v1@4",
+    "NW_io@11",
+    "q_spt0__physical_v1@1"
+   ],
+   "note_kw43hfx": "KW-FIX-43 11-10 18:3x: view_detail_1110 entries for epyc7/epyc8 + retry of 5 HBM GRT-batch rows failed on missing epyc8 inputs. Revert *_prev_kw43hfx."
   }
  },
  "place_prefer": [
