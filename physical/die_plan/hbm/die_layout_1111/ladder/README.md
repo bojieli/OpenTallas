@@ -119,3 +119,38 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
 - **Delta of record:** `ladder_delta_c17.json.gz`. On t11 it gives **`291976a41c95`**. native_chk reports 0 of 55 violations.
 - **G0 with main's check.py:** identical to c16. 554 errors, 0 new and 0 lost against t11+c16; against t11 it is still the same 37 rows.
 - **EQ:** 17 latency-up lanes, which is the 16 from c13 (L5054/L5056 now +8) plus L1252 +1.
+
+## c18 (11-11): q_sm0 type split
+- **Problem:** the strict bind on t11+c17 and on t17d leaves one pass-2 error: `TYPE_SPLIT q_sm0`. NE_sm0 and NW_sm0 differ on L28_i.
+  - The ladder's lat pad left L8300m (NE_hub -> NE_sm0) with `fixed_cycles` 1, which is a 1-stage receiver pad inside NE_sm0.
+  - NW L8300 got a real station instead.
+- **Fix** (`scripts/fix_force.py`, i.e. fix_native.py with `FORCE=L8300m:0`): the pad moves into an FT station. NE q_b001 slot L28y2 goes from 6 to 7 stations. L8300m has no `fixed_cycles`; its stations are 19 and its cycles stay 21. Report: `tables/native_fix_c18.json`.
+- **Delta of record:** `ladder_delta_c18.json.gz`. On t11 584df6bfcfc2 it gives **`3a8a16e45bf2`**. It differs from c17 only in q_b001.ft_slots[L28y2], lanes[L8300m] and latency.lanes[L8300m].
+- **Checks:**
+  - G0 with main's check.py: 554 errors, 0 new and 0 lost against c17 (`tables/g0main_c18_vs_c17.txt`).
+  - native_chk: 0 of 55 violations.
+  - Slot-station sum vs latency.lanes: 0 mismatches.
+- **Strict bind of record:** t17d (2b016b55e39b) with the c18 change applied gives d37961f7a86d. It was bound with DIE-HBM-100's two-pass flow on main src_hbm_main_fe0002fac6:
+  - Pass 1: 30 R8_STALE only.
+  - Pass 2: **BIND_OK**, n_errors 0, stale 0, uncovered 0 (`tables/bind_t17c18_report.json`).
+- **Not a ladder issue:** the 30 LANE_LATENCY errors on t14d came from binding xtap form D with the kw43 tool. That tool does not count `clock.ft_hop_lockup.xtap_flop` hops; main's tool does.
+- **SFU_VM_NE 123 -> 131:** the driver is L5056 = C_rr_NE2 (NE_su20 -> NE_b113), 21 -> 29.
+  - The route now runs b103 -> b010 -> b011 -> b001, which adds 8 stations.
+  - LG2 is the binding loop. LG0's leg 4 going from 7 to 15 is only L5007's pad.
+
+## B1 (11-11): CPL-HBM-3 Proposal B1, COORD adopted
+- **Change:** the hub feeds q_b101 directly with the 2176 Q bits that q_b100 used to relay. In the bound RTL these are procdff_71770[2197:1110] and [1098:11], passing through 71561 and then 71555 before L1200.
+  - L1228 / L5028 (hub -> b100) go from 4986 / 4988 b to 2810 / 2812 b.
+  - L1200 / L5000 (b100 -> b101) go from 3332 to 1156 b: the 570 header copies plus 586 computed bits.
+  - New lanes L1228q / L5028q run from the hub S face to the b101 N face, 2176 b, with natural 2 + `fixed_cycles` 5 = 7. That matches the old path cycle for cycle (2 + 3 relay registers + 2).
+  - Windows sit at <= 6.02 b/um: NW b101-local 0.5-362.2, NE 363.5-725.2, and the hub windows at +3594.24.
+  - The old windows keep their length, so face density drops.
+- **Delta:** `b1_delta_on_c18.json.gz` on c18 gives **`1e122a9f23e1`**. The script is `scripts/b1.py`; latency is in `tables/b1_latency.txt`.
+- **G0 with main's check.py:** 554 -> 553 with 0 really new rows (`tables/g0main_b1_vs_c18.txt`).
+  - NW_b100.N (8.3/um) is cleared.
+  - The b100/b101 E/W worst windows now show 8.30/um instead of 8.50/um. Those are the same faces, re-keyed at 5065.61.
+- **Over-reach:** no worse. The hub source (idx query core u_hb_idx__q_Q__q0, hub-local (3663, 242)) is 0-660 um from the new window, against 125-750 um for today's L1228 window.
+- **Real-net supply:** route_supply cannot see this change, because the relay is glue cells, not core_conns (the scorer gap of COORD (3)).
+  - RUDY estimate: the b100 internal N->E relay of 2176 b over about 1145 um, about 2.5 M bit-um, is removed. That is about 36% of the 6.1 kb V-band forward.
+  - The b101 entry moves from the W face to the N face.
+- **Open: RTL re-partition + EQ (bind owner).** The 3 relay registers leave b100's quarter leaf, the hub fans out its L1228 source flops, and a 5-stage pad goes at b101. Until that lands, B1 does not bind (the new hub ports have no as-built source).
