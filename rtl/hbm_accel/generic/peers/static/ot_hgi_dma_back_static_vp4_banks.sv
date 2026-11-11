@@ -1,5 +1,17 @@
 `timescale 1ns/1ps
 `default_nettype none
+// vPose3L 11-11 (HBM-HUB-RTL-1, tag dma-vpose3l): VP3L=1 (default from -DOT_DMA_VP3L; requires OT_DMA_ACCEPT_EARLY)
+//  (ii) drain read path one register stage longer: every landing-bank read input (read_en, read_slot, read_addr tag,
+//       output_en) reaches the banks exactly one edge later, the address split into a W-field stage (hi, hi+1, lo) and
+//       the bank-face copies (carry-select mux only). wd is the old wd one edge later (PIN CYCLE +1 on wd, declared);
+//       landing writes, requests, faults and every other output keep their edges.
+// (iii) the issue-lead acceptance term is formed one edge earlier from q_ci and cycle_q (exact under the checked
+//       cycle_in(k)=cycle_in(k-1)+1 contract), 0 cycles.
+`ifdef OT_DMA_VP3L
+`define OT_VP3L_DEF 1
+`else
+`define OT_VP3L_DEF 0
+`endif
 // Four-stage descriptor successor. Seven-by-32 products use registered 7x8
 // partial products and pair sums. Register aperture end sums before validation.
 // Command lead is DESC_LAT4; absolute issue/drain/data edges remain compiled.
@@ -9,7 +21,8 @@ module ot_hgi_dma_back_static_vp4_banks #(
     parameter [35:0] STACK_BYTES=36'd22500000000,
     parameter integer MUT=0, // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
     parameter integer RR_RT=7, // VM read round trip at the controller pins (see the controller header)
-    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
+    parameter integer LOCAL_CTRL=0, // opt-in same-edge command predicate copies; no added cycle
+    parameter integer VP3L=`OT_VP3L_DEF // vPose3L: drain read stage (wd +1 edge) + early lead term
 )(
     input wire clk,rst_n,
     // stack identity strap (H-HARDEN 2026-10-15, DEDUPE: ONE controller/cluster master for all four stacks; replaces
@@ -46,7 +59,7 @@ module ot_hgi_dma_back_static_vp4_banks #(
     if(LOCAL_CTRL!=0)begin:G_BAD_LOCAL_CTRL $error("LOCAL_CTRL requires a newly qualified soft controller");end
     ot_hgi_dma_back_static_vp4_controller u_control(
 `else
-    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT),.LOCAL_CTRL(LOCAL_CTRL)) u_control(
+    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT),.RR_RT(RR_RT),.LOCAL_CTRL(LOCAL_CTRL),.VP3L(VP3L)) u_control(
 `endif
         .clk(clk),
         .rst_n(rst_n),
@@ -100,7 +113,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // behaviour (ot_vms_bank_static wired directly: samples rq one edge after launch, registered answer n+6).
     // d4g budget: 80 (GEN2c lanes 33..58, worst-case landing E 72; GEN2d headroom), see lanes/HBM-BANKLAT-DMA.md.
     parameter integer RR_RT=7,
-    parameter integer LOCAL_CTRL=0 // opt-in same-edge command predicate copies; no added cycle
+    parameter integer LOCAL_CTRL=0, // opt-in same-edge command predicate copies; no added cycle
+    parameter integer VP3L=`OT_VP3L_DEF // vPose3L (file header)
 )(
     input wire clk,rst_n,
     input wire [1:0] stk,   // stack identity strap: die constant per instance (stack = HBM queue id)
@@ -120,7 +134,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
     output reg [31:0] wb_reserve_base,
     output reg wb_fill_start,
     input wire wb_ready,
-    output reg [7:0] bank_read_en,
+    output wire [7:0] bank_read_en,
     // HH-7 10-19 (hv16_dbk_cpl 65c2387ab TT -12.3: bank_read_addr[166] -> L[5] -12.30, bank_write_slot[6] -> L[2] -11.73,
     // ~430-460 um parent wires): the bank read address and the two 7-bit slot broadcasts leave on the face of the bank
     // group they serve (S = banks 0-2 / row 0, W = banks 3-4 / column 0, N = banks 5-7 / row 3), each a point-to-point
@@ -143,7 +157,9 @@ module ot_hgi_dma_back_static_vp4_controller #(
     assign bank_read_addr_s=bank_read_addr[95:0];
     assign bank_read_addr_w=bank_read_addr[159:96];
     assign bank_read_addr_n=bank_read_addr[255:160];
-    assign bank_read_slot_s=bank_read_slot;assign bank_read_slot_w=bank_read_slot;assign bank_read_slot_n=bank_read_slot;
+    // vPose3L (ii): the bank sees read_slot/read_en/output_en through one more register (vp3l_*), see below.
+    wire [6:0] bank_read_slot_o;
+    assign bank_read_slot_s=bank_read_slot_o;assign bank_read_slot_w=bank_read_slot_o;assign bank_read_slot_n=bank_read_slot_o;
     assign bank_write_slot_s=bank_write_slot;assign bank_write_slot_w=bank_write_slot;assign bank_write_slot_n=bank_write_slot;
     // Reset is exceptional initialization: async assertion, two fixed release
     // edges, then normal compiler-scheduled commands. Only this two-flop leaf
@@ -199,6 +215,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [17:0] p_total,q_total;reg p_static_ok,q_static_ok;
     reg [13:0] p_total_hi;
     reg [18:0] b_vbase_end;reg [40:0] b_hbase_end;
+    reg b_lead_ok;
     reg [31:0] b_ci_m2,b_ci_m3,b_cd_m1,b_cd_m2,b_cd_m3,b_cd_m4,b_end_m2,b_end_m3;
     always @(posedge clk or negedge local_rst_n)
         if(!local_rst_n) begin a_v<=0;p_valid<=0;q_valid<=0;b_v<=0;end
@@ -237,6 +254,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
         b_vbase_end<=19'(q_mv[21:5])+19'(q_mv[219:206]);
         b_hbase_end<={4'b0,q_mv[134:98]}+(41'(q_mv[219:206])<<2);
         b_ci_m2<=q_ci-32'd2;b_ci_m3<=q_ci-32'd3;
+`ifdef OT_DMA_VP3L_NEG1
+        b_lead_ok<=$signed(q_ci-32'd2-cycle_q)>=1;            // NEGATIVE CONTROL: offset one short
+`else
+        b_lead_ok<=$signed(q_ci-32'd3-cycle_q)>=1;            // vPose3L (iii): == b_ci_m2-cycle_q(k)>=1, cycle_q(k)=cycle_q(k-1)+1
+`endif
         b_cd_m1<=q_cd-32'd1;b_cd_m2<=q_cd-32'd2;b_cd_m3<=q_cd-32'd3;b_cd_m4<=q_cd-32'd4;
         b_end_m2<=q_cd+32'(q_nchunk)-32'd1;b_end_m3<=q_cd+32'(q_nchunk)-32'd2;   // end_at = cd+nchunk+1
     end
@@ -330,6 +352,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
     wire valid_move=c_valid_0;
 `else
     wire valid_move=c_static_ok&&c_vok&&c_nchunk_ok&&c_hok&&c_ilead_ok&&c_lag_ok;
+    if(VP3L!=0)begin:G_BAD_VP3L $error("VP3L requires OT_DMA_ACCEPT_EARLY"); end
 `endif
     wire reload=cv&&valid_move;
     // Each command chunk receives its own copy of the existing C-cohort flags
@@ -374,7 +397,19 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // Each landing bank pin-captures the raw response valid itself; its slot is this
     // register one edge ahead, so the bank's write is on the same edge as before.
     assign bank_write_slot=(RR_RT==7)?expect_tag[7]:land_tag_rt;
-    assign bank_output_en=output_mask_q;
+    reg [7:0] bank_read_en_r;
+    // vPose3L (ii): one more register on every landing-bank read input. W-field stage: vp3l_en/oe/slot and the
+    // address split vp3l_hi/hi1/lo; bank-face copies: bank_read_addr (carry-select mux only). Exact one-edge delay of
+    // the old bank inputs; landing writes are not delayed (a slot is read only after its landing and is rewritten
+    // only by a later move, end_at = cd+nchunk+1 > last delayed read).
+    reg [7:0] vp3l_en,vp3l_oe; reg [6:0] vp3l_slot;
+    reg [28:0] vp3l_hi,vp3l_hi1; reg [2:0] vp3l_lo;
+    always @(posedge clk or negedge local_rst_n)
+        if(!local_rst_n)begin vp3l_en<=0;vp3l_oe<=0;vp3l_slot<=0;end
+        else begin vp3l_en<=bank_read_en_r;vp3l_oe<=output_mask_q;vp3l_slot<=bank_read_slot;end
+    assign bank_read_en=(VP3L!=0)?vp3l_en:bank_read_en_r;
+    assign bank_read_slot_o=(VP3L!=0)?vp3l_slot:bank_read_slot;
+    assign bank_output_en=(VP3L!=0)?vp3l_oe:output_mask_q;
     for(genvar b=0;b<8;b=b+1)begin:RQ
         assign rq[b*17+:17]={rq_v[b],rq_payload[b]};
     end
@@ -398,7 +433,15 @@ module ot_hgi_dma_back_static_vp4_controller #(
         c_ehit<=cycle_q==b_end_m3;                           // cycle(k)+1==cd+nchunk+1
         c_ci_m2<=b_ci_m2;c_cd_m1<=b_cd_m1;c_cd_m2<=b_cd_m2;c_cd_m3<=b_cd_m3;c_end_m2<=b_end_m2;
 `ifdef OT_DMA_ACCEPT_EARLY
-        for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=cs_addr(drain_chunk_hbm[36:8],dc_hi1,drain_chunk_hbm[7:5],4'(b)+((MUT==1&&b==1)?4'd1:4'd0));
+`ifdef OT_DMA_VP3L_NEG2
+        vp3l_hi<=drain_chunk_hbm[36:8];vp3l_hi1<=dc_hi1+29'd1;vp3l_lo<=drain_chunk_hbm[7:5];   // NEGATIVE CONTROL
+`else
+        vp3l_hi<=drain_chunk_hbm[36:8];vp3l_hi1<=dc_hi1;vp3l_lo<=drain_chunk_hbm[7:5];
+`endif
+        if(VP3L!=0)
+            for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=cs_addr(vp3l_hi,vp3l_hi1,vp3l_lo,4'(b)+((MUT==1&&b==1)?4'd1:4'd0));
+        else
+            for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=cs_addr(drain_chunk_hbm[36:8],dc_hi1,drain_chunk_hbm[7:5],4'(b)+((MUT==1&&b==1)?4'd1:4'd0));
 `else
         for(integer b=0;b<8;b=b+1)bank_read_addr[b*32+:32]<=drain_chunk_hbm[36:5]+32'(b)+((MUT==1&&b==1)?32'd1:32'd0);
 `endif
@@ -421,7 +464,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
         integer nland;
         if(!local_rst_n)begin
             cv<=0;busy<=0;quiet<=1;dirty<=0;src_sent<=0;mv_src<=0;mv_done<=0;mv_fault<=0;
-            wb_reserve_v<=0;wb_reserve_sectors<=0;wb_reserve_base<=0;wb_fill_start<=0;wb_reserve_bank<=0;wb_fill_bank<=0;wb_reserve_epoch<=0;wb_fill_epoch<=0;bank_read_en<=0;read_mask_q<=0;output_mask_q<=0;rr_valid<=0;
+            wb_reserve_v<=0;wb_reserve_sectors<=0;wb_reserve_base<=0;wb_fill_start<=0;wb_reserve_bank<=0;wb_fill_bank<=0;wb_reserve_epoch<=0;wb_fill_epoch<=0;bank_read_en_r<=0;read_mask_q<=0;output_mask_q<=0;rr_valid<=0;
             issue_index<=0;drain_index<=0;chunks<=0;column<=0;land_left<=0;first_drain_q<=0;
             pending_sectors<=0;
 `ifdef OT_DMA_ACCEPT_EARLY
@@ -434,15 +477,15 @@ module ot_hgi_dma_back_static_vp4_controller #(
 `ifdef OT_DMA_ACCEPT_EARLY
             cv_0<=b_v;cv_1<=b_v;cv_2<=b_v;cv_3<=b_v;
 `endif
-            bank_read_en<=0;
+            bank_read_en_r<=0;
             if(busy&&!cv&&drain_index<`OT_ACC_SEL(chunks_c,chunks))begin
                 if(`OT_ACC_SEL(drain_slot_c,drain_slot))begin
                     if(drain_index+1'b1<`OT_ACC_SEL(chunks_c,chunks))begin
                         if((drain_column==row_chunks-1?8'd0:drain_column+1'b1)==row_chunks-1&&row_sectors[2:0]!=0)
-                            bank_read_en<=(8'd1<<row_sectors[2:0])-1'b1;
-                        else bank_read_en<=8'hff;
+                            bank_read_en_r<=(8'd1<<row_sectors[2:0])-1'b1;
+                        else bank_read_en_r<=8'hff;
                     end
-                end else if(m_pre)bank_read_en<=drain_mask;
+                end else if(m_pre)bank_read_en_r<=drain_mask;
             end
             wb_fill_start<=busy&&m_fill;
             if(b_v&&(busy||cv))mv_fault<=1;
@@ -543,7 +586,7 @@ row_sectors<=18'(cm[226:209]);land_left<=20'(c_total); end
     wire e_vok=(b_mv[44:5]<65536&&41'(e_vend)<=65536)||(b_mv[44:5]>=65536&&41'(e_vend)<=98304);
     wire e_hok=b_hend[40:37]==0&&b_hend[36:35]==stk_q&&{1'b0,b_hend[34:0]}<=STACK_BYTES;
     wire e_nchunk_ok=b_nchunk>0&&b_nchunk<=128;
-    wire e_ilead_ok=$signed(b_ci_m2-cycle_q)>=1;
+    wire e_ilead_ok=(VP3L!=0)?b_lead_ok:($signed(b_ci_m2-cycle_q)>=1);
     wire e_lag_ok=$signed(b_cd-b_ci)>=RR_RT+3;
 `ifdef OT_DMA_ACCEPT_EARLY_NEG
     wire e_valid=e_static_ok&&e_vok&&e_nchunk_ok&&e_ilead_ok&&e_lag_ok;

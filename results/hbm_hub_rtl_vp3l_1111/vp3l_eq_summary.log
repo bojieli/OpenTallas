@@ -1,0 +1,9 @@
+neg1_rt7: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:51: control mismatch cycle2078
+neg1_rt80: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:51: control mismatch cycle3757
+neg2_rt7: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:59: VP3L_SHIFT write beat mismatch cycle1898 bank1
+neg2_rt80: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:59: VP3L_SHIFT write beat mismatch cycle3431 bank1
+pos_rt7: DMA_VP3L_EQ_CYCLE_SHIFTED PASS wd+1 cases=23 bad_cases=14 fault_cycles=112 checks=2270 beats=6877
+pos_rt80: DMA_VP3L_EQ_CYCLE_SHIFTED PASS wd+1 cases=23 bad_cases=14 fault_cycles=112 checks=3949 beats=6877
+shift0_rt7: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:57: VP3L_SHIFT valid mismatch cycle26 bank0
+shift0_rt80: FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vp3l_equiv.sv:57: VP3L_SHIFT valid mismatch cycle99 bank0
+VP3L_EQ ALL PASS (pos PASS, shift0/neg1/neg2 FAIL as required, RR_RT 7 and 80)

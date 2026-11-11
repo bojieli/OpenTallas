@@ -1,0 +1,11 @@
+EQ_CYCLE_SHIFTED declaration, vPose3L (HBM-HUB-RTL-1, 2026-11-11, tag dma-vpose3l)
+core:     ot_hgi_dma_back_static_vp4_banks_cp (u_fcore.u_dbk.u_control = ot_hgi_dma_back_static_vp4_controller)
+enable:   -DOT_DMA_VP3L (parameter VP3L default 1), requires -DOT_DMA_ACCEPT_EARLY
+reference: the same RTL with VP3L=0 (= vPose3C RTL, 8cbd25caf74a)
+PIN CYCLE: wd[8*289-1:0] (valid + payload, all 8 banks) = reference wd delayed by exactly +1 edge.
+SAME EDGE: every other output (mv_src, mv_done, mv_fault, quiet, busy, rq, wb_reserve_*, wb_fill_*) and all inputs.
+schedule:  for the same wd edge, drain_at is one cycle earlier; i.e. min issue->drain lag RR_RT+3 -> RR_RT+4
+           (die RR_RT 80: 83 -> 84). Price: TOK-VERIFY-1 dma-vpose3l-price = 0 tok/s (1 cycle slack, 32/40 layers).
+internal:  (iii) issue-lead acceptance term one edge early, exact under the checked cycle_in(k)=cycle_in(k-1)+1 contract, 0 cycles.
+bench:     rtl/hbm_accel/generic/peers/static/run_vp3l_eq.sh OUT  (iverilog lockstep, RR_RT 7 and 80;
+           pos PASS; negatives FAIL: unshifted wd, lead offset -1, W-field hi+1 off by one). Summary: vp3l_eq_summary.log
