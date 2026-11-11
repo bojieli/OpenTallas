@@ -1,0 +1,18 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+T41FORM_CENSUS_ODB limit 24 over 13 clock 0 signal 13
+T41FORM_CENSUS_ODB_NET 51718 SIGNAL clk
+T41FORM_CENSUS_ODB_NET 2077 SIGNAL {fclk_in_ft2_i[0]}
+T41FORM_CENSUS_ODB_NET 2077 SIGNAL {fclk_in_ft3_i[0]}
+T41FORM_CENSUS_ODB_NET 2077 SIGNAL {fclk_in_ft4_i[0]}
+T41FORM_CENSUS_ODB_NET 2077 SIGNAL {fclk_in_ft5_i[0]}
+T41FORM_CENSUS_ODB_NET 1125 SIGNAL {fclk_in_ft6_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft13_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft14_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft15_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft16_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft17_i[0]}
+T41FORM_CENSUS_ODB_NET 301 SIGNAL {fclk_in_ft18_i[0]}
+T41FORM_CENSUS_ODB_NET 25 SIGNAL {fclk_in_cland_dn_0[0]}

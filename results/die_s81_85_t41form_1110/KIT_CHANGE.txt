@@ -36,5 +36,9 @@ Pre-build check (synth only, epyc8 capped docker 24 GB): SDC_LINT, RTL_LINT, DON
 (15163/15163), REG_FANOUT PASS.  Fanout census of 1_2_yosys.v (fanout_census.py, per module): 15 nets > 24 loads, all clock
 (clk / fclk); 0 data, control, select or reset nets > 24.
 
-Build: epyc8 ot-heavy --mem 64 --tag t41form-route-1110 -- bash gen/run_kit.sh gen/slice_station__t41 route 64 16
-       (queued 2026-11-11 03:12 UTC, pid 3173713, log t41form/route_job.log); LEC runs beside the flow (lec_async).
+Build: epyc8 via ot-run admission (hub listener pid 2478389): ot-run --mem 64 --threads 16 --hosts epyc8 --no-spill
+       --dir .../t41form -- bash gen/run_kit.sh gen/slice_station__t41 route 64 16; tag otrun-ubuntu-2478389-367235074.
+       (The earlier epyc8 ot-heavy waiter 3173713/3173715 and an epyc4 unit were cancelled unstarted.)  LEC runs beside.
+Post-3_4 census (census_odb.tcl on 3_place.odb): 13 nets > 24 loads, all clock nets (clk, fclk_in_*; not yet typed
+CLOCK before CTS); 0 data/control/select/reset nets > 24.  3_4 repair_design: 1 slew violation, 1 buffer.
+Floorplan/resize logs: T41FORM set_max_fanout 24 and T41FORM_HPAD dont_touch 38528 present; native cells 204360 / 400000.
