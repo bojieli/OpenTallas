@@ -1,0 +1,430 @@
+{
+ "dsdv_slice_c1x_C__t5": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 334.5,
+    "max_hop_after": 369.1
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 352.8,
+    "max_hop_after": 370.1
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 350.1,
+    "max_hop_after": 367.4
+   },
+   {
+    "conn": "bus:leafdn_o3",
+    "max_hop_before": 287.2,
+    "max_hop_after": 287.2
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 369.3,
+    "max_hop_after": 386.6
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 381.9,
+    "max_hop_after": 401.9
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 318.7,
+    "max_hop_after": 387.9
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 387.9,
+    "max_hop_after": 400.8
+   },
+   {
+    "conn": "bus:leafup_i4",
+    "max_hop_before": 382.4,
+    "max_hop_after": 393.7
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 323.1,
+    "max_hop_after": 375.0
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 329.2,
+    "max_hop_after": 381.0
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 335.3,
+    "max_hop_after": 387.1
+   }
+  ],
+  "taps": {}
+ },
+ "dsdv_slice_c1x_C__t7": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 385.2,
+    "max_hop_after": 399.3
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 322.5,
+    "max_hop_after": 396.0
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 353.1,
+    "max_hop_after": 370.3
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 304.4,
+    "max_hop_after": 304.4
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 318.3,
+    "max_hop_after": 352.9
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 328.5,
+    "max_hop_after": 363.1
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 382.5,
+    "max_hop_after": 393.8
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 361.9,
+    "max_hop_after": 379.2
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 365.3,
+    "max_hop_after": 382.5
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 368.3,
+    "max_hop_after": 385.6
+   },
+   {
+    "conn": "bus:ret_i3",
+    "max_hop_before": 371.2,
+    "max_hop_after": 388.5
+   }
+  ],
+  "taps": {}
+ },
+ "dsdv_slice_lepw_mu_C__t1": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 321.1,
+    "max_hop_after": 394.6
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 376.4,
+    "max_hop_after": 392.0
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 368.8,
+    "max_hop_after": 386.1
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 304.4,
+    "max_hop_after": 304.4
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 366.9,
+    "max_hop_after": 384.1
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 349.0,
+    "max_hop_after": 364.5
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 337.1,
+    "max_hop_after": 351.5
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 335.2,
+    "max_hop_after": 352.5
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 339.8,
+    "max_hop_after": 357.0
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 344.1,
+    "max_hop_after": 361.4
+   },
+   {
+    "conn": "bus:ret_i3",
+    "max_hop_before": 348.9,
+    "max_hop_after": 366.2
+   }
+  ],
+  "taps": {
+   "clk_t35": {
+    "from": [
+     1144.32,
+     574.32
+    ],
+    "to": [
+     1144.32,
+     578.64
+    ]
+   }
+  }
+ },
+ "dsdv_slice_lepw_mus_C__t1": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 334.5,
+    "max_hop_after": 369.1
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 352.8,
+    "max_hop_after": 370.1
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 350.1,
+    "max_hop_after": 367.4
+   },
+   {
+    "conn": "bus:leafdn_o3",
+    "max_hop_before": 267.8,
+    "max_hop_after": 267.8
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 360.0,
+    "max_hop_after": 360.0
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 381.9,
+    "max_hop_after": 401.9
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 318.7,
+    "max_hop_after": 387.9
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 387.9,
+    "max_hop_after": 400.8
+   },
+   {
+    "conn": "bus:leafup_i3",
+    "max_hop_before": 227.1,
+    "max_hop_after": 327.9
+   },
+   {
+    "conn": "bus:leafup_i4",
+    "max_hop_before": 365.8,
+    "max_hop_after": 365.8
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 273.3,
+    "max_hop_after": 324.1
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 279.4,
+    "max_hop_after": 330.2
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 285.2,
+    "max_hop_after": 336.0
+   },
+   {
+    "conn": "bus:ret_i3",
+    "max_hop_before": 291.6,
+    "max_hop_after": 342.4
+   }
+  ],
+  "taps": {}
+ },
+ "dsdv_slice_c1x_C__t3": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 339.9,
+    "max_hop_after": 354.0
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 368.4,
+    "max_hop_after": 385.7
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 360.6,
+    "max_hop_after": 386.6
+   },
+   {
+    "conn": "bus:leafdn_o3",
+    "max_hop_before": 347.1,
+    "max_hop_after": 347.1
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 360.0,
+    "max_hop_after": 360.0
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 359.3,
+    "max_hop_after": 386.5
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 333.9,
+    "max_hop_after": 403.0
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 322.4,
+    "max_hop_after": 391.5
+   },
+   {
+    "conn": "bus:leafup_i4",
+    "max_hop_before": 365.8,
+    "max_hop_after": 365.8
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 362.7,
+    "max_hop_after": 402.1
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 279.5,
+    "max_hop_after": 314.6
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 284.3,
+    "max_hop_after": 319.5
+   },
+   {
+    "conn": "bus:ret_i3",
+    "max_hop_before": 288.9,
+    "max_hop_after": 324.0
+   }
+  ],
+  "taps": {
+   "clk_t28": {
+    "from": [
+     710.64,
+     233.304
+    ],
+    "to": [
+     710.64,
+     164.184
+    ]
+   }
+  }
+ },
+ "dsdv_slice_c1x_C__t1": {
+  "stations_changed": [
+   {
+    "conn": "bus:leafdn_o0",
+    "max_hop_before": 355.0,
+    "max_hop_after": 359.3
+   },
+   {
+    "conn": "bus:leafdn_o1",
+    "max_hop_before": 296.6,
+    "max_hop_after": 296.6
+   },
+   {
+    "conn": "bus:leafdn_o2",
+    "max_hop_before": 335.0,
+    "max_hop_after": 404.1
+   },
+   {
+    "conn": "bus:leafdn_o3",
+    "max_hop_before": 244.0,
+    "max_hop_after": 252.6
+   },
+   {
+    "conn": "bus:leafdn_o4",
+    "max_hop_before": 382.2,
+    "max_hop_after": 390.8
+   },
+   {
+    "conn": "bus:leafup_i0",
+    "max_hop_before": 367.3,
+    "max_hop_after": 367.3
+   },
+   {
+    "conn": "bus:leafup_i1",
+    "max_hop_before": 379.1,
+    "max_hop_after": 381.3
+   },
+   {
+    "conn": "bus:leafup_i2",
+    "max_hop_before": 241.3,
+    "max_hop_after": 340.7
+   },
+   {
+    "conn": "bus:leafup_i4",
+    "max_hop_before": 208.5,
+    "max_hop_after": 334.9
+   },
+   {
+    "conn": "bus:ret_i0",
+    "max_hop_before": 355.4,
+    "max_hop_after": 355.4
+   },
+   {
+    "conn": "bus:ret_i1",
+    "max_hop_before": 359.1,
+    "max_hop_after": 359.1
+   },
+   {
+    "conn": "bus:ret_i2",
+    "max_hop_before": 362.6,
+    "max_hop_after": 362.6
+   }
+  ],
+  "taps": {
+   "clk_t36": {
+    "from": [
+     384.32,
+     440.48
+    ],
+    "to": [
+     444.8,
+     440.48
+    ]
+   }
+  }
+ }
+}

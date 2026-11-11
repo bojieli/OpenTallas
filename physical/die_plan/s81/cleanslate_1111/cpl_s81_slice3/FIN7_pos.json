@@ -1,0 +1,584 @@
+{
+ "dsdv_slice_c1x_C__t5": {
+  "u_c.u_cap": [
+   120.96,
+   103.68,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   561.6,
+   172.8,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_cal_action": [
+   1075.68,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_cal_time": [
+   492.48,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_phase0": [
+   565.92,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_stream0": [
+   419.04,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_stream1": [
+   639.36,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.u_stream2": [
+   565.92,
+   1062.732,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[2].g_mac[4].u_mem": [
+   1075.68,
+   470.892,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[0].g_mac[0].u_mem": [
+   1075.68,
+   548.652,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[1].g_mac[1].u_mem": [
+   712.8,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   639.36,
+   1062.732,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[0].g_mac[1].u_mem": [
+   1075.68,
+   626.412,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[1].g_mac[2].u_mem": [
+   1205.28,
+   552.972,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[2].g_mac[7].u_mem": [
+   842.4,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   492.48,
+   665.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   423.36,
+   665.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   397.44,
+   730.092,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   397.44,
+   816.492,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   397.44,
+   881.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_4N_u_lp_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   423.36,
+   1062.732,
+   "R0"
+  ]
+ },
+ "dsdv_slice_c1x_C__t7": {
+  "u_c.u_cap": [
+   120.96,
+   103.68,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   561.6,
+   172.8,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.u_cal_action": [
+   397.44,
+   557.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.u_cal_time": [
+   470.88,
+   557.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.u_stream0": [
+   306.72,
+   768.972,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[0].g_mac[0].u_mem": [
+   483.84,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   453.6,
+   1041.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[1].g_mac[4].u_mem": [
+   1075.68,
+   483.852,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[0].g_mac[1].u_mem": [
+   613.44,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[2].g_mac[6].u_mem": [
+   583.2,
+   1041.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[1].g_mac[5].u_mem": [
+   1075.68,
+   561.612,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[0].g_mac[4].u_mem": [
+   743.04,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   483.84,
+   656.652,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   311.04,
+   665.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   311.04,
+   868.332,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   1075.68,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   311.04,
+   933.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_5N_u_lp_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   311.04,
+   997.932,
+   "R0"
+  ]
+ },
+ "dsdv_slice_lepw_mu_C__t1": {
+  "u_c.u_cap": [
+   120.96,
+   103.68,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   561.6,
+   172.8,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_stream3": [
+   453.6,
+   557.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_cal_action": [
+   328.32,
+   682.572,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_phase0": [
+   380.16,
+   799.212,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_stream0": [
+   306.72,
+   781.932,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_stream1": [
+   380.16,
+   898.572,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.u_stream2": [
+   401.76,
+   1071.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[0].g_mac[0].u_mem": [
+   453.6,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[1].g_mac[4].u_mem": [
+   475.2,
+   1041.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   583.2,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[0].g_mac[1].u_mem": [
+   1075.68,
+   527.052,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[1].g_mac[5].u_mem": [
+   604.8,
+   1041.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[2].g_mac[6].u_mem": [
+   712.8,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[1].g_mac[2].u_mem": [
+   734.4,
+   1071.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   483.84,
+   656.652,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   414.72,
+   660.972,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   1075.68,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   1075.68,
+   436.332,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   311.04,
+   881.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_0N_u_sl_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   1144.8,
+   440.652,
+   "R0"
+  ]
+ },
+ "dsdv_slice_lepw_mus_C__t1": {
+  "u_c.u_cap": [
+   120.96,
+   103.68,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   561.6,
+   172.8,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_cal_action": [
+   397.44,
+   557.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_cal_time": [
+   470.88,
+   557.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_phase0": [
+   345.6,
+   743.052,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_stream0": [
+   306.72,
+   842.412,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_stream1": [
+   401.76,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.u_stream3": [
+   328.32,
+   954.732,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[0].g_mac[0].u_mem": [
+   401.76,
+   656.652,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[1].g_mac[3].u_mem": [
+   285.12,
+   1062.732,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[2].g_mac[4].u_mem": [
+   475.2,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[0].g_mac[1].u_mem": [
+   414.72,
+   1062.732,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[1].g_mac[4].u_mem": [
+   604.8,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   544.32,
+   1041.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[0].g_mac[3].u_mem": [
+   734.4,
+   963.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[1].g_mac[1].u_mem": [
+   673.92,
+   1054.092,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   1075.68,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   1075.68,
+   436.332,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   1144.8,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   1075.68,
+   501.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   1144.8,
+   436.332,
+   "R0"
+  ],
+  "u_bound.u_u_s_0S_u_sl_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   1075.68,
+   565.932,
+   "R0"
+  ]
+ },
+ "dsdv_slice_c1x_C__t3": {
+  "u_c.u_cap": [
+   120.96,
+   95.04,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   561.6,
+   172.8,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.u_cal_action": [
+   803.52,
+   375.852,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.u_stream3": [
+   876.96,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.u_cal_time": [
+   950.4,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_mac[1].u_mem": [
+   565.92,
+   781.932,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_mac[4].u_mem": [
+   695.52,
+   803.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   876.96,
+   1019.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_mac[6].u_mem": [
+   876.96,
+   1097.292,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   803.52,
+   475.212,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   397.44,
+   548.652,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   876.96,
+   470.892,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   1023.84,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   397.44,
+   613.452,
+   "R0"
+  ],
+  "u_bound.u_u_s_2S_u_lp_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   946.08,
+   470.892,
+   "R0"
+  ]
+ },
+ "dsdv_slice_c1x_C__t1": {
+  "u_c.u_cap": [
+   95.04,
+   103.68,
+   "R0"
+  ],
+  "u_c.u_xr": [
+   483.84,
+   138.24,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.u_cal_action": [
+   306.72,
+   743.052,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.u_stream1": [
+   453.6,
+   794.892,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[0].g_mac[0].u_mem": [
+   725.76,
+   483.852,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[1].g_mac[3].u_mem": [
+   527.04,
+   734.412,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[2].g_mac[4].u_mem": [
+   725.76,
+   406.092,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[0].g_mac[1].u_mem": [
+   725.76,
+   561.612,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[1].g_mac[4].u_mem": [
+   285.12,
+   1049.772,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[2].g_mac[5].u_mem": [
+   527.04,
+   812.172,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[0].g_mac[2].u_mem": [
+   725.76,
+   639.372,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[0].g_ex[0].u_em": [
+   855.36,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[0].g_ex[1].u_em": [
+   855.36,
+   436.332,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[1].g_ex[0].u_em": [
+   924.48,
+   371.532,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[1].g_ex[1].u_em": [
+   855.36,
+   501.132,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[2].g_ex[0].u_em": [
+   656.64,
+   734.412,
+   "R0"
+  ],
+  "u_bound.u_u_s_1S_u_lp_u_xg.u_s.g_bank[2].g_ex[1].u_em": [
+   311.04,
+   842.412,
+   "R0"
+  ]
+ }
+}
