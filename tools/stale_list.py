@@ -20,6 +20,7 @@ from concurrent.futures import ThreadPoolExecutor
 COORD = os.path.expanduser('~/coord')
 OWNERS = os.path.join(COORD, 'autopilot/OWNERS.tsv')
 RETIRED = os.path.join(COORD, 'autopilot/OWNERS-RETIRED.tsv')
+ROUTED = os.path.join(COORD, 'autopilot/COORD-ROUTED-OWNERS.tsv')   # COORD rulings: beat OWNERS.tsv and lane files
 LANES_DIR = os.path.join(COORD, 'lanes')
 LANE_MD_H = 72.0
 LANE_MD_SKIP = {'COORD-REVIEW-QUEUE', 'STALE'}
@@ -145,6 +146,27 @@ def retired_rows(path=RETIRED):
     return out
 
 
+def routed_rows(path=ROUTED):
+    """COORD-ROUTED-OWNERS.tsv: die<TAB>item (or prefix*)<TAB>owner<TAB>ruling -> {die: [(item, owner, ruling)]}"""
+    out = {}
+    try:
+        for l in open(path):
+            f = l.rstrip('\n').split('\t')
+            if len(f) >= 3 and l.strip() and not l.startswith('#') and f[0] != 'die' and f[2].strip():
+                out.setdefault(f[0].strip(), []).append((f[1].strip(), f[2].strip(), f[3].strip() if len(f) > 3 else ''))
+    except OSError:
+        pass
+    return out
+
+
+def routed_owner(routed, die, names):
+    for n in names:
+        for r, o, why in (routed or {}).get(die, ()):
+            if n == r or (r.endswith('*') and n.startswith(r[:-1])):
+                return o, why
+    return None
+
+
 def is_retired(retired, die, names):
     for r in (retired or {}).get(die, ()):
         for n in names:
@@ -250,7 +272,7 @@ def owner_of(own, die, names):
 
 
 def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, plan_die=None, retired=None,
-                lane_idx=None):
+                lane_idx=None, routed=None):
     """-> [dict(die, tag, kind, item, last_status, last_stage, last_class, last_time, age_h, owner)], pure"""
     now = now or time.time()
     idx = row_index(rows)
@@ -293,15 +315,17 @@ def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, 
             t = ts(last['updated']) if last else None
             if t is not None and now - t < stale_h * 3600:
                 continue
+            ro = routed_owner(routed, die, names)
+            lo = None if ro or (o or {}).get('owner') else lane_owner(lane_idx, names[:2])
             out.append(dict(die=die, tag=tag, kind=kind, item=name.split('#')[0] if kind == 'type' else name,
                             last_item=(last or {}).get('item', ''),
                             last_status=(last or {}).get('status', 'no kit-wave row'),
                             last_stage=(last or {}).get('stage', ''), last_class=(last or {}).get('class', ''),
                             last_time=(last or {}).get('updated', ''),
                             age_h=round((now - t) / 3600, 1) if t else None,
-                            owner=(o or {}).get('owner') or lane_owner(lane_idx, names[:2]) or 'unowned',
-                            owner_state=(o or {}).get('state', '') if (o or {}).get('owner') else
-                            ('lanes/%s.md' % lane_owner(lane_idx, names[:2]) if lane_owner(lane_idx, names[:2]) else '')))
+                            owner=(ro[0] if ro else None) or (o or {}).get('owner') or lo or 'unowned',
+                            owner_state=('COORD-ROUTED ' + ro[1]).strip() if ro else
+                            ((o or {}).get('state', '') if (o or {}).get('owner') else ('lanes/%s.md' % lo if lo else ''))))
     return out
 
 
@@ -389,7 +413,7 @@ def section(cache, rows, dies, plan_die=None, hosts=None, write=True):
     state, src = hub_state()
     text, unreachable = live_text(hosts)
     stale = stale_items(cache, rows, owners_rows(), state, text, dies, plan_die=plan_die,
-                        retired=retired_rows(), lane_idx=lane_md_index())
+                        retired=retired_rows(), lane_idx=lane_md_index(), routed=routed_rows())
     if write:
         write_tsv(stale)
     return render(stale, unreachable, src)
@@ -405,7 +429,7 @@ def main(argv):
     state, src = hub_state()
     text, unreachable = live_text()
     stale = stale_items(cache, rows, owners_rows(), state, text, FB.DIES, plan_die=FB.PLAN_DIE,
-                        retired=retired_rows(), lane_idx=lane_md_index())
+                        retired=retired_rows(), lane_idx=lane_md_index(), routed=routed_rows())
     prev = read_tsv()
     write_tsv(stale)
     txt = owner_post(stale, prev, unreachable=unreachable)

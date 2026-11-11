@@ -140,6 +140,17 @@ def test_owner_fallback_lane_md(tmp_path):
     st = names(S.stale_items(CACHE, ROWS, {}, STATE, TEXT, DIES, now=NOW, lane_idx=idx))
     assert st['old_fail']['owner'] == 'unowned'                             # mention only -> not an owner
 
+
+def test_coord_routed_owner_wins(tmp_path):
+    p = tmp_path / 'COORD-ROUTED-OWNERS.tsv'
+    p.write_text('# die\titem\towner\truling\ns81\tcore_a\tDIE-S81-85\tCOORD 22:31\ns81\tt__*\tDIE-X\tprefix\n'
+                 's81\tcore_b\t\tempty owner ignored\n')
+    r = S.routed_rows(str(p))
+    st = names(S.stale_items(CACHE, ROWS, OWN, STATE, TEXT, DIES, now=NOW, routed=r))
+    assert st['core_a']['owner'] == 'DIE-S81-85' and st['core_a']['owner_state'] == 'COORD-ROUTED COORD 22:31'
+    assert st['t__t4']['owner'] == 'DIE-X'                     # prefix row; was unowned
+    assert st['core_b']['owner'] == 'unowned' and st['old_fail']['owner'] == 'KIT-WAVE-1'
+
 if __name__ == '__main__':
     import tempfile, pathlib
     test_stale_selection(); test_live_text_core_by_module_token(); test_tokens_whole_name()
@@ -149,4 +160,5 @@ if __name__ == '__main__':
     test_form_suffix_counts_as_live_but_not_a_sibling_core()
     test_retired_items_dropped(pathlib.Path(tempfile.mkdtemp()))
     test_owner_fallback_lane_md(pathlib.Path(tempfile.mkdtemp()))
-    print("9 passed")
+    test_coord_routed_owner_wins(pathlib.Path(tempfile.mkdtemp()))
+    print("10 passed")

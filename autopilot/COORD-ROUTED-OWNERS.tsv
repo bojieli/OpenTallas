@@ -1,0 +1,16 @@
+# die	item (exact, or prefix*)	owner	ruling   -- COORD-routed owners, read by tools/stale_list.py; override OWNERS.tsv and lanes/*.md owners
+hbm	ot_hbm_su_pg_lane1p_core	AUTO-RESIGN	COORD 11-10 22:31 (COUNT-ARCHIVE-3)
+qwen_kvsys	kv3_pv_v2n	DIE-KV-97	COORD 11-10 22:31
+qwen_compute	sle_hc2__cl9c4c4509__cl3edce1b8	DIE-QC-97	COORD 11-10 22:31 lineage batch
+qwen_compute	sle_hc2__cl9c4c4509__clf60c5152	DIE-QC-97	COORD 11-10 22:31 lineage batch
+qwen_compute	slw_hc2__cla3497502__cl16607c7a	DIE-QC-97	COORD 11-10 22:31 lineage batch
+qwen_compute	slw_hc2__cla3497502__cldc737267	DIE-QC-97	COORD 11-10 22:31 lineage batch
+qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	DIE-QC-97	COORD 11-10 22:31 lineage batch
+qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	DIE-QC-97	COORD 11-10 22:31 lineage batch
+s81	dsdv_gunit_l1f_bf	DIE-S81-85	COORD 11-10 22:31
+s81	s81p_slice_station__t51_ot_s81_station_t51_native_w	DIE-S81-85	COORD 11-10 22:31
+s81	dsdv_bksel_q	DIE-S81-85	COORD 11-10 23:2x
+hbm	PHY_NC	DIE-HBM-98	COORD 11-10 23:2x
+hbm	PHY_NE	DIE-HBM-98	COORD 11-10 23:2x
+hbm	PHY_NW	DIE-HBM-98	COORD 11-10 23:2x
+hbm	q_mcb	DIE-HBM-98	COORD 11-10 23:2x
