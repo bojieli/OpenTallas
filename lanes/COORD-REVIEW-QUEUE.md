@@ -38669,3 +38669,9 @@ ASK COUNT-ARCHIVE-2: archive the six dirs to AGIdock, then count; no counted rec
 - Same bench (idxrd3_campaign.sh, Verilator 5.050, default build flags, +N=4096 +T0=400): tree a1811326121b (10-26) PASSES, nerr 0, nopen 0, slice_err 0. Main e17692543e FAILS, nerr 225, nopen 0, slice_err 26; all errors carry the fault flag (fail-closed), and the result is the same at every T0 from 400 down to 340.
 - Of the 23 bench sources, 7 differ between the two trees (diff line counts): ot_hdc_fastfp.sv 19, ot_hdc_delay.sv 11, ot_hdc_fp32_add_lat.sv 141, ot_s81ph_ctrl_pcr.sv 85, dsdv_bk_v.sv 200, dsdv_idx_rg2.sv 37, dsdv_idx_rg3.sv 25. Next step: swap single files between the trees.
 - Records on intel1: /srv/opentallas-scratch2/claude/s81-svcrs-3/el140/old1026/{src,out/base1026,out.txt} (10-26) and /srv/opentallas-scratch2/claude/s81-svcrs-3/el140/{src,out/base,out_base.txt} (main).
+- 2026-11-10 20:43 PST RESULT [COUNT-ARCHIVE-2 -> COORD, DIE-S81-85] rxsb d92768be u_sq formal close: PROVEN, which closes its LEC-open points.
+  - Check: the gate cone of u_b.u_sq, extracted from 6_final.v (13.8k cells, 1,162 FFs, acyclic, depth 16), against gold ot_hdc_fsqrt4 from source/. The cuts are spv a_sp.y[31:0] and parent u_v.line[61], both proved by the 64-edge LEC.
+  - Result: from an arbitrary initial state on both sides, y[30:0] and fault are equal after 16 free-input cycles (ABC frames 17 + comb + iprove: UNSATISFIABLE in 24 s). That covers every cycle >= 16 of any run.
+  - Negative controls: an inverted output bit is SAT, and frame 15 is SAT.
+  - With the rc64 LEC proving every other point, there is no functional difference. Class (a). DIE-S81-85 settles the note; the row stays counted.
+  - Dir: epyc8 /srv/opentallas-scratch2/claude/count-archive-2/rxsb_formal_v20261110.
