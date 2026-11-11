@@ -499,10 +499,50 @@ def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
             if regs is not None:
                 L = sum(abs(q[0] - p[0]) + abs(q[1] - p[1]) for p, q in zip(poly, poly[1:]))
                 best = (L, "astar", poly, regs, n_min)
+    if (best is None or len(best[3]) > n_old) and n_old:
+        bb = place_regs_bbox(R, a, b, n_old, reach)
+        if bb is not None:
+            regs = bb
+            pts = [tuple(a)] + list(regs) + [tuple(b)]
+            L = sum(abs(q[0] - p[0]) + abs(q[1] - p[1]) for p, q in zip(pts, pts[1:]))
+            return dict(length_um=r3(L), kind="bbox", regs=regs, n_min=n_old)
     if best is None:
         return None
     L, kind, poly, regs, n_min = best
     return dict(length_um=r3(L + la + lb), kind=kind, regs=regs, n_min=n_min)
+
+
+def place_regs_bbox(R, a, b, n_old, reach):
+    """CPL-S81-LEAF 11-11: n_old registers on FREE lattice points anywhere in the a-b bounding box (any monotone
+    staircase, not only the two L routes), every pin-to-reg / reg-to-reg Manhattan hop <= reach.  The two-L search
+    alone could not re-site 312 stations of 39 S81 leaf types even on their UNMOVED base geometry (base hops all
+    <= 405 um, base regs off both L routes), which core_place reported as need_more_regs.  Greedy per register:
+    the free point within reach of the previous point (and able to finish: Manhattan to b <= (left + 1) x reach)
+    that minimises max(hop, rest / (left + 1)), so the hops come out balanced.  Returns [(x, y)] or None."""
+    x0, x1 = sorted((a[0], b[0])); y0, y1 = sorted((a[1], b[1]))
+    xs = [sn(x0) + k * G for k in range(int((x1 - x0) / G) + 2)]
+    ys = [sn(y0) + k * G for k in range(int((y1 - y0) / G) + 2)]
+    free = [(x, y) for x in xs if x0 - G <= x <= x1 + G for y in ys if y0 - G <= y <= y1 + G and R.free(x, y)]
+    if not free:
+        return None
+    man = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])  # noqa: E731
+    prev, regs = tuple(a), []
+    for k in range(n_old):
+        left = n_old - k - 1
+        best = None
+        for q in free:
+            h, rest = man(prev, q), man(q, b)
+            if h > reach + 1e-6 or rest > (left + 1) * reach + 1e-6 or q in regs:
+                continue
+            sc = max(h, rest / (left + 1))
+            if best is None or sc < best[0] - 1e-9:
+                best = (sc, q)
+        if best is None:
+            return None
+        regs.append(best[1]); prev = best[1]
+    if man(prev, b) > reach + 1e-6:
+        return None
+    return [(r3(x), r3(y)) for x, y in regs]
 
 
 # ----------------------------------------------------------------------------------------------- driver
