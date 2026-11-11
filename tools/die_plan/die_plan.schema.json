@@ -1253,6 +1253,11 @@
           "lsb_high"
          ]
         },
+        "hold_hb4": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 8
+        },
         "note": {
          "type": "string"
         }

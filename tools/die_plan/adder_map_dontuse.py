@@ -81,7 +81,22 @@ def rewrite_map(text, pats):
 
 def netlist_cells(text):
     """cell types instantiated in a flat Yosys netlist"""
-    return re.findall(r"^\s*([A-Za-z_][A-Za-z0-9_]*_ASAP7_[A-Za-z0-9_]+)\s+\S+\s*\(", text, re.M)
+    return [c for c, _i in netlist_insts(text)]
+
+
+def netlist_insts(text):
+    """(cell type, instance name) of every platform cell instance in a flat Yosys netlist"""
+    return re.findall(r"^\s*([A-Za-z_][A-Za-z0-9_]*_ASAP7_[A-Za-z0-9_]+)\s+(\S+)\s*\(", text, re.M)
+
+
+# HOLDFORM-1 (DIE-QC-97 11-10): the plan-declared structural hold pads (gen_rtl.ot_dp_hd, instance u_hdly_<bus>) are
+# deliberate HB4xp67 instances, kept dont_touch by the kit (gen_phys.hold_pad_dont_touch_tcl) like the in-flow HB4
+# hold repair cells; only that cell inside a u_hdly_ instance is exempt, every other DONT_USE cell still FAILs.
+HOLD_PAD_CELL_RE = re.compile(r"HB4xp67_ASAP7_75t_[RLS]+")
+
+
+def is_hold_pad(cell, inst):
+    return bool(HOLD_PAD_CELL_RE.fullmatch(cell)) and "u_hdly_" in inst
 
 
 def cmd_gen(a):
@@ -131,17 +146,22 @@ def cmd_check(a):
     if not n.is_file():
         print(f"DONT_USE_CHECK ERROR missing netlist {n}")
         return 2
-    cnt = {}
-    for c in netlist_cells(n.read_text()):
+    cnt, pads = {}, 0
+    for c, inst in netlist_insts(n.read_text()):
         if is_dont_use(c, pats):
+            if is_hold_pad(c, inst):
+                pads += 1
+                continue
             cnt[c] = cnt.get(c, 0) + 1
     if a.report:
         Path(a.report).write_text(json.dumps(dict(netlist=str(n), dont_use=pats, dont_use_cells=cnt,
+                                                  hold_pad_cells=pads,
                                                   verdict="FAIL" if cnt else "PASS"), indent=1) + "\n")
     if cnt:
         print(f"DONT_USE_CHECK FAIL {n.name}: {sum(cnt.values())} DONT_USE instances {cnt}")
         return 1
-    print(f"DONT_USE_CHECK PASS {n.name}: no DONT_USE cell ({' '.join(pats)})")
+    print(f"DONT_USE_CHECK PASS {n.name}: no DONT_USE cell ({' '.join(pats)})"
+          + (f"; {pads} declared HOLDFORM-1 hold-pad HB4 cells (u_hdly_*)" if pads else ""))
     return 0
 
 

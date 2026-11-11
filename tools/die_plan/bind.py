@@ -3072,6 +3072,9 @@ class Binder:
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
         if (self.plan.get("clock") or {}).get("ft_hop_lockup") and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
+        import gen_rtl
+        if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
+            cells += "\n" + gen_rtl.HOLD_CELLS
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
@@ -3546,17 +3549,26 @@ class Binder:
                             f"the boundary register (epoch [{W}] unread: no flop here)")
                 continue
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
+            din, dea = f"{n}[{W - 1}:0]", f"{n}[{W}]"
+            import gen_rtl
+            nhb = gen_rtl.hold_hb4(t, n)
+            if nhb:
+                # HOLDFORM-1 (gen_rtl.hold_pad): data + epoch through N kept HB4 per bit into the in-boundary flop
+                hd, hb, w = gen_rtl.hold_pad(n, f"{n}[{W}:0]", W + 1, nhb)
+                decl += hd
+                body += hb
+                din, dea = f"{w}[{W - 1}:0]", f"{w}[{W}]"
             pad = lane_pad(L)
             if pad > 0:
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
                             f".q({n}_b), .eq({n}_eb));")
                 body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
                             f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
                         f".q({n}_q), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
         drv_w = {}
