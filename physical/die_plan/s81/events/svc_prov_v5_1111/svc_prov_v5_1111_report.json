@@ -1,0 +1,15 @@
+{
+ "event": "SVCPROV-V5-1111",
+ "base_plan_sha256": "66466e86ebcd7450a7db52c3b8ae807926721845a2e64583dadc4c41da5b2a7f",
+ "output_plan_sha256": "5d1555dc7d7466d0b5abac28828c2fadca392b2fbcf80ba3f9857636d4a90592",
+ "recipe": "v5 commit 2096599e17: svc_prov_event_1109.py --lo-pack b --rdpipe (pin model v5) + step 3",
+ "recipe_blobs": {
+  "svc_prov_event_1109.py": "f7aa006e76e7ebcb2b431f755087c4c7ab5f6b6a",
+  "svc_split_event_1109.py": "4b7fd0ae0e2dd4320fddbd440822ac72c8547f72",
+  "svc_prov_meas_1109.json": "1e14dc19eaa1185e62838a744f3ccd4ab60941f1",
+  "svc_prov_step3_ft_1109.py": "81f3c1d21c9b4c9f6f95ff6f1e68e2c93ab7a95c"
+ },
+ "feed_taps_moved": 360,
+ "grow_um": 77.76,
+ "cut_y_um": 4104.0
+}
