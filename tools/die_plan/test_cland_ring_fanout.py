@@ -193,3 +193,49 @@ def test_rtl_module_has_rstrep():
     import pathlib
     src = (pathlib.Path(__file__).resolve().parents[2] / "rtl/common/ot_dp_clk_landing_ca.sv").read_text()
     assert "module ot_dp_landing_relay_rep" in src and "parameter int RSTREP = 0" in src and "rst_xn" in src
+
+
+def test_place_copies_helper():
+    """PLACEREP-1: needs a die fanout bound and more than one read chunk (64-bit chunks, or the wreg READ_CHUNK)."""
+    from clock_landings import ring_place_copies
+    c = {"landing_ring_fanout_max": 32}
+    assert not ring_place_copies({}, 549) and not ring_place_copies(None, 549)
+    assert not ring_place_copies({"landing_ring_fanout_max": 0}, 549)
+    assert ring_place_copies(c, 549) and ring_place_copies(c, 65)          # 9 / 2 chunks
+    assert not ring_place_copies(c, 64) and not ring_place_copies(c, 5)    # one chunk
+    assert ring_place_copies(c, 64, read_chunk=32) and not ring_place_copies(c, 64, read_chunk=64)
+
+
+def test_place_copies_follow_the_bound(monkeypatch):
+    """Under landing_ring_fanout_max a wide strap-form ring is instantiated with .PLACEREP(1), 0 added cycles; a one-chunk ring
+    and an absent / 0 bound keep byte-same RTL."""
+    import clock_landings
+    p, t = strap_vehicle()
+    _wreg(p)
+    base = Landings(p, t).type_rtl("B", B_BODY)
+    assert "PLACEREP" not in base
+    p0, t0 = strap_vehicle()
+    _wreg(p0)
+    p0.setdefault("clock", {})["landing_ring_fanout_max"] = 0
+    assert Landings(p0, t0).type_rtl("B", B_BODY) == base
+    p1, t1 = strap_vehicle()                      # 5-bit bundle: one read chunk, no copy
+    _wreg(p1)
+    p1.setdefault("clock", {})["landing_ring_fanout_max"] = 32
+    assert "PLACEREP" not in Landings(p1, t1).type_rtl("B", B_BODY)
+    monkeypatch.setattr(clock_landings, "ring_place_copies", lambda *a, **k: True)   # as a wide ring
+    p2, t2 = strap_vehicle()
+    _wreg(p2)
+    p2.setdefault("clock", {})["landing_ring_fanout_max"] = 32
+    lg = Landings(p2, t2)
+    rtl = lg.type_rtl("B", B_BODY)
+    assert ".PLACEREP(1)) u_cland_y" in rtl and rtl.count(".PLACEREP(1)") == rtl.count("ot_dp_clk_landing_cas #(")
+    r = lg.reset_placements["B"]["y"]
+    assert r["ring_place_copies"] is True and r["ring_place_copies_added_cycles"] == 0
+    assert CAB.strap_ties(t2["count_aligned"], p2) == CAB.strap_ties(t["count_aligned"], p)
+
+
+def test_rtl_module_has_placerep():
+    import pathlib
+    src = (pathlib.Path(__file__).resolve().parents[2] / "rtl/common/ot_dp_clk_landing_ca.sv").read_text()
+    assert "module ot_meso_place_rep" in src and "parameter bit PLACEREP = 0" in src
+    assert src.count(".PLACEREP(PLACEREP)") == 1 and ".place(pl_c)" in src and ".place(RP0[AW-1:0])" not in src

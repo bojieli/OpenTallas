@@ -8,6 +8,7 @@
 //   (1) ring order: q identical on gold/mid/cand; the sender count in q[31:0] advances by exactly 1 per clk while ready;
 //   (2) guards: r_glo_ok / r_ghi_ok of cand == gold == mid on EVERY edge, incl. fault epochs and window-edge K (0 added
 //       cycles; the falling-edge sample instant, hence the (GUARD + 0.5) T window, is unchanged);
+//   (3b) cand + PLACEREP (READ_CHUNK 16, 4 placement copies) == cand on every signal, every edge;
 //   (3) cand vs mid: q, rv, lap_ok, guards, ready, fault identical every edge (GUARD_REG adds 0 cycles to STATUS_REG);
 //   (4) cand vs gold: rv/lap_ok = gold one clk later (the declared STATUS_REG +1 status cycle); ready/fault identical on
 //       healthy centre-K epochs, else cand fault/ready = gold now or gold one clk ago.
@@ -44,6 +45,11 @@ module tb_guard_reg;
             .fclk(fclk),.t_rst_n(t_rst_n),.clk(clk),.rst_n(r_rst_n),.rst_xn(1'b1),.strap_k(k),.d(data),.q(q1),.ready(rdy1),.fault(flt1));
         ot_dp_clk_landing_cas #(.W(64),.DEPTH(D),.GUARD_HI(D),.CONTROL_STATUS_COPY(c),.WREG(r),.WFALL(f),.STATUS_REG(1),.GUARD_REG(1)) u_cand (
             .fclk(fclk),.t_rst_n(t_rst_n),.clk(clk),.rst_n(r_rst_n),.rst_xn(1'b1),.strap_k(k),.d(data),.q(q2),.ready(rdy2),.fault(flt2));
+        // combination with PLACEREP-1 (DIE-QC-97): 4 read chunks of 16 bits, each with its own placement copy
+        wire [63:0] q3; wire rdy3,flt3;
+        ot_dp_clk_landing_cas #(.W(64),.DEPTH(D),.GUARD_HI(D),.CONTROL_STATUS_COPY(c),.WREG(r),.WFALL(f),.STATUS_REG(1),.GUARD_REG(1),
+                                .READ_CHUNK(16),.PLACEREP(1)) u_cpl (
+            .fclk(fclk),.t_rst_n(t_rst_n),.clk(clk),.rst_n(r_rst_n),.rst_xn(1'b1),.strap_k(k),.d(data),.q(q3),.ready(rdy3),.fault(flt3));
         integer ready_n=0, trips=0, faults=0, ordered=0;
         logic flt0_d=0, rdy0_d=0, rv0_d=0, lap0_d=1, rdy2_d=0;
         logic [31:0] q2_d=0;
@@ -61,6 +67,10 @@ module tb_guard_reg;
                     $display("GR_MISMATCH guard D=%0d c=%0d r=%0d f=%0d K=%0d phase=%0d epoch=%0d glo %b/%b/%b ghi %b/%b/%b",D,c,r,f,KB,phase,epoch,
                              u_gold.glo_ok,u_mid.glo_ok,u_cand.glo_ok,u_gold.ghi_ok,u_mid.ghi_ok,u_cand.ghi_ok); fails=fails+1; end
                 if(!u_gold.glo_ok || !u_gold.ghi_ok) begin trips=trips+1; guard_trips=guard_trips+1; end
+                // (3b) GUARD_REG + PLACEREP == GUARD_REG, every signal, every epoch
+                if(q3!==q2 || rdy3!==rdy2 || flt3!==flt2 || u_cpl.rv!==u_cand.rv || u_cpl.lap_ok!==u_cand.lap_ok ||
+                   u_cpl.glo_ok!==u_cand.glo_ok || u_cpl.ghi_ok!==u_cand.ghi_ok) begin
+                    $display("GR_MISMATCH placerep D=%0d c=%0d r=%0d f=%0d K=%0d phase=%0d epoch=%0d",D,c,r,f,KB,phase,epoch); fails=fails+1; end
                 // (3) cand == mid, every signal, every epoch
                 if(u_mid.rv!==u_cand.rv || u_mid.lap_ok!==u_cand.lap_ok || rdy1!==rdy2 || flt1!==flt2) begin
                     $display("GR_MISMATCH mid D=%0d c=%0d r=%0d f=%0d K=%0d phase=%0d epoch=%0d rv %b/%b lap %b/%b rdy %b/%b flt %b/%b",D,c,r,f,KB,phase,epoch,
