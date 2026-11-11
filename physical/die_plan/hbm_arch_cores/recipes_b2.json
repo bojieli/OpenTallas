@@ -1596,7 +1596,7 @@
       "ot_sram_1r1w_1024x256_m2_r2c2"
     ],
     "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): plan hnx_vms_bank_q0_faces__vecd4ae (3 SRAM clk_macro0..2) = the as-built native q0 faces bank; generated pass-through wrapper | member recipe: d4g as-built die_r18h5.v instance vmb_NW0 (module hfd_vms_bank_native_q0_faces); files = closure of hfd_vms_bank_native_q0_faces at d34578d6f",
-    "source_commit": "d34578d6f",
+    "source_commit": "37893dfc1457fa6fa3f31aba0e161cad6f7e1ae8",
     "read_at_commit": true,
     "asbuilt_inst": "vmb_NW0",
     "alias_of": "hfd_vms_bank_native_q0_faces"
