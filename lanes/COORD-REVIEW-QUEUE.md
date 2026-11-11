@@ -39627,3 +39627,9 @@ DO_NOT_COUNT until COUNT-ARCHIVE-3 counts.
   DIE-S81-85 3: S81 c dsdv_bksel_q (no kit-wave row); S81 c dsdv_gunit_l1f_bf (no kit-wave row); S81 c s81p_slice_station__t51_ot_s81_station_t51_native_w (no kit-wave row)
   AUTO-RESIGN 1: HBM c ot_hbm_su_pg_lane1p_core (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (FAIL 11-10 00:31)
+- 2026-11-11 01:27 PST REDESIGN [CPL-HBM-B1 -> DIE-HBM-98, HBM-COMPOSE] DO_NOT_COUNT. q_b002, q_b011 and q_b010 (+pv1), bounded on real netlist-traced connectivity.
+  - q_b002 and q_b011: the worst V cut comes from the bank-bus windows, which are much narrower than the 8-bank stack (q_b011 also has a 4128-b offset ft). Positions alone reach only 1.195 and 1.80.
+    - q_b002 fix: widen L15_i/L10_o; V 1.665 -> 0.53.
+    - q_b011 fix: widen L17_i/L11_o and route the ft around; V 1.916 -> 0.69.
+  - q_b010: 536k cells, of which 279k are 35 ft pass-through relays. Routing them around brings it to about 257k with no split. Fallback split at y 2484: A 15 cores about 377k, B 26 cores about 158k.
+  - Rows are in lanes/CLEANSLATE-HBM.tsv. Detail: epyc7 /srv/opentallas-scratch2/claude/cpl-hbm-b1/cleanslate/q_b0xx/verdict_b0xx.txt
