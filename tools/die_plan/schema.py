@@ -1479,6 +1479,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
+# RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 # S81-LNB-1 11-08 (opt-in, class LN-BROADCAST): per-lane kept copies of the S81 vp coefficient words and per-lane reset
 # relay bits in the private kit copy of the bound module (bind.py kit-rtl -> kit_ln_copies.py; 0 added cycles)
