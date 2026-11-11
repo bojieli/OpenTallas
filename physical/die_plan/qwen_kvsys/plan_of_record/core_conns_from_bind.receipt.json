@@ -1,0 +1,73 @@
+{
+ "plan": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "base": null,
+ "types": {
+  "kv3_hg_v1p2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p2/attempt_4/gen/kv3_hg_v1p2/rtl/kv3_hg_v1p2_bound.sv",
+   "cores": 20,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "kv3_hg_v1p3": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p3/attempt_4/gen/kv3_hg_v1p3/rtl/kv3_hg_v1p3_bound.sv",
+   "cores": 20,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "kv3_hg_v1p4": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p4/attempt_4/gen/kv3_hg_v1p4/rtl/kv3_hg_v1p4_bound.sv",
+   "cores": 20,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "kv3_hg_v1p5": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p5/attempt_4/gen/kv3_hg_v1p5/rtl/kv3_hg_v1p5_bound.sv",
+   "cores": 20,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "kv3_hg_v1p6": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p6/attempt_4/gen/kv3_hg_v1p6/rtl/kv3_hg_v1p6_bound.sv",
+   "cores": 20,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "kv3_pv_v1n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v1n/attempt_11/gen/kv3_pv_v1n/rtl/kv3_pv_v1n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 8096
+  },
+  "kv3_pv_v2n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v2n/attempt_12/gen/kv3_pv_v2n/rtl/kv3_pv_v2n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 10144
+  },
+  "kv3_pv_v3n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v3n/attempt_11/gen/kv3_pv_v3n/rtl/kv3_pv_v3n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 8096
+  },
+  "kv3_pv_v4n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v4n/attempt_15/gen/kv3_pv_v4n/rtl/kv3_pv_v4n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 10144
+  },
+  "kv3_pv_v5n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v5n/attempt_13/gen/kv3_pv_v5n/rtl/kv3_pv_v5n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 8096
+  },
+  "kv3_pv_v6n": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v6n/attempt_18/gen/kv3_pv_v6n/rtl/kv3_pv_v6n_bound.sv",
+   "cores": 20,
+   "cores_wired": 16,
+   "wiring_paths": 10144
+  }
+ },
+ "note": "PLAN-ROUTE-1 11-10 (COORD): types route_supply had on the centroid FALLBACK, traced with tools/die_plan/core_conns_batch.py from their bound netlists; {} = a core with no pure-wiring partner at the bound level (route_supply glue escape). DO_NOT_COUNT."
+}

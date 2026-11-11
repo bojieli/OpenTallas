@@ -744,7 +744,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             st_pairs.add((A, bus_, Bi))
             # the capture end lists A as its destination on some input bus
             for bb, dd in ((cc or {}).get(Bi, {}) or {}).items():
-                if ("core:" + A) in dd:
+                if _names_core(dd, A):
                     st_rev[(Bi, bb)].add((A, Bi))
     rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
     g.cur = "core"
@@ -794,10 +794,12 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                         break
                 for d in dl:
                     k, _, v = str(d).partition(":")
+                    if k == "core" and v not in cen and v.rpartition(".")[0] in cen:
+                        v = v.rpartition(".")[0]    # core_conns_from_bind form core:<inst>.<port>
                     if k == "core" and v in cen:
                         if (inst, bus, v) in st_pairs or (v, inst) in st_rev.get((inst, bus), ()):
                             continue            # this link is routed by its internal_stations chain
-                        mate = [bb for bb, dd in (cc.get(v, {}) or {}).items() if ("core:" + inst) in dd]
+                        mate = [bb for bb, dd in (cc.get(v, {}) or {}).items() if _names_core(dd, inst)]
                         two_sided &= bool(mate)
                         pts.append(bus_cen[v][mate[0]] if mate and mate[0] in bus_cen.get(v, {}) else cen[v])
                     elif k == "bus" and v in bus_pt:
@@ -1141,6 +1143,12 @@ def load_conns(die_dir, path=None, plan_dir=None, ref_dirs=()):
 
 
 _CONNS_SRC = {}
+
+
+def _names_core(dests, inst):
+    """a core_conns destination list names core `inst` (core:<inst> or core_conns_from_bind's core:<inst>.<port>)."""
+    c = "core:" + inst
+    return any(d == c or (str(d).startswith(c + ".") and "." not in str(d)[len(c) + 1:]) for d in dests)
 
 
 def _nf(r, d):

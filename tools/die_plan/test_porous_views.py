@@ -102,7 +102,7 @@ class T(unittest.TestCase):
         rc = self.td / "r.json"
         rc.write_text(json.dumps(r))
         data = self.td / "data"
-        row = PV.add("s81", "cx", self.td / "out.lef", rc, data=data)
+        row = PV.add("s81", "cx", self.td / "out.lef", rc, data=data, allow_unprobed=True)
         PV.DATA, PV._map = data, None
         return row
 
@@ -150,6 +150,130 @@ class T(unittest.TestCase):
         with self.assertRaises(ValueError):
             PV.overlay_gen_phys(base.replace(PV._HOOK_A, ""))
 
+    # KW44-DRT0073-1111 class: ot_s81sl_vs u[235] (west-edge M4 pin 0..0.084) under the bloat-1 M5 OBS 0.048..0.12 and
+    # its own bloated M4 wire from 0.06; the exact (bloat 0) metal is M4 from 0.084 and M5 0.072..0.096.
+    U235 = "RECT 0.0000 10.0000 0.0840 10.0240"
+
+    def _drt(self, m4, m5, far=True):
+        obs = "    LAYER M4 ;\n      RECT %s ;\n" % m4 + ("      RECT 1.0000 1.0000 5.0000 1.0240 ;\n" if far else "")
+        obs += "    LAYER M5 ;\n      RECT %s ;\n" % m5
+        return detail().replace("RECT 0.0000 10.0000 0.1000 10.0240", self.U235).split("  OBS")[0] + \
+            "  OBS\n    LAYER M1 ;\n      RECT 0.0000 0.0000 20.0000 20.0000 ;\n" + obs + "  END\nEND cx\nEND LIBRARY\n"
+
+    def _drt_case(self, exact_m4, exact_m5):
+        self.base.write_text(BASE.replace("RECT 0.0000 10.0000 0.1000 10.0240", self.U235).replace(
+            "  OBS\n", "  OBS\n    LAYER M3 ;\n      RECT 0.0000 0.0000 20.0000 20.0000 ;\n"))   # kit M3 blanket
+        bloat = self._drt("0.0600 9.9760 0.2290 10.0480", "0.0480 9.6970 0.1200 10.3030")
+        ex = self.td / "exact.lef"
+        ex.write_text(self._drt(exact_m4, exact_m5))
+        return bloat, ex
+
+    def test_drt0073_pin_without_access_is_found(self):
+        bloat, _ = self._drt_case("0.0840 10.0000 0.2050 10.0240", "0.0720 9.7210 0.0960 10.2790")
+        r = self.build(bloat)
+        self.assertEqual(r["pin_access"]["without"], ["a"])                # the static model sees the u[235] class
+
+    def _probe_dir(self, sha, log):
+        d = self.td / "probe"
+        d.mkdir(exist_ok=True)
+        (d / "probe.json").write_text(json.dumps(dict(lef_sha256=sha, phase_nm=[12, 12])))
+        (d / "probe.log").write_text(log)
+        (d / "probe.def").write_text("DESIGN pv_probe ;\n")
+        return d
+
+    def test_add_needs_a_passing_probe_of_this_lef(self):
+        r = self.build(detail())
+        rc = self.td / "r.json"
+        rc.write_text(json.dumps(r))
+        data = self.td / "data"
+        with self.assertRaises(SystemExit):                                   # no probe
+            PV.add("s81", "cx", self.td / "out.lef", rc, data=data)
+        bad = "[ERROR DRT-0073] No access point for u0/a (cx).\nError: probe.tcl, 5 DRT-0073\n"
+        with self.assertRaises(SystemExit):                                   # probe failed
+            PV.add("s81", "cx", self.td / "out.lef", rc, data=data, probe_dir=self._probe_dir(r["out_sha256"], bad))
+        with self.assertRaises(SystemExit):                                   # probe of another LEF
+            PV.add("s81", "cx", self.td / "out.lef", rc, data=data,
+                   probe_dir=self._probe_dir("0" * 64, "PV_PROBE_PIN_ACCESS_DONE\n"))
+        row = PV.add("s81", "cx", self.td / "out.lef", rc, data=data,
+                     probe_dir=self._probe_dir(r["out_sha256"], "[INFO DRT-0166] Complete pin access.\nPV_PROBE_PIN_ACCESS_DONE\n"))
+        self.assertEqual(row["pin_access_probe"]["verdict"], "PASS")
+
+    def test_probe_def_puts_pins_on_tracks(self):
+        lines = BASE.splitlines(keepends=True)
+        self.assertEqual(PV.probe_phase(lines), (12, 44))                     # pin a y centre 10.012 um: 20160 + 44 + 10012 = 24 + 629 * 48
+        d, macro = PV.probe_def(lines)
+        self.assertEqual(macro, "cx")
+        self.assertIn("- u0 cx + FIXED ( 20172 20204 ) N ;", d)
+        self.assertIn("- n0_0 ( u0 a ) + USE SIGNAL ;", d)
+        self.assertNotIn("VDD", d.split("NETS")[1])
+
+    def test_drt0073_window_restores_access_with_exact_metal_only(self):
+        bloat, ex = self._drt_case("0.0840 10.0000 0.2050 10.0240", "0.0720 9.7210 0.0960 10.2790")
+        r = self.build(bloat, exact=ex)
+        self.assertTrue(r["check_ok"], r["problems"])
+        self.assertEqual(r["pin_access"]["without_count"], 0)
+        obs = (self.td / "out.lef").read_text().split("  OBS")[1]
+        self.assertIn("RECT 0.0720 9.8850 0.0960 10.1390", obs)          # real M5, exact, clipped to the M5 window
+        self.assertIn("RECT 0.0840 10.0000 0.1950 10.0240", obs)         # real M4 wire, exact, clipped to the M4 window
+        self.assertIn("RECT 0.0480 9.6970 0.1200 9.8850", obs)           # bloat outside the window stays
+        self.assertIn("LAYER M4 ;", obs)
+        m4 = obs.split("LAYER M4 ;")[1].split("LAYER")[0]
+        self.assertIn("RECT 0.0000 10.0000 0.0840 10.0240", m4)          # pin cover: the stub touches the pin -> OBS over it
+        self.assertEqual(r["pin_cover"], {"M4": 1})
+        self.assertNotIn("RECT 0.0480 9.6970 0.1200 10.3030", obs)       # the bloat over the landing is gone
+        self.assertIn("RECT 1.0000 1.0000 5.0000 1.0240", obs)           # metal outside every window untouched
+        self.assertEqual((self.td / "out.lef").read_text().split("  OBS")[0], self.base.read_text().split("  OBS")[0])
+
+    def test_drt0073_real_metal_blocking_still_fails(self):
+        bloat, ex = self._drt_case("0.0300 9.9900 0.2050 10.0340", "0.0000 9.7000 0.2000 10.3000")
+        r = self.build(bloat, exact=ex)
+        self.assertEqual(r["pin_access"]["without"], ["a"])
+        self.assertEqual(r["kit_fallback"]["pins"], ["a"])                   # its windows keep the kit LEF OBS
+        obs = (self.td / "out.lef").read_text().split("  OBS")[1]
+        self.assertIn("RECT 0.0000 9.8850 0.1990 10.1390", obs)          # a window never removes real metal
+
+    def test_parse_tech_matches_builtin(self):
+        t = self.td / "tech.lef"
+        t.write_text("""LAYER M4
+  TYPE ROUTING ;
+  DIRECTION HORIZONTAL ;
+ PITCH 0.048 ;
+ WIDTH 0.024 ;
+ SPACING 0.024 ;
+ PROPERTY LEF58_SPACING "
+ SPACING 0.024 ENDOFLINE 0.025 WITHIN 0.04 ENDTOEND 0.04 ; " ;
+  SPACINGTABLE
+ PARALLELRUNLENGTH 0.0
+ WIDTH 0.0 0.024
+ WIDTH 0.025 0.072 ;
+END M4
+
+LAYER M5
+  TYPE ROUTING ;
+ PITCH 0.048 ;
+ WIDTH 0.024 ;
+ SPACING 0.024 ;
+ " SPACING 0.024 ENDOFLINE 0.025 WITHIN 0.04 ENDTOEND 0.04 ; " ;
+  SPACINGTABLE
+ PARALLELRUNLENGTH 0.0
+ WIDTH 0.0 0.024
+ WIDTH 0.025 0.072 ;
+END M5
+
+VIA VIA45 Default
+  LAYER M4 ;
+ RECT -0.023 -0.012 0.023 0.012 ;
+  LAYER M5 ;
+ RECT -0.012 -0.023 0.012 0.023 ;
+  LAYER V4 ;
+ RECT -0.012 -0.012 0.012 0.012 ;
+END VIA45
+""")
+        p = PV.parse_tech(t)
+        for l in ("M4", "M5"):
+            self.assertEqual(p["layers"][l], PV.TECH_ASAP7["layers"][l])
+        self.assertEqual(p["vias"][("M4", "M5")], PV.TECH_ASAP7["vias"][("M4", "M5")])
+
     def test_shipped_map_rows_are_consistent(self):
         data = Path(__file__).resolve().parent / "porous_views_data"
         m = json.loads((data / "map.json").read_text()) if (data / "map.json").is_file() else {}
@@ -161,6 +285,7 @@ class T(unittest.TestCase):
             r = json.loads(rc)
             self.assertTrue(r["check_ok"], name)
             self.assertEqual(r["base_sha256"], row["base_sha256"], name)
+            self.assertEqual((row.get("pin_access_probe") or {}).get("verdict"), "PASS", name)   # KW44-DRT0073 gate
 
 
 if __name__ == "__main__":

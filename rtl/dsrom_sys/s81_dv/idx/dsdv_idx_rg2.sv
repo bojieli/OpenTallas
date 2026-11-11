@@ -1073,7 +1073,12 @@ endmodule
 // 2 edges a hop, term padded 7 x hid[2:0]); c_sum / c_fault keep the same age; ky / q terminal outputs (unused) are 56
 // edges earlier.  Without the define the netlist is unchanged.
 // =====================================================================================================================
-module dsdv_idx_rg2_chunk (
+module dsdv_idx_rg2_chunk #(
+    // S81-SVCRS-3 11-10: PR = IRG pin-register stages (ot_s81_svc_idx_hslice_fp PR; +2 edges a slice, +16 the chunk).
+    // Only the S81 svc copy (OT_IDX_HSLICE_FASTPAD + OT_IDX_HSLICE_FP_CS) has them; any other form with PR != 0 is a
+    // build error.  Under OT_IDX_HSLICE_HARD the slice is the physical box and carries them itself.
+    parameter integer PR = 0
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [7:0]    hb,
@@ -1087,6 +1092,12 @@ module dsdv_idx_rg2_chunk (
     output reg           c_fault
 );
     localparam integer NB = 4, FPL = 7, FML = 5, QL = 5, HC = 8, KW = NB * 136;
+`ifndef OT_IDX_HSLICE_FP_CS
+    if (PR != 0) begin : g_pr_bad initial $fatal(1, "dsdv_idx_rg2_chunk: PR needs OT_IDX_HSLICE_FP_CS"); end
+`elsif OT_IDX_HSLICE_FASTPAD
+`else
+    if (PR != 0) begin : g_pr_bad initial $fatal(1, "dsdv_idx_rg2_chunk: PR needs OT_IDX_HSLICE_FASTPAD"); end
+`endif
 `ifdef OT_IDX_HSLICE_FASTPAD
     // early-load guard (fail-closed, die-s81-85 11-09): the slices' q pin opens 4 edges after rr (slice relay 2 + 1,
     // then rn_p), i.e. for ql_v at this port >= 6 edges after rst_n rises; a load beat taken by rql_v (rr high) before
@@ -1122,7 +1133,7 @@ module dsdv_idx_rg2_chunk (
   `ifdef OT_IDX_HSLICE_HARD
         ot_s81_svc_idx_hslice_fp u_s (.clk(clk),
   `else
-        ot_s81_svc_idx_hslice_fp #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL)) u_s (.clk(clk),
+        ot_s81_svc_idx_hslice_fp #(.NB(NB), .FPL(FPL), .FML(FML), .QL(QL), .PR(PR)) u_s (.clk(clk),
   `endif
  `elsif OT_IDX_HSLICE_HARD
         ot_hdc_v41x_idx_hslice_fp u_s (.clk(clk),

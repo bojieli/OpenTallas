@@ -6,7 +6,9 @@ exist (physical/die_plan/{hbm,s81,qwen_kvsys}/reset_contract.json, COORD 10-27 /
 legacy generator staged them: in the 36 h to 2026-10-29 18:5x, 42 of 49 kit LEC FAILs ran at 4 edges, including HBM
 tops listed in the HBM contract (hnx r12 NOT EQUIVALENT 34 at 4 edges -> r13 EQUIVALENT under the 64-edge contract).
 
-stage(kd, module, source, required_source=False):
+stage(kd, module, source, required_source=False, plan_type=False):
+  * plan_type=True (gen_phys, RESET-SCOPE 11-10): an unlisted partition type of the die plan is covered by scope; the
+    kit copy adds it to `modules` (same proof and receipt), so a new type never LECs at 4 edges for want of a list edit;
   * required_source=True refuses a missing canonical file; it grants no module/reset authority;
   * otherwise no contract file, or `module` not listed in it (exact, or RESET-KEY 11-09: a landing clone
     <type>__cl<hex> through its base type's entry, lec.reset_contract_member) -> None, the kit is untouched (4-edge LEC as before);
@@ -45,7 +47,7 @@ def _sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def stage(kd, module, source, *, required_source=False):
+def stage(kd, module, source, *, required_source=False, plan_type=False):
     source = Path(source)
     if not source.is_file():
         if required_source:
@@ -63,9 +65,30 @@ def stage(kd, module, source, *, required_source=False):
         entry, how = lec.reset_contract_member(module, c.get("modules", []))
     except ValueError as e:
         raise SystemExit(f"{module}: {e}")
+    scoped = None
     if entry is None:
-        return None
-    report = lec.reset_contract_gate(source.parent, module, environ={"OT_LEC_RESET_CONTRACT": str(source)})
+        if not plan_type:
+            return None
+        # RESET-SCOPE 11-10 (KV kv3_hg 2b151cb27bf2 LEC NOT EQUIVALENT 1604 at 4 edges): a partition TYPE of a die
+        # plan takes its reset from the die's proven generator like every core of that die (DIE-QC-59), so the die
+        # contract covers it by scope, not by a hand-kept module list that lags every new type.  The kit copy lists
+        # the type (same proof, same receipt sha256); the canonical file is untouched.
+        scoped = dict(c, modules=list(c.get("modules", [])) + [module],
+                      types_scope=f"plan partition type {module}: covered by the die contract scope (RESET-SCOPE 11-10)")
+        entry, how = module, "plan_type"
+    env = {"OT_LEC_RESET_CONTRACT": str(source)}
+    if scoped is not None:
+        import tempfile
+        tmpd = Path(tempfile.mkdtemp(prefix="rcscope_"))
+        (tmpd / "reset_contract.json").write_text(json.dumps(scoped, indent=1) + "\n")
+        (tmpd / Path(c["proof"]["receipt"])).parent.mkdir(parents=True, exist_ok=True)
+        rr = Path(c["proof"]["receipt"])
+        if not (rr.is_absolute() or ".." in rr.parts) and (source.parent / rr).is_file():
+            shutil.copyfile(source.parent / rr, tmpd / rr)
+        env = {"OT_LEC_RESET_CONTRACT": str(tmpd / "reset_contract.json")}
+    report = lec.reset_contract_gate(source.parent, module, environ=env)
+    if scoped is not None:
+        shutil.rmtree(tmpd, ignore_errors=True)
     if report.get("refused"):
         raise SystemExit(f"{module}: die reset contract {source} refused: {report['refused']}")
     receipt = Path(c["proof"]["receipt"])
@@ -74,9 +97,13 @@ def stage(kd, module, source, *, required_source=False):
     kd = Path(kd)
     (kd / receipt).parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source.parent / receipt, kd / receipt)
-    shutil.copyfile(source, kd / "reset_contract.json")
+    if scoped is None:
+        shutil.copyfile(source, kd / "reset_contract.json")
+    else:
+        (kd / "reset_contract.json").write_text(json.dumps(scoped, indent=1) + "\n")
     verify_staged(kd, module, edges=report["used"])
     return dict(edges=report["used"], module=module, **({"listed_as": entry} if how == "clone_base" else {}),
+                **({"scope": "plan_type"} if scoped is not None else {}),
                 die=c.get("die"), contract=str(source),
                 contract_sha256=_sha(source), receipt_sha256=_sha(source.parent / receipt))
 
@@ -151,6 +178,19 @@ def _lec_used(kd):
     return None, None
 
 
+def partition_type_die(kd):
+    """RESET-SCOPE 11-10: the die contract key of a gen_phys partition TYPE kit (freeze.json
+    opentallas.partition_freeze.v1 names its die), else None.  Such a kit is covered by its die contract by scope."""
+    try:
+        fz = json.loads((Path(kd) / "freeze.json").read_text())
+    except (OSError, ValueError):
+        return None
+    if fz.get("schema") != "opentallas.partition_freeze.v1":
+        return None
+    src = die_contract(fz.get("die"))
+    return next((k for k, v in DIE_CONTRACT.items() if v == src), None) if src else None
+
+
 def audit(kd, dies=None):
     """RESET-KEY 11-09: does the kit's top resolve in a die contract (exact or clone base) while its LEC ran at the
     default (or the kit holds no contract)?  -> report dict; miss=True is a kit to re-stage and re-LEC."""
@@ -168,6 +208,11 @@ def audit(kd, dies=None):
         if entry:
             rep.update(die=d, entry=entry, how=how, edges=int(json.loads(src.read_text())["edges"]))
             break
+    if not rep["entry"]:
+        d = partition_type_die(kd)
+        src = DIE_CONTRACT.get(d) if d else None
+        if src and src.is_file() and (dies is None or d in dies):
+            rep.update(die=d, entry=top, how="plan_type", edges=int(json.loads(src.read_text())["edges"]))
     rep["kit_contract"] = (kd / "reset_contract.json").is_file()
     rep["lec_used"], rep["lec_json"] = _lec_used(kd)
     rep["miss"] = bool(rep["entry"]) and (not rep["kit_contract"] or (rep["lec_used"] is not None
@@ -182,7 +227,7 @@ def restage(kd, die):
         sys.path.insert(0, str(TOOL))
     import lec
     top = lec.parse_config(str(kd))["DESIGN_NAME"]
-    got = stage(kd, top, DIE_CONTRACT[die], required_source=True)
+    got = stage(kd, top, DIE_CONTRACT[die], required_source=True, plan_type=partition_type_die(kd) == die)
     if got is None:
         raise SystemExit(f"{kd}: {die} reset contract does not cover {top}")
     return got

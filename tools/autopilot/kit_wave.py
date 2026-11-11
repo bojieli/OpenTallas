@@ -703,6 +703,26 @@ def blocked_parents(d):
     return n
 
 
+WAVE_SRC_CHECK_DIR = "/srv/opentallas-scratch2/claude/wave-ops-1/srccheck"
+
+
+def wave_src_flag(cfg, die):
+    """WAVE-OPS-1 11-10 (COORD URGENT (a)): the FLAGS line for a die whose wave src differs from its declared commit +
+    approved overlays, read from WAVE-OPS-1's last check (srccheck/<die>.json on the hub); '' when clean, absent, for
+    another src, or unreadable.  ADVISORY (OWNER 11-03 targets, not gates)."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    try:
+        r = json.loads((Path(cfg.get("wave_src_check_dir") or WAVE_SRC_CHECK_DIR) / f"{die}.json").read_text())
+    except (OSError, ValueError):
+        return ""
+    if not isinstance(r, dict) or r.get("src") != d.get("src") or not r.get("mismatch"):
+        return ""
+    return (f"FLAGS WAVE-SRC-DRIFT {die}: src {r.get('src')} on {r.get('host')} differs from declared "
+            f"{str(r.get('declared') or '?')[:12]} + approved overlays in {r['mismatch']} file(s) "
+            f"(stale old git copies {r.get('stale', 0)}, not in git {r.get('undeclared', 0)}; checked {r.get('at', '?')}; "
+            f"ADVISORY, WAVE-OPS-1 wave_src_check)")
+
+
 NO_ROW_SOURCE = "NO-ROW-SOURCE: only_items item with no OWNERS row and no plan_core_items/allowlist row (never launches)"
 
 
@@ -1084,9 +1104,19 @@ RULES = [
     # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
     # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
+    # NETNONE_1111 (KW-FIX-44, COORD 11-11): ot-heavy containers run with --network none by default; a job that really
+    # needs the network fails on name resolution / connect: INFRA, and its class goes into /etc/ot-heavy-network-allow
+    ("INFRA", None, r"Temporary failure in name resolution|Could not resolve host|Name or service not known|"
+                    r"Network is unreachable|getaddrinfo failed|Failed to establish a new connection",
+     "infra (NETNONE: network refused in a --network none container; allowlist the class in /etc/ot-heavy-network-allow)"),
+    # RC125_1111 (KW-FIX-44, COORD 11-11 via KW-FIX-43): docker rc 125 at gen / gen_lint is the daemon refusing or failing
+    # to create the container (leaked veth device units, udevd / logind under load), never a design result
+    ("INFRA", r"^gen(?:_lint)?$", r"docker: Error response from daemon|Error response from daemon: failed to create|"
+                                  r"\brc[ =]+125\b|\bexit(?: status| code)? 125\b|returned non-zero exit status 125\b",
+     "infra (docker rc 125: container not created)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+137\b|"
+                    r"yosys elaboration failed rc[ =]+1(?:25|37)\b|"
                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
                     # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
                     # KW-FIX-43 11-09: make Error 247 = 256-9, a SIGKILL (q_su20 cgroup kill was labelled PLAN off [INFO PDN-0001])
@@ -2012,7 +2042,8 @@ def gen_hosts(cfg, die, item=None):
     low = cfg.get("_workroot_low") or {}
     imiss = cfg.get("_item_incomplete") or {}
     if item:
-        hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})] or hs
+        hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})
+              and core_module(item) not in (imiss.get(h) or {}).get(die, {})] or hs   # WAVE-OPS-1: core_kit.item_args
     return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
             or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
             or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
@@ -2082,6 +2113,8 @@ def deep_inputs(cfg, die):
     d = cfg["dies"][die]
     kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
     ps = abs_paths({k: v for k, v in kr.items() if not str(k).startswith("note")}) + abs_paths(d.get("gen_args") or [])
+    ck = d.get("core_kit") if isinstance(d.get("core_kit"), dict) else {}
+    ps += abs_paths(ck.get("args") or [])            # WAVE-OPS-1 11-10: die-wide core kit args (every core reads them)
     return list(dict.fromkeys(ps))
 
 
@@ -2104,6 +2137,14 @@ def item_inputs(cfg, die):
             if ps:
                 out.setdefault(item, [])
                 out[item] += [p for p in ps if p not in out[item]]
+    # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B svgr_top/epyc4 p6_relay/core_clock_regions.json): per-core kit args
+    # (core_kit.item_args {core module: [...]}, e.g. --clock-regions <json>) are that core's own inputs too
+    ck = d.get("core_kit") if isinstance(d.get("core_kit"), dict) else {}
+    for mod, v in ((ck.get("item_args") or {}) if isinstance(ck.get("item_args"), dict) else {}).items():
+        ps = abs_paths(v)
+        if ps:
+            out.setdefault(mod, [])
+            out[mod] += [p for p in ps if p not in out[mod]]
     return out
 
 
@@ -3878,6 +3919,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     (AP.log if AP else log)(f"KIT-WAVE NO-ROW-SOURCE {die}: {len(its)} only_items item(s) have no row "
                                             f"source (no OWNERS row, not in plan_core_items / allowlisted plan types) "
                                             f"and can never launch: " + " ".join(its[:40]) + (" ..." if len(its) > 40 else ""))
+                if picks:                                    # WAVE-OPS-1 11-10 (a): advisory, never blocks
+                    fl = wave_src_flag(cfg, die)
+                    if fl:
+                        (AP.log if AP else log)(fl)
                 n = capacity(cfg, die, st, status, hub)      # per-die share; the global caps apply below
                 if d.get("max_items_total"):           # canary: lifetime cap of wave items on this event
                     rel = set(d.get("retry") or [])

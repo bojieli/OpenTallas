@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:cf177137f5e8",
+ "die": "s81",
+ "type": "dsfd_node_LLfu",
+ "src": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1/signoff/signoff.json",
+ "tt_wns_ps": 26.89,
+ "ff_wns_ps": 3.53,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": null,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": [],
+ "pin_access": {
+  "ok": true,
+  "top_layer": "M5",
+  "signal_pins": 196,
+  "without_access": [],
+  "n_without_access": 0
+ }
+}

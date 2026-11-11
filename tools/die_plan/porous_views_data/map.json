@@ -2,15 +2,26 @@
  "dsfd_bf_front_roots.lef": {
   "base_sha256": "70aaf97be0cebc8b1a78acfe94ac364e2791a00212612f44d9190d955412667a",
   "die": "s81",
-  "file": "dsfd_bf_front_roots.lef.9d964e19a470.gz",
+  "file": "dsfd_bf_front_roots.lef.63b8a7f675ab.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_bf_front_roots",
-  "receipt": "dsfd_bf_front_roots.lef.9d964e19a470.receipt.json",
-  "receipt_sha256": "39c276eaa566239d804a24bb5446d628bf21d1ff5ca0eb09669b36c393e0909c",
-  "sha256": "9d964e19a4705aa10352f64c08c5cfa207c58d62000101d69816108eac984645",
+  "pin_access_probe": {
+   "def_sha256": "dbbd816bd6c4f972d3de0a517f12dec84b7fef0f4d6836ec744cd37f4b7efb5a",
+   "every_signal_pin_connected": true,
+   "log_sha256": "62291a3315dff20392ed22319d3112348085b4623e92341295f8971650214a90",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_bf_front_roots.lef.63b8a7f675ab.receipt.json",
+  "receipt_sha256": "8acb6670fabeb53e593f67e72b40173da553c17940d90b0351a6f77891ab6b7c",
+  "sha256": "63b8a7f675ab54f428b28dac741c6a5e64486a9c3985e574b8525f7a26938f67",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/ss29/resign/kit_bfr/run/results/asap7/kl_dsfd_bf_front_roots_s52a/base/6_final.odb",
@@ -22,15 +33,26 @@
  "dsfd_cfifo_crs4.lef": {
   "base_sha256": "2274f4fb64feec52861bae446887416e9cb9f73b84d32715930c3dbd9d2b7503",
   "die": "s81",
-  "file": "dsfd_cfifo_crs4.lef.baed2bbef911.gz",
+  "file": "dsfd_cfifo_crs4.lef.abc3a50da9a5.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_cfifo_crs4",
-  "receipt": "dsfd_cfifo_crs4.lef.baed2bbef911.receipt.json",
-  "receipt_sha256": "ab3e1de4cba5d6bd6177aac2ee2ffbe0cc2454c98903dbd3713483236486255e",
-  "sha256": "baed2bbef911338446bbc9aab487078ec8115c15c072b454cb783e386fe52a47",
+  "pin_access_probe": {
+   "def_sha256": "66b27321610864b230bcbc6b2a573cf26911ae9e2711cb435064b4cef02f8a93",
+   "every_signal_pin_connected": true,
+   "log_sha256": "2e38180001397f13864dafc47856574d5e94aa4330e2696e63b3347e49d2970d",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_cfifo_crs4.lef.abc3a50da9a5.receipt.json",
+  "receipt_sha256": "9c6ebd7860e5ffe7fe26d462dc2515753f7d2cda3a2c8caec2b43d22d641c139",
+  "sha256": "abc3a50da9a515afb3aa2fb7a90fcc313c4acc3af0ba6b852e1ca67e581f06c7",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/s81ck13/crs4/crs4_k13A/run/results/asap7/kl_dsfd_cfifo_crs4_cfix4/base/6_final.odb",
@@ -40,18 +62,116 @@
    "verdict": "SIGNED"
   }
  },
+ "dsfd_node_LLd.lef": {
+  "base_sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8",
+  "die": "s81",
+  "file": "dsfd_node_LLd.lef.a5a84626686c.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_node_LLd",
+  "pin_access_probe": {
+   "def_sha256": "9eb954da419be810ef95fedd0fae2e0b83836f04958de2aa591989790bb83010",
+   "every_signal_pin_connected": true,
+   "log_sha256": "c95d3f454b07d14faf1edb72fe388fabac3670e41e1f28dd8e915be50146291a",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_node_LLd.lef.a5a84626686c.receipt.json",
+  "receipt_sha256": "f72d387b55f14c65c848fed7aa912cd7b6189a8f964cadbabc550ba7d32bd393",
+  "sha256": "a5a84626686c4368ea4ab9db9d48a628fc7441e1778e5460afd96592dcf49278",
+  "source": {
+   "odb_sha256": "218b0171982b48ecc955b2eeb8f700f98dda23a5218d54df629acb5ac32004e9",
+   "origin": "DS85 child sub-lane eco i1 export (a276df56f2a376803), signed store",
+   "store_id_prefix": "992d7994a2df"
+  }
+ },
+ "dsfd_node_LLfd.lef": {
+  "base_sha256": "6dd0ecaebebfc88aa62753c7e54a46cda8306e69227d54c7fb351cbcc43a1dca",
+  "die": "s81",
+  "file": "dsfd_node_LLfd.lef.f0ec40135da8.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_node_LLfd",
+  "pin_access_probe": {
+   "def_sha256": "180e7d69142b197512005a5ca5e3f3e696230b9edbf96eaf4ea2378625a3d34c",
+   "every_signal_pin_connected": true,
+   "log_sha256": "016ff257e282192398923744f56a0bc9c5e7a37d001be5a44ff72954da4d7e87",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_node_LLfd.lef.f0ec40135da8.receipt.json",
+  "receipt_sha256": "3f2175b1d8fd2a3cc114d248db036f1803753e87c47fdbda8711387eda2edfb3",
+  "sha256": "f0ec40135da8fbcda8698e72db57cdecd0adecb405487e3db295fae5729a6c51",
+  "source": {
+   "odb_sha256": "6e611fdfc18b0b2d85410e845e27e1811b00451ae4d9a00584526eeba0966777",
+   "origin": "DS85 child sub-lane eco i1 export (a276df56f2a376803), signed store",
+   "store_id_prefix": "5fceed57a55e"
+  }
+ },
+ "dsfd_node_LLfu.lef": {
+  "base_sha256": "7c874fd7cae5d56089b626938d9a06d1e43c9d67dac4160454d397f065847d2f",
+  "die": "s81",
+  "file": "dsfd_node_LLfu.lef.02989c23a3ce.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_node_LLfu",
+  "pin_access_probe": {
+   "def_sha256": "14760f63a17fe2fa1a2eb2a5dea305e91d734f082ef9712d64fe6cee74f0ef87",
+   "every_signal_pin_connected": true,
+   "log_sha256": "4dc7ea033ed1e3580594c71f03dd640bd567162e4cebdf7dfb962be112177725",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_node_LLfu.lef.02989c23a3ce.receipt.json",
+  "receipt_sha256": "47cf72d1b3abac841962d2955b2e6f82af845eb6219efdb7c9217efda3f12d43",
+  "sha256": "02989c23a3ce248e0aa714408472331105a7b6e462675abf1f0891ba425e7c05",
+  "source": {
+   "odb_sha256": "8484e2f66fe786054fde7c97eeaaee035812da3709fa167e9a8d35f2227482f6",
+   "origin": "DS85 child sub-lane eco i1 export (a276df56f2a376803), signed store",
+   "store_id_prefix": "cf177137f5e8"
+  }
+ },
  "dsfd_node_NNfd.lef": {
   "base_sha256": "240fb5cd7c053a7fa2323a3fe0052f712d10636af362aadc57b07e886af21fed",
   "die": "s81",
-  "file": "dsfd_node_NNfd.lef.fa1a9917c6e4.gz",
+  "file": "dsfd_node_NNfd.lef.37a8c80c0216.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_node_NNfd",
-  "receipt": "dsfd_node_NNfd.lef.fa1a9917c6e4.receipt.json",
-  "receipt_sha256": "0f9fcfa4ab646c07ed3d9b3257be06f55eba5c3355359c0f65c98bb7024a22d4",
-  "sha256": "fa1a9917c6e48db21455240e4b341aea4f9820618dd8a5d39145c11f5b2e1ace",
+  "pin_access_probe": {
+   "def_sha256": "9aa417c4d259b99f0c58a4b3c087b30311db3c61cbc5d26a5e661c72c640abca",
+   "every_signal_pin_connected": true,
+   "log_sha256": "6edce4b541d8939facb0e99a2dc3f9007193ef704cfb8068cb83453c3677998e",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_node_NNfd.lef.37a8c80c0216.receipt.json",
+  "receipt_sha256": "fc43a5476157553761aaefb4cfc3c8f5916caf4ee19c38e819910a19b6e27eba",
+  "sha256": "37a8c80c021639ff336738156a5d637b5c0ec950ceb02703813c00c17c545458",
   "source": {
    "archive": "-",
    "db_path": "-",
@@ -63,15 +183,26 @@
  "dsfd_node_NNfu.lef": {
   "base_sha256": "f4e0985f2836bdafb992d3954e6424b87fdd97dbdbdedd8d9c62d8667e0851de",
   "die": "s81",
-  "file": "dsfd_node_NNfu.lef.c226a31af0db.gz",
+  "file": "dsfd_node_NNfu.lef.9df7a4328e4f.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_node_NNfu",
-  "receipt": "dsfd_node_NNfu.lef.c226a31af0db.receipt.json",
-  "receipt_sha256": "229bd70807b14a1d0469ad81bbdce1b6038c8655f83a078899d33310197213de",
-  "sha256": "c226a31af0db9f3e80c2c306a6e1462f0cc22b305eb17087119b58c272f743fe",
+  "pin_access_probe": {
+   "def_sha256": "23e62ed845f69c2e2b9a837c9c1daf37a901cf66e706b6ca16595fe9401b652d",
+   "every_signal_pin_connected": true,
+   "log_sha256": "25a4f07a44b40b2b77a47320d3aa3074b8029f648480cabefeecc87299e742ae",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_node_NNfu.lef.9df7a4328e4f.receipt.json",
+  "receipt_sha256": "a8ae98e7335c00c4c754ba492099ed709f3de57a3686c0faf39f9aab08d77fce",
+  "sha256": "9df7a4328e4fcd3418bf4e84fb881140277d269950cdd415f567d75c4b8c31e6",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
@@ -83,15 +214,26 @@
  "dsfd_qbank_N.lef": {
   "base_sha256": "68732dce65a36221d1b0e6a47bf6ef66c5a2f862af5237137760b4195a74e9fa",
   "die": "s81",
-  "file": "dsfd_qbank_N.lef.54a739c0c2e2.gz",
+  "file": "dsfd_qbank_N.lef.6e387979473e.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_qbank_N",
-  "receipt": "dsfd_qbank_N.lef.54a739c0c2e2.receipt.json",
-  "receipt_sha256": "c87b51c00818ed854f8f0cf723660d1e6fb1c1d3e59af99f214ce396ea13c12a",
-  "sha256": "54a739c0c2e2ba75069123236577f6886043bcf696d4c713685341c3f8e4c2a6",
+  "pin_access_probe": {
+   "def_sha256": "7ea16b3f6f6226aaf4410014e78ca63f34d98b209756a59f7540bd042dcad42e",
+   "every_signal_pin_connected": true,
+   "log_sha256": "fa6becf32c267555b7b4f1bf7cbdc783960235a214d47a989ab0c88affd65ac2",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_qbank_N.lef.6e387979473e.receipt.json",
+  "receipt_sha256": "aff94ac0404392b6e9aa46a0264f917bf8f02eb444a1aa189d74a31e59edaa21",
+  "sha256": "6e387979473e9aa0131a1599bd86db6675174706ff30f68cbc27e2bce59af207",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13B/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb",
@@ -103,15 +245,26 @@
  "dsfd_qbank_S.lef": {
   "base_sha256": "31134d920412b76acd31f36b6195237e6667d5bec854621b5dc32043a37c7035",
   "die": "s81",
-  "file": "dsfd_qbank_S.lef.41e2db4f211b.gz",
+  "file": "dsfd_qbank_S.lef.3d4bea94014e.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_qbank_S",
-  "receipt": "dsfd_qbank_S.lef.41e2db4f211b.receipt.json",
-  "receipt_sha256": "1d906270b88d0d3ca65615ab5be5f7acc37146731e1640a8f0fb5baa3f2b4d9b",
-  "sha256": "41e2db4f211b3203cbadbba31b872e5825ebccf6853d48a0b4aee66ccdf396c5",
+  "pin_access_probe": {
+   "def_sha256": "7e9b3377f7d29401464ce30f2b7044d4466a3054df5818b1899632570db864bf",
+   "every_signal_pin_connected": true,
+   "log_sha256": "02c64bdffa1d7094461dd5c7d5f122a019efe92337ec6c66dd79123dd1f517ed",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_qbank_S.lef.3d4bea94014e.receipt.json",
+  "receipt_sha256": "c234bbfe8836ea4822f765e94ff2b7a8da2b6b6d2c0ce05dc23d1e0c10d1a055",
+  "sha256": "3d4bea94014eb528c6ca9b9eb8f55e0ad0f3ea8bc7e3fdeb9713d2ec4142740a",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/eco_m0b/i1/run/results/asap7/kl_dsfd_qbank_S_cqS20/base/6_final.odb",
@@ -123,15 +276,26 @@
  "dsfd_rstg.lef": {
   "base_sha256": "9c458cd0efdb8dee1215855023866a932a82952aba9da49b7c3c1e96be272a2e",
   "die": "s81",
-  "file": "dsfd_rstg.lef.8604ebac86a6.gz",
+  "file": "dsfd_rstg.lef.dbf2ed91cf7c.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_rstg",
-  "receipt": "dsfd_rstg.lef.8604ebac86a6.receipt.json",
-  "receipt_sha256": "10f82be3e08a3056d62006a07f97d7020e3c6947922fb10bf13d5548652f122e",
-  "sha256": "8604ebac86a6e875eedb5b89746a1586eb269168c27fd694d0d1319579356d71",
+  "pin_access_probe": {
+   "def_sha256": "b0808c09abb743cd1d8e0d33a2faa5a3d28e3b84c5e4cba54b69bf7697fe72f7",
+   "every_signal_pin_connected": true,
+   "log_sha256": "9428815afb28ebb9e2657bbfcc3902cc2ad682245bb24ec7c6507fac869a644e",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_rstg.lef.dbf2ed91cf7c.receipt.json",
+  "receipt_sha256": "d113c7ffaba204200138c35c80ad8645113bd812f25d12d8e4a7af150da51784",
+  "sha256": "dbf2ed91cf7c190daccd3fcce1d5c156867ec26f3873f44f88609ab7f1f4f36b",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb",
@@ -144,15 +308,26 @@
  "dsfd_su_t_rxsf.lef": {
   "base_sha256": "cc7807bcc48b63551e8dc2610b043271188bb4edb8522cc4b82e0b88859431b4",
   "die": "s81",
-  "file": "dsfd_su_t_rxsf.lef.9553b026e457.gz",
+  "file": "dsfd_su_t_rxsf.lef.642dfea36740.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "dsfd_su_t_rxsf",
-  "receipt": "dsfd_su_t_rxsf.lef.9553b026e457.receipt.json",
-  "receipt_sha256": "a6e3f4f273edaca5b0b7dfdf0bec1a06f196b6f77446b80e3c8c9ed5c76d4fd7",
-  "sha256": "9553b026e45748d732e90b7b7ad156e41c59c7ca2999ba8742d18d8f72f99e05",
+  "pin_access_probe": {
+   "def_sha256": "e7923995eb89f3a610d81b08ab2357d26b67f1256dda5c945fc70c90c44465ac",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ebd351c126a2b74bd831481517cbab8b53d9f66b9719734c7c763262d8eb4c1f",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_su_t_rxsf.lef.642dfea36740.receipt.json",
+  "receipt_sha256": "66a59c79954e04872ac7f41191fccffc880ef6a6bedabbbc0681e82c1bb21947",
+  "sha256": "642dfea367407abe97ef5d3f893b7064a9ccc3430cd76fb58a5c273b94afda7b",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/s81ck13/rxsf/rxsf_k13_t40/run/results/asap7/kl_dsfd_su_t_rxsf_r1t/base/6_final.odb",
@@ -164,16 +339,27 @@
  "hfd_ep_host_vc.lef": {
   "base_sha256": "1163192a84fb79292379ea77790903b424f48c604caae091fe733014192aa9dc",
   "die": "hbm",
-  "file": "hfd_ep_host_vc.lef.c3423f1b647f.gz",
+  "file": "hfd_ep_host_vc.lef.783be01c32c3.gz",
   "layers": [
    "M4",
    "M5",
    "M6"
   ],
   "module": "hfd_ep_host_vc",
-  "receipt": "hfd_ep_host_vc.lef.c3423f1b647f.receipt.json",
-  "receipt_sha256": "ae3d3c0e76dca7bdeea3454f9d231643213e9730a3c06fda7352c0f9968b33c0",
-  "sha256": "c3423f1b647fd5540be9571e59ade3a250f806cd978374860434db2a1212c52e",
+  "pin_access_probe": {
+   "def_sha256": "7f9a7662c22b6874eb0f9642874227de6c80a9e93c53bb303d4125f2892a9c33",
+   "every_signal_pin_connected": true,
+   "log_sha256": "5bd2fd8a60c138cdd714b23b52750b600058ab21ef7fc482f42af7e648564710",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "hfd_ep_host_vc.lef.783be01c32c3.receipt.json",
+  "receipt_sha256": "59b9725446ab7547622d56862e5cec7cbf712d5a11c2ff55f356ad641d004143",
+  "sha256": "783be01c32c36eab9ad83f5ccd2ad6bd79c57127f0eb63d8ed4cfc5f87aaa5b0",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc6",
    "db_path": "srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/eco1/i1/run/results/asap7/hbc_hfd_ep_host_vc/base/6_final.odb",
@@ -186,16 +372,27 @@
  "hfd_ep_static_vc2.lef": {
   "base_sha256": "1ff1b9f79e0cca0e6c88fa570b2c8a8263be317ca408073d276445a92b8d6790",
   "die": "hbm",
-  "file": "hfd_ep_static_vc2.lef.7bdce3ee583d.gz",
+  "file": "hfd_ep_static_vc2.lef.4f4a8d60ce58.gz",
   "layers": [
    "M4",
    "M5",
    "M6"
   ],
   "module": "hfd_ep_static_vc2",
-  "receipt": "hfd_ep_static_vc2.lef.7bdce3ee583d.receipt.json",
-  "receipt_sha256": "d9783abe6c335222b3e2a225760a5c501c7211606f5ed031f03ed8f37e878f38",
-  "sha256": "7bdce3ee583d48fc73b3a776873708ae380ad676fbc38052f7caf98c7e512c23",
+  "pin_access_probe": {
+   "def_sha256": "e11a26673e2d9dc6dc3798396a1245f302da070011e8269de3051966ca9c2ff4",
+   "every_signal_pin_connected": true,
+   "log_sha256": "894f8082c5f0d96f9b2636f54ea84452bce44d5e4a3186f62a4da59968b55f3c",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "hfd_ep_static_vc2.lef.4f4a8d60ce58.receipt.json",
+  "receipt_sha256": "eaa9c853f35611667d759ae02bf82f1eb8e573ad6638ef55dd768abf7fd2b206",
+  "sha256": "4f4a8d60ce580d9df36a5e8247c17c8151e023aee98244b789f3a33d8f1b2b32",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc6",
    "db_path": "srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/eco1/i1/run/results/asap7/hbc_hfd_ep_static_vc2/base/6_final.odb",
@@ -208,7 +405,7 @@
  "kv3_pv_pair.lef": {
   "base_sha256": "25ada09fdd3be06646804a725d7d828bf962fdc92e2f6c5458c1f2f1d7c2fa39",
   "die": "qwen_kvsys",
-  "file": "kv3_pv_pair.lef.72b87f89bbad.gz",
+  "file": "kv3_pv_pair.lef.ded640208bb1.gz",
   "layers": [
    "M4",
    "M5",
@@ -216,9 +413,20 @@
    "M7"
   ],
   "module": "kv3_pv_pair",
-  "receipt": "kv3_pv_pair.lef.72b87f89bbad.receipt.json",
-  "receipt_sha256": "30d8ee1b7afad12e0d4226b9d5e84adfb98fd7c5c6eff68a0e1ef9a72779d186",
-  "sha256": "72b87f89bbad91674b4e1b0eba1849ff744278639079dcc4d523eb406090545a",
+  "pin_access_probe": {
+   "def_sha256": "edbdfa94bc6810686c4db4526af2793d80e1fac919543298d3f1410253391c52",
+   "every_signal_pin_connected": true,
+   "log_sha256": "28c1cf623d529445190036b04a257ec4516679ba6d0c94e68b686df6b325ab3d",
+   "phase_nm": [
+    0,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "kv3_pv_pair.lef.ded640208bb1.receipt.json",
+  "receipt_sha256": "3f4641f9422aa49acd4f4c3db681422ca512f630f34479078a684f729047e5c3",
+  "sha256": "ded640208bb1a63fcfdcd1d8207db01c4c26e20a4eeca5601c4b6b8342c78acc",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/die-kv-49/pv/kit/run/results/asap7/hc_kv3_pv_pair__380_16x190_08_fMX/base/6_final.odb",
@@ -231,15 +439,26 @@
  "ot_dsrom_su_hcpost_lane_pr.lef": {
   "base_sha256": "6d30752d8cca3bd70a5f045cf5327ca4c2bc083cf3b21776251640b7e88764ec",
   "die": "s81",
-  "file": "ot_dsrom_su_hcpost_lane_pr.lef.3c1a07302d62.gz",
+  "file": "ot_dsrom_su_hcpost_lane_pr.lef.e2bd3921a74a.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_dsrom_su_hcpost_lane_pr",
-  "receipt": "ot_dsrom_su_hcpost_lane_pr.lef.3c1a07302d62.receipt.json",
-  "receipt_sha256": "740a9319ec6c59fb9a2cd219b2743011f6016855f43d2ab423b52e15a3b316d1",
-  "sha256": "3c1a07302d626f275366386daf9bd9bb046c539802badcd4724de0b39d0e76ef",
+  "pin_access_probe": {
+   "def_sha256": "491c9c6496460e4336d0d521d4c0db11db9373cc451d52453e76d6fbcc436592",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ca41ffec2cdb0bd1930d2c0c0620c66ff26476e040b055c9140c3fb415fb4f4f",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_dsrom_su_hcpost_lane_pr.lef.e2bd3921a74a.receipt.json",
+  "receipt_sha256": "487ddd366abcb33dc6468a23502bcb0a3a38599eb699c1c3ec82dce00b7f94d9",
+  "sha256": "e2bd3921a74a5cce10289841061f77ebab9ba14b6e7a07a9a7e481eec86a9252",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base/6_final.odb",
@@ -251,15 +470,26 @@
  "ot_hbm_su_pg_lane1_core.lef": {
   "base_sha256": "5154e6236b9c1786e755942d7237da9ca2634cf5ccb9bb18144e749517101dc1",
   "die": "hbm",
-  "file": "ot_hbm_su_pg_lane1_core.lef.e83d48b1a58a.gz",
+  "file": "ot_hbm_su_pg_lane1_core.lef.f4426c7011e9.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_hbm_su_pg_lane1_core",
-  "receipt": "ot_hbm_su_pg_lane1_core.lef.e83d48b1a58a.receipt.json",
-  "receipt_sha256": "88cabeec2c3198961858ebdd478224f98f0fc105bb7dd3aae65415b927bd468e",
-  "sha256": "e83d48b1a58af39a182ce6f49cbf3dc6d94788b7cd6dadc3aa9c666a41875788",
+  "pin_access_probe": {
+   "def_sha256": "88df9e314e232ff8f46210a27496aa49201bbf43f0090cee45e395445e1daf5a",
+   "every_signal_pin_connected": true,
+   "log_sha256": "1b291a91b7678284152220c096f2095f99498ce4afb44e56104020d780244e07",
+   "phase_nm": [
+    0,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_hbm_su_pg_lane1_core.lef.f4426c7011e9.receipt.json",
+  "receipt_sha256": "4cf627921772c2aee18b57d8afafa1d9cb9dda7104c0d434735b454eb14a5888",
+  "sha256": "f4426c7011e9eb8a2a3adf6234822b62912425f83e32e568e9a407f6bd6dbfa6",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc4",
    "db_path": "srv/opentallas-scratch3/claude/hbm-form-timing/eco/l1r5/run/i3/run/results/asap7/hbc_ot_hbm_su_pg_lane1_core/base/6_final.odb",
@@ -272,15 +502,26 @@
  "ot_hbm_su_static_pgslice_lg__pretree.lef": {
   "base_sha256": "044e93ecacbbe52b51399abad780a279d50c3b2821409e9815c6c491056c94ea",
   "die": "hbm",
-  "file": "ot_hbm_su_static_pgslice_lg__pretree.lef.0dacbd23dbff.gz",
+  "file": "ot_hbm_su_static_pgslice_lg__pretree.lef.408acce795e0.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_hbm_su_static_pgslice_lg__pretree",
-  "receipt": "ot_hbm_su_static_pgslice_lg__pretree.lef.0dacbd23dbff.receipt.json",
-  "receipt_sha256": "4f8f9846b7f06a90a1a77b8f8935394fd5cb38cfb09b7f5fced652ac4f947f51",
-  "sha256": "0dacbd23dbffd778164b27f1b92d224beac31962dad67b8e93bbe1e673408c06",
+  "pin_access_probe": {
+   "def_sha256": "c5529ec9be991976d00839a7888791d882c95da774b62c23f40114bbc6e728ed",
+   "every_signal_pin_connected": true,
+   "log_sha256": "dfe3a28172ec6717967d5f6842c244c081d3caca9ebc63636d529677da738ff5",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_hbm_su_static_pgslice_lg__pretree.lef.408acce795e0.receipt.json",
+  "receipt_sha256": "6f9b05aa3e1a48f4669d05529d0c113e1083fa7f28f981514965e85ac4cf22f9",
+  "sha256": "408acce795e0792eb304b3e00ff7af4a433666e23e7bc07cd365bf5019d9afac",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "home/ubuntu/scratch-root/claude/ss24/pgslice_kit/run/results/asap7/hbc_ot_hbm_su_static_pgslice_lg__pretree/base/6_final.odb",
@@ -293,15 +534,26 @@
  "ot_hbm_svc_sm_xcal_rel_t.lef": {
   "base_sha256": "24b7acfba572b0c2d31466f7edbc0b5e9a2f29c1dade232d9f805c98b4472073",
   "die": "hbm",
-  "file": "ot_hbm_svc_sm_xcal_rel_t.lef.40007252cf1b.gz",
+  "file": "ot_hbm_svc_sm_xcal_rel_t.lef.2bc5d48b52d4.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_hbm_svc_sm_xcal_rel_t",
-  "receipt": "ot_hbm_svc_sm_xcal_rel_t.lef.40007252cf1b.receipt.json",
-  "receipt_sha256": "34d1727fdea25fb02982121e75515fb39ec05f84146b0a9bedcde9125ebe88ca",
-  "sha256": "40007252cf1b216083b39c0d846434551a3f208c013d92a89b5bdc858f908062",
+  "pin_access_probe": {
+   "def_sha256": "538a81390a76c6c385df4542b55001f7219377d638287dff1c3677d4fc166378",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ec8178055a8e98ffa011f498145d208fb49a1e4a6e21e924edeecaf895fd5355",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_hbm_svc_sm_xcal_rel_t.lef.2bc5d48b52d4.receipt.json",
+  "receipt_sha256": "eb9f503fa9a646267884d94f2134b3216f6b46d9436dd4c4168a26a8f895c1a3",
+  "sha256": "2bc5d48b52d4d2abc2c25f2e9ac146dce93b88637b51a71e12096377bbd3fef3",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal_view/i1/run/results/asap7/hbc_ot_hbm_svc_sm_xcal_rel_t/base/6_final.odb",
@@ -314,15 +566,26 @@
  "ot_pdie_serdes_rx_bm_native.lef": {
   "base_sha256": "39758e44687976d93dc9893dc307b34f1a8b162315d8eb448dfdd820ed5861de",
   "die": "hbm",
-  "file": "ot_pdie_serdes_rx_bm_native.lef.a65177902681.gz",
+  "file": "ot_pdie_serdes_rx_bm_native.lef.2cc8b2c99818.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_pdie_serdes_rx_bm_native",
-  "receipt": "ot_pdie_serdes_rx_bm_native.lef.a65177902681.receipt.json",
-  "receipt_sha256": "1286b16a2568357118be092cf53368363b9151187dff31716043549f619f5d35",
-  "sha256": "a651779026813df7e762d8b4ba0494e1404a59d96207f0f0e0723e03f41e8c3e",
+  "pin_access_probe": {
+   "def_sha256": "0b0a31f95552ee439a2db00cb3dd4eacc7239f23c4f82ba81502a8e77ce93bf0",
+   "every_signal_pin_connected": true,
+   "log_sha256": "b6cb2934bbeaf8d05b24975484077e3594d76e5c2d68949dd8ca36fee44d9b2c",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_pdie_serdes_rx_bm_native.lef.2cc8b2c99818.receipt.json",
+  "receipt_sha256": "c92160e659c8bfa8e0ad5cb3a51c54fd5087f6f4dd3463b4fa93fe1586c3abed",
+  "sha256": "2cc8b2c998180bcb006b82fa2c43ffd3119f02b895d48d73b04c5fe7346212af",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc4",
    "db_path": "srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2/run/results/asap7/hbc_ot_pdie_serdes_rx_bm_native/base/6_final.odb",
@@ -335,16 +598,27 @@
  "ot_pdie_serdes_tx.lef": {
   "base_sha256": "a2c0cbf61130b79c035ad716999a63b474e7b465838be4054b664dc966f34c0e",
   "die": "hbm",
-  "file": "ot_pdie_serdes_tx.lef.f98d2e845f91.gz",
+  "file": "ot_pdie_serdes_tx.lef.23e418b657c5.gz",
   "layers": [
    "M4",
    "M5",
    "M6"
   ],
   "module": "ot_pdie_serdes_tx",
-  "receipt": "ot_pdie_serdes_tx.lef.f98d2e845f91.receipt.json",
-  "receipt_sha256": "fb6913fec7b8a00d2b89263a0f50475330d2ab91a71159beb976b468db8f753c",
-  "sha256": "f98d2e845f91d1e4a4da285724ac8d552323733ab12a14d96388da5b6708b79a",
+  "pin_access_probe": {
+   "def_sha256": "08bcd43a46e247fff81a684f913d43df3578fc97b06610dfbe5e32ec96f63cd0",
+   "every_signal_pin_connected": true,
+   "log_sha256": "3bd62191d9b2e25e9d7bbbb6d08513a80b84676b5b4a8582f794b025082f6913",
+   "phase_nm": [
+    0,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_pdie_serdes_tx.lef.23e418b657c5.receipt.json",
+  "receipt_sha256": "7518c715350cb28d10d4d120e1e1199228c0c0975a12ed1fc9903a4aeb6384d9",
+  "sha256": "23e418b657c5b056670fac8cccbd74d5bf2484026eca7ce6f511a71714a9f5fc",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc4",
    "db_path": "srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/run/results/asap7/hbc_ot_pdie_serdes_tx/base/6_final.odb",
@@ -354,39 +628,29 @@
    "verdict": "SIGNED"
   }
  },
- "ot_qwen_tp8_pv_join_t.lef": {
-  "base_sha256": "dd2dfba96f1989dd9381274a92e885b312b490fa7c5d7586d8796f49d0dd34a0",
-  "die": "qwen_kvsys",
-  "file": "ot_qwen_tp8_pv_join_t.lef.c1d193b5cde7.gz",
-  "layers": [
-   "M4",
-   "M5"
-  ],
-  "module": "ot_qwen_tp8_pv_join_t",
-  "receipt": "ot_qwen_tp8_pv_join_t.lef.c1d193b5cde7.receipt.json",
-  "receipt_sha256": "adf598b47e4356d3b26fcb8028264c07e2f2de9e729dd17c18ced838fbd33cd2",
-  "sha256": "c1d193b5cde77dd84dcea9a68f086ab884f5e6c4e8e542c2994233bde3856563",
-  "source": {
-   "archive": "/archive/opentallas-signed-1106/epyc2",
-   "db_path": "home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_A/prd_w60_p2/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8/base/6_final.odb",
-   "odb_sha256": "ceda73b2ce306242fb26a3f230863561f0a4680677e905a911b1fcb1960be3d7",
-   "origin": "signed store stage (sha-verified)",
-   "store_id": "ce849299a035d91f3691c6372d0e4cb7828bd1b093ff005c9ab31bf16fe74249",
-   "verdict": "SIGNED"
-  }
- },
  "ot_s81_cfg7_seq.lef": {
   "base_sha256": "1e03ff7754b9f61a1bb9e35fb1773369280f5111ab51b43924c3dfa1af3917bd",
   "die": "s81",
-  "file": "ot_s81_cfg7_seq.lef.845124f5722b.gz",
+  "file": "ot_s81_cfg7_seq.lef.71b35254ef64.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81_cfg7_seq",
-  "receipt": "ot_s81_cfg7_seq.lef.845124f5722b.receipt.json",
-  "receipt_sha256": "c07c3421d627c749c47c73da34e93d460a3d23e24852943ac60529cd532bbb23",
-  "sha256": "845124f5722b34bac66fc5e1a0f02d57949debd487f78a79d3c56ce7d3c5acc3",
+  "pin_access_probe": {
+   "def_sha256": "2cd9c2d6767d3e175a80c77f6e413dc36d0d55ccabeaada5a08b77860d1110f8",
+   "every_signal_pin_connected": true,
+   "log_sha256": "89ac7145ed840ac8935bfdf90d791a9bae31ce4dd04e7f790c3cc6fbfdadad47",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81_cfg7_seq.lef.71b35254ef64.receipt.json",
+  "receipt_sha256": "e4ec27b5af39364c9002a75f8bf4c8d7e1134fc8aef05040ffa88c24a5676d62",
+  "sha256": "71b35254ef64ab6812e9fc8eb71c60668a645be31f7152a610ee002af9d986ce",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/ot_s81_cfg7_seq_cs7/run/results/asap7/kl_ot_s81_cfg7_seq_cs7/base/6_final.odb",
@@ -398,15 +662,26 @@
  "ot_s81_cfg7_seq_bfp.lef": {
   "base_sha256": "a9190358baf97bb53a865e9340f7a231feb59668c9f96750cfd1f1469fe59a49",
   "die": "s81",
-  "file": "ot_s81_cfg7_seq_bfp.lef.e5fe932b021e.gz",
+  "file": "ot_s81_cfg7_seq_bfp.lef.1ad16c3c6395.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81_cfg7_seq_bfp",
-  "receipt": "ot_s81_cfg7_seq_bfp.lef.e5fe932b021e.receipt.json",
-  "receipt_sha256": "9e52756ea79fb215ceb41bc76cc9bb734033c8825fbcb74e0276ba1b683d73bd",
-  "sha256": "e5fe932b021e43e57d14d088294a076340f9adbdccb559a08c27118276c7011e",
+  "pin_access_probe": {
+   "def_sha256": "fbb38fef98ddd25f87eb0a660c9a094a184ca8872314fb5a3e9f2dd30954f9f0",
+   "every_signal_pin_connected": true,
+   "log_sha256": "7c8ae3018339e98fc4dec0ded2e0875534513b024896e96c4c83f53c85b1968f",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81_cfg7_seq_bfp.lef.1ad16c3c6395.receipt.json",
+  "receipt_sha256": "ef461bc4b11e86e639e16570d19e6a328a29271cefc4e2c1bb4e3d7518e5f576",
+  "sha256": "1ad16c3c63959b2345cc21a465ebcdee5d55553a52ef91e3067ac0af0d1afac2",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/die-s81-51/sign/cfg7_seq_bfp/kitR/run/results/asap7/kl_ot_s81_cfg7_seq_bfp_g49/base/6_final.odb",
@@ -418,15 +693,26 @@
  "ot_s81_kp4_dchn.lef": {
   "base_sha256": "16155b5365b05f92666d964fd5e3a05c26cc5855bcb6d6ce9207bc27b6974ddb",
   "die": "hbm,s81",
-  "file": "ot_s81_kp4_dchn.lef.023cf5b24821.gz",
+  "file": "ot_s81_kp4_dchn.lef.521ab1f5e0e3.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81_kp4_dchn",
-  "receipt": "ot_s81_kp4_dchn.lef.023cf5b24821.receipt.json",
-  "receipt_sha256": "35fd096416c94c97f9fd90513b82bbc46000076ab14369461f75c159c4496d46",
-  "sha256": "023cf5b248216c1f623f6de1bc5c4d91dd92978f99f5a8c26af4785cd7ee2f6c",
+  "pin_access_probe": {
+   "def_sha256": "e71a0fffdaa7335f5bb4553d5b3a4eb37373564b5409b43a9ade0d0f9d9f069f",
+   "every_signal_pin_connected": true,
+   "log_sha256": "010c22ddb3a445bf1237633238b4257cb5fbd5476075a3f7166c35fe943979e5",
+   "phase_nm": [
+    0,
+    0
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81_kp4_dchn.lef.521ab1f5e0e3.receipt.json",
+  "receipt_sha256": "4877407187e8dcd0f192600c2e5c301bcfb97c9747f7571be057f4c60772bb68",
+  "sha256": "521ab1f5e0e3d680ef1a0648a90f8c509c895e0bb94d12a2f4798fc1be208cab",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/head-serdes-2/e13a/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.odb",
@@ -439,15 +725,26 @@
  "ot_s81_sstn_base566.lef": {
   "base_sha256": "99e0e97ed11347542a8ed9b9dda1a1589d2c34aa71abb8a8a9e3953fbdcb28e1",
   "die": "s81",
-  "file": "ot_s81_sstn_base566.lef.07ce518d3a4e.gz",
+  "file": "ot_s81_sstn_base566.lef.b5ff37d05d88.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81_sstn_base566",
-  "receipt": "ot_s81_sstn_base566.lef.07ce518d3a4e.receipt.json",
-  "receipt_sha256": "8d5d3b45055d082afdef74c14a8138e00909d2540777ab5544013ba5b9fb9aee",
-  "sha256": "07ce518d3a4e8cf79374e15fd55b6aa4bf7423bd6b8d0060ea9a8d0bd367a73c",
+  "pin_access_probe": {
+   "def_sha256": "98504da9846bc249ca6df44eccfb3360881f271bfea002daeb571e27dcdcd4c0",
+   "every_signal_pin_connected": true,
+   "log_sha256": "fe2c2a460cdb60dc42ba63ed1c370fc09e137b09cbb573f89a508d550e7c29d5",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81_sstn_base566.lef.b5ff37d05d88.receipt.json",
+  "receipt_sha256": "74eba8efe6acc462a3b483d0577edf7f6ffec5c82778d278df6f14b4cdae7c01",
+  "sha256": "b5ff37d05d88b9bfbb5219de2e273f6a2a1ba59d8e55e691b9c6596b0f21a97b",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/eco_m0/i3/run/results/asap7/kl_ot_s81_sstn_base566_bodyA/base/6_final.odb",
@@ -459,15 +756,26 @@
  "ot_s81_sstn_payload536.lef": {
   "base_sha256": "5c14147f7d851126987c5a03532880a00070159f6655ad7b49b8b49aaff78381",
   "die": "s81",
-  "file": "ot_s81_sstn_payload536.lef.0122d70d2318.gz",
+  "file": "ot_s81_sstn_payload536.lef.0187b355ac71.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81_sstn_payload536",
-  "receipt": "ot_s81_sstn_payload536.lef.0122d70d2318.receipt.json",
-  "receipt_sha256": "a4c1b7c15d8617e6329ba6dc665cf2fd2042844c3a8750e88f740548d0cac7ac",
-  "sha256": "0122d70d23187e30b31559b60ba4e6fa5467b79b0025e44e9c7f649c44d6e1c5",
+  "pin_access_probe": {
+   "def_sha256": "f437dd46044309b4220f2f12afe5748e7fce213376fad6faaa5f4dfaef44b915",
+   "every_signal_pin_connected": true,
+   "log_sha256": "07d73a7f8063171880236acbc6e5a267b4dd18a3c29921ef7a9f6763ba32a65d",
+   "phase_nm": [
+    108,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81_sstn_payload536.lef.0187b355ac71.receipt.json",
+  "receipt_sha256": "a6ed0b0e4f709546262cb54b71bce17c761e39db982c2c4f51810b623a10dfff",
+  "sha256": "0187b355ac715e7bfb737c350120ea4b03f231f6b7f173503e68edb70f0588b9",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_e1027/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb",
@@ -479,15 +787,26 @@
  "ot_s81sl_ve_m_tpl.lef": {
   "base_sha256": "d1253ccf988540e8ce501c584d745ebbb26de483e6fae81e03610bafa31da2b8",
   "die": "s81",
-  "file": "ot_s81sl_ve_m_tpl.lef.898dbc4012a2.gz",
+  "file": "ot_s81sl_ve_m_tpl.lef.a8f90d00f349.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_ve_m",
-  "receipt": "ot_s81sl_ve_m_tpl.lef.898dbc4012a2.receipt.json",
-  "receipt_sha256": "4c103e6a45018f2d5ef1e122d98b2bb1ab31b8e24843351123f46fab0a507d41",
-  "sha256": "898dbc4012a28890b1bc074c0270f0f99641ac3ce28271860b73bc06b7a09f0e",
+  "pin_access_probe": {
+   "def_sha256": "719a9d68260d73ac6e04e4adb4977c71950265901a32829d12e9b4fcd529927f",
+   "every_signal_pin_connected": true,
+   "log_sha256": "01b942238eea390b599f1cc745235b8f24dfbe3658205c87ba989aa85a449661",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_ve_m_tpl.lef.a8f90d00f349.receipt.json",
+  "receipt_sha256": "27230c6bdca74149ede5f6986a3504c740fb82cdef2f8bda0d05b02d40658f64",
+  "sha256": "a8f90d00f3496b1ad0095e4487d468134c6560833255cc36f0a4d58e2f756bab",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m_hxh/run/results/asap7/kl_ot_s81sl_ve_m_rt22/base/6_final.odb",
@@ -499,15 +818,26 @@
  "ot_s81sl_ve_s_tpl_w1728.lef": {
   "base_sha256": "76b41f3caf7cd698b56b8a7a5544ffc19b3585123a8a7f2983ad1277b9388304",
   "die": "s81",
-  "file": "ot_s81sl_ve_s_tpl_w1728.lef.031db56f6477.gz",
+  "file": "ot_s81sl_ve_s_tpl_w1728.lef.b6a43e935d5b.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_ve_s",
-  "receipt": "ot_s81sl_ve_s_tpl_w1728.lef.031db56f6477.receipt.json",
-  "receipt_sha256": "1bc10132ea6947303d1125fba6e5dd598ace2f29fc7e5866dd963fd6c6d1f1ae",
-  "sha256": "031db56f6477b3edc01a4af748e3c9157d384c7f7a0fd66bea1c13216123d76c",
+  "pin_access_probe": {
+   "def_sha256": "77e7350bfd8021ed27fc9d486f62d94cabaaa536b74412f167d02e019fbd9e75",
+   "every_signal_pin_connected": true,
+   "log_sha256": "b35b0298a572b1283f29d21ef4c1dd5b470e3905d1a9db423c441c19004fff52",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_ve_s_tpl_w1728.lef.b6a43e935d5b.receipt.json",
+  "receipt_sha256": "633d503e7c7798e846d697a5fc9d4d8b6150602972b2d6e8fd0c12b49502347e",
+  "sha256": "b6a43e935d5b273412b40de2361ac5b60e598c3a00a0deae797c6525059c9d20",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/ss21-resign/ves_eco/i1/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.odb",
@@ -519,15 +849,26 @@
  "ot_s81sl_vn_a_tpl.lef": {
   "base_sha256": "7e1999201817af45e0c1e4071c0f0598527ee9562a506d34fec810768845e204",
   "die": "s81",
-  "file": "ot_s81sl_vn_a_tpl.lef.8e14f07bd78d.gz",
+  "file": "ot_s81sl_vn_a_tpl.lef.0c6bd4355979.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_vn_a",
-  "receipt": "ot_s81sl_vn_a_tpl.lef.8e14f07bd78d.receipt.json",
-  "receipt_sha256": "50a236dc208380d14f5b8bfaacc4d34082a58c74caa4ffe16a22de9fe8012af9",
-  "sha256": "8e14f07bd78ddb2b6ef5026a684a0dc96e3861da914848f8387b438150543c00",
+  "pin_access_probe": {
+   "def_sha256": "c0967fde8ecccb9a58f0aa6a8c3fe638669731d6e8ec3923a1fc2c772f086af6",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ab687931139a2eff9b05e9c8174307bc1549073610c871cf44c2508835b9fd35",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_vn_a_tpl.lef.0c6bd4355979.receipt.json",
+  "receipt_sha256": "527f6d7672101ca3756f335a02e640c4765293399f79190e5b6bfaed71d6667f",
+  "sha256": "0c6bd4355979431becd9a30f6f7f088da412656ac7541a101765b060dfdef86d",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_a_rt22p_hxh2/run/results/asap7/kl_ot_s81sl_vn_a_rt22/base/6_final.odb",
@@ -539,15 +880,26 @@
  "ot_s81sl_vn_b_tpl.lef": {
   "base_sha256": "866dd8bcfc9356653d65607fd90c899831d12277056dbe698b63ceaf3a4f8956",
   "die": "s81",
-  "file": "ot_s81sl_vn_b_tpl.lef.784caf86a0ea.gz",
+  "file": "ot_s81sl_vn_b_tpl.lef.3904623a00f8.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_vn_b",
-  "receipt": "ot_s81sl_vn_b_tpl.lef.784caf86a0ea.receipt.json",
-  "receipt_sha256": "92e602203e0210baa962229cfcd2d4d718854dfc6b56ecc1ebdf1b6073ec644e",
-  "sha256": "784caf86a0ea21eaf3e8eec0fe97e4fccae61a6b5c40fdb47275f5002347965e",
+  "pin_access_probe": {
+   "def_sha256": "2a4c5ba5ad03539db70ab5fa1bf93077bf52a81627adeaed4780f7f849f6c263",
+   "every_signal_pin_connected": true,
+   "log_sha256": "35b4cadb5b64c0bb5d5db4b44a32b6cdab3afa72223cb81c55a2d5869f6afd40",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_vn_b_tpl.lef.3904623a00f8.receipt.json",
+  "receipt_sha256": "37474761df634fcf23087a6e05e8dc98442590a2c87abcc25b801e189c98162a",
+  "sha256": "3904623a00f8ad471101f832d3211c9d1a881a9d7c9c23d21b3358e326cc81c4",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh/run/results/asap7/kl_ot_s81sl_vn_b_rt22/base/6_final.odb",
@@ -559,15 +911,26 @@
  "ot_s81sl_vq_tpl.lef": {
   "base_sha256": "7f2c6cb19dd5f31d770cfd87563600823a0cabc198dd6760d6c05241d0c6e172",
   "die": "s81",
-  "file": "ot_s81sl_vq_tpl.lef.ce8fc290f255.gz",
+  "file": "ot_s81sl_vq_tpl.lef.cd303108839a.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_vq",
-  "receipt": "ot_s81sl_vq_tpl.lef.ce8fc290f255.receipt.json",
-  "receipt_sha256": "973411f6e42632a1fbf5518894c001e4f6601396f3e4568bac523a67efb486dc",
-  "sha256": "ce8fc290f255efdff49173d9739105f5f343ef4e947d31c18362226104c9a201",
+  "pin_access_probe": {
+   "def_sha256": "141ee9cb6cfc6422ff1de572c9ca333aa5eaf138a811d7a4d3325f812068b48c",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ecc8b915b9b37915038602d9268614cb0451fb15f01525367fca844cc1ae7804",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_vq_tpl.lef.cd303108839a.receipt.json",
+  "receipt_sha256": "7b9113a94700ac1c02285e00543b52cc1409e371b59dbd8b74400a435d3444d1",
+  "sha256": "cd303108839a2d65f9fbd02781d72bd1324fbea25e4e88edea1c132a8a8692e2",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3/run/results/asap7/kl_ot_s81sl_vq_rt6/base/6_final.odb",
@@ -579,15 +942,26 @@
  "ot_s81sl_vs.lef": {
   "base_sha256": "95545c1475d73d0da43f0bdbd20fbf461a75915b92688e5c854fc5ebf53104e7",
   "die": "s81",
-  "file": "ot_s81sl_vs.lef.e0eadd50b9ab.gz",
+  "file": "ot_s81sl_vs.lef.6f4582865b67.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_vs",
-  "receipt": "ot_s81sl_vs.lef.e0eadd50b9ab.receipt.json",
-  "receipt_sha256": "7c8c2682d118999c19ee8a4e88f074e3a08801766aa7eb5f53f00bc726e9544e",
-  "sha256": "e0eadd50b9ab8cc59d8b1db265b1d5c8b124d721a90e7048d302796ca45574d1",
+  "pin_access_probe": {
+   "def_sha256": "d20bdccb72c59bcacdcbf42f0fc8bdf67dfbab2c678dd98c5ee690ca80ea3557",
+   "every_signal_pin_connected": true,
+   "log_sha256": "2ed3ab5a59799bc3f59a2a7b9511ba552a8e396588cc2dcc99a59f73342727d4",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_vs.lef.6f4582865b67.receipt.json",
+  "receipt_sha256": "d0e023935b135add5d2cc2789e5ce11831f578b66da0932d9006ad6aa20075d2",
+  "sha256": "6f4582865b67522a853a92b9e5f33e32a5c4862660097a4f59f95036ebabc5d9",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/ss32/resign/kit_vs5/run/results/asap7/kl_ot_s81sl_vs_rf1s/base/6_final.odb",
@@ -599,15 +973,26 @@
  "ot_s81sl_vsw_tpl.lef": {
   "base_sha256": "1d76f8c9bc4cd1a7003f2665d4b45436fd0a89437573dfe30a459a252df1f005",
   "die": "s81",
-  "file": "ot_s81sl_vsw_tpl.lef.e6ce5c6e0ab9.gz",
+  "file": "ot_s81sl_vsw_tpl.lef.d4518d8b8a44.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_s81sl_vsw",
-  "receipt": "ot_s81sl_vsw_tpl.lef.e6ce5c6e0ab9.receipt.json",
-  "receipt_sha256": "f06f72351c70d8ae82ae65090a118362b9408168fcaa76825f0c2b9694e3dcec",
-  "sha256": "e6ce5c6e0ab9ab7b81366a3a3311588c93a76a08664783aba1565327f24829f1",
+  "pin_access_probe": {
+   "def_sha256": "b2b66b05bde0291d06360915be6d47d5b84c1d4a7a9582c826e0bdcb753ee4f7",
+   "every_signal_pin_connected": true,
+   "log_sha256": "7ce56cc1507c22611f8b16ddfecc0b2d4adb54c40a5fc408f0b57ab938d898a1",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_s81sl_vsw_tpl.lef.d4518d8b8a44.receipt.json",
+  "receipt_sha256": "2ce47e0f09f6aeb27e521506247121e8a86360daccd96944ce951cbc2b685b52",
+  "sha256": "d4518d8b8a446df55dcd0313f489ba648843635e614ee0f44deb1f38e3ab73d9",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.odb",
@@ -619,15 +1004,26 @@
  "ot_v41_bf16_half.lef": {
   "base_sha256": "ee99b0590ce67acfe1a3d046bac34c1beb5a04dc42c33396341ab8e2bc7f2464",
   "die": "s81",
-  "file": "ot_v41_bf16_half.lef.8f4ec85f24d9.gz",
+  "file": "ot_v41_bf16_half.lef.4bef51611053.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_v41_bf16_half",
-  "receipt": "ot_v41_bf16_half.lef.8f4ec85f24d9.receipt.json",
-  "receipt_sha256": "547518bda14cfd2379b3bbdb9023faf92b587e8229e56964f7a843f81b419a00",
-  "sha256": "8f4ec85f24d9cd9bec950a4c99917b90caf1347b860d93c3aa56e616a099fc64",
+  "pin_access_probe": {
+   "def_sha256": "b2f3cf15a8fa78672d3b001902a14b96db3a34f7825029f58568a660f61dee2a",
+   "every_signal_pin_connected": true,
+   "log_sha256": "c2f0be935010d979c689e7f7d556f15dcb809a67922fc0b5aed0d4d184188251",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_v41_bf16_half.lef.4bef51611053.receipt.json",
+  "receipt_sha256": "954b92ec0ddcf313995112b9a9fe21f338eb466246a550d91467a0d9783f54b8",
+  "sha256": "4bef51611053700d288af7649ce61ab9c8ba716d410aa795b7234bf2dceee9d7",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "srv/opentallas-scratch2/claude/ss29/resign/kit_half/run/results/asap7/kl_ot_v41_bf16_half_rfh6/base/6_final.odb",
@@ -639,16 +1035,27 @@
  "ot_v41_bf_col3_c.lef": {
   "base_sha256": "e4d242448770775b961e69ebac8449f17887f9420e2e8ddbaec992653c0227cd",
   "die": "s81",
-  "file": "ot_v41_bf_col3_c.lef.ef7d9e7206dd.gz",
+  "file": "ot_v41_bf_col3_c.lef.fa6b719beee8.gz",
   "layers": [
    "M4",
    "M5",
    "M6"
   ],
   "module": "ot_v41_bf_col3_c",
-  "receipt": "ot_v41_bf_col3_c.lef.ef7d9e7206dd.receipt.json",
-  "receipt_sha256": "340de3ae2e3d30e6f6bf5a844212385382666bfb0c97ec504198150f44e25f95",
-  "sha256": "ef7d9e7206dd2bac2ddfead023c9cae9eeee7e8120250c91a4fbc6697be642f5",
+  "pin_access_probe": {
+   "def_sha256": "22cbc7a542ade49a8f56be7248544703ba170027fcdd8e66b51ad316cbe75bc2",
+   "every_signal_pin_connected": true,
+   "log_sha256": "d25bc7d4039707e6184941abac13c5904a28c622615631dfe825947397e0ea22",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_v41_bf_col3_c.lef.fa6b719beee8.receipt.json",
+  "receipt_sha256": "a63dbea33c2e9c0785348f5828c0770b6660fcc7ab57e7713ef03fa9a6babe31",
+  "sha256": "fa6b719beee8049751703c5670d9f2810eaa708d088e141ab37668c921b65e36",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch2/claude/die-s81-56/eco/run/col3c6/i1/run/results/asap7/kl_ot_v41_bf_col3_c_rfh6/base/6_final.odb",
@@ -660,15 +1067,26 @@
  "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef": {
   "base_sha256": "2b6de51c97b5f915c861950b0d207ad9a4eb28b16259b4ec0667154ab15e09a7",
   "die": "s81",
-  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.c01fcad181df.gz",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.659819b4718b.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_v41_rom_elem_q_qxpq_w10_gb_he",
-  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.c01fcad181df.receipt.json",
-  "receipt_sha256": "64700e5066ef86cb85592141bbff3ecded6531413b16433f94c249673de518c5",
-  "sha256": "c01fcad181df95991993a8b5a8032f810353e95b2dbb9107cef6581e6c073539",
+  "pin_access_probe": {
+   "def_sha256": "88e6bb19cee9c660262af600b7108d9957d7add86da61c7aa68e7bd313c5407d",
+   "every_signal_pin_connected": true,
+   "log_sha256": "fd5549671122ad7fb78ceb77b984e6c52bf6ec1185041377187a73fdf37c3c2c",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.659819b4718b.receipt.json",
+  "receipt_sha256": "0b7e3f7c110879ac41980b5d8477f45003bcbc772137bcb1341bfe5932933367",
+  "sha256": "659819b4718b8385dacfd3d197488b980bf9711c4745c1703bc909a2b371808d",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc5",
    "db_path": "srv/opentallas-scratch3/claude/s81-romq-b4/he_tgt/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_he_vB/base/6_final.odb",
@@ -680,15 +1098,26 @@
  "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef": {
   "base_sha256": "996bfbfe9fcf3e5187858478efb7972b1e00c4e75ee66107dfdca6c54a52b3b6",
   "die": "s81",
-  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.6323241b635b.gz",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.9924dfc8290c.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "ot_v41_rom_elem_q_qxpq_w10_gb_hw",
-  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.6323241b635b.receipt.json",
-  "receipt_sha256": "4d2325cfca8bb9892d8c1d03783c507686b9f8f13d2b1addc45812d33c14fe96",
-  "sha256": "6323241b635bbecb611fc2097595c2de084066bb9bea228633a44d9ce6e41040",
+  "pin_access_probe": {
+   "def_sha256": "8e40c68226b8ae2391078b9c06a70cc842ebb76eabbc184f31eb2339dff4b99d",
+   "every_signal_pin_connected": true,
+   "log_sha256": "6af35990ff8c66b8c2b66185516128018e960f6c96482d37bdcc336c6bc737c1",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.9924dfc8290c.receipt.json",
+  "receipt_sha256": "c80afa5e9f5932b32bec64c04d174919561e6d7681f6a430f7e3db4359474e0b",
+  "sha256": "9924dfc8290c3a8fd4de155ae57be280fde77cab31592da83ba8c7fd19e17c06",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc5",
    "db_path": "srv/opentallas-scratch2/claude/s81-romq-b5/hw_x8/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_hw_vB/base/6_final.odb",
@@ -700,15 +1129,26 @@
  "qfd_dv_s5_red2_leaf.lef": {
   "base_sha256": "22f446d2ea27f728084dadd6bc9ff13e6614c7dfb4dd3bf6ec78e56445f62cf0",
   "die": "qwen_compute",
-  "file": "qfd_dv_s5_red2_leaf.lef.17fa801f9ca7.gz",
+  "file": "qfd_dv_s5_red2_leaf.lef.348ba5cd6479.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "qfd_dv_s5_red2_leaf",
-  "receipt": "qfd_dv_s5_red2_leaf.lef.17fa801f9ca7.receipt.json",
-  "receipt_sha256": "5ea070b248a800184e9a0bfb8c88b13b70e20ae6c23cf64a5ed237b1b8cd1c7b",
-  "sha256": "17fa801f9ca7a4089afbae6c32490d0a467b053d395e5eed9dc7b159c80bf6e9",
+  "pin_access_probe": {
+   "def_sha256": "87065a0a45221da63dff5df232fbce0c3da98e312ae065d2ab90ae4abfffe16c",
+   "every_signal_pin_connected": true,
+   "log_sha256": "588efad323ded20c2e75d9233f985e071476a1b765146bb5b8ba624e9800bb93",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "qfd_dv_s5_red2_leaf.lef.348ba5cd6479.receipt.json",
+  "receipt_sha256": "5a9620d5e0efcd89af103cc14f2ec4931a8261ec5256ae95318ed90b699d1d18",
+  "sha256": "348ba5cd64795cd35f240cebaea502071766cc328a949340f0511241cb362563",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc2",
    "db_path": "home/ubuntu/scratch-root/claude/dq67-red/eco3/i1/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/6_final.odb",
@@ -721,15 +1161,26 @@
  "qfd_dv_s5_sc2_leaf.lef": {
   "base_sha256": "7a90ce8f7fc2f1b5ce51303467380693734256d5b563e576e5c6be08c202e425",
   "die": "qwen_compute",
-  "file": "qfd_dv_s5_sc2_leaf.lef.f7750fcec47f.gz",
+  "file": "qfd_dv_s5_sc2_leaf.lef.80a9b87d5b21.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "qfd_dv_s5_sc2_leaf",
-  "receipt": "qfd_dv_s5_sc2_leaf.lef.f7750fcec47f.receipt.json",
-  "receipt_sha256": "b92f1c504e5c53fec52bc1fb15b848d32a29f132ada96b91c4a51306caca4c70",
-  "sha256": "f7750fcec47ff009a2067e94c8cccf5215c4e6983bb3fb369dda93564162fe42",
+  "pin_access_probe": {
+   "def_sha256": "f9b5517df525af1f0b954ee03f53e41b8adf7955d3647ec17bcb8200e1cfe7b1",
+   "every_signal_pin_connected": true,
+   "log_sha256": "78cbae26fd9d9b7e2369803c5989aa636102358ca9a87257dd021a98f0d29ee2",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "qfd_dv_s5_sc2_leaf.lef.80a9b87d5b21.receipt.json",
+  "receipt_sha256": "8bf04924046983a4739c759e8ab6ec9f9f336f3936d4f94aeb795ef5e54eb4b0",
+  "sha256": "80a9b87d5b211a098d8c04e5031bb9a0208a092cc02cd0b5ffdbbc26bbdd3e6e",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc4",
    "db_path": "srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_hab5fca/base/6_final.odb",
@@ -742,15 +1193,26 @@
  "qfd_dv_s5_su8_rst3.lef": {
   "base_sha256": "e56fadd2a9e778b425757ae897bf5de8c4b13bf8e83c94e610a1e3b7f24f4db4",
   "die": "qwen_compute",
-  "file": "qfd_dv_s5_su8_rst3.lef.3ee214684e82.gz",
+  "file": "qfd_dv_s5_su8_rst3.lef.5d46513256fb.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "qfd_dv_s5_su8_rst3",
-  "receipt": "qfd_dv_s5_su8_rst3.lef.3ee214684e82.receipt.json",
-  "receipt_sha256": "4a05112b9c976d75cebc303e99831a3d0ce24caaa0d769938e872557d96615d3",
-  "sha256": "3ee214684e821c0276d1175ae431e590f9365ebcab762242aaef568fba817602",
+  "pin_access_probe": {
+   "def_sha256": "f8f408e54eb4a1c329f67caa82b538269b3ba5107eda2242ebbdf55a02b4d787",
+   "every_signal_pin_connected": true,
+   "log_sha256": "0541b2d831c0e297442cfb267232e7c68989fd216bdfb771ef132571b7d6c332",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "qfd_dv_s5_su8_rst3.lef.5d46513256fb.receipt.json",
+  "receipt_sha256": "6348ec2f3ab6c61fa9268024be05713e141e3fca39bdcabbfa85bd71515836dd",
+  "sha256": "5d46513256fb547e445b8416609ed9be5af4eedaafb041d1e5d79d47fd655a30",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel1",
    "db_path": "srv/opentallas-scratch/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/kit_recon/run/results/asap7/kq_qfd_dv_s5_su8_rst3_c/base/6_final.odb",
@@ -763,15 +1225,26 @@
  "qfd_dv_s8x_btab.lef": {
   "base_sha256": "1e5397eedc8b9fb1522f2891616041e6b6e1e87a1fe160d553097e4de8903d51",
   "die": "qwen_compute",
-  "file": "qfd_dv_s8x_btab.lef.709c193acf59.gz",
+  "file": "qfd_dv_s8x_btab.lef.5547825d1761.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "qfd_dv_s8x_btab",
-  "receipt": "qfd_dv_s8x_btab.lef.709c193acf59.receipt.json",
-  "receipt_sha256": "8aa414880a3c43cc58f05185a3fb04ef70967263b7bc421b6b377d3fc3d8f9f1",
-  "sha256": "709c193acf59d02d9a9aca5205df700286e4fcc9dbf1186146212893233de076",
+  "pin_access_probe": {
+   "def_sha256": "b3373c07de995b25ae3a471ce696223a3f22dd4e10dc2e5705f5b44d65f404e4",
+   "every_signal_pin_connected": true,
+   "log_sha256": "0a5776668be674fb8818de1fd9deeb9cad5f3b5c6d68c0d4136efd3adf35f070",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "qfd_dv_s8x_btab.lef.5547825d1761.receipt.json",
+  "receipt_sha256": "2baa487e66410d26f14f93524f5473d5932c77d77cc79ed1769f0c2e41dfea81",
+  "sha256": "5547825d17619b527685d10153dbe3b53a34b61dbc741edb21e45ac81680672f",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/run/results/asap7/codex_btab_mif1_1847/base/6_final.odb",
@@ -784,44 +1257,32 @@
  "qfd_dv_s8x_prog.lef": {
   "base_sha256": "dec688ca053e04ce230c5eb1227a901e05fea673d2f2d3c815c499d3dcb40a85",
   "die": "qwen_compute",
-  "file": "qfd_dv_s8x_prog.lef.88fc9ddfcd50.gz",
+  "file": "qfd_dv_s8x_prog.lef.27e232249a57.gz",
   "layers": [
    "M4",
    "M5"
   ],
   "module": "qfd_dv_s8x_prog",
-  "receipt": "qfd_dv_s8x_prog.lef.88fc9ddfcd50.receipt.json",
-  "receipt_sha256": "47e45a32dd16b12840c3c2e8ec13259ea0c8dd2be82f886b3518d410f108f7eb",
-  "sha256": "88fc9ddfcd5076f48465e2221876d6ae0ea29933980bd0fb0c7ab00c79110af6",
+  "pin_access_probe": {
+   "def_sha256": "e6ac487ff03efa024be917e1fa08fc03132c92b52d76a226355376f724dc427d",
+   "every_signal_pin_connected": true,
+   "log_sha256": "ec93b60255284718c022769d27eef5949e0fb899c45533e6d600c8761fac4d13",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "qfd_dv_s8x_prog.lef.27e232249a57.receipt.json",
+  "receipt_sha256": "0fed3c855726b2d781434d5536590ab232acfe1325b954fb14c1d387c3b0ba4a",
+  "sha256": "27e232249a5782603563ad4e1862a08ebbd845aff3f864739fbe67422d834bc0",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb",
    "odb_sha256": "66fba74578449eb3eb3fe47f5270ab18a4664b99ce5f4fa760977144dc0a5527",
    "origin": "signed store stage (sha-verified)",
    "store_id": "1756e1285b37167c54c5de4a004a6d406441d76ec5f3c0c456421eb159dbafda",
-   "verdict": "SIGNED"
-  }
- },
- "qfd_tile_nl_a0c.lef": {
-  "base_sha256": "f1befcbbb9693ca99e6ec0d371d57ab59d6c854045f17d955b5da5e64cd3dc90",
-  "die": "qwen_compute",
-  "file": "qfd_tile_nl_a0c.lef.c17828597581.gz",
-  "layers": [
-   "M4",
-   "M5",
-   "M6",
-   "M7"
-  ],
-  "module": "qfd_tile_nl_a0c",
-  "receipt": "qfd_tile_nl_a0c.lef.c17828597581.receipt.json",
-  "receipt_sha256": "9afada63e4e1cdee670a7d8b096c04fe837d37ff8deda9f6d5708a1c88bf43d8",
-  "sha256": "c17828597581ec69da51201e86a92fd7c52b563e5ff49c2733959118690bb15d",
-  "source": {
-   "archive": "/archive/opentallas-signed-1106/epyc2",
-   "db_path": "srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1/run/results/asap7/kq_qfd_tile_nl_a0c_vB2/base/6_final.odb",
-   "odb_sha256": "68815b07d435a0ad938127d6d1769a9d23100c9a30303b4229a0d02ad4d34a11",
-   "origin": "signed store stage (sha-verified)",
-   "store_id": "5799265f54a1f7bbe7c5df71cabe30f023feeb5b64cd76e1f5e13318d4f291e5",
    "verdict": "SIGNED"
   }
  }

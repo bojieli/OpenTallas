@@ -148,6 +148,33 @@ def split_name(n):
     return (m.group(1), int(m.group(2))) if m else (n, None)
 
 
+def direct_port_check(pb, tports, shell_drop):
+    """top == module port check of the plan pin table against the RTL top.
+
+    With the face shell dropping unread input bits (drop_face_shell_pins plan events, e.g. HBM i8w8 1109 drops
+    command[191:184]), the plan table may already lack the unread top bits / whole bus of an INPUT: those buses are
+    deferred, not failed, and returned as {bus: plan width} for the post-shell check (shell keep == plan width).
+    Returns (bad, deferred)."""
+    tp = {n: (d, wd) for n, d, wd in tports}
+    bad, deferred = [], {}
+    for b, (wd, _) in pb.items():
+        d, twd = tp.get(b, (None, None))
+        if twd == wd:
+            continue
+        if shell_drop and d == "input" and twd is not None and wd < twd:
+            deferred[b] = wd
+        else:
+            bad.append(b)
+    for n, (d, _) in tp.items():
+        if n in pb:
+            continue
+        if shell_drop and d == "input":
+            deferred[n] = 0
+        else:
+            bad.append(n)
+    return bad, deferred
+
+
 def buses_of(names):
     """plan pin names -> {bus: width} (scalar = width 1, None index); refuses holes."""
     b = {}
@@ -1941,6 +1968,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         return yosys_ports(local, top_, params_, rec.get("defines", []), kd / "rtl")
 
     wrap_rep = None
+    shell_deferred = {}   # direct-top input buses the plan already narrowed (face-shell drop events)
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
         srcs.append(f"/work/rtl/{module}__wrap.sv")
@@ -1972,10 +2000,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         design, dparams = module, {}
     else:
         tports = inventory(top, params)
-        tp = {n: wd for n, _, wd in tports}
-        bad = [b for b, (wd, _) in pb.items() if tp.get(b) != wd] + [n for n in tp if n not in pb]
+        bad, shell_deferred = direct_port_check(pb, tports, a.face_shell == "on" and a.face_shell_drop == "on")
         if bad:
             raise SystemExit(f"PORT_MISMATCH {a.view}: {len(bad)} buses differ, e.g. {bad[:6]}")
+        if shell_deferred:
+            print(f"PORT_DEFER {a.view}: plan already drops unread input bits {sorted(shell_deferred.items())[:6]}"
+                  " (checked against the face shell keep below)", flush=True)
         design, dparams = module, params
     # HBM-FACE 10-25 (default ON, --face-shell off to disable): wrap the core in its face-register shell
     # (face_shell.py): one kept flop per signal pin bit at the face (+1 cycle in / +1 out), clock/reset pins through,
@@ -2034,6 +2064,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         pb = buses_of(names)
         tports = [(n_, d_, shell["keep"][n_]) for n_, d_ in shell["dirs"].items() if shell["keep"][n_] > 0]
         bad = [b for b, (wd, _) in pb.items() if shell["keep"].get(b) != wd]
+        bad += [b for b, wd in shell_deferred.items() if shell["keep"].get(b, 0) != wd and b not in bad]
         if bad:
             raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)

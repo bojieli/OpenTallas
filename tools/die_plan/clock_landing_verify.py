@@ -289,6 +289,9 @@ class Verification:
         for r in rows:
             pr=ports[r['port']];bus=pr['dst']['bus'];path=ident(r['dst'])+'.u_cland_'+bus
             ca=self.table.get('count_aligned')
+            # CA-MIXED-1: a mixed table's ring landings are checked as rings
+            from clock_landings import ca_port
+            if ca and not ca_port(ca,r['port']):ca=None
             c=self.instance(path,('ot_dp_clk_landing_cas' if ca.get('strap_form') else 'ot_dp_clk_landing_ca') if ca else 'ot_dp_clk_landing')
             if c:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
@@ -325,7 +328,9 @@ class Verification:
                     expected=data_width+int(schema.has_epoch(pr))
                     if len(c.ports.get('q',[]))!=expected or len(c.ports.get('d',[]))!=expected:
                         self.fail(path+f': whole live payload/epoch bus must survive (expected {expected})')
-        if self.table.get('count_aligned'):self._check_origins(rows,ports)
+        if self.table.get('count_aligned'):
+            from clock_landings import ca_port
+            self._check_origins([r for r in rows if ca_port(self.table['count_aligned'],r['port'])],ports)
         for pn,p in self.parts.items():
             info=self.collector['types'][p['type']]
             if not info['mask']['active']:continue

@@ -95,7 +95,81 @@ def isolation(text,module,decl,library):
     if sorted(a['kind'] for a in results)!=['clock','reset']:raise ValueError('expected declared clock/reset pair')
     return results
 
-def load(entry,module,lef,tt,ff,root=None,ppins=None,plan_dir=None):
+RECT_RE=re.compile(r'RECT\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;')
+
+def _lef_obs(text):
+    """-> (text before OBS, OBS body, text after OBS) of a one-macro LEF"""
+    found=list(re.finditer(r'^[ \t]*OBS[ \t]*\n(.*?)^[ \t]*END[ \t]*\n',text,re.M|re.S))
+    if len(found)!=1:raise ValueError('detail view: expected exactly one OBS block')
+    m=found[0];return text[:m.start()],m.group(1),text[m.end():]
+
+def _lef_pins(text):
+    out={}
+    for full,name in re.findall(r'^([ \t]*PIN[ \t]+(\S+)[ \t]*\n.*?^[ \t]*END[ \t]+\2[ \t]*\n)',text,re.M|re.S):
+        if name in out:raise ValueError('detail view: duplicate PIN '+name)
+        out[name]=full
+    return out
+
+def _obs_layers(body):
+    out=[]
+    for ln in body.splitlines():
+        if not ln.strip():continue
+        m=re.fullmatch(r'\s*LAYER\s+(\S+)\s*;\s*',ln)
+        if m:out.append((m.group(1),[]));continue
+        if not out:raise ValueError('detail view: OBS geometry before a LAYER')
+        out[-1][1].append(ln)
+    return out
+
+def detail_view(selected,captured,receipt):
+    """DIE-QC-97 11-11 ISLAND-VIEW (b): a selected LEF that is the captured qualified FT LEF plus refined OBS only (the
+    abstract_detail splice: DRT-0073 pin access on the same signed ODB).  Accepted only when ALL hold, else ValueError:
+      - the detail receipt names the captured LEF as its base and the selected file as its output (sha256),
+        says detail_pins_equal_base and check_ok, has no pin-clear cut and no problems, and lists the detailed layers;
+      - re-parsed, every PIN block is byte-equal to the captured LEF and all text outside OBS is byte-equal;
+      - inside OBS, the layer order is unchanged, unlisted layers are byte-equal, a listed layer holds only RECT
+        statements and every one lies inside a captured OBS rect of the same layer (a refinement, never new blockage
+        outside the signed footprint, never a removed layer)."""
+    if not isinstance(receipt,dict):raise ValueError('detail view: no detail receipt')
+    if receipt.get('base_sha256')!=sha(captured):raise ValueError('detail view: receipt base is not the captured FT LEF')
+    if receipt.get('out_sha256')!=sha(selected):raise ValueError('detail view: receipt output is not the selected LEF')
+    if receipt.get('detail_pins_equal_base') is not True or receipt.get('check_ok') is not True:raise ValueError('detail view: receipt lacks its pin/geometry check')
+    if receipt.get('pin_clear_um') is not None or receipt.get('problems'):raise ValueError('detail view: receipt has pin-clear cuts or problems')
+    layers=receipt.get('layers_detailed')
+    if not isinstance(layers,list) or not layers or not all(isinstance(l,str) for l in layers) or len(set(layers))!=len(layers):raise ValueError('detail view: receipt lists no detailed layers')
+    a=Path(captured).read_text();b=Path(selected).read_text()
+    pa,pb=_lef_pins(a),_lef_pins(b)
+    if not pa or pa!=pb:raise ValueError('detail view: pins differ from the captured FT LEF')
+    a0,ao,a1=_lef_obs(a);b0,bo,b1=_lef_obs(b)
+    if (a0,a1)!=(b0,b1):raise ValueError('detail view: change outside OBS')
+    la,lb=_obs_layers(ao),_obs_layers(bo)
+    if [l for l,_ in la]!=[l for l,_ in lb]:raise ValueError('detail view: OBS layer order changed')
+    rects={}
+    for (layer,ga),(_,gb) in zip(la,lb):
+        if ga==gb:continue
+        if layer not in layers:raise ValueError('detail view: OBS changed on unlisted layer '+layer)
+        base=[]
+        for ln in ga:
+            m=RECT_RE.fullmatch(ln.strip())
+            if not m:raise ValueError('detail view: non-RECT captured OBS on '+layer)
+            base.append([float(x) for x in m.groups()])
+        n=0
+        for ln in gb:
+            m=RECT_RE.fullmatch(ln.strip())
+            if not m:raise ValueError('detail view: non-RECT OBS statement on '+layer)
+            x0,y0,x1,y1=[float(x) for x in m.groups()]
+            if not any(r[0]-1e-6<=x0 and r[1]-1e-6<=y0 and x1<=r[2]+1e-6 and y1<=r[3]+1e-6 for r in base):raise ValueError('detail view: OBS rect outside the captured blockage on '+layer)
+            n+=1
+        if not n:raise ValueError('detail view: OBS removed on '+layer)
+        rects[layer]=n
+    if not rects:raise ValueError('detail view: no OBS difference although the LEF bytes differ')
+    return dict(signed_view_ok='via detail receipt',base_sha256=receipt['base_sha256'],out_sha256=receipt['out_sha256'],layers_detailed=sorted(rects),rects=rects)
+
+def receipt_beside(lef):
+    """the detail receipt prov_view.py stages next to a selected detailed LEF (<module>.detail_receipt.json), or None"""
+    p=Path(lef).with_name(Path(lef).name[:-len('.lef')]+'.detail_receipt.json') if str(lef).endswith('.lef') else None
+    return json.loads(p.read_text()) if p and p.is_file() else None
+
+def load(entry,module,lef,tt,ff,root=None,ppins=None,plan_dir=None,detail_receipt=None):
     spec=entry.get('physical_ft')
     if not spec:return None
     if module not in SUPPORTED or set(spec)!={'proof','proof_sha256','unconsumed_outputs'}:raise ValueError('unsupported physical FT contract')
@@ -112,8 +186,11 @@ def load(entry,module,lef,tt,ff,root=None,ppins=None,plan_dir=None):
         f=p.parent/rel
         if sha(f)!=v['sha256']:raise ValueError('physical FT captured '+key+' changed')
         files[key]=f
+    via=None
     for key,actual in [('lef',lef),('tt',tt),('ff',ff)]:
-        if sha(actual)!=sha(files[key]):raise ValueError('selected '+key+' differs from captured qualified FT view')
+        if sha(actual)!=sha(files[key]):
+            if key=='lef' and detail_receipt is not None:via=detail_view(actual,files[key],detail_receipt);continue
+            raise ValueError('selected '+key+' differs from captured qualified FT view')
     import sdc_lint
     decl=json.loads(files['declaration'].read_text())
     errors=sdc_lint.ft_verify(decl)
@@ -148,7 +225,9 @@ def load(entry,module,lef,tt,ff,root=None,ppins=None,plan_dir=None):
     adapter=entry.get('native_port_adapter',{})
     if adapter.get('merge')!={} or adapter.get('cycles')!=0 or adapter.get('tie')!={n:"1'b0" for n in inputs}:raise ValueError('FT inputs need explicit zero ties without other port edits')
     if set(spec['unconsumed_outputs'])!=outputs:raise ValueError('FT outputs need explicit unconsumed accounting')
-    return dict(ports=decl['ports'],core_header_sha256=r['core_header_sha256'],proof=str(p),proof_sha256=sha(p),module=module,isolation=graph)
+    out=dict(ports=decl['ports'],core_header_sha256=r['core_header_sha256'],proof=str(p),proof_sha256=sha(p),module=module,isolation=graph)
+    if via:out.update(signed_view_ok=via['signed_view_ok'],detail_view=via)
+    return out
 
 def extend_header(header,contract,raw_header=None):
     if hashlib.sha256((raw_header or header).encode()).hexdigest()!=contract['core_header_sha256']:raise ValueError('logical core header changed')
@@ -166,7 +245,7 @@ def contracts(cores,macros,staged,root=None,plan_dir=None):
         mod=c['module'];matches=[m for m in macros if m[1]==mod]
         if not matches:raise ValueError('physical FT macro missing')
         _,_,lef,tt,*_=matches[0];tt=Path(tt);ff=tt.with_name(tt.name.replace('_tt.lib','_ff.lib'))
-        value=load(c,mod,lef,tt,ff,root,plan_dir=plan_dir)
+        value=load(c,mod,lef,tt,ff,root,plan_dir=plan_dir,detail_receipt=receipt_beside(lef))
         inst='u_'+c['inst'];pattern=r'^\s*'+re.escape(mod)+r'(?:\s+#\([^\n]*\))?\s+'+re.escape(inst)+r'\s*\((.*?)^\s*\);'
         bodies=re.findall(pattern,staged,re.M|re.S)
         if len(bodies)!=1:raise ValueError('physical FT target instance identity missing/ambiguous '+inst)

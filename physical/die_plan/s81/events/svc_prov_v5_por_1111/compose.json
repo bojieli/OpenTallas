@@ -1,0 +1,28 @@
+{
+ "schema": "s81svcrs3.svcprov_v5_compose.v1",
+ "lane": "S81-SVCRS-3 with DIE-S81-85 (owner of the v5 event)",
+ "ruling": "COORD 11-10 (COUNT-ARCHIVE-3 finding a): compose svc_prov_1109 v5 into the S81 plan of record, EQ-gated. DO_NOT_COUNT.",
+ "method": [
+  "physical/die_plan/s81/svc_prov_event_1109.py BASE OUT EVENT svc_prov_meas_1109.json --lo-pack b --rdpipe  (the v5 event arguments: lo_pack b, OT_SVC_ATT_RDPIPE)",
+  "physical/die_plan/s81/svc_prov_step3_ft_1109.py OUT OUT_S3 LEDGER  (v5 step 3: ft bits inside the new boxes re-sited)"
+ ],
+ "reproduction": "The same two commands on v5 base d67f6ffb reproduce the v5 event plan_output f206e83ffcc6617d and then main events/plan_h2_2249_svcprov_v5_517fbf9ecffb8b8f.json.gz byte for byte (cmp); the step-3 ledger is identical on both lineages.",
+ "compositions": {
+  "por": {
+   "base": "plan of record b05c29bbaafa9842 (claude/ds85-s81-plan-of-record-1111 @ f105859379c2)",
+   "out_sha256": "347ecb05070dbc68ef66e8a25eb2b8cfa5dac4fa61d3017189bcac226d2c3c67",
+   "file": "plan_h2_2249_por_v5_347ecb05070dbc68.json.gz",
+   "eqgate": "eqgate_por.json PASS",
+   "g0": "g0_delta_por.json"
+  },
+  "pgr1": {
+   "base": "PGR1-S81-1111 plan ebea5f5b8ade7a23 (claude/ds85-pgr1-s81-1111 @ c71cc44fbce6, = POR + PGR1)",
+   "out_sha256": "ca10ae6afbab2337fd8c87e165b2037c37bd3f173f33f99dd34d4228793b3bb9",
+   "file": "plan_h2_2249_pgr1_v5_ca10ae6afbab2337.json.gz",
+   "eqgate": "eqgate_pgr1.json PASS"
+  }
+ },
+ "eq_gate": "eqgate.py: the leaf patch base -> composed plan equals the v5 patch d67f6ffb -> 517fbf9e on every touched section (14 svc_rs types, clock.spine, die, partitions, ports, reset.in_sites), base values equal under every numeric delta; excluded only top-level note text and the PBP-SVCRS-1110 port_buf_at_pin keys (in the POR, not in the v5 lineage). Every other type and key is byte-identical to the base.",
+ "install": "gunzip -c <file> > physical/die_plan/s81/plan_h2_2249.json (108 MB, over the GitHub file limit, so committed gzip -n -9 like the POR)",
+ "not_changed": "no RTL, bind or pin-window change of any die lane; pin_cycle_deltas are type-internal (event_*.json), already posted to TOK-VERIFY-1"
+}

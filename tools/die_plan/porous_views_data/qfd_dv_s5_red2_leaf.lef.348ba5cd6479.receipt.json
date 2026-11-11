@@ -1,0 +1,163 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/out/qfd_dv_s5_red2_leaf/base_kit.lef",
+ "base_sha256": "22f446d2ea27f728084dadd6bc9ff13e6614c7dfb4dd3bf6ec78e56445f62cf0",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/out/qfd_dv_s5_red2_leaf/detail.lef",
+ "detail_sha256": "dea2b071640f7200606e81ba8902c91ed66d7624d567a2ce3bbd9b6cff699d6c",
+ "exact": {
+  "bloat_factor": 0,
+  "path": "/srv/opentallas-scratch2/claude/porous-all-1/out0/qfd_dv_s5_red2_leaf/detail0.lef",
+  "pins_match": true,
+  "sha256": "f67404719bb9ee072060627109dc290fd5a62ba5920e5307565216207bd51dc0"
+ },
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "kit_fallback": {
+  "count": 0,
+  "cut": {},
+  "pins": [],
+  "rounds": 0
+ },
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views3/qfd_dv_s5_red2_leaf/qfd_dv_s5_red2_leaf.lef",
+ "out_sha256": "348ba5cd64795cd35f240cebaea502071766cc328a949340f0511241cb362563",
+ "pg_guard_rects": {},
+ "pin_access": {
+  "gate": "TritonRoute pin_access probe of the out LEF (add --probe), not this static count",
+  "modes": {
+   "planar_only": 0,
+   "via_down": 0,
+   "via_up": 354
+  },
+  "pins": 354,
+  "rule": "every signal pin: via up/down access point, tech via shapes + eol spacing (planar-only not credited)",
+  "without": [],
+  "without_count": 0,
+  "without_on_kit_lef": [
+   "l_last0",
+   "l_out[0]",
+   "l_out[100]",
+   "l_out[101]",
+   "l_out[102]",
+   "l_out[103]",
+   "l_out[104]",
+   "l_out[105]",
+   "l_out[106]",
+   "l_out[107]",
+   "l_out[108]",
+   "l_out[109]",
+   "l_out[10]",
+   "l_out[110]",
+   "l_out[111]",
+   "l_out[112]",
+   "l_out[113]",
+   "l_out[114]",
+   "l_out[115]",
+   "l_out[116]",
+   "l_out[117]",
+   "l_out[118]",
+   "l_out[119]",
+   "l_out[11]",
+   "l_out[120]",
+   "l_out[121]",
+   "l_out[122]",
+   "l_out[123]",
+   "l_out[124]",
+   "l_out[125]",
+   "l_out[126]",
+   "l_out[127]",
+   "l_out[128]",
+   "l_out[129]",
+   "l_out[12]",
+   "l_out[130]",
+   "l_out[131]",
+   "l_out[132]",
+   "l_out[133]",
+   "l_out[134]",
+   "l_out[135]",
+   "l_out[136]",
+   "l_out[137]",
+   "l_out[138]",
+   "l_out[139]",
+   "l_out[13]",
+   "l_out[140]",
+   "l_out[141]",
+   "l_out[142]",
+   "l_out[143]"
+  ]
+ },
+ "pin_cover": {
+  "M4": 292,
+  "M5": 62
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 354,
+  "size_base": [
+   276.48,
+   276.48
+  ],
+  "size_detail": [
+   276.48,
+   276.48
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 108556,
+  "M5": 4358
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/epyc2",
+  "db_path": "home/ubuntu/scratch-root/claude/dq67-red/eco3/i1/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/6_final.odb",
+  "odb_sha256": "468d77ec169eb744814f992998759b8fc76b6dfdc67ea88a53af33f4a43e9d1b",
+  "origin": "signed store stage (sha-verified)",
+  "store_id": "1122586a813b7e1f425c72d3c20fc285228186005c33a254df47b9b4e1612255",
+  "verdict": "SIGNED"
+ },
+ "tech": "asap7_tech_1x_201209.lef (ORFS platforms/asap7/lef)",
+ "tool_sha256": "42c07deb54dcb8b9cb2d743cfebf03e4706dca73d82b5751364471a9a34b1856",
+ "windows": {
+  "count": {
+   "M4": 354,
+   "M5": 354
+  },
+  "cut": {
+   "M4": {
+    "exact_added": 379,
+    "rects_cut": 355,
+    "um2_cut": 1.333815
+   },
+   "M5": {
+    "exact_added": 64,
+    "rects_cut": 65,
+    "um2_cut": 0.242616
+   }
+  },
+  "halo_um": {
+   "M4": 0.111,
+   "M5": 0.115
+  },
+  "rule": "pin shape + (max via landing half extent + eol spacing + 1 pitch) on pin layer, layer below, layer above; pin-layer planar escape to outline sides within 0.5 um; bloated OBS replaced by the exact (bloat 0) metal"
+ }
+}

@@ -399,15 +399,32 @@ def verify(b, samples=2000, seed=1, need_ps=100.0, fall_ports=None):
                      "sync physics with metastable resolution both ways")
 
 
-def annotate_table(table, b, root_settle_cycles=64, strap_form=False):
+def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None):
     """clock_landings / fallback_land region table -> count-aligned form (opt-in; the old ring stays the default).
     strap_form (MESO-STRAP-1, OWNER 12.15a, opt-in): clock_landings emits the strap form (strap_ca_* pins, one design
-    per type, parent ties from strap_ties())."""
+    per type, parent ties from strap_ties()).
+    mixed (CA-MIXED-1, opt-in): {"ring_cycles": {pid: n}}: the CA / ring choice is per landing.  The bind's crossings
+    take the count-aligned form; every other table crossing keeps today's ring, priced at ring_cycles[pid] (the measured
+    LEAD/LAG count) or 3.  Every bind crossing must still be a table crossing.  None = whole-network form (unchanged)."""
     t = json.loads(json.dumps(table))
     miss = [r["port"] for r in t["ports"] if r["port"] not in b["ports"]]
+    if mixed is not None:
+        extra = sorted(set(b["ports"]) - {r["port"] for r in t["ports"]})
+        if extra:
+            raise BindError(f"mixed form: {len(extra)} bind crossings are not table crossings: {extra[:5]}")
+        rc = {pid: int(n) for pid, n in sorted((mixed.get("ring_cycles") or {}).items())}
+        bad = sorted(set(rc) & set(b["ports"]))
+        if bad:
+            raise BindError(f"mixed form: ring_cycles given for {len(bad)} count-aligned crossings: {bad[:5]}")
+        for r in t["ports"]:
+            if r["port"] not in b["ports"]:
+                r["added_cycles"] = rc.get(r["port"], 3)
+        miss = []
     if miss:
         raise BindError(f"{len(miss)} table crossings missing from the bind: {miss[:5]}")
     for r in t["ports"]:
+        if r["port"] not in b["ports"]:
+            continue
         c = b["ports"][r["port"]]
         if (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
             raise BindError(f"{r['port']}: bind regions {c['src']}->{c['dst']} != table {r['src_region']}->{r['dst_region']}")
@@ -424,6 +441,10 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False):
                                        for k, v in b["regions"].items()})
     if strap_form:
         t["count_aligned"]["strap_form"] = True
+    if mixed is not None:
+        t["count_aligned"]["mixed"] = True
+        t["count_aligned"]["ring_cycles"] = {r["port"]: int(r["added_cycles"]) for r in t["ports"]
+                                             if r["port"] not in b["ports"]}
     if b.get("start_ports"):
         # START-TREE compose slice: the start ports (dedicated start pins / die-level stages) travel with the table
         t["count_aligned"]["start_tree"] = b.get("start_tree", "clock")
@@ -666,6 +687,35 @@ def lane_cycles(table):
     return dict(out)
 
 
+def load_select(path):
+    """CA-MIXED-1: landing_ca_select.py ca_select.json (landings_detail) or a change set (landings list) ->
+    {ca: {pid}, ring: {pid: new_cycles}} (decision CA / LEAD,LAG)"""
+    d = json.load(open(path))
+    rows = d.get("landings_detail")
+    if rows is None and isinstance(d.get("landings"), list):
+        rows = d["landings"]
+    if not isinstance(rows, list):
+        raise BindError(f"{path}: no landings_detail / landings list (landing_ca_select.py --out)")
+    ca, ring = set(), {}
+    for r in rows:
+        if r["decision"] == "CA":
+            ca.add(r["port"])
+        elif r["decision"] in ("LEAD", "LAG"):
+            ring[r["port"]] = int(r["new_cycles"])
+        else:
+            raise BindError(f"{path}: {r['port']} decision {r['decision']!r} is not CA/LEAD/LAG")
+    return dict(ca=ca, ring=ring)
+
+
+def select_plan(plan, ca):
+    """CA-MIXED-1 on a precomputed plan: keep the CA crossings and every start-tree port (the start rides it, so a
+    tree port stays count-aligned whatever its phase decision; main() reports those as start_tree_ports_forced_ca)."""
+    tree = {g["start_from"]["port"] for g in plan["regions"] if g.get("start_from")}
+    p = dict(plan)
+    p["crossings"] = [o for o in plan["crossings"] if o["port"] in ca or o["port"] in tree]
+    return p
+
+
 def report(b, v):
     hist = defaultdict(int)
     for c in b["ports"].values():
@@ -738,6 +788,9 @@ def main(argv=None):
     ap.add_argument("--plan-die", help="MESO-STRAP-1: die plan (partitions/ports) for --straps-out; HEAD-RINGHOLD-1: "
                     "its clock.ring_hold.write_edge fall moves the verify() window of those rings by T/2")
     ap.add_argument("--strap-form", action="store_true", help="MESO-STRAP-1: mark the --table-out for the strap form")
+    ap.add_argument("--select", metavar="CA_SELECT.json",
+                    help="CA-MIXED-1: landing_ca_select.py ca_select.json; per-landing form: decision CA crossings are "
+                         "planned/bound count-aligned, LEAD/LAG keep the ring at their new_cycles (mixed --table-out)")
     ap.add_argument("--straps-out", help="MESO-STRAP-1 (OWNER 12.15a): write per-type strap pins + per-instance tie "
                     "values (count_straps.v1) for the annotated table (needs --table and --plan-die)")
     a = ap.parse_args(argv)
@@ -745,8 +798,12 @@ def main(argv=None):
     CAP.check_start_tree_args(a, ap.error)
     if a.start_tree == "clock" and not a.from_ocv:
         ap.error("--start-tree clock plans in-process: needs --from-ocv (a plan JSON carries its own start tree)")
+    sel = load_select(a.select) if a.select else None
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
+        if sel is not None:
+            # CA-MIXED-1: only the count-aligned landings get count frames (rings keep their own phase)
+            rows = [r for r in rows if r["port"] in sel["ca"]]
         if a.sta_proof:
             # count_align_plan.py --sta-proof (DIE-HEAD-5 one interval model) in the in-process plan (MESO-START-2)
             if not a.sta_plan:
@@ -770,6 +827,8 @@ def main(argv=None):
             plan["start_edges"] = [{k: v for k, v in e.items() if not k.startswith("_")} for e in sedges]
     else:
         plan = json.load(open(a.plan_json))
+        if sel is not None:
+            plan = select_plan(plan, sel["ca"])
     table = json.load(open(a.table)) if a.table else None
     mode = ("table" if table else "region") if a.parts == "auto" else a.parts
     if mode == "ocv" and not a.from_ocv:
@@ -783,11 +842,17 @@ def main(argv=None):
     if parts is not None:
         rep["relay"] = relay_summary(b)
     rep["plan_source"] = a.plan_json
+    if sel is not None:
+        forced = sorted(set(b["ports"]) - sel["ca"])
+        rep["mixed"] = dict(select=a.select, count_aligned=len(b["ports"]), ring=len(sel["ring"]) - len(forced),
+                            start_tree_ports_forced_ca=forced)
     rep["margin_policy"] = mpol
     b["report"] = rep
     Path(a.out).write_text(json.dumps(b, indent=0) + "\n")
     if a.table:
-        t = annotate_table(table, b, a.root_settle, strap_form=a.strap_form)
+        t = annotate_table(table, b, a.root_settle, strap_form=a.strap_form,
+                           mixed=None if sel is None else dict(ring_cycles={p: n for p, n in sel["ring"].items()
+                                                                           if p not in b["ports"]}))
         Path(a.table_out).write_text(json.dumps(t, indent=1) + "\n")
         if a.straps_out:
             st = strap_ties(t["count_aligned"], json.load(open(a.plan_die)))

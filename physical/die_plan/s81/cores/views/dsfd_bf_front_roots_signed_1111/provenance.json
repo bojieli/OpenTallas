@@ -1,0 +1,167 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsfd_bf_front_roots_s52a",
+  "module": "dsfd_bf_front_roots",
+  "plan_type": "col_h10_r0_p4__t1",
+  "outline_um": [
+   116.64,
+   198.72
+  ],
+  "ref_tile": "physical/ref_tile/s81bf_front_five_roots_nlock_h03",
+  "spec": "physical/ref_tile/s81bf_front_five_roots_nlock_h03/spec.json",
+  "spec_sha256": "188262f640d529e87100f6a91f8746b487167efe266b06794ccac03550b00056",
+  "pins_file": "inputs/core_pins/dsfd_bf_front_roots.json",
+  "pins_sha256": "13a0f97dec1c6515b7915fcdfd89390b7be5621df1fe2d62bd7633cd7dd6c52f",
+  "pins": 3272,
+  "plan_lef": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots.lef",
+  "pins_canon_sha256": "678907e6cc9728de9bb31e95f81a6f78286fab0123b337a2fee89b01e076a8e0",
+  "pins_placed_canon_sha256": "678907e6cc9728de9bb31e95f81a6f78286fab0123b337a2fee89b01e076a8e0",
+  "pins_staged_file": "declared_pin_contract/dsfd_bf_front_roots.json",
+  "pins_staged_sha256": "13a0f97dec1c6515b7915fcdfd89390b7be5621df1fe2d62bd7633cd7dd6c52f",
+  "clocks": [
+   "ck",
+   "io_clk",
+   "io_n",
+   "io_w",
+   "io_e"
+  ],
+  "resets": [
+   "rs"
+  ],
+  "multi_root": {
+   "roots": [
+    {
+     "base": "ck",
+     "clock": "clk",
+     "pins": [
+      "ck"
+     ],
+     "domains": [
+      "core"
+     ]
+    },
+    {
+     "base": "io_clk",
+     "clock": "clk_io_clk",
+     "pins": [
+      "io_clk"
+     ],
+     "domains": [
+      "south"
+     ]
+    },
+    {
+     "base": "io_n",
+     "clock": "clk_io_n",
+     "pins": [
+      "io_n"
+     ],
+     "domains": [
+      "north"
+     ]
+    },
+    {
+     "base": "io_w",
+     "clock": "clk_io_w",
+     "pins": [
+      "io_w"
+     ],
+     "domains": [
+      "west"
+     ]
+    },
+    {
+     "base": "io_e",
+     "clock": "clk_io_e",
+     "pins": [
+      "io_e"
+     ],
+     "domains": [
+      "east"
+     ]
+    }
+   ],
+   "entries": 5
+  },
+  "recipe_sha256": "f5c737b5da8034063f13e74db2f5263e307cd088032b6bf3b1019f0e00896d50",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "8ee525918b",
+  "sdc_lint_sha256": "b5ed7ff17f5f77a047dbccdbec7623b1acf583a022808b081db18a1ba56cd4ae",
+  "face_guard_sha256": "c85a8ad7f6dff0291a85b74d8c85786f786df793d3e8d56947183c9273a6d041",
+  "signoff_sha256": "d2dfb53eb88aac554c079e854c0d7929d529cce45f1b3cd83df07799789b548a",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "c5f62460a46c502a",
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsfd_bf_front_roots",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr",
+ "src_commit": "f8170b8b778fa5e43f1499e23d7f7f26fe2596ad",
+ "flow_tag": "flow-20261104-v-s81",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-10T22:44:19-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr",
+  "base": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr/run/results/asap7/kl_dsfd_bf_front_roots_s52a/base",
+  "signoff": "/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/signoff/signoff.json",
+  "signoff_sha256": "3ad323860e441525f214b37599e9f04ea53c3ec880c990bf9828ec9a645f0416",
+  "signoff_generated": "2026-11-04T13:43:02-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/ss29/resign/kit_bfr/run/results/asap7/kl_dsfd_bf_front_roots_s52a/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/ss29/resign/bfr_k/lecrun/lec/lec.json",
+  "note": "counted record 3ad323860e44 (SS29-RESIGN kl_dsfd_bf_front_roots_s52a, PROVENANCE bfr_k/PROVENANCE.json); routed LEC 6_final.v EQUIVALENT",
+  "lib_basis": {
+   "dsfd_bf_front_roots_tt.lib": "base dsfd_bf_front_roots_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "dsfd_bf_front_roots_ff.lib": "base dsfd_bf_front_roots_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "dsfd_bf_front_roots.lef": "70aaf97be0cebc8b1a78acfe94ac364e2791a00212612f44d9190d955412667a",
+   "dsfd_bf_front_roots_ff.lib": "8c1ef574a949355751723f6562943a699f0422ff020251ae55b5267783996601",
+   "dsfd_bf_front_roots_tt.lib": "564d652636832fe657a58bd5e86be0fc7e8fd148597fb16dcc1333a61afd4dc7",
+   "pins.json": "acead1d03d2adf858582f3a991c7bc8f932101f56070ddeaeda3d43a549a740a"
+  },
+  "pin_access": {
+   "ok": true,
+   "top_layer": "M5",
+   "signal_pins": 3272,
+   "without_access": [],
+   "n_without_access": 0
+  }
+ }
+}
