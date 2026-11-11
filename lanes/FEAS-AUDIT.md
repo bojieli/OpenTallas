@@ -83,6 +83,11 @@ No die is line-limited: every full die line is at 0.23 or less. The die-level ov
 - **Model.** route_supply plan-route-5 (e940c50) plus net labels gives the worst p99 (local, calibrated) and a full-line cut: bits crossing each line of the type against every M2-M7 track on it. The line cut is computed stock, with ft_slots removed (pass-throughs routed around), and additionally with the 512-b-plus broadcasts removed.
 - **The line cut is optimistic.** It assumes perfect spreading along the line. CPL-HBM-B1's real-net bounds run 0.5-1.9x of it, so lane bounds override it.
 - **FINDING for PLAN-ROUTE-1.** route_supply counts each HBM face bus that reaches its cores through internal_stations twice: once as the core pin's bus:X net and once as the station chain. The audit removes the duplicate (r2). That halves the HBM bank line cuts, for example q_b002 V 1.83 -> 0.92, but moves p99 only 3-20%.
+- **HBM phantom stations (VIS-TRIAGE-HBM stscan_all2, bind 11b1d1215793).** The plan has 11,886 internal stations, 348 kb in total, that have no driver/load pair in the bound netlist. I removed them and re-scored the four HBM ARCH-REQUIRED types (r3noph, epyc4 out/r3noph):
+  - q_hub_ne: H with ft around goes from 1.86 to 1.805.
+  - q_hub_nw: H goes from 1.72 to 1.718.
+  - q_b001 and q_b001__physical_v1: unchanged.
+  So HBM-A2 and HBM-A1 do not come from phantom stations, and no class changes. Mis-attributed stations (247/286 on the hubs, about 80 on q_b001) carry real bits from a wrong location and are kept.
 - **S81 svc model artifact.** The svc line cut V 0.96 comes from core_conns 'face:E/N/W' destinations aimed at the face midpoint. The svc ARCH item is the reach path above, not that.
 - **No figures yet.** EXPLORER-SCRIPT-1's headless views come later; the intent PNGs of the lanes are cited instead.
 - **Run data.** epyc4 /srv/opentallas-scratch2/claude/feas-audit-1/ (tools/, out/r1 out/r2). No OpenROAD run was made and nothing was built.
