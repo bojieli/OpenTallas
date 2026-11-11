@@ -228,7 +228,30 @@ def merge_text(repo, b, n, l_bytes):
         return p.returncode == 0, p.stdout
 
 
-def classify(live, base, new, live_bytes=None, repo=None, mbase=None):
+def path_history(repo, revs, paths, chunk=200):
+    """{path: {blob shas the path ever had on the history of revs}} (one git log --raw per chunk of paths)"""
+    out = {p: set() for p in paths}
+    paths = sorted(paths)
+    for i in range(0, len(paths), chunk):
+        part = paths[i:i + chunk]
+        p = subprocess.run(['git', '-C', repo, 'log', '--raw', '--no-abbrev', '--no-renames', '--format=', '-m']
+                           + list(revs) + ['--'] + part, capture_output=True, text=True)
+        for ln in p.stdout.splitlines():
+            if not ln.startswith(':') or '\t' not in ln:
+                continue
+            meta, path = ln.split('\t', 1)
+            f = meta.split()
+            if path in out and len(f) >= 4:
+                out[path].update(x for x in (f[2], f[3]) if x.strip('0'))
+    return out
+
+
+def lag_candidates(live, base, new):
+    """paths whose live blob is neither the die-branch nor the composed blob (where an old git copy can sit)"""
+    return sorted(p for p, L in live.items() if L != new.get(p) and L != base.get(p))
+
+
+def classify(live, base, new, live_bytes=None, repo=None, mbase=None, hist=None):
     """live/base/new: {path: (mode, sha)}.  live_bytes(path) -> bytes of the live file (for 3-way merges).
     -> {counts, actions: [{op, path, mode, sha|text}], carried: [paths], conflicts: [paths], ...}
     op write = the new tree gets git blob sha; op text = merged content; op delete = absent in the new tree.
@@ -240,13 +263,25 @@ def classify(live, base, new, live_bytes=None, repo=None, mbase=None):
     mb = base if mbase is None else mbase
     def c(k):
         counts[k] = counts.get(k, 0) + 1
+    lag = []
     for p in sorted(set(live) | set(new)):
         L, B, N = live.get(p), base.get(p), new.get(p)
         if L == N:
             c('same'); continue
+        # COORD 11-10 (HBM-CORES-B, epyc4 HBM recipes.json = 11-06 copy): a live blob that is an OLD git version of the
+        # path (on the history of the composed tree or the die branch) is a stale copy, not an overlay: take the commit
+        if hist is not None and L is not None and L != B and L[1] in hist.get(p, ()):
+            lag.append(p)
+            if N is None:
+                acts.append(dict(op='delete', path=p)); c('stale old git copy -> deleted as on main'); continue
+            acts.append(dict(op='write', path=p, mode=N[0], sha=N[1])); c('stale old git copy -> take commit'); continue
         if L is None:                                   # absent live, present new
-            if B is not None:
+            # COORD 11-10 HBM: a declared-commit file absent from the live tree is restored (9 asbuilt_1108 RTL files
+            # and 41 HBM plan files were missing); only results/ stays sparse (data, never a gen input)
+            if B is not None and (p.startswith('results/') or os.environ.get('WSR_RESTORE', '1') == '0'):
                 c('sparse (absent live, kept absent)'); continue
+            if B is not None:
+                acts.append(dict(op='write', path=p, mode=N[0], sha=N[1])); c('restored (in the commit, absent live)'); continue
             acts.append(dict(op='write', path=p, mode=N[0], sha=N[1])); c('new file (main/overlay)'); continue
         if N is None:                                   # present live, absent new
             if B is None:
@@ -283,7 +318,27 @@ def classify(live, base, new, live_bytes=None, repo=None, mbase=None):
         else:
             conflicts.append(p); c('conflict: both changed, merge conflict (kept live)')
     return dict(counts=counts, actions=acts, carried=carried, conflicts=conflicts, merged=merged,
-                deleted_kept=deleted_kept)
+                deleted_kept=deleted_kept, lag=lag)
+
+
+def src_check(live, base, new, hist):
+    """COORD 11-10 (a): a live wave src vs its declared commit (base = src_sha) + approved overlays (new = composed
+    tree): stale = an old git version of the path; modified = differs, not a git version; live_only = not in git at all
+    (runtime / plan-event files, reported, not counted); missing = in the declared tree, absent live (sparse, reported)"""
+    out = dict(stale=[], modified=[], live_only=[], missing=0)
+    for p, L in live.items():
+        if '__pycache__/' in p or p.endswith('.pyc'):
+            continue
+        if L in (base.get(p), new.get(p)):
+            continue
+        if L[1] in hist.get(p, ()):
+            out['stale'].append(p)
+        elif p in base or p in new:
+            out['modified'].append(p)
+        else:
+            out['live_only'].append(p)
+    out['missing'] = sum(1 for p in base if p not in live)
+    return out
 
 
 def expected_manifest(live, actions):
@@ -371,10 +426,24 @@ def main(argv):
         mbv = None
         if not is_ancestor(repo, b, n):                 # die branch not merged: compare against the merge-base too
             mbv = ls_tree(repo, git(repo, 'merge-base', b, n).stdout.strip())
-        r = classify(read_manifest(lm), ls_tree(repo, b), ls_tree(repo, n), rb, repo, mbv)
+        lv, bv, nv = read_manifest(lm), ls_tree(repo, b), ls_tree(repo, n)
+        hist = path_history(repo, [n, b], lag_candidates(lv, bv, nv)) if os.environ.get('WSR_LAG', '1') != '0' else None
+        r = classify(lv, bv, nv, rb, repo, mbv, hist)
         json.dump(r, open(out, 'w'))
         print(json.dumps(dict(counts=r['counts'], actions=len(r['actions']), carried=len(r['carried']),
-                              conflicts=len(r['conflicts']), merged=len(r['merged']))))
+                              conflicts=len(r['conflicts']), merged=len(r['merged']), lag=len(r['lag']))))
+    elif cmd == 'check':                                # check repo live.tsv base new out.json
+        repo, lm, b, n, out = argv[2:7]
+        lv, bv, nv = read_manifest(lm), ls_tree(repo, b), ls_tree(repo, n)
+        cand = sorted(p for p, L in lv.items() if L not in (bv.get(p), nv.get(p)) and (p in bv or p in nv))
+        # fast form (path_history took 15 min per S81 host): a live blob the clone holds = some git version (stale)
+        q = subprocess.run(['git', '-C', repo, 'cat-file', '--batch-check=%(objectname) %(objecttype)'],
+                           input=''.join(lv[p][1] + '\n' for p in cand), capture_output=True, text=True).stdout
+        known = {ln.split()[0] for ln in q.splitlines() if ln.endswith(' blob')}
+        r = src_check(lv, bv, nv, {p: {lv[p][1]} for p in cand if lv[p][1] in known})
+        json.dump(r, open(out, 'w'))
+        print(json.dumps(dict(stale=len(r['stale']), modified=len(r['modified']), live_only=len(r['live_only']),
+                              missing=r['missing'])))
     elif cmd == 'pack':
         pack(argv[2], json.load(open(argv[3]))['actions'], argv[4]); print('packed')
     elif cmd == 'expect':

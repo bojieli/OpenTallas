@@ -117,7 +117,10 @@ def hub_cfg():
 
 def die_inputs(cfg):
     out = {}
+    only = [x for x in os.environ.get('WOS_DIES', '').split(',') if x]     # an urgent one-die rebuild (COORD 11-10 HBM)
     for die in DIES:
+        if only and die not in only:
+            continue
         d = (cfg.get('dies') or {}).get(die) or {}
         if not d.get('src'):
             continue
@@ -219,10 +222,11 @@ def plan(date, run_dir, cfg=None, queue_text=None):
             REPO, mdir, die, d['src_sha'] or comp['dies'][die]['sha'], r['new_sha'], mdir, die, live_root), 7200)
         r['classify'] = json.loads(out.strip().splitlines()[-1])
         detail = json.loads(ssh(CHOST, "python3 -I -c \"import json;c=json.load(open('%s/classify_%s.json'));"
-                                       "print(json.dumps({k:c[k] for k in ('carried','conflicts','merged')}))\"" % (mdir, die)))
+                                       "print(json.dumps({k:c.get(k,[]) for k in ('carried','conflicts','merged','lag')}))\"" % (mdir, die)))
         r['carried_dirs'] = top_dirs(detail['carried'])
         r['conflicts'] = detail['conflicts'][:60]
         r['merged'] = detail['merged'][:60]
+        r['lag'] = detail['lag']                         # stale old git copies the new tree replaces by the commit
         r['bind'] = bind_job(die, d, r['new_tree'], '%s/%s/%s.bind' % (OUT_ROOT, date, die),
                              script_text=script_text(d))
         res['dies'][die] = r
@@ -300,8 +304,10 @@ def report(res):
         L.append('- carried live overlays (not in git), top dirs: ' + ', '.join('%s %d' % tuple(kv) for kv in r['carried_dirs']))
         if r['merged']:
             L.append('- 3-way merged: ' + ' '.join(r['merged'][:20]))
+        if r.get('lag'):
+            L.append('- stale old git copies -> commit (%d): %s' % (len(r['lag']), ' '.join(r['lag'][:40])))
         if r['conflicts']:
-            L.append('- conflicts (live kept): ' + ' '.join(r['conflicts'][:20]))
+            L.append('- conflicts (live kept): ' + ' '.join(r['conflicts'][:60]))
         b = r['bind']
         L.append('- re-bind: ' + ('strict bind of record (asbuilt %s, old bind %s) -> %s' % (b['asbuilt'], b['old_bind'], b['out'])
                                   if b.get('cmd') else b['why']))
@@ -345,7 +351,8 @@ def build(date, run_dir):
             need = (BIND_CAP_GB + YOSYS_CAP_GB + 32) * 1024 * 1024
             job = ('mkdir -p %s; for i in $(seq 1 720); do [ $(awk \'/MemAvailable/{print $2}\' /proc/meminfo) -ge %d ] && break; '
                    'sleep 60; done; %s > %s.log 2>&1; echo "BIND rc=$? %s" > %s' % (b['out'], need, b['cmd'], b['out'], b['out'], rc))
-            ssh(CHOST, 'nohup setsid bash -c %s >/dev/null 2>&1 < /dev/null &' % shlex.quote(job), 60)
+            # the parentheses: a backgrounded 'cd / && ...' list keeps ssh's stdout open (11-10 HBM run hung 60 s)
+            ssh(CHOST, '(nohup setsid bash -c %s >/dev/null 2>&1 < /dev/null &)' % shlex.quote(job), 60)
             b['launched'] = time.strftime('%Y-%m-%d %H:%M %Z')
             rows.append('any\t%s\tWAVE-OPS-1 %s nightly strict bind %s' % (b['out'], date, die))
     if rows:
@@ -432,6 +439,8 @@ def main(argv):
         if os.path.exists(os.path.join(run_dir, 'build.json')):
             print('already built ' + date); return 0
         res, rows = build(date, run_dir)
+        if os.environ.get('WOS_NOPOST'):
+            print(open(os.path.join(run_dir, 'REPORT.md')).read()); return 0
         rel = os.path.relpath(run_dir, COORD)
         post('- %s STATE [WAVE-OPS-1 -> COORD, KW-FIX-44, ROOT-MERGE-57, KIT-INPUT-STORE-1] nightly wave src %s BUILT '
              '(new dated trees, live untouched, binds launched where a strict bind of record exists). DO_NOT_COUNT.\n%s%s'

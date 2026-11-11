@@ -95,8 +95,10 @@ def test_classify_conflict_kept_live():
     L = {'x': ('100644', 'l')}; B = {'x': ('100644', 'b')}; Nn = {'x': ('100644', 'n')}
     c = R.classify(L, B, Nn)                       # no bytes reader -> conflict, live kept (no action)
     assert c['conflicts'] == ['x'] and not c['actions']
-    c = R.classify({}, {'r/big': ('100644', 'b')}, {'r/big': ('100644', 'n')})
+    c = R.classify({}, {'results/big': ('100644', 'b')}, {'results/big': ('100644', 'n')})
     assert not c['actions'] and c['counts'] == {'sparse (absent live, kept absent)': 1}
+    c = R.classify({}, {'tools/x.py': ('100644', 'b')}, {'tools/x.py': ('100644', 'n')})
+    assert [a['op'] for a in c['actions']] == ['write'] and c['counts'] == {'restored (in the commit, absent live)': 1}
 
 
 def test_unmerged_die_branch_keeps_its_changes():
@@ -139,6 +141,41 @@ def test_rebind_cmd_and_asbuilt():
     assert s['old_bind'] == '/x/bind8' and s['asbuilt'] == '/y/asb.json'
     h = N.bind_job('s81_head', dict(plan='/p', kit_rtl=dict(mode='script', script='/h.sh')), '/n', '/o', script_text='')
     assert h['cmd'] is None and 'no strict bind' in h['why']
+
+
+def test_stale_old_git_copy_takes_commit():
+    # COORD 11-10 HBM recipes.json: the live file is an OLD git version (on main history), main == die branch:
+    # it used to be carried as a live overlay; now the commit wins.  A real live-only edit is still carried.
+    with tempfile.TemporaryDirectory() as t:
+        r, base, main, ov, bad = repo(t)
+        live = os.path.join(t, 'live'); os.makedirs(live)
+        sh('git', '-C', r, 'archive', '-o', os.path.join(t, 'm.tar'), main); sh('tar', '-xf', os.path.join(t, 'm.tar'), '-C', live)
+        open(os.path.join(live, 'a.txt'), 'w').write('l1\nl2\nl3\nl4\nl5\na.txt\n')        # base-era copy of a
+        open(os.path.join(live, 'b.txt'), 'w').write('l1\nl2\nl3\nl4\nl5 hand\nb.txt\n')    # hand edit (not in git)
+        open(os.path.join(live, 'd.txt'), 'w').write('l1\nl2\nl3\nl4\nl5\nd.txt\n')         # deleted on main, old copy
+        lm = R.manifest(live)
+        bv = nv = R.ls_tree(r, main)
+        hist = R.path_history(r, [main, main], R.lag_candidates(lm, bv, nv))
+        c = R.classify(lm, bv, nv, None, r, None, hist)
+        ops = {a['path']: a['op'] for a in c['actions']}
+        assert ops == {'a.txt': 'write', 'd.txt': 'delete'}, ops
+        assert sorted(c['lag']) == ['a.txt', 'd.txt'] and c['carried'] == ['b.txt'], c
+        c0 = R.classify(lm, bv, nv, None, r, None, None)                     # old behaviour without history
+        assert sorted(c0['carried']) == ['a.txt', 'b.txt', 'd.txt'], c0['carried']
+
+
+def test_src_check_categories():
+    with tempfile.TemporaryDirectory() as t:
+        r, base, main, ov, bad = repo(t)
+        live = os.path.join(t, 'live'); os.makedirs(live)
+        sh('git', '-C', r, 'archive', '-o', os.path.join(t, 'm.tar'), main); sh('tar', '-xf', os.path.join(t, 'm.tar'), '-C', live)
+        open(os.path.join(live, 'a.txt'), 'w').write('l1\nl2\nl3\nl4\nl5\na.txt\n')        # old git copy
+        open(os.path.join(live, 'b.txt'), 'w').write('hand\n')                                 # modified, not in git
+        open(os.path.join(live, 'run.json'), 'w').write('{}\n')                               # live-only
+        os.unlink(os.path.join(live, 'e.txt'))                                                 # missing
+        lm = R.manifest(live); bv = R.ls_tree(r, main)
+        c = R.src_check(lm, bv, bv, R.path_history(r, [main], sorted(lm)))
+        assert c == dict(stale=['a.txt'], modified=['b.txt'], live_only=['run.json'], missing=1), c
 
 
 if __name__ == '__main__':

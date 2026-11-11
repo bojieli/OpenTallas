@@ -1,0 +1,414 @@
+{
+ "date": "20261110hbm2",
+ "main": "d3f29c0e2b3795b117680a2192c8755ef949794f",
+ "train_line": "    1. Compose on epyc8 (own clone; GitHub-only shas are relayed through a localhost bundle): main + the latest \"ROOT-MERGE-57 UNLANDED\" train in landing order + KW-FIX-44 \"claude/<b> @ <sha>\" posts of the last 48 h + each die's wave branch (src_sha). Merges are plain; a conflict is aborted and repo",
+ "train_main": null,
+ "excluded": [],
+ "overlays": [
+  {
+   "name": "claude/kw-fix-44-eco-holdscope-1109",
+   "sha": "8b22a8cd23a9",
+   "src": "KW-FIX-44",
+   "full": "8b22a8cd23a9c881b9f9f0a5aa1e35f02c112b7c",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-wd143-1109",
+   "sha": "5bdc916451b4",
+   "src": "KW-FIX-44",
+   "full": "5bdc916451b409c891a186f346b7aa7b18fb9065",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-seal-ap-1109",
+   "sha": "a17641aaa6e6",
+   "src": "KW-FIX-44",
+   "full": "a17641aaa6e6d5bf053d279b2c4458bb9f7de0d5",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-eco-lectool-1109",
+   "sha": "28e008f692f5",
+   "src": "KW-FIX-44",
+   "full": "28e008f692f5becf33a824569fd55970b6fdc042",
+   "status": "on main"
+  },
+  {
+   "name": "claude/type-safe-5-s81-final-1109",
+   "sha": "c0c9a3de749a",
+   "src": "KW-FIX-44",
+   "full": "c0c9a3de749adaa0acf74a596fcf1c58c6ff0696",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-35-wave-c303a-1108",
+   "sha": "804f9e020b2",
+   "src": "KW-FIX-44",
+   "full": "804f9e020b210d3733cdfdb69d07a662e7fc0dc1",
+   "status": "merged"
+  },
+  {
+   "name": "claude/qc-types-12-sta-1108",
+   "sha": "7cb33a3fd1b7",
+   "src": "KW-FIX-44",
+   "full": "7cb33a3fd1b7649b2767ef0079fd40cbc847ca42",
+   "status": "merged"
+  },
+  {
+   "name": "claude/qc-transport-fix-4-1109",
+   "sha": "5333b7dca834",
+   "src": "KW-FIX-44",
+   "full": "5333b7dca834ab36b02ba86d7133e2061ba878ba",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-35-s81src2-1108",
+   "sha": "9d13c8cce9d",
+   "src": "KW-FIX-44",
+   "full": "9d13c8cce9df19dbd554ef09ea5d24a0fbfc9e87",
+   "status": "merged"
+  },
+  {
+   "name": "claude/kw-fix-44-script-inputs-1110",
+   "sha": "ad59b36619cb",
+   "src": "KW-FIX-44",
+   "full": "ad59b36619cbb2fce0623070d34d73e375a45f1b",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-grt-early-1110",
+   "sha": "b6d8a28df457",
+   "src": "KW-FIX-44",
+   "full": "b6d8a28df457c9ef4ba4621c1f013cd1c2bfaa95",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-macro-grid-1110",
+   "sha": "a1583449d1cd",
+   "src": "KW-FIX-44",
+   "full": "a1583449d1cd4022babe77837f40f324eea51f29",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-loadgate-1110",
+   "sha": "2129acf2d0e2",
+   "src": "KW-FIX-44",
+   "full": "2129acf2d0e2b3e2b6de17f199ebf535c7dda2bc",
+   "status": "merged"
+  }
+ ],
+ "base": "aac286936589f567b335a3ff7337edc47f8a9ffb",
+ "unfetched": [],
+ "dies": {
+  "hbm": {
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_hbmf4_m3_por15c",
+   "src_sha": "4393753cf0b438ba3d15257e9eb651760e35869b",
+   "gen_host": "epyc7",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "epyc4"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+    "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
+   },
+   "item_inputs": [
+    "NE_io",
+    "NW_io",
+    "PHY_NC",
+    "PHY_NE",
+    "PHY_NW",
+    "q_b000",
+    "q_b000__physical_v1",
+    "q_b001",
+    "q_b001__physical_v1",
+    "q_b002",
+    "q_b002__physical_v1",
+    "q_b003",
+    "q_b003__physical_v1",
+    "q_b010",
+    "q_b010__physical_v1",
+    "q_b011",
+    "q_b011__physical_v1",
+    "q_b012",
+    "q_b012__physical_v1",
+    "q_b013",
+    "q_b013__physical_v1",
+    "q_b100",
+    "q_b100__physical_v1",
+    "q_b101",
+    "q_b101_nw",
+    "q_b102",
+    "q_b102__physical_v1",
+    "q_b103",
+    "q_b103__physical_v1",
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112",
+    "q_b112__physical_v1",
+    "q_b113",
+    "q_b113__physical_v1",
+    "q_hub_ne",
+    "q_hub_ne__physical_v1",
+    "q_hub_nw",
+    "q_hub_nw__physical_v1",
+    "q_mca",
+    "q_mcb",
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3",
+    "q_spb0",
+    "q_spb0__physical_v1",
+    "q_spb2",
+    "q_spb2__physical_v1",
+    "q_spt0",
+    "q_spt0__physical_v1",
+    "q_spt1",
+    "q_spt2",
+    "q_spu0",
+    "q_spu0__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1",
+    "q_su20",
+    "q_su20__physical_v1",
+    "q_su21",
+    "q_su21__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_su31",
+    "q_su31__physical_v1",
+    "root",
+    "vsN0",
+    "vsN2",
+    "vsN5",
+    "vsN6"
+   ],
+   "bind_mem_gb": null,
+   "new_sha": "aac286936589f567b335a3ff7337edc47f8a9ffb",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm",
+   "live_manifests": {
+    "epyc7": "eacf87f45b253be382543a497e5deb48cb0f72442a36375b2de6a8a9d7409e7c",
+    "epyc8": "eacf87f45b253be382543a497e5deb48cb0f72442a36375b2de6a8a9d7409e7c",
+    "epyc4": "eacf87f45b253be382543a497e5deb48cb0f72442a36375b2de6a8a9d7409e7c"
+   },
+   "canonical_host": "epyc7",
+   "classify": {
+    "counts": {
+     "same": 320939,
+     "carry live-only (not in git)": 140,
+     "new file (main/overlay)": 733,
+     "stale old git copy -> take commit": 97,
+     "take new (main/overlay changed)": 184,
+     "restored (in the commit, absent live)": 204,
+     "conflict: both changed, merge conflict (kept live)": 3,
+     "3-way merged (live overlay + main)": 1,
+     "carry live overlay (not in git)": 7,
+     "sparse (absent live, kept absent)": 328
+    },
+    "actions": 1219,
+    "carried": 147,
+    "conflicts": 3,
+    "merged": 1,
+    "lag": 97
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     78
+    ],
+    [
+     "tools/die_plan/lef_overrides",
+     17
+    ],
+    [
+     "results/qc_ringfall_1105/bind",
+     6
+    ],
+    [
+     "physical/die_plan/hbm",
+     5
+    ],
+    [
+     "physical/die_plan/hbm_arch_cores",
+     4
+    ],
+    [
+     "tools/s81_head/__pycache__",
+     4
+    ],
+    [
+     "rtl/hbm_accel/cores_split",
+     3
+    ],
+    [
+     "physical/die_plan/qwen_compute",
+     2
+    ],
+    [
+     ".keep",
+     1
+    ],
+    [
+     ".keep_kw34",
+     1
+    ],
+    [
+     ".keep_kw35",
+     1
+    ],
+    [
+     ".stagedone",
+     1
+    ],
+    [
+     "kv37/pv_col_pads_28b.json",
+     1
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     1
+    ],
+    [
+     "results/hbm_sfu_bridge_1113/README.md",
+     1
+    ]
+   ],
+   "conflicts": [
+    "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+    "tools/die_plan/bind.py",
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [
+    "physical/die_plan/hbm_arch_cores/run_kit_hbm.sh"
+   ],
+   "lag": [
+    "physical/common_flow/grt183_make.sh",
+    "physical/die_plan/hbm/cores/harden/recipes.json",
+    "physical/die_plan/qwen_compute/bind/coll_regen.py",
+    "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt.json",
+    "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_reach.json",
+    "physical/die_plan/qwen_compute/qc_start_1108/plan_start.py",
+    "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv",
+    "physical/die_plan/s81/bind/source_modules/dsdv_eng_rr_boot_source.sv",
+    "physical/die_plan/s81/reset_contract.json",
+    "rtl/common/landed_parent/ot_pl_land.sv",
+    "rtl/common/ot_dp_clk_landing.sv",
+    "rtl/common/ot_meso_fifo.sv",
+    "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv",
+    "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+    "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+    "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv",
+    "rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+    "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_sx.sv",
+    "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+    "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+    "rtl/dsrom_sys/s81_ph/ctrl/test/run_ctrl_pcr_min.sh",
+    "rtl/dsrom_sys/s81_ph/ctrl/test/tb_dsfd_ctrl_rg3_mux.sv",
+    "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_1c.sv",
+    "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_rest_core.sv",
+    "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+    "rtl/hbm_accel/host_ep_20261018/tb_hbm_host_cp_rxs.sv",
+    "rtl/hdc/v41x/test/tb_s81c_h8_rt2.sv",
+    "rtl/qwen_split/qfd_embedding_word_provider.sv",
+    "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+    "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32.sv",
+    "tools/autopilot/auto_resign.py",
+    "tools/autopilot/kit_resume.py",
+    "tools/autopilot/kit_wave.py",
+    "tools/autopilot/prov_view.py",
+    "tools/autopilot/test_auto_resign.py",
+    "tools/autopilot/test_kit_resume.py",
+    "tools/autopilot/test_kit_wave_genhosts.py",
+    "tools/autopilot/test_kit_wave_infra_hold.py",
+    "tools/autopilot/test_kit_wave_source.py",
+    "tools/die_plan/clock_landings.py",
+    "tools/die_plan/die_ci.py",
+    "tools/die_plan/die_plan.schema.json",
+    "tools/die_plan/eco_loop.py",
+    "tools/die_plan/face_flops.tcl",
+    "tools/die_plan/hold_margin_pick.py",
+    "tools/die_plan/kit_gen_lint.py",
+    "tools/die_plan/kit_reset_contract.py",
+    "tools/die_plan/landing_place.py",
+    "tools/die_plan/landing_placement.tcl",
+    "tools/die_plan/lec.py",
+    "tools/die_plan/lec_async.sh",
+    "tools/die_plan/partition_ft_reserve.py",
+    "tools/die_plan/post_route_drv/prd_hook.tcl",
+    "tools/die_plan/post_route_drv/prd_mk.sh",
+    "tools/die_plan/post_route_drv/test_prd_stage.py",
+    "tools/die_plan/schema.py",
+    "tools/die_plan/signoff.py",
+    "tools/die_plan/tap_balance.tcl",
+    "tools/die_plan/test_bind.py",
+    "tools/die_plan/test_eco_loop.py",
+    "tools/die_plan/test_gen_phys_fsm_none.py",
+    "tools/die_plan/test_kit_gen_lint.py",
+    "tools/die_plan/test_landing_band_order.py",
+    "tools/die_plan/test_landing_group_rects.py",
+    "tools/die_plan/test_legacy_gate.py",
+    "tools/die_plan/test_macro_moves.py",
+    "tools/die_plan/test_native_istations.py",
+    "tools/die_plan/test_partition_ft_reserve.py",
+    "tools/die_plan/test_signoff_port_hold.py",
+    "tools/die_plan/test_ts_relay.py",
+    "tools/die_plan/ts_relay_event.py",
+    "tools/die_plan/ts_relay_miter.py",
+    "tools/fleet/ot-autoclean.py",
+    "tools/fleet/ot-run",
+    "tools/fleet/test_ot_autoclean_auto.py",
+    "tools/fleet/test_ot_run_docker_paths.py",
+    "tools/fleet/test_ot_run_spill_room.py",
+    "tools/qwen_split/head_prepare_params.py",
+    "tools/s81_dv/dv_layer_compile.py",
+    "tools/s81_dv/dv_mu_calendar_phys.py",
+    "tools/s81_dv/frame_schedule_asb.py",
+    "tools/s81_dv/layer_prog/bound_control.py",
+    "tools/s81_dv/layer_prog/lower_eng.py",
+    "tools/s81_dv/layer_prog/lower_vpx.py",
+    "tools/s81_dv/layer_prog/lower_vs.py",
+    "tools/s81_dv/layer_prog/native_mu_calendar.py",
+    "tools/s81_dv/layer_prog/pipeline_boot.py",
+    "tools/s81_dv/layer_prog/selected_entry_norm.py",
+    "tools/s81_dv/tokfunc/compose_tok_ds.py",
+    "tools/uarch_model.py"
+   ],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_hbm -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind:/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind -w /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm python:3.14-slim python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json --strict",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+    "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm.bind",
+    "launched": "2026-11-10 20:56 PST"
+   },
+   "hosts": {
+    "epyc7": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}",
+    "epyc8": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}",
+    "epyc4": "{\"ok\": true, \"files\": 322308, \"expected\": 322308, \"differ\": 0, \"sample\": []}"
+   }
+  }
+ }
+}

@@ -1,0 +1,16 @@
+s81 epyc7: mismatch 178 (stale old git copies 173, modified not in git 5); live-only 128, absent vs declared 142404
+s81 epyc4: mismatch 178 (stale old git copies 173, modified not in git 5); live-only 128, absent vs declared 142404
+s81 epyc8: mismatch 178 (stale old git copies 173, modified not in git 5); live-only 128, absent vs declared 142404
+s81_head epyc7: mismatch 6 (stale old git copies 5, modified not in git 1); live-only 95, absent vs declared 0
+s81_head epyc4: mismatch 6 (stale old git copies 5, modified not in git 1); live-only 36, absent vs declared 0
+s81_head epyc8: mismatch 6 (stale old git copies 5, modified not in git 1); live-only 95, absent vs declared 0
+qwen_compute epyc7: mismatch 141 (stale old git copies 135, modified not in git 6); live-only 96, absent vs declared 590
+qwen_compute epyc4: mismatch 141 (stale old git copies 135, modified not in git 6); live-only 96, absent vs declared 590
+qwen_compute intel2: mismatch 141 (stale old git copies 135, modified not in git 6); live-only 96, absent vs declared 590
+qwen_compute epyc8: mismatch 141 (stale old git copies 135, modified not in git 6); live-only 96, absent vs declared 590
+qwen_kvsys epyc7: mismatch 15 (stale old git copies 10, modified not in git 5); live-only 33, absent vs declared 0
+qwen_kvsys epyc8: mismatch 15 (stale old git copies 10, modified not in git 5); live-only 33, absent vs declared 0
+qwen_kvsys epyc4: mismatch 15 (stale old git copies 10, modified not in git 5); live-only 33, absent vs declared 0
+hbm epyc7: mismatch 108 (stale old git copies 105, modified not in git 3); live-only 50, absent vs declared 532
+hbm epyc8: mismatch 108 (stale old git copies 105, modified not in git 3); live-only 50, absent vs declared 532
+hbm epyc4: mismatch 108 (stale old git copies 105, modified not in git 3); live-only 50, absent vs declared 532
