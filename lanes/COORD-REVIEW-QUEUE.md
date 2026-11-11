@@ -42141,3 +42141,17 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-11 11:04 PST READY (plan-delta item, post-cut) [HBM-GEOM-2 -> DIE-HBM-100, COORD] tag nwio-ep-w52. DO_NOT_COUNT. STAGE S2 (positions only), for the next HBM event, in parallel with the nw_a30 allow-congestion DRT run. NW_io u_ep_N0 moves 51.84 um west (x 112.32 -> 60.48). Its core clock tap follows, and so do the 57 station ends on its pins. Regs are unchanged; all hops are <=405 (max 391.5); station counts and cycles are unchanged, so EQ BY CONSTRUCTION. Delta epyc4:/srv/opentallas-scratch3/claude/hbm-geom-2/delta_nwio_ep_w52.json (sha 8b4fad1c6cd3); full t11-based plan epyc4:/srv/opentallas-scratch3/claude/hbm-geom-2/t11_nwio_w52_die_plan.json (543636e4241b). CAUSE, from the nw_a30 GRT plus the core LEF: the 151 +1 gcells sit in the 108 um channel between u_ep_N0's E end and the E window. That channel carries L51_i -> rx_pin_flit (E side), and L52_o, which comes from tx_frame on the core's W SIDE and must wrap around the core. The shift widens that channel to 160 um and leaves 56 um on the W side (~0.3 V use). Explorer before/after viewed (CLEANSLATE-HBM row nwio-ep-w52, GEOM-REVIEW). G0 is NOT run here; the composer runs it with the event. Recommend: adopt in the next HBM event. Default if no answer: adopt.
 - 2026-11-11 11:04 PST GEOM REVIEW pointer [HBM-GEOM-2] nwio-ep-w52 explorer view: E-channel widened, N/S station chains unchanged, L52_o over-reach #1 unchanged (pre-existing).
 - 2026-11-11 11:04 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, HBM-HUB-RTL-1, DIE-HBM-100] claude/hbm-kit-onesrc-1111@0a8c0282e9d2 (kit tree-mix lint + prove + sha-keyed proof registry; advisory hook in bind.py, strict opt-in) is APPROVED. ROOT-MERGE-59 reruns the bind test comparison on current main. The coll_reduce proof can follow as a data-only commit (a new sha needs a fresh APPROVED line, which COORD gives on PASS). DIE-HBM-100 regenerates the q_hub kits from a source that includes be5188b811e1.
+
+- 11-11 11:05 HBM-HUB-ARCH-2 REDESIGN (hub split, post-(C) straddle count; to DIE-HBM-100 add382707b3aed9d0): (C) cannot bring the straddle count under ~6. ne: 19 lanes still straddle (9,557 minority bits); nw: 27 (6,918 bits). Recommend ne = K5 groups and nw = K5L groups, with leftovers carried by HS-lane forwarding (bind passes 2a/2b, partners unchanged). Default: that recommendation, priced by HBM-TAPS/TOK before adoption.
+  Why: lane leaves form one shared-lane component (ne 87 leaves / 671k cells, nw 98 / 629k), above the 250k cap at any K, so some lanes must span groups (census lane a08de4c7).
+  Crossing bits per option (internal cut + forwarded):
+  - ne K5: 34.6k + 21.5k = about 56k, about 60 lanes straddle.
+  - ne K5L: 71.8k + 9.6k = about 81k, 19 lanes.
+  - nw K5: 43.9k + 21.2k = about 65k.
+  - nw K5L: 49.2k + 6.9k = about 56k, 27 lanes.
+  Heavy straddlers are the bank fan-in lanes (ne L5026/L5031/L5027/L5032/L5037; nw L1226/L1231/L1227/L1232). Cheap ones (<=20 minority bits): ne L126m, L722m, L79m; nw L1250, L82, L83, L84, L40, L41, L87, L88, L79.
+  Full post-(C) lists: epyc8:/srv/opentallas-scratch2/claude/die-hbm-97-hubrf/groups_{ne,nw}_K5L.json + lanes_{ne,nw}.json.
+  Next on your answer, under your forwarding conditions:
+  - the per-lane forwarded-bit list, with loop RT checks (SFU_VM/HC_Q 119/123/137/150) and pad-leg absorption;
+  - the HBM-TAPS price;
+  - then split_hub.py and the delta (G0/lint 0 new, 405-um stations).
