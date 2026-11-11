@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="845" font-family="sans-serif" font-size="10">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="20" y="18" font-size="13">dsdv_slice_c1x_C__t7 BEFORE (plan 99f40d35) dataflow</text>
+<text x="20" y="34">dataflow arrows: red broadcast, blue p2p, purple staged station, grey control; width ~ bits; number = pipeline level from input faces</text>
+<rect x="20.0" y="60.0" width="900.0" height="765.3" fill="none" stroke="black"/>
+<rect x="46.9" y="508.6" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="470.9" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="433.2" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="395.5" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="357.7" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="320.0" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="282.3" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="244.6" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="206.8" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="169.1" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="131.4" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="46.9" y="93.7" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="497.9" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="460.1" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="422.4" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="384.7" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="303.8" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="266.1" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="228.4" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="190.7" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="117.0" y="115.2" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="187.1" y="508.6" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="187.1" y="470.9" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="187.1" y="433.2" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="495.0" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="446.5" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="354.9" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="306.4" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="257.9" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="209.3" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="257.1" y="117.7" width="23.7" height="39.3" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="673.3" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="646.4" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="619.4" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="592.5" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="565.5" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="289.5" y="538.6" width="21.0" height="17.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<circle cx="920.0" cy="746.6" r="4" fill="#2ca02c"/><text x="925.0" y="743.6" fill="#2ca02c">xring_i0 in 1104b</text>
+<circle cx="920.0" cy="515.3" r="4" fill="#2ca02c"/><text x="925.0" y="512.3" fill="#2ca02c">sid_i0 in 1b</text>
+<circle cx="69.1" cy="60.0" r="4" fill="#2ca02c"/><text x="74.1" y="57.0" fill="#2ca02c">leafup_i0 in 668b</text>
+<circle cx="242.1" cy="60.0" r="4" fill="#2ca02c"/><text x="247.1" y="57.0" fill="#2ca02c">leafup_i1 in 668b</text>
+<circle cx="716.1" cy="60.0" r="4" fill="#2ca02c"/><text x="721.1" y="57.0" fill="#2ca02c">leafup_i2 in 668b</text>
+<circle cx="848.0" cy="60.0" r="4" fill="#2ca02c"/><text x="853.0" y="57.0" fill="#2ca02c">ret_i0 in 70b</text>
+<circle cx="860.6" cy="60.0" r="4" fill="#2ca02c"/><text x="865.6" y="57.0" fill="#2ca02c">ret_i1 in 70b</text>
+<circle cx="872.0" cy="60.0" r="4" fill="#2ca02c"/><text x="877.0" y="57.0" fill="#2ca02c">ret_i2 in 70b</text>
+<circle cx="882.9" cy="60.0" r="4" fill="#2ca02c"/><text x="887.9" y="57.0" fill="#2ca02c">ret_i3 in 70b</text>
+<circle cx="893.8" cy="60.0" r="4" fill="#2ca02c"/><text x="898.8" y="57.0" fill="#2ca02c">ret_i4 in 70b</text>
+<circle cx="906.2" cy="60.0" r="4" fill="#2ca02c"/><text x="911.2" y="57.0" fill="#2ca02c">ret_i5 in 70b</text>
+<circle cx="80.7" cy="825.3" r="4" fill="#2ca02c"/><text x="85.7" y="822.3" fill="#2ca02c">xtier_i0 in 276b</text>
+<circle cx="145.4" cy="825.3" r="4" fill="#2ca02c"/><text x="150.4" y="822.3" fill="#2ca02c">leafup_i3 in 668b</text>
+<circle cx="318.4" cy="825.3" r="4" fill="#2ca02c"/><text x="323.4" y="822.3" fill="#2ca02c">leafup_i4 in 668b</text>
+<circle cx="20.0" cy="596.2" r="4" fill="#2ca02c"/><text x="25.0" y="593.2" fill="#2ca02c">xring_i1 in 1104b</text>
+<circle cx="920.0" cy="596.2" r="4" fill="#ff7f0e"/><text x="925.0" y="593.2" fill="#ff7f0e">xring_o0 out 1104b</text>
+<circle cx="155.5" cy="60.0" r="4" fill="#ff7f0e"/><text x="160.5" y="57.0" fill="#ff7f0e">leafdn_o0 out 597b</text>
+<circle cx="327.9" cy="60.0" r="4" fill="#ff7f0e"/><text x="332.9" y="57.0" fill="#ff7f0e">leafdn_o1 out 597b</text>
+<circle cx="444.8" cy="60.0" r="4" fill="#ff7f0e"/><text x="449.8" y="57.0" fill="#ff7f0e">x_o0 out 1104b</text>
+<circle cx="595.2" cy="60.0" r="4" fill="#ff7f0e"/><text x="600.2" y="57.0" fill="#ff7f0e">x_o1 out 1104b</text>
+<circle cx="802.1" cy="60.0" r="4" fill="#ff7f0e"/><text x="807.1" y="57.0" fill="#ff7f0e">leafdn_o2 out 597b</text>
+<circle cx="42.5" cy="825.3" r="4" fill="#ff7f0e"/><text x="47.5" y="822.3" fill="#ff7f0e">xtier_o0 out 276b</text>
+<circle cx="230.9" cy="825.3" r="4" fill="#ff7f0e"/><text x="235.9" y="822.3" fill="#ff7f0e">leafdn_o3 out 597b</text>
+<circle cx="403.3" cy="825.3" r="4" fill="#ff7f0e"/><text x="408.3" y="822.3" fill="#ff7f0e">leafdn_o4 out 597b</text>
+<circle cx="20.0" cy="746.6" r="4" fill="#ff7f0e"/><text x="25.0" y="743.6" fill="#ff7f0e">xring_o1 out 1104b</text>
+<circle cx="20.0" cy="515.3" r="4" fill="#ff7f0e"/><text x="25.0" y="512.3" fill="#ff7f0e">sid_o0 out 1b</text>
+<rect x="41.6" y="545.0" width="210.2" height="258.7" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="43.6" y="556.0">u_cap [L1] R0</text>
+<rect x="262.5" y="701.3" width="129.3" height="102.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="264.5" y="712.3">u_xr [L1] R0</text>
+<rect x="499.6" y="475.0" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="501.6" y="486.0">u_eg.u_nh [L2] R0</text>
+<rect x="585.9" y="475.0" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="587.9" y="486.0">u_eg.u_nk [L2] R0</text>
+<rect x="505.0" y="372.6" width="161.7" height="97.0" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="507.0" y="383.6">u_eg.u_gg [L2] R0</text>
+<rect x="311.0" y="248.6" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="313.0" y="259.6">u_xf.g_cp[0].u_e [L99] R0</text>
+<rect x="429.6" y="248.6" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="431.6" y="259.6">u_xf.g_cp[1].u_e [L99] R0</text>
+<rect x="548.1" y="248.6" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="550.1" y="259.6">u_xf.u_f [L99] R0</text>
+<rect x="666.7" y="248.6" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="668.7" y="259.6">u_xf.g_cp[2].u_e [L99] R0</text>
+<rect x="785.3" y="248.6" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="787.3" y="259.6">u_xf.g_cp[3].u_e [L99] R0</text>
+<line x1="69.1" y1="60.0" x2="327.2" y2="752.5" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="242.1" y1="60.0" x2="327.2" y2="752.5" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="716.1" y1="60.0" x2="327.2" y2="752.5" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="146.6" y2="674.4" stroke="#d62728" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="155.5" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="327.9" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="802.1" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="230.9" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="403.3" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="893.8" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="906.2" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="367.6" y1="307.9" x2="841.9" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="486.2" y1="307.9" x2="841.9" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="723.3" y1="307.9" x2="841.9" y2="307.9" stroke="#1f77b4" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="367.6" y1="307.9" x2="723.3" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="486.2" y1="307.9" x2="723.3" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="367.6" y1="307.9" x2="486.2" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="604.7" y1="307.9" x2="841.9" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="604.7" y1="307.9" x2="723.3" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="604.7" y1="307.9" x2="486.2" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="604.7" y1="307.9" x2="367.6" y2="307.9" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="848.0" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="860.6" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="872.0" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="882.9" y1="60.0" x2="146.6" y2="674.4" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="585.9" y1="421.1" x2="327.2" y2="752.5" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="540.1" y1="520.8" x2="585.9" y2="421.1" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="626.3" y1="520.8" x2="585.9" y2="421.1" stroke="#d62728" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="752.5" x2="585.9" y2="421.1" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+</svg>

@@ -1,0 +1,451 @@
+{
+ "SLICE-C": {
+  "path": "deltas_f/delta_SLICE-C_99f40d35.json",
+  "sha256": "6464cdede16922e8fd2f136dc19d55f46866a0570b9aad283d9c0e2d1a2892e8",
+  "types": [
+   "dsdv_slice_c1x_C__t1",
+   "dsdv_slice_c1x_C__t3",
+   "dsdv_slice_c1x_C__t4",
+   "dsdv_slice_c1x_C__t5",
+   "dsdv_slice_c1x_C__t6",
+   "dsdv_slice_c1x_C__t7",
+   "dsdv_slice_c1x_C__t8",
+   "dsdv_slice_c1x_C__t9",
+   "dsdv_slice_c1x_C__t10",
+   "dsdv_slice_c3x_C__t1",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_kv512_C__t1",
+   "dsdv_slice_lepe_mu_C__t1",
+   "dsdv_slice_lepe_nh_mus_C__t1",
+   "dsdv_slice_lepw_mu_C__t1",
+   "dsdv_slice_lepw_mus_C__t1"
+  ],
+  "adopted": [
+   "dsdv_slice_c1x_C__t1",
+   "dsdv_slice_c1x_C__t3",
+   "dsdv_slice_c1x_C__t4",
+   "dsdv_slice_c1x_C__t6",
+   "dsdv_slice_c1x_C__t7",
+   "dsdv_slice_c1x_C__t8",
+   "dsdv_slice_c1x_C__t9",
+   "dsdv_slice_c3x_C__t1",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_kv512_C__t1",
+   "dsdv_slice_lepe_mu_C__t1",
+   "dsdv_slice_lepw_mus_C__t1"
+  ],
+  "bitmm_before": 115326,
+  "bitmm_after": 113944,
+  "worst_cut_before": 0.495,
+  "worst_cut_after": 0.481,
+  "rows": {
+   "dsdv_slice_c1x_C__t1": {
+    "pick": "current",
+    "moved": 10,
+    "before": {
+     "bitmm": 7173.0,
+     "cutV": 0.471,
+     "cutH": 0.373,
+     "entry": 3.42,
+     "rs_p99": 2.923
+    },
+    "after": {
+     "bitmm": 7110.7,
+     "cutV": 0.471,
+     "cutH": 0.368,
+     "entry": 2.756,
+     "rs_p99": 2.313
+    }
+   },
+   "dsdv_slice_c1x_C__t3": {
+    "pick": "current",
+    "moved": 9,
+    "before": {
+     "bitmm": 4745.6,
+     "cutV": 0.314,
+     "cutH": 0.409,
+     "entry": 4.582,
+     "rs_p99": 1.744
+    },
+    "after": {
+     "bitmm": 4693.3,
+     "cutV": 0.317,
+     "cutH": 0.409,
+     "entry": 3.697,
+     "rs_p99": 1.744
+    }
+   },
+   "dsdv_slice_c1x_C__t4": {
+    "pick": "current",
+    "moved": 8,
+    "before": {
+     "bitmm": 6452.6,
+     "cutV": 0.467,
+     "cutH": 0.29,
+     "entry": 2.18,
+     "rs_p99": 1.473
+    },
+    "after": {
+     "bitmm": 6472.0,
+     "cutV": 0.467,
+     "cutH": 0.29,
+     "entry": 0.0,
+     "rs_p99": 1.473
+    }
+   },
+   "dsdv_slice_c1x_C__t5": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 6643.2,
+     "cutV": 0.389,
+     "cutH": 0.433,
+     "entry": 3.143,
+     "rs_p99": 2.087
+    },
+    "after": null
+   },
+   "dsdv_slice_c1x_C__t6": {
+    "pick": "current",
+    "moved": 4,
+    "before": {
+     "bitmm": 7967.0,
+     "cutV": 0.396,
+     "cutH": 0.3,
+     "entry": 2.199,
+     "rs_p99": 1.456
+    },
+    "after": {
+     "bitmm": 7859.2,
+     "cutV": 0.396,
+     "cutH": 0.3,
+     "entry": 1.023,
+     "rs_p99": 1.457
+    }
+   },
+   "dsdv_slice_c1x_C__t7": {
+    "pick": "current",
+    "moved": 10,
+    "before": {
+     "bitmm": 7824.9,
+     "cutV": 0.473,
+     "cutH": 0.429,
+     "entry": 3.233,
+     "rs_p99": 2.373
+    },
+    "after": {
+     "bitmm": 7920.3,
+     "cutV": 0.466,
+     "cutH": 0.429,
+     "entry": 1.751,
+     "rs_p99": 1.956
+    }
+   },
+   "dsdv_slice_c1x_C__t8": {
+    "pick": "current",
+    "moved": 8,
+    "before": {
+     "bitmm": 6172.0,
+     "cutV": 0.418,
+     "cutH": 0.495,
+     "entry": 3.143,
+     "rs_p99": 3.031
+    },
+    "after": {
+     "bitmm": 5991.5,
+     "cutV": 0.43,
+     "cutH": 0.425,
+     "entry": 2.763,
+     "rs_p99": 2.691
+    }
+   },
+   "dsdv_slice_c1x_C__t9": {
+    "pick": "current",
+    "moved": 9,
+    "before": {
+     "bitmm": 6099.0,
+     "cutV": 0.371,
+     "cutH": 0.445,
+     "entry": 3.534,
+     "rs_p99": 2.003
+    },
+    "after": {
+     "bitmm": 5927.5,
+     "cutV": 0.377,
+     "cutH": 0.445,
+     "entry": 2.649,
+     "rs_p99": 1.924
+    }
+   },
+   "dsdv_slice_c1x_C__t10": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 7453.4,
+     "cutV": 0.481,
+     "cutH": 0.256,
+     "entry": 2.977,
+     "rs_p99": 1.457
+    },
+    "after": null
+   },
+   "dsdv_slice_c3x_C__t1": {
+    "pick": "current",
+    "moved": 4,
+    "before": {
+     "bitmm": 10169.5,
+     "cutV": 0.431,
+     "cutH": 0.432,
+     "entry": 2.194,
+     "rs_p99": 0.482
+    },
+    "after": {
+     "bitmm": 9955.1,
+     "cutV": 0.431,
+     "cutH": 0.432,
+     "entry": 0.934,
+     "rs_p99": 0.481
+    }
+   },
+   "dsdv_slice_iq_C__t1": {
+    "pick": "current",
+    "moved": 9,
+    "before": {
+     "bitmm": 7779.0,
+     "cutV": 0.476,
+     "cutH": 0.325,
+     "entry": 1.633,
+     "rs_p99": 0.785
+    },
+    "after": {
+     "bitmm": 7651.7,
+     "cutV": 0.476,
+     "cutH": 0.325,
+     "entry": 0.657,
+     "rs_p99": 0.785
+    }
+   },
+   "dsdv_slice_kv512_C__t1": {
+    "pick": "current",
+    "moved": 5,
+    "before": {
+     "bitmm": 6563.9,
+     "cutV": 0.42,
+     "cutH": 0.34,
+     "entry": 1.979,
+     "rs_p99": 1.457
+    },
+    "after": {
+     "bitmm": 6453.2,
+     "cutV": 0.408,
+     "cutH": 0.34,
+     "entry": 0.876,
+     "rs_p99": 1.156
+    }
+   },
+   "dsdv_slice_lepe_mu_C__t1": {
+    "pick": "current",
+    "moved": 9,
+    "before": {
+     "bitmm": 7853.0,
+     "cutV": 0.422,
+     "cutH": 0.326,
+     "entry": 2.683,
+     "rs_p99": 1.457
+    },
+    "after": {
+     "bitmm": 7640.9,
+     "cutV": 0.468,
+     "cutH": 0.326,
+     "entry": 0.219,
+     "rs_p99": 1.41
+    }
+   },
+   "dsdv_slice_lepe_nh_mus_C__t1": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 7247.1,
+     "cutV": 0.447,
+     "cutH": 0.43,
+     "entry": 3.422,
+     "rs_p99": 1.457
+    },
+    "after": null
+   },
+   "dsdv_slice_lepw_mu_C__t1": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 7567.6,
+     "cutV": 0.429,
+     "cutH": 0.443,
+     "entry": 3.233,
+     "rs_p99": 2.373
+    },
+    "after": null
+   },
+   "dsdv_slice_lepw_mus_C__t1": {
+    "pick": "current",
+    "moved": 7,
+    "before": {
+     "bitmm": 7615.4,
+     "cutV": 0.397,
+     "cutH": 0.433,
+     "entry": 3.954,
+     "rs_p99": 1.744
+    },
+    "after": {
+     "bitmm": 7357.0,
+     "cutV": 0.471,
+     "cutH": 0.437,
+     "entry": 0.881,
+     "rs_p99": 1.744
+    }
+   }
+  }
+ },
+ "SLICE-LP-W": {
+  "path": "deltas_f/delta_SLICE-LP-W_99f40d35.json",
+  "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "types": [
+   "dsdv_slice_lepw_mus_LP__t2",
+   "dsdv_slice_lepw_mu_LP__t2"
+  ],
+  "adopted": [],
+  "bitmm_before": 7971,
+  "bitmm_after": 7971,
+  "worst_cut_before": 0.3,
+  "worst_cut_after": 0.3,
+  "rows": {
+   "dsdv_slice_lepw_mus_LP__t2": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 4194.5,
+     "cutV": 0.245,
+     "cutH": 0.3,
+     "entry": 1.825,
+     "rs_p99": 0.928
+    },
+    "after": null
+   },
+   "dsdv_slice_lepw_mu_LP__t2": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 3776.5,
+     "cutV": 0.242,
+     "cutH": 0.261,
+     "entry": 0.0,
+     "rs_p99": 1.058
+    },
+    "after": null
+   }
+  }
+ },
+ "SLICE-LP-E": {
+  "path": "deltas_f/delta_SLICE-LP-E_99f40d35.json",
+  "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "types": [
+   "dsdv_slice_lepe_mu_LP__t2",
+   "dsdv_slice_lepe_nh_mus_LP__t1"
+  ],
+  "adopted": [],
+  "bitmm_before": 6142,
+  "bitmm_after": 6142,
+  "worst_cut_before": 0.261,
+  "worst_cut_after": 0.261,
+  "rows": {
+   "dsdv_slice_lepe_mu_LP__t2": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 3758.9,
+     "cutV": 0.242,
+     "cutH": 0.261,
+     "entry": 0.0,
+     "rs_p99": 1.058
+    },
+    "after": null
+   },
+   "dsdv_slice_lepe_nh_mus_LP__t1": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 2383.3,
+     "cutV": 0.141,
+     "cutH": 0.164,
+     "entry": 0.0,
+     "rs_p99": 1.076
+    },
+    "after": null
+   }
+  }
+ },
+ "KVLEAF": {
+  "path": "deltas_f/delta_KVLEAF_99f40d35.json",
+  "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "types": [
+   "ot_s81sl_kv_leaf__t1",
+   "ot_s81sl_kv_leaf__t3",
+   "ot_s81sl_kv_leaf__t4",
+   "ot_s81sl_kv_leaf__t5"
+  ],
+  "adopted": [],
+  "bitmm_before": 10824,
+  "bitmm_after": 10824,
+  "worst_cut_before": 0.318,
+  "worst_cut_after": 0.318,
+  "rows": {
+   "ot_s81sl_kv_leaf__t1": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 2269.3,
+     "cutV": 0.16,
+     "cutH": 0.271,
+     "entry": 0.386,
+     "rs_p99": 1.024
+    },
+    "after": null
+   },
+   "ot_s81sl_kv_leaf__t3": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 2895.6,
+     "cutV": 0.234,
+     "cutH": 0.318,
+     "entry": 1.207,
+     "rs_p99": 1.103
+    },
+    "after": null
+   },
+   "ot_s81sl_kv_leaf__t4": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 2249.6,
+     "cutV": 0.163,
+     "cutH": 0.292,
+     "entry": 0.656,
+     "rs_p99": 1.121
+    },
+    "after": null
+   },
+   "ot_s81sl_kv_leaf__t5": {
+    "pick": null,
+    "moved": 0,
+    "before": {
+     "bitmm": 3409.1,
+     "cutV": 0.241,
+     "cutH": 0.195,
+     "entry": 0.546,
+     "rs_p99": 1.297
+    },
+    "after": null
+   }
+  }
+ }
+}

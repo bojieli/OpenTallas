@@ -1,0 +1,75 @@
+{
+ "note": "CPL-S81-SLICE SLICE-LP-W window REDESIGN on plan 99f40d35071d: bus window_um (type frame) and die port window_um (die frame), +622.08 um (72 x 8.64); core positions unchanged; G0 0 new errors / 0 new warnings (plan_f_win vs plan_99f)",
+ "partition_types": {
+  "dsdv_slice_lepw_mus_C__t1": {
+   "lepk_i0": {
+    "face": "W",
+    "from": [
+     247.296,
+     487.26
+    ],
+    "to": [
+     869.376,
+     1109.34
+    ]
+   },
+   "lepk_o0": {
+    "face": "W",
+    "from": [
+     6.144,
+     246.108
+    ],
+    "to": [
+     628.224,
+     868.188
+    ]
+   }
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "lepk_i0": {
+    "face": "E",
+    "from": [
+     6.144,
+     246.108
+    ],
+    "to": [
+     628.224,
+     868.188
+    ]
+   },
+   "lepk_o0": {
+    "face": "E",
+    "from": [
+     247.296,
+     487.26
+    ],
+    "to": [
+     869.376,
+     1109.34
+    ]
+   }
+  }
+ },
+ "ports": {
+  "kd_s_0S__0": {
+   "from": [
+    10616.064,
+    10856.028
+   ],
+   "to": [
+    11238.144,
+    11478.108
+   ]
+  },
+  "ku_s_0S__0": {
+   "from": [
+    10857.216,
+    11097.18
+   ],
+   "to": [
+    11479.296,
+    11719.26
+   ]
+  }
+ }
+}

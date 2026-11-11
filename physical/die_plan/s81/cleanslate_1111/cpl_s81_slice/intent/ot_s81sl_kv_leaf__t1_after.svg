@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="845" font-family="sans-serif" font-size="10">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="20" y="18" font-size="13">ot_s81sl_kv_leaf__t1 AFTER (delta) dataflow</text>
+<text x="20" y="34">dataflow arrows: red broadcast, blue p2p, purple staged station, grey control; width ~ bits; number = pipeline level from input faces</text>
+<rect x="20.0" y="60.0" width="900.0" height="765.3" fill="none" stroke="black"/>
+<rect x="440.4" y="212.2" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="461.9" y="402.9" width="105.6" height="18.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="472.7" y="435.2" width="105.6" height="18.2" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<rect x="343.4" y="427.8" width="59.1" height="25.6" fill="#e0e0e0" stroke="#bbb" stroke-width="0.3"/>
+<circle cx="457.2" cy="60.0" r="4" fill="#2ca02c"/><text x="462.2" y="57.0" fill="#2ca02c">leafdn_i0 in 597b</text>
+<circle cx="371.1" cy="60.0" r="4" fill="#ff7f0e"/><text x="376.1" y="57.0" fill="#ff7f0e">leafup_o0 out 668b</text>
+<rect x="84.7" y="97.7" width="107.8" height="215.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="86.7" y="108.7">u_lf.u_ve.u_m [L2] MY</text>
+<rect x="241.0" y="103.1" width="107.8" height="215.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="243.0" y="114.1">u_lf.u_ve.u_s [L3] MY</text>
+<rect x="52.3" y="329.5" width="140.1" height="140.1" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="54.3" y="340.5">u_lf.u_vsw [L2] R0</text>
+<rect x="203.2" y="356.4" width="107.8" height="107.8" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="205.2" y="367.4">u_lf.u_vs [L1] MY</text>
+<rect x="364.9" y="286.3" width="222.3" height="102.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="366.9" y="297.3">u_lf.u_vn.u_a [L1] MY</text>
+<rect x="192.5" y="597.6" width="87.6" height="87.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="194.5" y="608.6">u_lf.u_rxsb [L99] R0</text>
+<rect x="224.8" y="495.2" width="87.6" height="87.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="226.8" y="506.2">u_lf.u_rxsf [L2] R0</text>
+<rect x="602.0" y="258.1" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="604.0" y="269.1">u_lf.u_vp.g_ln[0].u_l [L99] R0</text>
+<rect x="677.5" y="430.5" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="679.5" y="441.5">u_lf.u_vp.g_ln[10].u_l [L99] R0</text>
+<rect x="677.5" y="85.6" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="679.5" y="96.6">u_lf.u_vp.g_ln[11].u_l [L2] R0</text>
+<rect x="763.7" y="171.8" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="765.7" y="182.8">u_lf.u_vp.g_ln[12].u_l [L2] R0</text>
+<rect x="774.5" y="344.3" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="776.5" y="355.3">u_lf.u_vp.g_ln[13].u_l [L3] R0</text>
+<rect x="763.7" y="430.5" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="765.7" y="441.5">u_lf.u_vp.g_ln[14].u_l [L2] R0</text>
+<rect x="591.3" y="603.0" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="593.3" y="614.0">u_lf.u_vp.g_ln[15].u_l [L2] R0</text>
+<rect x="591.3" y="171.8" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="593.3" y="182.8">u_lf.u_vp.g_ln[1].u_l [L3] R0</text>
+<rect x="602.0" y="344.3" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="604.0" y="355.3">u_lf.u_vp.g_ln[2].u_l [L3] R0</text>
+<rect x="688.3" y="258.1" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="690.3" y="269.1">u_lf.u_vp.g_ln[3].u_l [L3] R0</text>
+<rect x="591.3" y="430.5" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="593.3" y="441.5">u_lf.u_vp.g_ln[4].u_l [L3] R0</text>
+<rect x="591.3" y="85.6" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="593.3" y="96.6">u_lf.u_vp.g_ln[5].u_l [L3] R0</text>
+<rect x="677.5" y="171.8" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="679.5" y="182.8">u_lf.u_vp.g_ln[6].u_l [L3] R0</text>
+<rect x="688.3" y="344.3" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="690.3" y="355.3">u_lf.u_vp.g_ln[7].u_l [L3] R0</text>
+<rect x="774.5" y="258.1" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="776.5" y="269.1">u_lf.u_vp.g_ln[8].u_l [L3] R0</text>
+<rect x="591.3" y="516.7" width="71.4" height="71.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="593.3" y="527.7">u_lf.u_vp.g_ln[9].u_l [L3] R0</text>
+<line x1="138.6" y1="205.5" x2="294.9" y2="210.9" stroke="#1f77b4" stroke-width="5.6" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="257.1" y1="410.3" x2="122.4" y2="399.5" stroke="#9467bd" stroke-width="5.1" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="713.2" y1="121.3" x2="476.1" y2="337.5" stroke="#9467bd" stroke-width="3.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="207.5" x2="476.1" y2="337.5" stroke="#9467bd" stroke-width="3.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="476.1" y1="337.5" x2="713.2" y2="121.3" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="476.1" y1="337.5" x2="799.4" y2="207.5" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="476.1" y1="337.5" x2="799.4" y2="466.2" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="476.1" y1="337.5" x2="627.0" y2="638.7" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="466.2" x2="476.1" y2="337.5" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="638.7" x2="476.1" y2="337.5" stroke="#9467bd" stroke-width="3.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="457.2" y1="60.0" x2="257.1" y2="410.3" stroke="#9467bd" stroke-width="2.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="457.2" y1="60.0" x2="476.1" y2="337.5" stroke="#9467bd" stroke-width="2.3" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="236.2" y1="641.4" x2="268.6" y2="539.0" stroke="#1f77b4" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="257.1" y1="410.3" x2="138.6" y2="205.5" stroke="#1f77b4" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="122.4" y1="399.5" x2="257.1" y2="410.3" stroke="#1f77b4" stroke-width="1.4" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="138.6" y1="205.5" x2="257.1" y2="410.3" stroke="#1f77b4" stroke-width="1.1" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="294.9" y1="210.9" x2="257.1" y2="410.3" stroke="#1f77b4" stroke-width="1.1" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="236.2" y1="641.4" x2="257.1" y2="410.3" stroke="#1f77b4" stroke-width="1.0" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="257.1" y1="410.3" x2="268.6" y2="539.0" stroke="#1f77b4" stroke-width="1.0" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="257.1" y1="410.3" x2="371.1" y2="60.0" stroke="#9467bd" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="207.5" x2="627.0" y2="638.7" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="810.2" y1="380.0" x2="627.0" y2="638.7" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="466.2" x2="627.0" y2="638.7" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="637.7" y1="293.8" x2="627.0" y2="207.5" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="207.5" x2="637.7" y2="380.0" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="207.5" x2="724.0" y2="293.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="207.5" x2="810.2" y2="380.0" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="799.4" y1="207.5" x2="799.4" y2="466.2" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="637.7" y1="293.8" x2="637.7" y2="380.0" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="637.7" y1="380.0" x2="724.0" y2="293.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="466.2" x2="627.0" y2="121.3" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="121.3" x2="713.2" y2="207.5" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="627.0" y1="121.3" x2="724.0" y2="380.0" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="713.2" y1="466.2" x2="713.2" y2="121.3" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="713.2" y1="121.3" x2="810.2" y2="293.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+</svg>

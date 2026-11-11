@@ -1,0 +1,240 @@
+{
+ "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+ "bound_src": "dsdv_slice_lepe_nh_mus_LP__t1",
+ "chain": [
+  {
+   "level": 1,
+   "core": "ln0"
+  },
+  {
+   "level": 1,
+   "core": "ln1"
+  },
+  {
+   "level": 1,
+   "core": "lnl0"
+  },
+  {
+   "level": 1,
+   "core": "lnl1"
+  }
+ ],
+ "edges": [
+  {
+   "src": "core:lnl0",
+   "dst": "core:ln0",
+   "bits": 1071,
+   "role": "p2p",
+   "len_before": 444,
+   "len_after": 470
+  },
+  {
+   "src": "core:ln1",
+   "dst": "core:lnl1",
+   "bits": 559,
+   "role": "p2p",
+   "len_before": 105,
+   "len_after": 115
+  },
+  {
+   "src": "core:ln0",
+   "dst": "core:lnl0",
+   "bits": 558,
+   "role": "p2p",
+   "len_before": 105,
+   "len_after": 80
+  },
+  {
+   "src": "core:lnl0",
+   "dst": "macros@763,771",
+   "bits": 558,
+   "role": "p2p",
+   "len_before": 786,
+   "len_after": 760
+  },
+  {
+   "src": "core:lnl1",
+   "dst": "macros@763,771",
+   "bits": 558,
+   "role": "p2p",
+   "len_before": 475,
+   "len_after": 415
+  },
+  {
+   "src": "macros@763,771",
+   "dst": "core:lnl0",
+   "bits": 557,
+   "role": "broadcast",
+   "len_before": 786,
+   "len_after": 760
+  },
+  {
+   "src": "macros@763,771",
+   "dst": "core:lnl1",
+   "bits": 557,
+   "role": "broadcast",
+   "len_before": 475,
+   "len_after": 415
+  },
+  {
+   "src": "core:lnl1",
+   "dst": "core:ln1",
+   "bits": 556,
+   "role": "p2p",
+   "len_before": 205,
+   "len_after": 265
+  },
+  {
+   "src": "face:coll_i0",
+   "dst": "core:ln0",
+   "bits": 514,
+   "role": "p2p (staged station)",
+   "len_before": 131,
+   "len_after": 131
+  },
+  {
+   "src": "face:coll_i1",
+   "dst": "core:ln1",
+   "bits": 514,
+   "role": "p2p (staged station)",
+   "len_before": 131,
+   "len_after": 131
+  },
+  {
+   "src": "core:ln0",
+   "dst": "face:coll_o0",
+   "bits": 512,
+   "role": "p2p",
+   "len_before": 130,
+   "len_after": 130
+  },
+  {
+   "src": "core:ln1",
+   "dst": "face:coll_o1",
+   "bits": 512,
+   "role": "p2p",
+   "len_before": 130,
+   "len_after": 130
+  },
+  {
+   "src": "core:lnl1",
+   "dst": "core:lnl0",
+   "bits": 2,
+   "role": "serialisable (control/status)",
+   "len_before": 311,
+   "len_after": 346
+  },
+  {
+   "src": "face:lpc_i0",
+   "dst": "core:lnl0",
+   "bits": 1,
+   "role": "serialisable (control/status)",
+   "len_before": 1409,
+   "len_after": 1383
+  },
+  {
+   "src": "face:lpc_i0",
+   "dst": "core:lnl1",
+   "bits": 1,
+   "role": "serialisable (control/status)",
+   "len_before": 1098,
+   "len_after": 1055
+  },
+  {
+   "src": "face:N",
+   "dst": "face:S",
+   "bits": null,
+   "role": "pass-through (ft ft0, 0 stations)",
+   "len_before": null,
+   "len_after": null
+  },
+  {
+   "src": "face:S",
+   "dst": "face:N",
+   "bits": null,
+   "role": "pass-through (ft ft1, 0 stations)",
+   "len_before": null,
+   "len_after": null
+  }
+ ],
+ "critical": [
+  {
+   "kind": "plan station",
+   "conn": "bus:coll_i0",
+   "launch": "face flop",
+   "capture": "u_bound.u_u_ln0.rx",
+   "stages": 1,
+   "bits": 514
+  },
+  {
+   "kind": "plan station",
+   "conn": "bus:coll_i1",
+   "launch": "face flop",
+   "capture": "u_bound.u_u_ln1.rx",
+   "stages": 1,
+   "bits": 514
+  },
+  {
+   "kind": "plan station",
+   "conn": "bus:lpc_i0",
+   "launch": "face flop",
+   "capture": "u_bound.u_u_lnl0.rs_k",
+   "stages": 3,
+   "bits": 2
+  },
+  {
+   "kind": "link beyond 396.9-um reach",
+   "src": "core:lnl0",
+   "dst": "core:ln0",
+   "bits": 1071,
+   "len_before": 444,
+   "len_after": 470
+  },
+  {
+   "kind": "link beyond 396.9-um reach",
+   "src": "core:lnl0",
+   "dst": "macros@763,771",
+   "bits": 558,
+   "len_before": 786,
+   "len_after": 760
+  },
+  {
+   "kind": "link beyond 396.9-um reach",
+   "src": "core:lnl1",
+   "dst": "macros@763,771",
+   "bits": 558,
+   "len_before": 475,
+   "len_after": 415
+  },
+  {
+   "kind": "link beyond 396.9-um reach",
+   "src": "macros@763,771",
+   "dst": "core:lnl0",
+   "bits": 557,
+   "len_before": 786,
+   "len_after": 760
+  },
+  {
+   "kind": "link beyond 396.9-um reach",
+   "src": "macros@763,771",
+   "dst": "core:lnl1",
+   "bits": 557,
+   "len_before": 475,
+   "len_after": 415
+  }
+ ],
+ "flow_axis": {
+  "in_centroid": [
+   865.3248571428572,
+   342.6048571428572
+  ],
+  "out_centroid": [
+   918.1800000000001,
+   216.064
+  ]
+ },
+ "chain_order_corr_before": null,
+ "chain_order_corr_after": null,
+ "edges_longer_after": [],
+ "moved": 2
+}
