@@ -1,4 +1,6 @@
-# FEAS-AUDIT-1: routability feasibility audit, five dies (2026-11-11, ADVISORY, DO_NOT_COUNT)
+# FEAS-AUDIT: routability feasibility audit, five dies (2026-11-11, FINAL by FEAS-AUDIT-2, ADVISORY, DO_NOT_COUNT)
+
+FINAL fold-in (after the 02:20 table) is in the section "FINAL (FEAS-AUDIT-2)" at the end; where it differs from the tables above, the FINAL section wins.
 
 Table: `lanes/FEAS-AUDIT.tsv` (sections ARCH / TYPE / DIE / CENSUS, 6.7k rows). Lane: FEAS-AUDIT-1 for COORD.
 Question: what can only be fixed by an ARCHITECTURE change, and not by placement?
@@ -91,3 +93,58 @@ No die is line-limited: every full die line is at 0.23 or less. The die-level ov
 - **S81 svc model artifact.** The svc line cut V 0.96 comes from core_conns 'face:E/N/W' destinations aimed at the face midpoint. The svc ARCH item is the reach path above, not that.
 - **No figures yet.** EXPLORER-SCRIPT-1's headless views come later; the intent PNGs of the lanes are cited instead.
 - **Run data.** epyc4 /srv/opentallas-scratch2/claude/feas-audit-1/ (tools/, out/r1 out/r2). No OpenROAD run was made and nothing was built.
+
+## FINAL (FEAS-AUDIT-2, 2026-11-11 ~04:10 PST) per-die verdicts
+
+| die | final verdict | what changed since 02:20 |
+|---|---|---|
+| HBM | **AT-RISK** (unchanged) | HBM-A1 q_b001 and HBM-A2 hubs still ARCH. New HBM-A4: 104 real MISSING core-core links over 405 um (hubs 37/20, q_b113 7) and 114 explorer over-reach die hops, all real, plus 21 ft slots with station 0 more than one reach off the window (worst q_b010_pv1 L1259x2 2004 um). These are reach items, not track items, so they need a pin-cycle or station fix, not a bigger slot. |
+| S81 | **FEASIBLE-WITH-ARCH** (3 items; 2 types AT-RISK) | S81-A1 svc_rs (16 types, +4 cycles/pass at the chosen SRX=2 form). New S81-A2 bk_sel__t2 header pairs (reach by design). New S81-A3 svc_pvso_entry t1/t2: AT-RISK until an arch form lands, because +142.56 um in Y still leaves p99 3.66/4.40. |
+| QC | **FEASIBLE-WITH-ARCH** | QC-A1 cbf_q00 is ARCH (route_supply core_H 1.202 / street_V 1.187, line cut only 0.32). Option (c) is DIE-QC-97's pick. |
+| KV | **FEASIBLE** (conditional) | kv3_pv_v2 stock skeleton GRT overflow 3,131,015 does not change the class: ideal bisection is 0.44/0.48 and the line cut 0.43, so it is a placement/street problem. Condition: kv3_pv_*n street_V never reaches 0.8 by legal moves; it needs a die-island flip or a wider join street (PLAN). If neither is accepted, kv3_pv_*n becomes ARCH-BAND. The skeleton probe arms did not run (see below), so the GRT effect of the delta is UNCONFIRMED. |
+| HEAD | **FEASIBLE** | no change (hd_lep0N plan item, +86.4 um, S03 swap). |
+
+## HBM re-score with the phantom filter (route_supply plan-route-8 --station-scan, plan 29333b2b, epyc4 out/r4)
+
+Worst p99, stock -> filtered (FEAS rows, dedup fix of plan-route-7 on, header-pair code of plan-route-9 present):
+
+| type | p99 stock -> filtered | line cut H / V (stock -> ft-around) | note |
+|---|---|---|---|
+| q_b102 | 29.5 -> 8.6 (FEAS run: 8.64 -> 3.71 with ft around) | H 1.25 -> 0.90, V 2.30 -> 1.66 | PLAN / FT-AROUND; CPL-HBM-B1 reaches 0.28-0.52 on real nets |
+| q_b102__physical_v1 | 26.7 -> 5.2 | H 1.19 -> 0.90, V 2.04 -> 1.66 | same |
+| q_b103 | 12.0 -> 6.0 (-> 2.26 ft around) | H 1.79 -> 1.29, V 2.39 -> 1.62 | FT-AROUND + window move |
+| q_b100 | 10.8 -> 2.6 | H 1.00, V 1.46 | PLAN (window move, 0.369 bound) |
+| q_b101 / q_b101_nw | 8.8 -> 2.2 / 2.3 | H 1.23, V 1.44 | PLACEMENT; B1 real-net bound 0.285/0.300 |
+| q_hub_ne | 11.4 -> 11.4 (unchanged) | H 1.847 -> 1.805 -> 1.747, V 0.73 | ARCH HBM-A2 |
+| q_hub_nw | 7.9 -> 7.3 (-> 6.97 ft around) | H 1.755 -> 1.718 -> 1.609, V 0.76 | ARCH HBM-A2 |
+| q_b001 / _physical_v1 | 5.16 / 5.54 -> 5.14 | H 0.52 -> 0.26, V 0.80 -> 0.49 (model); lane bound V 0.937 | ARCH HBM-A1 by the lane bound, not the model |
+
+No class changes. The phantom stations explain the large p99 values of the q_b10x types (they are now 2-9, not 9-30), and the line cuts of q_b102/q_b103 stay above 1 only in the model's perfect-spreading full-line form, where B1's real-net bounds win. The hubs do not move: their cut is real (stations 46.8k b plus 25.5k b of core links).
+
+## ARCH items, final, each with the concrete option and its price
+
+Cycle prices are per pass or per token as stated. Area prices use one ASAP7 DFF at about 0.29 um2 per bit per stage (REGISTER ONLY; no clock tree or wiring), so 1,000 b x 1 stage is about 290 um2 (0.0003 mm2).
+
+- **HBM-A1 L14 (q_b001, 4127 b).** Pick: per-key-group point-to-point lanes, each with its own window, plus a key-group stack layout. Price: 0 cycles, 0 new flops, window re-derive plus layout (CPL-HBM-B1, post-cut). Query-only serialisation (N=4, query 569 b per token) is the fallback: -0.022 / -0.043% tok/s, 569 b x 3 extra stages = about 500 um2. Keys are a stream and cannot be serialised.
+- **HBM-A2 hub spine (q_hub_ne/nw, 72.3k b on 38.8k tracks, H 1.75-1.81 ft around).** Options in order. (a) svg/vmks co-location in the hub core_place redo: 0 cycles, 0 area, removes the 2488 b x 8 pair links from the spine (about 20k b of the 25.5k core-link bits). (b) local replication of the kin broadcast (1127 b x 8 sinks, 10 mm): a 2-level registered tree, +1 cycle on kin, about 1127 x 2 flops = 650 um2 per hub. (c) narrower beats: N=2 on the per-token crossings (about 7.6k b), +1 cycle each, 7.6k flops = 2,200 um2, word rate unchecked. (d) hub height sized from what H is left after (a). Not ready for 12:00. AT-RISK stays until (a) is measured at or under 0.8.
+- **HBM-A4 (new) real reach: 104 missing core-core links > 405 um, 114 explorer over-reach die hops, 21 ft slots with station 0 off the window.** Fix: pin-cycle stations (stations or relay stages priced by HBM-TAPS) on the 104 links, ft s0 re-derive on the 21 slots (G0 ft_s0_window, plan-route-g0ft0 2333a4c8225c), re-site of the 114 hops by a station chain. Price: +1 cycle per relayed hop and about 0.29 um2 per bit per stage; the hubs (57 of the 104) and q_b113 (7 links, 7.3 kb, about 2,100 um2) are the bulk. Kits do not build phantom stations, so the missing ones are real wire.
+- **S81-A1 svc_rs (16 types).** DIE-S81-85 chose a centre staging strip with SRX=2 (both stages on the q.k path): +2 cycles on scores and +4 on P.V per pass (about +160 cycles per token over 40 attn.pv passes of 953.2k, about -0.017% AR, TOK-VERIFY owes compose_tok_ds), about 7.5k flops per type (2,200 um2). Fallback: N band plus 5 stages. Held until the svc event after 12:00.
+- **S81-A2 (new) bk_sel__t2 reach.** The header pairs (q->c t_s/t_o, c->q f_c/f_cr, g->q lane, c<->g vd, g->tx) are 49 bundles with 52 over 405 um and no station (worst q0.t_o -> c.f_o_s 4281 um); the own cut is 0.33, so this is a reach problem. Ruling (a): one pin-cycle relay stage on t_s, t_o and lane, firm internal_stations, +1 cycle on the q->c credit loop (RTL/compiler update). Area: a stage per header bit, small (hundreds of flops per type). Post-cut, owner DIE-S81-85; the interim 6195be42 delta stays in 12:00.
+- **S81-A3 (new) svc_pvso_entry t1/t2 landing ring.** p99 11.08 / 7.90 stock, 3.66 / 4.40 with +103.68 um landing strip (+142.56 um with the u_tr region, +4.55 mm2 die, +0.56%). Growth alone fails S2 (still above 1.0). Options: (a) hard tr_x sites plus the S81-A1 relays so the ring carries fewer bits per cut; (b) narrower beats on the landing ring (the ring puts ring_tracks_per_bit x width tracks across both cuts, so halving the landing width halves its H demand), +1 cycle per halved beat, ring flops saved; (c) a registered tree between the S face and u_tr, +1-2 cycles, about 1,636 b x 2 stages = 950 um2 per type. The +142.56 um growth is only worth taking together with (a) or (b). AT-RISK until one of them is priced in the svc event.
+- **QC-A1 cbf_q00 NK tile ring (514 b links).** route_supply core_H 1.202 (1.174 halving off), street_V 1.187, line cut 0.32, ideal bisection 0.05/0.01. Options: (c) 2:1 glue serialiser on the one crossing link: +1 cycle on that hop, about 514 flops (150 um2), word rate to check, DIE-QC-97 first choice; (b) core-free H channel between the tile rows sized for 514 b at the M6/M4 pitch: 0 cycles, about +20-30 um of height (about 0.03 mm2 per tile row pair); (a) NK data pins split W+E is a re-pin of a signed core and is a no. Same for cbf_q00__cl870de686 / __cl1b5a6458. Post-cut.
+
+## KV check (kv3_pv_v2, stock GRT overflow 3,131,015)
+
+- The 3.13M is the pv_v2 stock arm of CPL-KV-PV's skeleton probe. Its own bound-netlist cut is H 0.44 / V 0.48 and the line cut 0.43 (not congested by design); the delta lowers own street_H 1.76 -> 0.81 and core_H p99 1.39 -> 1.18, core_V 1.58 -> 1.09.
+- The 20-core pv_v2 skeleton puts every one of the 20 cores and the pins into 2160 x 1520 um. A stock overflow in the millions with an ideal cut under 0.5 means the shelf packing, not the architecture, causes it. Verdict stays FEASIBLE.
+- Probe caveat: the four arms in epyc8 cpl-kv-pv-work/probe (pv_v2_base/srch, pv_v4n_base/srch) all ended rc=1 ("make_tracks.tcl: no such file") when I looked, so the number came from an earlier run and no arm result existed yet. A decision to move KV to REDESIGN rests on the arms' GRT, not on this stock count.
+- kv3_pv_*n: street_V stays 0.87-0.98 with legal moves; needs the die fix (flip far pairs vertically, own model core_H 1.95 -> 0.91, or widen the join/p2 street via ft_corridor.py). That is a PLAN item for DIE-KV-97 and does not make KV ARCH.
+
+## FINAL addendum: HBM-A4 priced per link (DIE-VIS-HBM, epyc4 die-vis-hbm/PROPOSAL_S1_HBM_postcut.md, slot_plan_post_cut.tsv, missing_gt405_plan.tsv)
+
+Supersedes the flat "+1 cycle per hop" price of HBM-A4. Source numbers are DIE-VIS-HBM's; I checked file presence and row counts (104 + 145 rows) only.
+- Over-reach ft slots: 145 remain after the cut (the 21 ft_s0_window slots are inside). 118 are fixed at 0 cycles (110 re-space, 8 jog), 19 need +20 stations, 8 need a core-free N-S corridor (hub L1256, L7002, L7502, L7503; q_b113 L8305/L8305m, L8309/L8309m). Corridor not granted -> those lanes go FT-AROUND.
+- 104 missing links over 405 um: 22 hub co-locations (0 cycles), 35 hub ARCH items, 14 in q_b113, 2 core moves, 3 in su20pv1, 28 hcol idx links of 33 b at +1 cycle (about 28 x 33 = 920 flops, 270 um2).
+- HBM-A2 correction: stations on the missing hub links at today's geometry would cost about 355k station-bits, so stations are rejected for the hubs. A2 is co-location plus an op_Q broadcast tree or an RTL re-split (+1 cycle tree as priced above).
+- Die cuts NE_b000 0.96 / NW_b000 0.85 fix = seam re-stack tied to the HBM-A1 L14 split. A1 and the die cut therefore become one post-cut event.
+Verdicts unchanged (HBM AT-RISK).
