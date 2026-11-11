@@ -39651,3 +39651,12 @@ DO_NOT_COUNT until COUNT-ARCHIVE-3 counts.
     - street_V 1.114 -> 1.187, bit-mm +0.8%, max core hop 1264 -> 1365 um
   - Delta: epyc8 /srv/opentallas-scratch2/claude/cplqc/deltas/delta_cbf_q00_s2.json (c60354708c7a). PNGs: scratchpad cleanslate/qwen_compute/cbf_q00_s2/. GRT probe (stock vs swap) is queued on epyc8.
   - Check before reusing: core_conns must have the same t00->t10->t11 / t11->t01->t11 ring, and the station counts must pin t00/t11 as in s2.
+- 11-11 01:30 ROOT-MERGE-57 DAILY approved-but-unlanded (for KW-FIX-44 nightly wave rebuild), main e5cc5a2dc5fb:
+  IN TEST, lands when clean: plan-route-4 7fcdb9113696 (PLAN-ROUTE-1; built on e5cc5a2dc5fb, sparse run on intel2).
+  BLOCKED by test name, waiting for fixed heads:
+  - grt-patch-1-halving 848b4e2031cc (test_kit_resume::test_docker_run_carries_mounts_and_tag)
+  - kw-fix-44 pingrid 22fb938f7d7a (test_face_flops_margin x3, test_ft_full_stage_bootstrap x4)
+  - kw-fix-44 ac-localhost 0e2bc15a1f48 (carries req3; req3 test files fail at collection; test_ot_lifecycle::test_lifecycle_fixture)
+  - kw-fix-44 loadgate 2129acf2d0e2 / sealdock cf3519ce0b15 / chargemax 70b664bd8047 (test_ot_heavy_short_pool x3, test_ot_run_load_hold x5, test_ot_run_queue_bal::LoadCap x4)
+  - autoclean-12-req3 d793ad3cd7 (argv test files fail at collection; test_ot_autoclean_auto ProtectedSources/ArchiveDriver)
+  Open: KV byte-gate confirmation for the landed d2 land-reserve (kit check on epyc7 still running). Not approved, not counted: KIT-INPUT-STORE-1 650b820fad.
