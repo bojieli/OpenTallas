@@ -80,3 +80,22 @@ def test_bands_only_remove_capacity_and_keep_rest(tmp_path):
     period = 0.57 / round(0.8 * 0.55, 3)
     assert len(m6) == int((6.4 - period / 2 + 0.016) // period) + 1
     assert all(abs(float(r[4]) - float(r[2]) - 0.032) < 1e-9 for r in m6)
+
+
+def test_channels_stay_open_on_their_layers(tmp_path):
+    f = tmp_path / "c.lef"; f.write_text(LEF)
+    ch = tmp_path / "ch.json"
+    ch.write_text('[{"dir": "EW", "span_um": [2.0, 3.0], "layers": ["M5", "M6"], "reason": "t"}]')
+    out = tmp_path / "g.lef"
+    assert G.main(["grt-view", "--bands", "--lef", str(f), "--out", str(out), "--channels", str(ch)]) == 0
+    head, groups, tail = G.split_obs(out.read_text())
+    for lay, lines in groups:
+        for l in lines[1:]:
+            x0, y0, x1, y1 = (float(v) for v in l.split()[1:5])
+            if lay in ("M5", "M6"):
+                assert y1 <= 2.0 + 1e-9 or y0 >= 3.0 - 1e-9, (lay, l)
+    # M5 blanket OBS is split around the channel, not dropped
+    m5 = [l for lay, ls in groups if lay == "M5" for l in ls[1:]]
+    assert len(m5) == 2
+    # M7 (not a channel layer) is untouched by the channel (removed by the default band mode anyway)
+    assert all(lay != "M7" for lay, _ in groups)

@@ -11,6 +11,9 @@ the real shapes.  The split form gives each stage its own view of the SAME child
          only REMOVES capacity (pure OBS), so GRT can never see more than the track supply.
   DRT  : the detailed abstract, swapped in on the GRT result (dbInst swapMaster, guides kept).
 
+  --channels FILE (JSON list of DIE-QC-97 route_channels, core frame) keeps those bands OPEN in the GRT view:
+  every OBS shape (band or detail) of a channel layer inside a channel rect is cut out.
+
   region-tcl is DISABLED (exit 2): set_global_routing_region_adjustment over the children RAISED capacity in the
   full flow (cbx_q10 M6 original 45.1M -> derated 132.1M, -193%; HBM q_su21 M4 -71%), although a 1-core probe
   without the kit hooks reduced it monotonically (0.1/0.5/0.9 -> H cap 3/2/1 of 4).  Do not use it.
@@ -93,6 +96,58 @@ def grt_view_bands(text, shares, gcell):
     head, groups, tail = split_obs(text)
     keep = [g for g in groups if g[0] not in shares]
     body = [l for g in keep for l in g[1]] + band_obs(text, shares, gcell)
+    return "\n".join(head + body + tail)
+
+
+def channel_rects(channels, size):
+    """core-frame rects {layer: [(x0,y0,x1,y1)]} of route_channels entries (DIE-QC-97 core_route_channel format:
+    {"dir": "EW"|"NS", "span_um": [lo, hi], "layers": [...]}); EW spans the full width, NS the full height."""
+    w, h = size
+    out = {}
+    for ch in channels or []:
+        lo, hi = (float(v) for v in ch["span_um"])
+        r = (0.0, lo, w, hi) if ch["dir"] == "EW" else (lo, 0.0, hi, h)
+        for lay in ch["layers"]:
+            out.setdefault(lay, []).append(r)
+    return out
+
+
+def _sub(r, c):
+    """r minus c as up to 4 rects."""
+    x0, y0, x1, y1 = r
+    cx0, cy0, cx1, cy1 = c
+    if cx0 >= x1 or cx1 <= x0 or cy0 >= y1 or cy1 <= y0:
+        return [r]
+    out = []
+    if cy0 > y0: out.append((x0, y0, x1, cy0))
+    if cy1 < y1: out.append((x0, cy1, x1, y1))
+    my0, my1 = max(y0, cy0), min(y1, cy1)
+    if cx0 > x0: out.append((x0, my0, cx0, my1))
+    if cx1 < x1: out.append((cx1, my0, x1, my1))
+    return out
+
+
+def open_channels(text, channels):
+    """remove every OBS shape of a channel layer inside the channel rects (parent owns those tracks)."""
+    rects = channel_rects(channels, size_of(text))
+    if not rects:
+        return text
+    head, groups, tail = split_obs(text)
+    body = []
+    for lay, lines in groups:
+        if lay not in rects:
+            body += lines
+            continue
+        body.append(lines[0])
+        for l in lines[1:]:
+            m = re.match(r"(\s*)RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*;", l)
+            if not m:
+                body.append(l)
+                continue
+            parts = [tuple(float(v) for v in m.groups()[1:])]
+            for c in rects[lay]:
+                parts = [q for p in parts for q in _sub(p, c)]
+            body += ["%sRECT %.4f %.4f %.4f %.4f ;" % (m.group(1), *q) for q in parts if q[2] > q[0] and q[3] > q[1]]
     return "\n".join(head + body + tail)
 
 
@@ -194,6 +249,7 @@ def main(argv=None):
     a.add_argument("--bands", action="store_true", help="price the detailed blocked share (+margin) with gcell bands instead of removing the OBS")
     a.add_argument("--gcell", type=float, default=0.57); a.add_argument("--margin", type=float, default=0.05); a.add_argument("--pitch", default="")
     a.add_argument("--band-layers", default="M6"); a.add_argument("--calib", type=float, default=0.8)
+    a.add_argument("--channels", default="", help="JSON file: route_channels list (core frame) kept open on their layers")
     b = sp.add_parser("share"); b.add_argument("--lef", required=True); b.add_argument("--layers", default="M6,M7"); b.add_argument("--pitch", default="")
     c = sp.add_parser("region-tcl"); c.add_argument("--lef", required=True); c.add_argument("--master", required=True)
     c.add_argument("--layers", default="M6,M7"); c.add_argument("--margin", type=float, default=0.05); c.add_argument("--pitch", default="")
@@ -209,13 +265,16 @@ def main(argv=None):
             bl = [x for x in ns.band_layers.split(",") if x and x in lay]
             sh = share(t, lay, pitch)
             shares = {l: (min(0.95, round(ns.calib * (sh[l]["blocked_share"] + ns.margin), 3)) if l in bl else 0.0) for l in lay}
-            g = grt_view_bands(t, shares, ns.gcell); open(ns.out, "w").write(g)
+            g = grt_view_bands(t, shares, ns.gcell)
+            chs = json.load(open(ns.channels)) if ns.channels else []
+            g = open_channels(g, chs); open(ns.out, "w").write(g)
             print(json.dumps({"lef": ns.lef, "out": ns.out, "mode": "bands", "gcell": ns.gcell, "calib": ns.calib, "detail_share": sh,
-                              "band_share": shares, "removed": [l for l in lay if l not in bl],
-                              "ok": grt_view(g, set(lay)) == grt_view(t, set(lay))}))
+                              "band_share": shares, "removed": [l for l in lay if l not in bl], "channels": chs,
+                              "ok": grt_view(g, set(lay) | set(channel_rects(chs, size_of(t)))) == grt_view(t, set(lay) | set(channel_rects(chs, size_of(t))))}))
         else:
-            g = grt_view(t, set(lay)); open(ns.out, "w").write(g)
-            print(json.dumps({"lef": ns.lef, "out": ns.out, "layers_removed": lay, "ok": check(t, g, set(lay))}))
+            chs = json.load(open(ns.channels)) if ns.channels else []
+            g0 = grt_view(t, set(lay)); g = open_channels(g0, chs); open(ns.out, "w").write(g)
+            print(json.dumps({"lef": ns.lef, "out": ns.out, "layers_removed": lay, "channels": chs, "ok": check(t, g0, set(lay))}))
     elif ns.cmd == "share":
         print(json.dumps(share(open(ns.lef).read(), lay, pitch)))
     elif ns.cmd == "region-tcl":
