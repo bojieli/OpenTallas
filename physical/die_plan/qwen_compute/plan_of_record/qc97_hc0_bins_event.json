@@ -1,0 +1,30 @@
+{
+ "event": "DIE-QC-97 hc0 sink bins (HOLD-TAP-SPLIT)",
+ "base": "/srv/opentallas-scratch2/claude/dq97/stb/plan_pv/plan_qc53v4nS_mem9_vml_pv.json",
+ "base_sha256": "72b74c858d8e5f982d8a677296affb42d5deeff81e16fd3ca76c58c49b289e9e",
+ "out": "/srv/opentallas-scratch2/claude/dq97/stb/plan_pv/plan_qc53v4nS_mem9_vml_pv_hc0bins.json",
+ "out_sha256": "5d12f649e06531c6089665a123cbc8cbe08be8fe772a097ab2eba177509e3d2e",
+ "types": {
+  "sle_hc0__cl05696ed1": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "sle_hc0__cl929603c0__cl38badc56": [
+   "clock.sink_bins_file"
+  ],
+  "sle_hc0__cl929603c0__cl4baa7c9c": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ],
+  "slw_hc0__cl4f54b7a3": [
+   "clock.sink_bins_file",
+   "clock.tap_pair_affinity = {}"
+  ]
+ },
+ "bins_sha256": {
+  "sle_hc0__cl05696ed1": "6ffee83dea803155ce115f0e913189de2585e2d3aefb40a01b04a912c1f8bbd4",
+  "sle_hc0__cl929603c0__cl38badc56": "5c3aee481807bd7e8030d453e54e1198a90d4313db6a9c411c12576793b7f60c",
+  "sle_hc0__cl929603c0__cl4baa7c9c": "52f539b9218dd8ab0fa9f83b0ed33e71427ec4ab60d34e9e0da3e9ff3c102883",
+  "slw_hc0__cl4f54b7a3": "b953c16624455fe30c3ae78ba267bf0b30ff7fef8db50a59a5d5f0b9246fa3c9"
+ }
+}
