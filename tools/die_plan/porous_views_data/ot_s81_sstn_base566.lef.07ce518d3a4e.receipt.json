@@ -1,0 +1,60 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_s81_sstn_base566/base_kit.lef",
+ "base_sha256": "99e0e97ed11347542a8ed9b9dda1a1589d2c34aa71abb8a8a9e3953fbdcb28e1",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/ds85/out/ot_s81_sstn_base566/detail.lef",
+ "detail_sha256": "1d5dee7c043812fded2f8123e1f3c8374882a3f93c402c468c1d3dc0cc1c82cc",
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views/ot_s81_sstn_base566/porous.lef",
+ "out_sha256": "07ce518d3a4e8cf79374e15fd55b6aa4bf7423bd6b8d0060ea9a8d0bd367a73c",
+ "pg_guard_rects": {
+  "M5": 35
+ },
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": false,
+  "signal_pins": 1143,
+  "size_base": [
+   84.24,
+   30.24
+  ],
+  "size_detail": [
+   84.24,
+   30.24
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 4120,
+  "M5": 1295
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/intel1",
+  "db_path": "srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/eco_m0/i3/run/results/asap7/kl_ot_s81_sstn_base566_bodyA/base/6_final.odb",
+  "odb_sha256": "f13e2df909f5f71ceaa6ee667e2e0f619d425ea9297efb0f9a4b1e2603c4d771",
+  "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+  "store_id": "93d5f534ad41eea6ee2d111c21a23984ea585f7dc1cd62b460987f52a5129597"
+ },
+ "tool_sha256": "a13099b82cc5718f16daf1fa8cecb99b5887eb5fb112e56dddb64740da1b107b"
+}

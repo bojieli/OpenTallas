@@ -2883,7 +2883,10 @@ def type_macros(P, tn):
         if k not in _VIEW_LEF:
             import view_lef as VL
             import lef_override as LO
-            _VIEW_LEF[k] = LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve)
+            import porous_views as PV
+            # POROUS-ALL-1 11-10 (OWNER): opt-in real-shape child abstract (gen env OT_POROUS_VIEWS); unset = unchanged
+            _VIEW_LEF[k] = PV.select(LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve),
+                                     _CR.resolve)
         return _VIEW_LEF[k]
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
@@ -4354,6 +4357,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
         import lef_override as _LO
         _LO.write_receipt(kd, macros)     # COORD 11-09 DRT-0073 class: corrected child LEFs this kit took, with both hashes
+        import porous_views as _PV
+        _PV.write_receipt(kd, macros)     # POROUS-ALL-1: porous_views.json only when OT_POROUS_VIEWS is set
         # DIE-QC-97 11-09: a hard core with clock_entry_access gets its access abstract by construction (cbx_q10 NL
         # DRT-0073: the signed blanket-OBS LEF was staged, the M5 ck had no access point)
         stage_clock_entry_lefs(P, tn, kd, macros, lambda q: _CR.resolve(q, base))
