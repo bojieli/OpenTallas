@@ -4290,5 +4290,28 @@
     "source_commit": "02046aa040",
     "read_at_commit": true,
     "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_sfu_opsb_group__gprot": {
+    "defines": [
+      "OT_OPSG_GP",
+      "OT_OPSG_ROT"
+    ],
+    "params": {},
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsb_tiles.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lbank_n32.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_gp.sv"
+    ],
+    "macros": [
+      "ot_sram_1r1w_2048x32_m8_r0c0_g32"
+    ],
+    "source": "HBM-CORES-B 11-11: opsbg_C3 = ot_hgi_sfu_opsb_group__gp + OT_OPSG_ROT (cycle-exact write crossbar rotate, ot_hgi_su_lgroup2_gp.sv); EQ opsbg_eq (ref kit vs this RTL). HBM-FORM-SPLIT d44v part 27: lgroup2 tile of ot_hgi_sfu_core_split3__opstore_b; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B9 log-depth lgroup2 selects (ot_hgi_su_lgroup2_lf, yosys equiv vs ot_hgi_su_lgroup2); HBM-REFORM-B9 RE-FORM lgroup2_lf BREG=1 (registered bank inputs, rd +1 edge); HBM-REFORM-B10 IREG+FREG (registered tile inputs + registered per-bank fault terms, rd +2 / flt +2); DIE-HBM-83-OPSG part 57 hub form: N32 banks, macro-free logic hub, flop on every haul; PIN CYCLES rd +5, flt 0; lock-step bench results/die_hbm_1106/opsg_gp",
+    "top": "ot_hgi_sfu_opsb_group",
+    "util": 0.4,
+    "source_commit": "02046aa040",
+    "read_at_commit": true,
+    "cts_delay_buffer_derate": 0
   }
 }
