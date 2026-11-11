@@ -1,0 +1,47 @@
+{
+ "event": "l48hp1 hd_host_e form H2: u_rr + u_ep of the lane-1 collector as hard core ot_s81hd_he_epc (COORD 11-10)",
+ "base": "HEAD-92 plan_he5 (l48hp1_straps result + hd_host_e rst_start_raw_0/2 +1.92 um, the form 5 / 5r build plan)",
+ "base_sha256": "017627403abaf54d074c7cc630ab1cd7c9520e9fb37f5fe2491807c7394f8b6b",
+ "result_sha256": "32f998b6366e3c3eed0a055fcf52e9c55cd892bd0ecf1de88861137edb15b2a8",
+ "apply": "python3 -I physical/die_plan/s81_head/plan_of_record/l48hp1_h2/apply_delta.py BASE.json OUT.json  (copy ot_s81hd_he_epc_pins.json to <plan dir>/core_pins/)",
+ "types": [
+  "hd_host_e",
+  "ot_s81hd_he_epc (new hard core, kit tools/s81_head/head_he_epc_kit.py)"
+ ],
+ "pin_cycles": 0,
+ "rtl": {
+  "define": "OT_HE_EPC (default off = original flat circuit)",
+  "child": "rtl/dsrom_sys/s81_head/ot_s81hd_he_epc.sv",
+  "parent": "rtl/dsrom_sys/s81_head/ot_s81hd_mesh_ep_core.sv (ot_s81ph_coll_lane_safe4_hd: u_rr + u_ep -> u_epc under OT_HE_EPC)"
+ },
+ "wiring_lec": {
+  "script": "wiring_lec.sh (yosys 0.x ORFS image, flatten both, u_epc.u_ep./u_epc.u_rr. -> u_ep./u_rr., equiv_simple -seq 4)",
+  "top": "ot_s81ph_coll_lane_safe4_hd CH_BOARD 700 TF_CLEANUP 1 REACH 2 (hd_host_e lane 1 params), OT_COLL_NATIVE32",
+  "result": "EQUIVALENT: 62208 / 62208 $equiv cells proven (gate-side parent rr[200:8] tie renamed: no loads in the parent)",
+  "files_sha256_16": {
+   "mesh_ep_core": "5e0e426d1a5e54d9",
+   "he_epc": "3753793ad176179a"
+  }
+ },
+ "geometry": {
+  "core_origin_um": [
+   336.96,
+   60.48
+  ],
+  "core_outline_um": [
+   224.64,
+   492.48
+  ],
+  "moves": [
+   "u_gb.u_sf g_bank[0..8] x 483.84 -> 233.28, g_bank[9] (535.68,77.76) -> (233.28,259.2)",
+   "u_ski.u_head g_bank[0..8] x 535.68 -> 604.8",
+   "reset tap (531.36,172.8) -> (574.56,172.8)",
+   "coll_i1 reader start stage 2 (445.17,123.79) -> (445.17,47.52)",
+   "u_cland_agg_2 (351.81,123.79) -> (351.81,47.52)",
+   "landing local reset k4 (524.65,153.59) -> (524.65,51.84)",
+   "clock density sink sites (359.784,384.48) and (531.36,172.8) dropped; (510.832|531.36, 551.856) -> y 559.872",
+   "clock tap (324,285.12) and count straps unchanged"
+  ]
+ },
+ "status": "DO_NOT_COUNT: child kit building (epyc8), parent rebind after the child LEF/LIB"
+}
