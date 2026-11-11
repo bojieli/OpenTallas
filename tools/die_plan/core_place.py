@@ -344,6 +344,14 @@ class TypeModel:
                             c[f] += cnt
                 st[fl] = c
             self.cface.append(st)
+        # face clearance rules (--face-clear FACE:UM:REGEX on inst or module): cluster -> {face: um}
+        self.cclr = []
+        for g in self.CL:
+            d = {}
+            for face, um, rx in self.cfg.get("face_clear") or []:
+                if any(re.search(rx, self.inst[i]) or re.search(rx, self.C[i].get("module", "")) for i in g):
+                    d[face] = max(d.get(face, 0.0), um)
+            self.cclr.append(d)
         self.reset_state()
 
     def reset_state(self):
@@ -404,6 +412,10 @@ class TypeModel:
         if x < max(G, self.need(fc["W"])) - EPS or y < max(G, self.need(fc["S"])) - EPS or \
                 x + w > W - max(G, self.need(fc["E"])) + EPS or y + h > H - max(G, self.need(fc["N"])) + EPS:
             return False
+        cl = self.cclr[k]
+        if cl and (x < cl.get("W", 0) - EPS or y < cl.get("S", 0) - EPS or x + w > W - cl.get("E", 0) + EPS or
+                   y + h > H - cl.get("N", 0) + EPS):
+            return False
         gap = self.cfg["gap"]
         for j in range(self.m):
             if j == k or j in ignore:
@@ -443,6 +455,59 @@ class TypeModel:
                 return False
         return True
 
+    def why(self, k, x, y, ignore=(), fl=None):
+        """legal() with the first broken rule as text ('' = legal)."""
+        if self.cfix[k]:
+            return 'rule1 %s' % (locals().get('j', ''),)
+        W, H = self.W, self.H
+        w, h = self.cbb[k, 2], self.cbb[k, 3]
+        fc = self.cface[k].get(fl or self.cflip[k], self.cface[k]["R0"])
+        if x < max(G, self.need(fc["W"])) - EPS or y < max(G, self.need(fc["S"])) - EPS or \
+                x + w > W - max(G, self.need(fc["E"])) + EPS or y + h > H - max(G, self.need(fc["N"])) + EPS:
+            return 'rule2 %s' % (locals().get('j', ''),)
+        cl = self.cclr[k]
+        if cl and (x < cl.get("W", 0) - EPS or y < cl.get("S", 0) - EPS or x + w > W - cl.get("E", 0) + EPS or
+                   y + h > H - cl.get("N", 0) + EPS):
+            return 'rule3 %s' % (locals().get('j', ''),)
+        gap = self.cfg["gap"]
+        for j in range(self.m):
+            if j == k or j in ignore:
+                continue
+            X0, Y0 = self.cpos[j]
+            X1, Y1 = X0 + self.cbb[j, 2], Y0 + self.cbb[j, 3]
+            gx = max(X0 - (x + w), x - X1)
+            gy = max(Y0 - (y + h), y - Y1)
+            fj = self.faces(j)
+            # facing pairs: projections overlap on the other axis
+            if gy < -EPS:      # side by side in x
+                if X0 >= x + w - EPS:
+                    req = max(gap, self.need(fc["E"] + fj["W"]))
+                else:
+                    req = max(gap, self.need(fc["W"] + fj["E"]))
+                if gx < req - EPS:
+                    return 'rule4 %s' % (locals().get('j', ''),)
+            elif gx < -EPS:    # stacked in y
+                if Y0 >= y + h - EPS:
+                    req = max(gap, self.need(fc["N"] + fj["S"]))
+                else:
+                    req = max(gap, self.need(fc["S"] + fj["N"]))
+                if gy < req - EPS:
+                    return 'rule5 %s' % (locals().get('j', ''),)
+            elif max(gx, gy) < gap - EPS:
+                return 'rule6 %s' % (locals().get('j', ''),)
+        if len(self.FP):
+            F, Hh = self.FP, self.FPH
+            if ((F[:, 0] > x - Hh) & (F[:, 0] < x + w + Hh) & (F[:, 1] > y - Hh) & (F[:, 1] < y + h + Hh)).any():
+                return 'rule7 %s' % (locals().get('j', ''),)
+        for r in self.FR:
+            if not (r[2] <= x or r[0] >= x + w or r[3] <= y or r[1] >= y + h):
+                return 'rule8 %s' % (locals().get('j', ''),)
+        if self.bands:
+            cur = self.band_now - self._band_k(k) + self._band_at(k, x, y)
+            if (cur > self.band_base + 1.0).any():
+                return 'rule9 %s' % (locals().get('j', ''),)
+        return ''
+
     def _band_k(self, k):
         return self._band_at(k, self.cpos[k, 0], self.cpos[k, 1])
 
@@ -480,6 +545,19 @@ class TypeModel:
         for k in range(self.m):
             self.band_base += self._band_k(k)
         self.band_now = self.band_base.copy()
+
+    def clear_viol(self):
+        """clusters breaking their --face-clear rule (inst of the first member)."""
+        out = []
+        for k in range(self.m):
+            cl = self.cclr[k]
+            if not cl:
+                continue
+            (x, y), w, h = self.cpos[k], self.cbb[k, 2], self.cbb[k, 3]
+            if x < cl.get("W", 0) - EPS or y < cl.get("S", 0) - EPS or x + w > self.W - cl.get("E", 0) + EPS or \
+                    y + h > self.H - cl.get("N", 0) + EPS:
+                out.append(self.inst[self.CL[k][0]])
+        return out
 
     def violations(self):
         """per cluster, the hard rules the current state breaks (for a seed / the base)."""
@@ -850,6 +928,129 @@ def undo_move(M, k, mv, pos, fl):
     M.cflip[k] = fl
     if M.bands:
         M.band_now += M._band_k(k) - old
+
+
+def tviol_now(M):
+    """timing violations of the accepted state (cached until a swap is applied)."""
+    if getattr(M, "_tv_now", None) is None:
+        M._tv_now = M.tviol(range(len(M.L)))
+    return M._tv_now
+
+
+def base_ok(M, k, ignore=()):
+    """the cluster back at its own base spot (base orient) is feasible when no other cluster, at its CURRENT spot,
+    comes nearer than the base did (the base plan is the signed-off reference geometry)."""
+    x, y, w, h = M.cbb[k]
+    for j in range(M.m):
+        if j == k or j in ignore:
+            continue
+        X, Y = M.cpos[j]; Wj, Hj = M.cbb[j, 2], M.cbb[j, 3]
+        g = max(X - (x + w), x - (X + Wj), Y - (y + h), y - (Y + Hj))
+        X0, Y0 = M.cbb[j, 0], M.cbb[j, 1]
+        g0 = max(X0 - (x + w), x - (X0 + Wj), Y0 - (y + h), y - (Y0 + Hj))
+        if g < min(g0, M.cfg["gap"]) - EPS:
+            return False
+    return True
+
+
+def face_clear_legalise(M, log):
+    """--face-clear: every rule cluster nearer its face than the rule is set onto the clearance line, then a
+    sweep away from that face (Tetris) puts each cluster that is no longer legal against the ones already swept
+    to the nearest legal lattice spot, moving away from the face first (dx up to +-4 steps).  Clusters that were
+    already off-rule in the base and are untouched keep their base spot (base_ok).  Returns (moved, failed)."""
+    failed = []
+    start = [tuple(M.cpos[k]) for k in range(M.m)]
+    for face, um, rx in M.cfg.get("face_clear") or []:
+        ax = 1 if face in "SN" else 0
+        sg = 1 if face in "SW" else -1           # direction away from the face
+        L = M.H if ax else M.W
+        hit = []
+        for k in range(M.m):
+            if face not in M.cclr[k] or M.cfix[k]:
+                continue
+            p, d = M.cpos[k][ax], M.cbb[k, 2 + ax]
+            if sg > 0 and p < um - EPS:
+                q = list(M.cpos[k]); q[ax] = snap(um + G / 2); M.cpos[k] = tuple(q); hit.append(k)
+            elif sg < 0 and p + d > L - um + EPS:
+                q = list(M.cpos[k]); q[ax] = snap(L - um - d - G / 2); M.cpos[k] = tuple(q); hit.append(k)
+        if not hit:
+            continue
+        key = (lambda k: M.cpos[k][ax]) if sg > 0 else (lambda k: -(M.cpos[k][ax] + M.cbb[k, 2 + ax]))
+        order = sorted((k for k in range(M.m) if not M.cfix[k]), key=key)
+        pending = set(order)
+        bad = []
+        for k in order:
+            pending.discard(k)
+            x, y = M.cpos[k]
+            untouched = tuple(M.cpos[k]) == start[k] and M.cflip[k] == "R0"
+            if M.legal(k, x, y, ignore=pending) or (untouched and base_ok(M, k, ignore=pending)):
+                continue
+            best = None
+            first = None       # nearest legal spot; best = nearest one that adds no link over its timing limit
+            K = sorted(set(q for i in M.CL[k] for q in M.inc[i]))
+            tv0 = M.tviol(K)
+            for st in range(0, int(L / G) + 1):
+                if first is not None and st > first[0] + 24:
+                    break
+                for dx in (0, 1, -1, 2, -2, 3, -3, 4, -4, 6, -6, 8, -8):
+                    d = [0.0, 0.0]; d[ax] = sg * st * G; d[1 - ax] = dx * G
+                    c = (snap(x + d[0]), snap(y + d[1]))
+                    if M.legal(k, *c, ignore=pending):
+                        if first is None:
+                            first = (st, c)
+                        M.cpos[k] = c
+                        okt = M.tviol(K) <= tv0
+                        M.cpos[k] = (x, y)
+                        if okt:
+                            best = c
+                            break
+                if best:
+                    break
+            if best is None:      # no spot keeps every incident link within its timing limit: the rule fails here
+                bad.append(M.inst[M.CL[k][0]])
+                continue
+            M.cpos[k] = best
+        if M.bands:
+            M.band_now = np.zeros(len(M.bands))
+            for kk in range(M.m):
+                M.band_now += M._band_k(kk)
+        if bad:
+            failed.append(dict(face=face, um=um, no_legal_spot=bad))
+            log("  face-clear %s %.1f: no legal, timing-clean spot for %s (an outline/die-plan change is needed)" % (
+                face, um, bad))
+        moved = [M.inst[M.CL[k][0]] for k in range(M.m) if tuple(M.cpos[k]) != start[k]]
+        log("  face-clear %s %.1f: %d rule clusters set on the line, %d clusters moved: %s" % (
+            face, um, len(hit), len(moved), [m_.split(".")[-2] + "." + m_.split(".")[-1] for m_ in moved]))
+    if failed:
+        def restore():
+            for k in range(M.m):
+                M.cpos[k] = start[k]
+            if M.bands:
+                M.band_now = np.zeros(len(M.bands))
+                for kk in range(M.m):
+                    M.band_now += M._band_k(kk)
+        restore()
+        # how much outline growth (on the rule's axis, at the far face) would make it fit: the die-plan ask
+        if not M.cfg.get("_growing"):
+            ax = 1 if failed[0]["face"] in "SN" else 0
+            W0, H0 = M.W, M.H
+            M.cfg["_growing"] = True
+            try:
+                for ext in np.arange(G * 2, 260.0, G * 2):
+                    if ax:
+                        M.H = H0 + ext
+                    else:
+                        M.W = W0 + ext
+                    _, f2 = face_clear_legalise(M, lambda s_: None)
+                    if not f2:
+                        failed[0]["outline_growth_um"] = round(float(ext), 2)
+                        log("  face-clear: fits with the outline grown by %.2f um on the %s axis" % (ext, "SN" if ax else "WE"))
+                        break
+            finally:
+                M.W, M.H = W0, H0
+                M.cfg.pop("_growing", None)
+                restore()
+    return sum(1 for k in range(M.m) if tuple(M.cpos[k]) != start[k]), failed
 
 
 def apply_seed(M, seed, log):
@@ -1284,6 +1485,9 @@ def main(argv=None):
     ap.add_argument("--grt-halving", choices=("full", "none"), default="full")
     ap.add_argument("--flips-only", action="store_true", help="orientation flips only (no relocate / swap)")
     ap.add_argument("--fixed", default="", help="regex of hard-core insts that never move")
+    ap.add_argument("--face-clear", action="append", default=[], metavar="FACE:UM:REGEX",
+                    help="cores whose inst/module match REGEX keep >= UM from FACE (S/N/E/W); a column too near is "
+                         "re-packed off the face before the search")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -1310,7 +1514,8 @@ def main(argv=None):
     conns = RS.load_conns(die_dir, None, plan.parent, RS.REF_DIRS[1:])
     cfg = dict(gap=a.gap, sweeps=a.sweeps, topk=a.topk, lam=a.lam, reach=a.reach, grid_um=a.grid_um,
                grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg,
-               flips_only=a.flips_only)
+               flips_only=a.flips_only,
+               face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
@@ -1347,6 +1552,7 @@ def main(argv=None):
         seeded = 0
         if tn in seeds:
             seeded = apply_seed(M, seeds[tn], log)
+        fc_moved, fc_failed = face_clear_legalise(M, log) if cfg.get("face_clear") else (0, [])
         st = {"moves": {}}
         if not a.no_search:
             st = search(M, Gd, cfg, log)
@@ -1355,6 +1561,50 @@ def main(argv=None):
             # most-implicated cluster first, while the revert is legal (the base is feasible, so this converges)
             qmap = {si: q for (si, q, _) in M.stations}
             reverted = []
+            # first: swap an over-station end with a same-size cluster (identical lanes) when that lowers the count
+            swapped = []
+            nbad = lambda: len(write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"])  # noqa: E731
+            cur = nbad()
+            for rnd in range(8):
+                if not cur:
+                    break
+                bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
+                ends = collections.Counter()
+                for si in bad:
+                    a_, b_, _, _ = M.L[qmap[si]]
+                    for e in (a_, b_):
+                        if e[0] is not None:
+                            ends[M.cid[e[0]]] += 1
+                best = (cur, None)
+                for k_, _ in ends.most_common(3):
+                    for j_ in range(M.m):
+                        if j_ == k_ or M.cfix[j_] or M.cfix[k_] or \
+                                abs(M.cbb[j_, 2] - M.cbb[k_, 2]) > EPS or abs(M.cbb[j_, 3] - M.cbb[k_, 3]) > EPS:
+                            continue
+                        pk, pj = tuple(M.cpos[k_]), tuple(M.cpos[j_])
+                        fk, fj = M.cflip[k_], M.cflip[j_]
+                        M.cpos[k_], M.cpos[j_] = pj, pk
+                        if M.legal(k_, *pj, ignore=(j_,)) and M.legal(j_, *pk) and M.tviol(range(len(M.L))) <= \
+                                tviol_now(M):
+                            n_ = nbad()
+                            if n_ < best[0]:
+                                best = (n_, (k_, j_))
+                        M.cpos[k_], M.cpos[j_] = pk, pj
+                        M.cflip[k_], M.cflip[j_] = fk, fj
+                if best[1] is None:
+                    break
+                k_, j_ = best[1]
+                M.cpos[k_], M.cpos[j_] = tuple(M.cpos[j_]), tuple(M.cpos[k_])
+                if M.bands:
+                    M.band_now = np.zeros(len(M.bands))
+                    for kk in range(M.m):
+                        M.band_now += M._band_k(kk)
+                M._tv_now = None
+                swapped.append((M.inst[M.CL[k_][0]], M.inst[M.CL[j_][0]]))
+                cur = best[0]
+            if swapped:
+                log("  station repair: %d same-size swaps, %d stations still over: %s" % (len(swapped), cur, swapped))
+                st["swapped"] = swapped
             for rnd in range(M.m):
                 bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
                 if not bad:
@@ -1368,11 +1618,13 @@ def main(argv=None):
                             if tuple(M.cpos[k_]) != tuple(M.cbb[k_, :2]) or M.cflip[k_] != "R0":
                                 cnt[k_] += 1
                 done_ = False
-                for k_, _ in cnt.most_common():
+                # face-rule clusters (--face-clear) revert last: the rule is the point of the move
+                for k_, _ in sorted(cnt.most_common(), key=lambda kv: bool(M.cclr[kv[0]])):
                     old = (tuple(M.cpos[k_]), M.cflip[k_])
                     ob = M._band_k(k_) if M.bands else None
+                    tvb = M.tviol(range(len(M.L)))
                     M.cpos[k_] = tuple(M.cbb[k_, :2]); M.cflip[k_] = "R0"
-                    if M.legal(k_, *M.cpos[k_]):
+                    if (M.legal(k_, *M.cpos[k_]) or base_ok(M, k_)) and M.tviol(range(len(M.L))) <= tvb:
                         if M.bands:
                             M.band_now += M._band_k(k_) - ob
                         reverted.append(M.inst[M.CL[k_][0]])
@@ -1409,7 +1661,10 @@ def main(argv=None):
         if ok:
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
-                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded,
+                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_end=M.clear_viol(),
+                         timing_over=[dict(a=str(M.L[q][0]), b=str(M.L[q][1]), bits=M.L[q][2], kind=M.L[q][3],
+                                           len_um=round(M.llen(q), 1), limit_um=round(M.maxlen[q], 1))
+                                      for q in range(len(M.L)) if M.llen(q) > M.maxlen[q] + EPS][:40],
                          base_violations=len(base_viol), moved_cores=moved, moves=st.get("moves"),
                          lam=dict((k, st[k]) for k in ("lamH", "lamV", "shortage_H", "shortage_V") if k in st),
                          bit_mm=[round(base_bitum / 1e3, 1), round(new_bitum / 1e3, 1),
