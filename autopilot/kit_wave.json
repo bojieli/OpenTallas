@@ -20858,12 +20858,7 @@
     "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "sle_su_l0__cl086d85ba": "KW-FIX-45 11-11 (DIE-QC-99): s20 su_l0 kits FAIL kit_topology KIT_TOPOLOGY_SOURCE (kit_istations prepare-stations inserts 4 stations per core, kit_rtl emits none); not a bind/plan input problem (identical bind recipe, su types have no native_internal_stations in any bind); kit-flow class for the su pin-face tooling lane; held until the class fix",
-    "sle_su_l0__cl7a55c676": "KW-FIX-45 11-11 (DIE-QC-99): s20 su_l0 kits FAIL kit_topology KIT_TOPOLOGY_SOURCE (kit_istations prepare-stations inserts 4 stations per core, kit_rtl emits none); not a bind/plan input problem (identical bind recipe, su types have no native_internal_stations in any bind); kit-flow class for the su pin-face tooling lane; held until the class fix",
-    "slw_su_l0__cl1a1c1f8f": "KW-FIX-45 11-11 (DIE-QC-99): s20 su_l0 kits FAIL kit_topology KIT_TOPOLOGY_SOURCE (kit_istations prepare-stations inserts 4 stations per core, kit_rtl emits none); not a bind/plan input problem (identical bind recipe, su types have no native_internal_stations in any bind); kit-flow class for the su pin-face tooling lane; held until the class fix",
-    "slw_su_l0__cl1e5219ea": "KW-FIX-45 11-11 (DIE-QC-99): s20 su_l0 kits FAIL kit_topology KIT_TOPOLOGY_SOURCE (kit_istations prepare-stations inserts 4 stations per core, kit_rtl emits none); not a bind/plan input problem (identical bind recipe, su types have no native_internal_stations in any bind); kit-flow class for the su pin-face tooling lane; held until the class fix",
-    "slw_su_l0__cl76fb247e": "KW-FIX-45 11-11 (DIE-QC-99): s20 su_l0 kits FAIL kit_topology KIT_TOPOLOGY_SOURCE (kit_istations prepare-stations inserts 4 stations per core, kit_rtl emits none); not a bind/plan input problem (identical bind recipe, su types have no native_internal_stations in any bind); kit-flow class for the su pin-face tooling lane; held until the class fix"
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -20932,7 +20927,6 @@
     "slw_su_l0__cl76fb247e@1",
     "slw_su_l1__cla2a78701@1",
     "slw_su_l1__clcc9d0155@1",
-    "sle_su_l0__cl7a55c676@2",
     "sle_su_l1__cl5ea486db@2",
     "sle_su_l1__clc6d66f5b@2",
     "sle_su_c@2",
@@ -21148,11 +21142,7 @@
     "slw_su_l1__clcc9d0155@7",
     "slw_sc_v2@5",
     "sle_su_c@3",
-    "sle_su_l0__cl086d85ba@2",
     "slw_su_c__cl19bb38ef@3",
-    "slw_su_l0__cl1a1c1f8f@2",
-    "slw_su_l0__cl1e5219ea@2",
-    "slw_su_l0__cl76fb247e@2",
     "slw_hc1__cl3449ea95@1",
     "slw_hc1__cl68f9248e__cl144ee7b3@3",
     "slw_hc2__cl6bcaba89@3",
@@ -21422,7 +21412,12 @@
     "coll_ftn@4",
     "coll_n@7",
     "coll_n@6",
-    "slw_hc2__cla3497502__cl16607c7a@2"
+    "slw_hc2__cla3497502__cl16607c7a@2",
+    "sle_su_l0__cl086d85ba@2",
+    "sle_su_l0__cl7a55c676@2",
+    "slw_su_l0__cl1a1c1f8f@2",
+    "slw_su_l0__cl1e5219ea@2",
+    "slw_su_l0__cl76fb247e@2"
    ],
    "queue_src": "main@730345725942+genscope@716f40ea7e2c",
    "type_args": {
