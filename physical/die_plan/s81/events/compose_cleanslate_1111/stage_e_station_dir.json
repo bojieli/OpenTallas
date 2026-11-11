@@ -1,5 +1,5 @@
 {"name": "e_station_dir",
- "why": "COORD 02:4x / DIE-S81-85 11-11: STATION-DIR-1111 (a15d38f573a804a60, claude/ds85-station-dir-1111 21ff7fae50ff) reverses all 75 face-first chains (68 STATION-LINT-1111 INVERTED + 7 same-form sub-threshold, DIE-S81-85 ruling 11-11) (from/to swap, regs_um reversed); run AFTER (a) so it reverses whatever regs (a) left",
+ "why": "COORD 02:4x / DIE-S81-85 11-11: STATION-DIR-1111 (a15d38f573a804a60, claude/ds85-station-dir-1111 8b488950d8f3, script 7288442477f0; needs tools/die_plan/native_istations.py md5 57a3d8fd overlay in any bind/gen src) reverses all 75 face-first chains (68 STATION-LINT-1111 INVERTED + 7 same-form sub-threshold, DIE-S81-85 ruling 11-11) (from/to swap, regs_um reversed); run AFTER (a) so it reverses whatever regs (a) left",
  "script": "physical/die_plan/s81/delta_station_dir_1111.py",
  "argv": ["{in}", "{out}", "--base-sha", "{in_sha}", "--report", "{report}"],
  "type_keys": ["internal_stations"], "top_keys": []}
