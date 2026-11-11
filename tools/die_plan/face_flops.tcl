@@ -675,6 +675,10 @@ if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_U
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
 # DIE-HBM-92 11-08: optional FT polarity placement (OT_FT_POLARITY_LOCAL=1); before the GPL guard, which stays last
 if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.tcl}
+# VSN6-B 11-11 S7: loud non-tap cell census against the 400k run cap (cell_census.tcl, ADVISORY)
+if {[file exists [file join [file dirname [file normalize [info script]]] cell_census.tcl]]} {
+  uplevel #0 [list source [file join [file dirname [file normalize [info script]]] cell_census.tcl]]; ot_cell_census floorplan
+} else { puts "OT_CELL_CENSUS WARN stage=floorplan: cell_census.tcl is not in the kit, no recount" }
 # OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE
 # hook is this shared face_flops.tcl: gen_phys type kits AND the per-die core kit generators that copy it).  It runs
 # after every FIRM face / ring / station placement above and BEFORE ORFS global_place.tcl reads GPL_ROUTABILITY_DRIVEN /
