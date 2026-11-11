@@ -1016,6 +1016,9 @@ SCHEMA = {
             "landing_ring_status_reg": {"type": "boolean"},
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
                           "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
+                                         # KV-PLAN-2 RINGHOLD-TYPES (COORD 11-10): per receiver type measured sender
+                                         # min overriding sender_ps (landing_contract.ring_sender_ps); absent = die-wide
+                                         "sender_ps_types": {"type": "object", "additionalProperties": {"type": "number"}},
                                          "write_fall_types": {"type": "array", "items": {"type": "string"}},
                                          # DIE-QC-67/STM: sender data-vs-fclk max (ps) replacing the ft-hop -max on ft ring
                                          # inputs of falling-edge writer types only: a (1-share) T budget cannot be captured
