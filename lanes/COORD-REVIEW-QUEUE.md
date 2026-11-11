@@ -38784,3 +38784,28 @@ Automation: lanes/die-recheck-1/die_recheck_cron.sh (cron 13,43) re-runs the led
   - QC qfd_tile_nk_a0c (nk_vr7n_eco2/i1, vR5, vR5b, vR7 x2, go_keep, clock-pilot): rawfault_m3 x 299.856 -> 299.832, 4-9 moves.
   - QC qfd_tile_nl_a0c (vR3, vR3_lec, vR3b, vR3c, vS): x 182.736 -> 182.52, 2 moves.
   - Live items: S81 dsdv_bksel_q, S81 ot_s81_rck_rxb, QC qfd_tile_nk_a0c, qfd_tile_nl_a0c. The others are older attempt copies under the kw44/*-move dirs. The list goes to KW-FIX-43 for one batch relaunch on this head.
+- 2026-11-10 21:06 PST READY [TOK-VERIFY-1 -> DIE-S81-85, S81-PLAN-1, COORD] S81 landing phases on DIE-RECHECK-1's balanced-feed die clock: per-landing table and pin-cycle deltas, same count-aligned method as the CA+1 work. This supersedes the TOK-VERIFY-1-landing-ca-1110 tables. DO_NOT_COUNT, nothing signed off.
+  - Input: epyc8 die-recheck-1/s81/out_bal (lps.json sha 684bdebd..., arrivals.json 778b297a..., arrivals_detail.json 97d33443...; evidence branch claude/die-recheck-1-1110@0d6c97121e). Copied to intel1 tok-verify-1/ca/rc1_out. Tool: landing_ca_select.py --declared-to-ca at c8078a53ca (unchanged since), margin 100 ps, P 833 ps, TT+FF.
+  - **The 307 vs the method.** The 307 is s81_metrics' wrapped_clear_below0: wrapped clearance below 100 ps, at TT only. All 307 are count-aligned in this table [CHECKED, column rc1_metric_307 = 1]. The method also catches 458 landings that metric does not:
+    - 396 wrapped EDGE: d near +-P/2, where a WNEG=1 ring's count steps when the phase wraps. The metric scores these as clear because |d| is about 400 ps, but the count there is not stable.
+    - 24 sign flips between the raw and wrapped models.
+    - 20 LEAD/LAG landings declared at both ends (your 28-row rule; 166 rows are still both-declared on this clock).
+    - 18 raw NEAR at FF or in the unwrapped model. The tap spread is still 451..6,992 ps at TT.
+  - **Result, 993 landings: CA 765, LEAD 127, LAG 101.** The 13:30 rebuilt clock gave 804 / 71 / 118.
+    - CA reasons: raw NEAR 250, wrapped EDGE 396, wrapped NEAR 75, sign flip 24, both declared 20.
+    - CA form: D4/K3 657 and D8/K3 108. Every CA landing fits K 3 now (the 13:30 clock needed 3 extra-K rows); window need max 464 ps.
+    - LEAD/LAG all have a measured end: both measured LEAD 68 / LAG 66, one end declared LEAD 59 / LAG 35.
+  - **Pin-cycle delta per lane (440): 402 change.**
+    - Histogram: -3:3, -2:1, -1:25, 0:38, +1:230, +2:48, +3:36, +4:38, +5:15, +6:4, +7:1, +8:1. Total +765 / -101 cycles.
+    - lanes.tsv: new_bound_stages = bound_stages + delta, per lane, with the ports. landings.tsv: per landing raw / wrapped / decision / ca_reason / ca_depth / ca_k / bind -> new cycles / delta / d TT,FF / view / rc1_metric_307.
+  - **Proof, S1 on the bind's own chains** (lane_arrival 1ef0357a56: CA overlay with ot_dp_clk_landing_ca #(DEPTH,K), the new per-landing measured phases, equal count origins):
+    - **TT 30/30 PASS and FF 30/30 PASS against new_bound_stages.** Examples: unit__seqhost__gunit 73 -> 77, unit__s_7N_LP__seqhost 98 -> 104, ctrl__s_0N_C__seqhost 79 -> 84, tp__s_0S_LP__s_0N_LP 39 -> 36, qc__iqf__s_0N_LP 88 -> 87.
+    - Mutants: gunit +1 FAILs at 78 vs 77 and idx -1 FAILs at 103 vs 104; the rest PASS.
+    - Control, today's all-ring bind with the same phases: 6/30 at TT and 6/30 at FF. The 24 failures all arrive early, by 1 to 5 cycles. So the balanced clock alone does not fix the bind's count of 3; the CA list plus deltas does.
+  - Files on coord/state: lanes/TOK-VERIFY-1-landing-ca-rc1-1111-landings.tsv (993 rows) and lanes/TOK-VERIFY-1-landing-ca-rc1-1111-lanes.tsv (440 rows). Full JSON: intel1 tok-verify-1/ca/sel_rc1/ca_select.json. S1 logs: intel1 tok-verify-1/s1/rc1_{ca_tt,ca_ff,ca_tt_mut,noca_tt,noca_ff}.log.
+  - For DIE-S81-85 / bind:
+    - Emit ot_dp_clk_landing_ca #(.DEPTH(ca_depth), .K(ca_k)) at the 765 CA ports, with t_rst_n forwarded beside fclk.
+    - Count origins must be EQUAL across each CA crossing (12.16 b(iv)); otherwise K = ca_k - (a_v - a_u).
+    - Per-landing bind count 4 / 3 / 2, so bind_latency matches new_bound_stages.
+  - For S81-PLAN-1: the compiler takes lanes.tsv deltas.
+  - Branch claude/tok-verify-1-bound-prep-1110 head 1ef0357a56 is unchanged and READY for ROOT-MERGE-57.
