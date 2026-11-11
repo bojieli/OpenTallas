@@ -1,0 +1,64 @@
+INTENT SHEET  KV pv family, pinwheel-quad form (CPL-KV-PV-3, 2026-11-11, STAGE S1/S2, ADVISORY, DO_NOT_COUNT)
+Supersedes the pv_S legal-move delta (179f926e) and the pv_N interim delta (61f17f9d) for the post-cut KV die event.
+Types: all 16 kv3_pv* (S: kv3_pv, v1..v8, v12; N: v1n..v6n). Same outline 2160 x 1520.64, same 20 cores, same netlist.
+Base: DIE-KV-98 cut plan kv1200/plan_c.json md5 bfe4c242 (pv_S already in it).
+
+0. WHY LEGAL MOVES FAIL WHILE THE IDEAL BISECTION IS 0.44
+   - The bisection prices a whole-type cut on M2-M7 everywhere. The binding cut is local: in the 4-row stack
+     (far | near | join | near | far) two of the four ts partners of every join sit in FAR slots. Their 1024-b ts bus must
+     cross the NEAR pair. Over a kv3_pv_pair the LEF blocks M1-M5 solid, and its own M6/M7 wiring leaves 21 % of the M6
+     and 68 % of the M7 through-tracks. So the crossing has M7 only, in a 380-um column, and no H (M6) to jog to the
+     join's W/E faces.
+   - GRT maps (skeleton probes, 2 congestion iterations, the same for every arm; heat_*.png): pv_v2_i2 1,638,563, of
+     which M6 1.19M and M7 0.33M. The overflow sits over the 8 NEAR pairs, V direction, ts nets (rpt: 15.2k of 18.2k units).
+     pv_v4n_i2 3,217,138: the same plus the N-family far slots whose pin faces point away from the join.
+   - Every assignment of 4 partners to the 4 slots of a column keeps 2 far partners, so no position/orient move inside the
+     plan slots removes the crossing. Street_H is already 0.81 after pv_S; the street is not the binding cut.
+
+1. DATAFLOW (unchanged, from INTENT_pv.txt): N/W/E face buses -> pd regs -> broadcast pv2 256 b / pe2 32 b / bc 19-23 b to
+   the pairs -> pair pK -> s0/s1 ts 2 x 512 b point-to-point -> join gK face tsK -> y. Join faces at R0: ts0 S, ts1 W,
+   ts2 N, ts3 E.
+
+2. HAND LAYOUT (rules)
+   R1. Each group is a 2x2 quad around its join: two pair rows of 2, with 43.2-um streets and the join (172.8) between
+       them. Every pair's pin face (one long face, M5) faces the join street. No ts bus crosses a pair.
+   R2. Pinwheel: pK sits at the corner nearest join face tsK (R0 image: p0 LL->S, p1 UL->W, p2 UR->N, p3 LR->E), so the
+       four 1024-b buses turn the same way and never cross each other.
+   R3. Per group, the quad image (R0/MX/MY/R180) equals the base join orient. The join orient is unchanged (no M3
+       0.018-um lattice issue), and the pair x-mirror class equals the join class (bit-order rule A).
+   R4. Quads at the 4 corners. CHOSEN FORM "quadw": column gap 103.68 inside each quad (the join straddles it), join x
+       345.6 in the quad frame, quads at g0 (8.64,43.2), g1 (1278.72,43.2), g2 (8.64,734.4), g3 (1278.72,734.4). Quad
+       864.0 x 639.36, all origins on the 8.64 lattice, tops at 1373.76 (below the ft0/ft26 1056-b band at y 1410).
+       Spine 873-1279 = 406 um. The narrow form "quad" (gap 25.92, the GRT-probed one) is kept as fallback
+       (delta_kv_pv_quad.json).
+       route_supply pv_v2 (explorer --supply): base worst p99 street_H 1.58 / core_H 1.26 -> quad ring_H 1.343,
+       core_H 1.319, street_H 1.156 -> quadw ring_H 1.291, core_H 1.187, street_H 1.099.
+   R5. The centre column x 794.88-1365.12 (570 um, full height) is macro-free. The die clock tap (1080,760.32) and the
+       reset tap are already there. It carries the broadcast spine: pd regs and the re-sited face-bus station chains,
+       entering each quad by its join street.
+   R6. Core clock taps move rigidly with their core (in-core island travels with the slot): 20 taps per type.
+   SVG/PNG: pv_redesign_options.{svg,png} panel C (drawn in the R0 image; the N family uses the MX image in every group).
+
+3. CRITICAL PAIRS: pK -> join tsK, 1024 b each. Explorer: max hop 544 -> 287 um, ts over-reach 4 -> 0, ts bit-mm
+   9796 -> 7885 (pv_v2).
+
+4. ACCEPTED COSTS / OVER-REACH
+   a) core-face broadcast legs (760 links in pv_v2) stay over reach, 760 -> 760. Their bit-mm rises 513.7k -> 564.3k
+      (+10 %) because the quads sit at the corners. They are registered at the pd flops and FIRM stations, and the
+      re-site carries them.
+   b) station_resite.py (same-count solver, reach 405) on the quad plan: every register in a body+halo moves out
+      (0 left, 0 failed). +1 cycle is needed on 42 chains in quad and 46 in quadw (v1/v1n 6, v6/v6n 8,
+      v3/v3n/v4/v4n/v5/v5n 2, v7 1, v12 1, v2/v2n 0 in quad and 2 in quadw, kv3_pv/v8 0). These are face-bus pass-through
+      chains: pin cycles (owner 11-03 lever), priced by DIE-KV-99 + TOK. The station_resite report lists each chain.
+   c) reset local taps at (8.64,544.32) and (2047.68,544.32) now fall inside pairs. The die-owner re-derive moves them
+      into the quad streets.
+
+5. EVIDENCE (GRT skeleton, intel1 cpl-kv-pv-probe/probe, same settings):
+   pv_v2 stock 3,131,015 | pv_S legal 1,638,563 | quad 1,288,202 (ts overflow -99.7 %). The quad residual is
+   i_astk_W 256 b + i_vport_W_N_vo 800 b broadcast routed over the middle pair rows. The skeleton has no pd/station
+   cells, so R5 (spine) is the fix. That fix is not yet measured; one probe on the re-sited plan confirms it.
+   S2 GATE: route_supply is still > 1.0 (quadw 1.29), so it is NOT launchable as is. The residual is the face buses:
+   i_vport_E/W_N_vo (397-800 b) and i_astk_E/W (256 b) broadcast to all 16 pairs, plus the N landing ring.
+   Under owner 11-11 (a >= 512-b bus driving a cut > 0.8 gets an architecture change), i_vport needs a die-owner
+   decision: one broadcast register stage per quad in the spine (pin cycle) or a 2:1 serialised vport leg. That is
+   the second half of this REDESIGN.

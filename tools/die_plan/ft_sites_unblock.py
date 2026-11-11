@@ -168,7 +168,12 @@ def _slot(s, k, pins, gate, grow, free, budget, smax, al, tn, name, k0):
             for b in bits:
                 ia, ib, r, L, ps = pts[b]
                 for j, p in enumerate(ps):
-                    q, _ = al.allocate(np.array(p), 1, max_radius_um=20.)
+                    try:
+                        q, _ = al.allocate(np.array(p), 1, max_radius_um=20.)
+                    except ValueError:
+                        # CPL-KV-PV-3: a crowded spot (dense 1-bit ft columns next to a wide ft band) widens the
+                        # search; the hop check below (worst > smax) still rejects an over-reach chain
+                        q, _ = al.allocate(np.array(p), 1, max_radius_um=80.)
                     c = q[0]; sites[j][b] = [round(float(c[0]-CELL[0]/2), 6), round(float(c[1]-CELL[1]/2), 6)]
                 chain = [ia] + [(x+CELL[0]/2, y+CELL[1]/2) for x, y in (sites[j][b] for j in range(k-1))] + [ib]
                 worst = max(worst, max(man(u, v) for u, v in zip(chain, chain[1:])))
