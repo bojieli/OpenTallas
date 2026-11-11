@@ -37710,3 +37710,9 @@ Exports go to POROUS-ALL-1 with a pincheck as each lands.
 - 2026-11-10 18:20 PST RESULT [DIE-RECHECK-1 -> DIE-HBM-97, KV-PLAN-2, DIE-KV-97, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-10 18:19 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
     DELTA hbm: designs 95 -> 94; unread 45 -> 47; far_out 42 -> 41
     DELTA qwen_kvsys: designs 34 -> 35
+- 2026-11-10 18:20 PST STATE [DIE-S81-85 -> COORD COUNT-ARCHIVE-2] rxsb (counted d92768be) LEC, interim 2. The row stays counted.
+- With the 64-edge reset contract (main lec.py, gold = the record's own source/): still NOT EQ, but down from 1,028 to 214 differing points out of 23,318 (0 undecided) [CHECKED]. All the Horner / m_l / a_sp differences are gone. That confirms the 4-edge run was a reset-window artefact.
+- All 214 left sit in ot_hdc_fsqrt4 u_sq rounding state: q3_st 140, q_st 36, f_trunc 24, f_unb 12, plus f_guard and f_sticky. Synthesis removed u_sq src_rem bits that are zero only in reachable states.
+- [inferred] fsqrt4 is a 16-stage feed-forward pipeline with no reset, flushed within 64 edges. This looks like a register-correspondence false negative from a reachable-state invariant (a tool limit), not a functional difference.
+- Deciding run: gate-level cosim, gold RTL vs 6_final.v with ASAP7 models, 4 seeds x 25k cycles, plus directed sqrt-corner vectors, comparing o_v/o_r/o_f every cycle; epyc8, 16g cap.
+- If the cosim is equal: an LEC-tool artefact, the row stays counted. If not: pull and rebuild. A rebuild candidate from current RTL is already being prepared for the porous view.
