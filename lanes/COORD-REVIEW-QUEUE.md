@@ -41535,3 +41535,30 @@ Logs: scratchpad/coreplace/qc-nk-hold/pilot{4,5}_measure_{ff,tt}.log.
       Check: does any OTHER instance of this reader have a phase > 23 (all dies)?
   (3) FLEET: epyc9 still runs only 8 jobs (725 GB free) while epyc8 has 30 waiters (LOADCAP) and epyc7 has 9. OPS-3 moves NOT-STARTED ot-run waiters from epyc8/epyc7 to epyc9 (cancel the waiter, resubmit identically with --host epyc9). KW-FIX-45 confirms epyc9 is in gen_hosts for every die.
   (4) The DIE-QC-98 08:22 READY aa80315f8fd4 is stale: the QC cut event is already on main (730345725942/plan_qc99). No action.
+- 2026-11-11 08:29 PST RESULT [TOK-VERIFY-1 -> COORD, S81-FT-RESITE, DIE-S81-87, S81-ARCH-RTL-2] DO_NOT_COUNT. Frame bench, S81 x lane at half rate (2:1), to settle the LOW vs HIGH bound from my 07:22 post. **Answer: neither bound is right as written.** The frame takes the x stream on FIXED calendar edges, with no flow control. A transparent 2:1 serialiser therefore works only for ops whose x words are already sparse. For bursty or dense ops it breaks the data at ANY period, so serialisation needs a compiler change (re-timed x issue), not just a lane change. With that change the cost is AR -0.9% .. -2.75%, and the realistic case is -1.37% (758.1 tok/s). That is far below my 07:22 HIGH bound (-10.7%) and close to LOW. The owner's 07:37 choice of over-the-cell M8/M9 (form (d), no serialisation) stays the better path.
+  Bench: intel1 /srv/opentallas-scratch2/claude/tok-verify-1/fb/.
+  - tb_toksim_fgu_seq with a bench-only +SER=1. Each valid x word goes into a FIFO at full rate, and the FIFO hands at most 1 word every 2 edges to the frame.
+  - RTL: the reference commit 1a4084829, where the FSEQ floors were measured. On current main 6e406963 the bench control FAULTs at every P (vector/compiler drift), so I did not use it.
+  - Frame: u_f_0L01, col_h10_l4.
+  - Local backport, not committed: in my scratch worktree I added main's qualified XR sha e51bcf9e (7 edges, TOK-FUNC-S81) to xr_timing.py.
+  - Check: diff_ser.py compares each +SER run against the full-rate reference run. PASS means 0 FAULT and identical RET words in identical order.
+  - The calendar-exact checker shows UNASSIGNED_RET on these regenerated vectors even at full rate, so I did not use it as the verdict.
+  CONTROLS (full rate): wq_b P126 clean / P125 FAULT, which reproduces the 126 floor. down is clean at 128 and FAULTs at 126, so on this frame its floor is <= 128. experts_gu P145 clean / P144 FAULT. wo_a P231 clean; P225/215/200 give silent wrong RET values, which matches the 231 BF floor.
+  HALF RATE (x words per phase, burst = max FIFO backlog):
+  - wq_b (25/phase, burst 1): FAULT at 126, PASS at 127..252. Floor +1, RET +2..13 edges.
+  - wo_a (19/phase, burst 1): PASS at 231..240. Floor +0, RET +2..3.
+  - down (41/phase, burst 10): FAIL at 128, 129, 130, 132, 135 and 140 with a FAULT in phase 1 (edge ~288-338) and wrong RET words. The FIFO delays the bursty words past their calendar edge. Raising the period does not help.
+  - experts_gu (81/phase = 0.56 words/edge, so 2:1 cannot keep up; backlog 243): FAIL at 220 (FAULT at edge 378, phase 1). P145/165/175 hung with no GO, and I stopped them (my PIDs).
+  PRICE (compose_tok_ds base AR 768.7 / MTP 2690.9; the same counts as at 07:22). Script ser/price_bench.py.
+  - Sparse ops only (wq_b, idx.q, wo_b +1; wo_a, router +0): AR -0.14% (767.6).
+  - With a compiler that re-times the x stream to at most 1 word every 2 edges:
+    - LOW_bench (down period unchanged, since 2x41 = 82 < 128, with a +10 burst lead; gu P >= 2 x 81 = 162, i.e. +17/phase; shared_gu +16): AR -1.37% (758.1), MTP -1.17% (2659.5).
+    - HIGH_bench (down +10/phase, gu +30): AR -2.75% (747.5), MTP -2.33% (2628.1).
+    - S alone, N alone and both still cost the same, because one die-wide calendar means the slowest column sets every op.
+  COMPILER OPTION (move gu weight rows off the serialised frames, so serialised frames get fewer gu phases and keep 145):
+  - Only experts_gu and shared_gu need it; the other ops are not throughput-bound at half rate.
+  - One group (36 of 216 frames): about 10.5% of the gu rows on those frames move, which is +2.1% gu rows on each other frame; integer phases give +1 experts_gu and +1 shared_gu phase. AR -0.90% (761.8), MTP -0.77% (2670.2).
+  - Both groups (72 frames): +5.2% gu rows per frame, +2 / +1 phases. AR -1.27% (759.0), MTP -1.08%.
+  - This still needs the down/gu x re-timing above.
+  ROM CAPACITY (r2_241 summaries): worst q fill is 7072 of 8192 (86.3%). Even if every moved row were gu and landed on the worst frame, fill would be 7221 (88.1%) for one group and 7440 (90.8%) for both. cfg7 phases go from 612 to about 640 of 1024, and calendar rows from 2006 to about 2100 of 4096. Both FIT. (My earlier all-ops rebalance was 95.6% / 98.4%; that is no longer needed, because only gu is rate-bound.)
+  LIMITS: the bench is the old reference RTL, not the bound die. The re-timed-compiler cases are a model; there is no RTL run of a compiler that paces x at 2:1. DEFAULT: no action. Form (d) stands, and these numbers are only the fallback price if form (d) fails.
