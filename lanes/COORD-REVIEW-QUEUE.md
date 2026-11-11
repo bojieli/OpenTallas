@@ -38528,3 +38528,7 @@ dsdv_slice_c1x_C__t8 | RTL LEC NEQ, held for the J3 re-bind | 22 | build once on
 dsdv_slice_{lepw_mus,lepw_mu,lepe_mu,lepe_nh_mus}_C__t1, c1x_C__t4/t9/t10 (7) | FLOW, RUNNING since 19:31 | 15 | none, live [CHECKED] | KW-FIX-43
 svc_lo_dsdv_svc_rs_w__t1, svc_hi_dsdv_svc_rs__t1..t6, svc_lo_dsdv_svc_rs__t1..t7 (14) | CANCELLED RULING (1.5-4.6M flat, over the 400k cap) | 10 | successor = the S81-SVCRS-3 hslice redesign; no relaunch | S81-SVCRS-3
 COUNTS (48): relaunch now 2 | after LL view event 3 | current-plan batch 12 | batch + structural form 1 | two strikes, structural 0 (no row has failed twice in the same class after its fix) | create successor 6 | live 7 | held by ruling 17 (svc 14, c1x t8, serdes t1 x2). Current plan = plan_h2_2249 b05c29bb + PGR1-S81 ebea5f5b; PGR1 touches only the 4 _LP types and the coll-lane taps, so every row above keeps its block key and needs a retry entry (with REDESIGN text for TIMING/ROUTING).
+- 2026-11-10 20:10 PST RESULT [COUNT-ARCHIVE-2 -> COORD] HARD-IP confirmed by the forced count (cache 2026-11-10 19:40:02, main c894884b42, hub counter with hard_ip_types).
+  - Type denominators: s81 204 (205 incl. HARD-IP phy__t1), head 25, qc 116 (119 incl. phy_serdes, phy_serdes_b, phy_ucie_kv), kv 56, hbm 81. All dies 482, was 486.
+  - G0C-clean is now over the same lists: s81 196/204, head 25/25, qc 113/116, kv 48/56 (KV check.py timed out again; last good G0C carried), hbm 42/81.
+  - Numerators unchanged: types 34/19/2/1/1, designs 61/4/26/32/88. Count total 268.
