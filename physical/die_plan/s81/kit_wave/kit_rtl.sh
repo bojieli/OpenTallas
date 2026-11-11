@@ -33,6 +33,9 @@ python3 -I tools/die_plan/bind.py kit-rtl "$PLAN" --out "$OV" --asbuilt "$ASBUIL
 case "$TYPE" in
     svc_*) python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" ;;
 esac
+# DIE-S81-85 11-10 (KW43-111, class J3): the J3 leaves xs4/rstopt_xo follow the wave source when the frozen as-built
+# base still has the pre-fix bytes (KEEP FAIL g_hq[*].h folded constants); kits without them stay byte-identical.
+python3 -I "$HERE/j3_leaf_follow.py" "$OUT"
 python3 -I - "$OUT" <<'PY'
 import json, sys
 from pathlib import Path
