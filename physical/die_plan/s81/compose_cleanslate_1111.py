@@ -127,8 +127,26 @@ def load_pos(paths):
     return out
 
 
-def apply_pos(plan, deltas):
-    """moves origin_um / orient; returns the per-type record and the derived core-tap moves."""
+TAP_SITE_UM = 0.054   # ASAP7 placement site: a lane companion core tap agrees with the rigid move within one site
+
+
+def load_derived(paths):
+    """lane companion files {type: {track_offset_um: {inst: [dx, dy]}, core_taps: {tap: [x, y]}}} (CPL-S81-MISC form)."""
+    out, srcs = {}, []
+    for p in paths or []:
+        d = json.loads(Path(p).read_text())
+        for tn, v in d.items():
+            assert tn not in out, f"derived companions overlap on type {tn}"
+            assert set(v) <= {"track_offset_um", "core_taps", "internal_stations"}, (p, tn, sorted(v))
+            out[tn] = dict(v, _src=str(p))
+        srcs.append(dict(path=str(p), sha256=fsha(p)))
+    return out, srcs
+
+
+def apply_pos(plan, deltas, derived=None):
+    """moves origin_um / orient (+ track_offset_um of a core whose orient changes, from the lane companion); returns
+    the per-type record and the derived core-tap moves (compared with the companion's core taps, if any)."""
+    derived = derived or {}
     T = plan["partition_types"]
     rec, problems = {}, []
     for path, dsha, d in deltas:
@@ -144,6 +162,10 @@ def apply_pos(plan, deltas):
                         idx.setdefault(e["inst"], (k, e))
             moved, unchanged = [], 0
             old = {}
+            dv = derived.get(tn, {})
+            dto = dv.get("track_offset_um", {})
+            for inst in sorted(set(dto) - set(m)):
+                problems.append(f"{tn}: companion track_offset_um for {inst}, which the delta does not list")
             for inst, (x, y, o) in sorted(m.items()):
                 if inst not in idx:
                     problems.append(f"{path}: {tn}: inst {inst} is not a placed hard_cores/contents entry")
@@ -153,6 +175,12 @@ def apply_pos(plan, deltas):
                     continue
                 k, e = idx[inst]
                 o0 = e.get("orient", "R0")
+                to0 = list(e.get("track_offset_um", [0.0, 0.0]))
+                to1 = [float(v) for v in dto.get(inst, to0)]
+                if to1 != [float(v) for v in to0] and o == o0 and [float(x), float(y)] == [float(v) for v in e["origin_um"]]:
+                    # DIE-S81-85 11-11: a companion offset is derived only for a core the delta moves or flips
+                    problems.append(f"{tn} {inst}: companion changes track_offset_um {to0} -> {to1} of an unmoved core")
+                    to1 = to0
                 if [float(x), float(y)] == [float(v) for v in e["origin_um"]] and o == o0:
                     unchanged += 1
                     continue
@@ -160,8 +188,11 @@ def apply_pos(plan, deltas):
                 e["origin_um"] = [x, y]
                 if "orient" in e or o != "R0":
                     e["orient"] = o
+                if to1 != [float(v) for v in to0]:
+                    e["track_offset_um"] = to1
                 moved.append(dict(inst=inst, list=k, module=e.get("module"), lef=e.get("lef"),
-                                  from_=[*old[inst][0], o0], to=[x, y, o]))
+                                  from_=[*old[inst][0], o0], to=[x, y, o],
+                                  **({"track_offset_from": to0, "track_offset_to": to1} if to1 != [float(v) for v in to0] else {})))
             # derived: early core taps of moved cores follow their core (rigid, core frame kept)
             taps = []
             hc = {e["inst"]: e for e in t.get("hard_cores") or []}
@@ -197,13 +228,55 @@ def apply_pos(plan, deltas):
                     if b0[0] - EPS <= tp["xy"][0] <= b0[2] + EPS and b0[1] - EPS <= tp["xy"][1] <= b0[3] + EPS:
                         problems.append(f"{tn}: plain clock tap {tp['name']} at {tp['xy']} sits on moved core {i}'s "
                                         "old box: not derivable (needs the die owner's call)")
+            # derived station sites (DIE-S81-85 ruling 11-11, CPL-S81-SLICE): a moved type may take the lane's
+            # internal_stations regs_um / from_um / to_um; station count, per-station reg count and every other key kept
+            st_new = dv.get("internal_stations")
+            st_rec = None
+            if st_new is not None:
+                sb = t.get("internal_stations") or []
+                if not old:
+                    problems.append(f"{tn}: companion re-sites internal_stations but the delta moves no core")
+                elif len(st_new) != len(sb):
+                    problems.append(f"{tn}: companion has {len(st_new)} internal_stations, BASE {len(sb)}")
+                else:
+                    W_, H_ = t["outline_um"]
+                    ch = 0
+                    for j, (a_, b_) in enumerate(zip(sb, st_new)):
+                        assert set(b_) <= {"from_um", "to_um", "regs_um"}, (tn, j, sorted(b_))
+                        if len(b_.get("regs_um", a_.get("regs_um", []))) != len(a_.get("regs_um", [])):
+                            problems.append(f"{tn}: station {a_.get('conn', j)} reg count {len(a_.get('regs_um', []))} -> "
+                                            f"{len(b_.get('regs_um', []))}")
+                            continue
+                        for q in b_.get("regs_um", []):
+                            if not (-EPS <= q[0] <= W_ + EPS and -EPS <= q[1] <= H_ + EPS):
+                                problems.append(f"{tn}: station {a_.get('conn', j)} reg {q} outside the outline")
+                        if any(a_.get(k) != b_[k] for k in b_):
+                            ch += 1
+                            a_.update(copy.deepcopy(b_))
+                    st_rec = dict(stations=len(sb), changed=ch, regs=sum(len(x.get("regs_um", [])) for x in sb))
+            ct = dv.get("core_taps", {})
+            mine = {r["tap"]: r["to"] for r in taps}
+            tap_cmp = dict(companion=len(ct), agree=0, differ=[], companion_only=sorted(set(ct) - set(mine))[:10],
+                           mine_only=sorted(set(mine) - set(ct))[:10] if ct else [])
+            for nm, xy in ct.items():
+                if nm in mine:
+                    dd = max(abs(xy[0] - mine[nm][0]), abs(xy[1] - mine[nm][1]))
+                    if dd <= TAP_SITE_UM + EPS:
+                        tap_cmp["agree"] += 1
+                    else:
+                        tap_cmp["differ"].append(dict(tap=nm, companion=xy, rigid=mine[nm], d_um=round(dd, 4)))
+            if tap_cmp["differ"] or tap_cmp["companion_only"] or tap_cmp["mine_only"]:
+                problems.append(f"{tn}: companion core taps disagree with the rigid move: {len(tap_cmp['differ'])} differ "
+                                f"> {TAP_SITE_UM} um, {len(tap_cmp['companion_only'])} companion-only, "
+                                f"{len(tap_cmp['mine_only'])} rigid-only")
             W, H = t["outline_um"]
             for r in taps:
                 if not (-EPS <= r["to"][0] <= W + EPS and -EPS <= r["to"][1] <= H + EPS):
                     problems.append(f"{tn}: moved core tap {r['tap']} -> {r['to']} outside the outline {W}x{H}")
                 r["displacement_um"] = round(abs(r["to"][0] - r["from_"][0]) + abs(r["to"][1] - r["from_"][1]), 4)
             rec[tn] = dict(delta=path, delta_sha256=dsha, moved=moved, unchanged_listed=unchanged,
-                           core_taps_moved=taps, core_taps_moved_n=len(taps),
+                           core_taps_moved=taps, core_taps_moved_n=len(taps), companion_taps=tap_cmp, stations_derived=st_rec,
+                           track_offsets_changed=sum(1 for x in moved if "track_offset_to" in x),
                            core_tap_max_displacement_um=max((r["displacement_um"] for r in taps), default=0.0))
     return rec, problems
 
@@ -227,8 +300,18 @@ def die_window(plan, part, bus):
     return (round(p["origin_um"][1] + lo, 4), round(p["origin_um"][1] + hi, 4))
 
 
+def face_form(d):
+    """the CPL-S81-SLICE window form {partition_types: {type: {bus: {face, from, to}}}, ports: {id: {from, to}}} ->
+    {type: {bus: {window_um}}} + the lane's from-windows and port windows (asserted against BASE / the derived ports)."""
+    if "partition_types" not in d:
+        return d, None
+    conv = {tn: {bus: {"window_um": v["to"]} for bus, v in m.items()} for tn, m in d["partition_types"].items()}
+    return conv, dict(from_={tn: {bus: (v["face"], v["from"]) for bus, v in m.items()} for tn, m in d["partition_types"].items()},
+                      ports=d.get("ports", {}))
+
+
 def apply_face(plan, path):
-    d = json.loads(Path(path).read_text())
+    d, lane = face_form(json.loads(Path(path).read_text()))
     T = plan["partition_types"]
     problems, rec = [], {}
     before = json.loads(json.dumps(plan))
@@ -242,6 +325,10 @@ def apply_face(plan, path):
                 problems.append(f"face: {tn} has no bus {bus}")
                 continue
             assert set(v) <= {"window_um", "layers"}, (tn, bus, sorted(v))
+            if lane and tn in lane["from_"] and bus in lane["from_"][tn]:
+                fface, fwin = lane["from_"][tn][bus]
+                if b["face"] != fface or [round(x, 4) for x in b["window_um"]] != [round(x, 4) for x in fwin]:
+                    problems.append(f"face: {tn}.{bus} BASE {b['face']} {b['window_um']} != the lane's from {fface} {fwin}")
             rec.setdefault(tn, {})[bus] = dict(from_={k: b.get(k) for k in v}, to=v)
             b.update(copy.deepcopy(v))
     for tn, m in rec.items():           # a moved window must not overlap another window on its face (buses + ft slots)
@@ -283,6 +370,13 @@ def apply_face(plan, path):
             elif q["layers"] != la:
                 ports.append(dict(port=q["id"], layers_from=q["layers"], layers_to=la))
                 q["layers"] = copy.deepcopy(la)
+    if lane:
+        got = {r["port"]: r["to"] for r in ports if "to" in r}
+        for pid, v in lane["ports"].items():
+            if pid not in got or [round(x, 4) for x in got[pid]] != [round(x, 4) for x in v["to"]]:
+                problems.append(f"face: derived port {pid} window {got.get(pid)} != the lane's {v['to']}")
+        for pid in set(got) - set(lane["ports"]):
+            problems.append(f"face: port {pid} window derived but not in the lane's ports")
     return dict(delta=str(path), delta_sha256=fsha(path), types=rec, ports_derived=ports), problems
 
 
@@ -384,11 +478,15 @@ def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None):
         for k in ("hard_cores", "contents"):
             for e in T[tn].get(k) or []:
                 if e["inst"] in bi:
-                    for f in ("origin_um", "orient"):
+                    for f in ("origin_um", "orient", "track_offset_um"):
                         if f in bi[e["inst"]]:
                             e[f] = copy.deepcopy(bi[e["inst"]][f])
                         else:
                             e.pop(f, None)
+        for a_, b_ in zip(T[tn].get("internal_stations") or [], B[tn].get("internal_stations") or []):
+            for f in ("from_um", "to_um", "regs_um"):
+                if f in b_:
+                    a_[f] = copy.deepcopy(b_[f])
         bt = {tp["name"]: tp for tp in (B[tn].get("clock") or {}).get("taps", []) or []}
         for tp in (T[tn].get("clock") or {}).get("taps", []) or []:
             if tp["name"] in bt:
@@ -505,12 +603,33 @@ def g0_diff(rb, ro):
     key = lambda i: (i.get("check"), i.get("msg"))  # noqa: E731
     eb = {key(i) for i in rb["findings"] if i.get("level") == "ERROR"}
     eo = [i for i in ro["findings"] if i.get("level") == "ERROR" and key(i) not in eb]
+    wb = {key(i) for i in rb["findings"] if i.get("level") == "WARN"}
+    wo = [i for i in ro["findings"] if i.get("level") == "WARN" and key(i) not in wb]
     return dict(pass_=not eo, base_errors=rb["errors"], out_errors=ro["errors"], new_errors=len(eo),
+                base_warnings=rb["warnings"], out_warnings=ro["warnings"], new_warnings=len(wo),
+                new_warn=[f"[{i.get('check')}] {i.get('msg')}" for i in wo[:60]],
                 new=[f"[{i.get('check')}] {i.get('msg')}" for i in eo[:40]], base_verdict=rb["verdict"],
                 out_verdict=ro["verdict"])
 
 
-def phys(plan_path, types, tap_types=()):
+def offtrack_pins(P, hc, plan_dir):
+    """type-frame off-track pin count of one placed hard core (check.check_taps_cores rule, layers != M1)."""
+    import check as CK
+    o = hc.get("orient", "R0")
+    cw, ch = hc["outline_um"]
+    X0, Y0 = hc["origin_um"][0] + hc.get("track_offset_um", [0, 0])[0], hc["origin_um"][1] + hc.get("track_offset_um", [0, 0])[1]
+    bad = n = 0
+    for nm, ln, x, y in CK.core_pins(hc, plan_dir):
+        L = P.layers.get(ln)
+        if L is None or ln == "M1":
+            continue
+        tx, ty = CK._orient_pt(o, cw, ch, x, y)
+        n += 1
+        bad += not CK.on_track((X0 + tx) if L["dir"] == "V" else (Y0 + ty), L)
+    return bad, n
+
+
+def phys(plan_path, types, tap_types=(), offset_moves=()):
     """SVCPROV-PHYSINST check form + (tap_types) the kit snap of every early core tap of the types whose cores moved:
     gen_phys.core_tap_pins (PG-legal snap, explicit-entry track rule, macro-edge clearing) must succeed and every
     snapped tap must lie inside the type outline."""
@@ -534,12 +653,25 @@ def phys(plan_path, types, tap_types=()):
                         raise ValueError(f"snapped core tap {port} ({x:g},{y:g}) outside the outline {W}x{H}")
         except Exception as e:  # noqa: BLE001 - recorded per type
             errs[tn] = f"{type(e).__name__}: {e}"
+    offs = []
+    for tn, inst, to0 in offset_moves:
+        hc = next(e for e in P.types[tn]["hard_cores"] if e["inst"] == inst)
+        try:
+            after = offtrack_pins(P, hc, HERE)
+            before = offtrack_pins(P, dict(hc, track_offset_um=to0), HERE)
+            offs.append(dict(type=tn, inst=inst, offtrack_with_old_offset=before[0], offtrack_with_new_offset=after[0],
+                             pins=after[1]))
+            if after[0]:
+                errs[tn] = f"{inst}: {after[0]} pins off track with the companion track_offset_um"
+        except Exception as e:  # noqa: BLE001
+            errs[tn] = f"{inst} off-track count: {type(e).__name__}: {e}"
     try:
         taps = len(DT.clock_taps(P))
         terr = None
     except Exception as e:  # noqa: BLE001
         taps, terr = None, f"{type(e).__name__}: {e}"
     return dict(pass_=not errs and terr is None, types=len(types), type_errors=errs, n_identity=n, clock_taps=taps,
+                track_offset_pins=offs,
                 clock_taps_error=terr)
 
 
@@ -561,7 +693,8 @@ def compose(a):
     pos_rec, face_rec = {}, None
     if a.pos:
         deltas = load_pos(a.pos)
-        pos_rec, pr = apply_pos(plan, deltas)
+        derived, dsrc = load_derived(getattr(a, "derived", None))
+        pos_rec, pr = apply_pos(plan, deltas, derived)
         problems += pr
         s_out = sha(dump(plan).encode())
         sheets = [split_sheet(x)[1] for x in a.pos]
@@ -571,7 +704,7 @@ def compose(a):
         stages.append(dict(stage="a_positions",
                            inputs=[dict(path=p, sha256=s, intent_sheet=sh,
                                         intent_sheet_sha256=fsha(sh) if sh and Path(sh).is_file() else None)
-                                   for (p, s, _), sh in zip(deltas, sheets)],
+                                   for (p, s, _), sh in zip(deltas, sheets)] + [dict(d_, role="companion") for d_ in dsrc],
                            in_sha256=cur, out_sha256=s_out, types=sorted(pos_rec),
                            moved=sum(len(r["moved"]) for r in pos_rec.values()),
                            core_taps_moved=sum(len(r["core_taps_moved"]) for r in pos_rec.values()),
@@ -646,6 +779,7 @@ def compose(a):
                created=time.strftime("%Y-%m-%d %H:%M:%S %Z"), base=str(a.base), base_plan_sha256=bsha,
                serialisation=form, args=dict(pos=a.pos or [], face=a.face, face_script=a.face_script,
                                              keep_clear=a.keep_clear, resize=getattr(a, "resize", None),
+                                             derived=getattr(a, "derived", None) or [],
                                              pad=a.pad, pad_script=a.pad_script if a.pad else None,
                                              gap=a.gap, edge=a.edge),
                stages=stages, output_plan_sha256=out_sha, changed_types=changed_types,
@@ -674,7 +808,9 @@ def compose(a):
         if a.dry_run:
             pp.write_bytes(text)
         rec["phys"] = phys(pp, changed_types or list(plan["partition_types"]),
-                           tap_types={t for t, r in pos_rec.items() if r["core_taps_moved"]})
+                           tap_types={t for t, r in pos_rec.items() if r["core_taps_moved"]},
+                           offset_moves=[(t, x["inst"], x["track_offset_from"]) for t, r in pos_rec.items()
+                                         for x in r["moved"] if "track_offset_to" in x])
         if a.dry_run:
             pp.unlink()
     ok = (not problems and eq["pass_"] and leg["pass_"] and rec.get("g0", {}).get("pass_", True)
@@ -701,7 +837,7 @@ def check(out_dir):
             assert fsha(i["path"]) == i["sha256"], (s["stage"], i["path"], "input changed")
     tmp = out_dir / "check_rederive"
     ns = argparse.Namespace(base=rec["base"], out_dir=str(tmp), pos=ar["pos"], face=ar["face"], pad=ar["pad"],
-                            face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"), resize=ar.get("resize"),
+                            face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"), resize=ar.get("resize"), derived=ar.get("derived"),
                             pad_script=ar["pad_script"], base_sha=[rec["base_plan_sha256"]], no_g0=True, phys=False,
                             dry_run=False, gap=ar["gap"], edge=ar["edge"])
     compose(ns)
@@ -719,6 +855,7 @@ def main():
     ap.add_argument("base")
     ap.add_argument("out_dir")
     ap.add_argument("--pos", action="append", help="positions/orients delta JSON[::intent sheet] (repeatable)")
+    ap.add_argument("--derived", action="append", help="lane companion (track_offset_um of flipped cores, core taps)")
     ap.add_argument("--face", help="face-window delta JSON")
     ap.add_argument("--face-script", help="the face event's own applier, run with --rebase on the same pre-stage plan; "
                                           "its output must equal the generic apply")
@@ -737,6 +874,8 @@ def main():
     a = ap.parse_args()
     if a.pos:
         a.pos = ["::".join(str(Path(x).resolve()) for x in split_sheet(p) if x) for p in a.pos]
+    if a.derived:
+        a.derived = [str(Path(p).resolve()) for p in a.derived]
     for k in ("face", "face_script", "keep_clear", "resize", "pad", "base"):
         if getattr(a, k):
             setattr(a, k, str(Path(getattr(a, k)).resolve()))
