@@ -1,0 +1,496 @@
+{
+ "s81": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "added": 53,
+   "added_not_on_main": 2,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kw-fix-44-grt-stop-1110",
+     "557a0b0604b9",
+     2
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "physical/die_plan/hbm/cores/harden/recipes.json",
+   "added": 0,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "physical/die_plan/s81/plan_h2_2249.json",
+   "added": 22271,
+   "added_not_on_main": 21715,
+   "by": [
+    [
+     "refs/remotes/origin/claude/rm31-in-srcn",
+     "90ad150b102e",
+     5393
+    ],
+    [
+     "refs/remotes/origin/claude/die-s81-47-event2-1101",
+     "2026e1e15613",
+     5290
+    ],
+    [
+     "refs/remotes/origin/claude/die-s81-47-svcrs-1101",
+     "d98e63e48083",
+     5279
+    ]
+   ],
+   "uncovered": 15925,
+   "uncovered_sample": [
+    "228.42",
+    "2067.93",
+    "1414.26"
+   ]
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "added": 24,
+   "added_not_on_main": 24,
+   "by": [
+    [
+     "refs/remotes/origin/codex/s81-rck-reform-0222",
+     "bdde15eb1f7f",
+     21
+    ],
+    [
+     "refs/remotes/origin/claude/s81-types-7-rck-1108",
+     "872819503b4a",
+     19
+    ]
+   ],
+   "uncovered": 3,
+   "uncovered_sample": [
+    "reg        run, flt;",
+    "module ot_s81_kp4_enc #(parameter integer MUT = 0) (",
+    "assign fault = flt;"
+   ]
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "added": 44,
+   "added_not_on_main": 44,
+   "by": [
+    [
+     "refs/remotes/origin/claude/die-kv-97-p4src-1109",
+     "4a0af930d9a1",
+     43
+    ],
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-e-1108",
+     "8a41939b81f5",
+     5
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/eco_loop.py",
+   "added": 15,
+   "added_not_on_main": 12,
+   "by": [
+    [
+     "refs/remotes/origin/codex/eco-prerouted-clock-1113",
+     "539f02fdd750",
+     11
+    ],
+    [
+     "refs/remotes/origin/claude/kw-fix-36-eco-census-1108",
+     "53e79ea9417e",
+     7
+    ],
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-e-1108",
+     "b721c3782d4d",
+     6
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "added": 106,
+   "added_not_on_main": 14,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kv-plan-2-finsbuf-wave-1109",
+     "5c15a885ca7f",
+     10
+    ]
+   ],
+   "uncovered": 4,
+   "uncovered_sample": [
+    "grid_taps=grid_count,",
+    "if t.get(\"clock\", {}).get(\"tap_mode\") != \"explicit\":",
+    "grid_count = 0 if _density(t) else len(S._grid_taps(P, tn))"
+   ]
+  },
+  {
+   "path": "tools/die_plan/lec.py",
+   "added": 18,
+   "added_not_on_main": 18,
+   "by": [
+    [
+     "refs/remotes/origin/codex/kshare-twins-1113",
+     "06641d575b40",
+     18
+    ],
+    [
+     "refs/remotes/origin/claude/root-merge-54-h-1108",
+     "ed5be48cd492",
+     6
+    ],
+    [
+     "refs/remotes/origin/claude/die-head-91-lec-taps-1109",
+     "7e4e5f87f33d",
+     1
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/schema.py",
+   "added": 23,
+   "added_not_on_main": 3,
+   "by": [],
+   "uncovered": 3,
+   "uncovered_sample": [
+    "# KW-FIX-43 11-10 (S81-SVCRS-3 plan event PBP-SVCRS-1110): opt-in per type; gen_phys.write_type_kit ",
+    "# port_buf_at_pin.tcl to face_flops_release.tcl when true.",
+    "SCHEMA[\"properties\"][\"partition_types\"][\"additionalProperties\"][\"properties\"][\"port_buf_at_pin\"] = {"
+   ]
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "added": 1,
+   "added_not_on_main": 1,
+   "by": [
+    [
+     "refs/remotes/origin/rescue/epyc2-kv-tok-d-1027",
+     "be22c61cd4c3",
+     1
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  }
+ ],
+ "s81_head": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "added": 124,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "added": 25,
+   "added_not_on_main": 1,
+   "by": [
+    [
+     "refs/remotes/origin/claude/root-merge-57-d2-1109",
+     "eeb83d46ec6d",
+     1
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  }
+ ],
+ "qwen_compute": [
+  {
+   "path": "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+   "added": 214,
+   "added_not_on_main": 1,
+   "by": [],
+   "uncovered": 1,
+   "uncovered_sample": [
+    "\"note\": \"DIE-QC-63/RED-1102: + substitute_inst u_red -> qfd_dv_s5_red2p1_leaf | TOK-QC-4 10-28 ev_qc"
+   ]
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "added": 24,
+   "added_not_on_main": 24,
+   "by": [
+    [
+     "refs/remotes/origin/codex/s81-rck-reform-0222",
+     "bdde15eb1f7f",
+     21
+    ],
+    [
+     "refs/remotes/origin/claude/s81-types-7-rck-1108",
+     "872819503b4a",
+     19
+    ]
+   ],
+   "uncovered": 3,
+   "uncovered_sample": [
+    "reg        run, flt;",
+    "module ot_s81_kp4_enc #(parameter integer MUT = 0) (",
+    "assign fault = flt;"
+   ]
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "added": 21,
+   "added_not_on_main": 14,
+   "by": [
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-e-1108",
+     "8a41939b81f5",
+     11
+    ],
+    [
+     "refs/remotes/origin/claude/kw-fix-37-spill-infra-1108",
+     "99d7dfcd2809",
+     10
+    ],
+    [
+     "refs/remotes/origin/claude/die-kv-97-p4src-1109",
+     "4a0af930d9a1",
+     7
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "added": 130,
+   "added_not_on_main": 10,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kv-plan-2-finsbuf-wave-1109",
+     "5c15a885ca7f",
+     9
+    ],
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-a-1108",
+     "cb6e91be108d",
+     4
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/lec.py",
+   "added": 120,
+   "added_not_on_main": 12,
+   "by": [
+    [
+     "refs/remotes/origin/codex/kshare-twins-1113",
+     "06641d575b40",
+     12
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "added": 1,
+   "added_not_on_main": 1,
+   "by": [
+    [
+     "refs/remotes/origin/rescue/epyc2-kv-tok-d-1027",
+     "be22c61cd4c3",
+     1
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  }
+ ],
+ "qwen_kvsys": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "added": 80,
+   "added_not_on_main": 2,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kw-fix-44-grt-stop-1110",
+     "557a0b0604b9",
+     2
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/die_plan.schema.json",
+   "added": 0,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "added": 53,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/landing_place.py",
+   "added": 0,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/landing_placement.tcl",
+   "added": 17,
+   "added_not_on_main": 8,
+   "by": [],
+   "uncovered": 8,
+   "uncovered_sample": [
+    "if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq \"local-reset\"} { cland_put_grow $i ",
+    "# window that earlier groups and FIRM station / reset-tree / face flops fill.  Bands whose cells tak",
+    "# DIE-KV-97 11-10 (wave form of claude/die-kv-97-startfit-1110; KV kv3_pv_v1 / v1n / v6n 3_3 \"... (w"
+   ]
+  }
+ ],
+ "hbm": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "added": 53,
+   "added_not_on_main": 2,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kw-fix-44-grt-stop-1110",
+     "557a0b0604b9",
+     2
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "physical/die_plan/hbm/cores/harden/recipes.json",
+   "added": 0,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+   "added": 14,
+   "added_not_on_main": 0,
+   "by": [],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "added": 24,
+   "added_not_on_main": 24,
+   "by": [
+    [
+     "refs/remotes/origin/codex/s81-rck-reform-0222",
+     "bdde15eb1f7f",
+     21
+    ],
+    [
+     "refs/remotes/origin/claude/s81-types-7-rck-1108",
+     "872819503b4a",
+     19
+    ]
+   ],
+   "uncovered": 3,
+   "uncovered_sample": [
+    "reg        run, flt;",
+    "module ot_s81_kp4_enc #(parameter integer MUT = 0) (",
+    "assign fault = flt;"
+   ]
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "added": 12,
+   "added_not_on_main": 12,
+   "by": [
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-e-1108",
+     "8a41939b81f5",
+     11
+    ],
+    [
+     "refs/remotes/origin/claude/kw-fix-37-spill-infra-1108",
+     "99d7dfcd2809",
+     10
+    ],
+    [
+     "refs/remotes/origin/claude/die-kv-97-p4src-1109",
+     "4a0af930d9a1",
+     5
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/bind.py",
+   "added": 21,
+   "added_not_on_main": 21,
+   "by": [
+    [
+     "refs/remotes/origin/claude/kw-fix-40-hbm-src-1108",
+     "a714b9cf4646",
+     21
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "added": 43,
+   "added_not_on_main": 4,
+   "by": [
+    [
+     "refs/remotes/origin/claude/root-merge-53-train-a-1108",
+     "cb6e91be108d",
+     4
+    ],
+    [
+     "refs/remotes/origin/claude/kv-plan-2-finsbuf-wave-1109",
+     "5c15a885ca7f",
+     3
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "added": 1,
+   "added_not_on_main": 1,
+   "by": [
+    [
+     "refs/remotes/origin/rescue/epyc2-kv-tok-d-1027",
+     "be22c61cd4c3",
+     1
+    ]
+   ],
+   "uncovered": 0,
+   "uncovered_sample": []
+  }
+ ]
+}

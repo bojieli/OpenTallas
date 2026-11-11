@@ -400,6 +400,10 @@ def advance(date, run_dir):
             die, len(bd['changed']), ' '.join(bd['changed'][:30]) + (' ...' if len(bd['changed']) > 30 else '')))
         r['rebound'] = bd['changed']
         lines.append('%s: kit-store %s' % (die, store_ingest(date, die, b['out'], mdir)))
+    for die, r in res['dies'].items():          # COORD 11-10: say which conflicted files the new tree keeps live
+        if r.get('conflicts'):
+            lines.append('%s: KEPT LIVE (conflicted with main+overlays, live bytes kept, not reproducible from git) %d file(s): %s'
+                         % (die, len(r['conflicts']), ' '.join(r['conflicts'][:40]) + (' ...' if len(r['conflicts']) > 40 else '')))
     ok = os.path.exists(SWITCH_OK) and open(SWITCH_OK).read().strip() in ('standing', date)
     lines.append('switch: ' + ('ALLOWED by lanes/wave-ops-1/SWITCH-OK; KW-FIX-44 applies it at the next idle gap (new launches only)'
                                if ok else 'NOT applied (no SWITCH-OK for %s): config unchanged, the new trees wait' % date))
@@ -430,10 +434,12 @@ def main(argv):
         res, rows = build(date, run_dir)
         rel = os.path.relpath(run_dir, COORD)
         post('- %s STATE [WAVE-OPS-1 -> COORD, KW-FIX-44, ROOT-MERGE-57, KIT-INPUT-STORE-1] nightly wave src %s BUILT '
-             '(new dated trees, live untouched, binds launched where a strict bind of record exists). DO_NOT_COUNT.\n%s'
+             '(new dated trees, live untouched, binds launched where a strict bind of record exists). DO_NOT_COUNT.\n%s%s'
              '  ARCHIVE-PROTECTED +%d rows. Full report %s/REPORT.md.\n' % (
                  stamp, date, ''.join('  %s: %s\n' % (d, '; '.join('%s %s' % (h, v[-80:]) for h, v in r.get('hosts', {}).items()))
-                                      for d, r in res['dies'].items()), len(rows), rel),
+                                      for d, r in res['dies'].items()),
+                 ''.join('  %s KEPT LIVE (conflicted) %d: %s\n' % (d, len(r['conflicts']), ' '.join(r['conflicts'][:40]))
+                         for d, r in res['dies'].items() if r.get('conflicts')), len(rows), rel),
              [os.path.relpath(PROTECTED, COORD)] + [os.path.join(rel, f) for f in ('REPORT.md', 'plan.json', 'build.json')])
     elif cmd == 'advance':
         if not os.path.exists(os.path.join(run_dir, 'build.json')) or os.path.exists(os.path.join(run_dir, 'POSTED')):
