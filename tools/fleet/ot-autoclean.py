@@ -729,10 +729,12 @@ class SourceCopy:
             try:
                 r = _git(top, "ls-remote", "--heads", "origin", timeout=self.fetch_timeout)
                 if r.returncode == 0:
-                    for sha in sorted({ln.split()[0] for ln in r.stdout.splitlines() if ln.strip()}):
-                        if sha == head or _git(top, "merge-base", "--is-ancestor", head, sha).returncode == 0:
-                            ok = True
-                            break
+                    live = {ln.split()[0] for ln in r.stdout.splitlines() if ln.strip()}
+                    # one walk (the fetch above refreshed refs/remotes/origin): the remote-tracking heads that contain HEAD,
+                    # kept only where origin still has that exact sha now (ls-remote); a pruned or moved branch never counts
+                    c = _git(top, "for-each-ref", "--contains", head, "--format=%(objectname)", "refs/remotes/origin",
+                             timeout=self.fetch_timeout)
+                    ok = head in live or (c.returncode == 0 and bool(live & set(c.stdout.split())))
             except subprocess.TimeoutExpired:
                 ok = False
             self.onorigin[key] = ok
@@ -759,6 +761,13 @@ class SourceCopy:
             return "outside its checkout"
         rel_dir = os.path.relpath(os.path.realpath(d), top)
         rel = os.path.relpath(rr, top)
+        with open(rr, "rb") as fh:                   # the cheap store test first: most records end here
+            sha = hashlib.sha256(fh.read()).hexdigest()
+        e = self.store.get(sha)
+        if not e:
+            return "not in signed store"
+        if not str(e.get("archive", "")).startswith("/archive/"):
+            return "store entry has no AGIdock archive"
         if _git(top, "ls-files", "--error-unmatch", "--", rel).returncode:
             return "untracked"
         st = _git(top, "status", "--porcelain", "--ignored", "--untracked-files=all", "--", rel_dir)
@@ -771,13 +780,6 @@ class SourceCopy:
         head = _git(top, "rev-parse", "HEAD").stdout.strip()
         if not self._on_origin(top, common, head):
             return "HEAD not on origin"
-        with open(rr, "rb") as fh:
-            sha = hashlib.sha256(fh.read()).hexdigest()
-        e = self.store.get(sha)
-        if not e:
-            return "not in signed store"
-        if not str(e.get("archive", "")).startswith("/archive/"):
-            return "store entry has no AGIdock archive"
         for loc in e.get("locs", []):
             pth = loc.partition(":")[2] if ":" in loc and not loc.startswith("/") else loc
             for q in {pth, os.path.realpath(pth)}:
