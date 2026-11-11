@@ -1,0 +1,67 @@
+{
+ "identical": 190,
+ "differing": [
+  "iqf__t1",
+  "serdes__t12",
+  "serdes__t13",
+  "serdes__t14",
+  "serdes__t15__cla2127225",
+  "serdes__t15__cla3d02796",
+  "serdes__t16",
+  "serdes__t1__clb45db5be",
+  "serdes__t1__clfe1f0815",
+  "serdes__t2",
+  "serdes__t3",
+  "serdes__t4",
+  "slice_station__t23",
+  "slice_station__t43",
+  "slice_station__t52"
+ ],
+ "bad": [
+  [
+   "iqf__t1",
+   [
+    "set_output_delay -max 287.0000 -clock vclk [get_ports {ft6_o[*] ft7_o[*] ft8_o[*]}]",
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft6_o[*] ft7_o[*] ft8_o[*]}]"
+   ]
+  ],
+  [
+   "serdes__t12",
+   [
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft1_o[*] ft2_o[*]}]",
+    "set_output_delay -max 293.0000 -clock vclk [get_ports {ft1_o[*] ft2_o[*]}]"
+   ]
+  ],
+  [
+   "serdes__t15__cla2127225",
+   [
+    "set_output_delay -max 287.0000 -clock vclk [get_ports {ft2_o[*] ft3_o[*]}]",
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft2_o[*] ft3_o[*]}]"
+   ]
+  ],
+  [
+   "slice_station__t23",
+   [
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft1_o[*]}]",
+    "set_output_delay -max 278.0000 -clock vclk [get_ports {ft1_o[*]}]"
+   ]
+  ],
+  [
+   "slice_station__t43",
+   [
+    "set_output_delay -max 296.0000 -clock vclk [get_ports {ft7_o[*] ft8_o[*] ft9_o[*]}]",
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft7_o[*] ft8_o[*] ft9_o[*]}]"
+   ]
+  ],
+  [
+   "slice_station__t52",
+   [
+    "set_output_delay -max 253.0000 -clock vclk [get_ports {ft8_o[*] ft9_o[*] ft12_o[*]}]",
+    "set_output_delay -max 300.0000 -clock vclk [get_ports {ft8_o[*] ft9_o[*] ft12_o[*]}]"
+   ]
+  ]
+ ],
+ "errors": [],
+ "n": 205,
+ "seconds": 1193
+}
