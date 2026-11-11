@@ -1,0 +1,523 @@
+{
+ "family": "SERDES",
+ "title": "SERDES family INTENT (9 types): PMA rx -> u_syn -> kp4 chn (W in, N/S out toward u_out) -> u_out beside dmem/cmem; one sheet per type",
+ "delta": "physical/die_plan/s81/cleanslate_1111/cpl_s81_misc/delta_cpl_s81_misc_serdes_1111.json",
+ "delta_sha256": "d626ff51abb493b45a224892ad11b65c97e524c1076d0c67c5dcaacc76aee70d",
+ "companion": "physical/die_plan/s81/cleanslate_1111/cpl_s81_misc/derived_cpl_s81_misc_serdes_1111.json",
+ "merged_by": "CPL-S81-MISC-2 11-11 for DIE-S81-86 (composer takes one sheet per delta file)",
+ "types": {
+  "serdes__t12": {
+   "type": "serdes__t12",
+   "title": "SERDES serdes__t12 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1186.728,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1137.888,
+     817.092
+    ],
+    "OUT": [
+     1327.968,
+     703.092
+    ],
+    "dmem": [
+     1244.484,
+     716.592
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t12.json",
+   "source_sha256": "f91255c6ce497f29cb890b967d044cf408aed232fe2211711f9083f3d82e570a",
+   "svg": "intent_SERDES_serdes__t12.svg"
+  },
+  "serdes__t13": {
+   "type": "serdes__t13",
+   "title": "SERDES serdes__t13 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1442.472,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1241.568,
+     664.092
+    ],
+    "OUT": [
+     1431.6480000000001,
+     608.052
+    ],
+    "dmem": [
+     1348.164,
+     621.552
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t13.json",
+   "source_sha256": "6b4893b06e6e71096fb3ceffb553e9d476fd5db32e4aebe90a16ce35c7e771d8",
+   "svg": "intent_SERDES_serdes__t13.svg"
+  },
+  "serdes__t14": {
+   "type": "serdes__t14",
+   "title": "SERDES serdes__t14 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1367.736,
+     1016.28
+    ],
+    "SYN": [
+     1166.4,
+     203.652
+    ],
+    "OUT": [
+     1356.48,
+     89.652
+    ],
+    "dmem": [
+     1272.996,
+     103.152
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t14.json",
+   "source_sha256": "0daf86259b8f2b49129b5c58ab43c41efc119901e522dbded449ca8a6b7c4530",
+   "svg": "intent_SERDES_serdes__t14.svg"
+  },
+  "serdes__t15__cla2127225": {
+   "type": "serdes__t15__cla2127225",
+   "title": "SERDES serdes__t15__cla2127225 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1442.472,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1241.568,
+     506.052
+    ],
+    "OUT": [
+     1431.6480000000001,
+     392.052
+    ],
+    "dmem": [
+     1348.164,
+     405.552
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t15__cla2127225.json",
+   "source_sha256": "03ff438740ebc368e6a0239842154dc3ee1b1d765f2450ffceba6bc105165769",
+   "svg": "intent_SERDES_serdes__t15__cla2127225.svg"
+  },
+  "serdes__t15__cla3d02796": {
+   "type": "serdes__t15__cla3d02796",
+   "title": "SERDES serdes__t15__cla3d02796 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1442.472,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1241.568,
+     506.052
+    ],
+    "OUT": [
+     1431.6480000000001,
+     392.052
+    ],
+    "dmem": [
+     1348.164,
+     405.552
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t15__cla3d02796.json",
+   "source_sha256": "e4cd703a32df1cd61867b4ec9a83cf4683932213e27feaed0dc3f2c55236aa52",
+   "svg": "intent_SERDES_serdes__t15__cla3d02796.svg"
+  },
+  "serdes__t16": {
+   "type": "serdes__t16",
+   "title": "SERDES serdes__t16 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1442.472,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1241.568,
+     506.052
+    ],
+    "OUT": [
+     1431.6480000000001,
+     392.052
+    ],
+    "dmem": [
+     1348.164,
+     405.552
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t16.json",
+   "source_sha256": "b15b396b08055589911544f67cb8356ed36f377bce53821f98990dc96f519b03",
+   "svg": "intent_SERDES_serdes__t16.svg"
+  },
+  "serdes__t2": {
+   "type": "serdes__t2",
+   "title": "SERDES serdes__t2 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1367.736,
+     1016.28
+    ],
+    "SYN": [
+     1166.4,
+     203.652
+    ],
+    "OUT": [
+     1356.48,
+     89.652
+    ],
+    "dmem": [
+     1272.996,
+     103.152
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t2.json",
+   "source_sha256": "38fec81a44b6a8a8a54394d8d9334676de42d8448dafb057635a6e0e8280a7f9",
+   "svg": "intent_SERDES_serdes__t2.svg"
+  },
+  "serdes__t3": {
+   "type": "serdes__t3",
+   "title": "SERDES serdes__t3 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1367.736,
+     1016.28
+    ],
+    "SYN": [
+     1156.032,
+     435.03599999999994
+    ],
+    "OUT": [
+     1516.32,
+     379.092
+    ],
+    "dmem": [
+     1262.628,
+     392.592
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t3.json",
+   "source_sha256": "1303b5d717643025e3318155c1ae5b8fcffbf8304c8154a4ee093eb3c98ad1bd",
+   "svg": "intent_SERDES_serdes__t3.svg"
+  },
+  "serdes__t4": {
+   "type": "serdes__t4",
+   "title": "SERDES serdes__t4 INTENT: PMA rx -> u_syn -> kp4 chn (W in, N out) -> u_out beside dmem/cmem",
+   "chain": [
+    [
+     "PMA rx",
+     "SYN",
+     320,
+     "p2p PMA symbols -> u_syn (soft)"
+    ],
+    [
+     "SYN",
+     "u_core.u_dec.u_chn",
+     320,
+     "p2p k_* into chn W face"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     559,
+     "p2p cw_q/apply/o_ne/fs from chn N face -> u_out"
+    ],
+    [
+     "dmem",
+     "OUT",
+     544,
+     "p2p delay-line data (SRAM W pins)"
+    ],
+    [
+     "u_core.u_dec.u_chn",
+     "OUT",
+     64,
+     "p2p status n_corr/n_unc"
+    ]
+   ],
+   "glue": {
+    "PMA rx": [
+     1442.472,
+     1017.3599999999999
+    ],
+    "SYN": [
+     1241.568,
+     664.092
+    ],
+    "OUT": [
+     1431.6480000000001,
+     608.052
+    ],
+    "dmem": [
+     1348.164,
+     621.552
+    ]
+   },
+   "source_sheet": "intent_SERDES_serdes__t4.json",
+   "source_sha256": "6a59462645c7a4c6192490d0c6dcdda559d38e00aee241071d9aba08add54852",
+   "svg": "intent_SERDES_serdes__t4.svg"
+  }
+ }
+}
