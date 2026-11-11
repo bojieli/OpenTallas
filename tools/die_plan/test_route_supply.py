@@ -425,3 +425,39 @@ endmodule
     assert cc["u_a"]["q"] == ["core:u_b.i"]
     assert cc["u_b"]["i"] == ["core:u_a.q"] and cc["u_b"]["o"] == ["bus:bo"]
     assert cc["u_a"]["s"] == ["glue"] and "clk" not in cc["u_a"]
+
+
+def _phy_like(tmp_path, inverted):
+    """DIE-KV-97 kv3_phy o_phy_Q: out bus launched in the core, captured at the east face flop."""
+    face, leaf = [864.0, 350.0], [306.0, 579.0]
+    regs = [[686.0, 426.0], [508.0, 502.0], [330.0, 579.0]]
+    e = {"conn": "bus:o_q", "launch": "u_core.pi0", "capture": "face flop",
+         "from_um": face if inverted else leaf, "to_um": leaf if inverted else face,
+         "regs_um": regs if inverted else regs[::-1]}
+    return {"outline_um": [864.0, 1520.0], "buses": [{"name": "o_q", "dir": "out", "width": 12}],
+            "internal_stations": [e]}
+
+
+def test_station_lint_flags_inverted_out_bus_chain(tmp_path):
+    import station_lint as sl
+    bad = sl.lint_type("kv3_phy", _phy_like(tmp_path, True))
+    assert [x["kind"] for x in bad] == ["INVERTED"] and bad[0]["name"] == "bus:o_q"
+    assert sl.lint_type("kv3_phy", _phy_like(tmp_path, False)) == []
+    # a face-launched out-bus entry is reversed by kit_istations (KW-FIX-27): face-first regs are not inverted
+    t = _phy_like(tmp_path, True)
+    t["internal_stations"][0]["launch"] = "face bus o_q"
+    assert sl.lint_type("kv3_phy", t) == []
+
+
+def test_route_supply_reports_station_inversion(tmp_path):
+    plan(tmp_path, n=800)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    t = P["partition_types"]["t"]
+    W, H = t["outline_um"]
+    t.setdefault("buses", []).append({"name": "o_q", "dir": "out", "width": 4})
+    t["internal_stations"] = [{"conn": "bus:o_q", "launch": "u_a.q", "capture": "face flop", "from_um": [W, H / 2],
+                               "to_um": [W * 0.2, H / 2], "regs_um": [[W * 0.8, H / 2], [W * 0.5, H / 2], [W * 0.25, H / 2]]}]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    _, r, _ = run(tmp_path)
+    assert r["station_inverted"] == ["internal_station:bus:o_q#0"]
+    assert any(n.startswith("STATION-INVERTED 1") for n in r["notes"])
