@@ -231,3 +231,43 @@ def test_grt_edge_modes_follow_grt_patch_1(tmp_path):
     solid = tmp_path / "s.lef"
     solid.write_text(lefp.read_text().replace(strips, "      RECT 0 0 200 400 ;\n"))
     assert rs.lef_edge_share(solid, 2, rs.GRT_GCELL_UM)["M5"] > 0.9   # straps every 3 um, halo 2 gcells
+
+
+def test_core_conns_from_plan_dir_and_refs_merged_per_type(tmp_path):
+    """a materialised plan dir (HBM) carries core_conns.json beside die_plan.json: route_supply reads it (and .gz in a
+    ref dir) instead of falling back to the all-core centroid; the plan dir wins per type over the die dir."""
+    import gzip
+    plan(tmp_path, n=1500)
+    pd = tmp_path / "por"
+    pd.mkdir()
+    (pd / "plan.json").write_text((tmp_path / "plan.json").read_text())
+    out = tmp_path / "o"
+    rs.main([str(pd / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+             "--release-cache", str(tmp_path / "nope.json"), "--views", str(tmp_path / "noviews.json")])
+    r0 = json.loads((out / "route_supply_tst.json").read_text())["rows"][0]
+    assert r0["model"] == "fallback"
+    (pd / "core_conns.json").write_text((tmp_path / "core_conns.json").read_text())
+    rs.main([str(pd / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+             "--release-cache", str(tmp_path / "nope.json"), "--views", str(tmp_path / "noviews.json")])
+    r1 = json.loads((out / "route_supply_tst.json").read_text())["rows"][0]
+    assert r1["model"] == "core_conns" and r1["conns_src"].endswith("por/core_conns.json")
+    ref = tmp_path / "physical" / "die_plan" / "old"
+    ref.mkdir(parents=True)
+    with gzip.open(ref / "core_conns.json.gz", "wt") as f:
+        json.dump({"t": {}, "t2": {"u_a": {"d": ["core:u_b"]}}}, f)
+    src = rs.conns_sources(tmp_path / "nodie", pd, [str(ref)])
+    assert [p.name for p in src] == ["core_conns.json", "core_conns.json.gz"]
+    m = rs.load_conns(tmp_path / "nodie", None, pd, [str(ref)])
+    assert set(m) == {"t", "t2"} and m["t"]["u_a"]["d"] == ["core:u_b"]        # plan dir wins for t
+
+
+def test_stale_bus_name_goes_to_nearest_same_direction_face_bus(tmp_path):
+    plan(tmp_path, n=400)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    P["partition_types"]["t"]["buses"] = [{"name": "N_i", "dir": "in", "face": "W", "width": 400, "window_um": [50, 450]}]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {"d": ["bus:OLD7_i", "tap:u_a"]},
+                                                                "u_b": {"d": ["core:u_a"]}}}))
+    _, r, _ = run(tmp_path)
+    assert any("nearest same-direction face bus" in n for n in r["notes"])
+    assert not any("not placed" in n for n in r["notes"])          # tap: is the clock, not unresolved

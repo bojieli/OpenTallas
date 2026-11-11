@@ -11,7 +11,8 @@ landing-ring form, layer reassignment).
 WHAT IT READS (all from the plan and files the plan names; no kit, no netlist):
   type outline_um; hard_cores (origin_um, outline_um, orient, lef, pins_file); buses (face, window_um, width);
   ft_slots (in/out face, width, regs_um, bit_sites_um); internal_stations (from_um, regs_um, to_um, bits);
-  clock.landing_contract.bands (rect_um, width, padded_data_storage_flops); <die>/core_conns.json when present.
+  clock.landing_contract.bands (rect_um, width, padded_data_storage_flops); core_conns.json(.gz) from the plan dir, the
+  --ref-dirs (newest first) and <die>/, merged per type (first file listing a type wins).
 
 SUPPLY (tracks per bin per layer, signal layers M2-M7, METHODOLOGY 12.1a: tiles never use M8/M9):
   tracks_L(bin) = bin_um / pitch_L x (1 - derate_L) x (1 - obs_L(bin))
@@ -701,13 +702,16 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         notes.append("no core pin files found")
     bus_pt = {}
     bus_win = {}
+    bus_dir = defaultdict(list)          # "in"/"out" -> face bus names (stale bus names fall back to these)
     for bu in t.get("buses", []) or []:
         if bu.get("face"):
+            bus_dir[str(bu.get("dir", ""))].append(bu["name"])
             bus_pt[bu["name"]] = face_point(W, H, bu["face"], bu.get("window_um"))
             if bu.get("window_um") and cfg.get("face_spread", True):
                 bus_win[bu["name"]] = (bu["face"], tuple(bu["window_um"][:2]))
-    cc = conns.get(name) or conns.get(re.sub(r"__cl[0-9a-f]{8}.*$", "", name)) or conns.get(
-        re.sub(r"__.*$", "", name))
+    cc_key = next((k for k in (name, re.sub(r"__cl[0-9a-f]{8}.*$", "", name), re.sub(r"__.*$", "", name))
+                   if conns.get(k)), None)
+    cc = conns.get(cc_key) if cc_key else None
     model = "core_conns" if cc else ("fallback" if npins else "none")
     cen = {}
     for inst, pl in pins.items():
@@ -724,6 +728,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             acc[bus].append((x, y))
         bus_cen[inst] = {k: (sum(p[0] for p in v) / len(v), sum(p[1] for p in v) / len(v)) for k, v in acc.items()}
     unresolved = 0
+    stale_bus = 0
     nglue = 0
     # links carried by internal_stations (launch core:A.bus -> capture B): not counted again as a direct core net
     st_pairs = set()
@@ -797,8 +802,17 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                         pts.append(bus_cen[v][mate[0]] if mate and mate[0] in bus_cen.get(v, {}) else cen[v])
                     elif k == "bus" and v in bus_pt:
                         pts.append(bus_pt[v])
+                    elif k == "bus" and cfg.get("stale_bus_nearest", True) and v[-2:] in ("_i", "_o") \
+                            and bus_dir.get({"_i": "in", "_o": "out"}[v[-2:]]):
+                        # bus name not in this plan (core_conns older than a lane renumbering): the nearest face
+                        # bus of the same direction (ESTIMATE, counted)
+                        cand = bus_dir[{"_i": "in", "_o": "out"}[v[-2:]]]
+                        pts.append(min((bus_pt[c_] for c_ in cand), key=lambda q: abs(q[0] - x) + abs(q[1] - y)))
+                        stale_bus += 1
                     elif k == "face" and v in "NSEW":
                         pts.append(face_point(W, H, v))
+                    elif k == "tap":
+                        continue                # clock entry: the clock tree, not a signal net
                     else:
                         unresolved += 1
                 if len(pts) > 1:
@@ -830,6 +844,9 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 g.net([(x, y), (px, py)])
     if unresolved:
         notes.append(f"{unresolved} core_conns destinations not placed in the type")
+    if stale_bus:
+        notes.append(f"{stale_bus} core_conns bus destinations not in the plan, taken to the nearest same-direction "
+                     f"face bus (ESTIMATE)")
     # ft slots
     g.cur = "ft"
     ft_bits = 0
@@ -1048,6 +1065,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     hot_all = int(((rH > cfg["hot"]) | (rV > cfg["hot"])).sum())
     return dict(
         type=name, outline_um=[W, H], model=model, bins=[g.nx, g.ny],
+        conns_src=_CONNS_SRC.get(cc_key) if cc else None,
         macros=len(mrects), mem_macros=sum(1 for v in h_kind.values() if v == "mem"),
         provisional_children=sorted(provisional),
         macro_area_frac=round(float(macro_cov.sum()) / (g.nx * g.ny), 3),
@@ -1086,12 +1104,43 @@ def children_fill(mrects, h_kind, cfg):
     return sorted(out.values(), key=lambda e: -e["area_um2"] * e["n"])
 
 
-def load_conns(die_dir, path=None):
-    p = Path(path) if path else die_dir / "core_conns.json"
-    try:
-        return json.loads(p.read_text())
-    except (OSError, ValueError):
-        return {}
+def conns_sources(die_dir, plan_dir=None, ref_dirs=(), path=None):
+    """core_conns files in precedence order: --core-conns; the plan's own dir (materialised HBM plan dirs carry
+    core_conns.json beside die_plan.json); the --ref-dirs, newest (last) first; the die dir. .json or .json.gz."""
+    if path:
+        return [Path(path)]
+    dirs = ([Path(plan_dir)] if plan_dir else []) + [Path(d) for d in reversed(list(ref_dirs))] + [Path(die_dir)]
+    out, seen = [], set()
+    for d in dirs:
+        for n in ("core_conns.json", "core_conns.json.gz"):
+            f = d / n
+            if f.is_file() and f.resolve() not in seen:
+                seen.add(f.resolve())
+                out.append(f)
+                break
+    return out
+
+
+def load_conns(die_dir, path=None, plan_dir=None, ref_dirs=()):
+    """{type: {core: {port: [dest]}}}, merged per type: the first source (conns_sources order) that lists a type wins.
+    Sets _CONNS_SRC[type] = file."""
+    out = {}
+    _CONNS_SRC.clear()
+    for f in conns_sources(die_dir, plan_dir, ref_dirs, path):
+        try:
+            d = read_json(f)
+        except (OSError, ValueError):
+            continue
+        if isinstance(d, dict) and isinstance(d.get("core_conns"), dict):
+            d = d["core_conns"]
+        for t, v in (d or {}).items():
+            if t not in out and isinstance(v, dict):
+                out[t] = v
+                _CONNS_SRC[t] = str(f)
+    return out
+
+
+_CONNS_SRC = {}
 
 
 def _nf(r, d):
@@ -1239,7 +1288,7 @@ def main(argv=None):
                ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells)
-    conns = load_conns(die_dir, a.core_conns)
+    conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
     if a.core_fill:
