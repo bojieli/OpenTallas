@@ -57,7 +57,7 @@ def bands(p, tn):
 class Derive(unittest.TestCase):
     def test_reproduces_hc1_strip_and_touches_nothing_else(self):
         base = plan({"sle_st_a_v2": 2})
-        out, moved = D.apply(copy.deepcopy(base))
+        out, moved, _ = D.apply(copy.deepcopy(base))
         self.assertEqual(sorted(moved), sorted(OFF))
         for tn in OFF:
             self.assertEqual(sorted(moved[tn]), ["b_hw_i", "rs_n1"])
@@ -76,13 +76,13 @@ class Derive(unittest.TestCase):
         self.assertEqual(json.dumps(out, sort_keys=True), json.dumps(b2, sort_keys=True))
 
     def test_idempotent(self):
-        once, _ = D.apply(plan())
-        twice, moved = D.apply(copy.deepcopy(once))
+        once, _, _ = D.apply(plan())
+        twice, moved, _ = D.apply(copy.deepcopy(once))
         self.assertEqual(moved, {})
         self.assertEqual(json.dumps(once, sort_keys=True), json.dumps(twice, sort_keys=True))
 
     def test_kit_rows(self):
-        out, _ = D.apply(plan())
+        out, _, _ = D.apply(plan())
         for t in OFF + HOME_T:
             self.assertEqual(GP._cland_strip_rows(out["budgets"], t), 3, t)
         for t in OTHER:
@@ -92,7 +92,7 @@ class Derive(unittest.TestCase):
         # a fixed (hard) band where HOME was: the derivation finds the next legal home instead of the old constant
         p = plan()
         bands(p, OFF[0])["hard_x"] = band([17.28, 17.28, 40.0, 30.0], 8, hard_core=True)
-        out, moved = D.apply(p)
+        out, moved, _ = D.apply(p)
         r = bands(out, OFF[0])["b_hw_i"]["rect_um"]
         self.assertNotEqual(r, HOME)
         self.assertFalse(D._ov(r, [17.28, 17.28, 40.0, 30.0]))
@@ -109,8 +109,88 @@ class Derive(unittest.TestCase):
             D.apply(plan({"sle_hc2": 2}))
 
     def test_keeps_matching_rows(self):
-        out, _ = D.apply(plan({"sle_hc2": 3}))
+        out, _, _ = D.apply(plan({"sle_hc2": 3}))
         self.assertEqual(out["budgets"]["cland_strip_rows_types"]["sle_hc2"], 3)
+
+
+def widen_plan():
+    """hc1 over a ctl partner (ctl N face = hc1 S face), as in QC slice rows 0/1"""
+    p = plan()
+    hc = p["partition_types"][OFF[0]]
+    hc["buses"] += [{"name": "cw_s1", "face": "S", "window_um": [277.248, 366.528], "width": 516, "dir": "out"},
+                    {"name": "x_st_b_o", "face": "S", "window_um": [373.776, 463.104], "width": 516, "dir": "out"}]
+    hc["clock"]["landing_contract"]["pins"] = [{"name": "fclk_in_b_hw_i", "layer": "M7", "xy_um": [140.192, 2.656]},
+                                              {"name": "fclk_out_cw_s1", "layer": "M7", "xy_um": [322.08, 2.656]}]
+    hc["clock"]["landing_contract"]["collector_local_sources"] = [
+        {"name": "b_hw_i", "tap": 2, "xy_um": [140.304, 0], "pin_xy_um": [140.304, 0]}]
+    p["partition_types"]["ctl_t"] = {"module": "ctl_t", "outline_um": [1226.88, 1339.2], "buses": [
+        {"name": "b_hw_hc1_o", "face": "N", "window_um": [4.32, 276.288], "width": 1573, "dir": "out"},
+        {"name": "cws1_i", "face": "N", "window_um": [277.248, 366.528], "width": 516, "dir": "in"},
+        {"name": "x_st_b_i", "face": "N", "window_um": [373.776, 463.104], "width": 516, "dir": "in"}],
+        "clock": {"landing_contract": {"bands": {}, "pins": [
+            {"name": "fclk_out_b_hw_hc1_o", "layer": "M7", "xy_um": [140.192, 1336.544]}]}}}
+    for q in p["partitions"]:
+        q["origin_um"] = [0, 1339.2] if q["type"] == OFF[0] else [5000, 5000]
+    p["partitions"].append({"name": "p_ctl", "type": "ctl_t", "origin_um": [0, 0]})
+    p["die"] = {"name": "t", "outline_um": [10000.0, 10000.0], "reach_um": 405}
+    p["lanes"] = []
+    for t in (hc, p["partition_types"]["ctl_t"]):
+        for bb in t["buses"]:
+            bb.setdefault("layers", ["M7", "M5"])
+    p["ports"] = [{"id": "a", "src": {"part": "p_ctl", "bus": "b_hw_hc1_o"}, "dst": {"part": "p_" + OFF[0], "bus": "b_hw_i"},
+                   "width": 1573, "kind": "data"},
+                  {"id": "b", "src": {"part": "p_" + OFF[0], "bus": "cw_s1"}, "dst": {"part": "p_ctl", "bus": "cws1_i"},
+                   "width": 516, "kind": "data"},
+                  {"id": "c", "src": {"part": "p_" + OFF[0], "bus": "x_st_b_o"}, "dst": {"part": "p_ctl", "bus": "x_st_b_i"},
+                   "width": 516, "kind": "data"}]
+    return p
+
+
+class Widen(unittest.TestCase):
+    def test_widen_both_seam_sides(self):
+        out, moved, rep = D.apply(widen_plan(), widen_face=True)
+        hc = {b["name"]: b["window_um"] for b in out["partition_types"][OFF[0]]["buses"]}
+        ctl = {b["name"]: b["window_um"] for b in out["partition_types"]["ctl_t"]["buses"]}
+        d = 596.16 - 463.104
+        d = int(d / D.WG + 1e-6) * D.WG
+        self.assertAlmostEqual(hc["b_hw_i"][1], round(276.288 + d, 6))
+        self.assertAlmostEqual(hc["cw_s1"][0], round(277.248 + d, 6))
+        self.assertLessEqual(hc["x_st_b_o"][1], 596.16 + 1e-6)
+        self.assertEqual(ctl["b_hw_hc1_o"], hc["b_hw_i"])
+        self.assertEqual(ctl["cws1_i"], hc["cw_s1"])
+        self.assertEqual(ctl["x_st_b_i"], hc["x_st_b_o"])
+        lc = out["partition_types"][OFF[0]]["clock"]["landing_contract"]
+        self.assertAlmostEqual(lc["collector_local_sources"][0]["xy_um"][0], (4.32 + hc["b_hw_i"][1]) / 2)
+        pin = {q["name"]: q["xy_um"] for q in lc["pins"]}
+        self.assertAlmostEqual((pin["fclk_in_b_hw_i"][0] - 140.192) / D.WG, round((pin["fclk_in_b_hw_i"][0] - 140.192) / D.WG))
+        cpin = out["partition_types"]["ctl_t"]["clock"]["landing_contract"]["pins"][0]["xy_um"][0]
+        self.assertAlmostEqual(cpin, pin["fclk_in_b_hw_i"][0])
+        b = bands(out, OFF[0])["b_hw_i"]["rect_um"]
+        self.assertGreater(b[2] - b[0], 289.248 - 17.28)       # the band follows the wider window
+        again, moved2, rep2 = D.apply(copy.deepcopy(out), widen_face=True)
+        self.assertEqual(rep2["windows"], {})
+        self.assertEqual(json.dumps(out, sort_keys=True), json.dumps(again, sort_keys=True))
+
+    def test_widen_refuses_disagreeing_partner(self):
+        p = widen_plan()
+        p["partition_types"]["ctl_t"]["buses"][0]["window_um"] = [8.64, 280.608]
+        with self.assertRaises(SystemExit):
+            D.apply(p, widen_face=True)
+
+
+class Exclude(unittest.TestCase):
+    def test_fw_v1_never_touched(self):
+        p = plan()
+        p["partition_types"]["slw_fw_v1__cl51d45468"] = htype("slw_fw_v1__cl51d45468", False)
+        before = json.dumps(p["partition_types"]["slw_fw_v1__cl51d45468"], sort_keys=True)
+        out, moved, _ = D.apply(p, bases=D.BASES + ("slw_fw_v1x",))
+        self.assertNotIn("slw_fw_v1__cl51d45468", moved)
+        self.assertEqual(json.dumps(out["partition_types"]["slw_fw_v1__cl51d45468"], sort_keys=True), before)
+        self.assertNotIn("slw_fw_v1", out["budgets"]["cland_strip_rows_types"])
+
+    def test_refuses_fw_v1_base(self):
+        with self.assertRaises(SystemExit):
+            D.apply(plan(), bases=("sle_hc1", "slw_fw_v1"))
 
 
 if __name__ == "__main__":
