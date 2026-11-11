@@ -5,53 +5,197 @@
   734.4,
   233.28
  ],
- "source": "DIE-HBM-97 KVPIPE rev3 2026-11-10: the per-bank-column copies g_col[c] (h128 / wf4 / fill / in_v, ~20 cells, ~4.2 um2 each) of ot_hbm_sm_kv_line; copy c feeds banks c and c+4 (bank k at x-column k%4) and bb / sc / lane slices of column c.  One small GPL guide pad per column, 60 x 10.8 um centred on the column just above the upper bank row (top 172.84).  Pads must stay small: GPL removes an INCLUSIVE region's area from the top-level region, and full-strip boxes (rev3 v1, 726 x 55 um) left the top level at 280 % utilisation (GPL-0301, vE probe 11-10).  Picked up by gen_core_kit_hbm.py (default_reg_guides) when no --reg-guide-boxes / --macro-reg-guide is given; released before DPL.",
+ "source": "DIE-HBM-97 KVPIPE rev4 2026-11-11: the 16 group copies g_col[g] (h128 / wf4 / fill / in_v / ge / win[22], ~60 cells each) of ot_hbm_sm_kv_line; copy g feeds bb qwords 6g..6g+5, sc bits 16g..16g+15, lanes 4g..4g+3 and (g = 4c+1, 4c+2) banks c / c+4 (bank k at x-column k%4).  One small GPL guide pad per group, 30 x 10.8 um, four per bank column, just above the upper bank row (top 172.84).  Pads stay small (GPL-0301 lesson, vE probe 11-10: full-strip INCLUSIVE boxes left the top level at 280 % utilisation).  Picked up by gen_core_kit_hbm.py (default_reg_guides) when no --reg-guide-boxes / --macro-reg-guide is given; released before DPL.",
  "boxes": [
   {
-   "name": "kvl_col0",
+   "name": "kvl_g0",
    "prefixes": [
     "u_fcore.g_col[0]."
    ],
    "box_um": [
-    64.285,
+    15.051,
     174.0,
-    124.285,
+    45.051,
     184.8
    ]
   },
   {
-   "name": "kvl_col1",
+   "name": "kvl_g1",
    "prefixes": [
     "u_fcore.g_col[1]."
    ],
    "box_um": [
-    244.215,
+    57.873,
     174.0,
-    304.215,
+    87.873,
     184.8
    ]
   },
   {
-   "name": "kvl_col2",
+   "name": "kvl_g2",
    "prefixes": [
     "u_fcore.g_col[2]."
    ],
    "box_um": [
-    424.14,
+    100.695,
     174.0,
-    484.14,
+    130.695,
     184.8
    ]
   },
   {
-   "name": "kvl_col3",
+   "name": "kvl_g3",
    "prefixes": [
     "u_fcore.g_col[3]."
    ],
    "box_um": [
-    604.065,
+    143.517,
     174.0,
-    664.065,
+    173.517,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g4",
+   "prefixes": [
+    "u_fcore.g_col[4]."
+   ],
+   "box_um": [
+    194.979,
+    174.0,
+    224.979,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g5",
+   "prefixes": [
+    "u_fcore.g_col[5]."
+   ],
+   "box_um": [
+    237.801,
+    174.0,
+    267.801,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g6",
+   "prefixes": [
+    "u_fcore.g_col[6]."
+   ],
+   "box_um": [
+    280.623,
+    174.0,
+    310.623,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g7",
+   "prefixes": [
+    "u_fcore.g_col[7]."
+   ],
+   "box_um": [
+    323.445,
+    174.0,
+    353.445,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g8",
+   "prefixes": [
+    "u_fcore.g_col[8]."
+   ],
+   "box_um": [
+    374.907,
+    174.0,
+    404.907,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g9",
+   "prefixes": [
+    "u_fcore.g_col[9]."
+   ],
+   "box_um": [
+    417.729,
+    174.0,
+    447.729,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g10",
+   "prefixes": [
+    "u_fcore.g_col[10]."
+   ],
+   "box_um": [
+    460.551,
+    174.0,
+    490.551,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g11",
+   "prefixes": [
+    "u_fcore.g_col[11]."
+   ],
+   "box_um": [
+    503.373,
+    174.0,
+    533.373,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g12",
+   "prefixes": [
+    "u_fcore.g_col[12]."
+   ],
+   "box_um": [
+    554.835,
+    174.0,
+    584.835,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g13",
+   "prefixes": [
+    "u_fcore.g_col[13]."
+   ],
+   "box_um": [
+    597.657,
+    174.0,
+    627.657,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g14",
+   "prefixes": [
+    "u_fcore.g_col[14]."
+   ],
+   "box_um": [
+    640.479,
+    174.0,
+    670.479,
+    184.8
+   ]
+  },
+  {
+   "name": "kvl_g15",
+   "prefixes": [
+    "u_fcore.g_col[15]."
+   ],
+   "box_um": [
+    683.301,
+    174.0,
+    713.301,
     184.8
    ]
   }
