@@ -1470,3 +1470,38 @@ def test_kept_copy_takes_representatives_renamed_gate_flop(tmp_path):
         return L
     assert not lec.kept_registers(build(True), keep)[1]
     assert lec.kept_registers(build(False), keep)[1]      # no second gate flop: one kept bit stays missing
+
+
+@pytest.mark.parametrize('cached', [False, True])
+def test_json_q_alias_uses_slang_element_index_not_flat_bit(tmp_path, cached):
+    # HBM-VEC-LEC 11-11, exp_x __vec6b144f732b: `reg rv [1:4]` is ONE flat slang net (element 1 at the MSB, flat
+    # bit 3); normalize_gold_elements already renamed the gold keys to elements rv[1..4].  Gate u_l1.vo is the Q of
+    # element rv[1] (vo = rv[1]).  Keyed by flat bit, vo was paired with gold "rv[3]" (element 3): a false
+    # NOT EQUIVALENT.  It must pair with element rv[1].
+    from types import SimpleNamespace
+    bits = {e: 40 + e for e in range(1, 5)}            # element -> net bit id
+    cells = {f'$flatten\\u.$driver$g_line.rv[{e}]': {'connections': {'Q': [bits[e]]}} for e in bits}
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {
+        'cells': cells,
+        'netnames': {'u.g_line.rv': {'bits': [bits[4], bits[3], bits[2], bits[1]]},   # flat f = element 4-f
+                     'u.vo': {'bits': [bits[1]]}}}}}))
+    gp = {'ff:u.g_line.rv[1]': 2, 'ff:u.g_line.rv[3]': 4, 'ff:u.g_line.rv[2]': 6}
+    L = SimpleNamespace(hyp={}, gp=gp, tp={'ff:u.vo': 2, 'ff:u.g_line.rv[2]': 6}, tc={},
+                        gonly=['ff:u.g_line.rv[1]', 'ff:u.g_line.rv[3]'], tonly=['ff:u.vo'])
+    if cached:
+        L.slang_flat = lec.slang_elements(tmp_path / 'gold.aliases.json')
+        assert L.slang_flat['ff:u.g_line.rv[3]'] == '[1]'
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 1
+    assert 'ff:u.g_line.rv[1]' in L.tp and 'ff:u.vo' not in L.tp
+    assert 'ff:u.g_line.rv[3]' in L.gonly
+
+
+def test_json_q_alias_skips_partly_known_slang_array(tmp_path):
+    # a flat net whose bits are only partly element-driven gives no keys (no flat/element mixing)
+    from types import SimpleNamespace
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {
+        'cells': {'$flatten\\u.$driver$x[1]': {'connections': {'Q': [51]}}},
+        'netnames': {'u.x': {'bits': [50, 51]}, 'u.y': {'bits': [50]}}}}}))
+    L = SimpleNamespace(hyp={}, gp={'ff:u.x[0]': 2}, tp={'ff:u.y': 2}, tc={},
+                        gonly=['ff:u.x[0]'], tonly=['ff:u.y'])
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
