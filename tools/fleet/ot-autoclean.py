@@ -64,12 +64,42 @@ TOOLS_DIR = os.path.join(HOME, ".local/share/ot-autoclean-auto")
 OFF_FILES = tuple(os.environ.get("OT_AUTOCLEAN_OFF_FILES", f"{HOME}/.config/ot-autoclean/OFF:{HOME}/.config/ot-autoclean-auto/OFF").split(":"))
 DEFAULT_ROOTS = ["/srv/opentallas-scratch/claude", "/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude",
                  os.path.join(HOME, "scratch-root/claude")]
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc7", "epyc8"]   # AUTOCLEAN-12 11-10: epyc5/6 terminated 11-09, + epyc7/8 (COORD)
-HOSTNAME_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2",
+HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc7", "epyc8", "localhost"]   # LOCALHOST_1111 (COORD 11-11): + localhost (root md0 at 100 %, no cleaner ran there)   # AUTOCLEAN-12 11-10: epyc5/6 terminated 11-09, + epyc7/8 (COORD)
+HOSTNAME_ALIAS = {"ubuntu": "localhost", "key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2",
                   "aware-parakeet": "epyc4", "devoted-wren": "epyc5", "eager-sunfish": "epyc6"}
 AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
+# LOCALHOST_1111: localhost holds lane and Codex trees outside the scratch roots (~/wt, ~/codex-*, ~/wt-codex-*,
+# ~/scratch-codex-*); `run --host localhost` scans them too (OWNER 11-06: finished runs in Codex trees are pruned on
+# localhost and fleet; 10-29: idle Codex worktrees > 12 h).  NEVER_TOUCH is refused on every host, by path and realpath.
+LOCAL_EXTRA_GLOBS = [os.path.join(HOME, "wt"), os.path.join(HOME, "codex-*"), os.path.join(HOME, "wt-codex-*"),
+                     os.path.join(HOME, "scratch-codex-*")]
+NEVER_TOUCH_SUBSTR = ("coro-train", "OpenRealtime", "Xilinx", "closed_archive")
+NEVER_TOUCH_PATHS = (os.path.join(HOME, ".codex"), os.path.join(HOME, "OpenTallas"), os.path.join(HOME, "coord"),
+                     os.path.join(HOME, ".claude"))
+LOCAL_WT_IDLE_H = 12.0
+
+
+def never_touch(p):
+    """a path (or its realpath) under a never-touch tree: refused on every host, every class"""
+    for q in {p, os.path.realpath(p)}:
+        if any(x in q for x in NEVER_TOUCH_SUBSTR):
+            return "never-touch " + q
+        for t in NEVER_TOUCH_PATHS:
+            if q == t or q.startswith(t + "/"):
+                return "never-touch " + t
+    return None
+
+
+def local_extra_roots():
+    import glob
+    out = []
+    for g in LOCAL_EXTRA_GLOBS:
+        for r in sorted(glob.glob(g)):
+            if os.path.isdir(r) and not os.path.islink(r) and not never_touch(r):
+                out.append(r)
+    return out
 MIN_BYTES = 1024
 WAVE_ROOT_RE = re.compile(r"/runs/[^/]+/kit-wave$")   # a kit-wave work root (protect.d/kit_wave.txt source line)
 GENERATED_UNION = "protected-dbs.txt"   # protect.d copy of write_union output (wt-reaper --protected-dbs)
@@ -879,6 +909,9 @@ class Job:
         return None
 
     def common_why(self, k, files, qn_ok=False):
+        nt = never_touch(k)
+        if nt:
+            return nt
         lane = self.lane(k)
         if lane.startswith(("tok-", "kv-fn-")) or "/tok-" in k or "/kv-fn-" in k:
             return "lane " + lane
@@ -1213,7 +1246,8 @@ class Job:
         if os.path.exists(alert_f):
             say(f"ot-autoclean: {alert_f} exists (sticky); no deletes until a human removes it")
             return 3
-        self.roots = dedupe_roots(a.roots)
+        self.roots = dedupe_roots(list(a.roots) + (local_extra_roots() if self.host == "localhost" else []))
+        self.roots = [r for r in self.roots if not never_touch(r)]
         if not self.roots:
             say("ot-autoclean: no roots")
             return 0
@@ -1310,7 +1344,8 @@ class Job:
             union = os.path.join(a.state, "protected-union.txt")
             self.write_union(union)
             cmd = [sys.executable, "-I", a.wt_reaper, "--protected-dbs", union, "--protected-dbs-repo", "",
-                   "--idle-h", str(a.wt_reaper_idle_h), "--roots"] + self.roots + [os.path.join(HOME, "wt")] + (["--apply"] if a.apply else [])
+                   "--idle-h", str(max(a.wt_reaper_idle_h, LOCAL_WT_IDLE_H) if self.host == "localhost" else a.wt_reaper_idle_h),
+                   "--roots"] + dedupe_roots(self.roots + [os.path.join(HOME, "wt")]) + (["--apply"] if a.apply else [])
             try:
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=a.wt_reaper_timeout)
                 with open(os.path.join(a.state, "wt-reaper.log"), "a") as fh:
@@ -1458,8 +1493,12 @@ class Remote:
         self.agi = shlex.split(os.path.expanduser(agidock_ssh))
         self.timeout = timeout
 
+    def argv(self, h):
+        """LOCALHOST_1111: the driver's own host runs its commands locally (no ssh to itself)"""
+        return ["bash", "-c"] if h == "localhost" else self.ssh + ([h] if h else [])
+
     def host(self, h, cmd, inp=None, timeout=None, binary=False):
-        argv = self.ssh + ([h] if h else []) + ["cd / && " + cmd]
+        argv = self.argv(h) + ["cd / && " + cmd]
         return subprocess.run(argv, input=inp, capture_output=True, text=not binary,
                               timeout=timeout or self.timeout)
 
@@ -1604,7 +1643,7 @@ class Driver:
                 src = None
             comp, decomp = ("zstd -q -T8 -3 -c", "zstd -q -d -c") if a.compress == "zstd" else ("cat", "cat")
             ok, msg = (False, "hash failed") if not src or None in src.values() else tar_stream(
-                self.r.ssh + [h], f"set -o pipefail; nice -n 10 tar -C / --null -T - -cf - | {comp}",
+                self.r.argv(h), f"set -o pipefail; nice -n 10 tar -C / --null -T - -cf - | {comp}",
                 self.r.agi, f"set -o pipefail; mkdir -p {shlex.quote(base)} && {decomp} | tar -C {shlex.quote(base)} -xf -",
                 files, a.timeout)
             verify = "-"
