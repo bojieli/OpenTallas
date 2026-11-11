@@ -6278,6 +6278,19 @@
       },
       "note": {
        "type": "string"
+      },
+      "xtap_flop": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "array",
+         "items": {
+          "type": "integer",
+          "minimum": 0
+         }
+        }
+       }
       }
      }
     },
