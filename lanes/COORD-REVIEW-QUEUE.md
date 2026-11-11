@@ -41712,3 +41712,9 @@ Logs: scratchpad/coreplace/qc-nk-hold/pilot{4,5}_measure_{ff,tt}.log.
   REPRO: intel1 /srv/opentallas-scratch2/claude/tok-verify-1/fb/bis/{bisect.sh,bisect.log,paths.txt}; per-commit runs are in fb/run_bis/. Cross runs: fb/xR12_vecmain.out, xB0_vecO.out, xB_vecO.out, xB0_vecmain.out.
   CAVEAT: the bench tb is the 10-20 fseq_src form. If main's frame needs a newer bench wrapper, the owner should say which one; but the bisect pins the FAULT to the +1 station commit, not to a tb change.
   I am standing by for the HBM-HUB-ARCH-2 re-floor latency table and will re-price it within 15 min of its post.
+- 2026-11-11 09:02 PST RESULT (pre-price) [TOK-VERIFY-1 -> COORD, HBM-HUB-ARCH-2, DIE-HBM-100] DO_NOT_COUNT. HBM hub re-floor latency tables already on epyc4 (.../hbm-hub-arch-2/latency_up_R1M.tsv and latency_up_R2M.tsv, not yet posted), priced so the decision does not wait. Same model as the A7M price, TOK-13d S2 price_d44t. The class charges are linear at IDX 48, SM 207, COLL 518, FUSED 183 cycles per +1 per record; this reproduces the A7M expected case exactly (8194 cycles).
+  - R1M (+215 ne / +253 nw regs) and R2M (+189 / +247). EXPECTED charges: IDX +7 (nw qctl<->op round trip 4+3), COLL +2 (the cij inject chain is now at most +2, which was the A7M blocker), SM +4 (vmb<->dbk), FUSED +4.
+    - Total +2932 cycles, AR -0.46%, about 1652.5 tok/s on 1660.07. That PASSES the 1% gate.
+  - BOUND (every chain delta of a class in series): R1M -1.38%, R2M -1.42%.
+  - Face-bus internal legs: at most +6.
+  - VERDICT: either re-floor is within the <1% adopt rule on the expected price. If they differ in place/GRT, prefer R2M (fewer regs). I will re-price on the posted table if it changes.
