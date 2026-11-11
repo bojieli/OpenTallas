@@ -80,6 +80,10 @@ TRIM_C = ("2_1_floorplan.odb", "2_2_floorplan_macro.odb", "2_3_floorplan_tapcell
 NEVER = {"2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb",
          "6_final.spef", "6_final.v", "6_final.def", "6_final.sdc", "signoff.json", "PROVENANCE.json", "ARCHIVED.json"}
 RECORD_NAMES = ("signoff.json", "PROVENANCE.json")
+STUB_AGE_S = 12 * 3600            # class s: every file it would delete is older than this (COORD 11-11)
+STUB_MARKER = "STUBBED.json"      # class s: written at the unit root; like ARCHIVED.json it is not part of the unit's archive set
+ARCHIVE_PREFIX = "/archive/opentallas-signed-1106/"
+SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 GENERIC_NAMES = {"kit", "run", "base", "results", "asap7", "src", "items", "work", "kits", "children", "child",
                  "s81_head", "kit-wave", "relocated-1106", "relocated-1106b", "signoff", "objects", "logs", "reports"}
 HEAVY_DIRS = {"run", "objects", "results", "logs", "reports", "gen", "items", ".git"}
@@ -602,6 +606,22 @@ def read_record(p):
     return signed, s
 
 
+NEVER_TOUCH_SUBSTR = ("coro-train", "OpenRealtime", "Xilinx", "closed_archive")
+NEVER_TOUCH_PATHS = (os.path.join(HOME, ".codex"), os.path.join(HOME, "OpenTallas"), os.path.join(HOME, "coord"),
+                     os.path.join(HOME, ".claude"))
+
+
+def never_touch(p):
+    """a path (or its realpath) under a never-touch tree: refused by class s on every host"""
+    for q in {p, os.path.realpath(p)}:
+        if any(x in q for x in NEVER_TOUCH_SUBSTR):
+            return "never-touch " + q
+        for t_ in NEVER_TOUCH_PATHS:
+            if q == t_ or q.startswith(t_ + "/"):
+                return "never-touch " + t_
+    return None
+
+
 def dedupe_roots(roots):
     seen, out = set(), []
     for r in roots:
@@ -1092,6 +1112,201 @@ class Job:
                           ",".join(os.path.basename(f) for f in files) if cls != "a" else "<tree>", size, int(mtime)])
         return verdict
 
+    # ---- class s: stub-trim of a signed unit whose archive copy is verified (COORD 11-11, KW-FIX-46)
+    def stub_verified(self, unit):
+        """None, or why the unit's ARCHIVED.json is not a verified archive of exactly the unit's current archive set"""
+        p = os.path.join(unit, "ARCHIVED.json")
+        try:
+            if os.path.islink(p) or not os.path.isfile(p):
+                return "no ARCHIVED.json"
+            rec = jl(p)
+            files = rec["files"]
+            if rec.get("schema") != "opentallas.archived.v2":
+                return "ARCHIVED.json schema"
+            if not str(rec.get("verify", "")).startswith("OK"):
+                return "ARCHIVED.json not verified"
+            if not str(rec.get("archive", "")).startswith(ARCHIVE_PREFIX):
+                return "ARCHIVED.json archive path"
+            if not files or rec.get("nfiles") != len(files) or not all(SHA_RE.match(str(f.get("sha256", ""))) for f in files):
+                return "ARCHIVED.json sha256 list"
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            return "ARCHIVED.json unreadable"
+        if not archived_ok(unit, unit_files(unit, self.roots)):
+            return "unit changed since the archive copy"
+        return None
+
+    def stub_units(self):
+        units = {}
+        for r in self.found["record"]:
+            signed, _ = read_record(r)
+            if signed:
+                units.setdefault(unit_of(r), []).append(r)
+        return {u: rs for u, rs in units.items() if not any(u.startswith(v + "/") for v in units)}
+
+    def stub_own(self, unit, why):
+        """a counted row that this unit's own records created (their dir, the paths they cite): the stub keeps all of it"""
+        for r in (os.path.join(unit, "signoff.json"), os.path.join(unit, "PROVENANCE.json"),
+                  os.path.join(unit, "signoff", "signoff.json"), os.path.join(unit, "signoff", "PROVENANCE.json")):
+            if why.endswith(" " + r) or why.endswith(" " + self.paths.canon(r)):
+                return True
+        return False
+
+    def stub_unit_hold(self, unit):
+        """protection that holds the WHOLE unit: a protected / kit-wave / local-keep row equal to it or above it
+        (--stub-protected-units relaxes it for protected rows only: the stub then keeps every protected path inside)"""
+        c = self.paths.canon(os.path.normpath(unit))
+        for name, ps in (("protected", self.protected), ("kitwave-keep", self.kwkeep), ("local keep", getattr(self, "localkeep_trim", self.localkeep))):
+            for a in [c] + ancestors(c):
+                if a in ps.m and (a == c or ps.deep(a)):
+                    if name == "protected" and getattr(self.a, "stub_protected_units", False):
+                        break
+                    return f"{name}: {a} ({ps.m[a]})"
+        return None
+
+    def stub_file_hold(self, unit, f):
+        for form in self.paths.forms(f):
+            h = self.protected.hit(form)
+            if h:
+                return "protected"
+            h = self.kwkeep.hit(form)
+            if h:
+                return "kitwave-keep"
+            h = getattr(self, "localkeep_trim", self.localkeep).hit(form)
+            if h:
+                return "local keep"
+            h = self.queue.hit(form)
+            if h:
+                return "queuepath"
+            c = self.paths.canon(os.path.normpath(form))
+            for a in [c] + ancestors(c):
+                why = self.counted.m.get(a)
+                if why is not None and (a == c or self.counted.deep(a)) and not self.stub_own(unit, why):
+                    return "counted"
+        return None
+
+    def eval_stub(self, unit):
+        """-> (why or None, [(path, size, disk_bytes, mtime)], {held reason: n})"""
+        nt = never_touch(unit)
+        if nt:
+            return nt, [], {}
+        if os.path.realpath(unit) != os.path.normpath(unit) or any(
+                os.path.islink(a) for a in [unit] + ancestors(unit) if depth(a) > LANE_DEPTH - 1):
+            return "symlinked path " + unit, [], {}
+        lane = self.lane(unit)
+        if lane.startswith(("tok-", "kv-fn-")) or any("tool" in c for c in unit.split("/")):
+            return "lane/tool tree " + lane, [], {}
+        if in_git_checkout(unit):
+            return "git checkout", [], {}
+        why = self.stub_verified(unit)
+        if why:
+            return why, [], {}
+        why = self.stub_unit_hold(unit)
+        if why:
+            return why, [], {}
+        w = self.live.why(self.paths.forms(unit))
+        if w:
+            return w, [], {}
+        g = git_locked(unit)
+        if g:
+            return "gitlocked " + g, [], {}
+        for a in [unit] + ancestors(unit):
+            if os.path.exists(os.path.join(a, ".keep")):
+                return "keep " + a, [], {}
+        try:
+            keep = {f["path"] for f in jl(os.path.join(unit, "ARCHIVED.json"))["files"]}
+        except (OSError, ValueError, KeyError, TypeError):
+            return "ARCHIVED.json unreadable", [], {}
+        keep.add(os.path.join(unit, "ARCHIVED.json"))
+        keep.add(os.path.join(unit, STUB_MARKER))
+        dev = os.lstat(unit).st_dev
+        cands, held = [], {}
+        for dp, dns, fns in os.walk(unit, followlinks=False):
+            sub = []
+            for d in dns:
+                full = os.path.join(dp, d)
+                if os.path.islink(full):
+                    held["symlink"] = held.get("symlink", 0) + 1
+                elif d == ".git":
+                    held["git"] = held.get("git", 0) + 1
+                elif any(os.path.exists(os.path.join(full, *x)) for x in
+                         (("signoff.json",), ("PROVENANCE.json",), ("ARCHIVED.json",), ("signoff", "signoff.json"))):
+                    held["nested record"] = held.get("nested record", 0) + 1
+                elif os.lstat(full).st_dev != dev:
+                    held["other filesystem"] = held.get("other filesystem", 0) + 1
+                else:
+                    sub.append(d)
+            dns[:] = sub
+            for f in fns:
+                pth = os.path.join(dp, f)
+                if pth in keep:
+                    continue
+                try:
+                    st = os.lstat(pth)
+                except OSError:
+                    continue
+                if not stat.S_ISREG(st.st_mode):
+                    held["not a regular file"] = held.get("not a regular file", 0) + 1
+                    continue
+                if st.st_nlink > 1:
+                    held["hardlink"] = held.get("hardlink", 0) + 1
+                    continue
+                if f in NEVER:
+                    held["never-delete name"] = held.get("never-delete name", 0) + 1
+                    continue
+                h = self.stub_file_hold(unit, pth)
+                if h:
+                    held[h] = held.get(h, 0) + 1
+                    continue
+                if self.now - st.st_mtime < STUB_AGE_S:
+                    return f"lt12h {pth}", [], held
+                cands.append((pth, st.st_size, st.st_blocks * 512, int(st.st_mtime)))
+        return (None if cands else "nothing to trim"), cands, held
+
+    def stub_apply(self, unit, cands, held):
+        """receipt first, then marker, then unlink; every file is re-checked right before its unlink"""
+        import gzip
+        rdir = os.path.join(self.a.state, "stub-receipts")
+        os.makedirs(rdir, exist_ok=True)
+        arch = jl(os.path.join(unit, "ARCHIVED.json"))
+        rid = hashlib.sha256(unit.encode()).hexdigest()[:12]
+        rpath = os.path.join(rdir, f"STUB-{self.host}-{stamp()}-{rid}.json.gz")
+        rec = {"schema": "opentallas.stub-receipt.v1", "host": self.host, "unit": unit, "date": time.strftime("%F %T %Z"),
+               "archive": arch.get("archive"), "archive_verify": arch.get("verify"),
+               "archived_json_sha256": sha256(os.path.join(unit, "ARCHIVED.json")),
+               "files": [{"path": p_, "size": s, "mtime": m} for p_, s, _, m in cands], "held": held}
+        with gzip.open(rpath + ".tmp", "wt") as fh:
+            json.dump(rec, fh)
+        os.replace(rpath + ".tmp", rpath)
+        mk = os.path.join(unit, STUB_MARKER)
+        with open(mk + ".tmp", "w") as fh:
+            json.dump({"schema": "opentallas.stubbed.v1", "date": rec["date"], "archive": rec["archive"], "nfiles": len(cands),
+                       "bytes": sum(s for _, s, _, _ in cands), "receipt": rpath, "held": held}, fh, indent=1)
+        os.replace(mk + ".tmp", mk)
+        freed, dirs = 0, set()
+        for p_, size, disk, _ in cands:
+            self.load_protected() if False else None
+            g = self.guard_hits(p_) if not self.stub_own_ok(unit, p_) else None
+            if g:
+                return freed, f"ALERT {g}"
+            st = os.lstat(p_)
+            if not stat.S_ISREG(st.st_mode) or st.st_nlink > 1 or os.path.basename(p_) in NEVER:
+                continue
+            os.unlink(p_)
+            freed += st.st_blocks * 512
+            dirs.add(os.path.dirname(p_))
+        for d in sorted(dirs, key=len, reverse=True):
+            while d != unit and d.startswith(unit + "/"):
+                try:
+                    os.rmdir(d)
+                except OSError:
+                    break
+                d = os.path.dirname(d)
+        return freed, ""
+
+    def stub_own_ok(self, unit, p_):
+        """True when guard_hits would only name this unit's own counted rows (the stub keeps those files)"""
+        return self.stub_file_hold(unit, p_) is None
+
     # ---- controls
     def controls(self):
         base = os.path.join(self.roots[0], "_ot_autoclean_ctl", f"{os.getpid()}-{stamp()}")
@@ -1230,6 +1445,38 @@ class Job:
                     continue
                 v = self.handle(cls, d, files, why, mt)
                 stop = v == "ALERT"
+        if "s" in classes and not stop:
+            for unit in sorted(self.stub_units()):
+                if stop:
+                    break
+                if not once(unit, "s"):
+                    continue
+                why, cands, held = self.eval_stub(unit)
+                if why in ("nothing to trim", "no ARCHIVED.json"):
+                    continue
+                size = sum(d_ for _, _, d_, _ in cands)
+                note = ",".join(f"{k}={n}" for k, n in sorted(held.items()))
+                verdict = "SKIP" if why else ("WOULD" if not a.apply else "STUB")
+                if not why and a.apply:
+                    self.load_protected()                    # a row added meanwhile must stop us
+                    self.live.refresh()
+                    w2, c2, h2 = self.eval_stub(unit)
+                    if w2:
+                        verdict, why = "SKIP", "recheck: " + w2
+                    else:
+                        try:
+                            size, err = self.stub_apply(unit, c2, h2)
+                            if err:
+                                verdict, why = "ALERT", err
+                                self.recheck_hits += 1
+                                self.alerts.append(f"s\t{unit}\t{err}")
+                            else:
+                                verdict = "STUBBED"
+                        except OSError as e:
+                            verdict, why = "ERROR", str(e)[:200]
+                self.rows.append([time.strftime("%F %T"), self.host, "s", verdict, " ".join((why or note).split())[:300], unit,
+                                  f"{len(cands)} files", size, int(os.lstat(unit).st_mtime)])
+                stop = verdict == "ALERT"
         mdir = os.path.join(a.state, "manifests")
         os.makedirs(mdir, exist_ok=True)
         mf = os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}.tsv")
@@ -1289,7 +1536,7 @@ def unit_files(unit, roots=None):
                   and not os.path.islink(os.path.join(dp, d))]
         for f in fns:
             p = os.path.join(dp, f)
-            if f == "ARCHIVED.json" and dp == unit:
+            if f in ("ARCHIVED.json", STUB_MARKER) and dp == unit:
                 continue
             out[p] = None
             if f in RECORD_NAMES or f.endswith(".signoff.json"):
@@ -1686,7 +1933,11 @@ def main(argv=None):
     r.add_argument("--max-snapshot-age-h", type=float, default=3.0)
     r.add_argument("--min-protected", type=int, default=100, help="refuse a union smaller than this")
     r.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
-    r.add_argument("--classes", default="abc")
+    r.add_argument("--classes", default="abc", help="a b c = deletes of unsigned attempts / ODB trims; s = stub-trim of signed units "
+                   "whose ARCHIVED.json is verified (never in the default set)")
+    r.add_argument("--stub-protected-units", action="store_true",
+                   help="class s: a protected-list row that EQUALS or CONTAINS the unit does not hold the unit (the stub keeps every "
+                        "protected path inside it and the unit's own records and cited files); default off = such a unit is skipped")
     r.add_argument("--docker", default="docker", help="docker command ('' = no docker on this host)")
     r.add_argument("--aliases", default=None, help="findmnt -rn -o TARGET,SOURCE text file (tests)")
     r.add_argument("--find-timeout", type=int, default=3600)
