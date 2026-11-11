@@ -2060,6 +2060,32 @@ def item_inputs(cfg, die):
     return out
 
 
+# KW-FIX-44 11-10 (COORD, KV kv3_pv batch 'preferred HDL source missing'): an as-built json (kit_rtl asbuilt, or one a
+# kit_rtl script names) points the bind at a source tree by 'base' + relative files / prefer / netlist / rtl_roots; on
+# epyc8 kw32/src_27db6 was a 15-file stub, so the bind failed on 45 files the probe never looked at.  Each listed path
+# is tested on the host (python3 there; first 3 missing reported as D lines).
+_ASBUILT_PY = """import json, os, sys
+p, lab = sys.argv[1], sys.argv[2]
+try:
+    d = json.load(open(p))
+except Exception:
+    sys.exit(0)
+b = d.get("base") if isinstance(d, dict) else None
+n = 0
+if isinstance(b, str) and b.startswith("/"):
+    for k in ("files", "prefer", "netlist", "rtl_roots"):
+        v = d.get(k)
+        for r in (v if isinstance(v, list) else []):
+            if isinstance(r, str) and r:
+                q = r if r.startswith("/") else os.path.join(b, r)
+                if not os.path.exists(q):
+                    print("D", lab, q)
+                    n += 1
+                    if n >= 3:
+                        sys.exit(0)
+"""
+
+
 def _deep_probe_cmd(paths):
     """shell: per path 'M <p>' (absent) or 'D <p> <what>' (a broken link below it, a missing bind.f source, or a path a
     .sh script names that fails the same test); silent when whole.  KW-FIX-44 11-10: 'N <p> <what>' = a path named by
@@ -2074,12 +2100,14 @@ def _deep_probe_cmd(paths):
           "[ -n \"$b\" ] && echo \"D $p $b\"; "
           "if [ -f \"$p/bind.f\" ]; then grep '^/' \"$p/bind.f\" | while read -r s; do [ -e \"$s\" ] || echo \"D $p $s\"; "
           "done | head -3; fi; fi; }; "
-          "ckd() { ck \"$1\"; case \"$1\" in *.sh) [ -f \"$1\" ] && "
+          f"ckj() {{ [ -f \"$1\" ] && python3 -I -c {shlex.quote(_ASBUILT_PY)} \"$1\" \"$2\" 2>/dev/null; }}; "
+          "ckd() { ck \"$1\"; case \"$1\" in *.json) ckj \"$1\" \"$1\";; esac; case \"$1\" in *.sh) [ -f \"$1\" ] && "
           "for s in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';)$]*' \"$1\" | sort -u); do "
           "ck \"$s\" | sed \"s#^M \\(.*\\)#D $1 \\1#; s#^D [^ ]* \\(.*\\)#D $1 \\1#\"; "
           "case \"$s\" in *.sh|*.json) [ -f \"$s\" ] && [ $(stat -c %s \"$s\") -lt 5000000 ] && "
           "for t in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';),$]*' \"$s\" | sort -u); do "
-          "[ -e \"$t\" ] || echo \"N $1 $t\"; done;; esac; done;; esac; }")
+          "[ -e \"$t\" ] || echo \"N $1 $t\"; done;; esac; "
+          "case \"$s\" in *.json) ckj \"$s\" \"$1\";; esac; done;; esac; }")
     return "; ".join([fn] + [f"ckd {q(p)}" for p in paths] + ["true"])
 
 

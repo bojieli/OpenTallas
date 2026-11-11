@@ -81,3 +81,24 @@ def test_probe_shell_walks_script_inputs(tmp_path):
     j(ROMQ).write_text("{}"); j(BIND).mkdir(parents=True)
     out = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True).stdout.replace(pre, "")
     assert set(out.split("\n")) - {""} == {f"N {SCRIPT} {OLD}"}
+
+
+def test_asbuilt_base_sources_checked_on_host(tmp_path):
+    """KV kv3_pv 11-10: asbuilt base kw32/src_27db6 was a 15-file stub on epyc8 -> bind 'preferred HDL source missing'"""
+    pre = str(tmp_path)
+    base = "/srv/opentallas-scratch2/claude/kw32/src_27db6"
+    asb = "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
+    Path(pre + asb).parent.mkdir(parents=True)
+    Path(pre + base + "/rtl").mkdir(parents=True)
+    Path(pre + asb).write_text('{"base": "%s", "files": ["rtl/a.sv"], "prefer": ["rtl/b.sv"], "rtl_roots": ["rtl"], '
+                               '"netlist": ["n.v.gz"]}' % (pre + base))
+    cmd = K._deep_probe_cmd([asb]).replace("/srv/opentallas-scratch", pre + "/srv/opentallas-scratch")
+    run = lambda: set(subprocess.run(["bash", "-c", cmd], capture_output=True, text=True).stdout
+                      .replace(pre, "").split("\n")) - {""}
+    assert run() == {f"D {asb} {base}/rtl/a.sv", f"D {asb} {base}/rtl/b.sv", f"D {asb} {base}/n.v.gz"}
+    for r in ("rtl/a.sv", "rtl/b.sv", "n.v.gz"):
+        Path(pre + base + "/" + r).write_text("x")
+    assert run() == set()
+    c = cfg(); c["dies"]["s81"]["kit_rtl"] = {"mode": "bind", "asbuilt": asb}
+    bad = K.src_incomplete(FakeAP(), c, run=fake({"epyc8": [f"D {asb} {base}/rtl/a.sv"]}))
+    assert set(bad) == {"epyc8"} and f"{base}/rtl/a.sv missing" in bad["epyc8"]["s81"]
