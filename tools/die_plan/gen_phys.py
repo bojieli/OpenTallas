@@ -2712,6 +2712,28 @@ def _hop_latch_capture_tap(P):
     return None
 
 
+def _hop_latch_re(slot, k):
+    """regex of the bound ft hop latch cells u_fl_<slot>_<face>_<k> (bind.py u_fl_{obus}_{k}, obus = <slot>_<face>)"""
+    return f"u_fl_{slot}_[^_]+_{int(k)}[^0-9]"
+
+
+def _hop_latch_tap_cfg(P, tn):
+    """HBM-VSN-XTAP-2 11-11 form A': OT_HOP_LATCH_CAPTURE_TAP value = the die default / GEN env (_hop_latch_capture_tap)
+    plus the plan's per-hop capture-tap latches of `tn` (schema.ft_hop_latch_tap); None = no line."""
+    base = _hop_latch_capture_tap(P)
+    res = [_hop_latch_re(s, k) for s, m in sorted(S.ft_hop_latch_tap(P.raw, tn).items())
+           for k, v in sorted(m.items()) if v == "capture"]
+    v = " ".join(([base] if base else []) + res)
+    return v or None
+
+
+def _hop_latch_frac_cfg(P, tn):
+    """HBM-VSN-XTAP-2 11-11 form A': OT_HOP_LATCH_FRAC_MAP value 're=f ...' (schema.ft_hop_latch_frac); None = none."""
+    v = " ".join(f"{_hop_latch_re(s, k)}={float(f):g}" for s, m in sorted(S.ft_hop_latch_frac(P.raw, tn).items())
+                 for k, f in sorted(m.items()))
+    return v or None
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -4700,7 +4722,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
-           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P)}"] if _hop_latch_capture_tap(P) else []),
+           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_tap_cfg(P, tn)}"] if _hop_latch_tap_cfg(P, tn) else []),
+           *([f"export OT_HOP_LATCH_FRAC_MAP = {_hop_latch_frac_cfg(P, tn)}"] if _hop_latch_frac_cfg(P, tn) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
