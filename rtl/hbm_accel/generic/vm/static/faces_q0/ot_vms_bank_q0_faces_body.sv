@@ -363,15 +363,20 @@ module ot_vms_bank_q0_faces_body #(
     // ------------------------------------------------------------------ M (macro edge) -> C (capture) -> D -> R
     reg mr_v; reg [3:0] mr_p; reg mr_mir; reg [7:0] mr_tag; reg mw_v; reg [3:0] mw_p; reg [7:0] mw_tag;
     reg c_v; reg [3:0] c_p; reg c_mir; (* keep *) reg [7:0] c_mir_s; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
+    reg e_v; reg [3:0] e_p; reg [7:0] e_tag; reg [255:0] e_dat; reg [55:0] e_ck; reg ew_v; reg [7:0] ew_tag;
     reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg [255:0] d_flip; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
     always @(posedge clk or negedge rn)
         if (!rn) begin
-            mr_v <= 1'b0; mw_v <= 1'b0; c_v <= 1'b0; cw_v <= 1'b0; d_v <= 1'b0; dw_v <= 1'b0;
+            mr_v <= 1'b0; mw_v <= 1'b0; c_v <= 1'b0; cw_v <= 1'b0; e_v <= 1'b0; ew_v <= 1'b0; d_v <= 1'b0; dw_v <= 1'b0;
         end else begin
             mr_v <= s2r_v; mw_v <= s2w_v;
             // done = the write is in the macro (this edge wrote it)
             c_v <= mr_v; cw_v <= mw_v && mw_p == 4'(WG + 2);
-            d_v <= c_v; dw_v <= cw_v;
+            // DIE-HBM-97 11-11 (vecd4ae fp2s setup -312 ps c_mir_s -> d_flip, 160-um A/C mux wire): +1 read stage E;
+            // read response (rr, pr read) and the packet write echo (pr write) both move one edge, so the
+            // one-packet-op-per-edge invariant on pr holds.  Pin-cycle row + TOK + latency-shifted EQ.
+            e_v <= c_v; ew_v <= cw_v;
+            d_v <= e_v; dw_v <= ew_v;
         end
     always @(posedge clk_w or negedge rn)
         if (!rn) begin wq_done[0] <= 0; xq_done <= 0; end
@@ -390,16 +395,18 @@ module ot_vms_bank_q0_faces_body #(
         reg [255:0] dat; reg [55:0] ck;
         mr_p <= s2r_p; mr_mir <= s2r_mir; mr_tag <= s2r_tag; mw_p <= s2w_p; mw_tag <= s2w_tag;
         c_p <= mr_p; c_mir <= mr_mir; c_mir_s <= {8{mr_mir}}; c_tag <= mr_tag; c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; cw_tag <= mw_tag;
-        d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
+        e_p <= c_p; e_tag <= c_tag; ew_tag <= cw_tag;
+        d_p <= e_p; d_tag <= e_tag; dw_tag <= ew_tag;
         // DIE-HBM-97 11-11 (vecd4ae fp2 setup -128 ps c_mir -> d_flip): one c_mir copy per 32-bit word slice, each
         // selecting only its own data word and 7-bit check slice; same edge, bit-exact.
         for (integer m = 0; m < 8; m = m + 1) begin
             dat[m*32 +: 32] = c_mir_s[m] ? c_c[m*32 +: 32] : c_a[m*32 +: 32];
             ck[m*7 +: 7] = c_mir_s[m] ? c_b[56 + m*7 +: 7] : c_b[m*7 +: 7];
         end
-        d_dat <= dat;
+        e_dat <= dat; e_ck <= ck;
+        d_dat <= e_dat;
         for (integer k = 0; k < 8; k = k + 1) begin : dk
-            reg [6:0] sk; sk = chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
+            reg [6:0] sk; sk = chk(e_dat[k*32 +: 32]) ^ e_ck[k*7 +: 7];
             d_syn[k*7 +: 7] <= sk;
             // strap3 (vm_strap_q2 strap1 TT -71.17: d_syn -> 7-b column match -> flip -> 2-face wire -> pr_d/rr_d):
             // the single-bit flip mask is decoded on the D edge (COLS are weight-3, never 0, so s == 0 flips nothing);
