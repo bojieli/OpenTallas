@@ -87,6 +87,22 @@ def sroot():
 SRC = [ROOT]     # RTL source root: the work tree, or (validation) an archive of the LP schedule's own revision
 
 
+def lp_schedule_rev(m):
+    """the ROOT revision that holds the LP schedule the selected source root carries, byte for byte.  S81-FRAME-FIX-1
+    11-11 (TOK-VERIFY-1): the newest ROOT commit of the schedule path is the wrong revision for a source root (bind tree)
+    older than that commit (c79a872d61 re-extracted the schedules at the 2-flop station depth): its schedule then
+    predates the newest commit and the validation archive did not hold its sources."""
+    path = LP_SCHED.format(m=m)
+    want = (sroot() / path).read_bytes()
+    revs = subprocess.run(['git', '-C', str(ROOT), 'log', '--format=%H', '--', path],
+                          capture_output=True, text=True, check=True).stdout.split()
+    for rev in revs:
+        got = subprocess.run(['git', '-C', str(ROOT), 'show', f'{rev}:{path}'], capture_output=True, check=False)
+        if got.returncode == 0 and got.stdout == want:
+            return rev
+    raise ValueError(f'no ROOT revision holds the selected LP schedule {path} (source root {sroot()})')
+
+
 def sha(f):
     return hashlib.sha256((SRC[0] / f).read_bytes()).hexdigest()
 
@@ -754,8 +770,7 @@ def main():
                      basis='as-built s81b_fint seam + (plan depth - 2) whole-bus stages on its q '
                            '(tools/die_plan/ts_relay_miter.py: bound lane == as-built lane delayed by k)')
     # (1) validation: tracer on the LP seam twin at the LP schedule's own revision (all its source hashes match)
-    rev = subprocess.run(['git', '-C', str(ROOT), 'log', '-1', '--format=%H', '--', LP_SCHED.format(m=m)],
-                         capture_output=True, text=True, check=True).stdout.strip()
+    rev = lp_schedule_rev(m)
     SRC[0] = archive(rev, work / f'rev_{rev[:11]}')
     stale_at_rev = [f for f, h in lp_sched['source_sha256'].items() if sha(f) != h]
     assert not stale_at_rev, ('LP schedule revision does not hold its own sources', rev, stale_at_rev)
