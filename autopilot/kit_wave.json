@@ -26701,7 +26701,10 @@
     "ot_svgr_top@3",
     "ot_hbm_sm_i8w_front@3",
     "ot_hbm_sm_pv_merge@3",
-    "ot_hbm_sm_i8w_front@5"
+    "ot_hbm_sm_i8w_front@5",
+    "NE_io@14",
+    "root@5",
+    "q_mca@2"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -27049,7 +27052,11 @@
     "ot_svgr_top@3": "INFRA: hbm-plan-1/stage/p6_relay (core_clock_regions.json) was missing on epyc4 only; staged to epyc4+epyc2 20:1x",
     "ot_hbm_sm_i8w_front@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core",
     "ot_hbm_sm_pv_merge@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core",
-    "ot_hbm_sm_i8w_front@5": "KW-FIX-43 11-10 22:2x COORD (HBM-CORES-B READY+ASK 8d3230a3fa approved): a5 PORT_MISMATCH 'command' (face-shell drop deferred) fixed by gen_core_kit_hbm.py direct_port_check; relaunch from gen as INFRA"
+    "ot_hbm_sm_i8w_front@5": "KW-FIX-43 11-10 22:2x COORD (HBM-CORES-B READY+ASK 8d3230a3fa approved): a5 PORT_MISMATCH 'command' (face-shell drop deferred) fixed by gen_core_kit_hbm.py direct_port_check; relaunch from gen as INFRA",
+    "NE_io@14": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a14 FLOW kit-RTL bind of record named pruned HDL sources; the taps batch uses the fresh strict bind 11b1d121579",
+    "q_su11@10": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a10 INFRA (COORD-authorized stop before detail route); relaunch on the taps plan",
+    "root@5": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a5 PLAN preflight macro-inst/bound-path on the old bind; fresh gen on the taps plan + fresh strict bind",
+    "q_mca@2": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a2 CANCELLED (drained epyc5); q_mca is new in the taps batch (type clock insertion 335.7/259.6)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -37453,7 +37460,8 @@
     "ot_hbm_su_pg_lane_exp_x_core",
     "ot_hidx_s3_q"
    ],
-   "note_kw43cyc2": "KW-FIX-43 11-10 23:2x: ot_hbm_su_pg_lane_exp_x_core is two core-view items in the plan probe (pin variants a8815b8d3cb4, ec6b144f732b, same in r2_restore and the taps plan): only_items/plan_core_items/item_inputs name the two view items (NO-ROW-SOURCE on the bare module); core_kit.item_args stays on the module (looked up by core_module). Revert: *_prev_kw43cyc2."
+   "note_kw43cyc2": "KW-FIX-43 11-10 23:2x: ot_hbm_su_pg_lane_exp_x_core is two core-view items in the plan probe (pin variants a8815b8d3cb4, ec6b144f732b, same in r2_restore and the taps plan): only_items/plan_core_items/item_inputs name the two view items (NO-ROW-SOURCE on the bare module); core_kit.item_args stays on the module (looked up by core_module). Revert: *_prev_kw43cyc2.",
+   "note_kw43tcr": "KW-FIX-43 11-10 23:2x: retries NE_io@14 q_su11@10 root@5 q_mca@2 (taps batch, fresh gen). Revert: drop them."
   }
  },
  "place_prefer": [
