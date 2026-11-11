@@ -44,8 +44,14 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     function automatic [3:0] pop12(input [11:0] x); integer b; begin pop12 = 0; for (b = 0; b < 12; b = b + 1) pop12 = pop12 + x[b]; end endfunction
     reg        am_ok, pv;
 `ifdef OT_S81_KP4_AM_FACE3
+`ifdef OT_S81_KP4_AM_EARLY
+    // S81-SERDES-VT4 (DIE-S81-85 2026-11-11): am_face3[0] is already (partial-count sum <= 2), reduced in ot_s81_kp4_am_face3
+    // ahead of the 4-edge transport; the same flop on the same edge as before (0 cycles).
+    always @(posedge clk) begin am_ok <= p_v && am_face3[0]; pv <= p_v; end
+`else
     wire [3:0] am_distance = {1'b0, am_face3[2:0]} + {1'b0, am_face3[5:3]} + {1'b0, am_face3[8:6]};
     always @(posedge clk) begin am_ok <= p_v && (am_distance <= 4'd2); pv <= p_v; end
+`endif
 `else
     always @(posedge clk) begin am_ok <= p_v && (pop12(amx) <= 2); pv <= p_v; end
 `endif
@@ -261,10 +267,27 @@ module ot_s81_kp4_am_face3 (
     function automatic [2:0] pop4(input [3:0] x);
         begin pop4 = {2'b0,x[0]} + {2'b0,x[1]} + {2'b0,x[2]} + {2'b0,x[3]}; end
     endfunction
+`ifdef OT_S81_KP4_AM_EARLY
+    // S81-SERDES-VT4 (DIE-S81-85 2026-11-11, 0 cycles).  vT3 GRT: am_ok sat at the PMA face (x 2109 um) because its D cone had ten
+    // two-pin inputs (nine partial counts + p_v) against one Q net, while its five load gates (acq / drop / xsel) sit 1390 um away
+    // at the xs cluster: am_ok -> xs TT -242.1 ps on io_pma_rck (no tap-window charge on that port), pure distance.  The three
+    // partial counts keep their face register on the same edge; their sum <= 2 is reduced here, between the face register and the
+    // 4-edge transport, so the transport carries ONE bit (parts[0]) and the flop that registers it with p_v has two D inputs.
+    // Cycle for cycle the same as the 9-bit form: transport q (4 edges) = reduce(face register 4 edges earlier).
+    reg [8:0] pc;
+    always @(posedge clk) begin
+        pc[2:0] <= pop4(amx[3:0]);
+        pc[5:3] <= pop4(amx[7:4]);
+        pc[8:6] <= pop4(amx[11:8]);
+    end
+    wire [3:0] am_dist_e = {1'b0, pc[2:0]} + {1'b0, pc[5:3]} + {1'b0, pc[8:6]};
+    always @* parts = {8'b0, (am_dist_e <= 4'd2)};
+`else
     always @(posedge clk) begin
         parts[2:0] <= pop4(amx[3:0]);
         parts[5:3] <= pop4(amx[7:4]);
         parts[8:6] <= pop4(amx[11:8]);
     end
+`endif
 endmodule
 `endif

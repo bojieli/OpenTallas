@@ -311,10 +311,23 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0) (
                 r_m[CB] <= ((CB==1) & r_idle) | (|({mem[7][CB],mem[6][CB],mem[5][CB],mem[4][CB],mem[3][CB],mem[2][CB],mem[1][CB],mem[0][CB]} & rsel[rs]));
         end
     end endgenerate
+`ifdef OT_S81_RM_OUT4
+    // S81-SERDES-VT4 (DIE-S81-85 2026-11-11, DIE-S81-87 ruling (b)): one more r_m -> r_d output stage, as an ot_pl_pad chain
+    // (rows r[0], r[1], q) so txl_mid.tcl (OT_TXL_MID_CHAINS "u_rm.u_rmo") spaces the 3 rows evenly on the line from r_m to the
+    // BOUT collector.  Why: vT3 GRT u_rm r_pipe -> r_d TT -337.9 ps (W=180), 512 bits, zero logic, r_pipe left at r_m and r_d at
+    // the collector: 1060 um median / 1303 um max on ONE hop; r_m -> collector spans up to 1409 um, which over 3 hops (2 stages)
+    // is 470 um per hop (> 405 reach), over 4 hops (3 stages) 352 um.  PIN CYCLE: +1 rclk on the RX data path (r_d three
+    // stages after r_m instead of two); the read side, pointers, flags and reset release are unchanged.  r_m / r_pipe / r_d carry
+    // no reset: the >=64-edge parent reset flushes IDLE through 4 rclk edges instead of 3.
+    wire [511:0] r_d_w;
+    ot_pl_pad #(.W(512), .N(3)) u_rmo (.ck(rclk), .d(r_m), .q(r_d_w));
+    always @* r_d = r_d_w;
+`else
     always @(posedge rclk) begin
         r_pipe<=r_m;
         r_d<=r_pipe;
     end
+`endif
 `else
     // S81-RCK-4 11-07 OT_S81_RM_STAGED: rate matcher form for the 2.9-mm serdes types (class: one enable/select across
     // 4096 mem bits, one reset to 512 flops; TT rp->r_d -300..-872, rp_g2->mem -99..-239).

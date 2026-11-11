@@ -133,7 +133,7 @@ namespace eval ot_txl_mid {
     set blk [ord::get_db_block]
     set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
     set halo [expr {8.64*$dbu}]
-    set macs {}; set lasts [dict create]
+    set macs {}; set lasts [dict create]; set rowsk [dict create]
     set chains [expr {[info exists ::env(OT_TXL_MID_CHAINS)] && [string trim $::env(OT_TXL_MID_CHAINS)] ne "" ? $::env(OT_TXL_MID_CHAINS) : "u_txl"}]
     set ca [$blk getCoreArea]; set core [list [$ca xMin] [$ca yMin] [$ca xMax] [$ca yMax]]
     set step [expr {5.0*$dbu}]; set maxr [expr {400.0*$dbu}]
@@ -145,6 +145,18 @@ namespace eval ot_txl_mid {
       set nm [$i getName]
       foreach C $chains {
         if {[string first "$C.q" $nm] >= 0 && [regexp [string cat [string map {. {\.}} $C] {\.q\\?\[[0-9]+\\?\]}] $nm]} { dict lappend lasts $C $i }
+        # a chain whose last stage is named g_reg.r[N-1] (no .q flop): remember every row by its stage index
+        set p [string first "$C.g_reg.r" $nm]
+        if {$p >= 0 && [regexp {^\\?\[([0-9]+)\\?\]\\?\[[0-9]+\\?\]} [string range $nm [expr {$p + [string length "$C.g_reg.r"]}] end] -> k]} { dict lappend rowsk $C [list $k $i] }
+      }
+    }
+    # DIE-S81-85 vT4: no .q flop for a chain (ot_pl_pad q aliased to a parent port: ot_s81_rate_match u_rm.u_rmo) -> the highest
+    # stage index is the last row.  Chains that have .q flops (u_txl, rck_transport4) are untouched.
+    foreach C $chains {
+      if {![dict exists $lasts $C] && [info exists rowsk] && [dict exists $rowsk $C]} {
+        set kmax -1
+        foreach r [dict get $rowsk $C] { if {[lindex $r 0] > $kmax} { set kmax [lindex $r 0] } }
+        foreach r [dict get $rowsk $C] { if {[lindex $r 0] == $kmax} { dict lappend lasts $C [lindex $r 1] } }
       }
     }
     set ret {}

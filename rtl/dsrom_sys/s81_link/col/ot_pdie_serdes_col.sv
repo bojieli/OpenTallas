@@ -157,7 +157,14 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
          .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
 `else
+`ifdef OT_S81_RCK_TX_PPCYC
+    // S81-SERDES-VT4 (DIE-S81-85 2026-11-11, DIE-S81-87 ruling (d), OWNER 11-03 pin cycles): the encoder's existing PPCYC option
+    // (ot_s81_kp4_enc.sv, bench tb_kp4_enc_la), +1 pin cycle ch_q -> pp, same define as the RCK reform TX core.  TX +1 clk.
+    // vT3 GRT: ch_q -> pp0 -159.5 / pp1 -169.6 ps TT (W=180), 8 XNOR/XOR levels, flops only 119..164 um apart.
+    ot_s81_kp4_enc #(.PPCYC(1)) u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`else
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`endif
 `endif
     wire [544:0] l_q;
 `ifdef OT_S81_SERDES_TXL4

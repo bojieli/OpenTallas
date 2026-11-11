@@ -158,3 +158,34 @@ def test_hop_cells_move_onto_their_hop(tmp_path):
         assert abs(x - (st[k] + st[k + 1]) / 2) <= 2   # iterm centre vs cell origin: 1-um mock cells
     assert abs(p[f"{C}.buf0"][0] - (st[4] + st[5]) / 2) <= 2   # q -> PMA buffer mid-hop
     assert "hop cells moved 5" in r.stdout
+
+
+# ---- chain whose last stage is named g_reg.r[N-1] (no .q flop), as u_rm.u_rmo after synthesis ----
+MOCK_NOQ = r'''
+proc chainnq {C b N ax bx gx} {
+  set e [cell "$C.enc$b" ENC $ax 0]; set n [net]; conn $e Y OUTPUT $n
+  set names {}; for {set k 0} {$k < $N} {incr k} { lappend names "$C.g_reg.r\\\[$k\\\]\\\[$b\\\]\$_DFF_P_" }
+  set out {}; set k 0
+  foreach nm $names {
+    set v [cell "$C.inv[incr k]_$b" INVx1 $gx 0]; conn $v A INPUT $n; set n [net]; conn $v Y OUTPUT $n
+    set f [cell $nm DFF $gx 0]; conn $f D INPUT $n; set n [net]; conn $f QN OUTPUT $n; lappend out $f $v
+  }
+  set u [cell "$C.buf$b" BUFx2 $gx 0]; conn $u A INPUT $n; set n [net]; conn $u Y OUTPUT $n
+  set p [cell "$C.pma$b" PMA $bx 0]; conn $p D INPUT $n
+  return [concat $out [list $u]]
+}
+'''
+
+
+def test_chain_without_q_flop_uses_highest_row(tmp_path):
+    body = MOCK_NOQ + "chainnq u_rm.u_rmo 0 3 2000 0 2000\n"
+    t = tmp_path / "t.tcl"
+    t.write_text(
+        "set ::env(OT_TXL_MID_CHAINS) {u_rm.u_rmo}\n" + MOCK + body + 'set ::BLK [obj block insts $::insts]\n'.replace("\n", "\n") +
+        'set ::env(OT_TXL_MID) 0\nsource %s\nset r [ot_txl_mid::run]\nforeach i $::insts { puts "POS [g $i name] [g $i x] [g $i y]" }\n' % TCL)
+    r = subprocess.run(["tclsh", str(t)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "chain u_rm.u_rmo bits moved 1 of 1," in r.stdout
+    p = pos(r.stdout)
+    xs = [p[f"u_rm.u_rmo.g_reg.r\\[{k}\\]\\[0\\]$_DFF_P_"][0] for k in range(3)]
+    assert all(abs(a - b) <= 2 for a, b in zip(xs, [1500, 1000, 500]))     # source 2000 -> sink 0, (k+1)/4
