@@ -62,6 +62,74 @@
    "verdict": "SIGNED"
   }
  },
+ "dsfd_coll_lane_e_safe8_ntf.lef": {
+  "base_sha256": "7dd372f620449413c670bf693fe160917de2f24f6d985ca14c7d21ebc409be63",
+  "die": "s81",
+  "file": "dsfd_coll_lane_e_safe8_ntf.lef.22a4bd17bd61.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "dsfd_coll_lane_e_safe8_ntf",
+  "pin_access_probe": {
+   "def_sha256": "465e6f7fbe70b65a5799527077cf0d6a2266af38a1565d75bc081ccbd9d2ed4f",
+   "every_signal_pin_connected": true,
+   "log_sha256": "48741b959d05d6bdd4ce4ca02aa2596090a90768c8e93f7bc565c95455ac910a",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_coll_lane_e_safe8_ntf.lef.22a4bd17bd61.receipt.json",
+  "receipt_sha256": "a8d595ee962e2226363bea6048183f1ea675b599600a3448fc66f9ed2d67a0b8",
+  "sha256": "22a4bd17bd610948599ad55ac133ba8f532a84e4c71b12f926b50bcbef58737e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert_input1/run/results/asap7/kl_dsfd_coll_lane_e_safe8_ntf_compact_m6_pg6_vB/base/6_final.odb",
+   "kit_lef": "epyc7:/srv/opentallas-scratch2/claude/kw43/src_s81_main_e5cc5a2/physical/die_plan/s81/cores/views/dsfd_coll_lane_e_safe8_ntf_signed_1107/dsfd_coll_lane_e_safe8_ntf.lef",
+   "odb_sha256": "78b18bc6b81dcc6200728590678dce9ba782d5ece66059a2fff925c7146831ff",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "14f60b29881636dbac835800993de4299dcfe5d6ca6a19fca6f2bd8f80ead5fa",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT"
+  }
+ },
+ "dsfd_coll_lane_w_safe8_ntf.lef": {
+  "base_sha256": "5774eb26b80a8a599a63560deef08bdca8e9a50cc5085ab7459db17e998329bf",
+  "die": "s81",
+  "file": "dsfd_coll_lane_w_safe8_ntf.lef.5073430023c1.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "dsfd_coll_lane_w_safe8_ntf",
+  "pin_access_probe": {
+   "def_sha256": "99b9dfddcca73dc19a5bb26cd7e2de4f9b2bcf5ec1ed097ee5d3e78cb84fc12b",
+   "every_signal_pin_connected": true,
+   "log_sha256": "eaa644044d0b87a2a7280beb718cd70acfd6c2143cdedf7e90374b81fc365916",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_coll_lane_w_safe8_ntf.lef.5073430023c1.receipt.json",
+  "receipt_sha256": "65f946d5a7da40bbd064a38e0471ec312ebf827bbc4e28e4e00eeaef8b15ece2",
+  "sha256": "5073430023c152aabeeef7cb89a28bf0c66347ec61bc46cd2f6ac16d83e2c623",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert_input1/run/results/asap7/kl_dsfd_coll_lane_w_safe8_ntf_compact_m6_pg6_vB/base/6_final.odb",
+   "kit_lef": "epyc7:/srv/opentallas-scratch2/claude/kw43/src_s81_main_e5cc5a2/physical/die_plan/s81/cores/views/dsfd_coll_lane_w_safe8_ntf_signed_1107/dsfd_coll_lane_w_safe8_ntf.lef",
+   "odb_sha256": "1dd595852586df8c17a93935cc315f8187a626e53156abeaf10481382ba44bf2",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "3ef06367aa2f4a0b6ec82cc39c0f97b960a7d19c4b36d3d4e6a5af22b8d389a0",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT"
+  }
+ },
  "dsfd_node_LLd.lef": {
   "base_sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8",
   "die": "s81",
@@ -303,6 +371,36 @@
    "origin": "signed store stage (sha-verified)",
    "store_id": "48ce559aaf7e46e8189d05975a8d7d94543ee209ece17d767aea5fba1ca8ba0a",
    "verdict": "SIGNED"
+  }
+ },
+ "dsfd_su_t_rxsb.lef": {
+  "base_sha256": "7de0f6b23db58cead15c42a98c64dd6a0fbe8a315929c9829581fafc2ecf8e90",
+  "die": "s81",
+  "file": "dsfd_su_t_rxsb.lef.01e1df85009a.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_su_t_rxsb",
+  "pin_access_probe": {
+   "def_sha256": "a5740f192ace83fde240e4257ec99552a2462cc7814efa4f460ece84a999e566",
+   "every_signal_pin_connected": true,
+   "log_sha256": "44ab32d7d4ea88fbb9645582ab9bdde30b5d217b64e8b3c70c2267fde944ae1d",
+   "phase_nm": [
+    12,
+    12
+   ],
+   "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
+   "verdict": "PASS"
+  },
+  "receipt": "dsfd_su_t_rxsb.lef.01e1df85009a.receipt.json",
+  "receipt_sha256": "abebc08b6533bdf40daa9d1fe8760a8dd00e79cdcedb681962c5044fe607c6dc",
+  "sha256": "01e1df85009a2fdd2ac9361cee5227fc94cb2f16b84a8de27501714b55e1f8c2",
+  "source": {
+   "db_path": "epyc8:/srv/opentallas-scratch2/claude/ds85-child/exp/out/dsfd_su_t_rxsb_eco/src/6_final.odb",
+   "odb_sha256": "3bde4042b0a2124c82f2852d2cec6cac8bc2201b9483e0b119d6065cd0f60abe",
+   "origin": "DS85 child sub-lane real-shape export (signed rxsb eco i1, kit dsfd_su_t_rxsb_d85)",
+   "verdict": "SIGNED (TT +15.2, FF hold +3.2, DRC 0, LEC EQ 14318/14318)"
   }
  },
  "dsfd_su_t_rxsf.lef": {
