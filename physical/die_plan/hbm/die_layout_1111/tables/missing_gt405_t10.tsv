@@ -1,0 +1,95 @@
+type	a	b	bits	dist_um	class	owner	plan_change	cycles
+NW_io	u_ep_N0	u_host_ep	1230	2998.1	F1 regression	DIE-LAYOUT-HBM F1 (this event)	u_host_ep back to y 1468.80 beside u_ep_N0 (pins face N<->S, 134-um gap, centre 397 um)	0
+q_b001	u_hb_idx__s_Q2_r1c0_k3h0__ra	u_hb_idx__s_Q2_r1c0_k3h1	33	626.8	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001	u_hb_idx__s_Q2_r1c1_k0h0__ra	u_hb_idx__s_Q2_r1c1_k0h1	33	696.0	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001	u_hb_idx__s_Q2_r1c2_k1h0__ra	u_hb_idx__s_Q2_r1c2_k1h1	33	644.1	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001	u_hb_idx__s_Q2_r1c2_k2h0__ra	u_hb_idx__s_Q2_r1c2_k2h1	33	652.8	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001__physical_v1	u_hb_idx__s_Q2_r1c0_k3h0__ra	u_hb_idx__s_Q2_r1c0_k3h1	33	626.8	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001__physical_v1	u_hb_idx__s_Q2_r1c1_k0h0__ra	u_hb_idx__s_Q2_r1c1_k0h1	33	696.0	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001__physical_v1	u_hb_idx__s_Q2_r1c2_k1h0__ra	u_hb_idx__s_Q2_r1c2_k1h1	33	644.1	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b001__physical_v1	u_hb_idx__s_Q2_r1c2_k2h0__ra	u_hb_idx__s_Q2_r1c2_k2h1	33	652.8	M6 hcol h0->h1	CPL-HBM-B1 A3	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010	u_hb_idx__s_Q2_r0c1_k3h0__ra	u_hb_idx__s_Q2_r0c1_k3h1	33	591.4	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010	u_hb_idx__s_Q2_r0c2_k0h0__rb	u_hb_idx__s_Q2_r0c2_k0h1	33	687.3	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010	u_hb_idx__s_Q2_r0c2_k3h0__ra	u_hb_idx__s_Q2_r0c2_k3h1	33	505.0	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010__physical_v1	u_hb_idx__s_Q2_r0c1_k3h0__ra	u_hb_idx__s_Q2_r0c1_k3h1	33	591.4	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010__physical_v1	u_hb_idx__s_Q2_r0c2_k0h0__rb	u_hb_idx__s_Q2_r0c2_k0h1	33	687.3	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b010__physical_v1	u_hb_idx__s_Q2_r0c2_k3h0__ra	u_hb_idx__s_Q2_r0c2_k3h1	33	505.0	M6 hcol h0->h1	q_b010 REDESIGN (cell cap)	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b102	u_hb_idx__s_Q_r1c1_k1h0__rb	u_hb_idx__s_Q_r1c1_k1h1	33	445.4	M6 hcol h0->h1	CPL-HBM-3 q_b10x	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b102__physical_v1	u_hb_idx__s_Q_r1c1_k1h0__rb	u_hb_idx__s_Q_r1c1_k1h1	33	445.4	M6 hcol h0->h1	CPL-HBM-3 q_b10x	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b103	u_hb_idx__s_Q_r1c3_k2h0__rb	u_hb_idx__s_Q_r1c3_k2h1	33	531.8	M6 hcol h0->h1	CPL-HBM-3 q_b10x	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b103__physical_v1	u_hb_idx__s_Q_r1c3_k2h0__rb	u_hb_idx__s_Q_r1c3_k2h1	33	531.8	M6 hcol h0->h1	CPL-HBM-3 q_b10x	h0/h1 adjacent (<=405 centre) in the S2 layout, else +1 station	0 adjacent / +1
+q_b113	u_sfucore_Q_ctl__pipe	u_sfup_Q__q1	2213	611.3	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_lane14__bk	u_sfucore_Q_opstore_b__g1	175	591.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_lane14__bk	u_sfucore_Q_opstore_a__g1	118	807.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_lane15__bk	u_sfucore_Q_opstore_b__g0	175	514.1	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_lane15__bk	u_sfucore_Q_opstore_a__g1	118	445.0	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_ctl__rest	u_sfucore_Q_opstore_a__r	2259	779.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113	u_sfucore_Q_ctl__rest	u_sfucore_Q_opstore_b__g0	2259	760.3	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_ctl__pipe	u_sfup_Q__q1	2213	611.3	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_lane14__bk	u_sfucore_Q_opstore_b__g1	175	591.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_lane14__bk	u_sfucore_Q_opstore_a__g1	118	807.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_lane15__bk	u_sfucore_Q_opstore_b__g0	175	514.1	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_lane15__bk	u_sfucore_Q_opstore_a__g1	118	445.0	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_ctl__rest	u_sfucore_Q_opstore_a__r	2259	779.8	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_b113__physical_v1	u_sfucore_Q_ctl__rest	u_sfucore_Q_opstore_b__g0	2259	760.3	M3 q_b113	q_b113 option B / REDESIGN (die transits 7681 b out of q_b113 first)	centre ctl between sfup_q1 and opstore_a/b, lanes14/15 beside opstore; needs the 17 ft slots out of the type	0 if co-located
+q_hub_ne	u_hb_dbk_Q__q0	u_vmb_Q2	274	419.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_dbk_Q__q1	u_vmb_Q2	274	4124.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q7	274	8635.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q6	274	7218.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q5	274	7391.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q4	274	5974.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q3	274	4384.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q2	274	2967.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q1	274	3140.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q0	u_vmb_Q0	274	1723.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q7	274	1974.2	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q6	274	557.3	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q5	274	2957.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q4	274	1540.1	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q3	274	5963.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q2	274	4546.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q1	274	7207.9	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__op_Q__q1	u_vmb_Q0	274	5791.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_vms_Q__q0	u_hb_vms_Q__q1	4448	4380.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s0__q1	18	3654.9	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_mu_keybuf_0_s0__q1	u_svg_Q0__o	1099	4894.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q0	u_mu_keybuf_0_s1__q0	18	3987.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s1__q1	18	4164.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_mu_keybuf_0_s1__q1	u_svg_Q1__t	1099	4704.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q0	u_mu_keybuf_0_s2__q0	18	3482.1	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s2__q1	18	1736.9	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_mu_keybuf_0_s2__q1	u_svg_Q2__t	1099	6665.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q0	u_mu_keybuf_0_s3__q0	18	4000.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s3__q1	18	4277.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_mu_keybuf_0_s3__q1	u_svg_Q3__o	1099	1715.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_svg_Q0__o	u_vmks_Q0	2488	3751.9	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_vmb_Q5	u_xl_Q_ctl__q1	274	1920.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_vmb_Q5	u_xl_Q_ctl__q0	274	5289.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_vmdel_Q0	u_vmks_Q0	280	1769.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_vmdel_Q1	u_vmdel_Q4	6	4225.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_vmdel_Q2	u_vmks_Q0	280	1648.1	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_ne	u_xl_Q_ctl__q1	u_xq_Q_p0_bfq0	1064	5808.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_dbk_Q__q0	u_vmb_Q2	274	419.0	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_dbk_Q__q1	u_vmb_Q2	274	4115.9	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_vms_Q__q0	u_hb_vms_Q__q1	4448	4389.1	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q0	u_mu_keybuf_0_s0__q0	18	630.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s0__q1	18	3084.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_mu_keybuf_0_s0__q1	u_svg_Q0__o	1099	5464.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q0	u_mu_keybuf_0_s1__q0	18	492.3	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s1__q1	18	3179.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_mu_keybuf_0_s1__q1	u_svg_Q1__t	1099	3615.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s2__q1	18	4354.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_mu_keybuf_0_s2__q1	u_svg_Q2__t	1099	4047.8	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_hb_idx__qctl_Q__q1	u_mu_keybuf_0_s3__q1	18	4562.1	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_mu_keybuf_0_s3__q1	u_svg_Q3__o	1099	2000.2	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_svg_Q0__o	u_vmks_Q0	2488	2153.5	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_vmb_Q5	u_xl_Q_ctl__q1	274	1920.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_vmb_Q5	u_xl_Q_ctl__q0	274	5281.2	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_vmdel_Q0	u_vmks_Q0	280	1263.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_vmdel_Q1	u_vmdel_Q4	6	4233.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_vmdel_Q2	u_vmks_Q0	280	1142.6	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_hub_nw	u_xl_Q_ctl__q1	u_xq_Q_p0_bfq0	1064	3959.7	M1/M2 hub	HBM-HUB-ARCH-2 (A5 co-location / op_Q stations in VM_RT_EXTRA pad)	hub interior, not this lane	A5: 0 / M2 priced
+q_su20__physical_v1	u_su_Q2_lanes24_27__p3	u_su_Q2_pretree	132	807.8	M5	DIE-HBM-100 (COORD 04:51 approved option 1)	move k=3/4/5 of the D=39 pd stages onto lane->pretree links as stations	0 (pd39 -> pd(39-k))
+q_su20__physical_v1	u_su_Q2_lanes16_19__p3	u_su_Q2_pretree	132	1101.6	M5	DIE-HBM-100 (COORD 04:51 approved option 1)	move k=3/4/5 of the D=39 pd stages onto lane->pretree links as stations	0 (pd39 -> pd(39-k))
+q_su20__physical_v1	u_su_Q2_lanes0_3__p3	u_su_Q2_pretree	132	1568.2	M5	DIE-HBM-100 (COORD 04:51 approved option 1)	move k=3/4/5 of the D=39 pd stages onto lane->pretree links as stations	0 (pd39 -> pd(39-k))
+root	u_hb_idx__link	u_hb_idx__selector__q0	2368	543.2	M4 root	ROOT REDESIGN (3x22 htile)	selector__q0 abut hb_idx__link E edge in the ROOTPACK root	0
