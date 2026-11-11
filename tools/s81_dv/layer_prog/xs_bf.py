@@ -463,7 +463,10 @@ def cmd_measure(a):
             ret_lat[leaf(p_, r_ % 2)] = e_ - edges[leaf(p_, r_ % 2)][0]
     topo0 = frame_topology(meta['master'], a.frame)
     corr = {}
-    if a.frame == 'lp':
+    # S81-FRAME-FIX-1 11-11: the as-built schedules (frame_schedule_asb.py) attribute landed crossings to the q leaves
+    # only, like the LP schedule: a BF leaf whose measured return latency differs carries the same MEASURED correction
+    # (the static replay must then reproduce every return date with it)
+    if a.frame in ('lp', 'asb_x', 'asb_nx'):
         corr = {k: v - P.leaf_path(topo0, k)[0] for k, v in ret_lat.items() if v != P.leaf_path(topo0, k)[0]}
     lvc = {k: [(w[0] + corr.get(k, 0),) + tuple(w[1:]) for w in v] for k, v in lv.items()}
     rep_, ret = P.compose(topo0, lvc)

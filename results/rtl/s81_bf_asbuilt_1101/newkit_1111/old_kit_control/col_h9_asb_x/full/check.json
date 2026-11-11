@@ -1,0 +1,29 @@
+{
+ "summary": {
+  "words": 6,
+  "rows": 6,
+  "complete_rows_at_root": 0,
+  "partial_words": 6,
+  "plan_exact": false,
+  "end": "END edges=3063 ret_words=6 xo_checked=3061 fault=4"
+ },
+ "fixture_rows": 6,
+ "errors": [
+  "MISMATCH edge 438 row 5 lo 0 k 0 got 3be43371/0 want ba23ef40/0",
+  "MISMATCH edge 441 row 4 lo 0 k 0 got bbbb725c/0 want bc8b2a30/0",
+  "PLAN_MISMATCH predicted 6 words, got 6; first diff ((439, 5, (0, 0, 4), 3122917184, 0), (438, 5, (0, 0, 4), 1004811121, 0))",
+  "FAULT edge 216 status 11 lx 0",
+  "FAULT edge 217 status 11 lx 0",
+  "FAULT edge 218 status 11 lx 0",
+  "FAULT edge 219 status 11 lx 0",
+  "BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 177",
+  "BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 185",
+  "BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 193",
+  "BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 201"
+ ],
+ "frame": "u_f_0L02",
+ "op": "attn.wo_a",
+ "field_phase": 106,
+ "mutant": null,
+ "pass": false
+}

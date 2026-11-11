@@ -54,7 +54,32 @@ def nx_testbench(text,plan,master):
                         '        // RET, source fault and spine fault monitors remain active.')
 
 
-def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_family=False):
+def selected_plan_kit(record, source, master):
+    """The plan kit the selected frame schedule actually binds.  A frame root (layer_prog/frame_root.py) names a kit
+    from outside its base by ext/<absolute path>; the measurement pin (xs_bf.qualify_asbuilt_measurement) is the
+    canonical rtl path, so that path must hold the same bytes."""
+    plan = f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{master}_l4_lp_plan_kit.sv'
+    kits = [n for n in record['source_sha256'] if Path(n).name == Path(plan).name]
+    if len(kits) != 1:
+        raise ValueError('selected frame schedule must bind exactly one plan kit: '+str(kits))
+    if kits[0] != plan and (source/plan).read_bytes() != (source/kits[0]).read_bytes():
+        raise ValueError('selected plan kit differs from the source root plan path: '+kits[0])
+    return plan, kits[0]
+
+
+def quiescent_q(source, name, module):
+    """Q leaf stub: every output tied 0 (BF-only active return composition)."""
+    text=(source/name).read_text();start=text.index('module '+module)
+    left=text.index('(',start);right=close_paren(text,left)
+    left=text.index('(',right);right=close_paren(text,left)
+    header=text[start:right]+';'
+    outputs=re.findall(r'\boutput\s+wire\s+(?:\[[^]]+\]\s*)?(\w+)',header)
+    if len(outputs)<3:raise ValueError('Q quiescent stub output schema changed')
+    return '`timescale 1ns/1ps\n'+header+'\n'+''.join("assign "+n+" = '0;\n" for n in outputs)+'endmodule\n'
+
+
+def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_family=False,
+            defines_manifest='asbuilt_kva3_g3tag2_sel.json'):
     if variant not in ('asb_x','asb_nx'):raise ValueError('unsupported actual frame variant')
     source, schedule, out = Path(source), Path(schedule), Path(out)
     out.mkdir(parents=True, exist_ok=False)
@@ -63,8 +88,9 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
         if hashlib.sha256((source/name).read_bytes()).hexdigest() != sha:
             raise ValueError('selected frame source changed: '+name)
     overlays = {}
-    plan = f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{master}_l4_lp_plan_kit.sv'
-    text = (source/plan).read_text()
+    plan, kit = selected_plan_kit(record, source, master)
+    text = (source/kit).read_text()
+    plan_text = text
     selected_wrapper=(source/'physical/die_plan/s81/bind/models/s81_asb_models.sv').read_text()
     cfg_census=cfg_source_census(text,master)
     # These INSTANCE arguments are precisely the missing simulation image rule;
@@ -77,7 +103,7 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
                           lambda m:'ot_rom_4096x72_m8 #(.INSTANCE({INSTANCE, "_'+m[1][2:]+'"})) '+m[1]+' (',text)
     if cfg_count!=sum(cfg_census.values()):raise ValueError('CFG overlay differs from source census')
     overlay = out/Path(plan).name
-    overlay.write_text(text); overlays[plan] = str(overlay)
+    overlay.write_text(text); overlays[plan] = overlays[kit] = str(overlay)
     core = 'rtl/v41rom/ot_v41_bf_front_core_roots.sv'
     text = (source/core).read_text()
     old = '    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_u : issue_available;'
@@ -96,16 +122,14 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
         overlay=out/(module+'.sv');overlay.write_text(text[:start]+head+text[right:]);overlays[name]=str(overlay)
     # BF-only active composition. Q results are explicitly quiescent, rather
     # than pretending stripped Q hard parameters are the selected die masters.
-    qname='rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv'
-    text=(source/qname).read_text();start=text.index('module ot_v41_rom_elem_q_qxpq_w10')
-    left=text.index('(',start);right=close_paren(text,left)
-    left=text.index('(',right);right=close_paren(text,left)
-    header=text[start:right]+';'
-    outputs=re.findall(r'\boutput\s+wire\s+(?:\[[^]]+\]\s*)?(\w+)',header)
-    if len(outputs)<3:raise ValueError('Q quiescent stub output schema changed')
-    overlay=out/'quiescent_q.sv'
-    overlay.write_text('`timescale 1ns/1ps\n'+header+'\n'+''.join("assign "+n+" = '0;\n" for n in outputs)+'endmodule\n')
-    overlays[qname]=str(overlay)
+    # The GB plan kits (DIE-S81-65) instantiate the split rom_q element instead; it is quiesced the same way.
+    quiet=['ot_v41_rom_elem_q_qxpq_w10']
+    if re.search(r'^\s*ot_v41_rom_elem_q_qxpq_w10_gb_split\b',plan_text,re.M):quiet.append('ot_v41_rom_elem_q_qxpq_w10_gb_split')
+    for module in quiet:
+        qname=f'rtl/v41rom/{module}.sv'
+        overlay=out/('quiescent_q.sv' if module=='ot_v41_rom_elem_q_qxpq_w10' else f'quiescent_{module}.sv')
+        overlay.write_text(quiescent_q(source,qname,module))
+        overlays[qname]=str(overlay)
     tb = 'rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv'
     text = (source/tb).read_text()
     if text.count('always #0.5 clk = ~clk;') != 1:
@@ -144,7 +168,7 @@ endmodule
     files += [n for n in record['source_sha256'] if n.endswith(('.sv','.v'))]
     files += ['rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv']
     files = list(dict.fromkeys(files))
-    selected_defines=json.loads((source/'asbuilt_kva3_g3tag2_sel.json').read_text())['defines']
+    selected_defines=json.loads((source/defines_manifest).read_text())['defines']
     if any(not re.fullmatch(r'[A-Za-z_]\w*(?:=[A-Za-z0-9_]+)?',d) for d in selected_defines):
         raise ValueError('unsupported selected define spelling')
     for kind in ('walker','static'):
@@ -161,7 +185,8 @@ endmodule
                   idle_q_assumption='Q leaf outputs stubbed to zero; BF-only active return composition',
                   native_family_hold=native_family,payload_skew_edges=4,
                   xo_forwarding_qualification='NOT_APPLICABLE_NO_XO_PORT' if variant=='asb_nx' else 'CHECKED',
-                  selected_defines=selected_defines)
+                  selected_defines=selected_defines,defines_manifest=defines_manifest,plan_kit=kit,
+                  plan_kit_sha256=hashlib.sha256((source/kit).read_bytes()).hexdigest(),quiescent_q_modules=quiet)
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
 
@@ -169,4 +194,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--schedule',required=True)
     p.add_argument('--out',required=True);p.add_argument('--master',default='col_h9');p.add_argument('--variant',default='asb_x')
     p.add_argument('--native-bf-family',action='store_true')
-    a=p.parse_args();prepare(a.source,a.schedule,a.out,a.master,a.variant,a.native_bf_family)
+    p.add_argument('--defines-manifest',default='asbuilt_kva3_g3tag2_sel.json',help='source-root manifest whose defines the bench uses')
+    a=p.parse_args();prepare(a.source,a.schedule,a.out,a.master,a.variant,a.native_bf_family,a.defines_manifest)

@@ -1,0 +1,9 @@
+MISMATCH edge 441 row 4 lo 3 k 0 got 3ce421b7/0 want 3be54f04/0
+PLAN_MISMATCH predicted 5 words, got 5; first diff ((442, 4, (3, 0, 4), 1004883716, 0), (441, 4, (3, 0, 4), 1021583799, 0))
+FAULT edge 216 status 11 lx 0
+FAULT edge 217 status 11 lx 0
+FAULT edge 218 status 11 lx 0
+FAULT edge 219 status 11 lx 0
+BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 177
+BFP_BAD tb_s81dv_frame.dut.u_f.u_r2.u_e13.u_view.g_hc.u_front.u_bft edge 185
+XS_PLACE_CHECK FAIL u_f_0L02 attn.wo_a phase 125 mutant=None rows=5 fixture_rows=5 errors=10 END edges=3063 ret_words=5 xo_checked=3061 fault=4

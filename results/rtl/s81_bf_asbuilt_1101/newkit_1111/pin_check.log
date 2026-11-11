@@ -1,0 +1,13 @@
+col_h10_asb_x|E2|bseg1024 new pin 0b0f9a60d5c6 root 0b0f9a60d5c6 MATCH
+col_h10_asb_x|E2|bseg1024 a2_ts5 pin 0b0f9a60d5c6 root 57d57d302dd7 REFUSE
+col_h10_asb_x|E2|bseg1024 root_old pin 0b0f9a60d5c6 root 635a79159aea REFUSE
+col_h9_asb_nx|E2|bseg1024 new pin 598afa63580f root 598afa63580f MATCH
+col_h9_asb_nx|E2|bseg1024 a2_ts5 pin 598afa63580f root 71fc96e0c9f3 REFUSE
+col_h9_asb_nx|E2|bseg1024 root_old pin 598afa63580f root c0207a7654d2 REFUSE
+col_h9_asb_x|E2|bseg1024 new pin 598afa63580f root 598afa63580f MATCH
+col_h9_asb_x|E2|bseg1024 a2_ts5 pin 598afa63580f root 71fc96e0c9f3 REFUSE
+col_h9_asb_x|E2|bseg1024 root_old pin 598afa63580f root c0207a7654d2 REFUSE
+test_bf_source_measurement.py rc=0 OK
+test_bf_cfg_census.py rc=0 OK
+test_bf_nx_monitor.py rc=0 OK
+test_bf_go_align.py rc=0 OK

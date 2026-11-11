@@ -1,0 +1,236 @@
+{
+ "col_h10_asb_x|E2|bseg1024": {
+  "desc": {
+   "1": 33057144057455270035520,
+   "10": 33057144057455270035520,
+   "5": 33057144057455270035520
+  },
+  "die_frame": "u_f_0L01",
+  "field_phase": 106,
+  "fits": {
+   "1": {
+    "descriptor": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 152,
+    "go_edge": 147,
+    "issues": 64,
+    "last_issue_edge": 215,
+    "mismatches": 0
+   },
+   "10": {
+    "descriptor": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 170,
+    "go_edge": 165,
+    "issues": 64,
+    "last_issue_edge": 233,
+    "mismatches": 0
+   },
+   "5": {
+    "descriptor": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 0,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 161,
+    "go_edge": 156,
+    "issues": 64,
+    "last_issue_edge": 224,
+    "mismatches": 0
+   }
+  },
+  "frame": "asb_x",
+  "key": "col_h10_asb_x|E2|bseg1024",
+  "land_e": 2,
+  "lat_issue_to_pv": {
+   "e10e.r": 106,
+   "e10w.r": 106,
+   "e1e.r": 106,
+   "e1w.r": 106,
+   "e5e.r": 106,
+   "e5w.r": 106
+  },
+  "leaf_ret_corr": {
+   "e10w.r": -4,
+   "e1e.r": -9,
+   "e1w.r": -9,
+   "e5e.r": -9,
+   "e5w.r": -9
+  },
+  "log": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h10_asb_x/walker.log",
+  "ok": true,
+  "op": "attn.wo_a",
+  "pv": {
+   "e10e.r": [
+    339
+   ],
+   "e10w.r": [
+    339
+   ],
+   "e1e.r": [
+    321
+   ],
+   "e1w.r": [
+    321
+   ],
+   "e5e.r": [
+    330
+   ],
+   "e5w.r": [
+    330
+   ]
+  },
+  "pv_all": {
+   "e10e.r": [
+    {
+     "edge": 339,
+     "n": 4,
+     "row": 5,
+     "seg": 0
+    }
+   ],
+   "e10w.r": [
+    {
+     "edge": 339,
+     "n": 4,
+     "row": 4,
+     "seg": 0
+    }
+   ],
+   "e1e.r": [
+    {
+     "edge": 321,
+     "n": 4,
+     "row": 1,
+     "seg": 0
+    }
+   ],
+   "e1w.r": [
+    {
+     "edge": 321,
+     "n": 4,
+     "row": 0,
+     "seg": 0
+    }
+   ],
+   "e5e.r": [
+    {
+     "edge": 330,
+     "n": 4,
+     "row": 3,
+     "seg": 0
+    }
+   ],
+   "e5w.r": [
+    {
+     "edge": 330,
+     "n": 4,
+     "row": 2,
+     "seg": 0
+    }
+   ]
+  },
+  "ret_composed": [
+   412,
+   415,
+   424,
+   427,
+   428,
+   436
+  ],
+  "ret_lat": {
+   "e10e.r": 89,
+   "e10w.r": 97,
+   "e1e.r": 91,
+   "e1w.r": 94,
+   "e5e.r": 94,
+   "e5w.r": 97
+  },
+  "ret_run": [
+   412,
+   415,
+   424,
+   427,
+   428,
+   436
+  ],
+  "ret_self_check": true,
+  "ret_uncorrected": [
+   421,
+   424,
+   428,
+   433,
+   436,
+   440
+  ]
+ }
+}

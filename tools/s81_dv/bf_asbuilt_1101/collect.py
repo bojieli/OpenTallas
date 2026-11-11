@@ -43,8 +43,13 @@ def collect(run,extra_positive=()):
     if result['status']!='PASS':return 1
     measured=json.loads((run/'measure.json').read_text())
     hashes=dict(manifest['source_sha256'])
-    name='rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv'
-    hashes[name]=hashlib.sha256((source/name).read_bytes()).hexdigest()
+    # the canonical plan-kit path is a required pin (xs_bf.qualify_asbuilt_measurement); a frame root's schedule may
+    # name the kit by ext/<path> instead, and prepare.py then required both paths to hold the same bytes
+    for name in ('rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv',
+                 f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{manifest["master"]}_l4_lp_plan_kit.sv'):
+        hashes[name]=hashlib.sha256((source/name).read_bytes()).hexdigest()
+    if manifest.get('plan_kit_sha256') not in (None,hashes[name]):
+        raise ValueError('plan kit changed since prepare: '+name)
     for line in (source/'tools/s81_dv/frame_bench.f').read_text().splitlines():
         line=line.strip()
         if line.startswith('+incdir+'):
