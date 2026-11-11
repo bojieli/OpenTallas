@@ -1,0 +1,7 @@
+# CLEANSLATE-QC (clean-slate placement round, OWNER 11-11 ~01:5x). DO_NOT_COUNT. Die owner DIE-QC-97. Base plan = DIE-QC-97 lineage head aace4c2668fc (qc52u + lineage events).
+# SPLIT (agreed 11-11 01:0x, CPL-QC-2 <-> VIS-TRIAGE-QC):
+#   CPL-QC-2 (cpl-qc-2): cb* A0-tile families (cbf_q00 x2, cbf_q01, cbf_q01_s2, cbf_q11, cbn_q00 x3, cbn_q01 x3, cbn_q11 x2, cbx_q10 x2 [CORE-PLACE-1 pilot reused]),
+#     coll_core, coll_n, coll_s, coll_ft__cl78c7b300, coll_ftc, coll_ftm, coll_ucie, tt_ctlm, glue, native59. Signed, not touched: coll_ft__cla4a25d77, coll_ftn.
+#   VIS-TRIAGE-QC: sle*/slw* families (st_a, st_b, stm, sc, su_c, ctl, fe, fw, hc0-3) except the su types.
+#   CPL-QC-SU: su_l1, su_l0, cbf_q00_s2.
+family	types	delta_path	sha256	bitmm_before	bitmm_after	worst_cut	grt_ov_before	grt_ov_after	verdict	lane	note
