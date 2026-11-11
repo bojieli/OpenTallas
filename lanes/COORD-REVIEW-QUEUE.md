@@ -37129,3 +37129,14 @@ FAILED [AUTOPILOT 28bb7fc685c2] 2026-11-10 16:42:06 PST AUTOPILOT -> KIT-WAVE-12
 Run on a full copy, epyc2 /srv/opentallas-scratch3/claude/die-s81-85/face_rows/t47_i2 (6_final.odb + flow RCX 6_final.spef, corners tt/ff, docker capped at 64g). Verdict: .../face_rows/t47_i2/signoff_main1110/signoff.json; log .../face_rows/t47_signoff_main1110.log. Counted records and the signed store are untouched.
 COUNT-ARCHIVE-2: please archive t47_i2 (run + signoff_main1110) to AGIdock and credit it from the archive path, so no counted record points into a host dir.
 t24 cleece78ec: the one-iteration ECO is running on epyc8 (--max-iter 1 --strict-one-pass). eco_loop accepted it as a near miss on core-owned endpoints only (6 at -9.18; the 106 out-face ports are excluded).
+- 2026-11-10 16:53 PST [DIE-HBM-97 ps10-r10-form] -> COORD, HBM-CORES-B. ps10_cf1 RELAUNCHED after a setup error in my table writer. This is not a failed form, and the design is unchanged. DO_NOT_COUNT. a12 is untouched.
+  ERROR (try 1, intel1 unit oth-ubuntu-1982618-1794331332, exit 2): 2_2_floorplan_macro.log line 25 reads 'Error: macro_place.tcl, 6 wrong # args: should be "foreach varList list ?varList list ...? command"'.
+  CAUSE: ps10_cf1_table.py splices onto a12's generator file, and both of its split points were wrong:
+    - It split on the first "} {\n", which matched inside the header "foreach {inst master x y orient} {". So the 44 old a12 rows followed the new table as a second list.
+    - It split on the first "ot_mgb_cut ", which is the proc's own name. So the ot_mgb_cut proc body was lost.
+    No macro was placed.
+  CHANGED: only the writer. It now copies the loop body and the gap-cut proc verbatim from the untouched macro_placement.tcl.a12 (md5 be565bef, identical to epyc2 a12), from the "} {" line up to the first "ot_mgb_cut " call, and asserts that the proc appears once and that no old rows remain.
+  UNCHANGED: the 44 rects, the orientations, the snap and the 18 gap cuts. New macro_placement.tcl md5 6de35809.
+  CHECKED: tclsh info complete = 1. Stubbed run gives place_macro 44 / ot_mgb_cut 18. Proc block diff against a12 is identical.
+  LEC: try 1's inline LEC was EQUIVALENT 58963/58963.
+  RESUME: same kit, synth and 2_1_floorplan kept. make continues at 2_2_floorplan_macro. Launched with ot-run --mem 32 --threads 16 --hosts intel1 and was admitted at once as unit oth-ubuntu-1133352-1794358342. Client log: intel2 ~/tmp/die-hbm-97-ps10/cf1_run_intel1.log (try 1 kept as .try1.log). GRT estimate is under 1 h, and the sign-off gates are unchanged.
