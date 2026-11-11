@@ -41990,3 +41990,10 @@ FAILED [AUTOPILOT c10a65e0dd3c] 2026-11-11 10:02:22 PST AUTOPILOT -> KW-FIX-43: 
   cutH 0.56/0.56 (passes <=0.8) but latency_up real table R5H ne 154 chains +385 regs, nw 244 chains +731 regs (u_ctl_Q_p07 / u_vmks_Q1 chains 12-17 stages); strict-count 0-cycle form puts those back over reach. R5H ne also puts u_mu_fused_n3_q0 in the street channel.
   Cause: one flat array cannot hold coll-inject + ctl/vmks chains within reach AND cut <=0.8; each pull trades core-core links. No hub floor delta posted; t11 hub = base+d6 stays. Probe still held for HBM-HUB-RTL-1 on main, then SPLIT sub-types on t11 584df6bfcfc2/bind_t11.
   Evidence (DO_NOT_COUNT): epyc4:/srv/opentallas-scratch3/claude/hbm-hub-arch-2/{solo_R4H,solo_R5H,latency_up_R4H.tsv,latency_up_R5H.tsv,plans/R5H,ls2c.py}.
+- 2026-11-11 10:29 PST RULING [COORD LOOP-GAP 10:3x, owner delegated -> ROOT-MERGE-59, DIE-QC-99, DIE-KV-98, DIE-HBM-100, CLAND-CLASS-1]
+  (1) claude/cland-ring-negedge-1111@ce36f07ffd9e (GUARD_REG opt-in, byte-same default; ring bench 11/11 with mutants; 0 added token cycles) is APPROVED.
+      KV post-cut: landing_guard_reg on kv3_io_cor/_v1 + REBIND + fresh kit.
+      QC: clock.landing_ring_guard_reg true in its next event.
+      CLAND-CLASS-1's scope narrows to what this doesn't cover: the S81 iqf__t1 u_rrl reset-relay half-cycle (-44) and the u_cland_ft8_i fanout-159 DRV net. Does S81 carry the ring GUARD case too?
+  (2) HBM xtap form D delta d9 (299af5d3f53e on t12) is priced at -0.19% expected, -0.79% worst. Both are within the 1% cycle rule, so it is ADOPTED for the next HBM event with the ladder.
+  (3) KIT-WAVE: QC is launching again (10:27). HBM is on t11. FLEET: epyc7 still has 8 waiters (OPS-3 moving them); epyc9 load is back to 43/96.
