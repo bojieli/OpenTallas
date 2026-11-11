@@ -195,33 +195,39 @@ def test_grt_edge_halving_mode_between_full_and_none(tmp_path):
     assert w.max() <= 1.0
 
 
-def test_grt_edge_on_obs_rects_vs_edge_outline(tmp_path):
-    """plain edge measures K from every OBS rect: a porous view (M5 in 2-um strips) stays ~fully halved, while
-    edge_outline (K from the instance bbox) frees the interior; a solid OBS gives the same answer both ways."""
+def test_grt_edge_modes_follow_grt_patch_1(tmp_path):
+    """edge (OBS tile union boundary + all pins incl. PG on L-1/L/L+1) vs edge_outline (instance bbox + signal pins):
+    a porous M5 view with PG straps stays halved under edge and is freed inside under edge_outline."""
     plan(tmp_path, n=2500)
-    _, rs_e, _ = run(tmp_path, "--grt-halving", "edge")
-    _, rs_o, _ = run(tmp_path, "--grt-halving", "edge_outline")
-    # same halved area; edge spreads it evenly over the macro, edge_outline places it on the rim
-    assert abs(rs_e["regions"]["core_H"]["p99"] - rs_o["regions"]["core_H"]["p99"]) < 0.02 * rs_o["regions"]["core_H"]["p99"]
     strips = "".join(f"      RECT {x} 0 {x + 2} 400 ;\n" for x in range(0, 200, 4))
-    (tmp_path / "blk.lef").write_text(
-        "MACRO blk\n  CLASS BLOCK ;\n  ORIGIN 0 0 ;\n  SIZE 200 BY 400 ;\n  OBS\n"
+    straps = "".join(f"        RECT {x} 0 {x + 0.3} 400 ;\n" for x in range(3, 200, 3))
+    lefp = tmp_path / "blk.lef"
+    lefp.write_text(
+        "MACRO blk\n  CLASS BLOCK ;\n  ORIGIN 0 0 ;\n  SIZE 200 BY 400 ;\n"
+        "  PIN VDD\n    USE POWER ;\n    PORT\n      LAYER M7 ;\n" + straps + "    END\n  END VDD\n  OBS\n"
         + "".join(f"    LAYER {L} ;\n      RECT 0 0 200 400 ;\n" for L in ("M1", "M2", "M3", "M4"))
         + "    LAYER M5 ;\n" + strips + "  END\nEND blk\nEND LIBRARY\n")
     rs._LEF_CACHE.clear()
-    rs._LEF_RECTS.clear()
+    rs._EDGE_CACHE.clear()
     _, pf, _ = run(tmp_path)
     _, pe, _ = run(tmp_path, "--grt-halving", "edge")
-    assert pe["regions"]["core_H"]["p99"] <= pf["regions"]["core_H"]["p99"]
-    lefp = tmp_path / "blk.lef"
-    bd = rs.lef_band(lefp, 2 * rs.GRT_GCELL_UM)
-    assert abs(bd["M5"] - rs.lef_obs(lefp)["M5"]) < 1e-9 and bd["M3"] < 0.05   # strips: all band; solid: rim only
+    _, po, _ = run(tmp_path, "--grt-halving", "edge_outline")
+    # region p99 also sees the cores beside the macro; the per-tile shares are checked below
+    assert max(po["regions"]["core_H"]["p99"], pe["regions"]["core_H"]["p99"]) <= pf["regions"]["core_H"]["p99"]
+    sh = rs.lef_edge_share(lefp, 2, rs.GRT_GCELL_UM)
+    assert sh["M5"] > 0.95                     # 2-um strips: every OBS tile within 2 gcells of a free tile
+    assert sh["M3"] < 0.05                     # solid M3, no pins on M3/M4/M5: only the rim
+    assert sh["M4"] < 0.05 and sh["M5"] > sh["M4"]
+    sh6 = rs.edge_share(rs.lef_shapes(lefp.read_text()), (2,), rs.GRT_GCELL_UM)["2"]
+    assert sh6 == sh
     g = rs.Grid(400, 500, 10.8)
     mr = [(100, 0, 300, 400, {"inst": "m"})]
-    cov = rs.coverage(g, mr)
     rs._VIEW_SRC.clear()
     rs._VIEW_SRC["m"] = ("lef", lefp)
-    w = rs.grt_halving_weight_obs(g, cov, mr, {}, 2, {"m": rs.lef_obs(lefp)}, [])
+    w = rs.grt_halving_weight_obs(g, rs.coverage(g, mr), mr, {}, 2, {}, [])
     wo = rs.grt_halving_weight(g, mr, {}, 2)
-    assert w["M5"][18, 18] == 1.0 and wo[18, 18] == 0.0   # interior: porous OBS still halves M6, outline frees it
-    assert w["M3"][18, 18] < 0.05                          # solid M3: M4 over it only halved on the rim
+    assert w["M5"][18, 18] > 0.95 and wo[18, 18] == 0.0
+    # PG straps on M7 (L+1 of M6) only count for B = M5
+    solid = tmp_path / "s.lef"
+    solid.write_text(lefp.read_text().replace(strips, "      RECT 0 0 200 400 ;\n"))
+    assert rs.lef_edge_share(solid, 2, rs.GRT_GCELL_UM)["M5"] > 0.9   # straps every 3 um, halo 2 gcells

@@ -71,12 +71,13 @@ LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
 #    between two obstructed layers is blocked where they overlap (extendObstructions l.5557)
 GRT_TRANSITION = ("M3", "M4", "M5", "M6", "M7")
 GRT_MAX_LAYER = "M7"
-GRT_GCELL_UM = 0.585   # dbBlock::getGCellTileSize: 15 x median(M2, M3, M4 pitch) on ASAP7 (GlobalRouter.cpp l.2513)
+GRT_GCELL_UM = 0.57    # MEASURED gcell of the ASAP7 tile runs (GRT-PATCH-1 11-10, t15: perimeter ring 2 x 0.57 um)
 
 
 def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
-    """GRT-PATCH-1 'edge' image: the transition-layer halving applies only to gcells within K gcells of a macro edge
-    or one of its pins. Returns, per bin, the fraction of the macro area under it that is still halved (1 = stock
+    """GRT-PATCH-1 'edge_outline' image (OT_GRT_TRANSITION_MODE=edge_outline, grtT3 sha256:2d12164ad3f6): a stock-halved
+    tile stays halved only within K gcells of the macro INSTANCE bbox boundary or within K of a macro SIGNAL pin (PG
+    excluded; pins_file pins are signal pins). Returns, per bin, the fraction of the macro area under it that is still halved (1 = stock
     image, everywhere under the OBS)."""
     d = k_gcells * gcell_um
     w = np.zeros((g.ny, g.nx))
@@ -89,25 +90,25 @@ def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
         if ix1 > ix0 and iy1 > iy0:
             for (_, px, py) in pins.get(h["inst"], []):
                 if ix0 < px < ix1 and iy0 < py < iy1:      # interior pin: its own K-gcell square is halved
-                    sq = coverage(g, [(max(px - d, ix0), max(py - d, iy0), min(px + d, ix1), min(py + d, iy1), h)])
+                    e = d + 0.5 * gcell_um              # Chebyshev K around the pin's own tile
+                    sq = coverage(g, [(max(px - e, ix0), max(py - e, iy0), min(px + e, ix1), min(py + e, iy1), h)])
                     band = band + sq[0][0]
         frac = np.where(c > 1e-9, np.clip(band / np.maximum(c, 1e-9), 0, 1), 0.0)
         w = np.maximum(w, frac)
     return w
 
 
-def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gcell_um=GRT_GCELL_UM):
-    """GRT-PATCH-1 plain 'edge' image: K gcells from the boundary of every OBS rect of the layer below (a porous view
-    fragmented into many rects is then halved almost everywhere). Per macro and layer the halved share of the OBS is
-    spread evenly over the macro (the rects are not placed); interior pins add their outline-mode squares. A view
-    without known rects (template, obs_max, ceiling, a kit view harvested without bands) is one solid rect = its
-    outline, i.e. edge_outline."""
-    d = k_gcells * gcell_um
+def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gcell_um=None):
+    """GRT-PATCH-1 'edge' image (OT_GRT_TRANSITION_MODE=edge): a stock-halved tile stays halved within K gcells
+    (Chebyshev) of the union boundary of the layer-below macro OBS tiles, or within K of any macro pin (PG included)
+    on L-1/L/L+1. The share comes from the view's OBS and pin shapes rasterised on the gcell grid (edge_share) and is
+    spread evenly over the macro. A view without shapes (template, obs_max, ceiling) is one solid block: edge_outline
+    with its signal pins (PG straps unknown, so this under-halves), noted."""
     out = {L: np.zeros((g.ny, g.nx)) for L in LAYERS}
     outline_w = None
     nfb = 0
     for (c, h), r in zip(cov, mrects):
-        bd = macro_band(h["inst"], d, k_gcells)
+        bd = macro_band(h["inst"], k_gcells, gcell_um)
         if bd is None:
             nfb += 1
             if outline_w is None:
@@ -115,16 +116,10 @@ def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gce
             for L in LAYERS:
                 out[L] = np.maximum(out[L], np.where(c > 1e-9, outline_w, 0.0))
             continue
-        pw = grt_halving_weight(g, [r], {h["inst"]: pins.get(h["inst"], [])}, k_gcells)
-        po = grt_halving_weight(g, [r], {}, k_gcells)
-        pin_extra = np.clip(pw - po, 0, 1)                 # interior-pin squares only
-        o = macro_obs.get(h["inst"]) or {}
         for L in LAYERS:
-            f = o.get(L, 0.0)
-            share = min(1.0, bd.get(L, 0.0) / f) if f > 1e-9 else 0.0
-            out[L] = np.maximum(out[L], np.where(c > 1e-9, np.clip(share + pin_extra, 0, 1), 0.0))
+            out[L] = np.maximum(out[L], np.where(c > 1e-9, bd.get(L, 0.0), 0.0))
     if nfb:
-        notes.append(f"grt edge: {nfb} macro views without OBS rects taken as solid (= edge_outline)")
+        notes.append(f"grt edge: {nfb} macro views without shapes taken as solid (= edge_outline)")
     return out
 
 
@@ -188,7 +183,6 @@ def lef_obs(path):
     if key in _LEF_CACHE:
         return _LEF_CACHE[key]
     out = None
-    rects = defaultdict(list)
     try:
         txt = Path(path).read_text(errors="replace")
     except OSError:
@@ -212,38 +206,118 @@ def lef_obs(path):
             if mm and cur:
                 x0, y0, x1, y1 = map(float, mm.groups())
                 acc[cur] += abs(x1 - x0) * abs(y1 - y0)
-                rects[cur].append((abs(x1 - x0), abs(y1 - y0)))
         for L, a in acc.items():
             if re.fullmatch(r"M\d", L) and area:
                 out[L] = min(1.0, a / area)
-        _LEF_RECTS[key] = (area, {L: np.array(v) for L, v in rects.items() if re.fullmatch(r"M\d", L)})
     _LEF_CACHE[key] = out
     return out
 
 
-_LEF_RECTS = {}
+_EDGE_CACHE = {}
+def _dilate(m, k):
+    """Chebyshev dilation by k tiles (separable running max)."""
+    out = m.copy()
+    for _ in range(k):
+        t = out.copy()
+        t[1:, :] |= out[:-1, :]
+        t[:-1, :] |= out[1:, :]
+        out = t
+    o2 = out.copy()
+    for _ in range(k):
+        t = o2.copy()
+        t[:, 1:] |= o2[:, :-1]
+        t[:, :-1] |= o2[:, 1:]
+        o2 = t
+    return o2
 
 
-def obs_band(wh, area, d):
-    """share of the macro area within d of the boundary of its own OBS rect, summed over the rects of one layer
-    (the halved area of the plain GRT-PATCH-1 'edge' image: every OBS rect has its own edge band)."""
-    if wh is None or not len(wh) or not area:
-        return 0.0
-    w, h = wh[:, 0], wh[:, 1]
-    band = w * h - np.clip(w - 2 * d, 0, None) * np.clip(h - 2 * d, 0, None)
-    return float(min(1.0, band.sum() / area))
-
-
-def lef_band(path, d):
-    """{layer: obs_band} for a LEF read by lef_obs, or None when its rects are unknown."""
-    key = str(path)
-    if key not in _LEF_RECTS:
-        lef_obs(path)
-    ar = _LEF_RECTS.get(key)
-    if not ar:
+def lef_shapes(txt, macro=None):
+    """(W, H, obs {layer: [rects]}, pins {layer: [(rect, is_pg)]}) of one MACRO."""
+    if macro:
+        m = re.search(r"MACRO\s+" + re.escape(macro) + r"\b(.*?)\nEND\s+" + re.escape(macro), txt, re.S)
+        if m:
+            txt = m.group(1)
+    sz = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", txt)
+    if not sz:
         return None
-    area, rr = ar
-    return {L: obs_band(wh, area, d) for L, wh in rr.items()}
+    W, H = float(sz.group(1)), float(sz.group(2))
+    obs, pins = {}, {}
+    rect = r"\s*RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)"
+    for pm in re.finditer(r"\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1", txt, re.S):
+        body = pm.group(2)
+        pg = bool(re.search(r"USE\s+(POWER|GROUND)", body))
+        cur = None
+        for ln in body.splitlines():
+            mm = re.match(r"\s*LAYER\s+(\S+)", ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mm = re.match(rect, ln)
+            if mm and cur:
+                pins.setdefault(cur, []).append((tuple(map(float, mm.groups())), pg))
+    i = txt.find("\n  OBS")
+    if i < 0:
+        i = txt.find("OBS")
+    if i >= 0:
+        cur = None
+        for ln in txt[i:].splitlines():
+            mm = re.match(r"\s*LAYER\s+(\S+)", ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mm = re.match(rect, ln)
+            if mm and cur:
+                obs.setdefault(cur, []).append(tuple(map(float, mm.groups())))
+            if re.match(r"\s*END\s*$", ln):
+                break
+    return W, H, obs, pins
+
+
+def edge_share(shapes, ks, g, layers=("M2", "M3", "M4", "M5", "M6", "M7")):
+    """{K: {B: share}}: of the gcell tiles under the layer-B macro OBS (B = the layer below a transition layer L),
+    the share still halved by GRT-PATCH-1 'edge' (OT_GRT_TRANSITION_MODE=edge): within K tiles (Chebyshev) of the
+    union boundary of the B OBS tiles, or within K of any macro pin (PG included) on B, L or L+1."""
+    W, H, obs, pins = shapes
+    nx, ny = max(1, int(np.ceil(W / g))), max(1, int(np.ceil(H / g)))
+
+    def raster(rs):
+        m = np.zeros((ny, nx), bool)
+        for (x0, y0, x1, y1) in rs:
+            a, b = sorted((x0, x1)), sorted((y0, y1))
+            i0, i1 = max(0, int(a[0] // g)), min(nx, int(np.ceil(a[1] / g)))
+            j0, j1 = max(0, int(b[0] // g)), min(ny, int(np.ceil(b[1] / g)))
+            if i1 > i0 and j1 > j0:
+                m[j0:j1, i0:i1] = True
+        return m
+
+    names = ["M1"] + list(layers) + ["M8"]
+    out = {str(k): {} for k in ks}
+    for B in layers[:-1]:
+        ob = raster(obs.get(B, []))
+        n = ob.sum()
+        if not n:
+            continue
+        L = names[names.index(B) + 1]
+        Lp = names[names.index(B) + 2]
+        pm = raster([r for Ly in (B, L, Lp) for (r, _) in pins.get(Ly, [])])
+        pad = np.pad(~ob, 1, constant_values=True)
+        for k in ks:
+            near_free = _dilate(pad, k)[1:-1, 1:-1]
+            halved = ob & (near_free | _dilate(pm, k))
+            out[str(k)][B] = round(float(halved.sum() / n), 4)
+    return out
+
+
+def lef_edge_share(path, k_gcells, gcell_um):
+    """{B: share} of edge_share for one LEF (first MACRO), cached; None if unreadable."""
+    key = (str(path), k_gcells, gcell_um)
+    if key not in _EDGE_CACHE:
+        try:
+            sh = lef_shapes(Path(path).read_text(errors="replace"))
+        except OSError:
+            sh = None
+        _EDGE_CACHE[key] = edge_share(sh, (k_gcells,), gcell_um)[str(k_gcells)] if sh else None
+    return _EDGE_CACHE[key]
 
 
 _SIGNED_CACHE = {}
@@ -273,15 +347,16 @@ def signed_view_lefs(die_dir):
 _VIEW_SRC = {}   # inst -> ("lef", path) | ("kit", kit_views entry): where the OBS rects of the chosen view live
 
 
-def macro_band(inst, d, k_gcells):
-    """{layer: OBS-rect edge band share} of the view macro_view chose for inst, or None (no rects known: a solid
-    block whose only OBS edge is its outline)."""
+def macro_band(inst, k_gcells, gcell_um=None):
+    """{B: share of the layer-B OBS tiles still halved under GRT-PATCH-1 'edge'} of the view macro_view chose for
+    inst, or None (no shapes known: a solid block, whose only OBS boundary is its outline)."""
+    gcell_um = gcell_um or GRT_GCELL_UM
     v = _VIEW_SRC.get(inst)
     if not v:
         return None
     if v[0] == "lef":
-        return lef_band(v[1], d)
-    kb = (v[1].get("band") or {}).get(str(k_gcells))
+        return lef_edge_share(v[1], k_gcells, gcell_um)
+    kb = (v[1].get("edge_share") or {}).get(str(k_gcells))
     return {L: float(f) for L, f in kb.items()} if kb is not None else None
 
 
