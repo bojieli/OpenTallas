@@ -4784,6 +4784,7 @@ def route_hold_reason(cfg, rec):
 #   - the spec's src_sha, when every part is an ancestor of it or changes only tools/autopilot/ (operational tools run
 #     from the live autopilot checkout, not kit content; e.g. the providx fix on top of the HBM integration commit).
 # Anything else stays a FLOW failure naming the part that is not in the commit.
+FREE_SRC_RE = re.compile(r"^([A-Za-z0-9_./-]+)\s+([0-9a-f]{7,40})(?:\s|$)")
 SINGLE_SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")      # autopilot.SRC_RE
 COMPOSED_SRC_TOOL_PREFIX = "tools/autopilot/"
 SRC_REFUSED = "enqueue rc 1: enqueue: REFUSED: src must be branch@sha"
@@ -4794,7 +4795,12 @@ def enqueue_src(AP, pinned, d):
     qs = str(pinned.get("queue_src") or "").strip()
     if not qs:
         return "main@" + pinned["src_sha"]
-    if SINGLE_SRC_RE.match(qs) or "+" not in qs:         # not a composition: the queue's own check judges it
+    if SINGLE_SRC_RE.match(qs):
+        return qs
+    m = FREE_SRC_RE.match(qs)         # KW-FIX-45 11-11: free-text label 'main 730345725942 (QC 12:00 event ...)' (a GRT-ARM pins its sibling's) -> main@730345725942
+    if m and "+" not in qs:
+        return f"{m.group(1)}@{m.group(2)}"
+    if "+" not in qs:               # not a composition: the queue's own check judges it
         return qs
     exact = (d.get("queue_src_exact") or {}).get(qs)
     if exact:
