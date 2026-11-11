@@ -4457,6 +4457,85 @@ def stage_disk_wait(live_log):
     return lines[-1][:200] if lines and "KW12_DISK_WAIT" in lines[-1] else ""
 
 
+# KW-FIX-46 REAP-DEAD (COORD 11-11, KW-FIX-45 finding: S81 rows RUNNING / RETRY-INFRA with no live process on any host).
+# collect() already turns a RUNNING row whose systemd unit is gone into FAIL/RETRY-INFRA; what it never handles is
+#   R1  a RUNNING / LAUNCHING row whose unit is gone and that stayed RUNNING for more than N minutes (collect did not
+#       reach it: pass cut short, unit renamed, result unreadable): unit, PLACE client and fleet containers under its
+#       attempt root are stopped by exact name, and the row becomes FAIL INFRA (the infra budget decides the retry);
+#   R3  a RETRY-INFRA row that infra_relaunch_due() can never take again because its infra budget is spent (it was set
+#       while the budget was open): it stays RETRY-INFRA for ever, counted as in flight.  It becomes a terminal FAIL INFRA.
+# A row with an ACTIVE unit and no output for N minutes is only reported (SILENT: it may wait in the ot-run queue).
+# Never touched: held rows (hold_items), arms handled by their own rules, rows whose unit is active.
+REAP_DEAD_MIN = 180
+
+
+def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
+    """-> [(key, kind, why)] (read-only)"""
+    now = now or time.time()
+    minutes = REAP_DEAD_MIN if minutes is None else minutes
+    out = []
+    for key, rec in sorted((st.get("items") or {}).items()):
+        s = rec.get("status")
+        age_m = (now - max(float(rec.get("updated") or 0), float(rec.get("started") or 0))) / 60.0
+        if s in ("RUNNING", "LAUNCHING"):
+            unit = rec.get("unit") or ""
+            if unit and AP.unit_active(unit):
+                try:
+                    newest = max((f.stat().st_mtime for f in Path(rec["dir"]).glob("*.log")), default=0)
+                except OSError:
+                    newest = 0
+                if newest and (now - newest) / 60.0 > minutes:
+                    out.append((key, "SILENT", f"unit active, no output for {(now - newest) / 60:.0f} min (reported only)"))
+                continue
+            if age_m <= minutes:
+                continue
+            if (Path(rec.get("dir") or "/nonexistent") / "result.json").exists():
+                continue                                  # collect reads it next tick
+            out.append((key, "R1", f"unit {unit or '-'} gone, row RUNNING for {age_m:.0f} min without a terminal record"))
+        elif s == "RETRY-INFRA":
+            if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
+                out.append((key, "R3", f"RETRY-INFRA with the infra budget spent ({infra_used(rec)} of "
+                                       f"{infra_attempts(cfg, rec['die'])}): never relaunched, {age_m / 60:.1f} h"))
+    return out
+
+
+def reap_dead(AP, cfg, st, notices, now=None):
+    """apply reap_dead_scan under the wave lock (called from _step); die/global option reap_dead_min 0 = off"""
+    minutes = float(cfg.get("reap_dead_min", REAP_DEAD_MIN))
+    if minutes <= 0:
+        return 0
+    roots, n = [], 0
+    for key, kind, why in reap_dead_scan(AP, cfg, st, now, minutes):
+        if kind == "SILENT":
+            AP.log(f"KIT-WAVE REAP-DEAD SILENT {key}: {why}")
+            continue
+        rec = st["items"][key]
+        if AP.DRY:
+            AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
+            continue
+        if kind == "R1":
+            units = [rec.get("unit")]
+            try:
+                units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+            for u in units:
+                if u:
+                    AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+            r = attempt_root(rec)
+            if r:
+                roots.append(r)
+        rec.update(status="FAIL", **{"class": "INFRA"}, updated=time.time(),
+                   reason=f"REAP-DEAD {kind}: {why}"[:300])
+        notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} REAP-DEAD {kind}: {why[:160]}")
+        AP.log(f"KIT-WAVE REAP-DEAD {rec['die']}/{rec['item']}@{rec.get('attempt')} {kind}: {why}")
+        n += 1
+    if roots:
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE REAP-DEAD remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+    return n
+
+
 def collect(AP, cfg, st, notices):
     for key, rec in st["items"].items():
         if rec.get("status") != "RUNNING" or AP.unit_active(rec["unit"]):
@@ -5090,6 +5169,10 @@ def _step(AP, ap_dir):
     notices = {}
     prune_stale_retries(cfg, st, notices, AP.log)
     collect(AP, cfg, st, notices)
+    try:                                                 # KW-FIX-46 REAP-DEAD: under the wave lock, right after collect
+        reap_dead(AP, cfg, st, notices)
+    except Exception as e:                              # a sweep never stops the tick
+        AP.log(f"KIT-WAVE REAP-DEAD skipped: {type(e).__name__}: {e}")
     retry_enqueue(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
     auto_rejudge(AP, cfg, st, notices)
@@ -6082,6 +6165,9 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    rd_ = sub.add_parser("reap-dead", help="KW-FIX-46: dry-run list of rows the REAP-DEAD sweep would reap (read-only)")
+    rd_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
+    rd_.add_argument("--minutes", type=float, default=REAP_DEAD_MIN)
     rj = sub.add_parser("rejudge-geom", help="re-judge stored FAIL@geom verdicts with today's geom_verdict (read-only "
                         "unless --write, which releases the current-plan passes through enqueue_pass in one batch)")
     rj.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
@@ -6128,6 +6214,15 @@ def main(argv=None):
         return 0
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
+    if a.cmd == "reap-dead":
+        AP.DRY = True
+        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        rows = reap_dead_scan(AP, cfg, load_state(), minutes=a.minutes)
+        import collections as _c
+        for key, kind, why in rows:
+            print(f"{kind}\t{key}\t{why}")
+        print("# reap-dead dry run:", len(rows), sorted(_c.Counter((k.split("|")[0], kd) for k, kd, _ in rows).items()))
+        return 0
     if a.cmd == "rejudge-geom":
         AP.DRY = not a.write
         cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
