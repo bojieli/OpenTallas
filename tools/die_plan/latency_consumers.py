@@ -194,7 +194,11 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
     """-> dict(errors=[str], r8=..., contracts=[rows], advisory=[rows], stats=...)"""
     ab = ab or {}
     pr = param_regen or {}
-    regen = {(c["inst"], c["param"]): c for c in pr.get("changed", [])}
+    # An absolute-law hook may derive the already-correct value. The binder
+    # records each explicitly validated target, including unchanged ones;
+    # merely having a hook still does not qualify any other parameter.
+    regen = {(c["inst"], c["param"]): c
+             for c in list(pr.get("derived", [])) + list(pr.get("changed", []))}
     hooked = bool(ab.get("param_regen")) or bool(pr)
     landed = bool(ab.get("land_align"))                  # the bind lands crossings (r8 table or cell pads)
     table = defaultdict(list)
@@ -244,7 +248,9 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
             if added == 0 and row.get("required", 0) == 0:
                 row["verdict"] = "MATCH"
             elif (path, c["param"]) in regen:
-                row.update(verdict="REGEN", bound=regen[(path, c["param"])]["bound"])
+                value = regen[(path, c["param"])]["bound"]
+                row.update(verdict="REGEN", bound=value, needed=value,
+                           asbuilt_plus_added=asb + added if isinstance(asb, int) else None)
             elif c.get("advisory"):
                 row["verdict"] = "ADVISORY_MISMATCH"
             else:

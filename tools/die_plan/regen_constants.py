@@ -133,7 +133,8 @@ class Bound:
     # -- the hook-applied RTL parameters
     def applied(self):
         """{(inst, param): (asbuilt str, bound value)} from param_regen.json changed[]"""
-        return {(c["inst"], c["param"]): (c["asbuilt"], c["bound"]) for c in self.param_regen.get("changed", [])}
+        rows = list(self.param_regen.get("derived", [])) + list(self.param_regen.get("changed", []))
+        return {(c["inst"], c["param"]): (c["asbuilt"], c["bound"]) for c in rows}
 
     def asbuilt_param(self, inst_re, param, default=None, module=None):
         """as-built value: param_regen.json changed[].asbuilt; a bind WITHOUT a param_regen hook still carries the

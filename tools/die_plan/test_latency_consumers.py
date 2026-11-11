@@ -199,3 +199,42 @@ def test_yosys_leaves_elab_keep_uses_u_die_paths():
     yjs = dict(modules=dict(bind_elab_keep=dict(attributes=dict(top=1), cells=dict(u_die=dict(type="die"), u_v0=dict(type="leaf"))),
                             die=dict(attributes={}, cells=dict(a=dict(type="leaf"))), leaf=dict(attributes={}, cells={})))
     assert set(LC.yosys_leaves(yjs)) == {"a"}
+
+
+def test_absolute_hook_unchanged_target_is_explicitly_derived(tmp_path):
+    """The actual HBM 11+2+2 law stays15; it must not add4 to stale15."""
+    from types import SimpleNamespace
+    import bind
+    hook = tmp_path / "absolute.py"
+    hook.write_text("def regen(ctx): return dict(params={'su0.u_tap': {'READ_RETURN': 15}}, record={'law':'11+2+2'})\n")
+    b = bind.Binder.__new__(bind.Binder)
+    b.ab = dict(param_regen=dict(file=str(hook)))
+    b.base, b.errors = str(tmp_path), []
+    b.F = SimpleNamespace(cells=[SimpleNamespace(path='su0.u_tap', module='ot_hbm_vm_lg_pair_tap',
+        ytype='tap', params={'READ_RETURN': 15})])
+    b.param_defaults = {}
+    b.regen_params()
+    assert not b.errors and b.param_regen['changed'] == []
+    assert b.param_regen['derived'] == [dict(inst='su0.u_tap',param='READ_RETURN',asbuilt='15',bound=15)]
+    leaves,bg = tap_die()
+    leaves['su0.u_tap']['params']['READ_RETURN']=15
+    report=LC.check(leaves,bg,b.param_regen,b.ab)
+    row=next(x for x in report['contracts'] if x.get('param')=='READ_RETURN')
+    assert (row['verdict'],row['bound'],row['needed'],row['asbuilt_plus_added']) == ('REGEN',15,15,19)
+    # Omitting the explicit target still fails even though the hook is present.
+    missing=LC.check(leaves,bg,dict(changed=[],derived=[]),b.ab)
+    assert any('READ_RETURN' in e for e in missing['errors'])
+
+
+def test_undeclared_hook_target_cannot_supply_derivation(tmp_path):
+    from types import SimpleNamespace
+    import bind
+    hook=tmp_path/'bad.py'
+    hook.write_text("def regen(ctx): return dict(params={'su0.u_tap': {'TYPO_RETURN': 15}})\n")
+    b=bind.Binder.__new__(bind.Binder)
+    b.ab=dict(param_regen=dict(file=str(hook)));b.base=str(tmp_path);b.errors=[]
+    b.F=SimpleNamespace(cells=[SimpleNamespace(path='su0.u_tap',module='ot_hbm_vm_lg_pair_tap',ytype='tap',params={'READ_RETURN':15})])
+    b.param_defaults={};b.regen_params()
+    assert b.errors and b.param_regen['derived']==[]
+    leaves,bg=tap_die();report=LC.check(leaves,bg,b.param_regen,b.ab)
+    assert any('READ_RETURN' in e for e in report['errors'])
