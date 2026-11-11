@@ -388,7 +388,10 @@ def clear_leaf(bn, b, bp, side, cc):
                     if kw <= MAR and hm <= MAR:
                         break
                     n += 1
-                ld = max(_load(l_) for l_, _w in _samples(FC, leaf, cc, b["face"] in "EW", order, b["face"])) if SPREAD else 0.0
+                # with --channel the key is the peak AFTER adding this chain (a channel splits its bits over NCHS
+                # columns); the + bits shift is the same for every non-channel candidate, so their ranking is unchanged
+                ld = max(_load(l_) + (_w * len(bp) if CHAN else 0.0)
+                         for l_, _w in _samples(FC, leaf, cc, b["face"] in "EW", order, b["face"])) if SPREAD else 0.0
                 key = ((n, ld, hm, order != "normal") if not (SPREAD and bn in NB) else
                        ((0 if n <= NB[bn] else 1), ld, n, hm, order != "normal"))
                 if best is None or key < best[0]:
