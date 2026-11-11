@@ -5,6 +5,7 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
 - Base: `c2aff36a6ca5` (HBM plan of record t10 + the DIE-LAYOUT-HBM positions-only delta).
 - New plan: `280ef01a6fc9` = `ladder_delta_c13.json.gz` applied to the base. Rebuild it with `scripts/ladder_delta.py apply BASE die_plan.json`; the result is byte-identical (sha checked).
 - Generator: `scripts/ladder.py TOOLS PLAN_DIR scripts/specC6.json OUT`.
+- **On t11** (DIE-HBM-100 post-cut `584df6bfcfc2` = d46a + d6_hubdrop + d8_cells_q_spt1 + d7 dl): t11 differs from `c2aff36a6ca5` only in 3 partition types (q_hub_ne, q_hub_nw, q_spt1), and the ladder touches none of them. The same delta applied to t11 gives **`5957a416a762`**. G0 on t11 goes from 621 to 537, with the same class counts as below; the diff is in `tables/g0_t11_ladder_vs_t11.txt`.
 
 ## Form (variant C of the 2x4 ladder)
 - **b000 is unchanged.** It keeps its full-height 457.92 um column on the hub face. The hub face, the b000 type and every hub window are byte-identical.
@@ -86,7 +87,12 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
   | q_b000 | 4.15 | **4.91 (worse)** |
 
   q_b000 is worse in its face region, from the denser b000 east windows. All bank types are still above 0.8, as they were in the base.
-- **Die GRT on abstracts:** one probe per arm (base and ladder) via ot-run on epyc9, DO_NOT_COUNT. Results are in `tables/die_grt.txt` once they finish.
+- **Die GRT on abstracts** (die_trial kit, M4-M9, one probe per arm, ot-run epyc2, DO_NOT_COUNT; the arms are base c2aff36a6ca5 and ladder 280ef01a6fc9):
+  - Overflow is 0 in both arms, and the ladder converges faster (4 extra iterations vs 9).
+  - Wirelength: 833.7M -> 729.2M um (-12.5%).
+  - Routed nets: 493,510 -> 401,631 (fewer station-hop nets).
+  - Usage: 7.71% -> 7.12% overall, and 17.2% -> 15.2% on M7.
+  - The full congestion tables are in `tables/die_grt.txt`.
 
 ## Views
 - `views/ladder_before_after_banks.png`: NE/NW bank blocks before and after, showing partitions, hard cores and FT slot routes.
