@@ -37,6 +37,14 @@ PLAN = {"kv3_hg_v1", "kv3_hub_Eo", "kv3_pc", "kv3_io_cor_v1", "kv3_phy_v1", "qkd
 
 
 class Gate(unittest.TestCase):
+    def test_item_inputs_may_name_a_private_src(self):
+        # KW-FIX-45 11-11: HBM opsb_group builds from its own cp -al src copy while the die src stays shared
+        c = cfg(item_inputs={"kv3_pc": {"src": "/x/private", "src_sha": "abc1234", "queue_src": "b/c@abc1234"}})
+        s = KW.spec_for(c, "qwen_kvsys", "kv3_pc", "intel2")
+        self.assertEqual((s["src"], s["src_sha"], s["queue_src"]), ("/x/private", "abc1234", "b/c@abc1234"))
+        o = KW.spec_for(c, "qwen_kvsys", "kv3_pc_other", "intel2")
+        self.assertNotEqual(o["src"], "/x/private")
+
     def test_kv_event_gate(self):
         self.assertTrue(KW.gate(cfg(), "qwen_kvsys")[0])
         ok, why = KW.gate(cfg(event="event28b"), "qwen_kvsys")

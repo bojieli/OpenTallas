@@ -53,6 +53,13 @@ class Composed(unittest.TestCase):
         ap = AP(self.d, self.repo)
         return KW.enqueue_src(ap, dict(queue_src=qs, src_sha=sha), die)
 
+    def test_free_text_label_becomes_branch_at_sha(self):
+        # KW-FIX-45 11-11: a GRT-ARM pins its sibling's free-text queue_src; the queue refused it (src must be branch@sha)
+        ap = AP(self.d, Path("/nonexistent"))
+        got = KW.enqueue_src(ap, dict(queue_src="main 730345725942 (QC 12:00 event aa80315f8fd4 landed)", src_sha="7" * 40), {})
+        self.assertEqual(got, "main@730345725942")
+        self.assertEqual(KW.enqueue_src(ap, dict(queue_src="no sha here", src_sha="7" * 40), {}), "no sha here")
+
     def test_single_source_unchanged_without_git(self):
         ap = AP(self.d, Path("/nonexistent"))
         self.assertEqual(KW.enqueue_src(ap, dict(queue_src="a/b@abc1234", src_sha="f" * 40), {}), "a/b@abc1234")
