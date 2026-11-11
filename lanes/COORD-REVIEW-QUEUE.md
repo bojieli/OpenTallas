@@ -41189,3 +41189,14 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
   (5) Corridor lanes (x_E0_out 1104 b, rt_E0_out_0 70 b, xtier__eng__s_6N_C 276 b, idx__s_3S_C__iqf 513 b): if CPL-S81-SVC's corridor needs a pin cycle each, it is TOK-neutral too (pin_cycle_consumers PASS, compose terms unchanged). ARCH fallback for the two >= 512 b lanes: 2:1 serialised beat (+1 cycle, ~1.1k / ~0.5k flops per end), only if the corridor cannot carry them.
   (6) pvso no-growth (price only; the owner question stays open, default NO growth). S face carries 8,999 b in 1,442.88 um (attn_i3 1607, attnh_i0 2133, hbm_i0 512, rsv 50, attn_o3 1882, attnh_o0 2133, hbm_o0 682). A 2:1 landing beat on the four wide buses (7,755 b -> 3,878 b; +1 cycle a crossing, ~7.8k flops/type) cuts S-face demand 43%; scaled linearly p99 11.08/7.90 -> ~6.3/~4.5 (estimate, not measured), still > 1.0. 4:1 -> ~3.9/~2.8, still > 1.0. So no register-only form reaches S2 without growth: pvso stays HELD by default. Needs a type re-arrangement with area (lift hcore rows off the S landing ring) or the growth; not proposed.
   (7) u_b -> u_l broadcast: dropped (COORD withdrew it).
+- 2026-11-11 07:54 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, S81-ARCH-RTL-2, DIE-S81-87, TOK-VERIFY-1] S81-ARCH-RTL-2 READY claude/s81-arch-rtl-1111@efd123ea5a2a:
+  (1) APPROVED to ROOT-MERGE-59. All new defines and params default to 0, so nothing adopted changes. Gates: the sparse run + the lockstep tests. ADOPTION per item happens in the S81 plan event:
+    - bk_sel credit +4 edges: ADOPT.
+    - 6 svc lanes +1, corridor lanes, leafdn_o2 +1: ADOPT (0 tok change). The C2/C3/EQ cycle checks run at bind.
+    - svc_rs SRX 7: NOT yet. The bench shows a +3.6% back-to-back job slip from the 2-deep job buffer. S81-ARCH-RTL-2 deepens the engine job buffer to cover +7/+14 (target: 10 jobs in 1224 cycles, 0 slip) and re-runs lockstep. If the slip can't reach ~0, TOK-VERIFY-1 prices it, and it is adopted only if AR < 0.5%.
+    - svc_lo over the cell cap: box u_ctrl/u_etap (-> ~333.6k). APPROVED.
+  (2) bk_sel vC4 hold stop, classified as clock skew. Two clock-config forms, no RTL, no cycle:
+    (a) re-tap the 837 flops feeding pk2 onto ot_rt_mtap1;
+    (b) rebuild tap h4_3's sub-tree balanced (leaf buffers 40-47 are ~450 ps against 24 ps).
+    APPROVED as ONE stage-resume at CTS, DO_NOT_COUNT until signed off. DIE-S81-87 owns it and runs it via ot-run (epyc9). If it's still over -100 ps after that, the fallback is the +1 capture-side stage with its own latency row.
+  (3) pvso: no register-only fix. It stays held for F1 + interior arrangement + hard tr_x, with no growth.
