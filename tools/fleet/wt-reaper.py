@@ -448,7 +448,9 @@ def protected(wt, admin, common, extra=(), listed=()):
         for c in {wt.rstrip("/"), rp}:
             if p == c or p.startswith(c + "/"):
                 return f"protected (listed source {p} in {origin})"
-            if c.startswith(p + "/"):                  # worktree inside a listed path (PROTECTED-DBS: parent/child)
+            # worktree inside a listed path (PROTECTED-DBS: parent/child).  A broad ancestor (/srv, a scratch root) named
+            # in free text (a kit_wave.json note "every /srv path") says nothing about this worktree (KW-FIX-44 11-11).
+            if c.startswith(p + "/") and not _generic(p):
                 return f"protected (inside listed path {p} in {origin})"
     for p in PROTECT_PATHS:
         if rp == os.path.realpath(p) or rp.startswith(os.path.realpath(p) + "/"):

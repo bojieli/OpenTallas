@@ -341,6 +341,20 @@ class Reaper(unittest.TestCase):
         self.assertEqual(v["free4"][0], "REMOVED")
         self.assertTrue(used.exists() and lk.exists() and not old.exists() and not free.exists())
 
+    def test_generic_listed_ancestor_does_not_protect(self):
+        """KW-FIX-44 11-11: a kit_wave.json note naming bare "/srv" protected 31 localhost worktrees as "inside listed
+        path /srv".  A broad ancestor never protects by containment; a specific listed parent still does."""
+        wt = "/srv/opentallas-scratch/claude/wt/some-lane-wt"
+        for p in ("/srv", "/srv/opentallas-scratch", "/srv/opentallas-scratch/claude", "/srv/opentallas-scratch/claude/wt",
+                  "/home"):
+            self.assertIsNone(R.protected(wt, "/nonexistent-admin", "/nonexistent/.git", (), [(p, "kit_wave.json note")]), p)
+        v = R.protected(wt, "/nonexistent-admin", "/nonexistent/.git", (),
+                        [("/srv/opentallas-scratch/claude/wt", "x"),
+                         ("/srv/opentallas-scratch/claude/wt/some-lane-wt/run/6_final.odb", "pdb")])
+        self.assertIn("listed source", v)
+        v = R.protected(wt + "/sub", "/nonexistent-admin", "/nonexistent/.git", (), [(wt, "pdb")])
+        self.assertIn("inside listed path", v)
+
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))
         self.assertTrue(R.protected("/x/closed_archive/wt", "/nonexistent", "/r/.git", ()))
