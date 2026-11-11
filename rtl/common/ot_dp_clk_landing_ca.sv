@@ -178,7 +178,13 @@ module ot_dp_clk_landing_cas #(
     parameter int RSTREP = 0,
     // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG): no logic on a half-cycle rclk path; 0 added cycles.
     // Default 0 = identical logic.
-    parameter bit GUARD_REG = 0
+    parameter bit GUARD_REG = 0,
+    // PLACEREP-1 (DIE-QC-97, plan clock.landing_ring_fanout_max > 0): every read-select chunk gets its own kept copy of the
+    // reader placement value RP0 (one rclk flop per chunk, ot_meso_place_rep) instead of all chunks loading one RP0T net
+    // (46-55 loads on an 18-chunk ring).  RP0 = 0 - strap_k is quasi-static (strap tied at the parent); the placement value
+    // is read only by the align load, which runs inside the held reset, so a copy that follows RP0 one rclk edge later
+    // holds the same value at every align edge.  q / ready / fault / data cycles unchanged.  0 = no copies, identical logic.
+    parameter bit PLACEREP = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -255,7 +261,7 @@ module ot_dp_clk_landing_cas #(
     wire [RXW-1:0] rst_x = RSTREP > 0 ? rst_xn : {RXW{1'b1}};
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -313,7 +319,9 @@ module ot_meso_ring_ca #(
     // a private copy oh_q of that edge's oh, and the compare lands in glo2/ghi2 a full period later.  glo1/ghi1 drop
     // out, so glo2/ghi2/glo3/ghi3 and r_glo_ok/r_ghi_ok are cycle-identical to STATUS_REG 0 and 1 (0 added cycles;
     // bench rtl/test/meso/guard_reg).  Default 0 = identical logic.
-    parameter bit GUARD_REG = 0
+    parameter bit GUARD_REG = 0,
+    // PLACEREP-1: per-chunk kept copy of the placement value RP0 (needs more than one read chunk); see ot_dp_clk_landing_cas
+    parameter bit PLACEREP = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -477,8 +485,15 @@ module ot_meso_ring_ca #(
         end
         // RSTREP-1: this chunk's equal copy of r_rst_n (contiguous chunk groups over r_rst_x[1..RSTN-1])
         wire r_rst_c = RSTN > 1 ? r_rst_x[(RSTN > 1 ? 1 + (c * (RSTN - 1)) / NCH : 0)] : r_rst_n;
+        // PLACEREP-1: this chunk's own copy of the placement value (see parameter PLACEREP)
+        logic [AW-1:0] pl_c;
+        if (PLACEREP && NCH > 1) begin : g_pl
+            ot_meso_place_rep #(.N(AW)) u_pl (.clk(rclk), .d(RP0[AW-1:0]), .q(pl_c));
+        end else begin : g_pl0
+            assign pl_c = RP0[AW-1:0];
+        end
         ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_c), .on(r_rst_c),
-            .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
+            .place(pl_c), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
     ot_meso_ohor #(.N(NS)) u_v   (.sel(st_oh), .x(pos_v),   .y(r_v_c));
@@ -895,4 +910,15 @@ module ot_dp_head_raw_export_pair (
         export_q <= d;
 `endif
     end
+endmodule
+
+// PLACEREP-1 (DIE-QC-97): one chunk's kept copy of the ring placement value; a separate kept module so synthesis does not
+// merge the per-chunk flops back into one net.
+(* keep_hierarchy, keep *)
+module ot_meso_place_rep #(parameter int N = 2) (
+    input  logic         clk,
+    input  logic [N-1:0] d,
+    output logic [N-1:0] q
+);
+    always_ff @(posedge clk) q <= d;
 endmodule

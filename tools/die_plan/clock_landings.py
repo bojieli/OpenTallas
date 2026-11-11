@@ -115,6 +115,18 @@ def ring_reset_copies(clock, w, depth, dsrep=1, read_chunk=0):
     return 1 + -(-nch // cpc)
 
 
+def ring_place_copies(clock, w, read_chunk=0):
+    """DIE-QC-97 PLACEREP-1: True when clock.landing_ring_fanout_max F > 0 and the ring (W = w before the cas 64-bit padding,
+    read_chunk = the wreg READ_CHUNK, 0 = 64-bit chunks) has more than one read chunk: every read chunk then keeps its own
+    copy of the reader placement value (ot_dp_clk_landing_cas PLACEREP), so one placement net no longer loads every chunk's
+    select decode.  Rings with one chunk and F = 0 keep today's logic."""
+    if not ring_fanout_max(clock):
+        return False
+    rw = -(-int(w) // 64) * 64
+    nch = -(-rw // int(read_chunk)) if read_chunk else rw // 64
+    return nch > 1
+
+
 def ring_write_reg(plan, tn, bus):
     """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
     ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
@@ -1419,6 +1431,13 @@ class Landings:
                         ring_rst += f", .rst_xn({reader_start}_x)"
                         self.reset_placements[tn][b]["reader_start"].update(ring_reset_copies=nrep,
                                                                             ring_reset_copies_added_cycles=0)
+                # PLACEREP-1 (DIE-QC-97): under clock.landing_ring_fanout_max every strap-form ring gets one kept copy of the
+                # reader placement value per read chunk (ot_dp_clk_landing_cas PLACEREP; rings with one chunk keep none).
+                # The value is 0 - strap_k, read only by the align load inside the held reset: 0 cycles, same q/ready/fault.
+                if cat.get("straps") and ring_place_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
+                                                           (wreg or {}).get("read_chunk", 0)):
+                    ring_mod = ring_mod[:-1] + ", .PLACEREP(1))"
+                    self.reset_placements[tn][b].update(ring_place_copies=True, ring_place_copies_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
