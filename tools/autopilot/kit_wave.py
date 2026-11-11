@@ -4330,6 +4330,26 @@ def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
            f"containers [{stopped or 'none'}] reclaim [{rec['reclaim']}]: {why}")
 
 
+GRT_ARM_REPIN_FILE = "grt_halving_arm.repin"
+
+
+def grt_arm_repin_due(ap_dir, rec):
+    """AP_DIR/grt_halving_arm.repin: lines 'item<TAB>max_attempt'; an arm of that item at attempt <= max_attempt that is not
+    yet flagged is cancelled (if live) and flagged repin, which lets grt_arm_launches launch it again from the pinned
+    launcher (the new record carries no flag, and has a higher attempt, so it is not taken again)"""
+    if (rec.get("arm") or {}).get("repin"):
+        return False
+    try:
+        lines = (Path(ap_dir or ".") / GRT_ARM_REPIN_FILE).read_text().splitlines()
+    except OSError:
+        return False
+    for ln in lines:
+        f = ln.split("\t")
+        if len(f) >= 2 and f[0] == rec.get("item") and f[1].strip().isdigit() and int(rec.get("attempt") or 0) <= int(f[1]):
+            return True
+    return False
+
+
 def grt_arm_step(AP, cfg, st, notices, ap_dir):
     """arbitration + stop rule + class stop for every arm record (after collect/follow_queue, before any relaunch)"""
     items = st.get("items") or {}
@@ -4344,6 +4364,15 @@ def grt_arm_step(AP, cfg, st, notices, ap_dir):
     for k, a in arms:
         die, mode = a.get("die"), a["arm"].get("mode")
         base = items.get(a["arm"].get("of")) or {}
+        if grt_arm_repin_due(ap_dir, a):              # KW-FIX-46 (COORD 04:5x (e)): arm built from inputs unlike its sibling's
+            if grt_arm_live(a):
+                grt_arm_cancel(AP, cfg, a, f"GRT-ARM[{mode}] re-pin: its src/plan/bind differ from the sibling's; "
+                                           "relaunched from the pinned launcher", "ARM-REPIN", jobs, notices)
+                n += 1
+            a["arm"]["repin"] = True
+            a["arm"].pop("final", None)
+            AP.log(f"KIT-WAVE GRT-ARM REPIN {die}/{a['item']}@{a.get('attempt')}")
+            continue
         if a.get("status") == "RETRY-INFRA" and a.get("q_status") == "FAIL":
             a["status"] = "FAIL"                          # never: a route verdict is final (stop rule)
         if a.get("status") == "ENQUEUED" and a.get("q_status") == "FAIL" and not a["arm"].get("final"):
@@ -4398,7 +4427,7 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
             base = item_key(die, d["event"], item, blocks[item])
             ak = grt_arm_key(base, o["mode"])
             brec = (st.get("items") or {}).get(base)
-            if ak in st["items"] or not brec or grt_arm_signed(brec) or counted_now(cfg, st, die, item, blocks[item]):
+            if (ak in st["items"] and not (st["items"][ak].get("arm") or {}).get("repin")) or not brec or grt_arm_signed(brec) or counted_now(cfg, st, die, item, blocks[item]):
                 continue
             if any(fnmatch.fnmatchcase(item, pat) for pat in (d.get("hold_items") or {})):
                 continue                                  # an operator hold holds the arm too

@@ -232,6 +232,39 @@ class Pin(unittest.TestCase):
             self.assertTrue(any("lacks src,plan" in m for m in ap.logs))
 
 
+class Repin(unittest.TestCase):
+    def test_repin_cancels_live_arm_then_relaunches_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            st, base = state(d, base_status="RUNNING", q_status="")
+            KW.grt_arm_launches(AP(d), cfg(ARM), st, {}, d)
+            ak = KW.grt_arm_key(base, "off")
+            first = st["items"][ak]["attempt"]
+            (Path(d) / KW.GRT_ARM_REPIN_FILE).write_text(f"{ITEM}\t{first}\n")
+            ap = AP(d)
+            self.assertEqual(KW.grt_arm_step(ap, cfg(ARM), st, {}, d), 1)
+            a = st["items"][ak]
+            self.assertEqual((a["status"], a["class"], a["arm"]["repin"]), ("CANCELLED", "ARM-REPIN", True))
+            self.assertIn(["systemctl", "--user", "stop", a["unit"]], ap.cmds)
+            self.assertEqual(KW.grt_arm_launches(AP(d), cfg(ARM), st, {}, d), 1)      # relaunched through the pinned launcher
+            self.assertEqual(st["items"][ak]["attempt"], first + 1)
+            self.assertFalse(st["items"][ak]["arm"].get("repin"))
+            self.assertEqual(KW.grt_arm_step(AP(d), cfg(ARM), st, {}, d), 0)           # the new attempt is above max_attempt
+            self.assertEqual(KW.grt_arm_launches(AP(d), cfg(ARM), st, {}, d), 0)
+
+    def test_repin_flags_a_failed_arm_without_a_cancel(self):
+        with tempfile.TemporaryDirectory() as d:
+            st, base = state(d)
+            KW.grt_arm_launches(AP(d), cfg(ARM), st, {}, d)
+            ak = KW.grt_arm_key(base, "off")
+            st["items"][ak].update(status="FAIL", q_status="")
+            (Path(d) / KW.GRT_ARM_REPIN_FILE).write_text(f"{ITEM}\t99\n")
+            ap = AP(d)
+            KW.grt_arm_step(ap, cfg(ARM), st, {}, d)
+            self.assertEqual(st["items"][ak]["status"], "FAIL")
+            self.assertTrue(st["items"][ak]["arm"]["repin"])
+            self.assertFalse([c for c in ap.cmds if c[:3] == ["systemctl", "--user", "stop"]])
+
+
 class Reclaim(unittest.TestCase):
     def test_refuses_foreign_dirs(self):
         with tempfile.TemporaryDirectory() as d:
