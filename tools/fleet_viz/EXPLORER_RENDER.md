@@ -19,6 +19,7 @@ The drawing uses the same encoding as the floor view (`explorer/dataflow/floor.j
 | line width | `min(5, 0.45 + 0.32 log2 bits)` |
 | dashed | crosses an unrelated block |
 | white squares | register stages / stations |
+| purple dotted | quasi-static: reset / strap / dead input (`static` column); never ranked, never red |
 | `#N` | the N worst links: hop > reach first, then bits x hop. Same order as `worst_rank` in the TSV |
 
 Run it on epyc4 under `nice -n 19`. It needs python3 with matplotlib (it adds the user site itself under `-I`).
@@ -32,9 +33,34 @@ python3 -I tools/fleet_viz/explorer_render.py die --plan DIE_PLAN.json[.gz] --ou
 - Every plan lane is one link, src -> dst. It runs through its ports' face windows and through the `ft_slots`
   `regs_um` of each partition it passes, placed with that partition's orient.
 - Width = the port width. Stages = the ft regs passed. `cycles` = the lane's `fixed_cycles`.
-- Ports without windows (QC, HEAD) use the middle of the shared edge.
+- Where a lane crosses from one partition to the next, the crossing is taken from, in order: the port's own
+  `face`/`window_um` (`pin`); the src (else dst) type's bus window of that bus name, placed with the partition
+  orient (`tbus`); the whole shared edge of the two abutting partitions (`edge`, a stand-in); the src outline (`box`).
+  On a window or edge the crossing sits at the point that minimises the longer of its two hops: a best case.
+- Ft slot stations follow the kit (gen_rtl + face_flops.tcl), in every schema form: k = `stations` (default 1)
+  + `built_station_extra`; station 0 is the in-face flop AT the slot's in window (the crossing), stations 1..k-1 sit
+  at `regs_um[1..k-1]` (regs_um carries k sites, [0] is ignored by the kit), else at the `bit_sites_um` stages
+  (k-1 of them, centroids), else at L*j/k along the slot route (`spread`, e.g. HEAD hd_spn `stations: 6`).
+  The out port is not registered (the next partition's station 0 is).
+- Crossing order: port window (`pin`), then the ft slot's in/out window (`slot`, overlap of both sides when they
+  abut), then the type bus window (`tbus`), then the shared edge (`edge`), then the outline (`box`).
+- Internal stations: one chain per bus conn as kit_istations.bus_entries (capture groups merged to the deepest
+  depth, bits-weighted centroid; bit_route / exact-site entries as written).
+- The record keeps per chain point `hk` (crossing / station provenance) and `hg` (the crossing segment), per hop
+  `hp` (partition) and `hs` (slot provenance).
+- The title shows the plan file, its sha256 and the plan's own `die.label` separately (a label can be stale).
 - TSV columns: worst_rank, id, class, bits, driver, sinks, stages, length_um, max_hop_um, bit_mm, status, bypass,
   note, cycles, via (the ft partitions).
+
+## Hop audit (REAL or MODEL)
+```
+python3 -I tools/fleet_viz/explorer_render.py audit --record DIE.links.json.gz --top 30 --out DIR
+```
+For the N worst lanes, each hop over reach is REAL (between plan facts: port windows, type bus windows, regs_um,
+bit sites, an even spread of a declared count, or a slot with no stations) or MODEL (it depends on a stand-in:
+`edge`/`box` crossing, missing slot, chain break). An `edge` hop is still REAL when even the best point on that
+shared edge leaves a hop over reach (`hop_lower_um`). Output: `<name>__hop_audit.tsv`, one row per over-reach hop
+plus one LANE row (REAL / MODEL / MIXED / ok).
 
 ## Type (intra-type) view
 ```
@@ -52,6 +78,12 @@ python3 -I tools/fleet_viz/explorer_render.py type --plan PLAN --type T --repo R
   - Direction comes from LEF DIRECTION, else the bus dir, else the port-name suffix.
   - Links are bundled per core pair by default. `--per-port` keeps one link per port.
   - Core pairs that the plan routes through internal stations are drawn from the stations.
+- core_conns lookup is the same as route_supply: exact type, then `__clXXXXXXXX` stripped, then the family
+  before `__` (so `bk_sel__t2` finds `bk_sel`).
+- Quasi-static links are flagged in the `static` column and drawn purple dotted, never ranked: `reset` (a reset
+  port, false_path from arst_n in gen_phys), `strap` (id/count/parent straps, false_path in straps.py), `dead`
+  (plan dead_inputs). Config ports such as `cfg_*`/`go`/`xs_*` are NOT flagged: no plan, RTL or SDC declares them
+  multicycle or false-path, so the flow times them single-cycle and so does this view.
 - `--delta` accepts four formats. Before and after are drawn side by side, and moved cores get a pink outline.
   - CLEANSLATE `{type: {inst: [x, y, orient]}}`.
   - The route_supply delta (`{"types"|"partition_types": ...}` or a list of `{type, inst, ...}` rows).
