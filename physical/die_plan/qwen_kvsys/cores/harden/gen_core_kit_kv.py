@@ -1229,6 +1229,10 @@ def main():
                     help="bound TT pin-register insertion (ps, measured); default: plan clock common latency")
     ap.add_argument("--io-ff-ps", type=float, default=None,
                     help="bound FF pin-register insertion (ps, measured); default: plan clock insertion_ff_ps, else 0.81 x TT")
+    ap.add_argument("--io-insertion", choices=("default", "plan"), default="default",
+                    help="PLAN-GEN-RULES-1 rule A (OWNER 11-10, opt-in): 'plan' binds the IO vclk to the parent plan's core-tap "
+                         "insertion of this core's module (tools/die_plan/plan_gen_rules.core_io_insertion) when no "
+                         "--io-tt-ps is given; 'default' (and a module no non-default tap names) = unchanged kit.")
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
@@ -1746,13 +1750,26 @@ def main():
     sys.path.insert(0, str(a.tool))
     import sdc_lint
     import core_flow
-    if a.io_tt_ps is not None:
+    if a.io_insertion == "plan" and a.io_tt_ps is None and hc is not None:
+        import plan_gen_rules as PGR
+        import schema as PSC
+        io_plan = PGR.core_io_insertion(PSC.Plan(plan), hc["module"])
+        if io_plan:
+            ins, tt_basis = float(io_plan[0]), f"--io-insertion plan: {io_plan[2]}"
+            if a.io_ff_ps is None:
+                a.io_ff_ps = io_plan[1]
+            print(f"IO_INSERTION plan {hc['module']}: TT {io_plan[0]:g} FF {io_plan[1]:g}", flush=True)
+    else:
+        io_plan = None
+    if io_plan:
+        pass
+    elif a.io_tt_ps is not None:
         ins, tt_basis = float(a.io_tt_ps), "--io-tt-ps (measured)"
     else:
         tt_basis = "plan clock common latency"
     if a.io_ff_ps is not None:
-        ff_b, ff_basis = a.io_ff_ps, "--io-ff-ps (measured)"
-    elif a.io_tt_ps is None and plan["clock"].get("insertion_ff_ps") is not None:
+        ff_b, ff_basis = a.io_ff_ps, ("--io-insertion plan" if io_plan else "--io-ff-ps (measured)")
+    elif a.io_tt_ps is None and not io_plan and plan["clock"].get("insertion_ff_ps") is not None:
         ff_b, ff_basis = plan["clock"]["insertion_ff_ps"], "plan clock insertion_ff_ps"
     else:
         ff_b, ff_basis = None, None
