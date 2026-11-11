@@ -872,6 +872,15 @@ class Binder:
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
+        self.subtype_receipts = []
+        if self.ab.get("subtype_bind"):
+            # BIND-SUBTYPE 11-11 (opt-in asbuilt.subtype_bind, absent = nothing runs): a native leaf (or composed cut)
+            # -> the leaves of an exact RTL composition of plan sub-types (bind_subtype.py), before drivers/loads.
+            import bind_subtype
+            try:
+                self.subtype_receipts = bind_subtype.apply(self, self.ab["subtype_bind"])
+            except bind_subtype.SubtypeError as exc:
+                raise BindError(f"SUBTYPE_BIND {exc}") from exc
         if self.ab.get("structural_bridges"):
             # Composition may create native cut leaves absent from the original
             # elaboration. Expand their exact full-ABI source bridges before
@@ -4467,6 +4476,8 @@ def cmd_bind(a):
     if getattr(B, "position_bank_layout", None):
         rep["position_banks"] = B.position_bank_layout
     rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
+    if getattr(B, "subtype_receipts", None):
+        rep["subtype_bind"] = B.subtype_receipts
     if B.param_regen:
         rep["param_regen"] = B.param_regen
         (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
