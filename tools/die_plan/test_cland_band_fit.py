@@ -86,3 +86,26 @@ def test_hard_child_band_under_another_macro_or_out_of_reach_fails():
     raw["partition_types"]["tA"]["clock"]["landing_contract"]["bands"]["bc_i00"]["max_pin_to_band_hop_um"] = 410.0
     _, rep = F.run(copy.deepcopy(raw), None, check=True)
     assert len(rep["failed"]) == 1 and "pin hop" in rep["failed"][0]["error"]
+
+
+def _soft_leaf_plan(lef=None):
+    """QC coll_s form: a content leaf (no LEF: built flat) whose outline covers a ring band."""
+    leaf = dict(inst="u_coll_face_s2", module="qfd_coll_static_face", origin_um=[267.84, 406.08], outline_um=[518.4, 388.8])
+    if lef:
+        leaf["lef"] = lef
+    t = dict(outline_um=[786.24, 803.52], buses=[], ft_slots=[], hard_cores=[], contents=[leaf],
+             clock=dict(landing_contract=dict(bands=dict(rec_tx_s2_i=dict(
+                 rect_um=[350.64, 745.2, 464.816, 786.24], width=548, instance="u_cland_rec_tx_s2_i",
+                 max_pin_to_band_hop_um=162.0)))))
+    return dict(partition_types=dict(tA=t), partitions=[])
+
+
+def test_band_over_a_flat_content_leaf_is_not_blocked():
+    raw = _soft_leaf_plan()
+    out, rep = F.run(copy.deepcopy(raw), None, check=True)
+    assert out == raw and not rep["failed"] and not rep["moved"] and not rep["blocked_not_moved"]
+
+
+def test_band_over_a_lef_content_leaf_is_still_blocked():
+    _, rep = F.run(copy.deepcopy(_soft_leaf_plan("x.lef")), None, check=True)
+    assert [f["bus"] for f in rep["failed"]] == ["rec_tx_s2_i"] and rep["failed"][0]["macro_free_um2"] == 0.0

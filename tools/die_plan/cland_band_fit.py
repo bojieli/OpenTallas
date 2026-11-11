@@ -22,6 +22,13 @@ cells live inside that child, not in rows under it.  face-home (clock_landing_pl
 bands; this check counted the child as the macro that blocks its own band.  A hard-child band is never moved; it is
 checked instead: the child is placed, its box equals the band (<= HARD_TOL_UM, the track offset), no other macro
 overlaps it, and its pin hop is <= REACH.  Any miss is a failure.  Kept in rep["hard_child"].
+
+DIE-QC-97 11-11 ROW-CUT set (QC coll_core / coll_s: 10 bands "macro-free 0.0 / 1351.9 um2" under u_coll_face_p /
+u_coll_face_s2): the band blocker set is the set the kit cuts rows at, schema.placed_macro_boxes (hard cores, LEF-bearing
+contents and their physical parts).  placement_boxes also adds probe blockages for content leaves WITHOUT a LEF
+(qfd_coll_static_face: no LEF, built flat, coll_s a19 placed all 2886 rec_tx_s1_i ring flops FIRM in the "blocked" band
+and routed); those are planning obstacles of a re-site (obstacles()), not row cuts.  A leaf that becomes a hard core or
+gets a LEF is in the set again by construction.
 usage: cland_band_fit.py PLAN SIDECAR OUT_PLAN REPORT [--types REGEX] [--reserve TSV] [--factor 1.25] [--check]
 """
 import argparse, copy, json, re, sys
@@ -144,6 +151,11 @@ def resite(r, tgt, W, H, obs, pxy, reach=REACH):
     return None
 
 
+def row_cut_boxes(t):
+    """Macros the kit cuts placement rows at (no halo): hard cores + LEF-bearing contents + physical parts."""
+    return dict(S.placed_macro_boxes(t, halo=0.0))
+
+
 def hard_child_row(t, lc, tn, bus, b, boxes):
     """Check of a band implemented by a hard cland child (b["hard_core"]): (row, error or None)."""
     r, hc = b["rect_um"], b["hard_core"]
@@ -177,7 +189,7 @@ def run(raw, side, types=r".", reserve=None, factor=1.25, check=False):
         bands = lc.get("bands") or {}
         if not bands:
             continue
-        boxes = placement_boxes(t)
+        boxes = row_cut_boxes(t)
         macros = [list(b) for b in boxes.values()]
         W, H = t["outline_um"]
         for bus in sorted(bands):
