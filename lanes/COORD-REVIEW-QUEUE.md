@@ -40030,5 +40030,36 @@ FAILED [AUTOPILOT 3c59a3ce3903] 2026-11-11 02:38:46 PST AUTOPILOT -> KIT-WAVE-12
   Compute: all searches ran on epyc4 under nice 19 with 8 scorers (COORD 01:3x); the epyc8 runs were stopped by exact PID. Scratch is epyc4 /srv/opentallas-scratch3/claude/cpl-s81-svc-run (1.5 GB, no .git); sparse tree on epyc8 wt/cpl-s81-svc.
 - 2026-11-11 02:43 PST RESULT [DIE-RECHECK-1 -> DIE-S81-85, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-11 02:43 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
     DELTA s81: plan_sha "e596e9588e72" -> "4b5e9a090a20"; designs 82 -> 84
+- 2026-11-11 02:46 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 3 event(s): PHY_NC LAUNCHED (kw-hbm-PHYNC-1-93991); PHY_NE LAUNCHED (kw-hbm-PHYNE-1-93991); PHY_NW LAUNCHED (kw-hbm-PHYNW-1-93992)
 - 2026-11-11 02:46 PST OWNER-ASK [DIE-S81-85 -> DIE-S81-85 -> COORD (for OWNER), CPL-S81-SVC, S81-SVCRS-3] DO_NOT_COUNT. Owner question, for the svc event after 12:00 (not 12:00 itself): may the S81 die grow by +142.56 um in Y so the two svc_pvso_entry types fit a landing strip and a transposer region? The question: svc_hi_dsdv_svc_pvso_entry__t1/t2 are landing-ring limited at the S face (route_supply p99 11.08 and 7.90). Their transposer logic u_tr is soft and has no free region; S81-A1 needs one so the relays reach. CPL-S81-SVC's slot check on 64eb2c89 shows the svc column is stacked edge to edge, every gap 0.00 (phy_hbm | svc_lo rs | pvso | slice_station | leaves ... up to the top at 25332.48). There is no in-column slack except the 103.68 um die-edge margins. The ask: grow pvso by +142.56 um at the S face (a 103.68 um landing strip plus a 38.88 um u_tr soft region), about 0.206 mm2 per type. Because the column is stacked, the die grows +142.56 um in Y: 25436.16 -> 25578.72 um, about +4.55 mm2 (+0.56%). It still fits the 26 x 33 mm reticle. The what-if takes p99 from 11.08 -> 3.66 (t1) and 7.90 -> 4.40 (t2), and gives u_tr a region within the SRX=8 reach. My recommendation: YES, +142.56 um, keeping the die-edge margin. The alternative (+38.88 um, giving up the 103.68 um die-edge margin) I would not take, because that margin is the die-edge keep-out. pvso stays held either way (S81-A1), so this decides the shape of the svc event, not today's batch. Without growth, pvso keeps p99 above 3 and needs a different u_tr plan (hard tr_x sites in pvso, still unpriced).
 - 2026-11-11 02:48 PST DELIVERED [DIE-HBM-97/HBM-CHANNELS -> DIE-HBM-98, HBM-COMPOSE, HBM-TAPS] tag hbm-channels-plan rev 2. DELIVERED for 12:00 compose. DO_NOT_COUNT. die_plan 85df1184ecea (replaces fd512301; same cycles, L8302/L8302m stations re-sited, hops <=356). Dir epyc7:/srv/opentallas-scratch2/claude/die-hbm-97-channels/plan_p11t_chan (SHA256SUMS b7ef1e90457b, replay_chan.sh). Stage proof eq_stations.json ALL_EQ_CYCLE_SHIFTED 7 links + neg controls. INTENT sheet (q_su11/q_su01 +pv1 SU-CHAN moves) plan_p11t_chan/intent/INTENT_SU_CHAN.md + 4 SVGs (lattice shifts, rows/order/l-s abutment kept, search only legalised stations). G0 639->627 (L8008 pre-existing, unmasked). q_b112pv1 route_supply = sidecar artifact, merged cc 0.778->0.778. GitHub claude/hbm-channels-1111 97187b58d5.
+
+### KW-FIX-44 -> COORD, ROOT-MERGE-57: RESULT KW44-SRCCOPY-RESULT-1111 (2026-11-11 02:50 PST)
+COORD counted refinement (SRCCOPY) on localhost: tested, dry-run, list below, applied.
+BRANCH claude/kw-fix-44-ac-localhost-1111 @ 518907696c60, merge-clean on main a3ccc85162f4. On top of the READY 387272f3704f:
+- c36f9e34b78b: SRCCOPY speed fix. One for-each-ref --contains walk per HEAD instead of one merge-base per origin branch; the dry run had hit 3 h before this.
+- 518907696c60: wt-reaper fix. A broad listed ancestor (/srv, a scratch root) no longer protects worktrees by containment. My own kit_wave.json note "Every /srv path named ..." (s81.retry_fix.ot_s81sl_leaf__t42@15, 11-10 17:10) had put a bare "/srv" into the list, which kept 31 localhost worktrees as "inside listed path /srv". A specific listed parent or child still protects. 16 tests pass; the new test fails on main.
+- The SRCCOPY tests pass (26).
+DRY RUN (02:12-02:15, snapshot rebuilt, 883 signed-store entries, 5451 protected rows):
+- SRCCOPY: 474 signed records judged source copies, so no longer counted.
+- controls positive PASS / negative PASS; protected/counted hits at recheck 0.
+- File-trim manifest: 0 rows.
+- wt-reaper with the fix: REMOVE 4 clean worktrees, all idle > 12 h and on origin:
+  - codex-hbm-gen-budget-1113
+  - die-hbm-97-spb/wt
+  - codex-token-followthrough-1107
+  - codex-token-programme-1551
+- wt-reaper DIRTY_IDLE: 26 rescue-only (patch to the rescue dir, worktree kept). The rest stay KEEP: 21 by protected rows, 16 HEAD not on origin, 4 recent admin.
+APPLY:
+- The deployed ~/.local/share/ot-autoclean-auto/ot-autoclean.py is now e8dfe37db16e (deployed base + SRCCOPY). It replaced 69724f329d9c; backup .bak-kw44-srccopy-20261111-022650.
+- wt-reaper.py is now 886d7de73a1c; backup .bak-kw44-generic-20261111-022650.
+- env now has --srccopy (backup env.bak-kw44-srccopy-20261111-022650).
+- Then the push ran (02:27) and the run service (02:27-02:44): SRCCOPY 640 records not counted, repos fetched 8/8; controls PASS; protected/counted hits 0; manifest AUTOCLEAN-auto-localhost-20261111-023931 has 0 file rows; wt-reaper removed 4 (the 4 listed above), 27 DIRTY_IDLE rescued (49 MB).
+- The rescue dir is /srv/opentallas-scratch/claude/rescue: patches written, no PermissionError this time.
+FLEET NOTE: the 02:27 push already carried both files to the fleet hosts. ot-autoclean.py there keeps SRCCOPY off, because their env files do not pass --srccopy. wt-reaper there now also ignores a bare /srv ancestor, which is the same behaviour as before my 11-10 17:10 note.
+DF localhost /:
+- 23:01: 215 GB free
+- before apply 02:26:59: 195 GB free
+- after 02:44:53: 140 GB free
+The drop is other writers, not this job: the job only removes. For example, a 7.1 GB pack was written to /home/ubuntu/OpenTallas/.git at 02:25, before the run started; I did not touch it. SRCCOPY frees nothing by itself here: the worktrees holding the 640 records are still kept by other rows (protected rows, HEAD off origin, or dirty). Localhost is at 97%, so the root floor needs another lever (your call).
+KW44-SRCCOPY-RESULT-1111
