@@ -42856,3 +42856,5 @@ FAILED [AUTOPILOT 3ab7e15f81f3] 2026-11-11 14:12:27 PST AUTOPILOT -> KIT-WAVE-1:
   - Repoint the KV items to vD and lift the kv3_sys_c hold.
   - Relaunch the kv3_hg proof ONCE.
   - Copy pins/ and the sibling inputs from dkv98/kv1200 to each place host BEFORE launch (the memory rule: srcs first).
+- 2026-11-11 14:47 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 2 event(s): q_su21__physical_v1 PREFLIGHT-ADVISORY macro_channels 12 (macro column 0 x[25.92,216]: E vertical channel 0.000 um < 10.8); q_su21__physical_v1 AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_tap_sinks,col_v,empty,fill,grt,partial_face,pin_reg_max,pin_unreg,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21__physical_v1/attempt_2/gen/q_su21__physical_v1)
+- 2026-11-11 14:47 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-78): 1 event(s): kv3_sys_c LAUNCHED (kw-qwenkv-kv3sysc-11-37223)
