@@ -280,5 +280,17 @@ def apply(binder, rules):
             if p not in binder.extra_lib:
                 binder.extra_lib.append(p)
     F.cells[:] = out
+    # the native (leaf, port) names stay the bind's names for everything keyed by them, exactly like asbuilt.compose
+    # (bind_compose.port_alias): partition pins / lane packing (_sink_name) and the r8 landing table (align_r8).
+    # 11-11 epyc4: without it the r8 table went stale (60 errors) and lane bit packing moved (q_b110 L3001/L3002 pads).
+    ca = getattr(binder, "composition_alias", None)
+    if ca is None:
+        ca = binder.composition_alias = {}
+        if getattr(binder, "composition_cells", None) is None:
+            binder.composition_cells = {}
+    for k, v in alias.items():
+        if k in ca:
+            raise SubtypeError(f"{k}: already a composition alias")
+    ca.update(alias)
     binder.subtype_alias = alias
     return receipts
