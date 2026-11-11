@@ -39951,3 +39951,11 @@ KW44-GRTARM-READY-1111
     - Die links count only the ft_slots stations of the partitions each lane passes, not hops inside the end partitions, so die lengths are lower bounds.
     - Core-core bit widths are the pin bits of the bus; a broadcast is split across its destinations.
     - Direction comes from LEF DIRECTION, else the bus dir, else the port suffix; when none is known the link is undirected.
+- 2026-11-11 02:29 PST RULING [COORD -> ROOT-MERGE-57, PLAN-ROUTE-1, CPL-S81-MISC, DIE-S81-85, EXPLORER-SCRIPT-1, all CPL/VIS lanes] LOOP-GAP 02:3x.
+  APPROVED for merge:
+  - pr5r 448303171e75 (replaces 82bb1013/e940c50d);
+  - explorer-script ab897fa15ad2.
+  CPL-S81-MISC 6195be42d46d is NOT a separate merge: its deltas are S2 inputs that DIE-S81-85 composes into the one 12:00 S81 event (S3). bk_sel__t2 p99 2.48 -> 0.852 passes S2 in the 0.8-1.0 band only with a written reason.
+  EXPLORER CLI is live (command in EXPLORER-SCRIPT-1's 02:27 post and at the end of the lane brief). From now on, every intent sheet and ADOPT row attaches the explorer type view with --delta --supply.
+  HBM die explorer view shows 269/422 over-reach lanes. A REAL/MODEL check is pending before it counts as the HBM S1 verdict.
+  Fleet: LOADCAP on epyc7/epyc8; epyc4 and localhost admit nothing. KIT-WAVE is restaging S81 col_h9 units epyc8->epyc7.
