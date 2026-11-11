@@ -38560,3 +38560,26 @@ Also done: the WAVE-OPS-1 QC request. intel2 kw43/src_qcsw2_hc0_por15c got the 4
 - Reading: iteration count alone cannot close this. The class needs a structural form: M6 supply or an M8 escape. The he move what-ifs (d1, e11 pair up 23.3 um, leading) are the macro-placement form; their 30-iteration results land about 02:30 and the chosen move then goes to POROUS-ALL-1 / S81-PLAN-1.
 - The obs4/obs4s runs were OBS-destroy no-ops (GRT ignores in-memory dbBox_destroy); their numbers equal ctl and are not evidence. DO_NOT_COUNT.
 - 2026-11-10 20:14 PST CORRECTION [DIE-S81-85 -> DIE-S81-85 -> COORD, POROUS-ALL-1, S81-PLAN-1] CORRECTION to my h9 GRT control post just above: the m8 what-if ran 30 iterations, not 12 [CHECKED m8.log: 30-iteration limit, one final report]. The like-for-like pairs are: at 12 iterations, ctl 123,335 vs m6lo 45,205 (M6 78,391 vs 35,103); at 30 iterations, ctl 77,805 vs m8 26,102 (M6 66,714 vs 23,143). The conclusion is unchanged: iterations do not close M6; M6 supply or an M8 escape does.
+KW44-PINGRID-1111 2026-11-10 20:14:50 PST KW-FIX-44 -> COORD, ROOT-MERGE-57
+
+READY: claude/kw-fix-44-pingrid-1111 @ 13648af615e1, on origin/main, 6 files, tools/die_plan:
+- kit_gen_lint pin_grid FAIL: an io.tcl place_pin that runs along its layer must sit on that layer's track grid, offset included (kit make_tracks, else platform offsets).
+- kit_gen_lint macro_grid FAIL: only the certain class, a placed macro whose signal pins miss the tracks.
+- OT_GRID_LINT 0 in config.mk or the environment turns both off.
+- pin_grid_snap.py KIT [--write] snaps pins onto the tracks (io.tcl + pins.json, overlaps refused, receipt).
+- face_flops.tcl: reset/clock ports are no longer face-registered (name regex + a BUF/INV walk to a flop CLK pin; OT_FF_SKIP_RE extends it). OT_FF_DEPTH_BAND_UM spreads face flops over a depth band; unset = unchanged.
+- io_pin_grid is not a queue (kit_contract CHECKS) row; it is a generation-time FAIL only.
+- Tests: 9 + 6 new; kit_contract/kit_gen_lint suites 101 pass, the 1 failure was already there (sparse tree, no rtl/). face_flops was rebased onto main's new LAND-RESERVE block.
+
+MEASURED before going live, on 604 epyc7 kits that have an io.tcl:
+- macro_grid FAIL: 16, all with DRT violations, so true positives.
+- pin_grid FAIL: 184, of which about 100 are real kits (the rest are my scratch copies). Median 10 pins off per kit.
+  - 90: M5 x half a track (24 nm vs make_tracks offset 0.024), the dma class.
+  - 52: M7 32 nm, mostly a single rst_n reset-spine pin.
+  - 37: kits without MAKE_TRACKS, 12/16 nm off the platform tracks.
+- dma vp4_vPose2 FAILs, vp4_vPose3 PASSes.
+
+NOT OVERLAID LIVE YET (decision needed): a live FAIL would stop about 100 current kits at generation. That also cuts against OWNER 11-03 "targets, not gates" (pre-build checks are advisory). Options:
+(A) overlay as is: pin_grid + macro_grid FAIL at generation, the error names pin_grid_snap.py.
+(B) overlay with pin_grid advisory, macro_grid FAIL, until the generators (dma respread, M7 reset taps, kits without MAKE_TRACKS) snap at write time; then pin_grid becomes FAIL.
+Recommendation: (B), since all 16 macro hits are real and the pin hits are mostly single pins that may route fine. Default if COORD is silent by the next hourly check: (B). face_flops goes into the same overlay either way.
