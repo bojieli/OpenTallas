@@ -97,6 +97,15 @@ def sites(t, a, b, n):
     return [snap_out(p, boxes, t["outline_um"]) for p in on_L(a, b, n)]
 
 
+def out_core_first(win, core, regs):
+    """an OUT relay entry written core -> face (STATION-FIX-HBM 11-11, COORD S7 station_lint INVERTED): from_um = the
+    core end, regs_um[0] next to the core, to_um = the face window.  kit_istations sites station k (the k-th register
+    after the launching core pin) at regs_um[k], so the chain runs core -> face; native_istations.face_first() keeps
+    such an entry as written.  regs are the sites on the L window -> core (same sites, reversed order).  The 11-08
+    form (from_um = window, regs face first) zig-zagged in every kit (HBM NE_io L8006_o last hop 862 um)."""
+    return dict(from_um=list(core), to_um=list(win), regs_um=list(reversed(regs)))
+
+
 _PINS = {}
 
 
@@ -318,8 +327,9 @@ def build(raw, bound, root, skip, only=None, native_base=(), price_existing=Fals
             count = max([n] + [F0[lid] - dest_need(lid) for lid in lns])
             for lid in lns:
                 lane_by_id[lid]["fixed_cycles"] = count + dest_need(lid)
-            ent = dict(conn=f"bus:{bus}", from_um=[round(v, 3) for v in frm], to_um=[round(v, 3) for v in to],
-                       regs_um=sites(t, frm, to, count), launch=sorted(a["ports"])[0], capture="face flop",
+            ent = dict(conn=f"bus:{bus}", **out_core_first([round(v, 3) for v in frm], [round(v, 3) for v in to],
+                                                           sites(t, frm, to, count)),
+                       launch=sorted(a["ports"])[0], capture="face flop",
                        note=f"TYPE-SAFE-2 11-08 relay: {', '.join(sorted(a['ports'])[:3])} -> face {bus} "
                             f"{a['d']:.0f} um, {n} needed, {count} source stations (lane slack moved first)")
             native_out.add(tn)
