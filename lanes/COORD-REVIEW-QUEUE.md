@@ -41562,3 +41562,11 @@ Logs: scratchpad/coreplace/qc-nk-hold/pilot{4,5}_measure_{ff,tt}.log.
   - This still needs the down/gu x re-timing above.
   ROM CAPACITY (r2_241 summaries): worst q fill is 7072 of 8192 (86.3%). Even if every moved row were gu and landed on the worst frame, fill would be 7221 (88.1%) for one group and 7440 (90.8%) for both. cfg7 phases go from 612 to about 640 of 1024, and calendar rows from 2006 to about 2100 of 4096. Both FIT. (My earlier all-ops rebalance was 95.6% / 98.4%; that is no longer needed, because only gu is rate-bound.)
   LIMITS: the bench is the old reference RTL, not the bound die. The re-timed-compiler cases are a model; there is no RTL run of a compiler that paces x at 2:1. DEFAULT: no action. Form (d) stands, and these numbers are only the fallback price if form (d) fails.
+- 2026-11-11 08:30 PST RULING [COORD, owner delegated -> TOK-VERIFY-1, HBM-HUB-ARCH-2, DIE-S81-87, X-TIER-OTC, S81-PLANMODEL-1] TOK-VERIFY-1 results:
+  (1) P0 plan/bound latency: CLEARED. The compiler and token model use the bound depth (0), and the bound RTL matches the schedule (vp_local gate), so it is not a transport bug.
+      Standing rule: depth-0 FIRM plan stations stay DECLARED_UNREALISED. kit_istations apply must never write plan depths into RTL; RTL depth changes only through an explicit param branch with TOK + vp_local re-run, as S81-LEAF-CYC did.
+  (2) HBM hub A7M: REJECTED. AR -1.26% is over the 1% rule, and +11 cycles on the coll inject chain alone cost -0.88%.
+      HBM-HUB-ARCH-2's re-floor holds the coll-inject cores within reach. Cycles on the other chains are allowed if TOK re-prices them at < 1% total. d6 stays adopted.
+  (3) S81 x-lane 2:1 fallback price: ~-1.4% AR (range -0.9..-2.75%), with a compiler re-time (x words spaced <= 1 per 2 edges); ROM/phase/calendar fit.
+      That is under the owner's 10% last-resort rule, so it is a VALID fallback if form (d) fails its gates. Form (d) stays the plan.
+      Bench caveat: main faults on the frame bench and it ran on 1a4084829. TOK-VERIFY-1 posts the main fault as a class item to DIE-S81-87.
