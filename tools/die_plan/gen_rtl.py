@@ -824,14 +824,18 @@ def realize_plan_stations(raw, tn, text, out):
     return wrapper.read_text()
 
 
-def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True):
+def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True,
+              validate_types=None):
     """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
     as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
     generated die top, so the landed form is one complete source-bound netlist; the declared observer is checked
     against its actual leaf header (one-bit inputs) before any ring is emitted."""
     if not emit_die_top and landing is not None:
         raise GenError("landed whole-die emission requires emit_die_top=True")
-    errs = S.validate(raw)
+    # KW-FIX-45: validate only the selected types' own errors (validate_types = the caller's explicit --types; the landed
+    # emitter passes types=None because it needs every copy, which must not widen the validation to the whole plan)
+    scope = validate_types or types
+    errs = S.scope_errors(S.validate(raw), scope)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
     P = S.Plan(raw, plan_path)
