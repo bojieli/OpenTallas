@@ -29,6 +29,8 @@ REACH = float(sys.argv[sys.argv.index("--reach") + 1]) if "--reach" in sys.argv 
 sys.path.insert(0, SRC + "/tools/autopilot")
 sys.path.insert(0, SRC + "/tools/die_plan")
 import geom_rules as G  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import istation_knee as KN  # noqa: E402
 
 K = Path(KIT)
 pins = json.loads((K / "pins.json").read_text())
@@ -215,17 +217,41 @@ for b, n in list(n_out.items()) + list(n_in.items()):
     fam[family(b)] = max(fam[family(b)], n)
 n_out = {b: fam[family(b)] for b in n_out}
 n_in = {b: fam[family(b)] for b in n_in}
-# per-bit knee routes must fit the kit limit from the leaf to the worst bit
-for b in n_out:
-    if n_out[b]:
-        w = max(L1(out_leaf[b], PIN.get((b, k)) or PC[b]) for k in range(OUTW[b] + 1))
-        n_out[b] = max(n_out[b], math.ceil(w / 400.0) - 1)
-print("n_out", {b: n for b, n in n_out.items() if n}, "n_in", {b: n for b, n in n_in.items() if n})
 
 raw_bytes = Path(BASE).read_bytes()
 raw = json.loads(raw_bytes)
 t = raw["partition_types"][TN]
 assert "internal_stations" not in t and "relay_sites" not in t, "type already carries stations / relay sites"
+
+# KNEE-1 11-10: size every per_bit chain with the kit's own knee rule (istation_knee mirrors kit_istations
+# is_knee_site: pin bbox of the whole bus, one shared integer stage split, leaf offset), out AND in buses.  The old
+# straight L1/(n+1) per-bit estimate passed sle_fw_v3 st_eo at 355 um; the kit measured 442.99 and stopped GPL.
+BUSREC = {b["name"]: b for b in t["buses"]}
+
+
+def in_leaf_pt(bus):
+    pts = in_leaf[bus]
+    return (round(sum(p[0] for p in pts) / len(pts), 3), round(sum(p[1] for p in pts) / len(pts), 3))
+
+
+def knee_size(n, bus, direction, leaf, width):
+    rec = BUSREC[bus]
+    pts = [PIN.get((bus, k)) or PC[bus] for k in range(width + 1)]
+    return KN.stations_needed(rec["face"], direction, leaf, pts, n, KN.PLAN_MARGIN_UM, KN.leaf_offset(t, rec))
+
+
+for _ in range(4):                       # knee depth, then one latency per bundle, until both hold
+    n_out = {b: knee_size(n, b, "out", out_leaf[b], OUTW[b]) if n else 0 for b, n in n_out.items()}
+    n_in = {b: knee_size(n, b, "in", in_leaf_pt(b), INW[b]) if n else 0 for b, n in n_in.items()}
+    fam = collections.defaultdict(int)
+    for b, n in list(n_out.items()) + list(n_in.items()):
+        fam[family(b)] = max(fam[family(b)], n)
+    stable = all(n_out[b] == fam[family(b)] for b in n_out) and all(n_in[b] == fam[family(b)] for b in n_in)
+    n_out = {b: fam[family(b)] for b in n_out}
+    n_in = {b: fam[family(b)] for b in n_in}
+    if stable:
+        break
+print("n_out", {b: n for b, n in n_out.items() if n}, "n_in", {b: n for b, n in n_in.items() if n})
 stations, report = [], dict(reach_um=REACH, out=[], inn=[], hops={})
 
 
@@ -246,8 +272,7 @@ for bus, n in sorted(n_out.items()):
 for bus, n in sorted(n_in.items()):
     if n <= 0:
         continue
-    pts = in_leaf[bus]
-    c = (round(sum(p[0] for p in pts) / len(pts), 3), round(sum(p[1] for p in pts) / len(pts), 3))
+    c = in_leaf_pt(bus)
     rc = PC[bus]
     tot = n + 2
     st_in[bus] = dict(conn=f"bus:{bus}", from_um=[round(rc[0], 3), round(rc[1], 3)], to_um=list(c),
