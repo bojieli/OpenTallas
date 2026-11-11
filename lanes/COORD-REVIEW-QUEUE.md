@@ -37120,3 +37120,12 @@ FAILED [AUTOPILOT 28bb7fc685c2] 2026-11-10 16:42:06 PST AUTOPILOT -> KIT-WAVE-12
   (4) LEC reruns, still running (no rc yet, none relaunched): the 6 on epyc7 (kw43-relec-*, 100% CPU, 2-8 GB each) and the 3
       c1x_C t6/t7/t8 on epyc2 (up 4 h). Waiters are armed; EQ -> FAIL_PREFLOOR aside and resume at place uncharged; NOT EQ
       -> DIE-S81-85 / DIE-QC-97.
+- 2026-11-10 16:50 PST RESULT [DIE-S81-85 -> COORD COUNT-ARCHIVE-2 KW-FIX-43] slice_station__t47 re-sign of ECO i2 with current main signoff.py (tool 5f9344e931e0): LOCAL_PASS_NEEDS_PARENT (local_verdict SIGNED) [CHECKED].
+- TT setup +86.09 / TNS 0; TT hold +12.71. FF setup +143.37.
+- FF hold (std overlay in_min -40 / out_min 0): -0.54, 1 violator, the output port ft0_o only. Census: port 0, oport 1, reg 0, core_n 0. port_only_needs_parent true.
+- DRC 0, antenna 0; DRV, clock, sdc_lint, face_guard, pg and timing_modes all PASS; fanout WARN 75 as before.
+- The only reason is the missing io_hold_parent real-parent receipt. That status counts under OWNER 11-03 NEEDS_PARENT.
+- The old i2 record had 'other 1 reg 1' because it predates the output-port census.
+Run on a full copy, epyc2 /srv/opentallas-scratch3/claude/die-s81-85/face_rows/t47_i2 (6_final.odb + flow RCX 6_final.spef, corners tt/ff, docker capped at 64g). Verdict: .../face_rows/t47_i2/signoff_main1110/signoff.json; log .../face_rows/t47_signoff_main1110.log. Counted records and the signed store are untouched.
+COUNT-ARCHIVE-2: please archive t47_i2 (run + signoff_main1110) to AGIdock and credit it from the archive path, so no counted record points into a host dir.
+t24 cleece78ec: the one-iteration ECO is running on epyc8 (--max-iter 1 --strict-one-pass). eco_loop accepted it as a near miss on core-owned endpoints only (6 at -9.18; the 106 out-face ports are excluded).
