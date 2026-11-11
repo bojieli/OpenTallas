@@ -29090,7 +29090,13 @@
     "NE_io": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse, no Steiner reason",
     "q_hub_ne": "KW-FIX-45 11-11 COORD 08:1x: q_hub_ne prov FAIL; HOLD until the d6 event (HUB-ARCH-2); also route_supply >1.0 and worse",
     "q_b102": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
-    "q_b102__physical_v1": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)"
+    "q_b102__physical_v1": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
+    "q_b011": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b011__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b101": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b101_nw": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b103": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b103__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens"
    },
    "gen_hosts": [
     "epyc8",
@@ -30646,27 +30652,47 @@
      {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
-      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      },
      {
       "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
-      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      },
      {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
-      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      },
      {
       "host": "epyc8",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
-      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      },
      {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
       "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      }
     ],
     "ot_hbm_idx_score_hcol_h0_rb": [
@@ -40447,8 +40473,8 @@
     "q_b011*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class; post-cut PDN channel item",
     "q_b100*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
     "q_b103*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
-    "q_b000": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
-    "q_b000__physical_v1": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
+    "q_b000": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b000__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
     "q_b011": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
     "q_b011__physical_v1": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
@@ -40457,7 +40483,34 @@
     "q_b101_nw": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
     "q_b103": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)",
     "q_b103__physical_v1": "KW-FIX-45 11-11 COORD fail_watch 09:06: HOLD BY CHILD ot_hbm_idx_score_hcol_h0_ra (PDN-0179 class; DIE-HBM-100 owns the class fix): every HBM type whose children include hcol_h0_ra (16 in plan t10/t11)"
-   }
+   },
+   "prov_view_sources_ra_prev_kw45": [
+    {
+     "host": "epyc2",
+     "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+     "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+    },
+    {
+     "host": "epyc4",
+     "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+     "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+    },
+    {
+     "host": "epyc7",
+     "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+     "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+    },
+    {
+     "host": "epyc8",
+     "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
+     "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)"
+    },
+    {
+     "host": "epyc2",
+     "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
+     "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+    }
+   ]
   }
  },
  "place_prefer": [
