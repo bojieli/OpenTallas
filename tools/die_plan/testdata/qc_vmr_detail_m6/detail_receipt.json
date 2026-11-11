@@ -1,0 +1,27 @@
+{
+ "base": "base.lef",
+ "base_sha256": "6dd379d21ce4d095f3b08683b4d0124ba1d3fb057d4787fc54daa28196ae270b",
+ "detail": "detail1.lef",
+ "out": "d/qfd_dv_s8x_vmr.lef",
+ "out_sha256": "7c36c9cdee224c871543e3d346398d22cafcd5f401bfa8dddc9426cbd7bbfd3e",
+ "layers_detailed": [
+  "M6"
+ ],
+ "rects": {
+  "M6": 81
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VDD": [
+   "M5"
+  ],
+  "VSS": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "bloat_factor": 1
+}

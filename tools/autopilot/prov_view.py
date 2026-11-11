@@ -717,8 +717,11 @@ def pg_layer_detail_layers(tool, before, after, bloat):
     return [top]
 
 
-def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_override=None):
-    """-> (ok, why) for a routed candidate dir"""
+def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_override=None, detail_receipt=None):
+    """-> (ok, why) for a routed candidate dir.  detail_receipt: the abstract_detail receipt of a selected detailed LEF;
+    a physical FT core accepts it only as the captured FT LEF plus refined OBS (core_ft_physical.detail_view), and the
+    result then reads "ok; signed_view_ok via detail receipt"."""
+    via = None
     lef, tt, ff = (os.path.join(cdir, f"{module}{s}") for s in (".lef", "_tt.lib", "_ff.lib"))
     lef = lef_override or lef
     for f in (tt, ff) + (() if plan_lef else (lef,)):
@@ -745,7 +748,8 @@ def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_ove
                 import core_ft_physical as CF
                 # DIE-QC-97 11-11 ISLAND-VIEW: a repo-relative physical_ft proof resolves against the selected --src
                 # cohort (the gen_phys root), not the remote shell cwd
-                contract = CF.load(entry, module, lef, tt, ff, root=source_root, ppins=ppins)
+                contract = CF.load(entry, module, lef, tt, ff, root=source_root, ppins=ppins, detail_receipt=detail_receipt)
+                via = contract.get("signed_view_ok")
                 ppins = list(ppins) + [{"name": p["name"]} for p in contract["ports"]]
             except (ValueError, OSError) as exc:
                 return False, "physical FT contract: " + str(exc)
@@ -761,7 +765,7 @@ def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_ove
         got = lib_signal_ports(got, lp)
         if got != want:
             return False, f"{os.path.basename(f)} ports != LEF ports (+{sorted(got - want)[:2]} -{sorted(want - got)[:2]})"
-    return True, "ok"
+    return True, "ok" + (f"; signed_view_ok {via}" if via else "")
 
 
 def make(a):
@@ -799,7 +803,8 @@ def make(a):
             try:
                 if not plan_lef:
                     selected_lef, detail = routed_detail(cdir, m, meta, a.src)
-                ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src, selected_lef)
+                receipt = json.load(open(os.path.join(cdir, meta["detailed_receipt"]))) if detail is not None else None
+                ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src, selected_lef, receipt)
             except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
                 ok, why = False, "detailed abstract: " + str(exc)
             tried.append(f"{meta.get('job', c)}: {why}")
@@ -808,6 +813,8 @@ def make(a):
                     shutil.copyfile(os.path.join(cdir, m + suffix), os.path.join(vd, m + suffix))
                 if not plan_lef:
                     shutil.copyfile(selected_lef, os.path.join(vd, m + ".lef"))
+                if receipt is not None and entry.get("physical_ft"):   # gen_phys CF.contracts re-checks it beside the LEF
+                    shutil.copyfile(os.path.join(cdir, meta["detailed_receipt"]), os.path.join(vd, m + ".detail_receipt.json"))
                 rec = dict(source="routed", job=meta.get("job"), host=meta.get("host"), signoff=meta.get("signoff"),
                            drc=meta.get("drc"), tt_wns=meta.get("tt_wns"), ff_wns=meta.get("ff_wns"))
                 # KW-FIX-35-V 11-08 (COORD: signed child views missing in the wave): a candidate that IS the counted
@@ -819,6 +826,8 @@ def make(a):
                     carry_landing_evidence(cdir, vd)
                 if detail is not None:
                     rec["abstract_detail"] = detail
+                if why.endswith("signed_view_ok via detail receipt"):
+                    rec["physical_ft_view"] = "signed_view_ok via detail receipt"
                 break
         if rec is None and entry.get("physical_ft"):
             errors.append(f"{m}: explicit physical FT requires its exact routed view ({'; '.join(tried)})")
