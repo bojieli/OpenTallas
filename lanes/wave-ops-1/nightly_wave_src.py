@@ -297,7 +297,7 @@ def report(res):
         if r.get('error'):
             L.append('- ERROR ' + r['error']); continue
         L.append('- paths: ' + ', '.join('%s %d' % kv for kv in sorted(r['classify']['counts'].items(), key=lambda kv: -kv[1])))
-        L.append('- carried live overlays (not in git), top dirs: ' + ', '.join('%s %d' % kv for kv in r['carried_dirs']))
+        L.append('- carried live overlays (not in git), top dirs: ' + ', '.join('%s %d' % tuple(kv) for kv in r['carried_dirs']))
         if r['merged']:
             L.append('- 3-way merged: ' + ' '.join(r['merged'][:20]))
         if r['conflicts']:
