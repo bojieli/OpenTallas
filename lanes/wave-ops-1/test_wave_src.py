@@ -226,9 +226,18 @@ def test_kept_owner_tags():
         assert o['tools/x.py']['owner'] == 'KW-FIX-44' and o['tools/none.py']['owner'] == '', o
 
 
+def test_approved_overlays(tmp_path=None):
+    import tempfile
+    d = tempfile.mkdtemp(); f = os.path.join(d, 'a.tsv')
+    open(f, 'w').write('# h\nclaude/kw-fix-44-pingrid-1111\t22fb938f7d7a\tKW-FIX-44\tCOORD 11-11\nbad\tzz\n')
+    o = N.approved_overlays(f)
+    assert o == [dict(name='claude/kw-fix-44-pingrid-1111', sha='22fb938f7d7a', src='KW-FIX-44')], o
+
+
 if __name__ == '__main__':
     n = 0
     for k, f in list(globals().items()):
         if k.startswith('test_'):
             f(); n += 1
     print('%d passed' % n)
+

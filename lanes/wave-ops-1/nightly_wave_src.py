@@ -111,6 +111,21 @@ def parse_kw44(text, now_s=None, window_h=48):
     return out
 
 
+APPROVED_TSV = os.path.join(HERE, 'APPROVED-OVERLAYS.tsv')   # branch<TAB>sha<TAB>owner<TAB>ruling (hand entries)
+
+
+def approved_overlays(path=None):
+    out = []
+    try:
+        for ln in open(path or APPROVED_TSV):
+            f = ln.rstrip('\n').split('\t')
+            if len(f) >= 2 and not ln.startswith('#') and re.fullmatch(r'[0-9a-f]{7,40}', f[1]):
+                out.append(dict(name=f[0], sha=f[1], src=(f[2] if len(f) > 2 else 'hand')))
+    except OSError:
+        pass
+    return out
+
+
 def hub_cfg():
     return json.loads(ssh(HUB, 'cat ' + HUB_CFG, timeout=120))
 
@@ -182,6 +197,9 @@ def plan(date, run_dir, cfg=None, queue_text=None):
     kw44 = parse_kw44(queue_text)
     known = {o['sha'] for o in train['overlays']}
     overlays = train['overlays'] + [o for o in kw44 if o['sha'] not in known]
+    for o in approved_overlays():                                  # COORD-ruled overlays named by hand (last wins on conflicts)
+        if not any(x['sha'].startswith(o['sha']) or o['sha'].startswith(x['sha']) for x in overlays):
+            overlays.append(o)
     main = ssh(CHOST, 'git -C %s fetch -q origin main 2>/dev/null; git -C %s rev-parse origin/main' % (REPO, REPO), 900).strip()
     shas = sorted({o['sha'] for o in overlays} | {d['src_sha'] for d in dies.values() if d['src_sha']})
     gone = ensure_shas(shas)
