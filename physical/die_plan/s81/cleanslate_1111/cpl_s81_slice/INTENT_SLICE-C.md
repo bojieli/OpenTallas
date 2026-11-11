@@ -1,6 +1,6 @@
 # INTENT SHEET SLICE-C (CPL-S81-SLICE, plan 99f40d35071d)
 
-Delta: `delta_SLICE-C_99f40d35.json` sha256 `6464cdede16922e8fd2f136dc19d55f46866a0570b9aad283d9c0e2d1a2892e8`; adopted types 12/16.
+Delta: `delta_SLICE-C_99f40d35.json` sha256 `e1ebefaeb58f95b6d43aaee78c4e830f4f56587438be299d35ab5d43b41bbd95`; adopted types 6/16.
 
 **Dataflow (bound netlist + LEF directions + plan buses/stations).** Ring side: leafup_i* face windows (279-668 b each,
 the farthest one staged) -> u_xr (xrt ring core) <-> the slice content macros (2707 b in / 1240 b out, p2p) -> u_xr broadcasts
@@ -11,30 +11,36 @@ xr->leafdn/cap broadcast; finish chain p2p neighbour links (+ skip links); cfg/s
 **Timing-critical pairs:** the plan internal stations (leafup_i3/i4 -> xr staged, ~1190 um), xr<->macros (~800 um), and the
 eng_finish chain neighbours.  **Intended layout:** the plan structure already follows this chain (finish row in chain
 order, xr between its windows and the content macros, cap beside the ret windows), so it is kept: the search only
-shifts cores <=250 um and flips them, and no link >=32 b (or any station link) may grow beyond 1.2x+20 um or cross the
-396.9-um reach.  What it buys: face-window streets (the window jam class: capc5r is an M1-M7 full blocker under the W
-lepk/xring windows), lower route_supply p99, a few % bit-mm.
+shifts cores <=250 um on the 8.64 lattice (no relocate, no flip), and no link >=32 b (or any station link) may grow beyond
+1.2x+20 um or cross the 396.9-um reach.  **Composer gate (v2, DS85-COMPOSE-1111 dry-run FAIL of v1 6464cded):** every
+search step must also pass the composer legality copied rule for rule (cgate.py): no new overlap or street <34.56 um
+(abutted 0 allowed) against every hard core AND every lef content macro (the slice SRAM/em banks), no new station/ft
+reg, tap or core tap strictly under any core or macro box (after the station re-site), and the kit tap rule
+(taps.grid_explicit_taps load <=1500, radius <=1.10 x tap_radius_um) checked on 99f + the LP-W window.  Six types keep a
+legal fine-tune (c1x t4/t8/t9, c3x, iq, lepe_mu_C); c1x t1/t3/t6/t7, kv512 and lepw_mus_C have no legal improvement
+under the gate -> KEEP.  What it buys: face-window entry streets, lower route_supply p99 (c1x_t8 3.03 -> 2.69),
+~0.5 % family bit-mm.
 
 ## Per type
 
 | type | moved | bit-mm | worst cut V/H | entry | rs p99 | chain corr | longer links | SVG |
 |---|---|---|---|---|---|---|---|---|
-| dsdv_slice_c1x_C__t1 | 10 | 7173.0 -> 7110.7 | 0.471/0.373 -> 0.471/0.368 | 3.42 -> 2.756 | 2.923 -> 2.313 | -0.986 -> -0.984 | 0 | dsdv_slice_c1x_C__t1_after.svg |
-| dsdv_slice_c1x_C__t3 | 9 | 4745.6 -> 4693.3 | 0.314/0.409 -> 0.317/0.409 | 4.582 -> 3.697 | 1.744 -> 1.744 | 0.635 -> 0.636 | 0 | dsdv_slice_c1x_C__t3_after.svg |
-| dsdv_slice_c1x_C__t4 | 8 | 6452.6 -> 6472.0 | 0.467/0.29 -> 0.467/0.29 | 2.18 -> 0.0 | 1.473 -> 1.473 | 0.881 -> 0.818 | 0 | dsdv_slice_c1x_C__t4_after.svg |
+| dsdv_slice_c1x_C__t1 | 0 | 7173.0 -> 7173.0 | 0.471/0.373 -> 0.471/0.373 | 3.42 -> 3.42 | 2.923 -> 2.923 | -0.986 -> -0.986 | 0 | dsdv_slice_c1x_C__t1_after.svg |
+| dsdv_slice_c1x_C__t3 | 0 | 4745.6 -> 4745.6 | 0.314/0.409 -> 0.314/0.409 | 4.582 -> 4.582 | 1.744 -> 1.744 | 0.635 -> 0.635 | 0 | dsdv_slice_c1x_C__t3_after.svg |
+| dsdv_slice_c1x_C__t4 | 10 | 6452.6 -> 6447.1 | 0.467/0.29 -> 0.467/0.29 | 2.18 -> 0.632 | 1.473 -> 1.473 | 0.881 -> 0.851 | 0 | dsdv_slice_c1x_C__t4_after.svg |
 | dsdv_slice_c1x_C__t5 | 0 | 6643.2 -> 6643.2 | 0.389/0.433 -> 0.389/0.433 | 3.143 -> 3.143 | 2.087 -> 2.087 | -0.715 -> -0.715 | 0 | dsdv_slice_c1x_C__t5_after.svg |
-| dsdv_slice_c1x_C__t6 | 4 | 7967.0 -> 7859.2 | 0.396/0.3 -> 0.396/0.3 | 2.199 -> 1.023 | 1.456 -> 1.457 | -0.921 -> -0.921 | 0 | dsdv_slice_c1x_C__t6_after.svg |
-| dsdv_slice_c1x_C__t7 | 10 | 7824.9 -> 7920.3 | 0.473/0.429 -> 0.466/0.429 | 3.233 -> 1.751 | 2.373 -> 1.956 | -0.968 -> -0.96 | 0 | dsdv_slice_c1x_C__t7_after.svg |
-| dsdv_slice_c1x_C__t8 | 8 | 6172.0 -> 5991.5 | 0.418/0.495 -> 0.43/0.425 | 3.143 -> 2.763 | 3.031 -> 2.691 | -0.44 -> -0.43 | 0 | dsdv_slice_c1x_C__t8_after.svg |
-| dsdv_slice_c1x_C__t9 | 9 | 6099.0 -> 5927.5 | 0.371/0.445 -> 0.377/0.445 | 3.534 -> 2.649 | 2.003 -> 1.924 | -0.64 -> -0.653 | 0 | dsdv_slice_c1x_C__t9_after.svg |
+| dsdv_slice_c1x_C__t6 | 0 | 7967.0 -> 7967.0 | 0.396/0.3 -> 0.396/0.3 | 2.199 -> 2.199 | 1.456 -> 1.456 | -0.921 -> -0.921 | 0 | dsdv_slice_c1x_C__t6_after.svg |
+| dsdv_slice_c1x_C__t7 | 0 | 7824.9 -> 7824.9 | 0.473/0.429 -> 0.473/0.429 | 3.233 -> 3.233 | 2.373 -> 2.373 | -0.968 -> -0.968 | 0 | dsdv_slice_c1x_C__t7_after.svg |
+| dsdv_slice_c1x_C__t8 | 9 | 6172.0 -> 6028.8 | 0.418/0.495 -> 0.432/0.425 | 3.143 -> 2.763 | 3.031 -> 2.691 | -0.44 -> -0.387 | 0 | dsdv_slice_c1x_C__t8_after.svg |
+| dsdv_slice_c1x_C__t9 | 9 | 6099.0 -> 6054.1 | 0.371/0.445 -> 0.371/0.445 | 3.534 -> 3.313 | 2.003 -> 1.924 | -0.64 -> -0.663 | 0 | dsdv_slice_c1x_C__t9_after.svg |
 | dsdv_slice_c1x_C__t10 | 0 | 7453.4 -> 7453.4 | 0.481/0.256 -> 0.481/0.256 | 2.977 -> 2.977 | 1.457 -> 1.457 | 0.796 -> 0.796 | 0 | dsdv_slice_c1x_C__t10_after.svg |
-| dsdv_slice_c3x_C__t1 | 4 | 10169.5 -> 9955.1 | 0.431/0.432 -> 0.431/0.432 | 2.194 -> 0.934 | 0.482 -> 0.481 | 0.975 -> 0.97 | 0 | dsdv_slice_c3x_C__t1_after.svg |
-| dsdv_slice_iq_C__t1 | 9 | 7779.0 -> 7651.7 | 0.476/0.325 -> 0.476/0.325 | 1.633 -> 0.657 | 0.785 -> 0.785 | -0.402 -> -0.474 | 0 | dsdv_slice_iq_C__t1_after.svg |
-| dsdv_slice_kv512_C__t1 | 5 | 6563.9 -> 6453.2 | 0.42/0.34 -> 0.408/0.34 | 1.979 -> 0.876 | 1.457 -> 1.156 | 0.82 -> 0.807 | 0 | dsdv_slice_kv512_C__t1_after.svg |
-| dsdv_slice_lepe_mu_C__t1 | 9 | 7853.0 -> 7640.9 | 0.422/0.326 -> 0.468/0.326 | 2.683 -> 0.219 | 1.457 -> 1.41 | 0.766 -> 0.74 | 0 | dsdv_slice_lepe_mu_C__t1_after.svg |
+| dsdv_slice_c3x_C__t1 | 5 | 10169.5 -> 9953.7 | 0.431/0.432 -> 0.431/0.432 | 2.194 -> 1.31 | 0.482 -> 0.481 | 0.975 -> 0.97 | 0 | dsdv_slice_c3x_C__t1_after.svg |
+| dsdv_slice_iq_C__t1 | 6 | 7779.0 -> 7657.3 | 0.476/0.325 -> 0.476/0.325 | 1.633 -> 0.969 | 0.785 -> 0.785 | -0.402 -> -0.469 | 0 | dsdv_slice_iq_C__t1_after.svg |
+| dsdv_slice_kv512_C__t1 | 0 | 6563.9 -> 6563.9 | 0.42/0.34 -> 0.42/0.34 | 1.979 -> 1.979 | 1.457 -> 1.457 | 0.82 -> 0.82 | 0 | dsdv_slice_kv512_C__t1_after.svg |
+| dsdv_slice_lepe_mu_C__t1 | 7 | 7853.0 -> 7754.3 | 0.422/0.326 -> 0.418/0.326 | 2.683 -> 1.523 | 1.457 -> 1.427 | 0.766 -> 0.757 | 0 | dsdv_slice_lepe_mu_C__t1_after.svg |
 | dsdv_slice_lepe_nh_mus_C__t1 | 0 | 7247.1 -> 7247.1 | 0.447/0.43 -> 0.447/0.43 | 3.422 -> 3.422 | 1.457 -> 1.457 | 0.8 -> 0.8 | 0 | dsdv_slice_lepe_nh_mus_C__t1_after.svg |
 | dsdv_slice_lepw_mu_C__t1 | 0 | 7567.6 -> 7567.6 | 0.429/0.443 -> 0.429/0.443 | 3.233 -> 3.233 | 2.373 -> 2.373 | -0.929 -> -0.929 | 0 | dsdv_slice_lepw_mu_C__t1_after.svg |
-| dsdv_slice_lepw_mus_C__t1 | 7 | 7615.4 -> 7357.0 | 0.397/0.433 -> 0.471/0.437 | 3.954 -> 0.881 | 1.744 -> 1.744 | 0.623 -> 0.602 | 0 | dsdv_slice_lepw_mus_C__t1_after.svg |
+| dsdv_slice_lepw_mus_C__t1 | 0 | 7615.4 -> 7615.4 | 0.397/0.36 -> 0.397/0.36 | 2.631 -> 2.631 | 1.744 -> 1.744 | 0.623 -> 0.623 | 0 | dsdv_slice_lepw_mus_C__t1_after.svg |
 
 ## Dataflow links of dsdv_slice_c1x_C__t1 (top 30 by bits; length um before -> after)
 
@@ -109,3 +115,32 @@ lepk/xring windows), lower route_supply p99, a few % bit-mm.
 - {"kind": "link beyond 396.9-um reach", "src": "core:u_cap", "dst": "face:leafdn_o4", "bits": 29, "len_before": 720, "len_after": 729}
 - {"kind": "link beyond 396.9-um reach", "src": "core:u_xr", "dst": "core:u_eg.u_nh", "bits": 16, "len_before": 1062, "len_after": 1002}
 - {"kind": "link beyond 396.9-um reach", "src": "core:u_xr", "dst": "core:u_eg.u_nk", "bits": 16, "len_before": 1200, "len_after": 1157}
+
+## Composer gate evidence (v2)
+- cgate.py (rule-for-rule copy of compose_cleanslate_1111.py legality + kit tap rule) on 99f + LP-W window: 0 new findings on all 6 moved types (ctest_g.log); v1 had 74 new.
+- G0 (check.py) plan_g and plan_g_win: 84 -> 84 errors, NEW 0; no new warning naming any slice/kv_leaf type.
+- Advisory only: c1x_C__t8 added tap clk_t23 radius 211.464 / 211.0 target (KW-FIX-28: stop only above 1.10 x).
+- Companion for the composer (--derived): companion_SLICE-C.json (core taps of the moved cores + every internal station from/to/regs, counts unchanged).
+
+## Explorer view (COORD 03:0x), v2
+Command (epyc4, plan-route-1/repo): `explorer_render.py type --plan plan_99f.json --type T --repo . --delta delta_SLICE-C_99f40d35.json --supply --release-cache .../release_cache.json`, plus `--plan plan_g.json` (station regs and core taps re-sited).
+PNGs: `explorer_<T>_delta.png` and `explorer_<T>_after_resited.png`.
+
+| type | before max hop / hop>reach | --delta (stale regs) | after, re-sited | rs p99 before -> after |
+|---|---|---|---|---|
+| c1x_C__t4 | 416 / 1 | 416 / 1 | 416 / 1 | 1.473 -> 1.473 |
+| c1x_C__t8 | 417 / 1 | 417 / 1 | 416 / 1 | 3.031 -> 2.691 |
+| c1x_C__t9 | 364 / 0 | 364 / 0 | 399 / 0 | 2.003 -> 1.924 |
+| c3x_C__t1 | 416 / 1 | 416 / 1 | 416 / 1 | 0.482 -> 0.481 |
+| iq_C__t1 | 416 / 2 | 416 / 2 | 416 / 2 | 0.785 -> 0.785 |
+| lepe_mu_C__t1 | 416 / 2 | 416 / 3 | 416 / 2 | 1.457 -> 1.427 |
+
+**Over-reach links.** I viewed the c1x_C__t8 and lepe_mu_C__t1 renders myself.
+- With the regs re-sited, the delta adds no over-reach link on any type. The one extra link in the lepe_mu_C `--delta` column is a stale station reg.
+- The remaining over-reach links are the plan's own: cap `cw_n_a` -> the first leafdn station reg at 408-416 um (reach 405).
+- **I accept them:** they are pre-existing, at most 11 um over, and owned by the die-owner station siting.
+- c1x_C__t8, the largest move:
+  - u_xf.u_f (norm_finish) lifts 225 um, from the finish row to y 769, between the row and egn.
+  - The four eng_finish shift by at most 86 um in x and 35 um in y, so the row reads cp0, cp1, (u_f above), cp2, cp3 in chain order.
+  - Chain correlation goes from -0.44 to -0.39. No link of >=32 b grows beyond 1.2x+20 um or crosses reach.
+  - The hot S-face band under cap/xr cools: p99 3.03 -> 2.69, core_H 1.23 -> 1.19, ring_H flag cleared.

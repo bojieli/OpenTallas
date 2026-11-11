@@ -264,7 +264,7 @@
    "src": "core:u_eg.u_nh",
    "dst": "core:u_eg.u_gg",
    "bits": 35,
-   "role": "p2p",
+   "role": "broadcast",
    "len_before": 30,
    "len_after": 30
   },
@@ -272,7 +272,7 @@
    "src": "core:u_eg.u_nk",
    "dst": "core:u_eg.u_gg",
    "bits": 35,
-   "role": "broadcast",
+   "role": "p2p",
    "len_before": 26,
    "len_after": 26
   },
@@ -421,8 +421,8 @@
    "len_after": 1669
   },
   {
-   "src": "core:u_eg.u_nk",
-   "dst": "core:u_eg.u_nh",
+   "src": "core:u_eg.u_nh",
+   "dst": "core:u_eg.u_nk",
    "bits": 17,
    "role": "broadcast",
    "len_before": 138,

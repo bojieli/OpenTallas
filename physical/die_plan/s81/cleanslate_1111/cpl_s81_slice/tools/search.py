@@ -37,6 +37,14 @@ class Search:
         self.need0 = {b[0]: b[2] for b in M.station_check(self.pl0)}
         self.b0 = max(1e-6, M.bitmm(self.pl0))
         self.intent = False
+        self.gate = None
+
+    def set_gate(self, plan_path, taps=None):
+        """DS85-COMPOSE-1111 legality (cgate): no new overlap/street/site finding over hard_cores + lef contents, and
+        (taps) the kit added-tap load/radius rule; CGATE_TAPS=0 checks taps only in finalize."""
+        import cgate
+        self.gate = cgate.Gate(plan_path, self.M.name, self.M.t)
+        self.gate_taps = (os.environ.get("CGATE_TAPS", "1") == "1") if taps is None else taps
 
     def set_intent(self, disp=250.0, minbits=32, grow=1.2, slack=20.0, reach=396.9):
         """COORD 02:1x intent rule: the plan layout is the dataflow structure; search only fine-tunes it.  Every
@@ -70,6 +78,9 @@ class Search:
                 return False
         for (si, d, need, n) in self.M.station_check(pl):
             if need > max(n, self.need0.get(si, 0)):
+                return False
+        if self.gate is not None and list(pl) != list(self.pl0):
+            if not self.gate.ok(self.M.plan_with(pl), taps=self.gate_taps):
                 return False
         return True
 
@@ -164,6 +175,8 @@ def main():
     S = Search(M)
     if "--intent" in args:
         S.set_intent()
+    if "--cgate" in args:
+        S.set_gate(plan)
     rng = random.Random(k)
     starts = [("current", S.pl0)]
     if "--seed-json" in args:

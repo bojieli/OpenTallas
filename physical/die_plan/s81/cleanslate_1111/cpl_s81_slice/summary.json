@@ -1,7 +1,7 @@
 {
  "SLICE-C": {
-  "path": "deltas_f/delta_SLICE-C_99f40d35.json",
-  "sha256": "6464cdede16922e8fd2f136dc19d55f46866a0570b9aad283d9c0e2d1a2892e8",
+  "path": "deltas_g/delta_SLICE-C_99f40d35.json",
+  "sha256": "e1ebefaeb58f95b6d43aaee78c4e830f4f56587438be299d35ab5d43b41bbd95",
   "types": [
    "dsdv_slice_c1x_C__t1",
    "dsdv_slice_c1x_C__t3",
@@ -21,27 +21,21 @@
    "dsdv_slice_lepw_mus_C__t1"
   ],
   "adopted": [
-   "dsdv_slice_c1x_C__t1",
-   "dsdv_slice_c1x_C__t3",
    "dsdv_slice_c1x_C__t4",
-   "dsdv_slice_c1x_C__t6",
-   "dsdv_slice_c1x_C__t7",
    "dsdv_slice_c1x_C__t8",
    "dsdv_slice_c1x_C__t9",
    "dsdv_slice_c3x_C__t1",
    "dsdv_slice_iq_C__t1",
-   "dsdv_slice_kv512_C__t1",
-   "dsdv_slice_lepe_mu_C__t1",
-   "dsdv_slice_lepw_mus_C__t1"
+   "dsdv_slice_lepe_mu_C__t1"
   ],
   "bitmm_before": 115326,
-  "bitmm_after": 113944,
+  "bitmm_after": 114696,
   "worst_cut_before": 0.495,
   "worst_cut_after": 0.481,
   "rows": {
    "dsdv_slice_c1x_C__t1": {
     "pick": "current",
-    "moved": 10,
+    "moved": 0,
     "before": {
      "bitmm": 7173.0,
      "cutV": 0.471,
@@ -49,17 +43,11 @@
      "entry": 3.42,
      "rs_p99": 2.923
     },
-    "after": {
-     "bitmm": 7110.7,
-     "cutV": 0.471,
-     "cutH": 0.368,
-     "entry": 2.756,
-     "rs_p99": 2.313
-    }
+    "after": null
    },
    "dsdv_slice_c1x_C__t3": {
     "pick": "current",
-    "moved": 9,
+    "moved": 0,
     "before": {
      "bitmm": 4745.6,
      "cutV": 0.314,
@@ -67,17 +55,11 @@
      "entry": 4.582,
      "rs_p99": 1.744
     },
-    "after": {
-     "bitmm": 4693.3,
-     "cutV": 0.317,
-     "cutH": 0.409,
-     "entry": 3.697,
-     "rs_p99": 1.744
-    }
+    "after": null
    },
    "dsdv_slice_c1x_C__t4": {
     "pick": "current",
-    "moved": 8,
+    "moved": 10,
     "before": {
      "bitmm": 6452.6,
      "cutV": 0.467,
@@ -86,10 +68,10 @@
      "rs_p99": 1.473
     },
     "after": {
-     "bitmm": 6472.0,
+     "bitmm": 6447.1,
      "cutV": 0.467,
      "cutH": 0.29,
-     "entry": 0.0,
+     "entry": 0.632,
      "rs_p99": 1.473
     }
    },
@@ -107,7 +89,7 @@
    },
    "dsdv_slice_c1x_C__t6": {
     "pick": "current",
-    "moved": 4,
+    "moved": 0,
     "before": {
      "bitmm": 7967.0,
      "cutV": 0.396,
@@ -115,17 +97,11 @@
      "entry": 2.199,
      "rs_p99": 1.456
     },
-    "after": {
-     "bitmm": 7859.2,
-     "cutV": 0.396,
-     "cutH": 0.3,
-     "entry": 1.023,
-     "rs_p99": 1.457
-    }
+    "after": null
    },
    "dsdv_slice_c1x_C__t7": {
     "pick": "current",
-    "moved": 10,
+    "moved": 0,
     "before": {
      "bitmm": 7824.9,
      "cutV": 0.473,
@@ -133,17 +109,11 @@
      "entry": 3.233,
      "rs_p99": 2.373
     },
-    "after": {
-     "bitmm": 7920.3,
-     "cutV": 0.466,
-     "cutH": 0.429,
-     "entry": 1.751,
-     "rs_p99": 1.956
-    }
+    "after": null
    },
    "dsdv_slice_c1x_C__t8": {
     "pick": "current",
-    "moved": 8,
+    "moved": 9,
     "before": {
      "bitmm": 6172.0,
      "cutV": 0.418,
@@ -152,8 +122,8 @@
      "rs_p99": 3.031
     },
     "after": {
-     "bitmm": 5991.5,
-     "cutV": 0.43,
+     "bitmm": 6028.8,
+     "cutV": 0.432,
      "cutH": 0.425,
      "entry": 2.763,
      "rs_p99": 2.691
@@ -170,10 +140,10 @@
      "rs_p99": 2.003
     },
     "after": {
-     "bitmm": 5927.5,
-     "cutV": 0.377,
+     "bitmm": 6054.1,
+     "cutV": 0.371,
      "cutH": 0.445,
-     "entry": 2.649,
+     "entry": 3.313,
      "rs_p99": 1.924
     }
    },
@@ -191,7 +161,7 @@
    },
    "dsdv_slice_c3x_C__t1": {
     "pick": "current",
-    "moved": 4,
+    "moved": 5,
     "before": {
      "bitmm": 10169.5,
      "cutV": 0.431,
@@ -200,16 +170,16 @@
      "rs_p99": 0.482
     },
     "after": {
-     "bitmm": 9955.1,
+     "bitmm": 9953.7,
      "cutV": 0.431,
      "cutH": 0.432,
-     "entry": 0.934,
+     "entry": 1.31,
      "rs_p99": 0.481
     }
    },
    "dsdv_slice_iq_C__t1": {
     "pick": "current",
-    "moved": 9,
+    "moved": 6,
     "before": {
      "bitmm": 7779.0,
      "cutV": 0.476,
@@ -218,16 +188,16 @@
      "rs_p99": 0.785
     },
     "after": {
-     "bitmm": 7651.7,
+     "bitmm": 7657.3,
      "cutV": 0.476,
      "cutH": 0.325,
-     "entry": 0.657,
+     "entry": 0.969,
      "rs_p99": 0.785
     }
    },
    "dsdv_slice_kv512_C__t1": {
     "pick": "current",
-    "moved": 5,
+    "moved": 0,
     "before": {
      "bitmm": 6563.9,
      "cutV": 0.42,
@@ -235,17 +205,11 @@
      "entry": 1.979,
      "rs_p99": 1.457
     },
-    "after": {
-     "bitmm": 6453.2,
-     "cutV": 0.408,
-     "cutH": 0.34,
-     "entry": 0.876,
-     "rs_p99": 1.156
-    }
+    "after": null
    },
    "dsdv_slice_lepe_mu_C__t1": {
     "pick": "current",
-    "moved": 9,
+    "moved": 7,
     "before": {
      "bitmm": 7853.0,
      "cutV": 0.422,
@@ -254,11 +218,11 @@
      "rs_p99": 1.457
     },
     "after": {
-     "bitmm": 7640.9,
-     "cutV": 0.468,
+     "bitmm": 7754.3,
+     "cutV": 0.418,
      "cutH": 0.326,
-     "entry": 0.219,
-     "rs_p99": 1.41
+     "entry": 1.523,
+     "rs_p99": 1.427
     }
    },
    "dsdv_slice_lepe_nh_mus_C__t1": {
@@ -287,26 +251,20 @@
    },
    "dsdv_slice_lepw_mus_C__t1": {
     "pick": "current",
-    "moved": 7,
+    "moved": 0,
     "before": {
      "bitmm": 7615.4,
      "cutV": 0.397,
-     "cutH": 0.433,
-     "entry": 3.954,
+     "cutH": 0.36,
+     "entry": 2.631,
      "rs_p99": 1.744
     },
-    "after": {
-     "bitmm": 7357.0,
-     "cutV": 0.471,
-     "cutH": 0.437,
-     "entry": 0.881,
-     "rs_p99": 1.744
-    }
+    "after": null
    }
   }
  },
  "SLICE-LP-W": {
-  "path": "deltas_f/delta_SLICE-LP-W_99f40d35.json",
+  "path": "deltas_g/delta_SLICE-LP-W_99f40d35.json",
   "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
   "types": [
    "dsdv_slice_lepw_mus_LP__t2",
@@ -345,7 +303,7 @@
   }
  },
  "SLICE-LP-E": {
-  "path": "deltas_f/delta_SLICE-LP-E_99f40d35.json",
+  "path": "deltas_g/delta_SLICE-LP-E_99f40d35.json",
   "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
   "types": [
    "dsdv_slice_lepe_mu_LP__t2",
@@ -384,7 +342,7 @@
   }
  },
  "KVLEAF": {
-  "path": "deltas_f/delta_KVLEAF_99f40d35.json",
+  "path": "deltas_g/delta_KVLEAF_99f40d35.json",
   "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
   "types": [
    "ot_s81sl_kv_leaf__t1",

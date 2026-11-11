@@ -50,7 +50,7 @@
    "bits": 2817,
    "role": "p2p",
    "len_before": 821,
-   "len_after": 804
+   "len_after": 821
   },
   {
    "src": "core:u_xr",
@@ -58,7 +58,7 @@
    "bits": 1240,
    "role": "p2p",
    "len_before": 874,
-   "len_after": 856
+   "len_after": 874
   },
   {
    "src": "face:leafup_i2",
@@ -66,7 +66,7 @@
    "bits": 668,
    "role": "p2p (staged station)",
    "len_before": 464,
-   "len_after": 482
+   "len_after": 464
   },
   {
    "src": "face:leafup_i4",
@@ -74,7 +74,7 @@
    "bits": 668,
    "role": "p2p (staged station)",
    "len_before": 399,
-   "len_after": 416
+   "len_after": 399
   },
   {
    "src": "face:leafup_i0",
@@ -82,7 +82,7 @@
    "bits": 389,
    "role": "p2p",
    "len_before": 1383,
-   "len_after": 1365
+   "len_after": 1383
   },
   {
    "src": "face:leafup_i1",
@@ -90,7 +90,7 @@
    "bits": 389,
    "role": "p2p",
    "len_before": 1451,
-   "len_after": 1434
+   "len_after": 1451
   },
   {
    "src": "core:u_xr",
@@ -98,7 +98,7 @@
    "bits": 312,
    "role": "broadcast",
    "len_before": 615,
-   "len_after": 606
+   "len_after": 615
   },
   {
    "src": "core:u_xr",
@@ -106,7 +106,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 1182,
-   "len_after": 1165
+   "len_after": 1182
   },
   {
    "src": "core:u_xr",
@@ -114,7 +114,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 1596,
-   "len_after": 1579
+   "len_after": 1596
   },
   {
    "src": "core:u_xr",
@@ -122,7 +122,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 272,
-   "len_after": 289
+   "len_after": 272
   },
   {
    "src": "core:u_xr",
@@ -130,7 +130,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 200,
-   "len_after": 217
+   "len_after": 200
   },
   {
    "src": "core:u_xr",
@@ -138,7 +138,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 477,
-   "len_after": 494
+   "len_after": 477
   },
   {
    "src": "core:u_xf.g_cp[0].u_e",
@@ -146,7 +146,7 @@
    "bits": 131,
    "role": "broadcast",
    "len_before": 760,
-   "len_after": 769
+   "len_after": 760
   },
   {
    "src": "core:u_xf.g_cp[1].u_e",
@@ -170,7 +170,7 @@
    "bits": 131,
    "role": "broadcast",
    "len_before": 570,
-   "len_after": 579
+   "len_after": 570
   },
   {
    "src": "core:u_xf.g_cp[1].u_e",
@@ -186,7 +186,7 @@
    "bits": 131,
    "role": "broadcast",
    "len_before": 190,
-   "len_after": 199
+   "len_after": 190
   },
   {
    "src": "core:u_xf.u_f",
@@ -218,7 +218,7 @@
    "bits": 123,
    "role": "broadcast",
    "len_before": 383,
-   "len_after": 392
+   "len_after": 383
   },
   {
    "src": "face:ret_i0",
@@ -226,7 +226,7 @@
    "bits": 93,
    "role": "p2p",
    "len_before": 1777,
-   "len_after": 1769
+   "len_after": 1777
   },
   {
    "src": "face:ret_i1",
@@ -234,7 +234,7 @@
    "bits": 93,
    "role": "p2p",
    "len_before": 1795,
-   "len_after": 1787
+   "len_after": 1795
   },
   {
    "src": "face:ret_i2",
@@ -242,7 +242,7 @@
    "bits": 93,
    "role": "p2p",
    "len_before": 1813,
-   "len_after": 1804
+   "len_after": 1813
   },
   {
    "src": "core:u_eg.u_gg",
@@ -250,13 +250,13 @@
    "bits": 35,
    "role": "p2p",
    "len_before": 1151,
-   "len_after": 1090
+   "len_after": 1151
   },
   {
    "src": "core:u_eg.u_nh",
    "dst": "core:u_eg.u_gg",
    "bits": 35,
-   "role": "broadcast",
+   "role": "p2p",
    "len_before": 30,
    "len_after": 30
   },
@@ -264,9 +264,9 @@
    "src": "core:u_eg.u_nk",
    "dst": "core:u_eg.u_gg",
    "bits": 35,
-   "role": "p2p",
+   "role": "broadcast",
    "len_before": 26,
-   "len_after": 43
+   "len_after": 26
   },
   {
    "src": "core:u_xr",
@@ -274,7 +274,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 1252,
-   "len_after": 1191
+   "len_after": 1252
   },
   {
    "src": "core:u_xf.g_cp[3].u_e",
@@ -282,7 +282,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 382
+   "len_after": 380
   },
   {
    "src": "core:u_xf.g_cp[2].u_e",
@@ -290,7 +290,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 192
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[1].u_e",
@@ -298,7 +298,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 188
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[0].u_e",
@@ -306,7 +306,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 387
+   "len_after": 380
   },
   {
    "src": "core:u_xf.g_cp[3].u_e",
@@ -314,7 +314,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 382
+   "len_after": 380
   },
   {
    "src": "core:u_xf.g_cp[2].u_e",
@@ -322,7 +322,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 192
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[1].u_e",
@@ -330,7 +330,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 188
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[0].u_e",
@@ -338,7 +338,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 387
+   "len_after": 380
   },
   {
    "src": "core:u_xf.g_cp[3].u_e",
@@ -346,7 +346,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 382
+   "len_after": 380
   },
   {
    "src": "core:u_xf.g_cp[2].u_e",
@@ -354,7 +354,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 192
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[1].u_e",
@@ -362,7 +362,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 190,
-   "len_after": 188
+   "len_after": 190
   },
   {
    "src": "core:u_xf.g_cp[0].u_e",
@@ -370,7 +370,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 380,
-   "len_after": 387
+   "len_after": 380
   },
   {
    "src": "core:u_cap",
@@ -378,7 +378,7 @@
    "bits": 29,
    "role": "broadcast",
    "len_before": 1103,
-   "len_after": 1094
+   "len_after": 1103
   },
   {
    "src": "core:u_cap",
@@ -386,7 +386,7 @@
    "bits": 29,
    "role": "broadcast",
    "len_before": 1623,
-   "len_after": 1615
+   "len_after": 1623
   },
   {
    "src": "core:u_cap",
@@ -394,7 +394,7 @@
    "bits": 29,
    "role": "broadcast",
    "len_before": 284,
-   "len_after": 292
+   "len_after": 284
   },
   {
    "src": "core:u_cap",
@@ -402,7 +402,7 @@
    "bits": 29,
    "role": "broadcast",
    "len_before": 444,
-   "len_after": 452
+   "len_after": 444
   },
   {
    "src": "core:u_cap",
@@ -410,15 +410,15 @@
    "bits": 29,
    "role": "broadcast",
    "len_before": 720,
-   "len_after": 729
+   "len_after": 720
   },
   {
-   "src": "core:u_eg.u_nh",
-   "dst": "core:u_eg.u_nk",
+   "src": "core:u_eg.u_nk",
+   "dst": "core:u_eg.u_nh",
    "bits": 17,
    "role": "broadcast",
    "len_before": 138,
-   "len_after": 156
+   "len_after": 138
   },
   {
    "src": "core:u_xr",
@@ -426,7 +426,7 @@
    "bits": 16,
    "role": "broadcast",
    "len_before": 1062,
-   "len_after": 1002
+   "len_after": 1062
   },
   {
    "src": "core:u_xr",
@@ -434,7 +434,7 @@
    "bits": 16,
    "role": "broadcast",
    "len_before": 1200,
-   "len_after": 1157
+   "len_after": 1200
   },
   {
    "src": "core:u_xr",
@@ -442,7 +442,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 302,
-   "len_after": 279
+   "len_after": 302
   },
   {
    "src": "core:u_cap",
@@ -450,7 +450,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 576,
-   "len_after": 561
+   "len_after": 576
   },
   {
    "src": "core:u_eg.u_gg",
@@ -458,7 +458,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 878,
-   "len_after": 840
+   "len_after": 878
   },
   {
    "src": "face:S",
@@ -572,7 +572,7 @@
    "dst": "core:u_xr",
    "bits": 2817,
    "len_before": 821,
-   "len_after": 804
+   "len_after": 821
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -580,7 +580,7 @@
    "dst": "macros@259,701",
    "bits": 1240,
    "len_before": 874,
-   "len_after": 856
+   "len_after": 874
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -588,7 +588,7 @@
    "dst": "core:u_xr",
    "bits": 668,
    "len_before": 464,
-   "len_after": 482
+   "len_after": 464
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -596,7 +596,7 @@
    "dst": "core:u_xr",
    "bits": 668,
    "len_before": 399,
-   "len_after": 416
+   "len_after": 399
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -604,7 +604,7 @@
    "dst": "core:u_xr",
    "bits": 389,
    "len_before": 1383,
-   "len_after": 1365
+   "len_after": 1383
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -612,7 +612,7 @@
    "dst": "core:u_xr",
    "bits": 389,
    "len_before": 1451,
-   "len_after": 1434
+   "len_after": 1451
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -620,7 +620,7 @@
    "dst": "core:u_cap",
    "bits": 312,
    "len_before": 615,
-   "len_after": 606
+   "len_after": 615
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -628,7 +628,7 @@
    "dst": "face:leafdn_o0",
    "bits": 151,
    "len_before": 1182,
-   "len_after": 1165
+   "len_after": 1182
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -636,7 +636,7 @@
    "dst": "face:leafdn_o1",
    "bits": 151,
    "len_before": 1596,
-   "len_after": 1579
+   "len_after": 1596
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -644,7 +644,7 @@
    "dst": "face:leafdn_o4",
    "bits": 151,
    "len_before": 477,
-   "len_after": 494
+   "len_after": 477
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -652,7 +652,7 @@
    "dst": "core:u_xf.g_cp[3].u_e",
    "bits": 131,
    "len_before": 760,
-   "len_after": 769
+   "len_after": 760
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -668,7 +668,7 @@
    "dst": "core:u_xf.g_cp[2].u_e",
    "bits": 131,
    "len_before": 570,
-   "len_after": 579
+   "len_after": 570
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -676,7 +676,7 @@
    "dst": "core:u_cap",
    "bits": 93,
    "len_before": 1777,
-   "len_after": 1769
+   "len_after": 1777
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -684,7 +684,7 @@
    "dst": "core:u_cap",
    "bits": 93,
    "len_before": 1795,
-   "len_after": 1787
+   "len_after": 1795
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -692,7 +692,7 @@
    "dst": "core:u_cap",
    "bits": 93,
    "len_before": 1813,
-   "len_after": 1804
+   "len_after": 1813
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -700,7 +700,7 @@
    "dst": "core:u_xr",
    "bits": 35,
    "len_before": 1151,
-   "len_after": 1090
+   "len_after": 1151
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -708,7 +708,7 @@
    "dst": "core:u_eg.u_gg",
    "bits": 32,
    "len_before": 1252,
-   "len_after": 1191
+   "len_after": 1252
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -716,7 +716,7 @@
    "dst": "face:leafdn_o0",
    "bits": 29,
    "len_before": 1103,
-   "len_after": 1094
+   "len_after": 1103
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -724,7 +724,7 @@
    "dst": "face:leafdn_o1",
    "bits": 29,
    "len_before": 1623,
-   "len_after": 1615
+   "len_after": 1623
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -732,7 +732,7 @@
    "dst": "face:leafdn_o3",
    "bits": 29,
    "len_before": 444,
-   "len_after": 452
+   "len_after": 444
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -740,7 +740,7 @@
    "dst": "face:leafdn_o4",
    "bits": 29,
    "len_before": 720,
-   "len_after": 729
+   "len_after": 720
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -748,7 +748,7 @@
    "dst": "core:u_eg.u_nh",
    "bits": 16,
    "len_before": 1062,
-   "len_after": 1002
+   "len_after": 1062
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -756,7 +756,7 @@
    "dst": "core:u_eg.u_nk",
    "bits": 16,
    "len_before": 1200,
-   "len_after": 1157
+   "len_after": 1200
   }
  ],
  "flow_axis": {
@@ -770,7 +770,7 @@
   ]
  },
  "chain_order_corr_before": -0.986,
- "chain_order_corr_after": -0.984,
+ "chain_order_corr_after": -0.986,
  "edges_longer_after": [],
- "moved": 10
+ "moved": 0
 }

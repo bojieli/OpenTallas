@@ -69,12 +69,12 @@
 <circle cx="20.0" cy="746.6" r="4" fill="#ff7f0e"/><text x="25.0" y="743.6" fill="#ff7f0e">xring_o1 out 1104b</text>
 <rect x="41.6" y="86.9" width="210.2" height="258.7" fill="#cfe2ff" stroke="#1f3b73"/>
 <text x="43.6" y="97.9">u_cap [L1] MX</text>
-<rect x="262.5" y="103.1" width="129.3" height="102.4" fill="#cfe2ff" stroke="#1f3b73"/>
-<text x="264.5" y="114.1">u_xr [L1] MX</text>
-<rect x="494.3" y="324.1" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
-<text x="496.3" y="335.1">u_eg.u_nh [L2] MX</text>
-<rect x="580.5" y="318.7" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
-<text x="582.5" y="329.7">u_eg.u_nk [L2] MX</text>
+<rect x="262.5" y="86.9" width="129.3" height="102.4" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="264.5" y="97.9">u_xr [L1] MX</text>
+<rect x="499.6" y="324.1" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="501.6" y="335.1">u_eg.u_nh [L2] MX</text>
+<rect x="585.9" y="324.1" width="80.8" height="91.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="587.9" y="335.1">u_eg.u_nk [L2] MX</text>
 <rect x="505.0" y="421.1" width="161.7" height="97.0" fill="#cfe2ff" stroke="#1f3b73"/>
 <text x="507.0" y="432.1">u_eg.u_gg [L2] MX</text>
 <rect x="311.0" y="523.5" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
@@ -85,26 +85,26 @@
 <text x="550.1" y="534.5">u_xf.u_f [L99] MX</text>
 <rect x="666.7" y="523.5" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
 <text x="668.7" y="534.5">u_xf.g_cp[2].u_e [L99] MX</text>
-<rect x="785.3" y="534.3" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
-<text x="787.3" y="545.3">u_xf.g_cp[3].u_e [L99] MX</text>
-<line x1="440.3" y1="825.3" x2="327.2" y2="154.3" stroke="#9467bd" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="681.8" y1="825.3" x2="327.2" y2="154.3" stroke="#9467bd" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="145.4" y1="60.0" x2="327.2" y2="154.3" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="318.4" y1="60.0" x2="327.2" y2="154.3" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="490.8" y1="60.0" x2="327.2" y2="154.3" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="146.6" y2="216.3" stroke="#d62728" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="230.9" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="403.3" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="577.0" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="526.8" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="768.4" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="367.6" y1="582.8" x2="841.9" y2="593.5" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="486.2" y1="582.8" x2="841.9" y2="593.5" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="723.3" y1="582.8" x2="841.9" y2="593.5" stroke="#1f77b4" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<rect x="785.3" y="523.5" width="113.2" height="118.6" fill="#cfe2ff" stroke="#1f3b73"/>
+<text x="787.3" y="534.5">u_xf.g_cp[3].u_e [L99] MX</text>
+<line x1="440.3" y1="825.3" x2="327.2" y2="138.1" stroke="#9467bd" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="681.8" y1="825.3" x2="327.2" y2="138.1" stroke="#9467bd" stroke-width="1.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="145.4" y1="60.0" x2="327.2" y2="138.1" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="318.4" y1="60.0" x2="327.2" y2="138.1" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="490.8" y1="60.0" x2="327.2" y2="138.1" stroke="#1f77b4" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="146.6" y2="216.3" stroke="#d62728" stroke-width="1.2" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="230.9" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="403.3" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="577.0" y2="60.0" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="526.8" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="768.4" y2="825.3" stroke="#d62728" stroke-width="0.9" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="367.6" y1="582.8" x2="841.9" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="486.2" y1="582.8" x2="841.9" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="723.3" y1="582.8" x2="841.9" y2="582.8" stroke="#1f77b4" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="367.6" y1="582.8" x2="723.3" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="486.2" y1="582.8" x2="723.3" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="367.6" y1="582.8" x2="486.2" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="604.7" y1="582.8" x2="841.9" y2="593.5" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="604.7" y1="582.8" x2="841.9" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="604.7" y1="582.8" x2="723.3" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="604.7" y1="582.8" x2="486.2" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="604.7" y1="582.8" x2="367.6" y2="582.8" stroke="#d62728" stroke-width="0.8" opacity="0.7" marker-end="url(#ar)"/>
@@ -114,8 +114,8 @@
 <line x1="607.6" y1="825.3" x2="146.6" y2="216.3" stroke="#9467bd" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="618.9" y1="825.3" x2="146.6" y2="216.3" stroke="#9467bd" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
 <line x1="629.8" y1="825.3" x2="146.6" y2="216.3" stroke="#9467bd" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="585.9" y1="469.6" x2="327.2" y2="154.3" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="534.7" y1="369.9" x2="585.9" y2="469.6" stroke="#d62728" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="620.9" y1="364.5" x2="585.9" y2="469.6" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
-<line x1="327.2" y1="154.3" x2="585.9" y2="469.6" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="585.9" y1="469.6" x2="327.2" y2="138.1" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="540.1" y1="369.9" x2="585.9" y2="469.6" stroke="#d62728" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="626.3" y1="369.9" x2="585.9" y2="469.6" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
+<line x1="327.2" y1="138.1" x2="585.9" y2="469.6" stroke="#1f77b4" stroke-width="0.7" opacity="0.7" marker-end="url(#ar)"/>
 </svg>

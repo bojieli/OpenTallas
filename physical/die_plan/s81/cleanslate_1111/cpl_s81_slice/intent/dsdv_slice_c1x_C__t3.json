@@ -58,7 +58,7 @@
    "bits": 485,
    "role": "p2p",
    "len_before": 1270,
-   "len_after": 1235
+   "len_after": 1270
   },
   {
    "src": "face:leafup_i2",
@@ -66,7 +66,7 @@
    "bits": 485,
    "role": "p2p",
    "len_before": 1546,
-   "len_after": 1512
+   "len_after": 1546
   },
   {
    "src": "face:leafup_i4",
@@ -90,7 +90,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 1141,
-   "len_after": 1122
+   "len_after": 1141
   },
   {
    "src": "core:u_xr",
@@ -98,7 +98,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 1415,
-   "len_after": 1380
+   "len_after": 1415
   },
   {
    "src": "core:u_xr",
@@ -106,7 +106,7 @@
    "bits": 151,
    "role": "broadcast",
    "len_before": 1694,
-   "len_after": 1659
+   "len_after": 1694
   },
   {
    "src": "core:u_xr",
@@ -258,7 +258,7 @@
    "bits": 35,
    "role": "p2p",
    "len_before": 1116,
-   "len_after": 1056
+   "len_after": 1116
   },
   {
    "src": "core:u_eg.u_nh",
@@ -266,7 +266,7 @@
    "bits": 35,
    "role": "broadcast",
    "len_before": 30,
-   "len_after": 48
+   "len_after": 30
   },
   {
    "src": "core:u_eg.u_nk",
@@ -282,7 +282,7 @@
    "bits": 32,
    "role": "p2p",
    "len_before": 1217,
-   "len_after": 1157
+   "len_after": 1217
   },
   {
    "src": "core:u_xf.g_cp[3].u_e",
@@ -426,7 +426,7 @@
    "bits": 17,
    "role": "broadcast",
    "len_before": 138,
-   "len_after": 156
+   "len_after": 138
   },
   {
    "src": "core:u_xr",
@@ -434,7 +434,7 @@
    "bits": 16,
    "role": "broadcast",
    "len_before": 1027,
-   "len_after": 950
+   "len_after": 1027
   },
   {
    "src": "core:u_xr",
@@ -442,7 +442,7 @@
    "bits": 16,
    "role": "broadcast",
    "len_before": 1166,
-   "len_after": 1105
+   "len_after": 1166
   },
   {
    "src": "core:u_xr",
@@ -450,7 +450,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 415,
-   "len_after": 412
+   "len_after": 415
   },
   {
    "src": "core:u_cap",
@@ -458,7 +458,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 564,
-   "len_after": 567
+   "len_after": 564
   },
   {
    "src": "core:u_eg.u_gg",
@@ -466,7 +466,7 @@
    "bits": 1,
    "role": "serialisable (control/status)",
    "len_before": 855,
-   "len_after": 826
+   "len_after": 855
   },
   {
    "src": "face:E",
@@ -612,7 +612,7 @@
    "dst": "core:u_xr",
    "bits": 485,
    "len_before": 1270,
-   "len_after": 1235
+   "len_after": 1270
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -620,7 +620,7 @@
    "dst": "core:u_xr",
    "bits": 485,
    "len_before": 1546,
-   "len_after": 1512
+   "len_after": 1546
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -644,7 +644,7 @@
    "dst": "face:leafdn_o0",
    "bits": 151,
    "len_before": 1141,
-   "len_after": 1122
+   "len_after": 1141
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -652,7 +652,7 @@
    "dst": "face:leafdn_o1",
    "bits": 151,
    "len_before": 1415,
-   "len_after": 1380
+   "len_after": 1415
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -660,7 +660,7 @@
    "dst": "face:leafdn_o2",
    "bits": 151,
    "len_before": 1694,
-   "len_after": 1659
+   "len_after": 1694
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -756,7 +756,7 @@
    "dst": "core:u_xr",
    "bits": 35,
    "len_before": 1116,
-   "len_after": 1056
+   "len_after": 1116
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -764,7 +764,7 @@
    "dst": "core:u_eg.u_gg",
    "bits": 32,
    "len_before": 1217,
-   "len_after": 1157
+   "len_after": 1217
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -812,7 +812,7 @@
    "dst": "core:u_eg.u_nh",
    "bits": 16,
    "len_before": 1027,
-   "len_after": 950
+   "len_after": 1027
   },
   {
    "kind": "link beyond 396.9-um reach",
@@ -820,7 +820,7 @@
    "dst": "core:u_eg.u_nk",
    "bits": 16,
    "len_before": 1166,
-   "len_after": 1105
+   "len_after": 1166
   }
  ],
  "flow_axis": {
@@ -834,7 +834,7 @@
   ]
  },
  "chain_order_corr_before": 0.635,
- "chain_order_corr_after": 0.636,
+ "chain_order_corr_after": 0.635,
  "edges_longer_after": [],
- "moved": 9
+ "moved": 0
 }

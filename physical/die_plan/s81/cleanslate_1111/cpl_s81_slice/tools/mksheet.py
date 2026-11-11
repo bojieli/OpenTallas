@@ -18,9 +18,15 @@ xr->leafdn/cap broadcast; finish chain p2p neighbour links (+ skip links); cfg/s
 **Timing-critical pairs:** the plan internal stations (leafup_i3/i4 -> xr staged, ~1190 um), xr<->macros (~800 um), and the
 eng_finish chain neighbours.  **Intended layout:** the plan structure already follows this chain (finish row in chain
 order, xr between its windows and the content macros, cap beside the ret windows), so it is kept: the search only
-shifts cores <=250 um and flips them, and no link >=32 b (or any station link) may grow beyond 1.2x+20 um or cross the
-396.9-um reach.  What it buys: face-window streets (the window jam class: capc5r is an M1-M7 full blocker under the W
-lepk/xring windows), lower route_supply p99, a few % bit-mm.""",
+shifts cores <=250 um on the 8.64 lattice (no relocate, no flip), and no link >=32 b (or any station link) may grow beyond
+1.2x+20 um or cross the 396.9-um reach.  **Composer gate (v2, DS85-COMPOSE-1111 dry-run FAIL of v1 6464cded):** every
+search step must also pass the composer legality copied rule for rule (cgate.py): no new overlap or street <34.56 um
+(abutted 0 allowed) against every hard core AND every lef content macro (the slice SRAM/em banks), no new station/ft
+reg, tap or core tap strictly under any core or macro box (after the station re-site), and the kit tap rule
+(taps.grid_explicit_taps load <=1500, radius <=1.10 x tap_radius_um) checked on 99f + the LP-W window.  Six types keep a
+legal fine-tune (c1x t4/t8/t9, c3x, iq, lepe_mu_C); c1x t1/t3/t6/t7, kv512 and lepw_mus_C have no legal improvement
+under the gate -> KEEP.  What it buys: face-window entry streets, lower route_supply p99 (c1x_t8 3.03 -> 2.69),
+~0.5 % family bit-mm.""",
     "SLICE-LP-W": """**Dataflow.** S face coll_i<k> (514 b, staged) -> ln<k> (coll_lane, M5 OBS) -> lnl<k> (inland, 559 b, ~105 um) ->
 the lep SRAM banks (558 b; banks broadcast 557 b back to every lnl) ; ln<k> -> coll_o<k> (512 b) back out of the S face.
 E face lepk_i0/lepk_o0 (2 x 1104 b) + lepf/flt/lpc feed the lep SRAM banks directly (p2p, no core on the path).

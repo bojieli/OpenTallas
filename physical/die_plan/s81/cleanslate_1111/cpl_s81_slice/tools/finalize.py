@@ -34,6 +34,8 @@ for n in sys.argv[2:]:
     S = search.Search(M)
     if INTENT:
         S.set_intent()
+    if os.environ.get("CGATE") == "1":
+        S.set_gate(sys.argv[1], taps=True)
     res = json.load(open("%s/%s.json" % (SR, n)))
     pl0 = S.pl0
     m0 = metrics(M, S, pl0)
