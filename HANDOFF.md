@@ -3522,3 +3522,5 @@ COORD: 2026-11-09 00:51 PST hourly: count 243 store lower bound. Main 093994d559
 - 2026-11-10 17:03 PST COORD: count 267 (KV 31/32 after KV e2 landed; n4ext not yet counted; audit asked of COUNT-ARCHIVE-2). Limit 15:00-16:40, all lanes resumed in 2 waves. 8 trains landed, main e17692543e92.
 
 - 2026-11-10 17:50 PST COORD: count 268 (KV e2 re-sign +1; n4ext pending). Owner rulings: fail fast, HBM ftres fix, route flags->plan change, cycles lever; S81 804 landings CA+1 (TOK-VERIFY-1); DIE-RECHECK-1 started (die clock+STA on current plans); epyc4 udevd 114 GB leak restarted (+105 GB); 18 HBM cores without kit rows -> HBM-CORES-B batch; bksel macro off-grid class -> KW-FIX-44. GEOM renders not viewed this hour.
+
+- 2026-11-10 18:50 PST COORD: count 268 flat. Main a8a7f27eb031 (+7). Rulings: cancel 31 bind8 rows -> bind_ctl batch (owner); GRT-PATCH-1 started (owner: patch halving, edge mode); ot-run admission real-RSS + load cap (epyc4 underused, epyc8 load 507); auto-cleanup re-enable on all hosts + fail closed; epyc9 provisioning. GEOM renders not viewed this hour.
