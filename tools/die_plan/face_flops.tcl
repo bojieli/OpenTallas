@@ -178,6 +178,9 @@ proc ff_clone_for {bt chain} {
 }
 set ff_done {}
 set ff_occ {}
+# DIE-QC-97 11-11 SHARED-OCC: body rect {x y w h} of every face pin register (and pinned face-chain cell) placed below;
+# reserved in the station map (ff_explicit_occ) before any ff_put_near, see there.
+set ff_face_rects {}
 set ff_n 0; set ff_miss 0
 # DIE-KV-60 11-01: an INTERIOR signal pin (plan site inside the outline, e.g. KV phy cland_tstart_in at the centre
 # column, 427 um from either face) has no face: "nearest core edge" put its register in the E band 426 um from the
@@ -253,6 +256,7 @@ foreach pass {INPUT OUTPUT} {
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
     $f setLocation $cx $cy
     $f setPlacementStatus FIRM
+    lappend ff_face_rects [list $cx $cy $w [[$f getMaster] getHeight]]
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
     # HBM-GAPS-8 11-06 (opt-in OT_FF_CHAIN_PIN=1, default off = unchanged): the pure BUF/INV cells between an OUT face
@@ -270,6 +274,7 @@ foreach pass {INPUT OUTPUT} {
         if {[dict exists $ff_orient $cy]} { $ci setOrient [dict get $ff_orient $cy] }
         $ci setLocation $ff_xx $cy
         $ci setPlacementStatus FIRM
+        lappend ff_face_rects [list $ff_xx $cy $iw [[$ci getMaster] getHeight]]
         puts $ff_chain_f [$ci getName]
         incr ff_nchain
         if {$face ne "E"} { set ff_xx [expr {$ff_xx + $iw}] }
@@ -500,6 +505,16 @@ if {[info exists ff_full_targets]} {
     lassign $target slot stage bit name master x y w h
     ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
   }
+}
+# DIE-QC-97 11-11 SHARED-OCC (QC cbn_q01__clab6e67f2 a26: 14 FIRM pairs on one site, e.g. S face register
+# u_bout_y_o12/q[211] and landed ft station u_ft_a00_o_3/q[380] both at (1192.32, 7.29)): face pin registers took
+# ff_occ (per-face band grid) and stations / interior registers / hop latches took ff_gocc (the 2.16 um station
+# grid); neither map saw the other, and the S/W face grid is the station grid, so a station spiralling near the face
+# landed exactly on a face register.  One shared occupancy: every face register body is reserved here in the same
+# rect map ff_put_near already checks (ff_hits_explicit), so no later FIRM placement can take a face register's site.
+# Default on; OT_FF_SHARED_OCC=0 restores the two separate maps.  A kit without such a collision places identically.
+if {[info exists ff_face_rects] && !([info exists ::env(OT_FF_SHARED_OCC)] && $::env(OT_FF_SHARED_OCC) eq "0")} {
+  foreach ff_fr $ff_face_rects { ff_reserve_explicit {*}$ff_fr }
 }
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
