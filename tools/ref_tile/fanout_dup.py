@@ -157,6 +157,60 @@ def strip_dead_unary(g, roles):
         g.cells[:] = [c for i, c in enumerate(g.cells) if i not in ds]
 
 
+def split_out_pin_regs(g, roles, cl):
+    """--split-out-pin-regs: an output pin register must drive only its port chain (face_guard 'shared').  Yosys merges
+    the pin register of an output with an internal flop that has the same D (a skew-line stage that also registers the
+    core output), so the merged flop drives the port chain AND that internal load.  Clone the register (same D / clock)
+    and the BUF / INV chain up to the tapped net for the internal loads: two flops with identical inputs, the function is
+    unchanged.  -> [{port, flop, extra_loads}]"""
+    is_reg = lambda m: m.upper().startswith(("DFF", "SDF", "ASYNC_DFF"))
+    _rep, ex = model(g, roles)
+    drivers, loads, transp = ex['drivers'], ex['loads'], ex['transparent']
+    cl.outs = {}
+    for n_, d_ in drivers.items():
+        if d_[0] != 'port':
+            cl.outs.setdefault(d_[0], set()).add(n_)
+    log = []
+    for b, (d, x) in sorted(g.ports.items()):
+        if d != 'output':
+            continue
+        net = g.find(x)
+        chain, nxt, cur = [], None, net           # chain: (net, the chain cell that reads it toward the port or None)
+        while True:
+            chain.append((cur, nxt))
+            dv = drivers.get(cur)
+            if dv is None or dv[0] == 'port' or dv[0] not in transp:
+                break
+            nxt, cur = dv[0], g.find(transp[dv[0]][0])
+        dv = drivers.get(cur)
+        if dv is None or dv[0] == 'port' or not is_reg(g.cells[dv[0]][0]):
+            continue
+        ff = dv[0]
+        extra = [(xn, e) for xn, keep in chain for e in loads.get(xn, ()) if e[0] != keep]
+        if not extra:
+            continue
+        _k, root = cl.clone(ff, {}, cur)
+        netmap = {cur: root}
+        up = {xn: nx for xn, nx in chain}         # net -> the transparent cell driving the next net toward the port
+        drv_of = {}                               # net toward the port -> (cell, its input net)
+        for xn, nx in chain:
+            if nx is not None:
+                drv_of[g.find(transp[nx][1])] = (nx, xn)
+
+        def mapped(xn):
+            if xn in netmap:
+                return netmap[xn]
+            t, tin = drv_of[xn]
+            _, y = cl.clone(t, {tin: mapped(tin)}, xn)
+            netmap[xn] = y
+            return y
+        for xn, (ci2, pn, bit) in extra:
+            assert g.find(g.cells[ci2][2][pn][bit]) == xn
+            g.cells[ci2][2][pn][bit] = mapped(xn)
+        log.append(dict(port=b, flop=g.cells[ff][1], extra_loads=len(extra)))
+    return log
+
+
 def replica_pin_regs(g):
     """{input port bit: D} for input bits whose net feeds the D pin of more than one register: a pin register that the
     split copied (its clones load the same D).  Read from the written netlist (clones connect D to the port net)."""
@@ -313,6 +367,8 @@ def main(argv=None):
     p.add_argument('--max-iter', type=int, default=12)
     p.add_argument('--land-slots', help='write face_guard land_slots.json of copied pin registers here (replica form)')
     p.add_argument('--land-plan', help='plan event keying the replica form (face_guard.REPLICA_PLANS)')
+    p.add_argument('--split-out-pin-regs', action='store_true',
+                   help='clone an output pin register that also drives internal loads (see split_out_pin_regs)')
     p.add_argument('--strip-dead-unary', action='store_true', help='remove loadless BUF / INV cells first (see strip_dead_unary)')
     a = p.parse_args(argv)
     roles, libs = NC.liberty_roles(a.liberty)
@@ -326,13 +382,14 @@ def main(argv=None):
     dead = strip_dead_unary(g, roles) if a.strip_dead_unary else []
     log, residual, it = [], [], 0
     cl = Cloner(g)
+    spr = split_out_pin_regs(g, roles, cl) if a.split_out_pin_regs else []
     while it < a.max_iter:
         it += 1
         n, residual = split_once(g, roles, a.limit, cl, log)
         if n == 0:
             break
     # nothing split: the input bytes pass through unchanged (same netlist sha, so every receipt of it stays valid)
-    text = emit(g, tm, a.top) if (log or dead) else raw.decode()
+    text = emit(g, tm, a.top) if (log or dead or spr) else raw.decode()
     Path(a.out).write_text(text)
     # verification = the census itself on the WRITTEN netlist, parsed exactly like native_census.main
     g2, _ = load_graph(text, a.top, roles)
@@ -346,7 +403,7 @@ def main(argv=None):
                liberty=libs, iterations=it, cells_before=cells0, cells_after=len(g2.cells),
                cells_added=len(g2.cells) - cells0, before=summary(before, a.limit), after=summary(after, a.limit),
                splits=log, residual=residual if final_over else [], residual_after=final_over,
-               dead_unary_removed=dict(n=len(dead), cells=dead[:200]))
+               dead_unary_removed=dict(n=len(dead), cells=dead[:200]), out_pin_reg_splits=spr)
     reps = replica_pin_regs(g2)
     rec['replica_pin_regs'] = reps
     if a.land_slots:
@@ -360,7 +417,7 @@ def main(argv=None):
     Path(a.report).write_text(json.dumps(rec, indent=1) + '\n')
     print(f"FANOUT_DUP {'PASS' if not final_over and not after['role_errors'] else 'FAIL'} "
           f"max {rec['before']['max_loads']} -> {rec['after']['max_loads']}, >{a.limit} "
-          f"{rec['before']['over_limit']} -> {rec['after']['over_limit']}, cells +{rec['cells_added']}, iter {it}, dead unary removed {len(dead)}")
+          f"{rec['before']['over_limit']} -> {rec['after']['over_limit']}, cells +{rec['cells_added']}, iter {it}, dead unary removed {len(dead)}, out pin regs split {len(spr)}")
     return 0 if not final_over and not after['role_errors'] else 1
 
 
