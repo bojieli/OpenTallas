@@ -28314,6 +28314,8 @@
       "OT_FF_CHAIN_PIN=1"
      ],
      "ot_hgi_sfu_opsb_group": [
+      "--recipe-key",
+      "ot_hgi_sfu_opsb_group__gprot",
       "--orfs-var",
       "OT_FF_CHAIN_PIN=1"
      ]
@@ -32517,6 +32519,12 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
      "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
+    },
+    "ot_hgi_sfu_opsb_group": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_opsg_fe0002fac6_1b4ef2e1ce",
+     "src_sha": "98823e93c3a389113b1a27e0c0a0e37841f99a82",
+     "queue_src": "claude/kw-fix-45-hbm-opsg-comp-1111@98823e93c3a3",
+     "note": "COORD 13:5x approved per-item private src (cp -al + real copies of 5 named files of main 1b4ef2e1ce97); needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
