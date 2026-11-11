@@ -1,0 +1,8 @@
+[
+ {"type": "dsdv_slice_lepw_mus_LP__t2", "rect_um": [1412.88, 596.16, 1000000.0, 1077.276], "obs_min": 4,
+  "why": "LEPW-EFACE-1111 keep-clear (DIE-S81-85 11-11): no OBS>=M4 hard core at x>=1412.88 over the moved lepk E windows y 596.16-1077.276"},
+ {"type": "dsdv_slice_lepw_mus_LP__t2", "module_re": "^dsfd_coll_lane", "max_top_um": 574.56,
+  "why": "LEPW-EFACE-1111 keep-clear: every lane core top <= 574.56 (lepk nets pass north of the lane-core row)"},
+ {"type": "dsdv_slice_lepw_mus_C__t1", "rect_um": [0.0, 596.16, 30.0, 1077.276],
+  "why": "LEPW-EFACE-1111 keep-clear: mus_C W face clear for 30 um over the moved lepk W windows y 596.16-1077.276"}
+]

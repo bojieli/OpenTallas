@@ -20,7 +20,7 @@ view_lef.bind receipt <m>.view.json, signoff.json, odb.sha (and PROVENANCE.json,
 Per row: lib -> the view TT ETM, lef -> the view LEF (view_lef.attach), note added.  Nothing else in the plan moves:
 the output with those three keys restored is json-equal to the input (asserted).  Asserted per master, fail-closed:
   * base plan sha256 is a known base (FEED-BAL 66466e86ebcd, plan of record ebea5f5b8ade or combined
-    FEED-BAL-2/SVCRS-3 v5 99f40d35071d); input serialisation is
+    FEED-BAL-2/SVCRS-3 v5 99f40d35071d, or FEED-BAL-2 on the physinst base 64eb2c89: 77b98be343 / c955442566); input serialisation is
     json.dumps(indent=1)+"\\n" or json.dumps()+"\\n" (kept for the output);
   * old plan LEF sha256 and old lef/lib paths as below; view LEF/lib sha256 = this script's pins and = the bind receipt;
     view provenance views_status 'signoff', gates view_complete, signoff.json verdict SIGNED, odb.sha as below;
@@ -52,6 +52,10 @@ BASES = {
     "ebea5f5b8ade7a2311458f2aa9b7ea5647c4acd7d8cb6030f39bd114208d7e31": "S81 plan of record (pgr1/out_s81_meas_1111_0332)",
     "99f40d35071d66bf2edd2b81f4d7046598f297bbf0b1b3884006252e85172eb9":
         "combined S81 plan: FEED-BAL-2 on SVCRS-3 v5 ca10ae6afbab (feed1111/out2/plan.json)",
+    "77b98be343798c7faa5964e4c45f25e39a20eb6f92ee75c35e1dc37a88213735":
+        "FEED-BAL-2 --svc-as-base on 64eb2c89c94c (v5 + SVCPROV-PHYSINST), DS85-COMPOSE-1111 BASE_1200 chain",
+    "c95544256627964dfc182e53cfc67ff047dc7a71c692ac3f56e4b48fb356cb85":
+        "FEED-BAL-2 on 64eb2c89c94c (v5 + SVCPROV-PHYSINST; svc_rs windows from the pre-v5 measurements), DS85-COMPOSE-1111",
 }
 VIEW = lambda m: f"physical/die_plan/s81/cores/views/{m}_signed_1111"  # noqa: E731
 MASTERS = {

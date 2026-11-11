@@ -11,8 +11,13 @@ Applies to BASE_1200 (64eb2c89 SVCPROV-PHYSINST -> FEED-BAL-2 -> DS85-VIEWS), in
         - only origin_um / orient of the named entries move.  DERIVED by construction (reported, not an input): the
           early core clock taps (clock.taps[] kind 'core', named <inst> or <inst>.<pin>) of a moved core keep their
           core-frame point (rigid transform with the core), because schema.core_taps reads tap xy as the die clock
-          early-tap site;  a stale tap would make the die clock tool route to the old core position.
-  (b) optional face-window delta  {type: {bus: {window_um: [lo, hi], layers: [..]}}}
+          early-tap site;  a stale tap would make the die clock tool route to the old core position (DIE-S81-85 ruling
+          11-11: approved as a derived key, reported per type: count + max displacement; the moved tap must be inside
+          the outline and pass the kit snap gen_phys.core_tap_pins under --phys; a tap shared by two cores, a
+          core_group tap, or a plain (non-core) tap on a moved core's old box FAILS: the die owner's call).
+  (b) optional face-window delta  {type: {bus: {window_um: [lo, hi], layers: [..]}}}  (OFF unless --face; e.g. the
+      SLICE-LP-W candidate delta_lepw_eface_1111.json with --face-script delta_lepw_eface_1111.py as a cross-check,
+      and --keep-clear for its keep-clear rules on any positions delta of the same types)
         - matched neighbour: for every ports[] row touching a changed (type, bus) on any partition of the type, the
           die-frame windows of both ends coincide after the delta (both ends must be changed together); a port's own
           window_um that equalled the old die-frame window follows the new one (derived, reported).
@@ -29,7 +34,7 @@ Gates on the composed plan (and per stage where cheap):
       overlap      no two core boxes of the type overlap;
       street       every pair of distinct cores is abutted (gap 0) or >= --gap apart (B34 street, default 34.56);
       sites        no clock tap (type clock.tap_um, core taps), ft_slots regs_um, internal_stations regs_um under a core;
-  G0                   tools/die_plan/check.py --json-only on BASE and on the output: 0 NEW errors (findings compared
+  G0                   tools/die_plan/check.py on BASE and on the output: 0 NEW errors (findings compared
                        by (check, msg)); --no-g0 skips it (dry runs);
   phys                 gen_phys content_physical_identity / window_port_names / type_macros on every changed type and
                        die_trial.clock_taps on the plan (the SVCPROV-PHYSINST check form), --phys.
@@ -88,6 +93,11 @@ def core_tap_inst(name, insts):
         if name == i or name.startswith(i + "."):
             return i
     return None
+
+
+def core_tap_matches(name, insts):
+    """every inst a core tap name can denote (<inst> or <inst>.<pin>); > 1 = a tap shared by two cores."""
+    return [i for i in insts if name == i or name.startswith(i + ".")]
 
 
 # ------------------------------------------------------------------------------------------- (a) positions / orients
@@ -153,7 +163,13 @@ def apply_pos(plan, deltas):
                 if i is None or i not in old:
                     continue
                 if "core_group" in tp:
-                    problems.append(f"{tn}: core tap {tp['name']} is a core_group tap of moved core {i}: not derivable")
+                    problems.append(f"{tn}: core tap {tp['name']} is a core_group tap of moved core {i}: not derivable "
+                                    "(needs the die owner's call)")
+                    continue
+                mm = core_tap_matches(tp["name"], hc)
+                if len(mm) > 1 and any(m in old for m in mm):
+                    problems.append(f"{tn}: core tap {tp['name']} is shared by cores {mm}: not derivable "
+                                    "(needs the die owner's call)")
                     continue
                 (ox, oy), o0, b0 = old[i]
                 w, h = hc[i]["outline_um"]
@@ -164,8 +180,22 @@ def apply_pos(plan, deltas):
                 dist = max(b0[0] - tp["xy"][0], 0, tp["xy"][0] - b0[2], b0[1] - tp["xy"][1], 0, tp["xy"][1] - b0[3])
                 taps.append(dict(tap=tp["name"], core=i, from_=list(tp["xy"]), to=new, off_core_um=round(dist, 3)))
                 tp["xy"] = new
+            # a plain (non-core) tap on / under a moved core's old box: not derivable, the die owner decides
+            for tp in (t.get("clock") or {}).get("taps", []) or []:
+                if tp.get("kind") == "core":
+                    continue
+                for i, (_, _, b0) in old.items():
+                    if b0[0] - EPS <= tp["xy"][0] <= b0[2] + EPS and b0[1] - EPS <= tp["xy"][1] <= b0[3] + EPS:
+                        problems.append(f"{tn}: plain clock tap {tp['name']} at {tp['xy']} sits on moved core {i}'s "
+                                        "old box: not derivable (needs the die owner's call)")
+            W, H = t["outline_um"]
+            for r in taps:
+                if not (-EPS <= r["to"][0] <= W + EPS and -EPS <= r["to"][1] <= H + EPS):
+                    problems.append(f"{tn}: moved core tap {r['tap']} -> {r['to']} outside the outline {W}x{H}")
+                r["displacement_um"] = round(abs(r["to"][0] - r["from_"][0]) + abs(r["to"][1] - r["from_"][1]), 4)
             rec[tn] = dict(delta=path, delta_sha256=dsha, moved=moved, unchanged_listed=unchanged,
-                           core_taps_moved=taps)
+                           core_taps_moved=taps, core_taps_moved_n=len(taps),
+                           core_tap_max_displacement_um=max((r["displacement_um"] for r in taps), default=0.0))
     return rec, problems
 
 
@@ -205,6 +235,19 @@ def apply_face(plan, path):
             assert set(v) <= {"window_um", "layers"}, (tn, bus, sorted(v))
             rec.setdefault(tn, {})[bus] = dict(from_={k: b.get(k) for k in v}, to=v)
             b.update(copy.deepcopy(v))
+    for tn, m in rec.items():           # a moved window must not overlap another window on its face (buses + ft slots)
+        t = T[tn]
+        for bus in m:
+            b = next(x for x in t["buses"] if x["name"] == bus)
+            lo, hi = b["window_um"]
+            if not (0 <= lo < hi <= t["outline_um"][0 if b["face"] in "NS" else 1] + EPS):
+                problems.append(f"face: {tn}.{bus} window {b['window_um']} outside the {b['face']} face")
+            others = [(o["name"], o["window_um"]) for o in t["buses"] if o is not b and o["face"] == b["face"]]
+            others += [(f"ft {f['name']}", f[w]) for f in t.get("ft_slots") or []
+                       for fk, w in (("in_face", "in_window_um"), ("out_face", "out_window_um")) if f.get(fk) == b["face"]]
+            for on, (olo, ohi) in others:
+                if not (ohi <= lo + EPS or olo >= hi - EPS):
+                    problems.append(f"face: {tn}.{bus} window {b['window_um']} overlaps {on} {[olo, ohi]}")
     changed = {(tn, bus) for tn, m in rec.items() for bus in m}
     ptype = {q["name"]: q["type"] for q in plan["partitions"]}
     ports = []
@@ -232,6 +275,28 @@ def apply_face(plan, path):
                 ports.append(dict(port=q["id"], layers_from=q["layers"], layers_to=la))
                 q["layers"] = copy.deepcopy(la)
     return dict(delta=str(path), delta_sha256=fsha(path), types=rec, ports_derived=ports), problems
+
+
+def keep_clear(plan, path):
+    """keep-clear rules of an accompanying face event: rect rule = no placed core (with obs_min: whose obs_max layer
+    >= obs_min) intersects rect_um (type frame, open interior); max_top rule = every core whose module matches
+    module_re has box top <= max_top_um."""
+    import re
+    rules = json.loads(Path(path).read_text())
+    bad = []
+    for r in rules:
+        t = plan["partition_types"][r["type"]]
+        for e in t.get("hard_cores") or []:
+            x0, y0, x1, y1 = box(e)
+            if "rect_um" in r:
+                X0, Y0, X1, Y1 = r["rect_um"]
+                lvl = int(str(e.get("obs_max", "M9"))[1:] or 9)
+                if lvl >= int(r.get("obs_min", 0)) and x0 < X1 - EPS and x1 > X0 + EPS and y0 < Y1 - EPS and y1 > Y0 + EPS:
+                    bad.append(f"{r['type']} {e['inst']} ({e['module']}, obs {e.get('obs_max')}) box "
+                               f"{[round(v, 3) for v in (x0, y0, x1, y1)]} in keep-clear {r['rect_um']} ({r.get('why', '')})")
+            if "module_re" in r and re.search(r["module_re"], e["module"]) and y1 > r["max_top_um"] + EPS:
+                bad.append(f"{r['type']} {e['inst']} ({e['module']}) top {y1:.3f} > {r['max_top_um']} ({r.get('why', '')})")
+    return dict(pass_=not bad, rules=path, rules_sha256=fsha(path), violations=bad)
 
 
 # ------------------------------------------------------------------------------------------- EQ gate
@@ -341,7 +406,7 @@ def legality_diff(base, out, types, gap, edge):
 def g0(plan_path, out_dir):
     out_dir.mkdir(parents=True, exist_ok=True)
     r = subprocess.run([sys.executable, "-I", str(REPO / "tools/die_plan/check.py"), str(plan_path), "--out",
-                        str(out_dir), "--json-only", "--quiet"], capture_output=True, text=True, cwd=REPO)
+                        str(out_dir), "--quiet"], capture_output=True, text=True, cwd=REPO)
     (out_dir / "g0.log").write_text(r.stdout + r.stderr)
     rep = json.loads((out_dir / "g0_report.json").read_text())
     return rep
@@ -356,7 +421,10 @@ def g0_diff(rb, ro):
                 out_verdict=ro["verdict"])
 
 
-def phys(plan_path, types):
+def phys(plan_path, types, tap_types=()):
+    """SVCPROV-PHYSINST check form + (tap_types) the kit snap of every early core tap of the types whose cores moved:
+    gen_phys.core_tap_pins (PG-legal snap, explicit-entry track rule, macro-edge clearing) must succeed and every
+    snapped tap must lie inside the type outline."""
     import schema as S
     import gen_phys as GP
     import die_trial as DT
@@ -370,6 +438,11 @@ def phys(plan_path, types):
                     n += 1
             GP.window_port_names(P, tn)
             GP.type_macros(P, tn)
+            if tn in tap_types:
+                W, H = P.types[tn]["outline_um"]
+                for port, x, y in GP.core_tap_pins(P, tn):
+                    if not (-EPS <= x <= W + EPS and -EPS <= y <= H + EPS):
+                        raise ValueError(f"snapped core tap {port} ({x:g},{y:g}) outside the outline {W}x{H}")
         except Exception as e:  # noqa: BLE001 - recorded per type
             errs[tn] = f"{type(e).__name__}: {e}"
     try:
@@ -405,14 +478,37 @@ def compose(a):
         stages.append(dict(stage="a_positions", inputs=[dict(path=p, sha256=s) for p, s, _ in deltas],
                            in_sha256=cur, out_sha256=s_out, types=sorted(pos_rec),
                            moved=sum(len(r["moved"]) for r in pos_rec.values()),
-                           core_taps_moved=sum(len(r["core_taps_moved"]) for r in pos_rec.values())))
+                           core_taps_moved=sum(len(r["core_taps_moved"]) for r in pos_rec.values()),
+                           core_tap_max_displacement_um=max((r["core_tap_max_displacement_um"]
+                                                             for r in pos_rec.values()), default=0.0)))
         cur = s_out
     if a.face:
+        pre = dump(plan).encode()
         face_rec, pr = apply_face(plan, a.face)
         problems += pr
         s_out = sha(dump(plan).encode())
-        stages.append(dict(stage="b_face_windows", inputs=[dict(path=a.face, sha256=fsha(a.face))], in_sha256=cur,
-                           out_sha256=s_out, types=sorted(face_rec["types"]), ports_derived=len(face_rec["ports_derived"])))
+        ins = [dict(path=a.face, sha256=fsha(a.face))]
+        cross = None
+        if a.face_script:
+            # the event's own applier (e.g. delta_lepw_eface_1111.py --rebase) on the same pre-stage plan: its output
+            # must be byte-identical to the generic apply (cross-check of both implementations)
+            mid, fo = out_dir / "pre_face_plan.json", out_dir / "face_script_plan.json"
+            mid.write_bytes(pre)
+            r = subprocess.run([sys.executable, "-I", a.face_script, "--rebase", str(mid), str(fo),
+                                str(out_dir / "face_script_report.json")], capture_output=True, text=True, cwd=REPO)
+            if r.returncode:
+                problems.append(f"face script failed: {(r.stdout + r.stderr)[-1500:]}")
+            else:
+                cross = dict(script_out_sha256=fsha(fo), generic_out_sha256=s_out, identical=fsha(fo) == s_out)
+                if not cross["identical"]:
+                    problems.append(f"face: {Path(a.face_script).name} output {cross['script_out_sha256'][:12]} != generic "
+                                    f"apply {s_out[:12]}")
+                fo.unlink()
+            mid.unlink()
+            ins.append(dict(path=a.face_script, sha256=fsha(a.face_script)))
+        stages.append(dict(stage="b_face_windows", inputs=ins, in_sha256=cur, out_sha256=s_out,
+                           types=sorted(face_rec["types"]), ports_derived=len(face_rec["ports_derived"]),
+                           script_cross_check=cross))
         cur = s_out
     text = dump(plan).encode()
     if a.pad:
@@ -437,9 +533,15 @@ def compose(a):
     changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})))
     eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad))
     leg = legality_diff(base, plan, changed_types, a.gap, a.edge)
+    if a.keep_clear:
+        kc = keep_clear(plan, a.keep_clear)
+        leg["keep_clear"] = kc
+        leg["pass_"] = leg["pass_"] and kc["pass_"]
     rec = dict(schema="opentallas.s81.compose_cleanslate.v1", event=TAG, do_not_count=True,
                created=time.strftime("%Y-%m-%d %H:%M:%S %Z"), base=str(a.base), base_plan_sha256=bsha,
-               serialisation=form, args=dict(pos=a.pos or [], face=a.face, pad=a.pad, pad_script=a.pad_script if a.pad else None,
+               serialisation=form, args=dict(pos=a.pos or [], face=a.face, face_script=a.face_script,
+                                             keep_clear=a.keep_clear,
+                                             pad=a.pad, pad_script=a.pad_script if a.pad else None,
                                              gap=a.gap, edge=a.edge),
                stages=stages, output_plan_sha256=out_sha, changed_types=changed_types,
                eq_gate=dict(eq, rtl_change=False, pin_change=False, outline_change=False, cycle_change=False),
@@ -466,7 +568,8 @@ def compose(a):
         pp = out_dir / ("plan.json" if not a.dry_run else "dry_plan.json")
         if a.dry_run:
             pp.write_bytes(text)
-        rec["phys"] = phys(pp, changed_types or list(plan["partition_types"]))
+        rec["phys"] = phys(pp, changed_types or list(plan["partition_types"]),
+                           tap_types={t for t, r in pos_rec.items() if r["core_taps_moved"]})
         if a.dry_run:
             pp.unlink()
     ok = (not problems and eq["pass_"] and leg["pass_"] and rec.get("g0", {}).get("pass_", True)
@@ -478,6 +581,8 @@ def compose(a):
                           problems=problems[:10], eq=eq["pass_"], legality=leg["pass_"],
                           legality_new={t: r["new"][:3] for t, r in leg["types"].items() if r["new"]},
                           g0=rec.get("g0", {}).get("new_errors"), phys=rec.get("phys", {}).get("pass_"),
+                          phys_errors=dict(list(rec.get("phys", {}).get("type_errors", {}).items())[:5]),
+                          core_taps_moved=sum(len(r["core_taps_moved"]) for r in pos_rec.values()),
                           stages=[(s["stage"], s["in_sha256"][:12], s["out_sha256"][:12]) for s in stages])))
     return 0 if ok else 1
 
@@ -491,6 +596,7 @@ def check(out_dir):
             assert fsha(i["path"]) == i["sha256"], (s["stage"], i["path"], "input changed")
     tmp = out_dir / "check_rederive"
     ns = argparse.Namespace(base=rec["base"], out_dir=str(tmp), pos=ar["pos"], face=ar["face"], pad=ar["pad"],
+                            face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"),
                             pad_script=ar["pad_script"], base_sha=[rec["base_plan_sha256"]], no_g0=True, phys=False,
                             dry_run=False, gap=ar["gap"], edge=ar["edge"])
     compose(ns)
@@ -509,6 +615,10 @@ def main():
     ap.add_argument("out_dir")
     ap.add_argument("--pos", action="append", help="positions/orients delta JSON (repeatable)")
     ap.add_argument("--face", help="face-window delta JSON")
+    ap.add_argument("--face-script", help="the face event's own applier, run with --rebase on the same pre-stage plan; "
+                                          "its output must equal the generic apply")
+    ap.add_argument("--keep-clear", help="keep-clear rules JSON [{type, rect_um, obs_min?, why}, "
+                                         "{type, module_re, max_top_um, why}]")
     ap.add_argument("--pad", help="DS85-LATETAP-1111 pads_delta.json (optional stage c, default OFF)")
     ap.add_argument("--pad-script", default=str(HERE / "delta_latetap_pad_1111.py"))
     ap.add_argument("--base-sha", action="append", help="accepted base sha256 (in addition to BASES)")
@@ -520,7 +630,7 @@ def main():
     a = ap.parse_args()
     if a.pos:
         a.pos = [str(Path(p).resolve()) for p in a.pos]
-    for k in ("face", "pad", "base"):
+    for k in ("face", "face_script", "keep_clear", "pad", "base"):
         if getattr(a, k):
             setattr(a, k, str(Path(getattr(a, k)).resolve()))
     a.pad_script = str(Path(a.pad_script).resolve())
