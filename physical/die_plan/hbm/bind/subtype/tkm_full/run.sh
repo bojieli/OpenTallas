@@ -26,7 +26,10 @@ sed -E 's/^(\s*)ot_hgi_coll_tkm_tp192_htile_core (u_h[ab])/\1ot_hgi_coll_tkm_tp1
 [ "$(grep -c 'htile_core__fs u_h' "$O/splitc__fs.sv")" = 2 ] || { echo SPLITC_FS_FAIL; exit 2; }
 # hier blocks: the half tile (64 instances, one compile) AND the root core (3.8 MB flattened extract): with the root core
 # in the top pass the top verilation was OOM-killed at a 96 GB cap (11-11 10:58 UTC, ctlrst pos, MemoryPeak 96G).
-printf '`verilator_config\nhier_block -module "ot_hgi_coll_tkm_tp192_htile_core"\nhier_block -module "ot_hgi_coll_tkm_tp192_root_core"\n' > "$O/hier.vlt"
+# The half tile block is its parameter-free face shell (htile_core__fs): with hier_block on the PT-parameterised
+# htile_core the top pass still elaborated every instance inline (tb.g_t[*]...u_hb.u_fcore.u_tile paths, 38-40 GB
+# in 60 s with the root source removed and the TB arrays cut: probes 11-11 13:4x UTC).
+printf '`verilator_config\nhier_block -module "ot_hgi_coll_tkm_tp192_htile_core__fs"\nhier_block -module "ot_hgi_coll_tkm_tp192_root_core"\n' > "$O/hier.vlt"
 COMMON=("$H/tb_tkm_root_full.sv" "$RK/ot_hgi_coll_tkm_m_tp192__root__fshell.sv" "$RK/ot_hgi_coll_tkm_m_tp192__root__wrap.sv"
   "$RK/ot_hbm_face_reg.sv" "$RK/ot_hbm_face_rst_relay.sv"
   "$P19/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__p19glue.sv" "$P19/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__p19glue.sv"
