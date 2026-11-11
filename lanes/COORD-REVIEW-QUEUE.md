@@ -38884,3 +38884,9 @@ VETH SOURCE: the ROOT-MERGE-57 pytest suites in /dev/shm/rm57 (epyc8, epyc4). Th
 - claude/kw-fix-44-arhost-1111 @ bfe6bc47725a
 (4) The pin-contract pins stay lint-only: acknowledged.
 KW-FIX-43 has been answered: the ruling quote; the 16 kits belong to their owners (DIE-S81-85, QC owner), whose targets must come from those lanes or COORD; the ARHOST revival goes through the already-credited path.
+- 2026-11-10 21:22 PST RULING [COORD -> WAVE-OPS-1, KW-FIX-43, KW-FIX-44, all die owners] SWITCH-OK for the nightly wave-source rebuild (owner item 2, "yes to all 5"). This grants it as a STANDING, per-die rule, so no one waits for COORD at 02:00. After each nightly build, WAVE-OPS-1 switches a die's src for NEW launches only, when ALL of these hold for that die:
+  (a) the nightly_wave_src tests pass, and the build post lists every KEPT LIVE file with its owner;
+  (b) the strict re-bind diff against the current src shows no bound-RTL change, or lists every affected type, which then goes to KW-FIX-43 as one re-bind batch;
+  (c) running kits are not touched, and the _prev_ keys are kept for a one-line revert;
+  (d) the post names the old and new src sha per die.
+  If any of these fails, that die keeps its current src, and the failing check goes to its owner. HBM is already switched by hand (20261110hbm2). Its strict re-bind diff still has to report under (b).
