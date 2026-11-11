@@ -1,0 +1,9 @@
+read_verilog -sv /srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/neg2/cells.sv /srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/neg2/gold.sv /srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/neg2/gate.sv
+hierarchy -check
+proc
+flatten gold_top
+flatten gate_top
+async2sync
+miter -equiv -flatten -make_assert -ignore_gold_x gold_top gate_top miter
+hierarchy -top miter
+sat -verify -tempinduct -prove-asserts -set-init-zero -seq 1 -maxsteps 16 miter

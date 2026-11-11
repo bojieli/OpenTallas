@@ -257,6 +257,7 @@ def ft_chain(t, seg, k0=None):
 
 
 _LB = {}
+_SB = {}
 
 
 def lane_max(P, lid):
@@ -265,7 +266,22 @@ def lane_max(P, lid):
     return max(h) if h else 0.0
 
 
-def slot_ok(P, tn, sl, lanes, base_lane):
+def slot_hops(P, lid, tn, sn):
+    """pin hops of lane lid that touch slot (tn, sn): (interior hops, boundary hops in, out) per crossing"""
+    geo = CK.lane_geometry(P, lid); hops = CK.lane_pin_hops(P, lid, geo[1])
+    out, idx, touch = [], 1, set()
+    for part, slot, a, b in P.lane_crossings(lid):
+        n = int((P.slot(part, slot) or {}).get("stations", 1))
+        if slot == sn and P.parts[part]["type"] == tn:
+            seg = hops[idx - 1: idx + n]
+            out.append((seg[1:-1], seg[0], seg[-1]))
+            touch |= set(range(idx - 1, idx + n))
+        idx += n
+    outside = max((h for i, h in enumerate(hops) if i not in touch), default=0.0)
+    return [(a, b, c, outside) for a, b, c in out]
+
+
+def slot_ok(P, tn, sl, lanes, base_lane, base_slot_hops=None):
     """the G0 checks on one slot (check_hops R3 + first input hop, check_ft_macro_sites centres, lane pin hops):
     no new violation against the base plan"""
     t = P.types[tn]; bx = boxes_of(t)
@@ -284,6 +300,21 @@ def slot_ok(P, tn, sl, lanes, base_lane):
         h = lane_max(P, lid)
         if h > max(P.reach, base_lane.get(lid, 0.0)) + 1e-6:
             return False, f"lane {lid} hop {h:.0f}"
+        # HBM-COMPOSE 11-11 (DIE-HBM-98): every hop inside this slot within reach (registered stages, no squeeze);
+        # the two boundary hops within reach or not worse than the same boundary hop in the base
+        # strict (<= reach) when the base lane is clean outside this slot; when the base lane already fails outside it
+        # (L8007/L8008: other partitions' pre-existing hops), no in-slot hop may be worse than the base slot's worst
+        bb = (base_slot_hops or {}).get((lid, tn, sl["name"]), [])
+        for i, (inner, hin, hout, _o) in enumerate(slot_hops(P, lid, tn, sl["name"])):
+            if i < len(bb):
+                b_inner, b_in, b_out, b_out_side = bb[i]
+                lim = P.reach if b_out_side <= P.reach + 1e-6 else max(P.reach, max(list(b_inner) + [b_in, b_out]))
+            else:
+                b_in = b_out = 0.0; lim = P.reach
+            if any(x > lim + 1e-6 for x in inner):
+                return False, f"lane {lid} slot hop {max(inner):.0f} > {lim:.0f}"
+            if hin > max(lim, b_in) + 1e-6 or hout > max(lim, b_out) + 1e-6:
+                return False, f"lane {lid} boundary hop {max(hin, hout):.0f}"
     return True, ""
 
 
@@ -304,7 +335,11 @@ def slot_candidates(t, seg, k0):
     for lim in (HOP, 300.0, 240.0, 180.0):          # b2n rule chain (shortest-hop relays on free macro edges)
         for R_ in (RelayRouter(bx, w, h, lim), FineRouter(bx, w, h, lim)):
             try:
-                out += emit([first] + R_(first, seg[-1]))
+                ch = [first] + R_(first, seg[-1])
+                out += emit(ch)
+                if len(ch) >= 2:   # +1 registered stage between S0 and S1 (first input hop), placed free
+                    m = ((ch[0][0] + ch[1][0]) / 2, (ch[0][1] + ch[1][1]) / 2)
+                    out += emit([ch[0], free_point(m, bx, w, h)] + ch[1:])
             except ValueError:
                 pass
     for k in range(max(1, k0), k0 + 4):              # count-kept, then +1.. (cycle delta) even chains
@@ -334,6 +369,8 @@ def restation_slots(P, want, note, commit=True):
         for lid in lanes:
             if lid not in _LB:
                 _LB[lid] = lane_max(PB, lid)
+            if (lid, tn, sn) not in _SB:
+                _SB[(lid, tn, sn)] = slot_hops(PB, lid, tn, sn)
         keep = (copy.deepcopy(sl.get("regs_um")), sl.get("stations"), sl.get("bit_sites_um"), sl.get("bit_site_cell_um"))
         sl.pop("bit_sites_um", None); sl.pop("bit_site_cell_um", None)
         chosen, why = None, []
@@ -342,7 +379,7 @@ def restation_slots(P, want, note, commit=True):
             while len(regs) < n0:
                 regs.append(regs[-1])
             sl["regs_um"] = [R3(p) for p in regs]; sl["stations"] = len(regs)
-            ok, w_ = slot_ok(P, tn, sl, lanes, _LB)
+            ok, w_ = slot_ok(P, tn, sl, lanes, _LB, _SB)
             if ok:
                 chosen = regs; break
             why.append(f"{len(regs)}:{w_}")
@@ -356,6 +393,8 @@ def restation_slots(P, want, note, commit=True):
             if chosen is not None:
                 res[(tn, sn)] = (n0, len(chosen), chosen)
             continue
+        if len(chosen) > n0:
+            rep.setdefault("why", {})[tn + "." + sn] = why[:16]
         res[(tn, sn)] = (n0, len(chosen), chosen)
         sl["note"] = sl.get("note", "").split(" | HBM-CHANNELS")[0] + f" | {note}"
     return res

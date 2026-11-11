@@ -1,0 +1,56 @@
+{
+ "base": {
+  "verdict": "FAIL",
+  "errors": 639,
+  "warnings": 1423
+ },
+ "new": {
+  "verdict": "FAIL",
+  "errors": 627,
+  "warnings": 1438
+ },
+ "ERROR": {
+  "new_by_check": {
+   "hops": 1
+  },
+  "gone_by_check": {
+   "hops": 5,
+   "stations": 8
+  },
+  "new": [
+   "lane L8008: normal FT NW_su00.L8008x6 real input bit 0 S0->S1 is 737 um > reach 405; regs_um[0] is not a native placement"
+  ],
+  "gone": [
+   "lane L8008: normal FT NW_su11.L8008x2 real input bit 1 S0->S1 is 742 um > reach 405; regs_um[0] is not a native placement",
+   "lane L8301: normal FT NW_su11.L8301x1 real input bit 0 S0->S1 is 659 um > reach 405; regs_um[0] is not a native placement",
+   "lane L8301m: normal FT NE_su11.L8301mx1 real input bit 1614 S0->S1 is 659 um > reach 405; regs_um[0] is not a native placement",
+   "lane L8302: normal FT NW_su11.L8302x1 real input bit 0 S0->S1 is 843 um > reach 405; regs_um[0] is not a native placement",
+   "lane L8302m: normal FT NE_su11.L8302mx1 real input bit 1614 S0->S1 is 843 um > reach 405; regs_um[0] is not a native placement",
+   "type q_su01 slot L8007x1: real normal input S0->S1 = 622 um > ft_station_max_um 405",
+   "type q_su01 slot L8008x7: real normal input S0->S1 = 610 um > ft_station_max_um 405",
+   "type q_su11 slot L8301mx1: real normal input S0->S1 = 659 um > ft_station_max_um 405",
+   "type q_su11 slot L8302mx1: real normal input S0->S1 = 843 um > ft_station_max_um 405",
+   "type q_su11__physical_v1 slot L8007x6: real normal input S0->S1 = 608 um > ft_station_max_um 405",
+   "type q_su11__physical_v1 slot L8008x2: real normal input S0->S1 = 742 um > ft_station_max_um 405",
+   "type q_su11__physical_v1 slot L8301x1: real normal input S0->S1 = 659 um > ft_station_max_um 405",
+   "type q_su11__physical_v1 slot L8302x1: real normal input S0->S1 = 843 um > ft_station_max_um 405"
+  ]
+ },
+ "WARN": {
+  "new_by_check": {
+   "types": 1,
+   "core_faces": 68,
+   "clock": 5,
+   "schema": 6,
+   "reach": 1
+  },
+  "gone_by_check": {
+   "core_faces": 54,
+   "clock": 4,
+   "schema": 3,
+   "reach": 5
+  },
+  "new": null,
+  "gone": null
+ }
+}

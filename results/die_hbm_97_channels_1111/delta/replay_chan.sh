@@ -4,8 +4,8 @@
 # Sections (mk_chan_event.py): A SU-CHAN q_su11/pv1 q_su01/pv1 | B b-type E-street stations + straight L51x4/L51x5 |
 # C kv_line south grow (+pins file, clock_entries) | D q_mcb -> q_mcb_ne/q_mcb_nw | E root u_tkm_SW_root reset source note |
 # cycles: ft station +1 lanes + L5090/L5091 fixed_cycles (latency.lanes keeps param).
-# Then compiler_core_delta.json pending entry (ccd_pending.py) and core_conns.json regen (core_conns_batch.py, no --base).
-# Expected die_plan.json sha256 fd5123010508864c82549536c8a04b4db9bc826cd60b945384f3f489c9c3e02a.
+# Then compiler_core_delta.json pending entry (ccd_pending.py) and core_conns.json regen (core_conns_batch.py trace, then cc_merge.py with the base sidecar).
+# Expected die_plan.json sha256 85df1184ecea45080cd79da7941ee5464f32c54f83fa436262429af471c46b79.
 set -euo pipefail
 BASE=$1; OUT=$2; REPO=$3; RTL=${4:-}
 H=$(cd "$(dirname "$0")" && pwd)
@@ -25,7 +25,9 @@ for t, v in p["partition_types"].items():
     assert f, t; picks[t] = os.path.join(B, f[0])
 json.dump(picks, open(sys.argv[3], "w"), indent=1)
 PY
-  python3 -I "$H/core_conns_batch.py" "$OUT/die_plan.json" "$OUT/cc_picks.json" "$OUT/core_conns.json"
+  python3 -I "$H/core_conns_batch.py" "$OUT/die_plan.json" "$OUT/cc_picks.json" "$OUT/core_conns.traced.json"
+  # traced wires 281/2553 cores (split hierarchies trace as {}): merge per core with the base sidecar (stale refs dropped)
+  python3 -I "$H/cc_merge.py" "$OUT/die_plan.json" "$OUT/core_conns.traced.json" "$BASE/core_conns.json" "$OUT/core_conns.json"
   gzip -n -c "$OUT/core_conns.json" > "$OUT/core_conns.json.gz"
 fi
 sha256sum "$OUT/die_plan.json"

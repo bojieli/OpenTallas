@@ -215,3 +215,24 @@ static_front E/W switch: NOT applied.
 - Trigger: ot_smh_static_front_w AND ot_smh_static_front_e both signed off. They are not signed off now: W RR6 has TT -49.53 rst recovery, and E D04/D04R has a GRT broad band.
 - To switch: install count/nip_sfs as the counted plan, or rerun `mk_count_chan.py ... --sfs`, and point PLANS['hbm'] in coord tools/release_tree_plan.py at it.
 - Until then, the counted plan is count/nip.
+
+## Rev 2 (11-11, for the 12:00 compose): die_plan 85df1184ecea…
+
+Rev 2 answers the DIE-HBM-98 and HBM-COMPOSE asks (a)-(d).
+
+The plan dir on epyc7 is `/srv/opentallas-scratch2/claude/die-hbm-97-channels/plan_p11t_chan` (532 files, `SHA256SUMS` sha256 b7ef1e90457bf52a…). Rev 1 is kept in `plan_p11t_chan_rev1_fd512301`.
+
+Replay: `delta/replay_chan.sh BASE OUT REPO BOUND_RTL`. The expected die_plan sha is 85df1184….
+
+**(a) G0 hops.**
+- L8302 and L8302m are clean. Their station regs_um are re-sited, with no extra cycle, and all hops are <= 356 um.
+- L8008 is a pre-existing lane error. The lane message now names the next base slot, NW_su00.L8008x6 at 737 um, which was already an error in the base. The G0 diff is in `plan/g0diff_channels.json`: errors go from 639 to 627.
+
+**(b) Stage-equivalence proof.**
+- `proof/eq_stations.json` gives ALL_EQ_CYCLE_SHIFTED on all 7 links: new == base delayed +k.
+- In each case the negative controls (k-1 delay, and a data-bit bypass) fail.
+- The tool is `delta/eq_stations.py`.
+
+**(c) Intent sheet.** See `plan/intent/INTENT_SU_CHAN.md`, the 4 SVGs, and `intent_su_chan.json`.
+
+**(d) q_b112pv1 0.778->1.18.** This was a model artifact of the trace-only core_conns. The plan does not touch q_b112. With the merged sidecar (`delta/cc_merge.py`) the value is 0.778 -> 0.778. On like-for-like route_supply runs, 26 types are better and 2 are worse; see `route_supply/route_supply_*_*.tsv`.

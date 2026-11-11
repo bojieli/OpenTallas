@@ -1,6 +1,6 @@
 {
  "base_sha": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
- "new_sha": "fd5123010508864c82549536c8a04b4db9bc826cd60b945384f3f489c9c3e02a",
+ "new_sha": "85df1184ecea45080cd79da7941ee5464f32c54f83fa436262429af471c46b79",
  "changed_paths": 5359,
  "non_position_paths": [],
  "outline_paths": [
@@ -21,21 +21,6 @@
   ],
   [
    "partition_types",
-   "q_sm1",
-   "hard_cores",
-   "232",
-   "pins_file"
-  ],
-  [
-   "partition_types",
-   "q_sm1",
-   "hard_cores",
-   "232",
-   "outline_um",
-   "1"
-  ],
-  [
-   "partition_types",
    "q_sm2",
    "hard_cores",
    "232",
@@ -59,6 +44,21 @@
   [
    "partition_types",
    "q_sm0",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ],
+  [
+   "partition_types",
+   "q_sm1",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm1",
    "hard_cores",
    "232",
    "outline_um",
@@ -74,13 +74,6 @@
    "ew_y_inside_old_span": true
   },
   {
-   "type": "q_sm1",
-   "inst": "u_sm_front_kv",
-   "pins": 2158,
-   "same_names_layers_dirs_faces": true,
-   "ew_y_inside_old_span": true
-  },
-  {
    "type": "q_sm2",
    "inst": "u_sm_front_kv",
    "pins": 2158,
@@ -89,6 +82,13 @@
   },
   {
    "type": "q_sm0",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  },
+  {
+   "type": "q_sm1",
    "inst": "u_sm_front_kv",
    "pins": 2158,
    "same_names_layers_dirs_faces": true,
@@ -141,6 +141,142 @@
  "contract_changes": {
   "stations_or_latency_paths": [
    [
+    "lanes",
+    "345",
+    "fixed_cycles"
+   ],
+   [
+    "lanes",
+    "346",
+    "fixed_cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "fixed"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "fixed"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "stations"
+   ],
+   [
     "partition_types",
     "q_su11",
     "ft_slots",
@@ -174,142 +310,6 @@
     "ft_slots",
     "6",
     "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5090",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5090",
-    "fixed"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5090",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8301m",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8301m",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8301m",
-    "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314m",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314m",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314m",
-    "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314",
-    "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5091",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5091",
-    "fixed"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L5091",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302",
-    "stations"
-   ],
-   [
-    "lanes",
-    "345",
-    "fixed_cycles"
-   ],
-   [
-    "lanes",
-    "346",
-    "fixed_cycles"
    ]
   ],
   "internal_station_reg_count": [

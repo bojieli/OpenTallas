@@ -13,6 +13,6 @@ c["pending_not_folded"]["hbm-channels-cycles-1111"] = (
     "the slowest SU->hub leg is L1271 at 66 (NE L5094 at 64), so under the max-leg rule the expected delta is +0 "
     "(1648.00 tok/s unchanged), bound 1642.88 tok/s (-0.311%, matches the SU+2 estimate); hub->SM +1 lanes expected +0. "
     "The affected types count only after the "
-    "scheduler/token check on the new cycles passes. Stage-equivalence proof for the extra stations: MISSING.")
+    "scheduler/token check on the new cycles passes. Stage-equivalence proof for the extra stations: delta/eq_stations.py -> eq_stations.json, ALL_EQ_CYCLE_SHIFTED (7 links: each new link == base link delayed +k, k = station delta, yosys miter + sat -tempinduct; negative controls k-1 delay and data-bit bypass both fail; lane latency delta == ft station delta + fixed_cycles delta on all 7 lanes).")
 json.dump(c, open(p, "w"), indent=1)
 print(hashlib.sha256(open(p, "rb").read()).hexdigest())

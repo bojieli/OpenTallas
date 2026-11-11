@@ -6,10 +6,10 @@
  "ruling": "COORD ruling on hbm-channels-ask (relayed by DIE-HBM-97 11-11): (1) SU-CHAN q_su11/pv1 q_su01/pv1; (2) b-type E-street stations + straight opposite-face crossings",
  "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
  "base_sha256": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
- "plan": "/tmp/tmp.Mwx8UdWQLT/die_plan.json",
- "plan_sha256": "fd5123010508864c82549536c8a04b4db9bc826cd60b945384f3f489c9c3e02a",
+ "plan": "/tmp/tmp.w38sApwVDW/die_plan.json",
+ "plan_sha256": "85df1184ecea45080cd79da7941ee5464f32c54f83fa436262429af471c46b79",
  "tool": "mk_chan_event.py",
- "tool_sha256": "3abdad4910cc2a1059680472c8fab075216dc55c3c522c4a8912063e6714aa34",
+ "tool_sha256": "425ebf7e5cfa1782b7b8fe04bdaedd223a144d3bc81d5115093d1b5b799f53f7",
  "report": {
   "su": {
    "q_su11": {
@@ -1290,6 +1290,27 @@
    }
   ],
   "fails": [],
+  "why": {
+   "q_su11.L8301mx1": [
+    "6:first input hop 445"
+   ],
+   "q_su11.L8302mx1": [
+    "6:first input hop 470",
+    "6:first input hop 491",
+    "6:first input hop 449"
+   ],
+   "q_su11.L8314mx1": [
+    "7:lane L8314m hop 441"
+   ],
+   "q_su11__physical_v1.L8302x1": [
+    "6:first input hop 496",
+    "6:first input hop 496",
+    "6:first input hop 449"
+   ],
+   "q_su11__physical_v1.L8314x1": [
+    "7:lane L8314 hop 441"
+   ]
+  },
   "ft_restation": {
    "q_b002.L51x5": [
     2,
