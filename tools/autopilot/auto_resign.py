@@ -243,6 +243,15 @@ def wave_candidates(jobs, kits, core_module=lambda x: x):
     return out
 
 
+# ARHOST_1111 (KW-FIX-44, COORD 11-11 19:22 hbm/hnx_rp3h_tl): ot-run placed nothing (no host / disk / floor refusal).  Such
+# a refusal is INFRA that never ends the row nor spends the infra budget: the row goes PENDING and the next launch is
+# placed like any ot-run job (anyhost: no --hosts pin, no --no-spill, --stage of exactly the job's inputs, so a host
+# that admits it gets a staged copy and the outputs come back to the DB host).  A failure key recorded for such a
+# refusal before this rule is not a verdict and is ignored.
+NO_HOST = re.compile(r"no host qualifies|DISK GUARD|ROOT FS \d+% full|disk \d+ GB < \d+|scratch\d? floor|"
+                     r"@unit: OSError: \[Errno 28\]", re.I)
+
+
 def cand_id(c):
     """from the row alone: an item keeps its state when it moves on to a late-ECO result"""
     return hashlib.sha1(("%s|%s|%s|%s" % (c["die"], c["name"], c["host"], c.get("path"))).encode()).hexdigest()[:12]
@@ -283,6 +292,8 @@ def judge(c, p, ctx, it):
         return "WAIT", "no flow tag covers %s" % c["die"]
     key = "%s|%s" % (p.get("odb_sha"), ctx["tool_key"](tag))
     prev = (it.get("failed") or {}).get(key)
+    if prev and NO_HOST.search(prev):                  # ARHOST_1111: a placement refusal is not a verdict
+        prev = None
     if prev:
         return "LANE", "FAILED %s; same DB and same signoff.py + lec.py on %s, not retried" % (prev, tag)
     bc = ctx["build_commit"](c, p)
@@ -671,12 +682,17 @@ def out_dir(root, c, tag, odb_sha, attempt):
     return s if attempt <= 1 else "%s_a%d" % (s, attempt)
 
 
-def job_argv(AP, c, p, d, out, tag, bc, mem):
+def job_argv(AP, c, p, d, out, tag, bc, mem, anyhost=False):
     # --dir is the tools dir, not the kit: ot-run ignores a --dir under a lane root marked .ot-run-spill-copy (ECO kits on a
     # spill copy, e.g. die-hbm-63 on epyc2), so a pinned job on the kit would wait for ever on a DB that is really there.
     host = "localhost" if AP.ssh_host(c["host"]) == "localhost" else c["host"]   # ot-run names the hub localhost
     note = "%s; %s" % (c.get("lane") or c.get("source"), c.get("note") or "")
-    return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS), "--hosts", host, "--no-spill", "--disk", "2",
+    if anyhost:                                        # ARHOST_1111: placed like any ot-run job, inputs staged
+        stage = [d, p["kit"], p["orfs"], out] + ([p["odb"]] if not str(p["odb"]).startswith(str(p["orfs"]).rstrip("/") + "/") else [])
+        place = ["--stage", ",".join(stage)]
+    else:
+        place = ["--hosts", host, "--no-spill"]
+    return [AP.OT_RUN, "--mem", str(mem), "--threads", str(THREADS)] + place + ["--disk", "2",
             "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/resign_driver.py", "run",
             "--auto", "--kit", p["kit"], "--run-dir", p["orfs"], "--routed-db", p["odb"], "--tag", tag,
             "--repo", d + "/tag_manifest.json", "--tools", d + "/tools/die_plan", "--out", out, "--build-commit", bc,
@@ -753,6 +769,11 @@ def poll_row(AP, cid, it, notices):
         so, le = res.get("signoff") or {}, res.get("lec") or {}
         msg = "%s/%s RECORDED %s TT %s FF %s LEC %s, %s:%s" % (it["die"], it["name"], it["tag"], so.get("tt"), so.get("ff"),
                                                              le.get("verdict"), it["host"], it["out"])
+    elif status == "INFRA" and NO_HOST.search(why):   # ARHOST_1111: placement refusal, retried next tick on any host
+        it.update(status="PENDING", anyhost=True,
+                  why="NO-HOST %s; next tick placed like any ot-run job (staged inputs), infra budget unchanged" % why[:200])
+        AP.log("AUTO-RESIGN %s/%s: %s" % (it["die"], it["name"], it["why"]))
+        return
     elif status in ("INFRA", "INFRA_OOM") and it.get("infra", 0) < MAX_INFRA:
         it["infra"] = it.get("infra", 0) + 1
         if status == "INFRA_OOM":
@@ -1014,9 +1035,15 @@ def launch(AP, c, p, ctx, it, plan, cid, ap_dir):
     mem = it.get("mem", MEM_GB)
     unit = "ar-%s-a%d" % (cid, n)
     logf = Path(ap_dir) / "auto_resign_jobs" / (unit + ".log")
-    argv = job_argv(AP, c, p, d, out, tag, bc, mem)
+    anyhost = bool(it.get("anyhost"))
+    if anyhost:                                        # ARHOST_1111: the output dir exists so ot-run can stage it
+        h = AP.ssh_host(c["host"])
+        if AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "mkdir -p %s" % shlex.quote(out)], timeout=60)[0]:
+            it.update(status="WAIT", why="ARHOST: mkdir %s on %s failed" % (out, c["host"]))
+            return False
+    argv = job_argv(AP, c, p, d, out, tag, bc, mem, anyhost=anyhost)
     rec = dict(status="RUNNING", why="", attempt=n, unit=unit, log=str(logf), out=out, tag=tag, key=plan["key"], build_commit=bc,
-               mem=mem, started=time.time(), kit=p["kit"], routed_db=p["odb"])     # read first: nothing may raise once the unit runs
+               mem=mem, started=time.time(), kit=p["kit"], routed_db=p["odb"], anyhost=anyhost)     # read first: nothing may raise once the unit runs
     if not AP.launch_unit(unit, logf, argv):
         it.update(status="WAIT", why="systemd-run failed")
         return False
