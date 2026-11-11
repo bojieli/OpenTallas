@@ -698,12 +698,12 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "epyc2"
+    "intel2"
    ],
    "gen_hosts": [
     "epyc7",
-    "epyc2",
-    "epyc8"
+    "epyc8",
+    "epyc4"
    ],
    "place_prefer": [
     "epyc4",
@@ -3056,7 +3056,18 @@
    },
    "kit_store": [
     "kv3_pv*"
-   ]
+   ],
+   "hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw43h": [
+    "epyc7",
+    "epyc2",
+    "epyc8"
+   ],
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
   },
   "s81": {
    "enabled": true,
@@ -5384,7 +5395,6 @@
    "gen_hosts": [
     "epyc7",
     "epyc4",
-    "epyc2",
     "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
@@ -5392,7 +5402,7 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "epyc2"
+    "intel2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -17395,7 +17405,19 @@
     "dsdv_slice_c1x_C__t9@13",
     "dsdv_slice_lepe_nh_mus_C__t1@17",
     "dsdv_slice_lepe_mu_C__t1@22"
-   ]
+   ],
+   "hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2",
+    "epyc8"
+   ],
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
   },
   "s81_head": {
    "enabled": true,
@@ -19627,7 +19649,6 @@
    "gen_hosts": [
     "epyc7",
     "epyc4",
-    "epyc2",
     "intel2",
     "epyc8"
    ],
@@ -19635,7 +19656,7 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "epyc2"
+    "intel2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
@@ -25170,7 +25191,20 @@
     "cbx_q10__cl94a12200@20",
     "cbx_q10__cl89936551@24"
    ],
-   "note_kw43por": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT. Revert: src/item_env/retry/item_inputs/hold_items <- *_prev_kw43por."
+   "note_kw43por": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT. Revert: src/item_env/retry/item_inputs/hold_items <- *_prev_kw43por.",
+   "hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2",
+    "intel2",
+    "epyc8"
+   ],
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
   },
   "hbm": {
    "enabled": true,
@@ -26516,7 +26550,8 @@
     "q_b101_nw@15",
     "q_b102@22",
     "NW_io@12",
-    "q_spt0__physical_v1@2"
+    "q_spt0__physical_v1@2",
+    "q_hub_ne@7"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -26568,8 +26603,8 @@
    },
    "gen_hosts": [
     "epyc7",
-    "epyc2",
-    "epyc8"
+    "epyc8",
+    "epyc4"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -26859,7 +26894,8 @@
     "q_b101_nw@15": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
     "q_b102@22": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
     "NW_io@12": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
-    "q_spt0__physical_v1@2": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7"
+    "q_spt0__physical_v1@2": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
+    "q_hub_ne@7": "INPUTS RESTAGED: epyc8 die-hbm-97 plan dirs (plan_p9_wsw_r cores now on every HBM host; 8 more plan_* dirs restaged)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -26906,7 +26942,7 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "epyc2"
+    "intel2"
    ],
    "cancel_superseded": false,
    "plan_core_items": [
@@ -35073,7 +35109,18 @@
     "NW_io@11",
     "q_spt0__physical_v1@1"
    ],
-   "note_kw43hfx": "KW-FIX-43 11-10 18:3x: view_detail_1110 entries for epyc7/epyc8 + retry of 5 HBM GRT-batch rows failed on missing epyc8 inputs. Revert *_prev_kw43hfx."
+   "note_kw43hfx": "KW-FIX-43 11-10 18:3x: view_detail_1110 entries for epyc7/epyc8 + retry of 5 HBM GRT-batch rows failed on missing epyc8 inputs. Revert *_prev_kw43hfx.",
+   "hosts_prev_kw43h": [
+    "epyc7",
+    "epyc4",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw43h": [
+    "epyc7",
+    "epyc2",
+    "epyc8"
+   ],
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
   }
  },
  "place_prefer": [
