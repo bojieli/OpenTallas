@@ -120,14 +120,15 @@ def test_type_kit_stages_qc_contract_and_lec_consumes_it(tmp_path):
         assert (kd / "reset_contract/receipt.txt").is_file()
 
 
-def test_type_kit_unlisted_top_keeps_default(tmp_path):
+def test_type_kit_unlisted_top_gets_die_scope(tmp_path):
+    """RESET-SCOPE 11-10 (was: unlisted type keeps the 4-edge default -> KV kv3_hg 1604 false differs)."""
     from types import SimpleNamespace
     import gen_phys
     (tmp_path / "io.tcl").write_text("")
     p = SimpleNamespace(name="qwen_compute", types={"sample": dict(outline_um=[10, 10], module="not_a_qc_top")})
     fz = gen_phys.write_partition_freeze(p, "sample", tmp_path, [])
-    assert "reset_contract" not in fz
-    assert not (tmp_path / "reset_contract.json").exists()
+    assert fz["reset_contract"]["scope"] == "plan_type" and fz["reset_contract"]["edges"] == 64
+    assert lec.reset_contract_gate(tmp_path, "not_a_qc_top", environ={})["used"] == 64
 
 
 def test_type_kit_stages_untrusted_lec_hints_in_freeze(tmp_path):
@@ -220,3 +221,47 @@ def test_hbm_q_b_type_tops_stage_through_plan_die_name(tmp_path):
     kd.mkdir()
     st = K.stage(kd, "hbm_arch_q_b102__physical_v1", src)
     assert st and st["edges"] == json.loads(src.read_text())["edges"]
+
+
+def test_plan_type_scope_covers_an_unlisted_type(tmp_path):
+    """RESET-SCOPE 11-10: KV kv3_hg (unlisted type) ran its LEC at 4 edges -> 1604 false differs."""
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    before = src.read_bytes()
+    assert K.stage(kd, "new_type_part", src) is None and not list(kd.iterdir())   # core kits: unchanged rule
+    st = K.stage(kd, "new_type_part", src, plan_type=True)
+    assert st["edges"] == 64 and st["scope"] == "plan_type"
+    rep = lec.reset_contract_gate(kd, "new_type_part", environ={})
+    assert rep["used"] == 64 and "refused" not in rep
+    kc = json.loads((kd / "reset_contract.json").read_text())
+    assert "new_type_part" in kc["modules"] and "listed_core" in kc["modules"]
+    assert src.read_bytes() == before                                              # canonical file untouched
+    assert K.repair(kd, source=src)["copied"] is False                              # repair accepts the scoped copy
+
+
+def test_plan_type_scope_listed_type_is_a_byte_copy(tmp_path):
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    st = K.stage(kd, "listed_core", src, plan_type=True)
+    assert "scope" not in st and (kd / "reset_contract.json").read_bytes() == src.read_bytes()
+
+
+def test_gen_phys_stages_types_by_scope():
+    assert "plan_type=True" in (REPO / "tools/die_plan/gen_phys.py").read_text()
+
+
+def test_audit_and_restage_cover_a_partition_type_kit(tmp_path, monkeypatch):
+    """RESET-SCOPE 11-10: the batch re-sign path (audit -> restage, no rebuild) reaches an unlisted type kit."""
+    src, kd = contract(tmp_path), tmp_path / "kit"
+    kd.mkdir()
+    (kd / "config.mk").write_text("export DESIGN_NAME = new_type_part\nexport VERILOG_FILES = a.v\n")
+    (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.partition_freeze.v1", die="hbm_arch_B2o")))
+    monkeypatch.setitem(K.DIE_CONTRACT, "hbm", src)
+    rep = K.audit(kd)
+    assert rep["how"] == "plan_type" and rep["die"] == "hbm" and rep["miss"] is True
+    assert K.restage(kd, "hbm")["scope"] == "plan_type"
+    assert lec.reset_contract_gate(kd, "new_type_part", environ={})["used"] == 64
+    core = tmp_path / "core"
+    core.mkdir()
+    (core / "config.mk").write_text("export DESIGN_NAME = new_type_part\nexport VERILOG_FILES = a.v\n")
+    assert K.audit(core)["entry"] is None                                    # core kits: list rule unchanged
