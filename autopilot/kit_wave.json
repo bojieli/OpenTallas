@@ -28532,7 +28532,23 @@
     "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key.",
     "q_b001": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
     "q_b001__physical_v1": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
-    "q_b001*": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1"
+    "q_b001*": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
+    "PHY_*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): hard wrapper needs placed macro with LEF+TT/FF views (gen fails); post-cut batch, watch DRT-0418",
+    "q_spt0*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1 and worse; child xcal_rel_t PROVISIONAL view; prov_views fail until lane1p_core/sfu_s_core routed",
+    "q_spb2*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): child ot_hbm_svc_sm_xcal_rel_t PROVISIONAL contract view (DRT-0073); wait for its signed view",
+    "q_b000*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class (identical cores/outline, will recur); one post-cut PDN channel item",
+    "q_b002*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class; post-cut PDN channel item",
+    "q_b011*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class; post-cut PDN channel item",
+    "q_b100*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
+    "q_b102*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
+    "q_b103*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
+    "q_b113*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold",
+    "q_su01*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply p99>1 (ft-chain packing); prov_views children (sfu_s_core) not routed",
+    "q_su11*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply p99>1 (ft-chain packing); post-cut ft re-site",
+    "q_su00__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child pgslice_lg__pretree/lane_exp has no routed abstract yet; release when signed/routed",
+    "q_su10__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child lane_exp_x_core has no routed abstract yet (vec LEC fix landed); release when routed",
+    "NE_io": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse, no Steiner reason",
+    "q_hub_ne": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse"
    },
    "gen_hosts": [
     "epyc8"
