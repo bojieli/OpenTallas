@@ -284,13 +284,17 @@ def main(argv=None):
                                                     cases=cases), indent=1))
     sh = ["#!/bin/bash", "# expect: base PROVED (rc 0), drop/add mutants FAILED (rc != 0)", 'Y=${YOSYS:-yosys}',
           'cd "$(dirname "$0")"', "J=${JOBS:-%d}" % a.jobs,
-          "one() { ( cd $1 && timeout ${CASE_TIMEOUT:-21600} $Y -q -l prove.log -s prove.ys >/dev/null 2>&1 ); echo \"$1 rc=$?\"; }",
+          # verdict from the log, not the rc alone: an OOM kill (137) or a parse error is UNRESOLVED, never a FAIL
+          "one() { ( cd $1 && timeout ${CASE_TIMEOUT:-21600} $Y -q -l prove.log -s prove.ys >/dev/null 2>&1 ); r=$?; "
+          "v=UNRESOLVED; grep -q 'Induction step proven: SUCCESS' $1/prove.log 2>/dev/null && [ $r -eq 0 ] && v=PROVED; "
+          "grep -q 'model found for base case: FAIL' $1/prove.log 2>/dev/null && v=FAILED; echo \"$1 rc=$r $v\"; }",
           "export -f one; export Y",
-          "ls -d c[0-9]*_* | xargs -P $J -I{} bash -c 'one {}' > rc.txt",
+          "ls -d ${CASES:-c[0-9]*_*} | xargs -P $J -I{} bash -c 'one {}' >> rc.txt",
           "python3 -I - <<'PY'", "import json", "C=json.load(open('cases.json'))",
-          "rc={l.split()[0]:int(l.split('rc=')[1]) for l in open('rc.txt') if 'rc=' in l}",
-          "bad=[c['dir'] for c in C['cases'] if (rc.get(c['dir'],-1)!=0) == (c['expect']=='PROVE')]",
-          "json.dump(dict(cases=len(C['cases']),bad=bad,text_problems=C['text_problems'],rc=rc),open('verdict.json','w'),indent=1)",
+          "rc={l.split()[0]:l.split()[2] for l in open('rc.txt') if len(l.split())>2}",   # last line per case wins
+          "want={'PROVE':'PROVED','FAIL':'FAILED'}",
+          "bad=[c['dir'] for c in C['cases'] if rc.get(c['dir'])!=want[c['expect']]]",
+          "json.dump(dict(cases=len(C['cases']),bad=bad,text_problems=C['text_problems'],verdicts=rc),open('verdict.json','w'),indent=1)",
           "print('RESULT', 'PASS' if not bad and not C['text_problems'] else 'FAIL', len(C['cases']), 'cases', len(bad), 'bad')",
           "PY"]
     (out / "run.sh").write_text("\n".join(sh) + "\n")

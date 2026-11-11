@@ -169,5 +169,5 @@ def test_proof_sat_base_proves_and_missing_extra_stage_fail(tmp_path):
     v = json.loads((tmp_path / "pf" / "verdict.json").read_text())
     assert rc == 0 and v["bad"] == [] and v["cases"] == 9, v
     exp = {c["dir"]: c["expect"] for c in json.loads((tmp_path / "pf" / "cases.json").read_text())["cases"]}
-    assert all((v["rc"][d] == 0) == (e == "PROVE") for d, e in exp.items())
+    assert all(v["verdicts"][d] == ("PROVED" if e == "PROVE" else "FAILED") for d, e in exp.items())
     assert sum(e == "FAIL" for e in exp.values()) == 6
