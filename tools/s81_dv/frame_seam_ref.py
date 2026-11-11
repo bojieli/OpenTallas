@@ -25,14 +25,15 @@ def seam_bands(text, top):
     return out
 
 
-def _delay(rt, inst, port, tag, ck='ck_r1'):
-    """re-time one port connection of a unique ref instance by one edge (zero-initialised register)"""
+def _delay(rt, inst, port, tag, ck='ck_r1', out=None):
+    """re-time one port connection of a unique ref instance by one edge (zero-initialised register); out: the port is
+    an output (default: only 'o')"""
     m = re.search(r'^(\s+\w+ (?:#\(.*?\) )?%s \(.*)$' % re.escape(inst), rt, flags=re.M)
     assert m and len(re.findall(r'^\s+\w+ (?:#\(.*?\) )?%s \(' % re.escape(inst), rt, flags=re.M)) == 1, inst
     ln = m.group(1)
     e = re.search(r'\.%s\(((?:[^()]|\([^()]*\))*)\)' % port, ln).group(1)
     w = f'rp_{tag}'
-    if port in ('o',):              # output: the instance drives w, the old net gets w one edge later
+    if out or (out is None and port in ('o',)):   # output: the instance drives w, the old net gets w one edge later
         dec = (f'    logic [$bits({e})-1:0] {w}; logic [$bits({e})-1:0] {w}_q = 0;\n'
                f'    always @(posedge {ck}) {w}_q <= {w};\n    assign {e} = {w}_q;\n')
     else:                           # input: the instance reads the net one edge later
@@ -54,6 +55,13 @@ def ref_plus(rt, dt):
     for a, b in re.findall(r'// \(i\) \+1 FIRM station: (u_n\d+)\.fo -> \w+ -> (u_n\d+)\.fi', dt):
         rt = _delay(rt, b, 'fi', f'{a[2:]}_{b[2:]}_fi')
         done.append(f'{a}.fo -> {b}.fi +1')
+    # S81-ARCH-RTL-2 slice-4 (b) (frame_band_plan.py --qb-pin-cycle, '(l) qbank pin cycle'): the DUT's qbank output relay
+    # u_y_<q>_pc_<p> (ot_s81_rly, the qbank's own ck) is mirrored as a one-edge delay on the ref qbank's output o_<p>
+    for q, p in sorted(set(re.findall(r'\bot_s81_rly #\(.*?\) u_y_(bs\d+)_pc_(\w+) \(', dt))):
+        m = re.search(r'^\s+\w+ u_%s \(.*\.ck\((\w+)\)' % q, rt, flags=re.M)
+        assert m, q
+        rt = _delay(rt, f'u_{q}', f'o_{p}', f'{q}_pc_{p}', ck=m.group(1), out=True)
+        done.append(f'u_{q}.o_{p} +1 (qbank pin cycle)')
     return rt, done
 
 

@@ -17,6 +17,15 @@
 # edge from SEAM_T0 (default 0) -- the ret calendar alone missed the x-seam mutants (x lands with slack before go).
 # Env: XO_LAT (x -> xo edges, default 1; 2 = plan contents with the R3-INTERNAL x chain), MUTS (default: base + all), LK (lane strap, default 2; LDLY passes to frame_bench.sh), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run, and check its return calendar with xs_place.py check, fixtures BF_FIXTURES,
 # the BF framed traffic on each build -- required to exercise the 536-b x2 payload seams).  Exit 0 = base PASS and every mutant FAIL.
+# S81-FRAME-FIX-1 11-11 (late<N> blind without BFVEC): the late seams (h9 9/13, h10 17/32) are the 536-b x2 payload seams;
+# the q-only plan set never drives them (SEAM_ACT lpl_<N> toggles 0), so a late<N> run without BFVEC re-times an idle bus
+# and PASSes by construction (the 11-11 seam_h9 'late9 PASS' run had no BFVEC).  late<N> now refuses to run without
+# BFVEC (NOT_EXERCISED, a bench failure), and every late<N> line reports the mutated seam's toggles in the plan and BF
+# runs (late_seam_toggles=plan:<a>,bf:<b>); a late<N> verdict with 0 toggles in both is NOT_EXERCISED, never a catch.
+# A BF vector on the LP calendar of the bench's lane strap: OT_XS_BF_FRAME=lp xs_place.py gen --frame <die frame of
+# this master at E = LK> --op attn.wo_a --nth 0 (col_h9 E2: u_f_0L03; col_h10 E2: u_f_0L01).
+# FRAME_SCHED (passed to frame_bench.sh): the landed schedule of the twin under test (e.g. a pin-cycle twin's own extracted
+# schedule); default the committed one.
 set -u
 O=$1; M=${2:-h9}; MASTER=col_$M; mkdir -p $O
 TW=${TWIN:-rtl/dsrom_sys/s81_dv/frame_lp/vgcs/${MASTER}_l4_lp_rf3r.sv}
@@ -29,6 +38,7 @@ run_one() {   # $1 = mutant name
   case $mu in
     base) ;;
     late*) n=${mu#late}; lpsv=$od/${MASTER}_l4_lp_rf3r.sv
+           [ -n "${BFVEC:-}" ] || { echo "SEAM_BENCH $M $mu: NOT_EXERCISED seam lpl_$n is a BF x2 payload seam, idle in the q plan set: BFVEC required"; return 3; }
            sed -E "/ u_lpl_${n}_r /s/\.K\(2\)/.K(3)/" $TW > $lpsv
            [ $(diff $TW $lpsv | grep -c '^>') = 1 ] || { echo "$mu: MUTANT_EMIT_FAILED"; return 3; } ;;
     short) seam=$od/ot_pl_seam_short.sv
@@ -76,6 +86,13 @@ PY
     local bck; python3 tools/s81_dv/layer_prog/xs_place.py check --dir $od/bfvec --log $od/run_bf.log ${BF_FIXTURES:+--fixtures $BF_FIXTURES} > $od/check_bf.log 2>&1 && bck=PASS || bck=FAIL
     bf="bf_seam_mismatch_lines=$bsm bf_fault=${bft:-NA} bf_active_seams=$bact bf_calendar=$bck"
   fi
+  # late<N>: the mutated seam must carry data in this run, else the verdict says nothing about its timing
+  case $mu in late*) local n=${mu#late} tp tb
+    tp=$(grep -m1 "^SEAM_ACT lpl_$n toggles" $od/run_plan.log 2>/dev/null | awk '{print $4}')
+    tb=$(grep -m1 "^SEAM_ACT lpl_$n toggles" $od/run_bf.log 2>/dev/null | awk '{print $4}')
+    bf="$bf late_seam_toggles=plan:${tp:-NA},bf:${tb:-NA}"
+    [ "${tp:-0}" -gt 0 ] 2>/dev/null || [ "${tb:-0}" -gt 0 ] 2>/dev/null || bf="$bf NOT_EXERCISED" ;;
+  esac
   echo "SEAM_BENCH $M $mu: ${line:-NO_RESULT $(tail -n 2 $od/frame_bench.log | tr '\n' ' ')} ${chk} ${bf}"
 }
 export -f run_one 2>/dev/null
@@ -89,6 +106,7 @@ for mu in $MUTS; do
   r=$(cat $O/$mu.res); echo "$r"
   if [ $mu = base ]; then echo "$r" | grep -q 'pass=1 fail=0 seam_mismatch_lines=0' || rc=1
     [ -z "${BFVEC:-}" ] || echo "$r" | grep -q 'bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=[0-9]* bf_calendar=PASS' || rc=1
-  else echo "$r" | grep -qE 'fail=1|bf_seam_mismatch_lines=[1-9]|bf_fault=[1-9]' || rc=1; fi
+  else echo "$r" | grep -qE 'fail=1|bf_seam_mismatch_lines=[1-9]|bf_fault=[1-9]' || rc=1
+    echo "$r" | grep -q 'NOT_EXERCISED' && rc=1; fi
 done
 echo "SEAM_BENCH_EXIT $M $rc"; exit $rc
