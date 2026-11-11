@@ -110,7 +110,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG)) u_ring (
-        .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
+        .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -168,12 +168,19 @@ module ot_dp_clk_landing_cas #(
     parameter bit STATUS_REG = 0,
     parameter int WRITE_CHUNK = 64, // appended for positional compatibility; local write-enable fanout bound
     parameter bit WRITE_TAIL = 0, // optional bounded partial final write chunk; same cycles
-    parameter int READ_CHUNK = 0 // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    parameter int READ_CHUNK = 0, // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    // RSTREP-1 (DIE-QC-97, plan clock.landing_ring_fanout_max): RSTREP extra copies of the receiver start rst_n on
+    // rst_xn, same D / raw reset / clock as rst_n (the kept ot_dp_landing_relay_rep last reader-START stage), 0 cycles:
+    // rst_n keeps the control flops (seen/arm/ready/fault/timeout, ring rp/status/rv/lap), rst_xn[0] the ring one-hot
+    // oh, rst_xn[1..RSTREP-1] the read-select chunks in contiguous groups (ot_meso_ring_ca RSTN).  Every copy equals
+    // rst_n, so q/ready/fault are identical; only the reset fanout per driver is bounded.  0 = rst_xn unused, identical logic.
+    parameter int RSTREP = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
     input  wire         clk,
     input  wire         rst_n,       // receiver start (count origin), synchronous to clk
+    input  wire [(RSTREP > 0 ? RSTREP : 1)-1:0] rst_xn,   // RSTREP-1 copies of rst_n (unused when RSTREP = 0)
     input  wire [$clog2(DEPTH)+3:0] strap_k,  // K mod 2^(log2(DEPTH)+4), quasi-static strap (tied at the parent)
     input  wire [W-1:0] d,
     output wire [W-1:0] q,
@@ -237,9 +244,15 @@ module ot_dp_clk_landing_cas #(
             fault_state <= fault_next;
         end
     end
+    localparam integer RXW = RSTREP > 0 ? RSTREP : 1;
+`ifdef OT_MESO_CA_MUTANT_RSTREP
+    wire [RXW-1:0] rst_x = RSTREP > 0 ? {rst_xn[RXW-1:1], rst_n & ~rst_xn[0]} : {RXW{1'b1}};  // MUTANT: oh copy wrong
+`else
+    wire [RXW-1:0] rst_x = RSTREP > 0 ? rst_xn : {RXW{1'b1}};
+`endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK)) u_ring (
-        .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP)) u_ring (
+        .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -281,7 +294,13 @@ module ot_meso_ring_ca #(
     parameter bit STATUS_REG = 0,
     parameter int WRITE_CHUNK = 64, // appended for positional compatibility; local write-enable fanout bound
     parameter bit WRITE_TAIL = 0, // optional bounded partial final write chunk; same cycles
-    parameter int READ_CHUNK = 0 // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    parameter int READ_CHUNK = 0, // optional bounded arbitrary-width read chunks; 0 preserves legacy64/divisibility
+    // WLIVE-1 (DIE-QC-97): live bits of t_d (the cas bundle W before 64-bit padding); a write chunk wholly above it
+    // writes only constant padding, so its write-enable flop takes D = 0 (the start has no unproven sink).  Default W: every chunk.
+    parameter int WLIVE = W,
+    // RSTREP-1: copies of r_rst_n on r_rst_x (0 = unused): r_rst_x[0] resets oh, r_rst_x[1..RSTN-1] the read-select
+    // chunks in contiguous groups (chunk c -> 1 + c*(RSTN-1)/NCH); r_rst_n keeps rp and the status/rv/lap flops
+    parameter int RSTN = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -289,6 +308,7 @@ module ot_meso_ring_ca #(
     input  logic [W-1:0] t_d,
     input  logic         rclk,
     input  logic         r_rst_n,
+    input  logic [(RSTN > 0 ? RSTN : 1)-1:0] r_rst_x,   // RSTREP-1 copies of r_rst_n (unused when RSTN = 0)
     input  logic [$clog2(DEPTH)+LAPX:0] k_s,   // read offset K mod 2^TW (constant / strap)
     output logic [W-1:0] r_d,        // RDREG: word captured at the consuming edge, presented one period later
     output logic         r_v,        // consumed slot written since the sender start, in the expected lap
@@ -332,8 +352,10 @@ module ot_meso_ring_ca #(
         wire [AW-1:0] slot_nx = fs_q ? tc[AW-1:0] + 1'b1 : '0;
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             for (genvar c = 0; c < WNC; c++) begin : ch
-                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(t_rst_n && (slot_nx == AW'(i))),
-                                                         .q(wen[i * WNC + c]));
+                // WLIVE-1: a padding-only chunk's enable flop keeps its name/site but takes D = 0 (no start load)
+                localparam bit LIVE = (c * WWC) < WLIVE;
+                wire wen_d = LIVE ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0;
+                (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(wen_d), .q(wen[i * WNC + c]));
             end
         end
         assign t_go = fs_q;
@@ -397,9 +419,14 @@ module ot_meso_ring_ca #(
     // ---------------- receive (rclk): rp = receiver count - K ----------------
     logic [TW-1:0] rp;
     logic [NS-1:0] oh;
+    wire r_rst_oh = RSTN > 0 ? r_rst_x[0] : r_rst_n;   // RSTREP-1: equal copy of r_rst_n
     always_ff @(posedge rclk) begin
-        if (!r_rst_n) begin rp <= RP0T; oh <= NS'(1) << RP0; end
-        else begin rp <= rp + 1'b1; oh <= {oh[NS-2:0], oh[NS-1]}; end
+        if (!r_rst_n) rp <= RP0T;
+        else rp <= rp + 1'b1;
+    end
+    always_ff @(posedge rclk) begin
+        if (!r_rst_oh) oh <= NS'(1) << RP0;
+        else oh <= {oh[NS-2:0], oh[NS-1]};
     end
     function automatic logic [NS-1:0] rot(input logic [NS-1:0] x, input int k);
         for (int j = 0; j < NS; j++) rot[j] = x[(j - k + 2 * NS) % NS];
@@ -435,7 +462,9 @@ module ot_meso_ring_ca #(
         for (genvar i = 0; i < DEPTH; i++) begin : sl
             assign sd_c[i*WCH +: WCH] = s_d[i][c*RSTEP +: WCH];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_n), .on(r_rst_n),
+        // RSTREP-1: this chunk's equal copy of r_rst_n (contiguous chunk groups over r_rst_x[1..RSTN-1])
+        wire r_rst_c = RSTN > 1 ? r_rst_x[(RSTN > 1 ? 1 + (c * (RSTN - 1)) / NCH : 0)] : r_rst_n;
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_c), .on(r_rst_c),
             .place(RP0[AW-1:0]), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
@@ -746,6 +775,23 @@ module ot_dp_landing_relay (
     always @(posedge clk) begin
         if (!rst_raw_n) q <= 1'b0;
         else q <= d;
+    end
+endmodule
+
+// RSTREP-1 (DIE-QC-97): one reader-START stage as 1 + N kept ot_dp_landing_relay copies at the same site, same clk /
+// rst_raw_n / d: q is the stage itself (control loads), qx[j] equal copies for the ring's rst_xn (0 cycles; each
+// copy's reset fanout is bounded instead of one flop driving every reset load of the ring).
+(* keep_hierarchy *)
+module ot_dp_landing_relay_rep #(parameter integer N = 1) (
+    input  wire         clk,
+    input  wire         rst_raw_n,
+    input  wire         d,
+    output wire         q,
+    output wire [N-1:0] qx
+);
+    (* keep = "true" *) ot_dp_landing_relay u_q (.clk(clk), .rst_raw_n(rst_raw_n), .d(d), .q(q));
+    for (genvar j = 0; j < N; j++) begin : g_x
+        (* keep = "true" *) ot_dp_landing_relay u_r (.clk(clk), .rst_raw_n(rst_raw_n), .d(d), .q(qx[j]));
     end
 endmodule
 

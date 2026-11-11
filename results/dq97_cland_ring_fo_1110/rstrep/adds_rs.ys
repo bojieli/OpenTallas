@@ -1,0 +1,6 @@
+# register correspondence: every gate copy of the last reader-START stage == the gold stage (flattened net names)
+equiv_add -try rst_n_gold rst_n_gate
+equiv_add -try rst_n_gold rst_xn_gate[0]
+equiv_add -try rst_n_gold rst_xn_gate[1]
+equiv_add -try rst_n_gold rst_xn_gate[2]
+equiv_add -try rst_n_gold rst_xn_gate[3]
