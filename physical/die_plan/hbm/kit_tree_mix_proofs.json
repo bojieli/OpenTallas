@@ -1,0 +1,137 @@
+{
+ "schema": "opentallas.kit_tree_mix_proofs.v1",
+ "proofs": [
+  {
+   "module": "ot_hdc_fp32_add_lat",
+   "pick_tree": "rtl",
+   "twin_tree": "bundle",
+   "pick_files": {
+    "rtl:hdc/ot_hdc_fp32_add_lat.sv": "ff57ae6a984e476a021cbe5c5c5fa970c3abae275359c70dd8ff63aa2711d8ba",
+    "rtl:dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "bundle:hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+   },
+   "twin_files": {
+    "bundle:hdc/ot_hdc_fp32_add_lat.sv": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "bundle:hdc/ot_hdc_prefix.sv": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "bundle:hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+   },
+   "domain": {
+    "LAT": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7"
+    ],
+    "DRST": [
+     "0",
+     "1"
+    ]
+   },
+   "results": [
+    {
+     "params": {
+      "LAT": "3",
+      "DRST": "0"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "3",
+      "DRST": "1"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "4",
+      "DRST": "0"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "4",
+      "DRST": "1"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "5",
+      "DRST": "0"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "5",
+      "DRST": "1"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "6",
+      "DRST": "0"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "6",
+      "DRST": "1"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "7",
+      "DRST": "0"
+     },
+     "proven": true
+    },
+    {
+     "params": {
+      "LAT": "7",
+      "DRST": "1"
+     },
+     "proven": true
+    }
+   ],
+   "method": "yosys flatten+async2sync+opt_dff, equiv_make/equiv_struct/equiv_induct -seq 4/equiv_simple -seq 8/equiv_induct -seq 8/equiv_status -assert",
+   "kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b000/rtl/kit_rtl.f"
+  },
+  {
+   "module": "ot_static_program_target",
+   "pick_tree": "bundle",
+   "twin_tree": "rtl",
+   "pick_files": {
+    "bundle:hbm_accel/generic/vm/static/ot_static_program_target.sv": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21"
+   },
+   "twin_files": {
+    "rtl:hbm_accel/generic/vm/static/ot_static_program_target.sv": "2e897454fdaa5f3fb1871263e824f11a676ca8ce6cf55a4b17d33b321da38ee4"
+   },
+   "domain": {
+    "PCW": [
+     "10"
+    ],
+    "TGT_PIN": [
+     "1"
+    ]
+   },
+   "results": [
+    {
+     "params": {
+      "PCW": "10",
+      "TGT_PIN": "1"
+     },
+     "proven": true
+    }
+   ],
+   "method": "yosys flatten+async2sync+opt_dff, equiv_make/equiv_struct/equiv_induct -seq 4/equiv_simple -seq 8/equiv_induct -seq 8/equiv_status -assert",
+   "kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_hub_ne/rtl/kit_rtl.f"
+  }
+ ]
+}
