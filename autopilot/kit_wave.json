@@ -26932,7 +26932,11 @@
    "note_kw43sle": "KW-FIX-43 11-10 22:0x: retry sle_sc_v3@30 (DIE-QC-97, infra disk-full). Revert: drop the retry entry.",
    "note_kw43qcnk": "KW-FIX-43 11-11 COORD 00:3x (DIE-QC-97 RESULT 23:55): cb* rows on plan 72b74c858d whose NK child was the PROVISIONAL contract LEF f922482c11b9 (spec had 0 NK candidates: launched 11-09 11:16..11-10 05:18, before prov_view_sources.qfd_tile_nk_a0c = nk_p1 signed view, detail_view.lef sha256 53a7be5c8092, 4 hosts checked) superseded and relaunched: cbf_q00_s2@22 cbn_q11__cl5cc92dfe@11 cbn_q11__cl49ae4555@13 cbx_q10__cl94a12200@21. Every attempt launched since picks the signed view (cbx_q10__cl89936551 a26, cbn_q00__cl622f65d2 a20, cbf_q11 a19, cbn_q00__cldbcda913 a25). cbn_q01__clab6e67f2 a26 (contract) stays on its RE-FORM hold.",
    "grt_halving_arm": {
-    "items": [
+    "items": [],
+    "mode": "off",
+    "gen_host": "epyc8",
+    "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43).",
+    "items_prev_kw45_1111": [
      "sle_ctl__cla4f6f12f",
      "sle_hc1__cl22c1ff36",
      "sle_hc1__cl7d360508",
@@ -26948,9 +26952,7 @@
      "slw_hc2__cla3497502__cldc737267",
      "slw_st_a_v2__cl9f076a5c"
     ],
-    "mode": "off",
-    "gen_host": "epyc8",
-    "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
+    "note_kw45": "KW-FIX-45 11-11 08:4x: QC paused (only_items=[]) but GRT-ARM REPIN relaunched 6 QC rows at 08:42 (items list bypasses only_items); items emptied until the QC plan switch"
    },
    "only_items_prev_kw45_1111": [
     "cbf_q00__cl1b5a6458",
