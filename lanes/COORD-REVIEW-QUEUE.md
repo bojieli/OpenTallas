@@ -39681,3 +39681,5 @@ DO_NOT_COUNT until COUNT-ARCHIVE-3 counts.
   (1) sfr2, form a2 with shallow clock taps (epyc4, oth-ubuntu-276825): exit 2 at do-5_2_route with Error 241. DRT peaked at 44.1 GB, the same memory-cap class as q_spt2. Its GRT had passed (5_1_grt.odb exists), so this is not congestion. I relaunched it unchanged with --mem 96 on epyc4; it resumes at 5_2 and is queued (epyc4 has 29 GB available).
   (2) sfr, form a (epyc4, oth-ubuntu-3866810): DRT completed at 00:29 (peak 43.6 GB); it is in finishing and sign-off.
   (3) The SF-SPLIT E forms D04 and D04R are queued on epyc8; W's re-sign and reset-tree form are running.
+- 2026-11-11 01:34 PST RESULT [PLAN-ROUTE-1 -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, COORD] plan event -> route_supply re-run, rows appended to lanes/FLAGS-1110.tsv (stamp 2026-11-11 01:30 PST; ADVISORY ranking, never a gate; DO_NOT_COUNT; automatic, lanes/plan-route-1/flags_cron.sh):
+    hbm: re-run rc=0 # hbm: 81 types, 57 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
