@@ -155,7 +155,7 @@ def snap_axis(spec, o, tracks, axis, v, step, limit, fits):
     return best[0]
 
 
-def snap_all(placements, outline, tracks, env=None):
+def snap_all(placements, outline, tracks, env=None, spec_of=None):
     """placements: [dict(inst, master, lef, x, y, o)] -> (new placements, receipt rows).  Only off-track macros move."""
     env = os.environ if env is None else env
     if env.get("OT_MACRO_GRID_SNAP", "1") == "0":
@@ -165,7 +165,8 @@ def snap_all(placements, outline, tracks, env=None):
     for p in out:
         k = (str(p["lef"]), p["master"])
         if k not in specs:
-            specs[k] = lef_master(p["lef"], p["master"]) if p.get("lef") and Path(p["lef"]).is_file() else None
+            specs[k] = spec_of(p) if spec_of else (
+                lef_master(p["lef"], p["master"]) if p.get("lef") and Path(p["lef"]).is_file() else None)
     boxes = [(_box(specs[(str(p["lef"]), p["master"])], p["x"], p["y"], p["o"])
               if specs[(str(p["lef"]), p["master"])] else None) for p in out]
     for i, p in enumerate(out):
@@ -210,3 +211,146 @@ def write_receipt(kd, rows):
     if rows:
         (Path(kd) / RECEIPT).write_text(json.dumps({"schema": "opentallas.macro_grid_snap.v1", "by": "KW-FIX-44",
                                                     "macros": rows}, indent=1) + "\n")
+
+
+def _lef_index(kd):
+    """{master: LEF file} of the kit's staged macro LEFs (kd/macros/*.lef)"""
+    out = {}
+    for f in sorted((Path(kd) / "macros").glob("*.lef")) if (Path(kd) / "macros").is_dir() else []:
+        for m in re.finditer(r"^MACRO\s+(\S+)", f.read_text(errors="replace"), re.M):
+            out.setdefault(m.group(1), f)
+    return out
+
+
+def _kit_tracks_text(kd):
+    f = Path(kd) / "make_tracks.tcl"
+    return f.read_text(errors="replace") if f.is_file() else None
+
+
+def snap_core_sites(kd, mplace, hard_children, outline, env=None):
+    """core-kit generator hook (gen_core_kit_legacy / gen_core_kit_qc, COORD 11-10 ruling 1): snap the static macro
+    sites mplace {master: [(x, y, orient)]} and the signed hard children [{master, inst, orient, at}] onto the kit
+    make_tracks grid before macro_place.tcl and freeze.json are written.  On-grid sites come back as the same objects
+    (byte-identical kits).  -> (mplace, hard_children, receipt rows); receipt macro_grid_snap.json when any moved."""
+    lefs = _lef_index(kd)
+    placed = []
+    for ms, sites in (mplace or {}).items():
+        for k, s in enumerate(sites):
+            placed.append(dict(inst=f"{ms}#{k}", master=ms, lef=lefs.get(ms), x=float(s[0]), y=float(s[1]),
+                               o=s[2] if len(s) > 2 else "R0", src=("m", ms, k)))
+    same = {(p["master"], round(p["x"], 4), round(p["y"], 4)): p for p in placed}
+    link = {}                                    # a hard child also listed in mplace (legacy shares the site): one move
+    for k, c in enumerate(hard_children or []):
+        key = (c["master"], round(float(c["at"][0]), 4), round(float(c["at"][1]), 4))
+        if key in same:
+            link[k] = same[key]["src"]
+            continue
+        placed.append(dict(inst=c["inst"], master=c["master"], lef=lefs.get(c["master"]), x=float(c["at"][0]),
+                           y=float(c["at"][1]), o=c.get("orient", "R0"), src=("h", None, k)))
+    if not placed:
+        return mplace, hard_children, []
+    out, rows = snap_all(placed, outline, tracks_for(_kit_tracks_text(kd)), env)
+    if not any("snapped_um" in r for r in rows):
+        write_receipt(kd, rows)
+        return mplace, hard_children, rows
+    mp = {ms: list(v) for ms, v in mplace.items()} if mplace else mplace
+    hc = [dict(c) for c in hard_children] if hard_children else hard_children
+    for p0, p in zip(placed, out):
+        if (p0["x"], p0["y"]) == (p["x"], p["y"]):
+            continue
+        kind, ms, k = p["src"]
+        if kind == "m":
+            s = mp[ms][k]
+            mp[ms][k] = (round(p["x"], 4), round(p["y"], 4)) + tuple(s[2:])
+        else:
+            hc[k]["at"] = [round(p["x"], 4), round(p["y"], 4)]
+        for hk, src in link.items():
+            if src == p["src"]:
+                hc[hk]["at"] = [round(p["x"], 4), round(p["y"], 4)]
+    write_receipt(kd, rows)
+    return mp, hc, rows
+
+
+# --------------------------------------------------------------------------------- existing kit (macro_place.tcl)
+_SITE = re.compile(r"\{\s*" + KC._NUM + r"\s+" + KC._NUM + r"\s+(R0|R90|R180|R270|MX|MY|MXR90|MYR90)\s*\}")
+_HARD = re.compile(r'getName\] eq "(\S+)".*?\$i setOrient (\S+).*?setLocation \[expr \{round\((' + KC._NUM[1:-1] +
+                   r') \* \$dbu\)[^\n]*?\[expr \{round\((' + KC._NUM[1:-1] + r') \* \$dbu\)', re.S)
+
+
+def _fmt(v):
+    s = f"{v:.4f}".rstrip("0").rstrip(".")
+    return s or "0"
+
+
+def _kit_sites(txt):
+    """[(master, x, y, orient, (x span), (y span))] of the legacy foreach {master sites} lists and the hard-child
+    setOrient / setLocation blocks (kit_contract.macro_boxes forms)"""
+    out = []
+    for m in re.finditer(r"foreach\s+\{master sites\}\s+\{", txt):
+        i, depth = m.end(), 1
+        while i < len(txt) and depth:
+            depth += {"{": 1, "}": -1}.get(txt[i], 0)
+            i += 1
+        body0, body = m.end(), txt[m.end():i - 1]
+        for mm in re.finditer(r"(\S+)\s+\{((?:\s*\{[^{}]*\})*)\s*\}", body):
+            for s in _SITE.finditer(mm.group(2)):
+                base = body0 + mm.start(2)
+                out.append((mm.group(1), float(s.group(1)), float(s.group(2)), s.group(3),
+                            (base + s.start(1), base + s.end(1)), (base + s.start(2), base + s.end(2))))
+    for m in _HARD.finditer(txt):
+        out.append((m.group(1), float(m.group(3)), float(m.group(4)), m.group(2),
+                    (m.start(3), m.end(3)), (m.start(4), m.end(4))))
+    return out
+
+
+def snap_kit(kd, write=False, env=None):
+    """snap the static macro sites of an existing kit's macro_place.tcl (legacy site lists + hard-child blocks) onto
+    the kit tracks; -> receipt rows.  write: rewrite macro_place.tcl (+ receipt).  On-grid kits are untouched."""
+    kd = Path(kd)
+    mp = kd / "macro_place.tcl"
+    if not mp.is_file():
+        return []
+    txt = mp.read_text(errors="replace")
+    sites = _kit_sites(txt)
+    if not sites:
+        return []
+    cfg = KC._mk(kd)
+    tracks, _src = KC._kit_tracks(kd, cfg)
+    pins, sizes = KC._lef_pins(kd, cfg), KC._lef_sizes(kd, cfg)
+    core = KC._core(kd)
+    outline = (core[2], core[3]) if core else (1e9, 1e9)
+    placed = [dict(inst=f"{ms}#{k}", master=ms, lef=None, x=x, y=y, o=o) for k, (ms, x, y, o, _a, _b) in enumerate(sites)]
+    specs = {ms: (sizes[ms][0], sizes[ms][1], pins.get(ms, [])) for ms in {p["master"] for p in placed} if ms in sizes}
+    out, rows = snap_all(placed, outline, tracks, env, spec_of=lambda p: specs.get(p["master"]))
+    edits = []
+    for (ms, x, y, o, sx, sy), p in zip(sites, out):
+        if p["x"] != x:
+            edits.append((sx, _fmt(p["x"])))
+        if p["y"] != y:
+            edits.append((sy, _fmt(p["y"])))
+    if write and edits:
+        for (a, b), v in sorted(edits, reverse=True):
+            txt = txt[:a] + v + txt[b:]
+        mp.write_text(txt)
+        write_receipt(kd, rows)
+    return rows
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="snap an existing kit's static macro sites onto its track grid")
+    ap.add_argument("kit", type=Path)
+    ap.add_argument("--write", action="store_true")
+    a = ap.parse_args(argv)
+    rows = snap_kit(a.kit, a.write)
+    moved = [r for r in rows if "snapped_um" in r]
+    unres = [r for r in rows if "unresolved" in r]
+    for r in rows:
+        print(f"  {r['inst']} {r['master']} {r['orient']} {r['off_track_pins']} off at {r['plan_um']} -> "
+              f"{r.get('snapped_um', 'UNRESOLVED')}")
+    print(f"MACRO_GRID_SNAP {'WROTE' if a.write and moved else 'DRY'} moved {len(moved)} unresolved {len(unres)}")
+    return 1 if unres else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

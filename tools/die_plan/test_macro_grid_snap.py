@@ -93,3 +93,68 @@ def test_gen_phys_writes_snapped_macro_place():
     src = (Path(__file__).resolve().parent / "gen_phys.py").read_text()
     assert "_MGS.snap_all(placed, (w, h), _MGS.tracks_for(make_tracks_tcl(P)))" in src
     assert "place_macro -macro_name {{{q['inst_db']}}}" in src
+
+
+TR_TEXT = ("make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n"
+           "make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n")
+
+
+def core_kit(tmp):
+    kd = Path(tmp) / "kit"
+    (kd / "macros").mkdir(parents=True)
+    p = lef(tmp, pins_m4=(), pins_m5=(("c", 0.012, 0.0, 0.036, 0.192),))
+    (kd / "macros" / "PK.lef").write_text(p.read_text())
+    (kd / "make_tracks.tcl").write_text(TR_TEXT)
+    return kd
+
+
+def test_core_sites_snap_mplace_and_hard_children_together(tmp_path):
+    kd = core_kit(tmp_path)
+    mplace = {"PK": [(100.061, 200.88, "R0"), (200.08, 200.88, "R0")]}       # first off (x), second on grid
+    hcb = [dict(master="PK", inst="u_a", orient="R0", at=[100.061, 200.88]),  # the same site as mplace[0] (legacy)
+           dict(master="PK", inst="u_b", orient="R0", at=[300.061, 100.0])]
+    mp, hc, rows = M.snap_core_sites(kd, mplace, hcb, (400.0, 400.0))
+    assert mp["PK"][0] == (100.08, 200.88, "R0") and mp["PK"][1] == (200.08, 200.88, "R0")
+    assert hc[0]["at"] == [100.08, 200.88] and hc[1]["at"] == [300.08, 100.0]
+    assert mplace["PK"][0] == (100.061, 200.88, "R0")                          # input not mutated
+    assert len([r for r in rows if "snapped_um" in r]) == 2
+    assert (kd / M.RECEIPT).is_file()
+
+
+def test_core_sites_on_grid_same_objects(tmp_path):
+    kd = core_kit(tmp_path)
+    mplace, hcb = {"PK": [(200.08, 200.88, "R0")]}, [dict(master="PK", inst="u", orient="R0", at=[300.08, 100.0])]
+    assert M.snap_core_sites(kd, mplace, hcb, (400.0, 400.0)) == (mplace, hcb, [])
+    assert not (kd / M.RECEIPT).exists()
+
+
+LEGACY_MP = """set b [ord::get_db_block]
+foreach {master sites} {PK {{100.061 200.88 R0} {200.08 200.88 R0}}} {
+  foreach i $hit s $sites { lassign $s x y orient }
+}
+set hit {}
+foreach i [$blk getInsts] { if {[[$i getMaster] getName] eq "PK" && [regexp {u_b} [$i getName]]} { lappend hit $i } }
+$i setOrient R0
+$i setLocation 0 0
+$i setLocation [expr {round(300.061 * $dbu) - [$bb xMin]}] [expr {round(100.0 * $dbu) - [$bb yMin]}]
+"""
+
+
+def test_existing_kit_macro_place_rewritten(tmp_path):
+    kd = core_kit(tmp_path)
+    (kd / "config.mk").write_text("export CORE_AREA = 0 0 400 400\nexport MAKE_TRACKS = /work/make_tracks.tcl\n")
+    (kd / "macro_place.tcl").write_text(LEGACY_MP)
+    rows = M.snap_kit(kd)                                                     # dry: nothing written
+    assert len([r for r in rows if "snapped_um" in r]) == 2
+    assert (kd / "macro_place.tcl").read_text() == LEGACY_MP
+    assert M.main([str(kd), "--write"]) == 0
+    txt = (kd / "macro_place.tcl").read_text()
+    assert "{100.08 200.88 R0} {200.08 200.88 R0}" in txt and "round(300.08 * $dbu)" in txt
+    assert M.snap_kit(kd) == []                                               # idempotent
+
+
+def test_core_generators_call_the_snap():
+    root = Path(__file__).resolve().parents[2] / "physical" / "die_plan"
+    for f in ("s81/cores/legacy/gen_core_kit_legacy.py", "qwen_compute/cores/legacy/gen_core_kit_qc.py"):
+        if (root / f).is_file():
+            assert "MGS.snap_core_sites(kd, mplace, hcb, (w, h))" in (root / f).read_text()

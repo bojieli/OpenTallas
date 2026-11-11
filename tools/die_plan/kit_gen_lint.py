@@ -14,7 +14,11 @@ finding only at synth, place or CTS:
                      10 M5 shorts at detail route)
   macro_grid         (KW-FIX-44 11-10, COORD) every static macro origin puts the macro's signal pins on the kit track grid
                      (kit_contract.macro_pin_grid; S81 P FIRM y 201.96: DRT-0418 / DRT-0073).  Both: OT_GRID_LINT 0 in
-                     config.mk (or the environment) turns them off for one kit; gen_phys snaps macro origins first.
+                     config.mk (or the environment) turns them off for one kit.  ADVISORY (COORD 11-10 ruling 1: safe by
+                     construction, targets not gates): the generators snap pins and macro origins (gen_phys
+                     write_type_kit: pin_grid_snap.snap_generated + macro_grid_snap.snap_all; gen_core_kit_legacy /
+                     gen_core_kit_qc: macro_grid_snap.snap_kit); these lines report what is still off-grid after the
+                     snap and never fail the kit.
   rtl_check          yosys elaboration with the flow's frontend: hierarchy, undriven and multi-driven nets
                      (`check`, same script as rtl_lint.py, run in the flow image)
   memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
@@ -145,7 +149,7 @@ def pin_grid(kd):
     errors, info = kit_contract.io_pin_grid(kd)
     if errors:
         errors = [f"{len(errors)} io.tcl pin(s) off the track grid ({info.get('tracks')} tracks, worst "
-                  f"{info.get('worst_off_nm')} nm): snap them with tools/die_plan/pin_grid_snap.py KIT --write"] + errors
+                  f"{info.get('worst_off_nm')} nm): left after the generator snap (tools/die_plan/pin_grid_snap.py KIT reports the moves)"] + errors
     return errors, info.get("applies", False)
 
 
@@ -311,13 +315,14 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     kd = Path(kd).resolve()
     checks = {}
 
-    def put(name, fn):
+    def put(name, fn, advisory=False):
         try:
             errors, applies = fn()
         except Exception as error:          # fail closed: a lint that cannot run is a FAIL
             errors, applies = [f"lint could not run: {type(error).__name__}: {error}"], True
-        checks[name] = dict(verdict="FAIL" if errors else ("PASS" if applies else "NA"), errors=errors[:40],
-                            n_errors=len(errors))
+        bad_v = "ADVISORY" if advisory else "FAIL"
+        checks[name] = dict(verdict=bad_v if errors else ("PASS" if applies else "NA"), errors=errors[:40],
+                            n_errors=len(errors), **({"advisory": True} if advisory else {}))
 
     # _rtl/ and other emission scratch dirs are not kits: every existing check
     # can be NA there, which otherwise turns a wrong CLI target into a false PASS.
@@ -329,8 +334,8 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     put("pins_vs_plan", lambda: pins_vs_plan(kd, plan_dir))
     put("clock_export_form", lambda: clock_export_form(kd))
     put("macro_tcl", lambda: macro_tcl(kd))
-    put("pin_grid", lambda: pin_grid(kd))
-    put("macro_grid", lambda: macro_grid(kd, plan_dir))
+    put("pin_grid", lambda: pin_grid(kd), advisory=True)
+    put("macro_grid", lambda: macro_grid(kd, plan_dir), advisory=True)
     cfg = _cfg(kd)
     if yosys and cfg.get("DESIGN_NAME"):
         res = {}
@@ -345,9 +350,10 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
             else (["not measured: yosys elaboration failed (see rtl_check)"], True))
     else:
         checks["rtl_check"] = checks["memory_bits"] = dict(verdict="NA", errors=[], n_errors=0)
-    bad = [f"{n}: {e}" for n, row in checks.items() for e in row["errors"]]
+    bad = [f"{n}: {e}" for n, row in checks.items() if not row.get("advisory") for e in row["errors"]]
+    adv = [f"{n}: {e}" for n, row in checks.items() if row.get("advisory") for e in row["errors"]]
     return dict(schema="opentallas.kit_gen_lint.v1", kit=str(kd), verdict="FAIL" if bad else "PASS",
-                checks=checks, issues=bad, note="BUILD check (OWNER 12.27 d), not a sign-off check")
+                checks=checks, issues=bad, advisories=adv, note="BUILD check (OWNER 12.27 d), not a sign-off check")
 
 
 def main(argv=None):
@@ -364,6 +370,8 @@ def main(argv=None):
           " ".join(f"{n}={r['verdict']}" for n, r in rec["checks"].items()))
     for i in rec["issues"][:30]:
         print("  - GEN_LINT FAIL", i)          # FAIL on every issue line: kit_wave.error_lines/classify read them
+    for i in rec.get("advisories", [])[:10]:
+        print("  - GEN_LINT ADVISORY", i)      # never a FAIL line (pin_grid / macro_grid after the generator snap)
     return int(rec["verdict"] != "PASS")
 
 

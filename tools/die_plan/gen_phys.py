@@ -5214,6 +5214,19 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import pregrt_ff_hold
     pregrt_ff_hold.install(t, kd)
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
+    # KW-FIX-44 11-10 (COORD 11-10 ruling 1; OWNER safe by construction, snapped pins approved): every io.tcl pin whose
+    # centre misses its layer's kit tracks (interior ID straps, spine taps, landing / bump / reset pins: up to 24 nm
+    # off on M5/M7) moves to the nearest track, across the tracks only, together with its pins.json row and its plan
+    # pin record, before the freeze is written (pins_canonical then holds the snapped set).  Master-plan slice pins
+    # stay.  On-grid kits are byte-identical (pin_grid_snap.py; OT_PIN_GRID_SNAP=0 off; receipt pin_grid_snap.json).
+    import pin_grid_snap as _PGS
+    import macro_grid_snap as _MGS
+    import master_slice as _MS
+    planned_pins, _pg_clash, _pg_rec = _PGS.snap_generated(kd, _MGS.tracks_for(make_tracks_tcl(P)), planned_pins,
+                                                           keep=set(_MS.kit_slice_placements(kd)))
+    if _pg_rec:
+        print(f"OT_PIN_GRID_SNAP type {tn}: {_pg_rec['moved']} pin(s) snapped onto the track grid "
+              f"(worst {_pg_rec['worst_move_nm']} nm), {len(_pg_clash)} unresolved")
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)

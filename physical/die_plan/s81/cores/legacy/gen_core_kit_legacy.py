@@ -2187,6 +2187,16 @@ def main():
         hm = a.hold_ff_margin if a.hold_ff_margin is not None else float(rec.get("hold_ff_margin", core_flow.HOLD_FF_MARGIN_DEFAULT))
         flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=True, hold_ff_margin=hm,
                                    grt_pre_extra=["/work/drv.tcl"], grt_post_extra=grt_post_drv)
+    # KW-FIX-44 11-10 (COORD 11-10 ruling 1, safe by construction): static macro sites and signed hard-child sites
+    # whose signal pins miss the kit make_tracks grid (the y M4-phase rule above leaves x on M5 / M7 open; S81 rxb
+    # kp4_dchn x 220.32 and QC rawfault_m3 x 299.856: 12 / 24 nm off) move to the nearest on-track origin before
+    # macro_place.tcl and freeze.json are written; on-grid kits are byte-identical (tools/die_plan/macro_grid_snap.py;
+    # OT_MACRO_GRID_SNAP=0 off; receipt macro_grid_snap.json)
+    import macro_grid_snap as MGS
+    mplace, hcb, _mg_rows = MGS.snap_core_sites(kd, mplace, hcb, (w, h))
+    for r in _mg_rows:
+        print(f"OT_MACRO_GRID_SNAP {mod}: {r['inst']} ({r['master']} {r['orient']}) {r['off_track_pins']} pin(s) off "
+              f"track at {r['plan_um']} -> " + str(r.get("snapped_um", "UNRESOLVED")), file=sys.stderr)
     if mplace:
         (kd / "macro_place.tcl").write_text(MACRO_TCL % " ".join(
             f"{ms} {{{' '.join('{%g %g %s}' % s for s in v)}}}" for ms, v in mplace.items()))

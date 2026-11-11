@@ -1,5 +1,6 @@
-"""KW-FIX-44 11-10 (COORD): io.tcl pins off their layer's track grid fail kit generation (kit_gen_lint pin_grid);
-pin_grid_snap.py moves them onto the tracks.  Case: DIE-HBM-97 dma vPose2, N pins at x = 0.048 k on M5 whose kit
+"""KW-FIX-44 11-10 (COORD ruling 1): the generator snaps io.tcl pins onto their layer's track grid
+(pin_grid_snap.snap_generated in gen_phys write_type_kit; pin_grid_snap.py for other kits); kit_gen_lint pin_grid
+reports what is still off-grid as ADVISORY, never a FAIL.  Case: DIE-HBM-97 dma vPose2, N pins at x = 0.048 k on M5 whose kit
 tracks are offset 0.024 (10 M5 shorts at detail route)."""
 import json
 import os
@@ -61,15 +62,17 @@ class Lint(unittest.TestCase):
         finally:
             os.environ.pop("OT_GRID_LINT", None)
 
-    def test_lint_runs_both_checks(self):
+    def test_lint_runs_both_checks_advisory(self):
         rec = L.lint(kit(N_OFF), yosys=False)
-        self.assertEqual(rec["checks"]["pin_grid"]["verdict"], "FAIL")
+        self.assertEqual(rec["checks"]["pin_grid"]["verdict"], "ADVISORY")
         self.assertIn("macro_grid", rec["checks"])
         self.assertEqual(rec["checks"]["macro_grid"]["verdict"], "NA")     # no macros
-        self.assertEqual(rec["verdict"], "FAIL")
+        self.assertEqual(rec["verdict"], "PASS")                           # advisory: never fails the kit
+        self.assertEqual(rec["issues"], [])
+        self.assertEqual(len(rec["advisories"]), 5)
 
     def test_generation_gate_only(self):
-        self.assertNotIn("io_pin_grid", KC.CHECKS)                         # FAIL at kit generation, no queue row
+        self.assertNotIn("io_pin_grid", KC.CHECKS)                         # advisory at kit generation, no queue row
 
 
 class Snap(unittest.TestCase):
@@ -102,6 +105,52 @@ class Snap(unittest.TestCase):
         kd = kit([("a", "M5", 9.024, 275.304, 0.024, 0.192), ("b", "M5", 9.048, 275.304, 0.024, 0.192)])
         self.assertEqual(S.main([str(kd), "--write"]), 1)
         self.assertEqual(len(L.pin_grid(kd)[0]), 2)
+
+
+
+TR = {"M5": ("V", 0.048, 0.024, (0.024,)), "M4": ("H", 0.048, 0.024, (0.024,))}
+
+
+class Generated(unittest.TestCase):
+    """gen_phys hook: io.tcl, pins.json and the plan pin records (freeze pin set) move together"""
+
+    def setUp(self):
+        os.environ.pop("OT_PIN_GRID_SNAP", None)
+
+    def _kit(self, pins):
+        kd = kit(pins)
+        (kd / "pins.json").write_text(json.dumps([dict(bus="d", bit=i, layer="M5", x=p[2], y=275.4, face="N")
+                                                  for i, p in enumerate(pins)]) + "\n")
+        recs = [dict(name=p[0], layer=p[1], x=p[2], y=p[3]) for p in pins]
+        return kd, recs
+
+    def test_on_grid_kit_untouched(self):
+        kd, recs = self._kit(N_ON)
+        before = {f: (kd / f).read_bytes() for f in ("io.tcl", "pins.json")}
+        out, clash, rec = S.snap_generated(kd, TR, recs)
+        self.assertEqual((out, clash, rec), (recs, [], None))
+        self.assertEqual({f: (kd / f).read_bytes() for f in before}, before)
+        self.assertFalse((kd / "pin_grid_snap.json").exists())
+
+    def test_off_grid_moves_io_pins_json_and_records(self):
+        kd, recs = self._kit(N_OFF)
+        out, clash, rec = S.snap_generated(kd, TR, recs)
+        self.assertEqual((clash, rec["moved"], rec["pins_json_moved"]), ([], 4, 4))
+        self.assertEqual(L.pin_grid(kd), ([], True))
+        placed = {p[0]: p[2] for p in KC.io_pins((kd / "io.tcl").read_text())}
+        self.assertEqual({r["name"]: r["x"] for r in out}, placed)            # freeze pin set == io.tcl
+        self.assertEqual([r["x"] for r in json.loads((kd / "pins.json").read_text())], [placed[f"d[{i}]"] for i in range(4)])
+        self.assertTrue((kd / "pin_grid_snap.json").is_file())
+
+    def test_keep_and_opt_out(self):
+        kd, recs = self._kit(N_OFF)
+        out, clash, rec = S.snap_generated(kd, TR, recs, keep={"d[0]"})
+        self.assertEqual(rec["moved"], 3)
+        self.assertEqual(out[0], recs[0])
+        kd, recs = self._kit(N_OFF)
+        before = (kd / "io.tcl").read_bytes()
+        self.assertEqual(S.snap_generated(kd, TR, recs, env={"OT_PIN_GRID_SNAP": "0"}), (recs, [], None))
+        self.assertEqual((kd / "io.tcl").read_bytes(), before)
 
 
 if __name__ == "__main__":
