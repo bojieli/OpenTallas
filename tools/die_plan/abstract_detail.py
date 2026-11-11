@@ -263,7 +263,13 @@ def export_plan(base_lines):
     if no_col:   # DIE-QC-97 11-10: no access on the base: the splice adds a window where the detail still has none
         plan["pin_window"] = dict(margin_um=WINDOW_MARGIN_UM, top_layer=acc["top_layer"], clear_um=ACCESS_CLEAR_UM,
                                   pins=no_col)
-    if not enclosed:
+    # HBM-CORES-B 11-10 (DRT-0073, ot_hbm_idx_score_hcol_h0_ra clk): a pin with no access on the base that is NOT
+    # enclosed (its own layer is free around it; only the bloated OBS of the layer above blocks every via landing)
+    # takes the same detail form, else the exporter logged PIN-WINDOW-NO-DETAIL-FORM and shipped the blocked view.
+    blocked = dict(enclosed)
+    for p in no_col:
+        blocked.setdefault(p, acc["pins"][p]["layer"])
+    if not blocked:
         return plan
     pg = pg_pin_layers(base_lines)
     tops = [l for ls in pg.values() for l in ls if l in LAYER_ORDER]
@@ -276,7 +282,8 @@ def export_plan(base_lines):
         have = [l for l, _ in _obs_by_layer(body) if l in LAYER_ORDER]
         if have and max(have, key=LAYER_ORDER.index) == top:
             layers, bloat, pg_layer = [top], 1, True
-    if layers and any(LAYER_ORDER[LAYER_ORDER.index(l) + 1] in layers for l in enclosed.values()):
+    if layers and any(l in LAYER_ORDER[:-1] and LAYER_ORDER[LAYER_ORDER.index(l) + 1] in layers
+                      for l in blocked.values()):
         plan.update(needed=True, layers=layers, bloat_factor=bloat, pg_layer=pg_layer)
     return plan
 
