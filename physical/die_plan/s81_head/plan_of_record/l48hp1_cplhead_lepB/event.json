@@ -1,0 +1,61 @@
+{
+ "event": "CPL-HEAD 11-11 hd_lep0N REDESIGN proposal B (accepted path after A did not fit): lep0N +129.6 um W, nst4 (hd_st_n4) E edge cropped 1123.2 -> 993.6",
+ "base": "physical/die_plan/s81_head/plan_of_record/l48hp1/source_plan.json.gz",
+ "base_sha256": "7322511ff22a4741426044711ca11b2b52fe8afcb18f0abfed4d1080aa54a5e6",
+ "result_sha256": "96248fef8156af4963cc7d6d55263f28ffe37fa781f14d377eec4ae68d452673",
+ "apply": [
+  "python3 -I lep_b.py BASE.json OUT.json",
+  "cd plan_of_record/l48hp1 && python3 -I rt_resel.py BASE.json OUT.json (re-selects each rst_start_raw export on the regenerated reset tree: same role+depth, nearest relay)",
+  "then the landing_contract rst_start_raw pins get source_instance/source_copy_from_net of the new relay and keep their pin offset from it"
+ ],
+ "why_not_A": "the HEAD N band (y 14999.04-16225.92) sits between the full-width W0/E0 tile row (top 14999.04) and the hd_serdes row (16225.92 to the seal ring 17452.8): no height slack anywhere in the column",
+ "why_W": "E side is the spine root: ctl (hd_ctl) S face abuts sp0 (hd_spn, 5 instances) at x 8760.96; shifting ctl breaks that abutment. W side: nst4 is a pure ft station (4 chains x 4 regs, 12,060 cells), already cropped once (DIE-HEAD-33 1442.88 -> 1123.2 for lep0N)",
+ "die": {
+  "lep0N_origin": [
+   [
+    6998.4,
+    14999.04
+   ],
+   [
+    6868.8,
+    14999.04
+   ]
+  ],
+  "lep0N_outline": [
+   [
+    1762.56,
+    1226.88
+   ],
+   [
+    1892.16,
+    1226.88
+   ]
+  ],
+  "nst4_outline": [
+   [
+    1123.2,
+    993.6
+   ],
+   [
+    993.6,
+    993.6
+   ]
+  ],
+  "channels": "DIE-HEAD-21 nst4-crop channels clipped to x <= 6868.8",
+  "overlaps": 0,
+  "outside_seal_ring": 0
+ },
+ "lep0N_internal": "piecewise x map: W region +0, centre gap +43.2, E pairs + E half street +86.4, E strip +129.6; N windows/band coll_i0/edge tap +129.6 local (global unchanged). Centre gap 34.56 -> 120.96 um (full height), E strip 103.68 -> 146.88 um. Positions only, no orient change.",
+ "nst4": "every x scaled by 993.6/1123.2 (E-edge items -129.6); 4 ft stations per chain kept (pitch 280.8 -> 248.4 um, latency unchanged). hd_st_n4 is a SIGNED type: this needs a rebuild of nst4.",
+ "reset": "outline change regenerates the reset tree (lep0N relays 694 -> 842, nst4 244 -> 238). The 7 + 8 rst_start_raw exports were re-selected (same role/depth, nearest relay; lep0N moves 0-56 um, nst4 0-147 um). Die raw-stage hop lengths for these sources must be re-checked by the die owner.",
+ "g0": {
+  "base_errors": 153,
+  "new_errors": 153,
+  "new": 0,
+  "resolved": 0,
+  "cmd": "cd plan_of_record/l48hp1 && python3 -I tools/die_plan/check.py <plan> --quiet"
+ },
+ "pins_audit": "lep0N_nst4_pins_audit.txt: all 15 lep0N bus windows and 8 nst4 ft windows keep their global spans; the shared W/E line moved 6998.40 -> 6868.80 with both partitions",
+ "not_remapped": "clock.sink_bins_file assets/sink_bins_lep_dt.json (density sink bins, plan-relative) is unchanged: re-derive in the die clock step",
+ "status": "DO_NOT_COUNT; die-level REDESIGN for the 12:00 HEAD event"
+}

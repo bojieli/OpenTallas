@@ -1,0 +1,28 @@
+{
+ "event": "HEAD 12:00 cut 11-11 (HEAD-94, composed by HEAD-93/94): ONE combined HEAD plan event on base l48hp1 (main 40f6c59b6409)",
+ "stage": "S3 (plan event + bind); S2 evidence per type in the READY post",
+ "base": "physical/die_plan/s81_head/plan_of_record/l48hp1/source_plan.json.gz",
+ "base_sha256": "7322511ff22a4741426044711ca11b2b52fe8afcb18f0abfed4d1080aa54a5e6",
+ "result_file": "physical/die_plan/s81_head/plan_of_record/l48hp1_head_cut1111/source_plan_cut.json.gz",
+ "result_sha256": "a09b33bc23b216ce601a188364239a90c6f251adb86c06e59131a74d910493a5",
+ "apply": [
+  "cd <repo> && python3 -I physical/die_plan/s81_head/plan_of_record/l48hp1_head_cut1111/compose.py <repo> OUT   (OUT/source_plan.json = result; OUT/pd = sidecar dir copy of l48hp1)",
+  "python3 -I .../prepare_cut.py <repo> OUT <prepared l48hp1 dir (kw42 prep_hp1)> PREP   (sink-bin pointers + hp1 strap sites; proves the procedure on raw l48hp1 first)",
+  "cd <repo-with-results/head_he_epc_h2_1110 LEF/LIB> && python3 -I .../republish.py <repo> PREP hd_ctl,hd_host_e,hd_lep0N,hd_st_n4   (regenerates published/<module>.sv of the 4 types whose reset tree changed; refreshes wave_prepare.json)"
+ ],
+ "steps": [
+  "1 lepB (CPL-HEAD, hd_lep0N +129.6 um W, hd_st_n4 crop, rt_resel exports) result sha 96248fef8156af49",
+  "2 S03 swap of hd_lep0N g_pp[0]/g_pp[3] pair (positions + orient R0/R180)",
+  "3 ctl C1 (hd_ctl xa0/xa1/xb0 hand seed) + b_i reader-start stage 2 xy (150,95)->(150,80)",
+  "4 H2 (l48hp1_h2/apply_delta.py: hd_host_e u_rr+u_ep hard core ot_s81hd_he_epc) + reset tap off clk_t5 + rst_start_raw re-select",
+  "5 hp1 raw-pin nudge (rst_start_raw_0/2 +1.92 um); hp1 strap sites are applied in prepare_cut.py",
+  "6 NEW HEAD-94: stage/local-reset raw_reset re-select (landing_reader_start, landing_writer_start, landing_local_resets) for hd_ctl, hd_host_e, hd_lep0N, hd_st_n4: the regenerated reset tree drops/renumbers rst_rl_N (hd_ctl rst_rl_25 sat under moved xa0; hd_host_e rst_rl_20/11 under H2; hd_st_n4 renumbered by the x-scale); same depth, nearest to the stage flop site, keep the Q if it survives within 25 um of the best. Without this gen fails 'reader START raw reset ... has no registered wavefront driver'.",
+  "7 start_q: hd_ctl verilog_defines += OT_S81HD_CTL_START_Q (claude/head-92-ctl-start-q-1110, +1 pin cycle, TOK-VERIFY-1 has the delta)",
+  "8 COORD 03:55 ruling: clock.tap_window.per_type_ps.hd_serdes = 50; per_port_ps +10 ps (cap per_type_ps) on hd_ctl (34 ports), hd_spn (42), hd_st_n4 (31); hd_mesh, hd_lep0N, hd_host_e, hd_serdes have no per_port entries (per-type windows 30/200/20/50 unchanged)"
+ ],
+ "per_port_note": "the +10 is applied to the existing zero-margin ceil1(need) values (DIE-VIS-KVHEAD: windows measured ceil1 on l48w_sth). A re-derive from a post-event clock-of-record proof (DIE-PROTO-2 re-judge) is still open and will replace these only if a port needs more.",
+ "g0": {"cmd": "cd <plan dir> && python3 -I tools/die_plan/check.py final_plan.json --quiet", "base_errors": 153, "cut_errors": 153, "new": 0, "resolved": 0},
+ "eq": "classification of the plan diff vs base: positions/orients/outlines (lep0N, st_n4, ctl cores, host_e cores), reset/landing site references (re-selected to the regenerated tree, same depth), clock window numbers, and 3 semantic items: H2 (u_rr+u_ep as hard core; wiring LEC EQUIVALENT 62208/62208 by HEAD-92), start_q (+1 pin cycle form, define), lepB reset relays 694->842 (hd_lep0N) / 244->238 (hd_st_n4). No port, bus width, ft slot count, station register count changes.",
+ "export_gate": "tools/s81_head/head_wave_kit_rtl.py export (the HEAD 'strict bind': no strict bind of record exists for s81_head, WAVE-OPS-1 04:17): 7/7 types rc=0 on the prepared+republished tree (hd_ctl, hd_lep0N, hd_st_n4, hd_host_e, hd_mesh, hd_spn, hd_serdes)",
+ "status": "DO_NOT_COUNT; plan event for the 12:00 HEAD cut"
+}
