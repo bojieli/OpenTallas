@@ -355,6 +355,24 @@ def build(date, run_dir):
     return res, rows
 
 
+KIT_STORE = '/srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_store.py'   # KIT-INPUT-STORE-1 11-10 (on intel2)
+
+
+def store_ingest(date, die, bind_out, mdir):
+    """KIT-INPUT-STORE-1 11-10: strict binds + manifests go through the kit store (sparse: full src trees do not;
+    they rebuild from their git sha).  The holding dir's hardlinks keep the blobs alive.  -> one status word/line"""
+    try:
+        src = ssh(HUB, 'cat ' + KIT_STORE, 120)
+        hold = '%s/kit_inputs/%s_%s' % (LANE, date, die)
+        out = ssh(CHOST, 'mkdir -p %s && python3 -I - ingest %s/bind.f %s/live_%s.tsv %s/expect_%s.tsv --kit-inputs %s '
+                         '--tag wave-src-%s-%s' % (hold, bind_out, mdir, die, mdir, die, hold, date, die),
+                  3600, check=False, input=src)
+        m = re.search(r'KW_KIT_STORE (\{.*\})', out)
+        return ('ingested ' + m.group(1)[:200]) if m else ('NOT ingested: ' + out.strip()[-200:])
+    except Exception as e:
+        return 'NOT ingested: %s' % str(e)[-200:]
+
+
 def advance(date, run_dir):
     """after the binds: binddiff, switch (gated), report; returns (text, done)"""
     res = json.load(open(os.path.join(run_dir, 'build.json')))
@@ -381,6 +399,7 @@ def advance(date, run_dir):
         lines.append('%s: strict bind rc 0; bound RTL changed on %d types (re-bound): %s' % (
             die, len(bd['changed']), ' '.join(bd['changed'][:30]) + (' ...' if len(bd['changed']) > 30 else '')))
         r['rebound'] = bd['changed']
+        lines.append('%s: kit-store %s' % (die, store_ingest(date, die, b['out'], mdir)))
     ok = os.path.exists(SWITCH_OK) and open(SWITCH_OK).read().strip() in ('standing', date)
     lines.append('switch: ' + ('ALLOWED by lanes/wave-ops-1/SWITCH-OK; KW-FIX-44 applies it at the next idle gap (new launches only)'
                                if ok else 'NOT applied (no SWITCH-OK for %s): config unchanged, the new trees wait' % date))
