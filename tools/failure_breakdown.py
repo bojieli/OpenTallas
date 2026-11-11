@@ -5,6 +5,7 @@ Cores: unsigned designs from the release-tree plan cache, classed by
 lanes/CORE-CLASS.tsv (COORD override, prefix match) or else by the latest
 kit-wave row. Types: latest current-plan kit-wave row per type item.
 The block sits between the BREAKDOWN markers; run after release_tree_plan.py.
+STALE section (WAVE-OPS-1 11-10): stale_list.py, full list in lanes/STALE.tsv; OT_FB_NO_STALE=1 skips it.
 """
 import csv, json, collections, os, re, time
 
@@ -170,6 +171,15 @@ def main():
             tn[lab].append(short(item))
         out.append('- [ ] FAIL.%s.CORES %d/%d signed · open: %s' % (tag, len(designs) - len(unsigned), len(designs), fmt(cc, cn, limit=3)))
         out.append('- [ ] FAIL.%s.TYPES %d/%d signed · kit rows: %s' % (tag, stypes, ntypes, fmt(tc, tn, limit=1)))
+    # WAVE-OPS-1 11-10 (OWNER 11-10, item A): STALE = unsigned plan core/type, no live job, no kit-wave row change >= 6 h
+    if not os.environ.get('OT_FB_NO_STALE'):
+        try:
+            import sys
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import stale_list
+            out += stale_list.section(cache, rows, DIES, plan_die=PLAN_DIE)
+        except Exception as e:                       # the breakdown is still written; the failure is named in it
+            out.append('### STALE · not computed: %s: %s' % (type(e).__name__, str(e)[:200]))
     out.append(END)
     block = '\n'.join(out)
 
