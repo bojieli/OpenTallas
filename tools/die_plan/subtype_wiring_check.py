@@ -94,10 +94,19 @@ def check(old_text, new_text, rule):
     check.renamed_nets = len(nmap)
     o_rest, o = split(old_text)
     n_rest, n = split(new_text)
-    if o_rest != n_rest:
-        a, b = o_rest.splitlines(), n_rest.splitlines()
+    # module header (port list, positional order matters) exact; the body lines (declarations, assigns, instance
+    # markers) as a multiset: the binder emits declarations sorted by net name, which the renamed nets reorder
+    def body(t):
+        h, sep, b = t.partition(");")
+        return h, sorted(x.strip() for x in b.splitlines() if x.strip())
+    (oh, ob), (nh, nb) = body(o_rest), body(n_rest)
+    if oh != nh:
+        a, b = oh.splitlines(), nh.splitlines()
         k = next((i for i, (x, y) in enumerate(zip(a, b)) if x != y), min(len(a), len(b)))
-        errs.append(f"non-instance text differs at line {k + 1}")
+        errs.append(f"module header differs at line {k + 1}")
+    if ob != nb:
+        d = sorted(set(ob) ^ set(nb))
+        errs.append(f"body lines differ ({len(d)}): {d[:3]}")
     if set(o) != set(n):
         errs.append(f"instance sets differ: only old {sorted(set(o) - set(n))[:5]}, only new {sorted(set(n) - set(o))[:5]}")
     rename, share = rule.get("rename", {}), rule.get("share", {})
