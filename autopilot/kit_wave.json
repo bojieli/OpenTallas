@@ -20602,6 +20602,9 @@
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
     "epyc9"
+   ],
+   "gate_events_extra": [
+    "hcut1111"
    ]
   },
   "qwen_compute": {
@@ -20717,7 +20720,6 @@
     "sle_hc1__cl22c1ff36@3",
     "sle_st_a_v1__cl989804f6__cl18eece69@4",
     "sle_st_b_v2__cl14c98df5@3",
-    "slw_hc2__cla3497502__cl16607c7a@2",
     "slw_st_b_v1__cle6023ec2@3",
     "slw_st_b_v2@5",
     "slw_hc2__cl6bcaba89@2",
@@ -21233,7 +21235,8 @@
     "coll_ftn@5",
     "coll_ftn@4",
     "coll_n@7",
-    "coll_n@6"
+    "coll_n@6",
+    "slw_hc2__cla3497502__cl16607c7a@2"
    ],
    "queue_src": "main@730345725942+genscope@716f40ea7e2c",
    "type_args": {
@@ -27736,9 +27739,7 @@
     "epyc2"
    ],
    "pilot_max_prev_kw45_1111": 2,
-   "route_hold_items": {
-    "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-45 11-11 (COORD): GRT-ARM[off] enqueue refused each tick (src must be branch@sha); route held until the enqueue_src class fix claude/kw-fix-45-queue-src-free-text-1111@db68b01991cb is deployed"
-   },
+   "route_hold_items": {},
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
     "epyc9"
@@ -29257,8 +29258,7 @@
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
-    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
-    "ot_hgi_sfu_opsb_group": "KW-FIX-45 11-11 (HBM-CORES-B/DIE-HBM-100 batch): opsb_group RTL (-DOT_OPSG_GP -DOT_OPSG_ROT) is not on main; held until the merge and the branch@sha ASK"
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)"
    },
    "gen_hosts": [
     "epyc9"
@@ -41371,7 +41371,8 @@
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
     "epyc9"
-   ]
+   ],
+   "prov_require_cands": true
   }
  },
  "place_prefer": [
