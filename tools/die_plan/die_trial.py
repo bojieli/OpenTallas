@@ -4057,10 +4057,11 @@ TRANSITION_LAYERS = ("M5", "M6")
 TRANSITION_KEEP = 0.5
 
 
-def ft_band_rects(P):
+def ft_band_rects(P, with_core_share=False):
     """die-frame rects of every type's die_ft_bands (DIE-FT-HBM 10-25): [(layer, x0, y0, x1, y1, die_share)].
     A band is a type-frame span (EW: y, NS: x) over the full type width/height where the listed layers belong to the
-    die (die_share of their tracks, default 1.0) instead of the ft_track_frac share."""
+    die (die_share of their tracks, default 1.0) instead of the ft_track_frac share.  with_core_share appends the
+    band's core_share (its die share over the type's hard-core footprints, FTRES-FIX 11-10; None = die_share)."""
     out = []
     for n, p in sorted(P.parts.items()):
         t = P.types[p["type"]]
@@ -4083,8 +4084,46 @@ def ft_band_rects(P):
                     lo, hi = w - hi, w - lo
                 r = (ox + lo, oy, ox + hi, oy + h)
             for L in b["layers"]:
-                out.append((L, *r, float(b.get("die_share", 1.0))))
+                row = (L, *r, float(b.get("die_share", 1.0)))
+                if with_core_share:
+                    cs = b.get("core_share")
+                    row += (None if cs is None else float(cs),)
+                out.append(row)
     return out
+
+
+def die_core_footprints(P):
+    """die-frame rects of every planned hard core of every placed partition, on every layer (FTRES-FIX 11-10, 12.10c:
+    no die leg crosses a hard core, so outside an explicit band the die keeps no share over a core footprint)."""
+    out = []
+    for n, p in sorted(P.parts.items()):
+        t = P.types[p["type"]]
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        o = p.get("orient", "R0")
+        for x0, y0, x1, y1, *_ in core_obs(t):
+            if o in ("MY", "R180"):
+                x0, x1 = w - x1, w - x0
+            if o in ("MX", "R180"):
+                y0, y1 = h - y1, h - y0
+            out.append((ox + x0, oy + y0, ox + x1, oy + y1))
+    return out
+
+
+def _rect_minus(r, holes):
+    """rect r minus the union of holes -> disjoint rects covering exactly the rest (die frame)."""
+    x0, y0, x1, y1 = r[:4]
+    loc = [(max(q[0], x0) - x0, max(q[1], y0) - y0, min(q[2], x1) - x0, min(q[3], y1) - y0) for q in holes
+           if q[0] < x1 - 1e-6 and q[2] > x0 + 1e-6 and q[1] < y1 - 1e-6 and q[3] > y0 + 1e-6]
+    if not loc:
+        return [tuple(r[:4])]
+    return [(round(a + x0, 3), round(b + y0, 3), round(c + x0, 3), round(d + y0, 3))
+            for a, b, c, d in _uncovered(x1 - x0, y1 - y0, loc)]
+
+
+def _rect_and(r, q):
+    a = (max(r[0], q[0]), max(r[1], q[1]), min(r[2], q[2]), min(r[3], q[3]))
+    return a if a[2] > a[0] + 1e-6 and a[3] > a[1] + 1e-6 else None
 
 
 def die_core_rects(P, L, grow=0.0):
@@ -4162,27 +4201,56 @@ def _gstrips(rects, vertical, W, H, g=GCELL_UM, eps=0.01):
     return out
 
 
-def band_region_adjust(P, share_adj):
+# FTRES-FIX 11-10 (owner-approved, COORD ftres-why-hbm-only): outside its explicit bands the die keeps NO share over a
+# planned hard-core footprint (12.10c: no die leg crosses a hard core); the old model kept 1 - share_adj (0.25) there,
+# which the partition then reserved over every core (HBM M6 ~0.61 / M7 0.25 over cores on every banded M5-core type).
+# OT_FT_CORE_ZERO=0 restores the old model (diagnosis only).
+FT_CORE_ZERO = os.environ.get("OT_FT_CORE_ZERO", "1") != "0"
+
+
+def band_region_adjust(P, share_adj, core_zero=None):
     """the die_ft_bands share model as one-gcell strips: band layers get global layer adjustment 0; every die area
     outside a band of that layer keeps 1 - share_adj of its tracks (share_adj = the usual 1 - ft_track_frac) and a
-    band with die_share < 1 keeps die_share.  Strips also cover planned hard cores: on the OBS layers of a core the
-    capacity is 0 anyway (obstruction strips over macro OBS do not underflow, measured 10-25), and above it the share
-    applies as everywhere else.  The 12-um core halo of cebbd80b8 is gone: it existed only for region adjustments
-    (GRT-0114 underflow) and gave the die 100 % of M4/M5 in a ring around every core (HBM edge+band M4 +31 %).
+    band with die_share < 1 keeps die_share.  The 12-um core halo of cebbd80b8 is gone: it existed only for region
+    adjustments (GRT-0114 underflow) and gave the die 100 % of M4/M5 in a ring around every core (HBM edge+band M4 +31 %).
+
+    Hard cores (FTRES-FIX 11-10, core_zero, default FT_CORE_ZERO): outside a band of the layer the die keeps 0 over a
+    planned hard-core footprint (12.10c); inside a band it keeps the band's core_share when declared (the type's own
+    measured need over its cores), else die_share.  On the OBS layers of a core the capacity is 0 anyway (obstruction
+    strips over macro OBS do not underflow, measured 10-25).  The region pieces (default / core / band / band-over-core)
+    partition the die exactly, so every gcell keeps exactly one owner after the gcell snap.
     -> (band layers, [(layer, x0, y0, x1, y1, kept fraction)])"""
-    rects = ft_band_rects(P)
+    if core_zero is None:
+        core_zero = FT_CORE_ZERO
+    rects = ft_band_rects(P, with_core_share=True)
     by = defaultdict(list)
-    for L, x0, y0, x1, y1, ds in rects:
-        by[L].append((x0, y0, x1, y1, ds))
+    for L, x0, y0, x1, y1, ds, cs in rects:
+        by[L].append((x0, y0, x1, y1, ds, cs))
+    cores = die_core_footprints(P) if (core_zero and by) else []
     regs = []
     for L, rs in sorted(by.items()):
         vert = P.layers[L]["dir"] == "V"
-        for x0, y0, x1, y1 in _gstrips(_uncovered(P.W, P.H, [r[:4] for r in rs]), vert, P.W, P.H):
+        band_boxes = [r[:4] for r in rs]
+        for x0, y0, x1, y1 in _gstrips(_uncovered(P.W, P.H, band_boxes + cores), vert, P.W, P.H):
             regs.append((L, x0, y0, x1, y1, round(1 - share_adj, 3)))
-        for x0, y0, x1, y1, ds in rs:
-            if ds < 1.0:
-                for a in _gstrips([(x0, y0, x1, y1)], vert, P.W, P.H):
-                    regs.append((L, *a, round(ds, 3)))
+        done = []
+        for c in cores:     # core footprint outside every band of L: the die keeps nothing (disjoint pieces)
+            for piece in _rect_minus(c, band_boxes + done):
+                for a in _gstrips([piece], vert, P.W, P.H):
+                    regs.append((L, *a, 0.0))
+            done.append(c)
+        for x0, y0, x1, y1, ds, cs in rs:
+            pieces = [((x0, y0, x1, y1), ds)]
+            if cores:
+                pieces = [(q, ds) for q in _rect_minus((x0, y0, x1, y1), cores)]
+                for c in cores:
+                    q = _rect_and((x0, y0, x1, y1), c)
+                    if q:
+                        pieces.append((q, ds if cs is None else cs))
+            for q, share in pieces:
+                if share < 1.0:
+                    for a in _gstrips([q], vert, P.W, P.H):
+                        regs.append((L, *a, round(share, 3)))
     return sorted(by), regs
 
 
@@ -4236,7 +4304,7 @@ def band_phase_flip(P, layers):
     return out
 
 
-def band_share_obs(P, regs, g=GCELL_UM):
+def band_share_obs(P, regs, g=GCELL_UM, owner=False):
     """die_ft_bands share as OBSTRUCTION stripes: in every one-gcell strip from band_region_adjust (kept fraction a)
     obstruct the top f of each gcell row (H layer) or the right f of each gcell column (V layer), f = 1 - a.
 
@@ -4255,17 +4323,26 @@ def band_share_obs(P, regs, g=GCELL_UM):
     layers of one direction alternate by level: the 1st (M4 / M5) obstructs the top / right f of the gcell (as
     before) and keeps the bottom / left a, the 2nd (M6 / M7) obstructs the bottom / left f and keeps the top / right
     a.  The die-kept slices are disjoint whenever a1 + a2 <= 1.  The obstructed length per gcell is unchanged, so
-    the die capacity is unchanged; only the row phase moves.  -> [(layer, x0, y0, x1, y1)]"""
+    the die capacity is unchanged; only the row phase moves.
+
+    owner=True (FTRES-FIX 11-10): the die's OWNERSHIP map, which the partition reserves (partition_ft_reserve).  It is
+    the same map except over a halved transition gcell, where the die really has only TRANSITION_KEEP * a of the
+    tracks (OpenROAD halves them first): the owner map obstructs 1 - TRANSITION_KEEP * a (also when a = 1), so the
+    die-owned slice is the die's real capacity, at the same edge and inside the GRT map's free slice.  The old
+    complement reserved 1 - fh = 0.5 + 0.5 a there (0.625 at a = 0.25, 0.75 in a 0.5 band) for 0.5 a of die use.
+    -> [(layer, x0, y0, x1, y1)]"""
     trans = {L: transition_intervals(P, L, g) for L in sorted({r[0] for r in regs})}
     flip = band_phase_flip(P, {r[0] for r in regs})
     out = []
     for L, x0, y0, x1, y1, a in regs:
-        if a >= 1.0:
+        if a >= 1.0 and not (owner and trans[L]):
             continue
         vert = P.layers[L]["dir"] == "V"
         k = int(round((x0 if vert else y0) / g))
         lo, hi = (int(round(v / g)) for v in ((y0, y1 + 0.01) if vert else (x0, x1 + 0.01)))
-        f, fh = 1.0 - a, (1.0 - TRANSITION_KEEP) * (1.0 - a)
+        f, fh = max(0.0, 1.0 - a), (1.0 - TRANSITION_KEEP) * max(0.0, 1.0 - a)
+        if owner:
+            fh = 1.0 - TRANSITION_KEEP * min(1.0, a)
         segs, pos = [], lo
         for a0, a1 in trans[L].get(k, []):
             a0, a1 = max(a0, lo), min(a1, hi)
@@ -4278,6 +4355,8 @@ def band_share_obs(P, regs, g=GCELL_UM):
         if pos < hi:
             segs.append((pos, hi, f))
         for s0, s1, ff in segs:
+            if ff <= 1e-9:
+                continue
             if L in flip:
                 c0, c1 = round(k * g, 3), round(k * g + ff * g, 3)
             else:

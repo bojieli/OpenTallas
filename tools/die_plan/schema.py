@@ -893,6 +893,10 @@ SCHEMA = {
                         "properties": {"dir": {"enum": ["EW", "NS"]}, "span_um": _win,
                                        "layers": {"type": "array", "items": _layer, "minItems": 1},
                                        "die_share": {"type": "number", "minimum": 0, "maximum": 1},
+                                       # FTRES-FIX 11-10: the die share over the type's hard-core footprints inside
+                                       # this band (the type's own measured need); absent = die_share.  Outside every
+                                       # band the die keeps 0 over hard cores (die_trial.band_region_adjust, 12.10c).
+                                       "core_share": {"type": "number", "minimum": 0, "maximum": 1},
                                        "note": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {

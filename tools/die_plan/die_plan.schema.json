@@ -5092,6 +5092,11 @@
          "minimum": 0,
          "maximum": 1
         },
+        "core_share": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
         "note": {
          "type": "string"
         }
