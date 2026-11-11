@@ -903,6 +903,12 @@ def memory_charge_note(row):
 STATUS_DIR = os.environ.get("OT_RUN_STATUS_DIR", "/srv/opentallas-scratch2/claude")
 
 
+def default_dir_refusal(row):
+    """host_refusal for a job whose run dir is not on the host's separate scratch disk (no --dir, or one on the root fs):
+    the status probe of a dir-aware host is made with STATUS_DIR (scratch2), which skips the root-fs guard"""
+    return host_refusal(dict(row, dir_onroot=None)) if row.get("dir_onroot") is False else ""
+
+
 def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
     held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
@@ -920,15 +926,24 @@ def status(hosts):
         if host_refusal(r):
             out.append(f"{h} REFUSED ({host_refusal(r)})")
             continue
+        rootref = default_dir_refusal(r)
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}" + (" LOADCAP" if load_capped(r, 32, 16) else "")
                    + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
-                   + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else ""))
+                   + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else "")
+                   + (f" ONLY --dir on scratch2 (a job without one: {rootref})" if rootref else ""))
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
             and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r)}
-    best, queue = choose(live, 32)
+    # STATUSGUARD_1111 (KW-FIX-44, COORD 11-11 20:0x): the next-job choice applies the same DISK GUARD as --pick for a
+    # job without a scratch2 --dir (the status probe of a dir-aware host reports as for a scratch2 job, so epyc2 at
+    # 144 GB root free < 150 showed "next job -> epyc2" while --pick refused it); the scratch2-dir choice is shown apart
+    # when it differs.
+    best, queue = choose({h: r for h, r in live.items() if not default_dir_refusal(r)}, 32)
     next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
+    best2, queue2 = choose(live, 32)
+    if best2 and best2 != best:
+        next_job += f" | with --dir on scratch2 -> {best2}" + (" (would queue)" if queue2 else "")
     print("ot-run status: " + " | ".join(out) + next_job)
 
 
