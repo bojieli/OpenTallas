@@ -45,11 +45,11 @@
   {
    "module": "dsdv_svc_sx_hrow",
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
-   "module_sha256": "4e97c7465b2f4a1fee4808be8cd7aed69ecffcf033f51bdb3e1ed15d25012a51",
+   "module_sha256": "326c58505731ccaa4828437b218197d91f70a4af93daee68b8df5a2f14f37357",
    "assumption": "opaque child: all inputs conservatively live"
   }
  ],
- "source_commit": "39f754dda07e9746c4850ea0814d48d134a6cf2a",
+ "source_commit": "e5cc5a2dc5fbcd082ab433abadaf39cd48de0df5",
  "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created.",
  "declarations": [
   {
@@ -66,7 +66,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -136,7 +136,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -210,7 +210,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -350,7 +350,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -416,7 +416,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -482,7 +482,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -568,7 +568,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -642,7 +642,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -708,7 +708,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -794,7 +794,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -860,7 +860,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -926,7 +926,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -1004,7 +1004,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -1090,7 +1090,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -1222,7 +1222,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
@@ -1288,7 +1288,7 @@
     "NR": "1"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
-   "module_sha256": "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5",
+   "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
    "method": "yosys.proc.opt.no_fanout",
    "remaining_loads": 0,
    "ports": {
