@@ -1,0 +1,974 @@
+{
+ "schema": "opentallas.cleanslate_intent.v1",
+ "type": "kv3_hgi",
+ "conns_key": "kv3_hgi",
+ "status": "DO_NOT_COUNT",
+ "cores": 16,
+ "heads": [
+  "head2",
+  "head3"
+ ],
+ "control_cores": [],
+ "chain": [
+  {
+   "head": "head2",
+   "input": "face buses (q/k/v beats, head cfg) -> fronts head2_e0,head2_e2,head2_e4,head2_e6",
+   "fronts_exchange": "broadcast all-to-all among head2_e0,head2_e2,head2_e4,head2_e6",
+   "front_to_stack": [
+    "head2_e0->head2_e1",
+    "head2_e2->head2_e3",
+    "head2_e4->head2_e5",
+    "head2_e6->head2_e7"
+   ],
+   "gather": "stacks head2_e1,head2_e3,head2_e5,head2_e7 -> head2_e0 (gf/kp/kpv)",
+   "output": "head2_e0 -> face buses"
+  },
+  {
+   "head": "head3",
+   "input": "face buses (q/k/v beats, head cfg) -> fronts head3_e0,head3_e2,head3_e4,head3_e6",
+   "fronts_exchange": "broadcast all-to-all among head3_e0,head3_e2,head3_e4,head3_e6",
+   "front_to_stack": [
+    "head3_e0->head3_e1",
+    "head3_e2->head3_e3",
+    "head3_e4->head3_e5",
+    "head3_e6->head3_e7"
+   ],
+   "gather": "stacks head3_e1,head3_e3,head3_e5,head3_e7 -> head3_e0 (gf/kp/kpv)",
+   "output": "head3_e0 -> face buses"
+  }
+ ],
+ "face_io": {},
+ "ft_slots": [
+  {
+   "name": "ft0",
+   "width": 1,
+   "path": "E->W",
+   "stations": 5,
+   "role": "pass-through"
+  },
+  {
+   "name": "ft2",
+   "width": 48,
+   "path": "E->W",
+   "stations": 6,
+   "role": "pass-through"
+  },
+  {
+   "name": "ft5",
+   "width": 15,
+   "path": "E->W",
+   "stations": 4,
+   "role": "pass-through"
+  },
+  {
+   "name": "ft6",
+   "width": 1056,
+   "path": "W->E",
+   "stations": 7,
+   "role": "pass-through"
+  }
+ ],
+ "internal_stations": 0,
+ "links": [
+  {
+   "a": "head2_e0",
+   "b": "head2_e2",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 319.7,
+   "dist_after_um": 406.1
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 933.1
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e2",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 319.7,
+   "dist_after_um": 319.7
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 985.0
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e1",
+   "bits": 738,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 1408,
+    "gather": 68
+   },
+   "ports": 15,
+   "dist_before_um": 319.7,
+   "dist_after_um": 319.7
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e1",
+   "bits": 738,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 1408,
+    "gather": 68
+   },
+   "ports": 15,
+   "dist_before_um": 319.7,
+   "dist_after_um": 259.2
+  },
+  {
+   "a": "head2_e2",
+   "b": "head2_e4",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 345.6,
+   "dist_after_um": 276.5
+  },
+  {
+   "a": "head2_e2",
+   "b": "head2_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 578.9
+  },
+  {
+   "a": "head2_e4",
+   "b": "head2_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 319.7,
+   "dist_after_um": 302.4
+  },
+  {
+   "a": "head3_e2",
+   "b": "head3_e4",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 345.6,
+   "dist_after_um": 345.6
+  },
+  {
+   "a": "head3_e2",
+   "b": "head3_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head3_e4",
+   "b": "head3_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 319.7,
+   "dist_after_um": 319.7
+  },
+  {
+   "a": "head2_e2",
+   "b": "head2_e3",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 337.0
+  },
+  {
+   "a": "head2_e4",
+   "b": "head2_e5",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 276.5
+  },
+  {
+   "a": "head2_e6",
+   "b": "head2_e7",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 302.4
+  },
+  {
+   "a": "head3_e2",
+   "b": "head3_e3",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 388.8
+  },
+  {
+   "a": "head3_e4",
+   "b": "head3_e5",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 397.4
+  },
+  {
+   "a": "head3_e6",
+   "b": "head3_e7",
+   "bits": 466,
+   "role": "point-to-point",
+   "role_mix": {
+    "point-to-point": 932
+   },
+   "ports": 6,
+   "dist_before_um": 319.7,
+   "dist_after_um": 319.7
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e3",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 639.4,
+   "dist_after_um": 639.4
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e5",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 985.0,
+   "dist_after_um": 907.2
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1183.7
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e3",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 639.4,
+   "dist_after_um": 604.8
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e5",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 985.0,
+   "dist_after_um": 838.1
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1304.6
+  }
+ ],
+ "timing_critical_pairs": [
+  {
+   "a": "head2_e0",
+   "b": "head2_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 933.1
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 985.0
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head2_e2",
+   "b": "head2_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 578.9
+  },
+  {
+   "a": "head3_e2",
+   "b": "head3_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1183.7
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1304.6
+  }
+ ],
+ "links_over_405um": [
+  {
+   "a": "head2_e0",
+   "b": "head2_e2",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 319.7,
+   "dist_after_um": 406.1
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 933.1
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e4",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e6",
+   "bits": 823,
+   "role": "hub",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1502,
+    "gather": 68
+   },
+   "ports": 21,
+   "dist_before_um": 985.0,
+   "dist_after_um": 985.0
+  },
+  {
+   "a": "head2_e2",
+   "b": "head2_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 578.9
+  },
+  {
+   "a": "head3_e2",
+   "b": "head3_e6",
+   "bits": 551,
+   "role": "broadcast",
+   "role_mix": {
+    "broadcast": 76,
+    "point-to-point": 1026
+   },
+   "ports": 12,
+   "dist_before_um": 665.3,
+   "dist_after_um": 665.3
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e3",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 639.4,
+   "dist_after_um": 639.4
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e5",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 985.0,
+   "dist_after_um": 907.2
+  },
+  {
+   "a": "head2_e0",
+   "b": "head2_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1183.7
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e3",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 639.4,
+   "dist_after_um": 604.8
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e5",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 985.0,
+   "dist_after_um": 838.1
+  },
+  {
+   "a": "head3_e0",
+   "b": "head3_e7",
+   "bits": 272,
+   "role": "gather",
+   "role_mix": {
+    "point-to-point": 476,
+    "gather": 68
+   },
+   "ports": 9,
+   "dist_before_um": 1304.6,
+   "dist_after_um": 1304.6
+  }
+ ],
+ "moved": {
+  "head2_e2": {
+   "before": [
+    17.28,
+    336.96,
+    "R0"
+   ],
+   "after": [
+    51.84,
+    388.8,
+    "R0"
+   ],
+   "shift_um": 86.4
+  },
+  "head2_e4": {
+   "before": [
+    17.28,
+    682.56,
+    "R0"
+   ],
+   "after": [
+    43.2,
+    656.64,
+    "R0"
+   ],
+   "shift_um": 51.84
+  },
+  "head2_e5": {
+   "before": [
+    336.96,
+    682.56,
+    "R0"
+   ],
+   "after": [
+    302.4,
+    639.36,
+    "R0"
+   ],
+   "shift_um": 77.76
+  },
+  "head2_e6": {
+   "before": [
+    17.28,
+    1002.24,
+    "R0"
+   ],
+   "after": [
+    25.92,
+    941.76,
+    "R0"
+   ],
+   "shift_um": 69.12
+  },
+  "head2_e7": {
+   "before": [
+    336.96,
+    1002.24,
+    "R0"
+   ],
+   "after": [
+    302.4,
+    915.84,
+    "R0"
+   ],
+   "shift_um": 120.96
+  },
+  "head3_e1": {
+   "before": [
+    976.32,
+    17.28,
+    "MX"
+   ],
+   "after": [
+    907.2,
+    8.64,
+    "MX"
+   ],
+   "shift_um": 77.76
+  },
+  "head3_e3": {
+   "before": [
+    976.32,
+    336.96,
+    "R0"
+   ],
+   "after": [
+    993.6,
+    285.12,
+    "MX"
+   ],
+   "shift_um": 69.12
+  },
+  "head3_e5": {
+   "before": [
+    976.32,
+    682.56,
+    "R0"
+   ],
+   "after": [
+    941.76,
+    570.24,
+    "R0"
+   ],
+   "shift_um": 146.88
+  }
+ },
+ "structure_kept": {
+  "head_column_kept": true,
+  "row_kept": "11/16"
+ },
+ "p2p_max_dist_before": 319.7,
+ "p2p_max_dist_after": 397.4,
+ "bitum_before": 6186567,
+ "bitum_after": 5835351,
+ "dataflow_chain": "per head (kv3_head_eighth x8): face buses (q/k/v beats, cfg from ectl/hroot) -> e0 hub (front_0) -> fronts e2/e4/e6 (823 b each from e0; c_in/e_in/lt_in/q_beat_in exchanged all-to-all among fronts, 551 b per pair) -> each front feeds its own stack (e0->e1 738 b, e2->e3 / e4->e5 / e6->e7 466 b, stin cr/dr point-to-point) -> stacks return gf/kp/kpv to e0 (gather, 272 b each from e3/e5/e7) -> e0 -> face. ft slots are die pass-through (registered stations, fixed by the plan); 0 internal core-core stations, so every core-core link is a direct unregistered hop with reach 405 um (12.1e).",
+ "timing_critical_source": "no prior worst paths for these types (hg kits reached place only, hgi has no current GRT/STA DB, hgi_v6 FAIL@gen); critical pairs taken from the plan: 0 internal stations, so the direct links over the 405-um reach (e0<->e4/e6 823 b at 665/985 um, e0<->e3/e5/e7 gather 272 b at 639-1305 um) are the timing-critical set; rule held: no link may exceed max(405 um, its current length).",
+ "alternatives_considered": [
+  {
+   "name": "hub (e0 centred, fronts as 2x2 around it, each stack just outside its front)",
+   "how": "brute force over all 8! slot assignments by intent centre cost, top 60 re-scored on the core_place pin model with per-core and joint pair flips, then lattice nudges",
+   "result": "bit-mm -21..-27% and RUDY V overflow down up to 98%, BUT 18-36 links (all stack->e0 gather, e0<->e3 272 b 348 -> ~760 um) exceed max(405, current); not achievable by positions/orients alone -> needs a registered station on each gather link (plan event = die owner), reported as REDESIGN candidate, not adopted",
+   "best_perm": "20314657 (e0->slot of e2, e1->e0, e2->e3, e3->e1, e5->e6, e6->e5)"
+  },
+  {
+   "name": "pair-row permutations (24 per head)",
+   "result": "none beats the current row order (earlier round)"
+  },
+  {
+   "name": "current structure (head columns, each front|stack pair side by side in one row, e0 at the S-face corner, ectl row at the N face) fine-tuned",
+   "result": "chosen: kept structure, core_place search only as legaliser/fine-tune on the 8.64-um G0C lattice (G=8.64, 17.28-um move grid), objective bit-um + lam*RUDY overflow, hard timing max(405, current), EQ by construction; 0 timing violations"
+  }
+ ],
+ "search_role": "core_place (CORE-PLACE-1) run with the plan lattice G=8.64 from the CURRENT structure, no seed: it only nudges/flips cores in place (moves <= a few lattice steps, no core changes row/column role); a hub re-structure was evaluated by hand (see alternatives) and rejected on timing, not left to the search",
+ "type_note": "5 head cores sit on ft bands in the base (base-illegal) and are left where they are",
+ "explorer": {
+  "cmd": "explorer_render.py type --plan plan_c.json --type kv3_hgi --die qwen_kvsys --delta delta_kv3_hgi.json --supply --release-cache plan-route-1/release_cache.json",
+  "png": "/tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/cleanslate/KV/hgi_light/kv3_hgi__explorer_before_after_supply.png",
+  "remote": "epyc4:/srv/opentallas-scratch3/claude/vis-triage-kvhead/explorer/kv3_hgi_after",
+  "links_over_before": 22,
+  "links_over_after": 20,
+  "new_over": [],
+  "over_and_longer": [],
+  "cleared": [
+   "head2_e2>head2_e6",
+   "head3_e3>head3_e0"
+  ],
+  "bit_mm_before": 7548,
+  "bit_mm_after": 7412,
+  "route_supply_ratio_max_ringH_p99_before": "1.59/1.524",
+  "after": "1.51/1.26"
+ },
+ "over_reach_accepted": {
+  "links": [
+   {
+    "id": "ft:ft6",
+    "bits": 1056,
+    "hop_before_um": 926.7,
+    "hop_after_um": 926.7
+   },
+   {
+    "id": "head3_e6>head3_e0",
+    "bits": 320,
+    "hop_before_um": 894.0,
+    "hop_after_um": 894.0
+   },
+   {
+    "id": "head2_e6>head2_e0",
+    "bits": 320,
+    "hop_before_um": 894.0,
+    "hop_after_um": 842.2
+   },
+   {
+    "id": "head2_e4>head2_e0",
+    "bits": 320,
+    "hop_before_um": 574.3,
+    "hop_after_um": 574.3
+   },
+   {
+    "id": "head3_e4>head3_e0",
+    "bits": 320,
+    "hop_before_um": 574.3,
+    "hop_after_um": 574.3
+   },
+   {
+    "id": "head3_e0>head3_e6",
+    "bits": 184,
+    "hop_before_um": 769.1,
+    "hop_after_um": 769.1
+   },
+   {
+    "id": "head3_e7>head3_e0",
+    "bits": 136,
+    "hop_before_um": 1030.3,
+    "hop_after_um": 1030.3
+   },
+   {
+    "id": "head2_e0>head2_e6",
+    "bits": 184,
+    "hop_before_um": 769.1,
+    "hop_after_um": 708.6
+   },
+   {
+    "id": "head2_e7>head2_e0",
+    "bits": 136,
+    "hop_before_um": 1030.3,
+    "hop_after_um": 909.3
+   },
+   {
+    "id": "head3_e6>head3_e2",
+    "bits": 184,
+    "hop_before_um": 665.2,
+    "hop_after_um": 665.2
+   },
+   {
+    "id": "head2_e6>head2_e2",
+    "bits": 184,
+    "hop_before_um": 665.2,
+    "hop_after_um": 552.9
+   },
+   {
+    "id": "head2_e5>head2_e0",
+    "bits": 136,
+    "hop_before_um": 710.6,
+    "hop_after_um": 632.8
+   },
+   {
+    "id": "head3_e0>head3_e4",
+    "bits": 184,
+    "hop_before_um": 449.4,
+    "hop_after_um": 449.4
+   },
+   {
+    "id": "head3_e2>head3_e6",
+    "bits": 184,
+    "hop_before_um": 449.4,
+    "hop_after_um": 449.4
+   },
+   {
+    "id": "head2_e0>head2_e4",
+    "bits": 184,
+    "hop_before_um": 449.4,
+    "hop_after_um": 423.5
+   },
+   {
+    "id": "head3_e5>head3_e0",
+    "bits": 136,
+    "hop_before_um": 710.6,
+    "hop_after_um": 563.7
+   },
+   {
+    "id": "head2_e3>head2_e0",
+    "bits": 136,
+    "hop_before_um": 407.1,
+    "hop_after_um": 407.1
+   },
+   {
+    "id": "ft:ft2",
+    "bits": 48,
+    "hop_before_um": 484.0,
+    "hop_after_um": 484.0
+   },
+   {
+    "id": "ft:ft5",
+    "bits": 15,
+    "hop_before_um": 757.0,
+    "hop_after_um": 757.0
+   },
+   {
+    "id": "ft:ft0",
+    "bits": 1,
+    "hop_before_um": 751.7,
+    "hop_after_um": 751.7
+   }
+  ],
+  "why": "all are inherited from the plan of record (none new, none longer): the head hub/gather links e2/e4/e6 and e3/e5/e7 -> e0 (136-320 b, unregistered, 0 stages) and the die ft slots (registered by the plan; the ft hop length is set by fixed station sites, not by this delta). Shortening them below 405 um needs registered stations on the head gather/hub links = a plan/timing event for the die owner (the hub re-structure in alternatives_considered), not a positions-only delta. Flagged to DIE-KV-97: these unregistered >405-um core-core links exist in every kv3_head_eighth type."
+ }
+}
