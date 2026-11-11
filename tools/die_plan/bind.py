@@ -746,6 +746,12 @@ def core_input_lockup(plan, tn, module):
     return tuple((cfg.get("modules") or {}).get(module) or ())
 
 
+def ft_hop_xtap(plan, tn, slot):
+    """schema.ft_hop_xtap on the bind plan: the cross-tap hops of slot that carry a hop flop (HBM-VSN-XTAP 11-11)"""
+    import schema
+    return schema.ft_hop_xtap(plan, tn, slot)
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -1506,7 +1512,9 @@ class Binder:
                     st = 0
                 else:
                     st = int(sl.get("stations", 0)) + int((P.get("built_station_extra") or {}).get(ptype[part], {}).get(sl["name"], 0))
-                ft.append(dict(part=part, ibus=ib, obus=ob, stations=st, slot=sl["name"] if sl else ob))
+                xt = ft_hop_xtap(P, ptype[part], sl["name"]) if sl and ft_hop_lockup(P, ptype[part]) else []
+                # HBM-VSN-XTAP 11-11: `stations` counts the register stages incl. the cross-tap hop flops (lane latency)
+                ft.append(dict(part=part, ibus=ib, obus=ob, stations=st + len(xt), xtap=xt, slot=sl["name"] if sl else ob))
             sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
             db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})
             L = lat.get(ln["id"], {})
@@ -3655,6 +3663,8 @@ class Binder:
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
         for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
             W, i, o, n = L["width"], h["ibus"], h["obus"], h["stations"]
+            xt = set(h.get("xtap") or ())
+            n -= len(xt)                     # HBM-VSN-XTAP 11-11: plan stations; the hop flops are emitted between them
             ports.append(f"    input  wire [{W}:0] {i}   // ft {h['slot']} lane {L['lane']}: {L['src']} -> {L['dst']}")
             ports.append(f"    output wire [{W}:0] {o}   // ft {h['slot']}: {n} station(s)")
             if n == 0:
@@ -3669,7 +3679,13 @@ class Binder:
                 body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
                             f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
                 prev = nxt
-                if lk and k < n - 1:
+                if lk and k < n - 1 and k in xt:
+                    # HBM-VSN-XTAP 11-11 cross-tap hop (schema.ft_hop_xtap): station k -> full-cycle flop -> station k+1
+                    decl.append(f"    wire [{W}:0] {nxt}_x;")
+                    body.append(f"    ot_dp_st #(.W({W})) u_fx_{o}_{k} (.clk(clk), .rst_n(1'b1), .d({nxt}[{W - 1}:0]), "
+                                f".ea({nxt}[{W}]), .q({nxt}_x[{W - 1}:0]), .eq({nxt}_x[{W}]));")
+                    prev = f"{nxt}_x"
+                elif lk and k < n - 1:
                     # TYPE-SAFE-1 11-06 hop lockup (ft_hop_lockup docstring): station k -> latch -> station k+1
                     decl.append(f"    wire [{W}:0] {nxt}_l;")
                     body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{o}_{k} (.clk(clk), .d({nxt}), .q({nxt}_l));")
@@ -5545,6 +5561,7 @@ def cmd_kit_rtl(a):
         chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
         prev = f"{ni}[{hi - 1}:{lo}]"
         lk = ft_hop_lockup(raw, tn)
+        xt = set(ft_hop_xtap(raw, tn, sl["name"])) if lk else set()
         for j in range(k):
             q = f"{no}[{hi - 1}:{lo}]" if j == k - 1 else f"sp_{no}_s{j}"
             if j < k - 1:
@@ -5552,7 +5569,12 @@ def cmd_kit_rtl(a):
             chain.append(f"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), "
                          f".q({q}), .eq());")
             prev = q
-            if lk and j < k - 1:      # TYPE-SAFE-1 11-06 hop lockup, as the bound stations (ft_hop_lockup)
+            if lk and j < k - 1 and j in xt:      # HBM-VSN-XTAP 11-11 cross-tap hop flop, as the bound stations
+                chain.append(f"    wire [{wd - 1}:0] {q}_x;")
+                chain.append(f"    ot_dp_st #(.W({wd})) u_fx_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({q}), .ea(1'b0), "
+                             f".q({q}_x), .eq());")
+                prev = f"{q}_x"
+            elif lk and j < k - 1:      # TYPE-SAFE-1 11-06 hop lockup, as the bound stations (ft_hop_lockup)
                 chain.append(f"    wire [{wd - 1}:0] {q}_l;")
                 chain.append(f"    ot_dp_lk #(.W({wd})) u_fl_spare_{no}_s{j} (.clk(clk), .d({q}), .q({q}_l));")
                 prev = f"{q}_l"

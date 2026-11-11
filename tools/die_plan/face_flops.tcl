@@ -335,6 +335,8 @@ proc ff_d_driver {f} {
       set mt [$it getMTerm]
       if {[$mt getIoType] ne "OUTPUT" || [$mt getSigType] eq "CLOCK"} continue
       set i [$it getInst]
+      # HBM-VSN-XTAP 11-11: one cross-tap hop flop u_fx_* (schema.ft_hop_xtap) between two stations: trace on through its D
+      if {[ff_is_hop_flop $i] && !$lat} { set lat 1; dict set ::ff_hl_seen [$i getName] $i; set nxt [ff_pin_net $i D]; continue }
       if {[ff_is_ff $i]} { return $i }
       # TYPE-SAFE-1 11-06: one ft hop lockup latch u_fl_* (bind/gen ft_hop_lockup) between two stations: trace on
       # through its D (the station before it is the driver)
@@ -348,10 +350,18 @@ proc ff_d_driver {f} {
 }
 # TYPE-SAFE-1 11-06: an ft hop lockup latch (gen_rtl.ft_hop_lockup: instances u_fl_*, ASAP7 DLL / DHL cells)
 proc ff_is_hop_latch {inst} { return [expr {[ff_is_latch $inst] && [regexp {(^|[./])u_fl_} [$inst getName]]}] }
+# HBM-VSN-XTAP 11-11: a cross-tap ft hop flop (bind/gen schema.ft_hop_xtap: instances u_fx_*, +1 cycle) sits where the
+# hop latch would (hop midpoint, below) and is skipped by the station walks like a hop latch
+proc ff_is_hop_flop {inst} { return [expr {[ff_is_ff $inst] && [regexp {(^|[./])u_fx_} [$inst getName]]}] }
+proc ff_hop_next {i} {
+  foreach o [ff_sig_iterms $i out] { set q [ff_from_in [$o getNet] 0]; if {$q ne ""} { return $q } }
+  return ""
+}
 # the next station after station flop f: through BUF/INV (ff_from_in), or through BUF/INV -> ONE hop latch (D) -> BUF/INV
 proc ff_next_station {f} {
   foreach o [ff_sig_iterms $f out] {
     set q [ff_from_in [$o getNet] 0]
+    if {$q ne "" && [ff_is_hop_flop $q]} { dict set ::ff_hl_seen [$q getName] $q; set q [ff_hop_next $q] }
     if {$q ne ""} { return $q }
   }
   foreach o [ff_sig_iterms $f out] {
@@ -642,7 +652,8 @@ if {[info exists ::env(OT_HOP_LATCH_FRAC)] && $::env(OT_HOP_LATCH_FRAC) ne ""} {
 set ff_hl 0; set ff_hl_miss 0
 if {![info exists ::ff_hl_seen]} { set ::ff_hl_seen {} }
 foreach i [dict values $::ff_hl_seen] {
-  set a [ff_d_driver $i]; set b [ff_from_in [ff_pin_net $i Q] 0]
+  set a [ff_d_driver $i]
+  if {[ff_is_hop_flop $i]} { set b [ff_hop_next $i] } else { set b [ff_from_in [ff_pin_net $i Q] 0] }
   if {$a eq "" || $b eq ""} { incr ff_hl_miss; continue }
   lassign [$a getLocation] ax ay; lassign [$b getLocation] bx by
   if {$ff_hl_frac eq ""} {

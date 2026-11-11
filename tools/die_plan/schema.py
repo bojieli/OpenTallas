@@ -1230,7 +1230,10 @@ SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "objec
 SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
     "type": "object", "additionalProperties": False,
     "properties": {"all": {"type": "boolean"}, "except": {"type": "array", "items": {"type": "string"}},
-                   "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
+                   "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"},
+                   # HBM-VSN-XTAP 11-11: cross-tap hops get a full-cycle hop flop instead (ft_xtap.py; ft_hop_xtap)
+                   "xtap_flop": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
+                       "type": "array", "items": {"type": "integer", "minimum": 0}}}}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
@@ -1737,6 +1740,14 @@ def _id_strap_errors(obj):
 
 
 # ------------------------------------------------------------------------------------------------------- loader
+def ft_hop_xtap(raw, type_name, slot):
+    """HBM-VSN-XTAP 11-11 (COORD 04:18, tools/die_plan/ft_xtap.py): sorted hop indices k of ft slot `slot` of
+    `type_name` whose hop k -> k+1 crosses clock taps and so carries a full-cycle hop flop u_fx_* (+1 register stage
+    each) instead of the ft_hop_lockup latch.  Plan clock.ft_hop_lockup.xtap_flop {type: {slot: [k]}}; absent = []."""
+    lk = ((raw or {}).get("clock") or {}).get("ft_hop_lockup") or {}
+    return sorted({int(k) for k in ((lk.get("xtap_flop") or {}).get(type_name) or {}).get(slot, [])})
+
+
 def built_station_extra(raw, type_name, slot):
     """stations of ft slot `slot` of `type_name` already built beyond plan ft_slots[].stations (0 when none)"""
     return int(((raw.get("built_station_extra") or {}).get(type_name) or {}).get(slot, 0))
@@ -2107,7 +2118,8 @@ class Plan:
         st = 0
         for part, slot, _, _ in self.lane_crossings(lid):
             s = self.slot(part, slot) if slot else None
-            st += (int(s.get("stations", 1)) + built_station_extra(self.raw, self.parts[part]["type"], slot)) if s else 1
+            st += (int(s.get("stations", 1)) + built_station_extra(self.raw, self.parts[part]["type"], slot)
+                   + len(ft_hop_xtap(self.raw, self.parts[part]["type"], slot))) if s else 1
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
