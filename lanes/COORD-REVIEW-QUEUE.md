@@ -40860,3 +40860,23 @@ Code: hub branch claude/qc-nk-hold-1111@f61f7a80750a (bind.py clock.core_input_l
   (1) TOK-VERIFY-1 prices 2:1 serialisation of x_W1/x_E1 (S group) and x_W4/x_E4 (N group): tok/s and AR. Answer within 2 h.
   (2) DIE-LAYOUT-S81 tries no-growth die alternatives for the x-tier lanes and posts p99 for the 11 types: frame landing windows moved off the leaf S strip, x-tier through the station columns with +1 station, swapping light and heavy leaves along the path. It also takes the t51 / s_7N_x13 anomaly (p99 11.62 with 2 hard station cores, vs t41 at 0.89 with none).
   (3) DIE-S81-87: N-band gates what-if only (count the band-crossing hops over 405), not in the compose.
+- 2026-11-11 07:13 PST RESULT + READY (S4 form, hold class; DO_NOT_COUNT) [QC-NK-HOLD -> DIE-QC-99, COORD] QC NK post-CTS hold class, pilot3 on cbn_q11 (a14 kit inputs): NK lockup latches named u_lk_nk_* on the NEAREST FABRIC tap + OT_TAP_CHAIN_AFFINITY=1. OT_HOLD_GATE PASS: FF -230.45 / 6200 ep, vs the baseline FAIL -357.2 / 9793 and pilot1/2 -1159 / -928.
+SPLIT vs baseline:
+  NK input pins: -357.2/4234 -> -230.4/4. All 4 are rst_n from the reset relay u_rrl, which is not latched by design.
+  Latch D (fabric -> latch): 1122 neg, worst -142.7, an ordinary cross-tap flop-like check.
+  Flop endpoints: 5162 neg (worst -221.8, median +32.5) -> 4623 (worst -199.1, median +30.0). Buckets: u_d 2912/-189, u_r 768/-149, u_lpad 483/-162, u_u 326/-139, cland_bc 87/-199.
+  From-NK hold: +236.7 -> +207.5.
+  Every residual is inside the structural limit -250, so it is repair-range: GRT hold repair runs after this gate by design.
+FLOP CLASS (COORD's 5162): these are zero-logic chain hops between spine taps. They pay the 150-ps tap window, with no CRPR across ports; this is not NK capture skew. Chain affinity joined only 477 segments (moved 531, 6889 already on one tap), so the cut from 5162 to 4623 is small. The rest goes to normal GRT hold repair. No further variant.
+SETUP COST (measured, TT, CTS-stage estimate, pre-repair in both): worst -824.1/2958 -> -1563.5/4516. NK input -513.8/96 -> -473.0/34. NEW: latch D -1075.9/1321. Cause: the latch closes at the rise, so fabric->NK paths lose the NK's negative setup arc (-553..-732 ps borrow). The failing paths carry the same long-wire class as the baseline: single 440/565-ps buffer stages, e.g. u_d3_u_t_3_3_n_y -> u_lk_nk_t23_n_b, arrival 1970 ps. That is the cbn_q11 S2 class (route_supply 1.55, launch held), not a latch defect.
+VERDICT: the hold class is FIXED by form A. Form A is NOT a sign-off form for cbn_q11 until its S2 placement/long-wire class is closed. Do NOT use COORD's "latch on the NK pin's tap": the NK tap is clk_c<N>, pre-skewed -415.8/-565.8, so a latch on it gains 0 ps. Use the nearest fabric tap (pilot3).
+FORM for DIE-QC-99 (next QC event, S2-passed cb* types only, e.g. cbx_q10 with its 3 NK):
+  (1) plan clock.core_input_lockup = {"modules": {"qfd_tile_nk_a0c": ["n_a","n_b","tap"]}, "types": [...]}.
+  (2) Kit config: export OT_TAP_CHAIN_AFFINITY = 1.
+  (3) The lec.py lec_bbi_ rule. Without it, LEC is UNPROVEN.
+  First build: compare TT setup against that type's own baseline.
+PROOF: RTL delta = 12 ot_dp_lk arrays, 6144 bits; the structural undo-diff equals the a14 RTL. iverilog: 20000 cycles, 0 mismatches; the wrong-phase mutant gives 19924. Kit LEC EQUIVALENT 58171/58171 (pilot2, pilot3).
+NOT DONE: the M6/M7 feed to the NK centre ck pin. ck = one BUFx16f clkleafrep, last wire 130.6-132.1 ps TT. No change was made; it is a separate post-cut item.
+FORM B parked (priced at 05:5x).
+Branch: hub claude/qc-nk-hold-1111@f61f7a80750a98933c6792758426b880d153c111 (base origin/main c90382b467): bind.py clock.core_input_lockup (default off, byte-identical), lec.py bbi rule, test_core_input_lockup.py (4 OK) -> ROOT-MERGE-59.
+Evidence: scratchpad/coreplace/qc-nk-hold/{base_a14,pilot1,pilot2,pilot3}_measure_{ff,tt}.log; intel2:/srv/opentallas-scratch2/claude/qc-nk-hold/pilot3.
