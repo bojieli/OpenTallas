@@ -29,24 +29,48 @@ proc ta_sinks {net} {
   }
   return $out
 }
+# DIE-HBM-97 11-11 (tapalign-stale-measure): ot_cf_wire reads stored vertex arrivals and never forces a search, so
+# after delay cells are inserted a tap could read its pre-edit mean (vecd4ae v512b ot_dtap_700011: 617 -> 617 after 1
+# and after 12 cells, final 1067 vs target 860).  Every measurement now forces a full arrival search first, and the
+# first sink of every tap is cross-checked against a direct arrival query; a mismatch stops the flow.
+set ta_xcheck_ps [expr {[info exists ::env(OT_DTAP_XCHECK_PS)] ? $::env(OT_DTAP_XCHECK_PS) : 1.0}]
+proc ta_fresh_check {tap pin cf ref tol} {
+  if {$ref eq "" || $ref eq "INF" || ![string is double -strict $ref]} {
+    error "OT_DTAP_ALIGN STALE $tap: no direct arrival for $pin (cross-check impossible)"
+  }
+  if {abs($cf - $ref) > $tol} {
+    error "OT_DTAP_ALIGN STALE $tap: $pin measured [format %.2f $cf] ps, direct arrival [format %.2f $ref] ps (tol $tol)"
+  }
+  return 1
+}
 proc ta_measure {} {
-  global ta_blk
+  global ta_blk ta_xcheck_ps
   set_propagated_clock [all_clocks]
   estimate_parasitics -placement
   ot_cf_refresh
+  sta::find_timing 1
   set clk [lindex [all_clocks] 0]
   set res [dict create]
   foreach i [$ta_blk getInsts] {
     set n [$i getName]
     if {![regexp {^ot_dtap_[0-9]+$} $n]} continue
     set y [$i findITerm Y]; set net [$y getNet]
-    set s 0.0; set k 0; set mn 1e9; set mx 0.0
+    set s 0.0; set k 0; set mn 1e9; set mx 0.0; set xc 0
     foreach p [ta_sinks $net] {
       set pin [get_pins -quiet $p]; if {$pin eq ""} continue
       # clock_family tagged arrival; a pin it cannot resolve uniquely falls back to the rise arrival property (the
       # core clk port carries no input delay, so a CK pin holds clock arrivals only)
       if {[catch {set a [ot_cf_wire $pin $clk]}] || $a eq ""} {
         if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq "" || $a eq "INF"} continue
+      } elseif {!$xc} {
+        # ot_cf_wire reports the arrival relative to the active edge of the waveform (fall edge for a negative-edge
+        # register); the direct query is absolute, so take the same edge off it before comparing
+        set tr [ot_cf_active $pin]
+        set wf {}; foreach t [$clk waveform] {lappend wf [sta::time_sta_ui $t]}
+        set ref [get_property $pin [expr {$tr eq "fall" ? "arrival_max_fall" : "arrival_max_rise"}]]
+        if {[string is double -strict $ref]} {set ref [expr {$ref - [lindex $wf [expr {$tr eq "fall" ? 1 : 0}]]}]}
+        ta_fresh_check $n $p $a $ref $ta_xcheck_ps
+        set xc 1
       }
       set s [expr {$s + $a}]; incr k; set mn [expr {min($mn, $a)}]; set mx [expr {max($mx, $a)}]
     }
