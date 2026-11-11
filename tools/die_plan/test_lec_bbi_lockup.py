@@ -33,14 +33,15 @@ RTL_LATCH = "  reg [1:0] lk;\n  always @(*) if (!clk) lk = r;"
 
 
 def _gate(mut=False):
-    src = "d" if mut else "r0"
+    src = "d" if mut == True else "r0"
     s = ["module lec_bbi_t(clk, clk_c, d, o);", "  input clk; input clk_c; input [1:0] d; output [1:0] o;",
          "  wire [1:0] rn, r0, l;"]
     for i in range(2):
         s += [f"  DFFHQNx1_ASAP7_75t_R \\r[{i}]$_DFF_P_ (.CLK(clk), .D(d[{i}]), .QN(rn[{i}]));",
               f"  INVx1_ASAP7_75t_R u_i{i} (.A(rn[{i}]), .Y(r0[{i}]));",
               f"  DLLx1_ASAP7_75t_R u_lk_nk_{i} (.CLK(clk), .D({src}[{i}]), .Q(l[{i}]));"]
-    s += ["  kid u_kid (.ck(clk_c), .s(l), .y(o));", "endmodule", ""]
+    kid_s = "{l[0], l[1]}" if mut == "QSWAP" else "l"   # wrong Q connection: latch bits crossed at the pin
+    s += [f"  kid u_kid (.ck(clk_c), .s({kid_s}), .y(o));", "endmodule", ""]
     return "\n".join(s)
 
 
@@ -111,3 +112,10 @@ def test_latch_on_both_sides_is_equivalent(tmp_path):
 def test_latch_reading_the_input_is_not_equivalent(tmp_path):
     rc, r = _run(_kit(tmp_path, "mut", mut=True))
     assert rc == 1 and r["verdict"] == "NOT EQUIVALENT", r.get("reason")
+
+
+@needs_image
+def test_latch_q_crossed_at_the_pin_is_not_equivalent(tmp_path):
+    rc, r = _run(_kit(tmp_path, "qswap", mut="QSWAP"))
+    assert rc == 1 and r["verdict"] == "NOT EQUIVALENT", r.get("reason")
+    assert sorted(e["point"] for e in r["failing"]) == ["bb:u_dut.u_kid.lec_bbi_s[0]", "bb:u_dut.u_kid.lec_bbi_s[1]"], r
