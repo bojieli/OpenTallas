@@ -3067,7 +3067,9 @@
     "epyc2",
     "epyc8"
    ],
-   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
+   "cell_check": true,
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
   },
   "s81": {
    "enabled": true,
@@ -17426,7 +17428,9 @@
     "epyc8"
    ],
    "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
-   "note_kw44_userbus_1111": "KW-FIX-44 11-11 03:4x UTC (COORD 19:3x): INFRA batch relaunch, 14 rows failed on epyc4 03:10-03:25 UTC (logind CreateSession failed -> no XDG_RUNTIME_DIR -> ot-heavy systemd-run --user 'Failed to connect to user scope bus', or docker rc 125 in the same overload) + svc_hi_dsdv entry earlyoom on epyc8 (sealed-job undercount, SEALDOCK_1111). ot-heavy USERBUS_1111 falls back to /run/user/UID/bus."
+   "note_kw44_userbus_1111": "KW-FIX-44 11-11 03:4x UTC (COORD 19:3x): INFRA batch relaunch, 14 rows failed on epyc4 03:10-03:25 UTC (logind CreateSession failed -> no XDG_RUNTIME_DIR -> ot-heavy systemd-run --user 'Failed to connect to user scope bus', or docker rc 125 in the same overload) + svc_hi_dsdv entry earlyoom on epyc8 (sealed-job undercount, SEALDOCK_1111). ot-heavy USERBUS_1111 falls back to /run/user/UID/bus.",
+   "cell_check": true,
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
   },
   "s81_head": {
    "enabled": true,
@@ -18425,7 +18429,9 @@
     "epyc7"
    ],
    "work_root_prev_kw43gen2": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81_head/kit-wave",
-   "hold_items_prev_kw43hdser": {}
+   "hold_items_prev_kw43hdser": {},
+   "cell_check": true,
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
   },
   "qwen_compute": {
    "enabled": true,
@@ -25213,7 +25219,9 @@
     "intel2",
     "epyc8"
    ],
-   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
+   "cell_check": true,
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
   },
   "hbm": {
    "enabled": true,
@@ -35129,7 +35137,9 @@
     "epyc2",
     "epyc8"
    ],
-   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
+   "cell_check": true,
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
   }
  },
  "place_prefer": [
