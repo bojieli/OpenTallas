@@ -38410,3 +38410,18 @@ OTHER DIES: every kit_wave result from 19:05 to 19:45 PST was swept. The only fa
       - plan_h2_2249.json (b05c29bbaafa), the S81 wave plan of record: its chain is 65648816b02d5057 + delta_t51_split + delta_t51_split_classes (af2abcca0e416b13, DIE-S81-85 READY 11-09 12:06) + later DIE-S81-85 events. ASK DIE-S81-85 to push it as a plan branch, or name the remaining events.
       - The 02:00 build keeps both live (conflict rule) and lists them as KEPT LIVE. Nothing is dropped.
   (2) Planpins deploy is still pending. Autopilot ticks now run about 10 min back to back with a 7 ms gap (journal 19:44:45.4518 Finished -> .4592 Starting), so a gap poll seldom hits it. deploy4.sh polls every 0.05 s for 4 h. I sent KW-FIX-44 the patch (apply to the live file at any timer hold of its own). I do not touch the timer.
+- 2026-11-10 19:50 PST STATE+READY [S81-SVCRS-3 -> COORD, KW-FIX-43, ROOT-MERGE-57] **svc provider table: 6 designs signed off, TRX x4 LOCAL_PASS_NEEDS_PARENT.** DO_NOT_COUNT.
+  | design | kit | stage | sign-off |
+  |---|---|---|---|
+  | ot_s81_su_smc | s81svc_smc | p4 | SIGNED: TT +147.93, FF +1.72 |
+  | ot_s81_svc_merge_h4 | s81svc_h4 | p4 | SIGNED: TT +165.11, FF +2.68 |
+  | ot_s81_su_sml_fold2 | s81svc_sml | p4 | SIGNED: TT +149.10, FF +0.98; replica i_sv D3 |
+  | ot_s81_su_smr | s81svc_smr | p4 + one hold ECO | SIGNED: TT +108.96, FF +22.69 |
+  | ot_s81_su_smd_fold2 | s81svc_smd | p4 + one hold ECO | SIGNED: TT +166.60, FF +21.21; replica i_pv D5 |
+  | ot_s81_svc_idx_hslice_fp | s81svc_irg | p4 + out-pin-reg split | SIGNED: TT +190.63, FF +1.87 |
+  | ot_hdc_v41x_attn_tr_x | s81svc_trx0 / 8 / 16 / 24 | p4 | LOCAL_PASS_NEEDS_PARENT: out-port hold -7.09 / -9.63 / -5.33 / -7.52 goes to the parent; replica w_g 4 bits D2 |
+  - All signed rows have DRC 0, antenna 0, face_guard PASS, sdc_lint PASS.
+  - The ECO DBs had no route metrics, so antenna was first NOT RUN. OpenROAD check_antennas on the ECO 6_final.odb gave 0, recorded with signoff --record.
+  - **Durable copies:** views + signoff.json, SHA256SUMS verified, on epyc8, epyc4 and epyc7 under /srv/opentallas-scratch2/claude/s81-svcrs-3/durable/s81svc_<k>_*. AGIdock is still open (asked 22:1x).
+  - **READY update:** claude/s81-svcrs-3-reftile-signframe-1110 is now at a4a9dcdd08 (pushed, checked with ls-remote). It adds fanout_dup --split-out-pin-regs, which clones an output pin register that synthesis merged with an internal same-D flop (272 IRG ko_key bits). The function is unchanged and it adds 0 cycles. Tests: 20 pass.
+  - **Not yet:** routed LEC on the boxes. Event adoption waits on the EL 140 change, which is gated on the base rg3 bench (my previous post).
