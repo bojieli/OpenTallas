@@ -20,6 +20,28 @@ set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
+# KW-FIX-44 11-10 (COORD): control ports are not data faces.  A reset (rst_n, rst, *_rst_n, *_rst) or clock (clk*,
+# *_clk, *_clk_n ...) port took a face register like a data bit, pulling the reset synchroniser / a clock-domain flop to
+# the pin.  Skipped as well: any port whose net reaches a flop or latch clock pin (CLK) through BUF/INV only.
+# OT_FF_SKIP_RE (regex) adds names.
+set ff_ctl_re {^(([A-Za-z0-9_]*_)?(a?rst(_n|_ni|_b)?|reset(_n)?)|clk(_[A-Za-z0-9]+)?|[A-Za-z0-9_]*_clk(_[np])?)$}
+if {[info exists ::env(OT_FF_SKIP_RE)] && $::env(OT_FF_SKIP_RE) ne ""} { set ff_ctl_re "($ff_ctl_re)|($::env(OT_FF_SKIP_RE))" }
+proc ff_is_clock_port {net} {
+  set seen {}; set todo [list $net]
+  while {[llength $todo]} {
+    set n [lindex $todo 0]; set todo [lrange $todo 1 end]
+    if {$n eq "NULL" || $n eq "" || [dict exists $seen $n]} continue
+    dict set seen $n 1
+    if {[dict size $seen] > 64} { return 0 }
+    foreach it [$n getITerms] {
+      if {[$it isOutputSignal]} continue
+      set i [$it getInst]; set mn [[$it getMTerm] getName]
+      if {$mn eq "CLK" && ([ff_is_ff $i] || [ff_is_latch $i])} { return 1 }
+      if {[ff_is_buf $i]} { foreach o [$i getITerms] { if {[$o isOutputSignal]} { lappend todo [$o getNet] } } }
+    }
+  }
+  return 0
+}
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
 if {[file exists /work/ft_stations.txt]} {
@@ -178,7 +200,24 @@ proc ff_clone_for {bt chain} {
 }
 set ff_done {}
 set ff_occ {}
-set ff_n 0; set ff_miss 0
+set ff_n 0; set ff_miss 0; set ff_ctl 0
+# KW-FIX-44 11-10 (COORD): OT_FF_DEPTH_BAND_UM = D spreads the face registers over a band D um deep instead of packing
+# them against the face: consecutive pins of one face start their nearest-free search at rotating depths 0, 1, ..
+# nd-1 (nd = D / row height on N/S, D / column pitch on E/W), then wrap; beyond the band the search goes on inward as
+# before.  Absent or 0: unchanged (every search starts at depth 0).
+set ff_band_um [expr {[info exists ::env(OT_FF_DEPTH_BAND_UM)] && $::env(OT_FF_DEPTH_BAND_UM) ne "" ? double($::env(OT_FF_DEPTH_BAND_UM)) : 0.0}]
+set ff_bandk {}
+proc ff_depths {face step} {
+  global ff_band_um ff_dbu ff_bandk
+  set nd [expr {$ff_band_um > 0 ? max(1, int($ff_band_um * $ff_dbu / $step)) : 1}]
+  set k [expr {[dict exists $ff_bandk $face] ? [dict get $ff_bandk $face] : 0}]
+  dict set ff_bandk $face [expr {$k + 1}]
+  set s [expr {$k % $nd}]
+  set out {}
+  for {set i 0} {$i < $nd} {incr i} { lappend out [expr {($s + $i) % $nd}] }
+  for {set i $nd} {$i < 400} {incr i} { lappend out $i }
+  return $out
+}
 # DIE-KV-60 11-01: an INTERIOR signal pin (plan site inside the outline, e.g. KV phy cland_tstart_in at the centre
 # column, 427 um from either face) has no face: "nearest core edge" put its register in the E band 426 um from the
 # pin (pin_reg_max 426-449).  A pin farther than OT_FF_INTERIOR_UM (default 10 um) from every core edge takes the
@@ -194,6 +233,7 @@ foreach pass {INPUT OUTPUT} {
     if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne $pass} continue
     set nm [$bt getName]
     if {[regexp $ff_skip_re $nm]} continue
+    if {[regexp $ff_ctl_re $nm] || [ff_is_clock_port [$bt getNet]]} { incr ff_ctl; continue }
     # ft out ports: registered by the neighbour's station 0; the last station is placed by the station pass
     if {$pass eq "OUTPUT" && [ff_slot_of $nm _o] ne ""} continue
     set f [expr {$pass eq "INPUT" ? [ff_from_in [$bt getNet] 0] : [ff_from_out [$bt getNet] 0]}]
@@ -217,7 +257,8 @@ foreach pass {INPUT OUTPUT} {
       set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
-      for {set c 0} {$c < 400 && !$placed} {incr c} {
+      foreach c [ff_depths $face $ff_cpitch] {
+        if {$placed} break
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
           if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
@@ -234,7 +275,8 @@ foreach pass {INPUT OUTPUT} {
       if {$cmax < 0} { incr ff_miss; continue }
       set col [expr {max(0,min($cmax,($px-$ff_x0)/$ff_cpitch))}]
       set placed 0
-      for {set r 0} {$r < 400 && !$placed} {incr r} {
+      foreach r [ff_depths $face $ff_rh] {
+        if {$placed} break
         foreach dc {0 1 -1} {
           set c [expr {$col + $dc}]
           if {$c < 0 || $c > $cmax || [dict exists $ff_occ "$face,$r,$c"]} continue
@@ -658,7 +700,7 @@ if {($ff_hl || $ff_hl_miss) && $ff_hl_frac eq ""} { puts "OT_FACE_FLOPS hop latc
 if {($ff_hl || $ff_hl_miss) && $ff_hl_frac ne ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at launch + $ff_hl_frac of their hops (OT_HOP_LATCH_FRAC; $ff_hl_miss without both stations)" }
 close $ff_out
 close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
-puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ctl control ports (reset / clock) skipped; depth band ${ff_band_um} um; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }

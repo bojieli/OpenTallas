@@ -1438,6 +1438,57 @@ def macro_pin_grid(kd, plan_dir=None):
     return err, dict(applies=True, macros=len(sites), pins=n_pins, tracks=src, worst_off_nm=round(worst * 1000, 1))
 
 
+# ------------------------------------------------------------------------------------------ 12b io pin track grid
+# KW-FIX-44 11-10 (COORD, DIE-HBM-97 dma vPose2: a hand respread put all 2,420 N pins at x = 0.048 k, half a track off
+# the kit's M5 tracks (make_tracks M5 -x_offset 0.024 -x_pitch 0.048) -> 10 M5 shorts at detail route).  Every place_pin
+# of io.tcl whose rectangle runs along its layer's preferred direction (a track segment: V layer taller than wide, H
+# layer wider than tall) must have its centre on one of that layer's tracks (kit make_tracks, else the platform
+# offsets), within GRID_TOL.  Cross-direction pins (the pin is a stub across the tracks) are counted, not judged.
+_PLACE_PIN = re.compile(r"^\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)\s+-layer\s+(M\d+)\s+-location\s+\{\s*" + _NUM +
+                        r"\s+" + _NUM + r"\s*\}(?:\s+-pin_size\s+\{\s*" + _NUM + r"\s+" + _NUM + r"\s*\})?")
+
+
+def io_pins(text):
+    """[(name, layer, x, y, w, h)] of the literal place_pin lines (w, h None when no -pin_size)"""
+    out = []
+    for line in text.splitlines():
+        m = _PLACE_PIN.match(_strip_tcl_comment(line))
+        if m:
+            w, h = (float(m.group(5)), float(m.group(6))) if m.group(5) else (None, None)
+            out.append((m.group(1).strip("{}"), m.group(2), float(m.group(3)), float(m.group(4)), w, h))
+    return out
+
+
+def track_miss(c, pitch, offsets):
+    """distance (um) from c to the nearest track of any of the offsets"""
+    return min(abs(c - (of + round((c - of) / pitch) * pitch)) for of in offsets)
+
+
+def io_pin_grid(kd):
+    kd = Path(kd)
+    io = kd / "io.tcl"
+    if not io.is_file():
+        return [], dict(applies=False, reason="no io.tcl")
+    cfg = _mk(kd)
+    tracks, src = _kit_tracks(kd, cfg)
+    err, checked, across, worst = [], 0, 0, 0.0
+    for name, layer, x, y, w, h in io_pins(io.read_text(errors="replace")):
+        if layer not in tracks:
+            continue
+        d, pitch, _width, offsets = tracks[layer]
+        if w is not None and h is not None and ((d == "V" and w > h) or (d == "H" and h > w)):
+            across += 1
+            continue
+        checked += 1
+        c = x if d == "V" else y
+        miss = track_miss(c, pitch, offsets)
+        if miss > GRID_TOL:
+            worst = max(worst, miss)
+            err.append(f"pin {name} {layer} {'x' if d == 'V' else 'y'} {c:g} is {miss * 1000:.1f} nm off the {src} "
+                       f"{layer} tracks (pitch {pitch:g}, offset {'/'.join(f'{o:g}' for o in offsets)})")
+    return err, dict(applies=checked > 0, pins=checked, across=across, tracks=src, worst_off_nm=round(worst * 1000, 1))
+
+
 # ---------------------------------------------------------------------------------------------- 13 macro instances
 # HBM-CORES-KITS-3 10-28 (measured failure, COORD 19:53): the qcore_r13 kit _k3mp5 placed u_fcore.u_fcore.u_red.m{a,b}
 # (face-shell prefix twice); the netlist has u_fcore.u_red.m{a,b}, so place_macro could not find them, yet every

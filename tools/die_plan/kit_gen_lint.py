@@ -9,6 +9,12 @@ finding only at synth, place or CTS:
   clock_export_form  a forwarded clock output with a create_generated_clock must use the fwd_buffer export form; the
                      legacy tie text (output BTerm joined onto the source tap net) stops TritonCTS with CTS-0114
   macro_tcl          a kit whose sources instantiate a staged LEF macro must stage MACRO_PLACEMENT_TCL (static sites)
+  pin_grid           (KW-FIX-44 11-10, COORD) every io.tcl place_pin that runs along its layer sits on that layer's track
+                     grid, offset included (kit_contract.io_pin_grid; HBM dma vPose2: 2,420 N pins half an M5 track off,
+                     10 M5 shorts at detail route)
+  macro_grid         (KW-FIX-44 11-10, COORD) every static macro origin puts the macro's signal pins on the kit track grid
+                     (kit_contract.macro_pin_grid; S81 P FIRM y 201.96: DRT-0418 / DRT-0073).  Both: OT_GRID_LINT 0 in
+                     config.mk (or the environment) turns them off for one kit; gen_phys snaps macro origins first.
   rtl_check          yosys elaboration with the flow's frontend: hierarchy, undriven and multi-driven nets
                      (`check`, same script as rtl_lint.py, run in the flow image)
   memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
@@ -126,6 +132,31 @@ def clock_export_form(kd):
     hit = [n for n, _ in tied if n in gen or re.sub(r"\[\d+\]$", "", n) in gen] or ([n for n, _ in tied] if gen else [])
     return [f"forwarded clock output {n} uses the tie export form with a create_generated_clock on the port "
             f"(TritonCTS CTS-0114); regenerate with clock.landing_export_form fwd_buffer (the default)" for n in hit], True
+
+
+def _grid_lint_off(kd):
+    cfg = _cfg(kd)
+    return os.environ.get("OT_GRID_LINT") == "0" or (cfg.get("OT_GRID_LINT") or ["1"])[-1] == "0"
+
+
+def pin_grid(kd):
+    if _grid_lint_off(kd):
+        return [], False
+    errors, info = kit_contract.io_pin_grid(kd)
+    if errors:
+        errors = [f"{len(errors)} io.tcl pin(s) off the track grid ({info.get('tracks')} tracks, worst "
+                  f"{info.get('worst_off_nm')} nm): snap them with tools/die_plan/pin_grid_snap.py KIT --write"] + errors
+    return errors, info.get("applies", False)
+
+
+def macro_grid(kd, plan_dir=None):
+    """only the certain class: a placed macro whose signal pins miss the tracks.  A kit whose static sites cannot be read
+    here (rtl_macro_placer, no LEF) is NA: kit_contract reports that as advisory."""
+    if _grid_lint_off(kd):
+        return [], False
+    errors, info = kit_contract.macro_pin_grid(kd, plan_dir)
+    off = [e for e in errors if " off the " in e and e.startswith("macro ")]
+    return off, bool(info.get("applies")) and len(off) == len(errors)
 
 
 def macro_tcl(kd):
@@ -298,6 +329,8 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     put("pins_vs_plan", lambda: pins_vs_plan(kd, plan_dir))
     put("clock_export_form", lambda: clock_export_form(kd))
     put("macro_tcl", lambda: macro_tcl(kd))
+    put("pin_grid", lambda: pin_grid(kd))
+    put("macro_grid", lambda: macro_grid(kd, plan_dir))
     cfg = _cfg(kd)
     if yosys and cfg.get("DESIGN_NAME"):
         res = {}
