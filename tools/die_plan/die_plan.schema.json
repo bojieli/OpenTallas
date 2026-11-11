@@ -5031,6 +5031,57 @@
         },
         "core_glob": {
          "type": "string"
+        },
+        "core": {
+         "oneOf": [
+          {
+           "type": "string",
+           "minLength": 1
+          },
+          {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           },
+           "minItems": 2,
+           "uniqueItems": true
+          }
+         ]
+        },
+        "start_core": {
+         "type": "string",
+         "minLength": 1
+        },
+        "start_port": {
+         "type": "string",
+         "minLength": 1
+        },
+        "start_um": {
+         "type": "array",
+         "minItems": 2,
+         "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+           "type": "number"
+          }
+         }
+        },
+        "leg_order": {
+         "enum": [
+          "normal_first",
+          "along_first"
+         ]
+        },
+        "core_bits": {
+         "type": "array",
+         "items": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "minItems": 1
         }
        }
       }
