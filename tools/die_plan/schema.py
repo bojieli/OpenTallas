@@ -710,6 +710,9 @@ SCHEMA = {
                                            # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
                                            # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
                                            "insertion_ff_ps": _pos,
+                                           # PLAN-GEN-RULES-1 rule A 11-10: where the tap insertion came from (measured
+                                           # view / 12.9d model); documentation only, read by plan_gen_rules.py
+                                           "insertion_basis": {"type": "string"},
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},

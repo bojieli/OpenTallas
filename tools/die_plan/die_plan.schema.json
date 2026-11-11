@@ -2434,6 +2434,9 @@
            "type": "number",
            "exclusiveMinimum": 0
           },
+          "insertion_basis": {
+           "type": "string"
+          },
           "insertion_tol_ps": {
            "type": "number",
            "minimum": 0
