@@ -79,7 +79,8 @@ def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
     tile stays halved only within K gcells of the macro INSTANCE bbox boundary or within K of a macro SIGNAL pin (PG
     excluded; pins_file pins are signal pins). Returns, per bin, the fraction of the macro area under it that is still halved (1 = stock
     image, everywhere under the OBS)."""
-    d = k_gcells * gcell_um
+    # rim = bbox tiles first..first+K (GRT-PATCH-1: interior from first+K+1), the first tile ~half covered
+    d = (k_gcells + 0.5) * gcell_um
     w = np.zeros((g.ny, g.nx))
     b = g.b
     for (x0, y0, x1, y1, h) in mrects:
@@ -90,7 +91,7 @@ def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
         if ix1 > ix0 and iy1 > iy0:
             for (_, px, py) in pins.get(h["inst"], []):
                 if ix0 < px < ix1 and iy0 < py < iy1:      # interior pin: its own K-gcell square is halved
-                    e = d + 0.5 * gcell_um              # Chebyshev K around the pin's own tile
+                    e = d                                # Chebyshev K around the pin's own tile (+ its half tile)
                     sq = coverage(g, [(max(px - e, ix0), max(py - e, iy0), min(px + e, ix1), min(py + e, iy1), h)])
                     band = band + sq[0][0]
         frac = np.where(c > 1e-9, np.clip(band / np.maximum(c, 1e-9), 0, 1), 0.0)
