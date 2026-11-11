@@ -117,7 +117,7 @@ def test_schema_accepts_vsn2_hold_keys():
     for k in ("hop_latch_launch_tap", "reset_follow_clock_tap"):
         sub = S.SCHEMA["properties"]["clock"]["properties"][k]
         assert sub["additionalProperties"] is False
-        assert set(sub["properties"]) == {"types", "note"}
+        assert {"types", "note"} <= set(sub["properties"]) <= {"types", "note", "capture"}
     js = json.loads(pathlib.Path(S.__file__).with_name("die_plan.schema.json").read_text())
     assert js["properties"]["clock"]["properties"]["hop_latch_launch_tap"] == S.SCHEMA["properties"]["clock"]["properties"]["hop_latch_launch_tap"]
     assert js["properties"]["clock"]["properties"]["reset_follow_clock_tap"] == S.SCHEMA["properties"]["clock"]["properties"]["reset_follow_clock_tap"]

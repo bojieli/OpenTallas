@@ -2697,7 +2697,9 @@ def _hop_latch_capture_tap(P, tn=None):
         v = " ".join(env.replace(",", " ").split())
         return None if v in ("", "0", "off") else v
     if hop_latch_launch_tap(P, tn):
-        return None
+        # hybrid (COORD 11-11 00:5x): the type's own capture-tap subset (e.g. u_fl_rst_), launch tap for the rest
+        cfg = (getattr(P, "clock", None) or {}).get("hop_latch_launch_tap") or {}
+        return " ".join(str(cfg.get("capture") or "").split()) or None
     name = str(P.die.get("name") or "").lower()
     for pre, v in HOP_LATCH_CAPTURE_TAP_DEFAULT.items():
         if name.startswith(pre):
@@ -2712,6 +2714,16 @@ def reset_follow_clock_tap(P, tn):
     CTS assignment reset_follow_clock.tcl re-points such sinks to a terminal launched on their own clock net."""
     clock = getattr(P, "clock", None) or {}     # under clock, not reset: the native reset contract stays unchanged
     cfg = clock.get("reset_follow_clock_tap") or {}
+    return tn is not None and tn in set(cfg.get("types") or [])
+
+
+def reset_root_tap(P, tn):
+    """VSN2-HOLD hybrid 11-11 (COORD 00:5x): True when plan clock.reset_root_tap.types lists type tn.  vsN2 bf9c99d599c3
+    FF hold u_rst_in -> u_rrl_38/D -30.32 and -> u_rrl_27/D -15.08: the reset pin register feeds the depth-1 relays
+    directly, on other taps, so the hop carries the whole tap window.  reset_root_tap.tcl (pre-CTS, after
+    clock_taps.tcl) hangs those relays on the root's own tap (shared tap root, CRPR)."""
+    clock = getattr(P, "clock", None) or {}
+    cfg = clock.get("reset_root_tap") or {}
     return tn is not None and tn in set(cfg.get("types") or [])
 
 
@@ -4535,8 +4547,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if reset_follow_clock_tap(P, tn):
             shutil.copyfile(Path(__file__).with_name("reset_follow_clock.tcl"), kd / "reset_follow_clock.tcl")
             rfc = "source /work/reset_follow_clock.tcl\n"
+        # VSN2-HOLD hybrid 11-11 (opt-in plan clock.reset_root_tap): root -> depth-1 relays on one tap, before the
+        # reset terminals are picked; absent = no line and no file.
+        rrt = ""
+        if reset_root_tap(P, tn):
+            shutil.copyfile(Path(__file__).with_name("reset_root_tap.tcl"), kd / "reset_root_tap.tcl")
+            rrt = "source /work/reset_root_tap.tcl\n"
         leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n{port}"
-                      "source /work/reset_taps.tcl\n" + rfc + "unset rt_postplace\n")
+                      + rrt + "source /work/reset_taps.tcl\n" + rfc + "unset rt_postplace\n")
     group_hook = ""
     if grouped["groups"]:
         (kd / "core_clock_groups.json").write_text(json.dumps(grouped, indent=1) + "\n")

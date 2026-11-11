@@ -6135,10 +6135,28 @@
       },
       "note": {
        "type": "string"
+      },
+      "capture": {
+       "type": "string"
       }
      }
     },
     "reset_follow_clock_tap": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "types": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
+    "reset_root_tap": {
      "type": "object",
      "additionalProperties": false,
      "properties": {
