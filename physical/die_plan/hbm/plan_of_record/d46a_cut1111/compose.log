@@ -1,0 +1,51 @@
+== t10 Wed Nov 11 12:03:52 UTC 2026
+delta 0b32b6bae78cb136277019197edcef5f5f5376dbd3bed6215addbdc61c209a9c  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d0_base_sync.json
+delta 76b83a0cf099f8502503a3ba5e848bde4c6cef8b8922ab22c1282272545ff1fb  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d1_channels.json
+delta dde64cb4a704cf0d721954ceadffa51d4f1bd33e3cbbbda23b275e57625b4e08  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d1c_channels_ccd.json
+delta c6808d4e47fdddcb1f223050f95e8e8e3ec2548fdc20f3e3e1b95140351f4b87  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d2_ftres_spu1.json
+delta 7b53425690a624429363fcc44510528fbaf353a02a7d09a469d522e2e4448e1a  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d2b_ftres_mneed.json
+delta e9b41e630ad224b3691739c1e0f105f7c29c71db4b91906a2ad78f4847ac9bc7  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d2c_ftres_postcut.json
+delta ed3f71af0696e84330fce72623960287413a398fbcf4a0714b403a5b8da0fe33  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_vis_NW_io_formh.json
+delta 7cdd738b4ce5b6a9749e8dca326b8fc1550217d93b6a9f1224b0b288ddd82ad7  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4b_stationfix_1111.json
+delta 9f9e9c548f2ce19cd1a5fde44d6b7a06176af59f70b3d60b04bc38751067de7f  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2_q_su10.json
+delta 34ed1e084db20afbad038eb0abc756128bbe71e9abe8e7691043d6b253090ae4  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2_q_su10__physical_v1.json
+delta 09e4fb177ad753af2432eaf4dd5682136ccf8be0cd3f7fedebce82482c78de35  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2_q_su21.json
+delta 2a14d13dfe8cc806ab085c495cae998ebd86f3f3bb4fa399569ca99246597fae  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2_q_su21__physical_v1.json
+delta 7bab0fc66069928ae9e50be9949f2243e64c4e5a86b8269e21f193b052df6f36  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2lift_q_spt0.json
+delta 14f051b7e25e2032860e5db394f48f3d49fa58ea6f8301d49afb09f6e37dcdc6  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cpl2lift_q_spt0__physical_v1.json
+delta 589a5885f1d3fdfc00eea7fc95ae9cd333698b095f2a0a26563becef0617cbd5  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cplb1_q_b101.json
+delta 8295902c9975a264e886e98f89fd040c65d61d556f6748b8eefab436102d2bb8  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d4_adopt_cplb1_q_b101_nw.json
+delta b5ed1df7e0eded5c47d38a04801f8d569068c21a2b1a049cb2a43aede0421376  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d5_phy_cores.json
+conflicts rc 0
+overlap 16 identical 1 settled 15 open 0
+applied base_sync {"compiler_core_delta_postcut.json": {"raw": "set"}}
+applied channels_rev3 {"cc_merge.py": {"raw": "set"}, "cc_picks.json": {"raw": "set"}, "ccd_pending.py": {"raw": "set"}, "channels_1111_event.json": {"raw": "set"}, "clock_entries.json": {"ops": 16, "changed_leaf_paths": 16, "noop_ops": 0, "sha256": "603711cc2dbd22e073e1f89d381cde284e759829a8928d838
+applied channels_rev3_ccd {"compiler_core_delta.json": {"ops": 1, "changed_leaf_paths": 1, "noop_ops": 0, "sha256": "f6369f8eb7af01784f38cabd38c83619406cdc5474b2040735cd4d6ce218517e"}}
+applied ftres_spu1 {"README_SPU1.txt": {"raw": "set"}, "die_plan.json": {"ops": 8, "changed_leaf_paths": 8, "noop_ops": 0, "sha256": "d4e4a132edd7166694a9d2f3f519aded1e2bb9c4ab294fe42964a4990d2313a3"}, "mk_plan_spu1.py": {"raw": "set"}, "pin_access.txt": {"raw": "set"}, "spu1_event.json": {"raw": "s
+applied ftres_mneed {"die_plan.json": {"ops": 68, "changed_leaf_paths": 68, "noop_ops": 0, "sha256": "21c98775d24602093465ba4ec131914ea3066dfa756afc39c5db23f921a880a3"}}
+applied ftres_postcut {"die_plan.json": {"ops": 22, "changed_leaf_paths": 22, "noop_ops": 0, "sha256": "25f3f44ea7ae94d8dbeb8ab538dfee2ba1882f2e5c21455fe36be51facac01e8"}}
+applied adopt_vis_NW_io_formh {"die_plan.json": {"ops": 283, "changed_leaf_paths": 283, "noop_ops": 0, "sha256": "22e59b498b7b0ed6bda297353aa1548e3988d9beb98cb20ddef562d18bec9eec"}}
+applied stationfix_1111 {"die_plan.json": {"ops": 158, "changed_leaf_paths": 158, "noop_ops": 0, "sha256": "9660eadaf79dfe40f87b959ad5b07db3331f2c7c8c00d4e6442b6ad7900aec51"}}
+applied adopt_cpl2_q_su10 {"die_plan.json": {"ops": 12, "changed_leaf_paths": 12, "noop_ops": 0, "sha256": "e3f61e24224bd7f0ec175832266bf217753a603f598068f0016a8f5cdd59033f"}}
+applied adopt_cpl2_q_su10__physical_v1 {"die_plan.json": {"ops": 5, "changed_leaf_paths": 5, "noop_ops": 0, "sha256": "2bb42a2a1d8f31bfee225fde79bff09e726fd8fb551a0d2d3985cd5aa7d9d419"}}
+applied adopt_cpl2_q_su21 {"die_plan.json": {"ops": 47, "changed_leaf_paths": 47, "noop_ops": 0, "sha256": "96e2b581aae479a1bb624f56f1975b6fdc27325a128058409c4e1789c32c75e4"}}
+applied adopt_cpl2_q_su21__physical_v1 {"die_plan.json": {"ops": 32, "changed_leaf_paths": 32, "noop_ops": 0, "sha256": "c1f4cb29be980a7936ea032e4cf8a2e553087f07e3f6e75037f1b066226b0fa3"}}
+applied adopt_cpl2lift_q_spt0 {"die_plan.json": {"ops": 373, "changed_leaf_paths": 373, "noop_ops": 0, "sha256": "2aeb7fa980b065ee6759beb4c302212b7495da669e166d6ee35b3d0c61e4d4ce"}}
+applied adopt_cpl2lift_q_spt0__physical_v1 {"die_plan.json": {"ops": 373, "changed_leaf_paths": 373, "noop_ops": 0, "sha256": "441be80804b9f9f46c4ca461c3a394e350d2094c97e9fbdd7e84e2ec6a3bb8af"}}
+applied cplb1_q_b101 {"die_plan.json": {"ops": 72, "changed_leaf_paths": 72, "noop_ops": 0, "sha256": "ed6b9e57e06405bffd69bcf9768479f40fc0a56c9abf8a4d37ff457a915694d5"}}
+applied cplb1_q_b101_nw {"die_plan.json": {"ops": 72, "changed_leaf_paths": 72, "noop_ops": 0, "sha256": "b0a41d0e577d8d6f30f530a21c389107b732f5ea703260a62d4975df961b8afc"}}
+applied phy_cores_kvform {"die_plan.json": {"ops": 3, "changed_leaf_paths": 3, "noop_ops": 0, "sha256": "e6bb764f1f229d28d70cbebbc68977ce68a68207640f30fa5bd5dd72a1729f91"}}
+e6bb764f1f229d28d70cbebbc68977ce68a68207640f30fa5bd5dd72a1729f91  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t10/die_plan.json
+f6369f8eb7af01784f38cabd38c83619406cdc5474b2040735cd4d6ce218517e  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t10/compiler_core_delta.json
+163da56aad47fe396a82bf7ec967a33052b07490b6ad16fb91a704bcc45b176b  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t10/core_conns.json
+{'notes': 995, 'ft_bands_windows': 5256, 'positions_orients': 395, 'clock': 222, 'type_split': 5, 'outline': 4, 'other': 26, 'reset': 3} types 46 removed ['q_mcb'] added ['q_mcb_ne', 'q_mcb_nw']
+== G0
+{"base_errors": 639, "new_errors": 624, "base_warnings": 1440, "new_warnings": 1571, "err_findings_base": 639, "err_findings_new": 624, "new_err": 0, "lost_err": 15}
+== route_supply WORSE
+WORSE [["NE_io", 1.403, 1.792, 1.403, 1.792], ["PHY_NC", 0.194, 0.194, 0.0, 0.083], ["PHY_NE", 0.194, 0.194, 0.0, 0.083], ["PHY_NW", 0.194, 0.194, 0.0, 0.083], ["q_hub_ne", 11.443, 12.028, 11.443, 12.028], ["q_spt0", 3.015, 3.136, 0.702, 0.313], ["q_spt0__physical_v1", 3.207, 3.344, 0.749, 0.314], ["root", 7.741, 7.84, 4.917, 4.917]]
+== stscan (type base_phantom new_phantom base_miss405 new_miss405)
+q_b101 stations 1421 -> 12 phantom 1370 -> 0 miss>405 0 -> 0 misattr 0 -> 12
+q_b101_nw stations 1421 -> 11 phantom 1370 -> 0 miss>405 0 -> 0 misattr 0 -> 11
+q_mcb_ne stations 0 -> 0 phantom 0 -> 0 miss>405 0 -> 0 misattr 0 -> 0
+q_mcb_nw stations 0 -> 0 phantom 0 -> 0 miss>405 0 -> 0 misattr 0 -> 0
+PIPE_DONE

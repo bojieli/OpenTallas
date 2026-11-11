@@ -1,0 +1,9175 @@
+{
+ "NE_io": {
+  "u_ep_N2": {
+   "fault": [
+    "bus:L126_o"
+   ],
+   "phy_up": [
+    "bus:L126_o"
+   ],
+   "rx_arm_bank": [
+    "bus:L101_i"
+   ],
+   "rx_arm_v": [
+    "bus:L101_i"
+   ],
+   "rx_block_words": [
+    "bus:L101_i"
+   ],
+   "rx_pin_flit": [
+    "bus:L126_o",
+    "bus:L52_o"
+   ],
+   "rx_pin_v": [
+    "bus:L52_o"
+   ],
+   "rx_release_bank": [
+    "bus:L101_i"
+   ],
+   "rx_release_v": [
+    "bus:L101_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L101_i"
+   ],
+   "rx_slot_index": [
+    "bus:L101_i"
+   ],
+   "rx_slot_v": [
+    "bus:L101_i"
+   ],
+   "tx_frame": [
+    "bus:L101_i",
+    "bus:L51_i"
+   ],
+   "tx_v": [
+    "bus:L51_i"
+   ]
+  },
+  "u_lk_N2__chn": {},
+  "u_lk_N2__rx__bm0": {},
+  "u_lk_N2__rx__bm1": {},
+  "u_lk_N2__rx__bm2": {},
+  "u_lk_N2__rx__rest": {},
+  "u_lk_N2__tx": {}
+ },
+ "NW_io": {
+  "u_ep_N0": {
+   "fault": [
+    "bus:L126_o"
+   ],
+   "h_tx_frame": [
+    "core:u_host_ep.vc_tx_frame"
+   ],
+   "h_tx_v": [
+    "core:u_host_ep.vc_tx_v"
+   ],
+   "phy_up": [
+    "bus:L126_o"
+   ],
+   "rx_arm_bank": [
+    "bus:L101_i"
+   ],
+   "rx_arm_v": [
+    "bus:L101_i"
+   ],
+   "rx_block_words": [
+    "bus:L101_i"
+   ],
+   "rx_pin_flit": [
+    "bus:L126_o",
+    "bus:L52_o"
+   ],
+   "rx_pin_v": [
+    "bus:L52_o"
+   ],
+   "rx_release_bank": [
+    "bus:L101_i"
+   ],
+   "rx_release_v": [
+    "bus:L101_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L101_i"
+   ],
+   "rx_slot_index": [
+    "bus:L101_i"
+   ],
+   "rx_slot_v": [
+    "bus:L101_i"
+   ],
+   "tx_frame": [
+    "bus:L101_i",
+    "bus:L51_i"
+   ],
+   "tx_v": [
+    "bus:L51_i"
+   ]
+  },
+  "u_host_ep": {
+   "rx_arm_bank": [
+    "bus:L8008_i"
+   ],
+   "rx_arm_v": [
+    "bus:L8008_i"
+   ],
+   "rx_block_words": [
+    "bus:L8008_i"
+   ],
+   "rx_release_bank": [
+    "bus:L8008_i"
+   ],
+   "rx_release_v": [
+    "bus:L8008_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L8008_i"
+   ],
+   "rx_slot_index": [
+    "bus:L8008_i"
+   ],
+   "rx_slot_v": [
+    "bus:L8008_i"
+   ],
+   "tx_frame": [
+    "bus:L8008_i"
+   ],
+   "tx_v": [
+    "bus:L8008_i"
+   ],
+   "vc_cause": [
+    "core:u_ep_N0.h_cause"
+   ],
+   "vc_rx_frame": [
+    "core:u_ep_N0.h_rx_frame"
+   ],
+   "vc_rx_v": [
+    "core:u_ep_N0.h_rx_v"
+   ],
+   "vc_up": [
+    "core:u_ep_N0.h_up"
+   ]
+  },
+  "u_lk_N0__chn": {},
+  "u_lk_N0__rx__bm0": {},
+  "u_lk_N0__rx__bm1": {},
+  "u_lk_N0__rx__bm2": {},
+  "u_lk_N0__rx__rest": {},
+  "u_lk_N0__tx": {}
+ },
+ "q_b000": {
+  "u_hb_idx__s_Q2_r0c0_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k0h1": {},
+  "u_hb_idx__s_Q2_r0c0_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k1h1": {},
+  "u_hb_idx__s_Q2_r0c0_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k2h1": {},
+  "u_hb_idx__s_Q2_r0c0_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k3h0__rb": {},
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b000__physical_v1": {
+  "u_hb_idx__s_Q2_r0c0_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k0h1": {},
+  "u_hb_idx__s_Q2_r0c0_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k1h1": {},
+  "u_hb_idx__s_Q2_r0c0_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c0_k2h1": {},
+  "u_hb_idx__s_Q2_r0c0_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c0_k3h0__rb": {},
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q0.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q0.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b001": {
+  "u_hb_idx__s_Q2_r0c3_k2h1": {},
+  "u_hb_idx__s_Q2_r0c3_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k3h1": {},
+  "u_hb_idx__s_Q2_r1c0_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k0h1": {},
+  "u_hb_idx__s_Q2_r1c0_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k1h1": {},
+  "u_hb_idx__s_Q2_r1c0_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k2h1": {},
+  "u_hb_idx__s_Q2_r1c0_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k3h1": {},
+  "u_hb_idx__s_Q2_r1c1_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k0h1": {},
+  "u_hb_idx__s_Q2_r1c1_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k1h1": {},
+  "u_hb_idx__s_Q2_r1c1_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k2h1": {},
+  "u_hb_idx__s_Q2_r1c1_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k3h1": {},
+  "u_hb_idx__s_Q2_r1c2_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k0h1": {},
+  "u_hb_idx__s_Q2_r1c2_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k1h1": {},
+  "u_hb_idx__s_Q2_r1c2_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k2h1": {},
+  "u_hb_idx__s_Q2_r1c2_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k3h1": {},
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b001__physical_v1": {
+  "u_hb_idx__s_Q2_r0c3_k2h1": {},
+  "u_hb_idx__s_Q2_r0c3_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k3h1": {},
+  "u_hb_idx__s_Q2_r1c0_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k0h1": {},
+  "u_hb_idx__s_Q2_r1c0_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k1h1": {},
+  "u_hb_idx__s_Q2_r1c0_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k2h1": {},
+  "u_hb_idx__s_Q2_r1c0_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c0_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c0_k3h1": {},
+  "u_hb_idx__s_Q2_r1c1_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k0h1": {},
+  "u_hb_idx__s_Q2_r1c1_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k1h1": {},
+  "u_hb_idx__s_Q2_r1c1_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k2h1": {},
+  "u_hb_idx__s_Q2_r1c1_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c1_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c1_k3h1": {},
+  "u_hb_idx__s_Q2_r1c2_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k0h1": {},
+  "u_hb_idx__s_Q2_r1c2_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k1h1": {},
+  "u_hb_idx__s_Q2_r1c2_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k2h1": {},
+  "u_hb_idx__s_Q2_r1c2_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c2_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r1c2_k3h1": {},
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q1.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b002": {
+  "u_hb_idx__s_Q2_r1c3_k3h1": {},
+  "u_hb_idx__s_Q2_tail0": {},
+  "u_hb_idx__s_Q2_tail1": {},
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair0": {},
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair7": {
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  }
+ },
+ "q_b002__physical_v1": {
+  "u_hb_idx__s_Q2_r1c3_k3h1": {},
+  "u_hb_idx__s_Q2_tail0": {},
+  "u_hb_idx__s_Q2_tail1": {},
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair0": {},
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q2.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  },
+  "u_hcb_Q2.ot_hbm_hc_bank128_pair7": {
+   "sum_in": [
+    "bus:L15_i"
+   ],
+   "sum_out": [
+    "bus:L10_o"
+   ]
+  }
+ },
+ "q_b003": {
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b003__physical_v1": {
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q3.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q3.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b010": {
+  "u_hb_idx__s_Q2_r0c0_k3h1": {},
+  "u_hb_idx__s_Q2_r0c1_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k0h1": {},
+  "u_hb_idx__s_Q2_r0c1_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k1h1": {},
+  "u_hb_idx__s_Q2_r0c1_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k2h1": {},
+  "u_hb_idx__s_Q2_r0c1_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k3h1": {},
+  "u_hb_idx__s_Q2_r0c2_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k0h1": {},
+  "u_hb_idx__s_Q2_r0c2_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k1h1": {},
+  "u_hb_idx__s_Q2_r0c2_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k2h1": {},
+  "u_hb_idx__s_Q2_r0c2_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k3h1": {},
+  "u_hb_idx__s_Q2_r0c3_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k0h1": {},
+  "u_hb_idx__s_Q2_r0c3_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k1h1": {},
+  "u_hb_idx__s_Q2_r0c3_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k2h0__rb": {},
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b010__physical_v1": {
+  "u_hb_idx__s_Q2_r0c0_k3h1": {},
+  "u_hb_idx__s_Q2_r0c1_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k0h1": {},
+  "u_hb_idx__s_Q2_r0c1_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k1h1": {},
+  "u_hb_idx__s_Q2_r0c1_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k2h1": {},
+  "u_hb_idx__s_Q2_r0c1_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c1_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c1_k3h1": {},
+  "u_hb_idx__s_Q2_r0c2_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k0h1": {},
+  "u_hb_idx__s_Q2_r0c2_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k1h1": {},
+  "u_hb_idx__s_Q2_r0c2_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k2h1": {},
+  "u_hb_idx__s_Q2_r0c2_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r0c2_k3h0__rb": {},
+  "u_hb_idx__s_Q2_r0c2_k3h1": {},
+  "u_hb_idx__s_Q2_r0c3_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k0h1": {},
+  "u_hb_idx__s_Q2_r0c3_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r0c3_k1h1": {},
+  "u_hb_idx__s_Q2_r0c3_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r0c3_k2h0__rb": {},
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q7.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q7.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b011": {
+  "u_hb_idx__s_Q2_r1c3_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k0h1": {},
+  "u_hb_idx__s_Q2_r1c3_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k1h1": {},
+  "u_hb_idx__s_Q2_r1c3_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k2h1": {},
+  "u_hb_idx__s_Q2_r1c3_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k3h0__rb": {},
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair0": {},
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair7": {
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  }
+ },
+ "q_b011__physical_v1": {
+  "u_hb_idx__s_Q2_r1c3_k0h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k0h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k0h1": {},
+  "u_hb_idx__s_Q2_r1c3_k1h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k1h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k1h1": {},
+  "u_hb_idx__s_Q2_r1c3_k2h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k2h0__rb": {},
+  "u_hb_idx__s_Q2_r1c3_k2h1": {},
+  "u_hb_idx__s_Q2_r1c3_k3h0__ra": {},
+  "u_hb_idx__s_Q2_r1c3_k3h0__rb": {},
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair0": {},
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q6.ot_hbm_hc_bank128_pair7.rst_n"
+   ],
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  },
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair7": {
+   "sum_in": [
+    "bus:L17_i"
+   ],
+   "sum_out": [
+    "bus:L11_o"
+   ]
+  }
+ },
+ "q_b012": {
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b012__physical_v1": {
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q5.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q5.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b013": {
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b013__physical_v1": {
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair0": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair1": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair2": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair3": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair4": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair5": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair6": {
+   "rst_n": [
+    "core:u_hcb_Q4.ot_hbm_hc_bank128_pair7.rst_n"
+   ]
+  },
+  "u_hcb_Q4.ot_hbm_hc_bank128_pair7": {}
+ },
+ "q_b100": {
+  "u_hb_idx__s_Q_r0c0_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k0h1": {},
+  "u_hb_idx__s_Q_r0c0_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k1h1": {},
+  "u_hb_idx__s_Q_r0c0_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k2h1": {},
+  "u_hb_idx__s_Q_r0c0_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k3h1": {},
+  "u_hb_idx__s_Q_r0c1_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k0h1": {},
+  "u_hb_idx__s_Q_r0c1_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k1h1": {},
+  "u_hb_idx__s_Q_r0c1_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k2h1": {},
+  "u_hb_idx__s_Q_r0c1_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k3h1": {}
+ },
+ "q_b100__physical_v1": {
+  "u_hb_idx__s_Q_r0c0_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k0h1": {},
+  "u_hb_idx__s_Q_r0c0_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k1h1": {},
+  "u_hb_idx__s_Q_r0c0_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k2h1": {},
+  "u_hb_idx__s_Q_r0c0_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c0_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c0_k3h1": {},
+  "u_hb_idx__s_Q_r0c1_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k0h1": {},
+  "u_hb_idx__s_Q_r0c1_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k1h1": {},
+  "u_hb_idx__s_Q_r0c1_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k2h1": {},
+  "u_hb_idx__s_Q_r0c1_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c1_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c1_k3h1": {}
+ },
+ "q_b101": {
+  "u_hb_idx__s_Q_r0c2_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k0h1": {},
+  "u_hb_idx__s_Q_r0c2_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k1h1": {},
+  "u_hb_idx__s_Q_r0c2_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k2h1": {},
+  "u_hb_idx__s_Q_r0c2_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k3h1": {},
+  "u_hb_idx__s_Q_r0c3_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k0h1": {},
+  "u_hb_idx__s_Q_r0c3_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k1h1": {},
+  "u_hb_idx__s_Q_r0c3_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k2h1": {},
+  "u_hb_idx__s_Q_r0c3_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k3h1": {},
+  "u_hb_idx__s_Q_tail0": {}
+ },
+ "q_b101_nw": {
+  "u_hb_idx__s_Q_r0c2_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k0h1": {},
+  "u_hb_idx__s_Q_r0c2_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k1h1": {},
+  "u_hb_idx__s_Q_r0c2_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k2h1": {},
+  "u_hb_idx__s_Q_r0c2_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c2_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c2_k3h1": {},
+  "u_hb_idx__s_Q_r0c3_k0h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k0h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k0h1": {},
+  "u_hb_idx__s_Q_r0c3_k1h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k1h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k1h1": {},
+  "u_hb_idx__s_Q_r0c3_k2h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k2h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k2h1": {},
+  "u_hb_idx__s_Q_r0c3_k3h0__ra": {},
+  "u_hb_idx__s_Q_r0c3_k3h0__rb": {},
+  "u_hb_idx__s_Q_r0c3_k3h1": {},
+  "u_hb_idx__s_Q_tail0": {}
+ },
+ "q_b102": {
+  "u_hb_idx__s_Q_r1c0_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k0h1": {},
+  "u_hb_idx__s_Q_r1c0_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k1h1": {},
+  "u_hb_idx__s_Q_r1c0_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k2h1": {},
+  "u_hb_idx__s_Q_r1c0_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k3h1": {},
+  "u_hb_idx__s_Q_r1c1_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k0h1": {},
+  "u_hb_idx__s_Q_r1c1_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k1h1": {},
+  "u_hb_idx__s_Q_r1c1_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k2h1": {},
+  "u_hb_idx__s_Q_r1c1_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k3h1": {}
+ },
+ "q_b102__physical_v1": {
+  "u_hb_idx__s_Q_r1c0_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k0h1": {},
+  "u_hb_idx__s_Q_r1c0_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k1h1": {},
+  "u_hb_idx__s_Q_r1c0_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k2h1": {},
+  "u_hb_idx__s_Q_r1c0_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c0_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c0_k3h1": {},
+  "u_hb_idx__s_Q_r1c1_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k0h1": {},
+  "u_hb_idx__s_Q_r1c1_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k1h1": {},
+  "u_hb_idx__s_Q_r1c1_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k2h1": {},
+  "u_hb_idx__s_Q_r1c1_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c1_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c1_k3h1": {}
+ },
+ "q_b103": {
+  "u_hb_idx__s_Q_r1c2_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k0h1": {},
+  "u_hb_idx__s_Q_r1c2_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k1h1": {},
+  "u_hb_idx__s_Q_r1c2_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k2h1": {},
+  "u_hb_idx__s_Q_r1c2_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k3h1": {},
+  "u_hb_idx__s_Q_r1c3_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k0h1": {},
+  "u_hb_idx__s_Q_r1c3_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k1h1": {},
+  "u_hb_idx__s_Q_r1c3_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k2h1": {},
+  "u_hb_idx__s_Q_r1c3_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k3h1": {},
+  "u_hb_idx__s_Q_tail1": {}
+ },
+ "q_b103__physical_v1": {
+  "u_hb_idx__s_Q_r1c2_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k0h1": {},
+  "u_hb_idx__s_Q_r1c2_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k1h1": {},
+  "u_hb_idx__s_Q_r1c2_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k2h1": {},
+  "u_hb_idx__s_Q_r1c2_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c2_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c2_k3h1": {},
+  "u_hb_idx__s_Q_r1c3_k0h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k0h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k0h1": {},
+  "u_hb_idx__s_Q_r1c3_k1h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k1h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k1h1": {},
+  "u_hb_idx__s_Q_r1c3_k2h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k2h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k2h1": {},
+  "u_hb_idx__s_Q_r1c3_k3h0__ra": {},
+  "u_hb_idx__s_Q_r1c3_k3h0__rb": {},
+  "u_hb_idx__s_Q_r1c3_k3h1": {},
+  "u_hb_idx__s_Q_tail1": {}
+ },
+ "q_b110": {
+  "u_sfucore_Q_lane0__bk": {},
+  "u_sfucore_Q_lane0__ex": {},
+  "u_sfucore_Q_lane0__fr": {},
+  "u_sfucore_Q_lane1__bk": {},
+  "u_sfucore_Q_lane1__ex": {},
+  "u_sfucore_Q_lane1__fr": {},
+  "u_sfucore_Q_lane2__bk": {},
+  "u_sfucore_Q_lane2__ex": {},
+  "u_sfucore_Q_lane2__fr": {},
+  "u_sfucore_Q_lane3__bk": {},
+  "u_sfucore_Q_lane3__ex": {},
+  "u_sfucore_Q_lane3__fr": {}
+ },
+ "q_b110__physical_v1": {
+  "u_sfucore_Q_lane0__bk": {},
+  "u_sfucore_Q_lane0__ex": {},
+  "u_sfucore_Q_lane0__fr": {},
+  "u_sfucore_Q_lane1__bk": {},
+  "u_sfucore_Q_lane1__ex": {},
+  "u_sfucore_Q_lane1__fr": {},
+  "u_sfucore_Q_lane2__bk": {},
+  "u_sfucore_Q_lane2__ex": {},
+  "u_sfucore_Q_lane2__fr": {},
+  "u_sfucore_Q_lane3__bk": {},
+  "u_sfucore_Q_lane3__ex": {},
+  "u_sfucore_Q_lane3__fr": {}
+ },
+ "q_b111": {
+  "u_sfucore_Q_lane4__bk": {},
+  "u_sfucore_Q_lane4__ex": {},
+  "u_sfucore_Q_lane4__fr": {},
+  "u_sfucore_Q_lane5__bk": {},
+  "u_sfucore_Q_lane5__ex": {},
+  "u_sfucore_Q_lane5__fr": {},
+  "u_sfucore_Q_lane6__bk": {},
+  "u_sfucore_Q_lane6__ex": {},
+  "u_sfucore_Q_lane6__fr": {},
+  "u_sfucore_Q_lane7__bk": {},
+  "u_sfucore_Q_lane7__ex": {},
+  "u_sfucore_Q_lane7__fr": {},
+  "u_sfucore_Q_lane8__bk": {},
+  "u_sfucore_Q_lane8__ex": {},
+  "u_sfucore_Q_lane8__fr": {}
+ },
+ "q_b111__physical_v1": {
+  "u_sfucore_Q_lane4__bk": {},
+  "u_sfucore_Q_lane4__ex": {},
+  "u_sfucore_Q_lane4__fr": {},
+  "u_sfucore_Q_lane5__bk": {},
+  "u_sfucore_Q_lane5__ex": {},
+  "u_sfucore_Q_lane5__fr": {},
+  "u_sfucore_Q_lane6__bk": {},
+  "u_sfucore_Q_lane6__ex": {},
+  "u_sfucore_Q_lane6__fr": {},
+  "u_sfucore_Q_lane7__bk": {},
+  "u_sfucore_Q_lane7__ex": {},
+  "u_sfucore_Q_lane7__fr": {},
+  "u_sfucore_Q_lane8__bk": {},
+  "u_sfucore_Q_lane8__ex": {},
+  "u_sfucore_Q_lane8__fr": {}
+ },
+ "q_b112": {
+  "u_sfucore_Q_lane10__bk": {},
+  "u_sfucore_Q_lane10__ex": {},
+  "u_sfucore_Q_lane10__fr": {},
+  "u_sfucore_Q_lane11__bk": {},
+  "u_sfucore_Q_lane11__ex": {},
+  "u_sfucore_Q_lane11__fr": {},
+  "u_sfucore_Q_lane12__bk": {},
+  "u_sfucore_Q_lane12__ex": {},
+  "u_sfucore_Q_lane12__fr": {},
+  "u_sfucore_Q_lane13__bk": {},
+  "u_sfucore_Q_lane13__ex": {},
+  "u_sfucore_Q_lane13__fr": {},
+  "u_sfucore_Q_lane9__bk": {},
+  "u_sfucore_Q_lane9__ex": {},
+  "u_sfucore_Q_lane9__fr": {}
+ },
+ "q_b112__physical_v1": {
+  "u_sfucore_Q_lane10__bk": {},
+  "u_sfucore_Q_lane10__ex": {},
+  "u_sfucore_Q_lane10__fr": {},
+  "u_sfucore_Q_lane11__bk": {},
+  "u_sfucore_Q_lane11__ex": {},
+  "u_sfucore_Q_lane11__fr": {},
+  "u_sfucore_Q_lane12__bk": {},
+  "u_sfucore_Q_lane12__ex": {},
+  "u_sfucore_Q_lane12__fr": {},
+  "u_sfucore_Q_lane13__bk": {},
+  "u_sfucore_Q_lane13__ex": {},
+  "u_sfucore_Q_lane13__fr": {},
+  "u_sfucore_Q_lane9__bk": {},
+  "u_sfucore_Q_lane9__ex": {},
+  "u_sfucore_Q_lane9__fr": {}
+ },
+ "q_b113": {
+  "u_sfucore_Q_ctl__pipe": {},
+  "u_sfucore_Q_ctl__rest": {},
+  "u_sfucore_Q_lane14__bk": {},
+  "u_sfucore_Q_lane14__ex": {},
+  "u_sfucore_Q_lane14__fr": {},
+  "u_sfucore_Q_lane15__bk": {},
+  "u_sfucore_Q_lane15__ex": {},
+  "u_sfucore_Q_lane15__fr": {},
+  "u_sfucore_Q_opstore_a__g0": {},
+  "u_sfucore_Q_opstore_a__g1": {},
+  "u_sfucore_Q_opstore_a__r": {},
+  "u_sfucore_Q_opstore_b__g0": {},
+  "u_sfucore_Q_opstore_b__g1": {},
+  "u_sfucore_Q_opstore_b__o": {},
+  "u_sfup_Q__q1": {}
+ },
+ "q_b113__physical_v1": {
+  "u_sfucore_Q_ctl__pipe": {},
+  "u_sfucore_Q_ctl__rest": {},
+  "u_sfucore_Q_lane14__bk": {},
+  "u_sfucore_Q_lane14__ex": {},
+  "u_sfucore_Q_lane14__fr": {},
+  "u_sfucore_Q_lane15__bk": {},
+  "u_sfucore_Q_lane15__ex": {},
+  "u_sfucore_Q_lane15__fr": {},
+  "u_sfucore_Q_opstore_a__g0": {},
+  "u_sfucore_Q_opstore_a__g1": {},
+  "u_sfucore_Q_opstore_a__r": {},
+  "u_sfucore_Q_opstore_b__g0": {},
+  "u_sfucore_Q_opstore_b__g1": {},
+  "u_sfucore_Q_opstore_b__o": {},
+  "u_sfup_Q__q1": {}
+ },
+ "q_hub_ne": {
+  "u_calendar_Q__q0": {},
+  "u_calendar_Q__q1": {},
+  "u_cij_Q__q0": {},
+  "u_cij_Q__q1": {},
+  "u_ctl_Q_p00": {
+   "col_bank": [
+    "bus:L63_o"
+   ],
+   "col_col": [
+    "bus:L63_o"
+   ],
+   "col_data": [
+    "bus:L63_o",
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p01": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p02": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p03": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p04": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p05": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102m_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p06": {
+   "col_bank": [
+    "bus:L63w_o"
+   ],
+   "col_col": [
+    "bus:L63w_o"
+   ],
+   "col_data": [
+    "bus:L63w_o",
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L114w_i",
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p07": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p08": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p09": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p10": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p11": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p12": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p13": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p14": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p15": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_cxij_Q_q__q0": {},
+  "u_cxij_Q_q__q1": {},
+  "u_hb_coll_Q_body_n2__q0__q": {},
+  "u_hb_coll_Q_body_n2__q0__r": {},
+  "u_hb_coll_Q_reduce__q0": {},
+  "u_hb_coll_Q_ring_ag__q0": {},
+  "u_hb_coll_Q_vm__q0": {},
+  "u_hb_dbk_Q__q0": {},
+  "u_hb_dbk_Q__q1": {},
+  "u_hb_idx__op_Q__q0": {},
+  "u_hb_idx__op_Q__q1": {},
+  "u_hb_idx__q_Q__q0": {},
+  "u_hb_idx__q_Q__q1": {},
+  "u_hb_idx__qctl_Q__q0": {},
+  "u_hb_idx__qctl_Q__q1": {},
+  "u_hb_vms_Q__q0": {},
+  "u_hb_vms_Q__q1": {},
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "bus:L42_o",
+    "bus:L43_o",
+    "bus:L65_o",
+    "bus:L73_o"
+   ]
+  },
+  "u_hcollgi_Q__q0__a0": {},
+  "u_hcollgi_Q__q0__a1": {},
+  "u_hcollgi_Q__q0__i": {},
+  "u_hcollgi_Q__q1__a0": {},
+  "u_hcollgi_Q__q1__a1": {},
+  "u_hcollgi_Q__q1__i": {},
+  "u_hcollgl_Q__q0": {},
+  "u_hcollgl_Q__q1": {},
+  "u_mu_fused_0__c": {},
+  "u_mu_fused_0__p0": {},
+  "u_mu_fused_0__p1": {},
+  "u_mu_fused_0__p2": {},
+  "u_mu_fused_0__p3": {},
+  "u_mu_fused_10__c": {},
+  "u_mu_fused_10__p0": {},
+  "u_mu_fused_10__p1": {},
+  "u_mu_fused_10__p2": {},
+  "u_mu_fused_10__p3": {},
+  "u_mu_fused_11__c": {},
+  "u_mu_fused_11__p0": {},
+  "u_mu_fused_11__p1": {},
+  "u_mu_fused_11__p2": {},
+  "u_mu_fused_11__p3": {},
+  "u_mu_fused_12__c": {},
+  "u_mu_fused_12__p0": {},
+  "u_mu_fused_12__p1": {},
+  "u_mu_fused_12__p2": {},
+  "u_mu_fused_12__p3": {},
+  "u_mu_fused_13__c": {},
+  "u_mu_fused_13__p0": {},
+  "u_mu_fused_13__p1": {},
+  "u_mu_fused_13__p2": {},
+  "u_mu_fused_13__p3": {},
+  "u_mu_fused_14__c": {},
+  "u_mu_fused_14__p0": {},
+  "u_mu_fused_14__p1": {},
+  "u_mu_fused_14__p2": {},
+  "u_mu_fused_14__p3": {},
+  "u_mu_fused_15__c": {},
+  "u_mu_fused_15__p0": {},
+  "u_mu_fused_15__p1": {},
+  "u_mu_fused_15__p2": {},
+  "u_mu_fused_15__p3": {},
+  "u_mu_fused_1__c": {},
+  "u_mu_fused_1__p0": {},
+  "u_mu_fused_1__p1": {},
+  "u_mu_fused_1__p2": {},
+  "u_mu_fused_1__p3": {},
+  "u_mu_fused_2__c": {},
+  "u_mu_fused_2__p0": {},
+  "u_mu_fused_2__p1": {},
+  "u_mu_fused_2__p2": {},
+  "u_mu_fused_2__p3": {},
+  "u_mu_fused_3__c": {},
+  "u_mu_fused_3__p0": {},
+  "u_mu_fused_3__p1": {},
+  "u_mu_fused_3__p2": {},
+  "u_mu_fused_3__p3": {},
+  "u_mu_fused_4__c": {},
+  "u_mu_fused_4__p0": {},
+  "u_mu_fused_4__p1": {},
+  "u_mu_fused_4__p2": {},
+  "u_mu_fused_4__p3": {},
+  "u_mu_fused_5__c": {},
+  "u_mu_fused_5__p0": {},
+  "u_mu_fused_5__p1": {},
+  "u_mu_fused_5__p2": {},
+  "u_mu_fused_5__p3": {},
+  "u_mu_fused_6__c": {},
+  "u_mu_fused_6__p0": {},
+  "u_mu_fused_6__p1": {},
+  "u_mu_fused_6__p2": {},
+  "u_mu_fused_6__p3": {},
+  "u_mu_fused_7__c": {},
+  "u_mu_fused_7__p0": {},
+  "u_mu_fused_7__p1": {},
+  "u_mu_fused_7__p2": {},
+  "u_mu_fused_7__p3": {},
+  "u_mu_fused_8__c": {},
+  "u_mu_fused_8__p0": {},
+  "u_mu_fused_8__p1": {},
+  "u_mu_fused_8__p2": {},
+  "u_mu_fused_8__p3": {},
+  "u_mu_fused_9__c": {},
+  "u_mu_fused_9__p0": {},
+  "u_mu_fused_9__p1": {},
+  "u_mu_fused_9__p2": {},
+  "u_mu_fused_9__p3": {},
+  "u_mu_fused_n1_q0_0": {
+   "dn": [
+    "core:u_mu_fused_n2L_q0.da"
+   ]
+  },
+  "u_mu_fused_n1_q0_1": {
+   "dn": [
+    "core:u_mu_fused_n2L_q0.db"
+   ]
+  },
+  "u_mu_fused_n1_q0_2": {
+   "dn": [
+    "core:u_mu_fused_n2R_q0.da"
+   ]
+  },
+  "u_mu_fused_n1_q0_3": {
+   "dn": [
+    "core:u_mu_fused_n2R_q0.db"
+   ]
+  },
+  "u_mu_fused_n1_q1_0": {
+   "dn": [
+    "core:u_mu_fused_n2L_q1.da"
+   ]
+  },
+  "u_mu_fused_n1_q1_1": {
+   "dn": [
+    "core:u_mu_fused_n2L_q1.db"
+   ]
+  },
+  "u_mu_fused_n1_q1_2": {
+   "dn": [
+    "core:u_mu_fused_n2R_q1.da"
+   ]
+  },
+  "u_mu_fused_n1_q1_3": {
+   "dn": [
+    "core:u_mu_fused_n2R_q1.db"
+   ]
+  },
+  "u_mu_fused_n2L_q0": {
+   "dn": [
+    "core:u_mu_fused_n3_q0.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q0_0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q0_1.uo"
+   ]
+  },
+  "u_mu_fused_n2L_q1": {
+   "dn": [
+    "core:u_mu_fused_n3_q1.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q1_0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q1_1.uo"
+   ]
+  },
+  "u_mu_fused_n2R_q0": {
+   "dn": [
+    "core:u_mu_fused_n3_q0.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q0_2.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q0_3.uo"
+   ]
+  },
+  "u_mu_fused_n2R_q1": {
+   "dn": [
+    "core:u_mu_fused_n3_q1.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q1_2.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q1_3.uo"
+   ]
+  },
+  "u_mu_fused_n3_q0": {
+   "dn": [
+    "core:u_mu_fused_n4.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n2L_q0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n2R_q0.uo"
+   ]
+  },
+  "u_mu_fused_n3_q1": {
+   "dn": [
+    "core:u_mu_fused_n4.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n2L_q1.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n2R_q1.uo"
+   ]
+  },
+  "u_mu_fused_n4": {
+   "dn": [
+    "bus:n4x_dn_i"
+   ],
+   "ua": [
+    "core:u_mu_fused_n3_q0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n3_q1.uo"
+   ],
+   "uo": [
+    "bus:n4x_up_o"
+   ]
+  },
+  "u_mu_keybuf_0_s0__q0": {},
+  "u_mu_keybuf_0_s0__q1": {},
+  "u_mu_keybuf_0_s1__q0": {},
+  "u_mu_keybuf_0_s1__q1": {},
+  "u_mu_keybuf_0_s2__q0": {},
+  "u_mu_keybuf_0_s2__q1": {},
+  "u_mu_keybuf_0_s3__q0": {},
+  "u_mu_keybuf_0_s3__q1": {},
+  "u_pgp_Q__q0__c0": {},
+  "u_pgp_Q__q0__c1": {},
+  "u_pgp_Q__q0__c2": {},
+  "u_pgp_Q__q0__c3": {},
+  "u_pgp_Q__q0__c4": {},
+  "u_pgp_Q__q0__c5": {},
+  "u_pgp_Q__q0__c6": {},
+  "u_pgp_Q__q0__c7": {},
+  "u_pgp_Q__q0__c8": {},
+  "u_pgp_Q__q0__c9": {},
+  "u_pgp_Q__q0__h": {},
+  "u_pgp_Q__q1__c0": {},
+  "u_pgp_Q__q1__c1": {},
+  "u_pgp_Q__q1__c2": {},
+  "u_pgp_Q__q1__c3": {},
+  "u_pgp_Q__q1__c4": {},
+  "u_pgp_Q__q1__c5": {},
+  "u_pgp_Q__q1__c6": {},
+  "u_pgp_Q__q1__c7": {},
+  "u_pgp_Q__q1__c8": {},
+  "u_pgp_Q__q1__c9": {},
+  "u_pgp_Q__q1__h": {},
+  "u_sfup_Q__q0": {},
+  "u_sfus_Q__q0": {},
+  "u_sfus_Q__q1": {},
+  "u_smw_Q__q0": {},
+  "u_smw_Q__q1": {},
+  "u_sucore_Q__q0": {},
+  "u_svg_Q0__b0": {},
+  "u_svg_Q0__b1": {},
+  "u_svg_Q0__o": {},
+  "u_svg_Q0__t": {},
+  "u_svg_Q1__b0": {},
+  "u_svg_Q1__b1": {},
+  "u_svg_Q1__o": {},
+  "u_svg_Q1__t": {},
+  "u_svg_Q2__b0": {},
+  "u_svg_Q2__b1": {},
+  "u_svg_Q2__o": {},
+  "u_svg_Q2__t": {},
+  "u_svg_Q3__b0": {},
+  "u_svg_Q3__b1": {},
+  "u_svg_Q3__o": {},
+  "u_svg_Q3__t": {},
+  "u_vmb_Q0": {
+   "dq": [
+    "core:u_vmdel_Q0.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q1.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5066_i"
+   ],
+   "rr0": [
+    "bus:L5086_o",
+    "bus:L8380_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5066_i"
+   ],
+   "wq_done0": [
+    "bus:L5081_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q0_mu1": {
+   "kq": [
+    "core:u_vmb_Q1_mu1.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q1": {
+   "dq": [
+    "core:u_vmdel_Q1.dq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5066_i"
+   ],
+   "rr0": [
+    "bus:L5081_o",
+    "bus:L5082_o",
+    "bus:L5083_o",
+    "bus:L5084_o",
+    "bus:L5085_o",
+    "bus:L5086_o",
+    "bus:L5087_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5066_i",
+    "bus:L5067_i"
+   ],
+   "wq_done0": [
+    "bus:L5087_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q1_mu1": {
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q2": {
+   "dq": [
+    "core:u_vmdel_Q2.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q3.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5027_i"
+   ],
+   "rr0": [
+    "bus:L5026_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5027_i"
+   ],
+   "wq_done0": [
+    "bus:L5026_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q2_mu1": {
+   "kq": [
+    "core:u_vmb_Q3_mu1.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q3": {
+   "dq": [
+    "core:u_vmdel_Q3.dq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5027_i"
+   ],
+   "rr0": [
+    "bus:L5026_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5027_i"
+   ],
+   "wq_done0": [
+    "bus:L5026_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q3_mu1": {
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q4": {
+   "dq": [
+    "core:u_vmdel_Q4.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q5.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5073_i"
+   ],
+   "rr0": [
+    "bus:L8003m_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5073_i"
+   ],
+   "wq_done0": [
+    "bus:L8003m_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q4_mu1": {
+   "kq": [
+    "core:u_vmb_Q5_mu1.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q5": {
+   "dq": [
+    "core:u_vmdel_Q5.dq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5073_i"
+   ],
+   "rr0": [
+    "bus:L7500_o",
+    "bus:L8003m_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5073_i",
+    "bus:L5074_i"
+   ],
+   "wq_done0": [
+    "bus:L7500_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q5_mu1": {
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q6": {
+   "dq": [
+    "core:u_vmdel_Q6.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q7.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7.pq"
+   ],
+   "rq0": [
+    "bus:L5032_i"
+   ],
+   "rr0": [
+    "bus:L5031_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L5032_i"
+   ],
+   "wq_done0": [
+    "bus:L5031_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7.xq2"
+   ]
+  },
+  "u_vmb_Q6_mu1": {
+   "kq": [
+    "core:u_vmb_Q7_mu1.kq"
+   ],
+   "pq": [
+    "core:u_vmb_Q7_mu1.pq"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ],
+   "xq": [
+    "core:u_vmb_Q7_mu1.xq"
+   ],
+   "xq2": [
+    "core:u_vmb_Q7_mu1.xq2"
+   ]
+  },
+  "u_vmb_Q7": {
+   "dq": [
+    "core:u_vmdel_Q7.dq"
+   ],
+   "rq0": [
+    "bus:L5032_i"
+   ],
+   "rr0": [
+    "bus:L5031_o"
+   ],
+   "wq0": [
+    "bus:L5032_i"
+   ],
+   "wq_done0": [
+    "bus:L5031_o"
+   ]
+  },
+  "u_vmb_Q7_mu1": {},
+  "u_vmdel_Q0": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q1": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q2": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q3": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q4": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q5": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q6": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q7": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad"
+   ]
+  },
+  "u_vmks_Q0": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p00.k_rdy",
+    "core:u_ctl_Q_p01.k_rdy",
+    "core:u_ctl_Q_p02.k_rdy",
+    "core:u_ctl_Q_p03.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p00.k_wr_done",
+    "core:u_ctl_Q_p01.k_wr_done",
+    "core:u_ctl_Q_p02.k_wr_done",
+    "core:u_ctl_Q_p03.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p00.kr_beat",
+    "core:u_ctl_Q_p01.kr_beat",
+    "core:u_ctl_Q_p02.kr_beat",
+    "core:u_ctl_Q_p03.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p00.kr_data",
+    "core:u_ctl_Q_p01.kr_data",
+    "core:u_ctl_Q_p02.kr_data",
+    "core:u_ctl_Q_p03.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p00.kr_tag",
+    "core:u_ctl_Q_p01.kr_tag",
+    "core:u_ctl_Q_p02.kr_tag",
+    "core:u_ctl_Q_p03.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p00.kr_v",
+    "core:u_ctl_Q_p01.kr_v",
+    "core:u_ctl_Q_p02.kr_v",
+    "core:u_ctl_Q_p03.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q1": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p04.k_rdy",
+    "core:u_ctl_Q_p05.k_rdy",
+    "core:u_ctl_Q_p06.k_rdy",
+    "core:u_ctl_Q_p07.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p04.k_wr_done",
+    "core:u_ctl_Q_p05.k_wr_done",
+    "core:u_ctl_Q_p06.k_wr_done",
+    "core:u_ctl_Q_p07.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p04.kr_beat",
+    "core:u_ctl_Q_p05.kr_beat",
+    "core:u_ctl_Q_p06.kr_beat",
+    "core:u_ctl_Q_p07.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p04.kr_data",
+    "core:u_ctl_Q_p05.kr_data",
+    "core:u_ctl_Q_p06.kr_data",
+    "core:u_ctl_Q_p07.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p04.kr_tag",
+    "core:u_ctl_Q_p05.kr_tag",
+    "core:u_ctl_Q_p06.kr_tag",
+    "core:u_ctl_Q_p07.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p04.kr_v",
+    "core:u_ctl_Q_p05.kr_v",
+    "core:u_ctl_Q_p06.kr_v",
+    "core:u_ctl_Q_p07.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q2": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p08.k_rdy",
+    "core:u_ctl_Q_p09.k_rdy",
+    "core:u_ctl_Q_p10.k_rdy",
+    "core:u_ctl_Q_p11.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p08.k_wr_done",
+    "core:u_ctl_Q_p09.k_wr_done",
+    "core:u_ctl_Q_p10.k_wr_done",
+    "core:u_ctl_Q_p11.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p08.kr_beat",
+    "core:u_ctl_Q_p09.kr_beat",
+    "core:u_ctl_Q_p10.kr_beat",
+    "core:u_ctl_Q_p11.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p08.kr_data",
+    "core:u_ctl_Q_p09.kr_data",
+    "core:u_ctl_Q_p10.kr_data",
+    "core:u_ctl_Q_p11.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p08.kr_tag",
+    "core:u_ctl_Q_p09.kr_tag",
+    "core:u_ctl_Q_p10.kr_tag",
+    "core:u_ctl_Q_p11.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p08.kr_v",
+    "core:u_ctl_Q_p09.kr_v",
+    "core:u_ctl_Q_p10.kr_v",
+    "core:u_ctl_Q_p11.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q3": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p12.k_rdy",
+    "core:u_ctl_Q_p13.k_rdy",
+    "core:u_ctl_Q_p14.k_rdy",
+    "core:u_ctl_Q_p15.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p12.k_wr_done",
+    "core:u_ctl_Q_p13.k_wr_done",
+    "core:u_ctl_Q_p14.k_wr_done",
+    "core:u_ctl_Q_p15.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p12.kr_beat",
+    "core:u_ctl_Q_p13.kr_beat",
+    "core:u_ctl_Q_p14.kr_beat",
+    "core:u_ctl_Q_p15.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p12.kr_data",
+    "core:u_ctl_Q_p13.kr_data",
+    "core:u_ctl_Q_p14.kr_data",
+    "core:u_ctl_Q_p15.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p12.kr_tag",
+    "core:u_ctl_Q_p13.kr_tag",
+    "core:u_ctl_Q_p14.kr_tag",
+    "core:u_ctl_Q_p15.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p12.kr_v",
+    "core:u_ctl_Q_p13.kr_v",
+    "core:u_ctl_Q_p14.kr_v",
+    "core:u_ctl_Q_p15.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ]
+  },
+  "u_wbk_Q__q0__r0__g0": {},
+  "u_wbk_Q__q0__r0__g1": {},
+  "u_wbk_Q__q0__r1__g0": {},
+  "u_wbk_Q__q0__r1__g1": {},
+  "u_wbk_Q__q0__r2__g0": {},
+  "u_wbk_Q__q0__r2__g1": {},
+  "u_wbk_Q__q0__r3__g0": {},
+  "u_wbk_Q__q0__r3__g1": {},
+  "u_wbk_Q__q0__sw": {},
+  "u_wbk_Q__q1__r0__g0": {},
+  "u_wbk_Q__q1__r0__g1": {},
+  "u_wbk_Q__q1__r1__g0": {},
+  "u_wbk_Q__q1__r1__g1": {},
+  "u_wbk_Q__q1__r2__g0": {},
+  "u_wbk_Q__q1__r2__g1": {},
+  "u_wbk_Q__q1__r3__g0": {},
+  "u_wbk_Q__q1__r3__g1": {},
+  "u_wbk_Q__q1__sw": {},
+  "u_xl_Q_aqhi": {},
+  "u_xl_Q_aqlo": {},
+  "u_xl_Q_ctl__q0": {},
+  "u_xl_Q_ctl__q1": {},
+  "u_xq_Q_p0_bd": {
+   "bsel": [
+    "core:u_xq_Q_p1_bd.bsel"
+   ],
+   "qe_hi": [
+    "core:u_xl_Q_aqhi.e"
+   ],
+   "qe_lo": [
+    "core:u_xl_Q_aqlo.e"
+   ],
+   "qq_hi": [
+    "core:u_xl_Q_aqhi.q"
+   ],
+   "qq_lo": [
+    "core:u_xl_Q_aqlo.q"
+   ],
+   "r_wsel": [
+    "core:u_xq_Q_p1_bd.r_wsel"
+   ],
+   "zhi": [
+    "core:u_xq_Q_p1_bd.zhi"
+   ],
+   "zlo": [
+    "core:u_xq_Q_p1_bd.zlo"
+   ]
+  },
+  "u_xq_Q_p0_bfq0": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq1": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq2": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq3": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bd": {
+   "qe_hi": [
+    "core:u_xl_Q_aqhi.e"
+   ],
+   "qe_lo": [
+    "core:u_xl_Q_aqlo.e"
+   ],
+   "qq_hi": [
+    "core:u_xl_Q_aqhi.q"
+   ],
+   "qq_lo": [
+    "core:u_xl_Q_aqlo.q"
+   ]
+  },
+  "u_xq_Q_p1_bfq0": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq1": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq2": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq3": {}
+ },
+ "q_hub_nw": {
+  "u_calendar_Q__q0": {},
+  "u_calendar_Q__q1": {},
+  "u_cij_Q__q0": {},
+  "u_cij_Q__q1": {},
+  "u_ctl_Q_p00": {
+   "col_bank": [
+    "bus:L63w_o"
+   ],
+   "col_col": [
+    "bus:L63w_o"
+   ],
+   "col_data": [
+    "bus:L63w_o",
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L114w_i",
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p01": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p02": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p03": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q0.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q0.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q0.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q0.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q0.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q0.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q0.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q0.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p04": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p05": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p06": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p07": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q1.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q1.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q1.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q1.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q1.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q1.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q1.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q1.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p08": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p09": {
+   "col_bank": [
+    "bus:L8_o"
+   ],
+   "col_col": [
+    "bus:L8_o"
+   ],
+   "col_data": [
+    "bus:L8_o"
+   ],
+   "col_strb": [
+    "bus:L8_o"
+   ],
+   "col_v": [
+    "bus:L8_o"
+   ],
+   "col_we": [
+    "bus:L8_o"
+   ],
+   "dram_rdata": [
+    "bus:L21_i"
+   ],
+   "dram_rvalid": [
+    "bus:L21_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L8_o"
+   ],
+   "row_op": [
+    "bus:L8_o"
+   ],
+   "row_row": [
+    "bus:L8_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L8_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p10": {
+   "col_bank": [
+    "bus:L63_o"
+   ],
+   "col_col": [
+    "bus:L63_o"
+   ],
+   "col_data": [
+    "bus:L63_o",
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p11": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q2.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q2.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q2.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q2.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q2.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q2.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q2.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q2.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p12": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p13": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p14": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_ctl_Q_p15": {
+   "col_bank": [
+    "bus:L9_o"
+   ],
+   "col_col": [
+    "bus:L9_o"
+   ],
+   "col_data": [
+    "bus:L9_o"
+   ],
+   "col_strb": [
+    "bus:L9_o"
+   ],
+   "col_v": [
+    "bus:L9_o"
+   ],
+   "col_we": [
+    "bus:L9_o"
+   ],
+   "dram_rdata": [
+    "bus:L22_i"
+   ],
+   "dram_rvalid": [
+    "bus:L8102_i"
+   ],
+   "k_addr": [
+    "core:u_vmks_Q3.c_k_addr"
+   ],
+   "k_len": [
+    "core:u_vmks_Q3.c_k_len"
+   ],
+   "k_tag": [
+    "core:u_vmks_Q3.c_k_tag"
+   ],
+   "k_v": [
+    "core:u_vmks_Q3.c_k_v"
+   ],
+   "k_wdata": [
+    "core:u_vmks_Q3.c_k_wdata"
+   ],
+   "k_we": [
+    "core:u_vmks_Q3.c_k_we"
+   ],
+   "k_wstrb": [
+    "core:u_vmks_Q3.c_k_wstrb"
+   ],
+   "kr_rdy": [
+    "core:u_vmks_Q3.c_kr_rdy"
+   ],
+   "owner_fault_split": [
+    "bus:L66_o"
+   ],
+   "pc_fault": [
+    "bus:L66_o"
+   ],
+   "refresh_reload": [
+    "bus:L82_i"
+   ],
+   "row_bank": [
+    "bus:L9_o"
+   ],
+   "row_op": [
+    "bus:L9_o"
+   ],
+   "row_row": [
+    "bus:L9_o"
+   ],
+   "row_v": [
+    "bus:L66_o",
+    "bus:L9_o"
+   ],
+   "rst_n": [
+    "bus:L82_i"
+   ]
+  },
+  "u_cxij_Q_q__q0": {},
+  "u_cxij_Q_q__q1": {},
+  "u_hb_coll_Q_body_core__q0__col0": {},
+  "u_hb_coll_Q_body_core__q0__col1": {},
+  "u_hb_coll_Q_body_core__q0__col2": {},
+  "u_hb_coll_Q_body_core__q0__col3": {},
+  "u_hb_coll_Q_body_core__q0__ctl": {},
+  "u_hb_coll_Q_edge__q0__arg": {},
+  "u_hb_coll_Q_edge__q0__link0": {},
+  "u_hb_coll_Q_edge__q0__link1": {},
+  "u_hb_coll_Q_edge__q0__link2": {},
+  "u_hb_coll_Q_reduce__q0": {},
+  "u_hb_coll_Q_ring_ag__q0": {},
+  "u_hb_coll_Q_vm__q0": {},
+  "u_hb_dbk_Q__q0": {},
+  "u_hb_dbk_Q__q1": {},
+  "u_hb_idx__op_Q__q0": {},
+  "u_hb_idx__op_Q__q1": {},
+  "u_hb_idx__q_Q__q0": {},
+  "u_hb_idx__q_Q__q1": {},
+  "u_hb_idx__qctl_Q__q0": {},
+  "u_hb_idx__qctl_Q__q1": {},
+  "u_hb_quant_Q__u_dec__q0": {},
+  "u_hb_quant_Q__u_dec__q1": {},
+  "u_hb_vms_Q__q0": {},
+  "u_hb_vms_Q__q1": {},
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "core:u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.rst_n"
+   ]
+  },
+  "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3": {
+   "data": [
+    "bus:L19_i"
+   ],
+   "rst_n": [
+    "bus:L42_o",
+    "bus:L43_o",
+    "bus:L65_o",
+    "bus:L73_o"
+   ]
+  },
+  "u_hcollgi_Q__q0__a0": {},
+  "u_hcollgi_Q__q0__a1": {},
+  "u_hcollgi_Q__q0__i": {},
+  "u_hcollgi_Q__q1__a0": {},
+  "u_hcollgi_Q__q1__a1": {},
+  "u_hcollgi_Q__q1__i": {},
+  "u_hcollgl_Q__q0": {},
+  "u_hcollgl_Q__q1": {},
+  "u_mu_fused_0__c": {},
+  "u_mu_fused_0__p0": {},
+  "u_mu_fused_0__p1": {},
+  "u_mu_fused_0__p2": {},
+  "u_mu_fused_0__p3": {},
+  "u_mu_fused_10__c": {},
+  "u_mu_fused_10__p0": {},
+  "u_mu_fused_10__p1": {},
+  "u_mu_fused_10__p2": {},
+  "u_mu_fused_10__p3": {},
+  "u_mu_fused_11__c": {},
+  "u_mu_fused_11__p0": {},
+  "u_mu_fused_11__p1": {},
+  "u_mu_fused_11__p2": {},
+  "u_mu_fused_11__p3": {},
+  "u_mu_fused_12__c": {},
+  "u_mu_fused_12__p0": {},
+  "u_mu_fused_12__p1": {},
+  "u_mu_fused_12__p2": {},
+  "u_mu_fused_12__p3": {},
+  "u_mu_fused_13__c": {},
+  "u_mu_fused_13__p0": {},
+  "u_mu_fused_13__p1": {},
+  "u_mu_fused_13__p2": {},
+  "u_mu_fused_13__p3": {},
+  "u_mu_fused_14__c": {},
+  "u_mu_fused_14__p0": {},
+  "u_mu_fused_14__p1": {},
+  "u_mu_fused_14__p2": {},
+  "u_mu_fused_14__p3": {},
+  "u_mu_fused_15__c": {},
+  "u_mu_fused_15__p0": {},
+  "u_mu_fused_15__p1": {},
+  "u_mu_fused_15__p2": {},
+  "u_mu_fused_15__p3": {},
+  "u_mu_fused_1__c": {},
+  "u_mu_fused_1__p0": {},
+  "u_mu_fused_1__p1": {},
+  "u_mu_fused_1__p2": {},
+  "u_mu_fused_1__p3": {},
+  "u_mu_fused_2__c": {},
+  "u_mu_fused_2__p0": {},
+  "u_mu_fused_2__p1": {},
+  "u_mu_fused_2__p2": {},
+  "u_mu_fused_2__p3": {},
+  "u_mu_fused_3__c": {},
+  "u_mu_fused_3__p0": {},
+  "u_mu_fused_3__p1": {},
+  "u_mu_fused_3__p2": {},
+  "u_mu_fused_3__p3": {},
+  "u_mu_fused_4__c": {},
+  "u_mu_fused_4__p0": {},
+  "u_mu_fused_4__p1": {},
+  "u_mu_fused_4__p2": {},
+  "u_mu_fused_4__p3": {},
+  "u_mu_fused_5__c": {},
+  "u_mu_fused_5__p0": {},
+  "u_mu_fused_5__p1": {},
+  "u_mu_fused_5__p2": {},
+  "u_mu_fused_5__p3": {},
+  "u_mu_fused_6__c": {},
+  "u_mu_fused_6__p0": {},
+  "u_mu_fused_6__p1": {},
+  "u_mu_fused_6__p2": {},
+  "u_mu_fused_6__p3": {},
+  "u_mu_fused_7__c": {},
+  "u_mu_fused_7__p0": {},
+  "u_mu_fused_7__p1": {},
+  "u_mu_fused_7__p2": {},
+  "u_mu_fused_7__p3": {},
+  "u_mu_fused_8__c": {},
+  "u_mu_fused_8__p0": {},
+  "u_mu_fused_8__p1": {},
+  "u_mu_fused_8__p2": {},
+  "u_mu_fused_8__p3": {},
+  "u_mu_fused_9__c": {},
+  "u_mu_fused_9__p0": {},
+  "u_mu_fused_9__p1": {},
+  "u_mu_fused_9__p2": {},
+  "u_mu_fused_9__p3": {},
+  "u_mu_fused_n1_q0_0": {
+   "dn": [
+    "core:u_mu_fused_n2L_q0.da"
+   ]
+  },
+  "u_mu_fused_n1_q0_1": {
+   "dn": [
+    "core:u_mu_fused_n2L_q0.db"
+   ]
+  },
+  "u_mu_fused_n1_q0_2": {
+   "dn": [
+    "core:u_mu_fused_n2R_q0.da"
+   ]
+  },
+  "u_mu_fused_n1_q0_3": {
+   "dn": [
+    "core:u_mu_fused_n2R_q0.db"
+   ]
+  },
+  "u_mu_fused_n1_q1_0": {
+   "dn": [
+    "core:u_mu_fused_n2L_q1.da"
+   ]
+  },
+  "u_mu_fused_n1_q1_1": {
+   "dn": [
+    "core:u_mu_fused_n2L_q1.db"
+   ]
+  },
+  "u_mu_fused_n1_q1_2": {
+   "dn": [
+    "core:u_mu_fused_n2R_q1.da"
+   ]
+  },
+  "u_mu_fused_n1_q1_3": {
+   "dn": [
+    "core:u_mu_fused_n2R_q1.db"
+   ]
+  },
+  "u_mu_fused_n2L_q0": {
+   "dn": [
+    "core:u_mu_fused_n3_q0.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q0_0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q0_1.uo"
+   ]
+  },
+  "u_mu_fused_n2L_q1": {
+   "dn": [
+    "core:u_mu_fused_n3_q1.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q1_0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q1_1.uo"
+   ]
+  },
+  "u_mu_fused_n2R_q0": {
+   "dn": [
+    "core:u_mu_fused_n3_q0.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q0_2.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q0_3.uo"
+   ]
+  },
+  "u_mu_fused_n2R_q1": {
+   "dn": [
+    "core:u_mu_fused_n3_q1.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n1_q1_2.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n1_q1_3.uo"
+   ]
+  },
+  "u_mu_fused_n3_q0": {
+   "dn": [
+    "core:u_mu_fused_n4.da"
+   ],
+   "ua": [
+    "core:u_mu_fused_n2L_q0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n2R_q0.uo"
+   ]
+  },
+  "u_mu_fused_n3_q1": {
+   "dn": [
+    "core:u_mu_fused_n4.db"
+   ],
+   "ua": [
+    "core:u_mu_fused_n2L_q1.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n2R_q1.uo"
+   ]
+  },
+  "u_mu_fused_n4": {
+   "dn": [
+    "bus:n4x_dn_i"
+   ],
+   "ua": [
+    "core:u_mu_fused_n3_q0.uo"
+   ],
+   "ub": [
+    "core:u_mu_fused_n3_q1.uo"
+   ],
+   "uo": [
+    "bus:n4x_up_o"
+   ]
+  },
+  "u_mu_keybuf_0_s0__q0": {},
+  "u_mu_keybuf_0_s0__q1": {},
+  "u_mu_keybuf_0_s1__q0": {},
+  "u_mu_keybuf_0_s1__q1": {},
+  "u_mu_keybuf_0_s2__q0": {},
+  "u_mu_keybuf_0_s2__q1": {},
+  "u_mu_keybuf_0_s3__q0": {},
+  "u_mu_keybuf_0_s3__q1": {},
+  "u_pgp_Q__q0__c0": {},
+  "u_pgp_Q__q0__c1": {},
+  "u_pgp_Q__q0__c2": {},
+  "u_pgp_Q__q0__c3": {},
+  "u_pgp_Q__q0__c4": {},
+  "u_pgp_Q__q0__c5": {},
+  "u_pgp_Q__q0__c6": {},
+  "u_pgp_Q__q0__c7": {},
+  "u_pgp_Q__q0__c8": {},
+  "u_pgp_Q__q0__c9": {},
+  "u_pgp_Q__q0__h": {},
+  "u_pgp_Q__q1__c0": {},
+  "u_pgp_Q__q1__c1": {},
+  "u_pgp_Q__q1__c2": {},
+  "u_pgp_Q__q1__c3": {},
+  "u_pgp_Q__q1__c4": {},
+  "u_pgp_Q__q1__c5": {},
+  "u_pgp_Q__q1__c6": {},
+  "u_pgp_Q__q1__c7": {},
+  "u_pgp_Q__q1__c8": {},
+  "u_pgp_Q__q1__c9": {},
+  "u_pgp_Q__q1__h": {},
+  "u_sfup_Q__q0": {},
+  "u_sfus_Q__q0": {},
+  "u_sfus_Q__q1": {},
+  "u_smw_Q__q0": {},
+  "u_smw_Q__q1": {},
+  "u_sucore_Q__q0": {},
+  "u_svg_Q0__b0": {},
+  "u_svg_Q0__b1": {},
+  "u_svg_Q0__o": {},
+  "u_svg_Q0__t": {},
+  "u_svg_Q1__b0": {},
+  "u_svg_Q1__b1": {},
+  "u_svg_Q1__o": {},
+  "u_svg_Q1__t": {},
+  "u_svg_Q2__b0": {},
+  "u_svg_Q2__b1": {},
+  "u_svg_Q2__o": {},
+  "u_svg_Q2__t": {},
+  "u_svg_Q3__b0": {},
+  "u_svg_Q3__b1": {},
+  "u_svg_Q3__o": {},
+  "u_svg_Q3__t": {},
+  "u_vmb_Q0": {
+   "dq": [
+    "core:u_vmdel_Q0.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q1.kq"
+   ],
+   "rq0": [
+    "bus:L1263_i"
+   ],
+   "rr0": [
+    "bus:L3004_o",
+    "bus:L8381_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1263_i"
+   ],
+   "wq_done0": [
+    "bus:L3004_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q0_mu1": {
+   "kq": [
+    "core:u_vmb_Q1_mu1.kq"
+   ],
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L156_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q1": {
+   "dq": [
+    "core:u_vmdel_Q1.dq"
+   ],
+   "rq0": [
+    "bus:L1263_i"
+   ],
+   "rr0": [
+    "bus:L3004_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1263_i",
+    "bus:L1264_i"
+   ],
+   "wq_done0": [
+    "bus:L3004_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q1_mu1": {
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L156_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q2": {
+   "dq": [
+    "core:u_vmdel_Q2.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q3.kq"
+   ],
+   "rq0": [
+    "bus:L1227_i"
+   ],
+   "rr0": [
+    "bus:L1226_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1227_i"
+   ],
+   "wq_done0": [
+    "bus:L1226_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q2_mu1": {
+   "kq": [
+    "core:u_vmb_Q3_mu1.kq"
+   ],
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L156_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q3": {
+   "dq": [
+    "core:u_vmdel_Q3.dq"
+   ],
+   "rq0": [
+    "bus:L1227_i"
+   ],
+   "rr0": [
+    "bus:L1226_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1227_i"
+   ],
+   "wq_done0": [
+    "bus:L1226_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q3_mu1": {
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L156_o",
+    "bus:L74_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q4": {
+   "dq": [
+    "core:u_vmdel_Q4.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q5.kq"
+   ],
+   "rq0": [
+    "bus:L1281_i"
+   ],
+   "rr0": [
+    "bus:L8003_o",
+    "bus:L8004_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1281_i"
+   ],
+   "wq_done0": [
+    "bus:L8004_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q4_mu1": {
+   "kq": [
+    "core:u_vmb_Q5_mu1.kq"
+   ],
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L74_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q5": {
+   "dq": [
+    "core:u_vmdel_Q5.dq"
+   ],
+   "rq0": [
+    "bus:L1281_i"
+   ],
+   "rr0": [
+    "bus:L3005_o",
+    "bus:L8004_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1281_i"
+   ],
+   "wq_done0": [
+    "bus:L3005_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q5_mu1": {
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L74_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q6": {
+   "dq": [
+    "core:u_vmdel_Q6.dq"
+   ],
+   "kq": [
+    "core:u_vmb_Q7.kq"
+   ],
+   "rq0": [
+    "bus:L1232_i"
+   ],
+   "rr0": [
+    "bus:L1231_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7.rslot_v"
+   ],
+   "wq0": [
+    "bus:L1232_i"
+   ],
+   "wq_done0": [
+    "bus:L1231_o"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7.wslot_v"
+   ]
+  },
+  "u_vmb_Q6_mu1": {
+   "kq": [
+    "core:u_vmb_Q7_mu1.kq"
+   ],
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L74_o"
+   ],
+   "rslot": [
+    "core:u_vmb_Q7_mu1.rslot"
+   ],
+   "rslot_v": [
+    "core:u_vmb_Q7_mu1.rslot_v"
+   ],
+   "wslot": [
+    "core:u_vmb_Q7_mu1.wslot"
+   ],
+   "wslot_v": [
+    "core:u_vmb_Q7_mu1.wslot_v"
+   ]
+  },
+  "u_vmb_Q7": {
+   "dq": [
+    "core:u_vmdel_Q7.dq"
+   ],
+   "rq0": [
+    "bus:L1232_i"
+   ],
+   "rr0": [
+    "bus:L1231_o"
+   ],
+   "wq0": [
+    "bus:L1232_i"
+   ],
+   "wq_done0": [
+    "bus:L1231_o"
+   ]
+  },
+  "u_vmb_Q7_mu1": {
+   "rq4": [
+    "bus:L13_i"
+   ],
+   "rr4": [
+    "bus:L74_o",
+    "bus:L89_o"
+   ]
+  },
+  "u_vmdel_Q0": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q1": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q2": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q3": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q0.fill_bank",
+    "core:u_vmks_Q2.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q0.fill_data",
+    "core:u_vmks_Q2.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q0.fill_epoch",
+    "core:u_vmks_Q2.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q0.fill_slot",
+    "core:u_vmks_Q2.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q0.fill_v",
+    "core:u_vmks_Q2.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q4": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q5": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q6.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q6.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q6.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q6": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q7.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q7.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q7.pcbad"
+   ]
+  },
+  "u_vmdel_Q7": {
+   "fault": [
+    "bus:L79_o"
+   ],
+   "fill_bank_i": [
+    "core:u_vmks_Q1.fill_bank",
+    "core:u_vmks_Q3.fill_bank"
+   ],
+   "fill_data_i": [
+    "core:u_vmks_Q1.fill_data",
+    "core:u_vmks_Q3.fill_data"
+   ],
+   "fill_epoch_i": [
+    "core:u_vmks_Q1.fill_epoch",
+    "core:u_vmks_Q3.fill_epoch"
+   ],
+   "fill_slot_i": [
+    "core:u_vmks_Q1.fill_slot",
+    "core:u_vmks_Q3.fill_slot"
+   ],
+   "fill_v_i": [
+    "core:u_vmks_Q1.fill_v",
+    "core:u_vmks_Q3.fill_v"
+   ],
+   "full0_all": [
+    "core:u_vmdel_Q0.full0",
+    "core:u_vmdel_Q1.full0",
+    "core:u_vmdel_Q2.full0",
+    "core:u_vmdel_Q3.full0",
+    "core:u_vmdel_Q4.full0",
+    "core:u_vmdel_Q5.full0",
+    "core:u_vmdel_Q6.full0"
+   ],
+   "full1_all": [
+    "core:u_vmdel_Q0.full1",
+    "core:u_vmdel_Q1.full1",
+    "core:u_vmdel_Q2.full1",
+    "core:u_vmdel_Q3.full1",
+    "core:u_vmdel_Q4.full1",
+    "core:u_vmdel_Q5.full1",
+    "core:u_vmdel_Q6.full1"
+   ],
+   "pcbad_all": [
+    "core:u_vmdel_Q0.pcbad",
+    "core:u_vmdel_Q1.pcbad",
+    "core:u_vmdel_Q2.pcbad",
+    "core:u_vmdel_Q3.pcbad",
+    "core:u_vmdel_Q4.pcbad",
+    "core:u_vmdel_Q5.pcbad",
+    "core:u_vmdel_Q6.pcbad"
+   ]
+  },
+  "u_vmks_Q0": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p00.k_rdy",
+    "core:u_ctl_Q_p01.k_rdy",
+    "core:u_ctl_Q_p02.k_rdy",
+    "core:u_ctl_Q_p03.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p00.k_wr_done",
+    "core:u_ctl_Q_p01.k_wr_done",
+    "core:u_ctl_Q_p02.k_wr_done",
+    "core:u_ctl_Q_p03.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p00.kr_beat",
+    "core:u_ctl_Q_p01.kr_beat",
+    "core:u_ctl_Q_p02.kr_beat",
+    "core:u_ctl_Q_p03.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p00.kr_data",
+    "core:u_ctl_Q_p01.kr_data",
+    "core:u_ctl_Q_p02.kr_data",
+    "core:u_ctl_Q_p03.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p00.kr_tag",
+    "core:u_ctl_Q_p01.kr_tag",
+    "core:u_ctl_Q_p02.kr_tag",
+    "core:u_ctl_Q_p03.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p00.kr_v",
+    "core:u_ctl_Q_p01.kr_v",
+    "core:u_ctl_Q_p02.kr_v",
+    "core:u_ctl_Q_p03.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q1": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p04.k_rdy",
+    "core:u_ctl_Q_p05.k_rdy",
+    "core:u_ctl_Q_p06.k_rdy",
+    "core:u_ctl_Q_p07.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p04.k_wr_done",
+    "core:u_ctl_Q_p05.k_wr_done",
+    "core:u_ctl_Q_p06.k_wr_done",
+    "core:u_ctl_Q_p07.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p04.kr_beat",
+    "core:u_ctl_Q_p05.kr_beat",
+    "core:u_ctl_Q_p06.kr_beat",
+    "core:u_ctl_Q_p07.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p04.kr_data",
+    "core:u_ctl_Q_p05.kr_data",
+    "core:u_ctl_Q_p06.kr_data",
+    "core:u_ctl_Q_p07.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p04.kr_tag",
+    "core:u_ctl_Q_p05.kr_tag",
+    "core:u_ctl_Q_p06.kr_tag",
+    "core:u_ctl_Q_p07.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p04.kr_v",
+    "core:u_ctl_Q_p05.kr_v",
+    "core:u_ctl_Q_p06.kr_v",
+    "core:u_ctl_Q_p07.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q2": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p08.k_rdy",
+    "core:u_ctl_Q_p09.k_rdy",
+    "core:u_ctl_Q_p10.k_rdy",
+    "core:u_ctl_Q_p11.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p08.k_wr_done",
+    "core:u_ctl_Q_p09.k_wr_done",
+    "core:u_ctl_Q_p10.k_wr_done",
+    "core:u_ctl_Q_p11.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p08.kr_beat",
+    "core:u_ctl_Q_p09.kr_beat",
+    "core:u_ctl_Q_p10.kr_beat",
+    "core:u_ctl_Q_p11.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p08.kr_data",
+    "core:u_ctl_Q_p09.kr_data",
+    "core:u_ctl_Q_p10.kr_data",
+    "core:u_ctl_Q_p11.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p08.kr_tag",
+    "core:u_ctl_Q_p09.kr_tag",
+    "core:u_ctl_Q_p10.kr_tag",
+    "core:u_ctl_Q_p11.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p08.kr_v",
+    "core:u_ctl_Q_p09.kr_v",
+    "core:u_ctl_Q_p10.kr_v",
+    "core:u_ctl_Q_p11.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ],
+   "w_k_addr": [
+    "core:u_vmks_Q3.w_k_addr"
+   ],
+   "w_k_v": [
+    "core:u_vmks_Q3.w_k_v"
+   ],
+   "w_k_wdata": [
+    "core:u_vmks_Q3.w_k_wdata"
+   ],
+   "wbw_base": [
+    "core:u_vmks_Q3.wbw_base"
+   ],
+   "wbw_total": [
+    "core:u_vmks_Q3.wbw_total"
+   ],
+   "wbw_v": [
+    "core:u_vmks_Q3.wbw_v"
+   ]
+  },
+  "u_vmks_Q3": {
+   "c_k_rdy": [
+    "core:u_ctl_Q_p12.k_rdy",
+    "core:u_ctl_Q_p13.k_rdy",
+    "core:u_ctl_Q_p14.k_rdy",
+    "core:u_ctl_Q_p15.k_rdy"
+   ],
+   "c_k_wr_done": [
+    "core:u_ctl_Q_p12.k_wr_done",
+    "core:u_ctl_Q_p13.k_wr_done",
+    "core:u_ctl_Q_p14.k_wr_done",
+    "core:u_ctl_Q_p15.k_wr_done"
+   ],
+   "c_kr_beat": [
+    "core:u_ctl_Q_p12.kr_beat",
+    "core:u_ctl_Q_p13.kr_beat",
+    "core:u_ctl_Q_p14.kr_beat",
+    "core:u_ctl_Q_p15.kr_beat"
+   ],
+   "c_kr_data": [
+    "core:u_ctl_Q_p12.kr_data",
+    "core:u_ctl_Q_p13.kr_data",
+    "core:u_ctl_Q_p14.kr_data",
+    "core:u_ctl_Q_p15.kr_data"
+   ],
+   "c_kr_tag": [
+    "core:u_ctl_Q_p12.kr_tag",
+    "core:u_ctl_Q_p13.kr_tag",
+    "core:u_ctl_Q_p14.kr_tag",
+    "core:u_ctl_Q_p15.kr_tag"
+   ],
+   "c_kr_v": [
+    "core:u_ctl_Q_p12.kr_v",
+    "core:u_ctl_Q_p13.kr_v",
+    "core:u_ctl_Q_p14.kr_v",
+    "core:u_ctl_Q_p15.kr_v"
+   ],
+   "fault": [
+    "bus:L79_o"
+   ]
+  },
+  "u_wbk_Q__q0__r0__g0": {},
+  "u_wbk_Q__q0__r0__g1": {},
+  "u_wbk_Q__q0__r1__g0": {},
+  "u_wbk_Q__q0__r1__g1": {},
+  "u_wbk_Q__q0__r2__g0": {},
+  "u_wbk_Q__q0__r2__g1": {},
+  "u_wbk_Q__q0__r3__g0": {},
+  "u_wbk_Q__q0__r3__g1": {},
+  "u_wbk_Q__q0__sw": {},
+  "u_wbk_Q__q1__r0__g0": {},
+  "u_wbk_Q__q1__r0__g1": {},
+  "u_wbk_Q__q1__r1__g0": {},
+  "u_wbk_Q__q1__r1__g1": {},
+  "u_wbk_Q__q1__r2__g0": {},
+  "u_wbk_Q__q1__r2__g1": {},
+  "u_wbk_Q__q1__r3__g0": {},
+  "u_wbk_Q__q1__r3__g1": {},
+  "u_wbk_Q__q1__sw": {},
+  "u_xl_Q_aqhi": {},
+  "u_xl_Q_aqlo": {},
+  "u_xl_Q_ctl__q0": {},
+  "u_xl_Q_ctl__q1": {},
+  "u_xq_Q_p0_bd": {
+   "bsel": [
+    "core:u_xq_Q_p1_bd.bsel"
+   ],
+   "qe_hi": [
+    "core:u_xl_Q_aqhi.e"
+   ],
+   "qe_lo": [
+    "core:u_xl_Q_aqlo.e"
+   ],
+   "qq_hi": [
+    "core:u_xl_Q_aqhi.q"
+   ],
+   "qq_lo": [
+    "core:u_xl_Q_aqlo.q"
+   ],
+   "r_wsel": [
+    "core:u_xq_Q_p1_bd.r_wsel"
+   ],
+   "zhi": [
+    "core:u_xq_Q_p1_bd.zhi"
+   ],
+   "zlo": [
+    "core:u_xq_Q_p1_bd.zlo"
+   ]
+  },
+  "u_xq_Q_p0_bfq0": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq1": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq2": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p0_bfq3": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bd": {
+   "qe_hi": [
+    "core:u_xl_Q_aqhi.e"
+   ],
+   "qe_lo": [
+    "core:u_xl_Q_aqlo.e"
+   ],
+   "qq_hi": [
+    "core:u_xl_Q_aqhi.q"
+   ],
+   "qq_lo": [
+    "core:u_xl_Q_aqlo.q"
+   ]
+  },
+  "u_xq_Q_p1_bfq0": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq1": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq2": {
+   "c_d": [
+    "core:u_xq_Q_p1_bfq3.c_d"
+   ],
+   "r_a": [
+    "core:u_xq_Q_p1_bfq3.r_a"
+   ],
+   "r_ce": [
+    "core:u_xq_Q_p1_bfq3.r_ce"
+   ],
+   "wa": [
+    "core:u_xq_Q_p1_bfq3.wa"
+   ],
+   "wce": [
+    "core:u_xq_Q_p1_bfq3.wce"
+   ]
+  },
+  "u_xq_Q_p1_bfq3": {}
+ },
+ "q_sm0": {
+  "u_sm_c0_be": {},
+  "u_sm_c0p0_l0_bdc": {},
+  "u_sm_c0p0_l0_h0": {},
+  "u_sm_c0p0_l0_h1": {},
+  "u_sm_c0p0_l0_merge": {},
+  "u_sm_c0p0_l0_qk": {},
+  "u_sm_c0p0_l0_xs": {},
+  "u_sm_c0p0_l1_bdc": {},
+  "u_sm_c0p0_l1_h0": {},
+  "u_sm_c0p0_l1_h1": {},
+  "u_sm_c0p0_l1_merge": {},
+  "u_sm_c0p0_l1_qk": {},
+  "u_sm_c0p0_l1_xs": {},
+  "u_sm_c0p0_pte": {},
+  "u_sm_c0p0_ptw": {},
+  "u_sm_c0p1_l0_bdc": {},
+  "u_sm_c0p1_l0_h0": {},
+  "u_sm_c0p1_l0_h1": {},
+  "u_sm_c0p1_l0_merge": {},
+  "u_sm_c0p1_l0_qk": {},
+  "u_sm_c0p1_l0_xs": {},
+  "u_sm_c0p1_l1_bdc": {},
+  "u_sm_c0p1_l1_h0": {},
+  "u_sm_c0p1_l1_h1": {},
+  "u_sm_c0p1_l1_merge": {},
+  "u_sm_c0p1_l1_qk": {},
+  "u_sm_c0p1_l1_xs": {},
+  "u_sm_c0p1_pte": {},
+  "u_sm_c0p1_ptw": {},
+  "u_sm_c1_be": {},
+  "u_sm_c1p0_l0_bdc": {},
+  "u_sm_c1p0_l0_h0": {},
+  "u_sm_c1p0_l0_h1": {},
+  "u_sm_c1p0_l0_merge": {},
+  "u_sm_c1p0_l0_qk": {},
+  "u_sm_c1p0_l0_xs": {},
+  "u_sm_c1p0_l1_bdc": {},
+  "u_sm_c1p0_l1_h0": {},
+  "u_sm_c1p0_l1_h1": {},
+  "u_sm_c1p0_l1_merge": {},
+  "u_sm_c1p0_l1_qk": {},
+  "u_sm_c1p0_l1_xs": {},
+  "u_sm_c1p0_pte": {},
+  "u_sm_c1p0_ptw": {},
+  "u_sm_c1p1_l0_bdc": {},
+  "u_sm_c1p1_l0_h0": {},
+  "u_sm_c1p1_l0_h1": {},
+  "u_sm_c1p1_l0_merge": {},
+  "u_sm_c1p1_l0_qk": {},
+  "u_sm_c1p1_l0_xs": {},
+  "u_sm_c1p1_l1_bdc": {},
+  "u_sm_c1p1_l1_h0": {},
+  "u_sm_c1p1_l1_h1": {},
+  "u_sm_c1p1_l1_merge": {},
+  "u_sm_c1p1_l1_qk": {},
+  "u_sm_c1p1_l1_xs": {},
+  "u_sm_c1p1_pte": {},
+  "u_sm_c1p1_ptw": {},
+  "u_sm_c2_be": {},
+  "u_sm_c2p0_l0_bdc": {},
+  "u_sm_c2p0_l0_h0": {},
+  "u_sm_c2p0_l0_h1": {},
+  "u_sm_c2p0_l0_merge": {},
+  "u_sm_c2p0_l0_qk": {},
+  "u_sm_c2p0_l0_xs": {},
+  "u_sm_c2p0_l1_bdc": {},
+  "u_sm_c2p0_l1_h0": {},
+  "u_sm_c2p0_l1_h1": {},
+  "u_sm_c2p0_l1_merge": {},
+  "u_sm_c2p0_l1_qk": {},
+  "u_sm_c2p0_l1_xs": {},
+  "u_sm_c2p0_pte": {},
+  "u_sm_c2p0_ptw": {},
+  "u_sm_c2p1_l0_bdc": {},
+  "u_sm_c2p1_l0_h0": {},
+  "u_sm_c2p1_l0_h1": {},
+  "u_sm_c2p1_l0_merge": {},
+  "u_sm_c2p1_l0_qk": {},
+  "u_sm_c2p1_l0_xs": {},
+  "u_sm_c2p1_l1_bdc": {},
+  "u_sm_c2p1_l1_h0": {},
+  "u_sm_c2p1_l1_h1": {},
+  "u_sm_c2p1_l1_merge": {},
+  "u_sm_c2p1_l1_qk": {},
+  "u_sm_c2p1_l1_xs": {},
+  "u_sm_c2p1_pte": {},
+  "u_sm_c2p1_ptw": {},
+  "u_sm_c3_be": {},
+  "u_sm_c3p0_l0_bdc": {},
+  "u_sm_c3p0_l0_h0": {},
+  "u_sm_c3p0_l0_h1": {},
+  "u_sm_c3p0_l0_merge": {},
+  "u_sm_c3p0_l0_qk": {},
+  "u_sm_c3p0_l0_xs": {},
+  "u_sm_c3p0_l1_bdc": {},
+  "u_sm_c3p0_l1_h0": {},
+  "u_sm_c3p0_l1_h1": {},
+  "u_sm_c3p0_l1_merge": {},
+  "u_sm_c3p0_l1_qk": {},
+  "u_sm_c3p0_l1_xs": {},
+  "u_sm_c3p0_pte": {},
+  "u_sm_c3p0_ptw": {},
+  "u_sm_c3p1_l0_bdc": {},
+  "u_sm_c3p1_l0_h0": {},
+  "u_sm_c3p1_l0_h1": {},
+  "u_sm_c3p1_l0_merge": {},
+  "u_sm_c3p1_l0_qk": {},
+  "u_sm_c3p1_l0_xs": {},
+  "u_sm_c3p1_l1_bdc": {},
+  "u_sm_c3p1_l1_h0": {},
+  "u_sm_c3p1_l1_h1": {},
+  "u_sm_c3p1_l1_merge": {},
+  "u_sm_c3p1_l1_qk": {},
+  "u_sm_c3p1_l1_xs": {},
+  "u_sm_c3p1_pte": {},
+  "u_sm_c3p1_ptw": {},
+  "u_sm_c4_be": {},
+  "u_sm_c4p0_l0_bdc": {},
+  "u_sm_c4p0_l0_h0": {},
+  "u_sm_c4p0_l0_h1": {},
+  "u_sm_c4p0_l0_merge": {},
+  "u_sm_c4p0_l0_qk": {},
+  "u_sm_c4p0_l0_xs": {},
+  "u_sm_c4p0_l1_bdc": {},
+  "u_sm_c4p0_l1_h0": {},
+  "u_sm_c4p0_l1_h1": {},
+  "u_sm_c4p0_l1_merge": {},
+  "u_sm_c4p0_l1_qk": {},
+  "u_sm_c4p0_l1_xs": {},
+  "u_sm_c4p0_pte": {},
+  "u_sm_c4p0_ptw": {},
+  "u_sm_c4p1_l0_bdc": {},
+  "u_sm_c4p1_l0_h0": {},
+  "u_sm_c4p1_l0_h1": {},
+  "u_sm_c4p1_l0_merge": {},
+  "u_sm_c4p1_l0_qk": {},
+  "u_sm_c4p1_l0_xs": {},
+  "u_sm_c4p1_l1_bdc": {},
+  "u_sm_c4p1_l1_h0": {},
+  "u_sm_c4p1_l1_h1": {},
+  "u_sm_c4p1_l1_merge": {},
+  "u_sm_c4p1_l1_qk": {},
+  "u_sm_c4p1_l1_xs": {},
+  "u_sm_c4p1_pte": {},
+  "u_sm_c4p1_ptw": {},
+  "u_sm_c5_be": {},
+  "u_sm_c5p0_l0_bdc": {},
+  "u_sm_c5p0_l0_h0": {},
+  "u_sm_c5p0_l0_h1": {},
+  "u_sm_c5p0_l0_merge": {},
+  "u_sm_c5p0_l0_qk": {},
+  "u_sm_c5p0_l0_xs": {},
+  "u_sm_c5p0_l1_bdc": {},
+  "u_sm_c5p0_l1_h0": {},
+  "u_sm_c5p0_l1_h1": {},
+  "u_sm_c5p0_l1_merge": {},
+  "u_sm_c5p0_l1_qk": {},
+  "u_sm_c5p0_l1_xs": {},
+  "u_sm_c5p0_pte": {},
+  "u_sm_c5p0_ptw": {},
+  "u_sm_c5p1_l0_bdc": {},
+  "u_sm_c5p1_l0_h0": {},
+  "u_sm_c5p1_l0_h1": {},
+  "u_sm_c5p1_l0_merge": {},
+  "u_sm_c5p1_l0_qk": {},
+  "u_sm_c5p1_l0_xs": {},
+  "u_sm_c5p1_l1_bdc": {},
+  "u_sm_c5p1_l1_h0": {},
+  "u_sm_c5p1_l1_h1": {},
+  "u_sm_c5p1_l1_merge": {},
+  "u_sm_c5p1_l1_qk": {},
+  "u_sm_c5p1_l1_xs": {},
+  "u_sm_c5p1_pte": {},
+  "u_sm_c5p1_ptw": {},
+  "u_sm_c6_be": {},
+  "u_sm_c6p0_l0_bdc": {},
+  "u_sm_c6p0_l0_h0": {},
+  "u_sm_c6p0_l0_h1": {},
+  "u_sm_c6p0_l0_merge": {},
+  "u_sm_c6p0_l0_qk": {},
+  "u_sm_c6p0_l0_xs": {},
+  "u_sm_c6p0_l1_bdc": {},
+  "u_sm_c6p0_l1_h0": {},
+  "u_sm_c6p0_l1_h1": {},
+  "u_sm_c6p0_l1_merge": {},
+  "u_sm_c6p0_l1_qk": {},
+  "u_sm_c6p0_l1_xs": {},
+  "u_sm_c6p0_pte": {},
+  "u_sm_c6p0_ptw": {},
+  "u_sm_c6p1_l0_bdc": {},
+  "u_sm_c6p1_l0_h0": {},
+  "u_sm_c6p1_l0_h1": {},
+  "u_sm_c6p1_l0_merge": {},
+  "u_sm_c6p1_l0_qk": {},
+  "u_sm_c6p1_l0_xs": {},
+  "u_sm_c6p1_l1_bdc": {},
+  "u_sm_c6p1_l1_h0": {},
+  "u_sm_c6p1_l1_h1": {},
+  "u_sm_c6p1_l1_merge": {},
+  "u_sm_c6p1_l1_qk": {},
+  "u_sm_c6p1_l1_xs": {},
+  "u_sm_c6p1_pte": {},
+  "u_sm_c6p1_ptw": {},
+  "u_sm_c7_be": {},
+  "u_sm_c7p0_l0_bdc": {},
+  "u_sm_c7p0_l0_h0": {},
+  "u_sm_c7p0_l0_h1": {},
+  "u_sm_c7p0_l0_merge": {},
+  "u_sm_c7p0_l0_qk": {},
+  "u_sm_c7p0_l0_xs": {},
+  "u_sm_c7p0_l1_bdc": {},
+  "u_sm_c7p0_l1_h0": {},
+  "u_sm_c7p0_l1_h1": {},
+  "u_sm_c7p0_l1_merge": {},
+  "u_sm_c7p0_l1_qk": {},
+  "u_sm_c7p0_l1_xs": {},
+  "u_sm_c7p0_pte": {},
+  "u_sm_c7p0_ptw": {},
+  "u_sm_c7p1_l0_bdc": {},
+  "u_sm_c7p1_l0_h0": {},
+  "u_sm_c7p1_l0_h1": {},
+  "u_sm_c7p1_l0_merge": {},
+  "u_sm_c7p1_l0_qk": {},
+  "u_sm_c7p1_l0_xs": {},
+  "u_sm_c7p1_l1_bdc": {},
+  "u_sm_c7p1_l1_h0": {},
+  "u_sm_c7p1_l1_h1": {},
+  "u_sm_c7p1_l1_merge": {},
+  "u_sm_c7p1_l1_qk": {},
+  "u_sm_c7p1_l1_xs": {},
+  "u_sm_c7p1_pte": {},
+  "u_sm_c7p1_ptw": {},
+  "u_sm_front_i8w": {},
+  "u_sm_front_kv": {},
+  "u_sm_front_nf": {},
+  "u_sm_front_ps": {}
+ },
+ "q_sm1": {
+  "u_sm_c0_be": {},
+  "u_sm_c0p0_l0_bdc": {},
+  "u_sm_c0p0_l0_h0": {},
+  "u_sm_c0p0_l0_h1": {},
+  "u_sm_c0p0_l0_merge": {},
+  "u_sm_c0p0_l0_qk": {},
+  "u_sm_c0p0_l0_xs": {},
+  "u_sm_c0p0_l1_bdc": {},
+  "u_sm_c0p0_l1_h0": {},
+  "u_sm_c0p0_l1_h1": {},
+  "u_sm_c0p0_l1_merge": {},
+  "u_sm_c0p0_l1_qk": {},
+  "u_sm_c0p0_l1_xs": {},
+  "u_sm_c0p0_pte": {},
+  "u_sm_c0p0_ptw": {},
+  "u_sm_c0p1_l0_bdc": {},
+  "u_sm_c0p1_l0_h0": {},
+  "u_sm_c0p1_l0_h1": {},
+  "u_sm_c0p1_l0_merge": {},
+  "u_sm_c0p1_l0_qk": {},
+  "u_sm_c0p1_l0_xs": {},
+  "u_sm_c0p1_l1_bdc": {},
+  "u_sm_c0p1_l1_h0": {},
+  "u_sm_c0p1_l1_h1": {},
+  "u_sm_c0p1_l1_merge": {},
+  "u_sm_c0p1_l1_qk": {},
+  "u_sm_c0p1_l1_xs": {},
+  "u_sm_c0p1_pte": {},
+  "u_sm_c0p1_ptw": {},
+  "u_sm_c1_be": {},
+  "u_sm_c1p0_l0_bdc": {},
+  "u_sm_c1p0_l0_h0": {},
+  "u_sm_c1p0_l0_h1": {},
+  "u_sm_c1p0_l0_merge": {},
+  "u_sm_c1p0_l0_qk": {},
+  "u_sm_c1p0_l0_xs": {},
+  "u_sm_c1p0_l1_bdc": {},
+  "u_sm_c1p0_l1_h0": {},
+  "u_sm_c1p0_l1_h1": {},
+  "u_sm_c1p0_l1_merge": {},
+  "u_sm_c1p0_l1_qk": {},
+  "u_sm_c1p0_l1_xs": {},
+  "u_sm_c1p0_pte": {},
+  "u_sm_c1p0_ptw": {},
+  "u_sm_c1p1_l0_bdc": {},
+  "u_sm_c1p1_l0_h0": {},
+  "u_sm_c1p1_l0_h1": {},
+  "u_sm_c1p1_l0_merge": {},
+  "u_sm_c1p1_l0_qk": {},
+  "u_sm_c1p1_l0_xs": {},
+  "u_sm_c1p1_l1_bdc": {},
+  "u_sm_c1p1_l1_h0": {},
+  "u_sm_c1p1_l1_h1": {},
+  "u_sm_c1p1_l1_merge": {},
+  "u_sm_c1p1_l1_qk": {},
+  "u_sm_c1p1_l1_xs": {},
+  "u_sm_c1p1_pte": {},
+  "u_sm_c1p1_ptw": {},
+  "u_sm_c2_be": {},
+  "u_sm_c2p0_l0_bdc": {},
+  "u_sm_c2p0_l0_h0": {},
+  "u_sm_c2p0_l0_h1": {},
+  "u_sm_c2p0_l0_merge": {},
+  "u_sm_c2p0_l0_qk": {},
+  "u_sm_c2p0_l0_xs": {},
+  "u_sm_c2p0_l1_bdc": {},
+  "u_sm_c2p0_l1_h0": {},
+  "u_sm_c2p0_l1_h1": {},
+  "u_sm_c2p0_l1_merge": {},
+  "u_sm_c2p0_l1_qk": {},
+  "u_sm_c2p0_l1_xs": {},
+  "u_sm_c2p0_pte": {},
+  "u_sm_c2p0_ptw": {},
+  "u_sm_c2p1_l0_bdc": {},
+  "u_sm_c2p1_l0_h0": {},
+  "u_sm_c2p1_l0_h1": {},
+  "u_sm_c2p1_l0_merge": {},
+  "u_sm_c2p1_l0_qk": {},
+  "u_sm_c2p1_l0_xs": {},
+  "u_sm_c2p1_l1_bdc": {},
+  "u_sm_c2p1_l1_h0": {},
+  "u_sm_c2p1_l1_h1": {},
+  "u_sm_c2p1_l1_merge": {},
+  "u_sm_c2p1_l1_qk": {},
+  "u_sm_c2p1_l1_xs": {},
+  "u_sm_c2p1_pte": {},
+  "u_sm_c2p1_ptw": {},
+  "u_sm_c3_be": {},
+  "u_sm_c3p0_l0_bdc": {},
+  "u_sm_c3p0_l0_h0": {},
+  "u_sm_c3p0_l0_h1": {},
+  "u_sm_c3p0_l0_merge": {},
+  "u_sm_c3p0_l0_qk": {},
+  "u_sm_c3p0_l0_xs": {},
+  "u_sm_c3p0_l1_bdc": {},
+  "u_sm_c3p0_l1_h0": {},
+  "u_sm_c3p0_l1_h1": {},
+  "u_sm_c3p0_l1_merge": {},
+  "u_sm_c3p0_l1_qk": {},
+  "u_sm_c3p0_l1_xs": {},
+  "u_sm_c3p0_pte": {},
+  "u_sm_c3p0_ptw": {},
+  "u_sm_c3p1_l0_bdc": {},
+  "u_sm_c3p1_l0_h0": {},
+  "u_sm_c3p1_l0_h1": {},
+  "u_sm_c3p1_l0_merge": {},
+  "u_sm_c3p1_l0_qk": {},
+  "u_sm_c3p1_l0_xs": {},
+  "u_sm_c3p1_l1_bdc": {},
+  "u_sm_c3p1_l1_h0": {},
+  "u_sm_c3p1_l1_h1": {},
+  "u_sm_c3p1_l1_merge": {},
+  "u_sm_c3p1_l1_qk": {},
+  "u_sm_c3p1_l1_xs": {},
+  "u_sm_c3p1_pte": {},
+  "u_sm_c3p1_ptw": {},
+  "u_sm_c4_be": {},
+  "u_sm_c4p0_l0_bdc": {},
+  "u_sm_c4p0_l0_h0": {},
+  "u_sm_c4p0_l0_h1": {},
+  "u_sm_c4p0_l0_merge": {},
+  "u_sm_c4p0_l0_qk": {},
+  "u_sm_c4p0_l0_xs": {},
+  "u_sm_c4p0_l1_bdc": {},
+  "u_sm_c4p0_l1_h0": {},
+  "u_sm_c4p0_l1_h1": {},
+  "u_sm_c4p0_l1_merge": {},
+  "u_sm_c4p0_l1_qk": {},
+  "u_sm_c4p0_l1_xs": {},
+  "u_sm_c4p0_pte": {},
+  "u_sm_c4p0_ptw": {},
+  "u_sm_c4p1_l0_bdc": {},
+  "u_sm_c4p1_l0_h0": {},
+  "u_sm_c4p1_l0_h1": {},
+  "u_sm_c4p1_l0_merge": {},
+  "u_sm_c4p1_l0_qk": {},
+  "u_sm_c4p1_l0_xs": {},
+  "u_sm_c4p1_l1_bdc": {},
+  "u_sm_c4p1_l1_h0": {},
+  "u_sm_c4p1_l1_h1": {},
+  "u_sm_c4p1_l1_merge": {},
+  "u_sm_c4p1_l1_qk": {},
+  "u_sm_c4p1_l1_xs": {},
+  "u_sm_c4p1_pte": {},
+  "u_sm_c4p1_ptw": {},
+  "u_sm_c5_be": {},
+  "u_sm_c5p0_l0_bdc": {},
+  "u_sm_c5p0_l0_h0": {},
+  "u_sm_c5p0_l0_h1": {},
+  "u_sm_c5p0_l0_merge": {},
+  "u_sm_c5p0_l0_qk": {},
+  "u_sm_c5p0_l0_xs": {},
+  "u_sm_c5p0_l1_bdc": {},
+  "u_sm_c5p0_l1_h0": {},
+  "u_sm_c5p0_l1_h1": {},
+  "u_sm_c5p0_l1_merge": {},
+  "u_sm_c5p0_l1_qk": {},
+  "u_sm_c5p0_l1_xs": {},
+  "u_sm_c5p0_pte": {},
+  "u_sm_c5p0_ptw": {},
+  "u_sm_c5p1_l0_bdc": {},
+  "u_sm_c5p1_l0_h0": {},
+  "u_sm_c5p1_l0_h1": {},
+  "u_sm_c5p1_l0_merge": {},
+  "u_sm_c5p1_l0_qk": {},
+  "u_sm_c5p1_l0_xs": {},
+  "u_sm_c5p1_l1_bdc": {},
+  "u_sm_c5p1_l1_h0": {},
+  "u_sm_c5p1_l1_h1": {},
+  "u_sm_c5p1_l1_merge": {},
+  "u_sm_c5p1_l1_qk": {},
+  "u_sm_c5p1_l1_xs": {},
+  "u_sm_c5p1_pte": {},
+  "u_sm_c5p1_ptw": {},
+  "u_sm_c6_be": {},
+  "u_sm_c6p0_l0_bdc": {},
+  "u_sm_c6p0_l0_h0": {},
+  "u_sm_c6p0_l0_h1": {},
+  "u_sm_c6p0_l0_merge": {},
+  "u_sm_c6p0_l0_qk": {},
+  "u_sm_c6p0_l0_xs": {},
+  "u_sm_c6p0_l1_bdc": {},
+  "u_sm_c6p0_l1_h0": {},
+  "u_sm_c6p0_l1_h1": {},
+  "u_sm_c6p0_l1_merge": {},
+  "u_sm_c6p0_l1_qk": {},
+  "u_sm_c6p0_l1_xs": {},
+  "u_sm_c6p0_pte": {},
+  "u_sm_c6p0_ptw": {},
+  "u_sm_c6p1_l0_bdc": {},
+  "u_sm_c6p1_l0_h0": {},
+  "u_sm_c6p1_l0_h1": {},
+  "u_sm_c6p1_l0_merge": {},
+  "u_sm_c6p1_l0_qk": {},
+  "u_sm_c6p1_l0_xs": {},
+  "u_sm_c6p1_l1_bdc": {},
+  "u_sm_c6p1_l1_h0": {},
+  "u_sm_c6p1_l1_h1": {},
+  "u_sm_c6p1_l1_merge": {},
+  "u_sm_c6p1_l1_qk": {},
+  "u_sm_c6p1_l1_xs": {},
+  "u_sm_c6p1_pte": {},
+  "u_sm_c6p1_ptw": {},
+  "u_sm_c7_be": {},
+  "u_sm_c7p0_l0_bdc": {},
+  "u_sm_c7p0_l0_h0": {},
+  "u_sm_c7p0_l0_h1": {},
+  "u_sm_c7p0_l0_merge": {},
+  "u_sm_c7p0_l0_qk": {},
+  "u_sm_c7p0_l0_xs": {},
+  "u_sm_c7p0_l1_bdc": {},
+  "u_sm_c7p0_l1_h0": {},
+  "u_sm_c7p0_l1_h1": {},
+  "u_sm_c7p0_l1_merge": {},
+  "u_sm_c7p0_l1_qk": {},
+  "u_sm_c7p0_l1_xs": {},
+  "u_sm_c7p0_pte": {},
+  "u_sm_c7p0_ptw": {},
+  "u_sm_c7p1_l0_bdc": {},
+  "u_sm_c7p1_l0_h0": {},
+  "u_sm_c7p1_l0_h1": {},
+  "u_sm_c7p1_l0_merge": {},
+  "u_sm_c7p1_l0_qk": {},
+  "u_sm_c7p1_l0_xs": {},
+  "u_sm_c7p1_l1_bdc": {},
+  "u_sm_c7p1_l1_h0": {},
+  "u_sm_c7p1_l1_h1": {},
+  "u_sm_c7p1_l1_merge": {},
+  "u_sm_c7p1_l1_qk": {},
+  "u_sm_c7p1_l1_xs": {},
+  "u_sm_c7p1_pte": {},
+  "u_sm_c7p1_ptw": {},
+  "u_sm_front_i8w": {},
+  "u_sm_front_kv": {},
+  "u_sm_front_nf": {},
+  "u_sm_front_ps": {}
+ },
+ "q_sm2": {
+  "u_sm_c0_be": {},
+  "u_sm_c0p0_l0_bdc": {},
+  "u_sm_c0p0_l0_h0": {},
+  "u_sm_c0p0_l0_h1": {},
+  "u_sm_c0p0_l0_merge": {},
+  "u_sm_c0p0_l0_qk": {},
+  "u_sm_c0p0_l0_xs": {},
+  "u_sm_c0p0_l1_bdc": {},
+  "u_sm_c0p0_l1_h0": {},
+  "u_sm_c0p0_l1_h1": {},
+  "u_sm_c0p0_l1_merge": {},
+  "u_sm_c0p0_l1_qk": {},
+  "u_sm_c0p0_l1_xs": {},
+  "u_sm_c0p0_pte": {},
+  "u_sm_c0p0_ptw": {},
+  "u_sm_c0p1_l0_bdc": {},
+  "u_sm_c0p1_l0_h0": {},
+  "u_sm_c0p1_l0_h1": {},
+  "u_sm_c0p1_l0_merge": {},
+  "u_sm_c0p1_l0_qk": {},
+  "u_sm_c0p1_l0_xs": {},
+  "u_sm_c0p1_l1_bdc": {},
+  "u_sm_c0p1_l1_h0": {},
+  "u_sm_c0p1_l1_h1": {},
+  "u_sm_c0p1_l1_merge": {},
+  "u_sm_c0p1_l1_qk": {},
+  "u_sm_c0p1_l1_xs": {},
+  "u_sm_c0p1_pte": {},
+  "u_sm_c0p1_ptw": {},
+  "u_sm_c1_be": {},
+  "u_sm_c1p0_l0_bdc": {},
+  "u_sm_c1p0_l0_h0": {},
+  "u_sm_c1p0_l0_h1": {},
+  "u_sm_c1p0_l0_merge": {},
+  "u_sm_c1p0_l0_qk": {},
+  "u_sm_c1p0_l0_xs": {},
+  "u_sm_c1p0_l1_bdc": {},
+  "u_sm_c1p0_l1_h0": {},
+  "u_sm_c1p0_l1_h1": {},
+  "u_sm_c1p0_l1_merge": {},
+  "u_sm_c1p0_l1_qk": {},
+  "u_sm_c1p0_l1_xs": {},
+  "u_sm_c1p0_pte": {},
+  "u_sm_c1p0_ptw": {},
+  "u_sm_c1p1_l0_bdc": {},
+  "u_sm_c1p1_l0_h0": {},
+  "u_sm_c1p1_l0_h1": {},
+  "u_sm_c1p1_l0_merge": {},
+  "u_sm_c1p1_l0_qk": {},
+  "u_sm_c1p1_l0_xs": {},
+  "u_sm_c1p1_l1_bdc": {},
+  "u_sm_c1p1_l1_h0": {},
+  "u_sm_c1p1_l1_h1": {},
+  "u_sm_c1p1_l1_merge": {},
+  "u_sm_c1p1_l1_qk": {},
+  "u_sm_c1p1_l1_xs": {},
+  "u_sm_c1p1_pte": {},
+  "u_sm_c1p1_ptw": {},
+  "u_sm_c2_be": {},
+  "u_sm_c2p0_l0_bdc": {},
+  "u_sm_c2p0_l0_h0": {},
+  "u_sm_c2p0_l0_h1": {},
+  "u_sm_c2p0_l0_merge": {},
+  "u_sm_c2p0_l0_qk": {},
+  "u_sm_c2p0_l0_xs": {},
+  "u_sm_c2p0_l1_bdc": {},
+  "u_sm_c2p0_l1_h0": {},
+  "u_sm_c2p0_l1_h1": {},
+  "u_sm_c2p0_l1_merge": {},
+  "u_sm_c2p0_l1_qk": {},
+  "u_sm_c2p0_l1_xs": {},
+  "u_sm_c2p0_pte": {},
+  "u_sm_c2p0_ptw": {},
+  "u_sm_c2p1_l0_bdc": {},
+  "u_sm_c2p1_l0_h0": {},
+  "u_sm_c2p1_l0_h1": {},
+  "u_sm_c2p1_l0_merge": {},
+  "u_sm_c2p1_l0_qk": {},
+  "u_sm_c2p1_l0_xs": {},
+  "u_sm_c2p1_l1_bdc": {},
+  "u_sm_c2p1_l1_h0": {},
+  "u_sm_c2p1_l1_h1": {},
+  "u_sm_c2p1_l1_merge": {},
+  "u_sm_c2p1_l1_qk": {},
+  "u_sm_c2p1_l1_xs": {},
+  "u_sm_c2p1_pte": {},
+  "u_sm_c2p1_ptw": {},
+  "u_sm_c3_be": {},
+  "u_sm_c3p0_l0_bdc": {},
+  "u_sm_c3p0_l0_h0": {},
+  "u_sm_c3p0_l0_h1": {},
+  "u_sm_c3p0_l0_merge": {},
+  "u_sm_c3p0_l0_qk": {},
+  "u_sm_c3p0_l0_xs": {},
+  "u_sm_c3p0_l1_bdc": {},
+  "u_sm_c3p0_l1_h0": {},
+  "u_sm_c3p0_l1_h1": {},
+  "u_sm_c3p0_l1_merge": {},
+  "u_sm_c3p0_l1_qk": {},
+  "u_sm_c3p0_l1_xs": {},
+  "u_sm_c3p0_pte": {},
+  "u_sm_c3p0_ptw": {},
+  "u_sm_c3p1_l0_bdc": {},
+  "u_sm_c3p1_l0_h0": {},
+  "u_sm_c3p1_l0_h1": {},
+  "u_sm_c3p1_l0_merge": {},
+  "u_sm_c3p1_l0_qk": {},
+  "u_sm_c3p1_l0_xs": {},
+  "u_sm_c3p1_l1_bdc": {},
+  "u_sm_c3p1_l1_h0": {},
+  "u_sm_c3p1_l1_h1": {},
+  "u_sm_c3p1_l1_merge": {},
+  "u_sm_c3p1_l1_qk": {},
+  "u_sm_c3p1_l1_xs": {},
+  "u_sm_c3p1_pte": {},
+  "u_sm_c3p1_ptw": {},
+  "u_sm_c4_be": {},
+  "u_sm_c4p0_l0_bdc": {},
+  "u_sm_c4p0_l0_h0": {},
+  "u_sm_c4p0_l0_h1": {},
+  "u_sm_c4p0_l0_merge": {},
+  "u_sm_c4p0_l0_qk": {},
+  "u_sm_c4p0_l0_xs": {},
+  "u_sm_c4p0_l1_bdc": {},
+  "u_sm_c4p0_l1_h0": {},
+  "u_sm_c4p0_l1_h1": {},
+  "u_sm_c4p0_l1_merge": {},
+  "u_sm_c4p0_l1_qk": {},
+  "u_sm_c4p0_l1_xs": {},
+  "u_sm_c4p0_pte": {},
+  "u_sm_c4p0_ptw": {},
+  "u_sm_c4p1_l0_bdc": {},
+  "u_sm_c4p1_l0_h0": {},
+  "u_sm_c4p1_l0_h1": {},
+  "u_sm_c4p1_l0_merge": {},
+  "u_sm_c4p1_l0_qk": {},
+  "u_sm_c4p1_l0_xs": {},
+  "u_sm_c4p1_l1_bdc": {},
+  "u_sm_c4p1_l1_h0": {},
+  "u_sm_c4p1_l1_h1": {},
+  "u_sm_c4p1_l1_merge": {},
+  "u_sm_c4p1_l1_qk": {},
+  "u_sm_c4p1_l1_xs": {},
+  "u_sm_c4p1_pte": {},
+  "u_sm_c4p1_ptw": {},
+  "u_sm_c5_be": {},
+  "u_sm_c5p0_l0_bdc": {},
+  "u_sm_c5p0_l0_h0": {},
+  "u_sm_c5p0_l0_h1": {},
+  "u_sm_c5p0_l0_merge": {},
+  "u_sm_c5p0_l0_qk": {},
+  "u_sm_c5p0_l0_xs": {},
+  "u_sm_c5p0_l1_bdc": {},
+  "u_sm_c5p0_l1_h0": {},
+  "u_sm_c5p0_l1_h1": {},
+  "u_sm_c5p0_l1_merge": {},
+  "u_sm_c5p0_l1_qk": {},
+  "u_sm_c5p0_l1_xs": {},
+  "u_sm_c5p0_pte": {},
+  "u_sm_c5p0_ptw": {},
+  "u_sm_c5p1_l0_bdc": {},
+  "u_sm_c5p1_l0_h0": {},
+  "u_sm_c5p1_l0_h1": {},
+  "u_sm_c5p1_l0_merge": {},
+  "u_sm_c5p1_l0_qk": {},
+  "u_sm_c5p1_l0_xs": {},
+  "u_sm_c5p1_l1_bdc": {},
+  "u_sm_c5p1_l1_h0": {},
+  "u_sm_c5p1_l1_h1": {},
+  "u_sm_c5p1_l1_merge": {},
+  "u_sm_c5p1_l1_qk": {},
+  "u_sm_c5p1_l1_xs": {},
+  "u_sm_c5p1_pte": {},
+  "u_sm_c5p1_ptw": {},
+  "u_sm_c6_be": {},
+  "u_sm_c6p0_l0_bdc": {},
+  "u_sm_c6p0_l0_h0": {},
+  "u_sm_c6p0_l0_h1": {},
+  "u_sm_c6p0_l0_merge": {},
+  "u_sm_c6p0_l0_qk": {},
+  "u_sm_c6p0_l0_xs": {},
+  "u_sm_c6p0_l1_bdc": {},
+  "u_sm_c6p0_l1_h0": {},
+  "u_sm_c6p0_l1_h1": {},
+  "u_sm_c6p0_l1_merge": {},
+  "u_sm_c6p0_l1_qk": {},
+  "u_sm_c6p0_l1_xs": {},
+  "u_sm_c6p0_pte": {},
+  "u_sm_c6p0_ptw": {},
+  "u_sm_c6p1_l0_bdc": {},
+  "u_sm_c6p1_l0_h0": {},
+  "u_sm_c6p1_l0_h1": {},
+  "u_sm_c6p1_l0_merge": {},
+  "u_sm_c6p1_l0_qk": {},
+  "u_sm_c6p1_l0_xs": {},
+  "u_sm_c6p1_l1_bdc": {},
+  "u_sm_c6p1_l1_h0": {},
+  "u_sm_c6p1_l1_h1": {},
+  "u_sm_c6p1_l1_merge": {},
+  "u_sm_c6p1_l1_qk": {},
+  "u_sm_c6p1_l1_xs": {},
+  "u_sm_c6p1_pte": {},
+  "u_sm_c6p1_ptw": {},
+  "u_sm_c7_be": {},
+  "u_sm_c7p0_l0_bdc": {},
+  "u_sm_c7p0_l0_h0": {},
+  "u_sm_c7p0_l0_h1": {},
+  "u_sm_c7p0_l0_merge": {},
+  "u_sm_c7p0_l0_qk": {},
+  "u_sm_c7p0_l0_xs": {},
+  "u_sm_c7p0_l1_bdc": {},
+  "u_sm_c7p0_l1_h0": {},
+  "u_sm_c7p0_l1_h1": {},
+  "u_sm_c7p0_l1_merge": {},
+  "u_sm_c7p0_l1_qk": {},
+  "u_sm_c7p0_l1_xs": {},
+  "u_sm_c7p0_pte": {},
+  "u_sm_c7p0_ptw": {},
+  "u_sm_c7p1_l0_bdc": {},
+  "u_sm_c7p1_l0_h0": {},
+  "u_sm_c7p1_l0_h1": {},
+  "u_sm_c7p1_l0_merge": {},
+  "u_sm_c7p1_l0_qk": {},
+  "u_sm_c7p1_l0_xs": {},
+  "u_sm_c7p1_l1_bdc": {},
+  "u_sm_c7p1_l1_h0": {},
+  "u_sm_c7p1_l1_h1": {},
+  "u_sm_c7p1_l1_merge": {},
+  "u_sm_c7p1_l1_qk": {},
+  "u_sm_c7p1_l1_xs": {},
+  "u_sm_c7p1_pte": {},
+  "u_sm_c7p1_ptw": {},
+  "u_sm_front_i8w": {},
+  "u_sm_front_kv": {},
+  "u_sm_front_nf": {},
+  "u_sm_front_ps": {}
+ },
+ "q_sm3": {
+  "u_sm_c0_be": {},
+  "u_sm_c0p0_l0_bdc": {},
+  "u_sm_c0p0_l0_h0": {},
+  "u_sm_c0p0_l0_h1": {},
+  "u_sm_c0p0_l0_merge": {},
+  "u_sm_c0p0_l0_qk": {},
+  "u_sm_c0p0_l0_xs": {},
+  "u_sm_c0p0_l1_bdc": {},
+  "u_sm_c0p0_l1_h0": {},
+  "u_sm_c0p0_l1_h1": {},
+  "u_sm_c0p0_l1_merge": {},
+  "u_sm_c0p0_l1_qk": {},
+  "u_sm_c0p0_l1_xs": {},
+  "u_sm_c0p0_pte": {},
+  "u_sm_c0p0_ptw": {},
+  "u_sm_c0p1_l0_bdc": {},
+  "u_sm_c0p1_l0_h0": {},
+  "u_sm_c0p1_l0_h1": {},
+  "u_sm_c0p1_l0_merge": {},
+  "u_sm_c0p1_l0_qk": {},
+  "u_sm_c0p1_l0_xs": {},
+  "u_sm_c0p1_l1_bdc": {},
+  "u_sm_c0p1_l1_h0": {},
+  "u_sm_c0p1_l1_h1": {},
+  "u_sm_c0p1_l1_merge": {},
+  "u_sm_c0p1_l1_qk": {},
+  "u_sm_c0p1_l1_xs": {},
+  "u_sm_c0p1_pte": {},
+  "u_sm_c0p1_ptw": {},
+  "u_sm_c1_be": {},
+  "u_sm_c1p0_l0_bdc": {},
+  "u_sm_c1p0_l0_h0": {},
+  "u_sm_c1p0_l0_h1": {},
+  "u_sm_c1p0_l0_merge": {},
+  "u_sm_c1p0_l0_qk": {},
+  "u_sm_c1p0_l0_xs": {},
+  "u_sm_c1p0_l1_bdc": {},
+  "u_sm_c1p0_l1_h0": {},
+  "u_sm_c1p0_l1_h1": {},
+  "u_sm_c1p0_l1_merge": {},
+  "u_sm_c1p0_l1_qk": {},
+  "u_sm_c1p0_l1_xs": {},
+  "u_sm_c1p0_pte": {},
+  "u_sm_c1p0_ptw": {},
+  "u_sm_c1p1_l0_bdc": {},
+  "u_sm_c1p1_l0_h0": {},
+  "u_sm_c1p1_l0_h1": {},
+  "u_sm_c1p1_l0_merge": {},
+  "u_sm_c1p1_l0_qk": {},
+  "u_sm_c1p1_l0_xs": {},
+  "u_sm_c1p1_l1_bdc": {},
+  "u_sm_c1p1_l1_h0": {},
+  "u_sm_c1p1_l1_h1": {},
+  "u_sm_c1p1_l1_merge": {},
+  "u_sm_c1p1_l1_qk": {},
+  "u_sm_c1p1_l1_xs": {},
+  "u_sm_c1p1_pte": {},
+  "u_sm_c1p1_ptw": {},
+  "u_sm_c2_be": {},
+  "u_sm_c2p0_l0_bdc": {},
+  "u_sm_c2p0_l0_h0": {},
+  "u_sm_c2p0_l0_h1": {},
+  "u_sm_c2p0_l0_merge": {},
+  "u_sm_c2p0_l0_qk": {},
+  "u_sm_c2p0_l0_xs": {},
+  "u_sm_c2p0_l1_bdc": {},
+  "u_sm_c2p0_l1_h0": {},
+  "u_sm_c2p0_l1_h1": {},
+  "u_sm_c2p0_l1_merge": {},
+  "u_sm_c2p0_l1_qk": {},
+  "u_sm_c2p0_l1_xs": {},
+  "u_sm_c2p0_pte": {},
+  "u_sm_c2p0_ptw": {},
+  "u_sm_c2p1_l0_bdc": {},
+  "u_sm_c2p1_l0_h0": {},
+  "u_sm_c2p1_l0_h1": {},
+  "u_sm_c2p1_l0_merge": {},
+  "u_sm_c2p1_l0_qk": {},
+  "u_sm_c2p1_l0_xs": {},
+  "u_sm_c2p1_l1_bdc": {},
+  "u_sm_c2p1_l1_h0": {},
+  "u_sm_c2p1_l1_h1": {},
+  "u_sm_c2p1_l1_merge": {},
+  "u_sm_c2p1_l1_qk": {},
+  "u_sm_c2p1_l1_xs": {},
+  "u_sm_c2p1_pte": {},
+  "u_sm_c2p1_ptw": {},
+  "u_sm_c3_be": {},
+  "u_sm_c3p0_l0_bdc": {},
+  "u_sm_c3p0_l0_h0": {},
+  "u_sm_c3p0_l0_h1": {},
+  "u_sm_c3p0_l0_merge": {},
+  "u_sm_c3p0_l0_qk": {},
+  "u_sm_c3p0_l0_xs": {},
+  "u_sm_c3p0_l1_bdc": {},
+  "u_sm_c3p0_l1_h0": {},
+  "u_sm_c3p0_l1_h1": {},
+  "u_sm_c3p0_l1_merge": {},
+  "u_sm_c3p0_l1_qk": {},
+  "u_sm_c3p0_l1_xs": {},
+  "u_sm_c3p0_pte": {},
+  "u_sm_c3p0_ptw": {},
+  "u_sm_c3p1_l0_bdc": {},
+  "u_sm_c3p1_l0_h0": {},
+  "u_sm_c3p1_l0_h1": {},
+  "u_sm_c3p1_l0_merge": {},
+  "u_sm_c3p1_l0_qk": {},
+  "u_sm_c3p1_l0_xs": {},
+  "u_sm_c3p1_l1_bdc": {},
+  "u_sm_c3p1_l1_h0": {},
+  "u_sm_c3p1_l1_h1": {},
+  "u_sm_c3p1_l1_merge": {},
+  "u_sm_c3p1_l1_qk": {},
+  "u_sm_c3p1_l1_xs": {},
+  "u_sm_c3p1_pte": {},
+  "u_sm_c3p1_ptw": {},
+  "u_sm_c4_be": {},
+  "u_sm_c4p0_l0_bdc": {},
+  "u_sm_c4p0_l0_h0": {},
+  "u_sm_c4p0_l0_h1": {},
+  "u_sm_c4p0_l0_merge": {},
+  "u_sm_c4p0_l0_qk": {},
+  "u_sm_c4p0_l0_xs": {},
+  "u_sm_c4p0_l1_bdc": {},
+  "u_sm_c4p0_l1_h0": {},
+  "u_sm_c4p0_l1_h1": {},
+  "u_sm_c4p0_l1_merge": {},
+  "u_sm_c4p0_l1_qk": {},
+  "u_sm_c4p0_l1_xs": {},
+  "u_sm_c4p0_pte": {},
+  "u_sm_c4p0_ptw": {},
+  "u_sm_c4p1_l0_bdc": {},
+  "u_sm_c4p1_l0_h0": {},
+  "u_sm_c4p1_l0_h1": {},
+  "u_sm_c4p1_l0_merge": {},
+  "u_sm_c4p1_l0_qk": {},
+  "u_sm_c4p1_l0_xs": {},
+  "u_sm_c4p1_l1_bdc": {},
+  "u_sm_c4p1_l1_h0": {},
+  "u_sm_c4p1_l1_h1": {},
+  "u_sm_c4p1_l1_merge": {},
+  "u_sm_c4p1_l1_qk": {},
+  "u_sm_c4p1_l1_xs": {},
+  "u_sm_c4p1_pte": {},
+  "u_sm_c4p1_ptw": {},
+  "u_sm_c5_be": {},
+  "u_sm_c5p0_l0_bdc": {},
+  "u_sm_c5p0_l0_h0": {},
+  "u_sm_c5p0_l0_h1": {},
+  "u_sm_c5p0_l0_merge": {},
+  "u_sm_c5p0_l0_qk": {},
+  "u_sm_c5p0_l0_xs": {},
+  "u_sm_c5p0_l1_bdc": {},
+  "u_sm_c5p0_l1_h0": {},
+  "u_sm_c5p0_l1_h1": {},
+  "u_sm_c5p0_l1_merge": {},
+  "u_sm_c5p0_l1_qk": {},
+  "u_sm_c5p0_l1_xs": {},
+  "u_sm_c5p0_pte": {},
+  "u_sm_c5p0_ptw": {},
+  "u_sm_c5p1_l0_bdc": {},
+  "u_sm_c5p1_l0_h0": {},
+  "u_sm_c5p1_l0_h1": {},
+  "u_sm_c5p1_l0_merge": {},
+  "u_sm_c5p1_l0_qk": {},
+  "u_sm_c5p1_l0_xs": {},
+  "u_sm_c5p1_l1_bdc": {},
+  "u_sm_c5p1_l1_h0": {},
+  "u_sm_c5p1_l1_h1": {},
+  "u_sm_c5p1_l1_merge": {},
+  "u_sm_c5p1_l1_qk": {},
+  "u_sm_c5p1_l1_xs": {},
+  "u_sm_c5p1_pte": {},
+  "u_sm_c5p1_ptw": {},
+  "u_sm_c6_be": {},
+  "u_sm_c6p0_l0_bdc": {},
+  "u_sm_c6p0_l0_h0": {},
+  "u_sm_c6p0_l0_h1": {},
+  "u_sm_c6p0_l0_merge": {},
+  "u_sm_c6p0_l0_qk": {},
+  "u_sm_c6p0_l0_xs": {},
+  "u_sm_c6p0_l1_bdc": {},
+  "u_sm_c6p0_l1_h0": {},
+  "u_sm_c6p0_l1_h1": {},
+  "u_sm_c6p0_l1_merge": {},
+  "u_sm_c6p0_l1_qk": {},
+  "u_sm_c6p0_l1_xs": {},
+  "u_sm_c6p0_pte": {},
+  "u_sm_c6p0_ptw": {},
+  "u_sm_c6p1_l0_bdc": {},
+  "u_sm_c6p1_l0_h0": {},
+  "u_sm_c6p1_l0_h1": {},
+  "u_sm_c6p1_l0_merge": {},
+  "u_sm_c6p1_l0_qk": {},
+  "u_sm_c6p1_l0_xs": {},
+  "u_sm_c6p1_l1_bdc": {},
+  "u_sm_c6p1_l1_h0": {},
+  "u_sm_c6p1_l1_h1": {},
+  "u_sm_c6p1_l1_merge": {},
+  "u_sm_c6p1_l1_qk": {},
+  "u_sm_c6p1_l1_xs": {},
+  "u_sm_c6p1_pte": {},
+  "u_sm_c6p1_ptw": {},
+  "u_sm_c7_be": {},
+  "u_sm_c7p0_l0_bdc": {},
+  "u_sm_c7p0_l0_h0": {},
+  "u_sm_c7p0_l0_h1": {},
+  "u_sm_c7p0_l0_merge": {},
+  "u_sm_c7p0_l0_qk": {},
+  "u_sm_c7p0_l0_xs": {},
+  "u_sm_c7p0_l1_bdc": {},
+  "u_sm_c7p0_l1_h0": {},
+  "u_sm_c7p0_l1_h1": {},
+  "u_sm_c7p0_l1_merge": {},
+  "u_sm_c7p0_l1_qk": {},
+  "u_sm_c7p0_l1_xs": {},
+  "u_sm_c7p0_pte": {},
+  "u_sm_c7p0_ptw": {},
+  "u_sm_c7p1_l0_bdc": {},
+  "u_sm_c7p1_l0_h0": {},
+  "u_sm_c7p1_l0_h1": {},
+  "u_sm_c7p1_l0_merge": {},
+  "u_sm_c7p1_l0_qk": {},
+  "u_sm_c7p1_l0_xs": {},
+  "u_sm_c7p1_l1_bdc": {},
+  "u_sm_c7p1_l1_h0": {},
+  "u_sm_c7p1_l1_h1": {},
+  "u_sm_c7p1_l1_merge": {},
+  "u_sm_c7p1_l1_qk": {},
+  "u_sm_c7p1_l1_xs": {},
+  "u_sm_c7p1_pte": {},
+  "u_sm_c7p1_ptw": {},
+  "u_sm_front_i8w": {},
+  "u_sm_front_kv": {},
+  "u_sm_front_nf": {},
+  "u_sm_front_ps": {}
+ },
+ "q_spb0": {
+  "u_ep_S0": {
+   "fault_cause": [
+    "bus:L117_o"
+   ],
+   "rx_arm_bank": [
+    "bus:L720_i"
+   ],
+   "rx_arm_v": [
+    "bus:L720_i"
+   ],
+   "rx_block_ready": [
+    "bus:L138_o"
+   ],
+   "rx_block_words": [
+    "bus:L720_i"
+   ],
+   "rx_release_bank": [
+    "bus:L720_i"
+   ],
+   "rx_release_v": [
+    "bus:L720_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L720_i"
+   ],
+   "rx_slot_index": [
+    "bus:L720_i"
+   ],
+   "rx_slot_v": [
+    "bus:L720_i"
+   ],
+   "tx_frame": [
+    "bus:L720_i"
+   ],
+   "tx_v": [
+    "bus:L720_i"
+   ]
+  },
+  "u_lk_S0__chn": {},
+  "u_lk_S0__rx__bm0": {},
+  "u_lk_S0__rx__bm1": {},
+  "u_lk_S0__rx__bm2": {},
+  "u_lk_S0__rx__rest": {},
+  "u_lk_S0__tx": {}
+ },
+ "q_spb0__physical_v1": {
+  "u_ep_S0": {
+   "fault_cause": [
+    "bus:L117_o"
+   ],
+   "rx_arm_bank": [
+    "bus:L720_i"
+   ],
+   "rx_arm_v": [
+    "bus:L720_i"
+   ],
+   "rx_block_ready": [
+    "bus:L138_o"
+   ],
+   "rx_block_words": [
+    "bus:L720_i"
+   ],
+   "rx_release_bank": [
+    "bus:L720_i"
+   ],
+   "rx_release_v": [
+    "bus:L720_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L720_i"
+   ],
+   "rx_slot_index": [
+    "bus:L720_i"
+   ],
+   "rx_slot_v": [
+    "bus:L720_i"
+   ],
+   "tx_frame": [
+    "bus:L720_i"
+   ],
+   "tx_v": [
+    "bus:L720_i"
+   ]
+  },
+  "u_lk_S0__chn": {},
+  "u_lk_S0__rx__bm0": {},
+  "u_lk_S0__rx__bm1": {},
+  "u_lk_S0__rx__bm2": {},
+  "u_lk_S0__rx__rest": {},
+  "u_lk_S0__tx": {}
+ },
+ "q_spb2": {
+  "u_xc_Q2": {
+   "active": [
+    "bus:L87_o"
+   ],
+   "cfg_addr": [
+    "bus:L49_i"
+   ],
+   "cfg_data": [
+    "bus:L49_i"
+   ],
+   "cfg_target": [
+    "bus:L49_i"
+   ],
+   "cfg_v": [
+    "bus:L49_i"
+   ],
+   "cmd_ext": [
+    "bus:L75_o"
+   ],
+   "configured": [
+    "bus:L87_o"
+   ],
+   "desc_base": [
+    "bus:L49_i"
+   ],
+   "desc_limit": [
+    "bus:L49_i"
+   ],
+   "desc_loops": [
+    "bus:L49_i"
+   ],
+   "desc_v": [
+    "bus:L49_i"
+   ],
+   "done": [
+    "bus:L87_o"
+   ],
+   "fault": [
+    "bus:L87_o"
+   ],
+   "kv_desc": [
+    "bus:L75_o"
+   ],
+   "launch_v": [
+    "bus:L49_i"
+   ]
+  },
+  "u_xc_Q3": {
+   "active": [
+    "bus:L87_o"
+   ],
+   "cfg_addr": [
+    "bus:L49_i"
+   ],
+   "cfg_data": [
+    "bus:L49_i"
+   ],
+   "cfg_target": [
+    "bus:L49_i"
+   ],
+   "cfg_v": [
+    "bus:L49_i"
+   ],
+   "cmd_ext": [
+    "bus:L76_o"
+   ],
+   "configured": [
+    "bus:L87_o"
+   ],
+   "desc_base": [
+    "bus:L49_i"
+   ],
+   "desc_limit": [
+    "bus:L49_i",
+    "bus:L83_i"
+   ],
+   "desc_loops": [
+    "bus:L83_i"
+   ],
+   "desc_v": [
+    "bus:L83_i"
+   ],
+   "done": [
+    "bus:L87_o"
+   ],
+   "fault": [
+    "bus:L87_o"
+   ],
+   "kv_desc": [
+    "bus:L76_o"
+   ],
+   "launch_v": [
+    "bus:L83_i"
+   ]
+  }
+ },
+ "q_spb2__physical_v1": {
+  "u_xc_Q2": {
+   "active": [
+    "bus:L87_o"
+   ],
+   "cfg_addr": [
+    "bus:L49_i"
+   ],
+   "cfg_data": [
+    "bus:L49_i"
+   ],
+   "cfg_target": [
+    "bus:L49_i"
+   ],
+   "cfg_v": [
+    "bus:L49_i"
+   ],
+   "cmd_ext": [
+    "bus:L75_o"
+   ],
+   "configured": [
+    "bus:L87_o"
+   ],
+   "desc_base": [
+    "bus:L49_i"
+   ],
+   "desc_limit": [
+    "bus:L49_i",
+    "bus:L83_i"
+   ],
+   "desc_loops": [
+    "bus:L83_i"
+   ],
+   "desc_v": [
+    "bus:L83_i"
+   ],
+   "done": [
+    "bus:L87_o"
+   ],
+   "fault": [
+    "bus:L87_o"
+   ],
+   "kv_desc": [
+    "bus:L75_o"
+   ],
+   "launch_v": [
+    "bus:L83_i"
+   ]
+  },
+  "u_xc_Q3": {
+   "active": [
+    "bus:L87_o"
+   ],
+   "cfg_addr": [
+    "bus:L49_i"
+   ],
+   "cfg_data": [
+    "bus:L49_i"
+   ],
+   "cfg_target": [
+    "bus:L49_i"
+   ],
+   "cfg_v": [
+    "bus:L49_i"
+   ],
+   "cmd_ext": [
+    "bus:L76_o"
+   ],
+   "configured": [
+    "bus:L87_o"
+   ],
+   "desc_base": [
+    "bus:L49_i"
+   ],
+   "desc_limit": [
+    "bus:L49_i"
+   ],
+   "desc_loops": [
+    "bus:L49_i"
+   ],
+   "desc_v": [
+    "bus:L49_i"
+   ],
+   "done": [
+    "bus:L87_o"
+   ],
+   "fault": [
+    "bus:L87_o"
+   ],
+   "kv_desc": [
+    "bus:L76_o"
+   ],
+   "launch_v": [
+    "bus:L49_i"
+   ]
+  }
+ },
+ "q_spt0": {
+  "u_xc_Q0": {
+   "active": [
+    "bus:L88_o"
+   ],
+   "cfg_addr": [
+    "bus:L50_i"
+   ],
+   "cfg_data": [
+    "bus:L50_i"
+   ],
+   "cfg_target": [
+    "bus:L50_i"
+   ],
+   "cfg_v": [
+    "bus:L50_i"
+   ],
+   "cmd_ext": [
+    "bus:L77_o"
+   ],
+   "configured": [
+    "bus:L88_o"
+   ],
+   "desc_base": [
+    "bus:L50_i"
+   ],
+   "desc_limit": [
+    "bus:L50_i"
+   ],
+   "desc_loops": [
+    "bus:L50_i"
+   ],
+   "desc_v": [
+    "bus:L50_i"
+   ],
+   "done": [
+    "bus:L88_o"
+   ],
+   "fault": [
+    "bus:L88_o"
+   ],
+   "kv_desc": [
+    "bus:L77_o"
+   ],
+   "launch_v": [
+    "bus:L50_i"
+   ]
+  },
+  "u_xc_Q1": {
+   "active": [
+    "bus:L88_o"
+   ],
+   "cfg_addr": [
+    "bus:L50_i"
+   ],
+   "cfg_data": [
+    "bus:L50_i"
+   ],
+   "cfg_target": [
+    "bus:L50_i"
+   ],
+   "cfg_v": [
+    "bus:L50_i"
+   ],
+   "cmd_ext": [
+    "bus:L78_o"
+   ],
+   "configured": [
+    "bus:L88_o"
+   ],
+   "desc_base": [
+    "bus:L50_i"
+   ],
+   "desc_limit": [
+    "bus:L50_i",
+    "bus:L84_i"
+   ],
+   "desc_loops": [
+    "bus:L84_i"
+   ],
+   "desc_v": [
+    "bus:L84_i"
+   ],
+   "done": [
+    "bus:L88_o"
+   ],
+   "fault": [
+    "bus:L88_o"
+   ],
+   "kv_desc": [
+    "bus:L78_o"
+   ],
+   "launch_v": [
+    "bus:L84_i"
+   ]
+  }
+ },
+ "q_spt0__physical_v1": {
+  "u_xc_Q0": {
+   "active": [
+    "bus:L88_o"
+   ],
+   "cfg_addr": [
+    "bus:L50_i"
+   ],
+   "cfg_data": [
+    "bus:L50_i"
+   ],
+   "cfg_target": [
+    "bus:L50_i"
+   ],
+   "cfg_v": [
+    "bus:L50_i"
+   ],
+   "cmd_ext": [
+    "bus:L77_o"
+   ],
+   "configured": [
+    "bus:L88_o"
+   ],
+   "desc_base": [
+    "bus:L50_i"
+   ],
+   "desc_limit": [
+    "bus:L50_i",
+    "bus:L84_i"
+   ],
+   "desc_loops": [
+    "bus:L84_i"
+   ],
+   "desc_v": [
+    "bus:L84_i"
+   ],
+   "done": [
+    "bus:L88_o"
+   ],
+   "fault": [
+    "bus:L88_o"
+   ],
+   "kv_desc": [
+    "bus:L77_o"
+   ],
+   "launch_v": [
+    "bus:L84_i"
+   ]
+  },
+  "u_xc_Q1": {
+   "active": [
+    "bus:L88_o"
+   ],
+   "cfg_addr": [
+    "bus:L50_i"
+   ],
+   "cfg_data": [
+    "bus:L50_i"
+   ],
+   "cfg_target": [
+    "bus:L50_i"
+   ],
+   "cfg_v": [
+    "bus:L50_i"
+   ],
+   "cmd_ext": [
+    "bus:L78_o"
+   ],
+   "configured": [
+    "bus:L88_o"
+   ],
+   "desc_base": [
+    "bus:L50_i"
+   ],
+   "desc_limit": [
+    "bus:L50_i"
+   ],
+   "desc_loops": [
+    "bus:L50_i"
+   ],
+   "desc_v": [
+    "bus:L50_i"
+   ],
+   "done": [
+    "bus:L88_o"
+   ],
+   "fault": [
+    "bus:L88_o"
+   ],
+   "kv_desc": [
+    "bus:L78_o"
+   ],
+   "launch_v": [
+    "bus:L50_i"
+   ]
+  }
+ },
+ "q_su00": {
+  "u_su_Q0_lane_exp0__l": {},
+  "u_su_Q0_lane_exp0__s": {},
+  "u_su_Q0_lane_exp10__l": {},
+  "u_su_Q0_lane_exp10__s": {},
+  "u_su_Q0_lane_exp12__l": {},
+  "u_su_Q0_lane_exp12__s": {},
+  "u_su_Q0_lane_exp14__l": {},
+  "u_su_Q0_lane_exp14__s": {},
+  "u_su_Q0_lane_exp2__l": {},
+  "u_su_Q0_lane_exp2__s": {},
+  "u_su_Q0_lane_exp4__l": {},
+  "u_su_Q0_lane_exp4__s": {},
+  "u_su_Q0_lane_exp6__l": {},
+  "u_su_Q0_lane_exp6__s": {},
+  "u_su_Q0_lane_exp8__l": {},
+  "u_su_Q0_lane_exp8__s": {},
+  "u_su_Q0_lanes_plain0_3__p0": {},
+  "u_su_Q0_lanes_plain0_3__p1": {},
+  "u_su_Q0_lanes_plain0_3__p2": {},
+  "u_su_Q0_lanes_plain0_3__p3": {},
+  "u_su_Q0_lanes_plain8_11__p0": {},
+  "u_su_Q0_lanes_plain8_11__p1": {},
+  "u_su_Q0_lanes_plain8_11__p2": {},
+  "u_su_Q0_lanes_plain8_11__p3": {},
+  "u_su_Q0_pretree": {
+   "pretree_ro_v": [
+    "bus:L5008_i",
+    "bus:L5009_i",
+    "bus:L5010_i",
+    "bus:L5011_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L5008_i",
+    "bus:L5009_i",
+    "bus:L5010_i",
+    "bus:L5011_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L8001_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L5066_o"
+   ]
+  }
+ },
+ "q_su00__physical_v1": {
+  "u_su_Q0_lane_exp0__l": {},
+  "u_su_Q0_lane_exp0__s": {},
+  "u_su_Q0_lane_exp10__l": {},
+  "u_su_Q0_lane_exp10__s": {},
+  "u_su_Q0_lane_exp12__l": {},
+  "u_su_Q0_lane_exp12__s": {},
+  "u_su_Q0_lane_exp14__l": {},
+  "u_su_Q0_lane_exp14__s": {},
+  "u_su_Q0_lane_exp2__l": {},
+  "u_su_Q0_lane_exp2__s": {},
+  "u_su_Q0_lane_exp4__l": {},
+  "u_su_Q0_lane_exp4__s": {},
+  "u_su_Q0_lane_exp6__l": {},
+  "u_su_Q0_lane_exp6__s": {},
+  "u_su_Q0_lane_exp8__l": {},
+  "u_su_Q0_lane_exp8__s": {},
+  "u_su_Q0_lanes_plain0_3__p0": {},
+  "u_su_Q0_lanes_plain0_3__p1": {},
+  "u_su_Q0_lanes_plain0_3__p2": {},
+  "u_su_Q0_lanes_plain0_3__p3": {},
+  "u_su_Q0_lanes_plain8_11__p0": {},
+  "u_su_Q0_lanes_plain8_11__p1": {},
+  "u_su_Q0_lanes_plain8_11__p2": {},
+  "u_su_Q0_lanes_plain8_11__p3": {},
+  "u_su_Q0_pretree": {
+   "pretree_ro_v": [
+    "bus:L1208_i",
+    "bus:L1209_i",
+    "bus:L1210_i",
+    "bus:L1211_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L1208_i",
+    "bus:L1209_i",
+    "bus:L1210_i",
+    "bus:L1211_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L8002_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L1263_o"
+   ]
+  }
+ },
+ "q_su01": {
+  "u_su_Q0_lane_exp11__l": {},
+  "u_su_Q0_lane_exp11__s": {},
+  "u_su_Q0_lane_exp13__l": {},
+  "u_su_Q0_lane_exp13__s": {},
+  "u_su_Q0_lane_exp1__l": {},
+  "u_su_Q0_lane_exp1__s": {},
+  "u_su_Q0_lane_exp3__l": {},
+  "u_su_Q0_lane_exp3__s": {},
+  "u_su_Q0_lane_exp5__l": {},
+  "u_su_Q0_lane_exp5__s": {},
+  "u_su_Q0_lane_exp7__l": {},
+  "u_su_Q0_lane_exp7__s": {},
+  "u_su_Q0_lane_exp9__l": {},
+  "u_su_Q0_lane_exp9__s": {},
+  "u_su_Q0_lane_exp_l__l": {},
+  "u_su_Q0_lane_exp_l__s": {},
+  "u_su_Q0_lanes_plain12_15__p0": {},
+  "u_su_Q0_lanes_plain12_15__p1": {},
+  "u_su_Q0_lanes_plain12_15__p2": {},
+  "u_su_Q0_lanes_plain12_15__p3": {},
+  "u_su_Q0_lanes_plain4_7__p0": {},
+  "u_su_Q0_lanes_plain4_7__p1": {},
+  "u_su_Q0_lanes_plain4_7__p2": {},
+  "u_su_Q0_lanes_plain4_7__p3": {}
+ },
+ "q_su01__physical_v1": {
+  "u_su_Q0_lane_exp11__l": {},
+  "u_su_Q0_lane_exp11__s": {},
+  "u_su_Q0_lane_exp13__l": {},
+  "u_su_Q0_lane_exp13__s": {},
+  "u_su_Q0_lane_exp1__l": {},
+  "u_su_Q0_lane_exp1__s": {},
+  "u_su_Q0_lane_exp3__l": {},
+  "u_su_Q0_lane_exp3__s": {},
+  "u_su_Q0_lane_exp5__l": {},
+  "u_su_Q0_lane_exp5__s": {},
+  "u_su_Q0_lane_exp7__l": {},
+  "u_su_Q0_lane_exp7__s": {},
+  "u_su_Q0_lane_exp9__l": {},
+  "u_su_Q0_lane_exp9__s": {},
+  "u_su_Q0_lane_exp_l__l": {},
+  "u_su_Q0_lane_exp_l__s": {},
+  "u_su_Q0_lanes_plain12_15__p0": {},
+  "u_su_Q0_lanes_plain12_15__p1": {},
+  "u_su_Q0_lanes_plain12_15__p2": {},
+  "u_su_Q0_lanes_plain12_15__p3": {},
+  "u_su_Q0_lanes_plain4_7__p0": {},
+  "u_su_Q0_lanes_plain4_7__p1": {},
+  "u_su_Q0_lanes_plain4_7__p2": {},
+  "u_su_Q0_lanes_plain4_7__p3": {}
+ },
+ "q_su10": {
+  "u_su_Q1_lane_exp0__l": {},
+  "u_su_Q1_lane_exp0__s": {},
+  "u_su_Q1_lane_exp10__l": {},
+  "u_su_Q1_lane_exp10__s": {},
+  "u_su_Q1_lane_exp12__l": {},
+  "u_su_Q1_lane_exp12__s": {},
+  "u_su_Q1_lane_exp14__l": {},
+  "u_su_Q1_lane_exp14__s": {},
+  "u_su_Q1_lane_exp2__l": {},
+  "u_su_Q1_lane_exp2__s": {},
+  "u_su_Q1_lane_exp4__l": {},
+  "u_su_Q1_lane_exp4__s": {},
+  "u_su_Q1_lane_exp6__l": {},
+  "u_su_Q1_lane_exp6__s": {},
+  "u_su_Q1_lane_exp8__l": {},
+  "u_su_Q1_lane_exp8__s": {},
+  "u_su_Q1_lanes_plain0_3__p0": {},
+  "u_su_Q1_lanes_plain0_3__p1": {},
+  "u_su_Q1_lanes_plain0_3__p2": {},
+  "u_su_Q1_lanes_plain0_3__p3": {},
+  "u_su_Q1_lanes_plain8_11__p0": {},
+  "u_su_Q1_lanes_plain8_11__p1": {},
+  "u_su_Q1_lanes_plain8_11__p2": {},
+  "u_su_Q1_lanes_plain8_11__p3": {},
+  "u_su_Q1_pretree": {
+   "pretree_ro_v": [
+    "bus:L1219_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L1219_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L1243_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L1244_o"
+   ]
+  }
+ },
+ "q_su10__physical_v1": {
+  "u_su_Q1_lane_exp0__l": {},
+  "u_su_Q1_lane_exp0__s": {},
+  "u_su_Q1_lane_exp10__l": {},
+  "u_su_Q1_lane_exp10__s": {},
+  "u_su_Q1_lane_exp12__l": {},
+  "u_su_Q1_lane_exp12__s": {},
+  "u_su_Q1_lane_exp14__l": {},
+  "u_su_Q1_lane_exp14__s": {},
+  "u_su_Q1_lane_exp2__l": {},
+  "u_su_Q1_lane_exp2__s": {},
+  "u_su_Q1_lane_exp4__l": {},
+  "u_su_Q1_lane_exp4__s": {},
+  "u_su_Q1_lane_exp6__l": {},
+  "u_su_Q1_lane_exp6__s": {},
+  "u_su_Q1_lane_exp8__l": {},
+  "u_su_Q1_lane_exp8__s": {},
+  "u_su_Q1_lanes_plain0_3__p0": {},
+  "u_su_Q1_lanes_plain0_3__p1": {},
+  "u_su_Q1_lanes_plain0_3__p2": {},
+  "u_su_Q1_lanes_plain0_3__p3": {},
+  "u_su_Q1_lanes_plain8_11__p0": {},
+  "u_su_Q1_lanes_plain8_11__p1": {},
+  "u_su_Q1_lanes_plain8_11__p2": {},
+  "u_su_Q1_lanes_plain8_11__p3": {},
+  "u_su_Q1_pretree": {
+   "pretree_ro_v": [
+    "bus:L5019_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L5019_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L5044_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L5045_o"
+   ]
+  }
+ },
+ "q_su11": {
+  "u_su_Q1_lane_exp11__l": {},
+  "u_su_Q1_lane_exp11__s": {},
+  "u_su_Q1_lane_exp13__l": {},
+  "u_su_Q1_lane_exp13__s": {},
+  "u_su_Q1_lane_exp1__l": {},
+  "u_su_Q1_lane_exp1__s": {},
+  "u_su_Q1_lane_exp3__l": {},
+  "u_su_Q1_lane_exp3__s": {},
+  "u_su_Q1_lane_exp5__l": {},
+  "u_su_Q1_lane_exp5__s": {},
+  "u_su_Q1_lane_exp7__l": {},
+  "u_su_Q1_lane_exp7__s": {},
+  "u_su_Q1_lane_exp9__l": {},
+  "u_su_Q1_lane_exp9__s": {},
+  "u_su_Q1_lane_exp_l__l": {},
+  "u_su_Q1_lane_exp_l__s": {},
+  "u_su_Q1_lanes_plain12_15__p0": {},
+  "u_su_Q1_lanes_plain12_15__p1": {},
+  "u_su_Q1_lanes_plain12_15__p2": {},
+  "u_su_Q1_lanes_plain12_15__p3": {},
+  "u_su_Q1_lanes_plain4_7__p0": {},
+  "u_su_Q1_lanes_plain4_7__p1": {},
+  "u_su_Q1_lanes_plain4_7__p2": {},
+  "u_su_Q1_lanes_plain4_7__p3": {}
+ },
+ "q_su11__physical_v1": {
+  "u_su_Q1_lane_exp11__l": {},
+  "u_su_Q1_lane_exp11__s": {},
+  "u_su_Q1_lane_exp13__l": {},
+  "u_su_Q1_lane_exp13__s": {},
+  "u_su_Q1_lane_exp1__l": {},
+  "u_su_Q1_lane_exp1__s": {},
+  "u_su_Q1_lane_exp3__l": {},
+  "u_su_Q1_lane_exp3__s": {},
+  "u_su_Q1_lane_exp5__l": {},
+  "u_su_Q1_lane_exp5__s": {},
+  "u_su_Q1_lane_exp7__l": {},
+  "u_su_Q1_lane_exp7__s": {},
+  "u_su_Q1_lane_exp9__l": {},
+  "u_su_Q1_lane_exp9__s": {},
+  "u_su_Q1_lane_exp_l__l": {},
+  "u_su_Q1_lane_exp_l__s": {},
+  "u_su_Q1_lanes_plain12_15__p0": {},
+  "u_su_Q1_lanes_plain12_15__p1": {},
+  "u_su_Q1_lanes_plain12_15__p2": {},
+  "u_su_Q1_lanes_plain12_15__p3": {},
+  "u_su_Q1_lanes_plain4_7__p0": {},
+  "u_su_Q1_lanes_plain4_7__p1": {},
+  "u_su_Q1_lanes_plain4_7__p2": {},
+  "u_su_Q1_lanes_plain4_7__p3": {}
+ },
+ "q_su20": {
+  "u_su_Q2_lanes0_3__p0": {},
+  "u_su_Q2_lanes0_3__p1": {},
+  "u_su_Q2_lanes0_3__p2": {},
+  "u_su_Q2_lanes0_3__p3": {},
+  "u_su_Q2_lanes16_19__p0": {},
+  "u_su_Q2_lanes16_19__p1": {},
+  "u_su_Q2_lanes16_19__p2": {},
+  "u_su_Q2_lanes16_19__p3": {},
+  "u_su_Q2_lanes24_27__p0": {},
+  "u_su_Q2_lanes24_27__p1": {},
+  "u_su_Q2_lanes24_27__p2": {},
+  "u_su_Q2_lanes24_27__p3": {},
+  "u_su_Q2_lanes8_11__p0": {},
+  "u_su_Q2_lanes8_11__p1": {},
+  "u_su_Q2_lanes8_11__p2": {},
+  "u_su_Q2_lanes8_11__p3": {},
+  "u_su_Q2_pretree": {
+   "pretree_ro_v": [
+    "bus:L5002_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L5002_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L5071_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L5072_o"
+   ]
+  }
+ },
+ "q_su20__physical_v1": {
+  "u_su_Q2_lanes0_3__p0": {},
+  "u_su_Q2_lanes0_3__p1": {},
+  "u_su_Q2_lanes0_3__p2": {},
+  "u_su_Q2_lanes0_3__p3": {},
+  "u_su_Q2_lanes16_19__p0": {},
+  "u_su_Q2_lanes16_19__p1": {},
+  "u_su_Q2_lanes16_19__p2": {},
+  "u_su_Q2_lanes16_19__p3": {},
+  "u_su_Q2_lanes24_27__p0": {},
+  "u_su_Q2_lanes24_27__p1": {},
+  "u_su_Q2_lanes24_27__p2": {},
+  "u_su_Q2_lanes24_27__p3": {},
+  "u_su_Q2_lanes8_11__p0": {},
+  "u_su_Q2_lanes8_11__p1": {},
+  "u_su_Q2_lanes8_11__p2": {},
+  "u_su_Q2_lanes8_11__p3": {},
+  "u_su_Q2_pretree": {
+   "pretree_ro_v": [
+    "bus:L1204_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L1204_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L1278_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L1281_o"
+   ]
+  }
+ },
+ "q_su21": {
+  "u_su_Q2_lanes12_15__p0": {},
+  "u_su_Q2_lanes12_15__p1": {},
+  "u_su_Q2_lanes12_15__p2": {},
+  "u_su_Q2_lanes12_15__p3": {},
+  "u_su_Q2_lanes20_23__p0": {},
+  "u_su_Q2_lanes20_23__p1": {},
+  "u_su_Q2_lanes20_23__p2": {},
+  "u_su_Q2_lanes20_23__p3": {},
+  "u_su_Q2_lanes28_31__p0": {},
+  "u_su_Q2_lanes28_31__p1": {},
+  "u_su_Q2_lanes28_31__p2": {},
+  "u_su_Q2_lanes28_31__p3": {},
+  "u_su_Q2_lanes4_7__p0": {},
+  "u_su_Q2_lanes4_7__p1": {},
+  "u_su_Q2_lanes4_7__p2": {},
+  "u_su_Q2_lanes4_7__p3": {}
+ },
+ "q_su21__physical_v1": {
+  "u_su_Q2_lanes12_15__p0": {},
+  "u_su_Q2_lanes12_15__p1": {},
+  "u_su_Q2_lanes12_15__p2": {},
+  "u_su_Q2_lanes12_15__p3": {},
+  "u_su_Q2_lanes20_23__p0": {},
+  "u_su_Q2_lanes20_23__p1": {},
+  "u_su_Q2_lanes20_23__p2": {},
+  "u_su_Q2_lanes20_23__p3": {},
+  "u_su_Q2_lanes28_31__p0": {},
+  "u_su_Q2_lanes28_31__p1": {},
+  "u_su_Q2_lanes28_31__p2": {},
+  "u_su_Q2_lanes28_31__p3": {},
+  "u_su_Q2_lanes4_7__p0": {},
+  "u_su_Q2_lanes4_7__p1": {},
+  "u_su_Q2_lanes4_7__p2": {},
+  "u_su_Q2_lanes4_7__p3": {}
+ },
+ "q_su30": {
+  "u_su_Q3_lanes0_3__p0": {},
+  "u_su_Q3_lanes0_3__p1": {},
+  "u_su_Q3_lanes0_3__p2": {},
+  "u_su_Q3_lanes0_3__p3": {},
+  "u_su_Q3_lanes16_19__p0": {},
+  "u_su_Q3_lanes16_19__p1": {},
+  "u_su_Q3_lanes16_19__p2": {},
+  "u_su_Q3_lanes16_19__p3": {},
+  "u_su_Q3_lanes24_27__p0": {},
+  "u_su_Q3_lanes24_27__p1": {},
+  "u_su_Q3_lanes24_27__p2": {},
+  "u_su_Q3_lanes24_27__p3": {},
+  "u_su_Q3_lanes8_11__p0": {},
+  "u_su_Q3_lanes8_11__p1": {},
+  "u_su_Q3_lanes8_11__p2": {},
+  "u_su_Q3_lanes8_11__p3": {},
+  "u_su_Q3_pretree": {
+   "pretree_ro_v": [
+    "bus:L1203_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L1203_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L1245_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L1246_o"
+   ]
+  }
+ },
+ "q_su30__physical_v1": {
+  "u_su_Q3_lanes0_3__p0": {},
+  "u_su_Q3_lanes0_3__p1": {},
+  "u_su_Q3_lanes0_3__p2": {},
+  "u_su_Q3_lanes0_3__p3": {},
+  "u_su_Q3_lanes16_19__p0": {},
+  "u_su_Q3_lanes16_19__p1": {},
+  "u_su_Q3_lanes16_19__p2": {},
+  "u_su_Q3_lanes16_19__p3": {},
+  "u_su_Q3_lanes24_27__p0": {},
+  "u_su_Q3_lanes24_27__p1": {},
+  "u_su_Q3_lanes24_27__p2": {},
+  "u_su_Q3_lanes24_27__p3": {},
+  "u_su_Q3_lanes8_11__p0": {},
+  "u_su_Q3_lanes8_11__p1": {},
+  "u_su_Q3_lanes8_11__p2": {},
+  "u_su_Q3_lanes8_11__p3": {},
+  "u_su_Q3_pretree": {
+   "pretree_ro_v": [
+    "bus:L5005_i"
+   ],
+   "pretree_ro_x": [
+    "bus:L5005_i"
+   ],
+   "pretree_tree_cmd": [
+    "bus:L5046_i"
+   ],
+   "pretree_tree_o": [
+    "bus:L5047_o"
+   ]
+  }
+ },
+ "q_su31": {
+  "u_su_Q3_lanes12_15__p0": {},
+  "u_su_Q3_lanes12_15__p1": {},
+  "u_su_Q3_lanes12_15__p2": {},
+  "u_su_Q3_lanes12_15__p3": {},
+  "u_su_Q3_lanes20_23__p0": {},
+  "u_su_Q3_lanes20_23__p1": {},
+  "u_su_Q3_lanes20_23__p2": {},
+  "u_su_Q3_lanes20_23__p3": {},
+  "u_su_Q3_lanes28_31__p0": {},
+  "u_su_Q3_lanes28_31__p1": {},
+  "u_su_Q3_lanes28_31__p2": {},
+  "u_su_Q3_lanes28_31__p3": {},
+  "u_su_Q3_lanes4_7__p0": {},
+  "u_su_Q3_lanes4_7__p1": {},
+  "u_su_Q3_lanes4_7__p2": {},
+  "u_su_Q3_lanes4_7__p3": {}
+ },
+ "q_su31__physical_v1": {
+  "u_su_Q3_lanes12_15__p0": {},
+  "u_su_Q3_lanes12_15__p1": {},
+  "u_su_Q3_lanes12_15__p2": {},
+  "u_su_Q3_lanes12_15__p3": {},
+  "u_su_Q3_lanes20_23__p0": {},
+  "u_su_Q3_lanes20_23__p1": {},
+  "u_su_Q3_lanes20_23__p2": {},
+  "u_su_Q3_lanes20_23__p3": {},
+  "u_su_Q3_lanes28_31__p0": {},
+  "u_su_Q3_lanes28_31__p1": {},
+  "u_su_Q3_lanes28_31__p2": {},
+  "u_su_Q3_lanes28_31__p3": {},
+  "u_su_Q3_lanes4_7__p0": {},
+  "u_su_Q3_lanes4_7__p1": {},
+  "u_su_Q3_lanes4_7__p2": {},
+  "u_su_Q3_lanes4_7__p3": {}
+ },
+ "root": {
+  "u_col_idx": {
+   "active": [
+    "bus:L12ms_o"
+   ],
+   "c_busy": [
+    "core:u_hb_argmax.busy"
+   ],
+   "c_fault": [
+    "bus:L156_i",
+    "core:u_hb_argmax.fault"
+   ],
+   "cfg_addr": [
+    "bus:L191_i"
+   ],
+   "cfg_data": [
+    "bus:L191_i",
+    "bus:L5038_i"
+   ],
+   "cfg_target": [
+    "bus:L5038_i"
+   ],
+   "cfg_v": [
+    "bus:L5038_i"
+   ],
+   "desc_v": [
+    "bus:L5038_i"
+   ],
+   "fault": [
+    "bus:L12ms_o"
+   ],
+   "go": [
+    "core:u_hb_argmax.go"
+   ],
+   "launch_v": [
+    "bus:L5038_i"
+   ],
+   "prm": [
+    "bus:L12ms_o"
+   ],
+   "pw_addr": [
+    "bus:L12ms_o"
+   ],
+   "pw_data": [
+    "bus:L12ms_o"
+   ],
+   "pw_we": [
+    "bus:L12ms_o"
+   ],
+   "ready": [
+    "bus:L12ms_o"
+   ],
+   "start_v": [
+    "bus:L12ms_o"
+   ]
+  },
+  "u_hb_argmax": {
+   "a_base": [
+    "core:u_col_idx.rec"
+   ],
+   "a_mirror": [
+    "core:u_col_idx.rec"
+   ],
+   "cr": [
+    "bus:L156_i"
+   ],
+   "die_id": [
+    "core:u_col_idx.prm"
+   ],
+   "imm_a": [
+    "core:u_col_idx.rec"
+   ],
+   "mode": [
+    "core:u_col_idx.rec"
+   ],
+   "n": [
+    "core:u_col_idx.rec"
+   ],
+   "nan_flag": [
+    "bus:L12ms_o"
+   ],
+   "o_base": [
+    "core:u_col_idx.rec"
+   ],
+   "o_is": [
+    "core:u_col_idx.rec"
+   ]
+  },
+  "u_hb_idx__ctl": {},
+  "u_hb_idx__link": {},
+  "u_hb_idx__selector__ctl": {},
+  "u_hb_idx__selector__q0": {},
+  "u_hb_idx__selector__q1": {},
+  "u_hb_idx__selector__q2": {},
+  "u_hb_idx__selector__q3": {},
+  "u_hc_eng_hcp_sys1": {},
+  "u_hc_eng_tail0_rest": {},
+  "u_hc_eng_tail0_sk_fsr": {},
+  "u_hc_eng_tail1_rest": {},
+  "u_hc_eng_tail1_sk_fsr": {},
+  "u_host_cp_rxs": {
+   "ep_phy_up": [
+    "bus:L8007_i"
+   ],
+   "ep_rx_block_ready": [
+    "bus:L8007_i"
+   ],
+   "ep_rx_pin_flit": [
+    "bus:L8007_i"
+   ],
+   "ep_rx_pin_v": [
+    "bus:L8007_i"
+   ]
+  },
+  "u_mu_fused_program": {},
+  "u_mu_fused_root": {
+   "down_ne": [
+    "bus:n4x_dn_ne_o"
+   ],
+   "down_nw": [
+    "bus:n4x_dn_nw_o"
+   ],
+   "up_ne": [
+    "bus:n4x_up_ne_i"
+   ],
+   "up_nw": [
+    "bus:n4x_up_nw_i"
+   ]
+  },
+  "u_tkm_SW_root": {},
+  "u_tkm_SW_tile0__ha": {},
+  "u_tkm_SW_tile0__hb": {},
+  "u_tkm_SW_tile10__ha": {},
+  "u_tkm_SW_tile10__hb": {},
+  "u_tkm_SW_tile11__ha": {},
+  "u_tkm_SW_tile11__hb": {},
+  "u_tkm_SW_tile12__ha": {},
+  "u_tkm_SW_tile12__hb": {},
+  "u_tkm_SW_tile13__ha": {},
+  "u_tkm_SW_tile13__hb": {},
+  "u_tkm_SW_tile14__ha": {},
+  "u_tkm_SW_tile14__hb": {},
+  "u_tkm_SW_tile15__ha": {},
+  "u_tkm_SW_tile15__hb": {},
+  "u_tkm_SW_tile16__ha": {},
+  "u_tkm_SW_tile16__hb": {},
+  "u_tkm_SW_tile17__ha": {},
+  "u_tkm_SW_tile17__hb": {},
+  "u_tkm_SW_tile18__ha": {},
+  "u_tkm_SW_tile18__hb": {},
+  "u_tkm_SW_tile19__ha": {},
+  "u_tkm_SW_tile19__hb": {},
+  "u_tkm_SW_tile1__ha": {},
+  "u_tkm_SW_tile1__hb": {},
+  "u_tkm_SW_tile20__ha": {},
+  "u_tkm_SW_tile20__hb": {},
+  "u_tkm_SW_tile21__ha": {},
+  "u_tkm_SW_tile21__hb": {},
+  "u_tkm_SW_tile22__ha": {},
+  "u_tkm_SW_tile22__hb": {},
+  "u_tkm_SW_tile23__ha": {},
+  "u_tkm_SW_tile23__hb": {},
+  "u_tkm_SW_tile24__ha": {},
+  "u_tkm_SW_tile24__hb": {},
+  "u_tkm_SW_tile25__ha": {},
+  "u_tkm_SW_tile25__hb": {},
+  "u_tkm_SW_tile26__ha": {},
+  "u_tkm_SW_tile26__hb": {},
+  "u_tkm_SW_tile27__ha": {},
+  "u_tkm_SW_tile27__hb": {},
+  "u_tkm_SW_tile28__ha": {},
+  "u_tkm_SW_tile28__hb": {},
+  "u_tkm_SW_tile29__ha": {},
+  "u_tkm_SW_tile29__hb": {},
+  "u_tkm_SW_tile2__ha": {},
+  "u_tkm_SW_tile2__hb": {},
+  "u_tkm_SW_tile30__ha": {},
+  "u_tkm_SW_tile30__hb": {},
+  "u_tkm_SW_tile31__ha": {},
+  "u_tkm_SW_tile31__hb": {},
+  "u_tkm_SW_tile3__ha": {},
+  "u_tkm_SW_tile3__hb": {},
+  "u_tkm_SW_tile4__ha": {},
+  "u_tkm_SW_tile4__hb": {},
+  "u_tkm_SW_tile5__ha": {},
+  "u_tkm_SW_tile5__hb": {},
+  "u_tkm_SW_tile6__ha": {},
+  "u_tkm_SW_tile6__hb": {},
+  "u_tkm_SW_tile7__ha": {},
+  "u_tkm_SW_tile7__hb": {},
+  "u_tkm_SW_tile8__ha": {},
+  "u_tkm_SW_tile8__hb": {},
+  "u_tkm_SW_tile9__ha": {},
+  "u_tkm_SW_tile9__hb": {}
+ },
+ "vsN0": {
+  "u_ep_S1": {
+   "fault": [
+    "bus:L118_o"
+   ],
+   "fault_cause": [
+    "bus:L118_o",
+    "bus:L141_o"
+   ],
+   "phy_up": [
+    "bus:L141_o"
+   ],
+   "rx_arm_bank": [
+    "bus:L200_i"
+   ],
+   "rx_arm_v": [
+    "bus:L200_i"
+   ],
+   "rx_block_words": [
+    "bus:L200_i"
+   ],
+   "rx_release_bank": [
+    "bus:L200_i"
+   ],
+   "rx_release_v": [
+    "bus:L200_i"
+   ],
+   "rx_slot_bank": [
+    "bus:L200_i"
+   ],
+   "rx_slot_index": [
+    "bus:L200_i"
+   ],
+   "rx_slot_v": [
+    "bus:L200_i"
+   ],
+   "tx_frame": [
+    "bus:L200_i"
+   ],
+   "tx_v": [
+    "bus:L200_i"
+   ]
+  },
+  "u_lk_S1__chn": {},
+  "u_lk_S1__rx__bm0": {},
+  "u_lk_S1__rx__bm1": {},
+  "u_lk_S1__rx__bm2": {},
+  "u_lk_S1__rx__rest": {},
+  "u_lk_S1__tx": {}
+ }
+}

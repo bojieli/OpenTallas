@@ -1,0 +1,52 @@
+base q_spu1__physical_v1
+    L33x1.inN[9,278] bits 1615 free_tracks 7301 M7blk 0.26 M5blk 0.25
+    L33x1.outS[9,278] bits 1615 free_tracks 7301 M7blk 0.26 M5blk 0.25
+    L40x1.inS[769,1005] bits 1064 free_tracks 6109 M7blk 0.32 M5blk 0.27
+    L49x1.inN[779,883] bits 618 free_tracks 2639 M7blk 0.34 M5blk 0.27
+    L49x1.outS[279,382] bits 618 free_tracks 1048 M7blk 1.00 M5blk 0.51
+    L83x1.outS[382,399] bits 99 free_tracks 177 M7blk 1.00 M5blk 0.49
+    L87x1.inS[753,764] bits 68 free_tracks 112 M7blk 1.00 M5blk 0.53
+    L722x3.inS[651,702] bits 308 free_tracks 546 M7blk 1.00 M5blk 0.49
+    L723x3.inS[418,469] bits 307 free_tracks 508 M7blk 1.00 M5blk 0.52
+    L5073x4.outN[704,765] bits 490 free_tracks 675 M7blk 1.00 M5blk 0.47
+    L5075x1.inN[670,702] bits 256 free_tracks 338 M7blk 1.00 M5blk 0.50
+    L5091x7.outN[767,772] bits 41 free_tracks 71 M7blk 1.00 M5blk 0.35
+    L5101x6.outN[774,775] bits 3 free_tracks 0 M7blk 1.00 M5blk 0.98
+base q_spu1
+    L33x1.inN[9,278] bits 1615 free_tracks 7349 M7blk 0.26 M5blk 0.25
+    L33x1.outS[9,278] bits 1615 free_tracks 7349 M7blk 0.26 M5blk 0.25
+    L40x1.inS[471,649] bits 1064 free_tracks 1800 M7blk 1.00 M5blk 0.51
+    L49x1.inN[779,883] bits 618 free_tracks 2778 M7blk 0.28 M5blk 0.25
+    L49x1.outS[279,382] bits 618 free_tracks 1071 M7blk 1.00 M5blk 0.50
+    L83x1.outS[382,399] bits 99 free_tracks 154 M7blk 1.00 M5blk 0.56
+    L87x1.inS[753,764] bits 68 free_tracks 112 M7blk 1.00 M5blk 0.53
+    L722x3.inS[651,702] bits 308 free_tracks 523 M7blk 1.00 M5blk 0.51
+    L723x3.inS[418,469] bits 307 free_tracks 531 M7blk 1.00 M5blk 0.50
+    L1273x1.inN[711,758] bits 374 free_tracks 466 M7blk 1.00 M5blk 0.52
+    L1278x2.outS[785,908] bits 1483 free_tracks 3384 M7blk 0.24 M5blk 0.26
+new q_spu1__physical_v1
+    L33x1.inN[9,278] bits 1615 free_tracks 7352 M7blk 0.25 M5blk 0.25
+    L33x1.outS[9,278] bits 1615 free_tracks 7352 M7blk 0.25 M5blk 0.25
+    L40x1.inS[769,1005] bits 1064 free_tracks 6435 M7blk 0.26 M5blk 0.25
+    L49x1.inN[779,883] bits 618 free_tracks 2809 M7blk 0.27 M5blk 0.24
+    L49x1.outS[279,382] bits 618 free_tracks 2608 M7blk 0.30 M5blk 0.31
+    L83x1.outS[382,399] bits 99 free_tracks 463 M7blk 0.25 M5blk 0.23
+    L87x1.inS[753,764] bits 68 free_tracks 302 M7blk 0.28 M5blk 0.28
+    L722x3.inS[651,702] bits 308 free_tracks 1335 M7blk 0.30 M5blk 0.28
+    L723x3.inS[418,469] bits 307 free_tracks 1288 M7blk 0.31 M5blk 0.32
+    L5073x4.outN[704,765] bits 490 free_tracks 1587 M7blk 0.32 M5blk 0.27
+    L5075x1.inN[670,702] bits 256 free_tracks 823 M7blk 0.30 M5blk 0.29
+    L5091x7.outN[767,772] bits 41 free_tracks 102 M7blk 0.62 M5blk 0.35
+    L5101x6.outN[774,775] bits 3 free_tracks 12 M7blk 0.00 M5blk 0.00
+new q_spu1
+    L33x1.inN[9,278] bits 1615 free_tracks 7373 M7blk 0.25 M5blk 0.25
+    L33x1.outS[9,278] bits 1615 free_tracks 7373 M7blk 0.25 M5blk 0.25
+    L40x1.inS[471,649] bits 1064 free_tracks 4528 M7blk 0.29 M5blk 0.31
+    L49x1.inN[779,883] bits 618 free_tracks 2801 M7blk 0.27 M5blk 0.25
+    L49x1.outS[279,382] bits 618 free_tracks 2669 M7blk 0.29 M5blk 0.29
+    L83x1.outS[382,399] bits 99 free_tracks 392 M7blk 0.31 M5blk 0.39
+    L87x1.inS[753,764] bits 68 free_tracks 287 M7blk 0.28 M5blk 0.34
+    L722x3.inS[651,702] bits 308 free_tracks 1287 M7blk 0.31 M5blk 0.31
+    L723x3.inS[418,469] bits 307 free_tracks 1328 M7blk 0.29 M5blk 0.29
+    L1273x1.inN[711,758] bits 374 free_tracks 1221 M7blk 0.28 M5blk 0.29
+    L1278x2.outS[785,908] bits 1483 free_tracks 3384 M7blk 0.24 M5blk 0.26
