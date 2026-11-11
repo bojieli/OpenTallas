@@ -26721,8 +26721,7 @@
     "q_b113": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b003": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (1): 3 strikes in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
-    "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
-    "vsN4": "KW-FIX-43 11-10 17:1x COORD: vsN4 form C (plan_p11t_vsn4c 33b69e42a323) kit built by the VSN4 sub-lane on epyc8 (NEAR-CLOSE); wave must not launch vsN4 on the old plan alongside it. Release when VSN4 posts the form C result."
+    "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key."
    },
    "gen_hosts": [
     "epyc7",
@@ -29066,7 +29065,8 @@
    "item_env": {
     "vsN4": {
      "OT_FT_POLARITY_LOCAL": "1",
-     "OT_MAXWIRE_UM": "80"
+     "OT_MAXWIRE_UM": "80",
+     "OT_POROUS_VIEWS": "all"
     },
     "vsN5": {
      "OT_FT_POLARITY_LOCAL": "1",
@@ -29078,7 +29078,8 @@
     },
     "q_spt1": {
      "OT_FT_POLARITY_LOCAL": "1",
-     "OT_MAXWIRE_UM": "80"
+     "OT_MAXWIRE_UM": "80",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_spt2": {
      "OT_FT_POLARITY_LOCAL": "1",
@@ -29091,57 +29092,222 @@
     "q_b102": {
      "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08",
      "OT_KW41_RESETC": "3372af2ddba5",
-     "OT_KW43_FIX": "9d276616a3"
+     "OT_KW43_FIX": "9d276616a3",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b102__physical_v1": {
      "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08",
-     "OT_KW41_RESETC": "3372af2ddba5"
+     "OT_KW41_RESETC": "3372af2ddba5",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b111": {
-     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b111__physical_v1": {
-     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_sm0": {
-     "OT_KW41_PVMERGE": "732789ce39"
+     "OT_KW41_PVMERGE": "732789ce39",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_sm1": {
-     "OT_KW41_PVMERGE": "732789ce39"
+     "OT_KW41_PVMERGE": "732789ce39",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_sm2": {
-     "OT_KW41_PVMERGE": "732789ce39"
+     "OT_KW41_PVMERGE": "732789ce39",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_sm3": {
-     "OT_KW41_PVMERGE": "732789ce39"
+     "OT_KW41_PVMERGE": "732789ce39",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b100__physical_v1": {
      "OT_KW41_CURSRC": "src_h94_pv",
-     "OT_KW43_FIX": "3b19164ed1"
+     "OT_KW43_FIX": "3b19164ed1",
+     "OT_POROUS_VIEWS": "all"
     },
     "root": {
-     "OT_KW41_CURSRC": "src_h94_pv"
+     "OT_KW41_CURSRC": "src_h94_pv",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b011": {
      "OT_KW42_PDNCOL": "20168ea1dfb8",
-     "OT_KW43_FIX": "3b19164ed1"
+     "OT_KW43_FIX": "3b19164ed1",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b103": {
-     "OT_KW42_PDNCOL": "20168ea1dfb8"
+     "OT_KW42_PDNCOL": "20168ea1dfb8",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b101": {
-     "OT_KW43_FIX": "3b19164ed1"
+     "OT_KW43_FIX": "3b19164ed1",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b101_nw": {
-     "OT_KW43_FIX": "3b19164ed1"
+     "OT_KW43_FIX": "3b19164ed1",
+     "OT_POROUS_VIEWS": "all"
     },
     "q_b100": {
-     "OT_KW43_FIX": "9d276616a3"
+     "OT_KW43_FIX": "9d276616a3",
+     "OT_POROUS_VIEWS": "all"
     },
     "NW_io": {
      "OT_POROUS_VIEWS": "all"
     },
     "q_spt0__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "NE_io": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b000": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b000__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b001": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b001__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b002": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b002__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b003": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b003__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b010": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b010__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b011__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b012": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b012__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b013": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b013__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b103__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b110": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b110__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b112": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b112__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b113": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b113__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_hub_ne": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_hub_nw": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spb0": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spb0__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spb2": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spb2__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spt0": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spu1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spu1__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su00": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su00__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su01": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su01__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su10": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su10__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su11": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su11__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su20": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su20__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su21": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su21__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su30": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su30__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su31": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_su31__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "vsN0": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_mca": {
      "OT_POROUS_VIEWS": "all"
     }
    },
@@ -29185,143 +29351,148 @@
    "item_inputs_prev_kw38h": null,
    "item_inputs": {
     "q_spb0": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spb0__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "NE_io": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "NW_io": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "vsN0": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_hub_nw": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_hub_ne": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_sm0": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_sm1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_sm2": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_sm3": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
-      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
-     }
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b113": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b113__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spu1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spu1__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su30": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su30__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spb2__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_hub_ne__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
@@ -29340,244 +29511,244 @@
      "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_b001": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b001__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b002": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b002__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b003__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b011": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b011__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b012": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b012__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b013": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b013__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b100__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b102": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b102__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b103__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b110": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b110__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b111": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b111__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b112": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b112__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spt0": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b003": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 19:5x COORD route (2): missed by the q_b p11t batch (kit_topology dry check True on p11t, False on die plan r2_restore)"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b000": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b000__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b101": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spb2": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su01__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su11__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su20": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "vsN2": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -29596,12 +29767,12 @@
      "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
     },
     "q_su01": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD route 22:53: q_su01 8744022fc7f7 BIND_STALE, same class as the 9 (e_bs9): p11t + p11t bind. Block key unchanged. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43su01."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "PHY_NC": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -29628,52 +29799,52 @@
      "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
     },
     "q_b010": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b010__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b100": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b101_nw": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_b103": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_mca": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_mcb": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -29684,20 +29855,20 @@
      "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
     },
     "q_spt0__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spt1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spt2": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -29708,92 +29879,92 @@
      "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
     },
     "q_su00": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su00__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su10": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su10__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su11": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su20__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su21": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su21__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su31": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_su31__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "root": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "vsN5": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -29818,6 +29989,14 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
      "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
+    },
+    "vsN4": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -35472,7 +35651,669 @@
    ],
    "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b.",
    "src_prev_kw43fsp": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm",
-   "note_kw43fsp": "KW-FIX-43 11-10 22:2x COORD: new HBM launches -> private src kw43/src_hbm_tc1111 = cp -a of wave-src/20261110hbm2 (aac2869) + gen_core_kit_hbm.py of 8d3230a3fa (md5 d98f30607a4c; only direct_port_check/PORT_DEFER hunks, same as HBM-CORES-B fsport_dry) + the COORD-ruled ftres/porous batch overlay (ftres_d54b96cc27.patch, porous c16a7f2655); same on epyc7/epyc8/epyc4 (read-only). src_sha/queue_src name the base. Retry ot_hbm_sm_i8w_front@5 INFRA. pv_merge untouched. Revert: src <- src_prev_kw43fsp."
+   "note_kw43fsp": "KW-FIX-43 11-10 22:2x COORD: new HBM launches -> private src kw43/src_hbm_tc1111 = cp -a of wave-src/20261110hbm2 (aac2869) + gen_core_kit_hbm.py of 8d3230a3fa (md5 d98f30607a4c; only direct_port_check/PORT_DEFER hunks, same as HBM-CORES-B fsport_dry) + the COORD-ruled ftres/porous batch overlay (ftres_d54b96cc27.patch, porous c16a7f2655); same on epyc7/epyc8/epyc4 (read-only). src_sha/queue_src name the base. Retry ot_hbm_sm_i8w_front@5 INFRA. pv_merge untouched. Revert: src <- src_prev_kw43fsp.",
+   "item_inputs_prev_kw43tc": {
+    "NE_io": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+    },
+    "NW_io": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+    },
+    "q_b000": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_b000__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_b001": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b001__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b002": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b002__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b003": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 19:5x COORD route (2): missed by the q_b p11t batch (kit_topology dry check True on p11t, False on die plan r2_restore)"
+    },
+    "q_b003__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b010": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_b010__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_b011": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b011__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b012": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b012__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b013": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b013__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b100": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_b100__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b101": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_b101_nw": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_b102": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b102__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b103": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_b103__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b110": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b110__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b111": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b111__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b112": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b112__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_b113": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_b113__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_hub_ne": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_hub_nw": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_sm0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_sm1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_sm2": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_sm3": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-93/plan_final3/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/bind_F3",
+      "asbuilt": "/srv/opentallas-scratch3/claude/die-hbm-93/lat/asbuilt_p37su5_sm_lat_vK.json"
+     }
+    },
+    "q_spb0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+    },
+    "q_spb0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+    },
+    "q_spb2": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_spb2__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_spt0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:4x COORD 18:2x(1): frozen HBM line p11t + canonical strict bind (kit_topology dry check PASS on p11t, FAIL on die plan r2_restore)"
+    },
+    "q_spt0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_spt1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_spu1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_spu1__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_su00": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su00__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su01": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD route 22:53: q_su01 8744022fc7f7 BIND_STALE, same class as the 9 (e_bs9): p11t + p11t bind. Block key unchanged. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43su01."
+    },
+    "q_su01__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_su10": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su10__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su11": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su11__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_su20": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_su20__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su21": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su21__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su30": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_su30__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_su31": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su31__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "root": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "vsN0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 18:3x types-closure-1109 (1): bind_F3/vK on plan_final3 names pruned sources (p37su2_sm_sources + 4 refs) -> frozen HBM line p11t + canonical strict bind (same as the 7 p11t types)"
+    },
+    "vsN4": null,
+    "q_mca": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    }
+   },
+   "item_env_prev_kw43tc": {
+    "NE_io": null,
+    "NW_io": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_b000": null,
+    "q_b000__physical_v1": null,
+    "q_b001": null,
+    "q_b001__physical_v1": null,
+    "q_b002": null,
+    "q_b002__physical_v1": null,
+    "q_b003": null,
+    "q_b003__physical_v1": null,
+    "q_b010": null,
+    "q_b010__physical_v1": null,
+    "q_b011": {
+     "OT_KW42_PDNCOL": "20168ea1dfb8",
+     "OT_KW43_FIX": "3b19164ed1"
+    },
+    "q_b011__physical_v1": null,
+    "q_b012": null,
+    "q_b012__physical_v1": null,
+    "q_b013": null,
+    "q_b013__physical_v1": null,
+    "q_b100": {
+     "OT_KW43_FIX": "9d276616a3"
+    },
+    "q_b100__physical_v1": {
+     "OT_KW41_CURSRC": "src_h94_pv",
+     "OT_KW43_FIX": "3b19164ed1"
+    },
+    "q_b101": {
+     "OT_KW43_FIX": "3b19164ed1"
+    },
+    "q_b101_nw": {
+     "OT_KW43_FIX": "3b19164ed1"
+    },
+    "q_b102": {
+     "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08",
+     "OT_KW41_RESETC": "3372af2ddba5",
+     "OT_KW43_FIX": "9d276616a3"
+    },
+    "q_b102__physical_v1": {
+     "OT_MACRO_MOVES": "u_hb_idx__s_Q_r1c0_k0h1:17.28:4.32,u_hb_idx__s_Q_r1c0_k1h0__ra:17.28:194.4,u_hb_idx__s_Q_r1c0_k1h0__rb:129.6:194.4,u_hb_idx__s_Q_r1c0_k1h1:17.28:488.16,u_hb_idx__s_Q_r1c0_k3h0__ra:578.88:4.32,u_hb_idx__s_Q_r1c0_k3h0__rb:466.56:4.32,u_hb_idx__s_Q_r1c0_k3h1:466.56:298.08,u_hb_idx__s_Q_r1c1_k0h0__ra:466.56:488.16,u_hb_idx__s_Q_r1c1_k0h0__rb:578.88:488.16,u_hb_idx__s_Q_r1c1_k0h1:466.56:781.92,u_hb_idx__s_Q_r1c1_k1h1:466.56:972.0,u_hb_idx__s_Q_r1c1_k2h0__ra:17.28:678.24,u_hb_idx__s_Q_r1c1_k2h0__rb:129.6:678.24,u_hb_idx__s_Q_r1c1_k3h0__ra:17.28:972.0,u_hb_idx__s_Q_r1c1_k3h0__rb:129.6:972.0,u_hb_idx__s_Q_r1c1_k3h1:466.56:1162.08",
+     "OT_KW41_RESETC": "3372af2ddba5"
+    },
+    "q_b103": {
+     "OT_KW42_PDNCOL": "20168ea1dfb8"
+    },
+    "q_b103__physical_v1": null,
+    "q_b110": null,
+    "q_b110__physical_v1": null,
+    "q_b111": {
+     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+    },
+    "q_b111__physical_v1": {
+     "OT_MACRO_MOVES": "u_sfucore_Q_lane4__bk:4.32:8.64,u_sfucore_Q_lane5__bk:4.32:371.52,u_sfucore_Q_lane6__bk:4.32:734.4,u_sfucore_Q_lane7__ex:704.16:371.52,u_sfucore_Q_lane8__ex:704.16:8.64"
+    },
+    "q_b112": null,
+    "q_b112__physical_v1": null,
+    "q_b113": null,
+    "q_b113__physical_v1": null,
+    "q_hub_ne": null,
+    "q_hub_nw": null,
+    "q_sm0": {
+     "OT_KW41_PVMERGE": "732789ce39"
+    },
+    "q_sm1": {
+     "OT_KW41_PVMERGE": "732789ce39"
+    },
+    "q_sm2": {
+     "OT_KW41_PVMERGE": "732789ce39"
+    },
+    "q_sm3": {
+     "OT_KW41_PVMERGE": "732789ce39"
+    },
+    "q_spb0": null,
+    "q_spb0__physical_v1": null,
+    "q_spb2": null,
+    "q_spb2__physical_v1": null,
+    "q_spt0": null,
+    "q_spt0__physical_v1": {
+     "OT_POROUS_VIEWS": "all"
+    },
+    "q_spt1": {
+     "OT_FT_POLARITY_LOCAL": "1",
+     "OT_MAXWIRE_UM": "80"
+    },
+    "q_spu1": null,
+    "q_spu1__physical_v1": null,
+    "q_su00": null,
+    "q_su00__physical_v1": null,
+    "q_su01": null,
+    "q_su01__physical_v1": null,
+    "q_su10": null,
+    "q_su10__physical_v1": null,
+    "q_su11": null,
+    "q_su11__physical_v1": null,
+    "q_su20": null,
+    "q_su20__physical_v1": null,
+    "q_su21": null,
+    "q_su21__physical_v1": null,
+    "q_su30": null,
+    "q_su30__physical_v1": null,
+    "q_su31": null,
+    "q_su31__physical_v1": null,
+    "root": {
+     "OT_KW41_CURSRC": "src_h94_pv"
+    },
+    "vsN0": null,
+    "vsN4": {
+     "OT_FT_POLARITY_LOCAL": "1",
+     "OT_MAXWIRE_UM": "80"
+    },
+    "q_mca": null
+   },
+   "hold_items_prev_kw43tc": {
+    "vsN4": "KW-FIX-43 11-10 17:1x COORD: vsN4 form C (plan_p11t_vsn4c 33b69e42a323) kit built by the VSN4 sub-lane on epyc8 (NEAR-CLOSE); wave must not launch vsN4 on the old plan alongside it. Release when VSN4 posts the form C result."
+   },
+   "note_kw43tc": "KW-FIX-43 11-10 22:xx COORD (2): HBM ftres batch had not started gen -> launched in one go on the taps plan plan_p11t_taps_cyc 29333b2b19c9 (DIE-HBM-97/HBM-TAPS ROW 21:43; FTRES-FIX ROW 20:11 + amendments). 69 types (68 ftres + q_mca) get item_inputs {plan taps, bind /srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12, asbuilt vK5d_c12} + OT_POROUS_VIEWS=all; src -> kw43/src_hbm_tc1111 (wave src aac2869 + ftres_d54b96cc27.patch + porous c16a7f2655 + porous_views overlay; PGR already in the wave tree; same md5 manifest 075abae2a3d3 on epyc7/epyc8/epyc4; src_sha/queue_src name the base). vsN4 hold released (its intent was old-plan only; FTRES addendum (2): parallel form on the new plan). Holds kept: q_b003, q_su11__physical_v1 (bounded-displacement spec), q_b010(+pv1) RE-FORM, q_b110..q_b113(+pv1) split rebind, q_hub_nw, q_sm0-3 PROVISIONAL kids -- they pick up the taps plan when released. Cores: none (taps ROW (a) HOLD, (c) re-sign). Old-plan RUNNING/ENQUEUED rows are superseded by the wave (cancel_superseded). Revert: *_prev_kw43tc."
   }
  },
  "place_prefer": [
