@@ -5277,6 +5277,27 @@ def kit_reset_sync(tn, rs, sources):
     return None
 
 
+def kit_tree_mix(tn, kd):
+    """HBM-HUB-RTL-1 11-11 (class of hbm-hub-gather-phase: q_hub kit took ot_hbm_hc_q_static from rtl/ and its reader
+    from r18h5_bundle, whose PERIOD default the rtl/ parent did not set -> $fatal at GATHER_PHASE 174): lint the kit
+    file-list for rtl/ <-> r18h5_bundle parent/child edges whose two copies of the child differ in a parameter the parent
+    leaves unset (kit_tree_mix_lint.py; an edge proven equivalent in physical/die_plan/hbm/kit_tree_mix_proofs.json
+    passes).  Writes kit_tree_mix.json.  Advisory (owner 11-03 targets, not gates) unless OT_KIT_TREE_MIX=strict."""
+    import os
+    import kit_tree_mix_lint as KTM
+    rp = HERE.parents[1] / "physical/die_plan/hbm/kit_tree_mix_proofs.json"
+    reg = json.loads(rp.read_text()).get("proofs", []) if rp.is_file() else []
+    r = KTM.lint(kd / "kit_rtl.f", reg)
+    (kd / "kit_tree_mix.json").write_text(json.dumps(r, indent=1) + "\n")
+    for x in r["mix_param"]:
+        print(f"kit-rtl {tn}: WARN KIT_TREE_MIX {x['parent']}[{x['parent_tree']}] -> {x['child']}[{x['child_tree']}] "
+              f"unset params differ {x['unset_param_diff']}", file=sys.stderr)
+    if r["mix_param"] and os.environ.get("OT_KIT_TREE_MIX") == "strict":
+        raise BindError(f"kit-rtl {tn}: {len(r['mix_param'])} rtl/<->bundle parameter mix(es), see kit_tree_mix.json")
+    return dict(file="kit_tree_mix.json", mixed_edges=r["mixed_edges"], safe_mix=r["safe_mix"],
+                proven=r["proven"], mix_param=len(r["mix_param"]))
+
+
 def kit_dedupe(tn, fl):
     """Flatten kit sources; identical copies collapse, disjoint module-only collisions get byte-exact aliases."""
     from kit_assembly import dedupe_sources
@@ -5740,6 +5761,7 @@ def cmd_kit_rtl(a):
         except (ValueError, gen_rtl.GenError) as exc:
             raise BindError(f"kit-rtl {tn}: native reset export: {exc}") from exc
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
+    tree_mix = kit_tree_mix(tn, kd)
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
@@ -5756,6 +5778,7 @@ def cmd_kit_rtl(a):
                                         source=bound_reset_source["authority"])} if bound_reset else {}),
                **({"native_glue": native_glue} if native_glue else {}),
                **({"library_profile": lib_profile, "library_profile_selected": lib_selected} if lib_profile else {}),
+               tree_mix=tree_mix,
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
