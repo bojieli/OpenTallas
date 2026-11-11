@@ -948,13 +948,68 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
                 st = " {" + " ".join(f"{bit} {x:.4f} {y:.4f}" for bit, (x, y) in sorted(sp.items())) + "}"
             if e.get("leg_order", "normal_first") == "along_first":
                 st = (st or " {}") + " along"
+            chan = None
+            if e.get("leg_order") == "channel":                 # KIT-CHAN-1
+                import istation_channel as _IC
+                chan = _IC.entry_channel(e)
+                if TCL_CHAN not in tcl:
+                    tcl.insert(1, TCL_CHAN)
             for j, nm in enumerate(chains[gi]):
                 # out chains run core -> face: is_bits stage j counts from the leaf for out, from the pin for in
+                if chan:
+                    tcl.append(f"is_chan_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} "
+                               f"ist:{bus}:{'+'.join(core_list(e))} {chan[0]:.4f} {chan[1]:.4f} 0{st}")
+                    continue
                 tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} "
                            f"ist:{bus}:{'+'.join(core_list(e))} 0{st}")
             rep.append(dict(conn=e["conn"], core=e["core"], planned=k, bound_pads=len(pads), inserted=k,
                             stations=chains[gi], core_bits=len(e["core_bits"]), plan_width=b["width"], bound_width=W))
     return txt
+
+
+# KIT-CHAN-1 (DIE-QC-97 11-11): plan leg_order "channel" (istation_channel.py).  Bit b of the bound bus (W payload bits
+# + epoch) routes pin -> (col_b, py) -> (col_b, ly) -> leaf for an E/W face (transpose for N/S), col_b = lo + (hi - lo) *
+# (b + 0.5) / (W + 1); station edge e of edges sits at arclength L_b e / edges (per bit), fails closed above 403 um.
+# Emitted only into kits with a channel chain, so every other kit's istations.tcl is unchanged.
+TCL_CHAN_SITE = """proc is_chan_site {px py lx ly face edge edges dir lo hi b W} {
+  set col [expr {$lo + ($hi - $lo) * ($b + 0.5) / double($W + 1)}]
+  if {$face in {E W}} { set pts [list $px $py $col $py $col $ly $lx $ly] } else { set pts [list $px $py $px $col $lx $col $lx $ly] }
+  if {$dir ne "in"} { set r {}; foreach {x y} $pts { set r [linsert $r 0 $x $y] }; set pts $r }
+  set L 0.0
+  foreach {ax ay} [lrange $pts 0 end-2] {cx cy} [lrange $pts 2 end] { set L [expr {$L + abs($ax - $cx) + abs($ay - $cy)}] }
+  if {$L / double($edges) > 403.0} {
+    error "internal station channel needs a plan depth change: bit $b hop [expr {$L / double($edges)}] >403um"
+  }
+  set t [expr {$L * $edge / double($edges)}]
+  foreach {ax ay} [lrange $pts 0 end-2] {cx cy} [lrange $pts 2 end] {
+    set d [expr {abs($ax - $cx) + abs($ay - $cy)}]
+    if {$t <= $d} {
+      if {$d == 0} { set f 0.0 } else { set f [expr {$t / $d}] }
+      return [list [expr {$ax + $f * ($cx - $ax)}] [expr {$ay + $f * ($cy - $ay)}]]
+    }
+    set t [expr {$t - $d}]
+  }
+  return [lrange $pts end-1 end]
+}
+"""
+
+
+def _tcl_chan():
+    """is_chan_bits = is_bits verbatim (pin / start lookup, flop matching, ff_put_near, report) with the site from
+    is_chan_site; built from TCL_HEAD so the two cannot drift"""
+    a = TCL_HEAD.index("proc is_bits ")
+    body = TCL_HEAD[a:TCL_HEAD.index("\n}\n", a) + 3]
+    for old, new in (
+            ("proc is_bits {inst bus face W lx ly k n dir tag {offset 0} {starts {}} {order normal}} {",
+             "proc is_chan_bits {inst bus face W lx ly k n dir tag lo hi {offset 0} {starts {}}} {"),
+            ("lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry $order] x y",
+             "lassign [is_chan_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $lo $hi $b $W] x y")):
+        assert body.count(old) == 1, old
+        body = body.replace(old, new)
+    return "# KIT-CHAN-1 leg_order channel (istation_channel.py)\n" + TCL_CHAN_SITE + body
+
+
+TCL_CHAN = _tcl_chan()
 
 
 MACRO_TOL_UM = 0.5     # a station site / L-route leg may touch a hard-macro box, not enter it by more than this
@@ -1042,10 +1097,24 @@ def _seg_in_box(a, c, box, tol):
     return bx0 < bx1 and by0 < by1 and x0 < bx1 and x1 > bx0 and y0 < by1 and y1 > by0
 
 
-def chain_macro_hits(t, e, b, starts):
+def chain_macro_hits(t, e, b, starts, nbits=None):
     """[(bit, hard core)] whose box (shrunk by MACRO_TOL_UM) a bit's planned L route start -> corner -> leaf_um enters
-    (every station site lies on that route, so this covers the sites too)"""
+    (every station site lies on that route, so this covers the sites too).  leg_order channel (KIT-CHAN-1): the bit's
+    Z route through its channel column; nbits = bound width + 1 (default max(starts) + 1)."""
     lx, ly = e["leaf_um"]
+    if e.get("leg_order") == "channel":
+        import istation_channel as _IC
+        lo, hi = _IC.entry_channel(e)
+        nb = nbits if nbits is not None else max(starts) + 1
+        boxes = {c["inst"]: (c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+                             c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])}
+        out = []
+        for bit, (px, py) in sorted(starts.items()):
+            for nm, box in boxes.items():
+                if any(_seg_in_box(a, c, box, MACRO_TOL_UM)
+                       for a, c in _IC.legs(px, py, lx, ly, b["face"], lo, hi, bit, nb)):
+                    out.append((bit, nm))
+        return out
     along = e.get("leg_order", "normal_first") == "along_first"
     boxes = {c["inst"]: (c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
                          c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])}
@@ -1085,7 +1154,14 @@ def core_chain_geometry_errors(P, tn, plan_dir=None):
             errs.append(f"type {tn}: {ex}")
             continue
         keep = {int(x) for x in e["core_bits"]} | {max(st)}     # bits synthesis keeps (+ epoch; start_um lists all)
-        hits = chain_macro_hits(t, e, b, {k: v for k, v in st.items() if k in keep})
+        if e.get("leg_order") == "channel":                     # KIT-CHAN-1: channel_um present and well formed
+            import istation_channel as _IC
+            try:
+                _IC.entry_channel(e)
+            except SystemExit as ex:
+                errs.append(f"type {tn}: {ex}")
+                continue
+        hits = chain_macro_hits(t, e, b, {k: v for k, v in st.items() if k in keep}, nbits=max(st) + 1)
         if hits:
             errs.append(f"type {tn}: core chain {bus} {e['core']}: {len({h[0] for h in hits})} bit L routes enter hard "
                         f"macros {sorted({h[1] for h in hits})} by > {MACRO_TOL_UM} um (station sites would be moved off "
@@ -1175,6 +1251,9 @@ def main(argv):
     txt = bfile.read_text()
     tcl = [TCL_HEAD]
     rep = []
+    bad = [e.get("conn") for e in t.get("internal_stations", []) if e.get("leg_order") == "channel" and not e.get("core")]
+    if bad:   # KIT-CHAN-1: the channel order is a core pin-face chain form only (bus chains have no leg order)
+        raise SystemExit(f"kit_istations: {tn}: leg_order channel on non-core chain(s) {bad[:4]}")
     if any(e.get("core") for e in t.get("internal_stations", [])) and any(
             p.get("type") == tn for p in raw.get("partitions", [])):   # SUL0-PINFACE-1 geometry gate (fail closed)
         import schema as _S

@@ -1531,7 +1531,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_core"] = {"type": "string", "minLength": 1}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_port"] = {"type": "string", "minLength": 1}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_um"] = {"type": "array", "minItems": 2, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first"]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first", "channel"]}
+# KIT-CHAN-1 (DIE-QC-97 11-11): leg_order channel routes each bit through column/row lo + (hi - lo) (b + 0.5) / nbits of
+# channel_um [lo, hi] (x for an E/W bus face, y for N/S; istation_channel.py); required with channel (kit / gate fail closed)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["channel_um"] = {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic

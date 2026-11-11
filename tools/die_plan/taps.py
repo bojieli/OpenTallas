@@ -225,6 +225,12 @@ def per_bit_station_sites(t, pins, plan_dir=None):
         for bit, (px, py, face) in sorted(bat.items()):
             if keep is not None and bit not in keep and bit != len(bat) - 1:
                 continue
+            if e.get("leg_order") == "channel":    # KIT-CHAN-1: the bit's Z route through its channel column (kit is_chan_site)
+                import istation_channel as _IC
+                lo, hi = _IC.entry_channel(e)
+                out.extend((x, y, "ist") for x, y in
+                           _IC.sites(px, py, lx, ly, face, "in" if d_in else "out", lo, hi, bit, len(bat), n))
+                continue
             # SUL0-PINFACE-1 11-11: leg_order along_first puts the corner at the pin column / row (kit is_knee_site)
             along = e.get("leg_order", "normal_first") == "along_first"
             cx, cy = (lx, py) if (face in ("E", "W")) != along else (px, ly)
