@@ -282,3 +282,67 @@ def test_core_dest_with_port_suffix_resolves(tmp_path):
     assert not any("not placed" in n for n in r1["notes"])
     assert abs(r1["regions"]["core_H"]["p99"] - r0["regions"]["core_H"]["p99"]) < 1e-6
     assert rs._names_core(["core:u_a.d"], "u_a") and not rs._names_core(["core:u_a.x.y"], "u_a")
+
+
+def _t51_like(tmp, obs_max=True):
+    """two abutting solid M1-M7 children (native split) tiling the outline; a 1104-bit E->W ft slot whose stations
+    live inside both children (stations_in)."""
+    L7 = ("M1", "M2", "M3", "M4", "M5", "M6", "M7")
+    lef(tmp / "w.lef", "cw", 300, 480, L7)
+    lef(tmp / "e.lef", "ce", 380, 480, L7)
+    hc = [dict(inst="u_w", module="cw", origin_um=[8, 10], outline_um=[300, 480], orient="R0", lef="w.lef",
+               pins_file="none.json"),
+          dict(inst="u_e", module="ce", origin_um=[316, 10], outline_um=[380, 480], orient="R0", lef="e.lef",
+               pins_file="none.json")]
+    if obs_max:
+        for h in hc:
+            h["obs_max"] = "M7"
+    ft = dict(name="ft0", stations_in=["u_e", "u_w"], in_face="E", out_face="W", width=4416,
+              in_window_um=[20, 240], out_window_um=[20, 240], regs_um=[[704, 130], [500, 130], [150, 130], [4, 130]])
+    P = {"schema": "opentallas.die_plan.v1", "die": {"name": "tst"},
+         "partition_types": {"t": {"outline_um": [704, 500], "hard_cores": hc, "ft_slots": [ft],
+                                   "clock": {"landing_contract": {"bands": {"ft0_i": {
+                                       "rect_um": [20, 100, 120, 140], "width": 4416,
+                                       "padded_data_storage_flops": 20000}}}}}}}
+    (tmp / "plan.json").write_text(json.dumps(P))
+    (tmp / "core_conns.json").write_text(json.dumps({}))
+
+
+def test_ft_inside_hard_cores_is_not_parent_wire_over_them(tmp_path):
+    """CPL-S81-STN t51: ft slots whose stations_in are the hard cores are child-internal; parent wire is only the
+    face -> core, core -> core (seam) and core -> face legs."""
+    _t51_like(tmp_path)
+    _, r0, _ = run(tmp_path, "--ft-internal-as-parent", "--template-cap-default")
+    _, r1, _ = run(tmp_path)
+    assert r0["verdict"] == "FLAG" and r0["regions"]["core_H"]["p99"] > 3
+    assert r1["ft_core_internal_bits"] == 4416 and r0["ft_core_internal_bits"] == 0
+    assert r1["ring_bands_core_internal"] == 1 and r0["ring_bands_core_internal"] == 0
+    assert r1["verdict"] != "FLAG"
+    assert r1["regions"].get("core_H", {}).get("p99", 0) < 0.4 * r0["regions"]["core_H"]["p99"]
+    assert r1["wirelength_mm"] < 0.1 * r0["wirelength_mm"]
+
+
+def test_template_cap_follows_plan_obs_max(tmp_path):
+    """a whole-block template is capped at the plan's obs_max (M7), not the M5 default: no M6 credit over it."""
+    _t51_like(tmp_path)
+    _, r1, _ = run(tmp_path, "--ft-internal-as-parent")
+    _, r0, _ = run(tmp_path, "--ft-internal-as-parent", "--template-cap-default")
+    assert any("M7 obs_max" in k for k in r1["obs_src"]) and any("M5)" in k for k in r0["obs_src"])
+    assert r1["regions"]["core_H"]["p99"] > r0["regions"]["core_H"]["p99"]
+    _t51_like(tmp_path, obs_max=False)
+    _, r2, _ = run(tmp_path, "--ft-internal-as-parent")
+    assert any("capped M5)" in k for k in r2["obs_src"])
+
+
+def test_empty_core_conns_entry_is_unchecked_not_glue(tmp_path):
+    plan(tmp_path, n=800)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {}, "u_b": {}}}))
+    _, r0, _ = run(tmp_path, "--empty-conns-glue")
+    _, r1, _ = run(tmp_path)
+    assert r0["glue_pins"] == 1600 and r0["unchecked_pins"] == 0
+    assert r1["glue_pins"] == 0 and r1["unchecked_pins"] == 1600 and r1["verdict"] == "UNCHECKED"
+    assert any("UNCHECKED" in n for n in r1["notes"])
+    import route_supply_flags as rf
+    out = tmp_path / "out"
+    rf.main([str(out), "--tsv", str(tmp_path / "f.tsv"), "--stamp", "s"])
+    assert (tmp_path / "f.tsv").read_text().splitlines()[1].split("\t")[6] == "unchecked"

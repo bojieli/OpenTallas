@@ -83,7 +83,7 @@ def rows_of(path, stamp, main, plan_sha, plan):
             w = r["worst"]
             reg, dr, layer, p99, ratio = w["region"], w["dir"], w.get("layer", ""), w["p99"], "-"
         sug, nf = suggestion(r)
-        yield [stamp, main, d["die"], plan, plan_sha, r["type"], "yes" if fl else "no", reg, dr, layer, p99, ratio,
+        yield [stamp, main, d["die"], plan, plan_sha, r["type"], "yes" if fl else ("unchecked" if r.get("verdict") == "UNCHECKED" else "no"), reg, dr, layer, p99, ratio,
                ",".join(f"{k}:{v}" for k, v in fl) or "-", sug, nf, ",".join(r.get("provisional_children") or []) or "-"]
 
 
