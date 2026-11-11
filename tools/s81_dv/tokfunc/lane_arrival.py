@@ -193,46 +193,58 @@ class Part:
 
 
 def bench(lanes, phases, W=32, fwd=0.0, force_wneg=None):
-    """one bench: every (lane, end) chain; returns verilog text"""
+    """one bench: every (lane, end) chain; returns verilog text.  Every domain starts its count at the SAME edge index
+    E (equal count origins: domain i's edge j is at B + 5 + 10 j + phase_i ns); rs[i] is that domain's start, released
+    so that edge E samples it high.  Stage cells and rings take their domain's start; a CA landing takes the sender
+    domain's start as t_rst_n (forwarded with fclk) and its own as rst_n."""
     doms = sorted({c['dom'] for L in lanes for c in L['chain']} | {L['src_dom'] for L in lanes})
     di = {d: i for i, d in enumerate(doms)}
-    v = ['`timescale 1ns/1ps', 'module tb;', f'  localparam integer ND = {len(doms)};', '  reg rst_n = 0;',
-         '  reg [ND-1:0] ck = 0;', '  integer cyc [0:ND-1];', '  integer i0;',
+    B, E = 400.0, 10
+    v = ['`timescale 1ns/1ps', 'module tb;', f'  localparam integer ND = {len(doms)}, E = {E};',
+         '  reg [ND-1:0] ck = 0; reg [ND-1:0] rs = 0;', '  integer cyc [0:ND-1];', '  integer i0;',
          '  initial for (i0 = 0; i0 < ND; i0 = i0 + 1) cyc[i0] = 0;']
     for d, i in di.items():
         ph = phases.get(d, 0.0)
-        v.append(f'  initial begin #({5.0 + ph:.3f}); forever begin ck[{i}] = 1; cyc[{i}] = cyc[{i}] + 1; #5; '
+        v.append(f'  initial begin #({B + 5.0 + ph:.3f}); forever begin ck[{i}] = 1; cyc[{i}] = cyc[{i}] + 1; #5; '
                  f'ck[{i}] = 0; #5; end end  // {d} phase {ph:+.3f} ns')
-    v.append('  initial begin #95 rst_n = 1; end')
+        v.append(f'  always @(negedge ck[{i}]) if (cyc[{i}] == E) rs[{i}] <= 1;')
     for k, L in enumerate(lanes):
         s = di[L['src_dom']]
         v += [f'  // probe {k}: {L["lane"]} -> {L["sink"]}', f'  reg [{W-1}:0] src{k}; reg sea{k};',
               f'  reg [{W-1}:0] h{k} [0:4095];',
               f'  initial begin src{k} = 0; sea{k} = 0; end',
-              f'  always @(negedge ck[{s}]) begin src{k} = $urandom; sea{k} = rst_n; h{k}[cyc[{s}] % 4096] = src{k}; end']
+              f'  always @(negedge ck[{s}]) begin src{k} = $urandom; sea{k} = rs[{s}]; h{k}[cyc[{s}] % 4096] = src{k}; end']
         prev, pe, pdom = f'src{k}', f'sea{k}', s
         for j, c in enumerate(L['chain']):
             dd = di[c['dom']]
             o, oe = f'l{k}_{j}', f'l{k}_{j}e'
             v.append(f'  wire [{W-1}:0] {o}; wire {oe};')
             if c['mod'] == 'ot_dp_st':
-                v.append(f'  ot_dp_st #(.W({W})) u{k}_{j} (.clk(ck[{dd}]), .rst_n(rst_n), .d({prev}), .ea({pe}), .q({o}), .eq({oe}));')
+                v.append(f'  ot_dp_st #(.W({W})) u{k}_{j} (.clk(ck[{dd}]), .rst_n(rs[{dd}]), .d({prev}), .ea({pe}), .q({o}), .eq({oe}));')
             elif c['mod'] == 'ot_dp_dly':
                 v.append(f'  ot_dp_dly #(.W({W + 1}), .D({c["edges"]})) u{k}_{j} (.clk(ck[{dd}]), .d({{{pe}, {prev}}}), .q({{{oe}, {o}}}));')
+            elif c.get('ca'):
+                v.append(f'  wire r{k}_{j}, f{k}_{j}, fk{k}_{j};')
+                v.append(f'  assign #({fwd:.3f}) fk{k}_{j} = ck[{pdom}];  // forwarded clock + start: upstream')
+                v.append(f'  ot_dp_clk_landing_ca #(.W({W + 1}), .DEPTH({c["ca"][0]}), .K({c["ca"][1]})) u{k}_{j} '
+                         f'(.fclk(fk{k}_{j}), .t_rst_n(rs[{pdom}]), .clk(ck[{dd}]), .rst_n(rs[{dd}]), .d({{{pe}, {prev}}}), '
+                         f'.q({{{oe}, {o}}}), .ready(r{k}_{j}), .fault(f{k}_{j}));')
+                v.append(f'  always @(posedge f{k}_{j}) $display("FAULT {k} {j}");')
             else:
                 wn = c['wneg'] if force_wneg is None else force_wneg
                 v.append(f'  wire r{k}_{j}, f{k}_{j}, fk{k}_{j};')
                 v.append(f'  assign #({fwd:.3f}) fk{k}_{j} = ck[{pdom}];  // forwarded clock: upstream clock + {fwd} ns')
                 v.append(f'  ot_dp_clk_landing #(.W({W + 1}), .WNEG({wn}), .FREG({c["freg"]})) u{k}_{j} '
-                         f'(.fclk(fk{k}_{j}), .clk(ck[{dd}]), .rst_n(rst_n), .d({{{pe}, {prev}}}), .q({{{oe}, {o}}}), '
+                         f'(.fclk(fk{k}_{j}), .clk(ck[{dd}]), .rst_n(rs[{dd}]), .d({{{pe}, {prev}}}), .q({{{oe}, {o}}}), '
                          f'.ready(r{k}_{j}), .fault(f{k}_{j}));')
+                v.append(f'  always @(posedge f{k}_{j}) $display("FAULT {k} {j}");')
             prev, pe, pdom = o, oe, dd
         t = di[L['chain'][-1]['dom']] if L['chain'] else s
         v += [f'  integer n{k}, lat{k} = -9, bad{k} = 0, got{k};',
               f'  always @(posedge ck[{t}]) begin #0.5; if (cyc[{t}] > 300 && cyc[{t}] < 1300) begin got{k} = -1;',
               f'    for (n{k} = 0; n{k} < 200; n{k} = n{k} + 1) if (got{k} < 0 && {prev} === h{k}[(cyc[{t}] - n{k}) % 4096]) got{k} = n{k};',
               f'    if (!{pe}) bad{k} = bad{k} + 1; if (lat{k} == -9) lat{k} = got{k}; else if (lat{k} != got{k}) bad{k} = bad{k} + 1; end end']
-    v.append('  initial begin #14000;')
+    v.append(f'  initial begin #({B + 14000});')
     for k in range(len(lanes)):
         v.append(f'    $display("LAT {k} %0d %0d", lat{k}, bad{k});')
     v += ['    $finish; end', 'endmodule']
@@ -255,11 +267,14 @@ def run_bench(text, work, cell_files, tag):
         raise SystemExit(f'verilator build failed, see {d}/build.log')
     r = subprocess.run([str(d / 'obj_dir' / 'sim')], capture_output=True, text=True, timeout=1800)
     (d / 'sim.log').write_text(r.stdout + r.stderr)
-    out = {}
+    out, flt = {}, defaultdict(int)
+    for line in r.stdout.splitlines():
+        if line.startswith('FAULT '):
+            flt[int(line.split()[1])] += 1
     for line in r.stdout.splitlines():
         if line.startswith('LAT '):
             _, k, lat, bad = line.split()
-            out[int(k)] = (int(lat), int(bad))
+            out[int(k)] = (int(lat), int(bad) + flt[int(k)])     # a landing fault makes the probe unstable
     return out
 
 
@@ -276,6 +291,14 @@ def main():
     ap.add_argument('--skew-ns', type=float, default=2.0, help='random region phase range +- (10 ns period)')
     ap.add_argument('--fwd-ns', type=float, default=0.0, help='forwarded clock delay at every landing (ns)')
     ap.add_argument('--force-wneg', type=int, default=None, help='what-if: override every landing WNEG')
+    ap.add_argument('--landing-select', type=Path, default=None, help='landing_ca_select ca_select.json: CA landings '
+                    'become ot_dp_clk_landing_ca #(DEPTH, K) (what-if overlay on this bind until the bind emits them) and '
+                    'the expected depth is the lane\'s new_bound_stages')
+    ap.add_argument('--arrivals', type=Path, default=None, help='per-landing measured phase (landing_phase_sign '
+                    'arrivals schema): every landing starts a new clock segment at upstream phase + d (unwrapped, '
+                    'scaled to the bench period by --period-ps)')
+    ap.add_argument('--corner', default='TT')
+    ap.add_argument('--period-ps', type=float, default=833.0)
     ap.add_argument('--cut', type=Path, default=None, help='walk a dv_bound_cut directory instead of the whole bound '
                     'top: its <name>.sv top and its generated pass-through shells (<type>__ftshell*.sv)')
     a = ap.parse_args()
@@ -293,6 +316,25 @@ def main():
     land = [f for f in bf if f.name in ('ot_dp_clk_landing.sv', 'ot_meso_fifo.sv')]
     if len(land) != 2:
         raise SystemExit(f'landing sources not found in bind.f: {land}')
+    sel, newb = {}, {}
+    if a.landing_select:
+        js = json.loads(a.landing_select.read_text())
+        sel = {(x['dst'], x['dst_bus']): x for x in js['landings_detail']}
+        newb = {x['lane']: x['new_bound_stages'] for x in js['lanes_detail']}
+        if any(x['decision'] == 'CA' for x in sel.values()):
+            caf = land[0].parent / 'ot_dp_clk_landing_ca.sv'
+            if not caf.exists():
+                raise SystemExit(f'CA landing selected but {caf} missing')
+            land = land + [caf]
+    arr = {}
+    if a.arrivals:
+        aj = json.loads(a.arrivals.read_text())['corners'][a.corner]
+        port_of = {}
+        for x in (sel.values() if sel else []):
+            port_of[(x['dst'], x['dst_bus'])] = x['port']
+        arr = {p: v['t_local_ps'] - v['t_fwd_ps'] for p, v in aj.items()}
+        if not port_of:
+            raise SystemExit('--arrivals needs --landing-select (it maps landing cells to ports)')
     cell_files = [cells] + land
     lat = {b['lane']: b for b in json.loads((a.bind / 'bind_latency.json').read_text())['buses']}
     sinks = defaultdict(set)
@@ -321,6 +363,7 @@ def main():
             if base(e)[0]:
                 users[base(e)[0]].append((it['name'], p))
     cache = {}
+    seg_phase = {}
 
     def part(inst):
         mod = by_name[inst]['mod']
@@ -393,10 +436,36 @@ def main():
                 if c['dom'] != prevd and c['mod'] != 'ot_dp_clk_landing':
                     row['problems'].append(f"{c['part']}.{c['name']}: clock {c['dom']} != upstream {prevd} with no landing")
                 prevd = c['dom']
+            # measured phases / CA overlay: per-landing clock segments, cell form from the selection
+            if sel:
+                seg, ph = 0, 0.0
+                for c in ch:
+                    if c['mod'] == 'ot_dp_clk_landing':
+                        bus = c['name'][len('u_cland_'):] if c['name'].startswith('u_cland_') else c['name']
+                        x = sel.get((c['part'], bus))
+                        if x is None:
+                            row['problems'].append(f"{c['part']}.{c['name']}: landing not in --landing-select")
+                        else:
+                            c['port'], c['decision'] = x['port'], x['decision']
+                            if x['decision'] == 'CA':
+                                c['ca'] = (x['ca_depth'], x['ca_k'])
+                            if arr:
+                                if x['port'] not in arr:
+                                    row['problems'].append(f"{x['port']}: no arrival")
+                                else:
+                                    seg += 1
+                                    ph += arr[x['port']] / a.period_ps * 10.0
+                    if arr:
+                        c['dom'] = f'{lane}#{len(probes)}#s{seg}'
+                        seg_phase[c['dom']] = ph
+                if arr:
+                    src_dom = f'{lane}#{len(probes)}#s0'
+                    seg_phase[src_dom] = 0.0
             e['domains'] = sorted({c['dom'] for c in ch} | {src_dom})
             e['cells'] = {m: sum(c['mod'] == m for c in ch) for m in STAGE}
             e['dly_edges'] = sum(c['edges'] for c in ch if c['mod'] == 'ot_dp_dly')
-            e['landings'] = [dict(part=c['part'], name=c['name'], fclk_top=c.get('fclk_top'), wneg=c['wneg'])
+            e['landings'] = [dict(part=c['part'], name=c['name'], fclk_top=c.get('fclk_top'), wneg=c['wneg'],
+                                  port=c.get('port'), decision=c.get('decision'), ca=c.get('ca'))
                              for c in ch if c['mod'] == 'ot_dp_clk_landing']
             # bus_groups names the as-built sink (e.g. u_s_7N.u_lep); the bind emits the leaf inside the dst partition
             # with a prefixed name (s_7N_LP.u_u_lep): same dst partition, leaf name ends with the as-built leaf, same pin
@@ -414,6 +483,8 @@ def main():
     for ps in [int(x) for x in a.phases.split(',')]:
         rnd = random.Random(1000 + ps)
         phases = {d: (0.0 if ps == 0 else rnd.uniform(-a.skew_ns, a.skew_ns)) for d in doms}
+        if seg_phase:      # measured per-landing phases: one deterministic set (--phases ignored beyond the first)
+            phases = dict(seg_phase)
         res = run_bench(bench(probes, phases, fwd=a.fwd_ns, force_wneg=a.force_wneg), work, cell_files, f'phase{ps}')
         for k in range(len(probes)):
             meas[k][ps] = res.get(k, (None, None))
@@ -424,17 +495,22 @@ def main():
             e['measured'] = {str(ps): dict(edges=v[0], bad_samples=v[1]) for ps, v in m.items()}
             vals = {v[0] for v in m.values()}
             stable = all(v[1] == 0 for v in m.values())
-            e['verdict'] = 'PASS' if (stable and vals == {row['bound_stages']} and row['prog_depth'] == row['bound_stages']
+            exp = newb.get(row['lane'], row['bound_stages']) if newb else row['bound_stages']
+            e['expected'] = exp
+            e['verdict'] = 'PASS' if (stable and vals == {exp} and (newb or row['prog_depth'] == row['bound_stages'])
                                       and e['named_in_bus_groups'] and not row['problems']) else 'FAIL'
         row['verdict'] = 'PASS' if row['ends'] and all(e['verdict'] == 'PASS' for e in row['ends']) and not row['problems'] else 'FAIL'
         ok_all &= row['verdict'] == 'PASS'
-        print(f"{row['verdict']} {row['lane']}: bound {row['bound_stages']} prog {row['prog_depth']} | "
+        print(f"{row['verdict']} {row['lane']}: bound {row['bound_stages']} prog {row['prog_depth']} "
+              f"expect {newb.get(row['lane'], row['bound_stages']) if newb else row['bound_stages']} | "
               + '; '.join(f"{e['sink']}.{e['sink_pin']} parts {len(e['path'])} cells {e['cells']} dly {e['dly_edges']} "
                           f"sim {[(v['edges'], v['bad_samples']) for v in e['measured'].values()]}"
                           f"{'' if e['named_in_bus_groups'] else ' SINK-NOT-IN-BUS-GROUPS'}" for e in row['ends'])
               + (f" | problems {row['problems'][:3]}" if row['problems'] else ''), flush=True)
     rep = dict(schema='tok-verify-1.lane_arrival.v2', bind=str(a.bind), cut=str(a.cut) if a.cut else None,
                shells=sorted(extra), prog=str(a.prog), mutants=a.mutant,
+               landing_select=str(a.landing_select) if a.landing_select else None,
+               arrivals=str(a.arrivals) if a.arrivals else None, corner=a.corner if a.arrivals else None,
                phase_sets=a.phases, skew_ns=a.skew_ns, fwd_ns=a.fwd_ns, force_wneg=a.force_wneg, lanes=len(rows), passed=sum(r['verdict'] == 'PASS' for r in rows),
                verdict='PASS' if ok_all else 'FAIL', status='DO_NOT_COUNT', rows=rows,
                cell_sources=[str(f) for f in cell_files])
