@@ -266,7 +266,8 @@
     "kv3_pv_v6n@18",
     "kv3_pv_v12@26",
     "kv3_pv_v8@11",
-    "kv3_pv_v8@12"
+    "kv3_pv_v8@12",
+    "kv3_hg_v1@10"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -560,7 +561,8 @@
     "kv3_pv_v6n@18": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
     "kv3_pv_v12@26": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
     "kv3_pv_v8@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
-    "kv3_pv_v8@12": "INPUTS RESTAGED (KW-FIX-43 18:5x): epyc8 kw32/src_27db6 was partial; now 62511 files, file list = epyc7 (md5 57d070e074)"
+    "kv3_pv_v8@12": "INPUTS RESTAGED (KW-FIX-43 18:5x): epyc8 kw32/src_27db6 was partial; now 62511 files, file list = epyc7 (md5 57d070e074)",
+    "kv3_hg_v1@10": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV"
    },
    "only_items": [
     "kv3_astk",
@@ -698,12 +700,14 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "place_prefer": [
     "epyc4",
@@ -3069,7 +3073,18 @@
    ],
    "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
    "cell_check": true,
-   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)",
+   "hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc8",
+    "epyc4"
+   ],
+   "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2."
   },
   "s81": {
    "enabled": true,
@@ -4342,7 +4357,11 @@
     "ot_s81sl_leaf__t61@8",
     "ot_s81sl_leaf__t68@6",
     "ot_s81sl_leaf__t72@9",
-    "svc_hi_dsdv_svc_pvso_entry__t1@12"
+    "svc_hi_dsdv_svc_pvso_entry__t1@12",
+    "col_h9_r0_p4__t1__cl8ef405e8@12",
+    "col_h9_r0_p4__t1__clcb2fbfe8@18",
+    "dsdv_slice_c1x_C__t1@22",
+    "dsdv_slice_c1x_C__t3@17"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4784,7 +4803,7 @@
     "serdes__t13@2": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t15__cla2127225@4": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t16@3": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
-    "col_h10_r0_p4__t1@13": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
+    "col_h10_r0_p4__t1@13": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
     "col_h10_r2__t1__cl99efd374@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
     "col_h9_r0_p3__t1__cl0cd90c0e@18": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "col_h9_r0_p3__t1__cl31d0dc4b@13": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
@@ -5398,7 +5417,11 @@
     "ot_s81sl_leaf__t3@10": "INFRA (KW-FIX-43 19:3x): docker rc 125 on epyc4, not RTL: systemd 'manager has too many units' (130,302 leaked veth device units, limit 131072) from 03:10Z, so runc could not create container scopes; fixed by systemctl daemon-reload (839 units), docker run rc 0",
     "ot_s81sl_leaf__t60@8": "INFRA (KW-FIX-43 19:3x): docker rc 125 on epyc4, not RTL: systemd 'manager has too many units' (130,302 leaked veth device units, limit 131072) from 03:10Z, so runc could not create container scopes; fixed by systemctl daemon-reload (839 units), docker run rc 0",
     "serdes__t13@23": "INFRA (KW-FIX-43 19:3x): docker rc 125 on epyc4, not RTL: systemd 'manager has too many units' (130,302 leaked veth device units, limit 131072) from 03:10Z, so runc could not create container scopes; fixed by systemctl daemon-reload (839 units), docker run rc 0",
-    "serdes__t4@13": "INFRA (KW-FIX-43 19:3x): docker rc 125 on epyc4, not RTL: systemd 'manager has too many units' (130,302 leaked veth device units, limit 131072) from 03:10Z, so runc could not create container scopes; fixed by systemctl daemon-reload (839 units), docker run rc 0"
+    "serdes__t4@13": "INFRA (KW-FIX-43 19:3x): docker rc 125 on epyc4, not RTL: systemd 'manager has too many units' (130,302 leaked veth device units, limit 131072) from 03:10Z, so runc could not create container scopes; fixed by systemctl daemon-reload (839 units), docker run rc 0",
+    "col_h9_r0_p4__t1__cl8ef405e8@12": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
+    "col_h9_r0_p4__t1__clcb2fbfe8@18": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
+    "dsdv_slice_c1x_C__t1@22": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
+    "dsdv_slice_c1x_C__t3@17": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -5412,7 +5435,8 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -17430,7 +17454,18 @@
    "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
    "note_kw44_userbus_1111": "KW-FIX-44 11-11 03:4x UTC (COORD 19:3x): INFRA batch relaunch, 14 rows failed on epyc4 03:10-03:25 UTC (logind CreateSession failed -> no XDG_RUNTIME_DIR -> ot-heavy systemd-run --user 'Failed to connect to user scope bus', or docker rc 125 in the same overload) + svc_hi_dsdv entry earlyoom on epyc8 (sealed-job undercount, SEALDOCK_1111). ot-heavy USERBUS_1111 falls back to /run/user/UID/bus.",
    "cell_check": true,
-   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)",
+   "hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "epyc8"
+   ],
+   "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2."
   },
   "s81_head": {
    "enabled": true,
@@ -19665,13 +19700,15 @@
     "epyc7",
     "epyc4",
     "intel2",
-    "epyc8"
+    "epyc8",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
@@ -25221,7 +25258,19 @@
    ],
    "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
    "cell_check": true,
-   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)",
+   "hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "intel2",
+    "epyc8"
+   ],
+   "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2."
   },
   "hbm": {
    "enabled": true,
@@ -26621,7 +26670,8 @@
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -26959,7 +27009,8 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "cancel_superseded": false,
    "plan_core_items": [
@@ -35139,7 +35190,18 @@
    ],
    "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
    "cell_check": true,
-   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)",
+   "hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2": [
+    "epyc7",
+    "epyc8",
+    "epyc4"
+   ],
+   "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2."
   }
  },
  "place_prefer": [
