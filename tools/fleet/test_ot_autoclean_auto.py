@@ -46,7 +46,9 @@ class Base(unittest.TestCase):
         os.makedirs(self.root)
         self.snap = os.path.join(self.t, "snap")
         self.state = os.path.join(self.t, "state")
-        self.prot = [(f"/srv/none/claude/l{i}/k", "filler") for i in range(5)]
+        # the live tool REQUIRES rows from all three protected lists (lanes/PROTECTED-DBS.txt, PROTECTED-DBS.txt, lanes/prune/ARCHIVE-PROTECTED.tsv)
+        self.prot = [(f"/srv/none/claude/l{i}/k", ("lanes/PROTECTED-DBS.txt", "PROTECTED-DBS.txt", "lanes/prune/ARCHIVE-PROTECTED.tsv")[i % 3])
+                     for i in range(5)]
         self.qpaths, self.qwords = [], []
         self.kw = None
         d = os.path.join(self.t, "docker")
@@ -783,14 +785,24 @@ class TestProtectedSources(unittest.TestCase):
         self.assertIn("/srv/opentallas-scratch3/claude/kw24-wave-1106/runs", got)
         self.assertIn("/srv/none/claude/a/b", got)
 
-    def test_archive_protected_optional(self):
-        rows = ac.build_protected_union(self.coord)
-        self.assertEqual(sorted(p for p, _ in rows), ["/srv/none/claude/a/b", "/srv/none/claude/c/d"])
-
-    def test_first_two_still_required(self):
-        os.remove(os.path.join(self.coord, "PROTECTED-DBS.txt"))
-        with self.assertRaises(FileNotFoundError):
+    def test_archive_protected_required(self):
+        # AUTOCLEAN-12 11-10 (live tool): the third list is REQUIRED like the first two; missing = refuse, nothing is deleted
+        with self.assertRaises((RuntimeError, FileNotFoundError)):
             ac.build_protected_union(self.coord)
+        self.write_ap("any\t/srv/none/claude/e/f\tasbuilt\n")
+        rows = ac.build_protected_union(self.coord)
+        self.assertEqual(sorted(p for p, _ in rows), ["/srv/none/claude/a/b", "/srv/none/claude/c/d", "/srv/none/claude/e/f"])
+
+    def test_all_three_lists_required(self):
+        self.write_ap("any\t/srv/none/claude/e/f\tasbuilt\n")
+        for rel in ("PROTECTED-DBS.txt", "lanes/PROTECTED-DBS.txt", "lanes/prune/ARCHIVE-PROTECTED.tsv"):
+            keep = os.path.join(self.coord, rel)
+            data = open(keep).read()
+            os.remove(keep)
+            with self.assertRaises((RuntimeError, FileNotFoundError), msg=rel):
+                ac.build_protected_union(self.coord)
+            with open(keep, "w") as f:
+                f.write(data)
 
 
 class TestArchiveDriver(Base):
@@ -813,6 +825,9 @@ class TestArchiveDriver(Base):
             f.write("# header\nhx\t/srv/none/claude/a/b\tkit_root\n")
         with open(os.path.join(coord, "PROTECTED-DBS.txt"), "w") as f:
             f.write("hx /srv/none/claude/c/d note words\n")
+        os.makedirs(os.path.join(coord, "lanes/prune"), exist_ok=True)
+        with open(os.path.join(coord, "lanes/prune/ARCHIVE-PROTECTED.tsv"), "w") as f:
+            f.write("any\t/srv/none/claude/e/f\tasbuilt\n")
         recent = time.strftime("%Y-%m-%d %H:%M")
         with open(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), "w") as f:
             f.write(f"- {recent} PST STATE [X] nothing here /srv/none/claude/q/r\n")
