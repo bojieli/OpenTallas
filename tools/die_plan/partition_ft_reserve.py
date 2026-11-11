@@ -97,6 +97,9 @@ def tcl(receipt, macro_boxes=None):
     streetwins=pdn_windows_street(receipt, boxes=macro_boxes, existing=wins+pdn_windows_strip(receipt))
     if streetwins:
         lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_street={len(streetwins)}"')
+    m5wins=pdn_windows_m5_full(receipt, boxes=macro_boxes)
+    if m5wins:
+        lines.append(f'puts "OT_PARTITION_FT_RESERVE pdn_windows_m5_full={len(m5wins)}"')
     lines.append(f'puts "OT_PARTITION_FT_RESERVE rectangles={len(rows)}"')
     return '\n'.join(lines)+'\n'
 
@@ -701,6 +704,72 @@ def _m5_street_islands(rects, y0, y1, xa, xb, bridge, core_x0=4.32, core_y0=4.32
     return out
 
 
+# DIE-HBM-98 11-11 (q_b002 a10 PDN-0179, 304 PDN-0178 M4 channels across the tile; plan p11t_taps_cyc 29333b2b): the plan's
+# M5 + M7 die_ft_bands give the die ALL of M5 and M7 over the type (die_share 1.0, core_share 1.0, the full 380.16-um
+# width), so the partition reserves M5 everywhere except over the hard cores, where macro OBS blocks M5 anyway.  The tile
+# then has no M5 strap anywhere: the M1/M2 rails and the M3/M4 row bridge have no layer up to M6/M7 (M7 is windowed by
+# pdn_windows_v), and every M4 strap piece is an unrepairable channel.  core_zero (FTRES-FIX) does not change it: both
+# arms reserve M7 1,641,066 um^2 (the whole outline) and M5 981,227 um^2 on this plan.  When the free M5 left inside the
+# core area outside the hard cores is below PDN_M5_FREE_MIN of that area, every M5 rect wider than PDN_WIN_MIN keeps one
+# strap-pair window at every PDN_WIN_EVERY_M5-th M5 strap of the top grid (core x0 + offset + k * pitch, k on ONE global
+# phase so the windows of stacked rects line up into one strap through columns and street rows).  Cost in such a type:
+# 0.462 um of M5 per 17.28 um (2.7 %), which the die FT router sees in the abstract.  Types with free M5 are unchanged.
+PDN_WIN_EVERY_M5 = 4
+PDN_M5_FREE_MIN = 0.01
+
+
+def _m5_wholly_reserved(receipt, width, boxes, core=PDN_CORE_INSET):
+    try:
+        from . import die_trial as D
+    except ImportError:
+        import die_trial as D
+    height = max(r['rect'][3] for r in receipt['rectangles_um'])
+    cx0, cy0, cx1, cy1 = core, core, width - core, height - core
+    blk = [tuple(r['rect']) for r in receipt['rectangles_um'] if r['layer'] == 'M5'] + [tuple(b) for b in boxes]
+    blk = [(max(a, cx0) - cx0, max(b, cy0) - cy0, min(c, cx1) - cx0, min(d, cy1) - cy0) for a, b, c, d in blk]
+    blk = [q for q in blk if q[2] > q[0] + 1e-9 and q[3] > q[1] + 1e-9]
+    free = sum((c - a) * (d - b) for a, b, c, d in D._uncovered(cx1 - cx0, cy1 - cy0, blk))
+    return free < PDN_M5_FREE_MIN * (cx1 - cx0) * (cy1 - cy0)
+
+
+def pdn_windows_m5_full(receipt, width=None, core_x0=PDN_CORE_INSET, boxes=None):
+    """[(layer, x0, x1, rect)] M5 strap-pair windows on a global every-PDN_WIN_EVERY_M5 grid, only when the receipt leaves
+    no free M5 outside the hard cores (macro boxes required; without them nothing changes)."""
+    if receipt is None or not boxes or not any(r['layer'] == 'M5' for r in receipt['rectangles_um']):
+        return []
+    width = _width(receipt, width)
+    if not _m5_wholly_reserved(receipt, width, boxes):
+        return []
+    off, wd, sp, pitch = PDN_WIN_COMB['M5']
+    lo_of = lambda k: core_x0 + off + k * pitch - PDN_WIN_MARGIN
+    hi_of = lambda k: core_x0 + off + k * pitch + 2 * wd + sp + PDN_WIN_MARGIN
+    # the strap next to each hard-core x edge too (q_b002 probe, grid only: 129 M4 channels left in x 276.4-280.7, the
+    # 6.2 um between the bank macros' right edge 276.48 and the first grid window 282.714); same set for every rect
+    edge = set()
+    for bx0, _, bx1, _ in boxes:
+        edge.add(math.ceil((bx1 + PDN_WIN_MARGIN - core_x0 - off) / pitch - 1e-9))               # first window clear right of it
+        edge.add(math.floor((bx0 - PDN_WIN_MARGIN - core_x0 - off - 2 * wd - sp) / pitch + 1e-9))  # last window clear left of it
+    out = []
+    for r in receipt['rectangles_um']:
+        if r['layer'] != 'M5':
+            continue
+        x0, y0, x1, y1 = r['rect']
+        if x1 - x0 <= PDN_WIN_MIN + 1e-6:
+            continue
+        k = max(0, int((x0 - core_x0 - off) // pitch))
+        while True:
+            kk, k = k, k + 1
+            lo, hi = lo_of(kk), hi_of(kk)
+            if lo < x0 + PDN_WIN_MARGIN or lo < core_x0:
+                continue
+            if hi > x1 - PDN_WIN_MARGIN or hi > width - core_x0:
+                break
+            if kk % PDN_WIN_EVERY_M5 and kk not in edge:
+                continue
+            out.append(('M5', round(lo, 3), round(hi, 3), tuple(r['rect'])))
+    return out
+
+
 def pdn_windows_street(receipt, width=None, core_y0=4.32, boxes=None, existing=()):
     """[(layer, y0, y1)] one strap window per macro street and STREET_LAYERS layer whose lower layer has no partner
     there (M4: the street wholly reserved on M4; M6: an M5 island piece, _m5_street_islands) and no window yet."""
@@ -755,7 +824,8 @@ def obstruction_rows(receipt, width=None, core_y0=4.32, macro_boxes=None):
     wins = pdn_windows(receipt, width, core_y0) + swins
     stwins = pdn_windows_street(receipt, width, core_y0, macro_boxes, wins)
     wins = wins + stwins
-    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width) + pdn_windows_edge_pocket(receipt)
+    vwins = pdn_windows_v(receipt) + pdn_windows_comb(receipt) + pdn_windows_col(receipt) + pdn_windows_strip_m5(receipt, width) + pdn_windows_edge_pocket(receipt) \
+        + pdn_windows_m5_full(receipt, width, boxes=macro_boxes)
     out = []
     for r in receipt['rectangles_um']:
         x0, y0, x1, y1 = r['rect']
