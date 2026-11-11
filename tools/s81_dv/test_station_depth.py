@@ -94,5 +94,83 @@ class StationDepth(unittest.TestCase):
         self.assertEqual({k: off[k] - int(v) for k, v in d['masters']['col_h10']['off'].items() for k in [int(k)]}, sh)
 
 
+class InbandPricing(unittest.TestCase):
+    """COORD item (3): a landed schedule's in-band station edges beyond the emission measurement are priced, x / go /
+    cfg must move together, the go_tag lead over go stays in the proven window, and a stale schedule is refused."""
+    CMP = HERE.parents[1] / 'results/arch/s81_dv_1016/frame_l4_cluster/compiler'
+
+    def sched(self, m):
+        return json.loads((self.CMP / f'{m}_schedule.json').read_text())
+
+    def test_committed_schedules_flat_equivalent(self):
+        import frame_return_plan as P
+        for m in ('col_h9', 'col_h10'):
+            s = self.sched(m)
+            self.assertEqual(set(P.inband_shift(m, s).values()), {0}, m)
+            self.assertEqual({v['go'] - v['go_tag'] for v in P.schedule_paths(s).values()}, {2}, m)
+
+    def bump(self, s, e, pins, n=1):
+        st = s['station_inputs'][e]
+        if 'x' in pins:
+            for v in st['inputs'].values():
+                for q in v['paths']:
+                    q['flat_link_edges'] += n
+        for k in pins:
+            if k != 'x':
+                st['control'][k]['path_edges'] += n
+
+    def test_extra_station_priced(self):
+        # the bs2/bs3 qbank pin cycle form: one relay on x / go / cfg of e2 and e3, not on go_tag
+        import frame_return_plan as P
+        s = self.sched('col_h9')
+        for e in ('e2', 'e3'):
+            self.bump(s, e, ('x', 'go', 'cfg_v'))
+        got = P.inband_shift('col_h9', s)                 # go_tag lead 3: inside the proven window, priced +1
+        self.assertEqual({k: v for k, v in got.items() if v}, {2: 1, 3: 1})
+        self.bump(s, 'e2', ('x', 'go', 'cfg_v'))
+        with self.assertRaises(AssertionError) as cm:     # a second relay: lead 4 > proven 3, refused until benched
+            P.inband_shift('col_h9', s)
+        self.assertIn('go_tag lead', str(cm.exception))
+
+    def test_xgo_skew_refused(self):
+        import frame_return_plan as P
+        s = self.sched('col_h9')
+        self.bump(s, 'e5', ('x',))
+        with self.assertRaises(AssertionError) as cm:
+            P.inband_shift('col_h9', s)
+        self.assertIn('skew', str(cm.exception))
+
+    def test_asbuilt_schedule_not_refused(self):
+        # TOK-VERIFY-1 11-11: the strict-bind compile uses as-built schedules (no station_depth / path_edges); plan_phase
+        # keeps the main behaviour for them (crossing added_edges only), inband_shift itself would refuse them
+        import inspect
+        import frame_return_plan as P
+        src = inspect.getsource(P.plan_phase)
+        self.assertIn("for e in schedule['station_inputs']} if 'asbuilt' in schedule", src)
+
+    def test_stale_schedule_refused(self):
+        import frame_return_plan as P
+        s = self.sched('col_h10')
+        s['station_depth'] = {k: {q: 1 for q in v} for k, v in s['station_depth'].items()}
+        with self.assertRaises(AssertionError):
+            P.inband_shift('col_h10', s)
+        s = self.sched('col_h10')
+        for st in s['station_inputs'].values():
+            for c in st['control'].values():
+                c.pop('path_edges', None)
+        with self.assertRaises(AssertionError):
+            P.inband_shift('col_h10', s)
+
+
+class PipelineFloor(unittest.TestCase):
+    def test_wqb_pipeline_floor_from_table(self):
+        # TOK-VERIFY-1 11-11: the wq_b + idx.q pipeline period must come from the measured FLOORS table
+        sys.path[:0] = [str(HERE / 'layer_prog'), str(HERE.parents[1])]
+        import xs_field_calendar as XF
+        import xs_wqb_die as WD
+        self.assertEqual(WD.PIPE_FLOOR, max(XF.FLOORS[o][1] for o in WD.PIPE_OPS))
+        self.assertGreaterEqual(WD.PIPE_PERIOD, XF.FLOORS['attn.wq_b'][1])
+
+
 if __name__ == '__main__':
     unittest.main()

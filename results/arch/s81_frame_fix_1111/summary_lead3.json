@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.s81.frame_seq_gate.lead3.v1",
+ "verdict": "PASS",
+ "go_tag_lead": 3,
+ "positive_clean": true,
+ "negative_detected": true,
+ "runs": [
+  {
+   "case": "positive_lead3",
+   "op": "wq_b",
+   "period": 128,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 0,
+   "check": "TOKSIM_FGU_SEQ PASS op attn.wq_b PER 128 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1663 span 1600 errors 0 []",
+   "clean": true,
+   "log": "../lead3/vec_qb3/wq_b/run_P128_lead3.log",
+   "tags_equal_bound": true
+  },
+  {
+   "case": "positive_lead3",
+   "op": "experts_gu",
+   "period": 146,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 0,
+   "check": "TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 146 phases 18 rows 60 fixture_rows 60 go0 63 last_ret 2904 span 2841 errors 0 []",
+   "clean": true,
+   "log": "../lead3/vec_qb3/experts_gu/run_P146_lead3.log",
+   "tags_equal_bound": true
+  },
+  {
+   "case": "floor_lead3",
+   "op": "experts_gu",
+   "period": 145,
+   "rc": 0,
+   "faults": 4,
+   "end": 1,
+   "check_rc": 1,
+   "check": "TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 145 phases 18 rows 60 fixture_rows 60 go0 63 last_ret 2887 span 2824 errors 4 ['FAULT edge 592 status 11 lx 0', 'FAULT edge 593 status 11 lx 0', 'FAULT edge 594 status 11 lx 0']",
+   "clean": false,
+   "log": "../lead3/vec_qb3/experts_gu/run_P145_lead3.log"
+  },
+  {
+   "case": "negative_depth2_on_lead3",
+   "op": "wq_b",
+   "period": 128,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 1,
+   "check": "TOKSIM_FGU_SEQ FAIL op attn.wq_b PER 128 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1663 span 1600 errors 62 ['UNASSIGNED_RET edge 353 17c7d030010004447', 'UNASSIGNED_RET edge 358 07e41ea0a1000c047', 'UNASSIGNED_RET edge 363 17cb75b001000c447']",
+   "clean": false,
+   "log": "../lead3/vec_qb2/wq_b/run_P128_lead3.log",
+   "tags_equal_bound": true
+  },
+  {
+   "case": "negative_mut_tag_lead3",
+   "op": "wq_b",
+   "period": 128,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 0,
+   "check": "TOKSIM_FGU_SEQ PASS op attn.wq_b PER 128 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1663 span 1600 errors 0 []",
+   "clean": false,
+   "log": "../lead3/vec_qb3/wq_b/run_P128_mut_tag.log",
+   "tags_equal_bound": false
+  },
+  {
+   "case": "bound_lead2",
+   "op": "wq_b",
+   "period": 128,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 0,
+   "check": "TOKSIM_FGU_SEQ PASS op attn.wq_b PER 128 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1662 span 1599 errors 0 []",
+   "clean": true,
+   "log": "../lead3/vec_qb2/wq_b/run_P128_bound.log"
+  },
+  {
+   "case": "bound_lead2",
+   "op": "experts_gu",
+   "period": 146,
+   "rc": 0,
+   "faults": 0,
+   "end": 1,
+   "check_rc": 0,
+   "check": "TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 146 phases 18 rows 60 fixture_rows 60 go0 63 last_ret 2903 span 2840 errors 0 []",
+   "clean": true,
+   "log": "../lead3/vec_qb2/experts_gu/run_P146_bound.log"
+  }
+ ],
+ "qbank_s_3flop_sha256": "788f62055ced80d6fe1ad137fd9e9ab031f27bd5241187fb13ea359cf3c138ca",
+ "head": "ad60c8ed708ac62ffc523b0d670d7e5fe4e3b22f"
+}

@@ -243,7 +243,7 @@
    "5": 33057144057455270035520
   },
   "die_frame": "u_f_0L01",
-  "field_phase": 65,
+  "field_phase": 58,
   "fits": {
    "1": {
     "descriptor": {
@@ -272,10 +272,10 @@
      "sm": 0,
      "ssh": 0
     },
-    "first_issue_edge": 150,
-    "go_edge": 145,
+    "first_issue_edge": 152,
+    "go_edge": 147,
     "issues": 64,
-    "last_issue_edge": 213,
+    "last_issue_edge": 215,
     "mismatches": 0
    },
    "10": {
@@ -305,10 +305,10 @@
      "sm": 0,
      "ssh": 0
     },
-    "first_issue_edge": 160,
-    "go_edge": 155,
+    "first_issue_edge": 167,
+    "go_edge": 162,
     "issues": 64,
-    "last_issue_edge": 223,
+    "last_issue_edge": 230,
     "mismatches": 0
    },
    "5": {
@@ -338,14 +338,16 @@
      "sm": 0,
      "ssh": 0
     },
-    "first_issue_edge": 154,
-    "go_edge": 149,
+    "first_issue_edge": 158,
+    "go_edge": 153,
     "issues": 64,
-    "last_issue_edge": 217,
+    "last_issue_edge": 221,
     "mismatches": 0
    }
   },
+  "frame": "l4",
   "key": "col_h10|E2|bseg1024",
+  "land_e": 2,
   "lat_issue_to_pv": {
    "e10e.r": 106,
    "e10w.r": 106,
@@ -354,32 +356,34 @@
    "e5e.r": 106,
    "e5w.r": 106
   },
+  "leaf_ret_corr": {},
+  "log": "/srv/opentallas-scratch2/claude/s81-frame-fix-1/bfm/bench/run_vec2.log",
   "ok": true,
   "op": "attn.wo_a",
   "pv": {
    "e10e.r": [
-    329
+    336
    ],
    "e10w.r": [
-    329
+    336
    ],
    "e1e.r": [
-    319
+    321
    ],
    "e1w.r": [
-    319
+    321
    ],
    "e5e.r": [
-    323
+    327
    ],
    "e5w.r": [
-    323
+    327
    ]
   },
   "pv_all": {
    "e10e.r": [
     {
-     "edge": 329,
+     "edge": 336,
      "n": 4,
      "row": 5,
      "seg": 0
@@ -387,7 +391,7 @@
    ],
    "e10w.r": [
     {
-     "edge": 329,
+     "edge": 336,
      "n": 4,
      "row": 4,
      "seg": 0
@@ -395,7 +399,7 @@
    ],
    "e1e.r": [
     {
-     "edge": 319,
+     "edge": 321,
      "n": 4,
      "row": 1,
      "seg": 0
@@ -403,7 +407,7 @@
    ],
    "e1w.r": [
     {
-     "edge": 319,
+     "edge": 321,
      "n": 4,
      "row": 0,
      "seg": 0
@@ -411,7 +415,7 @@
    ],
    "e5e.r": [
     {
-     "edge": 323,
+     "edge": 327,
      "n": 4,
      "row": 3,
      "seg": 0
@@ -419,13 +423,47 @@
    ],
    "e5w.r": [
     {
-     "edge": 323,
+     "edge": 327,
      "n": 4,
      "row": 2,
      "seg": 0
     }
    ]
-  }
+  },
+  "ret_composed": [
+   406,
+   409,
+   412,
+   415,
+   422,
+   424
+  ],
+  "ret_lat": {
+   "e10e.r": 86,
+   "e10w.r": 88,
+   "e1e.r": 85,
+   "e1w.r": 88,
+   "e5e.r": 85,
+   "e5w.r": 88
+  },
+  "ret_run": [
+   406,
+   409,
+   412,
+   415,
+   422,
+   424
+  ],
+  "ret_self_check": true,
+  "ret_uncorrected": [
+   406,
+   409,
+   412,
+   415,
+   422,
+   424
+  ],
+  "remeasured": "S81-FRAME-FIX-1 11-11 on main RTL ad60c8ed70 (dc23a738 2-flop stations): xs_bench.sh BF_LEGACY=1 MASTER=col_h10 LK=2 LDLY=0, u_f_0L01 attn.wo_a phase 58 vector; old pv e1 319 / e5 323 / e10 329 (1-flop stations)"
  },
  "col_h9_lp|E2|bseg1024": {
   "bench": {

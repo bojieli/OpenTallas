@@ -69,14 +69,18 @@ FLOORS = {     # op: (family, measured floor period, first FAIL, span tail (go0 
     # S81-FRAME-FIX-1 11-11: re-measured on main RTL (dc23a738 2-flop stations) with the station-depth calendar, frame
     # bench col_h10_l4_b u_f_0L01: P127..136 PASS (strict checker 0 errors), P126 / P125 FAULT 11 (cfg7 load overrun);
     # the 10-19 floor 126 was measured on 1-flop stations.  Tail 223 (fullsix capture law) not re-measured.
+    # wo_b / shared_gu / down re-measured the same way (11-11); idx.q is NOT (the L0 fixture lacks indexer.wq_b) and keeps
+    # its 10-19 1-flop record; the FLOORS tails (4th field, legacy form) are not re-measured -- ROMOPT_TAIL holds the
+    # release-form tails, re-measured below.
     'attn.wq_b': ('fp8', 127, 126, 223, 'S81-FRAME-FIX-1 11-11 frame_seq_gate P127 PASS / P126 FAULT 11 (was claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS on 1-flop stations)'),
     'attn.idx.q': ('fp8', 126, 125, 295, 'claude/toksim-s81c-fseq-1019 (lanes/TOKSIM-S81C-FSEQ.md: 6-phase PASS 8/8 to P126, P125 FAULT)'),
-    'attn.wo_b': ('fp8', 127, 126, 320, 'results/rtl/s81_calpipe_1020/wob (u_f_0L00 / 0L01 P127 PASS 699 / 701, P126 FAIL 4 words)'),
-    'ffn.shared_gu': ('fp8', 146, 145, 360, 'results/rtl/toksim_s81b_fgu_1019/job5 P146 PASS 798, job4 P145 FAIL'),
+    'attn.wo_b': ('fp8', 128, 127, 320, 'S81-FRAME-FIX-1 11-11 main RTL station-depth calendar, frame bench col_h10_l4_b u_f_0L01 (fb/s2_*): P128 / P129 PASS, P127 FAIL 4 words, P126 FAIL 6 (was 10-20 calpipe P127 on 1-flop stations)'),
+    'ffn.shared_gu': ('fp8', 145, 144, 360, 'S81-FRAME-FIX-1 11-11 main RTL station-depth calendar, frame bench col_h10_l4_b u_f_0L01 (fb/s2_*): P145..148 PASS, P144..141 FAIL 4-5 words (was 10-19 P146 PASS / P145 FAIL)'),
     'ffn.experts_gu': ('fp8', 145, 144, 345, 'TOKSIM-S81B/FGU + S81C/FSGU: 24 phases P145 3680, P144 FAULT'),
-    'ffn.down': ('fp8', 130, 125, 289, 'TOKSIM-S81B/FDOWN + S81C/FSDN: 21 phases P130 2889, P125 FAULT 11'),
-    'attn.wo_a': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 352 + _BF_ADD, 'results/rtl/s81_wqbp_1020/pipe3: 12 phases P231 2893 / 2886 PASS, P230 FAIL'),
-    'ffn.router': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 345 + _BF_ADD, 'TOKSIM-S81C/FSEQ: 5 phases P231 1269 PASS 6/6 frames, P230 FAIL'),
+    'ffn.down': ('fp8', 127, 126, 289, 'S81-FRAME-FIX-1 11-11 main RTL station-depth calendar, frame bench col_h10_l4_b u_f_0L01 (fb/s2_*): 21 phases P127..132 PASS, P126 FAIL 4, P125 FAIL 18 (was 10-19 P130 PASS / P125 FAULT)'),
+    # BF16 (11-11, base column form, re-measured col_h10|E2 BF record): floor unchanged, tails +9 / +1 on 2-flop stations
+    'attn.wo_a': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 361 + _BF_ADD, 'S81-FRAME-FIX-1 11-11 main RTL u_f_0L01 base form: 12 phases P231 / P232 PASS span 2902 / 2913, P230 / P229 FAIL 11 (was 10-20 pipe3 tail 352)'),
+    'ffn.router': ('bf16', BF_SEG_LABEL_FLOOR, 230 + _BF_ADD, 346 + _BF_ADD, 'S81-FRAME-FIX-1 11-11 main RTL u_f_0L01 base form: 5 phases P231 / P232 PASS span 1270 / 1274, P230 / P229 FAIL 4 (was 10-19 FSEQ tail 345)'),
 }
 # S81-ROMOPT-C (O3, OT_XS_KSLOT=k): an op compiled with k segment classes per element has its OWN measured floor / tail
 # (release FSEQ frame exes, results/rtl/s81_romopt_1020/c); a k-class op without an entry is a compile fault.
@@ -118,7 +122,10 @@ EXEC_ORDER = ['attn.wq_b', 'attn.idx.q', 'attn.cmp.wk', 'attn.wo_a', 'attn.wo_b'
 # S81-FRAME-FIX-1 11-11: (12, 1) wq_b / experts_gu re-measured on main RTL (2-flop stations, station-depth calendar):
 # wq_b P127 span 1589 = 10 x 127 + 319 (was 306), experts_gu P145 span 2823 = 17 x 145 + 358 (was 346); the other
 # entries were measured on 1-flop stations and are expected ~+12..13 late (not re-measured: frame_seq_gate extension)
-ROMOPT_TAIL = {(12, 1): {'attn.wq_b': 319, 'attn.wo_b': 322, 'ffn.shared_gu': 363, 'ffn.experts_gu': 358, 'ffn.down': 296},
+# 11-11 (COORD item 2): wo_b P128 span 720 = 3 x 128 + 336 (was 322), shared_gu P145 span 667 = 2 x 145 + 377 (was 363),
+# down P127 span 2847 = 20 x 127 + 307 (was 296); constant over P (wo_b P128/129, shared_gu P145..148, down P127..132).
+# These (12, 1) values are one frame (u_f_0L01, col_h10), not the 10-20 max over four frames; (12, 0) / (10, 0) unchanged.
+ROMOPT_TAIL = {(12, 1): {'attn.wq_b': 319, 'attn.wo_b': 336, 'ffn.shared_gu': 377, 'ffn.experts_gu': 358, 'ffn.down': 307},
                (12, 0): {'attn.wq_b': 304, 'attn.wo_b': 320, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
                (10, 0): {'attn.wq_b': 296, 'attn.wo_b': 320, 'ffn.shared_gu': 361, 'ffn.experts_gu': 346, 'ffn.down': 292}}
 ROMOPT_DIR = {(12, 1): 'fseq_o1o2c', (12, 0): 'fseq_o1o2', (10, 0): 'fseq_o1'}

@@ -76,6 +76,56 @@ def emission(master):
 
 _SHIFT = {}
 
+INBAND_PINS = ('x', 'go', 'cfg_v')
+# go_tag-to-go lead (edges) the element is proven for.  The element pin-registers go_tag beside go and cfg7_seq holds
+# go_tag from the go edge to the next go (ot_s81_cfg7_seq.sv:271/309), so the sampled tag is the same for any lead below
+# the go spacing; bench-proven at 1 (10-17 measurement), 2 (bound main RTL, frame_seq_gate) and 3 (frame_seq_gate
+# --go-tag-lead3, S81-FRAME-FIX-1 11-11: 3-flop qbank_S, wq_b P128 / experts_gu P146 calendar + RET tag sequence equal to
+# the lead-2 build, MUT_TAG caught).  A larger lead needs its own bench run.
+GO_TAG_LEAD_MAX = 3
+
+
+def schedule_paths(schedule):
+    """per pair: in-band station path edges of x (one value over every xs_* bit), go, cfg_v and go_tag of a landed
+    frame schedule (frame_schedule.py; path_edges = flat leg + cfg7_seq upstream chain)"""
+    out = {}
+    for e, st in schedule['station_inputs'].items():
+        xs = {p['flat_link_edges'] for v in st['inputs'].values() for p in v['paths']}
+        assert len(xs) == 1, ('unaligned in-band x paths', e, sorted(xs))
+        c = st['control']
+        assert all('path_edges' in c[k] for k in ('go', 'cfg_v')), ('schedule predates path_edges: re-extract', e)
+        out[int(e[1:])] = dict(x=xs.pop(), go=c['go']['path_edges'], cfg_v=c['cfg_v']['path_edges'],
+                               go_tag=c['go_tag']['path_edges'] if 'go_tag' in c else None)
+    return out
+
+
+def inband_shift(master, schedule):
+    """S81-FRAME-FIX-1 11-11 (COORD item 3): the in-band station edges of a landed frame beyond what emission()
+    already prices.  emission() = the 10-17 measurement (stations at station_depth_measured) + station_shift (depth
+    changes since, read from RTL).  The reference = the measured frame's in-band paths at the measured depths
+    (emission.json station_path_at_measure, extracted by frame_schedule.py under the measured-depth override), so
+        extra[pair] = path(schedule) - path_at_measure - station_shift(pair)
+    must agree over x / go / cfg_v (else the element sees a skewed go vs x: refused).  go_tag (cfg7_seq -> element,
+    no qbank) is not delayed by an x/go station; its lead over go must stay within GO_TAG_LEAD_MAX (the proven
+    element window) or the schedule is refused.  A schedule extracted before path_edges / at other station depths is
+    refused (stale)."""
+    import station_depth as SD
+    assert schedule.get('station_depth') == SD.fingerprint(), 'landed schedule extracted at other station depths: re-extract'
+    d = json.loads(EMISSION.read_text())
+    ref = d['station_path_at_measure'][master]
+    sh = station_shift(master, d['station_depth_measured'])
+    got = schedule_paths(schedule)
+    out = {}
+    for pair, g in got.items():
+        r = ref[str(pair)]
+        ex = {k: g[k] - r[k] - sh[pair] for k in INBAND_PINS}
+        assert len(set(ex.values())) == 1, ('in-band x/go/cfg skew', master, pair, ex)
+        out[pair] = ex['x']
+        if g['go_tag'] is not None:
+            lead = g['go'] - g['go_tag']
+            assert 0 < lead <= GO_TAG_LEAD_MAX, ('go_tag lead over go outside the proven window', master, pair, lead)
+    return out
+
 
 def station_shift(master, measured):
     """{pair: register edges the pair's element inputs (every xs_* bit, go, cfg_*) gained over the measured
@@ -505,12 +555,19 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
         assert schedule['topology']['master'] == master
         topo = schedule['topology']
         off = dict(off)
+        # as-built band schedules (frame_schedule_asb.py, key asbuilt) carry station/control = LP + the MEASURED as-built
+        # depth delta in their own added_edges (one tracer, real flops), so they are priced as on main (in-band 0 here);
+        # the in-band pricing applies to the LP extractor (frame_schedule.py) schedules
+        inb = ({int(e[1:]): 0 for e in schedule['station_inputs']} if 'asbuilt' in schedule
+               else inband_shift(master, schedule))
         for pair in pairs:
             st = schedule['station_inputs'][f'e{pair}']
             assert st['all_x_inputs_equal_added_edges'], ('unaligned x calendar', pair)
             add, = st['added_edges']
             assert all(c['added_edges'] == add for c in st['control'].values()), ('unaligned go/cfg', pair)
-            off[pair] += add
+            # S81-FRAME-FIX-1 11-11: + the in-band station edges this frame has beyond the emission measurement's
+            # frame (e.g. a qbank pin-cycle relay); 0 on the flat-equivalent frame
+            off[pair] += add + inb[pair]
     if kslot == 1:
         nsr = len(pairs) // nseg
         ident = [(i, i // nseg, i % nseg) for i in range(len(pairs))]
