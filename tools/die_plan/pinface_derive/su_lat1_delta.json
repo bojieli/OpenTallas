@@ -1,0 +1,423 @@
+{
+ "base_plan": "s19 plan_qc99_s19.json bf5769723c51",
+ "plan_sha12": "42478be02a67",
+ "sidecar_sha12": "d26ec11a2a5f",
+ "sidecar_base_sha12": "0cd376957c97",
+ "note": "SU-LAT-1 11-11: x_su_c_i N=3 stations in all 5 su_l0 types (u_lane3 is a channel chain since s19: kit per-bit hop <= 315.8 um; L chains kit-knee need <= 3), chain-level regs at the kit spacing (j+1)/(N+1); 12 x_su_c su_l0 lanes fixed_cycles 4 -> 3, plan latency 8 -> 7 = head; latency table untouched (4 = 7 - 3); reset relays re-picked by site, anchors re-recorded; 1 collector source moved in sle_su_l0__cl7a55c676 (new sidecar).",
+ "TOK": "12 lanes sl_{E,W}{0..5}_su_c__x_su_c_su_l0: pin cycles 4 -> 3 (s19 -> s20), plan latency 8 -> 7; equal to head (pre-s16) fixed_cycles 3 / latency 7. RTL LAT_* params unchanged (table 4). Undoes the s16 +1 on these 12 lanes.",
+ "latency_rows": [
+  {
+   "lane": "sl_E0_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E0_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E0_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_E1_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E1_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E1_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_E2_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E2_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E2_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_E3_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E3_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E3_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_E4_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E4_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E4_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_E5_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_E5_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_E5_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W0_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W0_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W0_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W1_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W1_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W1_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W2_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W2_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W2_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W3_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W3_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W3_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W4_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W4_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W4_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  },
+  {
+   "lane": "sl_W5_su_c__x_su_c_su_l0",
+   "ports": [
+    "sl_W5_su_c__x_su_c_su_l0__0"
+   ],
+   "fixed_cycles": {
+    "head": 3,
+    "s19": 4,
+    "s20": 3
+   },
+   "plan_latency_cycles": {
+    "head": 7,
+    "s19": 8,
+    "s20": 7
+   },
+   "latency_table_cycles": {
+    "s19": 4,
+    "s20": 4,
+    "param": "LAT_SL_W5_SU_C__X_SU_C_SU_L0",
+    "convention": "table = plan - fixed (lane RTL LAT_* param; fixed = type-kit stations)"
+   }
+  }
+ ],
+ "chains": [
+  {
+   "type": "slw_su_l0__cl76fb247e",
+   "core": "u_lane0",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 0
+  },
+  {
+   "type": "slw_su_l0__cl76fb247e",
+   "core": "u_lane1",
+   "leg_order": "channel",
+   "worst_hop_um": 141.089,
+   "kit_knee_need": null
+  },
+  {
+   "type": "slw_su_l0__cl76fb247e",
+   "core": "u_lane2",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 3
+  },
+  {
+   "type": "slw_su_l0__cl76fb247e",
+   "core": "u_lane3",
+   "leg_order": "channel",
+   "worst_hop_um": 315.785,
+   "kit_knee_need": null
+  },
+  {
+   "type": "slw_su_l0__cl1e5219ea",
+   "core": "u_lane0",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 0
+  },
+  {
+   "type": "slw_su_l0__cl1e5219ea",
+   "core": "u_lane1",
+   "leg_order": "channel",
+   "worst_hop_um": 141.089,
+   "kit_knee_need": null
+  },
+  {
+   "type": "slw_su_l0__cl1e5219ea",
+   "core": "u_lane2",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 3
+  },
+  {
+   "type": "slw_su_l0__cl1e5219ea",
+   "core": "u_lane3",
+   "leg_order": "channel",
+   "worst_hop_um": 315.785,
+   "kit_knee_need": null
+  },
+  {
+   "type": "slw_su_l0__cl1a1c1f8f",
+   "core": "u_lane0",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 0
+  },
+  {
+   "type": "slw_su_l0__cl1a1c1f8f",
+   "core": "u_lane1",
+   "leg_order": "channel",
+   "worst_hop_um": 141.089,
+   "kit_knee_need": null
+  },
+  {
+   "type": "slw_su_l0__cl1a1c1f8f",
+   "core": "u_lane2",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 3
+  },
+  {
+   "type": "slw_su_l0__cl1a1c1f8f",
+   "core": "u_lane3",
+   "leg_order": "channel",
+   "worst_hop_um": 315.785,
+   "kit_knee_need": null
+  },
+  {
+   "type": "sle_su_l0__cl7a55c676",
+   "core": "u_lane0",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 0
+  },
+  {
+   "type": "sle_su_l0__cl7a55c676",
+   "core": "u_lane1",
+   "leg_order": "channel",
+   "worst_hop_um": 131.755,
+   "kit_knee_need": null
+  },
+  {
+   "type": "sle_su_l0__cl7a55c676",
+   "core": "u_lane2",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 3
+  },
+  {
+   "type": "sle_su_l0__cl7a55c676",
+   "core": "u_lane3",
+   "leg_order": "channel",
+   "worst_hop_um": 306.451,
+   "kit_knee_need": null
+  },
+  {
+   "type": "sle_su_l0__cl086d85ba",
+   "core": "u_lane0",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 0
+  },
+  {
+   "type": "sle_su_l0__cl086d85ba",
+   "core": "u_lane1",
+   "leg_order": "channel",
+   "worst_hop_um": 131.755,
+   "kit_knee_need": null
+  },
+  {
+   "type": "sle_su_l0__cl086d85ba",
+   "core": "u_lane2",
+   "leg_order": "normal_first",
+   "worst_hop_um": null,
+   "kit_knee_need": 3
+  },
+  {
+   "type": "sle_su_l0__cl086d85ba",
+   "core": "u_lane3",
+   "leg_order": "channel",
+   "worst_hop_um": 306.451,
+   "kit_knee_need": null
+  }
+ ],
+ "types_changed": [
+  "slw_su_l0__cl76fb247e",
+  "slw_su_l0__cl1e5219ea",
+  "slw_su_l0__cl1a1c1f8f",
+  "sle_su_l0__cl7a55c676",
+  "sle_su_l0__cl086d85ba"
+ ]
+}
