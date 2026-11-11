@@ -1,0 +1,479 @@
+{
+ "generated": "2026-11-11 02:01 UTC",
+ "k_die": 0.845,
+ "cq_ff": 25.0,
+ "dies": {
+  "hbm": {
+   "plan": "physical/die_plan/hbm/plan_of_record/d44v_gqi_cp1109_q3vm_smk/die_plan.json.gz",
+   "designs": 95,
+   "unread": 45,
+   "band_out": 57,
+   "far_out": 42,
+   "port_hold_designs": 32,
+   "port_hold_below0": 9,
+   "port_hold_below0_aocv": 25,
+   "port_hold_below0_core_viol_endpoints": 23387,
+   "worst_port_hold": [
+    "ot_hbm_su_pg_lane_exp_x_core",
+    -42.7
+   ],
+   "worst_xcorner": [
+    "ot_hfd_coll_q3_body_ctl q3bc_CF2 build",
+    -27.8
+   ],
+   "max_early_tap": [
+    "ot_hfd_coll_q3_body_ctl q3bc_CF2 build",
+    454.3
+   ],
+   "below0": [
+    [
+     "ot_hbm_su_pg_lane_exp_x_core",
+     -42.7,
+     -59.5,
+     1678,
+     70.8,
+     "SIGNED"
+    ],
+    [
+     "ot_hidx_s3_q",
+     -39.0,
+     -54.9,
+     647,
+     45.4,
+     "SIGNED"
+    ],
+    [
+     "ot_hfd_coll_q3_vm_core",
+     -18.3,
+     -38.0,
+     4903,
+     236.2,
+     "SIGNED"
+    ],
+    [
+     "ot_hbm_idx_rootctl_static_am",
+     -15.7,
+     -33.0,
+     3053,
+     118.6,
+     "SIGNED"
+    ],
+    [
+     "ot_hgi_sfu_opsb_output",
+     -13.8,
+     -33.7,
+     937,
+     249.6,
+     "SIGNED"
+    ],
+    [
+     "ot_hbm_accel_smh_xs",
+     -8.0,
+     -25.7,
+     2916,
+     126.5,
+     "SIGNED"
+    ],
+    [
+     "ot_hgi_coll_gqi_issue",
+     -6.4,
+     -21.9,
+     3234,
+     14.4,
+     "SIGNED"
+    ],
+    [
+     "ot_q2nf_qout",
+     -2.7,
+     -20.6,
+     4991,
+     141.5,
+     "SIGNED"
+    ],
+    [
+     "ot_hgi_gq_aq_tile",
+     -1.4,
+     -17.6,
+     1028,
+     38.4,
+     "SIGNED"
+    ]
+   ],
+   "far": [
+    [
+     "ot_hfd_coll_q3_body_ctl q3bc_CF2 build",
+     454.3,
+     356.1
+    ],
+    [
+     "ot_q2nf_rest split kit_bd2 (vG2 row select on bd half)",
+     349.4,
+     272.3
+    ],
+    [
+     "ot_smh_static_front_w SF-SPLIT W half (COORD form b)",
+     313.8,
+     244.6
+    ],
+    [
+     "ot_hgi_sfu_opsb_output",
+     249.6,
+     207.4
+    ],
+    [
+     "ot_hfd_coll_q3_vm_core",
+     236.2,
+     189.9
+    ],
+    [
+     "ot_hfd_coll_q3_vm_core vL repeater pitch",
+     234.4,
+     185.6
+    ],
+    [
+     "ot_hbm_idx_rootctl_static_am e1 ECO2",
+     211.9,
+     167.6
+    ],
+    [
+     "ot_hbm_su_pg_lane1p_core D2L (D2 physical + LID_COPY)",
+     171.6,
+     130.4
+    ],
+    [
+     "ot_hbm_su_pg_lane1p_core L1P-HS (D2L + HB4 pad per zero-logic hop, COORD structural form)",
+     159.4,
+     119.7
+    ],
+    [
+     "ot_hbm_hc_bank128_pair_first_core",
+     154.8,
+     121.1
+    ],
+    [
+     "ot_hbm_su_pg_lane1_core",
+     154.6,
+     118.6
+    ],
+    [
+     "ot_q2nf_qout",
+     141.5,
+     113.0
+    ]
+   ]
+  },
+  "qwen_compute": {
+   "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52u.json",
+   "designs": 29,
+   "unread": 25,
+   "band_out": 24,
+   "far_out": 23,
+   "port_hold_designs": 1,
+   "port_hold_below0": 0,
+   "port_hold_below0_aocv": 0,
+   "port_hold_below0_core_viol_endpoints": 0,
+   "worst_port_hold": [
+    "coll_ft__cla4a25d77",
+    118.3
+   ],
+   "worst_xcorner": [
+    "qfd_tile_nl_a0c",
+    -35.0
+   ],
+   "max_early_tap": [
+    "qfd_tile_nl_a0c",
+    524.4
+   ],
+   "below0": [],
+   "far": [
+    [
+     "qfd_tile_nl_a0c",
+     524.4,
+     408.1
+    ],
+    [
+     "NL ecow3 re-sign + routed LEC",
+     524.4,
+     408.1
+    ],
+    [
+     "NL ecow3 routed LEC, gold + IDLE_UCK 1",
+     524.4,
+     408.1
+    ],
+    [
+     "NK vR7n nonport GRT hold from vR7 4_CTS (R1)",
+     483.2,
+     383.5
+    ],
+    [
+     "qfd_dv_s8x_prog",
+     229.7,
+     166.6
+    ],
+    [
+     "sle_cland_w2_e_200",
+     -193.0,
+     -159.9
+    ],
+    [
+     "qfd_qc_su_lane_w_l4",
+     176.4,
+     140.0
+    ],
+    [
+     "qfd_qc_su_lane_w_l5",
+     176.4,
+     140.0
+    ],
+    [
+     "qfd_qc_su_lane_w_l2",
+     168.6,
+     134.9
+    ],
+    [
+     "qfd_qc_su_lane_w_l7",
+     164.0,
+     131.4
+    ],
+    [
+     "sle_cland_w515_s_200",
+     -162.9,
+     -133.0
+    ],
+    [
+     "sle_cland_w517_n_200",
+     -156.6,
+     -127.5
+    ]
+   ]
+  },
+  "qwen_kvsys": {
+   "plan": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "designs": 34,
+   "unread": 9,
+   "band_out": 23,
+   "far_out": 15,
+   "port_hold_designs": 2,
+   "port_hold_below0": 1,
+   "port_hold_below0_aocv": 2,
+   "port_hold_below0_core_viol_endpoints": 1300,
+   "worst_port_hold": [
+    "kv3_head_eighth_e0",
+    -0.2
+   ],
+   "worst_xcorner": [
+    "qkd_hr_phy_pad",
+    -14.5
+   ],
+   "max_early_tap": [
+    "qkd_hr_ingest_eng",
+    90.4
+   ],
+   "below0": [
+    [
+     "kv3_head_eighth_e0",
+     -0.2,
+     -15.6,
+     1300,
+     5.4,
+     "SIGNED"
+    ]
+   ],
+   "far": [
+    [
+     "qkd_hr_ingest_eng",
+     90.4,
+     70.6
+    ],
+    [
+     "qkd_hr_ingest_eng vE_fo8",
+     90.4,
+     70.6
+    ],
+    [
+     "qkd_hr_ingest_eng vE3",
+     90.4,
+     70.6
+    ],
+    [
+     "qkd_hr_cdc_hi",
+     -86.4,
+     -70.7
+    ],
+    [
+     "qkd_hr_cdc_ci",
+     -83.6,
+     -68.5
+    ],
+    [
+     "qkd_hr_core_queue",
+     -79.0,
+     -64.0
+    ],
+    [
+     "qkd_kvs_pcf_h_head_p",
+     -64.7,
+     -53.9
+    ],
+    [
+     "qkd_kvs_pcf",
+     -64.0,
+     -53.4
+    ],
+    [
+     "qkd_hr_core_guard",
+     -63.9,
+     -53.1
+    ],
+    [
+     "qkd_hr_core_order",
+     57.9,
+     45.7
+    ],
+    [
+     "qkd_hr_core_tx",
+     -56.8,
+     -46.8
+    ],
+    [
+     "qkd_hr_phy_pad",
+     50.6,
+     28.2
+    ]
+   ]
+  },
+  "s81": {
+   "plan": "physical/die_plan/s81/plan_h2_2249.json",
+   "designs": 81,
+   "unread": 31,
+   "band_out": 31,
+   "far_out": 23,
+   "port_hold_designs": 32,
+   "port_hold_below0": 0,
+   "port_hold_below0_aocv": 0,
+   "port_hold_below0_core_viol_endpoints": 0,
+   "worst_port_hold": [
+    "slice_station__t29__clc7772371",
+    29.1
+   ],
+   "worst_xcorner": [
+    "ot_v41_bf_col3_c",
+    -24.5
+   ],
+   "max_early_tap": [
+    "dsdv_idx_tx_n32",
+    427.1
+   ],
+   "below0": [],
+   "far": [
+    [
+     "dsdv_idx_tx_n32",
+     427.1,
+     359.8
+    ],
+    [
+     "dsdv_gunit_l5",
+     244.1,
+     192.8
+    ],
+    [
+     "dsdv_gunit_l1f_ba1",
+     205.5,
+     164.5
+    ],
+    [
+     "dsdv_bksel_c",
+     192.8,
+     151.5
+    ],
+    [
+     "ot_v41_bf_col3_c",
+     184.6,
+     131.4
+    ],
+    [
+     "dsfd_coll_lane_e_safe8_ntf",
+     174.6,
+     133.8
+    ],
+    [
+     "dsfd_coll_lane_w_safe8_ntf",
+     174.6,
+     133.8
+    ],
+    [
+     "dsdv_bk_g",
+     162.1,
+     135.5
+    ],
+    [
+     "ot_s81sl_vn_b",
+     160.9,
+     133.4
+    ],
+    [
+     "ot_s81sl_vn_a",
+     154.9,
+     127.3
+    ],
+    [
+     "dsdv_gunit_l1f_ba0",
+     147.2,
+     119.5
+    ],
+    [
+     "dsdv_gunit_l0r",
+     131.2,
+     103.0
+    ]
+   ]
+  },
+  "s81_head": {
+   "plan": "physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz",
+   "designs": 26,
+   "unread": 16,
+   "band_out": 4,
+   "far_out": 4,
+   "port_hold_designs": 21,
+   "port_hold_below0": 0,
+   "port_hold_below0_aocv": 0,
+   "port_hold_below0_core_viol_endpoints": 0,
+   "worst_port_hold": [
+    "hd_host_e form 5r (form 5 + ring set_max_fanout 32)",
+    74.6
+   ],
+   "worst_xcorner": [
+    "hd_mesh_e",
+    -1.6
+   ],
+   "max_early_tap": [
+    "ot_s81hd_elemB_cv",
+    -219.3
+   ],
+   "below0": [],
+   "far": [
+    [
+     "ot_s81hd_elemB_cv",
+     -219.3,
+     -175.2
+    ],
+    [
+     "ot_s81hd_elemA_cv",
+     -194.8,
+     -156.2
+    ],
+    [
+     "ot_s81_kp4_dchn",
+     -161.5,
+     -134.8
+    ],
+    [
+     "hd_host_n",
+     -75.7,
+     -53.4
+    ]
+   ]
+  }
+ }
+}
