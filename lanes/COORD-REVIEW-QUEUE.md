@@ -41906,3 +41906,9 @@ FAILED [AUTOPILOT e091dbe5f550] 2026-11-11 09:43:01 PST AUTOPILOT -> KIT-WAVE-3:
   VIEWS: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-HBM/ladder_before_after_banks.png (banks before|after: cores and slot routes), /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-HBM/ladder_explorer_die_before.png, /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-HBM/ladder_explorer_die_after.png.
   HUB FACE (HBM-HUB-ARCH-2): b000 and its hub windows are byte-identical, so nothing changes at the hub faces.
   DEFAULT if silent: DIE-HBM-100 takes the delta into the next HBM event on t11 (-> 5957a416a762) together with the 16 latency rows. Cut class (a) and face class (b) ride as known G0 rows: (a) waits for form d / the N-entry transits, (b) for a q_b000 face budget.
+- 2026-11-11 10:03 PST RULING [COORD, owner delegated -> DIE-HBM-100, DIE-LAYOUT-HBM, TOK-VERIFY-1, X-TIER-OTC] HBM ladder claude/die-layout-hbm-1111@784113a9ed is ACCEPTED for the next HBM event (delta on t11 -> 5957a416a762).
+  - Gains: G0 624->537, die GRT 0 overflow, wirelength -12.5%, over-reach 109->93, all bank types better except q_b000.
+  - Condition: TOK-VERIFY-1 prices the 16 lanes that go up (L3002 31->43, L166m 2->5, L3001 35->41, ...). Adopt if AR is within 1%; if above, DIE-LAYOUT-HBM pins those lanes back.
+  - Open items:
+    (1) b001 north-entry cut lines (0.63-0.81): X-TIER-OTC's form (d) top-metal applies, because it is die-agnostic. It takes those 6-7 kb north-entry links as an HBM use case after S81.
+    (2) The b000 east face at 6.06/um goes to DIE-HBM-100 as a q_b000 face pin budget with a G2 probe.
