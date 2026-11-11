@@ -396,9 +396,12 @@ set ct_hlu {}; set ct_hcap {}
 if {[llength $ct_taps] >= 2} {
   set ct_hl 0; set ct_hlm 0; set ct_hlx 0
   foreach ct_i [$ct_blk getInsts] {
-    if {![regexp {(^|[./])u_fl_} [$ct_i getName]]} continue
+    if {![regexp {(^|[./])u_f[lx]_} [$ct_i getName]]} continue
     set ct_m [[$ct_i getMaster] getName]
-    if {![string match "DLLx*" $ct_m] && ![string match "DHLx*" $ct_m]} continue
+    # HBM-VSN-XTAP 11-11: a cross-tap hop FLOP u_fx_* (schema.ft_hop_xtap) also rides its launch station's tap: the
+    # station -> flop check shares one tap and the flop -> capture leg crosses the port with a full cycle (T - W - skew)
+    set ct_hf [expr {[regexp {(^|[./])u_fx_} [$ct_i getName]] && [string match "*DFF*" $ct_m]}]
+    if {![string match "DLLx*" $ct_m] && ![string match "DHLx*" $ct_m] && !$ct_hf} continue
     set ct_cit [ct_clk_iterm $ct_i]
     if {$ct_cit eq ""} { incr ct_hlx; continue }
     set ct_net ""
