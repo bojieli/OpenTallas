@@ -70,7 +70,10 @@ module tb;
   if(mask==0 && (jA&&!jAq)!==(jB&&!jB1)) err("job_active rise not on the same cycle");
   jB1=jB; jAq=jA;
  end
- task err(input [8*48-1:0] m); begin if(errs<12)$display("MISMATCH %0s cycle %0d",m,cyc); errs=errs+1; end endtask
+ integer fail_at=0;
+ task err(input [8*48-1:0] m); begin if(errs<12)$display("MISMATCH %0s cycle %0d",m,cyc); if(errs==0) fail_at=cyc; errs=errs+1; end endtask
+ // a failing run (mutants) stops 3000 cycles after its first mismatch instead of running into the timeout
+ always @(negedge ck) if(MODE!=2 && fail_at>0 && cyc>fail_at+3000) begin $display("FAIL hd_ctl start_q MODE=%0d errs=%0d first=%0d",MODE,errs,fail_at); $finish; end
  always @(negedge ck) begin
   if(checking && mask==0 && MODE!=2) begin
    cmp_cycles=cmp_cycles+1;
