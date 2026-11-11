@@ -1,0 +1,47 @@
+{
+ "serdes__t14": {
+  "nets": 32,
+  "same": false,
+  "ndiff": 11,
+  "first_diff": [
+   "rst_n_t0",
+   "rst_n_t1",
+   "rst_n_t15"
+  ],
+  "max_cycle": 8,
+  "min_cycle": 8,
+  "mutant": "u_rrl_0",
+  "nl_a": 98,
+  "nl_b": 0
+ },
+ "serdes__t16": {
+  "nets": 49,
+  "same": false,
+  "ndiff": 4,
+  "first_diff": [
+   "rst_n_t15",
+   "rst_n_t31",
+   "rst_n_t33"
+  ],
+  "max_cycle": 9,
+  "min_cycle": 9,
+  "mutant": "u_rrl_0",
+  "nl_a": 174,
+  "nl_b": 0
+ },
+ "serdes__t2": {
+  "nets": 35,
+  "same": false,
+  "ndiff": 5,
+  "first_diff": [
+   "rst_n_t15",
+   "rst_n_t22",
+   "rst_n_t23"
+  ],
+  "max_cycle": 8,
+  "min_cycle": 8,
+  "mutant": "u_rrl_0",
+  "nl_a": 107,
+  "nl_b": 0
+ }
+}

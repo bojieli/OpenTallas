@@ -1,0 +1,141 @@
+{
+ "cap_ps": 208.0,
+ "event": "SERDES-KITWIN-1111",
+ "flag_ps": 116.0,
+ "margin_ps": 20.0,
+ "plan_in_sha256": "dc1050772e776c5aa7348ddd627f8005be7da55b4f8852639ca5fd1be28f96e8",
+ "plan_out_sha256": "831dae244da3b200e9e961ea7bf26ae80816e11f16adbc3e1402608f823fef4e",
+ "ports_clamped_to_cap": {},
+ "ports_measured_over_flag": {
+  "serdes__t12": {
+   "clk_t5": [
+    120.0,
+    140.0
+   ]
+  },
+  "serdes__t15__cla3d02796": {
+   "clk_t45": [
+    131.0,
+    151.0
+   ]
+  },
+  "serdes__t16": {
+   "clk_t2": [
+    121.0,
+    141.0
+   ]
+  },
+  "serdes__t1__clb45db5be": {
+   "clk_t35": [
+    118.0,
+    138.0
+   ]
+  }
+ },
+ "ports_unmeasured_flat_fallback": {
+  "serdes__t15__cla3d02796": {
+   "flat_ps": 47.0,
+   "ports": [
+    "fclk_in_cland_dn_0",
+    "fclk_in_cland_dn_1"
+   ]
+  },
+  "serdes__t1__clb45db5be": {
+   "flat_ps": 75.0,
+   "ports": [
+    "fclk_in_cland_dn_0"
+   ]
+  },
+  "serdes__t3": {
+   "flat_ps": 61.0,
+   "ports": [
+    "fclk_in_cland_dn_0",
+    "fclk_in_cland_dn_1"
+   ]
+  }
+ },
+ "ports_written": 514,
+ "table": "kitwin_auto_66466e86ebcd.json",
+ "table_plan_sha256": "66466e86ebcd7450a7db52c3b8ae807926721845a2e64583dadc4c41da5b2a7f",
+ "table_sha256": "9149770f950a979af32ff08a22f08037ce92490fd9139300d76ecd62e18f4d44",
+ "types_unmeasured_keep_flat": {},
+ "types_written": {
+  "serdes__t12": {
+   "flat_before": 66,
+   "measured_max": 120.0,
+   "ports": 43,
+   "window_max": 140,
+   "window_min": 20
+  },
+  "serdes__t13": {
+   "flat_before": 53,
+   "measured_max": 93.0,
+   "ports": 44,
+   "window_max": 113,
+   "window_min": 20
+  },
+  "serdes__t14": {
+   "flat_before": 116,
+   "measured_max": 78.0,
+   "ports": 32,
+   "window_max": 98,
+   "window_min": 29
+  },
+  "serdes__t15__cla2127225": {
+   "flat_before": 60,
+   "measured_max": 96.0,
+   "ports": 58,
+   "window_max": 116,
+   "window_min": 20
+  },
+  "serdes__t15__cla3d02796": {
+   "flat_before": 47,
+   "measured_max": 131.0,
+   "ports": 59,
+   "window_max": 151,
+   "window_min": 20
+  },
+  "serdes__t16": {
+   "flat_before": 66,
+   "measured_max": 121.0,
+   "ports": 49,
+   "window_max": 141,
+   "window_min": 35
+  },
+  "serdes__t1__clb45db5be": {
+   "flat_before": 75,
+   "measured_max": 118.0,
+   "ports": 48,
+   "window_max": 138,
+   "window_min": 20
+  },
+  "serdes__t1__clfe1f0815": {
+   "flat_before": 76,
+   "measured_max": 76.0,
+   "ports": 50,
+   "window_max": 96,
+   "window_min": 20
+  },
+  "serdes__t2": {
+   "flat_before": 69,
+   "measured_max": 69.0,
+   "ports": 35,
+   "window_max": 89,
+   "window_min": 40
+  },
+  "serdes__t3": {
+   "flat_before": 61,
+   "measured_max": 95.0,
+   "ports": 53,
+   "window_max": 115,
+   "window_min": 20
+  },
+  "serdes__t4": {
+   "flat_before": 57,
+   "measured_max": 109.0,
+   "ports": 43,
+   "window_max": 129,
+   "window_min": 20
+  }
+ }
+}

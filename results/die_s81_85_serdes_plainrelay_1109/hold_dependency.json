@@ -1,0 +1,30 @@
+{
+ "event": "S81 serdes plain relay (relay_lockup negedge -> plain posedge relay on the 11 serdes types)",
+ "branch_base": "b9a19a2426",
+ "plan": "fe0e3577f657 -> dc1050772e77 (receipt.json)",
+ "question": "COORD 11-11: the event relies on kit hold repair doing ~332 ps FF on one relay hop (estimate: t2 pad sum 2797 ps FF over 24 hops; vC t14 worst hop -331.9 ps FF). What bounds that repair?",
+ "answer": "(a) written reason with one measured repair; recommended for the hold side, with a residual SETUP item on 3 long t14 relay hops (below)",
+ "what_bounds_the_repair": [
+  "Pad cell: hold_pad_hb4.tcl allows HB4xp67 only inside repair_timing -hold (~37-47 ps FF per cell; ~332 ps = 7-9 HB4 on one net; BUFx2 ~15-17 ps would need ~20)",
+  "Tool buffer cap: hold_repair_pre.tcl raises repair_timing -max_buffer_percent to OT_MAX_BUFFER_PERCENT 100 (config.mk), so the ORFS 20 % cap (RSZ-0060) does not stop it",
+  "Hop setup slack: the pad is bounded by the hop's TT setup slack after the half cycle the plain relay gains (estimate: setup_after = TT setup + 416.5, pad at TT = FF pad x 1.33, 0 hops negative after pad on the 3 estimated types); repair_timing -hold does not insert past setup, so a hop that is both hold- and setup-short stays setup-negative instead"
+ ],
+ "measured_repair": {
+  "W": "W=180 ps (vT3 kit SDC: set_clock_latency -source -early -180 on every clk_t* port; the plan fe0e3577f657 per_type_ps for serdes__t14 is 116)",
+  "db": "epyc8 /srv/opentallas-scratch2/claude/die-s81-85/serdes14_vT3/gen/serdes__t14 run/results/asap7/dp_serdes__t14/base/4_cts.odb sha256 84a9d8fec820 (post-CTS, placement RC setRC_rcx, read-only)",
+  "method": "the kit's own FF hold-gate session (hold_gate.tcl head: FF libs, vclk FF binding, seam IO contract, propagated clocks); the 98 relay flops u_bound.u_rrl_*/q (DFFLQNx1/x2, negedge) re-mastered to DFFHQNx1 (posedge = the plain relay); then repair_timing -hold -hold_margin 5 -max_buffer_percent 100 with HB4xp67 un-dont_used, as the kit's PRE_GLOBAL_ROUTE hook does; TT setup re-timed on the repaired DB",
+  "scripts": "epyc8 /srv/opentallas-scratch2/claude/die-s81-85/probe_vT3/rep/{relrep.tcl b43bcf9ceb7d, inner.sh 2b667ea85d9a, tt_after.tcl 3ca28979d379}",
+  "FF_hold_relay_to_relay": {"negedge_as_built": "0 negative paths", "plain_before_repair": "17 negative, worst -309.0 ps", "plain_after_repair": "0 negative"},
+  "FF_hold_design": {"before": "-331.2 ps / 4067 endpoints (u_enc cross-tap class, not the relays)", "after": "+5.0 ps / 0 endpoints"},
+  "repair_cost": {"HB4xp67_inserted": 9875, "instances_added": 9953, "seconds": 350, "note": "the count is design-wide; most pads are on the u_enc cross-tap class, not on the relays"},
+  "TT_setup_relay_to_relay": {"negedge_as_built": "223 paths, 28 negative, worst -454.6 ps", "plain_after_repair": "223 paths, 3 negative: u_rrl_53->59 -119.2, u_rrl_74->79 -53.9, u_rrl_84->88 -31.2 ps"},
+  "TT_setup_design": {"before": "-458.9 ps / 1311", "after_plain_and_repair": "-471.7 ps / 1546 (pads on non-relay classes; not attributed per class here)"}
+ },
+ "recommendation": "(a): repair closes the worst plain-relay hop on t14 (-309 ps FF, close to the 332 ps in question) and the whole design to +5 ps FF hold at CTS/placement RC. The +1-relay-stage variant (b) is not needed for hold. The 3 setup-negative t14 hops (53->59, 74->79, 84->88) are long wire hops that miss setup even with a full cycle; that is a separate distance item (a closer relay placement or +1 relay stage on those 3 hops only, +1 reset-release cycle each), not part of the hold dependency.",
+ "not_verified": [
+  "only serdes__t14 is measured by repair (vT3 DB, CTS stage, placement RC, not GRT/routed); t2 (the 332 ps / 2797 ps case) and t16 are estimate-only; the other 8 types (t12, t13, t15__cla2127225, t15__cla3d02796, t1__clb45db5be, t1__clfe1f0815, t3, t4) are UNMEASURED",
+  "the vT3 DB carries W=180, not the per-port window of SERDES-KITWIN-1111; with smaller windows the u_enc cross-tap hold demand drops",
+  "the TT setup cost of the pads is measured after repair only; the plain-relay-before-repair TT setup was not timed separately",
+  "the estimate's raw per-hop probe data (vC t14 / t2 / vC t16 DBs) was not found any more, so estimate.json was not re-derived"
+ ]
+}

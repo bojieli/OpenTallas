@@ -1,0 +1,84 @@
+{
+ "status": "estimate_not_measured",
+ "W": "W=180 ps (SDC tap window carried by the serdes kit); W for serdes is unmeasured until die_sta_related gives a die-delivered number; not a closure claim",
+ "method": "post-CTS / GRT probes (vC t14 4_1_cts, t2 5_1_grt, vC t16 from its own kit): setup_after = TT setup + 416.5, hold_after = FF hold - 416.5 (833 ps half cycle removed); pad charged at TT = FF pad * 1.33",
+ "all_hops": {
+  "vC_t14": {
+   "hops": 125,
+   "setup_wns_ps": -72.3,
+   "setup_neg_hops": 1,
+   "hold_wns_ps": -331.9,
+   "hops_needing_pad": 19,
+   "pad_sum_ps_FF": 1970,
+   "negative_after_pad": 0
+  },
+  "vC_t16": {
+   "hops": 217,
+   "setup_wns_ps": 273.1,
+   "setup_neg_hops": 0,
+   "hold_wns_ps": -203.6,
+   "hops_needing_pad": 24,
+   "pad_sum_ps_FF": 855,
+   "negative_after_pad": 0
+  },
+  "t2": {
+   "hops": 136,
+   "setup_wns_ps": 99.0,
+   "setup_neg_hops": 0,
+   "hold_wns_ps": -288.8,
+   "hops_needing_pad": 24,
+   "pad_sum_ps_FF": 2797,
+   "negative_after_pad": 0
+  }
+ },
+ "failing_hops_only": {
+  "vC_t14": {
+   "hops": 27,
+   "setup_wns_ps": -72.3,
+   "hold_wns_ps": -83.0,
+   "hops_needing_pad": 7,
+   "pad_sum_ps_FF": 171
+  },
+  "vC_t16": {
+   "hops": 49,
+   "setup_wns_ps": 273.1,
+   "hold_wns_ps": -58.9,
+   "hops_needing_pad": 21,
+   "pad_sum_ps_FF": 404
+  },
+  "t2": {
+   "hops": 27,
+   "setup_wns_ps": 99.0,
+   "hold_wns_ps": -66.7,
+   "hops_needing_pad": 9,
+   "pad_sum_ps_FF": 288
+  }
+ },
+ "decision": "all hops: plan event removes the 11 serdes types from reset.relay_lockup.types",
+ "u_rrl_74_to_t12_estimate_vC_t14": {
+  "assignment_settable_in_plan": false,
+  "clock_move_ps": {
+   "TT": 251,
+   "FF": 211,
+   "basis": "u_rrl_74 CK vs clk_t12 median (TT 611 -> 360, FF 506 -> 295), n=14 sinks on t12"
+  },
+  "after_move": {
+   "74_to_79": {
+    "setup": 178.7,
+    "hold": 133.7
+   },
+   "74_to_84": {
+    "setup": 317.7,
+    "hold": -14.6
+   },
+   "74_to_75": {
+    "setup": 916.9,
+    "hold": -153.9
+   },
+   "53_to_74": {
+    "setup": 36.7,
+    "hold": 218.0
+   }
+  }
+ }
+}
