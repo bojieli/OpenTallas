@@ -1245,6 +1245,14 @@ def latch_to_wire(src, dst, side):
         return bool(FF_TYPE.match(cells[cn]["type"])) and \
             bool(po_re.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
 
+    def bbi_ff(cn):
+        """QC-NK-HOLD 11-11: a black-box input compare point (lec_bbi_<pin>, rising-edge stub).  The hard core samples
+        its input pins at its own rising clock edge, so a transparent-low lockup latch on the pin (bind
+        clock.core_input_lockup) is a wire to it exactly as to a rising-edge flop of ours."""
+        f = FF_TYPE.match(cells[cn]["type"])
+        return bool(f) and f[2] == "P" and \
+            bool(re.search(r"(^|\.)lec_bbi_", str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
+
     def rise_ff(cn):
         """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
         f = FF_TYPE.match(cells[cn]["type"])
@@ -1355,7 +1363,8 @@ def latch_to_wire(src, dst, side):
                     po_sinks[ln] += 1
                     continue
                 if f:
-                    ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
+                    ok = (rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))) or \
+                        (bbi_ff(ln) and lp == "D")
                     if not ok:
                         raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
                                        f"rising-edge flops on primary-input clocks and output ports are modelled)")
