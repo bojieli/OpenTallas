@@ -866,7 +866,7 @@ def apply_seed(M, seed, log):
     fixed = 0
     for k in range(M.m):
         x, y = M.cpos[k]
-        if M.cfix[k] or M.legal(k, x, y):
+        if M.cfix[k] or M.legal(k, x, y) or k not in done:   # VIS-TRIAGE-S81 local: legalise seeded clusters only
             continue
         best = None
         for r in range(1, 60):
@@ -1069,6 +1069,17 @@ def eq_gate(t0, t1):
         if len(s0.get("regs_um") or []) != len(s1.get("regs_um") or []) or s0.get("bits") != s1.get("bits"):
             bad.append("internal_stations[%d] regs/bits" % i)
     return sorted(set(bad))
+
+
+def overlap_pairs(M):
+    out = set()
+    for i in range(M.n):
+        xi, yi = M.core_origin(i)
+        for j in range(i + 1, M.n):
+            xj, yj = M.core_origin(j)
+            if xi < xj + M.dim[j, 0] - EPS and xj < xi + M.dim[i, 0] - EPS and                     yi < yj + M.dim[j, 1] - EPS and yj < yi + M.dim[i, 1] - EPS:
+                out.add((M.inst[i], M.inst[j]))
+    return out
 
 
 def overlaps(M):
@@ -1323,6 +1334,7 @@ def main(argv=None):
         b_oH, b_oV, b_rH, b_rV = Gd.ovf(DH, DV, SH, SV)
         b_cut = cut_table(M, Gd)
         base_viol = M.violations()
+        base_ovp = overlap_pairs(M)   # VIS-TRIAGE-S81 local: abutted split views overlap by <1 um in the base
         icut = intrinsic_cuts(M, Gd)
         log("  intrinsic min-cut: %s worst %.3f (H %s, V %s)" % (icut["verdict"], icut["worst_ratio"],
                                                               icut["H"]["worst"], icut["V"]["worst"]))
@@ -1338,6 +1350,10 @@ def main(argv=None):
             st = search(M, Gd, cfg, log)
         new_bitum = M.cost(range(len(M.L)))
         tviol_end = M.tviol(range(len(M.L)))
+        for q in range(len(M.L)):   # VIS-TRIAGE-S81 local: name the over-limit links
+            if M.llen(q) > M.maxlen[q] + EPS:
+                a_, b_, w_, kd_ = M.L[q]
+                log("  TV %s %s -> %s bits %.0f len %.0f lim %.0f" % (kd_, M.inst[a_[0]] if a_[0] is not None else "face", M.inst[b_[0]] if b_[0] is not None else "face", w_, M.llen(q), M.maxlen[q]))
         SH, SV = Gd.supply(); DH, DV = Gd.demand()
         n_oH, n_oV, n_rH, n_rV = Gd.ovf(DH, DV, SH, SV)
         n_cut = cut_table(M, Gd)
@@ -1356,6 +1372,8 @@ def main(argv=None):
                                     before=list(M.org0[i]), before_orient=M.ori0[i], after=list(M.core_origin(i)),
                                     after_orient=M.core_orient(i)) for i in range(M.n)])
             Path(Path(a.svg) / f"{tn}__view.json").write_text(json.dumps(dump))
+        new_ovp = overlap_pairs(M) - base_ovp
+        nov = len(new_ovp)
         ok = not eqbad and nov == 0 and srep["need_more_regs"] == 0 and tviol_end == 0
         if ok:
             Q["partition_types"][tn] = tnew
