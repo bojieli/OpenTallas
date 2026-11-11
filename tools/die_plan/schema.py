@@ -2360,25 +2360,43 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=N
                 for x0, y0, x1, y1 in boxes]
     neighbours = [(a, sum(1 << i for i, py in enumerate(ys) if abs(py - b) < clear - eps))
                   for a, b in taken]
+    def column(px):
+        bits = inside
+        for x0, x1, blocked in blockers:
+            if x0 + eps < px < x1 - eps:
+                bits &= ~blocked
+        for a, blocked in neighbours:
+            if abs(px - a) < clear - eps:
+                bits &= ~blocked
+        while bits:
+            low = bits & -bits
+            yield px, ys[low.bit_length() - 1]
+            bits ^= low
+
     def legal_candidates():
         for px in xs:
             if not clear - eps <= px <= w - clear + eps:
                 continue
-            bits = inside
-            for x0, x1, blocked in blockers:
-                if x0 + eps < px < x1 - eps:
-                    bits &= ~blocked
-            for a, blocked in neighbours:
-                if abs(px - a) < clear - eps:
-                    bits &= ~blocked
-            while bits:
-                low = bits & -bits
-                yield px, ys[low.bit_length() - 1]
-                bits ^= low
-    ok = legal_candidates()
-    best = min(ok, key=lambda p: (round(abs(p[0] - x) + abs(p[1] - y) if legal_axes is not None
-                                      else max(abs(p[0] - x), abs(p[1] - y)), 7),
-                                  (p[0] - x) ** 2 + (p[1] - y) ** 2, p), default=None)
+            yield from column(px)
+    key = lambda p: (round(abs(p[0] - x) + abs(p[1] - y) if legal_axes is not None
+                           else max(abs(p[0] - x), abs(p[1] - y)), 7),
+                     (p[0] - x) ** 2 + (p[1] - y) ** 2, p)
+    if math.isfinite(x) and math.isfinite(y):
+        # TAPS-ASSIGN (DIE-QC-97 11-11): the same minimum, columns nearest x first.  Every key is unique (it ends in
+        # p) and its first term is >= round(|px - x|, 7) (|dx| + |dy| >= |dx| and max(|dx|, |dy|) >= |dx| in float,
+        # round() is monotone), so once that bound exceeds the best first term no later column can win or tie.
+        best = bk = None
+        for px in sorted(xs, key=lambda v: (abs(v - x), v)):
+            if not clear - eps <= px <= w - clear + eps:
+                continue
+            if bk is not None and round(abs(px - x), 7) > bk[0]:
+                break
+            for p in column(px):
+                k = key(p)
+                if bk is None or k < bk:
+                    best, bk = p, k
+    else:
+        best = min(legal_candidates(), key=key, default=None)
     if best is not None:
         return round(best[0], 4), round(best[1], 4)
     raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "

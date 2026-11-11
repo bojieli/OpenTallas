@@ -629,6 +629,20 @@ def grid_explicit_taps(P, tn):
     return [(name, x, y, n, r) for (name, x, y), n, r in zip(out, load, far)]
 
 
+def _memo_snap(snap):
+    """gen_phys._snap_tap is a pure function of (P layers, x, y): one density_taps call re-snaps every taken tap on
+    every tap_clear (TAPS-ASSIGN 11-11), so remember each (x, y) -> result (exact key, same returned value)."""
+    memo = {}
+
+    def f(x, y):
+        k = (type(x), x, type(y), y)
+        r = memo.get(k)
+        if r is None:
+            r = memo[k] = snap(x, y)
+        return r
+    return f
+
+
 def density_taps(P, tn, control=True):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
@@ -683,7 +697,7 @@ def density_taps(P, tn, control=True):
 
     import gen_phys
     legal_axes = None if frozen else gen_phys.clock_legal_axes(P, tn)
-    pin_snap = None if frozen else (lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard')))
+    pin_snap = None if frozen else _memo_snap(lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard')))
 
     def place(cands):
         tk, xy = list(taken), []
@@ -819,8 +833,108 @@ def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):
     """Python mirror of clock_taps.tcl (the kit's sink -> tap split, for G0 / review): every sink (x, y, w) to its
     NEAREST tap (Manhattan, ties to the lower tap index), then capacity-constrained re-assignment: while a tap holds
     > cap, its sinks that cost the least extra distance move to the best other tap with room, at most max_extra_um
-    further.  Returns (per-tap load, per-tap max distance, [tap index per sink]).  Deterministic."""
+    further.  Returns (per-tap load, per-tap max distance, [tap index per sink]).  Deterministic.
+
+    TAPS-ASSIGN (DIE-QC-97 11-11): the nearest-tap and best-other-tap searches run as numpy float64 argmins (the
+    same abs / + / - IEEE operations, argmin = first minimum = the lower tap index on a tie); loads, far distances
+    and the move loop stay the Python reference arithmetic.  Inputs the vector form cannot reproduce exactly
+    (no numpy, non-finite values, non int / float coordinates, ints beyond 2**51) take _assign_py unchanged."""
     xy = [(t[1], t[2]) for t in taps]
+    fast = _assign_np(xy, sinks, cap, max_extra_um, max_distance_um)
+    if fast is not None:
+        return fast
+    return _assign_py(xy, sinks, cap, max_extra_um, max_distance_um)
+
+
+_EXACT_INT = 1 << 51      # |a - b| + |c - d| of such ints stays exact in float64
+_ASSIGN_BLOCK = 1 << 21       # float64 cells per (sinks x taps) block
+
+
+def _plain(v):
+    """v is a value the float64 vector form reproduces bit for bit (finite float, or an int exact in float64)."""
+    tv = type(v)
+    if tv is float:
+        return math.isfinite(v)
+    return tv is int and -_EXACT_INT < v < _EXACT_INT
+
+
+def _assign_np(xy, sinks, cap, max_extra_um, max_distance_um):
+    try:
+        import numpy as np
+    except ImportError:
+        return None
+    if not xy or not sinks:
+        return None
+    if not all(_plain(v) for p in xy for v in p) or not all(_plain(s[0]) and _plain(s[1]) for s in sinks):
+        return None
+    if max_distance_um is not None and not _plain(max_distance_um):
+        return None
+    n, m = len(sinks), len(xy)
+    tx = np.array([p[0] for p in xy], dtype=np.float64)
+    ty = np.array([p[1] for p in xy], dtype=np.float64)
+    sx = np.array([s[0] for s in sinks], dtype=np.float64)
+    sy = np.array([s[1] for s in sinks], dtype=np.float64)
+    d = lambda s, j: abs(s[0] - xy[j][0]) + abs(s[1] - xy[j][1])
+
+    def dist(rows):
+        return np.abs(sx[rows, None] - tx[None, :]) + np.abs(sy[rows, None] - ty[None, :])
+    step = max(1, _ASSIGN_BLOCK // m)
+    asgv = np.empty(n, dtype=np.int64)
+    for a in range(0, n, step):
+        asgv[a:a + step] = np.argmin(dist(np.arange(a, min(n, a + step))), axis=1)
+    asg = asgv.tolist()
+    load = [0.0] * m
+    for s, j in zip(sinks, asg):
+        load[j] += s[2]
+    room = np.array([v < cap for v in load], dtype=bool)
+    stuck = set()
+    cols = np.arange(m)
+    for _ in range(8 * m):
+        over = next((j for j in range(m) if j not in stuck and load[j] > cap), None)
+        if over is None:
+            break
+        own = np.flatnonzero(asgv == over)
+        cand = []
+        for a in range(0, len(own), step):
+            rows = own[a:a + step]
+            D = dist(rows)
+            delta = D - D[:, over][:, None]
+            ok = np.broadcast_to(room & (cols != over), D.shape)
+            if max_distance_um is not None:
+                ok = ok & (D <= max_distance_um)
+            has = ok.any(axis=1)
+            jb = np.argmin(np.where(ok, delta, np.inf), axis=1)
+            for i, h_, j in zip(rows.tolist(), has.tolist(), jb.tolist()):
+                if not h_:
+                    continue
+                s = sinks[i]
+                e = d(s, j) - d(s, over)
+                if e <= max_extra_um:
+                    cand.append((e, i, j))
+        if not cand:
+            stuck.add(over)
+            continue
+        cand.sort()
+        tgt = cand[0][2]
+        for _, i, j in cand:
+            if load[over] <= cap or load[tgt] >= cap:
+                break
+            if j != tgt:
+                continue
+            asg[i] = tgt
+            asgv[i] = tgt
+            load[over] -= sinks[i][2]
+            load[tgt] += sinks[i][2]
+        room[over] = load[over] < cap
+        room[tgt] = load[tgt] < cap
+    far = [0.0] * m
+    for s, j in zip(sinks, asg):
+        far[j] = max(far[j], d(s, j))
+    return load, far, asg
+
+
+def _assign_py(xy, sinks, cap, max_extra_um, max_distance_um=None):
+    """the reference assign body (pre TAPS-ASSIGN 11-11), for inputs the numpy form cannot reproduce exactly."""
     d = lambda s, j: abs(s[0] - xy[j][0]) + abs(s[1] - xy[j][1])
     asg = [min(range(len(xy)), key=lambda j: (d(s, j), j)) for s in sinks]
     load = [0.0] * len(xy)
