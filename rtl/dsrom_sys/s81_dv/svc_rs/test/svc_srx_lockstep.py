@@ -14,7 +14,7 @@ vectors and checks, beat by beat:
 Each SRXMUT negative control (1 tags not delayed, 2 load line one stage short, 3 tile 0 fill one stage short) must
 FAIL.  Usage: svc_srx_lockstep.py --root <repo> --work <dir> --srx 7 [--srxt <hex>] [--dut hdc|s81] [--mut 1,2,3]
 """
-import argparse, json, os, random, re, subprocess, sys, hashlib
+import argparse, json, os, random, re, shlex, subprocess, sys, hashlib
 from pathlib import Path
 
 P = dict(H=8, D=32, TD=32, NL=4, TROWS=640, PWORDS=2, ILV=1, REPL=2, NSTAGE=2, FPL=4, FML=6, TILE_S=1, NARROW=1,
@@ -64,7 +64,7 @@ def build(a, srx, mut, nkv, np_):
            "--x-assign", "fast", "--x-initial", "fast", "--output-split", "20000", "-fno-inline", "-MAKEFLAGS", "OPT_FAST=-O1"]
     dk = ["docker", "run", "--rm", "--memory", "32g", "--cpus", "24", "-u", f"{os.getuid()}:{os.getgid()}",
           "-v", f"{a.root}:/work/root:ro", "-v", f"{a.work}:/work/out", "-e", "HOME=/work/out", "-e", "CCACHE_DISABLE=1", "--entrypoint", "bash", a.image, "-c",
-          " ".join(cmd) + f" > /work/out/build_{tag}.log 2>&1; echo $? > /work/out/build_{tag}.rc"]
+          " ".join(shlex.quote(x) for x in cmd) + f" > /work/out/build_{tag}.log 2>&1; echo $? > /work/out/build_{tag}.rc"]
     subprocess.run(dk, check=False)
     rc = (a.work / f"build_{tag}.rc").read_text().strip()
     if rc != "0":
