@@ -1,6 +1,21 @@
 {
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_s81_svc_idx_hslice_fp",
- "enable": false,
- "reason": "Source-registered: ot_s81_svc_idx_hslice_fp flops every input at the pin (pin flop) and every output leaves a flop (q / key 2 edges pin to pin); the chunk schedule (cs_out = key_in + LAT_T + FPL + 2 + FPL*hid) is priced on those edges, a recipe pin stage would shift it."
+ "enable": true,
+ "clock": "clk",
+ "clock_ports": [
+  "clk"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "exclude": "",
+ "reset": "",
+ "reason": "S81-SVCRS-3 11-10 (COORD ruling on DIE-S81-85 finding): recipe-4 pin registers ON for the svc_lo IRG boxes (structural IO fix: the source-registered form left recirculating output flops and an unregistered ql_v). +1 in / +1 out: +2 per IRG hop, +16 per 8-slice chain; the readers u_irg_00..07 move EL 124 -> 140 in die_b178.v IN THE SAME CHANGE (dsdv_idx_rg3.sv ra = mw - (EL + KR - 1)); never one without the other.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
 }
