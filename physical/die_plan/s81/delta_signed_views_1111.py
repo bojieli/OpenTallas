@@ -19,8 +19,9 @@ view_lef.bind receipt <m>.view.json, signoff.json, odb.sha (and PROVENANCE.json,
 
 Per row: lib -> the view TT ETM, lef -> the view LEF (view_lef.attach), note added.  Nothing else in the plan moves:
 the output with those three keys restored is json-equal to the input (asserted).  Asserted per master, fail-closed:
-  * base plan sha256 is a known base (FEED-BAL 66466e86ebcd or plan of record ebea5f5b8ade); input serialisation is
-    json.dumps(indent=1)+"\\n" (kept for the output, so the text diff is the touched rows only);
+  * base plan sha256 is a known base (FEED-BAL 66466e86ebcd, plan of record ebea5f5b8ade or combined
+    FEED-BAL-2/SVCRS-3 v5 99f40d35071d); input serialisation is
+    json.dumps(indent=1)+"\\n" or json.dumps()+"\\n" (kept for the output);
   * old plan LEF sha256 and old lef/lib paths as below; view LEF/lib sha256 = this script's pins and = the bind receipt;
     view provenance views_status 'signoff', gates view_complete, signoff.json verdict SIGNED, odb.sha as below;
   * SIZE equal to the plan LEF and to every row's outline_um; lib cell = macro; lib signal bits = LEF signal bits;
@@ -49,6 +50,8 @@ TAG = "DS85-VIEWS-1111"
 BASES = {
     "66466e86ebcd7450a7db52c3b8ae807926721845a2e64583dadc4c41da5b2a7f": "FEED-BAL plan (feed1111/out/plan.json)",
     "ebea5f5b8ade7a2311458f2aa9b7ea5647c4acd7d8cb6030f39bd114208d7e31": "S81 plan of record (pgr1/out_s81_meas_1111_0332)",
+    "99f40d35071d66bf2edd2b81f4d7046598f297bbf0b1b3884006252e85172eb9":
+        "combined S81 plan: FEED-BAL-2 on SVCRS-3 v5 ca10ae6afbab (feed1111/out2/plan.json)",
 }
 VIEW = lambda m: f"physical/die_plan/s81/cores/views/{m}_signed_1111"  # noqa: E731
 MASTERS = {
@@ -90,6 +93,8 @@ MASTERS = {
 }
 SHAPE = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # == gen_core_kit_legacy.RECT
 EPS = 1e-6
+FORMATS = {"indent1_nl": lambda d: json.dumps(d, indent=1) + "\n",   # the base plans' own byte forms (kept)
+           "compact_nl": lambda d: json.dumps(d) + "\n"}
 
 
 def sha(b):
@@ -232,7 +237,8 @@ def main():
     base = sha(raw)
     assert base in BASES, f"base plan {base[:12]} is not a known event base {[b[:12] for b in BASES]}"
     P = json.loads(raw)
-    assert (json.dumps(P, indent=1) + "\n").encode() == raw, "input serialisation is not indent=1 + newline"
+    fmt = next((k for k, f in FORMATS.items() if f(P).encode() == raw), None)
+    assert fmt, "input serialisation is not one of " + ", ".join(FORMATS)
     rows = defaultdict(list)
     for tn, t in P["partition_types"].items():
         for k in ("hard_cores", "contents"):
@@ -241,6 +247,7 @@ def main():
                     assert k == "hard_cores", (tn, c["inst"], k)
                     rows[c["module"]].append((tn, c))
     report = dict(schema="opentallas.s81.plan_view_event.v1", event=TAG, base_plan_sha256=base, base=BASES[base],
+                  serialisation=fmt,
                   masters={}, types={})
     for m, spec in MASTERS.items():
         rs = rows[m]
@@ -267,7 +274,7 @@ def main():
                         c.pop(k, None)
         return plan
     assert strip(json.loads(json.dumps(P))) == strip(json.loads(raw)), "the event moved more than lef/lib/note"
-    out = (json.dumps(P, indent=1) + "\n").encode()
+    out = FORMATS[fmt](P).encode()
     report.update(plan_out_sha256=sha(out), relaunch_types=sorted(report["types"]),
                   relaunch_type_count=len(report["types"]),
                   insts=sum(len(v) for v in report["types"].values()))
