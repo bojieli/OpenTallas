@@ -6,7 +6,13 @@ core_conns_from_bind finds wired (bus / core partners) and {} for a core with no
 (its pins land on the type's own logic = route_supply glue escape, not the all-core centroid).
 
   core_conns_batch.py PLAN.json PICKS.json OUT.json [--base EXISTING_core_conns.json]
-PICKS = {type: bound.sv path}.  With --base, the base file's types are kept unchanged and only new types are added.
+PICKS = {type: bound.sv path} or {type: {"bound": bound.sv, "netlist": gate 1_2_yosys.v}}.
+INTRA-TYPE HEADER PAIRS (COORD 11-11 02:5x, S81 bk_sel__t2): cores nested inside a soft header module of the type
+(u_bk_sel.u_sel.g_q[k].u_q / u_c / u_g) are wired to each other INSIDE the header, which the bound module text does not
+show, so the bound trace leaves them {} and G0/G0C R3-INTERNAL and route_supply saw 0 core links.  With a netlist
+(the elaborated gate netlist sees through the header), every core the bound trace left empty is derived from it
+(core_conns_netlist.derive: core<->core pairs, face buses, glue); a type whose bound trace wires none of its cores
+while a netlist is missing is reported as nested_header_unresolved (loud, never silently {}).  With --base, the base file's types are kept unchanged and only new types are added.
 Writes OUT.json ({type: {core: {port: [dest]}}}) and OUT.receipt.json (per type: source, cores traced / total)."""
 import argparse
 import gzip
@@ -16,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import core_conns_from_bind as C  # noqa: E402
+import core_conns_netlist as CN  # noqa: E402
 
 
 def read_json(p):
@@ -42,12 +49,32 @@ def main(argv=None):
         if not T or not T.get("hard_cores"):
             rec[t] = dict(src=src, skipped="type not in plan or no hard cores")
             continue
-        res = C.trace(plan, t, Path(src).read_text(errors="replace"))
-        cc = res["core_conns"][t]
-        full = {h["inst"]: cc.get(h["inst"], {}) for h in T["hard_cores"]}
+        bound, netlist = (src.get("bound"), src.get("netlist")) if isinstance(src, dict) else (src, None)
+        full = {h["inst"]: {} for h in T["hard_cores"]}
+        paths = 0
+        if bound:
+            res = C.trace(plan, t, Path(bound).read_text(errors="replace"))
+            cc = res["core_conns"][t]
+            full = {h["inst"]: cc.get(h["inst"], {}) for h in T["hard_cores"]}
+            paths = len(res["paths"])
+        empty = [c for c, v in full.items() if not v]
+        r_ = dict(src=src, cores=len(full), cores_wired_bound=len(full) - len(empty), wiring_paths=paths)
+        if empty and netlist:
+            nd = CN.derive(plan, t, Path(netlist), cores=empty, top=T.get("module"))
+            ncc = nd["core_conns"].get(t, {})
+            filled = [c for c in empty if ncc.get(c)]
+            for c in filled:
+                full[c] = ncc[c]
+            r_.update(netlist=netlist, cores_filled_netlist=len(filled),
+                      header_pairs=sum(1 for c in filled for v in ncc[c].values()
+                                       for d in v if str(d).startswith("core:")))
+        elif empty and len(empty) == len(full):
+            r_["nested_header_unresolved"] = True
+            print(f"WARNING {t}: bound trace wires none of its {len(full)} cores (cores nested in a header module?) "
+                  f"and no gate netlist was given: entries stay {{}} = UNCHECKED", file=sys.stderr)
+        r_["cores_wired"] = sum(1 for v in full.values() if v)
         out[t] = full
-        rec[t] = dict(src=src, cores=len(full), cores_wired=sum(1 for v in full.values() if v),
-                      wiring_paths=len(res["paths"]))
+        rec[t] = r_
     Path(a.out).write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
     Path(a.out + ".receipt.json").write_text(json.dumps(dict(plan=a.plan, base=a.base, types=rec), indent=1) + "\n")
     n = [r for r in rec.values() if "cores" in r]

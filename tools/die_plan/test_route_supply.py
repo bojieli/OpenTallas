@@ -498,3 +498,36 @@ def test_station_scan_drops_bind_phantoms(tmp_path):
     assert r1["phantom_stations_dropped"] == 2 and r1["phantom_bits_dropped"] == 800 and r1["phantom_unmatched"] == 0
     assert r1["station_bits"] == 0 < r0["station_bits"]
     assert any(n.startswith("PHANTOM 2") for n in r1["notes"])
+
+
+def test_batch_fills_intra_type_header_pairs_from_netlist(tmp_path, capsys):
+    """COORD 02:5x bk_sel__t2: cores nested in a soft header are wired inside it; the bound trace sees none of them,
+    the gate netlist does, so core_conns_batch fills the header pairs instead of writing {}."""
+    import core_conns_batch as CB
+    (tmp_path / "b.sv").write_text("module top(input clk, input [1:0] bi, output [1:0] bo);\n"
+                                   "  hdr u_w (.clk(clk), .bi(bi), .bo(bo));\nendmodule\n")
+    (tmp_path / "n.v").write_text("""module top(clk, bi, bo);
+  input clk;
+  input [1:0] bi;
+  output [1:0] bo;
+  wire [1:0] z;
+  cA \\u_w.u_a  (.clk(clk), .d(bi), .q({ z[1], z[0] }));
+  cB \\u_w.u_b  (.i({ z[1], z[0] }), .o(bo));
+endmodule
+""")
+    P = {"partition_types": {"t": {"module": "top", "outline_um": [100, 100],
+                                   "buses": [{"name": "bi", "face": "W", "dir": "in"},
+                                             {"name": "bo", "face": "E", "dir": "out"}],
+                                   "hard_cores": [{"inst": "u_w.u_a"}, {"inst": "u_w.u_b"}]}}}
+    (tmp_path / "p.json").write_text(json.dumps(P))
+    (tmp_path / "k0.json").write_text(json.dumps({"t": str(tmp_path / "b.sv")}))
+    (tmp_path / "k1.json").write_text(json.dumps({"t": {"bound": str(tmp_path / "b.sv"), "netlist": str(tmp_path / "n.v")}}))
+    CB.main([str(tmp_path / "p.json"), str(tmp_path / "k0.json"), str(tmp_path / "o0.json")])
+    assert json.loads((tmp_path / "o0.json").read_text())["t"] == {"u_w.u_a": {}, "u_w.u_b": {}}
+    assert "nested_header_unresolved" in (tmp_path / "o0.json.receipt.json").read_text()
+    assert "WARNING t" in capsys.readouterr().err
+    CB.main([str(tmp_path / "p.json"), str(tmp_path / "k1.json"), str(tmp_path / "o1.json")])
+    cc = json.loads((tmp_path / "o1.json").read_text())["t"]
+    assert cc["u_w.u_a"]["q"] == ["core:u_w.u_b.i"] and cc["u_w.u_b"]["i"] == ["core:u_w.u_a.q"]
+    rc = json.loads((tmp_path / "o1.json.receipt.json").read_text())["types"]["t"]
+    assert rc["cores_filled_netlist"] == 2 and rc["header_pairs"] == 2 and rc["cores_wired"] == 2
