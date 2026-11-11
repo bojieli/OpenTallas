@@ -75,7 +75,7 @@ def run(a, tag):
     log = a.work / f"run_{tag}.log"
     dk = ["docker", "run", "--rm", "--memory", "8g", "--cpus", "1", "-u", f"{os.getuid()}:{os.getgid()}",
           "-v", f"{a.work}:/work/out", "-e", "HOME=/work/out", "-e", "CCACHE_DISABLE=1", "--entrypoint", "bash", a.image, "-c",
-          f"/work/out/obj_{tag}/Vtb +dir=/work/out/vec > /work/out/run_{tag}.log 2>&1"]
+          f"timeout 900 /work/out/obj_{tag}/Vtb +dir=/work/out/vec > /work/out/run_{tag}.log 2>&1"]
     subprocess.run(dk, check=False)
     ev = {"BSC": [], "BPV": [], "IJ": [], "IQ": [], "IKV": [], "IP": []}
     summ = {}
@@ -120,8 +120,9 @@ def main():
     ref, rs = run(a, ref_tag)
     rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
-    for mut, tag in zip(muts, tags[1:]):
-        ev, s = run(a, tag)
+    with ThreadPoolExecutor(len(muts)) as ex:
+        res = list(ex.map(lambda t: run(a, t), tags[1:]))
+    for mut, tag, (ev, s) in zip(muts, tags[1:], res):
         c = compare(ref, ev, a.srx)
         setchk = s.get("V41XSETCHK", {}).get("errors")
         lock = all(v["ok"] for v in c.values()) and setchk in ("0", None)
