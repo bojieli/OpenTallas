@@ -1,5 +1,6 @@
 `timescale 1ps/1ps
-module tb_vp_local;
+module tb_vp_local #(parameter integer ML = 7, AL = 6, HPL = 33, CS_HI_D = 0, CS_HI_GS = 0, CS_HO_D = 0, CS_HO_GS = 0,
+    CS_H_G = 4, HQX = 0);   // gate.py --form passes the measured vp form (forms.py) as -G overrides
   reg clk=0; always begin #416 clk=1; #417 clk=0; end
   reg rst_n=0,c_v=0,sw_v=0;
   reg [159:0] c_d=0; reg [9:0] sw_a=0; reg [7:0] sw_m=0; reg [255:0] sw_d=0;
@@ -9,7 +10,7 @@ module tb_vp_local;
   reg [15:0] cargs[0:2];
   wire lo_v,hw_v,hw_hf,wl_v,f_vp;
   wire [255:0] lo_d,hw_d,wl_d; wire [2:0] hw_j,wl_i;
-  ot_s81sl_vp #(.ML(7),.AL(6),.HPL(33),.CS_HI_D(0),.CS_HI_GS(0),.CS_HO_D(0),.CS_HO_GS(0),.CS_H_G(4),.HQX(0)) u_vp(
+  ot_s81sl_vp #(.ML(ML),.AL(AL),.HPL(HPL),.CS_HI_D(CS_HI_D),.CS_HI_GS(CS_HI_GS),.CS_HO_D(CS_HO_D),.CS_HO_GS(CS_HO_GS),.CS_H_G(CS_H_G),.HQX(HQX)) u_vp(
     .clk(clk),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),.sw_v(sw_v),.sw_a(sw_a),.sw_m(sw_m),.sw_d(sw_d),
     .cw_v(2'd0),.cw_a(24'd0),.cw_d(64'd0),.lo_v(lo_v),.lo_d(lo_d),
     .x_rv(1'b0),.x_ra(10'd0),.x_wv(1'b0),.x_wa(10'd0),.x_wm(8'd0),.x_wd(256'd0),
