@@ -15,10 +15,10 @@
    "assigns": 1509
   },
   "2": {
-   "insts": 244,
+   "insts": 250,
    "ports": 38,
    "port_bits": 6384,
-   "internal_nets": 18202,
+   "internal_nets": 18298,
    "assigns": 1178
   }
  },
@@ -407,6 +407,9 @@
   "u_y_es_p14_0": 2,
   "u_y_es_p14_1": 2,
   "u_y_fp_p13_0": 2,
+  "u_y_ga_e13_cfg_0": 2,
+  "u_y_ga_e13_f_prog_0": 2,
+  "u_y_ga_e13_go_0": 2,
   "u_y_go_p13_0": 2,
   "u_y_rt_20a_0": 2,
   "u_y_rt_20a_1": 2,
@@ -793,6 +796,9 @@
   "u_lprc_u_y_rt_28b_sk": 2,
   "u_lprc_u_y_rt_4b_sk": 0,
   "u_lprc_u_y_rt_6b_sk": 0,
+  "u_lprc_u_y_ga_e13_go_0": 2,
+  "u_lprc_u_y_ga_e13_cfg_0": 2,
+  "u_lprc_u_y_ga_e13_f_prog_0": 2,
   "u_lpr_r0": 0,
   "u_lpr_r1": 1,
   "u_lpr_r2": 2,

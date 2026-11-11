@@ -442,6 +442,9 @@
     "u_y_es_p14_0",
     "u_y_es_p14_1",
     "u_y_fp_p15_0",
+    "u_y_ga_e15_cfg_0",
+    "u_y_ga_e15_f_prog_0",
+    "u_y_ga_e15_go_0",
     "u_y_go_p15_0",
     "u_y_rt_20a_0",
     "u_y_rt_22a_0",
@@ -28131,7 +28134,7 @@
      "scalar_child_pad_port_uses": 0
     },
     "r2": {
-     "leaves": 185,
+     "leaves": 188,
      "terms": [
       "1",
       "3",
@@ -28148,7 +28151,7 @@
       "3",
       "3",
       "1",
-      "110"
+      "113"
      ],
      "bindings": [
       {
@@ -28375,15 +28378,18 @@
       "u_y_xb_9_0": 106,
       "u_y_rt_24b_sk": 107,
       "u_y_rt_26b_sk": 108,
-      "u_y_rt_28b_sk": 109
+      "u_y_rt_28b_sk": 109,
+      "u_y_ga_e15_go_0": 110,
+      "u_y_ga_e15_cfg_0": 111,
+      "u_y_ga_e15_f_prog_0": 112
      },
      "levels": 2,
      "branches": 6,
-     "FFs": 196,
+     "FFs": 199,
      "scalar_child_pad_port_uses": 0
     }
    },
-   "incremental_FFs": 689,
+   "incremental_FFs": 692,
    "required_rtl_sources": [
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
@@ -28395,7 +28401,7 @@
  "flops": {
   "landing": 18865,
   "pads": 0,
-  "reset": 711
+  "reset": 714
  },
  "communicating_region_pairs": {
   "landed": [
@@ -28895,7 +28901,10 @@
    "u_y_rt_28b_sk": 0,
    "u_y_rt_4b_sk": 0,
    "u_y_rt_6b_sk": 0,
-   "u_y_rt_8b_sk": 0
+   "u_y_rt_8b_sk": 0,
+   "u_y_ga_e15_go_0": 0,
+   "u_y_ga_e15_cfg_0": 0,
+   "u_y_ga_e15_f_prog_0": 0
   },
   "input_port_offset_edges": {
    "x": 0
