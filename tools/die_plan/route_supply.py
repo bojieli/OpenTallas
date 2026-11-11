@@ -1350,6 +1350,17 @@ def verdict(r, scale=1.0):
     return ("FLAG" if hits else "ok"), hits
 
 
+def _station_lint():
+    try:
+        import station_lint as sl
+    except ImportError:                      # python3 -I does not put the script dir on sys.path
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("station_lint", Path(__file__).resolve().parent / "station_lint.py")
+        sl = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(sl)
+    return sl
+
+
 def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=False, out=None, die=None):
     """route_supply rows (verdict, flag regions, fix) for the named types of partition_types T."""
     rows = []
@@ -1364,6 +1375,15 @@ def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=F
         r["verdict"], r["flag_regions"] = verdict(r, flag_ratio)
         if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
             r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
+        # S1/S2 station-direction lint (COORD S7, DIE-KV-97 kv3_phy o_phy_Q): chains whose kit stage order runs
+        # against the bus data flow; reported per type, never changes the verdict
+        sl = _station_lint().lint_type(n, t)
+        r["station_inverted"] = [f"{x['chain']}:{x['name']}#{x['index']}" for x in sl if x["kind"] == "INVERTED"]
+        r["station_nonmonotone"] = sum(1 for x in sl if x["kind"] == "NONMONOTONE")
+        if r["station_inverted"]:
+            r.setdefault("notes", []).append(
+                f"STATION-INVERTED {len(r['station_inverted'])} chain(s): " + ", ".join(r["station_inverted"][:6])
+                + (" ..." if len(r["station_inverted"]) > 6 else ""))
         if r["flag_regions"]:
             reg, d = r["flag_regions"][0][0].rsplit("_", 1)
             r["fix"] = FIX.get((reg, d), r["fix"])
@@ -1593,7 +1613,8 @@ def main(argv=None):
                              -r["worst"]["p99"]))
     hdr = ["die", "type", "verdict", "flag_regions", "worst_region", "dir", "layer", "p99_ratio", "max_ratio", "hot_bins",
            "at_um", "core_H", "core_V", "mem_H", "mem_V", "street_H", "street_V", "ring_H", "ring_V", "open_H",
-           "open_V", "cells_per_um2", "cells", "macro_frac", "mem_frac", "model", "need_free_M4", "need_free_M5", "provisional_children", "fix"]
+           "open_V", "cells_per_um2", "cells", "macro_frac", "mem_frac", "model", "need_free_M4", "need_free_M5", "provisional_children", "fix",
+           "station_inverted"]
     lines = ["\t".join(hdr)]
     for r in rows:
         w = r["worst"]
@@ -1605,7 +1626,8 @@ def main(argv=None):
                                     [r["regions"].get("dens_A", {}).get("p99", ""), r.get("cells") or "",
                                      r["macro_area_frac"], r["mem_area_frac"], r["model"],
                                      _nf(r, "H"), _nf(r, "V"),
-                                     ",".join(r["provisional_children"]) or "-", r["fix"]])))
+                                     ",".join(r["provisional_children"]) or "-", r["fix"],
+                                     len(r.get("station_inverted") or [])])))
     out = dict(schema=SCHEMA, advisory=True, plan=str(a.plan), die=die,
                cfg={k: (sorted(v) if isinstance(v, set) else v) for k, v in cfg.items()}, rows=rows)
     if a.out:
@@ -1615,6 +1637,9 @@ def main(argv=None):
         (od / f"route_supply_{die}.json").write_text(json.dumps(out, indent=1))
     print("\n".join(lines))
     nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
+    ninv = sum(len(r.get("station_inverted") or []) for r in rows)
+    print(f"# {die}: station-direction lint {ninv} INVERTED chain(s) in "
+          f"{sum(1 for r in rows if r.get('station_inverted'))} type(s) (station_lint.py; ADVISORY)", file=sys.stderr)
     print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}; GRT halving "
           f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving.startswith('edge') else ''}); ADVISORY, not a gate",
           file=sys.stderr)
