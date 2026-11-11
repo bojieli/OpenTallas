@@ -7,8 +7,11 @@ cache) with
     process (ps args, systemd --user units on the hub) or docker container (name + mount sources) on any fleet host
     naming the item; and
   - no kit-wave row change (kit_wave_stages.tsv 'updated', any plan_current) for >= STALE_H hours (or no row at all).
-Each line carries the last row (status / stage / class), its time and the owner from OWNERS.tsv ('unowned' when
-OWNERS has no row).  Read-only: it never launches, kills or deletes anything.  A host that does not answer is named in
+Each line carries the last row (status / stage / class), its time and the owner from OWNERS.tsv; with no OWNERS row,
+the lane of the newest 'OWNER <LANE>' line naming the item in a lanes/*.md changed in the last LANE_MD_H hours ('unowned' when
+none does).  COORD 11-10 (HBM-CORES-B): a core is live when a token names its module plus a form suffix
+(<module>_<suffix>, e.g. opsa_group1_p3r1109, static_front_w_...) unless that token belongs to another plan core of
+the die; items in autopilot/OWNERS-RETIRED.tsv (NOT-IN-PLAN) are dropped.  Read-only: it never launches, kills or deletes anything.  A host that does not answer is named in
 the header (its jobs cannot be seen, so a listed item may be live there).
 """
 import csv, json, os, re, subprocess, time
@@ -16,6 +19,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 COORD = os.path.expanduser('~/coord')
 OWNERS = os.path.join(COORD, 'autopilot/OWNERS.tsv')
+RETIRED = os.path.join(COORD, 'autopilot/OWNERS-RETIRED.tsv')
+LANES_DIR = os.path.join(COORD, 'lanes')
+LANE_MD_H = 72.0
+LANE_MD_SKIP = {'COORD-REVIEW-QUEUE', 'STALE'}
 HOSTS_TSV = os.path.join(COORD, 'tools/fleet_hosts.tsv')
 STALE_TSV = os.path.join(COORD, 'lanes/STALE.tsv')
 STALE_H = 6.0
@@ -47,14 +54,27 @@ class Tokens:
     def __init__(self, text):
         self.set = set(re.findall(r'[A-Za-z0-9_]+', text or ''))
         self.pre = {}
+        self.under = {}                                 # '<prefix>' -> tokens '<prefix>_...' (form suffixes)
         for t in self.set:
             i = t.find('__')
             while i > 0:
                 self.pre.setdefault(t[:i], True)
                 i = t.find('__', i + 2)
+            i = t.find('_')
+            while i > 0:
+                self.under.setdefault(t[:i], set()).add(t)
+                i = t.find('_', i + 1)
 
     def hit(self, item):
         return item in self.set or item in self.pre
+
+    def hit_form(self, module, others=()):
+        """a token '<module>_<suffix>' (a running form of the core) that is not another plan core's name or form"""
+        longer = [o for o in others if o != module and o.startswith(module + '_')]
+        for t in self.under.get(module, ()):
+            if t != module and not any(t == o or t.startswith(o + '_') for o in longer):
+                return True
+        return False
 
 
 def fleet_hosts(path=HOSTS_TSV):
@@ -110,6 +130,62 @@ def owners_rows(path=OWNERS):
         return {(r['die'], r['item']): r for r in csv.DictReader(lines, delimiter='\t')}
     except (OSError, KeyError):
         return {}
+
+
+def retired_rows(path=RETIRED):
+    """OWNERS-RETIRED.tsv: die<TAB>name (item / member module / prefix*)<TAB>reason -> {die: [names]}"""
+    out = {}
+    try:
+        for l in open(path):
+            f = l.rstrip('\n').split('\t')
+            if len(f) >= 2 and l.strip() and not l.startswith('#') and f[0] != 'die':
+                out.setdefault(f[0].strip(), []).append(f[1].strip())
+    except OSError:
+        pass
+    return out
+
+
+def is_retired(retired, die, names):
+    for r in (retired or {}).get(die, ()):
+        for n in names:
+            if (r.endswith('*') and n.startswith(r[:-1])) or n == r:
+                return True
+    return False
+
+
+def lane_md_index(lanes_dir=LANES_DIR, max_h=LANE_MD_H, now=None):
+    """[(mtime, LANE, token set)]: the 'OWNER <LANE>' lines of lanes/*.md changed in the last max_h hours, newest file
+    first, newest line first within a file (the format ownership.py reads)"""
+    now = now or time.time()
+    out = []
+    try:
+        names = os.listdir(lanes_dir)
+    except OSError:
+        return out
+    for fn in names:
+        if not fn.endswith('.md') or fn[:-3] in LANE_MD_SKIP:
+            continue
+        p = os.path.join(lanes_dir, fn)
+        try:
+            mt = os.path.getmtime(p)
+            if now - mt > max_h * 3600:
+                continue
+            # only ownership lines ('... OWNER <LANE> ...: items'), newest last in the file; plain mentions do not own
+            for l in reversed(open(p, errors='replace').read().splitlines()):
+                m = re.search(r'\bOWNER\s+([A-Z][A-Z0-9-]+[A-Z0-9])\b', l)
+                if m:
+                    out.append((mt, m.group(1), set(re.findall(r'[A-Za-z0-9_]+', l))))
+        except OSError:
+            continue
+    out.sort(key=lambda x: -x[0])                      # stable: line order kept within a file
+    return out
+
+
+def lane_owner(lane_idx, names):
+    for _, lane, toks in lane_idx or ():
+        if any(n in toks for n in names):
+            return lane
+    return None
 
 
 def base_names(name, design=None):
@@ -173,7 +249,8 @@ def owner_of(own, die, names):
     return None
 
 
-def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, plan_die=None):
+def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, plan_die=None, retired=None,
+                lane_idx=None):
     """-> [dict(die, tag, kind, item, last_status, last_stage, last_class, last_time, age_h, owner)], pure"""
     now = now or time.time()
     idx = row_index(rows)
@@ -197,14 +274,19 @@ def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, 
         for t in (pt if not isinstance(pt, int) else {}):
             if t not in st:
                 items.append(('type', t, None))
+        core_mods = sorted({(d or {}).get('module') or n.split('#')[0] for k, n, d in items if k == 'core'})
         for kind, name, d in items:
             names = base_names(name, d)
+            if is_retired(retired, die, names):
+                continue
             if any((die, n) in wl for n in names):
                 continue
             o = owner_of(own, die, names)
             if o and o.get('live_job', 'none') not in ('', 'none'):
                 continue
             if tok and any(tok.hit(n) for n in names[:2] + list((d or {}).get('wave_keys') or [])):
+                continue
+            if tok and kind == 'core' and tok.hit_form((d or {}).get('module') or name.split('#')[0], core_mods):
                 continue
             rs = item_rows(idx, die, names, all_items=all_items)
             last = rs[-1] if rs else None
@@ -217,7 +299,9 @@ def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, 
                             last_stage=(last or {}).get('stage', ''), last_class=(last or {}).get('class', ''),
                             last_time=(last or {}).get('updated', ''),
                             age_h=round((now - t) / 3600, 1) if t else None,
-                            owner=(o or {}).get('owner') or 'unowned', owner_state=(o or {}).get('state', '')))
+                            owner=(o or {}).get('owner') or lane_owner(lane_idx, names[:2]) or 'unowned',
+                            owner_state=(o or {}).get('state', '') if (o or {}).get('owner') else
+                            ('lanes/%s.md' % lane_owner(lane_idx, names[:2]) if lane_owner(lane_idx, names[:2]) else '')))
     return out
 
 
@@ -304,7 +388,8 @@ def section(cache, rows, dies, plan_die=None, hosts=None, write=True):
     """the STALE block lines for failure_breakdown.main(); probes the fleet"""
     state, src = hub_state()
     text, unreachable = live_text(hosts)
-    stale = stale_items(cache, rows, owners_rows(), state, text, dies, plan_die=plan_die)
+    stale = stale_items(cache, rows, owners_rows(), state, text, dies, plan_die=plan_die,
+                        retired=retired_rows(), lane_idx=lane_md_index())
     if write:
         write_tsv(stale)
     return render(stale, unreachable, src)
@@ -319,7 +404,8 @@ def main(argv):
     rows = list(csv.DictReader(open(FB.STAGES), delimiter='\t'))
     state, src = hub_state()
     text, unreachable = live_text()
-    stale = stale_items(cache, rows, owners_rows(), state, text, FB.DIES, plan_die=FB.PLAN_DIE)
+    stale = stale_items(cache, rows, owners_rows(), state, text, FB.DIES, plan_die=FB.PLAN_DIE,
+                        retired=retired_rows(), lane_idx=lane_md_index())
     prev = read_tsv()
     write_tsv(stale)
     txt = owner_post(stale, prev, unreachable=unreachable)

@@ -49,7 +49,7 @@ def test_stale_selection():
     assert 't__t4' in st and st['t__t4']['last_status'] == 'no kit-wave row' and st['t__t4']['owner'] == 'unowned'
     assert 'core_a' in st and st['core_a']['last_status'] == 'CANCELLED' and st['core_a']['owner'] == 'S81-CORES'
     assert 'core_b' in st
-    assert 'core_live#10x10/abcd' in st               # 'core_live_d85' is another name, not this module
+    assert 'core_live#10x10/abcd' not in st           # COORD 11-10: 'core_live_d85' = a running form of core_live
 
 
 def test_live_text_core_by_module_token():
@@ -95,10 +95,58 @@ def test_owner_post_groups_and_marks_new():
     assert 'COORD (unowned)' in txt and '+S81 t t__t4 (no kit-wave row)' in txt
     assert S.owner_post([]) == ''
 
+
+def test_form_suffix_counts_as_live_but_not_a_sibling_core():
+    c = {'plans': {'s81/plan.json': {'designs': {
+        'ot_opsa_group1': {'module': 'ot_opsa_group1'}, 'ot_static_front': {'module': 'ot_static_front'},
+        'ot_q2nf_rest': {'module': 'ot_q2nf_rest'}, 'ot_q2nf_rest_x': {'module': 'ot_q2nf_rest_x'}},
+        'signed_designs': {}, 'plan_types': {'t__t4': 'm'}, 'signed_types': {}}}}
+    txt = ('/srv/a/ot_opsa_group1_p3r1109/run\nnew-ot_static_front_w_7a5b26893ab62940\n'
+           '/srv/b/ot_q2nf_rest_x_c3/run\n/srv/c/t__t4_b/run\n')
+    st = names(S.stale_items(c, [], {}, {}, txt, DIES, now=NOW))
+    assert 'ot_opsa_group1' not in st and 'ot_static_front' not in st     # forms <module>_<suffix> are live
+    assert 'ot_q2nf_rest_x' not in st                                       # its own form
+    assert 'ot_q2nf_rest' in st                                             # sibling core's form is not its form
+    assert 't__t4' in st                                                    # types keep whole-name matching
+
+
+def test_retired_items_dropped(tmp_path):
+    p = tmp_path / 'OWNERS-RETIRED.tsv'
+    p.write_text('# die\tname\treason\ns81\tcore_b\tNOT-IN-PLAN\ns81\told_*\tNOT-IN-PLAN prefix\nhbm\tt__t4\tother die\n')
+    r = S.retired_rows(str(p))
+    st = names(S.stale_items(CACHE, ROWS, OWN, STATE, TEXT, DIES, now=NOW, retired=r))
+    assert 'core_b' not in st and 'old_fail' not in st
+    assert 't__t4' in st and 'core_a' in st
+
+
+def test_owner_fallback_lane_md(tmp_path):
+    d = tmp_path / 'lanes'; d.mkdir()
+    (d / 'HBM-CORES-B.md').write_text('# HBM-CORES-B lane file\n- 2026-11-10 22:41 PST OWNER HBM-CORES-B (COORD): core_b, '
+                                      't__t4 (forms)\n- 22:50 note: core_x looked at\n')
+    (d / 'OLD-LANE.md').write_text('- OWNER OLD-LANE: core_b was mine\n')
+    (d / 'GEOM-REVIEW.md').write_text('- GEOM REQ [KIT-WAVE-1 sample s81/old_fail]\n')   # a mention, no OWNER line
+    (d / 'COORD-REVIEW-QUEUE.md').write_text('core_a t__t4\n')
+    os.utime(d / 'OLD-LANE.md', (NOW - 100 * 3600, NOW - 100 * 3600))   # older than LANE_MD_H: not read
+    os.utime(d / 'HBM-CORES-B.md', (NOW - 3600, NOW - 3600))
+    os.utime(d / 'COORD-REVIEW-QUEUE.md', (NOW, NOW))
+    os.utime(d / 'GEOM-REVIEW.md', (NOW, NOW))
+    idx = S.lane_md_index(str(d), now=NOW)
+    assert [x[1] for x in idx] == ['HBM-CORES-B'] and 'core_x' not in idx[0][2]
+    st = names(S.stale_items(CACHE, ROWS, OWN, STATE, TEXT, DIES, now=NOW, lane_idx=idx))
+    assert st['core_b']['owner'] == 'HBM-CORES-B' and st['core_b']['owner_state'] == 'lanes/HBM-CORES-B.md'
+    assert st['t__t4']['owner'] == 'HBM-CORES-B'
+    assert st['core_a']['owner'] == 'S81-CORES'                             # an OWNERS row still wins
+    assert st['old_fail']['owner'] == 'KIT-WAVE-1'                          # OWNERS row; GEOM mention ignored
+    st = names(S.stale_items(CACHE, ROWS, {}, STATE, TEXT, DIES, now=NOW, lane_idx=idx))
+    assert st['old_fail']['owner'] == 'unowned'                             # mention only -> not an owner
+
 if __name__ == '__main__':
     import tempfile, pathlib
     test_stale_selection(); test_live_text_core_by_module_token(); test_tokens_whole_name()
     test_no_probe_text_means_no_process_filter_and_threshold()
     test_render_and_owner_comment_line(pathlib.Path(tempfile.mkdtemp()))
     test_owner_post_groups_and_marks_new()
-    print("6 passed")
+    test_form_suffix_counts_as_live_but_not_a_sibling_core()
+    test_retired_items_dropped(pathlib.Path(tempfile.mkdtemp()))
+    test_owner_fallback_lane_md(pathlib.Path(tempfile.mkdtemp()))
+    print("9 passed")
