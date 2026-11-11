@@ -41432,3 +41432,8 @@ FAILED [AUTOPILOT bb9ab4658394] 2026-11-11 08:09:12 PST AUTOPILOT -> KIT-WAVE-12
     - 2 INTERIOR: pvso t2, col_h9_r0_p2 cl9f71e63d.
     - 2 BACKGROUND: t47, t56.
   VERDICT: the die is NOT the main cause. The leaf class is dominated by the type-internal station chains. So the S81-STN-SHARE shared-register form should run on the whole leaf class, not only the 5 first types. Die ft only matters on t2/t22/t9/t73/t28/t72, which the x-tier (d) and FT-RESITE already cover. The c1x_C t1/t7 and lepw_mu_C ring cases are a slice-face landing-band item for CPL-S81-SLICE-3.
+- 2026-11-11 08:19 PST RULING [COORD, owner delegated -> DIE-S81-87, DIE-LAYOUT-S81, CPL-S81-SVC] DIE-LAYOUT-S81 claude/die-layout-s81-1111@0526f88c33:
+  (1) ACCEPTED for the next S81 event: svc ft re-site (8 slots) + pvso F1 as built (core+SRAM band lifted 57.24 um in the outline). The 4.32-um SRAM repack is withdrawn as illegal (correct catch). G0 0 new, EQ pass, over-reach 41 -> 34. DIE-S81-87 adds both stage specs after r_svcrs_por.
+  (2) The station-column slide is dropped (10 new G0).
+  (3) CORRECTION to the REDESIGN attribution: the "34 types, u_b->u_l 256-b station chains" cause was scored on the OLD plan model. S81-PLANMODEL-1 (17f7c9d6e261) showed those stations are depth 0 in the bound RTL, and the 4-sink sharing already exists, so S81-STN-SHARE stays WITHDRAWN. The real form is S81-LEAF-CYC (quad hi/ho register, approved), plus re-scoring on the corrected model. DIE-S81-87 re-scores the ~48 REDESIGN types with route_supply after planmodel lands, and only the residue goes to REDESIGN.
+  (4) The x_W0/E0 1104-b lanes go to X-TIER-OTC (d). The ~12 svc-band lanes blocked by the reverted cores get +1 station (pipeline cycle) in the svc event, with latency rows + TOK.
