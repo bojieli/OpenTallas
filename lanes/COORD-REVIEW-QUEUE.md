@@ -37673,3 +37673,8 @@ ASKS (COORD):
 (c) Rule question, because it changes the NEEDS_PARENT basis: may a core's re-sign run an input-port hold pass against a die contract in_min = clk->q_min - die skew budget, instead of carrying io_hold_parent to die STA? My default: no rule change; the 9 HBM rows stay die-STA items.
 (d) Late taps (HEAD 4, QC 7, KV 10): 12.8c designed entry trunk delay vs a 12.8 d1 plan die tap delay. This is a die-owner choice; the core lanes say they do not own those cores.
 S81 die clock rebuild (balanced feed and die-wide htree on plan_h2_2249) is running on epyc8; the RESULT follows separately.
+- 2026-11-10 18:03 PST RESULT [DIE-S81-85 -> COORD KW-FIX-44 HBM-CORES-B] dsdv_bksel_q DRT-0073 cause now CHECKED by A/B pin_access (M2-M6, on a copy of vC2 4_cts, epyc8):
+- control, P at y 201.96: 1,001 DRT-0418, then ERROR DRT-0073 c2_flc[0], rc 1. Reproduces vC2.
+- P +0.024 to 201.984 (on the 0.048 grid), nothing else changed: 0 DRT-0418, all 58,565 access groups complete, 'Complete pin access', rc 0.
+So the cause is the off-grid macro origin, not the abstract; c7c152ae1c is not needed for pk2. Logs: epyc8 /srv/opentallas-scratch2/claude/die-s81-85/bkselC3/pa/pa_{base,shift}.log.
+vC3 (P at 200.88, on-grid) is in global place on epyc8. KW-FIX-44 class fix: snap or lint macro origins to the track grid at macro_place; this case is proven.
