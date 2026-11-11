@@ -329,22 +329,20 @@ class TypeModel:
             for fl in FLIP:
                 c = collections.Counter()
                 for i in g:
-                    o = comp(self.ori0[i], fl) if len(g) == 1 else self.ori0[i]
+                    o = comp(self.ori0[i], fl)
                     for lf, cnt in self.lface[i].items():
                         f = lf
                         if o in ("MX", "R180") and f in "NS":
                             f = OPP[f]
                         if o in ("MY", "R180") and f in "EW":
                             f = OPP[f]
-                        ox, oy = self.coff[i]
+                        ox, oy = self.moff(i, fl)
                         w, h = self.dim[i]
                         cw, ch = self.cbb[k, 2], self.cbb[k, 3]
                         on = {"W": ox < G, "E": ox + w > cw - G, "S": oy < G, "N": oy + h > ch - G}[f]
                         if on:
                             c[f] += cnt
                 st[fl] = c
-                if len(g) > 1:
-                    break
             self.cface.append(st)
         self.reset_state()
 
@@ -357,9 +355,20 @@ class TypeModel:
         k = self.cid[i]
         return comp(self.ori0[i], self.cflip[k])
 
+    def moff(self, i, fl):
+        """member offset inside its cluster bbox after mirroring the whole cluster by fl."""
+        k = self.cid[i]
+        ox, oy = self.coff[i]
+        if fl in ("MY", "R180"):
+            ox = self.cbb[k, 2] - ox - self.dim[i, 0]
+        if fl in ("MX", "R180"):
+            oy = self.cbb[k, 3] - oy - self.dim[i, 1]
+        return ox, oy
+
     def core_origin(self, i):
         k = self.cid[i]
-        return (self.cpos[k, 0] + self.coff[i][0], self.cpos[k, 1] + self.coff[i][1])
+        ox, oy = self.moff(i, self.cflip[k])
+        return (self.cpos[k, 0] + ox, self.cpos[k, 1] + oy)
 
     def pt(self, e):
         i, d = e
@@ -440,7 +449,7 @@ class TypeModel:
     def _band_at(self, k, x, y):
         s = np.zeros(len(self.bands))
         for i in self.CL[k]:
-            ox, oy = self.coff[i]
+            ox, oy = self.moff(i, self.cflip[k])
             s += self.band_overlap(x + ox, y + oy, self.dim[i, 0], self.dim[i, 1])
         return s
 
@@ -734,7 +743,7 @@ def search(M, Gd, cfg, log):
                     continue
                 pm, po = M.pt(me), M.pt(ot)
                 xs.append(po[0] - (pm[0] - ox)); ys.append(po[1] - (pm[1] - oy)); ws.append(w)
-            if ws:
+            if ws and not cfg.get("flips_only"):
                 def wmed(v):
                     z = sorted(zip(v, ws)); hh = sum(ws) / 2; c = 0
                     for val, w in z:
@@ -758,7 +767,7 @@ def search(M, Gd, cfg, log):
                                     cands.append((M.cost(K) - c0 + TP * (tv - tv0), ("mv", p)))
                                 M.cpos[k] = (ox, oy)
             for j in range(M.m):
-                if j == k or M.cfix[j]:
+                if j == k or M.cfix[j] or cfg.get("flips_only"):
                     continue
                 oj = M.cpos[j].copy()
                 xk = snap(oj[0] + (M.cbb[j, 2] - M.cbb[k, 2]) / 2); yk = snap(oj[1] + (M.cbb[j, 3] - M.cbb[k, 3]) / 2)
@@ -772,7 +781,7 @@ def search(M, Gd, cfg, log):
                 if okk and tv <= tvj:
                     cands.append((M.cost(KK) - c0j + TP * (tv - tvj), ("sw", j, (xk, yk), (xj, yj), (float(oj[0]), float(oj[1])))))
                 M.cpos[k] = (ox, oy); M.cpos[j] = oj
-            if len(M.CL[k]) == 1:
+            if True:     # whole-cluster mirror (an abutted group mirrors as one block)
                 for fo in ("MY", "MX", "R180"):
                     nf = comp(of, fo)
                     if not M.legal(k, ox, oy, fl=nf):
@@ -855,7 +864,7 @@ def apply_seed(M, seed, log):
         if k in done:
             continue
         done.add(k)
-        if "orient" in v and len(M.CL[k]) == 1:
+        if "orient" in v:
             M.cflip[k] = comp(M.ori0[i], v["orient"])
         if "origin_um" in v:
             ox, oy = M.coff[i]
@@ -935,7 +944,8 @@ def write_type(M, t_new, cfg, log):
     import hub_repack as HR
     fol = follow_fn(M)
     W, H = M.W, M.H
-    rep = dict(stations=0, moved=0, regs_old=0, regs_new=0, rerouted=0, kept_old_regs=0, need_more_regs=0, failed=0)
+    rep = dict(stations=0, moved=0, regs_old=0, regs_new=0, rerouted=0, kept_old_regs=0, need_more_regs=0, failed=0,
+               need_more_idx=[])
     # stations (base geometry ownership)
     st = t_new.get("internal_stations") or []
     ends = []
@@ -948,7 +958,8 @@ def write_type(M, t_new, cfg, log):
             continue
         x0, y0 = M.core_origin(i)
         h["origin_um"] = [round(x0, 4), round(y0, 4)]
-        h["orient"] = M.core_orient(i)
+        if "orient" in h or M.core_orient(i) != "R0":
+            h["orient"] = M.core_orient(i)
         cea = h.get("clock_entry_access")
         if isinstance(cea, (str, dict)):
             d = ast.literal_eval(cea) if isinstance(cea, str) else cea
@@ -1011,6 +1022,7 @@ def write_type(M, t_new, cfg, log):
                          (r["kind"], r["length_um"], nold))
         elif r is not None and len(r["regs"]) > nold:
             rep["need_more_regs"] += 1
+            rep["need_more_idx"].append(st.index(s))
             rep["regs_new"] += nold
         else:
             rep["failed"] += 1
@@ -1270,6 +1282,7 @@ def main(argv=None):
     ap.add_argument("--reach", type=float, default=360.0)
     ap.add_argument("--grid-um", type=float, default=21.6)
     ap.add_argument("--grt-halving", choices=("full", "none"), default="full")
+    ap.add_argument("--flips-only", action="store_true", help="orientation flips only (no relocate / swap)")
     ap.add_argument("--fixed", default="", help="regex of hard-core insts that never move")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
@@ -1296,7 +1309,8 @@ def main(argv=None):
         rs_cfg["kit_views"] = {}
     conns = RS.load_conns(die_dir, None, plan.parent, RS.REF_DIRS[1:])
     cfg = dict(gap=a.gap, sweeps=a.sweeps, topk=a.topk, lam=a.lam, reach=a.reach, grid_um=a.grid_um,
-               grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg)
+               grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg,
+               flips_only=a.flips_only)
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
@@ -1336,6 +1350,41 @@ def main(argv=None):
         st = {"moves": {}}
         if not a.no_search:
             st = search(M, Gd, cfg, log)
+            # station repair: a station that hub_repack.route_station cannot re-site with its old register count
+            # (length limit, or no free street sites along it) gets its end clusters reverted to the base placement,
+            # most-implicated cluster first, while the revert is legal (the base is feasible, so this converges)
+            qmap = {si: q for (si, q, _) in M.stations}
+            reverted = []
+            for rnd in range(M.m):
+                bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
+                if not bad:
+                    break
+                cnt = collections.Counter()
+                for si in bad:
+                    a_, b_, _, _ = M.L[qmap[si]]
+                    for e in (a_, b_):
+                        if e[0] is not None:
+                            k_ = M.cid[e[0]]
+                            if tuple(M.cpos[k_]) != tuple(M.cbb[k_, :2]) or M.cflip[k_] != "R0":
+                                cnt[k_] += 1
+                done_ = False
+                for k_, _ in cnt.most_common():
+                    old = (tuple(M.cpos[k_]), M.cflip[k_])
+                    ob = M._band_k(k_) if M.bands else None
+                    M.cpos[k_] = tuple(M.cbb[k_, :2]); M.cflip[k_] = "R0"
+                    if M.legal(k_, *M.cpos[k_]):
+                        if M.bands:
+                            M.band_now += M._band_k(k_) - ob
+                        reverted.append(M.inst[M.CL[k_][0]])
+                        done_ = True
+                        break
+                    M.cpos[k_], M.cflip[k_] = old
+                if not done_:
+                    log("  station repair: no legal revert left (%d stations over)" % len(bad))
+                    break
+            if reverted:
+                log("  station repair: reverted %d clusters to base: %s" % (len(reverted), reverted))
+                st["reverted"] = reverted
         new_bitum = M.cost(range(len(M.L)))
         tviol_end = M.tviol(range(len(M.L)))
         SH, SV = Gd.supply(); DH, DV = Gd.demand()
