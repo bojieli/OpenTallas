@@ -39,7 +39,7 @@ BLK=("$O/htilefs.sv" "$TT/ot_hgi_coll_tkm_tp192_htile_core.sv" "$TK/ot_hgi_coll_
   "$S/rtl/lib/ot_rst_relay.sv" "$S/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v")
 sha256sum "${COMMON[@]}" "${BLK[@]}" "$RF" "$RM" "$O/tb_dflit_map.svh" "$B/tkm_split_vectors.py" > "$O/sources.sha256"
 VW=(-O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN)
-lib(){ # mdir name top files...
+lib(){ # mdir name top files...  (name = top: the DPI wrapper module is named after the library)
   local md=$1 nm=$2 top=$3; shift 3
   [ -f "$md/lib$nm.a" ] && [ -f "$md/$nm.sv" ] && return 0
   "$V" --cc --no-timing --lib-create "$nm" --top-module "$top" "${VW[@]}" -Mdir "$md" --build -j "${JOBS:-8}" "$@"
@@ -47,11 +47,12 @@ lib(){ # mdir name top files...
 build(){ # tag rootfile -G...
   local tag=$1 rf=$2; shift 2
   [ -x "$O/obj_$tag/Vtb" ] && return 0
-  { lib "$O/lib_htile" htilefs ot_hgi_coll_tkm_tp192_htilefs "${BLK[@]}" &&
-    lib "$O/lib_root_$tag" rootcore ot_hgi_coll_tkm_tp192_root_core "$rf" "$S/rtl/lib/ot_rst_relay.sv" "$RK/ot_hbm_face_reg.sv" "$RK/ot_hbm_face_rst_relay.sv" \
+  { lib "$O/lib_htile" ot_hgi_coll_tkm_tp192_htilefs ot_hgi_coll_tkm_tp192_htilefs "${BLK[@]}" &&
+    lib "$O/lib_root_$tag" ot_hgi_coll_tkm_tp192_root_core ot_hgi_coll_tkm_tp192_root_core "$rf" "$S/rtl/lib/ot_rst_relay.sv" "$RK/ot_hbm_face_reg.sv" "$RK/ot_hbm_face_rst_relay.sv" \
       "$S/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" &&
     "$V" --cc --exe --main --timing --build -j "${JOBS:-8}" "${VW[@]}" --top-module tb -I"$O" -Mdir "$O/obj_$tag" "$@" "${COMMON[@]}" \
-      "$O/lib_htile/htilefs.sv" "$O/lib_root_$tag/rootcore.sv" "$O/lib_htile/libhtilefs.a" "$O/lib_root_$tag/librootcore.a"; } \
+      "$O/lib_htile/ot_hgi_coll_tkm_tp192_htilefs.sv" "$O/lib_root_$tag/ot_hgi_coll_tkm_tp192_root_core.sv" \
+      "$O/lib_htile/libot_hgi_coll_tkm_tp192_htilefs.a" "$O/lib_root_$tag/libot_hgi_coll_tkm_tp192_root_core.a"; } \
     > "$O/build_$tag.log" 2>&1 || { echo "BUILD FAIL $tag"; tail -8 "$O/build_$tag.log"; return 2; }
 }
 run(){ "$O/obj_$1/Vtb" +DIR="$O/vec/$2" > "$O/${1}_$2.log" 2>&1; echo "$1 $2: $(grep -m1 -E 'TKM_FULL (PASS|FAIL)' "$O/${1}_$2.log" || tail -1 "$O/${1}_$2.log")"; }

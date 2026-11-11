@@ -75,7 +75,7 @@ module tb;
     seenr[ix-RB]=1;words=words+1;
    end else begin errs=errs+1;$display("GOLD OUTSIDE %0d",ix);end
   end
- integer exp0,exp1,tot,nw;
+ integer exp0,exp1,tot,nw;reg sawdone=0;  // done is a one-edge pulse: latch it at loop exit
  initial begin
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"missing DIR");
   $readmemh({dir,"/cfg.hex"},cfg);$readmemh({dir,"/a.hex"},a);$readmemh({dir,"/b.hex"},b);
@@ -86,11 +86,12 @@ module tb;
   repeat(10)@(negedge clk);rst_n=1;repeat(20)@(negedge clk);
   start=1;@(negedge clk);start=0;
   while(!done&&elapsed<exp1+200)begin @(negedge clk);elapsed=elapsed+1;end
+  sawdone=done;
   repeat(4)@(negedge clk);
   tot=errs;nw=HASR?2*NOUT:NOUT;
   if(cyc!=32'(exp1))begin tot++;$display("TIMELINE got%0d exp%0d",cyc,exp1);end
   if(exp1-exp0!=448||SHIFT!=448)begin tot++;$display("SHIFT exp1-exp0=%0d SHIFT=%0d (priced 448)",exp1-exp0,SHIFT);end
-  if(!done)begin tot++;$display("NO DONE after %0d edges",elapsed);end
+  if(!sawdone)begin tot++;$display("NO DONE after %0d edges",elapsed);end
   if(fault)begin tot++;$display("FAULT");end
   for(integer i=0;i<NOUT;i=i+1)if(!seeno[i]||(HASR&&!seenr[i]))begin tot++;if(tot<12)$display("MISSING word %0d",i);end
   if(tot)$display("TKM_FULL FAIL total=%0d gold=%0d words=%0d/%0d cycles=%0d exp=%0d exp0=%0d",tot,errs,words,nw,cyc,exp1,exp0);
