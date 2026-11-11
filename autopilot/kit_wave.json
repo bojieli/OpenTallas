@@ -19603,10 +19603,8 @@
     "hd_turn_b"
    ],
    "hosts": [
-    "epyc7",
-    "epyc9",
-    "epyc4",
-    "epyc2"
+    "epyc8",
+    "epyc9"
    ],
    "live_claim_h": 0,
    "place_prefer": [
@@ -20230,7 +20228,13 @@
    "work_root_prev_kw43gen2": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81_head/kit-wave",
    "hold_items_prev_kw43hdser": {},
    "cell_check": true,
-   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)"
+   "note_kw44_cellcheck_1111": "KW-FIX-44 11-11 (COORD): PLAN-GEN-RULES-1 0059c5de770 rule C cell_check on (advisory: after_place compares synth cells with the plan outline; PLAN-CHANGE notice + lanes/FLAGS-CELLCHECK.tsv)",
+   "hosts_prev_kw45_1111": [
+    "epyc7",
+    "epyc9",
+    "epyc4",
+    "epyc2"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
@@ -21476,11 +21480,8 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
-    "epyc7",
-    "epyc9",
-    "epyc4",
-    "intel2",
-    "epyc2"
+    "epyc8",
+    "epyc9"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
@@ -27203,6 +27204,13 @@
     "slw_fw_v1__clf51c11d8__cl592e3d37",
     "slw_fw_v1__clf51c11d8__clc7ddab13",
     "slw_st_a_v2__cl9f076a5c"
+   ],
+   "hosts_prev_kw45_1111": [
+    "epyc7",
+    "epyc9",
+    "epyc4",
+    "intel2",
+    "epyc2"
    ]
   },
   "hbm": {
@@ -29022,11 +29030,8 @@
     "ot_hgi_dma_back_static_vp4_banks_cp": null
    },
    "hosts": [
-    "epyc7",
-    "epyc9",
-    "epyc4",
-    "intel2",
-    "epyc2"
+    "epyc8",
+    "epyc9"
    ],
    "cancel_superseded": true,
    "plan_core_items": [
@@ -40010,7 +40015,14 @@
      },
      "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     }
-   }
+   },
+   "hosts_prev_kw45_1111": [
+    "epyc7",
+    "epyc9",
+    "epyc4",
+    "intel2",
+    "epyc2"
+   ]
   }
  },
  "place_prefer": [
