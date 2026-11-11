@@ -1,0 +1,55 @@
+{
+ "plan": "l48hp1/source_plan.json.gz",
+ "note": "PLAN-ROUTE-1 11-11: l48uo bind/netlist entries for unchanged cores, l48hp1 kit gate netlists (core_conns_netlist.py --depth 4) for hd_host_e/w and empty cores; hd_host_e H2 he_epc core not covered (no H2 netlist yet). ADVISORY, DO_NOT_COUNT.",
+ "types": {
+  "hd_tile": {
+   "cores": 5,
+   "from_l48uo": 5,
+   "from_netlist": 0,
+   "netlist": null,
+   "netlist_sha256_12": null
+  },
+  "hd_serdes": {
+   "cores": 3,
+   "from_l48uo": 3,
+   "from_netlist": 0,
+   "netlist": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_serdes/attempt_3/gen/hd_serdes/run/results/asap7/dp_hd_serdes/base/1_2_yosys.v",
+   "netlist_sha256_12": "525d8cf4ccf7"
+  },
+  "hd_mesh": {
+   "cores": 110,
+   "from_l48uo": 110,
+   "from_netlist": 0,
+   "netlist": "/srv/opentallas-scratch/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_mesh/attempt_2/gen/hd_mesh/run/results/asap7/dp_hd_mesh/base/1_2_yosys.v",
+   "netlist_sha256_12": "9f61635e6c17"
+  },
+  "hd_lep0N": {
+   "cores": 49,
+   "from_l48uo": 0,
+   "from_netlist": 49,
+   "netlist": "/srv/opentallas-scratch/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N/run/results/asap7/dp_hd_lep0N/base/1_2_yosys.v",
+   "netlist_sha256_12": "a8854a84e01f"
+  },
+  "hd_ctl": {
+   "cores": 4,
+   "from_l48uo": 4,
+   "from_netlist": 0,
+   "netlist": null,
+   "netlist_sha256_12": null
+  },
+  "hd_host_e": {
+   "cores": 55,
+   "from_l48uo": 0,
+   "from_netlist": 55,
+   "netlist": "/srv/opentallas-scratch/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_e/attempt_3/gen/hd_host_e/run/results/asap7/dp_hd_host_e/base/1_2_yosys.v",
+   "netlist_sha256_12": "51689c46260e"
+  },
+  "hd_host_w": {
+   "cores": 55,
+   "from_l48uo": 0,
+   "from_netlist": 55,
+   "netlist": "/srv/opentallas-scratch/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_w/attempt_3/gen/hd_host_w/run/results/asap7/dp_hd_host_w/base/1_2_yosys.v",
+   "netlist_sha256_12": "d97d2a039aee"
+  }
+ }
+}
