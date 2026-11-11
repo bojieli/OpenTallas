@@ -18,8 +18,12 @@ T = {"run_sim.sh": dict(n=2, live=0, proved=0, peak_gb=5.0, req_gb=96),
 
 class Admit(unittest.TestCase):
     def test_oversized_request_is_charged_the_class_size(self):
-        self.assertEqual(R.admit_size(96, "run_sim.sh", T)[0], 13)          # max(1.5 x 5, 5 + 8)
-        self.assertEqual(R.admit_size(96, "proved.sh", T)[0], 45)           # max(1.5 x 30, 30 + 8)
+        # CHARGEMAX_1111: only a class with >= 3 finished samples lowers a declared request
+        self.assertIsNone(R.admit_size(96, "run_sim.sh", T))                # n=2: the request stands
+        self.assertIsNone(R.admit_size(96, "proved.sh", T))                 # n=0 (+1 proved): the request stands
+        t3 = {k: dict(v, n=3) for k, v in T.items()}
+        self.assertEqual(R.admit_size(96, "run_sim.sh", t3)[0], 13)         # max(1.5 x 5, 5 + 8)
+        self.assertEqual(R.admit_size(96, "proved.sh", t3)[0], 45)          # max(1.5 x 30, 30 + 8)
 
     def test_request_within_2x_or_unknown_keeps_its_request(self):
         self.assertIsNone(R.admit_size(96, "big.sh", T))                    # 96 <= 2 x 60

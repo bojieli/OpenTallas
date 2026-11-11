@@ -92,8 +92,7 @@ class V174Acceptance(unittest.TestCase):
             return rows
         total, avail, rows, table = load("ot-epyc9", "17:44", 154.0, at1606)
         cls = "ref_gate_qfd_c_b#_rgx_c#_#-#.sh"
-        seed = R.admit_size(192, cls, table)
-        self.assertIsNotNone(seed)
+        seed = R.admit_size(192, cls, table) or (192, "CHARGEMAX_1111: an unmeasured class keeps its request")
         self.assertGreaterEqual(seed[0], 60, seed)
         can, die, inv = capacity(total, avail, rows, table)
         self.assertLess(can, seed[0], inv)
@@ -108,7 +107,7 @@ class V174Units(unittest.TestCase):
         t.update({f"ref_gate_x_y_z{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((2, 3, 4))})
         self.assertEqual(R.family_seed("ref_gate_qfd_c_new.sh", "ref_gate_", t)[0], 120)
         self.assertEqual(R.family_seed("ref_gate_other_new.sh", "ref_gate_", t)[0], 120)    # family p90
-        self.assertEqual(R.admit_size(192, "ref_gate_qfd_c_new.sh", t)[0], 120)
+        self.assertIsNone(R.admit_size(192, "ref_gate_qfd_c_new.sh", t))   # CHARGEMAX_1111: a seed never lowers a request
         self.assertIsNone(R.admit_size(64, "ref_gate_qfd_c_new.sh", t))                     # seed >= request
 
     def test_phase_target(self):

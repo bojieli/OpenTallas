@@ -438,8 +438,22 @@ def capacity_sample_count(cls, entry):
 
 
 def admit_size(mem, cls, table=None):
-    """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
+    """(GB charged, why) when a request is over 2x the measured peak of its class, else None.
+    CHARGEMAX_1111 (KW-FIX-44, COORD 11-11 ruling on DIE-S81-85 20:19: lec.py:kit n=1 peak 1.7 GB charged 10 GB against
+    --mem 96 on epyc7, the OOM mechanism again): the charge is max(--mem request, learned class peak) on every path; a
+    class (or family seed) with fewer than CLASS_LOWER_MIN_N (3) finished samples never lowers a declared request."""
     e = (sizes() if table is None else table).get(cls)
+    r = _admit_size_lowered(mem, cls, table, e)
+    n = (e or {}).get("n", 0)
+    pk = e.get("peak_gb", 0) if e and cls not in ("?", "cd") and n >= 1 else 0
+    if r and r[0] < mem and n < conf("CLASS_LOWER_MIN_N"):
+        r = None                                       # too few samples: the declared request stands
+    if pk > mem and (not r or r[0] < math.ceil(pk)):
+        return math.ceil(pk), f"class '{cls}' measured peak {pk}G above the request {mem}G (n={n}): charge = max(request, peak)"
+    return r
+
+
+def _admit_size_lowered(mem, cls, table, e):
     if cls not in ("?", "cd") and (not e or capacity_sample_count(cls, e) < 1):
         for pre, gb in SEED.items():
             if cls.startswith(pre):
@@ -687,7 +701,7 @@ def main():
         new = max(1, math.ceil(max(peak * 1.25, peak + 4 * GB) / GB))
         if (kind is None or new >= m) and s.get("lowered") is None and not s.get("no_class") and m == s["launch"]:
             a = admit_size(m, s["cls"], table)                # a full-size unit of an over-requested class
-            if a and rss <= 0.8 * a[0] * GB:
+            if a and a[0] < m and rss <= 0.8 * a[0] * GB:
                 if DRY or set_res(f, unit, m, a[0]):
                     freed += m - a[0]
                     log(f"LOWER {unit} {m} -> {a[0]} GB (class) [{s['cls']}]: {a[1]}; RSS {rss/GB:.2f} GiB; {why}")
@@ -846,7 +860,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1135,7 +1149,7 @@ def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
     a = admit_size(mem, cls, table)
-    res, note = (a[0], a[1]) if a and a[0] < mem else (mem, "")
+    res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a class peak above the request raises the charge
     total, avail = meminfo()
     rows = read_units()
     for r in rows:                                     # finished long ago: drop the reservation and its side files
@@ -1687,7 +1701,15 @@ def selftest():
     os.environ["PHASE_MARGIN"] = "1"      # default 0 since OWNER 10-22 20:10; the rule itself stays tested
     ft = {f"ref_gate_qfd_c_k{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((80, 90, 105, 120))}
     chk("v17.4 seed: an unmeasured qfd ref_gate is charged its siblings' p75 (120), not 10 GB",
-        (admit_size(192, "ref_gate_qfd_c_new.sh", ft) or [0])[0], 120)
+        family_seed("ref_gate_qfd_c_new.sh", "ref_gate_", ft)[0], 120)
+    chk("CHARGEMAX_1111: a family seed never lowers the 192 GB request",
+        (admit_size(192, "ref_gate_qfd_c_new.sh", ft) or [192])[0], 192)
+    lec = {"lec.py:kit": dict(n=1, proved=0, peak_gb=1.7)}
+    chk("CHARGEMAX_1111: lec.py:kit n=1 peak 1.7 GB keeps --mem 96 (epyc7 OOM)", (admit_size(96, "lec.py:kit", lec) or [96])[0], 96)
+    chk("CHARGEMAX_1111: n=3 lowers 96 -> max(1.5 x 1.7, 1.7 + 8)",
+        (admit_size(96, "lec.py:kit", {"lec.py:kit": dict(n=3, proved=0, peak_gb=1.7)}) or [96])[0], 10)
+    chk("CHARGEMAX_1111: a class peak above the request raises the charge",
+        (admit_size(8, "lec.py:kit", {"lec.py:kit": dict(n=1, proved=0, peak_gb=20.4)}) or [8])[0], 21)
     chk("v17.4 phase: settled unit -> no margin", phase_target(dict(cls="a", now=10.0, decl=160.0, phase=""), {}), 0.0)
     chk("v17.4 phase: compiling verilator, no class peak -> declared cap",
         phase_target(dict(cls="a", now=10.0, decl=160.0, phase="vl", compiling=True), {}), 160.0)
