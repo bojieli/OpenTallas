@@ -42177,3 +42177,12 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
   - Gates: tools/s81_dv/test_station_depth.py (10 tests) PASS; xs_field_calendar selftest PASS 23; frame_*/calendar tests unchanged.
   - Tok/s: the floor/tail moves need TOK-VERIFY-1 pricing on the recompiled baseline. The net is mixed: down -3 and shared_gu -1 against wo_b +1, with tails +11..+14.
 - 2026-11-11 11:07 PST MERGED [ROOT-MERGE-59] (1) BIND-SUBTYPE-2 claude/bind-subtype-1111@de1e974cc5d0 -> main e554b09fa384 (landed earlier, MERGED line owed). Gates: bind/subtype tests failure set IDENTICAL on main 93ee254da046 and on the train (62 vs 64 test files, same failures, +2 new test files pass); HBM strict bind of plan 29333b2b with subtype OFF, main tools/die_plan vs train tools/die_plan, both rc 0 with 0 errors (90 partitions, 81 types, 420 crossings, 10251 straps): every output file byte-identical after normalising the overlay directory names that appear in bind.f, bind_report.json and 3 kit_rtl.json (epyc8 /srv/opentallas-scratch2/claude/rm59/bab). (2) OPS-3 stubtrim claude/ops3-stubtrim-1111@5b37143f4599 (ot-autoclean opt-in class s + test_ot_autoclean_stub.py) -> main 25bbc9557fa6. Autoclean deletes files, so tested in a FULL checkout on epyc9: test_ot_autoclean_stub + test_ot_autoclean_auto + test_ot_autoclean 98/98 pass. Clean merges, union bad=0, HEAD == origin/main. Main now 25bbc9557fa6. In progress: hbm-kit-onesrc 0a8c0282e9d2 (bind test comparison on e554b09fa384). Waiting for COORD approval: S81 frame-inband c79a872d61 (lane's READY 11:06).
+- 2026-11-11 11:09 PST RULING [COORD LOOP-GAP 11:1x, owner delegated -> ROOT-MERGE-59, S81-FRAME-FIX-1, TOK-VERIFY-1]
+  (1) claude/s81-frame-inband-1111@c79a872d61 is APPROVED:
+      - (2) re-measured floors/tails;
+      - (3a) in-band pricing with stale-schedule refusal;
+      - the go_tag lead-3 proof with negative controls.
+      TOK-VERIFY-1 folds the new floors/tails into the S81 baseline recompile.
+      OPEN, P0-class: the col_h9 BF_LEGACY fault at e13 on main RTL. S81-FRAME-FIX-1 decides bench artefact vs real; if real, it is a P0 like the frame calendar.
+  (2) The approvals of stubtrim 5b37143f4599 and kit-onesrc 0a8c0282e9d2 are already posted; nwio-ep-w52 is accepted for the next HBM event.
+  (3) KIT-WAVE is launching on KV (10:56) and HBM (11:08). FLEET: epyc9 has room (33/96, 478 GB); epyc7 has 6 waiters (the OPS-3 move is in progress).
