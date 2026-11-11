@@ -405,8 +405,13 @@ def macro_view(h, die_dir, repo, cfg):
                 if kv:
                     obs, src = None, None          # whole-block template: the kit's real view LEF wins
                 else:
-                    obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
-                    src = "plan-template(capped M%d)" % cap
+                    # the plan's own obs_max for this core is its ceiling (T51 native split children: M7), else
+                    # the 12.1a default
+                    tc = cap
+                    if h.get("obs_max") and cfg.get("template_cap_obs_max", True):
+                        tc = min(int(str(h["obs_max"])[1:]), 9)
+                    obs = {L: f for L, f in obs.items() if int(L[1:]) <= tc}
+                    src = "plan-template(capped M%d%s)" % (tc, " obs_max" if tc != cap else "")
     if obs is None and kv:
         # repo LEF missing (or a template): the macro LEF the kit hands to GRT (route_supply_kit_views.json)
         obs = {L: float(f) for L, f in kv["obs"].items()}
@@ -640,6 +645,70 @@ def box(a, k, ky=None):
     return (c[ky:, k:] - c[:-ky, k:] - c[ky:, :-k] + c[:-ky, :-k])[: a.shape[0], : a.shape[1]] / (k * ky)
 
 
+def _nearest_on_rect(p, r):
+    x0, y0, x1, y1 = r
+    x = min(max(p[0], x0), x1)
+    y = min(max(p[1], y0), y1)
+    if x0 < x < x1 and y0 < y < y1:           # inside: to the nearest edge
+        d = {(x0, y): x - x0, (x1, y): x1 - x, (x, y0): y - y0, (x, y1): y1 - y}
+        return min(d, key=d.get)
+    return (x, y)
+
+
+def _seam_pts(r, q, frac):
+    """the hop from core r to core q: facing edges, at fraction `frac` along their overlap (bits spread over the seam,
+    each at its own row/column), else the nearest corners."""
+    ax0, ay0, ax1, ay1 = r
+    bx0, by0, bx1, by1 = q
+    lo, hi = max(ay0, by0), min(ay1, by1)
+    if hi > lo and (ax1 <= bx0 or bx1 <= ax0):
+        y = lo + frac * (hi - lo)
+        return ((ax1, y), (bx0, y)) if ax1 <= bx0 else ((ax0, y), (bx1, y))
+    lo, hi = max(ax0, bx0), min(ax1, bx1)
+    if hi > lo and (ay1 <= by0 or by1 <= ay0):
+        x = lo + frac * (hi - lo)
+        return ((x, ay1), (x, by0)) if ay1 <= by0 else ((x, ay0), (x, by1))
+    c = (min(max((bx0 + bx1) / 2, ax0), ax1), min(max((by0 + by1) / 2, ay0), ay1))
+    return c, _nearest_on_rect(c, q)
+
+
+def _gap(r, q):
+    return max(0.0, q[0] - r[2], r[0] - q[2]) + max(0.0, q[1] - r[3], r[1] - q[3])
+
+
+def ft_core_internal(g, W, H, f, wbits, rects, bundles=16):
+    """parent wire of a feed-through slot carried inside hard cores (stations_in), per bit bundle spread over the
+    face windows: in face -> nearest core, core -> next core across their seam (spread along it), last core -> out
+    face. The slot's own wires over the cores are child-internal (CPL-S81-STN t51)."""
+    nb = max(1, min(bundles, wbits))
+    fi, fo = f.get("in_face", "W"), f.get("out_face", "E")
+    wi = f.get("in_window_um") or ([0, H] if fi in ("W", "E") else [0, W])
+    wo = f.get("out_window_um") or ([0, H] if fo in ("W", "E") else [0, W])
+    for j in range(nb):
+        n = wbits / nb
+        fr = (j + 0.5) / nb
+        a = face_bit_point(W, H, (fi, tuple(wi[:2])), (fr, nb))
+        z = face_bit_point(W, H, (fo, tuple(wo[:2])), (fr, nb))
+        # enter the core nearest the in point, leave from the core nearest the out point, hopping core to core
+        # (nearest gap first) only until that last core is reached; stations_in cores off that path add nothing
+        cur = min(rects, key=lambda q: _gap((a[0], a[1], a[0], a[1]), q))
+        last = min(rects, key=lambda q: _gap((z[0], z[1], z[0], z[1]), q))
+        left = [q for q in rects if q != cur]
+        e = _nearest_on_rect(a, cur)
+        if e != a:
+            g.net([a, e], n=n)
+        while cur != last and left:
+            nxt = last if _gap(cur, last) <= min(_gap(cur, q) for q in left) else min(left, key=lambda q: _gap(cur, q))
+            left.remove(nxt)
+            p, q = _seam_pts(cur, nxt, fr)
+            if p != q:
+                g.net([p, q], n=n)
+            cur = nxt
+        x = _nearest_on_rect(z, cur)
+        if x != z:
+            g.net([x, z], n=n)
+
+
 def analyze_type(name, t, die_dir, repo, conns, cfg):
     W, H = map(float, t["outline_um"])
     b = cfg["bin_um"]
@@ -730,6 +799,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     unresolved = 0
     stale_bus = 0
     nglue = 0
+    unchecked = 0          # pins of cores whose core_conns entry is empty {}: no partner known, not scored
     # links carried by internal_stations (launch core:A.bus -> capture B): not counted again as a direct core net
     st_pairs = set()
     st_rev = defaultdict(set)
@@ -771,6 +841,11 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             continue
         if cc:
             ci = cc.get(inst, {})
+            if inst in cc and not ci and cfg.get("empty_conns_unchecked", True):
+                # empty entry: the netlist trace found no wiring partner, which says nothing about where the
+                # pins go (glue, parent logic, faces). UNCHECKED, not scored as local escapes
+                unchecked += len(pl)
+                continue
             for bus, x, y in pl:
                 dl = ci.get(bus)
                 if not dl:
@@ -846,14 +921,32 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 g.net([(x, y), (px, py)])
     if unresolved:
         notes.append(f"{unresolved} core_conns destinations not placed in the type")
+    if unchecked:
+        notes.append(f"{unchecked} core pins UNCHECKED (core_conns entry empty: partners unknown, not scored)")
     if stale_bus:
         notes.append(f"{stale_bus} core_conns bus destinations not in the plan, taken to the nearest same-direction "
                      f"face bus (ESTIMATE)")
     # ft slots
     g.cur = "ft"
     ft_bits = 0
+    ft_internal = 0
+    ft_internal_slots = set()
+    rect_by_name = {}
+    for (x0, y0, x1, y1, h) in mrects:
+        for k_ in (h.get("inst"), h.get("module")):
+            if k_:
+                rect_by_name[k_] = (x0, y0, x1, y1)
     for f in t.get("ft_slots", []) or []:
         wbits = int(f.get("width", 1))
+        si_ = [rect_by_name[n_] for n_ in (f.get("stations_in") or []) if n_ in rect_by_name]
+        if si_ and cfg.get("ft_core_internal", True):
+            # the slot's stations and wires live inside these hard cores (stations_in): parent wire is only
+            # face -> first core, core -> core across the street/seam, last core -> face, each along the slot line
+            ft_core_internal(g, W, H, f, wbits, si_)
+            ft_internal += wbits
+            ft_bits += wbits
+            ft_internal_slots.add(str(f.get("name", "")))
+            continue
         regs = [tuple(r) for r in (f.get("regs_um") or [])]
         sites = f.get("bit_sites_um") or []
         chain = []
@@ -910,9 +1003,14 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     ring_cells = np.zeros((g.ny, g.nx), dtype=bool)
     lc = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
     ring_bits = 0
+    ring_internal = 0
     for bn, bd in lc.items():
         r = bd.get("rect_um")
         if not r:
+            continue
+        if re.sub(r"_[io]$", "", str(bn)) in ft_internal_slots:
+            # landing band of a core-internal ft slot: its storage sits with the slot's stations inside the child
+            ring_internal += 1
             continue
         x0, y0, x1, y1 = map(float, r)
         flops = float(bd.get("padded_data_storage_flops") or bd.get("live_data_storage_flops") or 0)
@@ -1072,7 +1170,9 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         provisional_children=sorted(provisional),
         macro_area_frac=round(float(macro_cov.sum()) / (g.nx * g.ny), 3),
         mem_area_frac=round(float(mem_cov.sum()) / (g.nx * g.ny), 3), glue_pins=nglue,
-        core_pins=npins, ft_bits=ft_bits, station_bits=st_bits, ring_bits=int(ring_bits),
+        core_pins=npins, unchecked_pins=unchecked, ft_bits=ft_bits, ft_core_internal_bits=ft_internal,
+        ring_bands_core_internal=ring_internal,
+        station_bits=st_bits, ring_bits=int(ring_bits),
         wirelength_mm=round(g.wl / 1000, 1),
         worst=dict(region=c, dir=d, p99=round(p99, 3), max=round(mx, 3),
                    at_um=[round((ii + 0.5) * b, 1), round((jj + 0.5) * b, 1)],
@@ -1257,6 +1357,12 @@ def main(argv=None):
                          "(+ pins); none = no halving")
     ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge / edge_outline (gcells of %.3f um)"
                     % GRT_GCELL_UM)
+    ap.add_argument("--ft-internal-as-parent", action="store_true",
+                    help="old model: an ft slot whose stations_in are hard cores still runs as parent wire over them")
+    ap.add_argument("--template-cap-default", action="store_true",
+                    help="old model: cap whole-block template LEFs at --core-ceiling even when the plan gives obs_max")
+    ap.add_argument("--empty-conns-glue", action="store_true",
+                    help="old model: an empty core_conns entry scores every pin as a local glue escape")
     ap.add_argument("--pin-escape", action="store_true",
                     help="what-if: 2-pin core links as an L whose first leg follows the pin face normal (off by default)")
     ap.add_argument("--margin-bins", type=int, default=DEFAULTS["margin_bins"],
@@ -1295,6 +1401,8 @@ def main(argv=None):
                cell_fill=a.cell_fill, ring_tracks_per_bit=a.ring_tracks_per_bit,
                ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
                pin_escape=a.pin_escape, station_spread=a.station_spread,
+               ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
+               empty_conns_unchecked=not a.empty_conns_glue,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells)
     conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
     cfg["signed_modules"] = None
@@ -1334,6 +1442,8 @@ def main(argv=None):
             continue
         add_density(r, t, cells_of(n, bool(t.get("hard_cores"))))
         r["verdict"], r["flag_regions"] = verdict(r, a.flag_ratio)
+        if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
+            r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
         if r["flag_regions"]:
             reg, d = r["flag_regions"][0][0].rsplit("_", 1)
             r["fix"] = FIX.get((reg, d), r["fix"])
