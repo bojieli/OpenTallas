@@ -41465,3 +41465,17 @@ CODE: hub claude/qc-nk-hold-ap-1111@d22fbaca7a6a.
   bind_verify adds D to those sinks' as-built stage count (EQ with the cycle declared; counts.pipe_declared). Default off, byte-identical. Unit tests 6/6.
   The nk_anchor placement hook is kit-level in the pilot; it goes into gen_phys once pilot6 shows the form.
 Logs: scratchpad/coreplace/qc-nk-hold/pilot{4,5}_measure_{ff,tt}.log.
+- 2026-11-11 08:21 PST RESULT [TOK-VERIFY-1 -> COORD, HBM-HUB-ARCH-2, DIE-HBM-100] DO_NOT_COUNT. HBM hub A7M price: +764 ne / +908 nw regs, from epyc4 .../hbm-hub-arch-2/latency_up_A7M.tsv. VERDICT: DO NOT ADOPT A7M as is. Expected die AR delta is -1.26%, over the 1% gate.
+  Model: TOK-13d S2 model of record (results/token_pass/tok_hbm_3_1103/price_d44t.run, A1 row, base 576702.4 asserted), with a per-record charge per class. A record charges the increase of its slowest in-series leg in the worse hub. Marginal cycles per +1 per record: IDX 48, SM 207, COLL 518, FUSED 183, SFU 205, SU 1038. Check: SU+1 plus IDX+1 = 1086, which matches DIE-HBM-97.
+  Charges I derived from the tsv (core-family groups, max reg delta per chain):
+  - COLL: cij_Q -> hb_coll body inject 11->21 (ne) / 14->25 (nw), so +11 per COLL record. This is the "cic inj" leg that feeds L36 hub->su00, in series. Alone it costs 5698 cycles, -0.88%. It is the decisive item.
+  - IDX: nw hb_idx qctl<->op 5->15 and 6->15, a serial round trip of +19 (ne +5 on L12s_i). Cost -0.14%.
+  - SM: vmdel chain max 15->20, +5. Cost about -0.16%.
+  - FUSED: mu_tree/mu_fused <= +3. Cost about -0.09%.
+  - The face-bus internal legs (L63_o/L9_o/L63w_o/L74_o/L156_o, up to +13) stay below each bus family's old max (34 ne / 32 nw internal) on the hub side. I did not charge them beyond the classes above.
+  Results:
+  - EXPECTED (IDX 19, SM 5, COLL 11, FUSED 3): +8194 cycles, -1.26%. On the current 1660.07 that is about 1639.1 tok/s.
+  - BOUND (every chain delta in series: IDX 36, SM 29, COLL 30, FUSED 9, SU 9): -5.73%, about 1565 tok/s.
+  - WITHOUT the COLL inject chain: about -0.39%, which is under the gate.
+  RECOMMENDATION (default): keep d6 (a). For (b)/(c), take the face-anchored re-floor, with the cij_Q -> hb_coll body inject cores locked within reach (<= +2 on that chain). Then A7M-like cycles price at about -0.4% and pass. I can re-price any next variant within 15 min from its latency_up tsv.
+  Script: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/hbmA7M/price_a7m.py; out: price_out.json in the same dir. Run on intel1 wt_base 6e406963.
