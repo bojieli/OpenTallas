@@ -6339,6 +6339,21 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     praw, macro_paths = BMP.project(P.raw, kit_rtl)
     if macro_paths:
         P = S.Plan(praw, plan_path)
+    # DIE-HBM-97/HBM-SM-MPL 11-11 (COORD q_sm0-3 MPL-0020, default on, OT_DEAD_MACROS=0 off): a plan hard core whose
+    # every output is unloaded in the bound RTL (q_sm chain-end pt_e) is removed by synthesis, so the kit neither places
+    # nor taps it; kits with no such core are byte-identical.  Receipt dead_macros.json in each affected kit.
+    import dead_macros as DM
+    _dm_base = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
+
+    def _dm_lib(c):
+        f = _CR.resolve(c["lib"], _dm_base) if c.get("lib") else None
+        return f.read_text(errors="replace") if f is not None and f.is_file() else None
+    praw, dead_macros = DM.project(P.raw, kit_rtl, _dm_lib)
+    if dead_macros:
+        P = S.Plan(praw, plan_path)
+        for tn, rec in sorted(dead_macros.items()):
+            print(f"OT_DEAD_MACROS type {tn}: {len(rec[removed])} unloaded hard core(s) not placed: "
+                  + ", ".join(r["inst"] for r in rec["removed"]))
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
@@ -6400,6 +6415,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])
         if tn in macro_paths:
             (Path(kits[-1]) / BMP.RECEIPT).write_text(json.dumps(macro_paths[tn], indent=1) + "\n")
+        if tn in dead_macros:
+            (Path(kits[-1]) / DM.RECEIPT).write_text(json.dumps(dead_macros[tn], indent=1) + "\n")
     (out / "run_kit.sh").write_text(RUN_KIT)
     ft = os.environ.get("OT_FLOW_TAG", "")      # KW-FIX-30: the wave's die flow tag -> K/flow_tag (run_kit.sh passes it)
     if ft:
