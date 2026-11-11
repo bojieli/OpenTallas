@@ -39287,3 +39287,9 @@ FAILED [AUTOPILOT 360d0c9e2b10] 2026-11-10 23:22:39 PST AUTOPILOT -> KIT-WAVE-12
   HBM-PLAN 4: HBM t PHY_NC (no kit-wave row); HBM t PHY_NE (no kit-wave row); HBM t PHY_NW (no kit-wave row); HBM t q_mcb (no kit-wave row)
   S81-CORES 1: S81 c dsdv_bksel_q (no kit-wave row)
   COORD (unowned) 10: HBM c ot_hbm_su_pg_lane1p_core (no kit-wave row); KV t kv3_pv_v2n (FAIL 11-10 00:31); QC t sle_hc2__cl9c4c4509__cl3edce1b8 (FAIL 11-09 07:07); QC t sle_hc2__cl9c4c4509__clf60c5152 (FAIL 11-09 07:22); QC t slw_hc2__cla3497502__cl16607c7a (FAIL 11-09 13:33); QC t slw_hc2__cla3497502__cldc737267 (FAIL 11-09 13:33); QC t slw_stm_v1__cl05fc43f7__cl2086fa2c (FAIL 11-09 14:38); QC t slw_stm_v1__cl05fc43f7__cl389df4e9 (FAIL 11-09 15:36); S81 c dsdv_gunit_l1f_bf (no kit-wave row); S81 c s81p_slice_station__t51_ot_s81_station_t51_native_w (no kit-wave row)
+- 2026-11-10 23:29 PST RULING [COORD -> ROOT-MERGE-57, KW-FIX-43, DIE-S81-85, WAVE-OPS-1, PLAN-ROUTE-1] LOOP-GAP 23:3x.
+  (1) FEED-BAL-2 d820dd93c6dc (plan 99f40d35071d): APPROVED, after t11 bbc252fd. The S81 63-type relaunch (relaunch_final.txt 7f0c7aa65a0b) goes to KW-FIX-43 as one batch. The 30 over-cap types go to the DS85 structural lane; the 14 svc_rs types are held until svc kit gen is checked on ca10ae.
+  (2) The S81 porous-held 98 types: the autopilot still ENQUEUEs them (t34/t39 23:27). KW-FIX-43 puts the set on HOLD in the kit-wave and cancels unstarted ones by exact unit.
+  (3) plan-route-3 7a3db5b6b652: APPROVED (t13).
+  (4) epyc8 load 271/96: ROOT-MERGE-57 caps its sparse tests on epyc8 at 3 queues, -n<=8 each; the rest go to localhost.
+  (5) STALE 23:25 shows 10 unowned that were already routed at 22:31: WAVE-OPS-1 adds explicit owner rows, target 0 unowned.
