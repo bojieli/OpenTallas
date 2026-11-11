@@ -1180,6 +1180,9 @@ SCHEMA = {
             # (100 % FIRM at the pin-facing band edge: sle_fw_v2 GRT-0116, 3 overflow edges in that top gcell row).
             cland_strip_rows={"type": "integer", "minimum": 1},
             cland_strip_rows_types={"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+            # DIE-QC-97 11-10 opt-in (absent = unchanged plans): clock_landing_plan face-home re-sites these types' ring
+            # bands that sit > 50 um from their own pin face or off their pin window (rehome_far_bands)
+            cland_face_home_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
             # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
             id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},

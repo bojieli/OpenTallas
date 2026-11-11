@@ -253,6 +253,16 @@ BAND_RING="all"
 # parallel tracks of that strip at FACE_CROSSING_TARGET (the ft_track_use target); candidates that do are taken first.
 FACE_CROSSING=False
 FACE_CROSSING_TARGET=0.5
+# DIE-QC-97 11-10 (opt-in FACE_HOME, on only in rehome_far_bands; compose and resize_undersized_bands byte-identical): a
+# face band whose pin window reaches into the 17.28-um outline margin (a corner window) has NO legal face strip, because
+# the strip spans the raw window and its low end sits inside the margin; the compact-bank fallback then stops at the
+# first aspect that fits, which can be a bank against ANOTHER face.  slw_st_a_v2__cl9f076a5c b_hw_ctl_hc0_i (1573 bits,
+# E pins y 4.32..276.29): resized to the S-face bank [332.61,60.48,604.80,105.84] (every bit off-window); x_fw_ctl_i
+# (536 bits, S pins x 476.06..568.22) then lost its own face strip and went 168.48 um north, over SRAM btb[0]:
+# GRT-0116, 200 overflow, all in the 11.88-um ring strip at y 168.5..180.4.  FACE_HOME also tries the face strip over
+# the window clamped into the margin (same reserved area, depth from it), nearest legal inset first.
+FACE_HOME=False
+FACE_HOME_FAR_UM=50.0
 PARALLEL_PITCH_UM={"h":(0.039,0.048,0.064),"v":(0.036,0.048,0.064)}   # ASAP7 M2/M4/M6 (h), M3/M5/M7 (v)
 
 
@@ -326,6 +336,30 @@ def _face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi):
                 continue
             out.append(box);break
     return out
+
+
+def _face_clamped_boxes(t,b,w,h,obstacles,margin,px,py,area):
+    """FACE_HOME only: the face strip over the pin window clamped into the outline margin, depth = reserved area / the
+    clamped length (2.16-um grid), at the nearest legal inset (same legality as the face strip).  [] when none fits."""
+    f=b["face"];along=h if f in "EW" else w;lo,hi=b["window_um"]
+    s0,s1=max(lo,margin),min(hi,along-margin)
+    if s1-s0<8.64:return []
+    d=math.ceil(area/(s1-s0)/2.16)*2.16
+    for inset in [margin+2.16*j for j in range(88)]:
+        box=([inset,s0,inset+d,s1] if f=="W" else [w-inset-d,s0,w-inset,s1] if f=="E" else
+             [s0,inset,s1,inset+d] if f=="S" else [s0,h-inset-d,s1,h-inset])
+        if box[0]<margin-1e-6 or box[1]<margin-1e-6 or box[2]>w-margin+1e-6 or box[3]>h-margin+1e-6:break
+        if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:break
+        if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):
+            continue
+        return [[round(v,6) for v in box]]
+    return []
+
+
+def face_distance(t,bus,rect):
+    """distance from a band's pin face (the bus's own face) to the band's near edge, um"""
+    f=_bus_geom(t,bus)["face"];w,h=t["outline_um"]
+    return {"S":rect[1],"N":h-rect[3],"W":rect[0],"E":w-rect[2]}[f]
 
 
 def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()):
@@ -424,6 +458,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
                 candidates.append(box)
     if FACE_CROSSING and not any(face_crossing(t,bus,c,width)[0]<0.5 for c in candidates):
         wide=_face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi)
+        if not wide and FACE_HOME:wide=_face_clamped_boxes(t,b,w,h,obstacles,margin,px,py,area)
         if wide:candidates=wide
     if not candidates and scale==1.0:
         candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
@@ -1311,6 +1346,73 @@ def resize_undersized_bands(plan,sidecar,types):
     return out,report
 
 
+def face_home_types(plan):
+    """budgets.cland_face_home_types (types or unsplit base names); [] = no type re-homed"""
+    sel=list((plan.get("budgets") or {}).get("cland_face_home_types") or [])
+    return [tn for tn in sorted(plan.get("partition_types",{})) if tn in sel or tn.split("__")[0] in sel]
+
+
+def rehome_far_bands(plan,sidecar,types=None,far_um=None):
+    """DIE-QC-97 11-10 (fix-only, opt-in: the named types, default budgets.cland_face_home_types).  Every ring band
+    with pin geometry (sidecar-inferred seam/port window OR the type's own declared bus face/window) of
+    >= RELOCATE_MIN_BITS bits that sits more than far_um from its own pin face, or covers less than half of its pin
+    window along the face, is searched again as ONE set: widest first, the old rects of the set are no obstacle, every
+    other band stays a byte-identical obstacle, with FACE_CROSSING and FACE_HOME (clamped corner-window face strip).  A
+    new rect is kept only if it is nearer its face with its crossing within the strip cap, or crosses fewer bits while
+    staying within far_um of its face; otherwise the band keeps its rect, which must
+    then be clear of the bands already moved (else ValueError: no partial plan).  Types not named: byte-identical."""
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING,FACE_HOME
+    types=face_home_types(plan) if types is None else list(types)
+    far=FACE_HOME_FAR_UM if far_um is None else float(far_um)
+    geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING,FACE_HOME)
+    BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING,FACE_HOME="ring_ff",1.0,"all",True,True
+    P=S.Plan(out) if (out.get("die") or {}).get("pg",{}).get("domains") and out.get("partitions") else None
+    try:
+        for tn in types:
+            t=out["partition_types"][tn];bands=t["clock"]["landing_contract"]["bands"]
+            phy=phy_supply_rects(P,tn) if P is not None else []
+            resets=_reset_sites_for_type(out,tn,geoms[tn].get("tree"),t["clock"]["landing_contract"].get("base_type"))
+            tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
+            todo={}
+            for bus in sorted(bands):
+                b=bands[bus]
+                if (bus.startswith("monitor_") or not b.get("rect_um") or b.get("hard_core")
+                        or any(k in b for k in ("rects_um","ff_rect_um","freg_rect_um","native_role_banks"))
+                        or int(b.get("width") or 0)<RELOCATE_MIN_BITS or not _has_type_geom(tt,bus)):continue
+                dist=face_distance(tt,bus,b["rect_um"]);dm,_=face_crossing(tt,bus,b["rect_um"],int(b["width"]))
+                if dist>far+1e-6 or dm>RELOCATE_OFF_WINDOW*int(b["width"]):todo[bus]=(dist,dm)
+            done=set()
+            for bus in sorted(todo,key=lambda k:(-int(bands[k]["width"]),k)):
+                b=bands[bus];dist0,dm0=todo[bus]
+                used=[list(o["rect_um"]) for k,o in bands.items()
+                      if k!=bus and o.get("rect_um") and (k not in todo or k in done)]
+                try:nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
+                except ValueError:nb=None
+                ok=False
+                if nb is not None:
+                    dist1=face_distance(tt,bus,nb["rect_um"]);dm1,cap1=face_crossing(tt,bus,nb["rect_um"],int(b["width"]))
+                    # nearer its face without crossing more than the strip holds, or fewer crossings while staying
+                    # within far_um of the face (never trade a near-face band for a far one)
+                    ok=((dist1<dist0-1e-6 and dm1<=max(dm0,cap1)+1e-6) or
+                        (dm1<dm0-0.5 and dist1<=max(dist0,far)+1e-6))
+                if not ok:
+                    if any(_rect_overlap(b["rect_um"],o) for o in used):
+                        raise ValueError(f"{tn}.{bus}: no nearer face band and its old rect {b['rect_um']} now overlaps "
+                                         "a re-homed band")
+                    done.add(bus);continue
+                if "ring_place" in b:nb["ring_place"]=b["ring_place"]
+                nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
+                          resize="DIE-QC-97 face home: band re-sited at its own pin face (corner-window clamp)")
+                report.append(dict(type=tn,bus=bus,old_rect_um=list(b["rect_um"]),new_rect_um=nb["rect_um"],
+                                   face_um=[round(dist0,3),round(dist1,3)],crossing_bits=[round(dm0,1),round(dm1,1)],
+                                   hop_um=nb["max_pin_to_band_hop_um"]))
+                bands[bus]=nb;done.add(bus)
+    finally:
+        BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING,FACE_HOME=saved
+    return out,report
+
+
 RELOCATE_MIN_BITS=64        # DIE-QC-97: narrow control bands are not worth a move
 RELOCATE_OFF_WINDOW=0.5     # relocate when more than this fraction of the bus bits lie outside the band's face span
 
@@ -1391,10 +1493,17 @@ if __name__=="__main__":
     import argparse
     ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands (resize-bands) or fill "
                                "FAIL bands with multi-rect bands (fill-bands)")
-    ap.add_argument("cmd",choices=["resize-bands","fill-bands"]);ap.add_argument("plan");ap.add_argument("sidecar")
-    ap.add_argument("--types",required=True);ap.add_argument("--out",required=True)
+    ap.add_argument("cmd",choices=["resize-bands","fill-bands","face-home"]);ap.add_argument("plan");ap.add_argument("sidecar")
+    ap.add_argument("--types",help="comma list (face-home default: budgets.cland_face_home_types)");ap.add_argument("--out",required=True)
     ap.add_argument("--band-reserve",default="padded",choices=BAND_MODES,help="fill-bands: reserve mode (default padded)")
     a=ap.parse_args()
+    if a.cmd=="face-home":
+        new,rep=rehome_far_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(",") if a.types else None)
+        open(a.out,"w").write(json.dumps(new,indent=1))
+        for r in rep:print("OT_BAND_HOME",json.dumps(r))
+        print(f"OT_BAND_HOME {len(rep)} bands re-homed")
+        raise SystemExit(0)
+    if not a.types:ap.error("--types is required")
     if a.cmd=="fill-bands":
         new,rep=fill_failed_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","),a.band_reserve)
         open(a.out,"w").write(json.dumps(new,indent=1))
