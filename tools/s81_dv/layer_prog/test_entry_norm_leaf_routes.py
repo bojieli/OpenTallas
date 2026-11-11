@@ -205,7 +205,7 @@ def test_lo_send_takes_the_leaf_value_and_default_keeps_the_constant():
     base = VP.leg_program(1, 'W', 15, list(range(16)), leaf=2)
     wide = VP.leg_program(1, 'W', 15, list(range(16)), leaf=2, lo_after_ctl=30)
     assert base['sends'][0]['cycle'] != wide['sends'][0]['cycle']
-    assert emit(None) == emit(vpx_routes([15, 15, 15, 15, 15]))
+    assert emit(None) == emit(vpx_routes([VP.LO_AFTER_CTL] * 5))     # S81-XTIER-FIX: the bound form's value (xrt 16)
     assert emit(vpx_routes([9, 9, 30, 9, 9])) != emit(None)
     with pytest.raises(ValueError, match='no slice'):
         emit({'u_s_9N': dict(lo_after_ctl=[1] * 5)})

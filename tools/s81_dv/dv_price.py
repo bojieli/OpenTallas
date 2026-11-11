@@ -54,7 +54,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
+sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 from throughput import accepted_cost as ac          # noqa: E402
+import dv_layer_compile as DLC                      # noqa: E402  (S81-XTIER-FIX: one source for the norm / xfin edges)
 
 TP = ROOT / 'results/arch/token_path_20261009'
 LEDGER = ROOT / 'results/arch/accepted_cost_ledger_1013.json'
@@ -66,18 +68,22 @@ HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 
 # measured (tb_s81dv_xfin16, results/rtl/s81_dv_1016): last partial -> rstd 234 cycles with the sequenced dataflow finish
 # vs 171 with the parallel tree the hub's price already contains -> +63 on every full-h norm (rstd precedes the matvec:
 # norm-after-matvec is AGENTS level 6, excluded, so this latency is on the critical path)
-FINISH_SEQ_EXTRA = 234 - 171
-LEAF_PARTIAL_EXTRA = (112 + 4 + 5) - 100
-LEAF_SCALE_EXTRA = (59 + 4 * 4 + 4) - 76
+# S81-XTIER-FIX 11-11: the three terms now read the compiler's current values (dv_layer_compile BEAT / XFIN) instead of
+# the 10-16 copies: last partial -> rstd 261 (FORM-NF 16-slice latest, was 234), go -> partial NORMR 117 (SS34, was the
+# NORM-imm 112), collector 5 + the bound xrt p face landing (xtier_land, 6 on the die).  +27 / +6 cycles per full-h norm.
+FINISH_SEQ_EXTRA = DLC.XFIN['last_partial_to_rstd'] - 171
+LEAF_PARTIAL_EXTRA = (DLC.BEAT['go_to_partial_normr'] + DLC.XFIN['dl'] + DLC.XFIN['collector']) - 100
+LEAF_SCALE_EXTRA = DLC.XFIN['rstd_to_xq_ring'] - 76
 # RTL-BUILD-S81 (owner 0dv 10-18): mix4_half deleted; the Engram mix is the in-slice op ENG (ve beat sub-leaf + xfin ENG
 # + ot_s81sl_eg scalar finish; results/arch/s81_dv_1016/p4j/engram_mix_verdict.json build_plan.cycle_estimate).  With
 # --eng-slice the eng.* chain nodes are REPLACED (absolute, not a hub delta) by the slice-op terms; ESTIMATES except
 # ve reduce 129 / add 44 (measured tb_s81sl_ve) until the slice composition bench measures them:
-#   eng.hh   = ve reduce 129 (meas.) + partial -> xfin DL 4 + collector 5           = 138
+#   eng.hh   = ve reduce 129 (meas.) + partial -> xfin DL 4 + collector 5 + e face landing (bound xrt 1) = 139
 #   eng.dot  = 0: dd = csum((h*w)*k) is summed in the same ve reduce pass as hh / kk
 #   eng.gate = exchange 111 + finish 270 + scalar chain 175 + gate -> leaves 8      = 564 (est.)
 #   eng.add  = ve add 44 (meas.) + write-back 11                                    = 55
-ENG_SLICE_EST = {'eng.hh': 138.0, 'eng.dot': 0.0, 'eng.gate': 564.0, 'eng.add': 55.0}
+ENG_SLICE_EST = {'eng.hh': float(129 + DLC.XFIN['dl'] + DLC.XFIN_COLLECTOR_XR + DLC.XTIER.face_edges('e')),
+                 'eng.dot': 0.0, 'eng.gate': 564.0, 'eng.add': 55.0}
 ENG_SLICE = False
 
 

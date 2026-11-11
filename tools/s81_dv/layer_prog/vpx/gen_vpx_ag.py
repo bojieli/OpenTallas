@@ -53,7 +53,8 @@ def gen(fx, out, mut='none', sa=0, sb=14, op='a_allgather'):
     out.mkdir(parents=True, exist_ok=True)
     stim, exp = [], dict(schema='opentallas.s81_dv.vpx_ag_expect.v1', mut=mut, sa=sa, sb=sb, op=op,
                          consts=dict(CFG_AT=LV.CFG_AT, LO_AFTER_CTL=LV.LO_AFTER_CTL, SEND_AFTER_GO=LV.SEND_AFTER_GO,
-                                     RX_WR_AFTER_PIN=LV.RX_WR_AFTER_PIN, period=LV.beat_period()))
+                                     RX_WR_AFTER_PIN=LV.RX_WR_AFTER_PIN, period=LV.beat_period()),
+                         xtier=LV._XT.form())      # S81-XTIER-FIX: the bound u_xr form (run_vpx_ag.sh checks the defines)
     dies = dict(A=dict(port=0, sid=sa, rank=0, dir='W', peer='B', psid=sb, rb_dir='E'),
                 B=dict(port=1, sid=sb, rank=3, dir='E', peer='A', psid=sa, rb_dir='W'))
     P = LV.beat_period()

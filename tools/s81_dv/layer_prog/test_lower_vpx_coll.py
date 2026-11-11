@@ -33,7 +33,8 @@ class T(unittest.TestCase):
         self.assertFalse(cfg & lov1)
         pins = [c['cycle'] for c in leg['ctl']]
         self.assertEqual(len(pins), len(set(pins)))
-        self.assertEqual(LV.beat_period(), 6)
+        self.assertEqual(LV.beat_period(), 6)           # S81-XTIER-FIX 11-11: 6 on the xr (15) and the bound xrt (16) form
+        self.assertEqual(len({b['cycle'] - a['cycle'] for a, b in zip(leg['sends'], leg['sends'][1:])} - {LV.beat_period()}), 0)
     def test_later_substage_hop_uses_identical_abi(self):
         """Every numbered stage hop is the same rank-local static NEXT circuit, with its own issue dates."""
         class Die:
