@@ -4332,7 +4332,15 @@
     "ot_s81sl_leaf__t60@8",
     "serdes__t13@23",
     "serdes__t4@13",
-    "slice_station__t49@3"
+    "slice_station__t49@3",
+    "col_h9_r2__t1__clce45cab5@28",
+    "ot_s81sl_leaf__t27@12",
+    "ot_s81sl_leaf__t43@8",
+    "ot_s81sl_leaf__t53__cl958451dd@12",
+    "ot_s81sl_leaf__t61@8",
+    "ot_s81sl_leaf__t68@6",
+    "ot_s81sl_leaf__t72@9",
+    "svc_hi_dsdv_svc_pvso_entry__t1@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -17417,7 +17425,8 @@
     "epyc2",
     "epyc8"
    ],
-   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h."
+   "note_kw43h": "KW-FIX-43 11-10 19:4x COORD: (A KW43-110) epyc4 = gen host for hbm + qwen_kvsys (inputs staged from epyc7, one rsync -aHR, 24 roots); (19:32) place hosts + intel2 (admits 41 GB, no waiters), epyc2 off hosts/gen_hosts while REFUSED on disk (AUTOCLEAN-12). Revert: hosts/gen_hosts <- *_prev_kw43h.",
+   "note_kw44_userbus_1111": "KW-FIX-44 11-11 03:4x UTC (COORD 19:3x): INFRA batch relaunch, 14 rows failed on epyc4 03:10-03:25 UTC (logind CreateSession failed -> no XDG_RUNTIME_DIR -> ot-heavy systemd-run --user 'Failed to connect to user scope bus', or docker rc 125 in the same overload) + svc_hi_dsdv entry earlyoom on epyc8 (sealed-job undercount, SEALDOCK_1111). ot-heavy USERBUS_1111 falls back to /run/user/UID/bus."
   },
   "s81_head": {
    "enabled": true,
