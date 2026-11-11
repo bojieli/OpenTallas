@@ -1,0 +1,830 @@
+{
+ "schema": "plan_path_delta.v1",
+ "base": "head-93 bp_v5 source_plan.json",
+ "diffs": [
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    19,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_24",
+   "new": "rst_rl_151"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    19,
+    "source_instance"
+   ],
+   "old": "u_rrl_24",
+   "new": "u_rrl_151"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    19,
+    "xy_um",
+    1
+   ],
+   "old": 405.624,
+   "new": 405.0
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    20,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_67",
+   "new": "rst_rl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    20,
+    "source_instance"
+   ],
+   "old": "u_rrl_67",
+   "new": "u_rrl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    20,
+    "xy_um",
+    0
+   ],
+   "old": 68.64,
+   "new": 63.24
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    20,
+    "xy_um",
+    1
+   ],
+   "old": 351.52,
+   "new": 316.6053
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    21,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_69",
+   "new": "rst_rl_82"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    21,
+    "source_instance"
+   ],
+   "old": "u_rrl_69",
+   "new": "u_rrl_82"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    21,
+    "xy_um",
+    0
+   ],
+   "old": 376.352,
+   "new": 379.592
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    21,
+    "xy_um",
+    1
+   ],
+   "old": 289.429,
+   "new": 275.3997
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    22,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_56",
+   "new": "rst_rl_156"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    22,
+    "source_instance"
+   ],
+   "old": "u_rrl_56",
+   "new": "u_rrl_156"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    22,
+    "xy_um",
+    0
+   ],
+   "old": 376.352,
+   "new": 459.512
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    22,
+    "xy_um",
+    1
+   ],
+   "old": 602.123,
+   "new": 531.923
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    23,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_38",
+   "new": "rst_rl_160"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    23,
+    "source_instance"
+   ],
+   "old": "u_rrl_38",
+   "new": "u_rrl_160"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    24,
+    "source_copy_from_net"
+   ],
+   "old": "rst_rl_75",
+   "new": "rst_rl_110"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    24,
+    "source_instance"
+   ],
+   "old": "u_rrl_75",
+   "new": "u_rrl_110"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_contract",
+    "pins",
+    24,
+    "xy_um",
+    1
+   ],
+   "old": 553.675,
+   "new": 540.0003
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    0,
+    "raw"
+   ],
+   "old": "rst_rl_34",
+   "new": "rst_rl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    1,
+    "raw"
+   ],
+   "old": "rst_rl_11",
+   "new": "rst_rl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    2,
+    "raw"
+   ],
+   "old": "rst_rl_63",
+   "new": "rst_rl_118"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    3,
+    "raw"
+   ],
+   "old": "rst_rl_14",
+   "new": "rst_rl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    4,
+    "raw"
+   ],
+   "old": "rst_rl_59",
+   "new": "rst_rl_164"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    5,
+    "raw"
+   ],
+   "old": "rst_rl_59",
+   "new": "rst_rl_118"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    6,
+    "raw"
+   ],
+   "old": "rst_rl_61",
+   "new": "rst_rl_118"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    7,
+    "raw"
+   ],
+   "old": "rst_rl_49",
+   "new": "rst_rl_164"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    8,
+    "raw"
+   ],
+   "old": "rst_rl_36",
+   "new": "rst_rl_164"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    9,
+    "raw"
+   ],
+   "old": "rst_rl_57",
+   "new": "rst_rl_110"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    10,
+    "raw"
+   ],
+   "old": "rst_rl_41",
+   "new": "rst_rl_181"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    11,
+    "raw"
+   ],
+   "old": "rst_rl_46",
+   "new": "rst_rl_157"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    12,
+    "raw"
+   ],
+   "old": "rst_rl_41",
+   "new": "rst_rl_181"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_local_resets",
+    13,
+    "raw"
+   ],
+   "old": "rst_rl_26",
+   "new": "rst_rl_153"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ia",
+    "stages",
+    0,
+    "raw_reset"
+   ],
+   "old": "rst_rl_45",
+   "new": "rst_rl_160"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ia",
+    "stages",
+    1,
+    "raw_reset"
+   ],
+   "old": "rst_rl_41",
+   "new": "rst_rl_164"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ia",
+    "stages",
+    2,
+    "raw_reset"
+   ],
+   "old": "rst_rl_49",
+   "new": "rst_rl_181"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ib",
+    "stages",
+    0,
+    "raw_reset"
+   ],
+   "old": "rst_rl_70",
+   "new": "rst_rl_114"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ib",
+    "stages",
+    1,
+    "raw_reset"
+   ],
+   "old": "rst_rl_14",
+   "new": "rst_rl_69"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "coll_ib",
+    "stages",
+    2,
+    "raw_reset"
+   ],
+   "old": "rst_rl_11",
+   "new": "rst_rl_42"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "coll_oa",
+    "stages",
+    0,
+    "raw_reset"
+   ],
+   "old": "rst_rl_39",
+   "new": "rst_rl_161"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "coll_oa",
+    "stages",
+    1,
+    "raw_reset"
+   ],
+   "old": "rst_rl_41",
+   "new": "rst_rl_181"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "coll_ob",
+    "stages",
+    0,
+    "raw_reset"
+   ],
+   "old": "rst_rl_31",
+   "new": "rst_rl_114"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "coll_ob",
+    "stages",
+    1,
+    "raw_reset"
+   ],
+   "old": "rst_rl_48",
+   "new": "rst_rl_83"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "clock",
+    "sink_bins_file"
+   ],
+   "old": "<absent>",
+   "new": "physical/die_plan/s81_head/plan_of_record/sink_bins/hd_mesh.json"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    0,
+    "instance"
+   ],
+   "old": "u_rrl_24",
+   "new": "u_rrl_151"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    0,
+    "net"
+   ],
+   "old": "rst_rl_24",
+   "new": "rst_rl_151"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    0,
+    "xy_um",
+    1
+   ],
+   "old": 405.624,
+   "new": 405.0
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    1,
+    "instance"
+   ],
+   "old": "u_rrl_67",
+   "new": "u_rrl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    1,
+    "net"
+   ],
+   "old": "rst_rl_67",
+   "new": "rst_rl_94"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    1,
+    "xy_um",
+    0
+   ],
+   "old": 73.44,
+   "new": 68.04
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    1,
+    "xy_um",
+    1
+   ],
+   "old": 353.5147,
+   "new": 318.6
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    2,
+    "instance"
+   ],
+   "old": "u_rrl_69",
+   "new": "u_rrl_82"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    2,
+    "net"
+   ],
+   "old": "rst_rl_69",
+   "new": "rst_rl_82"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    2,
+    "xy_um",
+    0
+   ],
+   "old": 375.84,
+   "new": 379.08
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    2,
+    "xy_um",
+    1
+   ],
+   "old": 289.4293333333334,
+   "new": 275.4
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    3,
+    "instance"
+   ],
+   "old": "u_rrl_56",
+   "new": "u_rrl_156"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    3,
+    "net"
+   ],
+   "old": "rst_rl_56",
+   "new": "rst_rl_156"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    3,
+    "xy_um",
+    0
+   ],
+   "old": 375.84,
+   "new": 459.0
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    3,
+    "xy_um",
+    1
+   ],
+   "old": 604.8,
+   "new": 534.6
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    4,
+    "instance"
+   ],
+   "old": "u_rrl_38",
+   "new": "u_rrl_160"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    4,
+    "net"
+   ],
+   "old": "rst_rl_38",
+   "new": "rst_rl_160"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    5,
+    "instance"
+   ],
+   "old": "u_rrl_75",
+   "new": "u_rrl_110"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    5,
+    "net"
+   ],
+   "old": "rst_rl_75",
+   "new": "rst_rl_110"
+  },
+  {
+   "path": [
+    "partition_types",
+    "hd_mesh",
+    "reset_start_raw_exports",
+    5,
+    "xy_um",
+    1
+   ],
+   "old": 553.6746666666667,
+   "new": 540.0
+  }
+ ]
+}

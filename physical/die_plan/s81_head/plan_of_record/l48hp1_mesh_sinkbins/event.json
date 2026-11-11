@@ -1,0 +1,19 @@
+{
+ "event": "l48hp1_mesh_sinkbins (DIE-LAYOUT-KVHEAD 2026-11-11, for HEAD-94 hd_mesh re-form, post-cut)",
+ "stage": "S2 type clock (hd_mesh), plan delta only; DO_NOT_COUNT",
+ "base_plan": "head-93 bp_v5 source_plan.json (md5 989575025d80543cc1d3f5461038c97d; = l48hp1_head_cut1111 compose input)",
+ "event_plan_md5": "26c1a9c27060c870520d1ed32fe60375",
+ "apply": [
+  "partition_types.hd_mesh.clock.sink_bins_file = physical/die_plan/s81_head/plan_of_record/sink_bins/hd_mesh.json (qc_hc0_bins_event pattern; tap_target_sinks 1000 / tap_radius_um 180 unchanged)",
+  "then run mesh_resel.py BASE EVENT REPO on the composed plan: re-selects the 6 reset_start_raw exports + landing_contract pin sources (pin offset kept) and the stage/local-reset raw refs on the re-solved reset tree (compose.py RAWSEL / rt_resel.py rule). delta_hd_mesh_sinkbins.json lists the 65 resulting path diffs vs bp_v5; all under partition_types.hd_mesh"
+ ],
+ "sink_bins": {"source": "head-92 ds8d hd_mesh 3_place.odb sha256 26e2165d8e2c20194df573a9269b485eefe7040fbab1d23b3e0ef5469603b56d", "registers": 59311, "bins": 1884, "bin_um": 10.8, "sha256": "e5bdb51eb655ffeb4223955b23669f08a5819f5404ae58890cd9c67b20058c2e"},
+ "taps": {
+  "before": {"count": 19, "planned_max": 517, "real_max_nearest": 9633, "over_1500": 11, "reach_max_um": 202, "ds8d_kit_loads": "2..7342, 11 taps over the 1500 cap"},
+  "after": {"count": 79, "planned_max": 1495, "real_max_nearest": 1707, "over_1500_nearest": 2, "reach_max_um": 137, "note": "nearest-tap count; kit clock_taps.tcl caps 1500 per tap and rebalances"}
+ },
+ "G0": {"base_errors": 153, "event_errors": 153, "new": 0, "resolved": 0, "note": "without the reset re-select G0 shows 36 new clock_landings errors (stale rst_start_raw sources) - the re-select is required"},
+ "EQ": "RTL and core netlists untouched. Changed: clock tap ports/sites and the generated reset relay tree (relay count/positions) + raw-reset source selection at the same depth. Logic equivalence by construction for the clock taps; the reset tree is regenerated infrastructure - the in-kit LEC of the composed kit is the proof (not run here).",
+ "explorer": "explorer_type_hd_mesh_before_after.png (core placement unchanged; route_supply identical, open_V 3.36 is the empty core_conns artefact); explorer does not draw density taps -> hd_mesh_taps_before_after.png",
+ "not_in_delta": "coll_ib landing fanout split: the 514-b W-face landing (y 120-330) feeds the densest register field (old tap at (18,208) carried 8458 regs); with the bins file 12 taps share it at <=1500. A structural fanout split of the coll_ib reader stages is an RTL/landing change for HEAD-94's re-form, not this plan delta."
+}
