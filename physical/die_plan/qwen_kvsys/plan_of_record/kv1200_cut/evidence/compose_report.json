@@ -1,0 +1,173 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/kw43/kvr2/plan_c.json",
+ "base_md5": "92370701ae3b0a10f0b556616179830b",
+ "out_md5": "1f387181617cd1e52474156f1ca5699d",
+ "overlays": {
+  "kv3_hg": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v3": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v3": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v4": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v5": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v6": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v7": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v8": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1p2": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1p3": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1p4": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1p5": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hg_v1p6": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v1__cl42bc8b12": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v1__cl141fc26e": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v2__cl2862d491": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hgi_v2__cle0015330": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/plan_c.json"
+  ],
+  "kv3_hub_C": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_kvfix1/plan_c.json"
+  ],
+  "kv3_hub_Wi": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_kvfix1/plan_c.json",
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_sys_c": [
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_kvfix1/plan_c.json"
+  ],
+  "kv3_pv_v2": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v4": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v7": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v1": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v3": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v1n": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v2n": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v3n": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ],
+  "kv3_pv_v4n": [
+   "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json"
+  ]
+ },
+ "copied_files": [
+  [
+   "pins/kv3_head_eighth_e2_pins_r26q4s.json",
+   "/srv/opentallas-scratch2/claude/kv-plan-2/plan_e2s2/pins/kv3_head_eighth_e2_pins_r26q4s.json"
+  ]
+ ],
+ "step1_types": [
+  "kv3_io_cor",
+  "kv3_io_cor_v1",
+  "kv3_sys_SD_v1",
+  "kv3_io_ft",
+  "kv3_sys_SD"
+ ],
+ "step2_types": [
+  "kv3_io_cor",
+  "kv3_io_cor_v1",
+  "kv3_sys_SD_v1"
+ ],
+ "step3_phyrev": [
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_fhN"
+  ],
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_piN"
+  ],
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_piN_d1"
+  ],
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_piN_d2"
+  ],
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_piN_d3"
+  ],
+  [
+   "kv3_phy",
+   "bus:o_phy_Q__sN_rhN"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_fhN"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_piN"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_piN_d1"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_piN_d2"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_piN_d3"
+  ],
+  [
+   "kv3_phy_v1",
+   "bus:o_phy_Q__sN_rhN"
+  ]
+ ],
+ "sheets": {},
+ "deltas": [],
+ "moves": [],
+ "moved_types": []
+}
