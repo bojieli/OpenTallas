@@ -226,7 +226,26 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     wire start;
     wire due, deadline_miss;
     wire token_retire; reg[30:0]job_identity;
-    always@(posedge ck)if(start)job_identity<=mt_tag;
+    // OT_S81HD_CTL_START_Q (HEAD-92/CTL 11-10, hd_ctl cycle form, +1 pin cycle approved by COORD): u_issue keeps the
+    // combinational START for its own state (job_active / merge timer / fault / dates); ONE flop start_q beside u_issue
+    // drives every wide consumer (job_identity 31, nbeat, busy/n, tag FIFO tfe/tfw/tfn/st1, fset[5]), so the
+    // op_q1 -> blk -> tk_pop -> token_retire -> issue_o cone ends at one D pin instead of a buffer tree.
+    // The stream (x_o go/xv/data), tag FIFO push and job identity move +1 cycle after the START date.  In the cycle
+    // after START (start_q high) job_identity still holds the previous job, so token_retire is masked there; nbeat
+    // still reads NB there, but job_active_o is already set and token_retire is masked, so loaded_ready cannot re-issue.
+    // Default (define off) is the original circuit, cycle for cycle.
+`ifdef OT_S81HD_CTL_START_Q
+    reg start_q;
+    always @(posedge ck or negedge rr[1]) if (!rr[1]) start_q <= 1'b0; else start_q <= start;
+`ifdef OT_S81HD_CTL_START_Q_MUT
+    wire start_s = start_q, tr_mask = 1'b0;                          // must-fail mutant: no retire mask in the start_q cycle
+`else
+    wire start_s = start_q, tr_mask = start_q;
+`endif
+`else
+    wire start_s = start, tr_mask = 1'b0;
+`endif
+    always@(posedge ck)if(start_s)job_identity<=mt_tag;
     reg [15:0] c_iss_off,c_iss_per,c_merge_dl;
     wire schedule_fault;
     ot_s81hd_static_issue #(.MUT_MODE(MUT_STATIC), .DATE_SPLIT(CTL_PRE)) u_issue(
@@ -236,7 +255,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
       .issue_o(start),.job_active_o(job_active_o),.due_o(due),.fault_o(schedule_fault));
     always @(posedge ck or negedge rr[1])
         if (!rr[1]) nbeat <= 7'd0;
-        else if (start) nbeat <= 7'd0;
+        else if (start_s) nbeat <= 7'd0;
         else if (wv2) nbeat <= nbeat + 7'd1;
     // ================================================================== X STORE (4 x 64x512 macros)
     wire go0 = busy && n == 14'd0;
@@ -261,7 +280,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     reg st1;
     always @(posedge ck or negedge rr[2])
         if (!rr[2]) begin busy <= 1'b0; n <= 14'd0; end
-        else if (start) begin busy <= 1'b1; n <= 14'd0; end
+        else if (start_s) begin busy <= 1'b1; n <= 14'd0; end
         else if (busy) begin n <= n + 14'd1; if (n == 14'(NEND - 1)) busy <= 1'b0; end
     // one-hot slice selects, 8 kept copies each (one per 32 output bits)
 `ifdef OT_S81HD_CTL_MUT_SLICE
@@ -349,8 +368,8 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     wire nsf_fire;
     // the entry is written one edge after start (kept write-enable copies); mt_tag is stable until the next message
     wire [3:0] tfe;
-    ot_s81hd_kf u_tfe0 (.ck(ck), .d(start && !tfw), .q(tfe[0])); ot_s81hd_kf u_tfe1 (.ck(ck), .d(start && !tfw), .q(tfe[1]));
-    ot_s81hd_kf u_tfe2 (.ck(ck), .d(start && tfw), .q(tfe[2]));  ot_s81hd_kf u_tfe3 (.ck(ck), .d(start && tfw), .q(tfe[3]));
+    ot_s81hd_kf u_tfe0 (.ck(ck), .d(start_s && !tfw), .q(tfe[0])); ot_s81hd_kf u_tfe1 (.ck(ck), .d(start_s && !tfw), .q(tfe[1]));
+    ot_s81hd_kf u_tfe2 (.ck(ck), .d(start_s && tfw), .q(tfe[2]));  ot_s81hd_kf u_tfe3 (.ck(ck), .d(start_s && tfw), .q(tfe[3]));
     always @(posedge ck) begin
         if (tfe[0]) tf0[15:0] <= mt_tag[15:0]; if (tfe[1]) tf0[30:16] <= mt_tag[30:16];
         if (tfe[2]) tf1[15:0] <= mt_tag[15:0]; if (tfe[3]) tf1[30:16] <= mt_tag[30:16];
@@ -358,11 +377,11 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     always @(posedge ck or negedge rr[3])
         if (!rr[3]) begin tfn <= 2'd0; tfw <= 1'b0; tfr <= 1'b0; tfr_a <= 1'b0; tfr_b <= 1'b0; tfr_c <= 1'b0; upos <= 21'd0; st1 <= 1'b0; end
         else begin
-            st1 <= start;
-            if (start) tfw <= ~tfw;
+            st1 <= start_s;
+            if (start_s) tfw <= ~tfw;
             if (st1 && !mt_v) upos <= upos + 21'd1;
             if (nsf_fire && tfn != 2'd0) begin tfr <= ~tfr; tfr_a <= ~tfr_a; tfr_b <= ~tfr_b; tfr_c <= ~tfr_c; end
-            tfn <= tfn + {1'b0, start && tfn != 2'd2} - {1'b0, nsf_fire && tfn != 2'd0};
+            tfn <= tfn + {1'b0, start_s && tfn != 2'd2} - {1'b0, nsf_fire && tfn != 2'd0};
         end
     wire [30:0] tf_head = {tfr_c ? tf1[30:21] : tf0[30:21], tfr_b ? tf1[20:11] : tf0[20:11], tfr_a ? tf1[10:0] : tf0[10:0]};
     // ================================================================== N/S FINAL
@@ -626,7 +645,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     wire blk = window_open || o2 || o3 || p1_op;                    // window open or about to open
     reg htv0_q;
     assign tk_pop = tk_hv && !f5v && !blk && !htv0_q;
-    assign token_retire=tk_pop && tk_q[60:40]==job_identity[20:0] && {tk_q[152:151],tk_q[39:32]}==job_identity[30:21];
+    assign token_retire=tk_pop && !tr_mask && tk_q[60:40]==job_identity[20:0] && {tk_q[152:151],tk_q[39:32]}==job_identity[30:21];
     assign hf_pop = hf_hv && !f5v && !blk && !tk_pop && !sd_pop && !hs_pop && cslot;
     assign sel_fx = f5v && x5;
     wire [16:0] sf_c, st_c, sh_c, sd_c;
@@ -714,7 +733,7 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
         fset[2]  = wv2 && nbeat != 7'd0 && (t2[31] != mt_v || t2[30:0] != mt_tag);   // tag changes inside a message
         fset[3]  = bv && (isnan(n_bits) || isnan(s_bits)) || (mg1 && mchk_nan);
         fset[4]  = sni_q[564] || ssi_q[564];                           // spine fault in
-        fset[5]  = (nsf_fire && tfn == 2'd0) || (start && tfn == 2'd2) || (nrv && nh && !nsf_fire) || (srv && sh && !nsf_fire);
+        fset[5]  = (nsf_fire && tfn == 2'd0) || (start_s && tfn == 2'd2) || (nrv && nh && !nsf_fire) || (srv && sh && !nsf_fire);
         fset[6]  = mg1 && mchk_tag;
         fset[7]  = mg1 && mchk_cpy;
         fset[8]  = |sl_ovw;
