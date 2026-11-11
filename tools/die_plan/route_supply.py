@@ -99,6 +99,7 @@ FIX = {
     ("open", "V"): "narrower/reshaped outline or lower cell density (open-area demand)",
     ("ring", "H"): "landing ring form (stacked / y-column ring, or split the landing)",
     ("ring", "V"): "landing ring form (stacked / y-column ring, or split the landing)",
+    ("dens", "A"): "cell density: grow / reshape the outline or split the type (cells per soft um2 above the GRT-pass limit)",
 }
 
 
@@ -790,7 +791,62 @@ def _nf(r, d):
 # FLAG thresholds on the region p99 ratio, CALIBRATED on the controls (calib/README in the lane post): the RUDY model
 # is close to measured GRT over hard cores and in streets between hard cores (the S81 M6 class), and over-predicts
 # beside / over SRAM-ROM, in landing rings and in open area (signed / GRT-pass types reach ~2-3 there).
-FLAG_AT = {"core": 1.0, "street": 1.0, "mstreet": 3.0, "mem": 3.0, "ring": 3.0, "open": 3.0, "face": 3.0}
+FLAG_AT = {"core": 1.0, "street": 1.0, "mstreet": 3.0, "mem": 3.0, "ring": 3.0, "open": 3.0, "face": 3.0,
+           # std-cell density (synth cells incl. landing rings / um2 of outline not under a macro), not a track ratio:
+           # QC slice types fail GRT on every layer from 0.424 (hc2) up, GRT-pass up to 0.413 (hc0) and 0.437 (st_b, 20
+           # hard cores); measured on the kit synth_stat + 5_1_grt.log of 184 rows (PLAN-ROUTE-1 11-10)
+           "dens": 0.42}
+
+
+def _base_names(n):
+    """type name, then the landing-cohort / sid bases it was derived from (x__clHASH__clHASH -> x__clHASH -> x)."""
+    out = [n]
+    while True:
+        m = re.match(r"(.+?)(__cl[0-9a-f]{8}|__sid\w+|__v[0-9a-f]{6,})$", out[-1])
+        if not m:
+            return out
+        out.append(m.group(1))
+
+
+def load_cells(P, plan, die, measured_path):
+    """type -> (cells, basis): measured kit synth (exact type, then cohort base), else cells.py plan estimate."""
+    meas = {}
+    try:
+        meas = json.loads(Path(measured_path).read_text()).get(die, {})
+    except (OSError, ValueError, AttributeError):
+        pass
+    est = {}
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import cells as C  # tools/die_plan/cells.py
+        est, _ = C.estimate(P, plan_dir=plan.parent)
+    except Exception as e:  # advisory: no estimate is not an error
+        print(f"# cells.py estimate unavailable: {e}", file=sys.stderr)
+
+    def get(n, has_cores=False):
+        for b in _base_names(n):
+            v = meas.get(b)
+            if v and v.get("cells"):
+                return int(v["cells"]), "measured synth " + (b if b == n else f"{b} (base of {n})")
+        v = est.get(n)
+        if has_cores:
+            # plan / cells.py estimates are FLAT counts incl. the hard cores' own cells (measured synth counts the
+            # type's top only, cores are black boxes): not a soft-area density, so not used
+            return None, ("no measured synth; flat estimate incl. hard cores not used" if v and v[0] else None)
+        if v and v[0]:
+            return int(v[0]), "cells.py " + str(v[1])
+        return None, None
+    return get
+
+
+def add_density(r, t, cb):
+    cells, basis = cb
+    w, h = t["outline_um"]
+    soft = w * h * (1.0 - r.get("macro_area_frac", 0.0))
+    r["cells"], r["cells_basis"], r["soft_um2"] = cells, basis, round(soft, 1)
+    if cells and soft > 0:
+        d = round(cells / soft, 4)
+        r["regions"]["dens_A"] = {"p99": d, "max": d, "hot_bins": 0, "bins": 1}
 
 
 def verdict(r, scale=1.0):
@@ -832,6 +888,8 @@ def main(argv=None):
     ap.add_argument("--views", default=str(Path(__file__).with_name("route_supply_views.json")),
                     help="signed-view blocked-layer table (JSON {views: {module: {lef|obs_top, coverage, src}}})")
     ap.add_argument("--maps", action="store_true", help="write per-type ratio maps (npz)")
+    ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
+                    help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
     repo = Path(a.repo).resolve()
     plan = Path(a.plan)
@@ -867,6 +925,7 @@ def main(argv=None):
     except (OSError, ValueError):
         cfg["views"] = {}
     T = P.get("partition_types", {})
+    cells_of = load_cells(P, plan, die, a.cells)
     names = list(T)
     if a.types:
         want = a.types.split(",")
@@ -881,6 +940,7 @@ def main(argv=None):
         r = analyze_type(n, t, die_dir, repo, conns, cfg)
         if r is None:
             continue
+        add_density(r, t, cells_of(n, bool(t.get("hard_cores"))))
         r["verdict"], r["flag_regions"] = verdict(r, a.flag_ratio)
         if r["flag_regions"]:
             reg, d = r["flag_regions"][0][0].rsplit("_", 1)
@@ -896,7 +956,7 @@ def main(argv=None):
                              -r["worst"]["p99"]))
     hdr = ["die", "type", "verdict", "flag_regions", "worst_region", "dir", "layer", "p99_ratio", "max_ratio", "hot_bins",
            "at_um", "core_H", "core_V", "mem_H", "mem_V", "street_H", "street_V", "ring_H", "ring_V", "open_H",
-           "open_V", "macro_frac", "mem_frac", "model", "need_free_M4", "need_free_M5", "provisional_children", "fix"]
+           "open_V", "cells_per_um2", "cells", "macro_frac", "mem_frac", "model", "need_free_M4", "need_free_M5", "provisional_children", "fix"]
     lines = ["\t".join(hdr)]
     for r in rows:
         w = r["worst"]
@@ -905,7 +965,8 @@ def main(argv=None):
         lines.append("\t".join(map(str, [die, r["type"], r["verdict"],
                                          ",".join(f"{k}:{v}" for k, v in r["flag_regions"]) or "-", w["region"], w["dir"], w["layer"], w["p99"],
                                          w["max"], r["hot_bins"], "%s,%s" % tuple(w["at_um"])] + reg +
-                                    [r["macro_area_frac"], r["mem_area_frac"], r["model"],
+                                    [r["regions"].get("dens_A", {}).get("p99", ""), r.get("cells") or "",
+                                     r["macro_area_frac"], r["mem_area_frac"], r["model"],
                                      _nf(r, "H"), _nf(r, "V"),
                                      ",".join(r["provisional_children"]) or "-", r["fix"]])))
     out = dict(schema=SCHEMA, advisory=True, plan=str(a.plan), die=die,

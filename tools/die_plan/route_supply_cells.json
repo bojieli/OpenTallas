@@ -1,0 +1,1109 @@
+{
+ "schema": "opentallas.route_supply_cells.v1",
+ "note": "MEASURED Yosys synth cell counts (top module, incl. landing rings) of the latest current-plan kit-wave row per type; read-only harvest by PLAN-ROUTE-1 2026-11-10. route_supply.py reads it before tools/die_plan/cells.py estimates.",
+ "hbm": {
+  "hfd_hgi_vms_glue_nw_t": {
+   "cells": 152038,
+   "synth_area_um2": 24552.80748,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/hfd_hgi_vms_glue_nw_t/attempt_11/gen/hfd_hgi_vms_glue_nw_t_bb7727c8971e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a": {
+   "cells": 34050,
+   "synth_area_um2": 42564.47592,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a/attempt_6/gen/hnx_vms_bank_q0_faces__vecd4ae_32e0dfcad68a synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
+   "cells": 34050,
+   "synth_area_um2": 42564.47592,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16/attempt_9/gen/hnx_vms_bank_q0_faces__vecd4ae_512b2172bf16 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_hc_bank128_pair_core__v7d149b37532c": {
+   "cells": 108429,
+   "synth_area_um2": null,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_bank128_pair_core__v7d149b37532c/attempt_2/gen/ot_hbm_hc_bank128_pair_core_7d149b37532c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_hc_bank128_pair_core__v9bf80cdae38d": {
+   "cells": 108429,
+   "synth_area_um2": null,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_bank128_pair_core__v9bf80cdae38d/attempt_6/gen/ot_hbm_hc_bank128_pair_core_9bf80cdae38d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_hc_bank128_pair_first_core": {
+   "cells": 70304,
+   "synth_area_um2": null,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_bank128_pair_first_core/attempt_5/gen/ot_hbm_hc_bank128_pair_first_core_3762e7b21fc5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_hc_root_static__hcp_sys1": {
+   "cells": 49843,
+   "synth_area_um2": 6353.17668,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_root_static__hcp_sys1/attempt_2/gen/ot_hbm_hc_root_static__hcp_sys1_0690dba9b78d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "cells": 89575,
+   "synth_area_um2": 20094.85638,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_idx_rootctl_static_am/attempt_17/gen/ot_hbm_idx_rootctl_static_am_d3147e0cfabb synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_idx_tail_native__v9496b22d4b49": {
+   "cells": 53119,
+   "synth_area_um2": 6280.50996,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_idx_tail_native__vf56d1f72f3f3": {
+   "cells": 53119,
+   "synth_area_um2": 6280.50996,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "cells": 75816,
+   "synth_area_um2": 11596.11552,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_idx_vm_query_static_n12/attempt_10/gen/ot_hbm_idx_vm_query_static_n12_f99439275b63 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "cells": 45214,
+   "synth_area_um2": 10695.2769,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_sm_vm_wr_q_t_lanes4/attempt_5/gen/ot_hbm_sm_vm_wr_q_t_lanes4_2e36b328fac9 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_su_static_pgslice_lg__pretree": {
+   "cells": 168721,
+   "synth_area_um2": 20657.10438,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_su_static_pgslice_lg__pretree/gen/ot_hbm_su_static_pgslice_lg__pretree_b51f26423130 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "cells": 17967,
+   "synth_area_um2": 64725.39324,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_static_sfustore_hw/attempt_5/gen/ot_hbm_su_static_sfustore_hw_14918cf926c8 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__v700685": {
+   "cells": 128752,
+   "synth_area_um2": 17849.43378,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_svc_vm_kshare_splitstrap__v700685/attempt_6/gen/ot_hbm_svc_vm_kshare_splitstrap__v700685_5d7908703d6a synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
+   "cells": 128752,
+   "synth_area_um2": 17849.43378,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_svc_vm_kshare_splitstrap__v8e478a/attempt_6/gen/ot_hbm_svc_vm_kshare_splitstrap__v8e478a_3d378bacc6c1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_coll_gq_land__v25778639ea1b": {
+   "cells": 46901,
+   "synth_area_um2": 6035.2452,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_gq_land__v25778639ea1b/gen/ot_hgi_coll_gq_land_25778639ea1b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_coll_gq_land__vac72b8c34f86": {
+   "cells": 46901,
+   "synth_area_um2": 6035.2452,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_gq_land__vac72b8c34f86/gen/ot_hgi_coll_gq_land_ac72b8c34f86 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_coll_tkm_m_tp192__root": {
+   "cells": 47636,
+   "synth_area_um2": 31501.5986,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_coll_tkm_m_tp192__root/attempt_12/gen/ot_hgi_coll_tkm_m_tp192__root_b07a1cb60b9b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "cells": 74263,
+   "synth_area_um2": 306794.18162,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sfu_programme_store_r10/attempt_12/gen/ot_hgi_sfu_programme_store_r10_67927302fa18 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "cells": 12099,
+   "synth_area_um2": 33248.48994,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sm_xload_cl2_bfqg/attempt_6/gen/ot_hgi_sm_xload_cl2_bfqg_733b36af1fdf synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "cells": 73909,
+   "synth_area_um2": 13953.29454,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_sm_xload_cl2_ctlx/attempt_2/gen/ot_hgi_sm_xload_cl2_ctlx_456621d51445 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hnx_fused_hub_n4ext": {
+   "cells": 174867,
+   "synth_area_um2": 28762.59704,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hnx_fused_hub_n4ext/attempt_16/gen/ot_hnx_fused_hub_n4ext_d54df49f3760 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hnx_fused_tnode": {
+   "cells": 14321,
+   "synth_area_um2": 6532.26566,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hnx_fused_tnode/attempt_2/gen/ot_hnx_fused_tnode_50055cbac918 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_hnx_idxn_keybuf_slice": {
+   "cells": 10508,
+   "synth_area_um2": 22256.06448,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hnx_idxn_keybuf_slice/attempt_4/gen/ot_hnx_idxn_keybuf_slice_cf0fd580a934 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "q_spt1": {
+   "cells": 167322,
+   "synth_area_um2": 30873.19374,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/q_spt1/attempt_3/gen/q_spt1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "q_spu1": {
+   "cells": 152807,
+   "synth_area_um2": 25930.6758,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/q_spu1/attempt_7/gen/q_spu1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "q_spu1__physical_v1": {
+   "cells": 134836,
+   "synth_area_um2": 22815.68796,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/q_spu1__physical_v1/attempt_9/gen/q_spu1__physical_v1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "vsN4": {
+   "cells": 2,
+   "synth_area_um2": 25789.30812,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/vsN4/attempt_3/gen/vsN4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  }
+ },
+ "qwen_compute": {
+  "coll_ft__cl78c7b300": {
+   "cells": 65148,
+   "synth_area_um2": 8996.12244,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ft__cl78c7b300/attempt_13/gen/coll_ft__cl78c7b300 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "coll_ft__cla4a25d77": {
+   "cells": 65861,
+   "synth_area_um2": 9098.34282,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ft__cla4a25d77/attempt_15/gen/coll_ft__cla4a25d77 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "coll_s": {
+   "cells": 107512,
+   "synth_area_um2": 180841.23154,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_s/attempt_19/gen/coll_s synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "coll_ucie": {
+   "cells": 102896,
+   "synth_area_um2": 619500.46752,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ucie/attempt_10/gen/coll_ucie synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "glue": {
+   "cells": 200408,
+   "synth_area_um2": 55085.42476,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "native59": {
+   "cells": 260452,
+   "synth_area_um2": 107030.43864,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/native59/attempt_9/gen/native59 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_ctl__cl372cea1c": {
+   "cells": 322620,
+   "synth_area_um2": 45843.54408,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_ctl__cl372cea1c/attempt_5/gen/sle_ctl__cl372cea1c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_ctl__cl67434795": {
+   "cells": 323298,
+   "synth_area_um2": 45993.52854,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_ctl__cl67434795/attempt_17/gen/sle_ctl__cl67434795 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_ctl__cla4f6f12f": {
+   "cells": 325200,
+   "synth_area_um2": 46258.28676,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_ctl__cla4f6f12f/attempt_12/gen/sle_ctl__cla4f6f12f synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_fe_v1__cl1cbb7497": {
+   "cells": 186661,
+   "synth_area_um2": 27610.146,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_fe_v1__cl1cbb7497/attempt_9/gen/sle_fe_v1__cl1cbb7497 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_fe_v2": {
+   "cells": 166307,
+   "synth_area_um2": 24594.15636,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_fe_v2/attempt_6/gen/sle_fe_v2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_fe_v3": {
+   "cells": 57546,
+   "synth_area_um2": 8387.4366,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_fe_v3/attempt_5/gen/sle_fe_v3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc0__cl05696ed1": {
+   "cells": 343957,
+   "synth_area_um2": 46215.04248,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc0__cl05696ed1/attempt_4/gen/sle_hc0__cl05696ed1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc0__cl929603c0__cl4baa7c9c": {
+   "cells": 343963,
+   "synth_area_um2": 46217.62314,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc0__cl929603c0__cl4baa7c9c/attempt_4/gen/sle_hc0__cl929603c0__cl4baa7c9c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc1__cl22c1ff36": {
+   "cells": 381548,
+   "synth_area_um2": 51649.25634,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl22c1ff36/attempt_30/gen/sle_hc1__cl22c1ff36 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc1__cl7d360508": {
+   "cells": 381744,
+   "synth_area_um2": 51692.20902,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc1__cl7d360508/attempt_14/gen/sle_hc1__cl7d360508 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc2__cl9c4c4509__cl3edce1b8": {
+   "cells": 349422,
+   "synth_area_um2": 47121.62688,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc2__cl9c4c4509__cl3edce1b8/attempt_11/gen/sle_hc2__cl9c4c4509__cl3edce1b8 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc2__cl9c4c4509__clf60c5152": {
+   "cells": 349505,
+   "synth_area_um2": 47126.97774,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc2__cl9c4c4509__clf60c5152/attempt_7/gen/sle_hc2__cl9c4c4509__clf60c5152 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_hc2__clcc5e3e61": {
+   "cells": 348690,
+   "synth_area_um2": 47022.1038,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_hc2__clcc5e3e61/attempt_13/gen/sle_hc2__clcc5e3e61 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_a_v1__cl67389ecd": {
+   "cells": 402850,
+   "synth_area_um2": 81857.86876,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl67389ecd/attempt_13/gen/sle_st_a_v1__cl67389ecd synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+   "cells": 402587,
+   "synth_area_um2": 81759.133,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl989804f6__cl18eece69/attempt_13/gen/sle_st_a_v1__cl989804f6__cl18eece69 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+   "cells": 402638,
+   "synth_area_um2": 81799.82578,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v1__cl989804f6__cled3c1d7b/attempt_15/gen/sle_st_a_v1__cl989804f6__cled3c1d7b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_a_v2": {
+   "cells": 386305,
+   "synth_area_um2": 79314.66478,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_a_v2/attempt_19/gen/sle_st_a_v2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_b_v1__pv0e7b1dcc": {
+   "cells": 374232,
+   "synth_area_um2": 62461.68148,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_b_v1__pv0e7b1dcc/gen/sle_st_b_v1__pv0e7b1dcc synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_b_v1__pvc5a85fd4": {
+   "cells": 375088,
+   "synth_area_um2": 62584.18264,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_b_v1__pvc5a85fd4/gen/sle_st_b_v1__pvc5a85fd4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_b_v2__cl14c98df5": {
+   "cells": 360167,
+   "synth_area_um2": 60388.65334,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_b_v2__cl14c98df5/attempt_3/gen/sle_st_b_v2__cl14c98df5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_st_b_v2__clfde1249e": {
+   "cells": 359577,
+   "synth_area_um2": 60301.2025,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_st_b_v2__clfde1249e/attempt_3/gen/sle_st_b_v2__clfde1249e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_stm_v1__clbe630b9c": {
+   "cells": 233596,
+   "synth_area_um2": 65229.93196,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v1__clbe630b9c/attempt_19/gen/sle_stm_v1__clbe630b9c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_stm_v2__cl55be2264": {
+   "cells": 231938,
+   "synth_area_um2": 64927.92184,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v2__cl55be2264/attempt_16/gen/sle_stm_v2__cl55be2264 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_stm_v2__cl7b3062fa": {
+   "cells": 232538,
+   "synth_area_um2": 65025.02464,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v2__cl7b3062fa/attempt_14/gen/sle_stm_v2__cl7b3062fa synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "sle_stm_v3": {
+   "cells": 166071,
+   "synth_area_um2": 55745.48158,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v3/attempt_14/gen/sle_stm_v3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_fe_v1__clfe325744__cl08d14f0d": {
+   "cells": 166303,
+   "synth_area_um2": 24906.02256,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v1__clfe325744__cl08d14f0d/attempt_6/gen/slw_fe_v1__clfe325744__cl08d14f0d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_fe_v2__cle312294d": {
+   "cells": 164382,
+   "synth_area_um2": 24531.5061,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fe_v2__cle312294d/attempt_16/gen/slw_fe_v2__cle312294d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_fw_v3": {
+   "cells": 184496,
+   "synth_area_um2": 26191.39536,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_fw_v3/attempt_11/gen/slw_fw_v3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc0__cl1bc59e1c": {
+   "cells": 346104,
+   "synth_area_um2": 46539.5058,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc0__cl1bc59e1c/attempt_14/gen/slw_hc0__cl1bc59e1c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc0__cl4f54b7a3": {
+   "cells": 344727,
+   "synth_area_um2": 46314.18648,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc0__cl4f54b7a3/attempt_7/gen/slw_hc0__cl4f54b7a3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc1__cl3449ea95": {
+   "cells": 381606,
+   "synth_area_um2": 51674.37768,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl3449ea95/attempt_8/gen/slw_hc1__cl3449ea95 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc1__cl68f9248e__cl144ee7b3": {
+   "cells": 381214,
+   "synth_area_um2": 51623.01234,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl68f9248e__cl144ee7b3/attempt_18/gen/slw_hc1__cl68f9248e__cl144ee7b3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc1__cl68f9248e__cle683a076": {
+   "cells": 381741,
+   "synth_area_um2": 51674.84424,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc1__cl68f9248e__cle683a076/attempt_20/gen/slw_hc1__cl68f9248e__cle683a076 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc2__cl6bcaba89": {
+   "cells": 348996,
+   "synth_area_um2": 47066.48532,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc2__cl6bcaba89/attempt_14/gen/slw_hc2__cl6bcaba89 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc2__cla3497502__cl16607c7a": {
+   "cells": 349131,
+   "synth_area_um2": 47080.59876,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc2__cla3497502__cl16607c7a/attempt_20/gen/slw_hc2__cla3497502__cl16607c7a synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc2__cla3497502__cldc737267": {
+   "cells": 348982,
+   "synth_area_um2": 47048.8581,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc2__cla3497502__cldc737267/attempt_16/gen/slw_hc2__cla3497502__cldc737267 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc3__clccfc3e6b": {
+   "cells": 298259,
+   "synth_area_um2": 39893.92722,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/qc-wave-1104s2/kit-wave/qwen_compute/efdb36e864/items/slw_hc3__clccfc3e6b/attempt_7/gen/slw_hc3__clccfc3e6b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_hc3__cld86a7ad4": {
+   "cells": 297135,
+   "synth_area_um2": 39726.00936,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_hc3__cld86a7ad4/attempt_8/gen/slw_hc3__cld86a7ad4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_a_v1__clb036e152": {
+   "cells": 401225,
+   "synth_area_um2": 81578.89504,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v1__clb036e152/attempt_8/gen/slw_st_a_v1__clb036e152 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
+   "cells": 402474,
+   "synth_area_um2": 81750.69118,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v1__clfc5867a6__pvdf8e5ca4/gen/slw_st_a_v1__clfc5867a6__pvdf8e5ca4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
+   "cells": 401562,
+   "synth_area_um2": 81613.8433,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v1__clfc5867a6__pvf82a6c28/gen/slw_st_a_v1__clfc5867a6__pvf82a6c28 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+   "cells": 387159,
+   "synth_area_um2": 79466.8654,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__cl9f076a5c/attempt_13/gen/slw_st_a_v2__cl9f076a5c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_a_v2__clf4365a62": {
+   "cells": 385749,
+   "synth_area_um2": 79260.89374,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_b_v1__cl6357f1cc__pv6ace3e48": {
+   "cells": 362169,
+   "synth_area_um2": 60415.33474,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_b_v1__cl6357f1cc__pv6ace3e48/gen/slw_st_b_v1__cl6357f1cc__pv6ace3e48 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
+   "cells": 363026,
+   "synth_area_um2": 60537.00484,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_b_v1__cl6357f1cc__pvffd43fdc/gen/slw_st_b_v1__cl6357f1cc__pvffd43fdc synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_b_v1__cle6023ec2": {
+   "cells": 361354,
+   "synth_area_um2": 60273.32554,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_b_v1__cle6023ec2/attempt_3/gen/slw_st_b_v1__cle6023ec2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_b_v2__pva66d0f22": {
+   "cells": 347616,
+   "synth_area_um2": 58302.59068,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_b_v2__pva66d0f22/gen/slw_st_b_v2__pva66d0f22 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_st_b_v2__pvc2ec5bfb": {
+   "cells": 348066,
+   "synth_area_um2": 58297.05028,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_b_v2__pvc2ec5bfb/gen/slw_st_b_v2__pvc2ec5bfb synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+   "cells": 221050,
+   "synth_area_um2": 63620.13958,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v1__cl05fc43f7__cl2086fa2c/attempt_13/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+   "cells": 220931,
+   "synth_area_um2": 63600.10666,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v1__cl05fc43f7__cl389df4e9/attempt_22/gen/slw_stm_v1__cl05fc43f7__cl389df4e9 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slw_stm_v3": {
+   "cells": 218467,
+   "synth_area_um2": 63154.60018,
+   "src": "intel2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_stm_v3/attempt_16/gen/slw_stm_v3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "tt_ctlm": {
+   "cells": 247114,
+   "synth_area_um2": 115222.74154,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/tt_ctlm/attempt_11/gen/tt_ctlm synth_stat.txt (kit-wave row, read 2026-11-10)"
+  }
+ },
+ "qwen_kvsys": {
+  "kv3_hg": {
+   "cells": 501464,
+   "synth_area_um2": 474570.3723,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg/attempt_8/gen/kv3_hg synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v1p2": {
+   "cells": 559147,
+   "synth_area_um2": 482896.17924,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p2/attempt_4/gen/kv3_hg_v1p2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v1p3": {
+   "cells": 561159,
+   "synth_area_um2": 483237.2346,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p3/attempt_4/gen/kv3_hg_v1p3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v1p4": {
+   "cells": 560378,
+   "synth_area_um2": 483137.07,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p4/attempt_4/gen/kv3_hg_v1p4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v1p5": {
+   "cells": 562821,
+   "synth_area_um2": 483477.19224,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p5/attempt_4/gen/kv3_hg_v1p5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v1p6": {
+   "cells": 561578,
+   "synth_area_um2": 483322.76088,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v1p6/attempt_4/gen/kv3_hg_v1p6 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hg_v3": {
+   "cells": 549480,
+   "synth_area_um2": 481710.53364,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hg_v3/attempt_8/gen/kv3_hg_v3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_hgi_v5": {
+   "cells": 195133,
+   "synth_area_um2": 365001.365,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_hgi_v5/attempt_8/gen/kv3_hgi_v5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_phy": {
+   "cells": 12695,
+   "synth_area_um2": 456242.59422,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_phy/attempt_11/gen/kv3_phy synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_pv": {
+   "cells": 291063,
+   "synth_area_um2": 564648.60362,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv/attempt_7/gen/kv3_pv synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_pv_v8": {
+   "cells": 288171,
+   "synth_area_um2": 564147.10994,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_pv_v8/attempt_11/gen/kv3_pv_v8 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_sys_SD": {
+   "cells": 58286,
+   "synth_area_um2": 1806025.05198,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_SD/attempt_12/gen/kv3_sys_SD synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_sys_SD_v1": {
+   "cells": 58194,
+   "synth_area_um2": 1806011.30304,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_SD_v1/attempt_20/gen/kv3_sys_SD_v1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "kv3_sys_c": {
+   "cells": 149449,
+   "synth_area_um2": 642728.52718,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_sys_c/attempt_7/gen/kv3_sys_c synth_stat.txt (kit-wave row, read 2026-11-10)"
+  }
+ },
+ "s81": {
+  "bk_sel__t2": {
+   "cells": 36910,
+   "synth_area_um2": 617148.33454,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h10_r0_p1__t1__cl574cc59d": {
+   "cells": 108789,
+   "synth_area_um2": 547700.79662,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl574cc59d/attempt_20/gen/col_h10_r0_p1__t1__cl574cc59d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h10_r0_p1__t1__cl911743eb": {
+   "cells": 58846,
+   "synth_area_um2": 541221.50294,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h10_r1__t1__cl95b37463": {
+   "cells": 44263,
+   "synth_area_um2": 633565.02354,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r1__t1__cl95b37463/attempt_14/gen/col_h10_r1__t1__cl95b37463 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h10_r2__t1__cl8b686b3e": {
+   "cells": 30283,
+   "synth_area_um2": 502394.7317,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl8b686b3e/attempt_21/gen/col_h10_r2__t1__cl8b686b3e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h10_r2__t1__cl99efd374": {
+   "cells": 29522,
+   "synth_area_um2": 502284.74018,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl99efd374/attempt_23/gen/col_h10_r2__t1__cl99efd374 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r0_p2__t1__cl0045af7b": {
+   "cells": 66629,
+   "synth_area_um2": 523483.37026,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p2__t1__cl0045af7b/attempt_22/gen/col_h9_r0_p2__t1__cl0045af7b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r0_p5__t1": {
+   "cells": 66892,
+   "synth_area_um2": 522873.00772,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p5__t1/attempt_20/gen/col_h9_r0_p5__t1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r0_p6__t1": {
+   "cells": 34381,
+   "synth_area_um2": 518162.96788,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p6__t1/attempt_19/gen/col_h9_r0_p6__t1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r1__t1__cl49d7a23e": {
+   "cells": 37027,
+   "synth_area_um2": 510945.42202,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__cl49d7a23e/attempt_17/gen/col_h9_r1__t1__cl49d7a23e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r1__t1__clf32cde8d": {
+   "cells": 37034,
+   "synth_area_um2": 510945.53866,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__clf32cde8d/attempt_17/gen/col_h9_r1__t1__clf32cde8d synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r2__t1__cl774acf45": {
+   "cells": 26715,
+   "synth_area_um2": 501670.01822,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl774acf45/attempt_10/gen/col_h9_r2__t1__cl774acf45 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r2__t1__cl87f3ff59": {
+   "cells": 27433,
+   "synth_area_um2": 501771.32006,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl87f3ff59/attempt_2/gen/col_h9_r2__t1__cl87f3ff59 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r2__t1__clb8d86cd5": {
+   "cells": 26064,
+   "synth_area_um2": 501579.94298,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clb8d86cd5/attempt_9/gen/col_h9_r2__t1__clb8d86cd5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r2__t1__clc9ad8f7e": {
+   "cells": 26733,
+   "synth_area_um2": 501673.29872,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clc9ad8f7e/attempt_9/gen/col_h9_r2__t1__clc9ad8f7e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "col_h9_r2__t1__clce45cab5": {
+   "cells": 26015,
+   "synth_area_um2": 501572.04062,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clce45cab5/attempt_27/gen/col_h9_r2__t1__clce45cab5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "cells": 150774,
+   "synth_area_um2": 489543.8659,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "cells": 187277,
+   "synth_area_um2": 494128.9843,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mus_LP__t2/attempt_9/gen/dsdv_slice_lepw_mus_LP__t2 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "iqf__t1": {
+   "cells": 120086,
+   "synth_area_um2": 17196.5268,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/iqf__t1/attempt_11/gen/iqf__t1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_kv_leaf__t3": {
+   "cells": 331430,
+   "synth_area_um2": 256921.23274,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t3/attempt_4/gen/ot_s81sl_kv_leaf__t3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t1": {
+   "cells": 156806,
+   "synth_area_um2": 266790.64262,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t1/attempt_5/gen/ot_s81sl_leaf__t1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t12": {
+   "cells": 106038,
+   "synth_area_um2": 259471.90544,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t12/attempt_7/gen/ot_s81sl_leaf__t12 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t13": {
+   "cells": 97639,
+   "synth_area_um2": 257625.12974,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t13/attempt_4/gen/ot_s81sl_leaf__t13 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t15": {
+   "cells": 54105,
+   "synth_area_um2": 251042.98874,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t15/attempt_8/gen/ot_s81sl_leaf__t15 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t16": {
+   "cells": 80674,
+   "synth_area_um2": 255630.49826,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t16/attempt_6/gen/ot_s81sl_leaf__t16 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t17": {
+   "cells": 113850,
+   "synth_area_um2": 259749.20246,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t17/attempt_16/gen/ot_s81sl_leaf__t17 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t21": {
+   "cells": 49838,
+   "synth_area_um2": 251138.48774,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t21/attempt_20/gen/ot_s81sl_leaf__t21 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t22": {
+   "cells": 142247,
+   "synth_area_um2": 263805.12518,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t22/attempt_8/gen/ot_s81sl_leaf__t22 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t23": {
+   "cells": 134629,
+   "synth_area_um2": 263170.50152,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t23/attempt_2/gen/ot_s81sl_leaf__t23 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "cells": 87287,
+   "synth_area_um2": 255979.90796,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t24__cl2456157b/attempt_6/gen/ot_s81sl_leaf__t24__cl2456157b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "cells": 85955,
+   "synth_area_um2": 255793.79426,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t24__cl81374cd8/attempt_4/gen/ot_s81sl_leaf__t24__cl81374cd8 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "cells": 35665,
+   "synth_area_um2": 248668.35872,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t25__cl431c660f/attempt_4/gen/ot_s81sl_leaf__t25__cl431c660f synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t25__cl55642d17": {
+   "cells": 35506,
+   "synth_area_um2": 248635.65578,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t25__cl55642d17/attempt_2/gen/ot_s81sl_leaf__t25__cl55642d17 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t27": {
+   "cells": 20878,
+   "synth_area_um2": 246327.67094,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t27/attempt_11/gen/ot_s81sl_leaf__t27 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t29": {
+   "cells": 70742,
+   "synth_area_um2": 253411.36394,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t29/attempt_12/gen/ot_s81sl_leaf__t29 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t3": {
+   "cells": 195472,
+   "synth_area_um2": 271928.6492,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t3/attempt_9/gen/ot_s81sl_leaf__t3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t31": {
+   "cells": 48487,
+   "synth_area_um2": 251012.3999,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t31/attempt_11/gen/ot_s81sl_leaf__t31 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t32": {
+   "cells": 118339,
+   "synth_area_um2": 260544.68726,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t32/attempt_6/gen/ot_s81sl_leaf__t32 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t33": {
+   "cells": 124673,
+   "synth_area_um2": 261970.81538,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t33/attempt_8/gen/ot_s81sl_leaf__t33 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t34": {
+   "cells": 91606,
+   "synth_area_um2": 256768.32146,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t34/attempt_2/gen/ot_s81sl_leaf__t34 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t35": {
+   "cells": 46882,
+   "synth_area_um2": 250315.78208,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t35/attempt_5/gen/ot_s81sl_leaf__t35 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t36": {
+   "cells": 86520,
+   "synth_area_um2": 256215.40412,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t36/attempt_6/gen/ot_s81sl_leaf__t36 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t38": {
+   "cells": 94472,
+   "synth_area_um2": 257054.07488,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t39": {
+   "cells": 78004,
+   "synth_area_um2": 254931.18314,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t39/attempt_11/gen/ot_s81sl_leaf__t39 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "cells": 33962,
+   "synth_area_um2": 248334.33092,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__cl86ea32b3/attempt_10/gen/ot_s81sl_leaf__t40__cl86ea32b3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+   "cells": 33962,
+   "synth_area_um2": 248334.33092,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__cl86ea32b3__sid5S/attempt_8/gen/ot_s81sl_leaf__t40__cl86ea32b3__sid5S synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "cells": 51073,
+   "synth_area_um2": 250603.09556,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__clf8bbdae1/attempt_16/gen/ot_s81sl_leaf__t40__clf8bbdae1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t41": {
+   "cells": 91618,
+   "synth_area_um2": 256295.81282,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t41/attempt_7/gen/ot_s81sl_leaf__t41 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t42": {
+   "cells": 20902,
+   "synth_area_um2": 246328.32704,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t42/attempt_13/gen/ot_s81sl_leaf__t42 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t43": {
+   "cells": 122895,
+   "synth_area_um2": 261487.06556,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t43/attempt_7/gen/ot_s81sl_leaf__t43 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "cells": 78418,
+   "synth_area_um2": 254696.21186,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t44__clf4ea6d4b/attempt_9/gen/ot_s81sl_leaf__t44__clf4ea6d4b synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "cells": 115507,
+   "synth_area_um2": 259840.06502,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t44__clf6cf8492/attempt_6/gen/ot_s81sl_leaf__t44__clf6cf8492 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t47": {
+   "cells": 138184,
+   "synth_area_um2": 263738.05718,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t47/attempt_7/gen/ot_s81sl_leaf__t47 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t51": {
+   "cells": 77396,
+   "synth_area_um2": 254557.33736,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t51/attempt_6/gen/ot_s81sl_leaf__t51 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t52": {
+   "cells": 104284,
+   "synth_area_um2": 259230.38774,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t52/gen/ot_s81sl_leaf__t52 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t53__cl958451dd": {
+   "cells": 88945,
+   "synth_area_um2": 256125.28514,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t53__cl958451dd/attempt_11/gen/ot_s81sl_leaf__t53__cl958451dd synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "cells": 86437,
+   "synth_area_um2": 255745.38866,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t53__clb66fa5cb/attempt_7/gen/ot_s81sl_leaf__t53__clb66fa5cb synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t55": {
+   "cells": 97936,
+   "synth_area_um2": 258037.14596,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t55/gen/ot_s81sl_leaf__t55 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t57": {
+   "cells": 123853,
+   "synth_area_um2": 261685.57226,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t57/attempt_7/gen/ot_s81sl_leaf__t57 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t58": {
+   "cells": 106428,
+   "synth_area_um2": 259583.6903,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t58/attempt_5/gen/ot_s81sl_leaf__t58 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t59": {
+   "cells": 67754,
+   "synth_area_um2": 253003.34264,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t59/attempt_5/gen/ot_s81sl_leaf__t59 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t6": {
+   "cells": 123787,
+   "synth_area_um2": 261552.209,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t6/attempt_5/gen/ot_s81sl_leaf__t6 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t60": {
+   "cells": 93371,
+   "synth_area_um2": 257459.42804,
+   "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t60/attempt_7/gen/ot_s81sl_leaf__t60 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t61": {
+   "cells": 127419,
+   "synth_area_um2": 262099.80464,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t61/attempt_7/gen/ot_s81sl_leaf__t61 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t62": {
+   "cells": 143380,
+   "synth_area_um2": 265151.25284,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t62/gen/ot_s81sl_leaf__t62 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t65": {
+   "cells": 148461,
+   "synth_area_um2": 265493.85368,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t65/attempt_7/gen/ot_s81sl_leaf__t65 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t66": {
+   "cells": 154983,
+   "synth_area_um2": 265723.15334,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t66/attempt_2/gen/ot_s81sl_leaf__t66 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t68": {
+   "cells": 80649,
+   "synth_area_um2": 255117.38432,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t68/attempt_5/gen/ot_s81sl_leaf__t68 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t69": {
+   "cells": 42871,
+   "synth_area_um2": 249603.76778,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t69/attempt_4/gen/ot_s81sl_leaf__t69 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t70": {
+   "cells": 121077,
+   "synth_area_um2": 261160.0799,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t70/attempt_5/gen/ot_s81sl_leaf__t70 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t71": {
+   "cells": 86655,
+   "synth_area_um2": 255909.00542,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t71/attempt_3/gen/ot_s81sl_leaf__t71 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t72": {
+   "cells": 218909,
+   "synth_area_um2": 276129.70124,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t72/attempt_8/gen/ot_s81sl_leaf__t72 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t73": {
+   "cells": 140827,
+   "synth_area_um2": 263522.50646,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t73/gen/ot_s81sl_leaf__t73 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t75": {
+   "cells": 159481,
+   "synth_area_um2": 267395.30438,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t75/gen/ot_s81sl_leaf__t75 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t8": {
+   "cells": 219557,
+   "synth_area_um2": 276217.22498,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t8/attempt_7/gen/ot_s81sl_leaf__t8 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "ot_s81sl_leaf__t9": {
+   "cells": 140860,
+   "synth_area_um2": 263532.81452,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t9/attempt_6/gen/ot_s81sl_leaf__t9 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "seqhost__t1": {
+   "cells": 259537,
+   "synth_area_um2": 89548.78602,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/seqhost__t1/attempt_7/gen/seqhost__t1 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t12": {
+   "cells": 272354,
+   "synth_area_um2": 671257.61258,
+   "src": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t13": {
+   "cells": 310739,
+   "synth_area_um2": 676280.74334,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t13/attempt_22/gen/serdes__t13 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t15__cla2127225": {
+   "cells": 320361,
+   "synth_area_um2": 678183.66662,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla2127225/attempt_22/gen/serdes__t15__cla2127225 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t15__cla3d02796": {
+   "cells": 353725,
+   "synth_area_um2": 682581.11126,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d02796/attempt_4/gen/serdes__t15__cla3d02796 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t16": {
+   "cells": 313065,
+   "synth_area_um2": 676633.1711,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t16/attempt_12/gen/serdes__t16 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t1__clb45db5be": {
+   "cells": 291520,
+   "synth_area_um2": 673944.37124,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clb45db5be/attempt_13/gen/serdes__t1__clb45db5be synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t1__clfe1f0815": {
+   "cells": 313565,
+   "synth_area_um2": 676708.63718,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clfe1f0815/attempt_14/gen/serdes__t1__clfe1f0815 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t3": {
+   "cells": 357234,
+   "synth_area_um2": 683016.12014,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t3/attempt_18/gen/serdes__t3 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "serdes__t4": {
+   "cells": 314813,
+   "synth_area_um2": 676789.6874,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t4/attempt_12/gen/serdes__t4 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t12": {
+   "cells": 15205,
+   "synth_area_um2": 2392.33014,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t12/attempt_8/gen/slice_station__t12 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t14": {
+   "cells": 67737,
+   "synth_area_um2": 10078.41042,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t14/attempt_13/gen/slice_station__t14 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t18": {
+   "cells": 66750,
+   "synth_area_um2": 10091.63448,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t18/attempt_14/gen/slice_station__t18 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t20": {
+   "cells": 20908,
+   "synth_area_um2": 3404.83824,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t20/attempt_5/gen/slice_station__t20 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t23": {
+   "cells": 22841,
+   "synth_area_um2": 3830.7492,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t23/attempt_5/gen/slice_station__t23 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t24__cleece78ec": {
+   "cells": 46745,
+   "synth_area_um2": 6924.1149,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t24__cleece78ec/attempt_14/gen/slice_station__t24__cleece78ec synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t27": {
+   "cells": 106736,
+   "synth_area_um2": 16382.36502,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t27/attempt_2/gen/slice_station__t27 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t29__clc7772371": {
+   "cells": 61317,
+   "synth_area_um2": 9776.07954,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t29__clc7772371/attempt_14/gen/slice_station__t29__clc7772371 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t30__cl6a190133": {
+   "cells": 34210,
+   "synth_area_um2": 5017.4883,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__cl6a190133/attempt_18/gen/slice_station__t30__cl6a190133 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t30__clcedefe91": {
+   "cells": 17485,
+   "synth_area_um2": 2825.64774,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__clcedefe91/attempt_17/gen/slice_station__t30__clcedefe91 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t31": {
+   "cells": 87335,
+   "synth_area_um2": 12462.29874,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t31/attempt_3/gen/slice_station__t31 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t41": {
+   "cells": 162008,
+   "synth_area_um2": 24807.49092,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t41/attempt_4/gen/slice_station__t41 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t44": {
+   "cells": 81276,
+   "synth_area_um2": 11706.74856,
+   "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t44/attempt_8/gen/slice_station__t44 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t46": {
+   "cells": 19568,
+   "synth_area_um2": 3215.00664,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t46/attempt_5/gen/slice_station__t46 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t47": {
+   "cells": 47584,
+   "synth_area_um2": 7285.85928,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t47/attempt_20/gen/slice_station__t47 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t48": {
+   "cells": 38490,
+   "synth_area_um2": 5937.00516,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t48/attempt_5/gen/slice_station__t48 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t49": {
+   "cells": 110032,
+   "synth_area_um2": 16381.7235,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/s81-wave-1105f2/kit-wave/s81/bf1e2233ce05/items/slice_station__t49/gen/slice_station__t49 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t50__cl39451317": {
+   "cells": 109276,
+   "synth_area_um2": 16270.87176,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cl39451317/attempt_2/gen/slice_station__t50__cl39451317 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t50__cld84c9e24": {
+   "cells": 114388,
+   "synth_area_um2": 16923.77874,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cld84c9e24/attempt_12/gen/slice_station__t50__cld84c9e24 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t52": {
+   "cells": 154786,
+   "synth_area_um2": 23576.10786,
+   "src": "intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t52/attempt_18/gen/slice_station__t52 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t6__cl54a9ceeb": {
+   "cells": 70308,
+   "synth_area_um2": 10981.656,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t6__cl54a9ceeb/attempt_14/gen/slice_station__t6__cl54a9ceeb synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t7__cl503f4913": {
+   "cells": 26475,
+   "synth_area_um2": 4030.84512,
+   "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t7__cl503f4913/attempt_19/gen/slice_station__t7__cl503f4913 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "slice_station__t7__cl945bc067": {
+   "cells": 25786,
+   "synth_area_um2": 3932.48844,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t7__cl945bc067/attempt_12/gen/slice_station__t7__cl945bc067 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  }
+ },
+ "s81_head": {
+  "hd_ctl": {
+   "cells": 158229,
+   "synth_area_um2": 76597.71872,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_ctl/attempt_2/gen/hd_ctl synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_host_e": {
+   "cells": 105260,
+   "synth_area_um2": 78036.68894,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_e/attempt_3/gen/hd_host_e synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_host_w": {
+   "cells": 122366,
+   "synth_area_um2": 80373.35264,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_host_w/attempt_3/gen/hd_host_w synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_lep0N": {
+   "cells": 215405,
+   "synth_area_um2": 491916.9024,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_lep0N/attempt_4/gen/hd_lep0N synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_mesh": {
+   "cells": 208455,
+   "synth_area_um2": 155801.85454,
+   "src": "epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_mesh/attempt_2/gen/hd_mesh synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_spn": {
+   "cells": 106218,
+   "synth_area_um2": 16088.18436,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_spn/attempt_2/gen/hd_spn synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_spn_end": {
+   "cells": 75873,
+   "synth_area_um2": 11498.85234,
+   "src": "epyc4:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_spn_end/attempt_2/gen/hd_spn_end synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_st_k5": {
+   "cells": 39140,
+   "synth_area_um2": 5518.3113,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_k5/gen/hd_st_k5 synth_stat.txt (kit-wave row, read 2026-11-10)"
+  },
+  "hd_st_m": {
+   "cells": 5600,
+   "synth_area_um2": 804.61188,
+   "src": "intel2:/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_m/gen/hd_st_m synth_stat.txt (kit-wave row, read 2026-11-10)"
+  }
+ }
+}
