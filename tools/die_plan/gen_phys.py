@@ -2632,6 +2632,24 @@ def tap_chain_affinity_exports(t):
             f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
 
 
+def tap_group_exports(t):
+    """DIE-QC-97 11-10: default-off clock.tap_group {"re": <group regex>} -> OT_TAP_GROUP_RE (clock_taps.tcl
+    CLOCK-RESET 10-25 group form: every sink whose instance matches goes, with all bits of its group (capture 1 = key),
+    to the tap nearest the group's sink centroid; grouped sinks are pinned against the cap pass).  For compact local
+    blocks split over two taps (QC st_b station adders: launch/capture 10-20 um apart on two taps, hold repair then put
+    227-417 ps of HB4 on the setup paths).  The canary caveat of clock_taps.tcl applies: use for compact blocks only,
+    never long station rows.  The regex must not contain '#', '$' or whitespace (config.mk / make)."""
+    clock = t.get("clock", {})
+    if "tap_group" not in clock:
+        return []
+    rx = clock["tap_group"].get("re", "")
+    if not rx or any(c in rx for c in "#$ \t\n") or "(" not in rx:
+        raise ValueError("clock.tap_group.re must be a non-empty capture regex without '#', '$' or whitespace")
+    import re as _re
+    _re.compile(rx)
+    return [f"export OT_TAP_GROUP_RE = {rx}"]
+
+
 def tap_pair_affinity_exports(t):
     """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
     Clock pins only; radius and group bounded by the declared tap radius and capacity."""
@@ -4796,6 +4814,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
