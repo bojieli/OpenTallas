@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.hbm_compiler_core_delta.postcut.v1",
+ "note": "POST-CUT pending cycle deltas for plan_p11t_taps_cyc (DIE-HBM-98 11-11): NOT part of the cut price (cut = compiler_core_delta.json: taps + TKM + SFU = 1648.00 tok/s). Moved out because the bind hook for L14 serial is not built yet. DO_NOT_COUNT. 11-11: the only entry is VOID (kept for history).",
+ "pending_post_cut": {
+  "cpl-hbm-b1-L14-serial-n4-1111": {
+   "status": "VOID (DIE-HBM-98 11-11): key_k0..3 (2176 b) are a 1-word-per-cycle valid/ready stream (ot_hbm_idx_owned_native take = k_valid && k_ready; ot_hidx_score_hcol loads key_p every cycle), so N:1 serialisation cuts key throughput by up to N; the +3 latency price is wrong. L14 re-decided as split lanes + layout. A query-only N=4 (+3 per token on qv_b/q_b/rst_col) may come back as a NEW entry. Do not fold.",
+   "original_text": "CPL-HBM-B1 option (A) L14 query/key serialisation N=4 (DIE-HBM-98 11-11 chose N=4; delta epyc4 /srv/opentallas-scratch3/claude/cpl-hbm-b1/arch/L14_serial_N2.json sha 36bafa0a, N=2 form): L14q (2745 b: q_b 568 + rst_col + key_k0..k3 4x544, NW+NE b000->b001) 4 beats, +3 cycles on every query/key op into the q_b001 idx scorers; L14s +0. S2: IDX +3 per IDX record with overlap (expected), IDX +6 without (one more L14q beat per query). Price on top of taps+TKM+SFU (1648.00 tok/s): +144 cycles, 1647.64 (-0.022%); no overlap +288, 1647.29 (-0.043%). May be superseded by one CPL-HBM-B1 delta for the whole hub query/key chain (L160m/161m/166m/175m). Folds at the 12:00 cycle event / next compiler-scheduler re-run."
+  }
+ }
+}

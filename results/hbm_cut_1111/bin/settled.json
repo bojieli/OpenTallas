@@ -1,0 +1,22 @@
+[
+ {
+  "a": "ftres_mneed",
+  "b": "ftres_postcut",
+  "types": [
+   "q_su30",
+   "q_su31",
+   "q_su31__physical_v1",
+   "q_b012",
+   "q_b012__physical_v1"
+  ],
+  "ruling": "same owner FTRES-FIX; DIE-HBM-98 02:0x: postcut ft3 applied as step 2c AFTER mneed 2b on the same bands (core_share -> 0 supersedes mneed core_share; note appended)"
+ },
+ {
+  "a": "adopt_vis_NW_io_formh",
+  "b": "stationfix_1111",
+  "types": [
+   "NW_io"
+  ],
+  "ruling": "sequential, not competing: STATION-FIX-HBM built stationfix_1111 (dedd3ab0) ON form h fb858a44 and declared APPLY ORDER base -> form h -> stationfix; NW_io L8007_o (idx 58) keeps form-h site multiset, only chain direction core->face flipped. Applied as step 4b after form h."
+ }
+]

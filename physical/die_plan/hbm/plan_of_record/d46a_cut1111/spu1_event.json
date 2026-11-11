@@ -1,0 +1,72 @@
+{
+ "event": "ftres-fix-1110-spu1",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+ "base_sha256": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
+ "out_sha256": "70c3e990f40eeaebaacc18885a93c05ffa86c1d8bbd69752e720285cbccc3e7e",
+ "ledger": [
+  {
+   "type": "q_spu1",
+   "band": 0,
+   "dir": "NS",
+   "span_um": [
+    276.48,
+    786.24
+   ],
+   "layers": [
+    "M5"
+   ],
+   "bits": 2999,
+   "tracks": 18585,
+   "old_die_share": 0.5,
+   "new_die_share": 0.3
+  },
+  {
+   "type": "q_spu1",
+   "band": 1,
+   "dir": "NS",
+   "span_um": [
+    276.48,
+    786.24
+   ],
+   "layers": [
+    "M7"
+   ],
+   "bits": 2999,
+   "tracks": 18585,
+   "old_die_share": 1.0,
+   "new_die_share": 0.3
+  },
+  {
+   "type": "q_spu1__physical_v1",
+   "band": 0,
+   "dir": "NS",
+   "span_um": [
+    276.48,
+    786.24
+   ],
+   "layers": [
+    "M5"
+   ],
+   "bits": 2999,
+   "tracks": 18585,
+   "old_die_share": 0.5,
+   "new_die_share": 0.3
+  },
+  {
+   "type": "q_spu1__physical_v1",
+   "band": 1,
+   "dir": "NS",
+   "span_um": [
+    276.48,
+    786.24
+   ],
+   "layers": [
+    "M7"
+   ],
+   "bits": 2999,
+   "tracks": 18585,
+   "old_die_share": 1.0,
+   "new_die_share": 0.3
+  }
+ ]
+}

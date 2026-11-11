@@ -1,0 +1,297 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+ "event": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/evH/die_plan.json",
+ "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl",
+ "links": {
+  "q_su11.L8301mx1": {
+   "kind": "ft",
+   "type": "q_su11",
+   "link": "L8301mx1",
+   "width": 1615,
+   "stations_base": 6,
+   "stations_new": 7,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 6,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  },
+  "q_su11.L8302mx1": {
+   "kind": "ft",
+   "type": "q_su11",
+   "link": "L8302mx1",
+   "width": 1615,
+   "stations_base": 6,
+   "stations_new": 7,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 6,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  },
+  "q_su11.L8314mx1": {
+   "kind": "ft",
+   "type": "q_su11",
+   "link": "L8314mx1",
+   "width": 15,
+   "stations_base": 7,
+   "stations_new": 8,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 7,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  },
+  "q_su01__physical_v1.L5090_o": {
+   "kind": "ist",
+   "type": "q_su01__physical_v1",
+   "link": "L5090_o",
+   "width": 21,
+   "stations_base": 3,
+   "stations_new": 5,
+   "k": 2,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 4,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+2"
+  },
+  "q_su01__physical_v1.L5091_o": {
+   "kind": "ist",
+   "type": "q_su01__physical_v1",
+   "link": "L5091_o",
+   "width": 41,
+   "stations_base": 3,
+   "stations_new": 4,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 4,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  },
+  "q_su11__physical_v1.L8302x1": {
+   "kind": "ft",
+   "type": "q_su11__physical_v1",
+   "link": "L8302x1",
+   "width": 1615,
+   "stations_base": 6,
+   "stations_new": 7,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 6,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  },
+  "q_su11__physical_v1.L8314x1": {
+   "kind": "ft",
+   "type": "q_su11__physical_v1",
+   "link": "L8314x1",
+   "width": 15,
+   "stations_base": 7,
+   "stations_new": 8,
+   "k": 1,
+   "pattern_matches_bound_rtl": true,
+   "bound_rtl_lines": 7,
+   "PASS": {
+    "rc": 0,
+    "proved": true,
+    "induction": true,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/pass/yosys.log",
+    "tail": ""
+   },
+   "NEG1_short_delay": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/neg1/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "NEG2_bit_bypass": {
+    "rc": 1,
+    "proved": false,
+    "induction": false,
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/neg2/yosys.log",
+    "tail": "ERROR: Called with -verify and proof did fail!\n"
+   },
+   "verdict": "EQ_CYCLE_SHIFTED_+1"
+  }
+ },
+ "lanes": {
+  "L5090": {
+   "latency_base": 48,
+   "latency_new": 50,
+   "delta": 2,
+   "ft_station_delta": 0,
+   "fixed_cycles_delta": 2,
+   "consistent": true
+  },
+  "L5091": {
+   "latency_base": 47,
+   "latency_new": 48,
+   "delta": 1,
+   "ft_station_delta": 0,
+   "fixed_cycles_delta": 1,
+   "consistent": true
+  },
+  "L8301m": {
+   "latency_base": 8,
+   "latency_new": 9,
+   "delta": 1,
+   "ft_station_delta": 1,
+   "fixed_cycles_delta": 0,
+   "consistent": true
+  },
+  "L8302": {
+   "latency_base": 8,
+   "latency_new": 9,
+   "delta": 1,
+   "ft_station_delta": 1,
+   "fixed_cycles_delta": 0,
+   "consistent": true
+  },
+  "L8302m": {
+   "latency_base": 8,
+   "latency_new": 9,
+   "delta": 1,
+   "ft_station_delta": 1,
+   "fixed_cycles_delta": 0,
+   "consistent": true
+  },
+  "L8314": {
+   "latency_base": 9,
+   "latency_new": 10,
+   "delta": 1,
+   "ft_station_delta": 1,
+   "fixed_cycles_delta": 0,
+   "consistent": true
+  },
+  "L8314m": {
+   "latency_base": 9,
+   "latency_new": 10,
+   "delta": 1,
+   "ft_station_delta": 1,
+   "fixed_cycles_delta": 0,
+   "consistent": true
+  }
+ },
+ "verdict": "ALL_EQ_CYCLE_SHIFTED"
+}
