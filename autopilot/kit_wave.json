@@ -3820,7 +3820,8 @@
     "dsdv_slice_iq_C__t1@22",
     "ot_s81sl_leaf__t42@15",
     "slice_station__t27@2",
-    "slice_station__t49@1"
+    "slice_station__t49@1",
+    "ot_s81sl_leaf__t42@16"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4813,7 +4814,8 @@
     "dsdv_slice_iq_C__t1@22": "KW-FIX-44 2026-11-10: COORD retry once after disk room (a22 INFRA no host with 60 GB at 03:29; epyc2 scratch2 now 118 GB after store GC)",
     "ot_s81sl_leaf__t42@15": "KW-FIX-44 2026-11-10 17:10 PST COORD: INFRA, not a stale path. kit_rtl script kw43-canon/s81/kit_rtl_ctapw.sh exists on epyc7/epyc2/epyc4/intel1 but was missing on gen host epyc8 (a hole in the KW-FIX-44 epyc8 staging; the SRC-INCOMPLETE probe does not read 'script' keys). Every /srv path named in live kit_wave.json values checked on epyc8: the 50 present on epyc7 but missing on epyc8 (21 GB) copied add-only; ctapw md5 4cb6220d = epyc7. Same script path in other FAIL rows today: none.",
     "slice_station__t27@2": "REDESIGN: ft_hop_lockup per-item event, internal ft hop hold (FTLOCK-S81, plan 9c9ac92a70d1)",
-    "slice_station__t49@1": "REDESIGN: ft_hop_lockup per-item event, internal ft hop hold (FTLOCK-S81, plan 9c9ac92a70d1)"
+    "slice_station__t49@1": "REDESIGN: ft_hop_lockup per-item event, internal ft hop hold (FTLOCK-S81, plan 9c9ac92a70d1)",
+    "ot_s81sl_leaf__t42@16": "KW-FIX-44 2026-11-10 17:50 PST COORD: INFRA. a16 kit_rtl on epyc8: die-s81-85/s81p7/bind10_ctap/bind_report.json absent. The dir is named inside kit_rtl_ctapw.sh (S81_BIND_OUT), not as a kit_wave.json value, and the SRC-INCOMPLETE probe never read item_inputs. Full walk of ctapw.sh + kit_rtl.sh + asbuilt_f.json + bind dirs: 484 existing paths; epyc4/epyc2 have all, epyc8 lacked only bind10_ctap (374 paths): copied from epyc7, 1486 files / 6397575617 bytes equal, bind_report sha 313466186ac1 equal. Probe fix claude/kw-fix-44-script-inputs-1110 ad59b36619cb deployed 17:49."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
