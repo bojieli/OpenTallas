@@ -100,3 +100,39 @@ def test_pin_table_shapes():
     assert list(rs._pin_iter({"pins": [{"name": "a[0]", "x": 1, "y": 2}]})) == [("a[0]", [1, 2])]
     assert list(rs._pin_iter([{"name": "b", "xy_um": [3, 4]}])) == [("b", [3, 4])]
     assert list(rs._pin_iter({"pins": {"c": [5, 6]}})) == [("c", [5, 6])]
+
+
+def test_density_from_measured_cells_and_cohort_base(tmp_path):
+    plan(tmp_path, macro=False, n=200)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    P["partition_types"]["t__cl0123abcd"] = P["partition_types"]["t"]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    (tmp_path / "cells.json").write_text(json.dumps({"tst": {"t": {"cells": 100000, "src": "synth"}}}))
+    out = tmp_path / "outd"
+    rs.main([str(tmp_path / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+             "--core-conns", str(tmp_path / "core_conns.json"), "--release-cache", str(tmp_path / "nope.json"),
+             "--views", str(tmp_path / "noviews.json"), "--cells", str(tmp_path / "cells.json")])
+    rows = {r["type"]: r for r in json.loads((out / "route_supply_tst.json").read_text())["rows"]}
+    for n in ("t", "t__cl0123abcd"):
+        # soft area = outline minus the two cores; measured synth counts the type top only
+        assert rows[n]["soft_um2"] < 400 * 500
+        assert rows[n]["regions"]["dens_A"]["p99"] == round(100000 / rows[n]["soft_um2"], 4)   # > 0.5 >= 0.42
+        assert rows[n]["verdict"] == "FLAG" and rows[n]["flag_regions"][0][0] == "dens_A"
+    assert "base of" in rows["t__cl0123abcd"]["cells_basis"]
+
+
+def test_flags_append_and_watch_skip_unchanged(tmp_path):
+    import route_supply_flags as F
+    import route_supply_watch as W
+    plan(tmp_path, n=8000)
+    rc, _, _ = run(tmp_path)
+    tsv = tmp_path / "FLAGS.tsv"
+    F.main([str(tmp_path / "out"), "--tsv", str(tsv), "--stamp", "s1", "--plans", f"tst={tmp_path / 'plan.json'}"])
+    lines = tsv.read_text().splitlines()
+    assert lines[0].split("\t")[:3] == ["stamp", "main", "die"] and len(lines) == 2
+    row = dict(zip(lines[0].split("\t"), lines[1].split("\t")))
+    assert row["flagged"] == "yes" and row["plan_sha"] == F.sha(tmp_path / "plan.json")
+    pl = tmp_path / "plans.jsonl"
+    pl.write_text(json.dumps({"die": "tst", "plan": "plan.json", "refs": []}) + "\n")
+    W.main(["--repo", str(tmp_path), "--tsv", str(tsv), "--out-root", str(tmp_path / "w"), "--plans", str(pl)])
+    assert len(tsv.read_text().splitlines()) == 2          # same plan sha: nothing re-run, nothing appended
