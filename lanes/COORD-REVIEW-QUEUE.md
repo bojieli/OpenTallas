@@ -41206,3 +41206,49 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
 - 2026-11-11 07:54 PST OWNER DIRECTION (verbatim, relayed by COORD): "half width buses can be adopted for last resort if the cost is below 10%, applied for both s81 and hbm". This REPLACES COORD's 07:5x "serialisation only if TOK < 1%".
   Order of forms, for S81 AND HBM: layout / top-metal / pipeline cycle first. Half-width (2:1) serialisation is the LAST resort, adoptable when the measured tok/s (AR) cost is < 10%.
   Note: the S81 x-tier 2:1 measured -2.4..-12.6% AR. If top-metal (d) fails, the frame bench (TOK-VERIFY-1) decides whether it is < 10%.
+- 2026-11-11 07:57 PST PROPOSAL+READY+REDESIGN (S1) [DIE-LAYOUT-QC -> DIE-QC-99, ROOT-MERGE-59, COORD] QC die visual review on plan_qc99_1111 7164829ac234. DO_NOT_COUNT. Full sheet: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-QC/S1_PROPOSAL_QC.txt (copy at epyc4:/srv/opentallas-scratch3/claude/die-layout-qc/).
+  VIEWED: the explorer die view /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-QC/die_qc99.png has 1921 links, max hop 402, 0 hop>reach, 0 crossing unrelated blocks, worst die cut 0.215 (no die cut > 0.8), and 12 identical columns. The smells sit inside the 4x4 slice, and they are the die-level cause of the 9 excluded sc types.
+  (1) SLICE CROSSROADS, all 12 slices. sc passes 8,854-9,112 ft bits per slice, against about 520 b of its own I/O. That is the heaviest tile in the slice (stm 5,387, st_a 3,256). Three routes in it are detours:
+    - x_fw_ctl_p2 536 b runs fw>stm>sc>fe>st_b>ctl: 3,269 um, 21 cycles, and it pads the x_fw_ctl group to 21.
+    - x_fw_ctl_p1 536 b runs fw>stm>sc>ctl.
+    - x_su_l1_ctl 456 b runs su_l1>su_c>sc, northward in the 23-um E strip beside the 514-um sc2 core. The core is taller than reach, so no V lane can cross it. That strip is the kit GRT overflow spot (slw_sc_v1 221, slw_sc_v3 64) and the route_supply worst bin (610,740) on every slw sc type.
+    The min-cut bound is V 0.62 / H 0.50 at ft frac 0.5, so sc is NOT congested by design. The cause is routing choice plus a core taller than reach.
+  (2) IN-TYPE LAYOUT TRIED, numbers in the sheet. Moving the core W by 21.6 or 43.2 um only moves the hot spot into the W street. Putting su_l1_ctl in the W street is worse (1.21-1.48).
+    KEPT: H-lane straightening, which removes the W-face dives (e.g. sle_sc_v3 x_fw_fe_p2 at (0,892)>(9,596)>(311,613)>(318,892)), plus the station-wall de-crowd.
+    READY plan epyc4:/srv/opentallas-scratch3/claude/die-layout-qc/plan_dlqc2.json sha256 73dbd07ef8c750f7e3220d050d93cd7b86c196688fa433e35a65d9f7687be1e0 on base 7164829ac234. It changes only ft_slots regs_um/bit_sites_um in the 9 sc types: 114 station clouds, rigidly translated on the 0.216/0.27 grid. Stations, widths, faces, windows and layers are identical, so it is EQ by construction. Max per-bit hop 386.5.
+    Gates:
+    - G0 268=268 and G0C 325=325, identical error sets, same env (epyc4 g0e, die-qc-98 side files).
+    - station_lint 0 INVERTED, 3 NONMONOTONE = base (same 3 x_stm_fe chains).
+    - Die over-reach unchanged (0); partitions and lanes are untouched.
+    - No die GRT probe: type outlines, faces and abstracts are unchanged, so the die GRT input is identical.
+    route_supply p99 base -> dlqc2:
+    - sle_sc_v1 x2: 1.53 -> 1.164
+    - sle_sc_v2: 1.325 -> 1.282
+    - sle_sc_v3: 1.337 -> 1.263
+    - slw_sc_v1 x3: 1.126 -> 1.115/1.12
+    - slw_sc_v2/v3: 1.118 -> 1.114
+    No sc type reaches S2, so the launch stays HELD. This is an improvement for the next QC event only.
+    Renders: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-QC/type_sle_sc_v1__cl115da35f_before.png and _after.png, type_sle_sc_v3_after.png, type_slw_sc_v2_before.png.
+  (3) REDESIGN (die routing + ft RTL, post-cut, all 12 slices):
+    (R1) x_fw_ctl_p1/p2 -> fw>stm>ctl. This takes 1,072 b out of sc and 536 b out of fe/st_b, and the x_fw_ctl group drops from 21 to about 16 cycles (a tok/s gain).
+    (R2) x_su_l1_ctl -> su_l1>su_c>stm>ctl, mirroring su_l0 in the fe column.
+    What-if with the lanes removed from sc: slw_sc_v2/v3 0.92/0.91, slw_sc_v1 1.03-1.06, sle_sc_v1 1.07, sle_sc_v2 1.03. sle_sc_v3 stays 1.26 (its x_fw_fe_p2 dive is kept).
+    stm takes +1,528 V b (open_V 0.40 today, p99 1.035 from mstreet H), so measure stm before adopting. st_a must not take them: its 0.48 cells/um2 is above the 0.42 QC GRT-fail line.
+    Drawing: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-QC/slice_reroute.svg.
+    RECOMMENDATION: DIE-QC-99 prices R1+R2 in the post-cut QC event. DEFAULT: dlqc2 rides the next QC event as a held improvement.
+  (4) cbf_q00 (ARCH) and cbn_q11 (NK hold): no die-level layout fix.
+    - cbf_q00: both A0 inputs enter the N face while the chain starts at u_t00 at the S end, and the outputs leave S-W/E-top. That order is set by the die ring tf_01>tf_00>{tn_01,tf_10}, and the bf copies are MX. The ideal bisection is 0.05, so ARCH (c) pin cycles stands. The die can help with form d for rsf (below).
+    - cbn_q11: the cause is the NK ETM internal clock spread plus the 230-um channel tap feed, already in forms A/B. No plan geometry cause.
+  (5) LONG WIDE LINKS (COORD add-on): /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/DIE-LAYOUT-QC/die_inventory_256b_1mm.tsv lists 366 links >= 256 b and > 1 mm. None is over reach or crosses an unrelated block; all are relayed, as plan ft through intermediate types. No link needs a pipeline cycle.
+    Form d (M8/M9 over the cell, register bays in the block) YES for:
+    - rsf 514 b x24: tf_00>hc1 6.9 mm 23 st, bf_00>st_a 8.7-8.8 mm 29 st. Today it is N-S ft through cbn_q01 (9 st) and cbn_q00 (10 st) over NK cores.
+    - cws0-3 516 b x4 per slice, 4.2-4.8 mm through all 3 slice rows (cws2 through sc).
+    - ctl>su_c 1,655 b through sc (the alternative is a layout split via stm).
+    - fw<>fe 539-553 b x5 through stm+sc.
+    - ctl>hc0/hc3 b_hw 1,573 b through the dense st_a/st_b.
+    - l9 fe>fw 514 b 4.4-4.6 mm (sle_sc_v1).
+    - serdes rx/tx 597 b 4.9-5.2 mm over cbf_q01_s2 (REDESIGN 2.06).
+    LAYOUT first, not form d: x_fw_ctl_p1/p2, x_su_l1_ctl/x_su_l0_ctl.
+    No action: st_a>st_b 652, ctl>fw_p1 631, y_o22>na_i00 514 (2.26 mm cb ring), coll rec 547-549, native59 dr 520, coll data 512.
+    Budget: M8/M9 cut_avail is 0.6. Over sc, 2,171 V b vs about 4.6k M9 tracks gives 0.47. Over the cb rows M8/M9 carries PG under the A0 75-um bump field (option c), so form d there needs a PG strap audit first.
+  Running: nothing. Next: none unless DIE-QC-99 asks.
