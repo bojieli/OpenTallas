@@ -651,6 +651,98 @@ def git_locked(path, stop_depth=3):
     return None
 
 
+# ------------------------------------------------------------------ KIT-INPUT-STORE-1 (class k + store links)
+# A kit-wave kit holds its inputs as hardlinks to the host's kit store (<scratch>/kit-store/blobs/<sha[:2]>/<sha>, outside
+# every claude/ root, so classes a/b/c never see the store).  Such a link is not a foreign hard link: a kit file whose
+# inode IS the blob its kit_inputs/MANIFEST.json names does not block deleting that kit.  Class k is the store's only
+# retention rule (referenced set, no heuristics): a blob is deleted iff no file links it (st_nlink == 1: no live kit,
+# counted record or archived unit holds it) and no store manifest of the last KIT_STORE_KEEP_DAYS days names its sha.
+KIT_STORE_KEEP_DAYS = 14
+KIT_STORE_SCHEMA = "opentallas.kit_inputs.v1"
+_KS_MANIFESTS = {}
+
+
+def kit_store_roots():
+    out = []
+    for r in DEFAULT_ROOTS:
+        k = os.path.join(os.path.dirname(os.path.realpath(r)), "kit-store")
+        if os.path.isdir(os.path.join(k, "blobs")) and k not in out:
+            out.append(k)
+    return out
+
+
+def store_linked(f):
+    """True when f sits in a kit_inputs/ dir whose MANIFEST.json maps it to a store blob with f's own inode"""
+    head, rel = f, ""
+    while head and head != "/":
+        head, tail = os.path.split(head)
+        rel = tail + ("/" + rel if rel else "")
+        if tail == "kit_inputs":
+            ki = os.path.join(head, tail)
+            break
+    else:
+        return False
+    if ki not in _KS_MANIFESTS:
+        try:
+            m = jl(os.path.join(ki, "MANIFEST.json"))
+            _KS_MANIFESTS[ki] = m if m.get("schema") == KIT_STORE_SCHEMA else None
+        except (OSError, ValueError):
+            _KS_MANIFESTS[ki] = None
+    m = _KS_MANIFESTS[ki]
+    if not m:
+        return False
+    orig = "/" + rel.split("/", 1)[1] if "/" in rel else ""
+    sha = (m.get("rewritten") or {}).get(orig, {}).get("kit_sha") or (m.get("files") or {}).get(orig)
+    if not sha or not re.fullmatch(r"[0-9a-f]{64}", sha):
+        return False
+    try:
+        return os.stat(os.path.join(m["store"], "blobs", sha[:2], sha)).st_ino == os.stat(f).st_ino
+    except (OSError, KeyError, TypeError):
+        return False
+
+
+def kit_store_gc(root, apply, keep_days=KIT_STORE_KEEP_DAYS, now=None):
+    """-> (rows [verdict, reason, path, bytes, mtime], summary).  An unreadable manifest of the window = the referenced
+    set is unknown: no deletes at all in that store this run."""
+    now = now or time.time()
+    keep, rows = set(), []
+    md = os.path.join(root, "manifests")
+    for n in sorted(os.listdir(md)) if os.path.isdir(md) else []:
+        q = os.path.join(md, n)
+        try:
+            if now - os.path.getmtime(q) > keep_days * 86400:
+                continue
+            keep.update(jl(q).get("shas") or [])
+        except (OSError, ValueError, AttributeError):
+            return [["SKIP", f"kit-store: unreadable manifest {q}: referenced set unknown", root, 0, int(now)]], {}
+    tot = linked = only = 0
+    bd = os.path.join(root, "blobs")
+    for sub in sorted(os.listdir(bd)) if os.path.isdir(bd) else []:
+        for n in sorted(os.listdir(os.path.join(bd, sub))):
+            q = os.path.join(bd, sub, n)
+            try:
+                st = os.lstat(q)
+            except OSError:
+                continue
+            tot += st.st_size
+            if st.st_nlink > 1:
+                linked += st.st_size
+                continue
+            only += st.st_blocks * 512
+            if n in keep:
+                continue
+            v = "WOULD"
+            if apply:
+                try:
+                    os.unlink(q)
+                    v = "DELETED"
+                except OSError as e:
+                    v = "ERROR"
+            rows.append([v, f"kit-store blob: no link, no manifest within {keep_days} d", q, st.st_blocks * 512,
+                         int(st.st_mtime)])
+    return rows, {"bytes": tot, "linked_bytes": linked, "store_only_bytes": only, "keep_shas": len(keep)}
+
+
 def tree_info(d):
     """(newest mtime, bytes, nlink>1 file or None)"""
     newest, size, hl = os.lstat(d).st_mtime, 0, None
@@ -663,7 +755,7 @@ def tree_info(d):
             newest = max(newest, st.st_mtime)
             if stat.S_ISREG(st.st_mode):
                 size += st.st_blocks * 512
-                if st.st_nlink > 1 and hl is None:
+                if st.st_nlink > 1 and hl is None and not store_linked(os.path.join(dp, n)):
                     hl = os.path.join(dp, n)
     return newest, size, hl
 
@@ -852,7 +944,7 @@ class Job:
             return w
         for f in files:
             try:
-                if os.stat(f).st_nlink > 1:
+                if os.stat(f).st_nlink > 1 and not store_linked(f):
                     return "hardlink " + f
             except OSError:
                 return "gone " + f
@@ -1226,6 +1318,15 @@ class Job:
                     continue
                 v = self.handle(cls, d, files, why, mt)
                 stop = v == "ALERT"
+        if "k" in classes and not stop:
+            for ks in kit_store_roots():
+                krows, ksum = kit_store_gc(ks, a.apply)
+                for v, reason, path, b, mt in krows:
+                    self.rows.append([time.strftime("%F %T"), self.host, "k", v, reason, path, os.path.basename(path), b, mt])
+                if ksum:
+                    say(f"KIT-STORE {self.host} {ks}: {ksum['bytes'] / 1e9:.2f} GB in blobs, "
+                        f"{ksum['store_only_bytes'] / 1e9:.2f} GB held only by the store, {ksum['keep_shas']} shas in "
+                        f"manifests of the last {KIT_STORE_KEEP_DAYS} d")
         mdir = os.path.join(a.state, "manifests")
         os.makedirs(mdir, exist_ok=True)
         mf = os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}.tsv")
@@ -1652,7 +1753,7 @@ class Driver:
                                        f"{' --apply' if a.apply else ''} {extra}", timeout=a.run_timeout + 120)
                     out = r.stdout
                     for ln in out.splitlines():
-                        if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper")):
+                        if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper", "KIT-STORE")):
                             say(f"{h}: {ln}")
                     say(f"{h}: run rc {r.returncode}{' ' + r.stderr.strip()[-200:] if r.returncode else ''}")
                 if a.collect:
@@ -1682,7 +1783,7 @@ def main(argv=None):
     r.add_argument("--max-snapshot-age-h", type=float, default=3.0)
     r.add_argument("--min-protected", type=int, default=100, help="refuse a union smaller than this")
     r.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
-    r.add_argument("--classes", default="abc")
+    r.add_argument("--classes", default="abck")
     r.add_argument("--docker", default="docker", help="docker command ('' = no docker on this host)")
     r.add_argument("--aliases", default=None, help="findmnt -rn -o TARGET,SOURCE text file (tests)")
     r.add_argument("--find-timeout", type=int, default=3600)
