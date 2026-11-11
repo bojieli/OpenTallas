@@ -975,33 +975,46 @@ def _core_pins(tn, t, inst, plan_dir):
 
 
 def chain_starts(tn, t, e, b, W, plan_dir, pins):
-    """{bit: (x, y)} L-route start of every bit (core_bits + epoch W) of a core chain: the face pin (pins:
-    {bit: (x, y)}, gen_phys.type_pins) or, with start_core/start_port, that hard core's pin <port>[bit], which must sit on
-    the core outline edge (<= MACRO_TOL_UM; the launch point of a landed bus is the landing macro's q edge)."""
-    bits = sorted({int(x) for x in e["core_bits"]} | {W})
-    if e.get("start_core"):
-        bits = list(range(W + 1))      # is_bits takes its knee geometry from every start (as from every BTerm)
+    """{bit: (x, y)} L-route start of every bit of a core chain: the face pin (pins: {bit: (x, y)}, gen_phys.type_pins;
+    core_bits + epoch W) or, with start_core, the plan's start_um (one site per bound bit 0..W, the epoch last): each
+    must sit on the start core's outline edge (<= MACRO_TOL_UM; a landed bus launches at its landing macro's q edge).
+    With plan_dir (kit --apply) the sites must also equal start_core's <start_port>[bit] pins (pins file)."""
     if not e.get("start_core"):
+        bits = sorted({int(x) for x in e["core_bits"]} | {W})
         if pins is None:
             return None
         miss = [x for x in bits if x not in pins]
         if miss:
             raise SystemExit(f"kit_istations: {tn} {b['name']}: face pins missing for bits {miss[:8]}")
         return {x: pins[x] for x in bits}
-    hc, cp = _core_pins(tn, t, e["start_core"], plan_dir)
-    port = e.get("start_port", "q")
+    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == e["start_core"]), None)
+    if hc is None:
+        raise SystemExit(f"kit_istations: {tn}: start_core {e['start_core']} is not a hard core of the type")
+    su = e.get("start_um")
+    if not isinstance(su, list) or not su:
+        raise SystemExit(f"kit_istations: {tn} {b['name']}: start_core {e['start_core']} without start_um")
+    if W is not None and len(su) != W + 1:
+        raise SystemExit(f"kit_istations: {tn} {b['name']}: start_um has {len(su)} sites != bound width + epoch {W + 1}")
+    if max(int(x) for x in e["core_bits"]) >= len(su) - 1:
+        raise SystemExit(f"kit_istations: {tn} {b['name']}: core_bits beyond start_um")
     (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
     out = {}
-    for x in bits:
-        p = cp.get(f"{port}[{x}]")
-        if p is None:
-            raise SystemExit(f"kit_istations: {tn} {b['name']}: start_core {e['start_core']} has no pin {port}[{x}]")
+    for x, p in enumerate(su):
+        p = (float(p[0]), float(p[1]))
         d = min(abs(p[0] - x0), abs(p[0] - x0 - w), abs(p[1] - y0), abs(p[1] - y0 - h))
         inside = x0 - MACRO_TOL_UM <= p[0] <= x0 + w + MACRO_TOL_UM and y0 - MACRO_TOL_UM <= p[1] <= y0 + h + MACRO_TOL_UM
         if d > MACRO_TOL_UM or not inside:
-            raise SystemExit(f"kit_istations: {tn} {b['name']}: start {port}[{x}] {p} is not on the edge of start_core "
-                             f"{e['start_core']} ({d:.3f} um off)")
+            raise SystemExit(f"kit_istations: {tn} {b['name']}: start site of bit {x} {p} is not on the edge of "
+                             f"start_core {e['start_core']} ({d:.3f} um off)")
         out[x] = p
+    if plan_dir is not None:
+        _, cp = _core_pins(tn, t, e["start_core"], plan_dir)
+        port = e.get("start_port", "q")
+        for x, p in out.items():
+            q = cp.get(f"{port}[{x}]")
+            if q is None or abs(q[0] - p[0]) + abs(q[1] - p[1]) > 0.01:
+                raise SystemExit(f"kit_istations: {tn} {b['name']}: start site of bit {x} {p} is not start_core "
+                                 f"{e['start_core']} pin {port}[{x}] {q}")
     return out
 
 
@@ -1067,11 +1080,11 @@ def core_chain_geometry_errors(P, tn, plan_dir=None):
             continue
         W = len(pins.get(bus, {})) - 1
         try:
-            st = chain_starts(tn, t, e, b, W, plan_dir, pins.get(bus, {}))
+            st = chain_starts(tn, t, e, b, None if e.get("start_core") else W, plan_dir, pins.get(bus, {}))
         except SystemExit as ex:
             errs.append(f"type {tn}: {ex}")
             continue
-        keep = {int(x) for x in e["core_bits"]} | {W}     # bits synthesis keeps (chain_starts may list all)
+        keep = {int(x) for x in e["core_bits"]} | {max(st)}     # bits synthesis keeps (+ epoch; start_um lists all)
         hits = chain_macro_hits(t, e, b, {k: v for k, v in st.items() if k in keep})
         if hits:
             errs.append(f"type {tn}: core chain {bus} {e['core']}: {len({h[0] for h in hits})} bit L routes enter hard "

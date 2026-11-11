@@ -1472,6 +1472,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
 # SUL0-PINFACE-1 11-11: a landed bus's chain starts at its landing macro's output pins (kit_istations.chain_starts)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_core"] = {"type": "string", "minLength": 1}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_port"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_um"] = {"type": "array", "minItems": 2, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}

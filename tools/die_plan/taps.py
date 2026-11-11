@@ -216,15 +216,14 @@ def per_bit_station_sites(t, pins, plan_dir=None):
         n = len(e["regs_um"])
         bat = at.get(bus, {})
         if e.get("start_core"):       # SUL0-PINFACE-1 11-11: a landed bus starts at its landing macro's q pins
-            import kit_istations as KI
-            _, cp = KI._core_pins("?", t, e["start_core"], plan_dir)
-            port = e.get("start_port", "q")
-            bat = {bit: cp[f"{port}[{bit}]"] + (f,) for bit, (_x, _y, f) in bat.items() if f"{port}[{bit}]" in cp}
+            su = e["start_um"]
+            f0 = next(iter(bat.values()))[2] if bat else buses[bus]["face"]
+            bat = {bit: (float(p[0]), float(p[1]), f0) for bit, p in enumerate(su)}
         d_in = buses[bus]["dir"] == "in"
         # SUL0-PINFACE-1: a per-core chain keeps only the bits its core reads / drives (synthesis drops the rest)
         keep = set(int(b) for b in e["core_bits"]) if e.get("core") else None
         for bit, (px, py, face) in sorted(bat.items()):
-            if keep is not None and bit not in keep and bit != len(at.get(bus, {})) - 1:
+            if keep is not None and bit not in keep and bit != len(bat) - 1:
                 continue
             # SUL0-PINFACE-1 11-11: leg_order along_first puts the corner at the pin column / row (kit is_knee_site)
             along = e.get("leg_order", "normal_first") == "along_first"

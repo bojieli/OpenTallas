@@ -232,7 +232,7 @@ endmodule
 def lplan(qx=0.0, start=True):
     e = st("z", "A", [0, 1, 2], leaf=(62.0, 50.0))
     if start:
-        e.update(start_core="LM", start_port="q")
+        e.update(start_core="LM", start_port="q", start_um=[[80.0 + qx, 12.0 + b] for b in range(4)])
     return dict(partition_types=dict(t=dict(
         buses=[dict(name="z", dir="in", width=3, kind="data", face="E")], internal_stations=[e],
         hard_cores=[dict(inst="A", module="core_a", origin_um=[40, 40], outline_um=[20, 20]),
@@ -273,7 +273,7 @@ def test_start_core_q_pins(tmp_path):
 def test_start_not_on_source_edge_fails(tmp_path):
     """must-fail: the named start pin is 5 um inside the landing macro, not on its edge"""
     r, bf, _ = lrun(tmp_path, qx=5.0)
-    assert r.returncode != 0 and "is not on the edge of start_core LM" in r.stderr, r.stderr[-300:]
+    assert r.returncode != 0 and "is not on the edge of " in r.stderr, r.stderr[-300:]
     assert bf.read_text() == LBOUND
 
 
@@ -343,3 +343,31 @@ def test_leg_order_gate_and_taps_corner():
     e = dict(conn="bus:z", bit_route="per_bit", leaf_um=[0.0, 80.0], regs_um=[[0, 0]], leg_order="along_first")
     s = taps.per_bit_station_sites(dict(t, internal_stations=[e]), [("z", 0, "M4", 50.0, 5.0, "E"), ("z", 1, "M4", 50.0, 6.0, "E")])
     assert all(not (20 < x < 30 and 0 < y < 50) for x, y, _ in s) and len(s) == 2
+
+
+def test_start_um_must_match_start_core_pins(tmp_path):
+    """must-fail: the plan's start sites (start_um) are on the macro edge but are not its q pins"""
+    p, pins = lplan()
+    p["partition_types"]["t"]["internal_stations"][0]["start_um"][1] = [80.0, 18.0]
+    (tmp_path / "LM_pins.json").write_text(json.dumps(dict(pins=pins)))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(p))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    bf = kd / "t_part_bound.sv"
+    bf.write_text(LBOUND)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
+                       capture_output=True, text=True)
+    assert r.returncode != 0 and "is not start_core LM pin q[1]" in r.stderr, r.stderr[-300:]
+
+
+def test_taps_start_um_sites():
+    """taps reads the start sites from the plan (no pins file): stations lie on start -> corner -> leaf"""
+    sys.path.insert(0, str(HERE))
+    import taps
+    p, _ = lplan()
+    t = p["partition_types"]["t"]
+    pins = [("z", b, "M4", 100.0, 30.0 + b, "E") for b in range(4)]
+    s = taps.per_bit_station_sites(t, pins)
+    assert len(s) == 2 * 4 and all(x <= 80.0 + 1e-9 for x, _, _ in s)   # from x = 80 (macro edge) west, not from 100
