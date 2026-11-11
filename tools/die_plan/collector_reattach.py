@@ -23,6 +23,11 @@ the stale sidecar.  With --sidecar the node/tap of every reattached type's sourc
 sidecar (sources matched by name, children by index; any count or name mismatch -> exit 1 and no output).  Other
 types and keys stay byte-identical, and the output keeps the sidecar's JSON style.
 
+Rerooted collectors (collector_root_node a local relay, the monitor up-link source): the root keeps its SITE.  The new
+root is the nearest same-depth relay of the new tree to the old root's site within reach (shift reported).  The tree
+root, up pins and parent seam must be unchanged, otherwise exit 1.  cand21c slw_fw_v3 (struct form: 117 -> 239
+relays) moved rst_n_t8 from (17.76, 273.12) to (583.71, 64.80).
+
 Orthogonal to reset_anchor.py (RELAY-ANCHOR): that one re-picks the START / local-reset relay NAMES at bind time by
 recorded site; this one moves the collector status sources in the plan when the tree snapshot itself is refreshed.
 """
@@ -67,6 +72,33 @@ def source_hops(lc):
     return out
 
 
+def _reroot(blc, lc, reach_um):
+    """A collector rooted at a local relay (collector_root_node != rst_root_n: the up-link source of a monitor edge)
+    keeps its SITE, not its name: the new root is the nearest same-depth relay of the new tree to the old root's site,
+    within reach_um.  The up pins and the parent seam stay where they are; the shift is reported (an up-edge hop grows
+    by at most that much).  None when the collector is rooted at rst_root_n, or the old root keeps its name and site."""
+    root = lc.get("collector_root_node", "rst_root_n")
+    if root == "rst_root_n":
+        return None
+    if blc.get("collector_root_node", "rst_root_n") != root:
+        raise ValueError(f"collector root changed name {blc.get('collector_root_node')} -> {root} between base and cand")
+    ot, nt = blc["collector_tree"], lc["collector_tree"]
+    if tuple(ot["root"]) != tuple(nt["root"]):
+        raise ValueError("collector tree root moved; requires an explicit parent seam event")
+    old = {r["q"]: r for r in ot["relays"]}
+    if root not in old:
+        raise ValueError(f"collector root {root} absent from the base tree")
+    oxy, depth = old[root]["xy"], old[root]["depth"] + nt["depth"] - ot["depth"]
+    new = {r["q"]: r for r in nt["relays"]}
+    if root in new and new[root]["xy"] == oxy and new[root]["depth"] == depth:
+        return None
+    d = lambda r: abs(r["xy"][0] - oxy[0]) + abs(r["xy"][1] - oxy[1])
+    best = sorted((d(r), q) for q, r in new.items() if r["depth"] == depth)
+    if not best or best[0][0] > reach_um + 1e-6:
+        raise ValueError(f"collector root {root}: no depth-{depth} relay within {reach_um}um of its site {oxy}")
+    return dict(old_node=root, node=best[0][1], shift_um=round(best[0][0], 3), site_um=list(oxy), depth=depth)
+
+
 def reattach_plan(base, cand, reach_um=405):
     """in place on cand -> report {reattached: {type: ...}, over: {type: [(name, node, hop)]}}"""
     rep = {"reattached": {}, "over": {}}
@@ -76,17 +108,21 @@ def reattach_plan(base, cand, reach_um=405):
             continue
         blc = _lc(base, tn)
         if blc is not None and blc["collector_tree"] != lc["collector_tree"]:
+            reroot = _reroot(blc, lc, reach_um)
             info = dict(tree=copy.deepcopy(blc["collector_tree"]),
                         local_sources=copy.deepcopy(blc.get("collector_local_sources") or []),
                         children=copy.deepcopy(blc.get("collector_children") or []),
-                        collector_root_node=lc.get("collector_root_node", "rst_root_n"))
+                        collector_root_node="rst_root_n" if reroot else lc.get("collector_root_node", "rst_root_n"))
             r = LCO.reattach_sources(info, lc["collector_tree"], reach_um=reach_um)
             lc["collector_local_sources"] = info["local_sources"]
             if "collector_children" in lc or info["children"]:
                 lc["collector_children"] = info["children"]
+            if reroot:
+                lc["collector_root_node"] = reroot["node"]
             rep["reattached"][tn] = dict(added_collector_cycles=r["added_collector_cycles"],
                                          max_source_hop_um=r["max_source_hop_um"],
-                                         moved=[x for x in r["sources"] if x["old_node"] != x["node"]])
+                                         moved=[x for x in r["sources"] if x["old_node"] != x["node"]],
+                                         **(dict(rerooted=reroot) if reroot else {}))
         bad = [h for h in source_hops(lc) if h[2] is None or h[2] > reach_um + 1e-6]
         if bad:
             rep["over"][tn] = bad
@@ -113,6 +149,10 @@ def sync_sidecar(cand, side, types):
                 if k in q and s.get(k) != q[k]:
                     s[k] = q[k]
                     n += 1
+        root = lc.get("collector_root_node")
+        if root and row.get("collector_root_node") not in (None, root):
+            row["collector_root_node"] = root            # collector_root_xy (the up-link site) stays
+            n += 1
         out[tn] = n
     return out
 

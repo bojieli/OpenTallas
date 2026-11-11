@@ -109,6 +109,41 @@ def test_sidecar_name_mismatch_fails_closed(tmp_path):
     assert not out.exists() and not so.exists()
 
 
+def test_rerooted_collector_keeps_root_site():
+    # root = local relay rst_n_t1 (an up-link source); the new tree renames the relay at that site rst_n_t0
+    def rooted(tree):
+        p = _plan(tree, [{"name": "cws1_i", "xy_um": [300.0, 450.0], "tap": 0}])
+        p["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_root_node"] = "rst_n_t1"
+        return p
+    base = rooted(_tree([450.0, 0.0]))
+    nt = _tree([300.0, 100.0]); nt["relays"][1]["xy"] = [455.0, 0.0]          # t0 <-> t1 sites swapped (5 um off)
+    cand = rooted(nt)
+    rep = CR.reattach_plan(base, cand)
+    lc = cand["partition_types"]["ctl"]["clock"]["landing_contract"]
+    assert lc["collector_root_node"] == "rst_n_t0"
+    assert rep["reattached"]["ctl"]["rerooted"]["shift_um"] == 5.0
+    assert lc["collector_local_sources"][0]["node"] == "rst_n_t1"              # source follows its site too
+    side = {"collector": {"types": {"ctl": {"local_sources": [{"name": "cws1_i", "tap": 0}], "children": [],
+                                            "collector_root_node": "rst_n_t1", "collector_root_xy": [450.0, 0.0]}}}}
+    CR.sync_sidecar(cand, side, ["ctl"])
+    row = side["collector"]["types"]["ctl"]
+    assert row["collector_root_node"] == "rst_n_t0" and row["collector_root_xy"] == [450.0, 0.0]
+
+
+def test_reroot_out_of_reach_fails():
+    base = _plan(_tree([450.0, 0.0]), copy.deepcopy(SRC))
+    base["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_root_node"] = "rst_n_t1"
+    far = _tree([0.0, 900.0]); far["relays"][1]["xy"] = [0.0, 1200.0]
+    cand = _plan(far, copy.deepcopy(SRC))
+    cand["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_root_node"] = "rst_n_t1"
+    try:
+        CR.reattach_plan(base, cand)
+    except ValueError as e:
+        assert "collector root rst_n_t1" in str(e)
+    else:
+        raise AssertionError("expected a reach failure")
+
+
 if __name__ == "__main__":
     import tempfile
     for n, f in sorted(globals().items()):
