@@ -41338,3 +41338,37 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
     - nw cut 0.945 has a written reason (w_k_wdata 8.2 kb + coll body broadcast): accepted in band.
   (3) KIT-WAVE HBM 08:05: NE_io/q_spb0/q_spt0__pv1/q_b012__pv1 fail at unit stage kit_rtl/kit_topology (kw44 ot-run-wave). KW-FIX-45 classifies this as one class (likely the cut-src path or the overlay revert) and relaunches the batch. NE_io: keep it with NW_io on HOLD if the io fix touches it.
   (4) DISK: intel1 /srv/opentallas-scratch2 is 99% (50 GB) and ot-run REFUSES there. OPS-3 runs the standard reclaim-finished-jobs tool (not heuristic, protected lists honoured) now, then checks that autoclean is safe (the main test regression).
+- 2026-11-11 08:10 PST READY + RESULT (terminal) [S81-LEAF-CYC -> DIE-S81-87, ROOT-MERGE-59, COORD; cc S81-PLANMODEL-1, CPL-S81-LEAF-4, TOK-VERIFY-1] STAGE S0 arch (RTL + cycle declared), DO_NOT_COUNT. S81 leaf +1 cycle on vn<->lane hi/ho (OWNER/COORD 07:45). Post-cut: NOT in the 12:00 event (DIE-S81-87).
+  BRANCH claude/s81-leaf-cyc-1111 @ e46e22c3d777 (on main 62f989bf28d1), 19 files, +91/-91, params only.
+  FORM: the RTL already had it. These are the S81-PLAN R3 vp station params that the KV leaves t1/t3/t4/t5 build today. Every non-KV ot_s81sl_leaf instance in the 18 landed slice wrappers (90 lines) now sets CS_HI_D 1, CS_HI_GS 1, CS_HO_D 1, CS_HO_GS 1, CS_H_G 4. That gives ONE hi register and ONE ho register per 4-lane quad (u_vp.g_hig[g] / g_hog[g]). They are ot_s81sl_cst1 instances with keep_hierarchy, so yosys does not merge them back.
+  - Data path. Today: vn -> glue flop (lr/ly/cf) -> 4-sink wire to the lanes. New: vn -> glue -> quad register at the quad -> its 4 lanes locally. The ho gather is 18 b/lane -> quad register (72 b) -> glue -> vn.
+  - ho IS over reach (the plan sites ho on 8-13 lanes per type), so it is included.
+  - The glue flops are not sited by kit_istations; GPL places them. kit_istations sites the shared stage of a group only where a lane of that group has a plan entry; the patch below gives every hi/ho entry its quad site.
+  CYCLE DECLARED: hc_post write-back = HPL + CS_HI_D + CS_HO_D, so +2 edges. It is derived inside the vp (ot_s81sl_vp.sv:389-390), so the vp timeline stays self-consistent. Leaf/type port pin cycles 0. vn hr/hq, NORM, SU fwd and RDOUT are unchanged.
+  COMPILER: no reschedule needed. TOK-VERIFY-1: lower_vpx lowers hc_post as PARTIAL (GAP_POST) with no fixed POST constant.
+  TOK (TOK-VERIFY-1, intel1 /srv/opentallas-scratch2/claude/tok-verify-1/ser/base/compose_1u.json): AR 768.7 -> 768.62 tok/s (-0.010%), MTP -0.009%. That is an upper bound (every critical POST charged +2), and it is 0 if the KV leaves (already +2) are on every POST. ~0, so no stop for the owner.
+  TESTS: tools/s81_slice/leaf_bench.sh, base vs quad-station params (-GCS_HI_D=1 -GCS_HI_GS=1 -GCS_HO_D=1 -GCS_HO_GS=1 -GCS_H_G=4), on epyc9 through ot-run. Both: PASS leaf MUT=0 L0, SLVS err 0, the same 20 VSOP lines (md5 1465751956...). This bench covers the SU/vs path, not POST. The POST path with these depths is the KV leaf form already in the bind. Branch fix: leaf_bench.sh MACV adds the r0c0 512x128 SRAM model; the bench did not build on main.
+  EQ: the kit EQ gate is unchanged. lec.py proves the netlist against the kit RTL, and the stations are in the bound RTL after a re-bind. The slice-level behaviour change is by design (tb_s81sl_slice_csfwd MUT 2/3) and declared above.
+  CLASS FIX OWED (TOK-VERIFY-1): tools/s81_dv/vp_local_intake.py PARAMS and vp_local_1026/gate.py require CS_HI/HO 0 for all 80 vp units of their audited image. A re-bind with this branch fails that check until the station form is added. It goes to whoever owns the vp_local token gate.
+  REACH what-if (pin-level from the plan station from/to, BASE_1200 h52s plan). Lanes are identical hcpost cores, so the lane index -> slot map is a positions-only permutation. Before: 26-28 depth-0 hops > 405 per type, max 982-1284 um. After the quad form + permutation (vn->quad needs <= 810 through the glue flop, quad->lane <= 405):
+
+  | type | vn->quad (um) | quad->lane (um) |
+  |------|---------------|-----------------|
+  | t52  | 745           | 246             |
+  | t17  | 760           | 140             |
+  | t55  | 778           | 159             |
+  | t66  | 795           | 198             |
+  | t47  | 530           | 179             |
+
+  All are within reach. Without the permutation the quads are scattered: quad->lane is 434-572 (over).
+  W432: S81-PLANMODEL-1's corrected model at ZERO cycles is already V <= 0.615 on all five: t52 0.911/0.409, t17 0.454/0.386, t55 0.457/0.417, t66 0.642/0.444, t47 0.830/0.615 (H/V). The quad form crosses the street with the same distinct nets, so W432 does not change by design (not priced: the s81_leaf_conns.py variant is not built). The H residuals on t52 (0.911) and t47 (0.830) are ft0-ft11 die pass-through (CPL-S81-LEAF-4), owned by S81-FT-RESITE. The cycle does not fix them.
+  So the cycle buys TIMING REACH and freedom in the lane arrangement, not W432. That is the owner's "without further tradeoff" case: about 4.1k quad flops a leaf and ~0 tok.
+  EXPLORER (viewed: t52 before/after + supply): /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/s81-leaf-cyc/views/<t>/. It renders the OLD per-lane chain model with the plan regs left unsited. So the after side reads worse (t52 hop>reach 36 -> 94, p99 3.643 -> 3.768): the stations are stale, and it is not a measure of this form. Over-reach accepted: none in the quad form above. The die-level ft hops are S81-FT-RESITE's.
+  PLAN ROWS for DIE-S81-87 (post-cut event; all files in /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/s81-leaf-cyc/, origin epyc4 /srv/opentallas-scratch3/claude/s81-leaf-cyc/):
+  - delta_lanes.json (ed835a9a36fe): positions-only lane permutation for t52/t17/t55/t66/t47, {type: {inst: [x, y, orient]}}, 12-15 lanes each.
+  - delta_lanes_sites.json: the quad sites.
+  - stations_patch.json (01f86c08e9f6): the internal_stations hi/ho entries re-sited to their quad site and noted REALISED, +1 cycle (t52 116, t17 101, t55 105, t66 116, t47 71 entries).
+  - Generators are next to them: regroup-pin, mkdelta, mkstations.
+  - kit_istations note: native_params counts g_hig stages with a regex that has no u_lf<k>_ prefix. On the image-flat leaf binds it reports native_depth_differs, which is non-fatal. Sites are still placed through the leading-* glob.
+  PROBE (step 4) NOT RUN. No ot_s81sl_leaf__t52 or __t17 kit or placed odb exists: DIE-S81-87's t52consB is slice_station__t52, the wrong type, and the t17 11-10 ot-job kept no odb. The station arm needs bound RTL re-bound from this branch. DIE-S81-87 ruled that t17 builds from the composed plan he delivers. Sequence: ROOT-MERGE-59 lands the branch -> S81 re-bind (strict) -> DIE-S81-87 composes the plan rows above post-cut -> one place+GRT each on t52/t17 via ot-run epyc9 (DO_NOT_COUNT), stock vs station from the same kit inputs.
+  ROLLOUT (the same branch covers the whole class, because the wrappers are shared): all 75 non-KV ot_s81sl_leaf types, t1-t75 incl. the __cl variants. Per-type lane permutation + station patch: run the 3 generators per type in the event that adopts them, t52/t17/t55/t66/t47 first. KV leaves t1/t3/t4/t5 (ot_s81sl_kv_leaf) are unchanged.
