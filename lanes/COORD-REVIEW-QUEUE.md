@@ -42751,3 +42751,20 @@ FAILED [AUTOPILOT 64bc87ce60b7] 2026-11-11 14:02:23 PST AUTOPILOT -> KIT-WAVE-1:
   - fp2s NOT SIGNED (setup -312.7: the 160-um A/C mux wire, so copies can't fix it). rd1 (+1 read stage, TOK -0.322%) is ADOPTED under the owner cycle rule (<= 1%). The counted vecd4ae launches on rd1 once its EQ passes; that needs a new recipe re-point READY to rd1's sha.
   - KW-FIX-45 sends GRT-PATCH-1 the two GRT-ARM[off] kit paths + overflow.
 - 2026-11-11 14:09 PST NOTE [COORD] HBM t19 switch confirmed by KW-FIX-45 (13:13, commit 1fb4768c5d; 'hcut1111' is only the event label). My 13:3x "not switched" read was wrong.
+- 2026-11-11 14:13 PST READY P0 [S81-FRAME-FIX-1 -> ROOT-MERGE-59, COORD, DIE-S81-87, TOK-VERIFY-1] BF go_bf/go skew fix: claude/s81-bf-gobf-1111@8ab821da2c (base main cd5748bb22, 81 files). Fixes FINDING 11:15.
+  - Generator fix: tools/s81_dv/frame_wrap.py add_bf_go_align traces each BF front with station_depth. It adds +1 relay on go/cfg/f_prog where the x2 payload is deeper: col_h9 e13 (u_y_ga_e13_*) and col_h10 e15 (u_y_ga_e15_*). All other fronts and every q element were already aligned and are untouched.
+  - LP chain regenerated with no hand edits. New tools/s81_dv/frame_plan_events.py replays the DIE-S81-70 romq split and the DIE-S81-71 cst_st chain. Control on main: frame_band_plan + events reproduces plan_kit.sv byte for byte for both masters, and every other stage was byte-identical on main. Commands are in the commit message.
+  - Proofs:
+    - vgcs twin, frame_bf_measure h9 LK5 LDLY3: fault 0 (main control: fault 4, check FAIL).
+    - test_bf_go_align (new): main fails all 30 LP forms plus frame_l4; the fix passes.
+    - test_station_depth 12 OK; inband_shift 0 on all pairs. xs_field_calendar selftest PASS 23. frame_seq_gate PASS.
+    - Seam bench with BFVEC (qbpc-proof guard): EXIT 0. base: bf_fault 0, 0 seam mismatches. late9/late13/short/unland/landread/reset all caught.
+    - _l4 production bench: fault 0, check PASS (OT_S81_BF_COL_FORM=base).
+  - measure.json re-measured (2-flop stations; the 10-23 records predated dc23a738):
+    - col_h9_lp|E5: e4 329 / e8 341 / e13 352 (was 326/335/343)
+    - col_h9_lp|E2: 324 / 336 / 347
+    - col_h10_lp|E2: 321 / 330 / 339
+  - DIE-S81-87 re-sign-off: logic changes only in col_h9/col_h10 plan_kit.sv module *_r2 (+3 relays, +3 reset leaves) and in kit band b2 (vgch/vgcs). In r0/r0_nx/r1/b0/b1 only an unused localparam's text changes; that it is netlist-neutral is inferred, not LEC-checked.
+  - TOK-VERIFY-1: rerun the as-built re-trace and TOK. The LP schedules and plan kits changed. asb_x_check was already FAIL on main.
+  - Pre-existing, not fixed: the q PLAN_SET at LK5/LDLY3 is +2 on main and the fix alike; lp record ok=false UNLANDED x/xk; vg* schedule format drift.
+  - Evidence: epyc9 /srv/opentallas-scratch2/claude/s81-frame-fix-1/h9bf/.
