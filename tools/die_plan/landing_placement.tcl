@@ -1054,8 +1054,26 @@ proc cland_place_ff {prefix rect tag} {
 # bound of what the band can hold: per band row, every free segment (length >= the narrowest body) plus one widest
 # reservation of overhang at its end (a last body fits, its reservation may run past the segment).  Bands that fit,
 # multi-row cells and bands not inside the core skip it: their placement is unchanged.
+# DIE-KV-97 11-10: the cland_put_start grow condition (same expression), for the band bound below
+proc cland_start_grows {rect} {
+ global ff_x0 ff_y0 ff_x1 ff_y1 ff_dbu
+ lassign $rect ax ay bx by
+ set x [expr {($ax+$bx)/2.0*$ff_dbu}]; set y [expr {($ay+$by)/2.0*$ff_dbu}]
+ return [expr {!([info exists ::env(OT_CLAND_START_GROW)] && $::env(OT_CLAND_START_GROW) eq "0") &&
+     $x > $ff_x0 && $x < $ff_x1 && $y > $ff_y0 && $y < $ff_y1}]
+}
+# DIE-KV-97 11-10 (KV kv3_pv_v1 / kv3_pv_v1n a8..a11, v6n: 3_3 "... (writer-start:ft7_o): 3 cells reserve 1.2 um2 > band
+# upper bound 0.0 um2, checked before placement"): up to 35 reader/writer START bands share ONE 4.32-um window
+# (kv3_pv_v1n 397.44..401.76 x 302.40..306.72); the earlier groups and the FIRM station / reset-tree / face flops fill
+# it, so this up-front bound failed the kit before cland_put_start could grow the window (DIE-QC-97 11-09).  A band
+# whose cells take the grow law (START windows that grow, local-reset; literal-local-reset with OT_LAND_RESERVE=1) is
+# not bounded by its unscaled window: the bound is skipped and the grow keeps the same fail-closed error at x32.
+# Rings, status and every other band are checked as before.
 proc cland_band_fit {prefix rect tag} {
  global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
+ if {$tag eq "local-reset" || (([string match {reader-start:*} $tag] || [string match {writer-start:*} $tag])
+     && [cland_start_grows $rect]) || ($tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)]
+     && $::env(OT_LAND_RESERVE) eq "1")} return
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
  foreach i [cland_group_insts $prefix] {
