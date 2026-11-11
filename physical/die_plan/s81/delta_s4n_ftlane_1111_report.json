@@ -1,0 +1,371 @@
+{
+ "event": "S4N-FTLANE-1111",
+ "base_plan_sha256": "b5faa1bacc5f6e80c6167856ee1597a7a775ea81dad9305424a3c47de0786d7b",
+ "lane": "dn_s_4N_L0",
+ "width": 597,
+ "old_chain": [
+  "s_4N_L1",
+  "s_4N_L3",
+  "s_5N_L3"
+ ],
+ "new_chain": [
+  "s_4N_L1",
+  "s_5N_L1",
+  "s_5N_L3"
+ ],
+ "stations_total_x1_x3": 13,
+ "old_slots": {
+  "dn_s_4N_L0x1": {
+   "in_face": "S",
+   "out_face": "N",
+   "stations": 4,
+   "in_window_um": [
+    958.1253,
+    1057.792
+   ],
+   "out_window_um": [
+    678.7653,
+    778.432
+   ]
+  },
+  "dn_s_4N_L0x2": {
+   "in_face": "S",
+   "out_face": "W",
+   "stations": 4,
+   "in_window_um": [
+    678.7653,
+    778.432
+   ],
+   "out_window_um": [
+    563.6,
+    663.2667
+   ]
+  },
+  "dn_s_4N_L0x3": {
+   "in_face": "E",
+   "out_face": "N",
+   "stations": 5,
+   "in_window_um": [
+    563.6,
+    663.2667
+   ],
+   "out_window_um": [
+    284.0293,
+    383.696
+   ]
+  }
+ },
+ "lane_natural_before": {
+  "cycles": 31,
+  "stations": 17,
+  "boundary": 2,
+  "faces": 5,
+  "fixed": 6,
+  "clock_landing": 6
+ },
+ "windows_die": {
+  "s_4N_L1|s_5N_L1": {
+   "face": "E",
+   "window_um": [
+    19325.152,
+    19424.8187
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ]
+  },
+  "s_5N_L1|s_5N_L3": {
+   "face": "N",
+   "window_um": [
+    18202.112,
+    18301.7787
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ]
+  }
+ },
+ "stations": {
+  "reach_um": 405.0,
+  "ft_station_max_um": 405.0,
+  "tries": [
+   [
+    0.5,
+    [
+     4,
+     5,
+     4
+    ],
+    403.6,
+    376.7
+   ]
+  ],
+  "per_slot": {
+   "dn_s_4N_L0x1": 4,
+   "dn_s_4N_L0x2": 5,
+   "dn_s_4N_L0x3": 4
+  },
+  "max_pin_hop_um": 403.63,
+  "crossings": [
+   {
+    "part": "s_4N_L1",
+    "slot": "dn_s_4N_L0x1",
+    "len_um": 1184.9,
+    "stations": 4
+   },
+   {
+    "part": "s_5N_L1",
+    "slot": "dn_s_4N_L0x2",
+    "len_um": 1883.7,
+    "stations": 5
+   },
+   {
+    "part": "s_5N_L3",
+    "slot": "dn_s_4N_L0x3",
+    "len_um": 1502.2,
+    "stations": 4
+   },
+   {
+    "part": "s_5N_L4",
+    "slot": "dn_s_4N_L0x4",
+    "len_um": 1423.2,
+    "stations": 4
+   }
+  ]
+ },
+ "bands": {
+  "ot_s81sl_leaf__t52.dn_s_4N_L0x2_i": {
+   "rect_um": [
+    1293.5333,
+    17.28,
+    1393.2,
+    47.52
+   ],
+   "width": 597,
+   "ring_width": 640,
+   "live_data_storage_flops": 2990,
+   "padded_data_storage_flops": 3200,
+   "clock_roles": {
+    "forwarded_write_flops": 2560,
+    "local_read_flops": 640
+   },
+   "max_pin_to_band_hop_um": 308.972,
+   "area_reserve_um2": 2916.0,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "ring_place": "ff",
+   "reset_sites_avoided_um": [
+    [
+     1423.44,
+     15.12,
+     1427.76,
+     19.44
+    ],
+    [
+     1395.36,
+     45.36,
+     1399.68,
+     49.68
+    ]
+   ],
+   "instance": "u_cland_dn_s_4N_L0x2_i"
+  },
+  "dn_s_4N_L0x3_i_old": [
+   1395.36,
+   563.6,
+   1425.6,
+   663.2667
+  ],
+  "ot_s81sl_leaf__t53__cl958451dd.dn_s_4N_L0x3_i": {
+   "rect_um": [
+    559.3413,
+    17.28,
+    659.008,
+    47.52
+   ],
+   "width": 597,
+   "ring_width": 640,
+   "live_data_storage_flops": 2990,
+   "padded_data_storage_flops": 3200,
+   "clock_roles": {
+    "forwarded_write_flops": 2560,
+    "local_read_flops": 640
+   },
+   "max_pin_to_band_hop_um": 97.353,
+   "area_reserve_um2": 2916.0,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "ring_place": "ff",
+   "instance": "u_cland_dn_s_4N_L0x3_i"
+  }
+ },
+ "pins_separated": {},
+ "lane_natural_after": {
+  "cycles": 31,
+  "stations": 17,
+  "boundary": 2,
+  "faces": 5,
+  "fixed": 6,
+  "clock_landing": 6
+ },
+ "eq_gate": {
+  "rtl_change": false,
+  "pin_cycle_change": false,
+  "outline_change": false,
+  "core_position_change": false,
+  "lane_cycles_identical": true,
+  "other_lanes_natural_identical": true,
+  "changed_paths": [
+   "ports.dn_s_4N_L0_1.dst.part",
+   "ports.dn_s_4N_L0_2.src.part",
+   "clock.landing_network.edges.cland_clk__dn_s_4N_L0_1.dst.part",
+   "clock.landing_network.edges.cland_clk__dn_s_4N_L0_2.src.part",
+   "partition_types.ot_s81sl_leaf__t43.(ft_slots|clock.landing_contract|clock.edge_clocks)",
+   "partition_types.ot_s81sl_leaf__t44__clf6cf8492.(ft_slots|clock.landing_contract|clock.edge_clocks)",
+   "partition_types.ot_s81sl_leaf__t52.(ft_slots|clock.landing_contract|clock.edge_clocks)",
+   "partition_types.ot_s81sl_leaf__t53__cl958451dd.(ft_slots|clock.landing_contract|clock.edge_clocks)"
+  ],
+  "kit_input_types": [
+   "ot_s81sl_leaf__t43",
+   "ot_s81sl_leaf__t44__clf6cf8492",
+   "ot_s81sl_leaf__t52",
+   "ot_s81sl_leaf__t53__cl958451dd"
+  ]
+ },
+ "new_slots": {
+  "dn_s_4N_L0x1": {
+   "name": "dn_s_4N_L0x1",
+   "in_face": "S",
+   "out_face": "W",
+   "width": 597,
+   "stations": 4,
+   "in_window_um": [
+    958.1253,
+    1057.792
+   ],
+   "in_layers": [
+    "M7",
+    "M5"
+   ],
+   "in_order": "lsb_high",
+   "out_window_um": [
+    127.072,
+    226.7387
+   ],
+   "out_layers": [
+    "M6",
+    "M4"
+   ],
+   "out_order": "lsb_low",
+   "regs_um": [
+    [
+     807.84,
+     34.56
+    ],
+    [
+     600.48,
+     69.12
+    ],
+    [
+     432.0,
+     108.0
+    ],
+    [
+     64.8,
+     142.56
+    ]
+   ]
+  },
+  "dn_s_4N_L0x2": {
+   "name": "dn_s_4N_L0x2",
+   "in_face": "E",
+   "out_face": "N",
+   "width": 597,
+   "stations": 5,
+   "in_window_um": [
+    127.072,
+    226.7387
+   ],
+   "in_layers": [
+    "M6",
+    "M4"
+   ],
+   "in_order": "lsb_low",
+   "out_window_um": [
+    559.3413,
+    659.008
+   ],
+   "out_layers": [
+    "M7",
+    "M5"
+   ],
+   "out_order": "lsb_high",
+   "regs_um": [
+    [
+     1412.64,
+     345.6
+    ],
+    [
+     1136.16,
+     470.88
+    ],
+    [
+     1028.16,
+     760.32
+    ],
+    [
+     889.92,
+     907.2
+    ],
+    [
+     738.72,
+     1157.76
+    ]
+   ]
+  },
+  "dn_s_4N_L0x3": {
+   "name": "dn_s_4N_L0x3",
+   "in_face": "S",
+   "out_face": "N",
+   "width": 597,
+   "stations": 4,
+   "in_window_um": [
+    559.3413,
+    659.008
+   ],
+   "in_layers": [
+    "M7",
+    "M5"
+   ],
+   "in_order": "lsb_high",
+   "out_window_um": [
+    284.0293,
+    383.696
+   ],
+   "out_layers": [
+    "M7",
+    "M5"
+   ],
+   "out_order": "lsb_high",
+   "regs_um": [
+    [
+     596.16,
+     185.76
+    ],
+    [
+     561.6,
+     552.96
+    ],
+    [
+     414.72,
+     781.92
+    ],
+    [
+     388.8,
+     1157.76
+    ]
+   ]
+  }
+ },
+ "output_plan_sha256": "534706172e9c9aa177068ac63b89e68e164f09cba44b9aedbe553d05df6e80a7"
+}
