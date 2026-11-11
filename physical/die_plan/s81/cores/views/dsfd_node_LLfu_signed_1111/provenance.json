@@ -1,0 +1,108 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsfd_node_LLfu_d85",
+  "module": "dsfd_node_LLfu",
+  "plan_type": "col_h10_r0_p4__t1",
+  "outline_um": [
+   43.2,
+   77.76
+  ],
+  "ref_tile": "physical/ref_tile/s81net_node_llfu",
+  "spec": "physical/ref_tile/s81net_node_llfu/spec.json",
+  "spec_sha256": "f2bd2b10d76c46ea5d030d5d8cafc1a5bd3fee6ac2d0ee625f49f6db5bb2274a",
+  "pins_file": "inputs/core_pins/dsfd_node_LLfu.json",
+  "pins_sha256": "07564d7043523a5fa0ecf3c30ddbe266f1e4b1f33ab5b71a99c83671524feaee",
+  "pins": 196,
+  "plan_lef": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu.lef",
+  "pins_canon_sha256": "13dd7df7d9a00cceecdbcfd980ac5a8fc1735b30d881165772ef405b02b5c930",
+  "pins_placed_canon_sha256": "13dd7df7d9a00cceecdbcfd980ac5a8fc1735b30d881165772ef405b02b5c930",
+  "pins_staged_file": "declared_pin_contract/dsfd_node_LLfu.json",
+  "pins_staged_sha256": "07564d7043523a5fa0ecf3c30ddbe266f1e4b1f33ab5b71a99c83671524feaee",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "9ccbac837fd2669a2140920267aadea24d596c03b77fe5c343e137df45643a09",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "a8a7f27eb0",
+  "sdc_lint_sha256": "4ebf5de2286bfc0c2c2f0898d73b40079a10f2c73b7934f4ed0e99ba2539c92f",
+  "face_guard_sha256": "99e438c81bbd099255cc9c85da85879f7e8241699884aaacef68b67b0d93e769",
+  "signoff_sha256": "f0065258960ea161d0cec894b7f89bc670006b359c0cae0e01176b96c6178283",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "8fe3b0192a77b6f8",
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsfd_node_LLfu",
+   "contract_sha256": "f54f3cc8e740202eeb7a341f9fb3e5fab5f68a433291db2e5830d20376b9bbbb",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-11T06:43:56+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1",
+  "base": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1/run/results/asap7/kl_dsfd_node_LLfu_d85/base",
+  "signoff": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1/signoff/signoff.json",
+  "signoff_sha256": "cf177137f5e86a69afad100b52d8c824595f66a5c67ccc2254ffb4bc248ae2ab",
+  "signoff_generated": "2026-11-11T03:50:04+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/eco_d85/i1/run/results/asap7/kl_dsfd_node_LLfu_d85/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/ds85-child/kits/dsfd_node_LLfu_d85/lec/lec.json",
+  "note": "DS85 child rebuild d85 + hold ECO i1 (DIE-S81-85 11-11); LEC record = kit lec/lec.json (RTL vs synth netlist)",
+  "lib_basis": {
+   "dsfd_node_LLfu_tt.lib": "base dsfd_node_LLfu_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "dsfd_node_LLfu_ff.lib": "base dsfd_node_LLfu_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "dsfd_node_LLfu.lef": "b84636b8bab94cd98341c52d1edd0fe1e96e5957f717376256507897a8e637bf",
+   "dsfd_node_LLfu_ff.lib": "ba4c0543eab7b4b15683c88d396bbf09d1174a342837c41fa9354c757a3d0d2c",
+   "dsfd_node_LLfu_tt.lib": "dea19331277a3661bcaa10f9b46fb0753ac9c62ece1909f641b42f735e24e715",
+   "pins.json": "99a4ec790e2ad0231935be027702c1aba053c20ee4691124196d182b4a2d20c4"
+  },
+  "pin_access": {
+   "ok": true,
+   "top_layer": "M5",
+   "signal_pins": 196,
+   "without_access": [],
+   "n_without_access": 0
+  }
+ }
+}

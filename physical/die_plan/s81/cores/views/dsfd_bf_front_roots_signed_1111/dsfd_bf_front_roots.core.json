@@ -1,0 +1,34 @@
+{
+ "module": "dsfd_bf_front_roots",
+ "plan_type": "col_h10_r0_p4__t1",
+ "boundary_role": {
+  "ck": "clk",
+  "io_clk": "clk",
+  "io_n": "clk",
+  "io_w": "clk",
+  "io_e": "clk",
+  "rs": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 3266,
+   "min": 255.96,
+   "mean": 273.16,
+   "max": 300.43,
+   "spread": 44.47
+  },
+  "ff": {
+   "n": 3266,
+   "min": 197.8,
+   "mean": 213.4,
+   "max": 238.28,
+   "spread": 40.48
+  }
+ }
+}
