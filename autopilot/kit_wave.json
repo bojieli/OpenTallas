@@ -28814,7 +28814,7 @@
     "hnx_rp3h_xs@4": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts",
     "ot_hbm_idx_rootctl_static_am@14": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts",
     "q_spu0__physical_v1@1": "KW-FIX-32 2026-11-07 21:28 PST: class fix HBM transit placeholder 79239a67263 (DIE-HBM-90; GEN_LINT 'Module hbm_arch_ft_<T> not part of the design') on main fcb5094d74a; batch relaunch of the 13 transit types",
-    "q_spu1__physical_v1@1": "KW-FIX-32 2026-11-07 21:28 PST: class fix HBM transit placeholder 79239a67263 (DIE-HBM-90; GEN_LINT 'Module hbm_arch_ft_<T> not part of the design') on main fcb5094d74a; batch relaunch of the 13 transit types",
+    "q_spu1__physical_v1@1": "KW-FIX-45 11-11 09:0x: a1 launched 07:15 with the free-text queue_src pinned in its launch spec and failed at enqueue; the old label now resolves through queue_src_exact to the composition commit (main cd03a1f33fb7 + m5full). Relaunch.",
     "q_b000@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
     "q_b000__physical_v1@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
     "q_b001@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
@@ -31006,7 +31006,8 @@
    },
    "queue_src_exact": {
     "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b",
-    "main@cd03a1f33fb7+m5full@7f09deb2a68": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c"
+    "main@cd03a1f33fb7+m5full@7f09deb2a68": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c",
+    "main cd03a1f33fb7 + m5full 7f09deb2a68 (HBM cut 63189bfdfddd landed cd03a1f33fb7)": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c"
    },
    "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p.",
    "plan_prev_kw37h": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
