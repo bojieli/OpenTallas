@@ -88,9 +88,9 @@ qwen_kvsys	type	kv3_hgi_v1__cl141fc26e	SUPERSEDED	place	SUPERSEDED	2026-11-03 03
 qwen_kvsys	type	kv3_hgi_v2__cl2862d491	SUPERSEDED	place	SUPERSEDED	2026-11-03 01:08	189.3	KIT-WAVE-1	PLAN-STRUCTURAL	kv3_hgi_v2__cl2862d491
 qwen_kvsys	type	kv3_hgi_v2__cle0015330	SUPERSEDED	place	SUPERSEDED	2026-11-03 00:05	190.3	KIT-WAVE-1	PLAN-STRUCTURAL	kv3_hgi_v2__cle0015330
 hbm	core	ot_pdie_serdes_rx_bm3_rest	no kit-wave row					unowned		
-hbm	core	ot_hgi_sfu_opsa_group1	no kit-wave row					unowned		
-hbm	core	ot_hgi_sfu_opsb_group	no kit-wave row					unowned		
-hbm	core	ot_hgi_sfu_split3_ctl_rest_1c	no kit-wave row					unowned		
+hbm	core	ot_hgi_sfu_opsa_group1	no kit-wave row					HBM-CORES-B	LIVE opsa1c+opsa1r epyc8	
+hbm	core	ot_hgi_sfu_opsb_group	no kit-wave row					HBM-CORES-B	queued opsbg_C3 epyc4	
+hbm	core	ot_hgi_sfu_split3_ctl_rest_1c	no kit-wave row					HBM-CORES-B	KW-FIX-43 batch conservative (COORD yes)	
 hbm	core	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b95ff4f969a6c0ba	SUPERSEDED	route	SUPERSEDED	2026-11-03 21:37	168.8	HBM-CORES	SIGNED	hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9
 hbm	core	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b7314a95f9eb7d23	SUPERSEDED	gen	SUPERSEDED	2026-11-07 18:05	76.3	HBM-CORES	SIGNED	hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f
 hbm	core	ot_hbm_svc_vm_kshare_splitstrap__v700685	FAIL	signoff	TIMING	2026-11-09 09:07	37.3	KIT-WAVE-1	REVIEW	ot_hbm_svc_vm_kshare_splitstrap__v700685
@@ -98,16 +98,16 @@ hbm	core	ot_hbm_svc_vm_kshare_splitstrap__v8e478a	FAIL	signoff	TIMING	2026-11-09
 hbm	core	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/6d132375c20a740b	FAIL	route	ROUTING	2026-11-09 15:57	30.5	HBM-CORES	SIGNED	hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a
 hbm	core	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/430f68dee83dc012	FAIL	route	ROUTING	2026-11-09 15:57	30.5	HBM-CORES	SIGNED	hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16
 hbm	core	hfd_hgi_vms_glue_nw_t	FAIL	route	ROUTING	2026-11-07 10:37	83.8	KIT-WAVE-1	REVIEW	hfd_hgi_vms_glue_nw_t
-hbm	core	ot_wbq_sw	no kit-wave row					unowned		
-hbm	core	ot_q2nf_rest	no kit-wave row					unowned		
+hbm	core	ot_wbq_sw	no kit-wave row					HBM-CORES-B	queued wsw_H13_eco1	
+hbm	core	ot_q2nf_rest	no kit-wave row					HBM-CORES-B	KW-FIX-43 batch conservative (COORD yes)	
 hbm	core	ot_hfd_coll_q2n2_vm_core	FAIL	route	TIMING	2026-11-03 17:21	173.1	KIT-WAVE-1	FIX	ot_hfd_coll_q2n2_vm_core
 hbm	core	ot_hgi_dma_back_static_vp4_banks_cp	SUPERSEDED	route	SUPERSEDED	2026-11-04 08:58	157.5	KIT-WAVE-1	FIX	ot_hgi_dma_back_static_vp4_banks_cp
 hbm	core	hnx_vms_bank_q0_faces__vecd4ae#270x403.92/d4e89c75b4a66b6e	SUPERSEDED	route	SUPERSEDED	2026-11-04 00:13	166.2	HBM-CORES	SIGNED	hnx_vms_bank_q0_faces__vecd4ae__v5d4099d7f96c
-hbm	core	ot_hfd_coll_q3_body_ctl	no kit-wave row					unowned		
+hbm	core	ot_hfd_coll_q3_body_ctl	no kit-wave row					HBM-CORES-B	LIVE q3bc_CF2c epyc4	
 hbm	core	ot_hbm_accel_smh_pt_w	no kit-wave row					unowned		
-hbm	core	ot_hbm_sm_kv_line	no kit-wave row					unowned		
-hbm	core	ot_smh_static_front	no kit-wave row					unowned		
-hbm	core	ot_hbm_su_pg_lane_full_x_core	no kit-wave row					unowned		
+hbm	core	ot_hbm_sm_kv_line	no kit-wave row					HBM-CORES-B	KW-FIX-43 batch (COORD yes)	
+hbm	core	ot_smh_static_front	no kit-wave row					HBM-CORES-B	LIVE SF-SPLIT W RR6 epyc8 + E D04/D04R epyc2; counts when both halves sign	
+hbm	core	ot_hbm_su_pg_lane_full_x_core	no kit-wave row					NOT-IN-PLAN	COORD 2026-11-10 22:41 PST: not in wave build plan; dropped at next HBM plan update	
 hbm	core	ot_hbm_su_pg_lane1p_core	no kit-wave row					unowned		
 hbm	core	ot_hgi_coll_tkm_m_tp192__root	FAIL	queue	FLOW	2026-11-07 11:17	83.1	KIT-WAVE-1	GEOM-REQ	ot_hgi_coll_tkm_m_tp192__root
 hbm	core	ot_hbm_idx_topk_link_static	FAIL	place	FLOW	2026-11-07 19:38	74.8	KIT-WAVE-1	NEEDS-KIT	ot_hbm_idx_topk_link_static
