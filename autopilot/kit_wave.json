@@ -25466,8 +25466,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw43/src_hbmf4_m3_por15c",
-   "src_sha": "4393753cf0b438ba3d15257e9eb651760e35869b",
+   "src": "/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm",
+   "src_sha": "aac286936589f567b335a3ff7337edc47f8a9ffb",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -26629,12 +26629,14 @@
     "NW_io@12",
     "q_spt0__physical_v1@2",
     "q_hub_ne@7",
-    "ot_svgr_top@3"
+    "ot_svgr_top@3",
+    "ot_hbm_sm_i8w_front@3",
+    "ot_hbm_sm_pv_merge@3"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
    "pilot_mode": "queue",
-   "queue_src": "claude/hbm-plan-1-1109@4393753cf0b4",
+   "queue_src": "wave-src/20261110hbm2/hbm@aac286936589",
    "hold_items": {
     "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -26974,7 +26976,9 @@
     "NW_io@12": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
     "q_spt0__physical_v1@2": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
     "q_hub_ne@7": "INPUTS RESTAGED: epyc8 die-hbm-97 plan dirs (plan_p9_wsw_r cores now on every HBM host; 8 more plan_* dirs restaged)",
-    "ot_svgr_top@3": "INFRA: hbm-plan-1/stage/p6_relay (core_clock_regions.json) was missing on epyc4 only; staged to epyc4+epyc2 20:1x"
+    "ot_svgr_top@3": "INFRA: hbm-plan-1/stage/p6_relay (core_clock_regions.json) was missing on epyc4 only; staged to epyc4+epyc2 20:1x",
+    "ot_hbm_sm_i8w_front@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core",
+    "ot_hbm_sm_pv_merge@3": "INFRA: NO_RECIPE from the stale 3-recipe recipes.json; new HBM wave src 20261110hbm2 has 20 recipes incl this core"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -35405,7 +35409,11 @@
     "ot_hbm_sm_pv_merge",
     "ot_hbm_sm_i8w_front"
    ],
-   "note_kw43r5": "KW-FIX-43 11-10 20:3x COORD (HBM-CORES-B R5 YES): hnx_fused_lane_c into plan_core_items + only_items, conservative item_args util 0.40 / face-reset-relay 2 / face-lockup .*, no structural pads. Revert: *_prev_kw43r5."
+   "note_kw43r5": "KW-FIX-43 11-10 20:3x COORD (HBM-CORES-B R5 YES): hnx_fused_lane_c into plan_core_items + only_items, conservative item_args util 0.40 / face-reset-relay 2 / face-lockup .*, no structural pads. Revert: *_prev_kw43r5.",
+   "src_prev_kw43hsrc": "/srv/opentallas-scratch2/claude/kw43/src_hbmf4_m3_por15c",
+   "src_sha_prev_kw43hsrc": "4393753cf0b438ba3d15257e9eb651760e35869b",
+   "queue_src_prev_kw43hsrc": "claude/hbm-plan-1-1109@4393753cf0b4",
+   "note_src_kw43hsrc": "KW-FIX-43 11-10 20:5x COORD 20:3x (2) + WAVE-OPS-1 handoff: dies.hbm src -> wave-src/20261110hbm2/hbm (main c894884b42 + ROOT-MERGE-57 train + KW-FIX-44 overlays; recipes.json 3 -> 20; 322,308 files byte-checked on epyc7/8/4; live-kept gen_core_kit_hbm.py/bind.py/gen_phys.py; porous 81 files identical to the por15c tree, gen_phys identical) for NEW launches only: running kits keep their pinned spec. src_sha aac2869365, queue_src on the hub ref refs/wave-src/20261110hbm2/hbm. Retry ot_hbm_sm_i8w_front@3 + ot_hbm_sm_pv_merge@3 (NO_RECIPE on the stale recipes.json, INFRA). Revert: src/src_sha/queue_src <- *_prev_kw43hsrc."
   }
  },
  "place_prefer": [
