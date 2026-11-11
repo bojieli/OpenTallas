@@ -94,7 +94,8 @@ def test_sidecar_sources_follow(tmp_path):
     got = json.loads(so.read_text())["collector"]["types"]
     assert got["ctl"]["local_sources"][0]["node"] == "rst_n_t0" and got["ctl"]["local_sources"][0]["tap"] == 0
     assert got["other"] == side["collector"]["types"]["other"]                # untouched type unchanged
-    assert json.loads(rep.read_text())["sidecar_changed"] == {"ctl": 2}
+    assert json.loads(rep.read_text())["sidecar_changed"] == {"ctl": 3}               # node, tap, event tree
+    assert got["ctl"]["tree"] == cand["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_tree"]
     so2 = tmp_path / "so2.json"                                                # no reattach -> byte-identical
     assert CR.main([str(b), str(b), str(out), str(rep), "--sidecar", str(si), str(so2)]) == 0
     assert so2.read_bytes() == si.read_bytes()
@@ -142,6 +143,27 @@ def test_reroot_out_of_reach_fails():
         assert "collector root rst_n_t1" in str(e)
     else:
         raise AssertionError("expected a reach failure")
+
+
+def test_sidecar_node_off_event_tree_fails():
+    # gen_phys.install_collector_event walks the sidecar tree: a source node missing from it was KeyError rst_n_t73
+    # at gen (sidecar_pv_c21b2 sle_fw_v3); the sync now carries the plan tree and refuses a node it cannot reach
+    cand = _plan(_tree([0.0, 900.0]), [dict(SRC[0], node="rst_n_t0", tap=0)])
+    lc = cand["partition_types"]["ctl"]["clock"]["landing_contract"]
+    side = _side([dict(SRC[0])])
+    CR.sync_sidecar(cand, side, ["ctl"])
+    import landing_place as LP
+    row = side["collector"]["types"]["ctl"]
+    LP.collector_nodes(dict(tree=row["tree"], collector_root_node="rst_root_n", local_sources=row["local_sources"],
+                            children=[]))
+    lc["collector_tree"]["relays"] = lc["collector_tree"]["relays"][:1]          # plan tree lost the source's node
+    side = _side([dict(SRC[0])])
+    try:
+        CR.sync_sidecar(cand, side, ["ctl"])
+    except ValueError as e:
+        assert "rst_n_t0" in str(e) and "not on the event tree" in str(e)
+    else:
+        raise AssertionError("expected an off-tree failure")
 
 
 if __name__ == "__main__":

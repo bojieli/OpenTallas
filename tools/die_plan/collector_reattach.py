@@ -153,8 +153,28 @@ def sync_sidecar(cand, side, types):
         if root and row.get("collector_root_node") not in (None, root):
             row["collector_root_node"] = root            # collector_root_xy (the up-link site) stays
             n += 1
+        # the event tree the source/child nodes hang on: gen_phys.install_collector_event walks the SIDECAR tree
+        # (landing_place.collector_nodes), so new nodes without the new tree are a KeyError at gen (sle_fw_v3
+        # rst_n_t73, sidecar_pv_c21b2 93dd313d96ff)
+        pt = lc.get("collector_tree")
+        if pt is not None and row.get("tree") != pt:
+            row["tree"] = copy.deepcopy(pt)
+            n += 1
+        event_closed(row, tn)
         out[tn] = n
     return out
+
+
+def event_closed(row, tn):
+    """raise ValueError unless every collector source / child node of sidecar row reaches the root through its tree
+    (the gen-time walk, landing_place.collector_nodes)"""
+    import landing_place as LP
+    ev = dict(tree=row.get("tree"), collector_root_node=row.get("collector_root_node", "rst_root_n"),
+              local_sources=row.get("local_sources") or [], children=row.get("children") or [])
+    try:
+        LP.collector_nodes(ev)
+    except (KeyError, TypeError) as e:
+        raise ValueError(f"sidecar {tn}: collector node {e} not on the event tree")
 
 
 def main(argv=None):
