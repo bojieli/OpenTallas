@@ -110,12 +110,12 @@ def core_kit(tmp):
 
 def test_core_sites_snap_mplace_and_hard_children_together(tmp_path):
     kd = core_kit(tmp_path)
-    mplace = {"PK": [(100.061, 200.88, "R0"), (200.08, 200.88, "R0")]}       # first off (x), second on grid
+    mplace = {"PK": [(100.061, 200.88, "R0"), (200.064, 200.88, "R0")]}       # first off (x), second on grid
     hcb = [dict(master="PK", inst="u_a", orient="R0", at=[100.061, 200.88]),  # the same site as mplace[0] (legacy)
            dict(master="PK", inst="u_b", orient="R0", at=[300.061, 100.0])]
     mp, hc, rows = M.snap_core_sites(kd, mplace, hcb, (400.0, 400.0))
-    assert mp["PK"][0] == (100.08, 200.88, "R0") and mp["PK"][1] == (200.08, 200.88, "R0")
-    assert hc[0]["at"] == [100.08, 200.88] and hc[1]["at"] == [300.08, 100.0]
+    assert mp["PK"][0] == (100.08, 200.88, "R0") and mp["PK"][1] == (200.064, 200.88, "R0")
+    assert hc[0]["at"] == [100.08, 200.88] and hc[1]["at"] == [300.048, 100.0]
     assert mplace["PK"][0] == (100.061, 200.88, "R0")                          # input not mutated
     assert len([r for r in rows if "snapped_um" in r]) == 2
     assert (kd / M.RECEIPT).is_file()
@@ -123,13 +123,13 @@ def test_core_sites_snap_mplace_and_hard_children_together(tmp_path):
 
 def test_core_sites_on_grid_same_objects(tmp_path):
     kd = core_kit(tmp_path)
-    mplace, hcb = {"PK": [(200.08, 200.88, "R0")]}, [dict(master="PK", inst="u", orient="R0", at=[300.08, 100.0])]
+    mplace, hcb = {"PK": [(200.064, 200.88, "R0")]}, [dict(master="PK", inst="u", orient="R0", at=[300.048, 100.0])]
     assert M.snap_core_sites(kd, mplace, hcb, (400.0, 400.0)) == (mplace, hcb, [])
     assert not (kd / M.RECEIPT).exists()
 
 
 LEGACY_MP = """set b [ord::get_db_block]
-foreach {master sites} {PK {{100.061 200.88 R0} {200.08 200.88 R0}}} {
+foreach {master sites} {PK {{100.061 200.88 R0} {200.064 200.88 R0}}} {
   foreach i $hit s $sites { lassign $s x y orient }
 }
 set hit {}
@@ -149,7 +149,7 @@ def test_existing_kit_macro_place_rewritten(tmp_path):
     assert (kd / "macro_place.tcl").read_text() == LEGACY_MP
     assert M.main([str(kd), "--write"]) == 0
     txt = (kd / "macro_place.tcl").read_text()
-    assert "{100.08 200.88 R0} {200.08 200.88 R0}" in txt and "round(300.08 * $dbu)" in txt
+    assert "{100.08 200.88 R0} {200.064 200.88 R0}" in txt and "round(300.048 * $dbu)" in txt
     assert M.snap_kit(kd) == []                                               # idempotent
 
 
