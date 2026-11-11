@@ -1469,6 +1469,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core"] = {"oneOf": [
     {"type": "string", "minLength": 1},
     {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 2, "uniqueItems": True}]}
+# SUL0-PINFACE-1 11-11: a landed bus's chain starts at its landing macro's output pins (kit_istations.chain_starts)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_core"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_port"] = {"type": "string", "minLength": 1}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
@@ -2559,6 +2563,12 @@ def validate(raw):
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")
+        if any(e.get("core") for e in t.get("internal_stations", [])):   # SUL0-PINFACE-1 macro-clear chain gate
+            import kit_istations as KI
+            try:
+                errs += KI.core_chain_geometry_errors(P, tn, Path(P.path).resolve().parent if getattr(P, "path", None) else None)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f"type {tn}: core chain geometry: {exc}")
         import core_clock_groups as CG
         try:
             CG.groups(P, tn)

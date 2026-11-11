@@ -214,3 +214,132 @@ def test_taps_shared_chain_sinks():
         + [("y", b, "M5", 10.0 + b, 100.0, "N") for b in range(4)]
     # x shared: 4+1 (was A 2+1 + B 3+1 = 7); f 4; y 5 -> 14 bit rows x 2 stations
     assert len(taps.per_bit_station_sites(t, pins)) == 2 * 14
+
+
+# ---- SUL0-PINFACE-1 11-11: chain start at a landing macro's q pins + macro-clear geometry gate
+LBOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire [3:0] z, output wire [0:0] dummy);
+    wire [3:0] zl;
+    wire [2:0] z_q;
+    wire z_eq;
+    land_m L0 (
+        .d(z), .q(zl));
+    ot_dp_st #(.W(3)) u_bin_z (.clk(clk), .rst_n(rst_n), .d(zl[2:0]), .ea(zl[3]), .q(z_q), .eq(z_eq));
+    core_a A (.clk(clk), .c_i({z_q[2], z_q[1], z_q[0]}), .c_o(dummy));
+endmodule
+"""
+
+
+def lplan(qx=0.0, start=True):
+    e = st("z", "A", [0, 1, 2], leaf=(62.0, 50.0))
+    if start:
+        e.update(start_core="LM", start_port="q")
+    return dict(partition_types=dict(t=dict(
+        buses=[dict(name="z", dir="in", width=3, kind="data", face="E")], internal_stations=[e],
+        hard_cores=[dict(inst="A", module="core_a", origin_um=[40, 40], outline_um=[20, 20]),
+                    dict(inst="LM", module="land_m", origin_um=[80, 10], outline_um=[10, 10],
+                         pins_file="LM_pins.json")]))), [dict(name=f"q[{b}]", x=qx, y=2.0 + b) for b in range(4)]
+
+
+def lrun(tmp_path, qx=0.0, bound=LBOUND):
+    p, pins = lplan(qx)
+    (tmp_path / "LM_pins.json").write_text(json.dumps(dict(pins=pins)))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(p))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    bf = kd / "t_part_bound.sv"
+    bf.write_text(bound)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
+                       capture_output=True, text=True)
+    return r, bf, kd
+
+
+def test_start_core_q_pins(tmp_path):
+    r, bf, kd = lrun(tmp_path)
+    assert r.returncode == 0, r.stderr
+    tcl = (kd / "istations.tcl").read_text()
+    rows = re.findall(r"^is_bits u_ist_z__A_0_\d+ .*$", tcl, re.M)
+    assert len(rows) == 2
+    for ln in rows:
+        assert ln.endswith(" 0 {0 80.0000 12.0000 1 80.0000 13.0000 2 80.0000 14.0000 3 80.0000 15.0000}"), ln
+    # a chain without start_core keeps the face BTerm (no starts list)
+    sub = tmp_path / "plain"
+    sub.mkdir()
+    r2, _, kd2 = run(sub)
+    assert r2.returncode == 0 and not re.search(r"^is_bits .*\}$", (kd2 / "istations.tcl").read_text(), re.M)
+
+
+def test_start_not_on_source_edge_fails(tmp_path):
+    """must-fail: the named start pin is 5 um inside the landing macro, not on its edge"""
+    r, bf, _ = lrun(tmp_path, qx=5.0)
+    assert r.returncode != 0 and "is not on the edge of start_core LM" in r.stderr, r.stderr[-300:]
+    assert bf.read_text() == LBOUND
+
+
+def test_start_core_not_the_source_fails(tmp_path):
+    """must-fail: u_bin_z does not take the landing macro's q wire"""
+    bad = LBOUND.replace(".d(zl[2:0]), .ea(zl[3])", ".d(z[2:0]), .ea(z[3])")
+    r, bf, _ = lrun(tmp_path, bound=bad)
+    assert r.returncode != 0 and "does not drive .q(z)" in r.stderr, r.stderr[-300:]      # z is the face port, not the landing output
+    bad3 = LBOUND.replace(".d(zl[2:0]), .ea(zl[3])", ".d(zl[2:0]), .ea(z_eq)")
+    sub3 = tmp_path / "c"
+    sub3.mkdir()
+    r, bf, _ = lrun(sub3, bound=bad3)
+    assert r.returncode != 0 and "does not take one landed wire" in r.stderr, r.stderr[-300:]
+    bad2 = LBOUND.replace(".d(z), .q(zl));", ".d(z), .q(zx));")
+    sub = tmp_path / "b"
+    sub.mkdir()
+    r, bf, _ = lrun(sub, bound=bad2)
+    assert r.returncode != 0 and "does not drive .q(zl)" in r.stderr, r.stderr[-300:]
+
+
+def test_chain_macro_hits_gate():
+    """an L route through a hard macro is flagged; touching within MACRO_TOL_UM is not"""
+    sys.path.insert(0, str(HERE))
+    import kit_istations as KI
+    t = dict(hard_cores=[dict(inst="M", module="m", origin_um=[20.0, 0.0], outline_um=[10.0, 10.0])])
+    b = dict(name="z", face="E")
+    e = dict(leaf_um=[0.0, 30.0])
+    # bit 0 row y=5 runs x 50 -> 0 straight through M; bit 1 row y=9.6 grazes M's top edge (0.4 um in)
+    hits = KI.chain_macro_hits(t, e, b, {0: (50.0, 5.0), 1: (50.0, 9.6), 2: (50.0, 20.0)})
+    assert hits == [(0, "M")]
+    # the leaf column (x = 0) and rows above M are clear
+    assert KI.chain_macro_hits(t, dict(leaf_um=[35.0, 30.0]), b, {0: (50.0, 5.0)}) == []
+
+
+def test_knee_along_first_corner_tcl():
+    """leg_order along_first: is_knee_site's corner sits at the pin column (W face: (px, ly)); default unchanged"""
+    sys.path.insert(0, str(HERE))
+    import kit_istations as I
+    proc = I.TCL_HEAD[I.TCL_HEAD.index("proc is_knee_site"):I.TCL_HEAD.index("proc is_bits")]
+    body = """
+foreach k {1 2 3} { puts "A [is_knee_site 0 100 50 300 W $k 4 in {0 100 0 100} along]" }
+foreach k {1 2 3} { puts "N [is_knee_site 0 100 50 300 W $k 4 in {0 100 0 100}]" }
+if {[catch {is_knee_site 0 100 50 300 W 1 4 in {0 100 0 100} sideways} m]} { puts "E $m" }
+"""
+    p = subprocess.run(["tclsh"], input=proc + "\n" + body, text=True, capture_output=True)
+    assert p.returncode == 0, p.stderr
+    rows = [l.split() for l in p.stdout.splitlines()]
+    A = [tuple(map(float, r[1:])) for r in rows if r[0] == "A"]
+    N = [tuple(map(float, r[1:])) for r in rows if r[0] == "N"]
+    # along: legs (0,100)->(0,300)->(50,300); every site on x = 0 or y = 300
+    assert all(abs(x) < 1e-9 or abs(y - 300) < 1e-9 for x, y in A) and any(abs(x) < 1e-9 and y > 100 for x, y in A)
+    # normal (default): legs (0,100)->(50,100)->(50,300)
+    assert all(abs(y - 100) < 1e-9 or abs(x - 50) < 1e-9 for x, y in N)
+    assert any(r[0] == "E" and "knee order sideways" in " ".join(r) for r in rows)
+
+
+def test_leg_order_gate_and_taps_corner():
+    sys.path.insert(0, str(HERE))
+    import kit_istations as KI
+    import taps
+    t = dict(hard_cores=[dict(inst="M", module="m", origin_um=[20.0, 0.0], outline_um=[10.0, 50.0])],
+             buses=[dict(name="z", dir="in", width=1, face="E")])
+    b = dict(name="z", face="E")
+    # E face pin (50, 5) -> leaf (0, 80): normal-first runs y=5 through M, along-first goes up x=50 then west at y=80
+    assert KI.chain_macro_hits(t, dict(leaf_um=[0.0, 80.0]), b, {0: (50.0, 5.0)}) == [(0, "M")]
+    assert KI.chain_macro_hits(t, dict(leaf_um=[0.0, 80.0], leg_order="along_first"), b, {0: (50.0, 5.0)}) == []
+    e = dict(conn="bus:z", bit_route="per_bit", leaf_um=[0.0, 80.0], regs_um=[[0, 0]], leg_order="along_first")
+    s = taps.per_bit_station_sites(dict(t, internal_stations=[e]), [("z", 0, "M4", 50.0, 5.0, "E"), ("z", 1, "M4", 50.0, 6.0, "E")])
+    assert all(not (20 < x < 30 and 0 < y < 50) for x, y, _ in s) and len(s) == 2

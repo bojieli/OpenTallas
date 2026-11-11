@@ -189,11 +189,11 @@ def planned_sinks(P, tn, bit_sites=False):
         cw,ch=e["bit_site_cell_um"]
         for bx,by in e["face_bit_sites_um"][n:]:
             out.append((bx+cw/2,by+ch/2,"face_epoch"))
-    out += per_bit_station_sites(t, pins)
+    out += per_bit_station_sites(t, pins, __import__("pathlib").Path(P.path).resolve().parent if getattr(P, "path", None) else None)
     return out
 
 
-def per_bit_station_sites(t, pins):
+def per_bit_station_sites(t, pins, plan_dir=None):
     """[(x, y, 'ist')] sites of the internal stations with bit_route "per_bit" (HEAD-SPINE2 10-25), exactly as
     kit_istations.is_bits places them: bit b of station k (k = 0 next to the face for an in bus, next to the leaf for an
     out bus) at L_b * (k + 1) / (n + 1) along its own L leaf_um <-> pin b, the segment at the pin perpendicular to the
@@ -214,13 +214,21 @@ def per_bit_station_sites(t, pins):
         bus = e["conn"][4:]
         lx, ly = e["leaf_um"]
         n = len(e["regs_um"])
+        bat = at.get(bus, {})
+        if e.get("start_core"):       # SUL0-PINFACE-1 11-11: a landed bus starts at its landing macro's q pins
+            import kit_istations as KI
+            _, cp = KI._core_pins("?", t, e["start_core"], plan_dir)
+            port = e.get("start_port", "q")
+            bat = {bit: cp[f"{port}[{bit}]"] + (f,) for bit, (_x, _y, f) in bat.items() if f"{port}[{bit}]" in cp}
         d_in = buses[bus]["dir"] == "in"
         # SUL0-PINFACE-1: a per-core chain keeps only the bits its core reads / drives (synthesis drops the rest)
         keep = set(int(b) for b in e["core_bits"]) if e.get("core") else None
-        for bit, (px, py, face) in sorted(at.get(bus, {}).items()):
+        for bit, (px, py, face) in sorted(bat.items()):
             if keep is not None and bit not in keep and bit != len(at.get(bus, {})) - 1:
                 continue
-            cx, cy = (lx, py) if face in ("E", "W") else (px, ly)
+            # SUL0-PINFACE-1 11-11: leg_order along_first puts the corner at the pin column / row (kit is_knee_site)
+            along = e.get("leg_order", "normal_first") == "along_first"
+            cx, cy = (lx, py) if (face in ("E", "W")) != along else (px, ly)
             pts = [(px, py), (cx, cy), (lx, ly)] if d_in else [(lx, ly), (cx, cy), (px, py)]
             L = abs(px - cx) + abs(py - cy) + abs(cx - lx) + abs(cy - ly)
             for k in range(n):

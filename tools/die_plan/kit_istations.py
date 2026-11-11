@@ -182,7 +182,9 @@ proc is_place {pat x y tag} {
 # row (N/S) parallel to the pin window and every hop of bit b is L_b / (n+1) (the ft_bit_sites rule for ft slots).
 # Common bank legs: every payload/epoch bit uses the same stage-to-leg mapping.
 # Unlike per-bit arclength fractions, a stage remains one straight column/row.
-proc is_knee_site {px py lx ly face edge edges dir geometry} {
+# order "along" (plan leg_order along_first, SUL0-PINFACE-1 11-11): the leg at the pin runs along the face, the corner
+# is (px, ly) for an E/W face / (lx, py) for N/S, so a route can pass a macro column in a free strip; default unchanged.
+proc is_knee_site {px py lx ly face edge edges dir geometry {order normal}} {
   lassign $geometry xmin ymin xmax ymax
   if {$face in {E W}} {
     set normal [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
@@ -193,11 +195,16 @@ proc is_knee_site {px py lx ly face edge edges dir geometry} {
     set along [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
     set cx $px; set cy $ly
   }
+  set n1 $normal; set a1 $along
+  if {$order eq "along"} {
+    if {$face in {E W}} { set cx $px; set cy $ly } else { set cx $lx; set cy $py }
+    set n1 $along; set a1 $normal
+  } elseif {$order ne "normal"} { error "internal station knee order $order" }
   if {$dir eq "in"} {
-    set first $normal; set second $along
+    set first $n1; set second $a1
     set ax $px; set ay $py; set bx $lx; set by $ly
   } else {
-    set first $along; set second $normal
+    set first $a1; set second $n1
     set ax $lx; set ay $ly; set bx $px; set by $py
   }
   if {$first < 1e-8} { set split 0; set worst [expr {$second/double($edges)}]
@@ -219,16 +226,26 @@ proc is_knee_site {px py lx ly face edge edges dir geometry} {
   return [list [expr {$cx+$f*($bx-$cx)}] [expr {$cy+$f*($by-$cy)}]]
 }
 
-proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
+# SUL0-PINFACE-1 11-11: starts = {bit x y ...} (plan internal_stations[].start_core/start_port, e.g. the q pins of the
+# clock-landing macro a landed bus really launches from) replaces the face BTerm as bit b's L-route start; empty =
+# the BTerm (every other chain unchanged).
+proc is_bits {inst bus face W lx ly k n dir tag {offset 0} {starts {}} {order normal}} {
   global ff_blk ff_dbu is_n is_miss is_fh
   set hit 0
   set xmin 1e99; set ymin 1e99; set xmax -1e99; set ymax -1e99
+  set is_st [dict create]
+  foreach {sb sx sy} $starts { dict set is_st $sb [list $sx $sy] }
   for {set bit 0} {$bit <= $W} {incr bit} {
-    set pin [$ff_blk findBTerm "${bus}\\[$bit\\]"]
-    if {$pin eq "NULL"} { error "internal station pin missing: ${bus} bit $bit" }
-    set box [$pin getBBox]
-    set x [expr {([$box xMin]+[$box xMax])/2.0/$ff_dbu}]
-    set y [expr {([$box yMin]+[$box yMax])/2.0/$ff_dbu}]
+    if {[llength $starts]} {
+      if {![dict exists $is_st $bit]} { error "internal station start missing: ${bus} bit $bit" }
+      lassign [dict get $is_st $bit] x y
+    } else {
+      set pin [$ff_blk findBTerm "${bus}\\[$bit\\]"]
+      if {$pin eq "NULL"} { error "internal station pin missing: ${bus} bit $bit" }
+      set box [$pin getBBox]
+      set x [expr {([$box xMin]+[$box xMax])/2.0/$ff_dbu}]
+      set y [expr {([$box yMin]+[$box yMax])/2.0/$ff_dbu}]
+    }
     set xmin [expr {min($xmin,$x)}]; set xmax [expr {max($xmax,$x)}]
     set ymin [expr {min($ymin,$y)}]; set ymax [expr {max($ymax,$y)}]
   }
@@ -244,11 +261,16 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     if {[regexp {/q\\\\?\\[([0-9]+)\\\\?\\]} $nm -> b]} {
     } elseif {[regexp {/eq\\$} $nm]} { set b $W } else { lappend is_miss $nm; continue }
-    set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
-    if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
-    set bb [$bt getBBox]
-    set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
-    lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry] x y
+    if {[llength $starts]} {
+      if {![dict exists $is_st $b]} { lappend is_miss "$nm:nostart"; continue }
+      lassign [dict get $is_st $b] px py
+    } else {
+      set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
+      if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
+      set bb [$bt getBBox]
+      set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
+    }
+    lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry $order] x y
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
     if {$got eq ""} { lappend is_miss $nm; continue }
     puts $is_fh "$nm\t$tag\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
@@ -778,7 +800,7 @@ def soft_plan_cells(tn, t):
             if 'origin_um' in c and not c.get('lef') and c['inst'] not in hard]
 
 
-def core_pin_stations(tn, t, txt, man, tcl, rep):
+def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
     """SUL0-PINFACE-1 (DIE-QC-97 11-10, COORD geom-1235-1110): per-hard-core pin-face station chains.
     A bus whose face register serves several hard cores at different distances (QC su_lN: u_bin_x_su_c_i -> four
     lane macros, lane3 1.27 mm away) cannot be fixed by one bus chain: its stations sit at one place.  Entries with
@@ -919,13 +941,143 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
             check_core_delay(tn, bus, txt, [(tags[gi], core_list(e)) for gi, e in enumerate(bes)], k, q)
         for gi, e in enumerate(bes):
             lx, ly = e["leaf_um"]
+            st = ""
+            if e.get("start_core"):
+                check_start_source(tn, bus, t, e, txt, W)
+                sp = chain_starts(tn, t, e, b, W, plan_dir, None)
+                st = " {" + " ".join(f"{bit} {x:.4f} {y:.4f}" for bit, (x, y) in sorted(sp.items())) + "}"
+            if e.get("leg_order", "normal_first") == "along_first":
+                st = (st or " {}") + " along"
             for j, nm in enumerate(chains[gi]):
                 # out chains run core -> face: is_bits stage j counts from the leaf for out, from the pin for in
                 tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} "
-                           f"ist:{bus}:{'+'.join(core_list(e))} 0")
+                           f"ist:{bus}:{'+'.join(core_list(e))} 0{st}")
             rep.append(dict(conn=e["conn"], core=e["core"], planned=k, bound_pads=len(pads), inserted=k,
                             stations=chains[gi], core_bits=len(e["core_bits"]), plan_width=b["width"], bound_width=W))
     return txt
+
+
+MACRO_TOL_UM = 0.5     # a station site / L-route leg may touch a hard-macro box, not enter it by more than this
+
+
+def _core_pins(tn, t, inst, plan_dir):
+    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == inst), None)
+    if hc is None:
+        raise SystemExit(f"kit_istations: {tn}: start_core {inst} is not a hard core of the type")
+    if hc.get("orient", "R0") != "R0":
+        raise SystemExit(f"kit_istations: {tn}: start_core {inst} orient {hc['orient']} not handled (fail closed)")
+    pf = Path(hc["pins_file"])
+    pf = pf if pf.is_absolute() else Path(plan_dir or ".") / pf
+    if not pf.exists():
+        raise SystemExit(f"kit_istations: {tn}: start_core {inst} pins file {pf} missing")
+    ox, oy = hc["origin_um"]
+    return hc, {p["name"]: (ox + float(p["x"]), oy + float(p["y"])) for p in json.loads(pf.read_text())["pins"]}
+
+
+def chain_starts(tn, t, e, b, W, plan_dir, pins):
+    """{bit: (x, y)} L-route start of every bit (core_bits + epoch W) of a core chain: the face pin (pins:
+    {bit: (x, y)}, gen_phys.type_pins) or, with start_core/start_port, that hard core's pin <port>[bit], which must sit on
+    the core outline edge (<= MACRO_TOL_UM; the launch point of a landed bus is the landing macro's q edge)."""
+    bits = sorted({int(x) for x in e["core_bits"]} | {W})
+    if e.get("start_core"):
+        bits = list(range(W + 1))      # is_bits takes its knee geometry from every start (as from every BTerm)
+    if not e.get("start_core"):
+        if pins is None:
+            return None
+        miss = [x for x in bits if x not in pins]
+        if miss:
+            raise SystemExit(f"kit_istations: {tn} {b['name']}: face pins missing for bits {miss[:8]}")
+        return {x: pins[x] for x in bits}
+    hc, cp = _core_pins(tn, t, e["start_core"], plan_dir)
+    port = e.get("start_port", "q")
+    (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
+    out = {}
+    for x in bits:
+        p = cp.get(f"{port}[{x}]")
+        if p is None:
+            raise SystemExit(f"kit_istations: {tn} {b['name']}: start_core {e['start_core']} has no pin {port}[{x}]")
+        d = min(abs(p[0] - x0), abs(p[0] - x0 - w), abs(p[1] - y0), abs(p[1] - y0 - h))
+        inside = x0 - MACRO_TOL_UM <= p[0] <= x0 + w + MACRO_TOL_UM and y0 - MACRO_TOL_UM <= p[1] <= y0 + h + MACRO_TOL_UM
+        if d > MACRO_TOL_UM or not inside:
+            raise SystemExit(f"kit_istations: {tn} {b['name']}: start {port}[{x}] {p} is not on the edge of start_core "
+                             f"{e['start_core']} ({d:.3f} um off)")
+        out[x] = p
+    return out
+
+
+def check_start_source(tn, bus, t, e, txt, W):
+    """fail closed unless the bound RTL really launches bus from start_core: u_bin_<bus> .d(<w>[W-1:0]) .ea(<w>[W]) and
+    the start core's (unique) instance drives .<start_port>(<w>)"""
+    n = gen_rtl.sv_id(bus)
+    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == e["start_core"]), None)
+    if hc is None:
+        raise SystemExit(f"kit_istations: {tn}: start_core {e['start_core']} is not a hard core of the type")
+    m = re.search(rf"\bu_bin_{re.escape(n)}\s*\(.*?\.d\(([\w$]+)\[{W - 1}:0\]\),\s*\.ea\(([\w$]+)\[{W}\]\)", txt)
+    if not m or m.group(1) != m.group(2):
+        raise SystemExit(f"kit_istations: {tn} {bus}: u_bin_{n} does not take one landed wire [{W}:0] (start_core "
+                         f"{e['start_core']})")
+    w = m.group(1)
+    im = re.findall(rf"^\s*{re.escape(hc['module'])}\s+[\w$]+\s*\((.*?)\);\s*$", txt, re.M | re.S)
+    if len(im) != 1 or not re.search(rf"\.{re.escape(e.get('start_port', 'q'))}\(\s*{re.escape(w)}\s*\)", im[0]):
+        raise SystemExit(f"kit_istations: {tn} {bus}: start_core {e['start_core']} ({hc['module']}) does not drive "
+                         f".{e.get('start_port', 'q')}({w})")
+
+
+def _seg_in_box(a, c, box, tol):
+    x0, x1, y0, y1 = min(a[0], c[0]), max(a[0], c[0]), min(a[1], c[1]), max(a[1], c[1])
+    bx0, by0, bx1, by1 = box[0] + tol, box[1] + tol, box[2] - tol, box[3] - tol
+    return bx0 < bx1 and by0 < by1 and x0 < bx1 and x1 > bx0 and y0 < by1 and y1 > by0
+
+
+def chain_macro_hits(t, e, b, starts):
+    """[(bit, hard core)] whose box (shrunk by MACRO_TOL_UM) a bit's planned L route start -> corner -> leaf_um enters
+    (every station site lies on that route, so this covers the sites too)"""
+    lx, ly = e["leaf_um"]
+    along = e.get("leg_order", "normal_first") == "along_first"
+    boxes = {c["inst"]: (c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+                         c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])}
+    out = []
+    for bit, (px, py) in sorted(starts.items()):
+        c = (lx, py) if (b["face"] in "EW") != along else (px, ly)
+        for nm, box in boxes.items():
+            if _seg_in_box((px, py), c, box, MACRO_TOL_UM) or _seg_in_box(c, (lx, ly), box, MACRO_TOL_UM):
+                out.append((bit, nm))
+    return out
+
+
+def core_chain_geometry_errors(P, tn, plan_dir=None):
+    """validate / --apply gate (COORD 11-11, SUL0-PINFACE-1): every core pin-face chain's planned per-bit L routes stay
+    off every hard macro (incl. landing macros) by MACRO_TOL_UM; start_core starts sit on the core edge.  Returns error
+    strings (one per chain, with its bit count)."""
+    import gen_phys
+    t = P.types[tn]
+    es = [e for e in t.get("internal_stations", []) if e.get("core")]
+    if not es:
+        return []
+    pins = {}
+    for name, bit, _ln, x, y, _f in gen_phys.type_pins(P, tn):
+        pins.setdefault(name, {})[int(bit)] = (float(x), float(y))
+    buses = {b["name"]: b for b in t.get("buses", [])}
+    errs = []
+    for e in es:
+        bus = e["conn"][4:]
+        b = buses.get(bus)
+        if b is None:
+            errs.append(f"type {tn}: core chain on unknown bus {bus}")
+            continue
+        W = len(pins.get(bus, {})) - 1
+        try:
+            st = chain_starts(tn, t, e, b, W, plan_dir, pins.get(bus, {}))
+        except SystemExit as ex:
+            errs.append(f"type {tn}: {ex}")
+            continue
+        keep = {int(x) for x in e["core_bits"]} | {W}     # bits synthesis keeps (chain_starts may list all)
+        hits = chain_macro_hits(t, e, b, {k: v for k, v in st.items() if k in keep})
+        if hits:
+            errs.append(f"type {tn}: core chain {bus} {e['core']}: {len({h[0] for h in hits})} bit L routes enter hard "
+                        f"macros {sorted({h[1] for h in hits})} by > {MACRO_TOL_UM} um (station sites would be moved off "
+                        "the planned hop)")
+    return errs
 
 
 def core_list(e):
@@ -1010,7 +1162,13 @@ def main(argv):
     txt = bfile.read_text()
     tcl = [TCL_HEAD]
     rep = []
-    txt = core_pin_stations(tn, t, txt, man, tcl, rep)      # SUL0-PINFACE-1 per-core chains
+    if any(e.get("core") for e in t.get("internal_stations", [])) and any(
+            p.get("type") == tn for p in raw.get("partitions", [])):   # SUL0-PINFACE-1 geometry gate (fail closed)
+        import schema as _S
+        gerr = core_chain_geometry_errors(_S.Plan(json.loads(json.dumps(raw)), path=plan), tn, Path(plan).resolve().parent)
+        if gerr:
+            raise SystemExit("kit_istations: " + "; ".join(gerr[:6]) + (f" (+{len(gerr) - 6} more)" if len(gerr) > 6 else ""))
+    txt = core_pin_stations(tn, t, txt, man, tcl, rep, Path(plan).resolve().parent)      # SUL0-PINFACE-1 per-core chains
     for e in bus_entries(dict(t, internal_stations=[x for x in t.get('internal_stations', []) if not x.get('core')])):           # core<->core: core_stations() below
         conn = e["conn"]
         bus = conn[4:]

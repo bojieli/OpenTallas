@@ -4916,6 +4916,45 @@
         },
         "core_glob": {
          "type": "string"
+        },
+        "core": {
+         "oneOf": [
+          {
+           "type": "string",
+           "minLength": 1
+          },
+          {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           },
+           "minItems": 2,
+           "uniqueItems": true
+          }
+         ]
+        },
+        "start_core": {
+         "type": "string",
+         "minLength": 1
+        },
+        "start_port": {
+         "type": "string",
+         "minLength": 1
+        },
+        "leg_order": {
+         "enum": [
+          "normal_first",
+          "along_first"
+         ]
+        },
+        "core_bits": {
+         "type": "array",
+         "items": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "minItems": 1
         }
        }
       }
