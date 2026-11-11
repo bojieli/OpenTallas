@@ -28959,7 +28959,6 @@
     "q_su10@1",
     "q_su10__physical_v1@1",
     "q_su11@6",
-    "q_su20@3",
     "q_su20__physical_v1@3",
     "q_b002@2",
     "q_b002__physical_v1@2",
@@ -29081,7 +29080,8 @@
     "ot_hbm_sm_i8w_front@5",
     "NE_io@14",
     "q_mca@2",
-    "ot_svgr_top@6"
+    "ot_svgr_top@6",
+    "q_su20@3"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -40575,7 +40575,10 @@
     "epyc9",
     "epyc2"
    ],
-   "pilot_max_prev_kw45_1111": 2
+   "pilot_max_prev_kw45_1111": 2,
+   "place_mem_gb_by_item": {
+    "q_su20": 96
+   }
   }
  },
  "place_prefer": [
