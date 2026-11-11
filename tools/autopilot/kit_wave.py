@@ -1741,7 +1741,7 @@ def prov_predecessor(d, die, state, item, cur=None):
     if not pk or not prov_on(d):
         return None
     for key, rec in (state.get("items") or {}).items():
-        if rec is cur or rec.get("die") != die or rec.get("item") != item or not rec.get("provisional"):
+        if rec is cur or rec.get("die") != die or rec.get("item") != item or not rec.get("provisional") or rec.get("arm"):
             continue
         rs = (rec.get("prov_resign") or {}).get("status")
         if (rec.get("prov_key") == pk and rec.get("status") in ("RUNNING", "LAUNCHING", "PASS", "ENQUEUED")
@@ -2690,7 +2690,7 @@ def redesign_rows(cfg, st):
     for key, rec in sorted((st.get("items") or {}).items()):
         die = rec.get("die")
         d = (cfg.get("dies") or {}).get(die)
-        if not d or rec.get("event") != d.get("event") or not unchanged_fail(cfg, st, die, rec.get("item"), rec):
+        if not d or rec.get("arm") or rec.get("event") != d.get("event") or not unchanged_fail(cfg, st, die, rec.get("item"), rec):
             continue
         ia = f"{rec.get('item')}@{rec.get('attempt')}"
         q = rec.get("q_status") == "FAIL"
@@ -2731,7 +2731,7 @@ def restage_waiters(AP, cfg, st, notices):
         for r in (st.get("items") or {}).values():
             if n >= cap:
                 return n
-            if r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit"):
+            if r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit") or r.get("arm"):
                 continue
             # only an attempt the INFRA path WILL relaunch this tick (raw block identity, die not stopped)
             if (d.get("block_identity", "raw") != "raw") or stop_reason(cfg, die, cfg.get("_ap_dir")):
@@ -4024,7 +4024,8 @@ def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
-    key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
+    arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
+    key = arm["key"] if arm else item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
     # A stale/repeated launch list must never replace a live producer claim.
     if prev.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
@@ -4039,6 +4040,16 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
+    if arm:                                        # KW-FIX-44 GRTARM_1111: the halving-off arm of this row
+        if arm.get("gen_host"):
+            sp["gen_host"] = arm["gen_host"]
+            sp["place_prefer"] = [arm["gen_host"]] + [h for h in sp.get("place_prefer") or [] if h != arm["gen_host"]]
+        sp["gen_env"] = dict(sp.get("gen_env") or {}, OT_GRT_TRANSITION_MODE=arm["mode"])
+        sp["grt_arm"] = {"of": arm["of"], "mode": arm["mode"]}
+        why = grt_arm_src_check(AP, cfg, sp)
+        if why:
+            AP.log(f"KIT-WAVE GRT-ARM LAUNCH-SKIP {die}/{r['item']}: {why}")
+            return None
     bind_restage(cfg, die, prev, sp)
     alt = ((cfg.get("_workroot_alt") or {}).get(sp["gen_host"]) or {}).get(die)
     if alt:                                        # KW-FIX-38: this host starts the attempt on its scratch2
@@ -4064,7 +4075,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             if rgg:
                 sp["region_guide_geom"] = rgg
     # KW-FIX-17: an attempt released by the LEAFSLEW signature (or following a hooked one) builds with clk_leaf_repeat
-    ls_key, ls_form = leafslew_launch(cfg, st, die, r["item"], prev, attempt) \
+    ls_key, ls_form = leafslew_launch(cfg, {} if arm else st, die, r["item"],
+                                      (prev or st["items"].get(arm["of"]) or {}) if arm else prev, attempt) \
         if attempt > 1 or leafslew_item_env(cfg, die, r["item"]) is not None else (None, None)
     if ls_form:
         sp["leafslew_form"] = ls_form
@@ -4087,6 +4099,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            # design FAILs before must still get its infra_attempts after a class fix relaunch
            "infra_base": (int(prev.get("infra_base") or 0) if prev.get("class") == "INFRA"
                           else int(prev.get("attempt") or 0))}
+    if arm:
+        rec["arm"] = {k: arm.get(k) for k in ("of", "key", "mode", "gen_host")}
     if sp.get("prov_views"):
         rec["provisional"] = {m: "pending" for m in sp["prov_views"]["modules"]}
         rec["prov_key"] = (d.get("_prov_keys") or {}).get(r["item"])
@@ -4099,6 +4113,257 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     st["items"][key] = rec
     AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
     return rec
+
+
+# ------------------------------------------------------------------------------------------------ GRT halving-off arm
+# KW-FIX-44 GRTARM_1111 (COORD 01:0x 11-11; OWNER 11-11: "yes, I agree to rolling out the halving. If detailed routing
+# failed, stop it."): die option grt_halving_arm {items: [...], mode: off|edge|edge_outline, gen_host: <host>,
+# stop: <reason>} launches ONE extra attempt per listed current-plan row, alongside its normal path.  The arm has its own
+# state key (<row key>|grtarm-<mode>), its own attempt number and dir, and the gen env OT_GRT_TRANSITION_MODE=<mode>:
+# gen_phys writes K/grt_transition_mode and run_kit.sh runs the ORFS main run ONLY on the pinned patched router image
+# (asap7lock-grtoff); LEC and sign-off STA stay stock, receipt K/grt_transition.json.  An arm launches only from a die src
+# whose gen_phys.py has that writer (checked on the gen host).  Same item identity: the first of the two to sign off
+# (SIGNED / WAIT-PARENT) counts, the other is stopped by its exact units, marked CANCELLED SUPERSEDED and its run data
+# reclaimed (logs, reports, json kept).  STOP RULE: an arm that ends FAIL after the wave (DRT DRC>0, DRT not converged, any
+# route/sign-off verdict) is final and never relaunched; only an INFRA failure before any verdict uses the infra budget.
+# Class stop: top-level grt_halving_arm_stop, die option stop, or AP_DIR/grt_halving_arm.stop launches no new arm and
+# stops every live arm (CANCELLED ARM-STOP).  No option anywhere = no arm and the tick is unchanged.
+GRT_ARM_MODES = ("off", "edge", "edge_outline")
+GRT_ARM_STOP_FILE = "grt_halving_arm.stop"
+GRT_ARM_GEN_MARK = "def write_grt_transition_mode"
+GRT_ARM_SIGNED = ("SIGNED", "WAIT-PARENT")
+GRT_ARM_RECLAIM = ("*.odb", "*.def", "*.gds", "*.gds.gz", "*.spef", "*.oas")
+GRT_ARM_MAX_PER_TICK = 6
+
+
+def grt_arm_key(base_key, mode):
+    return f"{base_key}|grtarm-{mode}"
+
+
+def grt_arm_opt(cfg, die):
+    """the die's validated grt_halving_arm option, or None"""
+    o = ((cfg.get("dies") or {}).get(die) or {}).get("grt_halving_arm")
+    if not o:
+        return None
+    if not isinstance(o, dict) or str(o.get("mode", "off")) not in GRT_ARM_MODES or not isinstance(o.get("items") or [], list):
+        raise ValueError(f"grt_halving_arm {die}: {{items: [...], mode: {'|'.join(GRT_ARM_MODES)}}}")
+    gh = o.get("gen_host")
+    if gh is not None and not re.fullmatch(r"[A-Za-z0-9_.-]+", str(gh)):
+        raise ValueError(f"grt_halving_arm {die}: gen_host {gh!r}")
+    return dict(o, mode=str(o.get("mode", "off")), items=[str(x) for x in (o.get("items") or [])])
+
+
+def grt_arm_stop(cfg, die, ap_dir):
+    """class stop reason, '' = none (an unreadable stop file stops: fail-closed)"""
+    if cfg.get("grt_halving_arm_stop"):
+        return str(cfg["grt_halving_arm_stop"])[:200]
+    o = ((cfg.get("dies") or {}).get(die) or {}).get("grt_halving_arm")
+    if isinstance(o, dict) and o.get("stop"):
+        return str(o["stop"])[:200]
+    p = Path(ap_dir or ".") / GRT_ARM_STOP_FILE
+    try:
+        return (p.read_text().strip()[:200] or GRT_ARM_STOP_FILE) if p.exists() else ""
+    except OSError:
+        return GRT_ARM_STOP_FILE + " unreadable"
+
+
+def grt_arm_signed(rec):
+    return rec.get("status") == "ENQUEUED" and rec.get("q_status") in GRT_ARM_SIGNED
+
+
+def grt_arm_live(rec):
+    """an attempt that is still on its way to a verdict (the one the arbitration stops)"""
+    s = rec.get("status")
+    if s in ("RUNNING", "LAUNCHING", "PASS", "ROUTE-HELD", "RETRY-INFRA"):
+        return True
+    q = str(rec.get("q_status") or "")
+    return s == "ENQUEUED" and q not in GRT_ARM_SIGNED and (q in ("", "QUEUED", "RUNNING") or q.startswith("WAIT-"))
+
+
+def grt_arm_src_check(AP, cfg, sp):
+    """'' when the arm's gen host has a die src whose gen_phys.py writes K/grt_transition_mode, else why not (cached per tick)"""
+    h, src = sp.get("gen_host") or "", str(sp.get("src") or "")
+    cache = cfg.setdefault("_grt_arm_src", {})
+    if (h, src) not in cache:
+        f = shlex.quote(src.rstrip("/") + "/tools/die_plan/gen_phys.py")
+        cmd = f"grep -q {shlex.quote(GRT_ARM_GEN_MARK)} {f} && echo KW_GRTARM_SRC_OK || echo KW_GRTARM_SRC_NO"
+        remote = _ssh(h, getattr(AP, "HUB_NAME", "localhost"))
+        try:
+            rc, out, _ = AP.sh(remote + ["bash -c " + shlex.quote(cmd)] if remote else ["bash", "-c", cmd], timeout=60)
+        except Exception as e:                       # noqa: a probe error launches nothing
+            rc, out = 1, f"probe error {type(e).__name__}"
+        cache[(h, src)] = "" if "KW_GRTARM_SRC_OK" in (out or "") else \
+            f"{h}:{src} gen_phys.py has no {GRT_ARM_GEN_MARK} (GRT-PATCH-1 runner not in this src; rc {rc})"
+    return cache[(h, src)]
+
+
+def grt_arm_withdraw(AP, cfg, rec, why):
+    """append-only queue withdrawal of an ENQUEUED kit whose job has not started (enqueue.py --mode withdraw)"""
+    d = (cfg.get("dies") or {}).get(rec["die"]) or {}
+    try:
+        pinned = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        src = enqueue_src(AP, pinned, d)
+    except (OSError, ValueError, KeyError) as e:
+        return f"withdraw not sent: {e}"
+    argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
+            "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS",
+            "--geom-ref", re.sub(r"\s+", " ", why)[:200], "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])),
+            "--cells", "200000", "--lane", d.get("lane", LANE), "--mode", "withdraw"]
+    rc, out, err = AP.sh(argv, timeout=300)
+    return "withdrawn" if rc == 0 else f"withdraw rc {rc}: {(err or out)[-160:]}"
+
+
+def grt_arm_reclaim(AP, rec, hosts):
+    """delete the run data (GRT_ARM_RECLAIM) of a stopped attempt under its OWN dir .../items/<item>/attempt_<n> on each host
+    that may hold it.  Fail-closed: a dir that is not this record's attempt_<n> (attempt 1's dir holds the later attempts), or
+    one with any signoff.json under it, is left as it is and the reason is returned."""
+    try:
+        w = str(json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("work") or "")
+    except (OSError, ValueError, KeyError, TypeError):
+        return "not reclaimed: spec.json unreadable"
+    want = f"/items/{rec.get('item')}/attempt_{rec.get('attempt')}"
+    if not w.startswith("/") or not w.endswith(want) or "/../" in w + "/" or int(rec.get("attempt") or 0) < 2:
+        return f"not reclaimed: {w or '?'} is not this attempt's own dir"
+    names = " -o ".join(f"-name {shlex.quote(g)}" for g in GRT_ARM_RECLAIM)
+    cmd = (f"W=$(readlink -f {shlex.quote(w)}) || exit 0; [ -d \"$W\" ] || {{ echo KW_RECLAIM_SKIP absent; exit 0; }}; "
+           f"case \"$W\" in *{shlex.quote(want)}) ;; *) echo KW_RECLAIM_SKIP resolves elsewhere; exit 0;; esac; "
+           f"if find \"$W\" -name signoff.json -print -quit | grep -q .; then echo KW_RECLAIM_SKIP signoff.json; exit 0; fi; "
+           f"b=$(du -sm \"$W\" | cut -f1); find \"$W\" -xdev -type f \\( {names} \\) -delete; "
+           f"echo KW_RECLAIM $b $(du -sm \"$W\" | cut -f1)")
+    out = []
+    hub = getattr(AP, "HUB_NAME", "localhost")
+    for h in [h for h in dict.fromkeys(hosts) if h]:
+        remote = _ssh(h, hub)
+        try:
+            rc, o, _ = AP.sh(remote + ["bash -c " + shlex.quote(cmd)] if remote else ["bash", "-c", cmd], timeout=240)
+        except Exception as e:                       # noqa: reclaim never stops the tick
+            rc, o = 1, type(e).__name__
+        m = re.search(r"KW_RECLAIM (\d+) (\d+)", o or "")
+        k = re.search(r"KW_RECLAIM_SKIP ([^\n]+)", o or "")
+        out.append(f"{h}: {m.group(1)}->{m.group(2)} MB" if m else f"{h}: skip {k.group(1)}" if k else f"{h}: rc {rc}")
+    return "; ".join(out) or "no host"
+
+
+def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
+    """stop one attempt by its exact units (wave unit + PLACE client, or its running route job; an unstarted queue row is
+    withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data"""
+    units, withdraw, s = [], False, rec.get("status")
+    j = (jobs or {}).get(rec.get("q_id")) or {}
+    if s in ("RUNNING", "LAUNCHING"):
+        units.append(rec.get("unit"))
+        try:
+            units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+    elif s == "ENQUEUED":
+        if j.get("status") == "RUNNING" and j.get("unit"):
+            units.append(j["unit"])
+        elif rec.get("kit"):
+            withdraw = True
+    if AP.DRY:
+        AP.log(f"KIT-WAVE GRT-ARM would cancel {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units}: {why}")
+        return
+    for u in units:
+        if u:
+            AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+    wd = grt_arm_withdraw(AP, cfg, rec, why) if withdraw else ""
+    root = attempt_root(rec)
+    stopped = ""
+    if root and (units or s == "ENQUEUED"):
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [root])
+        stopped = " ".join(WJ.stopped_names(res))[:300]
+    try:
+        gh = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+    except (OSError, ValueError, KeyError, TypeError):
+        gh = None
+    rec.update(status="CANCELLED", **{"class": cls}, updated=time.time(), reason=why[:300])
+    rec["reclaim"] = grt_arm_reclaim(AP, rec, [gh, str(rec.get("kit") or "").partition(":")[0], j.get("ran_on")])
+    notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} {cls}: {why[:200]}")
+    AP.log(f"KIT-WAVE GRT-ARM CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} {wd} "
+           f"containers [{stopped or 'none'}] reclaim [{rec['reclaim']}]: {why}")
+
+
+def grt_arm_step(AP, cfg, st, notices, ap_dir):
+    """arbitration + stop rule + class stop for every arm record (after collect/follow_queue, before any relaunch)"""
+    items = st.get("items") or {}
+    arms = [(k, r) for k, r in items.items() if isinstance(r.get("arm"), dict)]
+    if not arms:
+        return 0
+    try:
+        jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    n = 0
+    for k, a in arms:
+        die, mode = a.get("die"), a["arm"].get("mode")
+        base = items.get(a["arm"].get("of")) or {}
+        if a.get("status") == "RETRY-INFRA" and a.get("q_status") == "FAIL":
+            a["status"] = "FAIL"                          # never: a route verdict is final (stop rule)
+        if a.get("status") == "ENQUEUED" and a.get("q_status") == "FAIL" and not a["arm"].get("final"):
+            a["arm"]["final"] = f"FAIL {a.get('q_class') or ''}: {str(a.get('q_reason') or '')[:160]}"
+            notices.setdefault(die, []).append(
+                f"{a['item']}@{a.get('attempt')} GRT-ARM[{mode}] FAIL, final (stop rule, no retry): {a['arm']['final']}")
+            AP.log(f"KIT-WAVE GRT-ARM FINAL {die}/{a['item']}@{a.get('attempt')}: {a['arm']['final']}")
+        stop = grt_arm_stop(cfg, die, ap_dir)
+        if stop and grt_arm_live(a):
+            grt_arm_cancel(AP, cfg, a, f"GRT-ARM[{mode}] class stop: {stop}", "ARM-STOP", jobs, notices)
+            n += 1
+            continue
+        if grt_arm_signed(a) and base and base is not a and grt_arm_live(base):
+            grt_arm_cancel(AP, cfg, base, f"GRT-ARM arbitration: the {mode} arm {a['item']}@{a.get('attempt')} signed off "
+                                          f"first (job {a.get('q_id')}); this normal-path attempt is superseded",
+                           "SUPERSEDED", jobs, notices)
+            n += 1
+        elif grt_arm_signed(base) and grt_arm_live(a):
+            grt_arm_cancel(AP, cfg, a, f"GRT-ARM arbitration: the normal path {base.get('item')}@{base.get('attempt')} "
+                                       f"signed off first (job {base.get('q_id')}); this {mode} arm is superseded",
+                           "SUPERSEDED", jobs, notices)
+            n += 1
+        elif grt_arm_live(a) and counted_now(cfg, st, die, a.get("item"), a.get("block_sha")):
+            grt_arm_cancel(AP, cfg, a, f"GRT-ARM[{mode}]: counted by the sign-off counter", "SUPERSEDED", jobs, notices)
+            n += 1
+    return n
+
+
+def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
+    """launch the arms of every die option grt_halving_arm (once per row key and mode; never after a final FAIL)"""
+    cur, n = None, 0
+    cap = int(cfg.get("grt_arm_max_per_tick", GRT_ARM_MAX_PER_TICK))
+    for die in sorted(cfg.get("dies") or {}):
+        d = cfg["dies"][die]
+        try:
+            o = grt_arm_opt(cfg, die) if isinstance(d, dict) else None
+        except ValueError as e:
+            AP.log(f"KIT-WAVE GRT-ARM option refused: {e}")
+            continue
+        if not o or not o["items"] or grt_arm_stop(cfg, die, ap_dir) or stop_reason(cfg, die, ap_dir):
+            continue
+        cur = current_blocks(cfg, st) if cur is None else cur
+        blocks = cur.get(die)
+        if not blocks:
+            continue                                      # no cached plan probe: nothing is judged current
+        for item in o["items"]:
+            if n >= cap:
+                return n
+            if item not in blocks:
+                AP.log(f"KIT-WAVE GRT-ARM {die}/{item}: not an item of the current plan; no arm")
+                continue
+            base = item_key(die, d["event"], item, blocks[item])
+            ak = grt_arm_key(base, o["mode"])
+            brec = (st.get("items") or {}).get(base)
+            if ak in st["items"] or not brec or grt_arm_signed(brec) or counted_now(cfg, st, die, item, blocks[item]):
+                continue
+            if load_hold(cfg, die, item, brec.get("parent_item"), core_module(item)):
+                continue
+            r = {"item": item, "kind": brec.get("kind") or "type", "parent_item": brec.get("parent_item"),
+                 "block_sha": blocks[item], "replicas": brec.get("replicas"),
+                 "arm": {"of": base, "key": ak, "mode": o["mode"], "gen_host": o.get("gen_host")}}
+            rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=(nl + n) * stagger)
+            if rec:
+                n += 1
+                notices.setdefault(die, []).append(f"{item} GRT-ARM[{o['mode']}] LAUNCHED ({rec['unit']}, beside "
+                                                   f"{brec.get('item')}@{brec.get('attempt')} {brec.get('status')})")
+    return n
 
 
 def stage_disk_wait(live_log):
@@ -4542,7 +4807,7 @@ def pilot_fail_times(d, die, state, src_sha=""):
     (slice_station__t26 geom FAIL cancelled 12 queued S81 stations at 10:16)."""
     fail_t = {}
     for r in (state.get("items") or {}).values():
-        if r.get("die") != die or r.get("volume"):
+        if r.get("die") != die or r.get("volume") or r.get("arm"):
             continue
         c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
         t = None
@@ -4661,7 +4926,8 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     for key, r in (st.get("items") or {}).items():
         die = r.get("die")
         d = (cfg.get("dies") or {}).get(die)
-        if die not in cur or key in cur[die] or not isinstance(d, dict) or d.get("cancel_superseded") is False:
+        if die not in cur or ((r.get("arm") or {}).get("of") or key) in cur[die] or not isinstance(d, dict) \
+                or d.get("cancel_superseded") is False:
             continue
         if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED"):
             item = r.get("item") or ""
@@ -4760,6 +5026,10 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:                                        # KW-FIX-44 GRTARM_1111: arm arbitration / stop rule / class stop
+        grt_arm_step(AP, cfg, st, notices, ap_dir)
+    except Exception as e:                      # an arm problem never stops the wave
+        AP.log(f"KIT-WAVE GRT-ARM step skipped: {type(e).__name__}: {e}")
     try:                                        # SUBSTEP-1 (COORD 11-05 10:53): sub-step ODBs of terminal attempts
         import substep_prune
         substep_prune.tick(AP, cfg, st, ap_dir, lambda h: _ssh(h, AP.HUB_NAME),
@@ -4838,7 +5108,8 @@ def _step(AP, ap_dir):
             rec["status"] = "FAIL"
             launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
-                                              "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
+                                              "replicas": rec.get("replicas"), "arm": rec.get("arm")},
+                        AP.HUB_NAME, delay_s=nl * stagger)
             nl += 1
     if nl and not AP.DRY:                                # launched units are on record before anything else can raise
         save_state(st, ap_dir)
@@ -4865,6 +5136,10 @@ def _step(AP, ap_dir):
         nl += 1
         if rec:
             notices.setdefault(die, []).append(f"{r['item']} LAUNCHED ({rec['unit']})")
+    try:                                                 # KW-FIX-44 GRTARM_1111: halving-off arms
+        nl += grt_arm_launches(AP, cfg, st, notices, ap_dir, nl, stagger)
+    except Exception as e:                               # an arm problem never stops the wave
+        AP.log(f"KIT-WAVE GRT-ARM launches skipped: {type(e).__name__}: {e}")
     if nl and not AP.DRY:
         save_state(st, ap_dir)
     if cfg.get("_gen_fallback_taken"):
@@ -5039,6 +5314,8 @@ def write_stages(st, ap_dir, cfg=None):
             # another path (lane build, OWNERS SIGNED); their old wave FAIL row reads SIGNED / COUNTED, not open work
             v.update(status="SIGNED", **{"class": "COUNTED"},
                      reason=f"counted elsewhere (counted_items), was {v.get('status')} {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
+        if isinstance(r.get("arm"), dict):               # KW-FIX-44 GRTARM_1111: the halving-off arm of the row
+            v["reason"] = (f"GRT-ARM[{r['arm'].get('mode')}] " + str(v.get("reason") or ""))[:240]
         if r.get("provisional"):
             # KW-PROV-1: built on PROVISIONAL child views (never counted until the STA-only re-sign on the signed libs)
             pv = ",".join(f"{m}:{str(src).split()[0] if src else '?'}" for m, src in sorted(r["provisional"].items()))
@@ -5589,7 +5866,7 @@ def leafslew_step(AP, cfg, st, notices, hub=None):
     ls = st.setdefault("leafslew", {})
     todo = [rec for rec in (st.get("items") or {}).values()
             if rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL" and rec.get("q_signoff")
-            and "leafslew" not in rec and rec.get("die") in (cfg.get("dies") or {})
+            and "leafslew" not in rec and rec.get("die") in (cfg.get("dies") or {}) and not rec.get("arm")
             and opt(cfg, rec.get("die"), "leafslew_auto") is not False]
     todo.sort(key=lambda r: -float(r.get("q_updated") or r.get("updated") or 0))
     for rec in todo[:LEAFSLEW_READS_PER_TICK]:
