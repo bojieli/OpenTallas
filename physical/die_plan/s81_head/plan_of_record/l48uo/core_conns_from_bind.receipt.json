@@ -1,0 +1,37 @@
+{
+ "plan": "physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz",
+ "base": null,
+ "types": {
+  "hd_ctl": {
+   "src": "/srv/opentallas-scratch3/claude/kw32src/src_cc346/.x/l48uk/gen/ot_s81hd_ctl.sv",
+   "cores": 4,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "hd_host": {
+   "src": "/srv/opentallas-scratch3/claude/kw32src/src_cc346/.x/l48uk/gen/ot_s81hd_host_ep.sv",
+   "cores": 110,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "hd_mesh": {
+   "src": "/srv/opentallas-scratch3/claude/kw32src/src_cc346/.x/l48uk/gen/ot_s81hd_mesh_ep.sv",
+   "cores": 110,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "hd_serdes": {
+   "src": "/srv/opentallas-scratch3/claude/kw32src/src_cc346/.x/l48uk/gen/ot_s81hd_serdes.sv",
+   "cores": 3,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "hd_tile": {
+   "src": "/srv/opentallas-scratch3/claude/kw32src/src_cc346/.x/l48uk/gen/ot_s81hd_tile_p.sv",
+   "cores": 5,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  }
+ },
+ "note": "PLAN-ROUTE-1 11-10 (COORD): types route_supply had on the centroid FALLBACK, traced with tools/die_plan/core_conns_batch.py from their bound netlists; {} = a core with no pure-wiring partner at the bound level (route_supply glue escape). DO_NOT_COUNT."
+}

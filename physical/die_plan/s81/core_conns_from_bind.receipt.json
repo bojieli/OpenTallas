@@ -1,0 +1,265 @@
+{
+ "plan": "physical/die_plan/s81/plan_h2_2249.json",
+ "base": "physical/die_plan/s81/core_conns.json",
+ "types": {
+  "bk_sel__t2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2/rtl/s81p_bk_sel__t2_bound.sv",
+   "cores": 7,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "col_h10_r0_p1__t1__cl574cc59d": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl574cc59d/attempt_20/gen/col_h10_r0_p1__t1__cl574cc59d/rtl/col_h10_r0_p1__t1__cl574cc59d_bound.sv",
+   "cores": 95,
+   "cores_wired": 85,
+   "wiring_paths": 951
+  },
+  "col_h10_r0_p1__t1__cl911743eb": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb/rtl/col_h10_r0_p1__t1__cl911743eb_bound.sv",
+   "cores": 95,
+   "cores_wired": 85,
+   "wiring_paths": 951
+  },
+  "col_h10_r0_p4__t1": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch/claude/die-s81-85/ftlock/bind_ctl/rtl/s81p_col_h10_r0_p4__t1.sv",
+   "cores": 95,
+   "cores_wired": 85,
+   "wiring_paths": 950
+  },
+  "col_h10_r1__t1__cl95b37463": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r1__t1__cl95b37463/attempt_14/gen/col_h10_r1__t1__cl95b37463/rtl/col_h10_r1__t1__cl95b37463_bound.sv",
+   "cores": 89,
+   "cores_wired": 74,
+   "wiring_paths": 914
+  },
+  "col_h10_r1__t1__cld01bb4ae": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r1__t1__cld01bb4ae/attempt_15/gen/col_h10_r1__t1__cld01bb4ae/rtl/col_h10_r1__t1__cld01bb4ae_bound.sv",
+   "cores": 89,
+   "cores_wired": 74,
+   "wiring_paths": 914
+  },
+  "col_h10_r2__t1__cl1f5d6c2a": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl1f5d6c2a/attempt_19/gen/col_h10_r2__t1__cl1f5d6c2a/rtl/col_h10_r2__t1__cl1f5d6c2a_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 901
+  },
+  "col_h10_r2__t1__cl8b686b3e": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl8b686b3e/attempt_22/gen/col_h10_r2__t1__cl8b686b3e/rtl/col_h10_r2__t1__cl8b686b3e_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 901
+  },
+  "col_h10_r2__t1__cl99efd374": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl99efd374/attempt_23/gen/col_h10_r2__t1__cl99efd374/rtl/col_h10_r2__t1__cl99efd374_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 901
+  },
+  "col_h10_r2__t1__clac068e56": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__clac068e56/attempt_15/gen/col_h10_r2__t1__clac068e56/rtl/col_h10_r2__t1__clac068e56_bound.sv",
+   "cores": 75,
+   "cores_wired": 58,
+   "wiring_paths": 161
+  },
+  "col_h9_r0_p1__t1": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p1__t1/attempt_30/gen/col_h9_r0_p1__t1/rtl/s81p_col_h9_r0_p1__t1_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p2__t1__cl0045af7b": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p2__t1__cl0045af7b/attempt_22/gen/col_h9_r0_p2__t1__cl0045af7b/rtl/col_h9_r0_p2__t1__cl0045af7b_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p2__t1__cl9f71e63d": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p2__t1__cl9f71e63d/attempt_18/gen/col_h9_r0_p2__t1__cl9f71e63d/rtl/col_h9_r0_p2__t1__cl9f71e63d_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p3__t1__cl0cd90c0e": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p3__t1__cl0cd90c0e/attempt_21/gen/col_h9_r0_p3__t1__cl0cd90c0e/rtl/col_h9_r0_p3__t1__cl0cd90c0e_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p3__t1__cl31d0dc4b": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p3__t1__cl31d0dc4b/attempt_17/gen/col_h9_r0_p3__t1__cl31d0dc4b/rtl/col_h9_r0_p3__t1__cl31d0dc4b_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p3__t1__cl8ce97bcb": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p3__t1__cl8ce97bcb/attempt_16/gen/col_h9_r0_p3__t1__cl8ce97bcb/rtl/col_h9_r0_p3__t1__cl8ce97bcb_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p4__t1__cl8ef405e8": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p4__t1__cl8ef405e8/attempt_11/gen/col_h9_r0_p4__t1__cl8ef405e8/rtl/col_h9_r0_p4__t1__cl8ef405e8_bound.sv",
+   "cores": 84,
+   "cores_wired": 67,
+   "wiring_paths": 184
+  },
+  "col_h9_r0_p4__t1__clcb2fbfe8": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p4__t1__clcb2fbfe8/attempt_17/gen/col_h9_r0_p4__t1__clcb2fbfe8/rtl/col_h9_r0_p4__t1__clcb2fbfe8_bound.sv",
+   "cores": 84,
+   "cores_wired": 67,
+   "wiring_paths": 184
+  },
+  "col_h9_r0_p5__t1": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p5__t1/attempt_20/gen/col_h9_r0_p5__t1/rtl/s81p_col_h9_r0_p5__t1_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r0_p6__t1": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p6__t1/attempt_19/gen/col_h9_r0_p6__t1/rtl/s81p_col_h9_r0_p6__t1_bound.sv",
+   "cores": 84,
+   "cores_wired": 75,
+   "wiring_paths": 923
+  },
+  "col_h9_r1__t1__cl49d7a23e": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__cl49d7a23e/attempt_18/gen/col_h9_r1__t1__cl49d7a23e/rtl/col_h9_r1__t1__cl49d7a23e_bound.sv",
+   "cores": 81,
+   "cores_wired": 72,
+   "wiring_paths": 911
+  },
+  "col_h9_r1__t1__clf32cde8d": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc7/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__clf32cde8d/attempt_17/gen/col_h9_r1__t1__clf32cde8d/rtl/col_h9_r1__t1__clf32cde8d_bound.sv",
+   "cores": 81,
+   "cores_wired": 72,
+   "wiring_paths": 911
+  },
+  "col_h9_r2__t1__cl774acf45": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl774acf45/attempt_11/gen/col_h9_r2__t1__cl774acf45/rtl/col_h9_r2__t1__cl774acf45_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 900
+  },
+  "col_h9_r2__t1__cl87f3ff59": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel2/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl87f3ff59/attempt_2/gen/col_h9_r2__t1__cl87f3ff59/rtl/col_h9_r2__t1__cl87f3ff59_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 900
+  },
+  "col_h9_r2__t1__clb8d86cd5": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clb8d86cd5/attempt_9/gen/col_h9_r2__t1__clb8d86cd5/rtl/col_h9_r2__t1__clb8d86cd5_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 900
+  },
+  "col_h9_r2__t1__clc9ad8f7e": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl774acf45/attempt_11/gen/col_h9_r2__t1__cl774acf45/rtl/col_h9_r2__t1__cl774acf45_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 900
+  },
+  "col_h9_r2__t1__clce45cab5": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clce45cab5/attempt_28/gen/col_h9_r2__t1__clce45cab5/rtl/col_h9_r2__t1__clce45cab5_bound.sv",
+   "cores": 75,
+   "cores_wired": 66,
+   "wiring_paths": 900
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepe_mu_LP__t2/attempt_8/gen/dsdv_slice_lepe_mu_LP__t2/rtl/s81p_dsdv_slice_lepe_mu_LP__t2_bound.sv",
+   "cores": 8,
+   "cores_wired": 8,
+   "wiring_paths": 46
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepe_nh_mus_LP__t1/attempt_7/gen/dsdv_slice_lepe_nh_mus_LP__t1/rtl/s81p_dsdv_slice_lepe_nh_mus_LP__t1_bound.sv",
+   "cores": 4,
+   "cores_wired": 4,
+   "wiring_paths": 22
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2/rtl/s81p_dsdv_slice_lepw_mu_LP__t2_bound.sv",
+   "cores": 8,
+   "cores_wired": 8,
+   "wiring_paths": 44
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mus_LP__t2/attempt_9/gen/dsdv_slice_lepw_mus_LP__t2/rtl/s81p_dsdv_slice_lepw_mus_LP__t2_bound.sv",
+   "cores": 8,
+   "cores_wired": 8,
+   "wiring_paths": 44
+  },
+  "serdes__t12": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel1/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12/rtl/s81p_serdes__t12_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t13": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t13/attempt_23/gen/serdes__t13/rtl/s81p_serdes__t13_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t14": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t14/attempt_13/gen/serdes__t14/rtl/s81p_serdes__t14_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t15__cla2127225": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla2127225/attempt_22/gen/serdes__t15__cla2127225/rtl/serdes__t15__cla2127225_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t15__cla3d02796": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d02796/attempt_4/gen/serdes__t15__cla3d02796/rtl/serdes__t15__cla3d02796_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t16": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t16/attempt_12/gen/serdes__t16/rtl/s81p_serdes__t16_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t1__clb45db5be": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clb45db5be/attempt_13/gen/serdes__t1__clb45db5be/rtl/serdes__t1__clb45db5be_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t1__clfe1f0815": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/intel1/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clfe1f0815/attempt_14/gen/serdes__t1__clfe1f0815/rtl/serdes__t1__clfe1f0815_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t2": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc2/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t2/attempt_22/gen/serdes__t2/rtl/s81p_serdes__t2_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t3": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t3/attempt_18/gen/serdes__t3/rtl/s81p_serdes__t3_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "serdes__t4": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t4/attempt_13/gen/serdes__t4/rtl/s81p_serdes__t4_bound.sv",
+   "cores": 1,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "slice_station__t51": {
+   "src": "/srv/opentallas-scratch2/claude/plan-route-1-ccb/bound/epyc4/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t51/attempt_7/gen/slice_station__t51/rtl/s81p_slice_station__t51_bound.sv",
+   "cores": 2,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  }
+ },
+ "note": "PLAN-ROUTE-1 11-10 (COORD): types route_supply had on the centroid FALLBACK, traced with tools/die_plan/core_conns_batch.py from their bound netlists; {} = a core with no pure-wiring partner at the bound level (route_supply glue escape). DO_NOT_COUNT."
+}
