@@ -29,6 +29,8 @@ class HubSync(unittest.TestCase):
         (seed / "lanes/X.md").write_text("x1\n")
         (seed / "BRIEFING.md").write_text("b1\n")
         (seed / "RELEASE_TREE.md").write_text("t1\n")
+        (seed / "autopilot/kit_wave_state.json").write_text("{\"v\": 1}\n")
+        (seed / "lanes/COORD-REVIEW-QUEUE.md").write_text("q1\n")
         (seed / "autopilot/resolved.tsv").write_text("r1\n")
         self.git(seed, "add", ".")
         self.git(seed, "commit", "-qm", "base")
@@ -155,6 +157,59 @@ class HubSync(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("BRIEFING.md", (self.hub / "autopilot/HUB-SYNC-FAILED").read_text())
         self.assertIn("hand edit", (self.hub / "BRIEFING.md").read_text())
+
+    # KW-FIX-46 11-11: a dirty autopilot/kit_wave_state.json (live state, rewritten every tick) stalled the sync for ~36 h
+    def test_dirty_live_state_does_not_block_and_is_kept(self):
+        (self.hub / "autopilot/kit_wave_state.json").write_text("{\"v\": 99}\n")
+        self.append(self.hub, "lanes/X.md", "hub post")
+        self.remote_commit("lanes/X.md", "remote post")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertEqual((self.hub / "autopilot/kit_wave_state.json").read_text(), "{\"v\": 99}\n")
+        self.assertIn("kit_wave_state.json", self.git(self.hub, "status", "--porcelain", "--untracked-files=no"))
+        self.assertEqual(self.remote_file("autopilot/kit_wave_state.json"), "{\"v\": 1}\n")   # never pushed
+
+    def test_dirty_live_state_survives_a_merge_that_changes_it(self):
+        (self.hub / "autopilot/kit_wave_state.json").write_text("{\"v\": 99}\n")
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "autopilot/kit_wave_state.json").write_text("{\"v\": 2}\n")
+        self.git(self.other, "commit", "-qam", "origin state")
+        self.git(self.other, "push", "-q", "origin", B)
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertEqual((self.hub / "autopilot/kit_wave_state.json").read_text(), "{\"v\": 99}\n")   # live bytes kept
+        self.assertEqual(self.git(self.hub, "show", "HEAD:autopilot/kit_wave_state.json"), "{\"v\": 2}\n")   # origin merged
+        self.assertFalse((self.hub / ".git/MERGE_HEAD").exists())
+
+    def test_live_state_plus_hand_edit_still_fails_and_keeps_both(self):
+        (self.hub / "autopilot/kit_wave_state.json").write_text("{\"v\": 99}\n")
+        self.append(self.hub, "BRIEFING.md", "hand edit")
+        r = self.sync()
+        self.assertNotEqual(r.returncode, 0)
+        failed = (self.hub / "autopilot/HUB-SYNC-FAILED").read_text()
+        self.assertIn("BRIEFING.md", failed)
+        self.assertNotIn("kit_wave_state.json", failed)
+        self.assertEqual((self.hub / "autopilot/kit_wave_state.json").read_text(), "{\"v\": 99}\n")
+
+    def test_fleet_line_after_30_min_failed_once(self):
+        old = time.strftime("%Y-%m-%d %H:%M %Z", time.localtime(time.time() - 7200))
+        (self.hub / "autopilot/HUB-SYNC-FAILED").write_text(f"since {old}\nearlier failure\n")
+        self.append(self.hub, "BRIEFING.md", "hand edit")
+        r = self.sync()
+        self.assertNotEqual(r.returncode, 0)
+        q = self.remote_file("lanes/COORD-REVIEW-QUEUE.md")
+        self.assertIn("FLEET [hub-git-sync", q)
+        self.assertIn("HUB-SYNC-FAILED for 1", q)       # 12x min
+        self.sync()
+        self.assertEqual(self.remote_file("lanes/COORD-REVIEW-QUEUE.md").count("FLEET [hub-git-sync"), 1)   # once per 6 h
+
+    def test_no_fleet_line_for_a_fresh_failure(self):
+        self.append(self.hub, "BRIEFING.md", "hand edit")
+        r = self.sync()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertNotIn("FLEET", self.remote_file("lanes/COORD-REVIEW-QUEUE.md"))
 
     def test_conflict_outside_logs_aborts_merge(self):
         self.append(self.hub, "BRIEFING.md", "hub b")
