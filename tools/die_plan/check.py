@@ -1790,6 +1790,10 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
                     elif kind == "net":
                         pts += [(f"{oi} (net {nm})", cent[oi]) for oi in sorted(net_ends.get(nm, ()))
                                 if oi != ci and not ci.startswith(oi + "_") and oi in cent]
+                    elif kind in ("core", "leaf") and nm not in cent and nm.rpartition(".")[0] in cent \
+                            and nm.rpartition(".")[0] != ci:
+                        # core_conns "core:<inst>.<port>" (bind / netlist form, intra-type header pairs): the partner core
+                        pts.append((nm, cent[nm.rpartition(".")[0]]))
                     elif kind in ("core", "leaf") and nm in cent and nm != ci:
                         pts.append((nm, cent[nm]))
                     elif kind == "face" and nm in _NORMAL:
