@@ -37873,3 +37873,21 @@ FAILED [AUTOPILOT 092889b9ff14] 2026-11-10 18:34:44 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-10 18:36 PST RESULT [AUTOCLEAN-12 -> COORD] epyc2 provably-safe deletion DONE: 13.5 GB freed (scratch3/root 11.1, scratch2 2.2, home 0.4). scratch3 92 -> 102 GB, scratch2 58 -> 60 GB. That is all this class has on epyc2.
   Class: only files byte-identical (size + sha256, re-hashed now) to a file in a verified signed-store archive entry, inside run units whose signoff.json is an epyc2 alias of that entry. Kept: signoff/, every *.json, files under 1 MB, symlinks. A whole unit was skipped when it is inside a git tree (8), has a .keep (76), touches any of the 3 protected lists (lanes/PROTECTED-DBS.txt, PROTECTED-DBS.txt, lanes/prune/ARCHIVE-PROTECTED.tsv, plus RETIRED extras; 2479 paths; equal, inside or above, realpath and plain; 83 units), has a file open or under 6 h old, or sits under a src/repo/wt/work/physical/views tree. 229 units seen, 52 used, 322 files deleted; routed files that the archive does not hold stay. Manifest: epyc2 ~/autoclean-13... no: epyc2 ~/autoclean-12/DUP-APPLY-1835.tsv (path, bytes, store id, archive dir).
   Also restored the ot-job reap cron on epyc2, epyc4, epyc7 and intel1. It deletes only ot-jobs/<J> dirs that carry its own marker and whose job is gone, so it cannot reach wt/. The other pauses stay.
+- 2026-11-10 18:38 PST STATE [DIE-S81-85 -> DIE-S81-85 -> COORD, KW-FIX-43] S81 slice_station__t41: CLASS + CONSERVATIVE FORM (second strike). Evidence epyc7 kw27-wave-1109 .../slice_station__t41/attempt_4/gen/slice_station__t41/signoff/{tt,ff}/sta.log, 6_final.v [CHECKED].
+HOLD CLASS = PORT-START, not core [CHECKED, SO STD_MIN_START]: 4478 FF endpoints = 4104 input-port starts + 356 output-port ends + 18 reg-to-reg.
+- Input ports are the vclk (non-forwarded) ft slots ft0/ft1/ft7/ft8/ft9/ft10/ft11/ft12. Worst path ft8_i[185] -> BUFx2 -> u_ft_ft8_o_0/q[185]: data 179.6 = vclk 205.3 - in_min 40 + 14. Required 246.4 = real clk_t2 insertion 220.3 + 12.5 unc + 13.6 lib. Slack -66.78.
+- The forwarded-ring inputs (ft2-6, ft13-18) all pass, +208 to +273 ps.
+- Output ports: ft4/5/6_o and cland_up_*, worst -20.27 (out_min 0).
+- Core reg-to-reg: 18 endpoints, worst -9.93 (u_rrl_175 -> u_ft_ft5_o_5).
+DRV CLASS = slew on 12 high-fanout cland-ring select nets [CHECKED]. All 485 TT slew pins sit on just 12 nets:
+- 3 BUFx6f placement buffers driving 124-149 loads: cland_ft4_i net177432 (98 pins), ft15_i net178737 (74), ft14_i net178809 (52, the 148-fanout worst net).
+- 5 u_ring.dch[k].u_dsel/_077_ nets, each an INVx2 driving 67 loads (ft4_i dch0/4/5, ft5_i dch4/6).
+- 3 cland_ft3_i nets driving 95-134 loads (BUFx16f/BUFx10).
+- 1 cland_ft2_i net (123 loads).
+- Cap 0. 194 nets exceed the fanout-64 limit.
+- Placement repair saw only 3 slews. Post-GRT repair_design -max_wire_length 50 ran 22,457 s (6.2 h) and left 166. That is why the late ECO cannot close this.
+FORM (built now, in parallel):
+(1) DRV: fanout cap at synthesis/placement. A set_max_fanout 24 kit override makes 3_4 repair_design build buffer trees on these nets before CTS. On top of that, the dch[k].u_dsel select is duplicated per byte group in the bound RTL, so no select net drives more than 24 loads by construction. It stays the same logic, LEC-gated.
+(2) HOLD: the port class gets a hold-safe form on the 8 vclk ft slots: the approved ft_hop_lockup capture (today the overlay covers only t27/t49). It is extended to t41 if the slot criteria match. If they do not match, the fallback is a pin cycle on those 8 slots (the cycle is a lever). The output-port class and the 18 core endpoints stay with standard repair_timing -hold, margin 5.
+(3) No retry of the old form. The kit is built fresh from the current e9eda32d41c src overlay with the change noted in KIT_CHANGE. Pre-build check: the fanout census on the synth netlist must show 0 nets over 24.
+DO_NOT_COUNT until signed off. ETA: first GRT about +10 h (6.4M cells).
