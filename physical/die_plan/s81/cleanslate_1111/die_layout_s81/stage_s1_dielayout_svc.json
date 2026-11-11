@@ -1,0 +1,5 @@
+{"name": "s1_dielayout_svc",
+ "why": "DIE-LAYOUT-S81 11-11 (COORD 05:27 ruling: DIE-VIS-S81-2 be01c9dd7b accepted for the next S81 event): station-column margin slide + svc ft re-site re-legalised on the current svc_rs cores",
+ "script": "/srv/opentallas-scratch2/claude/die-layout-s81/c1111/stage/stage_s1_dielayout_1111.py",
+ "argv": ["{in}", "{out}", "{report}", "/srv/opentallas-scratch2/claude/die-layout-s81/c1111/stage/delta_s1_svc_resite_only.json"],
+ "type_keys": ["ft_slots"], "top_keys": ["partitions", "die.channels"]}

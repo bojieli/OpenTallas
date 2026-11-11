@@ -1,0 +1,60 @@
+type	base	top	-ft	-ring	-station	-stn-ft	-core/glue	dominant
+leaf t10	1.06	street_V	1.06	1.06	0.00	0.00	0.00	station chains (<=1 with station+ft off)
+leaf t74	1.06	street_V	1.06	1.06	0.00	0.00	0.00	station chains (<=1 with station+ft off)
+leaf t11	1.90	street_V	1.90	1.90	0.00	0.00	1.79	station chains (<=1 with station+ft off)
+leaf t12	1.64	street_V	1.64	1.64	1.12	0.00	1.54	station chains (<=1 with station+ft off)
+leaf t15	1.71	street_V	1.71	1.71	0.00	0.00	1.53	station chains (<=1 with station+ft off)
+leaf t40__clf8bbdae1	1.71	street_V	1.71	1.71	0.00	0.00	1.53	station chains (<=1 with station+ft off)
+leaf t16	1.96	street_V	1.61	1.96	1.09	0.00	1.83	station chains (<=1 with station+ft off)
+leaf t41	1.89	street_V	1.61	1.89	1.08	0.00	1.77	station chains (<=1 with station+ft off)
+leaf t17	1.90	street_V	1.90	1.90	1.12	0.00	1.69	station chains (<=1 with station+ft off)
+leaf t2	2.77	street_V	1.60	2.77	2.77	0.00	2.74	die ft (<=1 with station+ft off)
+leaf t22	2.71	street_V	1.60	2.71	2.71	0.00	2.64	die ft (<=1 with station+ft off)
+leaf t21	1.01	street_V	1.00	1.01	0.00	0.00	0.00	station chains (<=1 with station+ft off)
+leaf t24__cl2456157b	1.16	street_V	1.01	1.16	0.00	0.00	1.00	station chains (<=1 with station+ft off)
+leaf t24__cl81374cd8	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+leaf t26	1.88	street_V	1.88	1.88	0.00	0.00	1.76	station chains (<=1 with station+ft off)
+leaf t6	1.91	street_V	1.91	1.91	0.00	0.00	1.80	station chains (<=1 with station+ft off)
+leaf t27	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+leaf t28	3.04	core_H	2.28	3.04	2.89	1.21	2.90	die ft
+leaf t29	1.44	street_V	1.44	1.44	0.00	0.00	1.32	station chains (<=1 with station+ft off)
+leaf t31	1.00	street_V	1.00	1.00	0.00	0.00	0.00	station chains (<=1 with station+ft off)
+leaf t32	1.61	street_V	1.61	1.61	1.17	1.16	1.44	station chains
+leaf t36	1.89	street_V	1.89	1.89	1.20	0.00	1.78	station chains (<=1 with station+ft off)
+leaf t38	1.79	street_V	1.79	1.79	1.01	0.00	1.69	station chains (<=1 with station+ft off)
+leaf t42	1.79	street_V	1.79	1.79	0.00	0.00	1.69	station chains (<=1 with station+ft off)
+leaf t47	1.28	street_H	1.28	1.28	1.16	1.05	1.15	background/cells
+leaf t5	2.03	street_V	2.03	2.03	0.00	0.00	1.89	station chains (<=1 with station+ft off)
+leaf t50	1.81	street_V	1.81	1.81	0.00	0.00	1.69	station chains (<=1 with station+ft off)
+leaf t52	2.42	street_V	2.42	2.42	1.46	1.08	2.28	station chains
+leaf t53__cl958451dd	1.38	street_V	1.38	1.38	0.00	0.00	1.26	station chains (<=1 with station+ft off)
+leaf t53__clb66fa5cb	1.38	street_V	1.38	1.38	0.00	0.00	1.26	station chains (<=1 with station+ft off)
+leaf t54__cl501e5681	1.79	street_V	1.79	1.79	0.00	0.00	1.68	station chains (<=1 with station+ft off)
+leaf t55	1.85	street_V	1.85	1.85	1.50	1.50	1.71	station chains
+leaf t56	1.75	street_V	1.75	1.75	1.69	0.00	1.69	background/cells (<=1 with station+ft off)
+leaf t57	2.05	street_V	2.05	2.05	1.18	0.00	1.85	station chains (<=1 with station+ft off)
+leaf t58	1.61	street_V	1.47	1.61	1.18	0.00	1.43	station chains (<=1 with station+ft off)
+leaf t59	1.70	street_V	1.70	1.70	0.00	0.00	1.49	station chains (<=1 with station+ft off)
+leaf t60	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+leaf t65	1.64	street_V	1.64	1.64	1.21	0.00	1.50	station chains (<=1 with station+ft off)
+leaf t66	2.41	street_V	2.41	2.41	2.16	1.62	2.26	station chains
+leaf t68	1.13	street_V	1.12	1.13	0.00	0.00	1.09	station chains (<=1 with station+ft off)
+leaf t70	2.06	street_V	2.06	2.06	1.25	0.00	1.93	station chains (<=1 with station+ft off)
+leaf t72	2.43	core_V	2.17	2.33	2.18	1.17	2.25	die ft
+leaf t73	1.89	street_V	1.60	1.89	1.89	0.00	1.78	die ft (<=1 with station+ft off)
+leaf t8	2.55	core_H	2.55	2.33	2.13	1.87	2.33	station chains
+leaf t9	1.88	street_V	1.58	1.88	1.88	0.00	1.78	die ft (<=1 with station+ft off)
+svc_hi_dsdv_svc_pvso_entry__t1	4.43	core_H	4.43	3.38	4.43	4.43	4.23	die ring
+svc_hi_dsdv_svc_pvso_entry__t2	3.41	street_H	3.41	3.38	3.41	3.41	3.01	interior core/glue
+dsdv_slice_lepw_mus_C__t1	1.02	core_V	0.00	0.00	1.02	0.00	1.02	die ft (<=1 with station+ft off)
+dsdv_slice_lepw_mu_LP__t2	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+dsdv_slice_lepw_mu_C__t1	1.17	core_H	1.17	0.00	1.17	1.17	0.00	die ring
+dsdv_slice_c1x_C__t1	1.23	core_H	1.23	0.00	1.23	1.23	1.12	die ring
+dsdv_slice_c1x_C__t10	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+dsdv_slice_c1x_C__t3	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+dsdv_slice_c1x_C__t5	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+dsdv_slice_c1x_C__t7	1.17	core_H	1.17	0.00	1.17	1.17	0.00	die ring
+dsdv_slice_lepe_nh_mus_LP__t1	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+dsdv_slice_lepe_mu_LP__t2	0.00	-	0.00	0.00	0.00	0.00	0.00	<=1
+col_h9_r0_p2__t1__cl9f71e63d	1.55	street_H	1.55	1.55	1.55	1.55	0.00	interior core/glue
+{'station chains': 34, 'die ft': 7, '<=1': 9, 'background/cells': 2, 'die ring': 4, 'interior core/glue': 2}
