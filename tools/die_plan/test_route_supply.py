@@ -271,3 +271,14 @@ def test_stale_bus_name_goes_to_nearest_same_direction_face_bus(tmp_path):
     _, r, _ = run(tmp_path)
     assert any("nearest same-direction face bus" in n for n in r["notes"])
     assert not any("not placed" in n for n in r["notes"])          # tap: is the clock, not unresolved
+
+
+def test_core_dest_with_port_suffix_resolves(tmp_path):
+    """core_conns_from_bind writes core:<inst>.<port>; route_supply resolves it to the core like core:<inst>."""
+    plan(tmp_path, n=800)
+    _, r0, _ = run(tmp_path)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {"d": ["core:u_b.d"]}, "u_b": {"d": ["core:u_a.d"]}}}))
+    _, r1, _ = run(tmp_path)
+    assert not any("not placed" in n for n in r1["notes"])
+    assert abs(r1["regions"]["core_H"]["p99"] - r0["regions"]["core_H"]["p99"]) < 1e-6
+    assert rs._names_core(["core:u_a.d"], "u_a") and not rs._names_core(["core:u_a.x.y"], "u_a")
