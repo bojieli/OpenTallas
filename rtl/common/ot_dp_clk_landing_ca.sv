@@ -51,7 +51,8 @@ module ot_dp_clk_landing_ca #(
     // Data q and ready are cycle-identical in the window; a rv/lap fault is seen one clk later; guard faults unchanged.
     // Default 0 = identical logic.
     parameter bit STATUS_REG = 0,
-    parameter bit WFALL = 0 // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
+    parameter bit WFALL = 0, // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
+    parameter bit GUARD_REG = 0 // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG); default 0 = identical logic
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -109,7 +110,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer KNT = 1 << KTW;
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG)) u_ring (
         .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -174,7 +175,10 @@ module ot_dp_clk_landing_cas #(
     // rst_n keeps the control flops (seen/arm/ready/fault/timeout, ring rp/status/rv/lap), rst_xn[0] the ring one-hot
     // oh, rst_xn[1..RSTREP-1] the read-select chunks in contiguous groups (ot_meso_ring_ca RSTN).  Every copy equals
     // rst_n, so q/ready/fault are identical; only the reset fanout per driver is bounded.  0 = rst_xn unused, identical logic.
-    parameter int RSTREP = 0
+    parameter int RSTREP = 0,
+    // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG): no logic on a half-cycle rclk path; 0 added cycles.
+    // Default 0 = identical logic.
+    parameter bit GUARD_REG = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -251,7 +255,7 @@ module ot_dp_clk_landing_cas #(
     wire [RXW-1:0] rst_x = RSTREP > 0 ? rst_xn : {RXW{1'b1}};
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -300,7 +304,16 @@ module ot_meso_ring_ca #(
     parameter int WLIVE = W,
     // RSTREP-1: copies of r_rst_n on r_rst_x (0 = unused): r_rst_x[0] resets oh, r_rst_x[1..RSTN-1] the read-select
     // chunks in contiguous groups (chunk c -> 1 + c*(RSTN-1)/NCH); r_rst_n keeps rp and the status/rv/lap flops
-    parameter int RSTN = 0
+    parameter int RSTN = 0,
+    // GUARD-REG-1 (CLAND-RING-NEGEDGE, COORD 11-11 09:47; needs STATUS_REG): no logic on any half-cycle rclk path.
+    // STATUS_REG still selects/compares the falling-edge guard sample (w_n/lap_n, negedge) into glo1/ghi1 (posedge):
+    // a T/2 path through the oh select and the 2*DEPTH OR (kv3_io_cor_v1 legacy form: oh[3] -> ghi0 -152 ps TT).
+    // GUARD_REG = 1: the falling-edge sample is UNCHANGED (same instant, so the (GUARD + 0.5) T window is unchanged); it
+    // is re-registered on the next rising edge (w_p/lap_p, a zero-logic T/2 hop, as glo0 -> glo1 was), the select uses
+    // a private copy oh_q of that edge's oh, and the compare lands in glo2/ghi2 a full period later.  glo1/ghi1 drop
+    // out, so glo2/ghi2/glo3/ghi3 and r_glo_ok/r_ghi_ok are cycle-identical to STATUS_REG 0 and 1 (0 added cycles;
+    // bench rtl/test/meso/guard_reg).  Default 0 = identical logic.
+    parameter bit GUARD_REG = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -553,8 +566,9 @@ module ot_meso_ring_ca #(
     assign r_v = r_v_q; assign r_lap_ok = r_lap_q;
 
     // guards (as ot_meso_ring): falling read edge, then 3 rising flops
-    wire [NS-1:0] oh_lo = rot(oh, GUARD_LO);
-    wire [NS-1:0] oh_hi = rot(oh, GUARD_HI - 1);
+    wire [NS-1:0] g_oh;              // guard select: oh, or (GUARD_REG) its private copy one edge old
+    wire [NS-1:0] oh_lo = rot(g_oh, GUARD_LO);
+    wire [NS-1:0] oh_hi = rot(g_oh, GUARD_HI - 1);
     wire [DEPTH-1:0] gs_w, gs_lap;
     if (STATUS_REG) begin : g_guard_reg
         // same falling edge as glo0/ghi0; oh only changes on the rising edge, so the select below is the select at it
@@ -564,9 +578,22 @@ module ot_meso_ring_ca #(
 `else
         always_ff @(negedge rclk) begin w_n <= s_w; lap_n <= s_lap; end
 `endif
-        assign gs_w = w_n; assign gs_lap = lap_n;
+        if (GUARD_REG) begin : g_gpos
+            // GUARD-REG-1: the falling-edge sample, re-registered at the next rising edge with that edge's select
+            (* async_reg = "true" *) logic [DEPTH-1:0] w_p, lap_p;
+            logic [NS-1:0] oh_q;
+            always_ff @(posedge rclk) begin w_p <= w_n; lap_p <= lap_n; oh_q <= oh; end
+            assign gs_w = w_p; assign gs_lap = lap_p;
+`ifdef OT_MESO_CA_MUTANT_GR_OH
+            assign g_oh = oh;               // MUTANT: selects with the next edge's one-hot (one slot late)
+`else
+            assign g_oh = oh_q;
+`endif
+        end else begin : g_gneg
+            assign gs_w = w_n; assign gs_lap = lap_n; assign g_oh = oh;
+        end
     end else begin : g_guard_direct
-        assign gs_w = s_w; assign gs_lap = s_lap;
+        assign gs_w = s_w; assign gs_lap = s_lap; assign g_oh = oh;
     end
     wire glo_c = |(oh_lo & {gs_lap, ~gs_lap} & {gs_w, gs_w});   // written since start, in this lap
     wire ghi_c = ~|(oh_hi & {gs_lap, ~gs_lap} & {gs_w, gs_w});  // not yet written in this lap
@@ -589,10 +616,18 @@ module ot_meso_ring_ca #(
         ghi0 <= STATUS_REG ? 1'b0 : ghi_c;
     end
 `endif
+`ifdef OT_MESO_CA_MUTANT_GR_LATE
+    localparam bit GR = 1'b0;               // MUTANT: compare into glo1 as STATUS_REG, i.e. guards one clk late
+`else
+    localparam bit GR = GUARD_REG;          // GUARD-REG-1: the compare (one edge later) replaces the glo1/ghi1 stage
+`endif
     always_ff @(posedge rclk) begin
-        glo1 <= STATUS_REG ? glo_c : glo0; glo2 <= glo1; glo3 <= glo2;
-        ghi1 <= STATUS_REG ? ghi_c : ghi0; ghi2 <= ghi1; ghi3 <= ghi2;
+        glo1 <= STATUS_REG ? glo_c : glo0; glo2 <= GR ? glo_c : glo1; glo3 <= glo2;
+        ghi1 <= STATUS_REG ? ghi_c : ghi0; ghi2 <= GR ? ghi_c : ghi1; ghi3 <= ghi2;
     end
+`ifndef SYNTHESIS
+    initial if (GUARD_REG && !STATUS_REG) $fatal(1, "GUARD_REG needs STATUS_REG");
+`endif
 `ifdef OT_MESO_CA_MUTANT_NO_GUARD
     assign r_glo_ok = 1'b1;
     assign r_ghi_ok = 1'b1;

@@ -1315,6 +1315,9 @@
      "landing_status_reg": {
       "type": "boolean"
      },
+     "landing_guard_reg": {
+      "type": "boolean"
+     },
      "landing_relay_start_copy": {
       "type": "boolean"
      },
@@ -5973,6 +5976,9 @@
      ]
     },
     "landing_ring_status_reg": {
+     "type": "boolean"
+    },
+    "landing_ring_guard_reg": {
      "type": "boolean"
     },
     "landing_ring_write_chunk": {
