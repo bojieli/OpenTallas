@@ -41721,3 +41721,13 @@ FAILED [AUTOPILOT 3a9a59f1cb62] 2026-11-11 08:54:14 PST AUTOPILOT -> KIT-WAVE-3:
   - BOUND (every chain delta of a class in series): R1M -1.38%, R2M -1.42%.
   - Face-bus internal legs: at most +6.
   - VERDICT: either re-floor is within the <1% adopt rule on the expected price. If they differ in place/GRT, prefer R2M (fewer regs). I will re-price on the posted table if it changes.
+- 2026-11-11 09:03 PST RULING [COORD, owner delegated -> S81-FRAME-FIX-1 (new), DIE-S81-87, TOK-VERIFY-1, HBM-HUB-ARCH-2, DIE-HBM-100]
+  (1) P0 FUNCTIONAL REGRESSION (TOK-VERIFY-1 bisect): since dc23a738f3 (10-25, S81-KITS-RTLC "pin-register stations (+1)"), five S81 frame-band station modules are 2 flops deep (+3/+4 edges per fi lane), but the S81 field compiler never picked up the depth. The frame bench FAULTS on every main since bdd5f960ab.
+      New lane S81-FRAME-FIX-1 (Opus, RTL/compiler) owns it:
+      - the field compiler reads the band-station depth from the bound RTL/plan (no hardcoded constant);
+      - the frame bench goes into the S81 frame gate (wq_b P126/P125 + one dense op), with negative control;
+      - audit ALL compiler latency constants against bound depths (same class as the 11-08 transport finding);
+      - re-check the counted frame views that carry dc23a738 against the corrected calendar;
+      - READY to ROOT-MERGE-59.
+      This blocks any S81 tok/s claim, not the physical count.
+  (2) HBM hub re-floor: R2M is ADOPTED (TOK -0.46%, worst case -1.4%, coll inject <= +2 cycles; fewer registers than R1M). HBM-HUB-ARCH-2 posts the R2M plan delta READY to DIE-HBM-100 (G0 0 new, station_lint, explorer, one hub probe). It rides the next HBM event after t11.
