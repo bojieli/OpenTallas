@@ -125,6 +125,20 @@ def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gce
     return out
 
 
+GRT_HALVING_MODES = ("full", "edge", "edge_outline", "none", "off")
+
+
+def grt_halving_types(items):
+    """['TYPE=MODE', ...] -> {TYPE: MODE} (GRT-PATCH-1 per-row arm); a bad item raises"""
+    out = {}
+    for it in items or []:
+        t, sep, m = str(it).partition("=")
+        if not sep or not t or m not in GRT_HALVING_MODES:
+            raise ValueError(f"--grt-halving-type {it!r}: TYPE=MODE with MODE in {GRT_HALVING_MODES}")
+        out[t] = m
+    return out
+
+
 def grt_macro_rules(obs):
     """macro OBS extension as findInstancesObstructions applies it (bottom-up, in place)."""
     for i in range(1, len(LAYERS) - 1):
@@ -745,6 +759,11 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     for (_, _, _, _, h) in mrects:
         pins[h["inst"]] = core_pins(h, die_dir, repo)
     mode = cfg.get("grt_halving", "full")
+    # GRT-PATCH-1 11-11 (OWNER 01:1x, opt-in): rows on the halving-off parallel arm (kit item_env
+    # OT_GRT_TRANSITION_MODE=<mode>) get that mode here, so their plan flags use the router's capacity model.
+    # --grt-halving-type TYPE=MODE; "off" is the router env name of "none".  Absent = the global --grt-halving.
+    mode = (cfg.get("grt_halving_types") or {}).get(name, mode)
+    mode = "none" if mode == "off" else mode
     K = cfg.get("grt_edge_gcells", 2)
     halve_w = {L: 1.0 for L in LAYERS}
     if mode == "none":
@@ -1355,6 +1374,9 @@ def main(argv=None):
                          "under the whole OBS); GRT-PATCH-1 patched images: edge = only within --grt-edge-gcells of "
                          "each OBS rect boundary (+ pins), edge_outline = only within K of the macro instance bbox "
                          "(+ pins); none = no halving")
+    ap.add_argument("--grt-halving-type", action="append", default=[], metavar="TYPE=MODE",
+                    help="per-type --grt-halving (full|edge|edge_outline|none|off; off = none, the OT_GRT_TRANSITION_MODE "
+                         "name) for rows on the GRT-PATCH-1 halving-off parallel arm; repeatable; absent = --grt-halving")
     ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge / edge_outline (gcells of %.3f um)"
                     % GRT_GCELL_UM)
     ap.add_argument("--ft-internal-as-parent", action="store_true",
@@ -1403,7 +1425,8 @@ def main(argv=None):
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
                empty_conns_unchecked=not a.empty_conns_glue,
-               grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells)
+               grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
+               grt_halving_types=grt_halving_types(a.grt_halving_type))
     conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
