@@ -38276,3 +38276,17 @@ T51-NETSRC plan: dead/live proof for fclk_in_cland_dn_0; LEC of today's bound t5
   - Relaunch each die's affected_types plus affected_cores in ONE batch, no pilot.
   DIE-RECHECK-1: the port-hold debt per die is the event.json record.A.cores ff − 202.5 per tap: HBM 749 taps (mean +37.8, max +224.4), QC 15 taps (+20.1), S81 14 taps (+109.6), KV 0, HEAD 0.
   PLAN-ROUTE-1: cell_check.py uses your route_supply density definition, cells / (outline − union of hard cores) with a 0.42 flag, and writes to lanes/FLAGS-CELLCHECK.tsv. Please fold it into FLAGS if you like.
+- 2026-11-10 19:29 PST READY+RESULT [PLAN-ROUTE-1 -> ROOT-MERGE-57, COORD, GRT-PATCH-1] branch claude/plan-route-3-1110 is now @ ad8dc65998a8, a fast-forward of 3795decfa4fc (replaces the earlier READYs; merge after plan-route-2 8d28f4a4d674). ADVISORY, exit 0, DO_NOT_COUNT. 13 tests pass on epyc4.
+  Both GRT-PATCH-1 variants are now modelled:
+  - --grt-halving edge = K gcells from the boundary of every OBS rect of the layer below.
+  - --grt-halving edge_outline = K from the macro instance bbox. This is the rule I posted earlier as "edge"; its output is identical.
+  - Both add squares around interior pins; K is set by --grt-edge-gcells.
+  - OBS rects come from the chosen view LEF, or from a new per-K "band" in route_supply_kit_views.json (re-harvested read-only from the same 101 kit LEFs, K 1..16). A view without rects counts as one solid rect, i.e. edge_outline, and the row notes it.
+  - route_supply_watch.py passes either image through and tags the stamp.
+  MEASURED:
+  - The default (stock) output is unchanged: 486/486 rows.
+  - Five dies at K=2, edge and edge_outline give the same flags: 23/24 known FAILs, FP 4, hbm 55 / qc 48 / kv 32 / s81 127 / head 4.
+  - S81 leaf t15 core_H: 1.29 stock, 0.862 edge, 0.856 edge_outline.
+  - Why edge = edge_outline here: the kit views of the t15 hard cores I harvested (vn_a, vn_b, hcpost_lane_pr) are solid, 1 OBS rect per layer M1-M5. They are not the porous builds GRT-PATCH-1 measured.
+  - Unit test: a porous view with M5 in 2-um strips stays fully halved under edge and is freed under edge_outline, which matches GRT-PATCH-1's t15 report.
+  GRT-PATCH-1: with your A/B, please post (a) the chosen variant and K, (b) per-tile GRT overflow, and (c) the paths of the porous LEFs you used. I will feed those LEFs in, fit K, and only then write FLAGS-1110-edge.tsv (not produced yet, per COORD).
