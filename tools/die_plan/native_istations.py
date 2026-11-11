@@ -16,6 +16,15 @@ def selected_buses(ab,*names):
     return None
 
 
+def face_first(e,typ,tol=2.0):
+    """True unless the entry is provably written core -> face: to_um on the type outline and from_um inside it.
+    Without an outline or both ends (older plans, unit fixtures) it keeps the face-first reading."""
+    o=typ.get('outline_um');a,z=e.get('from_um'),e.get('to_um')
+    if not o or not a or not z:return True
+    edge=lambda p:min(p[0],p[1],o[0]-p[0],o[1]-p[1])<=tol
+    return not (edge(z) and not edge(a))
+
+
 def source_entries(typ,only=None):
     """Coalesce only identical OUT geometry; IN/core entries remain owned by their existing flow."""
     buses={x['name']:x for x in typ.get('buses',[])}
@@ -37,7 +46,10 @@ def source_entries(typ,only=None):
             item=copy.deepcopy(e)
             # Plan bus geometry is written face->core even for OUT signals;
             # actual source stage zero must sit nearest the launching core.
-            if item.get('capture')=='face flop' and item.get('launch')!='face flop':
+            # STATION-FIX-HBM 11-11: reverse only an entry still written face first (from_um on the outline, to_um
+            # inside it).  An entry already written core -> face (station_lint S7 fix, plan stationfix_1111) is
+            # source ordered and kept, so both forms give the same native stations (idempotent).
+            if item.get('capture')=='face flop' and item.get('launch')!='face flop' and face_first(item,typ):
                 item['regs_um']=list(reversed(item['regs_um']))
                 item['from_um'],item['to_um']=item.get('to_um'),item.get('from_um')
             selected[name]=item

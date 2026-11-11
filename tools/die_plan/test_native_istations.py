@@ -57,6 +57,19 @@ class NativeStations(unittest.TestCase):
   self.assertEqual(result['from_um'],e['to_um'])
   self.assertEqual(e['regs_um'][0],[0,0])
 
+ def test_output_geometry_core_first_is_kept(self):
+  # STATION-FIX-HBM 11-11: a plan entry already written core -> face (to_um on the outline) is source ordered;
+  # face-first and core-first forms of the same stations give identical native entries (bind receipt unchanged)
+  b,L=self.fixture();t=b.types['sys'];t['outline_um']=[100.0,50.0];e=t['internal_stations'][0]
+  e.update(launch='u_t00.n_y',capture='face flop',from_um=[0.0,10.0],to_um=[60.0,10.0],regs_um=[[7,10],[30,10],[52,10]])
+  old=native_istations.source_entries(t)[0]
+  self.assertEqual(old['regs_um'],[[52,10],[30,10],[7,10]]);self.assertEqual(old['from_um'],[60.0,10.0])
+  e['from_um'],e['to_um'],e['regs_um']=e['to_um'],e['from_um'],list(reversed(e['regs_um']))
+  self.assertEqual(native_istations.source_entries(t)[0],old)
+  # neither end on the outline: the face-first reading stays
+  e.update(from_um=[5.0,10.0],to_um=[60.0,10.0])
+  self.assertEqual(native_istations.source_entries(t)[0]['from_um'],[60.0,10.0])
+
  def test_source_and_destination_station_budget_is_not_double_charged(self):
   b,L=self.fixture();b.types['sys']['internal_stations'][0]['regs_um']=[[0,0],[1,0]]
   b.types['receiver']={'buses':[{'name':'i','dir':'in','width':8}],'internal_stations':[{'conn':'bus:i','regs_um':[[i,1] for i in range(7)]}]}
