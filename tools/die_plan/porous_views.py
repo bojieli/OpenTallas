@@ -280,6 +280,30 @@ def add(die, module, lef, receipt, name=None, data=DATA):
     return m[name]
 
 
+_HOOK_A = """            _VIEW_LEF[k] = LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve)\n"""
+_HOOK_A2 = """            import porous_views as PV
+            # POROUS-ALL-1 11-10 (OWNER): opt-in real-shape child abstract (gen env OT_POROUS_VIEWS); unset = unchanged
+            _VIEW_LEF[k] = PV.select(LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve),
+                                     _CR.resolve)\n"""
+_HOOK_B = "        _LO.write_receipt(kd, macros)"
+_HOOK_B2 = """        import porous_views as _PV
+        _PV.write_receipt(kd, macros)     # POROUS-ALL-1: porous_views.json only when OT_POROUS_VIEWS is set\n"""
+
+
+def overlay_gen_phys(text):
+    """the two gen_phys hooks by exact anchor (each must occur once); idempotent; ValueError when an anchor is missing"""
+    if "porous_views as PV" in text and "_PV.write_receipt(kd, macros)" in text:
+        return text
+    if text.count(_HOOK_A) != 1:
+        raise ValueError("gen_phys: own_lef anchor not found exactly once")
+    lines = text.splitlines(keepends=True)
+    hits = [i for i, ln in enumerate(lines) if ln.startswith(_HOOK_B)]
+    if len(hits) != 1:
+        raise ValueError("gen_phys: lef_override write_receipt anchor not found exactly once")
+    lines.insert(hits[0] + 1, _HOOK_B2)
+    return "".join(lines).replace(_HOOK_A, _HOOK_A2)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -292,6 +316,9 @@ def main(argv=None):
     a2 = sub.add_parser("add")
     for k in ("--die", "--module", "--lef", "--receipt"):
         a2.add_argument(k, required=True)
+    o = sub.add_parser("overlay", help="patch DIR/tools/die_plan/gen_phys.py with the two hooks (wave src overlay)")
+    o.add_argument("--src", required=True)
+    o.add_argument("--check", action="store_true")
     a2.add_argument("--name", default=None, help="kit LEF file name the view replaces (e.g. ot_s81sl_vq_tpl.lef)")
     a = ap.parse_args(argv)
     if a.cmd == "build":
@@ -299,6 +326,15 @@ def main(argv=None):
         rep = build(a.base, a.detail, a.out, [l for l in a.layers.split(",") if l], src)
         print(json.dumps(rep, indent=1))
         return 0 if rep["check_ok"] else 1
+    if a.cmd == "overlay":
+        f = Path(a.src) / "tools" / "die_plan" / "gen_phys.py"
+        old = f.read_text()
+        new = overlay_gen_phys(old)
+        print(json.dumps(dict(gen_phys=str(f), changed=new != old, before_sha256=_sha(old.encode()),
+                              after_sha256=_sha(new.encode()))))
+        if not a.check and new != old:
+            f.write_text(new)
+        return 0
     print(json.dumps(add(a.die, a.module, a.lef, a.receipt, a.name)))
     return 0
 

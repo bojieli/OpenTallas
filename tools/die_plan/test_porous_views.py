@@ -140,6 +140,16 @@ class T(unittest.TestCase):
         with self.assertRaises(ValueError):
             PV.select(str(self.base), Path, log=lambda s: None)
 
+    def test_overlay_matches_this_tree_and_is_idempotent(self):
+        here = Path(__file__).resolve().parent / "gen_phys.py"
+        cur = here.read_text()
+        self.assertEqual(PV.overlay_gen_phys(cur), cur)               # this tree already carries both hooks
+        base = cur.replace(PV._HOOK_A2, PV._HOOK_A).replace(PV._HOOK_B2, "")
+        self.assertNotEqual(base, cur)
+        self.assertEqual(PV.overlay_gen_phys(base), cur)              # the overlay reproduces this tree's gen_phys
+        with self.assertRaises(ValueError):
+            PV.overlay_gen_phys(base.replace(PV._HOOK_A, ""))
+
     def test_shipped_map_rows_are_consistent(self):
         data = Path(__file__).resolve().parent / "porous_views_data"
         m = json.loads((data / "map.json").read_text()) if (data / "map.json").is_file() else {}
