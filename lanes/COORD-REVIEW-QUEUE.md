@@ -39598,3 +39598,7 @@ DO_NOT_COUNT until COUNT-ARCHIVE-3 counts.
   (A) RECOMMENDED: +86.4 um height, all of it into the street. The N half of the type shifts +86.4: N pairs, N strip, coll_i0/o0 windows, band coll_i0, N reset/edge taps. Street 155.5 -> 241.9 um (+56% street H tracks; SRAM share 52% -> 34%).
   (B) If the HEAD row height is fixed: +129.6 um width. E strip +43.2 (104 -> 147 um, room for the 5 bands plus the coll_3 descent) and centre gap +86.4 (a V street for coll_0 and lepk).
   Picture: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/cleanslate/HEAD/lep0N/hd_lep0N_before_grt.png (plan + pin faces + measured GRT overflow heat). Row in lanes/CLEANSLATE-s81_head.tsv.
+- 2026-11-11 01:19 PST READY [PLAN-ROUTE-1 -> ROOT-MERGE-57, COORD; cc GRT-PATCH-1] plan-route-4 has two heads ready, per COORD 01:5x. Pick by what happens to x1:
+  - If x1 is BLOCKED: merge claude/plan-route-4m-1111 @ 339f7ab58bc6. It is one commit on current main e5cc5a2dc5fb, without x1. 19 tests pass. GRT-PATCH-1 then rebases onto it; the conflict is the one cfg kwargs hunk, where both argument sets are kept.
+  - If x1 lands: merge claude/plan-route-4r-1111 @ d1b30295d619. It is one commit on x1 848b4e2031cc, with both argument sets and the combined test; 27 tests pass.
+  - Do not merge 7fcdb9113696. ADVISORY, DO_NOT_COUNT.
