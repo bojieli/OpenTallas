@@ -158,10 +158,14 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
             required.append(dict(inst=inst,master='ot_dp_rrelay',kind='literal_raw_reset'))
             previous=net
     problems += [f'unplanned literal raw relay {n}' for n in sorted(set(actual_raw)-expected_raw)]
-    stations={}
+    stations={};core_chains={}
     for entry in typ.get('internal_stations',[]):
         conn=entry.get('conn','')
         if not conn.startswith('bus:'):continue
+        if entry.get('core'):
+            # SUL0-PINFACE-1 per-hard-core pin-face chains u_ist_<bus>__<cores>_<g>_<j> (QC su_l): one chain per entry,
+            # every chain of a bus has len(regs_um) stations; checked below by name, not by the u_ist_<bus>_<j> bus form
+            core_chains.setdefault(conn,[]).append(len(entry['regs_um']));continue
         # one chain per bus at the deepest entry (kit_istations.bus_entries)
         stations[conn]=max(stations.get(conn,0),len(entry['regs_um']))
     report=man.get('kit_istations',[])
@@ -198,6 +202,28 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
             if row.get('planned')!=count or len(names)!=count:
                 problems.append(f'{conn}: factory emitted {len(names)} stages, expected {count}')
             for name in names:
+                choices=kinds.get(name,[])
+                if len(choices)!=1:problems.append(f'{name}: expected one canonical station instance, found {len(choices)}')
+                required.append(dict(inst=name,master=choices[0] if len(choices)==1 else 'ot_dp_st',kind=conn))
+    for conn,depths in core_chains.items():
+        from gen_rtl import sv_id
+        bus=sv_id(conn[4:]);count=max(depths)
+        if len(set(depths))!=1:problems.append(f'{conn}: core chains carry unequal depths {sorted(set(depths))}')
+        names=sorted(set(re.findall(r'\bu_ist_'+re.escape(bus)+r'__\w+?_\d+_\d+\b',text)))
+        kinds={n:[k for k in ['ot_dp_st','ot_dp_ste'] if len(_instance_type_spans(text,k,n))==1] for n in names}
+        emitted=[n for n,ks in kinds.items() if len(ks)==1]
+        emitted_bus_stages[conn]=emitted
+        stations[conn]=count
+        rows=[r for r in report if r.get('conn')==conn]
+        if len(emitted)!=count*len(depths):
+            problems.append(f'{conn}: actual source emitted {len(emitted)} core-chain stages, expected {count*len(depths)}')
+        if require_receipt and len(rows)!=len(depths):
+            problems.append(f'{conn}: kit_istations factory receipt has {len(rows)} core chains, expected {len(depths)}')
+        for row in rows:
+            rn=row.get('stations',[])
+            if row.get('planned')!=count or len(rn)!=count:
+                problems.append(f'{conn}: factory emitted {len(rn)} core-chain stages, expected {count}')
+            for name in rn:
                 choices=kinds.get(name,[])
                 if len(choices)!=1:problems.append(f'{name}: expected one canonical station instance, found {len(choices)}')
                 required.append(dict(inst=name,master=choices[0] if len(choices)==1 else 'ot_dp_st',kind=conn))
