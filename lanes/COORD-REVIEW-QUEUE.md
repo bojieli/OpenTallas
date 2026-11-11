@@ -41449,3 +41449,19 @@ FAILED [AUTOPILOT bb9ab4658394] 2026-11-11 08:09:12 PST AUTOPILOT -> KIT-WAVE-12
   - The +1 reset relay level is one extra boot cycle inside hd_mesh. It is accepted under the owner's rst_n >= 64-clk boot hold, with no data-cycle change.
   - KW-FIX-45 builds the hd_mesh kit on this event once it lands (the re-form, not a retry). Its in-kit LEC is the EQ proof.
   - HEAD-94 judges the coll_ib fanout split from that kit's slew.
+- 2026-11-11 08:21 PST RESULT (pilot4 A+P, pilot5 P-only; pilot6 waiter live) [QC-NK-HOLD -> DIE-QC-99, COORD; cc TOK-VERIFY-1] DO_NOT_COUNT. cbn_q11, a14 kit inputs, goal cts. Baseline: FF hold -357.2/9793 (NK pins -357.2/4234, flops -221.8/5162); TT worst -824.1/2958 (NK in -513.8/96).
+P-ONLY (pilot5: +1 register on the fabric tap, no latch): hold gate FAIL -396.9/11062. NK input pins -396.9/6132 neg, median -321.7. This confirms the 07:40 ASK: a rising-edge register next to the NK cannot meet the NK 457-774 ps hold arc against the -416 clk_c pre-skew. TT: NK in -266.1/5, worst -1345.5/4139.
+A+P (pilot4: +1 register, then the latch): hold gate PASS -249.16/7092.
+  NK pins: -249.2/4, all rst_n, not in scope.
+  reg -> latch: 679 neg, -200.3.
+  Flops: 6407 neg, -246.4, of which the new u_pc fabric -> pipe regs are 1210 at -205.4. All are inside the structural limit, so they are GRT hold-repair range.
+  TT: NK in -144.4/11, better than the baseline -513.8/96. BUT latch D is -511.5/1272 and u_pc -530.1/289, and the worst is u_u stations -1680.9 (3986 ep).
+  Cause, read from the paths: the placer put the pipe registers near their SOURCES, not next to the NK. So reg -> latch carries the long wire, and the "full cycle on the long wire" did not happen.
+PILOT6 (running, same RTL): every u_pc_nk register and u_lk_nk latch is anchored FIRM 6/2 um outside its own NK pin before GPL, then released to DPL. This is the face_flops pin-register mechanism, applied by nk_anchor.tcl in PRE_GLOBAL_PLACE. It is the "placed next to the NK" half of the approved form, not a new variant. The waiter posts FF hold + TT setup.
+TOK (TOK-VERIFY-1, bound, DO_NOT_COUNT): +1 on n_a/n_b/tap = 46 edges of the CB16 fabric. tap 3/10/17/24 -> 4/11/18/25, rs_fabric 74 -> 79 (+5 per pass). 4403.2 -> 4391.6 tok/s (-0.26%) bound, floor -0.05%; accepted under 12.21. The reschedule belongs to DIE-QC-99: one latency event for the cluster contract latency_edges (tap, rs_fabric) plus the per-type chain table, in the same event as the RTL.
+CODE: hub claude/qc-nk-hold-ap-1111@d22fbaca7a6a.
+  plan clock.core_input_lockup.pipe = D emits ot_dp_dly #(W,D) u_pc_nk_* before the u_lk_nk_* latch.
+  bind writes bind_core_input_pipe.json (declared +D per as-built leaf.port).
+  bind_verify adds D to those sinks' as-built stage count (EQ with the cycle declared; counts.pipe_declared). Default off, byte-identical. Unit tests 6/6.
+  The nk_anchor placement hook is kit-level in the pilot; it goes into gen_phys once pilot6 shows the form.
+Logs: scratchpad/coreplace/qc-nk-hold/pilot{4,5}_measure_{ff,tt}.log.
