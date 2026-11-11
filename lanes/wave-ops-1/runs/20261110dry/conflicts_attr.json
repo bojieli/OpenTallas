@@ -1,0 +1,1866 @@
+{
+ "s81": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "L": "84902481f203e9142499235d069864418d9bde95",
+   "B": "a331fe3d88484fac16d73da8727d46529c08d706",
+   "N": "b22a440ef908330ce05edac15f024139d06b4beb",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/hbm/cores/harden/recipes.json",
+   "L": "d94a5207fe2d6fb6324bfc89d5c96f4efc45c99b",
+   "B": "af213504173e3cb8fbd6050e0ef083db6fb98563",
+   "N": "a1e9bd7b3f0c17a356fdc89fe3a669692bf6aa20",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/hbm/reset_contract.json",
+   "L": "75b57fb5a8b8e93c175578ff5968c57b5c899c26",
+   "B": "f22e9c1adb85bace04c7d2e67bfaabb4aebe6879",
+   "N": "2d7cf40590056e616b5bd9da42c160376ff6ca30",
+   "exact": [
+    [
+     "claude/root-merge-46-g31-1106",
+     "56542c38f914",
+     "2026-11-06T20:54"
+    ],
+    [
+     "claude/root-merge-46-g31b-1106",
+     "272f3fb2c7d6",
+     "2026-11-06T22:21"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/plan_h2_2249.json",
+   "L": "e8b5fd4cb05263b6286079cdff9fa6da404d0a49",
+   "B": "6081ba7f84a3ba43686c27ac9abf9acdd8ded02c",
+   "N": "917e6a3868e3ce991ab1c6bf208db870d3c490a7",
+   "exact": []
+  },
+  {
+   "path": "results/rtl/svc_irg_fastpad_1109/bench/run.sh",
+   "L": "e607633eed44c3ae18a58ae74401f7d751190107",
+   "B": null,
+   "N": "aab00fdbe4fe2d81e50b117cfd3d670deccee2c2",
+   "exact": [
+    [
+     "claude/die-s81-85-irg-fastpad-1109",
+     "b9200f361105",
+     "2026-11-09T07:47"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_dp_clk_landing.sv",
+   "L": "4a57156f84537c34b9451c3c264efd5d33a4c4fc",
+   "B": "c0d510c96af5ee73c5c0c8f5e9f24b90dfe377be",
+   "N": "6349922abb85c1e71fc33564cae054bcf20d1dd6",
+   "exact": [
+    [
+     "codex/s81-legacy-freg-1106",
+     "f555030b2dc6",
+     "2026-11-06T00:43"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_meso_fifo.sv",
+   "L": "688d3e0a654cc6ea98f84ee08e2defdc2620bc85",
+   "B": "3f86f106bb5da9c26c78f0437fcf0a200bc4d81f",
+   "N": "caedb16b6b13762d3a756c02de278f4db23d7e43",
+   "exact": [
+    [
+     "claude/dh58-turnb-1103",
+     "67f6d8982394",
+     "2026-11-03T14:33"
+    ],
+    [
+     "claude/kw-fix-4-headtb3-1103",
+     "4edd31ee14d4",
+     "2026-11-03T17:05"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv",
+   "L": "3600e9606e04209a8d5c2d1de6c2d1bf62c3ecca",
+   "B": "86b1f28e0ceada16a53b43b04df78391b0e35c08",
+   "N": "b1ce629f78ce6a64046ad8e2682b1ccf53ac41e5",
+   "exact": [
+    [
+     "claude/die-s81-85-irg-fastpad-1109",
+     "9b5f67af5058",
+     "2026-11-09T07:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+   "L": "56b49173914b80aa7e707795868065ab1bdacf90",
+   "B": "ae1057fa26b5ca629f548c87ce3b03a8b82b546b",
+   "N": "9d12a5ab83cba7c6b474a9cff9d371584ddacea8",
+   "exact": [
+    [
+     "claude/die-s81-85-vp-sramreg-1109",
+     "5b6e5209951d",
+     "2026-11-09T07:59"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+   "L": "ec670526a6455f086341684c26d69913b5c09d8e",
+   "B": "ef17a5f181514b43c505e5f2f873e20a3805bca7",
+   "N": "f4b12d76bce1d1636410da3b6b1520b94f022c97",
+   "exact": [
+    [
+     "codex/xfin-predecode-model-1131",
+     "1ec013265f12",
+     "2026-11-01T11:54"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+   "L": "e600d98be9ae04f487b30e47873dbe1df93e63e5",
+   "B": "7609233f499a8863a8c636bb0cbbefa107a9e2ec",
+   "N": "04596bbf423c4ad64b4b168ff1f715e75225dfd1",
+   "exact": [
+    [
+     "rescue/epyc1-codex-kv-agebounds-2145",
+     "1241731f6bf7",
+     "2026-10-25T21:53"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "L": "06788b2e955f1376f61dbbae1554f584e141d578",
+   "B": "c610d317d4121e6898d9faea37e0a359ab9e6145",
+   "N": "21e6bdb89fc8a7e70353448d502936b2dfbe889b",
+   "exact": [
+    [
+     "refs/tags/flow-20261106-bm-kv",
+     "a0f4dddf654c",
+     "2026-11-06T08:37"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "L": "b594b2f67cfef6400390a71ee4b0346b170c81cd",
+   "B": "4697a95dc1e7e32586d224c6c651434d6890a442",
+   "N": "e556d517cc893971a82f0dddb20c9c4dcb3306aa",
+   "exact": [
+    [
+     "claude/root-merge-47-rck4-1106",
+     "c944595e04a7",
+     "2026-11-07T04:32"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "L": "1002e55f0335f9573644ff6723c62b0c5d0565ea",
+   "B": "64f572d2982a9463f3a1ea59daeb54320f6fff2b",
+   "N": "c2e001a836693cb315c07dbfc5bd1d60dc42005a",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/counted_child_views.py",
+   "L": "42a33064952b13b7e4cc8792e5f03f596a19aea4",
+   "B": "b61908377c9d8b8ea6c36c6611cd2d3913203070",
+   "N": "1827a5691b4beae33771d6d5a9d9a97e3303e84f",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "9a43576a4d39",
+     "2026-11-08T05:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "L": "5249d3ab8fb76f6d3c083a5e3805fcf0d8888ade",
+   "B": "015b8c0fadfa835a52f103cf728afa603dedf09e",
+   "N": "c19dc01bc9ec842c403cb806aae1a3db35c9ddfc",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/prov_view.py",
+   "L": "22fa97909333ef3a06428c9f2a4e1fc4b10cf94f",
+   "B": "888451c387d08dd21f11ecd019c39657c51f28c8",
+   "N": "6ff04825fd7c39cfc4a2917582fd9aba6f2b66eb",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-dw-kv",
+     "9ba1e6f86e2b",
+     "2026-11-08T06:37"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/test_kit_wave_genhosts.py",
+   "L": "7e9159b6f762fa61cb63a3ef360a71a44f97dcb5",
+   "B": "af0feb825a36fa433521b51fa68e76a8b8da7328",
+   "N": "5bb056871318381a5df719deddb25f91a66d1fa0",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-cs-kv",
+     "61e6167befcb",
+     "2026-11-07T13:36"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/bind.py",
+   "L": "77eef42015ca0c39544d4b14b285a99366087424",
+   "B": "4533757870943c96795ad6b333906629ed350b52",
+   "N": "b71c86f4be57a5544b9381bd32975681f87166be",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-dw-kv",
+     "665a24ec18f2",
+     "2026-11-08T13:42"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/clock_landings.py",
+   "L": "e5b02e62036d91de293dd96f77ad7ccc4c01f5ed",
+   "B": "cdbc112ba3588b2facf1aadf26959f93591669ed",
+   "N": "fae36524d594fcbb16efd53476213a5595b1fb18",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-em-qc",
+     "4aa8c234091c",
+     "2026-11-08T09:15"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/core_flow.py",
+   "L": "bd9a711f66f35f326ccca9c64457a617aaa3b30f",
+   "B": "db76efad839ba378bf72b978a2a91d090cbcc98f",
+   "N": "b1fa5908d36690e31cc8da35df91af39afb812f6",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-cs-kv",
+     "711bad61f522",
+     "2026-11-07T12:30"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/eco_loop.py",
+   "L": "d6b34b05fd74a0383eb0c4e9ff0cabe05c9b0514",
+   "B": "dc3f45cc5dc65c2ac5530a11dbf36530f1f1dd24",
+   "N": "7599f219a51439499c663fdd1fcec4633090d46b",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "L": "6dea114c69419ac4e69e1e4b235607e92d80f001",
+   "B": "f3a02f0072d94bfed137ead221fe60edaed1819e",
+   "N": "d072b201135790e9ae22e885b6f7948af493a0aa",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/kit_reset_contract.py",
+   "L": "eadb46f84dd6d16dace22986da643808c42b5528",
+   "B": "ea1f5c31de79a6b40b5a5322f0e4fd2763110ecb",
+   "N": "974d2bcda24cd128bff8b311a46fdd4f5bbcf00e",
+   "exact": [
+    [
+     "codex/reset-contract-source-1106",
+     "bcbf6e97c593",
+     "2026-11-06T07:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/lec.py",
+   "L": "a4518d127a54e9ecff8de7379bd53dd24218a90e",
+   "B": "7a0d0391cd1a26364c42a13a96d8408f63ec09ff",
+   "N": "d54c0762f2cefe80730c4989e68f04faaa6baa30",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/partition_ft_reserve.py",
+   "L": "1203833b29f82bd5c999f7b911a4a1f4e3d83d80",
+   "B": "8ccf9fe3b3a55a4e8d85d0570401725a1fbc265f",
+   "N": "89429051fbeb50126a49db5fd5b249c5708c0354",
+   "exact": [
+    [
+     "claude/die-hbm-91-ftwin-1108",
+     "973348fee59d",
+     "2026-11-08T01:49"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/post_route_drv/prd_mk.sh",
+   "L": "b8a1d51868b2db6b8b33d022202194c2d5c924f9",
+   "B": "c4eb5d67cf5055ebf53296e53303d3689a6be7e5",
+   "N": "810191494c93acd536d40b7d801cf06c3cd6acf6",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-cr-kv",
+     "4e9e705e13e4",
+     "2026-11-07T13:39"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/schema.py",
+   "L": "ce0b5d4407d9ecc43a5c8d5b231bf013571cbb73",
+   "B": "4119d133bd3d9f527f59f40c48cdd27b91b6b685",
+   "N": "6ba8bc36ec16acb3aa0c3c528db8e7b2a5de0262",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/tap_pair_affinity.tcl",
+   "L": "af06fa9ab5717bc2cdbd888f45a1214ec00959c9",
+   "B": "d80cc2d0431b050736ba1537795239ca69b1e1c6",
+   "N": "318dc44acbc081086397772217d1983123fce673",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fr-qc",
+     "ccf792c10b63",
+     "2026-11-09T07:02"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/tap_pair_plan.tcl",
+   "L": "4744e6786c106a8b1baac5f793e10e6626d1b97e",
+   "B": "a4b728ea12d61824a8a1498718422376b2503f04",
+   "N": "e55f15ec926b3d43efb2af91ce6f729259ec9552",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fr-qc",
+     "ccf792c10b63",
+     "2026-11-09T07:02"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_eco_loop.py",
+   "L": "0c1ac1a4e04c0f10a3aebf6820cf5ce9aba3568c",
+   "B": "a36221e5e1957c841b4053058896b57ec12326a5",
+   "N": "bde7b4cc077b8e83122808a65943e7cfc16f217e",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-dj-kv",
+     "d23288029c62",
+     "2026-11-07T21:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_kit_reset_contract.py",
+   "L": "bd15a814938b5ca3e17fc96489824ecdd145a5b8",
+   "B": "1030f06de4d386bd808aaa6fc84350c5ec40a008",
+   "N": "4fb9c847056286161688432b44837821fdbf6536",
+   "exact": [
+    [
+     "codex/reset-contract-source-1106",
+     "bcbf6e97c593",
+     "2026-11-06T07:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_partition_ft_reserve.py",
+   "L": "63652f6fbf70856b5cc83e01c83c175ea5ab6bbe",
+   "B": "214b1908bc6438c6704ae8967003a1e17986592d",
+   "N": "654f0536e71f7fc69e1a4a13754be2ef32843088",
+   "exact": [
+    [
+     "claude/die-hbm-91-ftwin-1108",
+     "973348fee59d",
+     "2026-11-08T01:49"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/fleet/ot-run",
+   "L": "45210a86b725b7c0329a442d997da1f12abf0d41",
+   "B": "239e611484bae89c6017e4f937217c9a67af8806",
+   "N": "dad1fd6fe12fec3b6a00765d322808ec8c4b7cb6",
+   "exact": [
+    [
+     "claude/autoclean-3-1107",
+     "00ba6f60a1f1",
+     "2026-11-07T09:00"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/dv_layer_compile.py",
+   "L": "15a1753980f283d0a3a485f62b88e36a656d8eee",
+   "B": "99a1321310a00bf6c2d6f86c5296e42054a5836f",
+   "N": "ba64460331f1f16bf2db151192ec6008cbd7c9fc",
+   "exact": [
+    [
+     "codex/xfin-latest-1105",
+     "0e2fa571a9c3",
+     "2026-11-05T23:58"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/frame_schedule_asb.py",
+   "L": "6e2cbc1b57d33813386e497f85dcd471ed359d42",
+   "B": "f54f6df21a6cfa7626d8c5cc1423894c58dfce2c",
+   "N": "afa08263e2183e076581431e2cae8ac0d6e682cd",
+   "exact": [
+    [
+     "codex/ds-calendar-0251",
+     "0b0ca834e0b4",
+     "2026-10-28T23:55"
+    ],
+    [
+     "codex/qc-physical-1029",
+     "8d2e6487d416",
+     "2026-10-28T23:56"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "L": "9ba3320e49eae20daa48121f78da16d64f238840",
+   "B": "0bc10aa9d28569f5a60d47172bdee2eccb2ab058",
+   "N": "80a38118a551ccc9ba68ce77897994a8caedacba",
+   "exact": []
+  },
+  {
+   "path": "tools/s81_head/head_lep_nr_sources.py",
+   "L": "089b9fff71a0eb818b05fdacc53a06799af33a45",
+   "B": "3c347719be6bfd32e651c682047d56ab417d5bf6",
+   "N": "ec239bd2959ff03471f6d4640c3e3a46f7a63358",
+   "exact": [
+    [
+     "claude/dh71-lepwt-1105",
+     "d7684eb8b573",
+     "2026-11-05T15:15"
+    ]
+   ],
+   "on_main": true
+  }
+ ],
+ "s81_head": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "L": "b22a440ef908330ce05edac15f024139d06b4beb",
+   "B": "a331fe3d88484fac16d73da8727d46529c08d706",
+   "N": "b22a440ef908330ce05edac15f024139d06b4beb",
+   "exact": []
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_head/generated/ot_s81hd_lep_nr.sv",
+   "L": "f5f8c3d688c5dedc05f5c80a5d12fb88dc970df2",
+   "B": "03430ac799ded1a15e9351cd1fd714620517d941",
+   "N": "5d19bfc05a208534178aa4fc70276801698945ff",
+   "exact": [
+    [
+     "codex/head-lep-event-1113",
+     "a3a85c44a3a7",
+     "2026-11-08T11:52"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_hsf0_static.sv",
+   "L": "e264e59f89d691b8a0b0eee6d1685e6f7a797ce3",
+   "B": "e264e59f89d691b8a0b0eee6d1685e6f7a797ce3",
+   "N": "3f7c01b12d49cf1332f93e843ce5cf1ffaeae144",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fi-head",
+     "256a8a35f05c",
+     "2026-11-07T17:03"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/eco_loop.py",
+   "L": "6ee621fdb2fbce7fe567085aa10e1f805e5d360a",
+   "B": "dc3f45cc5dc65c2ac5530a11dbf36530f1f1dd24",
+   "N": "7599f219a51439499c663fdd1fcec4633090d46b",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fg-kv",
+     "a0490cc098da",
+     "2026-11-09T04:51"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "L": "c59d4726c22f23cc586dedcfb0b5d1696c86092e",
+   "B": "f3a02f0072d94bfed137ead221fe60edaed1819e",
+   "N": "d072b201135790e9ae22e885b6f7948af493a0aa",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/test_eco_loop.py",
+   "L": "5175980ea2f4052304b26524249f735f3917813e",
+   "B": "a36221e5e1957c841b4053058896b57ec12326a5",
+   "N": "bde7b4cc077b8e83122808a65943e7cfc16f217e",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fg-kv",
+     "117d9282bee8",
+     "2026-11-09T07:34"
+    ]
+   ],
+   "on_main": true
+  }
+ ],
+ "qwen_compute": [
+  {
+   "path": "physical/die_plan/hbm/reset_contract.json",
+   "L": "75b57fb5a8b8e93c175578ff5968c57b5c899c26",
+   "B": "f22e9c1adb85bace04c7d2e67bfaabb4aebe6879",
+   "N": "2d7cf40590056e616b5bd9da42c160376ff6ca30",
+   "exact": [
+    [
+     "claude/root-merge-46-g31-1106",
+     "56542c38f914",
+     "2026-11-06T20:54"
+    ],
+    [
+     "claude/root-merge-46-g31b-1106",
+     "272f3fb2c7d6",
+     "2026-11-06T22:21"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+   "L": "9ef506413095bade0a6e54bdfea0bfc6753685dd",
+   "B": null,
+   "N": "b0cf4e486474ea990af912e82c2e148deaa70948",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/s81/reset_contract.json",
+   "L": "07ff1ae9451de01ba96820cfd4e668db5481dcee",
+   "B": "20002f37b1fc70c69b2e7b07baef1283b789788e",
+   "N": "3dc1f475d4d993fbc05feabe3663076dcb55cf41",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "36d3dddec545",
+     "2026-11-08T05:09"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_dp_clk_landing.sv",
+   "L": "4a57156f84537c34b9451c3c264efd5d33a4c4fc",
+   "B": "c0d510c96af5ee73c5c0c8f5e9f24b90dfe377be",
+   "N": "6349922abb85c1e71fc33564cae054bcf20d1dd6",
+   "exact": [
+    [
+     "codex/s81-legacy-freg-1106",
+     "f555030b2dc6",
+     "2026-11-06T00:43"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_meso_fifo.sv",
+   "L": "688d3e0a654cc6ea98f84ee08e2defdc2620bc85",
+   "B": "3f86f106bb5da9c26c78f0437fcf0a200bc4d81f",
+   "N": "caedb16b6b13762d3a756c02de278f4db23d7e43",
+   "exact": [
+    [
+     "claude/dh58-turnb-1103",
+     "67f6d8982394",
+     "2026-11-03T14:33"
+    ],
+    [
+     "claude/kw-fix-4-headtb3-1103",
+     "4edd31ee14d4",
+     "2026-11-03T17:05"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+   "L": "ec670526a6455f086341684c26d69913b5c09d8e",
+   "B": "ef17a5f181514b43c505e5f2f873e20a3805bca7",
+   "N": "f4b12d76bce1d1636410da3b6b1520b94f022c97",
+   "exact": [
+    [
+     "codex/xfin-predecode-model-1131",
+     "1ec013265f12",
+     "2026-11-01T11:54"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+   "L": "e600d98be9ae04f487b30e47873dbe1df93e63e5",
+   "B": "7609233f499a8863a8c636bb0cbbefa107a9e2ec",
+   "N": "04596bbf423c4ad64b4b168ff1f715e75225dfd1",
+   "exact": [
+    [
+     "rescue/epyc1-codex-kv-agebounds-2145",
+     "1241731f6bf7",
+     "2026-10-25T21:53"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "L": "06788b2e955f1376f61dbbae1554f584e141d578",
+   "B": "c610d317d4121e6898d9faea37e0a359ab9e6145",
+   "N": "21e6bdb89fc8a7e70353448d502936b2dfbe889b",
+   "exact": [
+    [
+     "refs/tags/flow-20261106-bm-kv",
+     "a0f4dddf654c",
+     "2026-11-06T08:37"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "L": "b594b2f67cfef6400390a71ee4b0346b170c81cd",
+   "B": "4697a95dc1e7e32586d224c6c651434d6890a442",
+   "N": "e556d517cc893971a82f0dddb20c9c4dcb3306aa",
+   "exact": [
+    [
+     "claude/root-merge-47-rck4-1106",
+     "c944595e04a7",
+     "2026-11-07T04:32"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "L": "1002e55f0335f9573644ff6723c62b0c5d0565ea",
+   "B": "64f572d2982a9463f3a1ea59daeb54320f6fff2b",
+   "N": "c2e001a836693cb315c07dbfc5bd1d60dc42005a",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/counted_child_views.py",
+   "L": "42a33064952b13b7e4cc8792e5f03f596a19aea4",
+   "B": "b61908377c9d8b8ea6c36c6611cd2d3913203070",
+   "N": "1827a5691b4beae33771d6d5a9d9a97e3303e84f",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "9a43576a4d39",
+     "2026-11-08T05:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "L": "314eece71a9de4e86126d757d7145ae8491ca310",
+   "B": "015b8c0fadfa835a52f103cf728afa603dedf09e",
+   "N": "c19dc01bc9ec842c403cb806aae1a3db35c9ddfc",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/test_kit_wave_genhosts.py",
+   "L": "dd979397687de68243962320927e608d5b2c7a3a",
+   "B": "af0feb825a36fa433521b51fa68e76a8b8da7328",
+   "N": "5bb056871318381a5df719deddb25f91a66d1fa0",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-em-qc",
+     "54da643aa0d8",
+     "2026-11-08T08:41"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/clock_landing_plan.py",
+   "L": "c7c1915656e47fee00781ac8d75eb7da4a4cf5fc",
+   "B": "dc23a749da03e5afb1f07c0994348742e73b8b37",
+   "N": "8efc43fe6236adb22926c878f8aa1a147e58c9d8",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fx-qc",
+     "073656d7febf",
+     "2026-11-09T08:59"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/clock_landings.py",
+   "L": "e5b02e62036d91de293dd96f77ad7ccc4c01f5ed",
+   "B": "574e9d9056e0eb79bcb45b4cf01c0f575a5b16ff",
+   "N": "fae36524d594fcbb16efd53476213a5595b1fb18",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-em-qc",
+     "4aa8c234091c",
+     "2026-11-08T09:15"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/die_plan.schema.json",
+   "L": "c0301e5b0ee9066267c035598c56f24985f2c059",
+   "B": "603adec67af548967d7fe050dd0ae7e4bf30ab63",
+   "N": "55ff93ee520606423529e6ba3592a1dab958d2c3",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fz-qc",
+     "0409748de8de",
+     "2026-11-09T11:07"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/eco_loop.py",
+   "L": "b91fd6a07a473b75ec840cf25427f5e2ff0689f4",
+   "B": "dc3f45cc5dc65c2ac5530a11dbf36530f1f1dd24",
+   "N": "7599f219a51439499c663fdd1fcec4633090d46b",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-dj-kv",
+     "d23288029c62",
+     "2026-11-07T21:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "L": "deb9d2d09359698d02ee78bfc14a8f0d156b48fb",
+   "B": "f3a02f0072d94bfed137ead221fe60edaed1819e",
+   "N": "d072b201135790e9ae22e885b6f7948af493a0aa",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/landing_placement.tcl",
+   "L": "7104dc8450e15aca653e3817fa70035aa2fd574c",
+   "B": "87f7fe581da3443c92f3159068c87f86c5bf68d7",
+   "N": "2f84f614294c3daba8dd56081576bc6baff550ff",
+   "exact": [
+    [
+     "claude/kv-plan-2-ringkey-1109",
+     "1940add62dc6",
+     "2026-11-09T14:52"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/lec.py",
+   "L": "5c8a09a6ed70a04a4eeb2758c654f99cc3e4fe87",
+   "B": "8275dd5dc63829d9796fb72c7a017d32867022ad",
+   "N": "d54c0762f2cefe80730c4989e68f04faaa6baa30",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/partition_ft_reserve.py",
+   "L": "1203833b29f82bd5c999f7b911a4a1f4e3d83d80",
+   "B": "2bf13fac07a19802a0c85c08dd25dab9baadb0a2",
+   "N": "89429051fbeb50126a49db5fd5b249c5708c0354",
+   "exact": [
+    [
+     "claude/die-hbm-91-ftwin-1108",
+     "973348fee59d",
+     "2026-11-08T01:49"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/post_route_drv/prd_mk.sh",
+   "L": "b8a1d51868b2db6b8b33d022202194c2d5c924f9",
+   "B": "c4eb5d67cf5055ebf53296e53303d3689a6be7e5",
+   "N": "810191494c93acd536d40b7d801cf06c3cd6acf6",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-cr-kv",
+     "4e9e705e13e4",
+     "2026-11-07T13:39"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/qc_struct_ctl.py",
+   "L": "5c80639998ea22f34d737762d4204d385dde8059",
+   "B": null,
+   "N": "8f049e9e447c53c0b5ec8fbc55332c47a280e142",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-gq-qc",
+     "ac4c2c478488",
+     "2026-11-09T18:09"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/schema.py",
+   "L": "2b80d405fad6ac44e3cbe01310f3e9ba7d599760",
+   "B": "4119d133bd3d9f527f59f40c48cdd27b91b6b685",
+   "N": "6ba8bc36ec16acb3aa0c3c528db8e7b2a5de0262",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fz-qc",
+     "0409748de8de",
+     "2026-11-09T11:07"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/tap_pair_affinity.tcl",
+   "L": "af06fa9ab5717bc2cdbd888f45a1214ec00959c9",
+   "B": "d80cc2d0431b050736ba1537795239ca69b1e1c6",
+   "N": "318dc44acbc081086397772217d1983123fce673",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fr-qc",
+     "ccf792c10b63",
+     "2026-11-09T07:02"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/tap_pair_plan.tcl",
+   "L": "4744e6786c106a8b1baac5f793e10e6626d1b97e",
+   "B": "a4b728ea12d61824a8a1498718422376b2503f04",
+   "N": "e55f15ec926b3d43efb2af91ce6f729259ec9552",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fr-qc",
+     "ccf792c10b63",
+     "2026-11-09T07:02"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_band_resize_face_crossing.py",
+   "L": "e5c3b2be160e93da92912640e84b324b4adf39dc",
+   "B": null,
+   "N": "f71d5a36bef7df7a1da00fd1912eff4cf58f0d28",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fx-qc",
+     "c20531743e11",
+     "2026-11-09T07:16"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_cland_strip_rows.py",
+   "L": "ea3d8d1c816da46a64ca4b56f63671fc46edbb82",
+   "B": null,
+   "N": "074bdb84e76450d04fd7339eb139cf37650f7c3f",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fx-qc",
+     "826eb4010eec",
+     "2026-11-09T07:27"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_cons_kit.py",
+   "L": "6f13c0c8e6914f168fd3d983fd86aaac3bafa1fd",
+   "B": "1f6d95ed7fef85118f10abd5f51c7b56e751a315",
+   "N": "ce01847b1a1b7f9ea7f3b062825cebec63678a72",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fx-qc",
+     "826eb4010eec",
+     "2026-11-09T07:27"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_eco_loop.py",
+   "L": "0c1ac1a4e04c0f10a3aebf6820cf5ce9aba3568c",
+   "B": "a36221e5e1957c841b4053058896b57ec12326a5",
+   "N": "bde7b4cc077b8e83122808a65943e7cfc16f217e",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-dj-kv",
+     "d23288029c62",
+     "2026-11-07T21:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_partition_ft_reserve.py",
+   "L": "63652f6fbf70856b5cc83e01c83c175ea5ab6bbe",
+   "B": "f39de091095e5b49d7e6bae3ad3513a5c1af6512",
+   "N": "654f0536e71f7fc69e1a4a13754be2ef32843088",
+   "exact": [
+    [
+     "claude/die-hbm-91-ftwin-1108",
+     "973348fee59d",
+     "2026-11-08T01:49"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_schema.py",
+   "L": "8aebd1d7341b8573b7a506cda97f1c489c90fcbe",
+   "B": "0d271821ba0bc7d7363015479ab6131999e9f530",
+   "N": "f7d03800ffc7223e111a92f9a350fc82022b4144",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-fz-qc",
+     "0409748de8de",
+     "2026-11-09T11:07"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/fleet/ot-run",
+   "L": "45210a86b725b7c0329a442d997da1f12abf0d41",
+   "B": "a70f39b119b04e254e398c1fd5c5064b872c814f",
+   "N": "dad1fd6fe12fec3b6a00765d322808ec8c4b7cb6",
+   "exact": [
+    [
+     "claude/autoclean-3-1107",
+     "00ba6f60a1f1",
+     "2026-11-07T09:00"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/dv_layer_compile.py",
+   "L": "15a1753980f283d0a3a485f62b88e36a656d8eee",
+   "B": "99a1321310a00bf6c2d6f86c5296e42054a5836f",
+   "N": "ba64460331f1f16bf2db151192ec6008cbd7c9fc",
+   "exact": [
+    [
+     "codex/xfin-latest-1105",
+     "0e2fa571a9c3",
+     "2026-11-05T23:58"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/frame_schedule_asb.py",
+   "L": "6e2cbc1b57d33813386e497f85dcd471ed359d42",
+   "B": "f54f6df21a6cfa7626d8c5cc1423894c58dfce2c",
+   "N": "afa08263e2183e076581431e2cae8ac0d6e682cd",
+   "exact": [
+    [
+     "codex/ds-calendar-0251",
+     "0b0ca834e0b4",
+     "2026-10-28T23:55"
+    ],
+    [
+     "codex/qc-physical-1029",
+     "8d2e6487d416",
+     "2026-10-28T23:56"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "L": "9ba3320e49eae20daa48121f78da16d64f238840",
+   "B": "0bc10aa9d28569f5a60d47172bdee2eccb2ab058",
+   "N": "80a38118a551ccc9ba68ce77897994a8caedacba",
+   "exact": []
+  }
+ ],
+ "qwen_kvsys": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "L": "14537e9a0ee747c20bf83b5fd685bfe765e02ec6",
+   "B": "f780e8e42e2333e05b3a26d50c189d19715b7fc9",
+   "N": "b22a440ef908330ce05edac15f024139d06b4beb",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/qwen_compute/qc_start_1108/plan_start.py",
+   "L": "5c05fc542335e8d217fc957e417f2eedc727cb4a",
+   "B": null,
+   "N": "05337b9e6079d95563d39ce6fb5eee8620c74cce",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-ej-kv",
+     "66a32140a0be",
+     "2026-11-08T09:55"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py",
+   "L": "06b4a48ae56a76b4ad8865a85fde07d1a87e1eaf",
+   "B": "06b4a48ae56a76b4ad8865a85fde07d1a87e1eaf",
+   "N": "d95e9bc6979c73f8d2cc15746ea05bf271838a92",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "physical/die_plan/s81/cores/legacy/lef/gf1_1107/dsdv_gunit_l1f_bf.lef",
+   "L": "9b436ae27b39a6a32b675a9ed9b115eb65ae27a6",
+   "B": null,
+   "N": "7c544008810eaae944cf92869b73503ab5256771",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "63585c80abb1",
+     "2026-11-07T19:28"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/cores/legacy/recipes.json",
+   "L": "137ef964dcd396c1b0e3c5b676ad0ccebf9f166c",
+   "B": "137ef964dcd396c1b0e3c5b676ad0ccebf9f166c",
+   "N": "e290f14e67a13fd6fea326c791aad89e82193e19",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "ad6c60e548ad",
+     "2026-11-07T23:57"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/delta_gunit_l1f_band_1107.py",
+   "L": "b7d4a924e8f9ad4eb99f818f3a94853aefdbbd59",
+   "B": null,
+   "N": "cb842e3892b4a0f0e4e1382ca42c6a833c2abb65",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "63585c80abb1",
+     "2026-11-07T19:28"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/h2_2249/landed_sidecar_h2.json",
+   "L": "7440a9c34ee263a1522eef82a817e669db5f133e",
+   "B": "7440a9c34ee263a1522eef82a817e669db5f133e",
+   "N": "639b24efbf36351a11e99fe2531ae30a3f770709",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "63585c80abb1",
+     "2026-11-07T19:28"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "physical/die_plan/s81/plan_h2_2249.json",
+   "L": "ecae949de24a63162be7f464eb51396c2cbbf26b",
+   "B": "ecae949de24a63162be7f464eb51396c2cbbf26b",
+   "N": "917e6a3868e3ce991ab1c6bf208db870d3c490a7",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "physical/die_plan/s81/reset_contract.json",
+   "L": "07ff1ae9451de01ba96820cfd4e668db5481dcee",
+   "B": "07ff1ae9451de01ba96820cfd4e668db5481dcee",
+   "N": "3dc1f475d4d993fbc05feabe3663076dcb55cf41",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "36d3dddec545",
+     "2026-11-08T05:09"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv",
+   "L": "acee2eabb057b90aeef68df1dc4eef009355f228",
+   "B": "acee2eabb057b90aeef68df1dc4eef009355f228",
+   "N": "9c6c4790bd01ffc336169ce42e71bba3a912e460",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "c24e8955a1f0",
+     "2026-11-07T20:58"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/counted_child_views.py",
+   "L": "42a33064952b13b7e4cc8792e5f03f596a19aea4",
+   "B": null,
+   "N": "1827a5691b4beae33771d6d5a9d9a97e3303e84f",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "9a43576a4d39",
+     "2026-11-08T05:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "L": "6a7f0d31431718288c87bb681575ecbc0771e270",
+   "B": "6a7f0d31431718288c87bb681575ecbc0771e270",
+   "N": "c19dc01bc9ec842c403cb806aae1a3db35c9ddfc",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "c47ef36ab53f",
+     "2026-11-08T05:14"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/prov_view.py",
+   "L": "01b43778f1e373a9c3f1900ae5f14f9bb9f93d6a",
+   "B": "01b43778f1e373a9c3f1900ae5f14f9bb9f93d6a",
+   "N": "6ff04825fd7c39cfc4a2917582fd9aba6f2b66eb",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "tools/autopilot/test_counted_child_views.py",
+   "L": "cce1a54b00265b53fab2a437d5d298b6f1448a54",
+   "B": null,
+   "N": "2b9413d33e09e50a5b59f3c8c238487819aade60",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "9a43576a4d39",
+     "2026-11-08T05:01"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/test_prov_view_counted.py",
+   "L": "3a304c2f9b30aab75d57867582edefa30a0880e3",
+   "B": null,
+   "N": "1118ce1c84ceaacde999b575582c2fe6773e3f10",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "c47ef36ab53f",
+     "2026-11-08T05:14"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/test_prov_view_untracked_rtl.py",
+   "L": "bec9728b41a2d4bfca5fd5bdaf12be07f3828478",
+   "B": "bec9728b41a2d4bfca5fd5bdaf12be07f3828478",
+   "N": "46a954e5b548f9a5ed201e6d51bd4cbee5473228",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-dw-kv",
+     "bd4edf53333c",
+     "2026-11-08T02:45"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/bind.py",
+   "L": "0ee9925e7cc70230330e4f8008b9d661e1300a5c",
+   "B": "0ee9925e7cc70230330e4f8008b9d661e1300a5c",
+   "N": "b71c86f4be57a5544b9381bd32975681f87166be",
+   "exact": [
+    [
+     "claude/die-kv-97-zbadd-1109",
+     "e273bd37e4ee",
+     "2026-11-09T02:59"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "tools/die_plan/die_plan.schema.json",
+   "L": "711b08027fa2871a68e2dc4ef55d594053908246",
+   "B": "711b08027fa2871a68e2dc4ef55d594053908246",
+   "N": "55ff93ee520606423529e6ba3592a1dab958d2c3",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/face_guard.py",
+   "L": "8d2af002cfa4548e289bd00eed4a45b5b1786f81",
+   "B": "8d2af002cfa4548e289bd00eed4a45b5b1786f81",
+   "N": "a542796065e3ebedfe3e3c1dac7f9006efd26746",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "ad6c60e548ad",
+     "2026-11-07T23:57"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "L": "4b3e3110d8d5240b956142c7ac06f1ee81501157",
+   "B": "a2f0fd8faedef7783d74f92a5fcd57c6eb75ad24",
+   "N": "d072b201135790e9ae22e885b6f7948af493a0aa",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/kit_istations.py",
+   "L": "5acaca019a421854e97de3dfcc77789d91f3ed6f",
+   "B": "5acaca019a421854e97de3dfcc77789d91f3ed6f",
+   "N": "f88f1bdbd90ad9f1d8d415736e356ff9d7534aa9",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-dw-kv",
+     "1ee657291e94",
+     "2026-11-08T02:34"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/landing_place.py",
+   "L": "7470982a2307fc0babbd958bcf493dc0098189cd",
+   "B": "7470982a2307fc0babbd958bcf493dc0098189cd",
+   "N": "1f00b2fbe13adff55137aede0b661e1d49fe4fc5",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/landing_placement.tcl",
+   "L": "18abe346fb950672da55f6ed07fb7f1650abc12f",
+   "B": "31c6b5637a442400e5c184c44bc067eb6cc84ad7",
+   "N": "2f84f614294c3daba8dd56081576bc6baff550ff",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/legacy_gate.py",
+   "L": "e3ffd81bc9a89fc5c806d2d1e84eb5a069750fab",
+   "B": "e3ffd81bc9a89fc5c806d2d1e84eb5a069750fab",
+   "N": "ac75b30df6bd83e472c3a942f85ba14bc550fa70",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-ei-kv",
+     "958a7d6d7fe3",
+     "2026-11-08T19:17"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/reset_tree.py",
+   "L": "9a16dc66f0d92a30b85eea9ec1ef94dc1e543f46",
+   "B": "9a16dc66f0d92a30b85eea9ec1ef94dc1e543f46",
+   "N": "4a08ece80e1c16c8827a0ece85ab115406237c30",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "5e6346376121",
+     "2026-11-09T01:13"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "tools/die_plan/schema.py",
+   "L": "52c0ad9ae8c972ee21c09bcdac1952594bfcacfc",
+   "B": "52c0ad9ae8c972ee21c09bcdac1952594bfcacfc",
+   "N": "6ba8bc36ec16acb3aa0c3c528db8e7b2a5de0262",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "5e6346376121",
+     "2026-11-09T01:13"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "tools/die_plan/signoff.py",
+   "L": "26af57f12d4eea46ecaddef01fadc67f4e621540",
+   "B": "26af57f12d4eea46ecaddef01fadc67f4e621540",
+   "N": "534f6799c85fd974a88b1fe09e1a5b41d02aee5e",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-dt-kv",
+     "1762cad3e01d",
+     "2026-11-08T02:17"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_bind.py",
+   "L": "e4d4ab9905fdd00bb0c85e778a9d0f267b71e6ec",
+   "B": "e4d4ab9905fdd00bb0c85e778a9d0f267b71e6ec",
+   "N": "46599cc38375535fea8ed14fe0656f7c3b0e3d14",
+   "exact": [
+    [
+     "claude/die-kv-97-zbadd-1109",
+     "e273bd37e4ee",
+     "2026-11-09T02:59"
+    ]
+   ],
+   "on_main": false
+  },
+  {
+   "path": "tools/die_plan/test_clk_leaf_repeat_default.py",
+   "L": "42cbbf677747c09407aba3678917f9d170d6cd5f",
+   "B": "42cbbf677747c09407aba3678917f9d170d6cd5f",
+   "N": "1a4952dad6ed3fc3e6cdfc6642e32b9fbfc65f3a",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "454ba514a47a",
+     "2026-11-08T04:58"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_face_guard.py",
+   "L": "c4fc908e2c8498498671607af3a3a299b3cab856",
+   "B": "c4fc908e2c8498498671607af3a3a299b3cab856",
+   "N": "dc43d954b877f570546332ce22a072c4498d3498",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "ad6c60e548ad",
+     "2026-11-07T23:57"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_ring_reset_grid.py",
+   "L": "9b5f67edd3377d16edc0184a999f51c49608243e",
+   "B": "9b5f67edd3377d16edc0184a999f51c49608243e",
+   "N": "d5a4157d3031643eefee661611658404c20ce8fe",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-dt-kv",
+     "857e197e14c9",
+     "2026-11-08T01:59"
+    ]
+   ],
+   "on_main": true
+  }
+ ],
+ "hbm": [
+  {
+   "path": "physical/common_flow/grt183_make.sh",
+   "L": "84902481f203e9142499235d069864418d9bde95",
+   "B": "a331fe3d88484fac16d73da8727d46529c08d706",
+   "N": "b22a440ef908330ce05edac15f024139d06b4beb",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/hbm/cores/harden/recipes.json",
+   "L": "d94a5207fe2d6fb6324bfc89d5c96f4efc45c99b",
+   "B": "af213504173e3cb8fbd6050e0ef083db6fb98563",
+   "N": "a1e9bd7b3f0c17a356fdc89fe3a669692bf6aa20",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+   "L": "1c32d3bbab81fa7b25dea64aacd6c39654996a60",
+   "B": "7a45e5e115579894cd58c642153b50972db23d92",
+   "N": "78f2a00071adba4ae7cc2610be78bc23b531371c",
+   "exact": []
+  },
+  {
+   "path": "physical/die_plan/s81/reset_contract.json",
+   "L": "07ff1ae9451de01ba96820cfd4e668db5481dcee",
+   "B": "20002f37b1fc70c69b2e7b07baef1283b789788e",
+   "N": "3dc1f475d4d993fbc05feabe3663076dcb55cf41",
+   "exact": [
+    [
+     "claude/dkv96-kv-switch-1109",
+     "4a0af930d9a1",
+     "2026-11-09T01:13"
+    ],
+    [
+     "refs/tags/flow-20261108-du-kv",
+     "36d3dddec545",
+     "2026-11-08T05:09"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_dp_clk_landing.sv",
+   "L": "4a57156f84537c34b9451c3c264efd5d33a4c4fc",
+   "B": "c0d510c96af5ee73c5c0c8f5e9f24b90dfe377be",
+   "N": "6349922abb85c1e71fc33564cae054bcf20d1dd6",
+   "exact": [
+    [
+     "codex/s81-legacy-freg-1106",
+     "f555030b2dc6",
+     "2026-11-06T00:43"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/common/ot_meso_fifo.sv",
+   "L": "688d3e0a654cc6ea98f84ee08e2defdc2620bc85",
+   "B": "3f86f106bb5da9c26c78f0437fcf0a200bc4d81f",
+   "N": "caedb16b6b13762d3a756c02de278f4db23d7e43",
+   "exact": [
+    [
+     "claude/dh58-turnb-1103",
+     "67f6d8982394",
+     "2026-11-03T14:33"
+    ],
+    [
+     "claude/kw-fix-4-headtb3-1103",
+     "4edd31ee14d4",
+     "2026-11-03T17:05"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+   "L": "938df418ffb3e4ebb962c9217951189fdd0aae61",
+   "B": "7609233f499a8863a8c636bb0cbbefa107a9e2ec",
+   "N": "04596bbf423c4ad64b4b168ff1f715e75225dfd1",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-ee-kv",
+     "b6e977d850e7",
+     "2026-11-08T10:53"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "L": "06788b2e955f1376f61dbbae1554f584e141d578",
+   "B": "c610d317d4121e6898d9faea37e0a359ab9e6145",
+   "N": "21e6bdb89fc8a7e70353448d502936b2dfbe889b",
+   "exact": [
+    [
+     "refs/tags/flow-20261106-bm-kv",
+     "a0f4dddf654c",
+     "2026-11-06T08:37"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "L": "b594b2f67cfef6400390a71ee4b0346b170c81cd",
+   "B": "4697a95dc1e7e32586d224c6c651434d6890a442",
+   "N": "e556d517cc893971a82f0dddb20c9c4dcb3306aa",
+   "exact": [
+    [
+     "claude/root-merge-47-rck4-1106",
+     "c944595e04a7",
+     "2026-11-07T04:32"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "L": "1002e55f0335f9573644ff6723c62b0c5d0565ea",
+   "B": "64f572d2982a9463f3a1ea59daeb54320f6fff2b",
+   "N": "c2e001a836693cb315c07dbfc5bd1d60dc42005a",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/kit_wave.py",
+   "L": "42ac5bd04b25506fbf2623378a5401cbe3042eab",
+   "B": "015b8c0fadfa835a52f103cf728afa603dedf09e",
+   "N": "c19dc01bc9ec842c403cb806aae1a3db35c9ddfc",
+   "exact": []
+  },
+  {
+   "path": "tools/autopilot/prov_view.py",
+   "L": "25ac47bf4f86bd526fe8cfb37edd50d3c48a3804",
+   "B": "888451c387d08dd21f11ecd019c39657c51f28c8",
+   "N": "6ff04825fd7c39cfc4a2917582fd9aba6f2b66eb",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-ee-kv",
+     "18e54f8be907",
+     "2026-11-08T10:45"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/autopilot/test_kit_wave_genhosts.py",
+   "L": "dd979397687de68243962320927e608d5b2c7a3a",
+   "B": "af0feb825a36fa433521b51fa68e76a8b8da7328",
+   "N": "5bb056871318381a5df719deddb25f91a66d1fa0",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-em-qc",
+     "54da643aa0d8",
+     "2026-11-08T08:41"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/bind.py",
+   "L": "8aa68227524734540c6a503160264311b989ddd2",
+   "B": "fa2d73eca2e2a0d97c2bf54ad99fed9e0874e353",
+   "N": "b71c86f4be57a5544b9381bd32975681f87166be",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/clock_landings.py",
+   "L": "e5b02e62036d91de293dd96f77ad7ccc4c01f5ed",
+   "B": "574e9d9056e0eb79bcb45b4cf01c0f575a5b16ff",
+   "N": "fae36524d594fcbb16efd53476213a5595b1fb18",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-em-qc",
+     "4aa8c234091c",
+     "2026-11-08T09:15"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/eco_loop.py",
+   "L": "b91fd6a07a473b75ec840cf25427f5e2ff0689f4",
+   "B": "dc3f45cc5dc65c2ac5530a11dbf36530f1f1dd24",
+   "N": "7599f219a51439499c663fdd1fcec4633090d46b",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-dj-kv",
+     "d23288029c62",
+     "2026-11-07T21:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/gen_phys.py",
+   "L": "3a5382d562dcd78802557fc57da669f0585dc9c7",
+   "B": "f3a02f0072d94bfed137ead221fe60edaed1819e",
+   "N": "d072b201135790e9ae22e885b6f7948af493a0aa",
+   "exact": []
+  },
+  {
+   "path": "tools/die_plan/hold_margin_pick.py",
+   "L": "db5034c3a06e460fff97b190ea67fe7cd2fb1849",
+   "B": null,
+   "N": "db5034c3a06e460fff97b190ea67fe7cd2fb1849",
+   "exact": [
+    [
+     "refs/tags/flow-20261109-hm-hbm",
+     "c15eb3676920",
+     "2026-11-09T14:21"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/landing_placement.tcl",
+   "L": "87f7fe581da3443c92f3159068c87f86c5bf68d7",
+   "B": "0d4cdf8f68bc635030d69fbbaebe56423347e578",
+   "N": "2f84f614294c3daba8dd56081576bc6baff550ff",
+   "exact": [
+    [
+     "codex/head-lep-reserve-0222",
+     "3a1829140fcc",
+     "2026-11-08T02:32"
+    ],
+    [
+     "codex/head-lep-reserve-form-0222",
+     "41a81fe17627",
+     "2026-11-08T02:53"
+    ],
+    [
+     "refs/tags/flow-20261108-dx-kv",
+     "95df6810481e",
+     "2026-11-08T04:52"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/lec.py",
+   "L": "ff675007e41ccb774988d20b4d6b6c0816b438c6",
+   "B": "8275dd5dc63829d9796fb72c7a017d32867022ad",
+   "N": "d54c0762f2cefe80730c4989e68f04faaa6baa30",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-ee-kv",
+     "a5644801c46c",
+     "2026-11-08T11:24"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/partition_ft_reserve.py",
+   "L": "60da9f1feaa45158888006a8f7ccc5050613ef57",
+   "B": "3b6f90845dc5e2c9f16bda5488a6cf6e6977050a",
+   "N": "89429051fbeb50126a49db5fd5b249c5708c0354",
+   "exact": [
+    [
+     "claude/die-hbm-97-m3stack-1110",
+     "6267d6cac11b",
+     "2026-11-10T04:27"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/post_route_drv/prd_mk.sh",
+   "L": "b8a1d51868b2db6b8b33d022202194c2d5c924f9",
+   "B": "c4eb5d67cf5055ebf53296e53303d3689a6be7e5",
+   "N": "810191494c93acd536d40b7d801cf06c3cd6acf6",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-cr-kv",
+     "4e9e705e13e4",
+     "2026-11-07T13:39"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_eco_loop.py",
+   "L": "0c1ac1a4e04c0f10a3aebf6820cf5ce9aba3568c",
+   "B": "a36221e5e1957c841b4053058896b57ec12326a5",
+   "N": "bde7b4cc077b8e83122808a65943e7cfc16f217e",
+   "exact": [
+    [
+     "refs/tags/flow-20261107-dj-kv",
+     "d23288029c62",
+     "2026-11-07T21:46"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/die_plan/test_partition_ft_reserve.py",
+   "L": "caf76dda7ea95919c756e54256c374c28fea6184",
+   "B": "a3f479849819654f889a545ab4250685ce099a5a",
+   "N": "654f0536e71f7fc69e1a4a13754be2ef32843088",
+   "exact": [
+    [
+     "refs/tags/flow-20261108-eh-kv",
+     "5d79919b42e1",
+     "2026-11-09T01:50"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/fleet/ot-run",
+   "L": "45210a86b725b7c0329a442d997da1f12abf0d41",
+   "B": "a70f39b119b04e254e398c1fd5c5064b872c814f",
+   "N": "dad1fd6fe12fec3b6a00765d322808ec8c4b7cb6",
+   "exact": [
+    [
+     "claude/autoclean-3-1107",
+     "00ba6f60a1f1",
+     "2026-11-07T09:00"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/dv_layer_compile.py",
+   "L": "15a1753980f283d0a3a485f62b88e36a656d8eee",
+   "B": "99a1321310a00bf6c2d6f86c5296e42054a5836f",
+   "N": "ba64460331f1f16bf2db151192ec6008cbd7c9fc",
+   "exact": [
+    [
+     "codex/xfin-latest-1105",
+     "0e2fa571a9c3",
+     "2026-11-05T23:58"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/frame_schedule_asb.py",
+   "L": "6e2cbc1b57d33813386e497f85dcd471ed359d42",
+   "B": "f54f6df21a6cfa7626d8c5cc1423894c58dfce2c",
+   "N": "afa08263e2183e076581431e2cae8ac0d6e682cd",
+   "exact": [
+    [
+     "codex/ds-calendar-0251",
+     "0b0ca834e0b4",
+     "2026-10-28T23:55"
+    ],
+    [
+     "codex/qc-physical-1029",
+     "8d2e6487d416",
+     "2026-10-28T23:56"
+    ]
+   ],
+   "on_main": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_eng.py",
+   "L": "9ba3320e49eae20daa48121f78da16d64f238840",
+   "B": "0bc10aa9d28569f5a60d47172bdee2eccb2ab058",
+   "N": "80a38118a551ccc9ba68ce77897994a8caedacba",
+   "exact": []
+  }
+ ]
+}

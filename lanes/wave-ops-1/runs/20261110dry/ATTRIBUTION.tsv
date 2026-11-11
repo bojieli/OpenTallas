@@ -1,0 +1,140 @@
+die	path	class	attribution	added_not_on_main	uncovered
+s81	physical/common_flow/grt183_make.sh	covered by branches	claude/kw-fix-44-grt-stop-1110@557a0b0604(2)	2	0
+s81	physical/die_plan/hbm/cores/harden/recipes.json	behind main only		0	0
+s81	physical/die_plan/hbm/reset_contract.json	lag-only (old main blob)	[["claude/root-merge-46-g31-1106", "56542c38f914", "2026-11-06T20:54"], ["claude/root-merge-46-g31b-1106", "272f3fb2c7d6", "2026-11-06T22:21"]]		
+s81	physical/die_plan/s81/plan_h2_2249.json	UNBRANCHED lines	claude/rm31-in-srcn@90ad150b10(5393) claude/die-s81-47-event2-1101@2026e1e156(5290) claude/die-s81-47-svcrs-1101@d98e63e480(5279)	21715	15925
+s81	results/rtl/svc_irg_fastpad_1109/bench/run.sh	lag-only (old main blob)	[["claude/die-s81-85-irg-fastpad-1109", "b9200f361105", "2026-11-09T07:47"]]		
+s81	rtl/common/ot_dp_clk_landing.sv	lag-only (old main blob)	[["codex/s81-legacy-freg-1106", "f555030b2dc6", "2026-11-06T00:43"]]		
+s81	rtl/common/ot_meso_fifo.sv	lag-only (old main blob)	[["claude/dh58-turnb-1103", "67f6d8982394", "2026-11-03T14:33"], ["claude/kw-fix-4-headtb3-1103", "4edd31ee14d4", "2026-11-03T17:05"]]		
+s81	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	lag-only (old main blob)	[["claude/die-s81-85-irg-fastpad-1109", "9b5f67af5058", "2026-11-09T07:46"]]		
+s81	rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv	lag-only (old main blob)	[["claude/die-s81-85-vp-sramreg-1109", "5b6e5209951d", "2026-11-09T07:59"]]		
+s81	rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv	lag-only (old main blob)	[["codex/xfin-predecode-model-1131", "1ec013265f12", "2026-11-01T11:54"]]		
+s81	rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv	lag-only (old main blob)	[["rescue/epyc1-codex-kv-agebounds-2145", "1241731f6bf7", "2026-10-25T21:53"]]		
+s81	rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv	lag-only (old main blob)	[["refs/tags/flow-20261106-bm-kv", "a0f4dddf654c", "2026-11-06T08:37"]]		
+s81	rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv	lag-only (old main blob)	[["claude/root-merge-47-rck4-1106", "c944595e04a7", "2026-11-07T04:32"]]		
+s81	rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv	UNBRANCHED lines	codex/s81-rck-reform-0222@bdde15eb1f(21) claude/s81-types-7-rck-1108@872819503b(19)	24	3
+s81	tools/autopilot/counted_child_views.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "9a43576a4d39", "2026-11-08T05:01"]]		
+s81	tools/autopilot/kit_wave.py	covered by branches	claude/die-kv-97-p4src-1109@4a0af930d9(43) claude/root-merge-53-train-e-1108@8a41939b81(5)	44	0
+s81	tools/autopilot/prov_view.py	lag-only (old main blob)	[["refs/tags/flow-20261108-dw-kv", "9ba1e6f86e2b", "2026-11-08T06:37"]]		
+s81	tools/autopilot/test_kit_wave_genhosts.py	lag-only (old main blob)	[["refs/tags/flow-20261107-cs-kv", "61e6167befcb", "2026-11-07T13:36"]]		
+s81	tools/die_plan/bind.py	lag-only (old main blob)	[["refs/tags/flow-20261108-dw-kv", "665a24ec18f2", "2026-11-08T13:42"]]		
+s81	tools/die_plan/clock_landings.py	lag-only (old main blob)	[["refs/tags/flow-20261108-em-qc", "4aa8c234091c", "2026-11-08T09:15"]]		
+s81	tools/die_plan/core_flow.py	lag-only (old main blob)	[["refs/tags/flow-20261107-cs-kv", "711bad61f522", "2026-11-07T12:30"]]		
+s81	tools/die_plan/eco_loop.py	covered by branches	codex/eco-prerouted-clock-1113@539f02fdd7(11) claude/kw-fix-36-eco-census-1108@53e79ea941(7) claude/root-merge-53-train-e-1108@b721c3782d(6)	12	0
+s81	tools/die_plan/gen_phys.py	UNBRANCHED lines	claude/kv-plan-2-finsbuf-wave-1109@5c15a885ca(10)	14	4
+s81	tools/die_plan/kit_reset_contract.py	lag-only (old main blob)	[["codex/reset-contract-source-1106", "bcbf6e97c593", "2026-11-06T07:01"]]		
+s81	tools/die_plan/lec.py	covered by branches	codex/kshare-twins-1113@06641d575b(18) claude/root-merge-54-h-1108@ed5be48cd4(6) claude/die-head-91-lec-taps-1109@7e4e5f87f3(1)	18	0
+s81	tools/die_plan/partition_ft_reserve.py	lag-only (old main blob)	[["claude/die-hbm-91-ftwin-1108", "973348fee59d", "2026-11-08T01:49"]]		
+s81	tools/die_plan/post_route_drv/prd_mk.sh	lag-only (old main blob)	[["refs/tags/flow-20261107-cr-kv", "4e9e705e13e4", "2026-11-07T13:39"]]		
+s81	tools/die_plan/schema.py	UNBRANCHED lines		3	3
+s81	tools/die_plan/tap_pair_affinity.tcl	lag-only (old main blob)	[["refs/tags/flow-20261109-fr-qc", "ccf792c10b63", "2026-11-09T07:02"]]		
+s81	tools/die_plan/tap_pair_plan.tcl	lag-only (old main blob)	[["refs/tags/flow-20261109-fr-qc", "ccf792c10b63", "2026-11-09T07:02"]]		
+s81	tools/die_plan/test_eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261107-dj-kv", "d23288029c62", "2026-11-07T21:46"]]		
+s81	tools/die_plan/test_kit_reset_contract.py	lag-only (old main blob)	[["codex/reset-contract-source-1106", "bcbf6e97c593", "2026-11-06T07:01"]]		
+s81	tools/die_plan/test_partition_ft_reserve.py	lag-only (old main blob)	[["claude/die-hbm-91-ftwin-1108", "973348fee59d", "2026-11-08T01:49"]]		
+s81	tools/fleet/ot-run	lag-only (old main blob)	[["claude/autoclean-3-1107", "00ba6f60a1f1", "2026-11-07T09:00"]]		
+s81	tools/s81_dv/dv_layer_compile.py	lag-only (old main blob)	[["codex/xfin-latest-1105", "0e2fa571a9c3", "2026-11-05T23:58"]]		
+s81	tools/s81_dv/frame_schedule_asb.py	lag-only (old main blob)	[["codex/ds-calendar-0251", "0b0ca834e0b4", "2026-10-28T23:55"], ["codex/qc-physical-1029", "8d2e6487d416", "2026-10-28T23:56"]]		
+s81	tools/s81_dv/layer_prog/lower_eng.py	covered by branches	rescue/epyc2-kv-tok-d-1027@be22c61cd4(1)	1	0
+s81	tools/s81_head/head_lep_nr_sources.py	lag-only (old main blob)	[["claude/dh71-lepwt-1105", "d7684eb8b573", "2026-11-05T15:15"]]		
+s81_head	physical/common_flow/grt183_make.sh	behind main only		0	0
+s81_head	rtl/dsrom_sys/s81_head/generated/ot_s81hd_lep_nr.sv	exact branch tip	[["codex/head-lep-event-1113", "a3a85c44a3a7", "2026-11-08T11:52"]]		
+s81_head	rtl/dsrom_sys/s81_head/ot_s81hd_ctl_hsf0_static.sv	lag-only (old main blob)	[["refs/tags/flow-20261109-fi-head", "256a8a35f05c", "2026-11-07T17:03"]]		
+s81_head	tools/die_plan/eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fg-kv", "a0490cc098da", "2026-11-09T04:51"]]		
+s81_head	tools/die_plan/gen_phys.py	covered by branches	claude/root-merge-57-d2-1109@eeb83d46ec(1)	1	0
+s81_head	tools/die_plan/test_eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fg-kv", "117d9282bee8", "2026-11-09T07:34"]]		
+qwen_compute	physical/die_plan/hbm/reset_contract.json	lag-only (old main blob)	[["claude/root-merge-46-g31-1106", "56542c38f914", "2026-11-06T20:54"], ["claude/root-merge-46-g31b-1106", "272f3fb2c7d6", "2026-11-06T22:21"]]		
+qwen_compute	physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json	UNBRANCHED lines		1	1
+qwen_compute	physical/die_plan/s81/reset_contract.json	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "36d3dddec545", "2026-11-08T05:09"]]		
+qwen_compute	rtl/common/ot_dp_clk_landing.sv	lag-only (old main blob)	[["codex/s81-legacy-freg-1106", "f555030b2dc6", "2026-11-06T00:43"]]		
+qwen_compute	rtl/common/ot_meso_fifo.sv	lag-only (old main blob)	[["claude/dh58-turnb-1103", "67f6d8982394", "2026-11-03T14:33"], ["claude/kw-fix-4-headtb3-1103", "4edd31ee14d4", "2026-11-03T17:05"]]		
+qwen_compute	rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv	lag-only (old main blob)	[["codex/xfin-predecode-model-1131", "1ec013265f12", "2026-11-01T11:54"]]		
+qwen_compute	rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv	lag-only (old main blob)	[["rescue/epyc1-codex-kv-agebounds-2145", "1241731f6bf7", "2026-10-25T21:53"]]		
+qwen_compute	rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv	lag-only (old main blob)	[["refs/tags/flow-20261106-bm-kv", "a0f4dddf654c", "2026-11-06T08:37"]]		
+qwen_compute	rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv	lag-only (old main blob)	[["claude/root-merge-47-rck4-1106", "c944595e04a7", "2026-11-07T04:32"]]		
+qwen_compute	rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv	UNBRANCHED lines	codex/s81-rck-reform-0222@bdde15eb1f(21) claude/s81-types-7-rck-1108@872819503b(19)	24	3
+qwen_compute	tools/autopilot/counted_child_views.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "9a43576a4d39", "2026-11-08T05:01"]]		
+qwen_compute	tools/autopilot/kit_wave.py	covered by branches	claude/root-merge-53-train-e-1108@8a41939b81(11) claude/kw-fix-37-spill-infra-1108@99d7dfcd28(10) claude/die-kv-97-p4src-1109@4a0af930d9(7)	14	0
+qwen_compute	tools/autopilot/test_kit_wave_genhosts.py	lag-only (old main blob)	[["refs/tags/flow-20261108-em-qc", "54da643aa0d8", "2026-11-08T08:41"]]		
+qwen_compute	tools/die_plan/clock_landing_plan.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fx-qc", "073656d7febf", "2026-11-09T08:59"]]		
+qwen_compute	tools/die_plan/clock_landings.py	lag-only (old main blob)	[["refs/tags/flow-20261108-em-qc", "4aa8c234091c", "2026-11-08T09:15"]]		
+qwen_compute	tools/die_plan/die_plan.schema.json	lag-only (old main blob)	[["refs/tags/flow-20261109-fz-qc", "0409748de8de", "2026-11-09T11:07"]]		
+qwen_compute	tools/die_plan/eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261107-dj-kv", "d23288029c62", "2026-11-07T21:46"]]		
+qwen_compute	tools/die_plan/gen_phys.py	covered by branches	claude/kv-plan-2-finsbuf-wave-1109@5c15a885ca(9) claude/root-merge-53-train-a-1108@cb6e91be10(4)	10	0
+qwen_compute	tools/die_plan/landing_placement.tcl	lag-only (old main blob)	[["claude/kv-plan-2-ringkey-1109", "1940add62dc6", "2026-11-09T14:52"]]		
+qwen_compute	tools/die_plan/lec.py	covered by branches	codex/kshare-twins-1113@06641d575b(12)	12	0
+qwen_compute	tools/die_plan/partition_ft_reserve.py	lag-only (old main blob)	[["claude/die-hbm-91-ftwin-1108", "973348fee59d", "2026-11-08T01:49"]]		
+qwen_compute	tools/die_plan/post_route_drv/prd_mk.sh	lag-only (old main blob)	[["refs/tags/flow-20261107-cr-kv", "4e9e705e13e4", "2026-11-07T13:39"]]		
+qwen_compute	tools/die_plan/qc_struct_ctl.py	lag-only (old main blob)	[["refs/tags/flow-20261109-gq-qc", "ac4c2c478488", "2026-11-09T18:09"]]		
+qwen_compute	tools/die_plan/schema.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fz-qc", "0409748de8de", "2026-11-09T11:07"]]		
+qwen_compute	tools/die_plan/tap_pair_affinity.tcl	lag-only (old main blob)	[["refs/tags/flow-20261109-fr-qc", "ccf792c10b63", "2026-11-09T07:02"]]		
+qwen_compute	tools/die_plan/tap_pair_plan.tcl	lag-only (old main blob)	[["refs/tags/flow-20261109-fr-qc", "ccf792c10b63", "2026-11-09T07:02"]]		
+qwen_compute	tools/die_plan/test_band_resize_face_crossing.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fx-qc", "c20531743e11", "2026-11-09T07:16"]]		
+qwen_compute	tools/die_plan/test_cland_strip_rows.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fx-qc", "826eb4010eec", "2026-11-09T07:27"]]		
+qwen_compute	tools/die_plan/test_cons_kit.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fx-qc", "826eb4010eec", "2026-11-09T07:27"]]		
+qwen_compute	tools/die_plan/test_eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261107-dj-kv", "d23288029c62", "2026-11-07T21:46"]]		
+qwen_compute	tools/die_plan/test_partition_ft_reserve.py	lag-only (old main blob)	[["claude/die-hbm-91-ftwin-1108", "973348fee59d", "2026-11-08T01:49"]]		
+qwen_compute	tools/die_plan/test_schema.py	lag-only (old main blob)	[["refs/tags/flow-20261109-fz-qc", "0409748de8de", "2026-11-09T11:07"]]		
+qwen_compute	tools/fleet/ot-run	lag-only (old main blob)	[["claude/autoclean-3-1107", "00ba6f60a1f1", "2026-11-07T09:00"]]		
+qwen_compute	tools/s81_dv/dv_layer_compile.py	lag-only (old main blob)	[["codex/xfin-latest-1105", "0e2fa571a9c3", "2026-11-05T23:58"]]		
+qwen_compute	tools/s81_dv/frame_schedule_asb.py	lag-only (old main blob)	[["codex/ds-calendar-0251", "0b0ca834e0b4", "2026-10-28T23:55"], ["codex/qc-physical-1029", "8d2e6487d416", "2026-10-28T23:56"]]		
+qwen_compute	tools/s81_dv/layer_prog/lower_eng.py	covered by branches	rescue/epyc2-kv-tok-d-1027@be22c61cd4(1)	1	0
+qwen_kvsys	physical/common_flow/grt183_make.sh	covered by branches	claude/kw-fix-44-grt-stop-1110@557a0b0604(2)	2	0
+qwen_kvsys	physical/die_plan/qwen_compute/qc_start_1108/plan_start.py	lag-only (old main blob)	[["refs/tags/flow-20261108-ej-kv", "66a32140a0be", "2026-11-08T09:55"]]		
+qwen_kvsys	physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py	exact branch tip	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"]]		
+qwen_kvsys	physical/die_plan/s81/cores/legacy/lef/gf1_1107/dsdv_gunit_l1f_bf.lef	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "63585c80abb1", "2026-11-07T19:28"]]		
+qwen_kvsys	physical/die_plan/s81/cores/legacy/recipes.json	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "ad6c60e548ad", "2026-11-07T23:57"]]		
+qwen_kvsys	physical/die_plan/s81/delta_gunit_l1f_band_1107.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "63585c80abb1", "2026-11-07T19:28"]]		
+qwen_kvsys	physical/die_plan/s81/h2_2249/landed_sidecar_h2.json	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "63585c80abb1", "2026-11-07T19:28"]]		
+qwen_kvsys	physical/die_plan/s81/plan_h2_2249.json	exact branch tip	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"]]		
+qwen_kvsys	physical/die_plan/s81/reset_contract.json	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "36d3dddec545", "2026-11-08T05:09"]]		
+qwen_kvsys	rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "c24e8955a1f0", "2026-11-07T20:58"]]		
+qwen_kvsys	tools/autopilot/counted_child_views.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "9a43576a4d39", "2026-11-08T05:01"]]		
+qwen_kvsys	tools/autopilot/kit_wave.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "c47ef36ab53f", "2026-11-08T05:14"]]		
+qwen_kvsys	tools/autopilot/prov_view.py	exact branch tip	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"]]		
+qwen_kvsys	tools/autopilot/test_counted_child_views.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "9a43576a4d39", "2026-11-08T05:01"]]		
+qwen_kvsys	tools/autopilot/test_prov_view_counted.py	lag-only (old main blob)	[["refs/tags/flow-20261108-du-kv", "c47ef36ab53f", "2026-11-08T05:14"]]		
+qwen_kvsys	tools/autopilot/test_prov_view_untracked_rtl.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-dw-kv", "bd4edf53333c", "2026-11-08T02:45"]]		
+qwen_kvsys	tools/die_plan/bind.py	exact branch tip	[["claude/die-kv-97-zbadd-1109", "e273bd37e4ee", "2026-11-09T02:59"]]		
+qwen_kvsys	tools/die_plan/die_plan.schema.json	behind main only		0	0
+qwen_kvsys	tools/die_plan/face_guard.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "ad6c60e548ad", "2026-11-07T23:57"]]		
+qwen_kvsys	tools/die_plan/gen_phys.py	behind main only		0	0
+qwen_kvsys	tools/die_plan/kit_istations.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-dw-kv", "1ee657291e94", "2026-11-08T02:34"]]		
+qwen_kvsys	tools/die_plan/landing_place.py	behind main only		0	0
+qwen_kvsys	tools/die_plan/landing_placement.tcl	UNBRANCHED lines		8	8
+qwen_kvsys	tools/die_plan/legacy_gate.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-ei-kv", "958a7d6d7fe3", "2026-11-08T19:17"]]		
+qwen_kvsys	tools/die_plan/reset_tree.py	exact branch tip	[["claude/dkv96-kv-switch-1109", "5e6346376121", "2026-11-09T01:13"]]		
+qwen_kvsys	tools/die_plan/schema.py	exact branch tip	[["claude/dkv96-kv-switch-1109", "5e6346376121", "2026-11-09T01:13"]]		
+qwen_kvsys	tools/die_plan/signoff.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-dt-kv", "1762cad3e01d", "2026-11-08T02:17"]]		
+qwen_kvsys	tools/die_plan/test_bind.py	exact branch tip	[["claude/die-kv-97-zbadd-1109", "e273bd37e4ee", "2026-11-09T02:59"]]		
+qwen_kvsys	tools/die_plan/test_clk_leaf_repeat_default.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "454ba514a47a", "2026-11-08T04:58"]]		
+qwen_kvsys	tools/die_plan/test_face_guard.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "ad6c60e548ad", "2026-11-07T23:57"]]		
+qwen_kvsys	tools/die_plan/test_ring_reset_grid.py	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-dt-kv", "857e197e14c9", "2026-11-08T01:59"]]		
+hbm	physical/common_flow/grt183_make.sh	covered by branches	claude/kw-fix-44-grt-stop-1110@557a0b0604(2)	2	0
+hbm	physical/die_plan/hbm/cores/harden/recipes.json	behind main only		0	0
+hbm	physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py	behind main only		0	0
+hbm	physical/die_plan/s81/reset_contract.json	lag-only (old main blob)	[["claude/dkv96-kv-switch-1109", "4a0af930d9a1", "2026-11-09T01:13"], ["refs/tags/flow-20261108-du-kv", "36d3dddec545", "2026-11-08T05:09"]]		
+hbm	rtl/common/ot_dp_clk_landing.sv	lag-only (old main blob)	[["codex/s81-legacy-freg-1106", "f555030b2dc6", "2026-11-06T00:43"]]		
+hbm	rtl/common/ot_meso_fifo.sv	lag-only (old main blob)	[["claude/dh58-turnb-1103", "67f6d8982394", "2026-11-03T14:33"], ["claude/kw-fix-4-headtb3-1103", "4edd31ee14d4", "2026-11-03T17:05"]]		
+hbm	rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv	lag-only (old main blob)	[["refs/tags/flow-20261108-ee-kv", "b6e977d850e7", "2026-11-08T10:53"]]		
+hbm	rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv	lag-only (old main blob)	[["refs/tags/flow-20261106-bm-kv", "a0f4dddf654c", "2026-11-06T08:37"]]		
+hbm	rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv	lag-only (old main blob)	[["claude/root-merge-47-rck4-1106", "c944595e04a7", "2026-11-07T04:32"]]		
+hbm	rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv	UNBRANCHED lines	codex/s81-rck-reform-0222@bdde15eb1f(21) claude/s81-types-7-rck-1108@872819503b(19)	24	3
+hbm	tools/autopilot/kit_wave.py	covered by branches	claude/root-merge-53-train-e-1108@8a41939b81(11) claude/kw-fix-37-spill-infra-1108@99d7dfcd28(10) claude/die-kv-97-p4src-1109@4a0af930d9(5)	12	0
+hbm	tools/autopilot/prov_view.py	lag-only (old main blob)	[["refs/tags/flow-20261108-ee-kv", "18e54f8be907", "2026-11-08T10:45"]]		
+hbm	tools/autopilot/test_kit_wave_genhosts.py	lag-only (old main blob)	[["refs/tags/flow-20261108-em-qc", "54da643aa0d8", "2026-11-08T08:41"]]		
+hbm	tools/die_plan/bind.py	covered by branches	claude/kw-fix-40-hbm-src-1108@a714b9cf46(21)	21	0
+hbm	tools/die_plan/clock_landings.py	lag-only (old main blob)	[["refs/tags/flow-20261108-em-qc", "4aa8c234091c", "2026-11-08T09:15"]]		
+hbm	tools/die_plan/eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261107-dj-kv", "d23288029c62", "2026-11-07T21:46"]]		
+hbm	tools/die_plan/gen_phys.py	covered by branches	claude/root-merge-53-train-a-1108@cb6e91be10(4) claude/kv-plan-2-finsbuf-wave-1109@5c15a885ca(3)	4	0
+hbm	tools/die_plan/hold_margin_pick.py	lag-only (old main blob)	[["refs/tags/flow-20261109-hm-hbm", "c15eb3676920", "2026-11-09T14:21"]]		
+hbm	tools/die_plan/landing_placement.tcl	lag-only (old main blob)	[["codex/head-lep-reserve-0222", "3a1829140fcc", "2026-11-08T02:32"], ["codex/head-lep-reserve-form-0222", "41a81fe17627", "2026-11-08T02:53"], ["refs/tags/flow		
+hbm	tools/die_plan/lec.py	lag-only (old main blob)	[["refs/tags/flow-20261108-ee-kv", "a5644801c46c", "2026-11-08T11:24"]]		
+hbm	tools/die_plan/partition_ft_reserve.py	lag-only (old main blob)	[["claude/die-hbm-97-m3stack-1110", "6267d6cac11b", "2026-11-10T04:27"]]		
+hbm	tools/die_plan/post_route_drv/prd_mk.sh	lag-only (old main blob)	[["refs/tags/flow-20261107-cr-kv", "4e9e705e13e4", "2026-11-07T13:39"]]		
+hbm	tools/die_plan/test_eco_loop.py	lag-only (old main blob)	[["refs/tags/flow-20261107-dj-kv", "d23288029c62", "2026-11-07T21:46"]]		
+hbm	tools/die_plan/test_partition_ft_reserve.py	lag-only (old main blob)	[["refs/tags/flow-20261108-eh-kv", "5d79919b42e1", "2026-11-09T01:50"]]		
+hbm	tools/fleet/ot-run	lag-only (old main blob)	[["claude/autoclean-3-1107", "00ba6f60a1f1", "2026-11-07T09:00"]]		
+hbm	tools/s81_dv/dv_layer_compile.py	lag-only (old main blob)	[["codex/xfin-latest-1105", "0e2fa571a9c3", "2026-11-05T23:58"]]		
+hbm	tools/s81_dv/frame_schedule_asb.py	lag-only (old main blob)	[["codex/ds-calendar-0251", "0b0ca834e0b4", "2026-10-28T23:55"], ["codex/qc-physical-1029", "8d2e6487d416", "2026-10-28T23:56"]]		
+hbm	tools/s81_dv/layer_prog/lower_eng.py	covered by branches	rescue/epyc2-kv-tok-d-1027@be22c61cd4(1)	1	0
