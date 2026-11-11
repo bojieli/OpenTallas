@@ -4639,6 +4639,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            # DIE-HEAD-59 11-03: opt-in per item (kit_wave item_env reaches gen only): hold_gate.tcl stop base
            *([f"export OT_HOLD_STOP_PS = {os.environ['OT_HOLD_STOP_PS']}"] if os.environ.get("OT_HOLD_STOP_PS") else []),
+           # KW-FIX-43 11-10 LAND-RESERVE: opt-in per item (item_env OT_LAND_RESERVE=1): face_flops.tcl reserves the non-ring
+           # landing windows before the station grid and landing_placement.tcl grows start / literal-reset windows
+           *(["export OT_LAND_RESERVE = 1"] if os.environ.get("OT_LAND_RESERVE") == "1" else []),
            f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
            *([f"export OT_TAP_WINDOW = {t_lib(tap_window_max_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
