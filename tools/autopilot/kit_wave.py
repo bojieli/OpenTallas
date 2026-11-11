@@ -4511,7 +4511,9 @@ def live_on_fleet(AP, roots, hosts=None):
         cmd = ["python3", "-I", "-", args] if h in ("localhost", hub, os.uname().nodename) else \
             ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
         try:
-            rc, o, _ = AP.sh(cmd, timeout=240, input=LIVE_PROBE)
+            rc, o, e = AP.sh(cmd, timeout=240, input=LIVE_PROBE)
+            if rc == 255 and "Could not resolve hostname" in (e or ""):      # this host's own fleet alias: run it here
+                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=240, input=LIVE_PROBE)
             if rc != 0 or not (o or "").strip():
                 return None
             for r, v in json.loads(o.strip().splitlines()[-1]).items():
