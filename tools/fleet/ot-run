@@ -131,6 +131,11 @@ cancelled ~30 gates of OTHER lanes, which reported "ot-run exit 143"): every SIG
 sigtimedwait, so the message names the SENDER (pid + command line), and one line goes to ~/.local/state/ot-run/signals.log.
   ot-run --spill-handoff TAG [--goal G] [--dry-run]   one SPILL-PROOF hand-off for a running spilled client (spill_handoff):
                          physical result + receipt to the source host, the proof stays; no unit or container is touched.
+  ot-run --cancel-dir KIT_PATH [--reason TEXT]   ends the autopilot's record of a job whose ot-run CLIENT IS ALREADY DEAD (it was
+                         killed by pid, or died with its unit): writes the signals.log line autopilot.signals_cancel()
+                         accepts, so the job is classified CANCELLED at its next poll instead of waiting for the 3 h ORPHAN
+                         timer.  Refuses (exit 2) while a live local ot-run client still has that --dir (use --cancel).
+                         It signals nothing and touches no unit, container or file.
   ot-run --cancel SUBSTR [--all-dirs]   SIGTERMs the local ot-run clients whose arguments contain SUBSTR -- the ONLY way an
                          agent stops its own ot-run jobs besides `kill <exact pid>`.  It refuses (lists, kills nothing,
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
@@ -1016,6 +1021,28 @@ def cancel(sub, all_dirs):
     return 0
 
 
+def cancel_dir(path, reason=""):
+    """COORD 11-11 15:5x: a queue job whose client is already gone (killed by exact pid, no `ot-run --cancel`) stays ORPHAN for
+    ORPHAN_IDLE_S = 3 h before the autopilot classifies it.  This writes the ONE line autopilot.signals_cancel() accepts for
+    the job's kit path: ' signal N from <sender incl. "ot-run --cancel"> ... dir <path>: <text>'.  No process is signalled."""
+    p = path.split(":", 1)[1] if re.match(r"^[A-Za-z0-9_.-]+:/", path) else path
+    p = os.path.normpath(p)
+    if not p.startswith("/"):
+        print(f"ot-run --cancel-dir: {path!r} is not an absolute kit path")
+        return 2
+    live = {pid: v for pid, v in clients().items() if v[1] and os.path.normpath(v[1]) == p}
+    if live:
+        print(f"ot-run --cancel-dir: REFUSED: live local ot-run client(s) {sorted(live)} still have --dir {p}; use `ot-run --cancel` for them.  Nothing written.")
+        return 2
+    why = " ".join((reason or "client already gone").split())[:200]
+    # the sender text names this command itself ("ot-run --cancel-dir"), not whatever argv this process was started with, so the
+    # line is accepted by autopilot.signals_cancel() whether this runs from the CLI or as a library
+    who = f"pid {os.getpid()} (ot-run --cancel-dir {p}; invoked by {sender(os.getppid())})"
+    log_signal(f"signal 15 from {who} -> ot-run pid 0 host - tag cancel-dir DEAD-CLIENT dir {p}: {why}")
+    print(f"ot-run --cancel-dir: wrote the cancel record for {p} to {SIGNAL_LOG}; the autopilot classifies the job CANCELLED at its next poll")
+    return 0
+
+
 # OT_SCRATCH (FLEET-NEW2 2026-10-19, coordinator: EPYC4/5 have two 2.9 TB scratch volumes; EPYC5's scratch2 sat empty
 # while scratch was at 47 %, EPYC4's scratch at 79 % vs scratch2 36 %): every job gets OT_SCRATCH = the
 # /srv/opentallas-scratch* mount with the most free space on its host.  New job / lane / die-chain directories belong
@@ -1388,6 +1415,8 @@ def main():
         sys.exit(spill_handoff_cli(a[1], a[a.index("--goal") + 1] if "--goal" in a else "place", dry="--dry-run" in a))
     if a[:1] == ["--cancel"] and len(a) >= 2:
         sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
+    if a[:1] == ["--cancel-dir"] and len(a) >= 2:
+        sys.exit(cancel_dir(a[1], a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else ""))
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
     job = None
     spill = not os.environ.get("OT_RUN_NO_SPILL")
