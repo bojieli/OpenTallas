@@ -616,7 +616,6 @@
    "hosts": [
     "epyc7",
     "epyc9",
-    "epyc4",
     "intel2",
     "epyc2"
    ],
@@ -624,11 +623,9 @@
     "epyc7",
     "epyc8",
     "epyc9",
-    "epyc4",
     "epyc2"
    ],
    "place_prefer": [
-    "epyc4",
     "epyc7",
     "epyc9",
     "epyc2"
@@ -3136,6 +3133,26 @@
     "kv3_hgi_v2__cle0015330",
     "kv3_pc",
     "kv3_pc_v1"
+   ],
+   "hosts_prev_kw45_epyc4": [
+    "epyc7",
+    "epyc9",
+    "epyc4",
+    "intel2",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw45_epyc4": [
+    "epyc7",
+    "epyc8",
+    "epyc9",
+    "epyc4",
+    "epyc2"
+   ],
+   "place_prefer_prev_kw45_epyc4": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
+    "epyc2"
    ]
   },
   "s81": {
@@ -5770,7 +5787,6 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc7",
-    "epyc4",
     "epyc8",
     "epyc9"
    ],
@@ -5779,7 +5795,6 @@
    "hosts": [
     "epyc7",
     "epyc9",
-    "epyc4",
     "intel2",
     "epyc2"
    ],
@@ -5854,7 +5869,6 @@
     ]
    },
    "place_prefer": [
-    "epyc4",
     "epyc7",
     "epyc9",
     "epyc2"
@@ -19226,6 +19240,25 @@
     "svc_lo_dsdv_svc_rs__t6",
     "svc_lo_dsdv_svc_rs__t7",
     "svc_lo_dsdv_svc_rs_w__t1"
+   ],
+   "hosts_prev_kw45_epyc4": [
+    "epyc7",
+    "epyc9",
+    "epyc4",
+    "intel2",
+    "epyc2"
+   ],
+   "gen_hosts_prev_kw45_epyc4": [
+    "epyc7",
+    "epyc4",
+    "epyc8",
+    "epyc9"
+   ],
+   "place_prefer_prev_kw45_epyc4": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
+    "epyc2"
    ]
   },
   "s81_head": {
@@ -19608,7 +19641,6 @@
    ],
    "live_claim_h": 0,
    "place_prefer": [
-    "epyc4",
     "epyc7",
     "epyc9",
     "epyc2"
@@ -20233,6 +20265,12 @@
     "epyc7",
     "epyc9",
     "epyc4",
+    "epyc2"
+   ],
+   "place_prefer_prev_kw45_epyc4": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
     "epyc2"
    ]
   },
@@ -21485,7 +21523,6 @@
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
-    "epyc4",
     "epyc7",
     "epyc9",
     "epyc2"
@@ -27238,7 +27275,13 @@
    "queue_src_exact": {
     "main@730345725942+genscope@716f40ea7e2c": "claude/kw-fix-45-qc-cut-comp-1111@bb20c1f13513"
    },
-   "plan_note_kw45": "KW-FIX-45 11-11: QC plan = DIE-QC-99 s15 7f425f00b48a (0 validate errors), installed in the cut tree plan_of_record/plan_qc99_s15.json next to cores/; strict bind BIND_OK on the cut tree (epyc9 oth-ubuntu-730816-1794414763 retry b): 377 partitions, 1921 crossings, 790393 bits, errors 0, bus_groups 8a538cc6eeb7 and bind_latency_consumers 21bc4ea6 identical to the 7164829ac234 bind. Launch list = the 19 + slw_fw_v3 (RSZ-3006 proof, COORD)."
+   "plan_note_kw45": "KW-FIX-45 11-11: QC plan = DIE-QC-99 s15 7f425f00b48a (0 validate errors), installed in the cut tree plan_of_record/plan_qc99_s15.json next to cores/; strict bind BIND_OK on the cut tree (epyc9 oth-ubuntu-730816-1794414763 retry b): 377 partitions, 1921 crossings, 790393 bits, errors 0, bus_groups 8a538cc6eeb7 and bind_latency_consumers 21bc4ea6 identical to the 7164829ac234 bind. Launch list = the 19 + slw_fw_v3 (RSZ-3006 proof, COORD).",
+   "place_prefer_prev_kw45_epyc4": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
+    "epyc2"
+   ]
   },
   "hbm": {
    "enabled": true,
@@ -27429,7 +27472,6 @@
     "q_mcb"
    ],
    "place_prefer": [
-    "epyc4",
     "epyc7",
     "epyc9",
     "epyc2"
@@ -28814,7 +28856,7 @@
     "hnx_rp3h_xs@4": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts",
     "ot_hbm_idx_rootctl_static_am@14": "KW-FIX-27 infra: dead git alternates on intel1/intel2 src_02909 repointed; pin table now present on hosts",
     "q_spu0__physical_v1@1": "KW-FIX-32 2026-11-07 21:28 PST: class fix HBM transit placeholder 79239a67263 (DIE-HBM-90; GEN_LINT 'Module hbm_arch_ft_<T> not part of the design') on main fcb5094d74a; batch relaunch of the 13 transit types",
-    "q_spu1__physical_v1@1": "KW-FIX-32 2026-11-07 21:28 PST: class fix HBM transit placeholder 79239a67263 (DIE-HBM-90; GEN_LINT 'Module hbm_arch_ft_<T> not part of the design') on main fcb5094d74a; batch relaunch of the 13 transit types",
+    "q_spu1__physical_v1@1": "KW-FIX-45 11-11 09:0x: a1 launched 07:15 with the free-text queue_src pinned in its launch spec and failed at enqueue; the old label now resolves through queue_src_exact to the composition commit (main cd03a1f33fb7 + m5full). Relaunch.",
     "q_b000@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
     "q_b000__physical_v1@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
     "q_b001@1": "KW-FIX-32 2026-11-07 22:29 PST: class fix HBM die bind in git (DIE-HBM-89 f91b9f2eec3; gen 'bus L14_o/L14_i not bound' -> kit_rtl bind of record); one bound-type batch",
@@ -31006,7 +31048,8 @@
    },
    "queue_src_exact": {
     "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b",
-    "main@cd03a1f33fb7+m5full@7f09deb2a68": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c"
+    "main@cd03a1f33fb7+m5full@7f09deb2a68": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c",
+    "main cd03a1f33fb7 + m5full 7f09deb2a68 (HBM cut 63189bfdfddd landed cd03a1f33fb7)": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c"
    },
    "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p.",
    "plan_prev_kw37h": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
@@ -40051,6 +40094,12 @@
     "epyc4",
     "intel2",
     "epyc2"
+   ],
+   "place_prefer_prev_kw45_epyc4": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
+    "epyc2"
    ]
   }
  },
@@ -40069,13 +40118,11 @@
  "note_substep_1105": "KW-FIX-14 COORD 11:2x: SUBSTEP-1 off until the hook reads the PROTECTED union (lanes/ + root PROTECTED-DBS.txt) | 11-05 11:2x KW-FIX-15: back on after protunion I122 (main 692b0ef4c36) on origin, COORD 11:17.",
  "hosts_base": [
   "epyc2",
-  "intel2",
-  "epyc4"
+  "intel2"
  ],
  "place_prefer_base": [
   "epyc2",
-  "intel2",
-  "epyc4"
+  "intel2"
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
@@ -40710,6 +40757,16 @@
  "place_prefer_base_prev_kw45_intel1": [
   "epyc2",
   "intel1",
+  "intel2",
+  "epyc4"
+ ],
+ "hosts_base_prev_kw45_epyc4": [
+  "epyc2",
+  "intel2",
+  "epyc4"
+ ],
+ "place_prefer_base_prev_kw45_epyc4": [
+  "epyc2",
   "intel2",
   "epyc4"
  ]
