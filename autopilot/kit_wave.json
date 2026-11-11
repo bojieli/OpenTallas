@@ -22,7 +22,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw43/kvr2/plan_c.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw43/src_zb_lr_sf_por15c",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_zb_lr_sf_por15c_rh",
    "src_sha": "e273bd37e4ee82e912c95a29d7e665173cd7ca4f",
    "kit_rtl": {
     "mode": "bind",
@@ -267,7 +267,10 @@
     "kv3_pv_v12@26",
     "kv3_pv_v8@11",
     "kv3_pv_v8@12",
-    "kv3_hg_v1@10"
+    "kv3_hg_v1@10",
+    "kv3_io_cor@8",
+    "kv3_io_cor_v1@9",
+    "kv3_sys_SD_v1@20"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -563,7 +566,10 @@
     "kv3_pv_v12@26": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
     "kv3_pv_v8@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
     "kv3_pv_v8@12": "INPUTS RESTAGED (KW-FIX-43 18:5x): epyc8 kw32/src_27db6 was partial; now 62511 files, file list = epyc7 (md5 57d070e074)",
-    "kv3_hg_v1@10": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV"
+    "kv3_hg_v1@10": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
+    "kv3_io_cor@8": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
+    "kv3_io_cor_v1@9": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
+    "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold"
    },
    "only_items": [
     "kv3_astk",
@@ -2101,8 +2107,9 @@
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_sys_SD_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
-     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvrs_rh/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7).",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     },
     "kv3_pv_v12": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
@@ -2267,6 +2274,14 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/kv/asbuilt_kvc_zb.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
+    },
+    "kv3_io_cor": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
+    },
+    "kv3_io_cor_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/dkv97/sreg_plan/kvr2_rh/plan_c.json",
+     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     }
    },
    "item_inputs_prev_kw43sd": {
@@ -3098,7 +3113,17 @@
     "epyc4"
    ],
    "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b.",
-   "note_kw43rs": "KW-FIX-43 11-10 23:0x COORD 22:49 (2): core_kit.args --fp-root kit-wave-11/fp, die-kv-59/fp, codex-kv-norecipe-1101/fp retired (dirs gone since 11-05; every gen-host probe flagged them; no KV core row launched). A KV core gen now says NO_RECIPE (no --fp-root) until an owner names a live fp root. Revert: args <- args_prev_kw43rs."
+   "note_kw43rs": "KW-FIX-43 11-10 23:0x COORD 22:49 (2): core_kit.args --fp-root kit-wave-11/fp, die-kv-59/fp, codex-kv-norecipe-1101/fp retired (dirs gone since 11-05; every gen-host probe flagged them; no KV core row launched). A KV core gen now says NO_RECIPE (no --fp-root) until an owner names a live fp root. Revert: args <- args_prev_kw43rs.",
+   "src_prev_kw43kvrh": "/srv/opentallas-scratch2/claude/kw43/src_zb_lr_sf_por15c",
+   "item_inputs_prev_kw43kvrh": {
+    "kv3_io_cor": null,
+    "kv3_io_cor_v1": null,
+    "kv3_sys_SD_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/kvrs/plan_c.json",
+     "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
+    }
+   },
+   "note_kw43kvrh": "KW-FIX-43 11-11 00:3x COORD: KV src -> kw43/src_zb_lr_sf_por15c_rh = cp -al of por15c + 17002ccba5e tool files (landing_contract 9381b598, sdc_lint 9452ee88, schema.py 5367f66c, die_plan.schema.json 2869bb92 = branch tip bytes; landing_contract/sdc_lint equal to main) on epyc7/epyc2/epyc4/epyc8; kv3_io_cor/_v1 on kvr2_rh plan_c 6e1ad24c, kv3_sys_SD_v1 on kvrs_rh plan_c 4afd5f88 (staged epyc7/epyc2/epyc4/epyc8), retries kv3_io_cor@8 kv3_io_cor_v1@9 kv3_sys_SD_v1@20. Revert: src <- src_prev_kw43kvrh, item_inputs <- item_inputs_prev_kw43kvrh."
   },
   "s81": {
    "enabled": true,
