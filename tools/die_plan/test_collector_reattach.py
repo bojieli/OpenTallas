@@ -71,6 +71,44 @@ def test_stale_source_on_unchanged_tree_is_reported(tmp_path):
     assert json.loads(rep.read_text())["over"]["ctl"][0][0] == "cws1_i"
 
 
+def _side(sources):
+    return {"collector": {"types": {"ctl": {"tree": _tree([450.0, 0.0]), "local_sources": sources, "children": []},
+                                    "other": {"tree": _tree([450.0, 0.0]), "local_sources": [dict(SRC[0])],
+                                              "children": []}}}}
+
+
+def _files(tmp_path, base, cand, side):
+    b, c, si = tmp_path / "b.json", tmp_path / "c.json", tmp_path / "s.json"
+    b.write_text(json.dumps(base)); c.write_text(json.dumps(cand)); si.write_text(json.dumps(side, indent=1) + "\n")
+    return b, c, si
+
+
+def test_sidecar_sources_follow(tmp_path):
+    # the bind reads the sources from the sidecar: a10 failed on the stale sidecar copy after the plan was fixed
+    base = _plan(_tree([450.0, 0.0]), copy.deepcopy(SRC))
+    cand = _plan(_tree([0.0, 900.0]), copy.deepcopy(SRC))
+    side = _side(copy.deepcopy(SRC))
+    b, c, si = _files(tmp_path, base, cand, side)
+    out, rep, so = tmp_path / "o.json", tmp_path / "r.json", tmp_path / "so.json"
+    assert CR.main([str(b), str(c), str(out), str(rep), "--sidecar", str(si), str(so)]) == 0
+    got = json.loads(so.read_text())["collector"]["types"]
+    assert got["ctl"]["local_sources"][0]["node"] == "rst_n_t0" and got["ctl"]["local_sources"][0]["tap"] == 0
+    assert got["other"] == side["collector"]["types"]["other"]                # untouched type unchanged
+    assert json.loads(rep.read_text())["sidecar_changed"] == {"ctl": 2}
+    so2 = tmp_path / "so2.json"                                                # no reattach -> byte-identical
+    assert CR.main([str(b), str(b), str(out), str(rep), "--sidecar", str(si), str(so2)]) == 0
+    assert so2.read_bytes() == si.read_bytes()
+
+
+def test_sidecar_name_mismatch_fails_closed(tmp_path):
+    base = _plan(_tree([450.0, 0.0]), copy.deepcopy(SRC))
+    cand = _plan(_tree([0.0, 900.0]), copy.deepcopy(SRC))
+    b, c, si = _files(tmp_path, base, cand, _side([dict(SRC[0], name="zz_i")]))
+    out, rep, so = tmp_path / "o.json", tmp_path / "r.json", tmp_path / "so.json"
+    assert CR.main([str(b), str(c), str(out), str(rep), "--sidecar", str(si), str(so)]) == 1
+    assert not out.exists() and not so.exists()
+
+
 if __name__ == "__main__":
     import tempfile
     for n, f in sorted(globals().items()):

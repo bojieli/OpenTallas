@@ -2,6 +2,7 @@
 """Reattach landing collector sources after a reset-tree snapshot moved relays (DIE-QC-97 11-10, REMAP-REATTACH).
 
     python3 tools/die_plan/collector_reattach.py BASE_PLAN CAND_PLAN OUT_PLAN REPORT_JSON [--reach-um 405]
+        [--sidecar SIDECAR_IN SIDECAR_OUT]
 
 A plan writer that refreshes a type's published clock.landing_contract.collector_tree (a same-depth relay re-pick, a
 new bins tree, a knee/station event) must move that type's collector_local_sources / collector_children with it: each
@@ -14,6 +15,13 @@ tree -> new tree), which keeps each source's depth (no collector cycle change un
 reported) and picks the nearest same-depth relay within reach.  Afterwards EVERY type's sources are reach-checked
 against their own collector_tree (<= reach_um, the bind's landing_collector.build_local rule); any miss -> exit 1 and
 no output.  Types whose collector_tree is unchanged are byte-identical; the output keeps CAND's JSON style.
+
+--sidecar: the strict bind reads the collector SOURCES from the asbuilt clock_landing_table (sidecar
+collector.types[tn].local_sources / children), not from the plan; only the tree comes from the plan
+(landing_collector.effective_tree).  a10 (cand21b2, plan sources reattached) still failed `cws1_i -> rst_n_t32` on
+the stale sidecar.  With --sidecar the node/tap of every reattached type's sources and children is copied into the
+sidecar (sources matched by name, children by index; any count or name mismatch -> exit 1 and no output).  Other
+types and keys stay byte-identical, and the output keeps the sidecar's JSON style.
 
 Orthogonal to reset_anchor.py (RELAY-ANCHOR): that one re-picks the START / local-reset relay NAMES at bind time by
 recorded site; this one moves the collector status sources in the plan when the tree snapshot itself is refreshed.
@@ -85,10 +93,35 @@ def reattach_plan(base, cand, reach_um=405):
     return rep
 
 
+def sync_sidecar(cand, side, types):
+    """in place on side: node/tap of each reattached type's collector sources/children from cand -> {type: n changed}"""
+    st = (side.get("collector") or {}).get("types") or {}
+    out = {}
+    for tn in types:
+        if tn not in st:
+            raise ValueError(f"sidecar collector has no type {tn}")
+        lc, row, n = _lc(cand, tn), st[tn], 0
+        srcs, kids = row.get("local_sources") or [], row.get("children") or []
+        by_name = {s["name"]: s for s in lc.get("collector_local_sources") or []}
+        if sorted(by_name) != sorted(s["name"] for s in srcs):
+            raise ValueError(f"sidecar {tn}: sources {sorted(s['name'] for s in srcs)} != plan {sorted(by_name)}")
+        pk = lc.get("collector_children") or []
+        if len(pk) != len(kids):
+            raise ValueError(f"sidecar {tn}: {len(kids)} children, plan {len(pk)}")
+        for s, q in [(s, by_name[s["name"]]) for s in srcs] + list(zip(kids, pk)):
+            for k in ("node", "tap"):
+                if k in q and s.get(k) != q[k]:
+                    s[k] = q[k]
+                    n += 1
+        out[tn] = n
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("base"); ap.add_argument("cand"); ap.add_argument("out"); ap.add_argument("report")
     ap.add_argument("--reach-um", type=float, default=405.0)
+    ap.add_argument("--sidecar", nargs=2, metavar=("SIDECAR_IN", "SIDECAR_OUT"))
     a = ap.parse_args(argv)
     rb = Path(a.cand).read_bytes()
     cand = json.loads(rb)
@@ -103,7 +136,21 @@ def main(argv=None):
         Path(a.report).write_text(json.dumps(dict(rep, verdict="FAIL"), indent=1) + "\n")
         print(f"COLLECTOR_REATTACH FAIL sources over {a.reach_um:g} um: {rep['over']}")
         return 1
+    side_out = None
+    if a.sidecar:
+        sb = Path(a.sidecar[0]).read_bytes()
+        side = json.loads(sb)
+        sdump = _style(sb, side)
+        try:
+            rep["sidecar_changed"] = sync_sidecar(cand, side, sorted(rep["reattached"]))
+        except ValueError as e:
+            print(f"COLLECTOR_REATTACH FAIL {e}")
+            return 1
+        side_out = sdump(side)
     Path(a.out).write_text(dump(cand))
+    if side_out is not None:
+        Path(a.sidecar[1]).write_text(side_out)
+        rep["sidecar_sha256"] = hashlib.sha256(Path(a.sidecar[1]).read_bytes()).hexdigest()
     rep["sha256"] = hashlib.sha256(Path(a.out).read_bytes()).hexdigest()
     Path(a.report).write_text(json.dumps(dict(rep, verdict="PASS"), indent=1) + "\n")
     print("COLLECTOR_REATTACH PASS " + " ".join(f"{t}:moved{len(v['moved'])}/+{v['added_collector_cycles']}cyc/"
