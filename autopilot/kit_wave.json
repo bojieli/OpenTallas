@@ -39253,7 +39253,14 @@
    "hold_items_kw43qb001_added": [
     "q_b001",
     "q_b001__physical_v1"
-   ]
+   ],
+   "hard_wrappers_prev_kw43phyn": null,
+   "hard_wrappers": [
+    "PHY_NC",
+    "PHY_NE",
+    "PHY_NW"
+   ],
+   "note_kw43phyn": "KW-FIX-43 11-11 DIE-HBM-98 (WAVE-OPS-1 STALE 'no kit-wave row'): PHY_NC/NE/NW were never picked: the plan marks them hard and the wave skipped them ('plan entry: hard type ... unless hard_wrappers names it'). Added to hard_wrappers so gen builds them (--hard-wrappers) on item_inputs taps plan_p11t_taps_cyc + bind vK5d_c12. Revert: hard_wrappers <- hard_wrappers_prev_kw43phyn."
   }
  },
  "place_prefer": [
