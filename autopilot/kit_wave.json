@@ -20779,7 +20779,11 @@
     "cbx_q10__cl89936551@24",
     "sle_sc_v1__cl115da35f@11",
     "slw_su_c__cl92142dac@30",
-    "sle_sc_v3@30"
+    "sle_sc_v3@30",
+    "cbf_q00_s2@22",
+    "cbn_q11__cl5cc92dfe@11",
+    "cbn_q11__cl49ae4555@13",
+    "cbx_q10__cl94a12200@21"
    ],
    "queue_src": "claude/qc-transport-fix-4-1109@5333b7dca834",
    "type_args": {
@@ -21406,7 +21410,11 @@
     "cbn_q00__cld7bf7197@20": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "sle_sc_v1__cl115da35f@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
     "slw_su_c__cl92142dac@30": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
-    "sle_sc_v3@30": "KW-FIX-43 11-10 22:0x DIE-QC-97: a30 FAIL FLOW was the full epyc2 scratch3 disk that night (reproduces clean), plan_pv row, plain relaunch as INFRA"
+    "sle_sc_v3@30": "KW-FIX-43 11-10 22:0x DIE-QC-97: a30 FAIL FLOW was the full epyc2 scratch3 disk that night (reproduces clean), plan_pv row, plain relaunch as INFRA",
+    "cbf_q00_s2@22": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
+    "cbn_q11__cl5cc92dfe@11": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
+    "cbn_q11__cl49ae4555@13": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
+    "cbx_q10__cl94a12200@21": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)"
    },
    "gen_hosts": [
     "epyc7",
@@ -26996,7 +27004,8 @@
     "epyc8"
    ],
    "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b.",
-   "note_kw43sle": "KW-FIX-43 11-10 22:0x: retry sle_sc_v3@30 (DIE-QC-97, infra disk-full). Revert: drop the retry entry."
+   "note_kw43sle": "KW-FIX-43 11-10 22:0x: retry sle_sc_v3@30 (DIE-QC-97, infra disk-full). Revert: drop the retry entry.",
+   "note_kw43qcnk": "KW-FIX-43 11-11 COORD 00:3x (DIE-QC-97 RESULT 23:55): cb* rows on plan 72b74c858d whose NK child was the PROVISIONAL contract LEF f922482c11b9 (spec had 0 NK candidates: launched 11-09 11:16..11-10 05:18, before prov_view_sources.qfd_tile_nk_a0c = nk_p1 signed view, detail_view.lef sha256 53a7be5c8092, 4 hosts checked) superseded and relaunched: cbf_q00_s2@22 cbn_q11__cl5cc92dfe@11 cbn_q11__cl49ae4555@13 cbx_q10__cl94a12200@21. Every attempt launched since picks the signed view (cbx_q10__cl89936551 a26, cbn_q00__cl622f65d2 a20, cbf_q11 a19, cbn_q00__cldbcda913 a25). cbn_q01__clab6e67f2 a26 (contract) stays on its RE-FORM hold."
   },
   "hbm": {
    "enabled": true,
