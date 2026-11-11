@@ -891,9 +891,9 @@ def search(M, Gd, cfg, log):
                 imp += 1
                 acc[best[1][0]] += 1
         obj, a, b_ = total()
-        log("  sweep %d moves %d obj %.0f (%.1f%%) bit-mm %.0f ovfH %.0f ovfV %.0f %.0fs" % (
+        log("  sweep %d moves %d obj %.0f (%.1f%%) bit-mm %.0f ovfH %.0f ovfV %.0f tv %d %.0fs" % (
             sw, imp, obj / 1e3, 100 * (obj / max(base_obj, 1) - 1), M.cost(range(len(M.L))) / 1e3, a, b_,
-            time.time() - t0))
+            M.tviol(range(len(M.L))), time.time() - t0))
         if not imp:
             break
     st["moves"] = dict(acc)
@@ -928,13 +928,6 @@ def undo_move(M, k, mv, pos, fl):
     M.cflip[k] = fl
     if M.bands:
         M.band_now += M._band_k(k) - old
-
-
-def tviol_now(M):
-    """timing violations of the accepted state (cached until a swap is applied)."""
-    if getattr(M, "_tv_now", None) is None:
-        M._tv_now = M.tviol(range(len(M.L)))
-    return M._tv_now
 
 
 def base_ok(M, k, ignore=()):
@@ -1576,6 +1569,7 @@ def main(argv=None):
                         if e[0] is not None:
                             ends[M.cid[e[0]]] += 1
                 best = (cur, None)
+                tv_cur = M.tviol(range(len(M.L)))
                 for k_, _ in ends.most_common(3):
                     for j_ in range(M.m):
                         if j_ == k_ or M.cfix[j_] or M.cfix[k_] or \
@@ -1584,8 +1578,7 @@ def main(argv=None):
                         pk, pj = tuple(M.cpos[k_]), tuple(M.cpos[j_])
                         fk, fj = M.cflip[k_], M.cflip[j_]
                         M.cpos[k_], M.cpos[j_] = pj, pk
-                        if M.legal(k_, *pj, ignore=(j_,)) and M.legal(j_, *pk) and M.tviol(range(len(M.L))) <= \
-                                tviol_now(M):
+                        if M.legal(k_, *pj, ignore=(j_,)) and M.legal(j_, *pk) and M.tviol(range(len(M.L))) <= tv_cur:
                             n_ = nbad()
                             if n_ < best[0]:
                                 best = (n_, (k_, j_))
@@ -1599,7 +1592,6 @@ def main(argv=None):
                     M.band_now = np.zeros(len(M.bands))
                     for kk in range(M.m):
                         M.band_now += M._band_k(kk)
-                M._tv_now = None
                 swapped.append((M.inst[M.CL[k_][0]], M.inst[M.CL[j_][0]]))
                 cur = best[0]
             if swapped:
