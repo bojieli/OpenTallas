@@ -835,6 +835,21 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             for bb, dd in ((cc or {}).get(Bi, {}) or {}).items():
                 if _names_core(dd, A):
                     st_rev[(Bi, bb)].add((A, Bi))
+    # face buses carried by an internal_stations chain (conn bus:X, one end a core pin of inst): the chain is the
+    # wire from that core to the face, so the core pin's bus:X destination is not a second face net (FEAS-AUDIT-1)
+    st_face = set()
+    if cfg.get("station_face_dedupe", True):
+        for s_ in t.get("internal_stations", []) or []:
+            cn = str(s_.get("conn", ""))
+            if not cn.startswith("bus:"):
+                continue
+            for end in (s_.get("launch", ""), s_.get("capture", "")):
+                e_ = str(end)
+                e_ = e_[5:] if e_.startswith("core:") else e_
+                hit = [c_ for c_ in cen if e_ == c_ or e_.startswith(c_ + ".")]
+                if hit:
+                    st_face.add((max(hit, key=len), cn[4:]))
+    carried = 0
     rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
     g.cur = "core"
     # face pin band: the bits of a face bus land spread over its window, in the order of the core pins that drive
@@ -867,6 +882,13 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 continue
             for bus, x, y in pl:
                 dl = [d_ for d_ in (ci.get(bus) or []) if d_ != "glue"]
+                if st_face:
+                    n0 = len(dl)
+                    dl = [d_ for d_ in dl if not (str(d_).startswith("bus:") and (inst, str(d_)[4:]) in st_face)]
+                    if len(dl) < n0:
+                        carried += 1
+                        if not dl:
+                            continue            # routed by its internal_stations chain to the face
                 if not dl:
                     # pin to type glue logic (not core-to-core): a local escape net from the pin out of the
                     # core face, cfg glue_um long (the glue cells sit next to the core)
@@ -1188,7 +1210,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         macros=len(mrects), mem_macros=sum(1 for v in h_kind.values() if v == "mem"),
         provisional_children=sorted(provisional),
         macro_area_frac=round(float(macro_cov.sum()) / (g.nx * g.ny), 3),
-        mem_area_frac=round(float(mem_cov.sum()) / (g.nx * g.ny), 3), glue_pins=nglue,
+        mem_area_frac=round(float(mem_cov.sum()) / (g.nx * g.ny), 3), glue_pins=nglue, station_carried_pins=carried,
         core_pins=npins, unchecked_pins=unchecked, ft_bits=ft_bits, ft_core_internal_bits=ft_internal,
         ring_bands_core_internal=ring_internal,
         station_bits=st_bits, ring_bits=int(ring_bits),
@@ -1519,6 +1541,9 @@ def main(argv=None):
                     help="old model: an ft slot whose stations_in are hard cores still runs as parent wire over them")
     ap.add_argument("--template-cap-default", action="store_true",
                     help="old model: cap whole-block template LEFs at --core-ceiling even when the plan gives obs_max")
+    ap.add_argument("--station-face-double", action="store_true",
+                    help="old model: a core pin whose face bus is carried by an internal_stations chain also counts "
+                         "its own pin -> face net (counted twice)")
     ap.add_argument("--empty-conns-glue", action="store_true",
                     help="old model: an empty core_conns entry scores every pin as a local glue escape")
     ap.add_argument("--pin-escape", action="store_true",
@@ -1563,7 +1588,7 @@ def main(argv=None):
                ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
-               empty_conns_unchecked=not a.empty_conns_glue,
+               empty_conns_unchecked=not a.empty_conns_glue, station_face_dedupe=not a.station_face_double,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
                grt_halving_types=grt_halving_types(a.grt_halving_type))
     conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
