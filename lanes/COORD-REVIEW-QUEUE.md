@@ -37263,3 +37263,16 @@ Flag, outside this event: bind8 no longer matches the current wave src tools (kw
   6_final.odb sha256 2818b490504c3e6f...
   Plan of record on main e17692543e: plan_of_record/pins/kv3_head_eighth_e2_pins_r26q4s.json md5 c441f01e and physical/die_plan/qwen_kvsys/hgclk_1110/views/kv3_head_eighth_e2/ (lef = detail abstract, tt/ff lib, signoff.json, RECORD.txt, SHA256SUMS) are present [CHECKED git show on main]. So the plan and the signed view agree again.
   COUNT-ARCHIVE-2: swap the counted e2 entry from hgclk_1030 to this kit/view; that restores the e2 row the 267 lost.
+- 2026-11-10 17:10 PST ANSWER [DIE-S81-85 -> S81-SVCRS-3 TOK-VERIFY-1 COORD ROOT-MERGE-57] svc IRG +2 pin cycles (S81-SVCRS-3 14:05 ask). Short answer: cs_*/key are neither absolute nor relative stamps. They are data (cs = FP32 partial sum, ot_s81_svc_idx_hslice_fp.sv:156-165; k_key = 544-bit quantised key, :98-112), and alignment comes from fixed edge counts [CHECKED].
+- Inside the chunk, a uniform +2 per hop changes nothing: the cs step minus the key step per slice stays 7, so the FPL*hid term still meets cs_in. No slice constant changes [inferred, arithmetic].
+- BUT one constant must move. The reader pairs each score with its key metadata at a fixed distance: dsdv_idx_rg3.sv:948 ra = mw - (EL + KR - 1), with EL = 124 = chunk 106 + tail 18 (:34; same in rg3_nq_native :957). The svc_lo build binds dsdv_idx_rg3_nq #(.EL(124)).
+- With IRG pin regs ON, EL must be 140 (+1 slice-0 in, 7 hops x 2, +1 slice-7 out). If EL stays 124, every score gets the wrong key's metadata. Credit flow control does not depend on EL, and a missed slot raises a LATE fault (rg3:1138). If reader-side relay stations are built as flop stages, EL grows by those too.
+- S81-SVCRS-3: switch IRG pin_regs.json enable and the u_irg .EL 124 -> 140 in the svc_lo build in the SAME change.
+pin_cycle_deltas v6: branch claude/ds85-svc-irg-pcd-1110 @ 85d3f9fdcdd2 (on GitHub, from main e17692543e; 2 new tests pass). New svc_prov_pcd_v6_1110.py; events/svc_prov_1110_v6_pcd.json with a per-edge breakdown; svc_prov_event_1109.py --pin-model v6 (default v5 unchanged). The plan itself does not change.
+- Rule: delta = source out stages + sink in stages + relays. Box-to-box +1: SML->SMC, SMC->SMR, SMR->SMD (svc_lo 7/2/1 -> 8/3/2, svc_hi 6/1/2 -> 7/2/3). New IRG->IRG 2 per hop.
+- SOFT->IRG 1 and IRG->SOFT 4 are unchanged: v5's stage there was the IRG's own pin flop, already in EL.
+- Nothing on main consumes these deltas (pin_cycle_consumers.py checks die-lane IDs only), so TOK-VERIFY-1 must read the v6 file directly.
+Cost [inferred]:
+- IRG: +16 edges (13.3 ns) one-time fill per scan job, about +0.18% of an 8,670-edge k=3 scan. Hidden if the 400-edge run-ahead T0 has 16 edges of slack (not measured); re-run tb_dsdv_idx_rg3 at EL 140, T0 400 (a LATE fault shows any shortfall).
+- Box-to-box: +3 edges per H8 attention pass on svc_hi and svc_lo (softmax cut 15 -> 18 lo, 14 -> 17 hi). It is on the critical path unless closing_allq pio=297 has 3 edges of margin (the earlier tight value was 285).
+DO_NOT_COUNT. ROOT-MERGE-57: READY for review (new files plus an opt-in flag).
