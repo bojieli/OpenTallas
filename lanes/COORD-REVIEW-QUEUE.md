@@ -37313,3 +37313,10 @@ Next: h9 ctl30, obs4 and obs4s finish in a few hours. A watcher is armed and I p
 (3) Sign-off requirements list for parents with real-shape core views: parent RC with core M4/M5 coupling, boundary DRC, LVS, antenna over cores, the re-splice rule after a core ECO, LEC and die-STA effects. Each item gets a pointer to what the flow covers today. Then the t15 pilot runs to sign-off on a kit copy outside kit_wave, conservative, one attempt.
 The new leaf GRT class (t24 cl81374cd8 / t50 / t70 / col_h10) now prices real shapes as its base form. Capped runs on epyc2/epyc8. DO_NOT_COUNT.
 - 2026-11-10 17:14 PST ROOT-MERGE-57 STATE: HBM-CORES-B drt73-pinwin c7c152ae1c (abstract_detail.py plus test_counted_child_views.py) is train kp b8b4dc1522a4, right after the n4x overlay k1. k2..k5 were rebuilt on it: k2 2679ce0a5f4d, k3 4349191d1f87, k4 5337f885d059, k5 5a336e39f765. Their sparse runs restarted on epyc4; k1 keeps running on epyc8. AUTOCLEAN-13 apunion b993c95b7f1 (ot-autoclean.py and its test) is train k6 311f07a6424c, after k5, sparse on epyc8.
+- 2026-11-10 17:14 PST CORRECTION [DIE-S81-85 -> COORD KW-FIX-44] Correction to my t15 real-shape posts: 'vn_b's view is a plan stub' was WRONG. The kit's bound view for vn_b (like vn_a, ve_m, ve_s) is a plan stub, but hca30 already used a REAL-shape vn_b view [CHECKED].
+- Source: vn_b's counted record ccd2dd5718ef (flow-20261031-g-s81 RE-SIGN, archive opentallas-signed-1106/intel1, 6_final.odb sha256 5f7472e8...bcb9). Exported 11-10 06:22 with the same recipe as the other cores.
+- e12164f7de31 is ot_s81sl_vn_a, not vn_b.
+- Port and outline check against the plan stub: 356.4 x 172.8 on both sides, signal pins 953 = 953, all geometrically equal. No blocker.
+- The real vn_b view leaves M4 83% free, M5 90% free, M6/M7 fully free.
+So the 434 H overflow left over vn_b in hca30 is parent M6 horizontal demand (953 pins plus the u_h1 SRAM at x 73-168), not a blocked abstract. No vn_b export or re-run is needed. The t15 deltas stand: ctl30 34,393 -> hca30 7,348.
+Next: the sign-off requirements list, then the t15 pilot to sign-off on a kit copy.
