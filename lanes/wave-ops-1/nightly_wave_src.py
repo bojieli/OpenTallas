@@ -675,6 +675,10 @@ def main(argv):
         if not os.path.exists(os.path.join(run_dir, 'build.json')) or os.path.exists(os.path.join(run_dir, 'POSTED')):
             return 0
         txt, done = advance(date, run_dir)
+        nxt = os.path.join(HERE, 'NEXT-POST.txt')            # hand notes queued for tonight's one result post
+        if done and os.path.exists(nxt):
+            txt += '\n' + open(nxt).read().strip()
+            os.replace(nxt, os.path.join(run_dir, 'NEXT-POST.posted.txt'))
         if done:
             rel = os.path.relpath(run_dir, COORD)
             open(os.path.join(run_dir, 'POSTED'), 'w').write(stamp + '\n')
