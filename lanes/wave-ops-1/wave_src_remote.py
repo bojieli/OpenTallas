@@ -228,13 +228,16 @@ def merge_text(repo, b, n, l_bytes):
         return p.returncode == 0, p.stdout
 
 
-def classify(live, base, new, live_bytes=None, repo=None):
+def classify(live, base, new, live_bytes=None, repo=None, mbase=None):
     """live/base/new: {path: (mode, sha)}.  live_bytes(path) -> bytes of the live file (for 3-way merges).
     -> {counts, actions: [{op, path, mode, sha|text}], carried: [paths], conflicts: [paths], ...}
     op write = the new tree gets git blob sha; op text = merged content; op delete = absent in the new tree.
     Paths absent from live but in both base and new are a sparse-tree choice of the live tree: kept absent."""
     acts, counts = [], {}
     carried, conflicts, deleted_kept, merged = [], [], [], []
+    # mbase = merge-base(base, new) when the die branch (base) did not merge into new: then 'new differs from base'
+    # can be the die branch's own change (new == mbase), which the live tree keeps
+    mb = base if mbase is None else mbase
     def c(k):
         counts[k] = counts.get(k, 0) + 1
     for p in sorted(set(live) | set(new)):
@@ -248,12 +251,18 @@ def classify(live, base, new, live_bytes=None, repo=None):
         if N is None:                                   # present live, absent new
             if B is None:
                 carried.append(p); c('carry live-only (not in git)'); continue
+            if L == B and mb.get(p) is None and mbase is not None:
+                carried.append(p); c('die-branch file kept (die branch not merged)'); continue
             if L == B:
                 acts.append(dict(op='delete', path=p)); c('deleted on main/overlay'); continue
             deleted_kept.append(p); conflicts.append(p); c('conflict: live-modified, deleted on main (kept live)'); continue
+        if L == B and mbase is not None and mb.get(p) != B:
+            if mb.get(p) == N:
+                carried.append(p); c('die-branch change kept (die branch not merged)'); continue
+            conflicts.append(p); c('conflict: die branch and main both changed (kept live)'); continue
         if L == B:
             acts.append(dict(op='write', path=p, mode=N[0], sha=N[1])); c('take new (main/overlay changed)'); continue
-        if N == B or B is None and False:
+        if N == B:
             carried.append(p); c('carry live overlay (not in git)'); continue
         if B is None:                                   # both added, different content
             conflicts.append(p); c('conflict: added both (kept live)'); continue
@@ -359,7 +368,10 @@ def main(argv):
         repo, lm, b, n, out = argv[2:7]
         live_root = argv[7] if len(argv) > 7 else None
         rb = (lambda p: open(os.path.join(live_root, p), 'rb').read()) if live_root else None
-        r = classify(read_manifest(lm), ls_tree(repo, b), ls_tree(repo, n), rb, repo)
+        mbv = None
+        if not is_ancestor(repo, b, n):                 # die branch not merged: compare against the merge-base too
+            mbv = ls_tree(repo, git(repo, 'merge-base', b, n).stdout.strip())
+        r = classify(read_manifest(lm), ls_tree(repo, b), ls_tree(repo, n), rb, repo, mbv)
         json.dump(r, open(out, 'w'))
         print(json.dumps(dict(counts=r['counts'], actions=len(r['actions']), carried=len(r['carried']),
                               conflicts=len(r['conflicts']), merged=len(r['merged']))))

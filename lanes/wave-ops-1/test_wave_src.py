@@ -99,6 +99,15 @@ def test_classify_conflict_kept_live():
     assert not c['actions'] and c['counts'] == {'sparse (absent live, kept absent)': 1}
 
 
+def test_unmerged_die_branch_keeps_its_changes():
+    S_ = {'d': ('100644', 'dd'), 'm': ('100644', 'm0'), 'x': ('100644', 'x1')}     # die branch tip
+    M_ = {'m': ('100644', 'm0'), 'x': ('100644', 'x0')}                            # merge-base: d added, x changed by die
+    N_ = {'m': ('100644', 'm1'), 'x': ('100644', 'x0')}                            # main changed m only
+    c = R.classify(dict(S_), S_, N_, mbase=M_)
+    assert {a['path']: a['op'] for a in c['actions']} == {'m': 'write'}
+    assert sorted(c['carried']) == ['d', 'x'] and not c['conflicts']
+
+
 def test_parse_train_and_kw44():
     q = ('- 11-10 18:14 ROOT-MERGE-57 UNLANDED (approved, not on main; main=a8a7f27eb031), in landing order: land-reserve '
          'f99ba4416be1 (gate met); n4x overlay 135427e515e5; stm-dupq 161d17842f04 + 577fce65b7b9; ft-hop-lockup '
