@@ -65,8 +65,8 @@ def test_idx_fit_renames_svc_lo_reader_and_sizes_masters():
     assert s2.count("dsdv_idx_rg3_fit #(") == 1 and rep["renamed"] == 1 and set(kids) == {"dsdv_idx_fit_mem.sv", "dsdv_idx_rg3_fit.sv"}
     assert c.idx_fit(s2, files)[0] == s2                      # idempotent
     fit = kids["dsdv_idx_rg3_fit.sv"]
-    assert "dsdv_idx_rg2_m1k #(" not in fit and fit.count("dsdv_idx_fit_mem #(") == 6 and ".WORDS(128), .BITS(MW + 1)) u_mq" in fit
-    assert sum(macros.values()) == 13
+    assert "dsdv_idx_rg2_m1k #(" not in fit and fit.count("dsdv_idx_fit_mem #(") == 6 and ".WORDS(EL + KR - 1 < 128 ? 128 : 1024), .BITS(MW + 1)) u_mq" in fit
+    assert sum(macros.values()) == 13 and macros == idx.MACROS
     assert c.idx_fit(hi, files)[1:] == ({}, {}, None)         # svc_hi: no reader, untouched
     with pytest.raises(ValueError, match="not a proven source"):
         idx.fit_source(src.read_text().replace("lw_h1[u] <= !sc && bt[0];", "lw_h1[u] <= !sc;"))
@@ -97,6 +97,24 @@ def test_idx_fit_chain_end_nq_reader():
         idx.fit_source((pf / "dsdv_idx_rg3.sv").read_text(), nq=True)
     with pytest.raises(ValueError, match="instances"):
         c.idx_fit("module b;\n" + line + line.replace("u_u_irg_07", "u_u_irg_08") + "endmodule\n", files)
+
+
+def test_idx_fit_el140_pin_stages_keep_full_mq_ring():
+    """S81-SVCRS-3 11-11: with the IRG pin stages (.EL(140), .PR(1)) the metadata ring is read 139 edges behind, so the
+    128-deep u_mq fit would be wrong; u_mq stays 1024 deep (original master) and any other EL / PR pair is refused."""
+    import s81_svc_idx_fit as idx
+    pf = c.ROOT / "physical/die_plan/s81/bind/source_modules/portfix178"
+    for kind, mod, files in (("rg3", "dsdv_idx_rg3", ["/x/rtl/dsdv_idx_rg2.sv", str(pf / "dsdv_idx_rg3.sv")]),
+                             ("nq", "dsdv_idx_rg3_nq", ["/x/rtl/dsdv_idx_rg2.sv", str(pf / "dsdv_idx_rg3_nq.sv"),
+                                                        str(pf / "dsdv_idx_rg3_nq_native.sv")])):
+        line = ("    %s #(.DQR(24), .EL(140), .IH(0), .IQD(512), .KR(0), .LFD(256), .MUT(0), .PR(1), .SQD(256), "
+                ".SRAM_MACRO(1'b1)) u_u_irg_07 (\n" % mod)
+        s2, kids, macros, rep = c.idx_fit("module b;\n" + line + "    );\nendmodule\n", files)
+        assert rep["kind"] == kind and rep["renamed"] == 1 and macros == idx.MACROS_EL140
+        assert "ot_sram_1r1w_128x23_m1_r0c0" not in macros and sum(macros.values()) == 13
+        with pytest.raises(ValueError, match="EL 140 with PR 0"):
+            c.idx_fit("module b;\n" + line.replace(".PR(1), ", "") + "    );\nendmodule\n", files)
+    assert ".WORDS(EL + KR - 1 < 128 ? 128 : 1024), .BITS(MW + 1)) u_mq" in idx.fit_source((pf / "dsdv_idx_rg3.sv").read_text())
 
 
 def test_rebase_source_renames_tokens_and_refuses_unknown():
