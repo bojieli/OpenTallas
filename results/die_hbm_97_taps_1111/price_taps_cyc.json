@@ -1,0 +1,89 @@
+{
+ "basis": "DIE-HBM-97/HBM-TAPS 11-11: S2 (TOK-13d DS-native) price of the two +1 pin-cycle cores, same model and harness as\ntools/token_pass/hbm_price_d44t.py (base 576702.4178 asserted).  Reference = A1 row + the folded compiler_core_delta\nS2 extras of plan_p11t (SU +4, IDX +2, SFU +4, COLL_XING +1); new = reference + SU +1 (lane_exp_x inputs, max lane leg,\nbound = expected) + IDX +1 (s3_q inputs, serial IDX chain).  Separately each.  ESTIMATE, DO_NOT_COUNT.\nRun at a full repo root: PYTHONPATH=src python3 price_taps_cyc.py OUT.json",
+ "base_cycles": 576702.4178468838,
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "rows": [
+  {
+   "case": "ref_p11t_folded",
+   "delta": {},
+   "extra": {
+    "SU": 7,
+    "IDX": 40,
+    "SM": 1,
+    "COLL": 1,
+    "FUSED": 0
+   },
+   "sfu": 172,
+   "cycles": 661049.98,
+   "tok_s": 1662.8,
+   "d_cycles_vs_ref": 0.0,
+   "pct_vs_ref": 0.0
+  },
+  {
+   "case": "expx_SU+1",
+   "delta": {
+    "SU": 1
+   },
+   "extra": {
+    "SU": 8,
+    "IDX": 40,
+    "SM": 1,
+    "COLL": 1,
+    "FUSED": 0
+   },
+   "sfu": 172,
+   "cycles": 662087.98,
+   "tok_s": 1660.19,
+   "d_cycles_vs_ref": 1038.0,
+   "pct_vs_ref": -0.1568
+  },
+  {
+   "case": "s3q_IDX+1",
+   "delta": {
+    "IDX": 1
+   },
+   "extra": {
+    "SU": 7,
+    "IDX": 41,
+    "SM": 1,
+    "COLL": 1,
+    "FUSED": 0
+   },
+   "sfu": 172,
+   "cycles": 661097.98,
+   "tok_s": 1662.68,
+   "d_cycles_vs_ref": 48.0,
+   "pct_vs_ref": -0.0073
+  },
+  {
+   "case": "both",
+   "delta": {
+    "SU": 1,
+    "IDX": 1
+   },
+   "extra": {
+    "SU": 8,
+    "IDX": 41,
+    "SM": 1,
+    "COLL": 1,
+    "FUSED": 0
+   },
+   "sfu": 172,
+   "cycles": 662135.98,
+   "tok_s": 1660.07,
+   "d_cycles_vs_ref": 1086.0,
+   "pct_vs_ref": -0.164
+  }
+ ]
+}

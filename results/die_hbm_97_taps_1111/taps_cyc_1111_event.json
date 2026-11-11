@@ -1,0 +1,1533 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "hbm-taps-cycles-1111",
+ "by": "DIE-HBM-97/HBM-TAPS",
+ "do_not_count": true,
+ "ruling": "COORD 2026-11-10 21:01 RULING (3) + DIE-HBM-97 brief: per-core tap table from lanes/DIE-RECHECK-TAPS.tsv and +1 pin cycles on su_pg_lane_exp_x / hidx_s3_q in the next HBM event after ftres+PGR",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_ftres_pgr/die_plan.json",
+ "base_sha256": "8955a4efd6351a63ad1a1f737f43c5743bd7fd059c03ad570df1f7f7f6981a93",
+ "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+ "plan_sha256": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
+ "tool": "mk_plan_taps_cyc.py",
+ "tool_sha256": "28120ddf61f905ef8a974b7085b0d6de5e5583e453e9df7b735af496a2623d95",
+ "inputs": {
+  "DIE-RECHECK-TAPS.tsv": "26d6663607007ff6810da631cb4c80f641759f3e14c33df06be62dc0ff1ee0c6",
+  "expx_face_shell.json": "054c68213a9975fab623e92ba60d5adb1575c03598dd37742eea9db822bf9934",
+  "expx_fshell.sv": "b602ca687f83bf5f2778f6230a69ceee723148bd0538516a1ca2cc7c2a51f2b2",
+  "expx_signoff.json": "ab88a15fbab4d8e965c7b17c3d9bde84b4a413eabbac3ce2f4d1fdc4ba08825c",
+  "s3q_face_shell.json": "634291a7e6cdd4fb36e0c8679b279e21988ba616085467d67c22bc8ff74a7aa1",
+  "s3q_fshell.sv": "8d9d88c9b45c96415e3a60bf4e46920df282b16f5c7887fb41167469716acec2",
+  "s3q_signoff.json": "090ae4600548b5467c523ff719da2e6461595da7471170973c5f8f23d3416063"
+ },
+ "taps": [
+  {
+   "module": "ot_q2nf_rest",
+   "design": "ot_q2nf_rest split kit_bd2 (vG2 row select on bd half)",
+   "label": "NEAR-CLOSE",
+   "view": "epyc7:/srv/opentallas-scratch2/claude/hbm-q2nf-rf/kit_bd2/signoff/signoff.json",
+   "tt": 599.4,
+   "ff": 474.8,
+   "e_tt": 349.4,
+   "early_tap_ps": 349.4,
+   "taps": 1,
+   "types": [
+    "q_hub_ne"
+   ],
+   "before": [
+    [
+     250.0,
+     202.5,
+     "plan tap note: rly offset; replaces ['u_hb_coll_Q_body_n2']; native view clock pin(s) ['clk_control', 'cl"
+    ]
+   ],
+   "note": "NEAR-CLOSE split kit_bd2 (the only measured ot_q2nf_rest view)"
+  },
+  {
+   "module": "ot_hgi_sfu_opsb_output",
+   "design": "ot_hgi_sfu_opsb_output",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch2/claude/hbm-cores-b/opsb_PS2f_eco1/i1/resign_gd/signoff/signoff.json",
+   "tt": 499.6,
+   "ff": 409.9,
+   "e_tt": 249.6,
+   "early_tap_ps": 249.6,
+   "taps": 2,
+   "types": [
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "before": [
+    [
+     250.0,
+     202.5,
+     "plan tap note: rly offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until "
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "design": "ot_hfd_coll_q3_vm_core",
+   "label": "SIGNED",
+   "view": "epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/q3vm_vF_eco1/i1/resign_gq/signoff/signoff.json",
+   "tt": 486.2,
+   "ff": 392.4,
+   "e_tt": 236.2,
+   "early_tap_ps": 236.2,
+   "taps": 1,
+   "types": [
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     250.0,
+     202.5,
+     "plan tap note: N/M5 -> E/M4 at the as_il partner y; core clock entry [164.16, 358.56] -> [164.16, 501.12]"
+    ]
+   ],
+   "note": "SIGNED view used; NEAR-CLOSE vL repeater pitch 484.4/388.1 is 1.8 ps lower"
+  },
+  {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "design": "ot_hbm_idx_rootctl_static_am",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/hbm-open-a/rootctl_E_so/signoff/signoff.json",
+   "tt": 368.6,
+   "ff": 293.6,
+   "e_tt": 118.6,
+   "early_tap_ps": 118.6,
+   "taps": 1,
+   "types": [
+    "root"
+   ],
+   "before": [
+    [
+     754.0,
+     608.0,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": "SIGNED view rootctl_E_so used; NEAR-CLOSE e1 ECO2 461.9/370.1 replaces it only if it becomes the counted view"
+  },
+  {
+   "module": "ot_hbm_su_pg_lane1p_core",
+   "design": "ot_hbm_su_pg_lane1p_core L1P-HS (D2L + HB4 pad per zero-logic hop, COORD structural form)",
+   "label": "NEAR-CLOSE",
+   "view": "epyc8:/srv/opentallas-scratch2/claude/hbm-collect-1/l1phs/ot_hbm_su_pg_lane1p_core_l1phs1110/signoff/signoff.json",
+   "tt": 409.4,
+   "ff": 322.2,
+   "e_tt": 159.4,
+   "early_tap_ps": 159.4,
+   "taps": 64,
+   "types": [
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1"
+   ],
+   "before": [
+    [
+     309.6,
+     250.8,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 276.5 um (core 440.64 x 112.32); FF = 0.81 x TT"
+    ]
+   ],
+   "note": "L1P-HS (HBM-COLLECT-1 READY-COUNT 11-10 17:52, the counted form); D2L 421.6/332.9 not used"
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "design": "ot_hbm_hc_bank128_pair_first_core",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch2/claude/die-hbm-74/resign/b128h1/signoff/signoff.json",
+   "tt": 404.8,
+   "ff": 323.6,
+   "e_tt": 154.8,
+   "early_tap_ps": 154.8,
+   "taps": 16,
+   "types": [
+    "q_b000",
+    "q_b000__physical_v1"
+   ],
+   "before": [
+    [
+     295.7,
+     239.5,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 259.2 um (core 250.56 x 267.84); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_pg_lane1_core",
+   "design": "ot_hbm_su_pg_lane1_core",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_lane1_core__flow-20261106-o-hbm__3b717c4b/signoff/signoff.json",
+   "tt": 404.6,
+   "ff": 321.1,
+   "e_tt": 154.6,
+   "early_tap_ps": 154.6,
+   "taps": 128,
+   "types": [
+    "q_su20",
+    "q_su20__physical_v1",
+    "q_su21",
+    "q_su21__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_su31",
+    "q_su31__physical_v1"
+   ],
+   "before": [
+    [
+     288.7,
+     233.8,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 250.6 um (core 190.08 x 311.04); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_q2nf_qout",
+   "design": "ot_q2nf_qout",
+   "label": "SIGNED",
+   "view": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-open-0222/qout_resign_fa_i2/signoff/signoff.json",
+   "tt": 391.5,
+   "ff": 315.5,
+   "e_tt": 141.5,
+   "early_tap_ps": 141.5,
+   "taps": 1,
+   "types": [
+    "q_hub_ne"
+   ],
+   "before": [
+    [
+     250.0,
+     202.5,
+     "plan tap note: rly offset; replaces ['u_hb_coll_Q_body_n2']; native view clock pin(s) ['clk_control', 'cl"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "hfd_ep_static",
+   "design": "hfd_ep_static",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hfd_ep_static__flow-20261106-cr-hbm__57373ed8/signoff/signoff.json",
+   "tt": 384.4,
+   "ff": 304.6,
+   "e_tt": 134.4,
+   "early_tap_ps": 134.4,
+   "taps": 4,
+   "types": [
+    "NE_io",
+    "q_spb0",
+    "q_spb0__physical_v1",
+    "vsN0"
+   ],
+   "before": [
+    [
+     435.0,
+     352.0,
+     "plan tap note: in-register TT 411.95/FF 333.43 (placement RC) + GRT ~25 -> core insertion 435/352, tol 40"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_accel_smh_xs",
+   "design": "ot_hbm_accel_smh_xs",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/hbm-collect-1/kfx6c/xs_mw_ecohm/i1/signoff/signoff.json",
+   "tt": 376.5,
+   "ff": 300.1,
+   "e_tt": 126.5,
+   "early_tap_ps": 126.5,
+   "taps": 128,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "before": [
+    [
+     288.7,
+     233.8,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 250.6 um (core 250.56 x 250.56); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "design": "ot_hgi_sm_xload_cl2_bfqg",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/ss29/resign/bfqg_k/signoff/signoff.json",
+   "tt": 370.1,
+   "ff": 294.5,
+   "e_tt": 120.1,
+   "early_tap_ps": 120.1,
+   "taps": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     212.8,
+     174.4,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "design": "ot_hbm_su_static_sfustore_hw",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch2/claude/ss25/resign/sfustore_b/signoff/signoff.json",
+   "tt": 364.0,
+   "ff": 298.0,
+   "e_tt": 114.0,
+   "early_tap_ps": 114.0,
+   "taps": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     354.0,
+     289.3,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_ctlx",
+   "design": "ot_hgi_sm_xload_cl2_ctlx",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch2/claude/ss29/resign/ctlx2_k/signoff/signoff.json",
+   "tt": 358.2,
+   "ff": 292.4,
+   "e_tt": 108.2,
+   "early_tap_ps": 108.2,
+   "taps": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     437.3,
+     358.7,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_svgr_bk",
+   "design": "ot_svgr_bk",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json",
+   "tt": 350.5,
+   "ff": 279.6,
+   "e_tt": 100.5,
+   "early_tap_ps": 100.5,
+   "taps": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     274.8,
+     222.6,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 233.3 um (core 259.2 x 207.36); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "design": "ot_hbm_host_cp_rxs",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json",
+   "tt": 350.0,
+   "ff": 278.3,
+   "e_tt": 100.0,
+   "early_tap_ps": 100.0,
+   "taps": 1,
+   "types": [
+    "root"
+   ],
+   "before": [
+    [
+     479.9,
+     390.3,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "design": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_sm_vm_wr_q_t_lanes4__flow-20261106-cr-hbm__11685eb6/signoff/signoff.json",
+   "tt": 336.9,
+   "ff": 272.9,
+   "e_tt": 86.9,
+   "early_tap_ps": 86.9,
+   "taps": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     132.1,
+     108.5,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_svgr_own",
+   "design": "ot_svgr_own",
+   "label": "SIGNED",
+   "view": "epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/own_RF4T_eco1k/i1/resign_hm/signoff/signoff.json",
+   "tt": 334.5,
+   "ff": 267.3,
+   "e_tt": 84.5,
+   "early_tap_ps": 84.5,
+   "taps": 8,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     313.1,
+     253.6,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 280.8 um (core 129.6 x 432); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_accel_smh_pt_e",
+   "design": "ot_hbm_accel_smh_pt_e",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/hbm-collect-1/smk/pt_e/so_ho/signoff/signoff.json",
+   "tt": 332.7,
+   "ff": 264.9,
+   "e_tt": 82.7,
+   "early_tap_ps": 82.7,
+   "taps": 64,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "before": [
+    [
+     250.0,
+     202.5,
+     "plan tap note: SM-ASBUILT-1108: plan centre clock entry of the as-built core (12.8a, clock_entries.json)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "design": "ot_hbm_su_static_cxport_ij_q",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json",
+   "tt": 329.9,
+   "ff": 262.4,
+   "e_tt": 79.9,
+   "early_tap_ps": 79.9,
+   "taps": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     305.4,
+     252.2,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_pcol_l",
+   "design": "ot_hbm_su_pcol_l",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json",
+   "tt": 326.2,
+   "ff": 267.7,
+   "e_tt": 76.2,
+   "early_tap_ps": 76.2,
+   "taps": 12,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     361.0,
+     292.4,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 340.2 um (core 257.04 x 423.36); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "design": "ot_hbm_svc_sm_xcal_rel_t",
+   "label": "SIGNED",
+   "view": "intel2:/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json",
+   "tt": 325.1,
+   "ff": 263.0,
+   "e_tt": 75.1,
+   "early_tap_ps": 75.1,
+   "taps": 8,
+   "types": [
+    "q_spb2",
+    "q_spb2__physical_v1",
+    "q_spt0",
+    "q_spt0__physical_v1"
+   ],
+   "before": [
+    [
+     527.0,
+     426.9,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: measured view ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c (core_insertion_b2l.json)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_pcol_s",
+   "design": "ot_hbm_su_pcol_s",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json",
+   "tt": 323.6,
+   "ff": 263.7,
+   "e_tt": 73.6,
+   "early_tap_ps": 73.6,
+   "taps": 28,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     270.5,
+     219.1,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 227.9 um (core 118.8 x 336.96); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_su_pg_lane_exp_x_core",
+   "design": "ot_hbm_su_pg_lane_exp_x_core",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json",
+   "tt": 320.8,
+   "ff": 259.0,
+   "e_tt": 70.8,
+   "early_tap_ps": 70.8,
+   "taps": 64,
+   "types": [
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1"
+   ],
+   "before": [
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp1']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp10']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp11']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp12']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp13']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp14']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp2']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp3']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp4']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp5']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp6']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp7']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp8']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp9']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q0_lane_exp_l']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp1']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp10']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp11']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp12']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp13']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp14']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp2']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp3']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp4']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp5']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp6']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp7']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp8']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp9']; native view clock pin(s) ['clk_bank', 'clk_ban | expx328_1107"
+    ],
+    [
+     295.98,
+     243.06,
+     "plan tap note: laces ['u_su_Q1_lane_exp_l']; native view clock pin(s) ['clk_bank', 'clk_ba | expx328_1107"
+    ],
+    [
+     299.2,
+     242.4,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 263.5 um (core 319.68 x 207.36); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "design": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/hbm-hard-9/h9b_resign/so_gj/signoff/signoff.json",
+   "tt": 319.5,
+   "ff": 250.3,
+   "e_tt": 69.5,
+   "early_tap_ps": 69.5,
+   "taps": 32,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     455.4,
+     363.2,
+     "plan tap note: 3: snapped to 8.64 lattice by (+4.32,-4.32) (G0C hard_cores); p15 endpoints/tap translated"
+    ],
+    [
+     455.4,
+     363.2,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hfd_coll_q3_qcol4",
+   "design": "ot_hfd_coll_q3_qcol4",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json",
+   "tt": 309.6,
+   "ff": 250.3,
+   "e_tt": 59.6,
+   "early_tap_ps": 59.6,
+   "taps": 4,
+   "types": [
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     347.9,
+     281.8,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 324.0 um (core 578.88 x 69.12); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_link",
+   "design": "ot_hfd_coll_q3_edge_link",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hfd_coll_q3_edge_link__flow-20261106-dm-hbm__a0b2e7ee/signoff/signoff.json",
+   "tt": 307.0,
+   "ff": 248.7,
+   "e_tt": 57.0,
+   "early_tap_ps": 57.0,
+   "taps": 3,
+   "types": [
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     334.0,
+     270.5,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 306.7 um (core 276.48 x 336.96); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "design": "ot_hnx_idxn_keybuf_slice",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json",
+   "tt": 306.8,
+   "ff": 246.4,
+   "e_tt": 56.8,
+   "early_tap_ps": 56.8,
+   "taps": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     302.7,
+     245.2,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 267.8 um (core 241.92 x 293.76); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "design": "ot_hgi_coll_inj_idx_join_rg",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e2_resign_dq/signoff/signoff.json",
+   "tt": 302.4,
+   "ff": 239.9,
+   "e_tt": 52.4,
+   "early_tap_ps": 52.4,
+   "taps": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     244.8,
+     201.6,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core_fr",
+   "design": "ot_hgi_sfu_split3_lane_core_fr",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch2/claude/die-hbm-82-b128/resign/fr_dc/signoff/signoff.json",
+   "tt": 299.4,
+   "ff": 237.1,
+   "e_tt": 49.4,
+   "early_tap_ps": 49.4,
+   "taps": 32,
+   "types": [
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112",
+    "q_b112__physical_v1",
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "before": [
+    [
+     274.8,
+     222.6,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 233.3 um (core 120.96 x 345.6); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hidx_s3_q",
+   "design": "ot_hidx_s3_q",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/die-hbm-92-open/s3_eco_resign_fg/signoff/signoff.json",
+   "tt": 295.4,
+   "ff": 243.6,
+   "e_tt": 45.4,
+   "early_tap_ps": 45.4,
+   "taps": 4,
+   "types": [
+    "root"
+   ],
+   "before": [
+    [
+     278.3,
+     225.4,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 237.6 um (core 259.2 x 216); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "design": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr/signoff/signoff.json",
+   "tt": 294.8,
+   "ff": 230.6,
+   "e_tt": 44.8,
+   "early_tap_ps": 44.8,
+   "taps": 2,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     274.8,
+     222.6,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 233.3 um (core 233.28 x 233.28); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "design": "ot_hbm_svc_vmdel_lane_n",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/ss29/resign/vm8_k/signoff/signoff.json",
+   "tt": 293.8,
+   "ff": 226.7,
+   "e_tt": 43.8,
+   "early_tap_ps": 43.8,
+   "taps": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "before": [
+    [
+     280.7,
+     236.2,
+     "plan tap note: HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core_ex",
+   "design": "ot_hgi_sfu_split3_lane_core_ex",
+   "label": "SIGNED",
+   "view": "epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json",
+   "tt": 293.7,
+   "ff": 237.4,
+   "e_tt": 43.7,
+   "early_tap_ps": 43.7,
+   "taps": 32,
+   "types": [
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112",
+    "q_b112__physical_v1",
+    "q_b113",
+    "q_b113__physical_v1"
+   ],
+   "before": [
+    [
+     264.4,
+     214.2,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 220.3 um (core 95.04 x 345.6); FF = 0.81 x TT"
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "design": "ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50",
+   "label": "SIGNED",
+   "view": "epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json",
+   "tt": 291.6,
+   "ff": 234.5,
+   "e_tt": 41.6,
+   "early_tap_ps": 41.6,
+   "taps": 112,
+   "types": [
+    "q_b001",
+    "q_b001__physical_v1",
+    "q_b002",
+    "q_b002__physical_v1",
+    "q_b003",
+    "q_b003__physical_v1",
+    "q_b010",
+    "q_b010__physical_v1",
+    "q_b011",
+    "q_b011__physical_v1",
+    "q_b012",
+    "q_b012__physical_v1",
+    "q_b013",
+    "q_b013__physical_v1"
+   ],
+   "before": [
+    [
+     295.7,
+     239.5,
+     "PLAN-GEN-RULES-1 (OWNER 2026-11-10) rule A: 12.9d core insertion model, centre entry L_max 259.2 um (core 250.56 x 267.84); FF = 0.81 x TT"
+    ]
+   ],
+   "note": "two SIGNED pin variants 291.6/234.5 (10ac9d74) and 290.1/234.1 (7eaeff6b): one value per module (core_io_insertion), the larger one; spread 1.5 ps"
+  },
+  {
+   "type": "q_mca",
+   "design": "q_mca",
+   "label": "SIGNED",
+   "view": "intel1:/srv/opentallas-scratch2/claude/hbm-cores-b/qmca_vSR3_eco1/i1/resign_hm/signoff/signoff.json",
+   "tt": 335.7,
+   "ff": 259.6,
+   "e_tt": 85.7,
+   "early_tap_ps": 85.7,
+   "before": [
+    250,
+    null
+   ]
+  }
+ ],
+ "kept": {
+  "vsN4": "form C insertion 380 (plan form, DIE-HBM-97/VSN4 basis) kept; the TSV row is form B (362.1/284.6), a different form, not the plan's kit"
+ },
+ "listed": {
+  "ot_hfd_coll_q3_body_ctl q3bc_CF2 build": "early tap 454.3 > T/2 416.5: Rule A guard (a tap moved by more than half a cycle changes the related edge) -> die-owner form, not planned",
+  "ot_smh_static_front_w SF-SPLIT W half (COORD form b)": "SF-SPLIT W half is not a core of this plan (plan has ot_smh_static_front, Rule A listed multi-tree): no plan tap"
+ },
+ "affected_types": [
+  "NE_io",
+  "q_b000",
+  "q_b000__physical_v1",
+  "q_b001",
+  "q_b001__physical_v1",
+  "q_b002",
+  "q_b002__physical_v1",
+  "q_b003",
+  "q_b003__physical_v1",
+  "q_b010",
+  "q_b010__physical_v1",
+  "q_b011",
+  "q_b011__physical_v1",
+  "q_b012",
+  "q_b012__physical_v1",
+  "q_b013",
+  "q_b013__physical_v1",
+  "q_b110",
+  "q_b110__physical_v1",
+  "q_b111",
+  "q_b111__physical_v1",
+  "q_b112",
+  "q_b112__physical_v1",
+  "q_b113",
+  "q_b113__physical_v1",
+  "q_hub_ne",
+  "q_hub_nw",
+  "q_mca",
+  "q_sm0",
+  "q_sm1",
+  "q_sm2",
+  "q_sm3",
+  "q_spb0",
+  "q_spb0__physical_v1",
+  "q_spb2",
+  "q_spb2__physical_v1",
+  "q_spt0",
+  "q_spt0__physical_v1",
+  "q_su00",
+  "q_su00__physical_v1",
+  "q_su01",
+  "q_su01__physical_v1",
+  "q_su10",
+  "q_su10__physical_v1",
+  "q_su11",
+  "q_su11__physical_v1",
+  "q_su20",
+  "q_su20__physical_v1",
+  "q_su21",
+  "q_su21__physical_v1",
+  "q_su30",
+  "q_su30__physical_v1",
+  "q_su31",
+  "q_su31__physical_v1",
+  "root",
+  "vsN0"
+ ],
+ "affected_cores": [
+  "hfd_ep_static",
+  "ot_hbm_accel_smh_pt_e",
+  "ot_hbm_accel_smh_xs",
+  "ot_hbm_hc_bank128_pair_core",
+  "ot_hbm_hc_bank128_pair_first_core",
+  "ot_hbm_host_cp_rxs",
+  "ot_hbm_idx_rootctl_static_am",
+  "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "ot_hbm_su_pcol_l",
+  "ot_hbm_su_pcol_s",
+  "ot_hbm_su_pg_lane1_core",
+  "ot_hbm_su_pg_lane1p_core",
+  "ot_hbm_su_pg_lane_exp_x_core",
+  "ot_hbm_su_static_cxport_ij_q",
+  "ot_hbm_su_static_sfustore_hw",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "ot_hbm_svc_sm_xcal_rel_t",
+  "ot_hbm_svc_vmdel_lane_n",
+  "ot_hfd_coll_q2_hard_v8g__reduce",
+  "ot_hfd_coll_q3_edge_link",
+  "ot_hfd_coll_q3_qcol4",
+  "ot_hfd_coll_q3_vm_core",
+  "ot_hgi_coll_inj_idx_join_rg",
+  "ot_hgi_sfu_opsb_output",
+  "ot_hgi_sfu_split3_lane_core_ex",
+  "ot_hgi_sfu_split3_lane_core_fr",
+  "ot_hgi_sm_xload_cl2_bfqg",
+  "ot_hgi_sm_xload_cl2_ctlx",
+  "ot_hidx_s3_q",
+  "ot_hnx_idxn_keybuf_slice",
+  "ot_q2nf_qout",
+  "ot_q2nf_rest",
+  "ot_svgr_bk",
+  "ot_svgr_own"
+ ],
+ "tap_types": [
+  "q_mca"
+ ],
+ "core_kit_args": {
+  "ot_q2nf_rest": [
+   "--io-tt-ps",
+   "599.4",
+   "--io-ff-ps",
+   "474.8"
+  ],
+  "ot_hgi_sfu_opsb_output": [
+   "--io-tt-ps",
+   "499.6",
+   "--io-ff-ps",
+   "409.9"
+  ],
+  "ot_hfd_coll_q3_vm_core": [
+   "--io-tt-ps",
+   "486.2",
+   "--io-ff-ps",
+   "392.4"
+  ],
+  "ot_hbm_idx_rootctl_static_am": [
+   "--io-tt-ps",
+   "368.6",
+   "--io-ff-ps",
+   "293.6"
+  ],
+  "ot_hbm_su_pg_lane1p_core": [
+   "--io-tt-ps",
+   "409.4",
+   "--io-ff-ps",
+   "322.2"
+  ],
+  "ot_hbm_hc_bank128_pair_first_core": [
+   "--io-tt-ps",
+   "404.8",
+   "--io-ff-ps",
+   "323.6"
+  ],
+  "ot_hbm_su_pg_lane1_core": [
+   "--io-tt-ps",
+   "404.6",
+   "--io-ff-ps",
+   "321.1"
+  ],
+  "ot_q2nf_qout": [
+   "--io-tt-ps",
+   "391.5",
+   "--io-ff-ps",
+   "315.5"
+  ],
+  "hfd_ep_static": [
+   "--io-tt-ps",
+   "384.4",
+   "--io-ff-ps",
+   "304.6"
+  ],
+  "ot_hbm_accel_smh_xs": [
+   "--io-tt-ps",
+   "376.5",
+   "--io-ff-ps",
+   "300.1"
+  ],
+  "ot_hgi_sm_xload_cl2_bfqg": [
+   "--io-tt-ps",
+   "370.1",
+   "--io-ff-ps",
+   "294.5"
+  ],
+  "ot_hbm_su_static_sfustore_hw": [
+   "--io-tt-ps",
+   "364",
+   "--io-ff-ps",
+   "298"
+  ],
+  "ot_hgi_sm_xload_cl2_ctlx": [
+   "--io-tt-ps",
+   "358.2",
+   "--io-ff-ps",
+   "292.4"
+  ],
+  "ot_svgr_bk": [
+   "--io-tt-ps",
+   "350.5",
+   "--io-ff-ps",
+   "279.6"
+  ],
+  "ot_hbm_host_cp_rxs": [
+   "--io-tt-ps",
+   "350",
+   "--io-ff-ps",
+   "278.3"
+  ],
+  "ot_hbm_sm_vm_wr_q_t_lanes4": [
+   "--io-tt-ps",
+   "336.9",
+   "--io-ff-ps",
+   "272.9"
+  ],
+  "ot_svgr_own": [
+   "--io-tt-ps",
+   "334.5",
+   "--io-ff-ps",
+   "267.3"
+  ],
+  "ot_hbm_accel_smh_pt_e": [
+   "--io-tt-ps",
+   "332.7",
+   "--io-ff-ps",
+   "264.9"
+  ],
+  "ot_hbm_su_static_cxport_ij_q": [
+   "--io-tt-ps",
+   "329.9",
+   "--io-ff-ps",
+   "262.4"
+  ],
+  "ot_hbm_su_pcol_l": [
+   "--io-tt-ps",
+   "326.2",
+   "--io-ff-ps",
+   "267.7"
+  ],
+  "ot_hbm_svc_sm_xcal_rel_t": [
+   "--io-tt-ps",
+   "325.1",
+   "--io-ff-ps",
+   "263"
+  ],
+  "ot_hbm_su_pcol_s": [
+   "--io-tt-ps",
+   "323.6",
+   "--io-ff-ps",
+   "263.7"
+  ],
+  "ot_hbm_su_pg_lane_exp_x_core": [
+   "--io-tt-ps",
+   "320.8",
+   "--io-ff-ps",
+   "259",
+   "--face-in-stage",
+   "^(bank_read_addr|bank_read_v|bank_write_addr|bank_write_data|bank_write_v|lane_aibase|lane_aind|lane_bank|lane_ca_ad|lane_ca_imm2|lane_ce_e2|lane_ce_imm1|lane_ci_sfu|lane_cm_imm1|lane_cm_m1|lane_cm_m2|lane_cm_qm|lane_co_dst|lane_co_rnd|lane_cp_imm1|lane_cp_m1|lane_cpair|lane_cs_e1|lane_cs_imm2|lane_cs_sfu|lane_cx_amin|lane_cx_arelu|lane_cx_arnd|lane_cx_cclip|lane_cx_imm3|lane_dst|lane_emit|lane_gsh|lane_i_v|lane_krow|lane_ld|lane_ld_bank|lane_ld_c|lane_ls|lane_lvw|lane_ni|lane_no|lane_o_v|lane_obase|lane_rd_q|lane_side_y|lane_srcs|lane_vb|sx_fault|sx_y_div|sx_y_exp)$=1"
+  ],
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+   "--io-tt-ps",
+   "319.5",
+   "--io-ff-ps",
+   "250.3"
+  ],
+  "ot_hfd_coll_q3_qcol4": [
+   "--io-tt-ps",
+   "309.6",
+   "--io-ff-ps",
+   "250.3"
+  ],
+  "ot_hfd_coll_q3_edge_link": [
+   "--io-tt-ps",
+   "307",
+   "--io-ff-ps",
+   "248.7"
+  ],
+  "ot_hnx_idxn_keybuf_slice": [
+   "--io-tt-ps",
+   "306.8",
+   "--io-ff-ps",
+   "246.4"
+  ],
+  "ot_hgi_coll_inj_idx_join_rg": [
+   "--io-tt-ps",
+   "302.4",
+   "--io-ff-ps",
+   "239.9"
+  ],
+  "ot_hgi_sfu_split3_lane_core_fr": [
+   "--io-tt-ps",
+   "299.4",
+   "--io-ff-ps",
+   "237.1"
+  ],
+  "ot_hidx_s3_q": [
+   "--io-tt-ps",
+   "295.4",
+   "--io-ff-ps",
+   "243.6",
+   "--face-in-stage",
+   "^(cw|in_line|thr|ties)$=1"
+  ],
+  "ot_hfd_coll_q2_hard_v8g__reduce": [
+   "--io-tt-ps",
+   "294.8",
+   "--io-ff-ps",
+   "230.6"
+  ],
+  "ot_hbm_svc_vmdel_lane_n": [
+   "--io-tt-ps",
+   "293.8",
+   "--io-ff-ps",
+   "226.7"
+  ],
+  "ot_hgi_sfu_split3_lane_core_ex": [
+   "--io-tt-ps",
+   "293.7",
+   "--io-ff-ps",
+   "237.4"
+  ],
+  "ot_hbm_hc_bank128_pair_core": [
+   "--io-tt-ps",
+   "291.6",
+   "--io-ff-ps",
+   "234.5"
+  ]
+ },
+ "pin_cycles": {
+  "ot_hbm_su_pg_lane_exp_x_core": {
+   "record": {
+    "file": "expx_signoff.json",
+    "sha256": "ab88a15fbab4d8e965c7b17c3d9bde84b4a413eabbac3ce2f4d1fdc4ba08825c",
+    "std_min_start": {
+     "port": 1678.0,
+     "other": 0.0,
+     "reg": 0.0,
+     "trunc": 0.0,
+     "err": 0.0,
+     "ports": [
+      "bank_read_addr",
+      "bank_read_v",
+      "bank_rst_n",
+      "bank_write_addr",
+      "bank_write_data",
+      "bank_write_v",
+      "lane_aibase",
+      "lane_aind",
+      "lane_bank",
+      "lane_ca_ad",
+      "lane_ca_imm2",
+      "lane_ce_e2",
+      "lane_ce_imm1",
+      "lane_ci_sfu",
+      "lane_cm_imm1",
+      "lane_cm_m1",
+      "lane_cm_m2",
+      "lane_cm_qm",
+      "lane_co_dst",
+      "lane_co_rnd",
+      "lane_cp_imm1",
+      "lane_cp_m1",
+      "lane_cpair",
+      "lane_cs_e1",
+      "lane_cs_imm2",
+      "lane_cs_sfu",
+      "lane_cx_amin",
+      "lane_cx_arelu",
+      "lane_cx_arnd",
+      "lane_cx_cclip",
+      "lane_cx_imm3",
+      "lane_dst",
+      "lane_emit",
+      "lane_gsh",
+      "lane_i_v",
+      "lane_krow",
+      "lane_lane_id",
+      "lane_ld",
+      "lane_ld_bank",
+      "lane_ld_c",
+      "lane_ls",
+      "lane_lvw",
+      "lane_ni",
+      "lane_no",
+      "lane_o_v",
+      "lane_obase",
+      "lane_rd_q",
+      "lane_rst_n",
+      "lane_side_y",
+      "lane_srcs",
+      "lane_vb",
+      "sx_fault",
+      "sx_y_div",
+      "sx_y_exp"
+     ],
+     "nonport_n": 0.0,
+     "nonport_wns": 0.0
+    },
+    "hold_wns_ff": -167.55,
+    "hold_nviol_ff": 1678.0,
+    "overlay": "applied vclk in_min -40 out_min 0"
+   },
+   "face_shell": {
+    "file": "expx_face_shell.json",
+    "sha256": "054c68213a9975fab623e92ba60d5adb1575c03598dd37742eea9db822bf9934",
+    "in_buses": 52,
+    "in_bits": 1674
+   },
+   "die_hold_ff_nominal_dierecheck": -42.7,
+   "staged_buses": [
+    "bank_read_addr",
+    "bank_read_v",
+    "bank_write_addr",
+    "bank_write_data",
+    "bank_write_v",
+    "lane_aibase",
+    "lane_aind",
+    "lane_bank",
+    "lane_ca_ad",
+    "lane_ca_imm2",
+    "lane_ce_e2",
+    "lane_ce_imm1",
+    "lane_ci_sfu",
+    "lane_cm_imm1",
+    "lane_cm_m1",
+    "lane_cm_m2",
+    "lane_cm_qm",
+    "lane_co_dst",
+    "lane_co_rnd",
+    "lane_cp_imm1",
+    "lane_cp_m1",
+    "lane_cpair",
+    "lane_cs_e1",
+    "lane_cs_imm2",
+    "lane_cs_sfu",
+    "lane_cx_amin",
+    "lane_cx_arelu",
+    "lane_cx_arnd",
+    "lane_cx_cclip",
+    "lane_cx_imm3",
+    "lane_dst",
+    "lane_emit",
+    "lane_gsh",
+    "lane_i_v",
+    "lane_krow",
+    "lane_ld",
+    "lane_ld_bank",
+    "lane_ld_c",
+    "lane_ls",
+    "lane_lvw",
+    "lane_ni",
+    "lane_no",
+    "lane_o_v",
+    "lane_obase",
+    "lane_rd_q",
+    "lane_side_y",
+    "lane_srcs",
+    "lane_vb",
+    "sx_fault",
+    "sx_y_div",
+    "sx_y_exp"
+   ],
+   "staged_bits": 1663,
+   "not_staged": {
+    "bank_rst_n": "clock/reset passthrough (face reset relay / pass-through): not a data stage",
+    "lane_lane_id": "parent-tied ID strap (plan parent_id_straps): constant, no die hold race",
+    "lane_rst_n": "clock/reset passthrough (face reset relay / pass-through): not a data stage"
+   },
+   "kit_arg": [
+    "--face-in-stage",
+    "^(bank_read_addr|bank_read_v|bank_write_addr|bank_write_data|bank_write_v|lane_aibase|lane_aind|lane_bank|lane_ca_ad|lane_ca_imm2|lane_ce_e2|lane_ce_imm1|lane_ci_sfu|lane_cm_imm1|lane_cm_m1|lane_cm_m2|lane_cm_qm|lane_co_dst|lane_co_rnd|lane_cp_imm1|lane_cp_m1|lane_cpair|lane_cs_e1|lane_cs_imm2|lane_cs_sfu|lane_cx_amin|lane_cx_arelu|lane_cx_arnd|lane_cx_cclip|lane_cx_imm3|lane_dst|lane_emit|lane_gsh|lane_i_v|lane_krow|lane_ld|lane_ld_bank|lane_ld_c|lane_ls|lane_lvw|lane_ni|lane_no|lane_o_v|lane_obase|lane_rd_q|lane_side_y|lane_srcs|lane_vb|sx_fault|sx_y_div|sx_y_exp)$=1"
+   ],
+   "in_cycles_after": 2,
+   "out_cycles_after": 1
+  },
+  "ot_hidx_s3_q": {
+   "record": {
+    "file": "s3q_signoff.json",
+    "sha256": "090ae4600548b5467c523ff719da2e6461595da7471170973c5f8f23d3416063",
+    "std_min_start": {
+     "port": 647.0,
+     "other": 0.0,
+     "reg": 0.0,
+     "trunc": 0.0,
+     "err": 0.0,
+     "ports": [
+      "cw",
+      "in_line",
+      "rst_n",
+      "thr",
+      "ties"
+     ],
+     "oport": 0.0,
+     "oports": [],
+     "nonport_n": 0.0,
+     "nonport_wns": 0.0
+    },
+    "hold_wns_ff": -142.3,
+    "hold_nviol_ff": 647.0,
+    "overlay": "applied vclk in_min -40 out_min 0"
+   },
+   "face_shell": {
+    "file": "s3q_face_shell.json",
+    "sha256": "634291a7e6cdd4fb36e0c8679b279e21988ba616085467d67c22bc8ff74a7aa1",
+    "in_buses": 4,
+    "in_bits": 636
+   },
+   "die_hold_ff_nominal_dierecheck": -39.0,
+   "staged_buses": [
+    "cw",
+    "in_line",
+    "thr",
+    "ties"
+   ],
+   "staged_bits": 636,
+   "not_staged": {
+    "rst_n": "clock/reset passthrough (face reset relay / pass-through): not a data stage"
+   },
+   "kit_arg": [
+    "--face-in-stage",
+    "^(cw|in_line|thr|ties)$=1"
+   ],
+   "in_cycles_after": 2,
+   "out_cycles_after": 1
+  }
+ },
+ "rtl_change": "core face shell only (two cycle cores, kit-generated)",
+ "die_plan_change": "clock insertion keys only (core taps + q_mca type)",
+ "data_cycles": 0,
+ "serialization": "json indent=1 newline (base style)"
+}

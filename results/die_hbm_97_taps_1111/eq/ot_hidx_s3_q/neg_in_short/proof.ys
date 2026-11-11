@@ -1,0 +1,18 @@
+
+read_verilog -sv /srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_in_short/cells.sv /srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_in_short/stub.sv /srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_in_short/gold.sv /srv/opentallas-scratch2/claude/die-hbm-97-taps/eq/ot_hidx_s3_q/neg_in_short/gate.sv
+hierarchy -check
+proc
+setattr -mod -unset keep_hierarchy *
+flatten gold_top
+flatten gate_top
+select -module gold_top
+expose -evert t:*__fcore
+select -clear
+select -module gate_top
+expose -evert t:*__fcore
+select -clear
+opt_clean
+async2sync
+miter -equiv -flatten -make_assert -ignore_gold_x gold_top gate_top miter
+hierarchy -top miter
+sat -verify -tempinduct -prove-asserts -set-init-zero -seq 1 -maxsteps 12 -show-ports miter
