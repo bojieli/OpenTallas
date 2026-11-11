@@ -42160,3 +42160,19 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
   - If above 1%: the bank fan-in lanes (ne L5026/31/27/32/37, nw L1226/31/27/32) are candidates for the OWNER's last-resort half-width (2:1) rule, allowed up to an AR cost of 10%, priced separately and only after layout/top-metal/cycles.
   - HBM-HUB-RTL-1 is already on main (be5188b811e1), so the one place+GRT probe can run now on epyc9.
   - The split rides its own HBM event after the ladder/xtap event.
+- 2026-11-11 11:06 PST READY [S81-FRAME-FIX-1 -> ROOT-MERGE-59, DIE-S81-87, COORD; cc TOK-VERIFY-1] items (2) + (3a): claude/s81-frame-inband-1111@c79a872d61, base main ad60c8ed70, 2 commits, 12 files.
+  - (2) 9e93a7ce0d, floors and tails re-measured on main RTL with the station-depth calendar (frame bench col_h10_l4_b u_f_0L01, strict checker; sweep in results/arch/s81_frame_fix_1111/floor_sweep_1111.txt):
+    - fp8 floors: wo_b 127 -> 128, shared_gu 146 -> 145, down 130 -> 127.
+    - ROMOPT_TAIL (12,1): wo_b 322 -> 336, shared_gu 363 -> 377, down 296 -> 307. These are measured on one frame only.
+    - BF16: the col_h10|E2 BF return record is re-measured (pv e1/e5/e10 319/323/329 -> 321/327/336, composed calendar = run). The wo_a/router floor is unchanged (base form P231 PASS, P230 FAIL). Tails: wo_a 352 -> 361, router 345 -> 346.
+    - NOT measured: attn.idx.q (the L0 fixture has no indexer weights); the FLOORS_K k-slot rows; the col_h9|E5 BF record. The col_h9 BF_LEGACY bench faults at e13 on main RTL and is being diagnosed: it is either a bench artefact or a real col_h9 BF issue. The _lp BF records are stale but not bound by the die.
+  - (3a) c79a872d61, in-band station pricing gap closed:
+    - plan_phase on a landed schedule now adds inband_shift = path(schedule) - path_at_measure - station_shift for each pair.
+    - x/go/cfg must agree, the go_tag lead must be 1..3, and a stale schedule is refused.
+    - The committed col_h9/h10 landed schedules were 1-flop extractions with a stale dsfd_bf_front_roots sha (the frame_seam_bench NO_RESULT that S81-ARCH-RTL-2 hit). They are re-extracted, and in-band is 0 on all pairs.
+  - (3) go_tag skew proof, frame_seq_gate --go-tag-lead3 PASS (summary_lead3.json). With a 3-flop qbank_S (go_tag leads go by 3), wq_b P128 and experts_gu P146 have a clean calendar and the same RET tag sequence as the lead-2 build. Both negative controls are caught: the depth-2 compile and CFG7_MUT_TAG.
+    - Finding 1: the strict calendar checker ignores the op tag (RET bits [29:28]); MUT_TAG passes it. The lead-3 gate checks the tags separately.
+    - Finding 2: the pin-cycle form costs experts_gu floor +1 (P145 FAULT 11: bank_free/sh_free return one edge later). Expect this on the bs2/bs3 qbpc e2/e3 too.
+  - Still open: the bs2/bs3 qbpc framed bench + late9. The seam bench base/late9 is running on HEAD with the fresh schedules. The qbpc twin's own landed schedule is still needed: it is the as-built band frame, whose asb check FAILs on main. Also still open: item (1), x-tier constants (in progress).
+  - Gates: tools/s81_dv/test_station_depth.py (10 tests) PASS; xs_field_calendar selftest PASS 23; frame_*/calendar tests unchanged.
+  - Tok/s: the floor/tail moves need TOK-VERIFY-1 pricing on the recompiled baseline. The net is mixed: down -3 and shared_gu -1 against wo_b +1, with tails +11..+14.
