@@ -1,0 +1,238 @@
+{
+  "schema": "opentallas.s81.explicit_pin_edge_delta.v1",
+  "baseline_source": "a8a7f27eb0",
+  "scope": "S81 plan-pin event DS85-LLPINS 2026-11-11 (DIE-S81-85 ruling): 2 plan centres per LL node onto their existing outline-face PORT RECT; LEF unchanged",
+  "cores": [
+    {
+      "module": "dsfd_node_LLd",
+      "outline_um": [
+        43.2,
+        77.76
+      ],
+      "base_pins_sha256": "39287e9076c1c6c7364197145171a2157b8bbe6a670349aa8445fb5f2be34a55",
+      "base_lef_sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8",
+      "pins": [
+        {
+          "pin": "fo[0]",
+          "layer": "M5",
+          "old_center_um": [
+            21.564,
+            1.0765
+          ],
+          "new_center_um": [
+            21.564,
+            0.042
+          ],
+          "existing_port_rects_um": [
+            [
+              21.552,
+              0.0,
+              21.576,
+              0.084
+            ],
+            [
+              21.552,
+              0.016,
+              21.576,
+              2.137
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            21.552,
+            0.0,
+            21.576,
+            0.084
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M5 face pin (0.024 x 0.084, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        },
+        {
+          "pin": "rst_n[0]",
+          "layer": "M4",
+          "old_center_um": [
+            42.6725,
+            39.372
+          ],
+          "new_center_um": [
+            43.158,
+            39.372
+          ],
+          "existing_port_rects_um": [
+            [
+              43.116,
+              39.36,
+              43.2,
+              39.384
+            ],
+            [
+              42.181,
+              39.36,
+              43.164,
+              39.384
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            43.116,
+            39.36,
+            43.2,
+            39.384
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M4 face pin (0.084 x 0.024, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        }
+      ]
+    },
+    {
+      "module": "dsfd_node_LLfd",
+      "outline_um": [
+        43.2,
+        77.76
+      ],
+      "base_pins_sha256": "a373de8088af831d1992fc87b6ac2a349e8c178192eb09492535b1c119d9497f",
+      "base_lef_sha256": "6dd0ecaebebfc88aa62753c7e54a46cda8306e69227d54c7fb351cbcc43a1dca",
+      "pins": [
+        {
+          "pin": "fi[0]",
+          "layer": "M5",
+          "old_center_um": [
+            21.564,
+            76.6675
+          ],
+          "new_center_um": [
+            21.564,
+            77.718
+          ],
+          "existing_port_rects_um": [
+            [
+              21.552,
+              77.676,
+              21.576,
+              77.76
+            ],
+            [
+              21.552,
+              75.623,
+              21.576,
+              77.712
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            21.552,
+            77.676,
+            21.576,
+            77.76
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M5 face pin (0.024 x 0.084, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        },
+        {
+          "pin": "fo[0]",
+          "layer": "M5",
+          "old_center_um": [
+            21.564,
+            1.0765
+          ],
+          "new_center_um": [
+            21.564,
+            0.042
+          ],
+          "existing_port_rects_um": [
+            [
+              21.552,
+              0.0,
+              21.576,
+              0.084
+            ],
+            [
+              21.552,
+              0.016,
+              21.576,
+              2.137
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            21.552,
+            0.0,
+            21.576,
+            0.084
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M5 face pin (0.024 x 0.084, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        }
+      ]
+    },
+    {
+      "module": "dsfd_node_LLfu",
+      "outline_um": [
+        43.2,
+        77.76
+      ],
+      "base_pins_sha256": "07564d7043523a5fa0ecf3c30ddbe266f1e4b1f33ab5b71a99c83671524feaee",
+      "base_lef_sha256": "7c874fd7cae5d56089b626938d9a06d1e43c9d67dac4160454d397f065847d2f",
+      "pins": [
+        {
+          "pin": "fi[0]",
+          "layer": "M5",
+          "old_center_um": [
+            21.564,
+            76.6675
+          ],
+          "new_center_um": [
+            21.564,
+            77.718
+          ],
+          "existing_port_rects_um": [
+            [
+              21.552,
+              77.676,
+              21.576,
+              77.76
+            ],
+            [
+              21.552,
+              75.623,
+              21.576,
+              77.712
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            21.552,
+            77.676,
+            21.576,
+            77.76
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M5 face pin (0.024 x 0.084, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        },
+        {
+          "pin": "fo[0]",
+          "layer": "M5",
+          "old_center_um": [
+            21.564,
+            1.0765
+          ],
+          "new_center_um": [
+            21.564,
+            0.042
+          ],
+          "existing_port_rects_um": [
+            [
+              21.552,
+              0.0,
+              21.576,
+              0.084
+            ],
+            [
+              21.552,
+              0.016,
+              21.576,
+              2.137
+            ]
+          ],
+          "selected_existing_edge_rect_um": [
+            21.552,
+            0.0,
+            21.576,
+            0.084
+          ],
+          "note": "old centre = centre of the inset access extension (largest RECT, kit pin_audit wrong_place); new centre = the canonical M5 face pin (0.024 x 0.084, gen_core_kit_legacy RECT) = the existing edge PORT RECT itself"
+        }
+      ]
+    }
+  ]
+}

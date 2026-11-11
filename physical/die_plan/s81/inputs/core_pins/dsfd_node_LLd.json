@@ -1,8 +1,8 @@
 {
 "module": "dsfd_node_LLd",
 "lef": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd.lef",
-"source": "CORE-KS 10-23 from plan LEF @d528c7aa5 (largest non-M1 rect centre); S81-P9 10-23: 1 multi-port pins re-pointed to their on-track access rect",
-"pinhash": "9ea0c64d9fd2",
+"source": "CORE-KS 10-23 from plan LEF @d528c7aa5 (largest non-M1 rect centre); S81-P9 10-23: 1 multi-port pins re-pointed to their on-track access rect; S81 plan event 2026-11-11 DS85-LLPINS (delta_llpins_1111.py): 2 pin centre(s) -> existing outline-face PORT RECT, LEF unchanged",
+"pinhash": "d27f66b89469",
 "pins": [
 {
 "name": "a[0]",
@@ -770,7 +770,7 @@
 "name": "fo[0]",
 "layer": "M5",
 "x": 21.564,
-"y": 1.0765
+"y": 0.042
 },
 {
 "name": "o[0]",
@@ -1171,7 +1171,7 @@
 {
 "name": "rst_n[0]",
 "layer": "M4",
-"x": 42.6725,
+"x": 43.158,
 "y": 39.372
 }
 ]
