@@ -38811,3 +38811,29 @@ Automation: lanes/die-recheck-1/die_recheck_cron.sh (cron 13,43) re-runs the led
   - Branch claude/tok-verify-1-bound-prep-1110 head 1ef0357a56 is unchanged and READY for ROOT-MERGE-57.
 - 11-10 21:16 ROOT-MERGE-57 STATE: head-92-zlp b923c963c8f2 (ff on 13935e) replaces q6 in place; test_kit_zl_hold_pad passes at it. New, built at the end: chargemax 9a08fe7918d1 -> r1 (it contains loadgate 2129acf2 + sealdock cf3519ce, both BLOCKED; I am running the 12 failing fleet tests at r1 now, and if they pass, chargemax lands as the single head carrying all three); rc125 2b9cf93a2729 + wave-ops-1 915bc0b6 -> r2 (kit_wave.py + 2 tests; 7cdfca/06f391 are already in as n5/p1); pingrid 22fb938f7d7a (contains macro-snap a1583449, landed) -> r3 (gen_phys, face_flops.tcl, pin_grid_snap, kit_gen_lint, 2 core-kit gens + tests); arhost bfe6bc47725a -> r4 (auto_resign + test). r2..r4 sparse on epyc8.
 - 11-10 21:18 ROOT-MERGE-57 BLOCKED kw-fix-44-chargemax 9a08fe7918d1 (r1): it carries loadgate 2129acf2 + sealdock, and the same 12 fleet tests fail at r1 (test_ot_heavy_short_pool x3, test_ot_run_load_hold x5, test_ot_run_queue_bal::LoadCap x4). It stays out with loadgate/sealdock until KW-FIX-44 posts a head with those tests updated. r2..r4 continue.
+- 2026-11-10 21:19 PST RESULT [WAVE-OPS-1 -> COORD, KW-FIX-43, KW-FIX-44, HBM-CORES-B, ROOT-MERGE-57] COORD URGENT done. The new HBM wave src is LIVE for new launches, (a)+(b) are deployed, and (a) ran on all 5 dies. DO_NOT_COUNT.
+  (1) HBM rebuild: /srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm, commit aac286936589, at the same path on epyc7, epyc8 and epyc4.
+      - Composition: main c894884b42 (4393753cf0b4 is on main) + the approved overlays. Merged: kw-fix-35-wave-c303a, qc-types-12-sta, kw-fix-35-s81src2, kw-fix-44-macro-grid, kw-fix-44-loadgate. 7 more were already on main; script-inputs was contained.
+      - Attribution, on the live por15c tree:
+        - 97 stale old-git copies take the commit, including recipes.json: 3 -> 20 recipes, ot_hbm_sm_i8w_front and pv_merge present.
+        - 204 files in the commit but absent live are restored, including 9 hbm_arch_cores/sm/asbuilt_1108 RTL. results/ stays sparse.
+        - Carried: 7 live overlays and 140 live-only files.
+        - KEPT LIVE (real live-only lines, not on main or any overlay): gen_core_kit_hbm.py (17 lines, --io-insertion), tools/die_plan/bind.py (32 lines, clock_landings), tools/die_plan/gen_phys.py (38 lines, native_cell_cap/prects_estimate). Owner unknown; ASK the HBM lanes to push them as a branch.
+      - Byte check: all 322,308 files match the expected manifest on all 3 hosts. The live trees are untouched. ARCHIVE-PROTECTED +4 rows.
+      - Superseded: an intermediate tree 20261110hbm (no restore rule). Not used.
+      - Switch: KW-FIX-43 switched dies.hbm src/src_sha/queue_src for NEW launches only (revert keys *_prev_kw43hsrc).
+      - Provenance: aac2869 is on the hub as branch wave-src/20261110hbm2/hbm. The queue flow tag resolves to flow-20261110-kx-hbm (0 watched files differ; the old src was 44 off).
+      - Strict re-bind: queued on epyc8, waiting for 128 GB free; advisory.
+  (2) Class fixes on branch claude/wave-ops-1-srccheck-1110@915bc0b6ceaa (GitHub + hub; merge-tree clean on main; contains planpins + stale/NO-ROW-SOURCE). READY.
+      - Deployed: live since 20:58:54 by KW-FIX-44 (576f49b58fd7, plus its RC125 -> 9127baca35e3).
+      - (a) Pre-gen WAVE-SRC check, ADVISORY: a die with picks logs "FLAGS WAVE-SRC-DRIFT <die>: ... differs from declared <sha> + approved overlays in N file(s)". Source: hub srccheck/<die>.json, written by lanes/wave-ops-1/wave_src_check.py. The line goes silent once dies.<die>.src changes.
+      - (b) core_kit.item_args (e.g. --clock-regions p6_relay/core_clock_regions.json, svgr_top) are item inputs, and core_kit.args are deep inputs. gen_hosts matches <module>__v<sha> core items by their module.
+      - Tests: kit_wave 4/4 new; the rest of the suite is unchanged before/after. wave_src tests 8/8 (stale-copy rule, restore rule, src_check).
+  (3) (a) run on all 5 dies' wave sources (MEASURED 21:00-21:18; mismatch = differs from declared commit + overlays; "stale" = an existing git blob; live-only and absent are reported but not counted):
+      - S81 kw43/src_t51f_pbp_por15c: 178 (stale 173, not in git 5) on epyc7/epyc4/epyc8. Live-only 128. Absent vs declared 142,404 (sparse src).
+      - HEAD kw42/src_head_hp1: 6 (5 / 1) on all 3 hosts.
+      - QC kw43/src_qcsw2_hc0_por15c: 141 (135 / 6) on epyc7/epyc4/epyc2... intel2/epyc8 the same. Absent 590.
+      - KV kw43/src_zb_lr_sf_por15c: 15 (10 / 5).
+      - HBM old por15c: 108 (105 / 3), absent 532. HBM NEW 20261110hbm2: 10, which are the 3 KEPT LIVE files + 7 carried overlays.
+      - Per-file lists: lanes/wave-ops-1/runs/srccheck-20261110-2100/ and srccheck-20261110-2115/.
+      - S81 and QC carry the most stale copies. The same rebuild (stale -> commit, restore absent, keep-live listed) would fix them. It runs for all 5 dies at 02:00 tonight. The switch stays absent until COORD writes SWITCH-OK, or until it is applied per die like HBM.
