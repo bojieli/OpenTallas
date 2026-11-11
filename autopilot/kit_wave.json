@@ -29414,7 +29414,7 @@
     "q_b112__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b113": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
     "q_b113__physical_v1": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
-    "q_b003": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (1): 3 strikes in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
+    "q_b003": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
     "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
     "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)",
     "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key.",
@@ -29444,7 +29444,12 @@
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
-    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)"
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
+    "q_b003__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b012": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b012__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b013": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b013__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class"
    },
    "gen_hosts": [
     "epyc9"
@@ -41558,7 +41563,15 @@
     "epyc8",
     "epyc9"
    ],
-   "prov_require_cands": true
+   "prov_require_cands": true,
+   "route_hold_items": {
+    "q_b003": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b003__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b012": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b012__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b013": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class",
+    "q_b013__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 14:4x, DIE-HBM-100): ladder-reshaped family; q_b003__physical_v1 a2 3_place BAD (fill 0.031, relay_collapse 4601, taps unbalanced); no new launch and no route until DIE-LAYOUT-HBM reports whether the family shares the class"
+   }
   }
  },
  "place_prefer": [
