@@ -4044,6 +4044,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if arm.get("gen_host"):
             sp["gen_host"] = arm["gen_host"]
             sp["place_prefer"] = [arm["gen_host"]] + [h for h in sp.get("place_prefer") or [] if h != arm["gen_host"]]
+            sp["hosts"] = [arm["gen_host"]] + [h for h in sp.get("hosts") or [] if h != arm["gen_host"]]
         sp["gen_env"] = dict(sp.get("gen_env") or {}, OT_GRT_TRANSITION_MODE=arm["mode"])
         sp["grt_arm"] = {"of": arm["of"], "mode": arm["mode"]}
         why = grt_arm_src_check(AP, cfg, sp)
@@ -4353,6 +4354,8 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
             brec = (st.get("items") or {}).get(base)
             if ak in st["items"] or not brec or grt_arm_signed(brec) or counted_now(cfg, st, die, item, blocks[item]):
                 continue
+            if any(fnmatch.fnmatchcase(item, pat) for pat in (d.get("hold_items") or {})):
+                continue                                  # an operator hold holds the arm too
             if load_hold(cfg, die, item, brec.get("parent_item"), core_module(item)):
                 continue
             r = {"item": item, "kind": brec.get("kind") or "type", "parent_item": brec.get("parent_item"),

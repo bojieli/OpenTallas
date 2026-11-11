@@ -106,7 +106,7 @@ class Probe(unittest.TestCase):
             self.assertEqual((a["item"], a["block_sha"], a["attempt"], a["arm"]["of"]), (ITEM, BLK, 4, base))
             sp = json.loads((Path(a["dir"]) / "spec.json").read_text())
             self.assertEqual(sp["gen_env"]["OT_GRT_TRANSITION_MODE"], "off")
-            self.assertEqual((sp["gen_host"], sp["place_prefer"][0]), ("epyc8", "epyc8"))
+            self.assertEqual((sp["gen_host"], sp["place_prefer"][0], sp["hosts"][0]), ("epyc8", "epyc8", "epyc8"))
             self.assertTrue(sp["work"].endswith(f"/items/{ITEM}/attempt_4"))
             self.assertNotEqual(Path(a["dir"]), Path(st["items"][base]["dir"]))
             self.assertIn("grtarm-off", a["dir"].replace("|", "_"))
@@ -160,6 +160,12 @@ class Probe(unittest.TestCase):
             self.assertEqual(KW.grt_arm_launches(ap, cfg(ARM), st, {}, d), 0)
             self.assertEqual(list(st["items"]), [base])
             self.assertTrue(any("GRT-PATCH-1 runner not in this src" in m for m in ap.logs))
+
+    def test_hold_items_hold_the_arm(self):
+        with tempfile.TemporaryDirectory() as d:
+            st, base = state(d)
+            self.assertEqual(KW.grt_arm_launches(AP(d), cfg(ARM, hold_items={"sle_*": "owner hold"}), st, {}, d), 0)
+            self.assertEqual(list(st["items"]), [base])
 
     def test_stop_rule_final_no_retry(self):
         with tempfile.TemporaryDirectory() as d:
