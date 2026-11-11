@@ -29155,7 +29155,9 @@
     "q_b000": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b000__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
-    "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)"
+    "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)"
    },
    "gen_hosts": [
     "epyc8",
