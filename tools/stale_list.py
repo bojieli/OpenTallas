@@ -260,6 +260,46 @@ def write_tsv(stale, path=STALE_TSV):
     os.replace(tmp, path)
 
 
+def read_tsv(path=STALE_TSV):
+    try:
+        return [r for r in csv.DictReader([l for l in open(path) if not l.startswith('#')], delimiter='\t')]
+    except OSError:
+        return []
+
+
+# COORD 11-10: the wave's own label (KIT-WAVE-<n>) is read by the kit-wave operator lanes
+WAVE_OPERATORS = 'KW-FIX-43, KW-FIX-44'
+
+
+def owner_post(stale, prev=(), stamp=None, unreachable=()):
+    """COORD 11-10 (3): hourly queue post, one paragraph per owner lane (unowned -> COORD); '+' = new since the last
+    list.  -> text (empty when nothing is stale)"""
+    if not stale:
+        return ''
+    old = {(r.get('die'), r.get('item')) for r in prev}
+    by = {}
+    for s in stale:
+        by.setdefault(s['owner'], []).append(s)
+    stamp = stamp or time.strftime('%Y-%m-%d %H:%M %Z')
+    owners = sorted(by, key=lambda o: (o == 'unowned', -len(by[o]), o))
+    to = ', '.join(o if o != 'unowned' else 'COORD' for o in owners)
+    if any(o.startswith('KIT-WAVE') for o in owners):
+        to += ', ' + WAVE_OPERATORS
+    out = ['- %s STALE [WAVE-OPS-1 -> %s] hourly STALE list (lanes/STALE.tsv): %d unsigned plan cores/types with no live '
+           'job and no kit-wave row change >= %g h%s; + = new since the last list. DO_NOT_COUNT, automatic '
+           '(lanes/wave-ops-1/stale_cron.sh).' % (stamp, to, len(stale), STALE_H,
+                                                  ' (NOT SEEN: %s)' % ' '.join(unreachable) if unreachable else '')]
+    for o in owners:
+        ss = sorted(by[o], key=lambda s: (s['tag'], s['item']))
+        lab = 'COORD (unowned)' if o == 'unowned' else (o + ' (wave label; for %s)' % WAVE_OPERATORS
+                                                         if o.startswith('KIT-WAVE') else o)
+        items = ['%s%s %s %s (%s%s)' % ('+' if (s['die'], s['item']) not in old else '', s['tag'], s['kind'][0],
+                                        s['item'] if s['kind'] == 'core' else s['item'].split('#')[0], s['last_status'],
+                                        (' ' + s['last_time'][5:]) if s['last_time'] else '') for s in ss]
+        out.append('  %s %d: %s' % (lab, len(ss), '; '.join(items)))
+    return '\n'.join(out) + '\n'
+
+
 def section(cache, rows, dies, plan_die=None, hosts=None, write=True):
     """the STALE block lines for failure_breakdown.main(); probes the fleet"""
     state, src = hub_state()
@@ -268,3 +308,28 @@ def section(cache, rows, dies, plan_die=None, hosts=None, write=True):
     if write:
         write_tsv(stale)
     return render(stale, unreachable, src)
+
+
+def main(argv):
+    """--post: compute, rewrite lanes/STALE.tsv, append the owner post to the queue (stale_cron.sh commits both)"""
+    import sys as _s
+    _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import failure_breakdown as FB
+    cache = json.load(open(FB.CACHE))
+    rows = list(csv.DictReader(open(FB.STAGES), delimiter='\t'))
+    state, src = hub_state()
+    text, unreachable = live_text()
+    stale = stale_items(cache, rows, owners_rows(), state, text, FB.DIES, plan_die=FB.PLAN_DIE)
+    prev = read_tsv()
+    write_tsv(stale)
+    txt = owner_post(stale, prev, unreachable=unreachable)
+    if '--post' in argv and txt:
+        with open(os.path.join(COORD, 'lanes/COORD-REVIEW-QUEUE.md'), 'a') as f:
+            f.write(txt)
+    print(txt or 'no stale items')
+    return 0
+
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(main(sys.argv))

@@ -85,9 +85,20 @@ def test_render_and_owner_comment_line(tmp_path):
     assert len((tmp_path / 'STALE.tsv').read_text().splitlines()) == len(st) + 2
 
 
+
+
+def test_owner_post_groups_and_marks_new():
+    st = S.stale_items(CACHE, ROWS, OWN, STATE, TEXT, DIES, now=NOW)
+    txt = S.owner_post(st, prev=[{'die': 's81', 'item': 'old_fail'}], stamp='X')
+    assert txt.startswith('- X STALE [WAVE-OPS-1 -> KIT-WAVE-1, S81-CORES, COORD, KW-FIX-43, KW-FIX-44]')
+    assert 'S81 t old_fail (FAIL 11-09 10:00)' in txt and '+S81 t old_fail' not in txt
+    assert 'COORD (unowned)' in txt and '+S81 t t__t4 (no kit-wave row)' in txt
+    assert S.owner_post([]) == ''
+
 if __name__ == '__main__':
     import tempfile, pathlib
     test_stale_selection(); test_live_text_core_by_module_token(); test_tokens_whole_name()
     test_no_probe_text_means_no_process_filter_and_threshold()
     test_render_and_owner_comment_line(pathlib.Path(tempfile.mkdtemp()))
-    print('5 passed')
+    test_owner_post_groups_and_marks_new()
+    print("6 passed")
