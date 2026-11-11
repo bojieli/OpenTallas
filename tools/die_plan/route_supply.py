@@ -11,7 +11,8 @@ landing-ring form, layer reassignment).
 WHAT IT READS (all from the plan and files the plan names; no kit, no netlist):
   type outline_um; hard_cores (origin_um, outline_um, orient, lef, pins_file); buses (face, window_um, width);
   ft_slots (in/out face, width, regs_um, bit_sites_um); internal_stations (from_um, regs_um, to_um, bits);
-  clock.landing_contract.bands (rect_um, width, padded_data_storage_flops); <die>/core_conns.json when present.
+  clock.landing_contract.bands (rect_um, width, padded_data_storage_flops); core_conns.json(.gz) from the plan dir, the
+  --ref-dirs (newest first) and <die>/, merged per type (first file listing a type wins).
 
 SUPPLY (tracks per bin per layer, signal layers M2-M7, METHODOLOGY 12.1a: tiles never use M8/M9):
   tracks_L(bin) = bin_um / pitch_L x (1 - derate_L) x (1 - obs_L(bin))
@@ -71,6 +72,57 @@ LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
 #    between two obstructed layers is blocked where they overlap (extendObstructions l.5557)
 GRT_TRANSITION = ("M3", "M4", "M5", "M6", "M7")
 GRT_MAX_LAYER = "M7"
+GRT_GCELL_UM = 0.57    # MEASURED gcell of the ASAP7 tile runs (GRT-PATCH-1 11-10, t15: perimeter ring 2 x 0.57 um)
+
+
+def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
+    """GRT-PATCH-1 'edge_outline' image (OT_GRT_TRANSITION_MODE=edge_outline, grtT3 sha256:2d12164ad3f6): a stock-halved
+    tile stays halved only within K gcells of the macro INSTANCE bbox boundary or within K of a macro SIGNAL pin (PG
+    excluded; pins_file pins are signal pins). Returns, per bin, the fraction of the macro area under it that is still halved (1 = stock
+    image, everywhere under the OBS)."""
+    # rim = bbox tiles first..first+K (GRT-PATCH-1: interior from first+K+1), the first tile ~half covered
+    d = (k_gcells + 0.5) * gcell_um
+    w = np.zeros((g.ny, g.nx))
+    b = g.b
+    for (x0, y0, x1, y1, h) in mrects:
+        (c, _), = coverage(g, [(x0, y0, x1, y1, h)])
+        ix0, iy0, ix1, iy1 = x0 + d, y0 + d, x1 - d, y1 - d
+        inner = coverage(g, [(ix0, iy0, ix1, iy1, h)])[0][0] if ix1 > ix0 and iy1 > iy0 else np.zeros_like(c)
+        band = c - inner
+        if ix1 > ix0 and iy1 > iy0:
+            for (_, px, py) in pins.get(h["inst"], []):
+                if ix0 < px < ix1 and iy0 < py < iy1:      # interior pin: its own K-gcell square is halved
+                    e = d                                # Chebyshev K around the pin's own tile (+ its half tile)
+                    sq = coverage(g, [(max(px - e, ix0), max(py - e, iy0), min(px + e, ix1), min(py + e, iy1), h)])
+                    band = band + sq[0][0]
+        frac = np.where(c > 1e-9, np.clip(band / np.maximum(c, 1e-9), 0, 1), 0.0)
+        w = np.maximum(w, frac)
+    return w
+
+
+def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gcell_um=None):
+    """GRT-PATCH-1 'edge' image (OT_GRT_TRANSITION_MODE=edge): a stock-halved tile stays halved within K gcells
+    (Chebyshev) of the union boundary of the layer-below macro OBS tiles, or within K of any macro pin (PG included)
+    on L-1/L/L+1. The share comes from the view's OBS and pin shapes rasterised on the gcell grid (edge_share) and is
+    spread evenly over the macro. A view without shapes (template, obs_max, ceiling) is one solid block: edge_outline
+    with its signal pins (PG straps unknown, so this under-halves), noted."""
+    out = {L: np.zeros((g.ny, g.nx)) for L in LAYERS}
+    outline_w = None
+    nfb = 0
+    for (c, h), r in zip(cov, mrects):
+        bd = macro_band(h["inst"], k_gcells, gcell_um)
+        if bd is None:
+            nfb += 1
+            if outline_w is None:
+                outline_w = grt_halving_weight(g, mrects, pins, k_gcells)
+            for L in LAYERS:
+                out[L] = np.maximum(out[L], np.where(c > 1e-9, outline_w, 0.0))
+            continue
+        for L in LAYERS:
+            out[L] = np.maximum(out[L], np.where(c > 1e-9, bd.get(L, 0.0), 0.0))
+    if nfb:
+        notes.append(f"grt edge: {nfb} macro views without shapes taken as solid (= edge_outline)")
+    return out
 
 
 def grt_macro_rules(obs):
@@ -102,7 +154,7 @@ DEFAULTS = dict(
     glue_um=21.6,
     cell_um2=0.1,              # mean placed std-cell area for the fill ESTIMATE (ASAP7, ~0.09-0.12 um2)
     detour_um=97.2,
-    margin_bins=2,             # free rows/cols beside a macro run that a crossing wire can use            # router detour across the direction of travel (9 bins), calibrated              # pin -> glue cell escape length (2 bins)
+    margin_bins=9,   # bins beside a macro run pooled with it = the detour window (97.2 um); 2 over-weighted V along hard-core columns
 )
 FIX = {
     ("core", "H"): "horizontal channel between hard-core rows (only M6 runs H over an M1-M5 hard core)",
@@ -163,6 +215,113 @@ def lef_obs(path):
     return out
 
 
+_EDGE_CACHE = {}
+def _dilate(m, k):
+    """Chebyshev dilation by k tiles (separable running max)."""
+    out = m.copy()
+    for _ in range(k):
+        t = out.copy()
+        t[1:, :] |= out[:-1, :]
+        t[:-1, :] |= out[1:, :]
+        out = t
+    o2 = out.copy()
+    for _ in range(k):
+        t = o2.copy()
+        t[:, 1:] |= o2[:, :-1]
+        t[:, :-1] |= o2[:, 1:]
+        o2 = t
+    return o2
+
+
+def lef_shapes(txt, macro=None):
+    """(W, H, obs {layer: [rects]}, pins {layer: [(rect, is_pg)]}) of one MACRO."""
+    if macro:
+        m = re.search(r"MACRO\s+" + re.escape(macro) + r"\b(.*?)\nEND\s+" + re.escape(macro), txt, re.S)
+        if m:
+            txt = m.group(1)
+    sz = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", txt)
+    if not sz:
+        return None
+    W, H = float(sz.group(1)), float(sz.group(2))
+    obs, pins = {}, {}
+    rect = r"\s*RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)"
+    for pm in re.finditer(r"\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1", txt, re.S):
+        body = pm.group(2)
+        pg = bool(re.search(r"USE\s+(POWER|GROUND)", body))
+        cur = None
+        for ln in body.splitlines():
+            mm = re.match(r"\s*LAYER\s+(\S+)", ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mm = re.match(rect, ln)
+            if mm and cur:
+                pins.setdefault(cur, []).append((tuple(map(float, mm.groups())), pg))
+    i = txt.find("\n  OBS")
+    if i < 0:
+        i = txt.find("OBS")
+    if i >= 0:
+        cur = None
+        for ln in txt[i:].splitlines():
+            mm = re.match(r"\s*LAYER\s+(\S+)", ln)
+            if mm:
+                cur = mm.group(1)
+                continue
+            mm = re.match(rect, ln)
+            if mm and cur:
+                obs.setdefault(cur, []).append(tuple(map(float, mm.groups())))
+            if re.match(r"\s*END\s*$", ln):
+                break
+    return W, H, obs, pins
+
+
+def edge_share(shapes, ks, g, layers=("M2", "M3", "M4", "M5", "M6", "M7")):
+    """{K: {B: share}}: of the gcell tiles under the layer-B macro OBS (B = the layer below a transition layer L),
+    the share still halved by GRT-PATCH-1 'edge' (OT_GRT_TRANSITION_MODE=edge): within K tiles (Chebyshev) of the
+    union boundary of the B OBS tiles, or within K of any macro pin (PG included) on B, L or L+1."""
+    W, H, obs, pins = shapes
+    nx, ny = max(1, int(np.ceil(W / g))), max(1, int(np.ceil(H / g)))
+
+    def raster(rs):
+        m = np.zeros((ny, nx), bool)
+        for (x0, y0, x1, y1) in rs:
+            a, b = sorted((x0, x1)), sorted((y0, y1))
+            i0, i1 = max(0, int(a[0] // g)), min(nx, int(np.ceil(a[1] / g)))
+            j0, j1 = max(0, int(b[0] // g)), min(ny, int(np.ceil(b[1] / g)))
+            if i1 > i0 and j1 > j0:
+                m[j0:j1, i0:i1] = True
+        return m
+
+    names = ["M1"] + list(layers) + ["M8"]
+    out = {str(k): {} for k in ks}
+    for B in layers[:-1]:
+        ob = raster(obs.get(B, []))
+        n = ob.sum()
+        if not n:
+            continue
+        L = names[names.index(B) + 1]
+        Lp = names[names.index(B) + 2]
+        pm = raster([r for Ly in (B, L, Lp) for (r, _) in pins.get(Ly, [])])
+        pad = np.pad(~ob, 1, constant_values=True)
+        for k in ks:
+            near_free = _dilate(pad, k)[1:-1, 1:-1]
+            halved = ob & (near_free | _dilate(pm, k))
+            out[str(k)][B] = round(float(halved.sum() / n), 4)
+    return out
+
+
+def lef_edge_share(path, k_gcells, gcell_um):
+    """{B: share} of edge_share for one LEF (first MACRO), cached; None if unreadable."""
+    key = (str(path), k_gcells, gcell_um)
+    if key not in _EDGE_CACHE:
+        try:
+            sh = lef_shapes(Path(path).read_text(errors="replace"))
+        except OSError:
+            sh = None
+        _EDGE_CACHE[key] = edge_share(sh, (k_gcells,), gcell_um)[str(k_gcells)] if sh else None
+    return _EDGE_CACHE[key]
+
+
 _SIGNED_CACHE = {}
 
 
@@ -187,6 +346,22 @@ def signed_view_lefs(die_dir):
     return out
 
 
+_VIEW_SRC = {}   # inst -> ("lef", path) | ("kit", kit_views entry): where the OBS rects of the chosen view live
+
+
+def macro_band(inst, k_gcells, gcell_um=None):
+    """{B: share of the layer-B OBS tiles still halved under GRT-PATCH-1 'edge'} of the view macro_view chose for
+    inst, or None (no shapes known: a solid block, whose only OBS boundary is its outline)."""
+    gcell_um = gcell_um or GRT_GCELL_UM
+    v = _VIEW_SRC.get(inst)
+    if not v:
+        return None
+    if v[0] == "lef":
+        return lef_edge_share(v[1], k_gcells, gcell_um)
+    kb = (v[1].get("edge_share") or {}).get(str(k_gcells))
+    return {L: float(f) for L, f in kb.items()} if kb is not None else None
+
+
 def macro_view(h, die_dir, repo, cfg):
     """(obs {layer: frac}, kind core|mem, source, provisional) for one hard core / macro.
 
@@ -201,6 +376,8 @@ def macro_view(h, die_dir, repo, cfg):
     if v:
         if v.get("lef"):
             obs = lef_obs(find_ref(v["lef"], repo))
+            if obs is not None:
+                _VIEW_SRC[h["inst"]] = ("lef", find_ref(v["lef"], repo))
         if obs is None and v.get("obs_top"):
             top = int(v["obs_top"][1:])
             obs = {f"M{k}": float(v.get("coverage", 1.0)) for k in range(1, top + 1)}
@@ -210,13 +387,31 @@ def macro_view(h, die_dir, repo, cfg):
         if sl:
             obs = lef_obs(sl)
             src = "signed-repo"
+            _VIEW_SRC[h["inst"]] = ("lef", sl)
+    kv = None
+    kvt = cfg.get("kit_views") or {}
+    stem = Path(str(h.get("lef") or "")).stem
+    for key in (mod, stem):
+        if key and key in kvt:
+            kv = kvt[key]
+            break
     if obs is None and h.get("lef"):
         obs = lef_obs(find_ref(h["lef"], repo))
         if obs is not None:
             src = "plan-lef"
+            _VIEW_SRC[h["inst"]] = ("lef", find_ref(h["lef"], repo))
             if all(obs.get(f"M{k}", 0) > 0.99 for k in range(1, 8)):
-                obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
-                src = "plan-template(capped M%d)" % cap
+                _VIEW_SRC.pop(h["inst"], None)          # template: solid block, its outline is the OBS edge
+                if kv:
+                    obs, src = None, None          # whole-block template: the kit's real view LEF wins
+                else:
+                    obs = {L: f for L, f in obs.items() if int(L[1:]) <= cap}
+                    src = "plan-template(capped M%d)" % cap
+    if obs is None and kv:
+        # repo LEF missing (or a template): the macro LEF the kit hands to GRT (route_supply_kit_views.json)
+        obs = {L: float(f) for L, f in kv["obs"].items()}
+        src = "kit-lef"
+        _VIEW_SRC[h["inst"]] = ("kit", kv)
     if obs is None and h.get("obs_max"):
         top = min(int(str(h["obs_max"])[1:]), 9)
         obs = {f"M{k}": 1.0 for k in range(1, top + 1)}
@@ -313,6 +508,19 @@ def face_point(W, H, face, window=None):
     return (W if face == "E" else 0.0, y)
 
 
+def face_bit_point(W, H, win, rank):
+    """point of one bit on a face window: rank = (fraction along the window, bits)."""
+    face, (lo, hi) = win
+    f = rank[0]
+    a = lo + f * (hi - lo)
+    if face in ("N", "S"):
+        return (a, H if face == "N" else 0.0)
+    return (W if face == "E" else 0.0, a)
+
+
+SKIP = set(filter(None, os.environ.get("ROUTE_SUPPLY_SKIP", "").split(",")))
+
+
 # ----------------------------------------------------------------------------------------------------------- model
 class Grid:
     def __init__(self, W, H, b):
@@ -321,6 +529,7 @@ class Grid:
         self.dH = np.zeros((self.ny + 1, self.nx + 1))   # difference arrays (density per um^2)
         self.dV = np.zeros((self.ny + 1, self.nx + 1))
         self.wl = 0.0
+        self.cur = None      # demand category being added (ablation: env ROUTE_SUPPLY_SKIP=glue,core,ft,station,ring)
 
     def _rect(self, d, x0, y0, x1, y1, dens):
         b = self.b
@@ -331,12 +540,22 @@ class Grid:
         d[j1, i0] -= dens
         d[j1, i1] += dens
 
-    def net(self, pts, n=1.0):
-        """RUDY: n nets with these terminals."""
+    def net(self, pts, n=1.0, span=0.0):
+        """RUDY: n nets with these terminals.  span > 0: the box is at least span um wide across a long thin
+        net (the router places a bundle of buffered relay wires anywhere within its detour, not on one line)."""
+        if self.cur in SKIP:
+            return
         xs = [p[0] for p in pts]
         ys = [p[1] for p in pts]
         x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
         w, h = max(x1 - x0, self.b), max(y1 - y0, self.b)   # a net shorter than a bin still fills that bin
+        if span > 0:
+            if w < span:
+                x0 -= (span - w) / 2
+                w = span
+            if h < span:
+                y0 -= (span - h) / 2
+                h = span
         x1, y1 = x0 + w, y0 + h
         # H wire length (x1-x0 actual) spread over w x h; per um^2 = (actual w)/(w h)
         aw, ah = max(xs) - min(xs), max(ys) - min(ys)
@@ -347,6 +566,8 @@ class Grid:
         self.wl += n * (aw + ah)
 
     def area_density(self, rect, dens_h, dens_v):
+        if self.cur in SKIP:
+            return
         x0, y0, x1, y1 = rect
         self._rect(self.dH, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_h)
         self._rect(self.dV, x0, y0, x1 - 1e-9, y1 - 1e-9, dens_v)
@@ -431,10 +652,13 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     macro_cov = np.zeros((g.ny, g.nx))
     mem_cov = np.zeros((g.ny, g.nx))
     obs_src = defaultdict(int)
+    macro_obs = {}
+    _VIEW_SRC.clear()
     h_kind = {}
     provisional = set()
     for (c, h) in cov:
         o, kind, src, prov = macro_view(h, die_dir, repo, cfg)
+        macro_obs[h["inst"]] = o
         obs_src[src] += 1
         h_kind[h["inst"]] = kind
         sm = cfg.get("signed_modules")
@@ -448,6 +672,19 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             mem_cov = np.maximum(mem_cov, c)
     if cfg.get("grt_rules", True):
         grt_macro_rules(obs)
+    pins = {}
+    for (_, _, _, _, h) in mrects:
+        pins[h["inst"]] = core_pins(h, die_dir, repo)
+    mode = cfg.get("grt_halving", "full")
+    K = cfg.get("grt_edge_gcells", 2)
+    halve_w = {L: 1.0 for L in LAYERS}
+    if mode == "none":
+        halve_w = {L: 0.0 for L in LAYERS}
+    elif mode == "edge_outline":
+        w = grt_halving_weight(g, mrects, pins, K)
+        halve_w = {L: w for L in LAYERS}
+    elif mode == "edge":
+        halve_w = grt_halving_weight_obs(g, cov, mrects, pins, K, macro_obs, notes)
     sup = {}
     for L in LAYERS:
         sup[L] = b / PITCH[L] * (1 - cfg["derate"][L]) * (1 - np.clip(obs[L], 0, 1))
@@ -456,22 +693,25 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             # (GlobalRouter::adjustTransitionLayers / adjustTileSet, floor(cap * 0.5))
             below = LAYERS[LAYERS.index(L) - 1] if LAYERS.index(L) > 0 else None
             if below:
-                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1))
+                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1) * halve_w[below])
     supH = sup["M2"] + sup["M4"] + sup["M6"]
     supV = sup["M3"] + sup["M5"] + sup["M7"]
     # ---------------- demand
-    pins = {}
-    for (_, _, _, _, h) in mrects:
-        pins[h["inst"]] = core_pins(h, die_dir, repo)
     npins = sum(len(v) for v in pins.values())
     if npins == 0 and mrects:
         notes.append("no core pin files found")
     bus_pt = {}
+    bus_win = {}
+    bus_dir = defaultdict(list)          # "in"/"out" -> face bus names (stale bus names fall back to these)
     for bu in t.get("buses", []) or []:
         if bu.get("face"):
+            bus_dir[str(bu.get("dir", ""))].append(bu["name"])
             bus_pt[bu["name"]] = face_point(W, H, bu["face"], bu.get("window_um"))
-    cc = conns.get(name) or conns.get(re.sub(r"__cl[0-9a-f]{8}.*$", "", name)) or conns.get(
-        re.sub(r"__.*$", "", name))
+            if bu.get("window_um") and cfg.get("face_spread", True):
+                bus_win[bu["name"]] = (bu["face"], tuple(bu["window_um"][:2]))
+    cc_key = next((k for k in (name, re.sub(r"__cl[0-9a-f]{8}.*$", "", name), re.sub(r"__.*$", "", name))
+                   if conns.get(k)), None)
+    cc = conns.get(cc_key) if cc_key else None
     model = "core_conns" if cc else ("fallback" if npins else "none")
     cen = {}
     for inst, pl in pins.items():
@@ -488,6 +728,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             acc[bus].append((x, y))
         bus_cen[inst] = {k: (sum(p[0] for p in v) / len(v), sum(p[1] for p in v) / len(v)) for k, v in acc.items()}
     unresolved = 0
+    stale_bus = 0
     nglue = 0
     # links carried by internal_stations (launch core:A.bus -> capture B): not counted again as a direct core net
     st_pairs = set()
@@ -506,6 +747,25 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 if ("core:" + A) in dd:
                     st_rev[(Bi, bb)].add((A, Bi))
     rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
+    g.cur = "core"
+    # face pin band: the bits of a face bus land spread over its window, in the order of the core pins that drive
+    # them (no crossing), not at one point
+    face_rank = {}
+    if cc and bus_win:
+        groups = defaultdict(list)
+        for inst, pl in pins.items():
+            ci = cc.get(inst, {}) if pl else {}
+            for bus, x, y in pl:
+                for d in ci.get(bus) or []:
+                    k, _, v = str(d).partition(":")
+                    if k == "bus" and v in bus_win:
+                        groups[v].append((inst, bus, x, y))
+        for v, lst in groups.items():
+            along = 0 if bus_win[v][0] in ("N", "S") else 1
+            order = sorted(range(len(lst)), key=lambda i: lst[i][2 + along])
+            for r_, i in enumerate(order):
+                inst, bus, x, y = lst[i]
+                face_rank[(inst, bus, v, x, y)] = ((r_ + 0.5) / len(lst), len(lst))
     for inst, pl in pins.items():
         if not pl:
             continue
@@ -516,11 +776,22 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 if not dl:
                     # pin to type glue logic (not core-to-core): a local escape net from the pin out of the
                     # core face, cfg glue_um long (the glue cells sit next to the core)
+                    g.cur = "glue"
                     g.net([(x, y), escape(x, y, rect_of[inst], cfg["glue_um"])])
+                    g.cur = "core"
                     nglue += 1
                     continue
                 pts = [(x, y)]
                 two_sided = True
+                had_face = False
+                for d in dl:
+                    k, _, v = str(d).partition(":")
+                    if k == "bus" and v in bus_win:
+                        had_face = True
+                        fp = face_bit_point(W, H, bus_win[v], face_rank.get((inst, bus, v, x, y), (0.5, 1)))
+                        pts.append(fp)
+                        dl = [dd for dd in dl if dd != d]
+                        break
                 for d in dl:
                     k, _, v = str(d).partition(":")
                     if k == "core" and v in cen:
@@ -531,14 +802,37 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                         pts.append(bus_cen[v][mate[0]] if mate and mate[0] in bus_cen.get(v, {}) else cen[v])
                     elif k == "bus" and v in bus_pt:
                         pts.append(bus_pt[v])
+                    elif k == "bus" and cfg.get("stale_bus_nearest", True) and v[-2:] in ("_i", "_o") \
+                            and bus_dir.get({"_i": "in", "_o": "out"}[v[-2:]]):
+                        # bus name not in this plan (core_conns older than a lane renumbering): the nearest face
+                        # bus of the same direction (ESTIMATE, counted)
+                        cand = bus_dir[{"_i": "in", "_o": "out"}[v[-2:]]]
+                        pts.append(min((bus_pt[c_] for c_ in cand), key=lambda q: abs(q[0] - x) + abs(q[1] - y)))
+                        stale_bus += 1
                     elif k == "face" and v in "NSEW":
                         pts.append(face_point(W, H, v))
+                    elif k == "tap":
+                        continue                # clock entry: the clock tree, not a signal net
                     else:
                         unresolved += 1
                 if len(pts) > 1:
                     # core_conns lists a core-to-core link at BOTH ends: count each end half
-                    g.net(pts, n=0.5 if two_sided and all(not str(d).startswith(("bus:", "face:")) for d in dl)
-                          else 1.0)
+                    w_ = 0.5 if two_sided and not had_face and all(not str(d).startswith(("bus:", "face:")) for d in dl) \
+                        else 1.0
+                    if cfg.get("pin_escape", False) and len(pts) == 2:
+                        # pin band: a core pin leaves its face along the face normal, so a 2-pin link is an L whose
+                        # first leg runs at the pin's own row (W/E face -> H leg at pin y, N/S -> V leg at pin x)
+                        (px_, py_), (qx_, qy_) = pts
+                        x0r, y0r, x1r, y1r = rect_of[inst]
+                        dd_ = {"W": px_ - x0r, "E": x1r - px_, "S": py_ - y0r, "N": y1r - py_}
+                        if min(dd_, key=dd_.get) in ("W", "E"):
+                            mid = (qx_, py_)
+                        else:
+                            mid = (px_, qy_)
+                        g.net([pts[0], mid], n=w_)
+                        g.net([mid, pts[1]], n=w_)
+                    else:
+                        g.net(pts, n=w_)
         else:
             others = [(cen[k], len(pins[k])) for k in pins if k != inst and pins[k]]
             if not others:
@@ -550,7 +844,11 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 g.net([(x, y), (px, py)])
     if unresolved:
         notes.append(f"{unresolved} core_conns destinations not placed in the type")
+    if stale_bus:
+        notes.append(f"{stale_bus} core_conns bus destinations not in the plan, taken to the nearest same-direction "
+                     f"face bus (ESTIMATE)")
     # ft slots
+    g.cur = "ft"
     ft_bits = 0
     for f in t.get("ft_slots", []) or []:
         wbits = int(f.get("width", 1))
@@ -590,6 +888,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 g.net([p, end])
         ft_bits += wbits
     st_bits = 0
+    g.cur = "station"
     # stations that share a launch pin are ONE driver net to all their first registers (a broadcast bus to 16
     # lanes is a 17-pin net, not 16 two-pin nets); later hops are per link
     fan = defaultdict(list)
@@ -597,13 +896,15 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         pts = [tuple(s["from_um"])] + [tuple(r) for r in s.get("regs_um", [])] + [tuple(s["to_um"])]
         fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, s.get("bits", 1)))
         st_bits += s.get("bits", 1)
+    sp = cfg["detour_um"] if cfg.get("station_spread", False) else 0.0
     for (_, _), lst in fan.items():
         bits = max(n for _, n in lst)
-        g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits)
+        g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits, span=sp)
         for pts, n in lst:
             for a, c in zip(pts[1:], pts[2:]):
-                g.net([a, c], n=n)
+                g.net([a, c], n=n, span=sp)
     # landing rings
+    g.cur = "ring"
     ring_cells = np.zeros((g.ny, g.nx), dtype=bool)
     lc = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
     ring_bits = 0
@@ -657,6 +958,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         ring_cells[j0:j1, i0:i1] = True
         ring_bits += bits
     DH, DV = g.demand()
+    g.cur = "cell"
     # background cell wiring outside macros
     bgH = cfg["cell_fill"] * (sup["M2"] + sup["M4"]) * (1 - macro_cov)
     bgV = cfg["cell_fill"] * (sup["M3"] + sup["M5"]) * (1 - macro_cov)
@@ -763,6 +1065,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     hot_all = int(((rH > cfg["hot"]) | (rV > cfg["hot"])).sum())
     return dict(
         type=name, outline_um=[W, H], model=model, bins=[g.nx, g.ny],
+        conns_src=_CONNS_SRC.get(cc_key) if cc else None,
         macros=len(mrects), mem_macros=sum(1 for v in h_kind.values() if v == "mem"),
         provisional_children=sorted(provisional),
         macro_area_frac=round(float(macro_cov.sum()) / (g.nx * g.ny), 3),
@@ -801,12 +1104,43 @@ def children_fill(mrects, h_kind, cfg):
     return sorted(out.values(), key=lambda e: -e["area_um2"] * e["n"])
 
 
-def load_conns(die_dir, path=None):
-    p = Path(path) if path else die_dir / "core_conns.json"
-    try:
-        return json.loads(p.read_text())
-    except (OSError, ValueError):
-        return {}
+def conns_sources(die_dir, plan_dir=None, ref_dirs=(), path=None):
+    """core_conns files in precedence order: --core-conns; the plan's own dir (materialised HBM plan dirs carry
+    core_conns.json beside die_plan.json); the --ref-dirs, newest (last) first; the die dir. .json or .json.gz."""
+    if path:
+        return [Path(path)]
+    dirs = ([Path(plan_dir)] if plan_dir else []) + [Path(d) for d in reversed(list(ref_dirs))] + [Path(die_dir)]
+    out, seen = [], set()
+    for d in dirs:
+        for n in ("core_conns.json", "core_conns.json.gz"):
+            f = d / n
+            if f.is_file() and f.resolve() not in seen:
+                seen.add(f.resolve())
+                out.append(f)
+                break
+    return out
+
+
+def load_conns(die_dir, path=None, plan_dir=None, ref_dirs=()):
+    """{type: {core: {port: [dest]}}}, merged per type: the first source (conns_sources order) that lists a type wins.
+    Sets _CONNS_SRC[type] = file."""
+    out = {}
+    _CONNS_SRC.clear()
+    for f in conns_sources(die_dir, plan_dir, ref_dirs, path):
+        try:
+            d = read_json(f)
+        except (OSError, ValueError):
+            continue
+        if isinstance(d, dict) and isinstance(d.get("core_conns"), dict):
+            d = d["core_conns"]
+        for t, v in (d or {}).items():
+            if t not in out and isinstance(v, dict):
+                out[t] = v
+                _CONNS_SRC[t] = str(f)
+    return out
+
+
+_CONNS_SRC = {}
 
 
 def _nf(r, d):
@@ -905,6 +1239,20 @@ def main(argv=None):
     ap.add_argument("--ring-tracks-per-bit", type=float, default=DEFAULTS["ring_tracks_per_bit"])
     ap.add_argument("--ring-um2-per-flop", type=float, default=DEFAULTS["ring_um2_per_flop"])
     ap.add_argument("--detour-um", type=float, default=DEFAULTS["detour_um"])
+    ap.add_argument("--station-spread", action="store_true",
+                    help="what-if: station hops spread over the detour window (moves leaf V to H, 8/14 vs 6/15 FAIL "
+                         "directions right, but loses leaf t24; off by default)")
+    ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default="full",
+                    help="OpenROAD transition-layer halving over macro OBS: full = stock image (adjustTransitionLayers "
+                         "under the whole OBS); GRT-PATCH-1 patched images: edge = only within --grt-edge-gcells of "
+                         "each OBS rect boundary (+ pins), edge_outline = only within K of the macro instance bbox "
+                         "(+ pins); none = no halving")
+    ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge / edge_outline (gcells of %.3f um)"
+                    % GRT_GCELL_UM)
+    ap.add_argument("--pin-escape", action="store_true",
+                    help="what-if: 2-pin core links as an L whose first leg follows the pin face normal (off by default)")
+    ap.add_argument("--margin-bins", type=int, default=DEFAULTS["margin_bins"],
+                    help="bins beside a macro run pooled with it (the router's sideways detour off the macro)")
     ap.add_argument("--flag-ratio", type=float, default=1.0, help="scale on the calibrated FLAG_AT region thresholds")
     ap.add_argument("--core-conns")
     ap.add_argument("--core-fill", help="JSON {module: {fill, free_M4, free_M5, src}} measured by porous-abstract lanes")
@@ -916,6 +1264,8 @@ def main(argv=None):
     ap.add_argument("--views", default=str(Path(__file__).with_name("route_supply_views.json")),
                     help="signed-view blocked-layer table (JSON {views: {module: {lef|obs_top, coverage, src}}})")
     ap.add_argument("--maps", action="store_true", help="write per-type ratio maps (npz)")
+    ap.add_argument("--kit-views", default=str(Path(__file__).with_name("route_supply_kit_views.json")),
+                    help="per-die macro OBS fractions of the kit macros/*.lef (used when the repo LEF is missing)")
     ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
                     help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
@@ -935,8 +1285,10 @@ def main(argv=None):
         der[k] = float(v)
     cfg = dict(DEFAULTS, bin_um=a.bin, window=a.window, derate=der, core_ceiling=a.core_ceiling,
                cell_fill=a.cell_fill, ring_tracks_per_bit=a.ring_tracks_per_bit,
-               ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um)
-    conns = load_conns(die_dir, a.core_conns)
+               ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
+               pin_escape=a.pin_escape, station_spread=a.station_spread,
+               grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells)
+    conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
     if a.core_fill:
@@ -952,6 +1304,10 @@ def main(argv=None):
         cfg["views"] = json.loads(Path(a.views).read_text()).get("views", {})
     except (OSError, ValueError):
         cfg["views"] = {}
+    try:
+        cfg["kit_views"] = json.loads(Path(a.kit_views).read_text()).get(die, {})
+    except (OSError, ValueError, AttributeError):
+        cfg["kit_views"] = {}
     T = P.get("partition_types", {})
     cells_of = load_cells(P, plan, die, a.cells)
     names = list(T)
@@ -1006,7 +1362,8 @@ def main(argv=None):
         (od / f"route_supply_{die}.json").write_text(json.dumps(out, indent=1))
     print("\n".join(lines))
     nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
-    print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}); ADVISORY, not a gate",
+    print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}; GRT halving "
+          f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving.startswith('edge') else ''}); ADVISORY, not a gate",
           file=sys.stderr)
     return 0
 

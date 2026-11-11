@@ -153,3 +153,121 @@ def test_grt_transition_halving_m6_over_m5_obs(tmp_path):
     assert obs["M7"][0, 0] == 1.0
     assert "M6" in rs.GRT_TRANSITION and "M2" not in rs.GRT_TRANSITION
     assert r1["regions"]["core_H"]["p99"] > 1.0 and rs_cfg["bin_um"] > 0
+
+
+def test_kit_lef_replaces_whole_block_template(tmp_path):
+    """a plan M1-M7 template defers to the kit's real view LEF (route_supply_kit_views.json) when one exists."""
+    plan(tmp_path, layers_a=("M1", "M2", "M3", "M4", "M5", "M6", "M7"), n=1500)
+    _, r0, _ = run(tmp_path)
+    kv = tmp_path / "kv.json"
+    kv.write_text(json.dumps({"tst": {"blk": {"obs": {"M1": .9, "M2": .9, "M3": .5, "M4": .4, "M5": .25,
+                                                      "M6": .1, "M7": .1}}}}))
+    _, r1, _ = run(tmp_path, "--kit-views", str(kv))
+    assert any(k.startswith("plan-template") for k in r0["obs_src"])
+    assert "kit-lef" in r1["obs_src"] and not any(k.startswith("plan-template") for k in r1["obs_src"])
+    assert r1["regions"]["core_H"]["p99"] < r0["regions"]["core_H"]["p99"]   # porous real view frees M4/M6
+
+
+def test_margin_default_and_what_if_options_run(tmp_path):
+    plan(tmp_path, n=2500)
+    assert rs.DEFAULTS["margin_bins"] == 9
+    _, r9, _ = run(tmp_path)
+    _, r2, _ = run(tmp_path, "--margin-bins", "2")
+    _, rw, _ = run(tmp_path, "--pin-escape", "--station-spread")
+    assert r9["regions"]["core_H"]["p99"] <= r2["regions"]["core_H"]["p99"] + 1e-9   # wider detour pool never worse
+    assert rw["verdict"] in ("FLAG", "ok")
+
+
+def test_grt_edge_halving_mode_between_full_and_none(tmp_path):
+    """GRT-PATCH-1 edge image: halving only within K gcells of macro edges/pins -> core_H between stock and none."""
+    plan(tmp_path, n=2500)
+    _, rf, _ = run(tmp_path)
+    _, re_, _ = run(tmp_path, "--grt-halving", "edge", "--grt-edge-gcells", "2")
+    _, rb, _ = run(tmp_path, "--grt-halving", "edge", "--grt-edge-gcells", "400")
+    _, rn, _ = run(tmp_path, "--grt-halving", "none")
+    f, e, b, n = (r["regions"]["core_H"]["p99"] for r in (rf, re_, rb, rn))
+    assert n <= e <= f and n < f
+    assert abs(b - f) < 1e-6                           # K beyond the macro half-width = the stock image
+    g = rs.Grid(400, 500, 10.8)
+    w = rs.grt_halving_weight(g, [(100, 0, 300, 500, {"inst": "m"})], {"m": [("d", 200, 250)]}, 2)
+    assert 0.1 < w[0, 9] < 0.3                         # edge bin: only the 1.17 um band along x=100 and y=0
+    assert w[10, 15] == 0.0 and w[23, 18] > 0.0         # interior: halved only around the pin at (200, 250)
+    assert w.max() <= 1.0
+
+
+def test_grt_edge_modes_follow_grt_patch_1(tmp_path):
+    """edge (OBS tile union boundary + all pins incl. PG on L-1/L/L+1) vs edge_outline (instance bbox + signal pins):
+    a porous M5 view with PG straps stays halved under edge and is freed inside under edge_outline."""
+    plan(tmp_path, n=2500)
+    strips = "".join(f"      RECT {x} 0 {x + 2} 400 ;\n" for x in range(0, 200, 4))
+    straps = "".join(f"        RECT {x} 0 {x + 0.3} 400 ;\n" for x in range(3, 200, 3))
+    lefp = tmp_path / "blk.lef"
+    lefp.write_text(
+        "MACRO blk\n  CLASS BLOCK ;\n  ORIGIN 0 0 ;\n  SIZE 200 BY 400 ;\n"
+        "  PIN VDD\n    USE POWER ;\n    PORT\n      LAYER M7 ;\n" + straps + "    END\n  END VDD\n  OBS\n"
+        + "".join(f"    LAYER {L} ;\n      RECT 0 0 200 400 ;\n" for L in ("M1", "M2", "M3", "M4"))
+        + "    LAYER M5 ;\n" + strips + "  END\nEND blk\nEND LIBRARY\n")
+    rs._LEF_CACHE.clear()
+    rs._EDGE_CACHE.clear()
+    _, pf, _ = run(tmp_path)
+    _, pe, _ = run(tmp_path, "--grt-halving", "edge")
+    _, po, _ = run(tmp_path, "--grt-halving", "edge_outline")
+    # region p99 also sees the cores beside the macro; the per-tile shares are checked below
+    assert max(po["regions"]["core_H"]["p99"], pe["regions"]["core_H"]["p99"]) <= pf["regions"]["core_H"]["p99"]
+    sh = rs.lef_edge_share(lefp, 2, rs.GRT_GCELL_UM)
+    assert sh["M5"] > 0.95                     # 2-um strips: every OBS tile within 2 gcells of a free tile
+    assert sh["M3"] < 0.05                     # solid M3, no pins on M3/M4/M5: only the rim
+    assert sh["M4"] < 0.05 and sh["M5"] > sh["M4"]
+    sh6 = rs.edge_share(rs.lef_shapes(lefp.read_text()), (2,), rs.GRT_GCELL_UM)["2"]
+    assert sh6 == sh
+    g = rs.Grid(400, 500, 10.8)
+    mr = [(100, 0, 300, 400, {"inst": "m"})]
+    rs._VIEW_SRC.clear()
+    rs._VIEW_SRC["m"] = ("lef", lefp)
+    w = rs.grt_halving_weight_obs(g, rs.coverage(g, mr), mr, {}, 2, {}, [])
+    wo = rs.grt_halving_weight(g, mr, {}, 2)
+    assert w["M5"][18, 18] > 0.95 and wo[18, 18] == 0.0
+    # PG straps on M7 (L+1 of M6) only count for B = M5
+    solid = tmp_path / "s.lef"
+    solid.write_text(lefp.read_text().replace(strips, "      RECT 0 0 200 400 ;\n"))
+    assert rs.lef_edge_share(solid, 2, rs.GRT_GCELL_UM)["M5"] > 0.9   # straps every 3 um, halo 2 gcells
+
+
+def test_core_conns_from_plan_dir_and_refs_merged_per_type(tmp_path):
+    """a materialised plan dir (HBM) carries core_conns.json beside die_plan.json: route_supply reads it (and .gz in a
+    ref dir) instead of falling back to the all-core centroid; the plan dir wins per type over the die dir."""
+    import gzip
+    plan(tmp_path, n=1500)
+    pd = tmp_path / "por"
+    pd.mkdir()
+    (pd / "plan.json").write_text((tmp_path / "plan.json").read_text())
+    out = tmp_path / "o"
+    rs.main([str(pd / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+             "--release-cache", str(tmp_path / "nope.json"), "--views", str(tmp_path / "noviews.json")])
+    r0 = json.loads((out / "route_supply_tst.json").read_text())["rows"][0]
+    assert r0["model"] == "fallback"
+    (pd / "core_conns.json").write_text((tmp_path / "core_conns.json").read_text())
+    rs.main([str(pd / "plan.json"), "--die", "tst", "--repo", str(tmp_path), "--out", str(out),
+             "--release-cache", str(tmp_path / "nope.json"), "--views", str(tmp_path / "noviews.json")])
+    r1 = json.loads((out / "route_supply_tst.json").read_text())["rows"][0]
+    assert r1["model"] == "core_conns" and r1["conns_src"].endswith("por/core_conns.json")
+    ref = tmp_path / "physical" / "die_plan" / "old"
+    ref.mkdir(parents=True)
+    with gzip.open(ref / "core_conns.json.gz", "wt") as f:
+        json.dump({"t": {}, "t2": {"u_a": {"d": ["core:u_b"]}}}, f)
+    src = rs.conns_sources(tmp_path / "nodie", pd, [str(ref)])
+    assert [p.name for p in src] == ["core_conns.json", "core_conns.json.gz"]
+    m = rs.load_conns(tmp_path / "nodie", None, pd, [str(ref)])
+    assert set(m) == {"t", "t2"} and m["t"]["u_a"]["d"] == ["core:u_b"]        # plan dir wins for t
+
+
+def test_stale_bus_name_goes_to_nearest_same_direction_face_bus(tmp_path):
+    plan(tmp_path, n=400)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    P["partition_types"]["t"]["buses"] = [{"name": "N_i", "dir": "in", "face": "W", "width": 400, "window_um": [50, 450]}]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {"d": ["bus:OLD7_i", "tap:u_a"]},
+                                                                "u_b": {"d": ["core:u_a"]}}}))
+    _, r, _ = run(tmp_path)
+    assert any("nearest same-direction face bus" in n for n in r["notes"])
+    assert not any("not placed" in n for n in r["notes"])          # tap: is the clock, not unresolved
