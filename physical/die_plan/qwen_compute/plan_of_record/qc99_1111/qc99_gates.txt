@@ -1,9 +1,9 @@
-QC 12:00 event plan s13_nosul1w sha256 54afd4ad68de (DIE-QC-99, 2026-11-11)
-base: anchored head 08a1c69f4431 (= aace4c lineage + sreg anchor)
-chain: s1_stdir, s2_vis (st/stm/cbf core place), s3-s6 (cbf, su_c), s7_egap, s8_sul1w, s9_reach, + CPL-QC-4 delta_cb_qc4 (c913f7e32292)
-REVERTED to s1_stdir hard_cores: 16 st_a/st_b types (reverted_types.json) -> 23 station-in-macro G0 errors; 11 stm types (reverted_stm.json) -> G0C off-lattice origins
-REVERTED sul1w in 9 sc types (sul1w_types.json) to s7_egap: strict bind of s12 failed R8_STALE (kv_waddr bound 20 vs table 19)
-G0: 268 errors = head 268 (0 new). G0C: 334 vs head 331 (+3 advisory core_faces: cbn_q11/cbf_q11/cbx_q10 n_y, su_c su_prog/su_rows)
-station_lint: head 27 INVERTED -> 0; 3 NONMONOTONE 19 um step-backs (sle_sc_v1 x_stm_fe)
-EQ: 9 sc types ft_slots bit_sites_um/regs_um positions only (qc_s1_reach); station counts, latency block identical to head
-route_supply: 45 types <=0.8, 27 in (0.8,1.0], 51 >1.0
+QC 12:00 event plan s14_final sha256 7164829ac234 (DIE-QC-99, 2026-11-11)
+base: anchored head 08a1c69f4431. chain: stdir, s2_vis (st/stm/cbf), su_c, egap, sul1w, s1reach + CPL-QC-4 delta_cb_qc4 c913f7e32292
+reverted to s1_stdir: 16 st_a/st_b types (23 station-in-macro G0 errors), 11 stm types (G0C off-lattice)
+reverted sul1w in 9 sc types to s7_egap (strict bind of s12 failed R8_STALE kv_waddr 20 vs 19): held-improvement
+reverted cbn_q01 x3 to s9_reach cores (s13 bind: 4 RESET_ANCHOR/EMIT errors, relay > tol 405): held-improvement
+G0 268 = head (0 new); G0C 334 vs head 331 (+3 advisory core_faces); station_lint 27 INVERTED -> 0, 3 NONMONOTONE 19 um
+EQ: 9 sc types ft_slots bit_sites_um/regs_um positions only, station counts and latency block identical to head
+strict bind of s14 on epyc7 (anchored overlay v3, sidecar 499a1c76d58d): BIND_RC=0 errors 0, latency_consumers errors 0
+digests sha256: bind_report 2fa6b10453c64ce17b1a033e594212209586a3d1db7031d0eb57073cffca0585 bus_groups 8a538cc6eeb7a51a4bb26125a55ad6cf18743ce45e3aee9da3b4b196aae9ca63 bind_latency_consumers e28d9cc0d44e63d0b8e531728c19fdd8a25a9fb32c6c4d44853b3a7dd63a3b28 provenance_bind 063623b7110b370c319b0c122e3d384a9d25caf3143d597ab5464a2cb77c5da3
