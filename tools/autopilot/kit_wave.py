@@ -2044,11 +2044,15 @@ def deep_inputs(cfg, die):
 
 
 def item_inputs(cfg, die):
-    """{item: [absolute paths]} named by the die's item_env and type_args for that item"""
+    """{item: [absolute paths]} named by the die's item_env, type_args and item_inputs ({plan, kit_rtl{...}}) for that
+    item.  KW-FIX-44 11-10 (COORD, t42 bind10_ctap): item_inputs was not probed, so an item's own kit_rtl script (and the
+    bind dir it names) could be absent on a gen host the probe passed"""
     d = cfg["dies"][die]
     out = {}
-    for key in ("item_env", "type_args"):
+    for key in ("item_env", "type_args", "item_inputs"):
         for item, v in ((d.get(key) or {}) if isinstance(d.get(key), dict) else {}).items():
+            if isinstance(v, dict):
+                v = {k: x for k, x in v.items() if not str(k).startswith("note")}
             ps = abs_paths(v)
             if ps:
                 out.setdefault(item, [])
@@ -2058,7 +2062,9 @@ def item_inputs(cfg, die):
 
 def _deep_probe_cmd(paths):
     """shell: per path 'M <p>' (absent) or 'D <p> <what>' (a broken link below it, a missing bind.f source, or a path a
-    .sh script names that fails the same test); silent when whole"""
+    .sh script names that fails the same test); silent when whole.  KW-FIX-44 11-10: 'N <p> <what>' = a path named by
+    a .sh / .json file the script names (its inputs: S81_ASBUILT json, a sourced .sh) that is absent here; counted
+    by src_incomplete only where another probed host has it (old provenance paths absent everywhere are not inputs)"""
     q = shlex.quote
     fn = ("ck() { p=$1; if [ ! -e \"$p\" ]; then echo \"M $p\"; return; fi; "
           # a link / bind.f scan only below a lane's sub-dir (never a lane root or claude/ itself: size and noise)
@@ -2070,7 +2076,10 @@ def _deep_probe_cmd(paths):
           "done | head -3; fi; fi; }; "
           "ckd() { ck \"$1\"; case \"$1\" in *.sh) [ -f \"$1\" ] && "
           "for s in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';)$]*' \"$1\" | sort -u); do "
-          "ck \"$s\" | sed \"s#^M \\(.*\\)#D $1 \\1#; s#^D [^ ]* \\(.*\\)#D $1 \\1#\"; done;; esac; }")
+          "ck \"$s\" | sed \"s#^M \\(.*\\)#D $1 \\1#; s#^D [^ ]* \\(.*\\)#D $1 \\1#\"; "
+          "case \"$s\" in *.sh|*.json) [ -f \"$s\" ] && [ $(stat -c %s \"$s\") -lt 5000000 ] && "
+          "for t in $(grep -o '/srv/opentallas-scratch[^[:space:]\"'\"'\"';),$]*' \"$s\" | sort -u); do "
+          "[ -e \"$t\" ] || echo \"N $1 $t\"; done;; esac; done;; esac; }")
     return "; ".join([fn] + [f"ckd {q(p)}" for p in paths] + ["true"])
 
 
@@ -2105,7 +2114,7 @@ def src_incomplete(AP, cfg, run=None):
         for h in list(d.get("gen_hosts") or []) + [d.get("gen_host")]:
             if h:
                 need.setdefault(h, set()).add(die)
-    counts, missing, deep = {}, {}, {}
+    counts, missing, deep, nmiss, probed = {}, {}, {}, {}, {}
     for h, ds in sorted(need.items()):
         trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
         files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
@@ -2117,7 +2126,7 @@ def src_incomplete(AP, cfg, run=None):
             continue
         if rc != 0:
             continue                                   # unreachable / failed probe = unknown, never dropped
-        counts[h], missing[h], deep[h] = {}, set(), {}
+        counts[h], missing[h], deep[h], nmiss[h], probed[h] = {}, set(), {}, {}, set(dps)
         for ln in (o or "").splitlines():
             f = ln.split()
             if len(f) == 3 and f[0] == "T" and f[2].isdigit():
@@ -2126,6 +2135,15 @@ def src_incomplete(AP, cfg, run=None):
                 missing[h].add(f[1])
             elif len(f) == 3 and f[0] == "D":
                 deep[h].setdefault(f[1], f[2])
+            elif len(f) == 3 and f[0] == "N":
+                nmiss[h].setdefault(f[1], set()).add(f[2])
+    # a second-level name counts only where another probed host has both the script and that path (KW-FIX-44 11-10)
+    for h in nmiss:
+        for p, subs in nmiss[h].items():
+            for sub in sorted(subs):
+                if p not in deep[h] and any(p in probed[g] and p not in missing[g] and sub not in nmiss[g].get(p, ())
+                                            for g in counts if g != h):
+                    deep[h].setdefault(p, sub)
     best = {}
     for h, c in counts.items():
         for t, n in c.items():
