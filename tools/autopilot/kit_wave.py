@@ -1104,9 +1104,14 @@ RULES = [
     # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
     # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
+    # RC125_1111 (KW-FIX-44, COORD 11-11 via KW-FIX-43): docker rc 125 at gen / gen_lint is the daemon refusing or failing
+    # to create the container (leaked veth device units, udevd / logind under load), never a design result
+    ("INFRA", r"^gen(?:_lint)?$", r"docker: Error response from daemon|Error response from daemon: failed to create|"
+                                  r"\brc[ =]+125\b|\bexit(?: status| code)? 125\b|returned non-zero exit status 125\b",
+     "infra (docker rc 125: container not created)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+137\b|"
+                    r"yosys elaboration failed rc[ =]+1(?:25|37)\b|"
                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
                     # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
                     # KW-FIX-43 11-09: make Error 247 = 256-9, a SIGKILL (q_su20 cgroup kill was labelled PLAN off [INFO PDN-0001])
