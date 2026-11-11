@@ -26616,7 +26616,8 @@
     "q_b102@22",
     "NW_io@12",
     "q_spt0__physical_v1@2",
-    "q_hub_ne@7"
+    "q_hub_ne@7",
+    "ot_svgr_top@3"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -26960,7 +26961,8 @@
     "q_b102@22": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
     "NW_io@12": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
     "q_spt0__physical_v1@2": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
-    "q_hub_ne@7": "INPUTS RESTAGED: epyc8 die-hbm-97 plan dirs (plan_p9_wsw_r cores now on every HBM host; 8 more plan_* dirs restaged)"
+    "q_hub_ne@7": "INPUTS RESTAGED: epyc8 die-hbm-97 plan dirs (plan_p9_wsw_r cores now on every HBM host; 8 more plan_* dirs restaged)",
+    "ot_svgr_top@3": "INFRA: hbm-plan-1/stage/p6_relay (core_clock_regions.json) was missing on epyc4 only; staged to epyc4+epyc2 20:1x"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
