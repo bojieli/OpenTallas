@@ -581,6 +581,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
         lk = ft_hop_lockup(P.raw, tn)
+        xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lk else set()
         for j in range(k):
             last = j == k - 1
             if last:
@@ -593,7 +594,13 @@ def wrapper(P, tn, epochs, rtl_root=None):
             body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel(s['name'] + '_i', s['name'] + '_o', j / k)}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
             d, ea = q, eq
-            if lk and not last:
+            if lk and not last and j in xt:
+                # HBM-VSN-XTAP 11-11 cross-tap hop (ft_hop_xtap): station j -> full-cycle hop flop (+1 cycle) -> j+1
+                decl.append(f"    wire [{W - 1}:0] {n}_s{j}_x;\n    wire {n}_s{j}_xe;")
+                body.append(f"    ot_dp_st #(.W({W})) u_fx_{n}_s{j} (.clk(clk), .rst_n(1'b1), .d({q}), .ea({eq}), "
+                            f".q({n}_s{j}_x), .eq({n}_s{j}_xe));")
+                d, ea = f"{n}_s{j}_x", f"{n}_s{j}_xe"
+            elif lk and not last:
                 # TYPE-SAFE-1 11-06 hop lockup (ft_hop_lockup): station j -> transparent-low latch -> station j+1
                 decl.append(f"    wire [{W}:0] {n}_s{j}_l;")
                 body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{n}_s{j} (.clk(clk), .d({{{eq}, {q}}}), .q({n}_s{j}_l));")

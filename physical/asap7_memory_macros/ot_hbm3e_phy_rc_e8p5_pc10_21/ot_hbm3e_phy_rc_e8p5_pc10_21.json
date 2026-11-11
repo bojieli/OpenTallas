@@ -1,0 +1,153 @@
+{
+  "claim_boundary": "a placement and connection abstract for licensed PHY IP only; ASSUMED: one clock input per channel group, stack-global functions in the slice holding full window 16",
+  "footprint": {
+    "area_mm2": 3.753101952,
+    "depth": "full rc macro height",
+    "height_um": 1177.2,
+    "width_basis": "12 x full window 265.584 um snapped up to 8.64 um",
+    "width_um": 3188.16
+  },
+  "generator": "tools/mem_compiler/hbm_phy_gen.py --variant rc_slice --pcs 10-21 --edge-mm 8.5 v1.0",
+  "interface": {
+    "controller_clock_mhz": {
+      "grade": "assumed",
+      "value": 1200.0
+    },
+    "parameters": {
+      "NPC": 12
+    },
+    "port_list": "ot_hbm3e_phy_rc PHY-side ports at NPC = 12"
+  },
+  "kind": "hbm_phy_abstract",
+  "name": "ot_hbm3e_phy_rc_e8p5_pc10_21",
+  "pins": {
+    "k_pins_in_window_um": [
+      0.96,
+      113.28
+    ],
+    "matches": "ot_hbm3e_phy_rc pins of PCs 10-21: local PC i = global PC 10 + i",
+    "on_track_orientations": [
+      "R0",
+      "MX"
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_phases_mod_48nm": [
+      0
+    ],
+    "pin_pitch_um": 0.192,
+    "pin_shift_um": 0.012,
+    "pins_off_m5_track": 0,
+    "placement": "local pseudo-channel i's row/column/data bits in [i*window + span]; clk, rst_n in window 6 (global PC 16)",
+    "power": {
+      "layer": "M4",
+      "obstructed_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "reach": "the parent's M5 stripes over the macro, M4-M5 vias (catalog-macro ElementGrid)",
+      "strap_step_um": 1.2,
+      "strap_width_um": 0.288,
+      "straps": {
+        "VDD": 490,
+        "VSS": 489
+      }
+    },
+    "pseudo_channel_window_um": 265.68,
+    "signal_pins": 7022,
+    "w_pins_in_window_um": [
+      114.24,
+      114.624
+    ]
+  },
+  "power_share": {
+    "basis": "by pseudo-channel count (ASSUMED)",
+    "fraction_of_stack": 0.375
+  },
+  "schema": "opentallas.hbm-phy-abstract.v2",
+  "slice_of": {
+    "channels": [
+      5,
+      10
+    ],
+    "full_width_um": 8500.032,
+    "full_window_um": 265.584,
+    "macro": "ot_hbm3e_phy_rc_e8p5",
+    "pcs": [
+      10,
+      21
+    ]
+  },
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 18.75,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 833.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 18.75,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 833.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 18.75,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 833.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy_rc",
+  "views": {
+    "ot_hbm3e_phy_rc_e8p5_pc10_21.lef": "65165e71c7635ec381d05286576b3742ff4e8cbb67c21989f43380f6cb24108e",
+    "ot_hbm3e_phy_rc_e8p5_pc10_21_bb.v": "0c06b4ea1bd61747388124893ca4f89208586715deb1b29c2207806a8bb5df4a",
+    "ot_hbm3e_phy_rc_e8p5_pc10_21_ff.lib": "5de87a1fde58d6dca149b0e4ba8aa9558bd34d7ced99b97dddd3d7864dbe616a",
+    "ot_hbm3e_phy_rc_e8p5_pc10_21_ss.lib": "a94eb874f52639690e915fccdd9cd29b33ece03a04f156b1180494827f7f5f50",
+    "ot_hbm3e_phy_rc_e8p5_pc10_21_tt.lib": "e48d4c9ad5a828c64d52a0b1335e943af0bdc08abfc8eb235ac5435afabf72ca"
+  }
+}
