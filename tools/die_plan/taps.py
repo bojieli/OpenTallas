@@ -371,6 +371,238 @@ def _absorb(leaves, target, min_sinks, radius):
     return keep
 
 
+_EXACT_SUM = float(1 << 53)    # integer-valued float weights sum exactly (in any order) below 2**53
+
+
+def _median_index(pts):
+    """((keys, prefix) for axis 0, (keys, prefix) for axis 1, total) of a leaf's sinks for the exact union weighted
+    median (_union_wmedian), or None when that median could differ from _wmedian in any bit.  keys = the sinks'
+    _wmedian sort keys (p[i], p[1-i]) in sorted order, prefix[k] = weight of the first k.  Qualifies only plain finite
+    non-zero float coordinates (equal keys are then the same bits; a +-0.0 / int / NaN coordinate keeps _wmedian) and
+    positive integer-valued float weights summing below 2**53 (every partial sum exact, so the order of the old
+    sorted-order accumulation cannot change a sum or a comparison with tot / 2)."""
+    tot = 0.0
+    for p in pts:
+        x, y, w = p[0], p[1], p[2]
+        if type(x) is not float or type(y) is not float or type(w) is not float:
+            return None
+        if x == 0.0 or y == 0.0 or not (math.isfinite(x) and math.isfinite(y)) or not (w > 0 and w.is_integer()):
+            return None
+        tot += w
+    if tot >= _EXACT_SUM:
+        return None
+    return _axis_index([(p[0], p[1], p[2]) for p in pts]) + _axis_index([(p[1], p[0], p[2]) for p in pts]) + (tot,)
+
+
+def _axis_index(rows):
+    rows.sort()
+    pre, acc = [0.0], 0.0
+    for row in rows:
+        acc += row[2]
+        pre.append(acc)
+    return ((rows, [row[:2] for row in rows], pre),)
+
+
+def _merge_index(A, B):
+    """the _median_index of the union of two qualified leaves (both sorted runs: Timsort merges them in linear time)."""
+    out = ()
+    for (ra, _, _), (rb, _, _) in zip(A[:2], B[:2]):
+        out += _axis_index(ra + rb)
+    return out + (A[2] + B[2],)
+
+
+def _union_wmedian(a, b, half):
+    """_wmedian(ga + gb, i) from the axis-i indexes a, b of two qualified leaves: the smallest sort key K of the union
+    with W(key <= K) >= tot / 2 (the first sorted sink whose running weight reaches tot / 2 carries exactly that key),
+    by binary search on each side (the cumulative weight is monotone in the key).  Returns K[0] = p[i]."""
+    from bisect import bisect_right
+    best = None
+    for (_, k1, p1), (_, k2, p2) in ((a, b), (b, a)):
+        lo, hi = 0, len(k1)
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if p1[mid + 1] + p2[bisect_right(k2, k1[mid])] >= half:
+                hi = mid
+            else:
+                lo = mid + 1
+        if lo < len(k1) and (best is None or k1[lo] < best):
+            best = k1[lo]
+    return best[0]
+
+
+_DIRS = ((1.0, 1.0), (1.0, -1.0), (-1.0, 1.0), (-1.0, -1.0))   # index d and 3 - d are opposite directions
+_GEO_ABS_UM = 1e5     # coordinate bound of the bounded radius search (any die frame is a few mm)
+_GEO_TOL_UM = 1e-6    # >> the float error of an L1 distance below 4e5 um (< 1e-9 um), << any planned distance
+
+
+def _geo_index(pts):
+    """per direction s of _DIRS the leaf's sinks as [(-(s . p), p[0], p[1])] ascending (the farthest along s first),
+    or None unless every coordinate is a finite float with |v| < _GEO_ABS_UM (then the bounded radius of
+    _radius_within is exact)."""
+    for p in pts:
+        x, y = p[0], p[1]
+        if type(x) is not float or type(y) is not float or not (abs(x) < _GEO_ABS_UM and abs(y) < _GEO_ABS_UM):
+            return None
+    return tuple(sorted((-(sx * p[0] + sy * p[1]), p[0], p[1]) for p in pts) for sx, sy in _DIRS)
+
+
+def _merge_geo(A, B):
+    return tuple(sorted(a + b) for a, b in zip(A, B))
+
+
+def _spread_lb(A, B):
+    """a lower bound of the L1 radius about ANY centre of the union of two _geo_index leaves: half its diagonal extent
+    max_s (M_s + M_-s) / 2, M_s = max s . p (float, within _GEO_TOL_UM of exact)."""
+    m = [-min(A[d][0][0], B[d][0][0]) for d in range(4)]
+    return max(m[0] + m[3], m[1] + m[2]) / 2
+
+
+def _radius_within(A, B, x, y, radius):
+    """max(abs(p[0] - x) + abs(p[1] - y) for p in the union), exactly as that generator gives it, or None when it is
+    > radius.  The L1 distance is max_s s . (p - c), so the exact radius is D = max_s (M_s - s . c); a sink whose s . p
+    is below D + s . c - _GEO_TOL_UM in every direction is farther than float rounding from the maximum and cannot
+    be (or tie) it, so the old formula on the remaining near-extreme sinks gives the same float maximum."""
+    m = [-min(A[d][0][0], B[d][0][0]) for d in range(4)]
+    sc = [sx * x + sy * y for sx, sy in _DIRS]
+    D = max(m[d] - sc[d] for d in range(4))
+    if D > radius + _GEO_TOL_UM:
+        return None
+    r = None
+    for d in range(4):
+        thr = -(D + sc[d] - _GEO_TOL_UM)
+        for L in (A[d], B[d]):
+            for v, px, py in L:
+                if v > thr:
+                    break
+                q = abs(px - x) + abs(py - y)
+                if r is None or q > r:
+                    r = q
+    if r is None:       # unreachable: the sink attaining D is always kept; stay exact regardless
+        r = max(abs(px - x) + abs(py - y) for L in (A[0], B[0]) for _, px, py in L)
+    return r
+
+
+class _Keepout:
+    """blocked(x, y) of density_taps: (x, y) strictly inside a hard-core keep-clear box (the same test as the lambda it
+    replaces).  _merge reads `boxes` to skip pairs that this test rejects whatever their median (_sure_blocked)."""
+    __slots__ = ("boxes",)
+
+    def __init__(self, boxes):
+        self.boxes = tuple(tuple(b) for b in boxes)
+
+    def __call__(self, x, y):
+        return any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in self.boxes)
+
+
+_NO_BOXES = (frozenset(), frozenset())
+
+
+def _box_key(boxes, pts):
+    """(BX, BY): the keep-clear boxes whose open x (BX) / y (BY) interval holds EVERY sink's x / y of pts (finite float
+    sinks only, else no box).  The key of a union is the intersection of its parts' keys."""
+    if not boxes:
+        return _NO_BOXES
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    if any(type(v) is not float or not math.isfinite(v) for v in xs + ys):
+        return _NO_BOXES
+    lo_x, hi_x, lo_y, hi_y = min(xs), max(xs), min(ys), max(ys)
+    return (frozenset(k for k, (x0, _, x1, _) in enumerate(boxes) if x0 < lo_x and hi_x < x1),
+            frozenset(k for k, (_, y0, _, y1) in enumerate(boxes) if y0 < lo_y and hi_y < y1))
+
+
+def _sure_blocked(ka, kb):
+    """True when _Keepout rejects the weighted median of the union of two leaves with box keys ka, kb, whatever it
+    is.  The median is (x, y) with x, y the coordinates of union sinks (_wmedian / _union_wmedian return a sink's).
+    If boxes b1 in BYa, b2 in BYb both lie in BXa & BXb, every union x is inside both x intervals, and y comes from
+    a (inside b1's y interval) or from b (inside b2's): (x, y) is strictly inside b1 or b2.  Likewise with x, y swapped."""
+    (xa, ya), (xb, yb) = ka, kb
+    X, Y = xa & xb, ya & yb
+    return bool((ya & X and yb & X) or (xa & Y and xb & Y))
+
+
+def _median_box(np, own_ax, w):
+    """per partner weight w: (x_lo, x_hi, y_lo, y_hi) holding the union weighted median of the owner (median index
+    own_index, total W) and any partner of weight w.  The union key K* is the least key whose union weight reaches
+    (W + w) / 2, so the owner's own weight up to K* is >= (W - w) / 2 and K* <= the owner's least key whose weight
+    reaches (W + w) / 2 (if any): x* lies between those keys' x (keys sort on x first; likewise y)."""
+    if own_ax is None:
+        inf = np.full(len(w), np.inf)
+        return -inf, inf, -inf, inf
+    ax, W = own_ax
+    out = []
+    for v, pre, _ in ax:
+        c = pre[1:]
+        lo_t, hi_t = (W - w) / 2, (W + w) / 2
+        lo = v[np.minimum(np.searchsorted(c, lo_t, side="left"), len(v) - 1)]
+        hi = v[np.minimum(np.searchsorted(c, hi_t, side="left"), len(v) - 1)]
+        out += [np.where(lo_t > 0, lo, -np.inf), np.where(hi_t <= W, hi, np.inf)]
+    return tuple(out)
+
+
+def _single_wmedian(np, v, pre, codes, cq, qv, w, W):
+    """_union_wmedian of an indexed leaf (axis keys coded as `codes`, their coordinate `v`, prefix weights `pre`,
+    total W) with each single sink q (key code cq, coordinate qv, weight w), vectorized: the owner's first key t whose
+    union weight reaches half = (W + w) / 2 (q counts from the first owner key >= q's key) against q's own key, the
+    smaller key wins.  Codes are exact ranks of the (p[i], p[1-i]) keys, so they order exactly as the key tuples."""
+    n = len(v)
+    half = (W + w) / 2
+    pos = np.searchsorted(codes, cq, side="left")
+    posr = np.searchsorted(codes, cq, side="right")
+    c1 = pre[1:]
+    i1 = np.searchsorted(c1, half, side="left")
+    i2 = np.searchsorted(c1, half - w, side="left")
+    tk = np.where(i1 < pos, i1, np.maximum(pos, i2))
+    kval = tk < n
+    tkc = np.minimum(tk, n - 1)
+    useq = (pre[posr] + w >= half) & (~kval | (cq <= codes[tkc]))
+    if not np.all(useq | kval):
+        raise AssertionError("taps._single_wmedian: no median (weights not exact)")
+    return np.where(useq, qv, v[tkc])
+
+
+def _pair_keys(own, cand, target, radius, sb_row, np_arrays=None, leaf=None, own_ax=None):
+    """(keys, js) (ascending without numpy; unsorted numpy arrays with it) for the pairs (own, j), j in cand, that can pass the merge offer: weight and centre tests
+    exactly as offer computes them, minus pairs blocked whatever their median (_sure_blocked, sb_row[group]) and pairs
+    whose union cannot fit the radius about any centre (_spread_lb).  key < the pair's exact r (a lower bound
+    minus _GEO_TOL_UM; -inf without a geometry index): the cursor of `own` reaches the heap before the pair could."""
+    if np_arrays is not None:
+        np, X, Y, Wt, M, G, Q = np_arrays
+        j = cand[~sb_row[G[cand]]] if sb_row.any() else cand
+        j = j[~((Wt[own] + Wt[j] > target) | (np.abs(X[own] - X[j]) + np.abs(Y[own] - Y[j]) > 2 * radius))]
+        if not len(j):
+            return np.zeros(0), j
+        with np.errstate(invalid="ignore"):
+            mu = np.maximum(M[own], M[j])
+            lb = np.maximum(mu[:, 0] + mu[:, 3], mu[:, 1] + mu[:, 2]) / 2
+            # the union median lies in _median_box: r >= max_s (M_s - max of s . c over that box)
+            # (both leaves qualified for _median_index: the old float sums are then exact)
+            x_lo, x_hi, y_lo, y_hi = _median_box(np, own_ax() if own_ax else None, Wt[j])
+            box = lb
+            for d, (sx, sy) in enumerate(_DIRS):
+                box = np.maximum(box, mu[:, d] - ((x_hi if sx > 0 else -x_lo) + (y_hi if sy > 0 else -y_lo)))
+            lb = np.where(Q[j], box, lb)
+            fin = np.isfinite(lb)
+            keep = ~(fin & (lb > radius + _GEO_TOL_UM))
+        j, lb, fin = j[keep], lb[keep], fin[keep]
+        return np.where(fin, lb - _GEO_TOL_UM, -np.inf), j          # unsorted: the caller sorts
+    a = leaf(own)
+    out = []
+    for j in cand:
+        b = leaf(j)
+        if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius or sb_row(j):
+            continue
+        ga, gb = a[5], b[5]
+        if ga is not None and gb is not None:
+            lb = _spread_lb(ga, gb)
+            if lb > radius + _GEO_TOL_UM:
+                continue
+            out.append((lb - _GEO_TOL_UM, j))
+        else:
+            out.append((-math.inf, j))
+    out.sort(key=lambda q: q[0])
+    return [q[0] for q in out], [q[1] for q in out]
+
+
 def _merge(leaves, target, radius, blocked=lambda x, y: False):
     """bisection cuts along the median, so a sparse channel or an L-shaped region ends up in many small leaves (dead-ish
     taps of a few hundred sinks next to each other).  Greedily merge the pair of leaves whose union still fits the
@@ -378,35 +610,230 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
     # Surviving leaves keep their relative order and each new merge is appended.
     # Monotonic IDs therefore preserve the original (radius, list-i, list-j)
     # tie break while unchanged pairs retain their previously computed cost.
+    # DIE-QC-97 TAPS-MERGE 11-11: the same merges in the same order as the all-pairs heap form (offer every pair, then
+    # every new leaf against every live leaf), by construction:
+    #  - pairs are offered lazily.  Each leaf keeps its candidate pairs (initial leaf i: j > i; merged leaf k: every
+    #    live j < k) sorted by a key below the pair's exact cost r (_pair_keys); only its cursor sits in the heap as
+    #    (key, -1, leaf).  A popped cursor offers its pair exactly as before and re-enters with the next key.  A
+    #    pair whose exact entry (r, i, j, x, y) would pop before another's is therefore always offered first: its
+    #    cursor key is < r.  Exact entries are unique in (i, j), so pop order depends on the entries only, and a
+    #    cursor of a merged-away leaf (all its pairs stale) is dropped.
+    #  - pairs failing the weight / centre test, pairs blocked whatever their median (density_taps' _Keepout,
+    #    _sure_blocked) and pairs no centre fits (_spread_lb) are never offered: the old offer dropped them too.
+    #  - the merged weighted median comes from per-leaf sorted indexes (_union_wmedian), bit-identical to
+    #    _wmedian(a[4] + b[4], i) for qualified leaves (_median_index); any other leaf keeps _wmedian.
+    #  - r is the same float max over the same sinks (order-free without NaN), from the near-extreme sinks only
+    #    (_radius_within); other leaves keep the full max.
+    #  - a qualified leaf's offers with single-sink partners are computed at once (batch, _single_wmedian: the
+    #    same median, r = max(leaf part, partner distance), blocked) and kept sorted; only the least is in the heap,
+    #    the next one enters when it pops stale (advance).  Its merge retires the rest with the leaf.
     import heapq
     live = dict(enumerate(leaves))
     pending = []
+    boxes = blocked.boxes if type(blocked) is _Keepout else ()
+    n_ids = 2 * len(leaves) + 1
+    inside, index, geo, gid, keys = {}, {}, {}, {}, []
+
+    def group(k, key=None):
+        key = _box_key(boxes, live[k][4]) if key is None else key
+        inside[k] = key
+        if key not in gid:
+            gid[key] = len(keys)
+            keys.append(key)
+        return gid[key]
+
+    try:
+        import numpy as np
+        if not all(type(v) in (float, int) for q in leaves for v in q[:3]):
+            raise ImportError
+    except ImportError:
+        np = None
+    if np is not None:
+        # exact ranks of every sink coordinate: (p[i], p[1-i]) sort keys coded as integers (_single_wmedian)
+        vals = sorted({v for q in leaves for p in q[4] for v in p[:2] if type(v) is float and math.isfinite(v)})
+        rank = {v: k for k, v in enumerate(vals)}
+        U = len(vals) + 1
+        SX, SY = np.zeros(n_ids), np.zeros(n_ids)
+        CX, CY = np.zeros(n_ids, dtype=np.int64), np.zeros(n_ids, dtype=np.int64)
+        S1 = np.zeros(n_ids, dtype=bool)
+        X, Y, Wt = np.zeros(n_ids), np.zeros(n_ids), np.zeros(n_ids)
+        M = np.full((n_ids, 4), np.nan)
+        G = np.zeros(n_ids, dtype=np.int64)
+        alive = np.zeros(n_ids, dtype=bool)
+        Q = np.zeros(n_ids, dtype=bool)
+        arrays = (np, X, Y, Wt, M, G, Q)
+        rows = {}
+
+    def enter(k, key=None, ga=None):
+        """index leaf k (live[k] set): box group, geometry index, numpy row."""
+        g = group(k, key)
+        geo[k] = _geo_index(live[k][4]) if ga is None else ga
+        if np is not None:
+            q = live[k]
+            X[k], Y[k], Wt[k], G[k], alive[k], Q[k] = q[0], q[1], q[2], g, True, idx(k) is not None
+            if geo[k] is not None:
+                M[k] = [-geo[k][d][0][0] for d in range(4)]
+                if Q[k] and len(q[4]) == 1:     # a qualified single sink: exact batch offers (batch)
+                    px, py = q[4][0][0], q[4][0][1]
+                    SX[k], SY[k], S1[k] = px, py, True
+                    CX[k], CY[k] = rank[px] * U + rank[py], rank[py] * U + rank[px]
+
+    def sb_row(k):
+        g = gid[inside[k]]
+        if np is None:
+            return lambda j: _sure_blocked(keys[g], inside[j])
+        row = rows.get(g)
+        if row is None or len(row) < len(keys):
+            row = rows[g] = np.array([_sure_blocked(keys[g], h) for h in keys], dtype=bool)
+        return row
+
+    cursor, batches, coded = {}, {}, {}
+
+    def code(k):
+        """k's median index as arrays: per axis (coordinate, prefix weights, exact key codes), total weight."""
+        if k not in coded:
+            ix = index[k]
+            coded[k] = ([(np.array([q[0] for q in rows]), np.array(pre),
+                          np.array([rank[q[0]] * U + rank[q[1]] for q in rows], dtype=np.int64))
+                         for rows, _, pre in ix[:2]], ix[2])
+        return coded[k]
+
+    def candidates(k, ids):
+        ks, js = _pair_keys(k, ids, target, radius, sb_row(k), arrays if np is not None else None,
+                            None if np is not None else (lambda j: live[j][:5] + (geo[j],)),
+                            (lambda: code(k)) if np is not None and Q[k] else None)
+        if np is not None:
+            if Q[k] and geo[k] is not None:
+                one = S1[js]
+                batch(k, js[one])
+                ks, js = ks[~one], js[~one]
+            o = np.argsort(ks, kind="stable")
+            ks, js = ks[o].tolist(), js[o].tolist()
+        if js:
+            cursor[k] = [ks, js, 0]
+            heapq.heappush(pending, (ks[0], -1, k))
+
+    def batch(k, js):
+        """the exact offers of k with single-sink partners js at once (offer's median / r / blocked, vectorized):
+        sorted (r, i, j, x, y) entries of which only the least sits in the heap (the rest cannot pop before it)."""
+        if not len(js):
+            return
+        ax, W = code(k)
+        qx, qy, w = SX[js], SY[js], Wt[js]
+        x = _single_wmedian(np, ax[0][0], ax[0][1], ax[0][2], CX[js], qx, w, W)
+        y = _single_wmedian(np, ax[1][0], ax[1][1], ax[1][2], CY[js], qy, w, W)
+        d = np.abs(qx - x) + np.abs(qy - y)
+        xy = np.empty(len(x), dtype=np.complex128)        # exact (x, y) pairs, ordered by x then y
+        xy.real, xy.imag = x, y
+        cen, inv = np.unique(xy, return_inverse=True)
+        inv = inv.reshape(-1)
+        cen = list(zip(cen.real.tolist(), cen.imag.tolist()))
+        rk = np.array([_radius_within(geo[k], geo[k], cx_, cy_, math.inf) for cx_, cy_ in cen])
+        r = np.maximum(rk[inv], d)
+        ok = r <= radius
+        if not ok.any():
+            return
+        used = np.unique(inv[ok])
+        blk = np.zeros(len(cen), dtype=bool)
+        blk[used] = [bool(blocked(*cen[u])) for u in used.tolist()]
+        ok &= ~blk[inv]
+        if not ok.any():
+            return
+        jj, r, x, y = js[ok], r[ok], x[ok], y[ok]
+        i_, j_ = np.minimum(jj, k), np.maximum(jj, k)
+        o = np.lexsort((j_, i_, r))
+        batches[k] = [(r[o], i_[o], j_[o], x[o], y[o]), 0]
+        heapq.heappush(pending, head(k))
+
+    def head(o):
+        (r, i_, j_, x, y), p = batches[o]
+        return (float(r[p]), int(i_[p]), int(j_[p]), float(x[p]), float(y[p]))
+
+    def advance(i, j):
+        """a stale exact entry (i, j) that heads a live leaf's batch: put that batch's next entry in the heap."""
+        for o in (i, j):
+            b = batches.get(o)
+            if b is not None and o in live and head(o)[1:3] == (i, j):
+                b[1] += 1
+                if b[1] < len(b[0][0]):
+                    heapq.heappush(pending, head(o))
+                else:
+                    del batches[o]
+
+    def idx(k):
+        if k not in index:
+            index[k] = _median_index(live[k][4])
+        return index[k]
 
     def offer(i, j):
         a, b = live[i], live[j]
         if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
             return
-        g = a[4] + b[4]
-        x, y = _wmedian(g, 0), _wmedian(g, 1)
-        r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+        ga, gb = geo[i], geo[j]
+        if ga is not None and gb is not None and _spread_lb(ga, gb) > radius + _GEO_TOL_UM:
+            return          # every centre is farther than radius from some sink: the old r <= radius test fails
+        ia, ib = idx(i), idx(j)
+        if ia is not None and ib is not None:
+            half = (ia[2] + ib[2]) / 2
+            x, y = _union_wmedian(ia[0], ib[0], half), _union_wmedian(ia[1], ib[1], half)
+        else:
+            g = a[4] + b[4]
+            x, y = _wmedian(g, 0), _wmedian(g, 1)
+        if ga is not None and gb is not None and math.isfinite(x) and math.isfinite(y):
+            r = _radius_within(ga, gb, x, y, radius)
+            if r is None:
+                return
+        else:
+            r = max(abs(p[0] - x) + abs(p[1] - y) for p in a[4] + b[4])
         if r <= radius and not blocked(x, y):
             heapq.heappush(pending, (r, i, j, x, y))
 
-    for i in live:
-        for j in range(i + 1, len(live)):
-            offer(i, j)
-    next_id = len(live)
+    L = len(leaves)
+    for k in live:
+        enter(k)
+    for i in range(L):
+        candidates(i, np.arange(i + 1, L) if np is not None else range(i + 1, L))
+    next_id = L
     while pending:
-        r, i, j, x, y = heapq.heappop(pending)
-        if i not in live or j not in live:
+        e = heapq.heappop(pending)
+        if e[1] == -1:                      # a leaf's cursor: offer its next pair
+            k = e[2]
+            if k not in live:
+                continue
+            c = cursor[k]
+            ks, js, n = c
+            j = js[n]
+            c[2] = n + 1
+            if n + 1 < len(js):
+                heapq.heappush(pending, (ks[n + 1], -1, k))
+            if j in live:
+                offer(min(k, j), max(k, j))
             continue
+        r, i, j, x, y = e
+        if i not in live or j not in live:
+            advance(i, j)
+            continue
+        ia, ib = index.pop(i, None), index.pop(j, None)
+        ga, gb = geo.pop(i), geo.pop(j)
+        key = (inside[i][0] & inside[j][0], inside[i][1] & inside[j][1])     # = _box_key of the union
+        for q in (i, j):
+            inside.pop(q)
+            cursor.pop(q, None)
+            batches.pop(q, None)
+            coded.pop(q, None)
+            if np is not None:
+                alive[q] = False
         a, b = live.pop(i), live.pop(j)
         k = next_id
         next_id += 1
         live[k] = (x, y, a[2] + b[2], r, a[4] + b[4])
-        for other in live:
-            if other != k:
-                offer(other, k)
+        if ia is not None and ib is not None:
+            index[k] = _merge_index(ia, ib)
+        enter(k, key, _merge_geo(ga, gb) if ga is not None and gb is not None else None)
+        if np is not None:
+            candidates(k, np.flatnonzero(alive[:k]))
+        else:
+            candidates(k, [o for o in live if o != k])
     return list(live.values())
 
 
@@ -677,7 +1104,7 @@ def density_taps(P, tn, control=True):
     cached = _density_cached(key)
     if cached is not None:
         return cached
-    blocked = lambda x, y: any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in boxes)
+    blocked = _Keepout(boxes)
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
 
