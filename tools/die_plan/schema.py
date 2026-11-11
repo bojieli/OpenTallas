@@ -1212,6 +1212,11 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
     "type": "object", "additionalProperties": False,
     "properties": {"all": {"type": "boolean"}, "except": {"type": "array", "items": {"type": "string"}},
                    "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
+# DIE-HBM-97 11-11 VSN2-HOLD: per-type hold forms (gen_phys.hop_latch_launch_tap / reset_follow_clock_tap; absent = off)
+for _k in ("hop_latch_launch_tap", "reset_follow_clock_tap"):
+    SCHEMA["properties"]["clock"]["properties"][_k] = {
+        "type": "object", "additionalProperties": False,
+        "properties": {"types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}

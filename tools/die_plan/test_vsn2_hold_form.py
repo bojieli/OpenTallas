@@ -109,3 +109,15 @@ def test_out_of_reach_terminal_is_not_used():
     assert p.returncode == 0, p.stderr
     assert "FINAL t7" in p.stdout
     assert "1 kept" in p.stdout and "u_ft_x_o_2/eq/RESETN:clk_t2" in p.stdout
+
+
+def test_schema_accepts_vsn2_hold_keys():
+    import json, pathlib, copy
+    import schema as S
+    for k in ("hop_latch_launch_tap", "reset_follow_clock_tap"):
+        sub = S.SCHEMA["properties"]["clock"]["properties"][k]
+        assert sub["additionalProperties"] is False
+        assert set(sub["properties"]) == {"types", "note"}
+    js = json.loads(pathlib.Path(S.__file__).with_name("die_plan.schema.json").read_text())
+    assert js["properties"]["clock"]["properties"]["hop_latch_launch_tap"] == S.SCHEMA["properties"]["clock"]["properties"]["hop_latch_launch_tap"]
+    assert js["properties"]["clock"]["properties"]["reset_follow_clock_tap"] == S.SCHEMA["properties"]["clock"]["properties"]["reset_follow_clock_tap"]
