@@ -21490,27 +21490,7 @@
     "epyc2"
    ],
    "cancel_superseded": true,
-   "only_items": [
-    "coll_ftc",
-    "coll_ftm",
-    "coll_ftn",
-    "coll_n",
-    "phy_serdes",
-    "phy_serdes_b",
-    "phy_ucie_kv",
-    "sle_fe_v2",
-    "sle_fw_v1__cl9d029624",
-    "sle_hc0__cl929603c0__cl38badc56",
-    "sle_hc1__cl22c1ff36",
-    "sle_hc1__cl7d360508",
-    "sle_hc2__cl9c4c4509__cl3edce1b8",
-    "sle_hc2__cl9c4c4509__clf60c5152",
-    "sle_hc2__clcc5e3e61",
-    "slw_fw_v1__cl51d45468",
-    "slw_fw_v1__clf51c11d8__cl592e3d37",
-    "slw_fw_v1__clf51c11d8__clc7ddab13",
-    "slw_st_a_v2__cl9f076a5c"
-   ],
+   "only_items": [],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
     "coll_ftm": {
@@ -27202,7 +27182,28 @@
      },
      "note": "KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built on cand23d_fh 4052bb53c794; only 4 hc rows x clock keys sink_bins_file + tap_pair_affinity) staged inside src; kit_rtl = strict bind in the wave root (bind_out unset, as sle_ctl cand12). Fresh kit (new key). DO_NOT_COUNT until signed."
     }
-   }
+   },
+   "only_items_19_kw45_1111": [
+    "coll_ftc",
+    "coll_ftm",
+    "coll_ftn",
+    "coll_n",
+    "phy_serdes",
+    "phy_serdes_b",
+    "phy_ucie_kv",
+    "sle_fe_v2",
+    "sle_fw_v1__cl9d029624",
+    "sle_hc0__cl929603c0__cl38badc56",
+    "sle_hc1__cl22c1ff36",
+    "sle_hc1__cl7d360508",
+    "sle_hc2__cl9c4c4509__cl3edce1b8",
+    "sle_hc2__cl9c4c4509__clf60c5152",
+    "sle_hc2__clcc5e3e61",
+    "slw_fw_v1__cl51d45468",
+    "slw_fw_v1__clf51c11d8__cl592e3d37",
+    "slw_fw_v1__clf51c11d8__clc7ddab13",
+    "slw_st_a_v2__cl9f076a5c"
+   ]
   },
   "hbm": {
    "enabled": true,
