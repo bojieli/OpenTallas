@@ -1,0 +1,19 @@
+#!/bin/bash
+# ot-udevd-guard (KW-FIX-44, OWNER via COORD 11-10): systemd-udevd leaks on the fleet hosts (epyc4 114 GB on 11-10,
+# back to 3.1 GB one hour after a restart, about 3 GB/h).  From cron every 5 min: when its RSS passes
+# OT_UDEVD_MAX_GB (default 4), restart systemd-udevd and log the restart.  Nothing else is touched.
+#   ot-udevd-guard [--dry-run]       log: $OT_UDEVD_LOG (default /var/tmp/ot-heavy/udevd-guard.log)
+set -u
+MAX_GB=${OT_UDEVD_MAX_GB:-4}
+LOG=${OT_UDEVD_LOG:-/var/tmp/ot-heavy/udevd-guard.log}
+pid=$(systemctl show -p MainPID --value systemd-udevd.service 2>/dev/null)
+case "$pid" in ''|0|*[!0-9]*) exit 0;; esac
+kb=$(awk '/^VmRSS:/{print $2}' "/proc/$pid/status" 2>/dev/null)
+case "$kb" in ''|*[!0-9]*) exit 0;; esac
+lim=$(( MAX_GB * 1024 * 1024 ))
+[ "$kb" -le "$lim" ] && exit 0
+gb=$(awk -v k="$kb" 'BEGIN{printf "%.1f", k / 1048576}')
+if [ "${1:-}" = --dry-run ]; then echo "would restart systemd-udevd pid $pid RSS ${gb} GB > ${MAX_GB} GB"; exit 0; fi
+if sudo -n systemctl restart systemd-udevd.service; then r=ok; else r="FAILED rc $?"; fi
+npid=$(systemctl show -p MainPID --value systemd-udevd.service 2>/dev/null)
+echo "$(date -Is) $(hostname) RESTART systemd-udevd pid $pid RSS ${gb} GB > ${MAX_GB} GB: $r (new pid $npid)" >> "$LOG"

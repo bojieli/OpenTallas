@@ -15,7 +15,7 @@ def load():
     return m
 
 
-def row(admit, avail, load=300.0):
+def row(admit, avail, load=100.0):
     return dict(admit_gb=admit, free_gb=admit, avail_gb=avail, cpu_load1=load, ncpu=128, total_gb=1000, disk_gb=1000,
                 headroom_gb=0, floor_gb=50, waiting=0, waiting_gb=0, running=1, fresh=0)
 
@@ -34,6 +34,15 @@ class Choose(unittest.TestCase):
         os.environ["OT_RUN_DIRECT"] = "1"
         self.assertEqual(self.m.choose({"a": row(500, 79), "b": row(500, 80)}, 48), ("b", False))
         self.assertEqual(self.m.choose({"a": row(500, 79), "b": row(500, 70)}, 48), ("a", True))    # waits, no start
+
+    def test_load_gated_host_is_skipped(self):
+        # LOADGATE_1110 (KW-FIX-44): ot-heavy holds every job, direct too, at load1 + fresh >= 1.25 x nproc (160 here)
+        os.environ["OT_RUN_DIRECT"] = "1"
+        self.assertEqual(self.m.choose({"a": row(500, 300, load=507.0), "b": row(500, 200, load=50.0)}, 48), ("b", False))
+        self.assertEqual(self.m.choose({"a": row(500, 300, load=100.0, ), "b": row(500, 200)}, 48), ("a", False))
+        burst = dict(row(500, 300, load=100.0), fresh=4)      # 100 + 4 x 16 = 164 >= 160: a burst counts before load1
+        self.assertEqual(self.m.choose({"a": burst, "b": row(500, 200)}, 48), ("b", False))
+        self.assertEqual(self.m.choose({"a": row(500, 300, load=507.0)}, 48), ("a", True))   # waits there, no start
 
     def test_off_by_default(self):
         self.assertEqual(self.m.choose({"a": row(-50, 300), "b": row(500, 200, load=1.0)}, 48)[0], "b")

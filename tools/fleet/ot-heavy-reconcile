@@ -421,6 +421,13 @@ def admit_size(mem, cls, table=None):
                 if gb < mem:
                     return gb, f"family '{pre}*' seed {gb:g}G ({why}; class '{cls}' not measured yet)"
                 return None
+    if conf("REAL_ADMIT") and cls not in ("?", "cd") and e and capacity_sample_count(cls, e) >= 1 and e["peak_gb"] > 0:
+        # REALMEM_1110 (OWNER via COORD 11-10: epyc4 at load 95 of 256 with 31 waiters / 424 GB and 207 GB available):
+        # a request is charged its class's MEASURED peak (stage class, from finished runs), not the declared --mem
+        res = math.ceil(max(conf("REQ_PEAK_MULT") * e["peak_gb"], e["peak_gb"] + conf("REQ_PEAK_PAD_GB")))
+        if res >= mem:
+            return None
+        return res, f"REALMEM class '{cls}' measured peak {e['peak_gb']}G, n={e['n']}+{e.get('proved', 0)} proved"
     if cls in ("?", "cd") or not e or capacity_sample_count(cls, e) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
@@ -578,7 +585,7 @@ def main():
         # A step is one set of containers in one growth phase: a Verilator build that finished compiling and now
         # simulates (phase 'vl' -> '') or an ORFS step that left GRT starts a new step; its peak is not carried.
         ph, s["compiling"] = growth_phase(allp)
-        step = [sorted(cs), ph]
+        step = [sorted(c["Id"] for c in cs), ph]
         if s.get("step") != step:
             s["step"], s["step_rss_gb"] = step, 0.0
         s["phase"] = ph
@@ -806,7 +813,8 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
-                PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
+                REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1016,12 +1024,19 @@ def invariant(rows, total, avail, b, table=None):
     # OWNER 2026-11-07: optionally discount historical peaks, retaining live usage,
     # full fresh reservations, measured growth and the physical headroom invariant.
     peak_factor = max(0.0, min(1.0, conf("INV_PAST_PEAK_FACTOR")))
+    # REALMEM_1110 (OWNER via COORD 11-10, epyc4: 207 GB available yet admits -6 from fresh 74 GB + peak reservations):
+    # with REAL_ADMIT=1 a running unit counts at its real memory now (no past-peak gap, no phase target, no running-growth
+    # reserve); only units younger than YOUNG_S (5 min) or admitted but not started keep their charge (fresh), and
+    # INV_HEADROOM_GB (32) is the MemAvailable floor.  Safety stays with the scope caps, swap and earlyoom.
+    real = bool(conf("REAL_ADMIT"))
+    if real:
+        peak_factor = 0.0
     base, extra = {}, {}
     for r in rows:
         if r["active"]:
             peak = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
             h0 = peak if peak_factor == 1.0 else r["now"] + peak_factor * (peak - r["now"])
-            base[id(r)], extra[id(r)] = h0, max(0.0, phase_target(r, table) - h0)   # v17.4 (b)/(c): growth-phase units only
+            base[id(r)], extra[id(r)] = h0, (0.0 if real else max(0.0, phase_target(r, table) - h0))   # v17.4 (b)/(c): growth-phase units only
     tot_extra = sum(extra.values())
     pcap = conf("PHASE_CAP_AVAIL_FRAC") * max(avail, 0.0)
     scale = 1.0 if tot_extra <= pcap or tot_extra <= 0 else pcap / tot_extra
@@ -1042,14 +1057,15 @@ def invariant(rows, total, avail, b, table=None):
     # v16 reserve of the old running units (already capped at 25 % of available), minus what their peak gaps hold;
     # v17.1: the v13 settled floor is a safety pad and is NOT charged here -- INV_HEADROOM_GB (64) is the pad
     capped = max(0.0, b["grow"] - b.get("fresh_gb", 0.0) - b.get("settled_floor", 0.0))
-    reserve = max(0.0, min(capped, run_grow) - reserve_dup)
+    reserve = 0.0 if real else max(0.0, min(capped, run_grow) - reserve_dup)
     other = max(0.0, used - now)
     # = other + held when the units' memory.current is all in use; when it holds reclaimable page cache (now > what
     # MemAvailable says is in use) the cache is not counted twice: in use + every unit's peak above what it holds now
     committed = used + (held - now) + reserve + fresh
     limit = total - conf("INV_HEADROOM_GB")
     return dict(committed=committed, free=limit - committed, limit=limit, other=other, held=held, now=now, used=used,
-                reserve=reserve, fresh=fresh, phase_extra=scale * tot_extra, phase_raw=tot_extra, on=bool(conf("HARD_INVARIANT")))
+                reserve=reserve, fresh=fresh, phase_extra=scale * tot_extra, phase_raw=tot_extra, on=bool(conf("HARD_INVARIANT")),
+                real=real)
 
 
 def inv_cap(x, inv):
@@ -1060,7 +1076,8 @@ def inv_cap(x, inv):
 def inv_text(inv):
     return (f"invariant: committed {inv['committed']:.0f} GB (in use {inv['used']:.0f}, other {inv['other']:.0f}, units max(now, peak) {inv['held']:.0f}, "
             f"+ reserve {inv['reserve']:.0f} + fresh {inv['fresh']:.0f}) vs physical - {conf('INV_HEADROOM_GB'):g} = "
-            f"{inv['limit']:.0f} GB -> headroom {inv['free']:.0f} GB" + ("" if inv["on"] else " (HARD_INVARIANT=0: not enforced)"))
+            f"{inv['limit']:.0f} GB -> headroom {inv['free']:.0f} GB" + ("" if inv["on"] else " (HARD_INVARIANT=0: not enforced)")
+            + (" (REAL_ADMIT: units at real memory, fresh < 5 min)" if inv.get("real") else ""))
 
 
 def holds_admit_lock(fd=8):

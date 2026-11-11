@@ -7,7 +7,7 @@ import unittest
 
 T = str(pathlib.Path(__file__).with_name("ot-heavy"))
 # LOADCAP_1101: these tests are about memory; the host load cap is tested in test_ot_heavy_crit.py
-ENV = dict(os.environ, LOAD_CAP_FACTOR="0")
+ENV = dict(os.environ, LOAD_CAP_FACTOR="0", LOAD_GATE_FACTOR="0")   # LOADGATE_1110: test_ot_heavy_crit.py
 
 
 class OtHeavy(unittest.TestCase):

@@ -49,12 +49,14 @@ class Heavy(unittest.TestCase):
         s = s.replace('sleep 20', 'sleep 0.2').replace('sleep 5;', 'sleep 0.2;')
         self.h = d / 'ot-heavy'; self.h.write_text(s); self.h.chmod(0o755)
 
-    def run_(self, load, crit=False, maxwait='1', mem='4'):
+    def run_(self, load, crit=False, maxwait='1', mem='4', **extra):
         self.load.write_text(f'{load} 1.0 1.0 1/1 1\n')
         env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0',
                    OT_HEAVY_SYSTEM_TOOLS='1')
-        env.pop('OT_HEAVY_CPU', None); env.pop('OT_HEAVY_PRIO', None)
+        for k in ('OT_HEAVY_CPU', 'OT_HEAVY_PRIO', 'OT_HEAVY_DIRECT', 'OT_HEAVY_THREADS', 'LOAD_GATE_FACTOR', 'LOAD_CAP_FACTOR'):
+            env.pop(k, None)
         if crit: env['OT_HEAVY_CPU'] = 'crit'
+        env.update(extra)
         try: (self.d / 'args').unlink()
         except FileNotFoundError: pass
         r = subprocess.run([str(self.h), '--mem', mem, '--max-wait', maxwait, '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
@@ -62,7 +64,7 @@ class Heavy(unittest.TestCase):
         return r, a
 
     def test_below_cap_runs_default_weight(self):
-        r, a = self.run_('14.9')
+        r, a = self.run_('12.4')      # below LOADCAP (15) and LOADGATE_1110 (12.5)
         self.assertIsNotNone(a, r.stderr); self.assertNotIn('CPUWeight=1000', a)
 
     def test_at_cap_non_crit_waits(self):
@@ -71,8 +73,54 @@ class Heavy(unittest.TestCase):
         self.assertIn('waiting for load', r.stderr); self.assertIn('load1 15 >= 1.5 x 10 = 15', r.stderr)
 
     def test_crit_bypasses_cap_and_gets_weight(self):
-        r, a = self.run_('500', crit=True)
+        # crit passes LOADCAP_1101 (15 here) but not LOADGATE_1110 (1.25 x 10 = 12.5): conf cap 1.0 -> 10 <= 12 < 12.5
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=1.0\n')
+        r, a = self.run_('12', crit=True)
         self.assertIsNotNone(a, r.stderr); self.assertIn('CPUWeight=1000', a)
+        r, a = self.run_('12')
+        self.assertIsNone(a); self.assertIn('load cap', r.stderr)
+
+    # LOADGATE_1110 (KW-FIX-44, COORD 11-10: epyc8 load1 507 on 96 threads; crit + direct FTRES-FIX runs admitted at any load)
+    def test_gate_holds_crit(self):
+        r, a = self.run_('500', crit=True)
+        self.assertIsNone(a); self.assertEqual(r.returncode, 75)
+        self.assertIn('waiting for load', r.stderr); self.assertIn('load gate: load1 500.0', r.stderr)
+        self.assertIn('1.25 x 10 = 12', r.stderr)
+
+    def test_gate_holds_direct_and_drops_its_record(self):
+        r, a = self.run_('500', crit=True, OT_HEAVY_DIRECT='1')
+        self.assertIsNone(a); self.assertIn('load gate', r.stderr)
+        self.assertEqual(list((self.d / 'state').glob('direct.*')), [])
+
+    def test_gate_holds_short_pool_and_frees_the_slot(self):
+        r, a = self.run_('500', OT_HEAVY_THREADS='2')
+        self.assertIsNone(a); self.assertIn('load gate', r.stderr)
+        r, a = self.run_('1', OT_HEAVY_THREADS='2')       # the lease was released: the next short stage gets slot 1
+        self.assertIsNotNone(a, r.stderr)
+
+    def test_fresh_admits_count_before_load1_shows_them(self):
+        import time
+        st = self.d / 'state'; st.mkdir(exist_ok=True)
+        (st / 'thr.u1').write_text('8\n'); (st / 'thr.u2').write_text('8\n')
+        old = st / 'thr.u0'; old.write_text('64\n'); t = time.time() - 400; os.utime(old, (t, t))
+        r, a = self.run_('0.5', crit=True)               # 0.5 + 16 >= 12.5
+        self.assertIsNone(a); self.assertIn('fresh admits 16 threads', r.stderr)
+        self.assertFalse(old.exists())                   # older than LOAD_FRESH_S (300 s): dropped, not counted
+        (st / 'thr.u2').unlink()
+        r, a = self.run_('0.5', crit=True, OT_HEAVY_THREADS='6')   # 0.5 + 8 < 12.5
+        self.assertIsNotNone(a, r.stderr)
+        units = [p for p in st.glob('thr.*') if p.name != 'thr.u1']
+        self.assertEqual([p.read_text().strip() for p in units], ['6'])   # the admitted job counts as fresh load
+
+    def test_gate_factor_from_conf_and_off(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=2\n')
+        r, a = self.run_('19', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+        r, a = self.run_('20', crit=True)
+        self.assertIsNone(a)
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=0\n')
+        r, a = self.run_('500', crit=True)
+        self.assertIsNotNone(a, r.stderr)
 
     def test_die_job_is_protected(self):
         # DIE_WATCHDOG_1021 restored (FLOW-21 11-01): a host-classified die job gets ot-protect-die --pid before its scope
@@ -91,7 +139,7 @@ class Heavy(unittest.TestCase):
 
     def test_cap_disabled(self):
         (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
-        r, a = self.run_('500')
+        r, a = self.run_('12')
         self.assertIsNotNone(a, r.stderr)
 
 

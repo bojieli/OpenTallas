@@ -44,10 +44,16 @@ class HostLoadCap(unittest.TestCase):
         self.env.stop()
 
     def test_own_cap_holds(self):
-        self.assertTrue(self.m.load_capped(row(900, 123, 96, cap=1.1), 48, 16))
-        self.assertFalse(self.m.load_capped(row(900, 123, 96, cap=1.5), 48, 16))
-        self.assertFalse(self.m.load_capped(row(900, 123, 96), 48, 16))       # old probe: fallback 1.5
-        self.assertFalse(self.m.load_capped(row(900, 500, 96, cap=0), 48, 16))  # 0 = off
+        self.assertTrue(self.m.load_capped(row(900, 115, 96, cap=1.1), 48, 16))
+        self.assertFalse(self.m.load_capped(row(900, 115, 96, cap=1.5), 48, 16))
+        self.assertFalse(self.m.load_capped(row(900, 115, 96), 48, 16))       # old probe: fallback 1.5
+        self.assertFalse(self.m.load_capped(row(900, 115, 96, cap=0), 48, 16))  # 0 = off
+        # LOADGATE_1110 (KW-FIX-44): at load1 >= 1.25 x nproc (120 here) the host holds every job, cap 0 / crit too
+        self.assertTrue(self.m.load_capped(row(900, 500, 96, cap=0), 48, 16))
+        os.environ["OT_RUN_CRIT"] = "1"
+        self.assertTrue(self.m.load_capped(row(900, 120, 96, cap=1.5), 48, 16))
+        self.assertFalse(self.m.load_capped(row(900, 119, 96, cap=1.5), 48, 16))
+        self.assertTrue(self.m.load_capped(row(900, 119, 96, cap=1.5) | dict(fresh=1), 48, 16))   # + 16 fresh threads
 
     def test_choose_leaves_capped_host(self):
         h, q = self.m.choose({"epyc7": row(900, 130, 96, cap=1.1), "epyc4": row(300, 60, 256)}, 48, 16)

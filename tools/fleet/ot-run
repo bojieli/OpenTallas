@@ -731,9 +731,25 @@ def reserved(h, r):
     return r
 
 
+LOAD_GATE_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_FACTOR", "1.25"))   # = ot-heavy LOADGATE_1110 (0 = off)
+
+
+def load_gated(r):
+    """LOADGATE_1110 (KW-FIX-44, COORD 11-10: epyc8 load1 507 / 96 threads): ot-heavy holds EVERY job (crit, direct,
+    short too) while load1 + fresh admits >= LOAD_GATE_FACTOR x nproc.  Placement sees the same: the fresh units of the
+    --free row count at THREADS each (as ratio()), nproc = the row's cores before HOST_RESERVE."""
+    if LOAD_GATE_FACTOR <= 0:
+        return False
+    n = (r.get("ncpu") or 0) + (r.get("reserve_threads") or 0)
+    return n > 0 and load1(r) + THREADS * (r.get("fresh") or 0) >= LOAD_GATE_FACTOR * n
+
+
 def load_capped(r, mem, threads):
     """QUEUE-BAL-1: ot-heavy on this host would hold this job on its load cap now (LOADCAP_1101): load1 >=
-    LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool"""
+    LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool;
+    LOADGATE_1110: or on its load gate, for any job"""
+    if load_gated(r):
+        return True
     f = host_load_cap(r)
     if f <= 0 or crit_job() or (mem <= SHORT_MAX_GB and threads <= SHORT_MAX_THREADS):
         return False
@@ -758,7 +774,7 @@ def choose(res, mem, threads=THREADS, die=False):
     if not ok:
         return None, False
     if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
-        fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB]
+        fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB and not load_gated(ok[h])]
         return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit
     if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
         ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
