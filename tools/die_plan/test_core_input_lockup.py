@@ -44,5 +44,28 @@ class CoreInputLockup(unittest.TestCase):
         self.assertIn("if (!clk) q = d;", t)
 
 
+class CoreInputPlace(unittest.TestCase):
+    """gen_phys.core_input_place: the A+P placement hooks follow the declared pipe, never form A alone."""
+
+    def test_place_only_with_pipe(self):
+        import gen_phys
+        base = {"modules": MODS, "types": ["cbn_q11"]}
+        self.assertFalse(gen_phys.core_input_place({}, "cbn_q11"))
+        self.assertFalse(gen_phys.core_input_place({"clock": {"core_input_lockup": base}}, "cbn_q11"))
+        p = {"clock": {"core_input_lockup": dict(base, pipe=1)}}
+        self.assertTrue(gen_phys.core_input_place(p, "cbn_q11"))
+        self.assertFalse(gen_phys.core_input_place(p, "cbn_q00"))
+
+    def test_hook_scripts_present(self):
+        import gen_phys
+        d = os.path.dirname(os.path.abspath(__file__))
+        for f in ("core_input_anchor.tcl", "core_input_chain.tcl"):
+            self.assertTrue(os.path.isfile(os.path.join(d, f)))
+            self.assertIn(f, gen_phys.CORE_INPUT_PLACE_ANCHOR + gen_phys.CORE_INPUT_PLACE_CHAIN)
+        chain = open(os.path.join(d, "core_input_chain.tcl")).read()
+        self.assertIn("u_pc_nk_", chain)
+        self.assertIn("ot_face_flops.txt", chain)   # face-anchored registers stay fixed
+
+
 if __name__ == "__main__":
     unittest.main()
