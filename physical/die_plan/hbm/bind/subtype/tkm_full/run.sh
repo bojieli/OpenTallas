@@ -24,7 +24,9 @@ grep -o 'assign del_flit__full\[[0-9]*\] = del_flit\[[0-9]*\];' "$RF" | sed -E '
 sed -E 's/^(\s*)ot_hgi_coll_tkm_tp192_htile_core (u_h[ab])/\1ot_hgi_coll_tkm_tp192_htile_core__fs \2/' \
   "$S/rtl/hbm_accel/cores_split/reform_1104a/tkm_tile/ot_hgi_coll_tkm_tp192_tile_core__splitc.sv" > "$O/splitc__fs.sv"
 [ "$(grep -c 'htile_core__fs u_h' "$O/splitc__fs.sv")" = 2 ] || { echo SPLITC_FS_FAIL; exit 2; }
-printf '`verilator_config\nhier_block -module "ot_hgi_coll_tkm_tp192_htile_core"\n' > "$O/hier.vlt"
+# hier blocks: the half tile (64 instances, one compile) AND the root core (3.8 MB flattened extract): with the root core
+# in the top pass the top verilation was OOM-killed at a 96 GB cap (11-11 10:58 UTC, ctlrst pos, MemoryPeak 96G).
+printf '`verilator_config\nhier_block -module "ot_hgi_coll_tkm_tp192_htile_core"\nhier_block -module "ot_hgi_coll_tkm_tp192_root_core"\n' > "$O/hier.vlt"
 COMMON=("$H/tb_tkm_root_full.sv" "$RK/ot_hgi_coll_tkm_m_tp192__root__fshell.sv" "$RK/ot_hgi_coll_tkm_m_tp192__root__wrap.sv"
   "$RK/ot_hbm_face_reg.sv" "$RK/ot_hbm_face_rst_relay.sv"
   "$P19/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__p19glue.sv" "$P19/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__p19glue.sv"

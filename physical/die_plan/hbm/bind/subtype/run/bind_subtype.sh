@@ -5,8 +5,9 @@
 # OV = hard-link tree of SRC; tools/die_plan and every written file are fresh inodes; nothing written into SRC.
 set -o pipefail
 export PYTHONDONTWRITEBYTECODE=1 GIT_NO_LAZY_FETCH=1
-L=/srv/opentallas-scratch2/claude/bind-subtype-1111
-SRC=/srv/opentallas-scratch2/claude/kw41/src_hbmf4_m3
+# L / SRC overridable for a host whose kw41 src is a symlink (epyc2: real tree on scratch3; OV needs the same device).
+L=${BST_L:-/srv/opentallas-scratch2/claude/bind-subtype-1111}
+SRC=${BST_SRC:-/srv/opentallas-scratch2/claude/kw41/src_hbmf4_m3}
 PD=/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc
 PLAN=$PD/die_plan.json
 PLAN_SHA=29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1
