@@ -4699,7 +4699,8 @@
     "svc_lo_dsdv_svc_rs__t5": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "svc_lo_dsdv_svc_rs__t6": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "svc_lo_dsdv_svc_rs__t7": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
-    "svc_lo_dsdv_svc_rs_w__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch"
+    "svc_lo_dsdv_svc_rs_w__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
+    "bk_sel__t2": "REDESIGN reach: q<->c / g->q pin-to-pin links up to 1530 um with no relay (CPL-S81-MISC), FIRM stations + pin cycles after 12:00 (KW-FIX-43 11-11 DIE-S81-85); out of the 12:00 S81 batch"
    },
    "queue_src": "claude/type-safe-5-s81-final-1109@c0c9a3de749a",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
