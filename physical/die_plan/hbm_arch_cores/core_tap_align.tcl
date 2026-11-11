@@ -5,6 +5,12 @@
 # to <= 20 ps" made explicit instead of trusting TritonCTS level balancing (measured 476..519 / 528..608 ps).
 # env: OT_DTAP_TOL_PS, OT_DTAP_DELAY_CELL (default BUFx4_ASAP7_75t_R), OT_DTAP_ROUNDS (default 4), OT_DTAP_NEXT
 # (script sourced at the end, default /work/tap_balance.tcl).
+# OT_DTAP_ALIGN_LEAD (HBM-TAPS 11-11, optional, CLKLOC 0-cycle clock form): a reviewed file of Tcl records
+# {lead_ps {exact_member_instance ...}}, read as data, never eval.  Every tap that drives a listed member aligns to
+# (target - lead_ps) instead of the target, i.e. its registers launch lead_ps EARLY on purpose (useful skew for a launch
+# group that core_density_taps OT_DTAP_ATOMIC_GROUPS put on its own branch); lead taps do not set the target.  All
+# sinks of a lead tap must be listed members of ONE record (an atomic branch), else the script stops.  The final lines
+# OT_DTAP_LEAD tap/requested/achieved are the receipt; a lead tap already later than its own target at r0 is a MISS line.
 if {![llength [info commands ot_cf_wire]]} { source [file join [file dirname [info script]] clock_family.tcl] }
 uplevel #0 {
 set ta_blk [ord::get_db_block]
@@ -117,16 +123,49 @@ if {![info exists ::env(OT_DTAP_ISO)] || $::env(OT_DTAP_ISO)} {
 }
 set m [ta_measure]
 puts [ta_line "OT_DTAP_ALIGN r0" $m]
-set ta_tgt 0.0; dict for {n v} $m { set ta_tgt [expr {max($ta_tgt, [lindex $v 0])}] }
+set ta_lead [dict create]
+if {[info exists ::env(OT_DTAP_ALIGN_LEAD)] && $::env(OT_DTAP_ALIGN_LEAD) ne ""} {
+  set fh [open $::env(OT_DTAP_ALIGN_LEAD) r]; set ta_lrec [read $fh]; close $fh
+  set ta_mlead [dict create]; set ta_mrec [dict create]; set ri 0
+  foreach rec $ta_lrec {
+    if {[llength $rec] != 2 || ![string is double -strict [lindex $rec 0]] || [lindex $rec 0] < 0 || [lindex $rec 0] > 200} {error "OT_DTAP_ALIGN_LEAD malformed record (need {lead_ps 0..200 {members}})"}
+    foreach nm [lindex $rec 1] {
+      set k [string map {\\ {}} $nm]
+      if {[dict exists $ta_mlead $k]} {error "OT_DTAP_ALIGN_LEAD member in two records: $nm"}
+      dict set ta_mlead $k [lindex $rec 0]; dict set ta_mrec $k $ri
+    }
+    incr ri
+  }
+  set ta_seen [dict create]
+  foreach i [$ta_blk getInsts] {
+    set n [$i getName]
+    if {![regexp {^ot_dtap_[0-9]+$} $n]} continue
+    set hit {}; set miss 0
+    foreach p [ta_sinks [[$i findITerm Y] getNet]] {
+      set k [string map {\\ {}} [string range $p 0 [expr {[string last / $p] - 1}]]]
+      if {[dict exists $ta_mlead $k]} { lappend hit $k } else { incr miss }
+    }
+    if {![llength $hit]} continue
+    set recs [lsort -unique [lmap k $hit {dict get $ta_mrec $k}]]
+    if {$miss || [llength $recs] != 1} {error "OT_DTAP_ALIGN_LEAD tap $n mixes lead members with [expr {$miss}] other sinks / [llength $recs] records: not an atomic lead branch"}
+    dict set ta_lead $n [dict get $ta_mlead [lindex $hit 0]]
+    foreach k $hit { dict set ta_seen $k 1 }
+  }
+  dict for {k v} $ta_mlead { if {![dict exists $ta_seen $k]} {error "OT_DTAP_ALIGN_LEAD member $k is on no density tap"} }
+  puts "OT_DTAP_ALIGN lead taps [dict size $ta_lead] members [dict size $ta_seen]"
+}
+proc ta_goal {n} { global ta_tgt ta_lead; return [expr {$ta_tgt - ([dict exists $ta_lead $n] ? [dict get $ta_lead $n] : 0.0)}] }
+set ta_tgt 0.0; dict for {n v} $m { if {![dict exists $ta_lead $n]} { set ta_tgt [expr {max($ta_tgt, [lindex $v 0])}] } }
+dict for {n v} $ta_lead { if {[lindex [dict get $m $n] 0] > [ta_goal $n] + $ta_tol} { puts "OT_DTAP_LEAD MISS $n r0 [format %.1f [lindex [dict get $m $n] 0]] already later than lead goal [format %.1f [ta_goal $n]]" } }
 set ta_stp [dict create]
 # safety: a tap never takes more than ceil(r0 deficit / 12 ps) + 1 cells in total, and a round whose measurement does
 # not move (stale timing) stops the loop -- f790 v3c: a stale measure re-added the same deficit 4x -> 1.1 ns tree.
 set ta_cap [dict create]; set ta_used [dict create]
-dict for {n v} $m { dict set ta_cap $n [expr {int(ceil(($ta_tgt - [lindex $v 0]) / 12.0)) + 1}]; dict set ta_used $n 0 }
+dict for {n v} $m { dict set ta_cap $n [expr {max(0, int(ceil(([ta_goal $n] - [lindex $v 0]) / 12.0)) + 1)}]; dict set ta_used $n 0 }
 for {set r 1} {$r <= $ta_rounds} {incr r} {
   set added {}
   dict for {n v} $m {
-    set d [expr {$ta_tgt - [lindex $v 0]}]
+    set d [expr {[ta_goal $n] - [lindex $v 0]}]
     if {$d <= $ta_tol} continue
     set st [expr {[dict exists $ta_stp $n] ? [dict get $ta_stp $n] : 20.0}]
     # Native multi-root inputs can differ by hundreds of ps (macro-only roots
@@ -160,6 +199,7 @@ for {set r 1} {$r <= $ta_rounds} {incr r} {
   puts "[ta_line "OT_DTAP_ALIGN r$r" $m] (target [format %.1f $ta_tgt])"
 }
 puts [ta_line "OT_DTAP_ALIGN final" $m]
+dict for {n l} $ta_lead { puts "OT_DTAP_LEAD $n requested [format %.1f $l] achieved [format %.1f [expr {$ta_tgt - [lindex [dict get $m $n] 0]}]] ps (target [format %.1f $ta_tgt])" }
 }
 set ta_next [expr {[info exists ::env(OT_DTAP_NEXT)] ? $::env(OT_DTAP_NEXT) : "/work/tap_balance.tcl"}]
 if {$ta_next ne "" && [file exists $ta_next]} { source $ta_next }
