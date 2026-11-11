@@ -5327,6 +5327,19 @@ if [ -f "$K/signed_parent_source.json" ]; then
 fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
+# GRT-PATCH-1 11-11 (OWNER 01:1x/01:2x halving-off parallel arm, opt-in): K/grt_transition_mode (written at gen from the  # GRTM
+# gen env OT_GRT_TRANSITION_MODE, e.g. kit_wave item_env) or the host env selects the patched router image for the ORFS  # GRTM
+# main run ONLY (OpenROAD 6cb3f2b704 + transition-layer mode; image unset-env = stock behaviour) and passes the mode.  # GRTM
+# LEC and sign-off keep $IMAGE.  No mode: GIMAGE=$IMAGE and GRTD is empty, so the main run is the stock run.  # GRTM
+GIMAGE=$IMAGE; GRTD=(); GRTM=${OT_GRT_TRANSITION_MODE:-$(head -1 "$K/grt_transition_mode" 2>/dev/null)}  # GRTM
+if [ -n "$GRTM" ]; then  # GRTM
+  case "$GRTM" in off|edge|edge_outline) ;; *) echo "FAIL_PREFLOOR grt transition mode '$GRTM' (off|edge|edge_outline)" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # GRTM
+  GIMAGE=${OT_GRT_IMAGE:-opentallas/orfs:asap7lock-grtoff}  # GRTM
+  GID=$(${OT_DOCKER:-docker} image inspect --format '{{.Id}}' "$GIMAGE" 2>/dev/null) && [ -n "$GID" ] || { echo "FAIL_PREFLOOR grt transition image $GIMAGE missing on $(hostname)" | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # GRTM
+  GRTD=(-e OT_GRT_TRANSITION_MODE="$GRTM")  # GRTM
+  printf '{"mode": "%s", "image": "%s", "image_id": "%s", "goal": "%s"}\n' "$GRTM" "$GIMAGE" "$GID" "$GOAL" > "$K/grt_transition.json"  # GRTM
+  echo "GRTM mode $GRTM image $GIMAGE $GID"  # GRTM
+fi  # GRTM
 # KW-RESUME-1 OT_STAGE_RESUME_V1: K/resume.json (kit_wave.py stage resume) names the first ORFS step to run; the  # KWRS
 # steps before it are hardlinked from the previous attempt.  Every make call then goes through kwrs_make.sh, which  # KWRS
 # skips the reused steps and runs the later ones as dependency-free do-* targets (a make dependency check would  # KWRS
@@ -5659,7 +5672,7 @@ KWCHILD
 )
 [ ${#CHILD_RO[@]} = 0 ] || echo "KWCHILD read-only child records: ${CHILD_RO[*]}"
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work "${CHILD_RO[@]}" -e OT_FLOW_TAG="$FT" \
-  -e HUID=$(id -u) -e HGID=$(id -g) "${LEC_MATCH_DOCKER[@]}" -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) "${LEC_MATCH_DOCKER[@]}" "${GRTD[@]}" -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; ${KWRS_F}${KWRS_M}${KWRS_G}rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \
@@ -5736,6 +5749,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")
+if [ -n "$GRTM" ] && [ $rc = 0 ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -1)  # GRTM
+  if [ -n "$GL" ] && ! grep -q "GRT-9103\] OT transition-layer mode $GRTM " "$GL"; then echo "FAIL_GRT_MODE $GRTM: $GL has no matching GRT-9103 (mode not applied)" | tee -a "$K/FAIL_GRT_MODE"; rc=1; fi  # GRTM
+fi  # GRTM
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # Route success alone is not sign-off. Preserve previous failed verdicts.
@@ -6406,8 +6422,24 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if not re.fullmatch(r"[A-Za-z0-9_.+-]+", ft):
             raise ValueError(f"OT_FLOW_TAG {ft!r}: not a tag name")
         (out / "flow_tag").write_text(ft + "\n")
+    write_grt_transition_mode(out)
     (out / "run_kit.sh").chmod(0o755)
     return kits
+
+
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(out, env=None):
+    """GRT-PATCH-1 11-11: gen env OT_GRT_TRANSITION_MODE (kit_wave item_env) -> K/grt_transition_mode, read by run_kit.sh
+    (patched router image for the ORFS main run).  Unset/empty = no file (stock run).  Bad value raises."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(out) / "grt_transition_mode").write_text(m + "\n")
+    return m
 
 
 _DEFINE_USE = re.compile(r"`(?:ifdef|ifndef|elsif|undef)\s+(\w+)|`(\w+)")

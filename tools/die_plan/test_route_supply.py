@@ -346,3 +346,20 @@ def test_empty_core_conns_entry_is_unchecked_not_glue(tmp_path):
     out = tmp_path / "out"
     rf.main([str(out), "--tsv", str(tmp_path / "f.tsv"), "--stamp", "s"])
     assert (tmp_path / "f.tsv").read_text().splitlines()[1].split("\t")[6] == "unchecked"
+
+
+def test_grt_halving_type_with_plan_route_4_defaults(tmp_path):
+    """GRT-PATCH-1 per-type --grt-halving-type combines with the core-internal ft / obs_max cap / UNCHECKED defaults."""
+    _t51_like(tmp_path)
+    _, r_full, _ = run(tmp_path, "--ft-internal-as-parent")
+    _, r_off, _ = run(tmp_path, "--ft-internal-as-parent", "--grt-halving-type", "t=off")
+    _, r_new, _ = run(tmp_path, "--grt-halving-type", "t=off")
+    assert any("M7 obs_max" in k for k in r_off["obs_src"])
+    assert r_new["ft_core_internal_bits"] == 4416 and r_new["ring_bands_core_internal"] == 1
+    assert r_new["regions"]["core_H"]["p99"] < r_off["regions"]["core_H"]["p99"]
+    plan(tmp_path, n=800)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {}, "u_b": {}}}))
+    _, r_u, _ = run(tmp_path, "--grt-halving-type", "t=edge_outline")
+    assert r_u["verdict"] == "UNCHECKED" and r_u["unchecked_pins"] == 1600
+    _, r_u0, _ = run(tmp_path, "--grt-halving-type", "t=edge_outline", "--empty-conns-glue")
+    assert r_u0["glue_pins"] == 1600 and r_full["verdict"] == "FLAG"
