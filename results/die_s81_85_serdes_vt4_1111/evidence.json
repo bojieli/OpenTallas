@@ -1,0 +1,48 @@
+{
+ "W": "every slack figure here is at W=180 ps (SDC early source latency on clk ports) unless the row says otherwise",
+ "vT3_GRT": {"setup_tt_wns": -337.86, "hold_ff_wns_policy": -230.11, "failing_tt_endpoints": 1278},
+ "window_sensitivity_vT3_GRT_TT": {
+   "method": "5_1_grt.odb re-timed with the early source latency on the 32 clk ports set to -180 / -90 / 0",
+   "failing_endpoints": {"180": 1278, "90": 1016, "0": 149},
+   "wns": {"180": -337.9, "90": -247.9, "0": -242.1},
+   "class_wns_ps(count)": {
+     "u_rm r_pipe->r_d": {"180": "-337.9 (512)", "90": "-247.9 (449)", "0": "-157.9 (82)"},
+     "u_enc": {"180": "-200.2 (674)", "90": "-110.2 (496)", "0": "-20.2 (7)"},
+     "u_rrl": {"180": "-326.6 (26)", "90": "-236.6 (12)", "0": "-146.6 (7)"},
+     "ring/cland": {"180": "-192.0 (15)", "90": "-102.0 (10)", "0": "-12.0 (4)"},
+     "u_syn am_ok->xs": {"180": "-242.1 (49)", "90": "-242.1 (49)", "0": "-242.1 (49)"}},
+   "reading": "cross-tap classes move 1 ps per ps of window; u_syn is on io_pma_rck, which carries no charge, and does not move"},
+ "kit_internal_tap_insertion_vT3_4_1_cts_TT": {
+   "note": "propagated clock, already inside every STA number; NOT a die-delivered window (that needs die_sta_related on the die DB)",
+   "tap_median_arrival_spread_ps": 268.9, "fastest": "clk_t7 250.2", "slowest": "clk_t28 519.1",
+   "extreme_sink_to_extreme_sink_ps": 427.8, "intra_tap_spread_median_ps": 111.9, "intra_tap_spread_max_ps": 217.6, "taps_with_20_or_more_sinks": 16},
+ "crpr_vT3_GRT_TT": {
+   "same_port_clk_t": {"crpr_credit_ps": [182.3, 185.6, 190.7, 185.8], "paths": "u_enc ch_q->pp1, ch_q->pp0 (clk_t22), cland ring (clk_t15)", "slack_ps": [100.1, 116.4, 189.5, 216.8]},
+   "cross_port": "0.0",
+   "io_pma_rck_same_port": {"crpr_credit_ps": 0.9, "note": "no -180 on this port"},
+   "same_tap_paths_on_clk_t": {"count": 2902, "negative": 0, "worst_ps": 100.1},
+   "cross_tap_paths": {"count": 7033, "negative": 1229}},
+ "hold_ff_vT2_vs_vT3_GRT": {
+   "constraints": "kit hold-gate head (IO min delays, 25 ps hold uncertainty) with global-routing parasitics",
+   "wns": {"vT2": -211.8, "vT3": -245.1}, "policy_wns": {"vT2": -185.86, "vT3": -230.11},
+   "endpoints": {"vT2": 3938, "vT3": 3782}, "cross_tap_share": {"vT2": "3656/3938", "vT3": "3615/3782"},
+   "worst_class": {"vT2": "u_bin_coll q -> u_enc d0 -211.8 (140); u_enc d1->d2 -199.2 (20)", "vT3": "u_enc d1->d2 -245.1 (18); wb->rem_q -208.8; d0->d1 -205.9; d0->ch_q -203.6; bin_coll->d0 -194.8 (131)"},
+   "txl_row_to_row": {"vT2": -173.4, "vT3": -177.1},
+   "classification": "u_enc internal cross-tap hold (tap 22/23/13 pairs), same class both builds, worst endpoint 46 ps worse by placement/tap noise; not the hook (u_txl rows within 4 ps, no transport4 hold class)"},
+ "tap_assignment_dry_run": {
+   "method": "kit clock_taps.tcl (pre-CTS tap assignment) on vT3 3_place.odb, read only",
+   "validation": "baseline reproduces the real post-CTS launch/capture taps of all 1278 negative paths",
+   "tap_pair_affinity": {"um200_depth4_group64": "1 clock pin moved; 0 of 1278 paths changed", "um200_depth10_group128": "1 pin moved; 0 changed", "why": "coherent components up to 2937 flops, frozen oversized"},
+   "group_all_u_enc": {"u_enc_neg_paths_same_tap": "674/674", "tap_sinks": "clk_t23 5925 (cap 3000)", "taken": false},
+   "group_rem_only": {"u_enc_neg_paths_same_tap": "289/289 (rem_q)", "sinks_moved": 81, "max_sinks_per_tap": 3000, "taken": true},
+   "group_compute_core": {"same_tap": "rem 289, pp0 214, pp1 149", "sinks_moved": 808, "taken": false, "note": "would add 1200 pq flops with PPCYC"}},
+ "encoder_swap": {
+   "why": "kit snapshot enc.sv predates PPCYC; vT4 kit uses the repo ot_s81_kp4_enc.sv with its active includes inlined",
+   "lockstep_default": "40000 cycles, 39943 beats, 0 mismatches vs the kit's old encoder (incl. mid-run reset)",
+   "ppcyc1_vs_ppcyc0": "p_v/p_d identical one clock later; 2 transient cycles at the reset assertion"},
+ "benches": {
+   "rlat_loopback": {"vC_RM_OUT4": 100, "vC_TX_PPCYC": 100, "vT4": 103, "wrong_expect_102": "FAIL"},
+   "reset_lockstep_vc_ls": "PASS with all defines", "reset_mutants_rt4_nocomp": "FAIL (as required)",
+   "two_die_column": "PASS",
+   "am_early_decoder_trace": "identical over 6000 cycles (5479 locked cycles, 5 relocks); mutant (distance <= 3) differs from cycle 48"}
+}

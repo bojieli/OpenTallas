@@ -1,0 +1,15 @@
+{
+ "title": "S81 serdes column vT4: added cycles (latency rows)",
+ "status": "measurement build vT4, DO_NOT_COUNT; not adopted; defaults off (all three are -D defines)",
+ "clock": "column core clk 833 ps; bench tb_s81_col_rlat = loopback enc -> TX -> PMA model -> RX -> collector",
+ "rows": [
+  {"id": "TXL4", "lane": "TX (u_enc -> u_txl rows -> PMA)", "define": "OT_S81_SERDES_TXL4", "added_cycles": 2, "clk": "clk", "relative_to": "released column", "already_in": "pilot, vT2, vT3"},
+  {"id": "TX_PPCYC", "lane": "TX (u_enc ch_q -> pp, encoder p_v/p_d)", "define": "OT_S81_RCK_TX_PPCYC", "added_cycles": 1, "clk": "clk", "relative_to": "vT3 and released column", "note": "ot_s81_kp4_enc PPCYC=1, existing encoder option"},
+  {"id": "RX_RM_OUT4", "lane": "RX (rate matcher read side r_m -> r_pipe -> r_d -> BOUT collector)", "define": "OT_S81_RM_OUT4", "added_cycles": 1, "clk": "rclk (= core clk)", "relative_to": "vT3 and released column", "note": "r_d becomes the third ot_pl_pad stage u_rmo; reset release unchanged; internal data flush 4 rclk instead of 3, parent reset holds >= 64"},
+  {"id": "AM_EARLY", "lane": "RX decoder alignment flag am_ok", "define": "OT_S81_KP4_AM_EARLY", "added_cycles": 0, "note": "reduction of the nine partial counts moved ahead of the 4-edge transport; flop-for-flop same; 6000-cycle decoder trace identical"}
+ ],
+ "totals_vs_released_column": {"TX": 3, "RX": 1},
+ "totals_vs_vT3": {"TX": 1, "RX": 1},
+ "bench_loopback_cycles": {"vC (released column form)": 99, "vC + TXL4": 101, "vC + RM_OUT4": 100, "vC + TX_PPCYC": 100, "vT4 (TXL4 + RM_OUT4 + TX_PPCYC + AM_EARLY)": 103, "vT4 expected 102 (wrong count)": "FAIL as required"},
+ "route_to": ["TOK-VERIFY-1", "COORD"]
+}
