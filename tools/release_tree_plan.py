@@ -49,7 +49,8 @@ REFRESH_S = 50 * 60
 # the plan dir first, in order (HBM: d35a holds every referenced cores/*.json + side JSON as .gz).  Repo-relative
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
-PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
+PLANS = [('s81', 's81', 'physical/die_plan/s81/events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz', ()),   # S81 POR + PGR1 + svc_prov v5 + physinst fix (COORD 11-11 03:1x ruling (a); main e5cc5a2dc5f, pin tables 274aaaa2b61f; dry run 0 lost, +2 H4/IRG; SMC/SML/SMR/SMD follow with the S81 12:00 plan event)
+         # was: ('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
          ('s81_head', 's81_head/plan_of_record/l48uo', 'physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz',
           ('s81_head/plan_of_record/l48uo',)),   # HEAD l48uo (DIE-HEAD-82, COORD 11-07 13:14; main 2d1ee842c5a with native-reset + head_root_boot re-pin f140216c): plain plan-relative tables, plan latency = sidecar sched_lat; dry run 16 types + 4 cores, 0 lost
          # was l48un: ('s81_head', 's81_head/plan_of_record/l48ui', 'physical/die_plan/s81_head/plan_of_record/l48ui/source_plan_l48un.json.gz', ('s81_head/plan_of_record/l48ui',)),   # HEAD l48un (DIE-HEAD-81, COORD 11-07 09:4x): main l48ui (n4 FREG = the signed hd_st_n4) + hd_serdes same_edge data_inputs, repo-relative sink_bins; dry run same 16 types + 4 cores
