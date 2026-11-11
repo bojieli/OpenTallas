@@ -1,0 +1,69 @@
+{
+ "event": "OVERLAY-CTAP-FTLK-1111",
+ "mode": "ftlk",
+ "base_plan_sha256": "99f40d35071d66bf2edd2b81f4d7046598f297bbf0b1b3884006252e85172eb9",
+ "ancestor_plan_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "donor": "FTLOCK-S81 plan 9c9ac92a70d1 (epyc7 die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json; bind_ftlk)",
+ "donor_plan_sha256": "9c9ac92a70d162a8278c0b5b725122df6033669d537281560ce6e6fd3c6cbc6e",
+ "types": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "composition": {
+  "took_from_donor": [
+   [
+    "clock",
+    "ft_hop_lockup"
+   ]
+  ],
+  "donor_equal_to_ancestor": [],
+  "conflicts": [],
+  "ft_hop_lockup": {
+   "types": [
+    "slice_station__t27",
+    "slice_station__t49"
+   ],
+   "note": "FTLOCK-S81 DIE-S81-85 11-10 (COORD): per-item event plan for item_inputs only (die plan of record unchanged); t27 ft6_o_1->_2 -15.26 ps / t49 ft9_o_3->_4 -20.86 ps FF hold after late ECO i1; lockup latch on every internal ft hop, 0 pin cycles"
+  }
+ },
+ "tap_window": {
+  "rule": "max(current, measured ebea5f, measured 66466e), ceil 1 ps, cap 208 (T/4)",
+  "types_raised": [],
+  "per_type": {
+   "slice_station__t27": {
+    "window_ports": 58,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "fclk_in_cland_dn_0"
+    ],
+    "W_t": 140.0,
+    "measured_ports_not_window": []
+   },
+   "slice_station__t49": {
+    "window_ports": 71,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "fclk_in_cland_dn_0",
+     "fclk_in_cland_dn_1"
+    ],
+    "W_t": 140.0,
+    "measured_ports_not_window": []
+   }
+  }
+ },
+ "eq_gate": {
+  "changed_paths": [
+   [
+    "clock",
+    "ft_hop_lockup"
+   ]
+  ],
+  "loaded_types_changed": [],
+  "every_other_type_and_key_identical_to_99f40d": true,
+  "rtl_change": true,
+  "note": "clock-structure overlay only: no pin, outline, content or cycle change on any type; ctap adds early core-tap clock ports (bound RTL of the overlay types changes, as bind9 -> bind10_ctap); ftlk adds u_fl_ hop lockup latches in the t27/t49 bound RTL"
+ },
+ "output_plan_sha256": "ffe10641e938dc3c045145cf1b5a1f310cd454a42fb117c411938f833bee8d1c"
+}

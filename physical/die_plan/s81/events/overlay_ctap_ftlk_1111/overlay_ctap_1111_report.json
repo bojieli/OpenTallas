@@ -1,0 +1,327 @@
+{
+ "event": "OVERLAY-CTAP-FTLK-1111",
+ "mode": "ctap",
+ "base_plan_sha256": "99f40d35071d66bf2edd2b81f4d7046598f297bbf0b1b3884006252e85172eb9",
+ "ancestor_plan_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "donor": "CORE-CTAP-WIDE-1109 plan c839c3235890 (epyc7 die-s81-85/s81p7/src_ctap2/physical/die_plan/s81/plan_h2_2249.json; bind10_ctap)",
+ "donor_plan_sha256": "c839c32358909222a4c27e9e9ce9534309a0508a3273d9ac0e5e29539572f9de",
+ "types": [
+  "dsdv_slice_c1x_C__t3",
+  "dsdv_slice_c1x_C__t4",
+  "dsdv_slice_c1x_C__t9",
+  "dsdv_slice_c1x_C__t10",
+  "dsdv_slice_lepe_mu_C__t1",
+  "dsdv_slice_lepe_nh_mus_C__t1",
+  "dsdv_slice_lepw_mu_C__t1",
+  "eng__t1"
+ ],
+ "composition": {
+  "took_from_donor": [
+   [
+    "T",
+    "dsdv_slice_c1x_C__t10",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t3",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t4",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t9",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_mu_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepw_mu_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "eng__t1",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "eng__t1",
+    "clock",
+    "taps"
+   ]
+  ],
+  "donor_equal_to_ancestor": [
+   [
+    "T",
+    "dsdv_slice_c1x_C__t10",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t3",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t4",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t9",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_mu_C__t1",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepw_mu_C__t1",
+    "clock",
+    "core_taps"
+   ]
+  ],
+  "conflicts": [],
+  "core_taps_added": {
+   "dsdv_slice_c1x_C__t3": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_c1x_C__t4": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_c1x_C__t9": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_c1x_C__t10": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_lepe_mu_C__t1": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_lepe_nh_mus_C__t1": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "dsdv_slice_lepw_mu_C__t1": [
+    "u_c.u_cap.ck_cw",
+    "u_c.u_cap.ck_rn"
+   ],
+   "eng__t1": [
+    "u_eng.u_e.ck",
+    "u_eng.u_h0.ck",
+    "u_eng.u_h1.ck"
+   ]
+  }
+ },
+ "tap_window": {
+  "rule": "max(current, measured ebea5f, measured 66466e), ceil 1 ps, cap 208 (T/4)",
+  "types_raised": [],
+  "per_type": {
+   "dsdv_slice_c1x_C__t3": {
+    "window_ports": 61,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11",
+     "fclk_in_cland_dn_1"
+    ],
+    "W_t": 127.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_c1x_C__t4": {
+    "window_ports": 28,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11"
+    ],
+    "W_t": 115.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_c1x_C__t9": {
+    "window_ports": 29,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11",
+     "fclk_in_cland_dn_0"
+    ],
+    "W_t": 105.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_c1x_C__t10": {
+    "window_ports": 29,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11",
+     "fclk_in_cland_dn_0"
+    ],
+    "W_t": 108.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_lepe_mu_C__t1": {
+    "window_ports": 28,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11"
+    ],
+    "W_t": 132.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_lepe_nh_mus_C__t1": {
+    "window_ports": 56,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11",
+     "fclk_in_cland_dn_1"
+    ],
+    "W_t": 112.0,
+    "measured_ports_not_window": []
+   },
+   "dsdv_slice_lepw_mu_C__t1": {
+    "window_ports": 56,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c10",
+     "clk_c11"
+    ],
+    "W_t": 142.0,
+    "measured_ports_not_window": []
+   },
+   "eng__t1": {
+    "window_ports": 45,
+    "raised": {},
+    "over_cap": {},
+    "unmeasured_ports_on_W_t": [
+     "clk_c0",
+     "clk_c1",
+     "clk_c2"
+    ],
+    "W_t": 65.0,
+    "measured_ports_not_window": []
+   }
+  }
+ },
+ "eq_gate": {
+  "changed_paths": [
+   [
+    "T",
+    "dsdv_slice_c1x_C__t10",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t3",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t4",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_c1x_C__t9",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_mu_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "dsdv_slice_lepw_mu_C__t1",
+    "clock",
+    "taps"
+   ],
+   [
+    "T",
+    "eng__t1",
+    "clock",
+    "core_taps"
+   ],
+   [
+    "T",
+    "eng__t1",
+    "clock",
+    "taps"
+   ]
+  ],
+  "loaded_types_changed": [
+   "dsdv_slice_c1x_C__t10",
+   "dsdv_slice_c1x_C__t3",
+   "dsdv_slice_c1x_C__t4",
+   "dsdv_slice_c1x_C__t9",
+   "dsdv_slice_lepe_mu_C__t1",
+   "dsdv_slice_lepe_nh_mus_C__t1",
+   "dsdv_slice_lepw_mu_C__t1",
+   "eng__t1"
+  ],
+  "every_other_type_and_key_identical_to_99f40d": true,
+  "rtl_change": true,
+  "note": "clock-structure overlay only: no pin, outline, content or cycle change on any type; ctap adds early core-tap clock ports (bound RTL of the overlay types changes, as bind9 -> bind10_ctap); ftlk adds u_fl_ hop lockup latches in the t27/t49 bound RTL"
+ },
+ "output_plan_sha256": "0e49331438c10f365bbd1c27a51823aabf3e321713136182ee3739f888d91f6d"
+}
