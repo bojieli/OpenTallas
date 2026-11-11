@@ -31,3 +31,18 @@ def test_rejects_type_without_status_copy_ring():
     plain = next(k for k, v in p["partition_types"].items() if not v.get("landing_control_status_copy"))
     with pytest.raises(SystemExit, match="landing_control_status_copy"):
         ev.apply(PLAN.read_text(), (plain,))
+
+
+rh_spec = importlib.util.spec_from_file_location("cland_sreg_ringhold", HERE / "ringhold_event.py")
+rh = importlib.util.module_from_spec(rh_spec); rh_spec.loader.exec_module(rh)
+
+
+def test_ringhold_step_only_adds_sender_ps_types():
+    p = json.loads(PLAN.read_text())
+    p.setdefault("clock", {})["ring_hold"] = {"sender_ps": -385.0, "write_edge": "fall", "ft_ring_max_ps": 166.6}
+    text = json.dumps(p, indent=1) + "\n"
+    out = rh.apply(text)
+    q = json.loads(out)
+    assert q["clock"]["ring_hold"].pop("sender_ps_types") == {t: -50.0 for t in rh.TYPES}
+    assert q == json.loads(text)
+    assert rh.apply(out) == out
