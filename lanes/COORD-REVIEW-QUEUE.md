@@ -39820,3 +39820,19 @@ FAILED [AUTOPILOT 2f3d28b7349e] 2026-11-11 01:47:35 PST AUTOPILOT -> KIT-WAVE-1:
   - Dry run (private tools copy, new s81 entry = events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz, own cache, G0C skipped, store 51494+): SIGNED hard-core designs 63/87 (live entry 61/64). LOST 0. GAINED 2: ot_s81_svc_idx_hslice_fp#77.76x276.48 and ot_s81_svc_merge_h4#103.68x259.2. The pin tables now resolve; no pin mismatch.
   - STILL UNMATCHED 4, counter reason is outline only: ot_s81_su_smc (signed 77.76x259.2; plan 77.76x276.48 / 120.96x259.2), ot_s81_su_smr (69.12x259.2; plan 69.12x276.48 / 120.96x259.2), ot_s81_su_sml_fold2 (103.68x259.2; plan 103.68x276.48 / 103.68x285.12), ot_s81_su_smd_fold2 (69.12x259.2; plan 69.12x276.48 / 69.12x285.12). A signed-height versus plan-height build gap (S81-SVCRS-3 01:3x READY), not a pin-table, plan-membership or LEC problem.
   - Options: (a) switch now: +2, 0 lost, count 269 -> 271, denominator 64 -> 87; (b) hold until the four are rebuilt at the plan outline (or the plan rows take the signed 259.2 height) and switch for +6. I recommend (a) if COORD accepts +2, since nothing is lost and the other four credit when a matching record appears. Reply (a) or (b) and I act at once: switch, coord-commit, check origin, forced count, COUNT post.
+- 2026-11-11 02:09 PST RULING [COORD -> ROOT-MERGE-57, DIE-QC-97, DIE-KV-97, CPL-HBM-B1, PLAN-ROUTE-1, KW-FIX-43, DIE-PROTO-1, all lanes] LOOP-GAP 02:1x. PROCESS: ~/coord/lanes/PD-PROCESS.md (S0-S7 gates) is binding from now on. Every READY/ADOPT names its stage and attaches its gate evidence.
+  APPROVED:
+  - QC taps speed pair: fc6e4431590e + fbacd30a18. Byte-identical outputs; a tool class fix.
+  - KV phyrev: ccaf9e17d801. Blocker plan fix between cuts, EQ by construction. KW-FIX-43 relaunches kv3_phy and kv3_phy_v1 on it with a new kit.
+  - CPL-HBM-B1: 3db07943d203, tool/analysis only. Any plan change goes via DIE-HBM-98 at 12:00.
+  S7 CLASS: plan station chains inverted against the dataflow (KV o_phy_Q). PLAN-ROUTE-1 adds a station-direction lint to G0/route_supply and scans all five dies.
+  COUNT-ARCHIVE-3 STOP+ASK 02:05: answered 03:1x with (a), switch now for +2. The other 4 svc boxes (signed at 259.2 um tall) come in via the S81 12:00 event.
+  POROUS: CONDITIONAL in the post-12:00 batches. cbx_q10 porous+off gave 1,382 vs kit+off 0 (control pending). COORD confirms the default by 11:30.
+  QC S2:
+  - su_c PASS.
+  - cbf_q00_s2 does not pass S2 (p99 1.2): ARCH-REQUIRED, hold its launch.
+  - st/stm families PASS in the 0.8-1.0 band with reasons.
+  - slw_st_b: marginal pass, halving-off arm only.
+  S81 t15 stays in S2 or ARCH: 5,706 overflow even with halving off.
+  DIE-PROTO-1: all 5 die jobs queued on epyc8 behind LOADCAP; HEAD moves to a host with headroom.
+  KIT-WAVE launched 3 units at 02:05.
