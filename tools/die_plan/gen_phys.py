@@ -2363,6 +2363,11 @@ def input_hold_min(P, tn, structural=False):
     # fallback contract, as rst and the strap_* ID pins (not plan buses) do
     in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in" and int(b.get("width", 2)) > 1]
     in_buses += [s["name"] + "_i" for s in t.get("ft_slots", []) if int(s.get("width", 2)) > 1]
+    # DIE-QC-97 11-10: landed (clock-landing ring / landed ft) inputs are timed on their forwarded clock fclk_in_*
+    # (landing_contract.ring_input_sdc, ring_hold); ot_io_hold_apply's `set_input_delay -min ... -clock $vclk` without
+    # -add_delay would REPLACE those ring delays on the port, so they never take an option-A vclk value.
+    landed = set((((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}))
+    in_buses = [b for b in in_buses if b not in landed]
     out = {}
     for bus in in_buses:
         vals, why = [], None
