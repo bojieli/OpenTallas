@@ -265,7 +265,8 @@
     "kv3_pv_v4n@15",
     "kv3_pv_v6n@18",
     "kv3_pv_v12@26",
-    "kv3_pv_v8@11"
+    "kv3_pv_v8@11",
+    "kv3_pv_v8@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -558,7 +559,8 @@
     "kv3_pv_v4n@15": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
     "kv3_pv_v6n@18": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
     "kv3_pv_v12@26": "KV pv START-band class fix: startfit 3af02bba68d3 (landing_placement.tcl fc691c13), resume at place",
-    "kv3_pv_v8@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)"
+    "kv3_pv_v8@11": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822)",
+    "kv3_pv_v8@12": "INPUTS RESTAGED (KW-FIX-43 18:5x): epyc8 kw32/src_27db6 was partial; now 62511 files, file list = epyc7 (md5 57d070e074)"
    },
    "only_items": [
     "kv3_astk",
@@ -23998,7 +24000,9 @@
     "q_b100@10",
     "q_b100__physical_v1@15",
     "q_b101_nw@15",
-    "q_b102@22"
+    "q_b102@22",
+    "NW_io@12",
+    "q_spt0__physical_v1@2"
    ],
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -24339,7 +24343,9 @@
     "q_b100@10": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
     "q_b100__physical_v1@15": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
     "q_b101_nw@15": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
-    "q_b102@22": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)"
+    "q_b102@22": "INPUTS RESTAGED (KW-FIX-43 COORD 18:2x): gen host epyc8 lacked die-hbm-97/plan_p11t/cores (only die_plan.json there) and view_detail_1110; both now staged on epyc7/epyc8 (529 / 56 files, = epyc7 / epyc2)",
+    "NW_io@12": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7",
+    "q_spt0__physical_v1@2": "INPUTS RESTAGED (KW-FIX-43 18:3x): gen host epyc8 had only die_plan.json of die-hbm-97/plan_p11t (cores/ pruned); 529 files now = epyc7"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
