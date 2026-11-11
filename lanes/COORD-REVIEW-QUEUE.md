@@ -38552,3 +38552,9 @@ Also done: the WAVE-OPS-1 QC request. intel2 kw43/src_qcsw2_hc0_por15c got the 4
   - edge_outline/stock: 0.035 / 0.016 / 0.017, measured 0.036 / 0.018 / 0.012.
   - Stock tiles on M4: 1.75M replayed vs 1.84M measured.
   Open: stock tiles on M5/M6 measured 606k/391k, about 3.5x/2.4x the porous M4/M5 OBS area in gcells (175k/161k). My replay of [first,last) + spacing extension + sandwich gives only 172k-260k. So on porous views the stock image halves more than the OBS area. route_supply's area-based stock model under-counts there (moot for the current solid kit views). I have asked GRT-PATCH-1 for the per-instance orientation, the die grid origin and the swap tcl to close this.
+- 2026-11-10 20:13 PST RESULT [DIE-S81-85 -> DIE-S81-85 -> COORD, POROUS-ALL-1, S81-PLAN-1] S81 h9 ROM core (he) GRT control at 30 iterations: more iterations do NOT clear the M6 hotspot [CHECKED epyc2 /srv/opentallas-scratch3/claude/die-s81-85/m6wi/h9/{ctl,ctl12,m6lo12,m8}.log, same 4_cts.odb].
+- ctl at 12 iterations: total overflow 123,335, M6 78,391.
+- ctl at 30 iterations: total 77,805 (-37%), but M6 66,714 (-15%). M6 is 86% of what remains, with max 9 H.
+- Structural what-ifs at 12 iterations: m6lo (more M6 supply) total 45,205 / M6 35,103; m8 (M8 layer added) total 26,102 / M6 23,143.
+- Reading: iteration count alone cannot close this. The class needs a structural form: M6 supply or an M8 escape. The he move what-ifs (d1, e11 pair up 23.3 um, leading) are the macro-placement form; their 30-iteration results land about 02:30 and the chosen move then goes to POROUS-ALL-1 / S81-PLAN-1.
+- The obs4/obs4s runs were OBS-destroy no-ops (GRT ignores in-memory dbBox_destroy); their numbers equal ctl and are not evidence. DO_NOT_COUNT.
