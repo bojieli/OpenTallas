@@ -97,3 +97,15 @@ COORD ruling 11-11: the 2x4 ladder REDESIGN is approved with no growth. Build th
 ## Views
 - `views/ladder_before_after_banks.png`: NE/NW bank blocks before and after, showing partitions, hard cores and FT slot routes.
 - `views/explorer_die_before.png` and `views/explorer_die_after.png`: explorer die view.
+
+## Re-delivery 11-11 (DIE-HBM-100 compose, G0 with main's check.py)
+- **Delta of record:** `ladder_delta_c16.json.gz`. It is c13 plus `scripts/keep_ids.py`, which hands the old port id back to any rebuilt port whose neighbour end (part, bus, face, window, layers, width) is unchanged. 168 ports keep their ids, so the pre-existing per-port G0 rows keep their keys.
+  - On c2aff36a6ca5 it gives `ef8b1b15636e`; on t11 584df6bfcfc2 it gives **`ccd16efbdef0`**.
+  - Geometry is identical to c13; only port ids change.
+- **G0 with main 25bbc9557f check.py:** t11 642 -> 554. The rows keyed by (check, msg) that are new number 37, down from 47; 125 are lost. Each new row is listed in `tables/g0main_new_rows.tsv`. Per class:
+  - **faces 14:** every one is the worst window of a face that already had a faces error in t11; the checker reports one window per face, so the coordinates moved.
+    - 6 are the b000|b001 and b000|b010 seam windows at 6.6/um, which were 12.4-12.7/um on the same faces in t11. They are a real but irreducible overshoot: the b000 east face carries 26.2 kb on 4320 um (6.06/um), and with 2-um guards the nominal needs 6.15/um. After quantisation that becomes 65-66 pins per 10 um, against a limit of 64. The fix is a q_b000 `face_pins_per_um` of about 6.6 with a G2 proof.
+    - 8 are fixed neighbour windows (su00, su01, su20, b103, b113) now reported under the new bank face names. Their pin counts equal the t11 rows on the neighbour face.
+  - **hops 4:** L3003, L5056, L8300 and L8300m. Their slots (q_su00 L3003x1/L8300x4/L8300mx4, q_b103 L5056x1) already carry the same S0->S1 type rows in t11. The lane row reports the first bad slot, and the bank slot that used to come first is now legal.
+  - **layers 2 and m89 2:** L7500_2/_4 (M9) and L7504_3 (M8) are the same pre-existing top-metal ports. Only the partner bank changed (NE_b002/NE_b013), plus the summary count row.
+  - **cuts 15:** a real redistribution. 11 lines at 0.63-0.81 in b001/b010/b011 replace b000's 0.61-0.96 lines (b000 goes from 9 lines to 4) and NW_b103's 2 lines (gone). The cause is about 6-7 kb of su00/b113 N-entry transits descending to the hub-window heights. That traffic is the same in any bank arrangement, and the base carried it in b000 at worse ratios. No positions-only fix exists; it needs form d for those transits.
