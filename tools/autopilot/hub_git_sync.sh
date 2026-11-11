@@ -11,6 +11,11 @@
 #                               coordinator commits it from its own checkout) never stall a sync: a local edit is
 #                               discarded and origin's copy wins a merge conflict (KW-FIX-25 11-06: 12 hub commits
 #                               and every intel2 post sat unpushed 22:22-23:0x on this one file);
+#                           (1c) LIVE-STATE files (autopilot/kit_wave_state.json, rewritten every tick by the autopilot and
+#                               by KW-FIX row edits on the hub; tracked in git) never stall a sync (KW-FIX-46 11-11: HUB-SYNC-FAILED
+#                               2026-11-09 19:08 -> 11-11 07:18, ~36 h of stale kit_wave.json): a dirty copy is tolerated, never
+#                               committed, never discarded; when the merge would change it, the local bytes are saved, the path
+#                               reset for the merge and the saved bytes restored afterwards (the live file keeps its content);
 #                           (2) fetch + merge origin coord/state (never rebase, never stash, never reset);
 #                               conflicts in append-only logs are resolved by UNION (both sides' lines kept;
 #                               a doubled "DIE-CI LATEST:" line keeps the newest); any other conflict -> merge --abort, FAIL;
@@ -28,6 +33,8 @@ C=${HUB_SYNC_COORD:-$HOME/coord}; R=${HUB_SYNC_REPO:-$HOME/OpenTallas}; B=${HUB_
 URL=git@github.com:bojieli/OpenTallas.git
 APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved)\.tsv)$'
 GENERATED_RE='^RELEASE_TREE\.md$'
+LIVE_RE='^autopilot/kit_wave_state\.json$'
+FLEET_AFTER_MIN=${HUB_SYNC_FLEET_AFTER_MIN:-30}
 say() { echo "hub-git-sync $1: $2"; }
 now() { date '+%Y-%m-%d %H:%M %Z'; }
 
@@ -49,6 +56,8 @@ fail() {   # loud: keep the FIRST failure time across consecutive failures
     > "$AP/.HUB-SYNC-FAILED.$$" && mv -f "$AP/.HUB-SYNC-FAILED.$$" "$AP/HUB-SYNC-FAILED"
   say coord "FAILED since $since: $1" >&2
   alert "HUB-SYNC-FAILED since $since: $1"
+  live_restore
+  fleet_alert "$1"
   exit 1
 }
 alert() {   # KW-FIX-35 11-08: one ALERT line in the autopilot log (fail_watch / LOOP-GAP grep it); 2.5 h went unseen
@@ -58,12 +67,45 @@ alert() {   # KW-FIX-35 11-08: one ALERT line in the autopilot log (fail_watch /
     "${ab:-ahead/behind unknown}" >> "${HUB_SYNC_LOG:-$AP/log.txt}" 2>/dev/null || true
 }
 ok() {
-  rm -f "$AP/HUB-SYNC-FAILED"
+  live_restore
+  rm -f "$AP/HUB-SYNC-FAILED" "$AP/.HUB-SYNC-FLEET-POSTED"
   printf '%s %s\n' "$(now)" "$(git rev-parse --short=10 HEAD)" > "$AP/.HUB-SYNC-OK.$$" && mv -f "$AP/.HUB-SYNC-OK.$$" "$AP/HUB-SYNC-OK"
   say coord "$1"; exit 0
 }
 is_append() { printf '%s\n' "$1" | grep -Eq "$APPEND_RE"; }
 is_generated() { printf '%s\n' "$1" | grep -Eq "$GENERATED_RE"; }
+is_live() { printf '%s\n' "$1" | grep -Eq "$LIVE_RE"; }
+LIVE_SAVED=""
+live_restore() {   # put the saved live-state bytes back (EXIT trap too: a failed merge must not lose them)
+  local f
+  for f in $LIVE_SAVED; do
+    [ -f "$AP/.hub-sync-live/$f" ] && cp -f -- "$AP/.hub-sync-live/$f" "$f.hubsync.tmp" && mv -f -- "$f.hubsync.tmp" "$f" && rm -f -- "$AP/.hub-sync-live/$f"
+  done
+  LIVE_SAVED=""
+}
+trap live_restore EXIT
+live_stash() {   # $1 = merge target; for each dirty live file that the merge would change: save bytes, reset the path
+  local f
+  for f in $LIVE_DIRTY; do
+    [ -n "$(git diff --name-only HEAD "$1" -- "$f")" ] || continue
+    mkdir -p "$AP/.hub-sync-live/$(dirname "$f")" && cp -f -- "$f" "$AP/.hub-sync-live/$f" || fail "cannot save live state $f"
+    LIVE_SAVED="$LIVE_SAVED $f"; git checkout -q -- "$f"
+    say coord "live state $f kept aside for the merge"
+  done
+}
+fleet_alert() {   # HUB-SYNC-FAILED older than FLEET_AFTER_MIN: ONE FLEET line in the queue per 6 h (best effort, never blocks)
+  local since ts age mk="$AP/.HUB-SYNC-FLEET-POSTED"
+  since=$(sed -n 's/^since //p' "$AP/HUB-SYNC-FAILED" 2>/dev/null | head -1)
+  ts=$(date -d "$(printf '%s' "$since" | sed 's/ [A-Z]*$//')" +%s 2>/dev/null) || return 0
+  age=$(( ($(date +%s) - ts) / 60 )); [ "$age" -ge "$FLEET_AFTER_MIN" ] || return 0
+  [ -z "$(find "$mk" -mmin -360 2>/dev/null)" ] || return 0
+  [ -f lanes/COORD-REVIEW-QUEUE.md ] || return 0
+  printf -- '- %s FLEET [hub-git-sync %s] HUB-SYNC-FAILED for %s min (since %s): %s. The autopilot reads a stale coord checkout until it clears.\n' \
+    "$(date '+%Y-%m-%d %H:%M %Z')" "$(hostname)" "$age" "$since" "$1" >> lanes/COORD-REVIEW-QUEUE.md
+  : > "$mk"
+  git commit -q -m "hub $(hostname): FLEET line, HUB-SYNC-FAILED ${age} min" -- lanes/COORD-REVIEW-QUEUE.md >/dev/null 2>&1 \
+    && timeout 60 git push -q origin "HEAD:$B" >/dev/null 2>&1 || true
+}
 dedupe_latest() {   # HANDOFF.md: ONE "DIE-CI LATEST:" line (die_ci_cron.sh replaces it in place); $1 = the line to keep
   [ -f HANDOFF.md ] || return 0
   [ "$(grep -c 'DIE-CI LATEST:' HANDOFF.md)" -gt 1 ] || return 0
@@ -137,9 +179,10 @@ git remote get-url origin >/dev/null 2>&1 || git remote add origin "$URL"
 
 # (1) commit dirty append-only logs; refuse anything else
 DIRTY=$(git status --porcelain --untracked-files=no | sed 's/^...//; s/.* -> //')
-OTHER=""; APP=""
+OTHER=""; APP=""; LIVE_DIRTY=""
 for f in $DIRTY; do
   if is_generated "$f"; then git checkout -q -- "$f" && say coord "discarded local edit of generated $f"
+  elif is_live "$f"; then LIVE_DIRTY="$LIVE_DIRTY $f"
   elif is_append "$f"; then APP="$APP $f"; else OTHER="$OTHER $f"; fi
 done
 [ -z "$OTHER" ] || fail "non-log local edits in the hub checkout, not touched:$OTHER"
@@ -157,7 +200,9 @@ for i in 1 2 3 4 5; do
   git fetch -q origin "$B" || { MERGE_ERR="fetch failed"; sleep 5; continue; }
   if ! git merge-base --is-ancestor FETCH_HEAD HEAD; then
     KEEP=$(latest_of HANDOFF.md)
+    live_stash FETCH_HEAD
     merge_union FETCH_HEAD || fail "$MERGE_ERR"
+    live_restore
     dedupe_latest "$KEEP"
     if [ -n "$(git status --porcelain --untracked-files=no -- HANDOFF.md)" ]; then
       git commit -q -m "hub $(hostname): one DIE-CI LATEST line after merge" -- HANDOFF.md || fail "dedupe commit failed"

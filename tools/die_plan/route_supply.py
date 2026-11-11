@@ -549,6 +549,8 @@ class Grid:
         self.dV = np.zeros((self.ny + 1, self.nx + 1))
         self.wl = 0.0
         self.cur = None      # demand category being added (ablation: env ROUTE_SUPPLY_SKIP=glue,core,ft,station,ring)
+        self.rec = None      # FEAS-AUDIT-1 / S81-PLANMODEL-1: list of (cat, label, x0, x1, y0, y1, n) when not None
+        self.label = None
 
     def _rect(self, d, x0, y0, x1, y1, dens):
         b = self.b
@@ -583,6 +585,8 @@ class Grid:
         if ah > 0:
             self._rect(self.dV, x0, y0, x1 - 1e-9, y1 - 1e-9, n * ah / (w * h))
         self.wl += n * (aw + ah)
+        if self.rec is not None and self.cur != "glue":
+            self.rec.append((self.cur, self.label, min(xs), max(xs), min(ys), max(ys), n))
 
     def area_density(self, rect, dens_h, dens_v):
         if self.cur in SKIP:
@@ -727,7 +731,14 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     W, H = map(float, t["outline_um"])
     b = cfg["bin_um"]
     g = Grid(W, H, b)
+    if cfg.get("record_nets"):
+        g.rec = []
     notes = []
+    if cfg.get("fanout", True) and (_UNREAL.get(name) or {}).get("phantom"):
+        # S81-PLANMODEL-1: plan stations whose class has bound depth 0 (s81_leaf_conns.py) are wires, not registers
+        t, nd_, nb_, nu_ = drop_phantoms(name, t, _UNREAL)
+        notes.append(f"UNREALISED {nd_} plan station(s) / {nb_} b: bound depth 0, not counted as register hops"
+                     + (f", {nu_} rows unmatched" if nu_ else ""))
     mrects = macro_rects(t)
     cov = coverage(g, mrects)
     # ---------------- supply
@@ -851,6 +862,10 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                     st_face.add((max(hit, key=len), cn[4:]))
     carried = 0
     rect_of = {h["inst"]: (x0, y0, x1, y1) for (x0, y0, x1, y1, h) in mrects}
+    # S81-PLANMODEL-1: ports named by a fan-out net are drawn by that net only (not as glue escapes / core_conns nets)
+    fan_nets = [n_ for n_ in (_FANOUT.get(name) or _FANOUT.get(cc_key) or []) if cfg.get("fanout", True)]
+    fan_claim = {(i_, p_) for n_ in fan_nets for i_, p_ in n_["pins"]}
+    fan_claimed = 0
     g.cur = "core"
     # face pin band: the bits of a face bus land spread over its window, in the order of the core pins that drive
     # them (no crossing), not at one point
@@ -873,6 +888,12 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     for inst, pl in pins.items():
         if not pl:
             continue
+        if fan_claim:
+            n0_ = len(pl)
+            pl = [q_ for q_ in pl if (inst, q_[0]) not in fan_claim]
+            fan_claimed += n0_ - len(pl)
+            if not pl:
+                continue
         if cc:
             ci = cc.get(inst, {})
             if inst in cc and not ci and cfg.get("empty_conns_unchecked", True):
@@ -934,6 +955,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                     else:
                         unresolved += 1
                 if len(pts) > 1:
+                    g.label = ("core", inst, bus, tuple(d_ for d_ in (ci.get(bus) or []) if d_ != "glue"))
                     # core_conns lists a core-to-core link at BOTH ends: count each end half
                     w_ = 0.5 if two_sided and not had_face and all(not str(d).startswith(("bus:", "face:")) for d in dl) \
                         else 1.0
@@ -960,6 +982,23 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             py = sum(c[1] * n for c, n in others) / tw
             for bus, x, y in pl:
                 g.net([(x, y), (px, py)])
+    fan_bits = 0
+    if fan_nets:
+        port_cen = {}
+        for inst_, bc_ in bus_cen.items():
+            for bus_, c_ in bc_.items():
+                port_cen[(inst_, bus_)] = c_
+        for n_ in fan_nets:
+            pts_ = [port_cen[(i_, p_)] for i_, p_ in n_["pins"] if (i_, p_) in port_cen]
+            go_ = [port_cen[(i_, p_)] for i_, p_ in n_.get("glue_of", []) if (i_, p_) in port_cen]
+            if go_:
+                pts_.append((sum(q[0] for q in go_) / len(go_), sum(q[1] for q in go_) / len(go_)))
+            if len(pts_) > 1:
+                g.label = ("core", n_["name"], n_["kind"], ())
+                g.net(pts_, n=n_["bits"])
+                fan_bits += n_["bits"]
+        notes.append(f"PLANMODEL {len(fan_nets)} fan-out nets / {fan_bits} b replace {fan_claimed} core pins "
+                     f"(s81_leaf_conns.py, from the leaf RTL)")
     if unresolved:
         notes.append(f"{unresolved} core_conns destinations not placed in the type")
     if unchecked:
@@ -979,6 +1018,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 rect_by_name[k_] = (x0, y0, x1, y1)
     for f in t.get("ft_slots", []) or []:
         wbits = int(f.get("width", 1))
+        g.label = ("ft", str(f.get("name", "")), wbits)
         si_ = [rect_by_name[n_] for n_ in (f.get("stations_in") or []) if n_ in rect_by_name]
         if si_ and cfg.get("ft_core_internal", True):
             # the slot's stations and wires live inside these hard cores (stations_in): parent wire is only
@@ -1033,8 +1073,9 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, s.get("bits", 1)))
         st_bits += s.get("bits", 1)
     sp = cfg["detour_um"] if cfg.get("station_spread", False) else 0.0
-    for (_, _), lst in fan.items():
+    for (_la, _), lst in fan.items():
         bits = max(n for _, n in lst)
+        g.label = ("st", _la, bits)
         g.net([lst[0][0][0]] + [p[1] for p, _ in lst], n=bits, span=sp)
         for pts, n in lst:
             for a, c in zip(pts[1:], pts[2:]):
@@ -1222,7 +1263,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         hot_bins=hot_all, hot_area_um2=round(hot_all * b * b),
         porous=porous, children=children_fill(mrects, h_kind, cfg),
         fix=FIX.get((c, d), "?"), regions=stats, notes=notes, obs_src=dict(obs_src),
-        _maps=(rH, rV, cls),
+        _maps=(rH, rV, cls), _sup=(supH, supV), _bin=b, _rec=g.rec,
     )
 
 
@@ -1269,21 +1310,31 @@ def load_conns(die_dir, path=None, plan_dir=None, ref_dirs=()):
     Sets _CONNS_SRC[type] = file."""
     out = {}
     _CONNS_SRC.clear()
+    _FANOUT.clear()
+    _UNREAL.clear()
     for f in conns_sources(die_dir, plan_dir, ref_dirs, path):
         try:
             d = read_json(f)
         except (OSError, ValueError):
             continue
+        top = d
         if isinstance(d, dict) and isinstance(d.get("core_conns"), dict):
             d = d["core_conns"]
         for t, v in (d or {}).items():
             if t not in out and isinstance(v, dict):
                 out[t] = v
                 _CONNS_SRC[t] = str(f)
+        # S81-PLANMODEL-1 sidecar keys (s81_leaf_conns.py): real multi-sink nets and the plan stations the bound RTL lacks
+        if isinstance(top, dict) and isinstance(top.get("core_conns"), dict):
+            for key, dst in (("fanout_nets", _FANOUT), ("unrealised_stations", _UNREAL)):
+                for t, v in (top.get(key) or {}).items():
+                    dst.setdefault(t, v)
     return out
 
 
 _CONNS_SRC = {}
+_FANOUT = {}        # {type: [{name, kind, bits, pins: [[inst, port]..], glue_of: [[inst, port]..]}]}
+_UNREAL = {}        # {type: {phantom: [{idx, conn, launch, capture, bits}]}}  (stscan format, bound depth 0)
 
 
 def _names_core(dests, inst):
@@ -1460,6 +1511,8 @@ def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=F
             r["fix"] = FIX.get((reg, d), r["fix"])
             r["fix_region"] = r["flag_regions"][0][0]
         maps_ = r.pop("_maps")
+        for k_ in ("_sup", "_bin", "_rec"):
+            r.pop(k_, None)
         if maps and out:
             Path(out).mkdir(parents=True, exist_ok=True)
             np.savez_compressed(Path(out) / f"{die}__{n}.npz", rH=maps_[0], rV=maps_[1],
@@ -1590,6 +1643,8 @@ def main(argv=None):
                     help="old model: an ft slot whose stations_in are hard cores still runs as parent wire over them")
     ap.add_argument("--template-cap-default", action="store_true",
                     help="old model: cap whole-block template LEFs at --core-ceiling even when the plan gives obs_max")
+    ap.add_argument("--no-planmodel", action="store_true",
+                    help="ignore the fanout_nets / unrealised_stations keys of the core_conns sidecar (its core_conns overrides still apply)")
     ap.add_argument("--station-scan", help="stscan --detail JSON (plan internal_stations vs the bound netlist): "
                     "PHANTOM stations (no bound path) are not scored as wire (DIE-HBM-98 S7, COORD 02:5x)")
     ap.add_argument("--station-face-double", action="store_true",
@@ -1640,7 +1695,7 @@ def main(argv=None):
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
                empty_conns_unchecked=not a.empty_conns_glue, station_face_dedupe=not a.station_face_double,
-               station_scan=a.station_scan,
+               station_scan=a.station_scan, fanout=not a.no_planmodel,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
                grt_halving_types=grt_halving_types(a.grt_halving_type))
     conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])

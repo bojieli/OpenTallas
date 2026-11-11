@@ -121,6 +121,12 @@ PIO0, P_ARR, P_PO_M, PIO_EARLY = 285, 70, 8, 150
 SERVICE_TIMING = {
     'legacy_fg3': dict(pio=285, kpv=55, engine_profile='legacy_fg3'),
     'closing_allq': dict(pio=297, kpv=78, engine_profile='closing'),
+    # S81-A1 (S81-ARCH-RTL-2 11-11): the svc_rs engine built with -DOT_SVC_SRX=7 (ot_hdc_v41x_attn_s / ot_s81_svc_attn_s
+    # SRX 7: 7 relay stages on every tile input).  A job's scores land 7 edges later and its P.V 14 (bench
+    # svc_srx_lockstep.py: values bit-identical; back-to-back jobs also slip, +44 edges over 10 jobs), so the dates move: PIO +7 (the SM e rows follow the
+    # scores), and KPV +7 on top of PO (which already follows PIO): P.V drain +14 a pass.  Same arithmetic, new dates.
+    'legacy_fg3_srx7': dict(pio=285 + 7, kpv=55 + 7, engine_profile='legacy_fg3', srx=7),
+    'closing_allq_srx7': dict(pio=297 + 7, kpv=78 + 7, engine_profile='closing', srx=7),
 }
 
 # TOK-DS-CMP (10-26): compressed-row (DSA) layers -- 128 window rows + the indexer's nsel selected compressed rows,
@@ -608,7 +614,7 @@ class Job:
         """t_q0: the CFG word's cycle (own row ready), t_q: q_rope done, t_exp: P (exp) ready -- all at the q pins.
         Returns {frame: first word cycle} and the job's derived cycles."""
         T = self.T
-        if self.timing_profile == 'closing_allq' and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
+        if self.timing_profile in ('closing_allq', 'closing_allq_srx7') and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
             raise ValueError('closing_allq timing requires the H16/D512 ALLQ+SMT on-die-P programme (T128, or T128+nsel '
                              'compressed with the T-scaled PIO)')
         if self.npass > 1:
