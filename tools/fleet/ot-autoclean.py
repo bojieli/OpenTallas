@@ -64,9 +64,9 @@ TOOLS_DIR = os.path.join(HOME, ".local/share/ot-autoclean-auto")
 OFF_FILES = tuple(os.environ.get("OT_AUTOCLEAN_OFF_FILES", f"{HOME}/.config/ot-autoclean/OFF:{HOME}/.config/ot-autoclean-auto/OFF").split(":"))
 DEFAULT_ROOTS = ["/srv/opentallas-scratch/claude", "/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude",
                  os.path.join(HOME, "scratch-root/claude")]
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc5", "epyc6", "epyc9"]   # ONBOARD-EPYC9 11-11: + epyc9 (renewed-glider)
 HOSTNAME_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2",
-                  "aware-parakeet": "epyc4", "devoted-wren": "epyc5", "eager-sunfish": "epyc6"}
+                  "aware-parakeet": "epyc4", "devoted-wren": "epyc5", "eager-sunfish": "epyc6", "renewed-glider": "epyc9"}
 AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
