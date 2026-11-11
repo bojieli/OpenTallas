@@ -1,0 +1,29 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/head-92/h2/kit/ot_s81hd_he_epc_kit/views/ot_s81hd_he_epc.lef",
+ "base_sha256": "06a5ea77d5354d47d2ef4ed825580ab2e95e431733f8cfdabb38524b545fd719",
+ "detail": "detail_b1.lef",
+ "out": "ot_s81hd_he_epc.lef",
+ "out_sha256": "4ccb218430234ecf3ee3e9b4d4a0593fc3a2692008ead01d72f1d5f9fa850c40",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 20487,
+  "M7": 8698
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VDD": [
+   "M5"
+  ],
+  "VSS": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "bloat_factor": 1
+}
