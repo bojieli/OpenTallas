@@ -19423,7 +19423,8 @@
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
-    "hd_serdes": "KW-FIX-43 COORD 11-10 00:5x: HEAD-92 stopped a2 on purpose (20:37), the wave read exit 137 as INFRA and relaunched the unchanged form as a3. Held until HEAD-92's form 3 (epyc7 head-92/ser3) is the source. Revert: delete hold_items.hd_serdes."
+    "hd_serdes": "KW-FIX-43 COORD 11-10 00:5x: HEAD-92 stopped a2 on purpose (20:37), the wave read exit 137 as INFRA and relaunched the unchanged form as a3. Held until HEAD-92's form 3 (epyc7 head-92/ser3) is the source. Revert: delete hold_items.hd_serdes.",
+    "hd_lep0N": "KW-FIX-45 11-11 (COORD ruling HEAD cut): hd_lep0N lepB+S03 route_supply 1.68, KIT launch CONDITIONAL on the post-cut lep0N GRT0 check (HEAD-94)"
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
