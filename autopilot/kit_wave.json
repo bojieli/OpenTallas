@@ -4564,12 +4564,12 @@
     "col_h9_r2__t1__clb8d86cd5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
     "col_h9_r2__t1__clc9ad8f7e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
     "col_h9_r2__t1__clce45cab5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
-    "ot_s81sl_leaf__t16": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
-    "ot_s81sl_leaf__t27": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
-    "ot_s81sl_leaf__t42": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
-    "col_h10_r0_p1__t1__cl911743eb": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
-    "col_h10_r0_p4__t1": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
-    "col_h9_r0_p3__t1__cl31d0dc4b": "KW-FIX-43 11-10 23:5x porous release: builds from its own CORE-CTAP-WIDE plan c839 + bind10_ctap; waits for DIE-S81-85 combined plan 0e49331438c1 + its strict bind",
+    "ot_s81sl_leaf__t16": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
+    "ot_s81sl_leaf__t27": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
+    "ot_s81sl_leaf__t42": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
+    "col_h10_r0_p1__t1__cl911743eb": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
+    "col_h10_r0_p4__t1": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
+    "col_h9_r0_p3__t1__cl31d0dc4b": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
     "slice_station__t27": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
     "slice_station__t49": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
     "ot_s81sl_leaf__t1": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
@@ -5010,7 +5010,7 @@
     "serdes__t13@2": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t15__cla2127225@4": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "serdes__t16@3": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
-    "col_h10_r0_p4__t1@13": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
+    "col_h10_r0_p4__t1@13": "KW-FIX-43 DIE-S81-85 00:0x: c839 -> plan of record 39eae5 (porous batch)",
     "col_h10_r2__t1__cl99efd374@15": "KW-FIX-35-S 2026-11-08 05:09 PST: S81-TYPES-7 05:0x CLASS A: reset-scope selected (7c731625b9); producer receipt reproduced (packet_classA.json SELECTED_PASS); only 4 LP types moved; failed at kit_topology before any CAD",
     "col_h9_r0_p3__t1__cl0cd90c0e@18": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
     "col_h9_r0_p3__t1__cl31d0dc4b@13": "CLASS RESET-CORE (reset_tree.py OT_RESET_CORE_KEPT, DIE-S81-51, on main since I2 4b09653bef8): these 32 global_place OT_RESET_CORE fails all started 13:51-16:56 on pre-fix src 39a2fae866 (were RUNNING during the I2 batch); relaunch once on I5 src kw-fix-4-s81i5 53d88982081 (KW-FIX-4 19:5x, COORD global_place class)",
@@ -8824,18 +8824,26 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "col_h10_r0_p1__t1__cl911743eb": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "col_h10_r0_p4__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "col_h9_r0_p1__t1": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
@@ -8866,11 +8874,15 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "col_h9_r0_p3__t1__cl31d0dc4b": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "col_h9_r0_p3__t1__cl8ce97bcb": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
@@ -9020,25 +9032,37 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "ot_s81sl_leaf__t16": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "ot_s81sl_leaf__t27": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "ot_s81sl_leaf__t42": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "prev_kw43six": {
+      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+      "kit_rtl": {
+       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      },
+      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "slice_station__t27": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
@@ -19114,9 +19138,16 @@
     "ot_s81sl_leaf__t66",
     "ot_s81sl_leaf__t7",
     "ot_s81sl_leaf__t73",
-    "col_h10_r2__t1__cl1f5d6c2a"
+    "col_h10_r2__t1__cl1f5d6c2a",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t42",
+    "col_h10_r0_p1__t1__cl911743eb",
+    "col_h10_r0_p4__t1",
+    "col_h9_r0_p3__t1__cl31d0dc4b"
    ],
-   "note_kw43pause": "KW-FIX-43 pause: 80 not-yet-running items of the 99f40d/39eae5/ffe106 sets held (44 running untouched); kit_rtl now {'kit_rtl_ftlk.sh': 2, 'kit_rtl_bctl.sh': 54, 'kit_rtl_s81_final_1109.sh': 68}"
+   "note_kw43pause": "KW-FIX-43 pause: 80 not-yet-running items of the 99f40d/39eae5/ffe106 sets held (44 running untouched); kit_rtl now {'kit_rtl_ftlk.sh': 2, 'kit_rtl_bctl.sh': 54, 'kit_rtl_s81_final_1109.sh': 68}",
+   "note_kw43six": "KW-FIX-43 11-11 00:0x DIE-S81-85: 6 c839 grid-tap items -> 39eae5 + die kit_rtl, in the pause list: ot_s81sl_leaf__t16:ENQUEUED@6 ot_s81sl_leaf__t27:RUNNING@14 ot_s81sl_leaf__t42:ENQUEUED@17 col_h10_r0_p1__t1__cl911743eb:ENQUEUED@20 col_h10_r0_p4__t1:RETRY-INFRA@13 col_h9_r0_p3__t1__cl31d0dc4b:ENQUEUED@17"
   },
   "s81_head": {
    "enabled": true,
