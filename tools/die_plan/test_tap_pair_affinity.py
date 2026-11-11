@@ -11,7 +11,7 @@ TCLSH = shutil.which('tclsh')
 pytestmark = pytest.mark.skipif(TCLSH is None, reason='tclsh not installed')
 
 
-def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0):
+def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20, merge=0, shift=0, grow=0):
     """regs {name: (x, y, tap)}; pairs [(a, b)]; taps {tap: (x, y)} -> ({name: tap}, passes)."""
     load = load or {k: sum(1 for r in regs.values() if r[2] == k) for k in taps}
     r = ' '.join(f'{{{n}}} {{opaque {x} {y} {tp}}}' for n, (x, y, tp) in regs.items())
@@ -20,7 +20,7 @@ def run(regs, pairs, taps, load=None, cap=100, radius=10**6, limit=64, passes=20
     ld = ' '.join(f'{k} {v}' for k, v in load.items())
     script = (f'source {{{PLAN}}}\n'
               f'set res [::ot_tap_pair::plan [dict create {r}] [list {p}] [dict create {tx}] [dict create {ld}] '
-              f'{cap} {radius} {limit} {passes} {merge} {shift}]\n'
+              f'{cap} {radius} {limit} {passes} {merge} {shift} {grow}]\n'
               'dict for {n row} [dict get $res regs] {puts "REG $n [lindex $row 3]"}\n'
               'puts "PASSES [dict get $res passes]"\n')
     res = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True)
@@ -149,3 +149,76 @@ def test_missing_or_negative_initial_load_still_fails():
                   f'[dict create t0 {{0 0}} t1 {{10 0}}] [dict create {ld}] 3 100 2 5}} msg]\nputs $msg\n')
         out = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True).stdout.split('\n')
         assert out[0] == '1' and 'initial tap capacity invalid: t1' in out[1], (ld, out)
+
+
+def overfull_boundary(n=8):
+    # DIE-QC-97 11-10 (QC sle_hc0 density taps, 8 of 15 above cap): n short pairs p_i -> r_i, 1.5 um apart, straddle
+    # the boundary of two over-full taps (p on t0, r on t1).  Each pair is its own 2-register component.
+    regs = {}
+    for i in range(n):
+        regs[f'p{i}'] = (4, i, 't0')
+        regs[f'r{i}'] = (5.5, i, 't1')
+    pairs = [(f'p{i}', f'r{i}') for i in range(n)]
+    taps = {'t0': (0, 0), 't1': (10, 0)}
+    load = {'t0': 100, 't1': 100}         # both far above cap 10
+    return regs, pairs, taps, load
+
+
+def test_overfull_boundary_stays_cut_without_growth():
+    regs, pairs, taps, load = overfull_boundary()
+    lab, _ = run(regs, pairs, taps, load=load, cap=10, limit=2)
+    assert cross(lab, pairs) == len(pairs)          # donate-only: no side may receive
+
+
+def test_overfull_growth_joins_every_boundary_pair_within_bound():
+    regs, pairs, taps, load = overfull_boundary()
+    lab, _ = run(regs, pairs, taps, load=load, cap=10, limit=2, grow=0.1)
+    assert cross(lab, pairs) == 0
+    for t, l0 in load.items():
+        moved_in = sum(1 for n, tp in lab.items() if tp == t and regs[n][2] != t)
+        moved_out = sum(1 for n, tp in lab.items() if tp != t and regs[n][2] == t)
+        assert l0 + moved_in - moved_out <= l0 + int(l0 * 0.1)
+
+
+def test_overfull_growth_is_bounded():
+    # r_i sit 8 um from t0 (radius 7): only the p_i can move, all onto t1.  Growth 0.02 of 100 = 2 sinks, so exactly
+    # two pairs join and t1 ends at 102.
+    regs, pairs, taps, load = overfull_boundary()
+    for i in range(len(pairs)):
+        regs[f'r{i}'] = (8, i, 't1')
+    lab, _ = run(regs, pairs, taps, load=load, cap=10, radius=7, limit=2, grow=0.02)
+    assert len(pairs) - cross(lab, pairs) == 2
+    for t, l0 in load.items():
+        final = l0 + sum(1 for n, tp in lab.items() if tp == t and regs[n][2] != t) \
+            - sum(1 for n, tp in lab.items() if tp != t and regs[n][2] == t)
+        assert final <= l0 + 2
+
+
+def test_overfull_growth_never_lets_an_under_cap_tap_exceed_cap():
+    regs, pairs, taps, _ = overfull_boundary(4)
+    lab, _ = run(regs, pairs, taps, load={'t0': 9, 't1': 9}, cap=10, limit=2, grow=0.5)
+    for t in taps:
+        final = 9 + sum(1 for n, tp in lab.items() if tp == t and regs[n][2] != t) \
+            - sum(1 for n, tp in lab.items() if tp != t and regs[n][2] == t)
+        assert final <= 10
+
+
+def test_overfull_growth_rejects_out_of_range():
+    for g in ('-0.1', '0.6', 'x'):
+        script = (f'source {{{PLAN}}}\n'
+                  'puts [catch {::ot_tap_pair::plan [dict create a {o 0 0 t0} b {o 10 0 t1}] {} '
+                  f'[dict create t0 {{0 0}} t1 {{10 0}}] [dict create t0 1 t1 1] 3 100 2 5 0 0 {g}}} msg]\nputs $msg\n')
+        out = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True).stdout.split('\n')
+        assert out[0] == '1' and 'invalid overfull growth' in out[1], (g, out)
+
+
+def test_overfull_grow_export_is_opt_in_and_bounded():
+    sys.path.insert(0, str(Path(__file__).parent))
+    from gen_phys import tap_pair_affinity_exports
+    base = {'tap_radius_um': 200, 'tap_max_sinks': 1200}
+    lines = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={})})
+    assert not any('OVERFULL' in x for x in lines)
+    lines = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'overfull_grow': 0.1})})
+    assert 'export OT_TAP_PAIR_OVERFULL_GROW = 0.1' in lines
+    with pytest.raises(ValueError):
+        tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'overfull_grow': 0.6})})

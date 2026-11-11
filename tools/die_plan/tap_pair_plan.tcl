@@ -18,10 +18,11 @@ namespace eval ::ot_tap_pair {
   if {[lindex $a 1]!=[lindex $b 1]} {return [expr {[lindex $a 1]<[lindex $b 1] ? -1 : 1}]}
   return [string compare [lindex $a 2] [lindex $b 2]]
  }
- proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0} {shift 0}} {
+ proc plan {regs pairs tapxy load cap radius limit maxpasses {mergelimit 0} {shift 0} {grow 0}} {
   if {$cap<1 || $radius<=0 || $limit<2 || $limit>$cap || $maxpasses<1} {
    error "OT_TAP_PAIR invalid capacity/radius/group/passes"
   }
+  if {![string is double -strict $grow] || $grow<0 || $grow>0.5} {error "OT_TAP_PAIR invalid overfull growth $grow"}
   # DIE-QC-97 11-09: the initial load must be KNOWN for every tap, but it may exceed cap.  clock_taps.tcl keeps an
   # over-full tap with no room within the reassign radius as a WARN (COORD 10-23 19:55: sinks per tap are guidance,
   # not a gate) and leaves hard-core clock pins on their tap, so taps above cap are legal inputs (QC cbn_q00 clk_t11,
@@ -34,6 +35,14 @@ namespace eval ::ot_tap_pair {
    }
    dict set initload $tap [dict get $load $tap]
   }
+  # DIE-QC-97 11-10 OVERFULL ADMISSION (grow>0, plan clock.tap_pair_affinity.overfull_grow): a tap may receive while
+  # load+n <= l0 + floor(l0*grow) when it started above cap (else cap).  grow 0 = the donate-only rule above.  QC sle_hc0 (density mode, 77k sinks
+  # on 15 taps, 8 above cap 1200 at start): donate-only moved 19 of the pins behind 6486 cross-tap short pairs, because
+  # every pair on a boundary between two over-full taps had no admissible side; the FF hold miss there is the 40-ps
+  # tap window plus the tree mismatch (p_ib -> r_ib 15 um apart, clk_t1 -> clk_t2, -100.65 ps).  The bounded growth
+  # (<= grow of the tap's own size; tree depth is log of sinks) lets those components join one tap.
+  set lim {}
+  dict for {tap l0} $initload {dict set lim $tap [expr {$l0>$cap ? $l0 + int(floor($l0*$grow)) : $cap}]}
   set overfull [llength [lmap {tap l0} $initload {expr {$l0>$cap ? $tap : [continue]}}]]
   set parent {};set adj {}
   dict for {name row} $regs {
@@ -79,7 +88,7 @@ namespace eval ::ot_tap_pair {
     set current [expr {[dict exists $votes $old] ? [dict get $votes $old] : 0}]
     set best {};set score $current;set cost 0
     dict for {tap count} $votes {
-     if {$tap eq $old || $count<=$current || $count<$score || [dict get $load $tap]+$n>$cap} continue
+     if {$tap eq $old || $count<=$current || $count<$score || [dict get $load $tap]+$n>[dict get $lim $tap]} continue
      lassign [dict get $tapxy $tap] tx ty
      set sum 0;set good 1
      foreach v $members {
@@ -149,7 +158,7 @@ namespace eval ::ot_tap_pair {
       if {$d>$radius} {set good 0;break}
       set sum [expr {$sum+$d}]
      }
-     if {!$good || [dict get $load $tap]+$n-$c>$cap} continue
+     if {!$good || [dict get $load $tap]+$n-$c>[dict get $lim $tap]} continue
      lappend cands [list $c $sum $tap]
     }
     if {![llength $cands]} continue
@@ -203,7 +212,7 @@ namespace eval ::ot_tap_pair {
      set s0 0;foreach e $ext {if {[lindex $e 0] ne $old} {set s0 [expr {$s0+[lindex $e 1]}]}}
      set best {};set bs $s0
      dict for {tap count} $votes {
-      if {$tap eq $old || $count!=$current || [dict get $load $tap]+$n>$cap} continue
+      if {$tap eq $old || $count!=$current || [dict get $load $tap]+$n>[dict get $lim $tap]} continue
       set s 0;foreach e $ext {if {[lindex $e 0] ne $tap} {set s [expr {$s+[lindex $e 1]}]}}
       if {$s<=$bs} continue
       lassign [dict get $tapxy $tap] tx ty;set good 1
@@ -229,7 +238,7 @@ namespace eval ::ot_tap_pair {
   }
   # Fail before any physical connection changes if a promised invariant is lost.
   dict for {tap l0} $initload {
-   if {[dict get $load $tap]>max($cap,$l0)} {error "OT_TAP_PAIR tap filled above capacity: $tap"}
+   if {[dict get $load $tap]>[dict get $lim $tap]} {error "OT_TAP_PAIR tap filled above capacity: $tap"}
   }
   foreach edge $pairs {
    lassign $edge distance a b
