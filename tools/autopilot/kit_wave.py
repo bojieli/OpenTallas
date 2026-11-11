@@ -4045,8 +4045,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             sp["gen_host"] = arm["gen_host"]
             sp["place_prefer"] = [arm["gen_host"]] + [h for h in sp.get("place_prefer") or [] if h != arm["gen_host"]]
             sp["hosts"] = [arm["gen_host"]] + [h for h in sp.get("hosts") or [] if h != arm["gen_host"]]
+        why = grt_arm_pin(st, arm, sp)             # KW-FIX-46: the arm builds from its sibling's src, plan and bind
+        if why:
+            AP.log(f"KIT-WAVE GRT-ARM LAUNCH-SKIP {die}/{r['item']}: {why}")
+            return None
         sp["gen_env"] = dict(sp.get("gen_env") or {}, OT_GRT_TRANSITION_MODE=arm["mode"])
-        sp["grt_arm"] = {"of": arm["of"], "mode": arm["mode"]}
+        sp["grt_arm"] = dict(sp.get("grt_arm") or {}, of=arm["of"], mode=arm["mode"])
         why = grt_arm_src_check(AP, cfg, sp)
         if why:
             AP.log(f"KIT-WAVE GRT-ARM LAUNCH-SKIP {die}/{r['item']}: {why}")
@@ -4179,6 +4183,48 @@ def grt_arm_live(rec):
         return True
     q = str(rec.get("q_status") or "")
     return s == "ENQUEUED" and q not in GRT_ARM_SIGNED and (q in ("", "QUEUED", "RUNNING") or q.startswith("WAIT-"))
+
+
+# KW-FIX-46 KIT_TOPOLOGY_BIND_STALE (QC sle_hc1__cl22c1ff36 arm @31, 11-11 02:52): spec_for() builds the arm from the die's
+# CURRENT config (plan, src, bind, asbuilt, clock-landing sidecar), which KW-FIX-43's rebinds had moved on from the sibling's
+# attempt; the A/B arm then ran a bind that does not belong to its src (kit_topology: "regenerate the canonical native bind").
+# The arm differs from its sibling only by the gen env OT_GRT_TRANSITION_MODE, so everything the kit reads is the sibling's.
+GRT_ARM_PIN = ("plan", "src", "src_sha", "src_base", "src_overlay", "queue_src", "kit_rtl", "canonical_topology_prepare",
+               "core_kit", "gen_args", "preflight_args", "cland_pinslot", "relay_bay_re", "prov_first_re", "cell_check")
+GRT_ARM_PIN_REQUIRED = ("src", "plan")
+
+
+def grt_arm_sibling_spec(st, arm):
+    """the spec.json of the newest attempt of the arm's sibling (the normal path of the row), or (None, why)"""
+    base = (st.get("items") or {}).get(arm.get("of"))
+    if not base or not base.get("dir"):
+        return None, f"sibling {arm.get('of')} has no attempt dir"
+    try:
+        return json.loads((Path(base["dir"]) / "spec.json").read_text()), ""
+    except (OSError, ValueError) as e:
+        return None, f"sibling spec {base.get('dir')}/spec.json unreadable ({type(e).__name__})"
+
+
+def grt_arm_pin(st, arm, sp):
+    """overwrite sp's source inputs (GRT_ARM_PIN) with the sibling attempt's, in place; the sibling's gen env is kept and the
+    arm's mode is added by the caller.  Returns '' or the reason the arm must not launch (fail closed: no sibling spec, or a
+    sibling spec without src/plan, launches nothing rather than an arm on a different src or bind)."""
+    sib, why = grt_arm_sibling_spec(st, arm)
+    if sib is None:
+        return why
+    miss = [k for k in GRT_ARM_PIN_REQUIRED if not sib.get(k)]
+    if miss:
+        return f"sibling spec lacks {','.join(miss)}: cannot pin the arm to the sibling's inputs"
+    for k in GRT_ARM_PIN:
+        if k in sib:
+            sp[k] = sib[k]
+        else:
+            sp.pop(k, None)
+    sp["gen_env"] = dict(sib.get("gen_env") or {})
+    kr = sib.get("kit_rtl") if isinstance(sib.get("kit_rtl"), dict) else {}
+    sp["grt_arm"] = {"pinned_from": {"attempt": (st["items"].get(arm.get("of")) or {}).get("attempt"), "src": sib.get("src"),
+                                     "plan": sib.get("plan"), "bind_out": kr.get("bind_out"), "asbuilt": kr.get("asbuilt")}}
+    return ""
 
 
 def grt_arm_src_check(AP, cfg, sp):

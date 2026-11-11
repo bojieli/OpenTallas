@@ -64,7 +64,11 @@ def state(d, base_status="ENQUEUED", q_status="FAIL", attempt=3):
     bd = Path(d) / "base"
     bd.mkdir(exist_ok=True)
     (bd / "spec.json").write_text(json.dumps({"work": f"/srv/kw/{DIE}/{EV}/items/{ITEM}/attempt_{attempt}",
-                                              "gen_host": "epyc4", "src_sha": "620077f42"}))
+                                              "gen_host": "epyc4", "src_sha": "620077f42",
+                                              "src": "/srv/wt/qc_sib", "plan": "/srv/p/plan_sib.json",
+                                              "queue_src": "claude/sib@620077f42", "gen_args": ["--clock-landing", "/srv/wt/qc_sib/sidecar.json"],
+                                              "gen_env": {"OT_FLOW_TAG": "flow-sib"},
+                                              "kit_rtl": {"mode": "bind", "bind_out": "/srv/b/bind_sib", "asbuilt": "/srv/wt/qc_sib/asbuilt_sib.json"}}))
     rec = dict(die=DIE, item=ITEM, kind="type", event=EV, attempt=attempt, block_sha=BLK, status=base_status,
                q_status=q_status, q_class="ROUTING", q_reason="grt-overflow: GRT-0116", unit="kw-base-unit",
                q_id="jb", kit=f"epyc4:/srv/kw/{DIE}/{EV}/items/{ITEM}/attempt_{attempt}/kit", dir=str(bd))
@@ -191,6 +195,41 @@ class Probe(unittest.TestCase):
             st2, _ = state(d)
             self.assertEqual(KW.grt_arm_launches(AP(d), cfg(ARM), st2, {}, d), 0)
             self.assertEqual(KW.grt_arm_stop(cfg(ARM, grt_halving_arm=dict(ARM, stop="x")), DIE, "/nonexistent"), "x")
+
+
+class Pin(unittest.TestCase):
+    """KW-FIX-46 KIT_TOPOLOGY_BIND_STALE: the arm builds from its sibling attempt's src, plan and bind, not the die's current ones"""
+    def test_arm_pins_sibling_src_plan_bind(self):
+        with tempfile.TemporaryDirectory() as d:
+            st, base = state(d, base_status="RUNNING", q_status="")
+            c = cfg(ARM, kit_rtl={"mode": "bind", "bind_out": "/srv/b/bind_cur", "asbuilt": "/srv/wt/qc/asbuilt_cur.json"},
+                    gen_args=["--clock-landing", "/srv/wt/qc/sidecar_cur.json"])
+            ap = AP(d)
+            self.assertEqual(KW.grt_arm_launches(ap, c, st, {}, d), 1)
+            sp = json.loads((Path(st["items"][KW.grt_arm_key(base, "off")]["dir"]) / "spec.json").read_text())
+            self.assertEqual((sp["src"], sp["plan"], sp["src_sha"], sp["queue_src"]),
+                             ("/srv/wt/qc_sib", "/srv/p/plan_sib.json", "620077f42", "claude/sib@620077f42"))
+            self.assertEqual(sp["kit_rtl"]["bind_out"], "/srv/b/bind_sib")
+            self.assertEqual(sp["kit_rtl"]["asbuilt"], "/srv/wt/qc_sib/asbuilt_sib.json")
+            self.assertEqual(sp["gen_args"], ["--clock-landing", "/srv/wt/qc_sib/sidecar.json"])
+            self.assertEqual(sp["gen_env"], {"OT_FLOW_TAG": "flow-sib", "OT_GRT_TRANSITION_MODE": "off"})
+            self.assertEqual(sp["grt_arm"]["pinned_from"]["bind_out"], "/srv/b/bind_sib")
+            self.assertEqual((sp["grt_arm"]["of"], sp["grt_arm"]["mode"]), (base, "off"))
+            self.assertEqual(sp["gen_host"], "epyc8")                          # host knobs stay the arm's own
+            self.assertTrue(any("/srv/wt/qc_sib" in " ".join(map(str, x)) for x in ap.cmds))   # runner probe on the pinned src
+
+    def test_no_sibling_spec_launches_nothing(self):
+        with tempfile.TemporaryDirectory() as d:
+            st, base = state(d)
+            (Path(st["items"][base]["dir"]) / "spec.json").unlink()
+            ap = AP(d)
+            self.assertEqual(KW.grt_arm_launches(ap, cfg(ARM), st, {}, d), 0)
+            self.assertEqual(list(st["items"]), [base])
+            self.assertTrue(any("sibling spec" in m and "unreadable" in m for m in ap.logs))
+            (Path(st["items"][base]["dir"]) / "spec.json").write_text(json.dumps({"work": "/w", "src_sha": "x"}))
+            ap = AP(d)
+            self.assertEqual(KW.grt_arm_launches(ap, cfg(ARM), st, {}, d), 0)
+            self.assertTrue(any("lacks src,plan" in m for m in ap.logs))
 
 
 class Reclaim(unittest.TestCase):
