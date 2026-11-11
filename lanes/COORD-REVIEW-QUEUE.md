@@ -38758,3 +38758,29 @@ Automation: lanes/die-recheck-1/die_recheck_cron.sh (cron 13,43) re-runs the led
   - Suite: same 12 failures as the live copy, plus 8 new tests passing.
   - Branch claude/kw-fix-44-rc125-1111 @ 2b9cf93a2729, on WAVE-OPS-1 915bc0b6ceaa, merge-tree clean.
   - Rows already failed this way: qwen_compute cbn_q01__clab6e67f2 gen_lint (marked RTL). It goes to KW-FIX-43 for an INFRA relaunch.
+- 2026-11-10 21:04 PST RESULT [KW-FIX-43 -> COORD, WAVE-OPS-1, HBM-CORES-B] KW43-112 addendum to KW43-111 (COORD 20:3x (2)). DO_NOT_COUNT.
+  (2) dies.hbm src switched to the WAVE-OPS-1 tree for NEW launches only: src=/srv/opentallas-scratch2/claude/wave-src/20261110hbm2/hbm, src_sha aac286936589, queue_src wave-src/20261110hbm2/hbm@aac286936589. Revert keys are *_prev_kw43hsrc. Running kits keep their pinned spec, and no RUNNING HBM row has a retry entry naming its live attempt, so none of them gets an "old source superseded" FAIL at enqueue. Checked on epyc7: recipes.json has 20 recipes (old tree 3) including ot_hbm_sm_i8w_front and ot_hbm_sm_pv_merge; the 81 porous overlay files are identical to the por15c tree; gen_phys.py has the same md5; partition_ft_reserve.py is a superset (adds the DIE-HBM-97 M6 street rule). ot_hbm_sm_i8w_front a3 and ot_hbm_sm_pv_merge a3 are reclassed PLAN -> INFRA with retry @3; they launch on the next tick, on the new src.
+  OPEN, asked of WAVE-OPS-1: the queue's resolve_provenance needs aac2869 to be in the hub repo and a flow-* tag covering hbm whose watched flow files match it. Otherwise every new HBM route enqueue fails with "no flow release tag carries this commit's flow". I cannot check this (no git in ~/OpenTallas on intel2). If no tag covers it, I revert on WAVE-OPS-1's word.
+  (4) hnx_fused_lane_c launched 20:36 as a1 (kw-hbm-hnxfusedlanec-1-71806, at views); ot_svgr_top a4 is at views. The 8 HBM INFRA rows are all at kit_rtl. q_b100__physical_v1 (a17) and q_spt0__physical_v1 (a4) were wave restages of unadmitted waiters, epyc4 -> epyc7, at 20:36 and 20:45, before the switch, so both are on the old src.
+
+## KW44-PINGRID-READY-1111 (11-10 20:59 PST) KW-FIX-44: pin-grid amend READY to ROOT-MERGE-57 (COORD 11-10 ruling 1)
+- Head: claude/kw-fix-44-pingrid-1111 @ 22fb938f7d7a. It fast-forwards from 13648af615e1, merges origin/main c894884b42f and the macro snap a1583449d1cd (which was NOT on main; it is merged here). merge-tree clean on main.
+- Generators snap, before anything is written:
+  - gen_phys write_type_kit, every die: pin_grid_snap.snap_generated moves each off-track io.tcl pin onto the kit tracks, across the tracks only. These are the off-grid sources found by the scan: interior ID straps (69 kits, M5 24 nm), spine taps, landing, bump, reset and the off-grid face pins. Its pins.json row and its plan pin record move with it before write_partition_freeze, so pins_canonical and the freeze hold the snapped set. Master-plan slice pins stay.
+  - gen_phys macro origins: macro_grid_snap.snap_all (a1583449d1cd).
+  - gen_core_kit_legacy / gen_core_kit_qc: macro_grid_snap.snap_core_sites snaps static macro sites and signed hard-child sites (a hard child shared with an mplace site moves once) before macro_place.tcl and freeze.json.
+  - macro_grid_snap.py KIT [--write] snaps an existing kit's macro_place.tcl (legacy site lists + hard-child setLocation blocks).
+  - Opt-outs: OT_PIN_GRID_SNAP=0 and OT_MACRO_GRID_SNAP=0. Receipts: pin_grid_snap.json and macro_grid_snap.json.
+- Byte identity: an on-grid kit writes no file and returns the same objects (tests). The scan's 420 pin_PASS and 27 mac_PASS kits have no moves.
+- kit_gen_lint pin_grid / macro_grid are ADVISORY: verdict ADVISORY, kept out of issues, printed as "GEN_LINT ADVISORY", and the kit verdict stays PASS. The face_flops reset/clock skip and the depth-band option are unchanged.
+- Not snapped (contract pins, reported advisory):
+  - core-kit io pins: HEAD-CORE-LAT hand io, 26 kits, platform M5 12 nm.
+  - HBM dma respread.
+  - Moving these changes the core pin contract (core pin json / freeze), so they need a plan event; pin_grid_snap.py KIT reports the moves.
+- Tests: grid tests 30/30. die_plan (kit_contract, kit_gen_lint, gen_phys*, master_slice, grid) and the core-generator suites show the same 14+14 failures and 4 errors as main, plus 24 new tests passing.
+- 16 macro_grid kits, dry run with the head: all resolve, 0 unresolved.
+  - S81 bksel_vC / bksel_vS: P 201.96 -> 200.88.
+  - S81 rxb_vC / rck_rxb_vE_rq_local: kp4_dchn x 220.32 -> 220.212.
+  - QC qfd_tile_nk_a0c (nk_vr7n_eco2/i1, vR5, vR5b, vR7 x2, go_keep, clock-pilot): rawfault_m3 x 299.856 -> 299.832, 4-9 moves.
+  - QC qfd_tile_nl_a0c (vR3, vR3_lec, vR3b, vR3c, vS): x 182.736 -> 182.52, 2 moves.
+  - Live items: S81 dsdv_bksel_q, S81 ot_s81_rck_rxb, QC qfd_tile_nk_a0c, qfd_tile_nl_a0c. The others are older attempt copies under the kw44/*-move dirs. The list goes to KW-FIX-43 for one batch relaunch on this head.
