@@ -362,7 +362,7 @@ module ot_vms_bank_q0_faces_body #(
 
     // ------------------------------------------------------------------ M (macro edge) -> C (capture) -> D -> R
     reg mr_v; reg [3:0] mr_p; reg mr_mir; reg [7:0] mr_tag; reg mw_v; reg [3:0] mw_p; reg [7:0] mw_tag;
-    reg c_v; reg [3:0] c_p; reg c_mir; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
+    reg c_v; reg [3:0] c_p; reg c_mir; (* keep *) reg [7:0] c_mir_s; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
     reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg [255:0] d_flip; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
     always @(posedge clk or negedge rn)
         if (!rn) begin
@@ -389,9 +389,14 @@ module ot_vms_bank_q0_faces_body #(
     always @(posedge clk) begin : mcd
         reg [255:0] dat; reg [55:0] ck;
         mr_p <= s2r_p; mr_mir <= s2r_mir; mr_tag <= s2r_tag; mw_p <= s2w_p; mw_tag <= s2w_tag;
-        c_p <= mr_p; c_mir <= mr_mir; c_tag <= mr_tag; c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; cw_tag <= mw_tag;
+        c_p <= mr_p; c_mir <= mr_mir; c_mir_s <= {8{mr_mir}}; c_tag <= mr_tag; c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; cw_tag <= mw_tag;
         d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
-        dat = c_mir ? c_c : c_a; ck = c_mir ? c_b[111:56] : c_b[55:0];
+        // DIE-HBM-97 11-11 (vecd4ae fp2 setup -128 ps c_mir -> d_flip): one c_mir copy per 32-bit word slice, each
+        // selecting only its own data word and 7-bit check slice; same edge, bit-exact.
+        for (integer m = 0; m < 8; m = m + 1) begin
+            dat[m*32 +: 32] = c_mir_s[m] ? c_c[m*32 +: 32] : c_a[m*32 +: 32];
+            ck[m*7 +: 7] = c_mir_s[m] ? c_b[56 + m*7 +: 7] : c_b[m*7 +: 7];
+        end
         d_dat <= dat;
         for (integer k = 0; k < 8; k = k + 1) begin : dk
             reg [6:0] sk; sk = chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
