@@ -5,8 +5,10 @@
 # (8700 -> 526 endpoints, OT_HOLD_STALL) and route lost ~25 ps again.
 # This PRE_CTS step puts ONE kept HB4xp67 (~37-47 ps FF) in front of every register / SRAM data or async input
 # whose driver reaches a register Q/QN through at most OT_ZLP_DEPTH buffer / inverter cells (no other logic).
+# Data pins only: async RESETN/SETN are rewired by reset_taps.tcl later in PRE_CTS (removal stays with GRT repair).
 # Clock nets never qualify (their drivers are ports / clock cells, not register outputs).  Pads are buffers:
-# logic unchanged.  They are dont_touch so setup / DRV repair keep them; CTS detailed_placement legalizes them.
+# logic unchanged.  NOT dont_touch (a dont_touch load blocks repair_design buffering of the driver net, RSZ-3006);
+# zero-logic hops carry no setup demand, so setup repair has no reason to touch them.  CTS detailed_placement legalizes.
 # Env: OT_ZLP (1 = on), OT_ZLP_DEPTH (default 4), OT_ZLP_MAX (abort above, default 150000), OT_ZLP_REPORT_ONLY.
 proc zlp_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 if {[zlp_env OT_ZLP 0] eq "1"} {
@@ -50,7 +52,7 @@ if {[zlp_env OT_ZLP 0] eq "1"} {
     foreach it [$inst getITerms] {
       if {![$it isInputSignal]} { continue }
       set pn [[$it getMTerm] getName]
-      if {$is_reg && ![regexp {^(D|RESETN|SETN|RESET|SET)$} $pn]} { continue }
+      if {$is_reg && ![regexp {^D$} $pn]} { continue }
       set n [$it getNet]
       if {$n eq "NULL" || $n eq ""} { continue }
       if {[$inst isDoNotTouch] || [$n isDoNotTouch]} { incr zlp_seen_dt; continue }
@@ -76,9 +78,8 @@ if {[zlp_env OT_ZLP 0] eq "1"} {
       set loc [$inst getLocation]
       $pad setLocation [lindex $loc 0] [lindex $loc 1]
       $pad setPlacementStatus PLACED
-      $pad setDoNotTouch 1
       incr i
     }
-    puts "OT_ZLP inserted $i HB4xp67 pads (dont_touch, legalized by CTS detailed_placement)"
+    puts "OT_ZLP inserted $i HB4xp67 pads (legalized by CTS detailed_placement)"
   }
 }

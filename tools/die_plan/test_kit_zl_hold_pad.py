@@ -39,4 +39,4 @@ def test_existing_resume_kept(tmp_path):
 
 def test_tcl_is_off_by_default():
     t = Z.TCL.read_text()
-    assert 'zlp_env OT_ZLP 0] eq "1"' in t and "HB4xp67_ASAP7_75t_R" in t and "setDoNotTouch 1" in t
+    assert 'zlp_env OT_ZLP 0] eq "1"' in t and "HB4xp67_ASAP7_75t_R" in t and "setDoNotTouch" not in t and "regexp {^D$} $pn" in t
