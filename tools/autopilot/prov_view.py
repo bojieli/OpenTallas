@@ -743,7 +743,9 @@ def check_routed(cdir, module, entry, ppins, plan_lef, source_root=None, lef_ove
                     raise ValueError("selected source lacks the matched physical FT helper")
                 sys.path.insert(0, helpers)
                 import core_ft_physical as CF
-                contract = CF.load(entry, module, lef, tt, ff, ppins=ppins)
+                # DIE-QC-97 11-11 ISLAND-VIEW: a repo-relative physical_ft proof resolves against the selected --src
+                # cohort (the gen_phys root), not the remote shell cwd
+                contract = CF.load(entry, module, lef, tt, ff, root=source_root, ppins=ppins)
                 ppins = list(ppins) + [{"name": p["name"]} for p in contract["ports"]]
             except (ValueError, OSError) as exc:
                 return False, "physical FT contract: " + str(exc)

@@ -1,0 +1,136 @@
+{
+ "event": "DIE-QC-97 11-11 ISLAND-VIEW",
+ "base": "epyc7:/srv/opentallas-scratch2/claude/dq97/sfw/kwfix43_ra/cand23d_fh_hc0bins_stmdq_ra.json",
+ "base_sha256": "886a8ffae77499e54d3e84048867c8f7c1d21a8803f02f14334fcaae7deddaec",
+ "out": "epyc7:/srv/opentallas-scratch2/claude/dq97/pgr/island/out/plan.json",
+ "out_sha256": "0d81952bdf19cc497c779c4cb7e9184599c76f94ffcb178db910ec797b1603e6",
+ "cores": {
+  "qfd_dv_s8x_vmr": {
+   "view": "vmrV1",
+   "signoff_sha12": "dfecc3725a27",
+   "lef_sha12": "6dd379d21ce4",
+   "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+   "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c"
+  },
+  "qfd_dv_s8_crh_rp1": {
+   "view": "rp1_fqc",
+   "signoff_sha12": "d31f69ad7728",
+   "lef_sha12": "6c9e07fc3651",
+   "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+   "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72"
+  }
+ },
+ "parents": {
+  "sle_su_c": [
+   "u_suvm_u_vm8q_u_va",
+   "u_suvm_u_vm8q_u_vb",
+   "u_suvm_u_vm8q_u_vc",
+   "u_suvm_u_vm8q_u_cl",
+   "u_suvm_u_vm8q_u_ch"
+  ],
+  "slw_su_c__cl92142dac": [
+   "u_suvm_u_vm8q_u_va",
+   "u_suvm_u_vm8q_u_vb",
+   "u_suvm_u_vm8q_u_vc",
+   "u_suvm_u_vm8q_u_cl",
+   "u_suvm_u_vm8q_u_ch"
+  ],
+  "slw_su_c__cl19bb38ef": [
+   "u_suvm_u_vm8q_u_va",
+   "u_suvm_u_vm8q_u_vb",
+   "u_suvm_u_vm8q_u_vc",
+   "u_suvm_u_vm8q_u_cl",
+   "u_suvm_u_vm8q_u_ch"
+  ]
+ },
+ "instances": 15,
+ "tree_diff": [
+  "partition_types.sle_su_c",
+  "partition_types.slw_su_c__cl19bb38ef",
+  "partition_types.slw_su_c__cl92142dac"
+ ],
+ "eq": {
+  "rtl_change": false,
+  "data_cycles": 0,
+  "pin_cycles": 0,
+  "pins_moved": 0,
+  "origins_moved": 0,
+  "note": "FT inputs tied 1'b0 at the physical blackbox (kit_core_clocks.adapt_core_ports), FT outputs unconsumed; logical core header and every existing connection unchanged"
+ },
+ "pin_diff_signed_lef_vs_plan": {
+  "measured": true,
+  "only_in_signed_lef": [
+   "ft_ck_i",
+   "ft_ck_o",
+   "ft_rst_i",
+   "ft_rst_o"
+  ],
+  "only_in_plan": [],
+  "moved": 0,
+  "layer_changed": 0,
+  "ft_rects_um": {
+   "ft_ck_i": [
+    "M5",
+    [
+     122.688,
+     109.968,
+     122.712,
+     110.352
+    ]
+   ],
+   "ft_ck_o": [
+    "M5",
+    [
+     127.872,
+     109.968,
+     127.896,
+     110.352
+    ]
+   ],
+   "ft_rst_i": [
+    "M5",
+    [
+     122.688,
+     105.648,
+     122.712,
+     106.032
+    ]
+   ],
+   "ft_rst_o": [
+    "M5",
+    [
+     127.872,
+     105.648,
+     127.896,
+     106.032
+    ]
+   ]
+  },
+  "plan_pins": {
+   "qfd_dv_s8x_vmr": 1509,
+   "qfd_dv_s8_crh_rp1": 998
+  }
+ },
+ "checks": {
+  "tree": "origin/main e17692543e + 44aa911117 (merge-tree be18336204)",
+  "schema": "PASS 0 errors (base also PASS)",
+  "cf_load": "15/15 PASS (4 FT ports added, plan pins 1509/998 equal captured core_pins)",
+  "prov_view_check_routed": "15/15 ok with root=--src fix; main prov_view fails 15/15 (relative proof resolved against cwd)",
+  "collector_reach": "1337 sources, 0 over 405 um, max 404.5 (same as base)",
+  "sidecar_reach": {
+   "sidecar_sha12": "93dd313d96ff",
+   "sources_checked": 1337,
+   "over": 0,
+   "sidecar_vs_plan_diff": {},
+   "absent": [
+    "sle_st_b_v1",
+    "slw_st_a_v1__clfc5867a6",
+    "slw_st_b_v1__cl6357f1cc",
+    "slw_st_b_v2"
+   ],
+   "verdict": "FAIL",
+   "same_as_base": true
+  },
+  "kit_wave_vmr_detail_candidate": "FAIL: detail_view.lef 7c36c9cdee22 != captured LEF 6dd379d21ce4; plain qfd_dv_s8x_vmr.lef in the same dir PASS"
+ }
+}
