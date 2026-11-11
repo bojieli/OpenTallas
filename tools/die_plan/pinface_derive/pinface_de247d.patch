@@ -1,0 +1,571 @@
+diff --git a/tools/die_plan/die_plan.schema.json b/tools/die_plan/die_plan.schema.json
+index a35a02d0fe9..ee6d4cad4c8 100644
+--- a/tools/die_plan/die_plan.schema.json
++++ b/tools/die_plan/die_plan.schema.json
+@@ -4916,6 +4916,57 @@
+         },
+         "core_glob": {
+          "type": "string"
++        },
++        "core": {
++         "oneOf": [
++          {
++           "type": "string",
++           "minLength": 1
++          },
++          {
++           "type": "array",
++           "items": {
++            "type": "string",
++            "minLength": 1
++           },
++           "minItems": 2,
++           "uniqueItems": true
++          }
++         ]
++        },
++        "start_core": {
++         "type": "string",
++         "minLength": 1
++        },
++        "start_port": {
++         "type": "string",
++         "minLength": 1
++        },
++        "start_um": {
++         "type": "array",
++         "minItems": 2,
++         "items": {
++          "type": "array",
++          "minItems": 2,
++          "maxItems": 2,
++          "items": {
++           "type": "number"
++          }
++         }
++        },
++        "leg_order": {
++         "enum": [
++          "normal_first",
++          "along_first"
++         ]
++        },
++        "core_bits": {
++         "type": "array",
++         "items": {
++          "type": "integer",
++          "minimum": 0
++         },
++         "minItems": 1
+         }
+        }
+       }
+diff --git a/tools/die_plan/kit_istations.py b/tools/die_plan/kit_istations.py
+index 1fa3e1da21e..cba9a6823be 100644
+--- a/tools/die_plan/kit_istations.py
++++ b/tools/die_plan/kit_istations.py
+@@ -182,7 +182,9 @@ proc is_place {pat x y tag} {
+ # row (N/S) parallel to the pin window and every hop of bit b is L_b / (n+1) (the ft_bit_sites rule for ft slots).
+ # Common bank legs: every payload/epoch bit uses the same stage-to-leg mapping.
+ # Unlike per-bit arclength fractions, a stage remains one straight column/row.
+-proc is_knee_site {px py lx ly face edge edges dir geometry} {
++# order "along" (plan leg_order along_first, SUL0-PINFACE-1 11-11): the leg at the pin runs along the face, the corner
++# is (px, ly) for an E/W face / (lx, py) for N/S, so a route can pass a macro column in a free strip; default unchanged.
++proc is_knee_site {px py lx ly face edge edges dir geometry {order normal}} {
+   lassign $geometry xmin ymin xmax ymax
+   if {$face in {E W}} {
+     set normal [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
+@@ -193,11 +195,16 @@ proc is_knee_site {px py lx ly face edge edges dir geometry} {
+     set along [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
+     set cx $px; set cy $ly
+   }
++  set n1 $normal; set a1 $along
++  if {$order eq "along"} {
++    if {$face in {E W}} { set cx $px; set cy $ly } else { set cx $lx; set cy $py }
++    set n1 $along; set a1 $normal
++  } elseif {$order ne "normal"} { error "internal station knee order $order" }
+   if {$dir eq "in"} {
+-    set first $normal; set second $along
++    set first $n1; set second $a1
+     set ax $px; set ay $py; set bx $lx; set by $ly
+   } else {
+-    set first $along; set second $normal
++    set first $a1; set second $n1
+     set ax $lx; set ay $ly; set bx $px; set by $py
+   }
+   if {$first < 1e-8} { set split 0; set worst [expr {$second/double($edges)}]
+@@ -219,16 +226,26 @@ proc is_knee_site {px py lx ly face edge edges dir geometry} {
+   return [list [expr {$cx+$f*($bx-$cx)}] [expr {$cy+$f*($by-$cy)}]]
+ }
+ 
+-proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
++# SUL0-PINFACE-1 11-11: starts = {bit x y ...} (plan internal_stations[].start_core/start_port, e.g. the q pins of the
++# clock-landing macro a landed bus really launches from) replaces the face BTerm as bit b's L-route start; empty =
++# the BTerm (every other chain unchanged).
++proc is_bits {inst bus face W lx ly k n dir tag {offset 0} {starts {}} {order normal}} {
+   global ff_blk ff_dbu is_n is_miss is_fh
+   set hit 0
+   set xmin 1e99; set ymin 1e99; set xmax -1e99; set ymax -1e99
++  set is_st [dict create]
++  foreach {sb sx sy} $starts { dict set is_st $sb [list $sx $sy] }
+   for {set bit 0} {$bit <= $W} {incr bit} {
+-    set pin [$ff_blk findBTerm "${bus}\\[$bit\\]"]
+-    if {$pin eq "NULL"} { error "internal station pin missing: ${bus} bit $bit" }
+-    set box [$pin getBBox]
+-    set x [expr {([$box xMin]+[$box xMax])/2.0/$ff_dbu}]
+-    set y [expr {([$box yMin]+[$box yMax])/2.0/$ff_dbu}]
++    if {[llength $starts]} {
++      if {![dict exists $is_st $bit]} { error "internal station start missing: ${bus} bit $bit" }
++      lassign [dict get $is_st $bit] x y
++    } else {
++      set pin [$ff_blk findBTerm "${bus}\\[$bit\\]"]
++      if {$pin eq "NULL"} { error "internal station pin missing: ${bus} bit $bit" }
++      set box [$pin getBBox]
++      set x [expr {([$box xMin]+[$box xMax])/2.0/$ff_dbu}]
++      set y [expr {([$box yMin]+[$box yMax])/2.0/$ff_dbu}]
++    }
+     set xmin [expr {min($xmin,$x)}]; set xmax [expr {max($xmax,$x)}]
+     set ymin [expr {min($ymin,$y)}]; set ymax [expr {max($ymax,$y)}]
+   }
+@@ -244,11 +261,16 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
+     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+     if {[regexp {/q\\\\?\\[([0-9]+)\\\\?\\]} $nm -> b]} {
+     } elseif {[regexp {/eq\\$} $nm]} { set b $W } else { lappend is_miss $nm; continue }
+-    set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
+-    if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
+-    set bb [$bt getBBox]
+-    set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
+-    lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry] x y
++    if {[llength $starts]} {
++      if {![dict exists $is_st $b]} { lappend is_miss "$nm:nostart"; continue }
++      lassign [dict get $is_st $b] px py
++    } else {
++      set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
++      if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
++      set bb [$bt getBBox]
++      set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
++    }
++    lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry $order] x y
+     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+     if {$got eq ""} { lappend is_miss $nm; continue }
+     puts $is_fh "$nm\t$tag\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
+@@ -778,7 +800,7 @@ def soft_plan_cells(tn, t):
+             if 'origin_um' in c and not c.get('lef') and c['inst'] not in hard]
+ 
+ 
+-def core_pin_stations(tn, t, txt, man, tcl, rep):
++def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
+     """SUL0-PINFACE-1 (DIE-QC-97 11-10, COORD geom-1235-1110): per-hard-core pin-face station chains.
+     A bus whose face register serves several hard cores at different distances (QC su_lN: u_bin_x_su_c_i -> four
+     lane macros, lane3 1.27 mm away) cannot be fixed by one bus chain: its stations sit at one place.  Entries with
+@@ -919,15 +941,158 @@ def core_pin_stations(tn, t, txt, man, tcl, rep):
+             check_core_delay(tn, bus, txt, [(tags[gi], core_list(e)) for gi, e in enumerate(bes)], k, q)
+         for gi, e in enumerate(bes):
+             lx, ly = e["leaf_um"]
++            st = ""
++            if e.get("start_core"):
++                check_start_source(tn, bus, t, e, txt, W)
++                sp = chain_starts(tn, t, e, b, W, plan_dir, None)
++                st = " {" + " ".join(f"{bit} {x:.4f} {y:.4f}" for bit, (x, y) in sorted(sp.items())) + "}"
++            if e.get("leg_order", "normal_first") == "along_first":
++                st = (st or " {}") + " along"
+             for j, nm in enumerate(chains[gi]):
+                 # out chains run core -> face: is_bits stage j counts from the leaf for out, from the pin for in
+                 tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {j} {k} {b['dir']} "
+-                           f"ist:{bus}:{'+'.join(core_list(e))} 0")
++                           f"ist:{bus}:{'+'.join(core_list(e))} 0{st}")
+             rep.append(dict(conn=e["conn"], core=e["core"], planned=k, bound_pads=len(pads), inserted=k,
+                             stations=chains[gi], core_bits=len(e["core_bits"]), plan_width=b["width"], bound_width=W))
+     return txt
+ 
+ 
++MACRO_TOL_UM = 0.5     # a station site / L-route leg may touch a hard-macro box, not enter it by more than this
++
++
++def _core_pins(tn, t, inst, plan_dir):
++    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == inst), None)
++    if hc is None:
++        raise SystemExit(f"kit_istations: {tn}: start_core {inst} is not a hard core of the type")
++    if hc.get("orient", "R0") != "R0":
++        raise SystemExit(f"kit_istations: {tn}: start_core {inst} orient {hc['orient']} not handled (fail closed)")
++    pf = Path(hc["pins_file"])
++    pf = pf if pf.is_absolute() else Path(plan_dir or ".") / pf
++    if not pf.exists():
++        raise SystemExit(f"kit_istations: {tn}: start_core {inst} pins file {pf} missing")
++    ox, oy = hc["origin_um"]
++    return hc, {p["name"]: (ox + float(p["x"]), oy + float(p["y"])) for p in json.loads(pf.read_text())["pins"]}
++
++
++def chain_starts(tn, t, e, b, W, plan_dir, pins):
++    """{bit: (x, y)} L-route start of every bit of a core chain: the face pin (pins: {bit: (x, y)}, gen_phys.type_pins;
++    core_bits + epoch W) or, with start_core, the plan's start_um (one site per bound bit 0..W, the epoch last): each
++    must sit on the start core's outline edge (<= MACRO_TOL_UM; a landed bus launches at its landing macro's q edge).
++    With plan_dir (kit --apply) the sites must also equal start_core's <start_port>[bit] pins (pins file)."""
++    if not e.get("start_core"):
++        bits = sorted({int(x) for x in e["core_bits"]} | {W})
++        if pins is None:
++            return None
++        miss = [x for x in bits if x not in pins]
++        if miss:
++            raise SystemExit(f"kit_istations: {tn} {b['name']}: face pins missing for bits {miss[:8]}")
++        return {x: pins[x] for x in bits}
++    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == e["start_core"]), None)
++    if hc is None:
++        raise SystemExit(f"kit_istations: {tn}: start_core {e['start_core']} is not a hard core of the type")
++    su = e.get("start_um")
++    if not isinstance(su, list) or not su:
++        raise SystemExit(f"kit_istations: {tn} {b['name']}: start_core {e['start_core']} without start_um")
++    if W is not None and len(su) != W + 1:
++        raise SystemExit(f"kit_istations: {tn} {b['name']}: start_um has {len(su)} sites != bound width + epoch {W + 1}")
++    if max(int(x) for x in e["core_bits"]) >= len(su) - 1:
++        raise SystemExit(f"kit_istations: {tn} {b['name']}: core_bits beyond start_um")
++    (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
++    out = {}
++    for x, p in enumerate(su):
++        p = (float(p[0]), float(p[1]))
++        d = min(abs(p[0] - x0), abs(p[0] - x0 - w), abs(p[1] - y0), abs(p[1] - y0 - h))
++        inside = x0 - MACRO_TOL_UM <= p[0] <= x0 + w + MACRO_TOL_UM and y0 - MACRO_TOL_UM <= p[1] <= y0 + h + MACRO_TOL_UM
++        if d > MACRO_TOL_UM or not inside:
++            raise SystemExit(f"kit_istations: {tn} {b['name']}: start site of bit {x} {p} is not on the edge of "
++                             f"start_core {e['start_core']} ({d:.3f} um off)")
++        out[x] = p
++    if plan_dir is not None:
++        _, cp = _core_pins(tn, t, e["start_core"], plan_dir)
++        port = e.get("start_port", "q")
++        for x, p in out.items():
++            q = cp.get(f"{port}[{x}]")
++            if q is None or abs(q[0] - p[0]) + abs(q[1] - p[1]) > 0.01:
++                raise SystemExit(f"kit_istations: {tn} {b['name']}: start site of bit {x} {p} is not start_core "
++                                 f"{e['start_core']} pin {port}[{x}] {q}")
++    return out
++
++
++def check_start_source(tn, bus, t, e, txt, W):
++    """fail closed unless the bound RTL really launches bus from start_core: u_bin_<bus> .d(<w>[W-1:0]) .ea(<w>[W]) and
++    the start core's (unique) instance drives .<start_port>(<w>)"""
++    n = gen_rtl.sv_id(bus)
++    hc = next((c for c in t.get("hard_cores", []) if c["inst"] == e["start_core"]), None)
++    if hc is None:
++        raise SystemExit(f"kit_istations: {tn}: start_core {e['start_core']} is not a hard core of the type")
++    m = re.search(rf"\bu_bin_{re.escape(n)}\s*\(.*?\.d\(([\w$]+)\[{W - 1}:0\]\),\s*\.ea\(([\w$]+)\[{W}\]\)", txt)
++    if not m or m.group(1) != m.group(2):
++        raise SystemExit(f"kit_istations: {tn} {bus}: u_bin_{n} does not take one landed wire [{W}:0] (start_core "
++                         f"{e['start_core']})")
++    w = m.group(1)
++    im = re.findall(rf"^\s*{re.escape(hc['module'])}\s+[\w$]+\s*\((.*?)\);\s*$", txt, re.M | re.S)
++    if len(im) != 1 or not re.search(rf"\.{re.escape(e.get('start_port', 'q'))}\(\s*{re.escape(w)}\s*\)", im[0]):
++        raise SystemExit(f"kit_istations: {tn} {bus}: start_core {e['start_core']} ({hc['module']}) does not drive "
++                         f".{e.get('start_port', 'q')}({w})")
++
++
++def _seg_in_box(a, c, box, tol):
++    x0, x1, y0, y1 = min(a[0], c[0]), max(a[0], c[0]), min(a[1], c[1]), max(a[1], c[1])
++    bx0, by0, bx1, by1 = box[0] + tol, box[1] + tol, box[2] - tol, box[3] - tol
++    return bx0 < bx1 and by0 < by1 and x0 < bx1 and x1 > bx0 and y0 < by1 and y1 > by0
++
++
++def chain_macro_hits(t, e, b, starts):
++    """[(bit, hard core)] whose box (shrunk by MACRO_TOL_UM) a bit's planned L route start -> corner -> leaf_um enters
++    (every station site lies on that route, so this covers the sites too)"""
++    lx, ly = e["leaf_um"]
++    along = e.get("leg_order", "normal_first") == "along_first"
++    boxes = {c["inst"]: (c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
++                         c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])}
++    out = []
++    for bit, (px, py) in sorted(starts.items()):
++        c = (lx, py) if (b["face"] in "EW") != along else (px, ly)
++        for nm, box in boxes.items():
++            if _seg_in_box((px, py), c, box, MACRO_TOL_UM) or _seg_in_box(c, (lx, ly), box, MACRO_TOL_UM):
++                out.append((bit, nm))
++    return out
++
++
++def core_chain_geometry_errors(P, tn, plan_dir=None):
++    """validate / --apply gate (COORD 11-11, SUL0-PINFACE-1): every core pin-face chain's planned per-bit L routes stay
++    off every hard macro (incl. landing macros) by MACRO_TOL_UM; start_core starts sit on the core edge.  Returns error
++    strings (one per chain, with its bit count)."""
++    import gen_phys
++    t = P.types[tn]
++    es = [e for e in t.get("internal_stations", []) if e.get("core")]
++    if not es:
++        return []
++    pins = {}
++    for name, bit, _ln, x, y, _f in gen_phys.type_pins(P, tn):
++        pins.setdefault(name, {})[int(bit)] = (float(x), float(y))
++    buses = {b["name"]: b for b in t.get("buses", [])}
++    errs = []
++    for e in es:
++        bus = e["conn"][4:]
++        b = buses.get(bus)
++        if b is None:
++            errs.append(f"type {tn}: core chain on unknown bus {bus}")
++            continue
++        W = len(pins.get(bus, {})) - 1
++        try:
++            st = chain_starts(tn, t, e, b, None if e.get("start_core") else W, plan_dir, pins.get(bus, {}))
++        except SystemExit as ex:
++            errs.append(f"type {tn}: {ex}")
++            continue
++        keep = {int(x) for x in e["core_bits"]} | {max(st)}     # bits synthesis keeps (+ epoch; start_um lists all)
++        hits = chain_macro_hits(t, e, b, {k: v for k, v in st.items() if k in keep})
++        if hits:
++            errs.append(f"type {tn}: core chain {bus} {e['core']}: {len({h[0] for h in hits})} bit L routes enter hard "
++                        f"macros {sorted({h[1] for h in hits})} by > {MACRO_TOL_UM} um (station sites would be moved off "
++                        "the planned hop)")
++    return errs
++
++
+ def core_list(e):
+     """hard cores one core pin-face chain serves ('core': inst or [inst, ...])"""
+     return [e["core"]] if isinstance(e["core"], str) else list(e["core"])
+@@ -1010,7 +1175,13 @@ def main(argv):
+     txt = bfile.read_text()
+     tcl = [TCL_HEAD]
+     rep = []
+-    txt = core_pin_stations(tn, t, txt, man, tcl, rep)      # SUL0-PINFACE-1 per-core chains
++    if any(e.get("core") for e in t.get("internal_stations", [])) and any(
++            p.get("type") == tn for p in raw.get("partitions", [])):   # SUL0-PINFACE-1 geometry gate (fail closed)
++        import schema as _S
++        gerr = core_chain_geometry_errors(_S.Plan(json.loads(json.dumps(raw)), path=plan), tn, Path(plan).resolve().parent)
++        if gerr:
++            raise SystemExit("kit_istations: " + "; ".join(gerr[:6]) + (f" (+{len(gerr) - 6} more)" if len(gerr) > 6 else ""))
++    txt = core_pin_stations(tn, t, txt, man, tcl, rep, Path(plan).resolve().parent)      # SUL0-PINFACE-1 per-core chains
+     for e in bus_entries(dict(t, internal_stations=[x for x in t.get('internal_stations', []) if not x.get('core')])):           # core<->core: core_stations() below
+         conn = e["conn"]
+         bus = conn[4:]
+diff --git a/tools/die_plan/schema.py b/tools/die_plan/schema.py
+index 43ff5b1402c..7d6b612eefc 100644
+--- a/tools/die_plan/schema.py
++++ b/tools/die_plan/schema.py
+@@ -1469,6 +1469,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
+ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core"] = {"oneOf": [
+     {"type": "string", "minLength": 1},
+     {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 2, "uniqueItems": True}]}
++# SUL0-PINFACE-1 11-11: a landed bus's chain starts at its landing macro's output pins (kit_istations.chain_starts)
++SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_core"] = {"type": "string", "minLength": 1}
++SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_port"] = {"type": "string", "minLength": 1}
++SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["start_um"] = {"type": "array", "minItems": 2, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}
++SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["leg_order"] = {"enum": ["normal_first", "along_first"]}
+ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_bits"] = {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 1}
+ SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+ # DIE-QC-97 11-09 (KW-FIX-43 ALERT 11:02): param_class_split.py (__pv clones) records the base type and the logic
+@@ -2559,6 +2564,12 @@ def validate(raw):
+         for y in t.get("clock", {}).get("tap_edge_y_um", []):
+             if not 0 <= y <= t["outline_um"][1]:
+                 errs.append(f"type {tn}: clock edge y {y} outside outline")
++        if any(e.get("core") for e in t.get("internal_stations", [])):   # SUL0-PINFACE-1 macro-clear chain gate
++            import kit_istations as KI
++            try:
++                errs += KI.core_chain_geometry_errors(P, tn, Path(P.path).resolve().parent if getattr(P, "path", None) else None)
++            except (ValueError, KeyError, TypeError) as exc:
++                errs.append(f"type {tn}: core chain geometry: {exc}")
+         import core_clock_groups as CG
+         try:
+             CG.groups(P, tn)
+diff --git a/tools/die_plan/taps.py b/tools/die_plan/taps.py
+index 7f1a35ad4e7..b417a90b5de 100644
+--- a/tools/die_plan/taps.py
++++ b/tools/die_plan/taps.py
+@@ -189,11 +189,11 @@ def planned_sinks(P, tn, bit_sites=False):
+         cw,ch=e["bit_site_cell_um"]
+         for bx,by in e["face_bit_sites_um"][n:]:
+             out.append((bx+cw/2,by+ch/2,"face_epoch"))
+-    out += per_bit_station_sites(t, pins)
++    out += per_bit_station_sites(t, pins, __import__("pathlib").Path(P.path).resolve().parent if getattr(P, "path", None) else None)
+     return out
+ 
+ 
+-def per_bit_station_sites(t, pins):
++def per_bit_station_sites(t, pins, plan_dir=None):
+     """[(x, y, 'ist')] sites of the internal stations with bit_route "per_bit" (HEAD-SPINE2 10-25), exactly as
+     kit_istations.is_bits places them: bit b of station k (k = 0 next to the face for an in bus, next to the leaf for an
+     out bus) at L_b * (k + 1) / (n + 1) along its own L leaf_um <-> pin b, the segment at the pin perpendicular to the
+@@ -214,13 +214,20 @@ def per_bit_station_sites(t, pins):
+         bus = e["conn"][4:]
+         lx, ly = e["leaf_um"]
+         n = len(e["regs_um"])
++        bat = at.get(bus, {})
++        if e.get("start_core"):       # SUL0-PINFACE-1 11-11: a landed bus starts at its landing macro's q pins
++            su = e["start_um"]
++            f0 = next(iter(bat.values()))[2] if bat else buses[bus]["face"]
++            bat = {bit: (float(p[0]), float(p[1]), f0) for bit, p in enumerate(su)}
+         d_in = buses[bus]["dir"] == "in"
+         # SUL0-PINFACE-1: a per-core chain keeps only the bits its core reads / drives (synthesis drops the rest)
+         keep = set(int(b) for b in e["core_bits"]) if e.get("core") else None
+-        for bit, (px, py, face) in sorted(at.get(bus, {}).items()):
+-            if keep is not None and bit not in keep and bit != len(at.get(bus, {})) - 1:
++        for bit, (px, py, face) in sorted(bat.items()):
++            if keep is not None and bit not in keep and bit != len(bat) - 1:
+                 continue
+-            cx, cy = (lx, py) if face in ("E", "W") else (px, ly)
++            # SUL0-PINFACE-1 11-11: leg_order along_first puts the corner at the pin column / row (kit is_knee_site)
++            along = e.get("leg_order", "normal_first") == "along_first"
++            cx, cy = (lx, py) if (face in ("E", "W")) != along else (px, ly)
+             pts = [(px, py), (cx, cy), (lx, ly)] if d_in else [(lx, ly), (cx, cy), (px, py)]
+             L = abs(px - cx) + abs(py - cy) + abs(cx - lx) + abs(cy - ly)
+             for k in range(n):
+diff --git a/tools/die_plan/test_kit_istations_core_pin.py b/tools/die_plan/test_kit_istations_core_pin.py
+index 0355787e203..c2f06d6d102 100644
+--- a/tools/die_plan/test_kit_istations_core_pin.py
++++ b/tools/die_plan/test_kit_istations_core_pin.py
+@@ -214,3 +214,160 @@ def test_taps_shared_chain_sinks():
+         + [("y", b, "M5", 10.0 + b, 100.0, "N") for b in range(4)]
+     # x shared: 4+1 (was A 2+1 + B 3+1 = 7); f 4; y 5 -> 14 bit rows x 2 stations
+     assert len(taps.per_bit_station_sites(t, pins)) == 2 * 14
++
++
++# ---- SUL0-PINFACE-1 11-11: chain start at a landing macro's q pins + macro-clear geometry gate
++LBOUND = """module t_part_bound (input wire clk, input wire rst_n, input wire [3:0] z, output wire [0:0] dummy);
++    wire [3:0] zl;
++    wire [2:0] z_q;
++    wire z_eq;
++    land_m L0 (
++        .d(z), .q(zl));
++    ot_dp_st #(.W(3)) u_bin_z (.clk(clk), .rst_n(rst_n), .d(zl[2:0]), .ea(zl[3]), .q(z_q), .eq(z_eq));
++    core_a A (.clk(clk), .c_i({z_q[2], z_q[1], z_q[0]}), .c_o(dummy));
++endmodule
++"""
++
++
++def lplan(qx=0.0, start=True):
++    e = st("z", "A", [0, 1, 2], leaf=(62.0, 50.0))
++    if start:
++        e.update(start_core="LM", start_port="q", start_um=[[80.0 + qx, 12.0 + b] for b in range(4)])
++    return dict(partition_types=dict(t=dict(
++        buses=[dict(name="z", dir="in", width=3, kind="data", face="E")], internal_stations=[e],
++        hard_cores=[dict(inst="A", module="core_a", origin_um=[40, 40], outline_um=[20, 20]),
++                    dict(inst="LM", module="land_m", origin_um=[80, 10], outline_um=[10, 10],
++                         pins_file="LM_pins.json")]))), [dict(name=f"q[{b}]", x=qx, y=2.0 + b) for b in range(4)]
++
++
++def lrun(tmp_path, qx=0.0, bound=LBOUND):
++    p, pins = lplan(qx)
++    (tmp_path / "LM_pins.json").write_text(json.dumps(dict(pins=pins)))
++    pf = tmp_path / "plan.json"
++    pf.write_text(json.dumps(p))
++    kd = tmp_path / "kit"
++    kd.mkdir()
++    bf = kd / "t_part_bound.sv"
++    bf.write_text(bound)
++    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
++    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
++                       capture_output=True, text=True)
++    return r, bf, kd
++
++
++def test_start_core_q_pins(tmp_path):
++    r, bf, kd = lrun(tmp_path)
++    assert r.returncode == 0, r.stderr
++    tcl = (kd / "istations.tcl").read_text()
++    rows = re.findall(r"^is_bits u_ist_z__A_0_\d+ .*$", tcl, re.M)
++    assert len(rows) == 2
++    for ln in rows:
++        assert ln.endswith(" 0 {0 80.0000 12.0000 1 80.0000 13.0000 2 80.0000 14.0000 3 80.0000 15.0000}"), ln
++    # a chain without start_core keeps the face BTerm (no starts list)
++    sub = tmp_path / "plain"
++    sub.mkdir()
++    r2, _, kd2 = run(sub)
++    assert r2.returncode == 0 and not re.search(r"^is_bits .*\}$", (kd2 / "istations.tcl").read_text(), re.M)
++
++
++def test_start_not_on_source_edge_fails(tmp_path):
++    """must-fail: the named start pin is 5 um inside the landing macro, not on its edge"""
++    r, bf, _ = lrun(tmp_path, qx=5.0)
++    assert r.returncode != 0 and "is not on the edge of " in r.stderr, r.stderr[-300:]
++    assert bf.read_text() == LBOUND
++
++
++def test_start_core_not_the_source_fails(tmp_path):
++    """must-fail: u_bin_z does not take the landing macro's q wire"""
++    bad = LBOUND.replace(".d(zl[2:0]), .ea(zl[3])", ".d(z[2:0]), .ea(z[3])")
++    r, bf, _ = lrun(tmp_path, bound=bad)
++    assert r.returncode != 0 and "does not drive .q(z)" in r.stderr, r.stderr[-300:]      # z is the face port, not the landing output
++    bad3 = LBOUND.replace(".d(zl[2:0]), .ea(zl[3])", ".d(zl[2:0]), .ea(z_eq)")
++    sub3 = tmp_path / "c"
++    sub3.mkdir()
++    r, bf, _ = lrun(sub3, bound=bad3)
++    assert r.returncode != 0 and "does not take one landed wire" in r.stderr, r.stderr[-300:]
++    bad2 = LBOUND.replace(".d(z), .q(zl));", ".d(z), .q(zx));")
++    sub = tmp_path / "b"
++    sub.mkdir()
++    r, bf, _ = lrun(sub, bound=bad2)
++    assert r.returncode != 0 and "does not drive .q(zl)" in r.stderr, r.stderr[-300:]
++
++
++def test_chain_macro_hits_gate():
++    """an L route through a hard macro is flagged; touching within MACRO_TOL_UM is not"""
++    sys.path.insert(0, str(HERE))
++    import kit_istations as KI
++    t = dict(hard_cores=[dict(inst="M", module="m", origin_um=[20.0, 0.0], outline_um=[10.0, 10.0])])
++    b = dict(name="z", face="E")
++    e = dict(leaf_um=[0.0, 30.0])
++    # bit 0 row y=5 runs x 50 -> 0 straight through M; bit 1 row y=9.6 grazes M's top edge (0.4 um in)
++    hits = KI.chain_macro_hits(t, e, b, {0: (50.0, 5.0), 1: (50.0, 9.6), 2: (50.0, 20.0)})
++    assert hits == [(0, "M")]
++    # the leaf column (x = 0) and rows above M are clear
++    assert KI.chain_macro_hits(t, dict(leaf_um=[35.0, 30.0]), b, {0: (50.0, 5.0)}) == []
++
++
++def test_knee_along_first_corner_tcl():
++    """leg_order along_first: is_knee_site's corner sits at the pin column (W face: (px, ly)); default unchanged"""
++    sys.path.insert(0, str(HERE))
++    import kit_istations as I
++    proc = I.TCL_HEAD[I.TCL_HEAD.index("proc is_knee_site"):I.TCL_HEAD.index("proc is_bits")]
++    body = """
++foreach k {1 2 3} { puts "A [is_knee_site 0 100 50 300 W $k 4 in {0 100 0 100} along]" }
++foreach k {1 2 3} { puts "N [is_knee_site 0 100 50 300 W $k 4 in {0 100 0 100}]" }
++if {[catch {is_knee_site 0 100 50 300 W 1 4 in {0 100 0 100} sideways} m]} { puts "E $m" }
++"""
++    p = subprocess.run(["tclsh"], input=proc + "\n" + body, text=True, capture_output=True)
++    assert p.returncode == 0, p.stderr
++    rows = [l.split() for l in p.stdout.splitlines()]
++    A = [tuple(map(float, r[1:])) for r in rows if r[0] == "A"]
++    N = [tuple(map(float, r[1:])) for r in rows if r[0] == "N"]
++    # along: legs (0,100)->(0,300)->(50,300); every site on x = 0 or y = 300
++    assert all(abs(x) < 1e-9 or abs(y - 300) < 1e-9 for x, y in A) and any(abs(x) < 1e-9 and y > 100 for x, y in A)
++    # normal (default): legs (0,100)->(50,100)->(50,300)
++    assert all(abs(y - 100) < 1e-9 or abs(x - 50) < 1e-9 for x, y in N)
++    assert any(r[0] == "E" and "knee order sideways" in " ".join(r) for r in rows)
++
++
++def test_leg_order_gate_and_taps_corner():
++    sys.path.insert(0, str(HERE))
++    import kit_istations as KI
++    import taps
++    t = dict(hard_cores=[dict(inst="M", module="m", origin_um=[20.0, 0.0], outline_um=[10.0, 50.0])],
++             buses=[dict(name="z", dir="in", width=1, face="E")])
++    b = dict(name="z", face="E")
++    # E face pin (50, 5) -> leaf (0, 80): normal-first runs y=5 through M, along-first goes up x=50 then west at y=80
++    assert KI.chain_macro_hits(t, dict(leaf_um=[0.0, 80.0]), b, {0: (50.0, 5.0)}) == [(0, "M")]
++    assert KI.chain_macro_hits(t, dict(leaf_um=[0.0, 80.0], leg_order="along_first"), b, {0: (50.0, 5.0)}) == []
++    e = dict(conn="bus:z", bit_route="per_bit", leaf_um=[0.0, 80.0], regs_um=[[0, 0]], leg_order="along_first")
++    s = taps.per_bit_station_sites(dict(t, internal_stations=[e]), [("z", 0, "M4", 50.0, 5.0, "E"), ("z", 1, "M4", 50.0, 6.0, "E")])
++    assert all(not (20 < x < 30 and 0 < y < 50) for x, y, _ in s) and len(s) == 2
++
++
++def test_start_um_must_match_start_core_pins(tmp_path):
++    """must-fail: the plan's start sites (start_um) are on the macro edge but are not its q pins"""
++    p, pins = lplan()
++    p["partition_types"]["t"]["internal_stations"][0]["start_um"][1] = [80.0, 18.0]
++    (tmp_path / "LM_pins.json").write_text(json.dumps(dict(pins=pins)))
++    pf = tmp_path / "plan.json"
++    pf.write_text(json.dumps(p))
++    kd = tmp_path / "kit"
++    kd.mkdir()
++    bf = kd / "t_part_bound.sv"
++    bf.write_text(LBOUND)
++    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
++    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
++                       capture_output=True, text=True)
++    assert r.returncode != 0 and "is not start_core LM pin q[1]" in r.stderr, r.stderr[-300:]
++
++
++def test_taps_start_um_sites():
++    """taps reads the start sites from the plan (no pins file): stations lie on start -> corner -> leaf"""
++    sys.path.insert(0, str(HERE))
++    import taps
++    p, _ = lplan()
++    t = p["partition_types"]["t"]
++    pins = [("z", b, "M4", 100.0, 30.0 + b, "E") for b in range(4)]
++    s = taps.per_bit_station_sites(t, pins)
++    assert len(s) == 2 * 4 and all(x <= 80.0 + 1e-9 for x, _, _ in s)   # from x = 80 (macro edge) west, not from 100
