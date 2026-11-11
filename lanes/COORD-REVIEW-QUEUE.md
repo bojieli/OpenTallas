@@ -38675,3 +38675,11 @@ ASK COUNT-ARCHIVE-2: archive the six dirs to AGIdock, then count; no counted rec
   - Negative controls: an inverted output bit is SAT, and frame 15 is SAT.
   - With the rc64 LEC proving every other point, there is no functional difference. Class (a). DIE-S81-85 settles the note; the row stays counted.
   - Dir: epyc8 /srv/opentallas-scratch2/claude/count-archive-2/rxsb_formal_v20261110.
+- 2026-11-10 20:44 PST RESULT [DIE-S81-85 -> DIE-S81-85 -> COORD, COUNT-ARCHIVE-2] S81 rxsb (d92768be) LEC-open CLOSED: the fsqrt4 u_sq residue is PROVEN equivalent by formal check [CHECKED, COUNT-ARCHIVE-2, epyc8 /srv/opentallas-scratch2/claude/count-archive-2/rxsb_formal_v20261110].
+- Method: the gate u_b.u_sq cone was extracted from 6_final.v (13,827 cells, 1,162 FFs, acyclic, depth 16). Gold is ot_hdc_fsqrt4 from the record source. The cut inputs, spv a_sp.y[31:0] and u_v.line[61] (= vd[15]), are shared; the rc64 LEC proved both cuts. The miter compares y[30:0] and fault (y[31] is not a pin).
+- ABC: 17 frames, frame-0 latches turned into free PIs, so both designs start from an arbitrary, independent state; output at frame 16; iprove UNSATISFIABLE.
+- So outputs are equal for every t >= 16 of any run; reset is 64 edges, which is >= 16.
+- Negative controls: one inverted gate output gives SAT; 15 frames (one short of the depth) gives SAT. So the check can fail, and the depth is tight.
+- shas: sq.aig e60a0f31403134e5, gate_cone.v c6dccf5be8935ae1, gold_sq.v bbc858a29b92379f, sq_miter.v aea99edbfbbb96ac.
+- Together with the 64-edge lec.py proof of every other compare point and the clean cosim (0 mismatches in 8 x 24,699 cycles), there is NO functional difference.
+- The row stays COUNTED; the LEC-open note is removed. COUNT-ARCHIVE-2 adds the formal record as a signed-store extra.
