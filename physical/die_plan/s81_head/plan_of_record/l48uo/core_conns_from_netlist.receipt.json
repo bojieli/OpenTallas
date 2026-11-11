@@ -1,0 +1,46 @@
+{
+ "hd_host": {
+  "key": "hd_host",
+  "cores_filled": 110,
+  "netlist": "/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81_head/kit-wave/s81_head/l48ui/items/hd_host/attempt_8/gen/hd_host/run/results/asap7/dp_hd_host/base/1_2_yosys.v",
+  "netlist_sha256_12": "d0272ab963c9",
+  "ports": {
+   "depth0": 368,
+   "depth2": 180,
+   "depth3": 82,
+   "glue": 110,
+   "depth4": 30
+  },
+  "cores_found": 110,
+  "cores": 110
+ },
+ "hd_mesh": {
+  "key": "hd_mesh",
+  "cores_filled": 110,
+  "netlist": "/srv/opentallas-scratch/claude/kw27-wave-1109/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_mesh/attempt_2/gen/hd_mesh/run/results/asap7/dp_hd_mesh/base/1_2_yosys.v",
+  "netlist_sha256_12": "9f61635e6c17",
+  "ports": {
+   "depth0": 368,
+   "depth2": 144,
+   "depth3": 94,
+   "glue": 110,
+   "depth4": 54
+  },
+  "cores_found": 110,
+  "cores": 110
+ },
+ "hd_serdes": {
+  "key": "hd_serdes",
+  "cores_filled": 3,
+  "netlist": "/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/l48hp1/items/hd_serdes/attempt_3/gen/hd_serdes/run/results/asap7/dp_hd_serdes/base/1_2_yosys.v",
+  "netlist_sha256_12": "525d8cf4ccf7",
+  "ports": {
+   "depth3": 2,
+   "depth0": 3,
+   "depth2": 5,
+   "glue": 17
+  },
+  "cores_found": 3,
+  "cores": 3
+ }
+}

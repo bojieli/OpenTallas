@@ -866,7 +866,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 unchecked += len(pl)
                 continue
             for bus, x, y in pl:
-                dl = ci.get(bus)
+                dl = [d_ for d_ in (ci.get(bus) or []) if d_ != "glue"]
                 if not dl:
                     # pin to type glue logic (not core-to-core): a local escape net from the pin out of the
                     # core face, cfg glue_um long (the glue cells sit next to the core)
@@ -1350,9 +1350,125 @@ def verdict(r, scale=1.0):
     return ("FLAG" if hits else "ok"), hits
 
 
+def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=False, out=None, die=None):
+    """route_supply rows (verdict, flag regions, fix) for the named types of partition_types T."""
+    rows = []
+    for n in names:
+        t = T[n]
+        if not t.get("outline_um"):
+            continue
+        r = analyze_type(n, t, die_dir, repo, conns, cfg)
+        if r is None:
+            continue
+        add_density(r, t, cells_of(n, bool(t.get("hard_cores"))))
+        r["verdict"], r["flag_regions"] = verdict(r, flag_ratio)
+        if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
+            r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
+        if r["flag_regions"]:
+            reg, d = r["flag_regions"][0][0].rsplit("_", 1)
+            r["fix"] = FIX.get((reg, d), r["fix"])
+            r["fix_region"] = r["flag_regions"][0][0]
+        maps_ = r.pop("_maps")
+        if maps and out:
+            Path(out).mkdir(parents=True, exist_ok=True)
+            np.savez_compressed(Path(out) / f"{die}__{n}.npz", rH=maps_[0], rV=maps_[1],
+                                cls=np.array(maps_[2], dtype="U6"), bin_um=cfg["bin_um"])
+        rows.append(r)
+    return rows
+
+
+def _merge(base, patch):
+    """deep merge: dicts merge; a dict patch onto a list of dicts merges by inst/name key (null deletes, new keys
+    append); anything else replaces."""
+    if isinstance(base, dict) and isinstance(patch, dict):
+        out = dict(base)
+        for k, v in patch.items():
+            if v is None:
+                out.pop(k, None)
+            else:
+                out[k] = _merge(base.get(k), v) if k in base else v
+        return out
+    if isinstance(base, list) and isinstance(patch, dict) and all(isinstance(x, dict) for x in base):
+        key = "inst" if any("inst" in x for x in base) else "name"
+        out, seen = [], set()
+        for x in base:
+            kx = x.get(key)
+            if kx in patch:
+                seen.add(kx)
+                if patch[kx] is None:
+                    continue
+                out.append(_merge(x, patch[kx]))
+            else:
+                out.append(x)
+        for kx, v in patch.items():
+            if kx not in seen and v is not None:
+                out.append(dict(v, **{key: kx}) if isinstance(v, dict) else v)
+        return out
+    return patch
+
+
+def apply_delta(T, D):
+    """partition_types after a candidate delta (see --delta)."""
+    import copy
+    T2 = copy.deepcopy(T)
+    if isinstance(D, list):
+        rows = D
+        D = {}
+        for r in rows:
+            r = dict(r)
+            tn = r.pop("type")
+            ins = r.pop("inst", None)
+            if ins is None:
+                D.setdefault(tn, {}).update(r)
+            else:
+                D.setdefault(tn, {}).setdefault("hard_cores", {})[ins] = r
+    else:
+        D = D.get("partition_types") or D.get("types") or {}
+    for tn, p in D.items():
+        T2[tn] = _merge(T2.get(tn, {}), p) if tn in T2 else p
+    return T2
+
+
+def _dir_worst(r):
+    out = {}
+    for k, v in r["regions"].items():
+        reg, d = k.rsplit("_", 1)
+        if d in ("H", "V") and v["p99"] > out.get(d, ("", -1))[1]:
+            out[d] = (reg, v["p99"])
+    return out
+
+
+def delta_report(before, after, die, plan, delta):
+    hdr = ["die", "type", "verdict_before", "verdict_after", "bit_mm_before", "bit_mm_after", "worst_H_before",
+           "worst_H_after", "worst_V_before", "worst_V_after", "p99_before", "p99_after", "flag_regions_after"]
+    lines = ["\t".join(hdr)]
+    rows = []
+    for n in after:
+        b, c = before.get(n), after[n]
+        wb, wc = (_dir_worst(b) if b else {}), _dir_worst(c)
+        f = lambda w, d: (f"{w[d][0]}:{w[d][1]}" if d in w else "-")
+        row = dict(type=n, verdict_before=b["verdict"] if b else "new", verdict_after=c["verdict"],
+                   bit_mm_before=b["wirelength_mm"] if b else None, bit_mm_after=c["wirelength_mm"],
+                   worst_H_before=wb.get("H"), worst_H_after=wc.get("H"), worst_V_before=wb.get("V"),
+                   worst_V_after=wc.get("V"), p99_before=b["worst"]["p99"] if b else None,
+                   p99_after=c["worst"]["p99"], flag_regions_after=c["flag_regions"],
+                   unchecked_pins_after=c.get("unchecked_pins"))
+        rows.append(row)
+        lines.append("\t".join(map(str, [die, n, row["verdict_before"], row["verdict_after"], row["bit_mm_before"],
+                                         row["bit_mm_after"], f(wb, "H"), f(wc, "H"), f(wb, "V"), f(wc, "V"),
+                                         row["p99_before"], row["p99_after"],
+                                         ",".join(f"{k}:{v}" for k, v in c["flag_regions"]) or "-"])))
+    return dict(schema=SCHEMA + ".delta", advisory=True, do_not_count=True, die=die, plan=str(plan),
+                delta=str(delta), rows=rows, lines=lines)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("plan")
+    ap.add_argument("plan", nargs="?")
+    ap.add_argument("--plan", dest="plan_opt", help="same as the positional PLAN")
+    ap.add_argument("--delta", help="score a candidate delta: JSON {partition_types|types: {TYPE: {field: value, "
+                                    "hard_cores|buses|ft_slots: {inst|name: {field: value}}}}} or a list of "
+                                    "{type, inst, origin_um, orient, ...} rows; prints before/after per type")
     ap.add_argument("--die")
     ap.add_argument("--repo", default=".")
     ap.add_argument("--types")
@@ -1405,6 +1521,9 @@ def main(argv=None):
     ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
                     help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
+    a.plan = a.plan or a.plan_opt
+    if not a.plan:
+        ap.error("PLAN (positional or --plan) is required")
     repo = Path(a.repo).resolve()
     plan = Path(a.plan)
     if not plan.is_absolute():
@@ -1455,28 +1574,21 @@ def main(argv=None):
         names = [n for n in names if n in want]
     if a.match:
         names = [n for n in names if re.search(a.match, n)]
-    rows = []
-    for n in names:
-        t = T[n]
-        if not t.get("outline_um"):
-            continue
-        r = analyze_type(n, t, die_dir, repo, conns, cfg)
-        if r is None:
-            continue
-        add_density(r, t, cells_of(n, bool(t.get("hard_cores"))))
-        r["verdict"], r["flag_regions"] = verdict(r, a.flag_ratio)
-        if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
-            r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
-        if r["flag_regions"]:
-            reg, d = r["flag_regions"][0][0].rsplit("_", 1)
-            r["fix"] = FIX.get((reg, d), r["fix"])
-            r["fix_region"] = r["flag_regions"][0][0]
-        maps = r.pop("_maps")
-        if a.maps and a.out:
-            Path(a.out).mkdir(parents=True, exist_ok=True)
-            np.savez_compressed(Path(a.out) / f"{die}__{n}.npz", rH=maps[0], rV=maps[1],
-                                cls=np.array(maps[2], dtype="U6"), bin_um=cfg["bin_um"])
-        rows.append(r)
+    if a.delta:
+        D = read_json(Path(a.delta))
+        T2 = apply_delta(T, D)
+        dn = [n for n in T2 if T2[n] != T.get(n)]
+        names2 = [n for n in names if n in dn] if (a.types or a.match) else dn
+        before = {r["type"]: r for r in score_rows(T, names2, die_dir, repo, conns, cfg, cells_of, a.flag_ratio)}
+        after = {r["type"]: r for r in score_rows(T2, names2, die_dir, repo, conns, cfg, cells_of, a.flag_ratio)}
+        out = delta_report(before, after, die, a.plan, a.delta)
+        if a.out:
+            od = Path(a.out)
+            od.mkdir(parents=True, exist_ok=True)
+            (od / f"route_supply_{die}_delta.json").write_text(json.dumps(out, indent=1))
+        print("\n".join(out["lines"]))
+        return 0
+    rows = score_rows(T, names, die_dir, repo, conns, cfg, cells_of, a.flag_ratio, a.maps and a.out, a.out, die)
     rows.sort(key=lambda r: (r["verdict"] != "FLAG", -(r["flag_regions"][0][1] if r["flag_regions"] else 0),
                              -r["worst"]["p99"]))
     hdr = ["die", "type", "verdict", "flag_regions", "worst_region", "dir", "layer", "p99_ratio", "max_ratio", "hot_bins",
