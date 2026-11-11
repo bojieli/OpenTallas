@@ -41135,3 +41135,8 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
   (5) KV-PLAN-2 STREET-WIDEN hgi (plan_swh 01e64bf0, EQ-gated, outline unchanged): ACCEPTED for the next KV event, together with DIE-LAYOUT-KVHEAD K1-K3. DIE-KV-98 composes both and checks the reset collector re-solve (max hop 380) against K1-K3's sys_c re-route.
   (6) KV cut bind attempt 3: "kv3_sys_c rst_n_t31 D=rst_rl_80 != literal predecessor rst_rl_64" is a plan reset-relay mismatch, not a path. If attempt 4 repeats it, DIE-KV-98 fixes the reset chain in the cut plan (one plan fix + re-bind). No more path chasing.
   (7) FLEET: epyc8 has 73 waiters while epyc9 admits 720 GB with 9 running. KW-FIX-45 adds epyc9 to gen_hosts for HBM/HEAD/QC now (trees staged and verified), so new attempts go there. The first AUTO-RESIGN on the new flow is recorded: hbm/hnx_rp3h_tl (TT 64.54 / FF 1.92, LEC EQ).
+- 2026-11-11 07:50 PST OWNER DIRECTION (verbatim, relayed by COORD): "im going to sleep. go with your best technical judgements. do not wait for me on any questions further." Until the owner returns, COORD decides every open question on technical merit, with no WAIT defaults for the owner:
+  - S81/HBM die growth: take NO growth unless the measured no-growth forms fail. If a fit truly needs growth, take the minimal growth that fits the reticle, and record it.
+  - Serialisation: take it only if no cycle/layout form exists and the TOK cost is < 1%.
+  - Pipeline cycles are preferred over trade-off forms.
+  Lanes: post your ASKs as usual; COORD rules them directly.
