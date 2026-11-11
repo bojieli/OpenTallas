@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.s81.qbpc_seam_bench.v1",
+ "lane": "S81-FRAME-FIX-1 / qbank (b)",
+ "host": "epyc9",
+ "dir": "/srv/opentallas-scratch2/claude/s81-frame-fix-1/qbpc",
+ "bfvec": "OT_XS_BF_FRAME=lp xs_place.py gen --frame u_f_0L03 --op attn.wo_a --nth 0 (col_h9 E2, calendar measured_shape col_h9_lp|E2|bseg1024, phase 58, BF pairs 4/8/13)",
+ "task1_vgcs": {
+  "cause": "late9/late13 re-time the 536-b x2 payload seams lpl_9/lpl_13, which carry data only in BF phases: SEAM_ACT toggles 0 in the q plan set. The 11-11 seam_h9 run had no BFVEC, so the mutant re-timed an idle bus. Historically (seam_bench.json r3, P7 vec) late9/13 were caught only by the BF traffic (bf_seam_mismatch_lines 8). Not a 2-flop station or SEAM_REF defect.",
+  "fix": "frame_seam_bench.sh: late<N> refuses to run without BFVEC (NOT_EXERCISED, bench fails), reports late_seam_toggles=plan:a,bf:b, and a late verdict with 0 toggles in both runs is NOT_EXERCISED (bench fails).",
+  "runs": {
+   "base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "landread": "SEAM_BENCH h9 landread: FRAME_SET col_h9 MUT=landread set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 12 ret words, got 12; first diff ((377, 2, (0, 1, 4), 1189003528, 0), (378, 2, (0, 1, 4), 1189003528, 0)) FAULT SEAM_MISMATCH lpl_0 edge 314  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "late13": "SEAM_BENCH h9 late13: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL late_seam_toggles=plan:0,bf:34",
+   "late9": "SEAM_BENCH h9 late9: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL late_seam_toggles=plan:0,bf:34",
+   "reset": "SEAM_BENCH h9 reset: FRAME_SET col_h9 MUT=reset set=plan pass=0 fail=1 seam_mismatch_lines=8 COVERAGE row 0 segments [0, 1, 3] of 4 COVERAGE row 1 segments [3] of 4  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "short": "SEAM_BENCH h9 short: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 12 ret words, got 12; first diff ((365, 0, (0, 2, 4), 1192719192, 0), (363, 0, (0, 2, 4), 1192719192, 0)) FAULT SEAM_MISMATCH lpl_8 edge 83  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "unland": "SEAM_BENCH h9 unland: FRAME_SET col_h9 MUT=unland set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 12 ret words, got 16; first diff ((377, 2, (0, 1, 4), 1189003528, 0), (374, 2, (1, 0, 4), 3271279920, 0)) FAULT SEAM_MISMATCH lpl_16 edge 342  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL"
+  },
+  "nobf_guard": {
+   "late9": "SEAM_BENCH h9 late9: NOT_EXERCISED seam lpl_9 is a BF x2 payload seam, idle in the q plan set: BFVEC required"
+  }
+ },
+ "task2_qbpc": {
+  "twin": "frame_band_plan.py (r0..r2 plan contents, == checked-in col_h9_l4_lp_plan.sv) --qb-pin-cycle u_bs2,u_bs3 --from it, + --bench-top (== checked-in btop); XO_LAT 2",
+  "schedule": "results/arch/s81_slice4_pincycles_1111/qbpc/col_h9_schedule.json = frame_schedule.py on col_h9_qbpc_spec.json (mk_qbpc_spec.py: the same 8 ot_s81_rly RSREG 1 relays inserted in the flat col_h9_l4 LP spec source, region r0). schedule_paths e2/e3 x/go/cfg_v 8->9, go_tag 6 (lead 3); inband_shift {2: 1, 3: 1}, all others 0; topology identical to the committed schedule.",
+  "seam_ref": "frame_seam_ref.py ref_plus mirrors each u_y_bs<k>_pc_<p> relay as a one-edge delay on the vgch ref u_bs<k>.o_<p> (ck_r0). Without it the priced twin shows SEAM_MISMATCH lpl_16 (r1 run below): the e2/e3 +1 reaches the return seam.",
+  "priced": {
+   "base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "late9": "SEAM_BENCH h9 late9: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL late_seam_toggles=plan:0,bf:34"
+  },
+  "stale_schedule": {
+   "base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=0 PLAN_MISMATCH predicted 12 ret words, got 12; first diff ((365, 0, (0, 2, 4), 1192719192, 0), (366, 0, (0, 2, 4), 1192719192, 0))  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL"
+  },
+  "unmirrored_ref_r1": {
+   "priced_base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 FAULT SEAM_MISMATCH lpl_16 edge 333 FAULT SEAM_MISMATCH lpl_16 edge 334  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "priced_late9": "SEAM_BENCH h9 late9: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 FAULT SEAM_MISMATCH lpl_16 edge 333 FAULT SEAM_MISMATCH lpl_16 edge 334  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL late_seam_toggles=plan:0,bf:34",
+   "stale_base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 12 ret words, got 12; first diff ((365, 0, (0, 2, 4), 1192719192, 0), (366, 0, (0, 2, 4), 1192719192, 0)) FAULT SEAM_MISMATCH lpl_16 edge 333  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "plan_contents_base_control": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL"
+  }
+ },
+ "open_item": "bf_fault=4 (FAULT edge 216..219 status 11) and bf_calendar=FAIL in EVERY run incl. the vgcs base and the unmodified plan contents base: pre-existing BF programme fault on main (same signature as h9bf/pbench and lbench2 on frame_l4, edges 207..). It is not caused by the seams or the pin cycle, but base is therefore not a full PASS with BFVEC and SEAM_BENCH_EXIT is 1. The late catches rely on bf_seam_mismatch_lines (0 in base, 8 in late9/late13), not on bf_fault."
+}
