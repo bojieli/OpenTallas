@@ -577,3 +577,36 @@ def test_m5_street_without_island_gets_no_m6_window():
     r = _m5_street_receipt()
     assert F.pdn_windows_street(r, boxes=M5_STREET_BOXES, existing=[('M6', 446.778, 447.75)]) == []
     assert 'pdn_windows_street' not in F.tcl(r)
+
+
+# q_b002 a10 (plan p11t_taps_cyc): M5 reserved everywhere except over the hard cores -> M5 strap windows on one global
+# every-4th-strap grid, aligned through stacked rects; types with free M5 outside the cores are unchanged.
+M5_FULL_BOXES = [(17.28, 20.0, 51.84, 80.0)]
+
+
+def _m5_full_receipt(right=True):
+    rows = [('M5', [0, 0, 60.0, 20.0]), ('M5', [0, 20.0, 17.28, 80.0]), ('M5', [0, 80.0, 60.0, 100.0])]
+    if right:
+        rows.append(('M5', [51.84, 20.0, 60.0, 80.0]))
+    return dict(rectangles_um=[dict(layer=L, rect=r) for L, r in rows])
+
+
+def test_m5_wholly_reserved_gets_aligned_strap_windows():
+    r = _m5_full_receipt()
+    wins = F.pdn_windows_m5_full(r, boxes=M5_FULL_BOXES)
+    assert sorted({(a, b) for _, a, b, _ in wins}) == [(6.234, 6.846), (14.874, 15.486), (23.514, 24.126), (40.794, 41.406),
+                                                     (53.754, 54.366)]   # grid k%4 + the strap clear of each core edge
+    assert sorted((rr, a) for _, a, _, rr in wins if a == 6.234) == [((0, 0, 60.0, 20.0), 6.234), ((0, 20.0, 17.28, 80.0), 6.234),
+                                                                    ((0, 80.0, 60.0, 100.0), 6.234)]
+    assert not any(rr == (51.84, 20.0, 60.0, 80.0) for _, _, _, rr in wins)        # no wider than PDN_WIN_MIN
+    rows = [q for L, q in F.obstruction_rows(r, 60.0, macro_boxes=M5_FULL_BOXES) if L == 'M5']
+    assert [0, 20.0, 6.234, 80.0] in rows and [6.846, 20.0, 14.874, 80.0] in rows and [15.486, 20.0, 17.28, 80.0] in rows
+    assert 'pdn_windows_m5_full=12' in F.tcl(r, M5_FULL_BOXES)
+
+
+def test_m5_with_free_area_or_without_boxes_is_unchanged():
+    free = _m5_full_receipt(right=False)
+    assert F.pdn_windows_m5_full(free, boxes=M5_FULL_BOXES) == []
+    assert F.pdn_windows_m5_full(_m5_full_receipt()) == []
+    assert 'pdn_windows_m5_full' not in F.tcl(_m5_full_receipt())
+    assert F.tcl(free, M5_FULL_BOXES) == F.tcl(free)
