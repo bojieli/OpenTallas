@@ -1,0 +1,64 @@
+{
+ "what": "Event chain of the S81 wave plan of record physical/die_plan/s81/plan_h2_2249.json from plan af2abcca0e416b13 on (DIE-S81-85 sub-lane, COORD ask from WAVE-OPS-1 11-10 19:36/19:48). DO_NOT_COUNT.",
+ "plan_of_record": {
+  "sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+  "bytes": 108523192,
+  "live_copies": [
+   "epyc7:/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp_por15c/physical/die_plan/s81/plan_h2_2249.json",
+   "epyc7:/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json"
+  ],
+  "live_copies_note": "Both paths are the same inode (102711767, 4 links, mtime 2026-11-10 17:15:31 UTC); both match the sha256 above.",
+  "partition_types": 205,
+  "committed_as": "physical/die_plan/s81/plan_h2_2249_por_b05c29bbaafa.json.gz (gzip -n -9 of the exact bytes; gunzip -c | sha256sum = b05c29bb...). The plain file is 108,523,192 bytes, over GitHub's 100 MB file limit (push refused GH001), so it cannot be committed at physical/die_plan/s81/plan_h2_2249.json. That path on this branch still holds main's plan. Install: gunzip -c plan_h2_2249_por_b05c29bbaafa.json.gz > plan_h2_2249.json"
+ },
+ "base": {
+  "sha256_prefix": "af2abcca0e416b13",
+  "path": "epyc7:/srv/opentallas-scratch2/claude/die-s81-85/s81p7/src_t51f/physical/die_plan/s81/plan_h2_2249.json",
+  "note": "af2abcca0e416b13 is a plan sha256 prefix, not a git commit. It is 65648816b02d5057 + delta_t51_split_1109 (event commit 2b738760040) + delta_t51_split_classes_1109 (event commit dcc71b861d9), DIE-S81-85 READY 11-09 12:06 (coord queue line ~31696). That base plan file itself is on no branch: main's plan has a different lineage (the T51 events on main were applied to plan ff97f217 -> d67f6ffb, not to 65648816)."
+ },
+ "method": "Type-key JSON diff (top-level keys, partition_types.<type>.<key>) between successive plans, then REPLAY: the chain below applied to a copy of af2abcca gives a file byte-identical (cmp) to the live plan b05c29bb.",
+ "chain": [
+  {
+   "step": 1,
+   "event": "TAPWIN-TYPE-1109 (TAPWIN-FIX-1109, COORD tapwin-revert-1109 ruling 11-09 20:27)",
+   "owner": "DIE-S81-85 (TAPWIN-1109-SWEEP); applied to the wave plan by KW-FIX-43 KW43-29 (queue 11-09 21:29)",
+   "source": "claude/die-s81-85-tapwin-fix-1109@c69786b37699fad40b7d5e0548e0ab5c0c2977e7 (on main since ROOT-MERGE-57 069520c3ad; the named branch is on the hub only, the commit is on GitHub via main)",
+   "queue": ["11-09 20:35 READY+CORRECTION TAPWIN-1109-SWEEP", "11-09 21:04 MERGED ROOT-MERGE-57 FC", "11-09 21:29 KW-FIX-43 KW43-29 (4)"],
+   "script": "physical/die_plan/s81/clock_tw_1109/delta_tapwin_type_1109.py + type_window_g50.json (on main, from c69786b3769)",
+   "script_exists_on_branch": true,
+   "changed": {
+    "top_level": ["clock.tap_window.per_type_ps: 159 types added (46 -> 205), 0 existing values changed", "clock.tap_window.note: TAPWIN-TYPE-1109 sentence appended"],
+    "partition_types_changed": 0
+   },
+   "result_sha256": "7d9bda324090bcaaf607f06cf194d1cb79b125085ac1dc2b21a1f7f11a5decf0",
+   "result_path": "epyc7:/srv/opentallas-scratch2/claude/kw43t51/src_t51f/physical/die_plan/s81/plan_h2_2249.json",
+   "replay": "delta_tapwin_type_1109.py on a copy of af2abcca -> 7d9bda324090bcaa, byte-identical"
+  },
+  {
+   "step": 2,
+   "event": "PBP-SVCRS-1110 (S81 plan event, COORD 11-10)",
+   "owner": "S81-SVCRS-3; adopted on the wave as an overlay by KW-FIX-43 KW43-84 (queue 11-10 09:28, src kw43/src_t51f_pbp)",
+   "source": "claude/s81-svcrs-3-rcpbp-1110@e18b76c13af00b9f4c417dcc6631725787ead6c9 (plan-only commit, +14 lines; READY 11-10 08:43; on main). The wave overlay was taken from the later branch tip 463b5b8af7 (KW43-84). The named branch is not on GitHub; the commit is, via main",
+   "queue": ["11-10 08:43 READY S81-SVCRS-3 tag s81-svcrs-rc-pbp, (2) Plan event PBP-SVCRS-1110 [CHECKED]", "11-10 08:46 ASK S81-SVCRS-3 -> KW-FIX-43", "11-10 09:28 KW43-84"],
+   "script": null,
+   "script_exists_on_branch": false,
+   "script_note": "Hand plan edit; no delta script on any branch. The event is fully defined by commit e18b76c13af: insert '\"port_buf_at_pin\": true' after the module line of each of the 14 types. Replaying that insertion on 7d9bda32 gives the live b05c29bb byte-identical.",
+   "changed": {
+    "top_level": [],
+    "partition_types_changed": 14,
+    "types": ["svc_hi_dsdv_svc_rs__t1", "svc_hi_dsdv_svc_rs__t2", "svc_hi_dsdv_svc_rs__t3", "svc_hi_dsdv_svc_rs__t4", "svc_hi_dsdv_svc_rs__t5", "svc_hi_dsdv_svc_rs__t6", "svc_lo_dsdv_svc_rs__t1", "svc_lo_dsdv_svc_rs__t2", "svc_lo_dsdv_svc_rs__t3", "svc_lo_dsdv_svc_rs__t4", "svc_lo_dsdv_svc_rs__t5", "svc_lo_dsdv_svc_rs__t6", "svc_lo_dsdv_svc_rs__t7", "svc_lo_dsdv_svc_rs_w__t1"],
+    "keys": ["port_buf_at_pin (added, true)"]
+   },
+   "result_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+   "replay": "byte-identical to the live plan (cmp)"
+  }
+ ],
+ "unattributed": [],
+ "not_in_plan_of_record": [
+  {
+   "event": "ENG-CTAP-1109 (claude/die-s81-85-eng-ctap-1109@c3cdaf3fe0, plan a3242962c805e59b: partition_types.eng__t1.clock)",
+   "note": "Applied per row only (eng__t1 item_inputs plan epyc7 kw43/ctap/plan_h2_2249.json), not to the plan of record; eng__t1.clock in b05c29bb equals af2abcca."
+  }
+ ],
+ "versus_main": "main c894884b42fd plan (blob 917e6a3868e3, sha256 e596e9588e72) differs from the plan of record in 179 of 205 types (clock 178, hard_cores 75, internal_stations 48, note 9, ft_slots 2) and in top-level lanes/latency/note. That gap is the 65648816 lineage versus main's plan lineage. It is before af2abcca and outside this chain."
+}
