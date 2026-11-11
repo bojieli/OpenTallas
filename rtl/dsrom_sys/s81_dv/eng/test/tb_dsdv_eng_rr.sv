@@ -2,7 +2,7 @@
 // S81-RTLGAP/RG-ENG (10-21): composition bench of the Engram row-read path + join (dsdv_eng_rr.sv) on REAL RTL:
 //   dsdv_eng_rr_c (window former + CLOSED-source dsfd_engram_lkp_static14 + head + XQ join) -> request chain through 16
 //   dsdv_eng_tap (west end + 15) with CS relay stages a hop -> 16 dsfd_ctrl_rg3 (real controller RTL, svc face idle) ->
-//   per-PC PHY models (in-order, LAT ckh cycles, k_rdy pattern) holding the Engram rows -> responses back through the
+//   per-PC PHY models (in-order, LAT ckh cycles, 8-deep queue: k_rdy = occupancy < 8) holding the Engram rows -> responses back through the
 //   taps' response chain -> lookup -> XQ trains on both V rung directions.
 // Concurrent traffic: a bench reader on tap/controller RD (both lanes, realistic dsdv_idx_rg3 tag codes incl. the
 //   g 0 / sc 1 / cell 0 scale reads) in phases between the Engram windows, overlapping their HBM flight; rung pass-through
@@ -126,16 +126,23 @@ module tb_dsdv_eng_rr;
         rdmem = mem.exists(key) ? mem[key] : pdat(a, pc);
     endfunction
     typedef struct packed { longint rdy_t; logic [29:0] a; logic [3:0] ln; logic [16:0] tg; } ent_t;
+    integer e_ovf = 0;                         // DS85-RG3: PHY queue overruns (credit contract)
     genvar gp;
     generate for (k = 0; k < 16; k = k + 1) begin : g_phy
         for (gp = 0; gp < 2; gp = gp + 1) begin : g_pc
             ent_t q[$];
             reg [3:0] bt = 0; reg rv = 0; reg [16:0] rtg = 0; reg [3:0] rbt = 0; reg [255:0] rdat = 0;
-            assign krdy[k][gp] = rst && (mix(64'h5200_0000 + hcyc * 32 + 2 * k + gp) % 4 != 0);
+            // DS85-RG3 11-10: PHY face contract since S81-TRANSPORT-FIX (930bc9c0c2): the controller presents by end-to-end
+            // credit (PQD 8 outstanding until the last beat / wr_done) into the bound ot_s81_hbm_pcc's 8-deep queue (q_rdy =
+            // occupancy < QD), so the PHY never refuses.  The former random refusing k_rdy (mod 4) dropped every word
+            // presented while low (only kv && krdy was queued).  q holds a request until its last beat, so q.size() <= the
+            // controller's outstanding count <= 8; a word presented with 8 queued FAILS the bench (credit overrun).
+            assign krdy[k][gp] = rst && q.size() < 8;
             assign krv[k][gp] = rv; assign krt[k][17 * gp +: 17] = rtg; assign krb[k][4 * gp +: 4] = rbt;
             assign krd[k][256 * gp +: 256] = rdat; assign kwd[k][gp] = 1'b0;
             always @(posedge ckh) begin
-                if (kv[k][gp] && krdy[k][gp]) q.push_back('{hcyc + LAT, kad[k][30 * gp +: 30], kln[k][4 * gp +: 4], ktg[k][17 * gp +: 17]});
+                if (kv[k][gp] && q.size() >= 8) begin e_ovf = e_ovf + 1; $display("TB_ENG_RR PHY queue overflow ctrl %0d pc %0d (credit contract)", k, gp); end
+                else if (kv[k][gp]) q.push_back('{hcyc + LAT, kad[k][30 * gp +: 30], kln[k][4 * gp +: 4], ktg[k][17 * gp +: 17]});
                 if (rv && krrdy[k][gp]) rv <= 1'b0;
                 if ((!rv || krrdy[k][gp]) && q.size() > 0 && q[0].rdy_t <= hcyc) begin
                     rv <= 1'b1; rtg <= q[0].tg; rbt <= bt; rdat <= rdmem(2 * k + gp, q[0].a + 30'(bt));
@@ -315,7 +322,7 @@ module tb_dsdv_eng_rr;
         if (rd_pops != rd_rq) begin e_rd = e_rd + 1; $display("TB_ENG_RR reader pops %0d != requests %0d", rd_pops, rd_rq); end
         if (st !== 4'd0 || tf !== 16'd0) begin e_flt = e_flt + 1; $display("TB_ENG_RR faults st %b taps %b", st, tf); end
         for (kk = 0; kk < 16; kk = kk + 1) if (rd[kk][561] !== 1'b0) begin e_flt = e_flt + 1; $display("TB_ENG_RR controller %0d status fault", kk); end
-        errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt;
+        errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt + e_ovf;
 `ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
         $display("TB_ENG_RR_LOCKSTEP split_mut %0d cycles %0d row_beats %0d rco_words %0d rung_words %0d mismatches %0d",
                  SPLIT_MUT, lk_cyc, lk_xv, lk_rco, lk_vo, lk_bad + lk_xbad);

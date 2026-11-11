@@ -152,32 +152,79 @@ module tb_dsdv_idx_rg2;
     wire [31:0] m_v, m_rdy;
     wire [32*30-1:0] m_addr; wire [32*4-1:0] m_len, m_beat; wire [32*20-1:0] m_tag, m_rtag;
     genvar pc;
+    // DS85-RG3 11-10: the adapter models the PHY request queue as the bound PHY has it (ot_s81_hbm_pcc QD = 8, k_rdy =
+    // occupancy < QD).  Since S81-TRANSPORT-FIX (930bc9c0c2) ot_s81ph_ctrl_pcr presents by END-TO-END CREDIT (PQD = 8
+    // outstanding, k_rdy only a check), so the former 1-deep adapter (k_rdy = !busy, a word presented while busy was
+    // silently dropped) is outside the PHY face contract and lost requests.  Same timing as before while the queue is
+    // empty (a word goes straight to the splitter); a word presented with the queue full FAILS the bench.
+    // The bound PHY also returns read beats IN REQUEST ORDER (ot_s81_hbm_pcc header), and the credit releases a read on
+    // the last beat of the OLDEST outstanding read (lq).  The bench HBM model reorders bursts (FR-FCFS), so the adapter
+    // re-sequences: each request carries a sequence number through the model (its 17 tag bits), beats are buffered and
+    // handed to the controller in request order (+1 ckh: the output is a register), with the controller's own tag.
+    localparam integer PQD = 8;
+    wire [31:0] m_rv; wire [32*256-1:0] m_rdata;
     generate for (pc = 0; pc < 32; pc = pc + 1) begin : g_a
         reg busy = 0; reg [29:0] la; reg [3:0] rem, off; reg [16:0] tg_; reg we_;
+        reg [29:0] fa [0:PQD-1]; reg [3:0] fl [0:PQD-1]; reg [16:0] ft [0:PQD-1];
+        reg [$clog2(PQD):0] fn = 0; reg [$clog2(PQD)-1:0] fw = 0, fr = 0;
+        reg [16:0] sq_a = 0, sq_h = 0; reg [3:0] hb = 0;        // next sequence number to assign / to hand out, its beat
+        reg [16:0] ctag [0:63]; reg [3:0] clen [0:63];        // sequence -> controller tag / length
+        logic [255:0] rbuf [int];                             // buffered beats, key {sequence, beat}
+        reg ov = 0; reg [16:0] otag; reg [3:0] obeat; reg [255:0] odat;
+        wire [16:0] r_sq = m_rtag[20 * pc +: 17];
+        wire [3:0]  r_bt = m_beat[4 * pc +: 4] + 4'(m_rtag[20 * pc + 17 +: 3]);
         wire [3:0] plen = (4'(4) - 4'(la[1:0])) < rem ? (4'(4) - 4'(la[1:0])) : rem;
-        assign k_rdy[pc] = rst && !busy;
+        wire pop = !busy && fn != 0;                 // splitter free: take the queue head
+        wire byp = !busy && fn == 0 && k_v[pc];      // splitter free, queue empty: the presented word goes straight in
+        wire psh = k_v[pc] && !byp;                  // otherwise the presented word is queued
+        assign k_rdy[pc] = rst && fn < PQD;
         assign m_v[pc] = busy;
         assign m_addr[30 * pc +: 30] = xl(la, 5'(pc));
         assign m_len[4 * pc +: 4] = plen;
         assign m_tag[20 * pc +: 20] = {off[2:0], tg_};
         always @(posedge ckh)
-            if (!rst) busy <= 0;
-            else if (!busy && k_v[pc]) begin
-                busy <= 1; la <= k_addr[30 * pc +: 30]; rem <= k_len[4 * pc +: 4]; off <= 0; tg_ <= k_tag[17 * pc +: 17];
-                we_ <= k_we[pc];
-                if (k_we[pc] || k_len[4 * pc +: 4] == 0) begin $display("TB_IDXRD FAIL write / zero-length request on PC %0d", pc); fail = 1; end
-            end else if (busy && m_rdy[pc]) begin
-                la <= la + 30'(plen); off <= off + plen; rem <= rem - plen; if (rem == plen) busy <= 0;
+            if (!rst) begin busy <= 0; fn <= 0; fw <= 0; fr <= 0; end
+            else begin
+                if (k_v[pc] && (k_we[pc] || k_len[4 * pc +: 4] == 0)) begin $display("TB_IDXRD FAIL write / zero-length request on PC %0d", pc); fail = 1; end
+                if (psh && fn == PQD) begin $display("TB_IDXRD FAIL PHY queue overflow on PC %0d (credit contract)", pc); fail = 1; end
+                else if (psh) begin fa[fw] <= k_addr[30 * pc +: 30]; fl[fw] <= k_len[4 * pc +: 4]; ft[fw] <= k_tag[17 * pc +: 17]; fw <= fw + 1'b1; end
+                fn <= fn + (psh && fn != PQD) - pop;
+                if (byp) begin
+                    busy <= 1; la <= k_addr[30 * pc +: 30]; rem <= k_len[4 * pc +: 4]; off <= 0; tg_ <= sq_a;
+                    ctag[sq_a[5:0]] <= k_tag[17 * pc +: 17]; clen[sq_a[5:0]] <= k_len[4 * pc +: 4]; sq_a <= sq_a + 1'b1;
+                    we_ <= k_we[pc];
+                end else if (pop) begin
+                    busy <= 1; la <= fa[fr]; rem <= fl[fr]; off <= 0; tg_ <= sq_a; fr <= fr + 1'b1;
+                    ctag[sq_a[5:0]] <= ft[fr]; clen[sq_a[5:0]] <= fl[fr]; sq_a <= sq_a + 1'b1;
+                end else if (busy && m_rdy[pc]) begin
+                    la <= la + 30'(plen); off <= off + plen; rem <= rem - plen; if (rem == plen) busy <= 0;
+                end
             end
-        assign kr_tag[17 * pc +: 17] = m_rtag[20 * pc +: 17];
-        assign kr_beat[4 * pc +: 4] = m_beat[4 * pc +: 4] + 4'(m_rtag[20 * pc + 17 +: 3]);
+        always @(posedge ckh) begin : g_rs
+            int key;
+            if (!rst) begin ov <= 0; sq_h <= 0; hb <= 0; rbuf.delete(); end
+            else begin
+                if (m_rv[pc]) rbuf[{r_sq, r_bt}] = m_rdata[256 * pc +: 256];
+                if (!ov || kr_rdy[pc]) begin
+                    key = {sq_h, hb};
+                    if (sq_h != sq_a && rbuf.exists(key)) begin
+                        ov <= 1; otag <= ctag[sq_h[5:0]]; obeat <= hb; odat <= rbuf[key]; rbuf.delete(key);
+                        if (hb == clen[sq_h[5:0]] - 4'd1) begin sq_h <= sq_h + 1'b1; hb <= 0; end else hb <= hb + 1'b1;
+                    end else ov <= 0;
+                end
+            end
+        end
+        assign kr_v[pc] = ov;
+        assign kr_tag[17 * pc +: 17] = otag;
+        assign kr_beat[4 * pc +: 4] = obeat;
+        assign kr_data[256 * pc +: 256] = odat;
         assign k_wr_done[pc] = 1'b0;
     end endgenerate
     ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(30), .DW(256), .MEM_WORDS(MW), .TAGW(20), .LENW(4), .BEATW(4), .CLK_PS(CKH_PS),
                           .QD(64), .REFPB(3), .MEM_MODE(0)) u_hbm (
         .clk(ckh), .rst_n(rst), .req_v(m_v), .req_rdy(m_rdy), .req_addr(m_addr), .req_len(m_len), .req_tag(m_tag),
         .req_we(32'd0), .req_wdata({32*256{1'b0}}), .req_wstrb({32*32{1'b0}}), .wr_done(),
-        .rsp_v(kr_v), .rsp_rdy(kr_rdy), .rsp_tag(m_rtag), .rsp_beat(m_beat), .rsp_data(kr_data));
+        .rsp_v(m_rv), .rsp_rdy(32'hFFFF_FFFF), .rsp_tag(m_rtag), .rsp_beat(m_beat), .rsp_data(m_rdata));
 
     // ------------------------------------------------------------------ HBM preload (keys at the compiler layout, slice data)
     task automatic place(input longint p);
