@@ -1762,6 +1762,13 @@ def prov_spec(AP, d, die, item, hub):
     return {"modules": mods, "cands": prov_sources(jobs, die, mods, d, hub)}
 
 
+def prov_missing_cands(spec):
+    """KW-FIX-45 11-11: child modules of a PROVISIONAL launch spec with no routed candidate view ({modules, cands});
+    die option prov_require_cands true turns a launch with such a child into a wait (it would fail PLAN at prov_views)"""
+    cands = (spec or {}).get("cands") or {}
+    return [m for m in (spec or {}).get("modules") or [] if not cands.get(m)]
+
+
 def prov_tb_last(txt):
     """the exception line closing the last Python traceback in txt ('' when there is none)"""
     ls = (txt or "").splitlines()
@@ -4093,6 +4100,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if (r.get("kind") or "type") == "type" and prov_item(d, r["item"]):
         # KW-PROV-1 (COORD 17:50 (C)): a type whose child views are unsigned launches on PROVISIONAL child views
         sp["prov_views"] = prov_spec(AP, d, die, r["item"], hub)
+        miss = prov_missing_cands(sp["prov_views"]) if opt(cfg, die, "prov_require_cands") is True else []
+        if miss:           # KW-FIX-45 11-11 (COORD, hbm q_su01 PLAN): wait for the child cores, no attempt consumed
+            AP.log(f"KIT-WAVE WAIT-CHILD {die}/{r['item']}: no routed PROVISIONAL source yet for child core(s) {' '.join(miss)} (prov_require_cands)")
+            return None
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
