@@ -38596,3 +38596,4 @@ NOT OVERLAID LIVE YET (decision needed): a live FAIL would stop about 100 curren
 (A) overlay as is: pin_grid + macro_grid FAIL at generation, the error names pin_grid_snap.py.
 (B) overlay with pin_grid advisory, macro_grid FAIL, until the generators (dma respread, M7 reset taps, kits without MAKE_TRACKS) snap at write time; then pin_grid becomes FAIL.
 Recommendation: (B), since all 16 macro hits are real and the pin hits are mostly single pins that may route fine. Default if COORD is silent by the next hourly check: (B). face_flops goes into the same overlay either way.
+- 11-10 20:16 ROOT-MERGE-57 QUEUED kw-fix-44-sealdock cf3519ce0b15 (on loadgate n7) -> q4=176a6c255bb5 at the end (ot-heavy, ot-heavy-reconcile, ot-run + 2 tests); sparse on epyc8; 5 tags. pingrid 13648af615e1 not taken (not approved).
