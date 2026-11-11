@@ -1,0 +1,19 @@
+{
+ "event": "HEAD post-cut hd_mesh re-form step 1 (HEAD-94 11-11): clock density taps from the ds8d register bins (DIE-LAYOUT-KVHEAD dlkv/hd-mesh-sinkbins-1111@71cb4f01721a) on the merged HEAD cut plan",
+ "stage": "S2/S3 type clock, plan event for hd_mesh only; DO_NOT_COUNT",
+ "base": "physical/die_plan/s81_head/plan_of_record/l48hp1_head_cut1111/source_plan_cut.json.gz",
+ "base_sha256": "a09b33bc23b216ce601a188364239a90c6f251adb86c06e59131a74d910493a5",
+ "result_file": "physical/die_plan/s81_head/plan_of_record/l48hp1_head_mesh_1111/source_plan_mesh.json.gz",
+ "result_sha256": "be4ec885a1d48648a87e237daee101f02ce3f498f86a24cb1e6c073114caf66e",
+ "apply": [
+  "python3 -I .../l48hp1_head_mesh_1111/mesh_event.py <full repo root> OUT   (sets hd_mesh.clock.sink_bins_file, mesh_resel.py, then fix_local_depth.py; ~10 min, runs the bootstrap GEN 15 times)",
+  "python3 -I .../l48hp1_head_mesh_1111/prepare_cut.py <repo> OUT <prepared l48hp1 dir> PREP   (patched: a census under plan_of_record/sink_bins/ is snapshotted into PREP/assets and added to native_sink_censuses)",
+  "python3 -I .../republish.py <repo> PREP hd_ctl,hd_host_e,hd_lep0N,hd_st_n4,hd_mesh   (needs results/head_he_epc_h2_1110 views for hd_host_e)"
+ ],
+ "changes": "partition_types.hd_mesh only: clock.sink_bins_file (59311 registers, 1884 bins of 10.8 um); taps 19 -> 79 (tap_target_sinks 1000, tap_radius_um 180 unchanged); reset tree re-solved ONE LEVEL DEEPER (landing_local_resets consumers now at depth 5); 6 reset_start_raw exports + pin sources, 10 stage and 14 local-reset raw references re-selected (local resets to depth(consumer)-1, found by 14 GEN iterations, fix_local_depth.py)",
+ "reset_depth_note": "hd_mesh release wavefront is +1 relay level: boot reset release one cycle later inside hd_mesh. No data-cycle change; the reset contract/boot sequencing owner should confirm one extra boot cycle is inside the budget.",
+ "g0": {"base_errors": 153, "event_errors": 153, "new": 0, "resolved": 0},
+ "eq": "RTL and cores untouched; clock taps, regenerated reset relay tree, raw-reset source selection at the same role (depth shifted with the tree). The in-kit LEC of the rebuilt hd_mesh kit is the proof; not run here.",
+ "not_in_event": "coll_ib landing fanout split (RTL/landing change); optional street spread (held)",
+ "status": "DO_NOT_COUNT"
+}
