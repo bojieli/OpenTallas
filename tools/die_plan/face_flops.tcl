@@ -20,28 +20,6 @@ set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
-# KW-FIX-44 11-10 (COORD): control ports are not data faces.  A reset (rst_n, rst, *_rst_n, *_rst) or clock (clk*,
-# *_clk, *_clk_n ...) port took a face register like a data bit, pulling the reset synchroniser / a clock-domain flop to
-# the pin.  Skipped as well: any port whose net reaches a flop or latch clock pin (CLK) through BUF/INV only.
-# OT_FF_SKIP_RE (regex) adds names.
-set ff_ctl_re {^(([A-Za-z0-9_]*_)?(a?rst(_n|_ni|_b)?|reset(_n)?)|clk(_[A-Za-z0-9]+)?|[A-Za-z0-9_]*_clk(_[np])?)$}
-if {[info exists ::env(OT_FF_SKIP_RE)] && $::env(OT_FF_SKIP_RE) ne ""} { set ff_ctl_re "($ff_ctl_re)|($::env(OT_FF_SKIP_RE))" }
-proc ff_is_clock_port {net} {
-  set seen {}; set todo [list $net]
-  while {[llength $todo]} {
-    set n [lindex $todo 0]; set todo [lrange $todo 1 end]
-    if {$n eq "NULL" || $n eq "" || [dict exists $seen $n]} continue
-    dict set seen $n 1
-    if {[dict size $seen] > 64} { return 0 }
-    foreach it [$n getITerms] {
-      if {[$it isOutputSignal]} continue
-      set i [$it getInst]; set mn [[$it getMTerm] getName]
-      if {$mn eq "CLK" && ([ff_is_ff $i] || [ff_is_latch $i])} { return 1 }
-      if {[ff_is_buf $i]} { foreach o [$i getITerms] { if {[$o isOutputSignal]} { lappend todo [$o getNet] } } }
-    }
-  }
-  return 0
-}
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
 if {[file exists /work/ft_stations.txt]} {
@@ -197,6 +175,28 @@ proc ff_clone_for {bt chain} {
   $bt disconnect
   $bt connect $prev
   return $newff
+}
+# KW-FIX-44 11-10 (COORD): control ports are not data faces.  A reset (rst_n, rst, *_rst_n, *_rst) or clock (clk*,
+# *_clk, *_clk_n ...) port took a face register like a data bit, pulling the reset synchroniser / a clock-domain flop to
+# the pin.  Skipped as well: any port whose net reaches a flop or latch clock pin (CLK) through BUF/INV only.
+# OT_FF_SKIP_RE (regex) adds names.
+set ff_ctl_re {^(([A-Za-z0-9_]*_)?(a?rst(_n|_ni|_b)?|reset(_n)?)|clk(_[A-Za-z0-9]+)?|[A-Za-z0-9_]*_clk(_[np])?)$}
+if {[info exists ::env(OT_FF_SKIP_RE)] && $::env(OT_FF_SKIP_RE) ne ""} { set ff_ctl_re "($ff_ctl_re)|($::env(OT_FF_SKIP_RE))" }
+proc ff_is_clock_port {net} {
+  set seen {}; set todo [list $net]
+  while {[llength $todo]} {
+    set n [lindex $todo 0]; set todo [lrange $todo 1 end]
+    if {$n eq "NULL" || $n eq "" || [dict exists $seen $n]} continue
+    dict set seen $n 1
+    if {[dict size $seen] > 64} { return 0 }
+    foreach it [$n getITerms] {
+      if {[$it isOutputSignal]} continue
+      set i [$it getInst]; set mn [[$it getMTerm] getName]
+      if {$mn eq "CLK" && ([ff_is_ff $i] || [ff_is_latch $i])} { return 1 }
+      if {[ff_is_buf $i]} { foreach o [$i getITerms] { if {[$o isOutputSignal]} { lappend todo [$o getNet] } } }
+    }
+  }
+  return 0
 }
 set ff_done {}
 set ff_occ {}
