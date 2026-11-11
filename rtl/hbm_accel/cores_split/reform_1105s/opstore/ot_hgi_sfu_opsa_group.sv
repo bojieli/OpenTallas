@@ -45,24 +45,50 @@ module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0, parameter integer IREG
     wire [15:0]  req;
     wire [511:0] data;
     wire [7:0]   sw;
+`ifdef OT_OPSG_GP  // DIE-HBM-83-OPSG d44v part 57 opt-in (ot_hgi_su_lgroup2_gp.sv): rd_q +5 edges. The scalar read moves with it: its 50 input
+                   // bits take the 5-edge delay (not its 512 result bits). scalar_selected2 gets a kept per-lane copy (fanout 32).
+    reg [49:0] q_sc [0:4];
+    always @(posedge clk) begin
+        q_sc[0] <= {scalar_load_i, scalar_enable_i, scalar_data_i, rd_re_i};
+        for (integer i = 1; i < 5; i = i + 1) q_sc[i] <= q_sc[i-1];
+    end
+    wire sc_load = q_sc[4][49], sc_en = q_sc[4][48]; wire [31:0] sc_data = q_sc[4][47:16]; wire [15:0] sc_re = q_sc[4][15:0];
+    (* keep *) reg [15:0] q_ssel;
+    always @(posedge clk) begin
+        if (sc_load) scalar_data_q <= sc_data;
+        scalar_selected <= sc_en; q_ssel <= {16{scalar_selected}}; scalar_read2 <= scalar_read;
+        for (integer l = 0; l < 16; l = l + 1)
+            if (sc_re[l] && sc_en) scalar_read[32*l +: 32] <= scalar_data_q;
+    end
+`else
     always @(posedge clk) begin
         if (scalar_load_i) scalar_data_q <= scalar_data_i;
         scalar_selected <= scalar_enable_i; scalar_selected2 <= scalar_selected; scalar_read2 <= scalar_read;
         for (integer l = 0; l < 16; l = l + 1)
             if (rd_re_i[l] && scalar_enable_i) scalar_read[32*l +: 32] <= scalar_data_q;
     end
+`endif
     for (genvar l = 0; l < 16; l = l + 1) begin : g_lane
         assign req[l] = rd_re_i[l] && rd_src_i[2*l +: 2] == 2'd0 && !scalar_enable_i;
+`ifdef OT_OPSG_GP
+        assign rd_q[32*l +: 32] = q_ssel[l] ? scalar_read2[32*l +: 32] : data[32*l +: 32];
+`else
         assign rd_q[32*l +: 32] = scalar_selected2 ? scalar_read2[32*l +: 32] : data[32*l +: 32];
+`endif
     end
     for (genvar b = 0; b < 8; b = b + 1) begin : g_stage
         assign sw[b] = stage_v_i[b] && stage_group_i[2*b +: 2] == G;
     end
+`ifdef OT_OPSG_GP
+    ot_hgi_su_lgroup2_gp u_g (.clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr_i), .rd(data),
+        .sw_v(sw), .sw_addr(stage_addr_i), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data_i), .flt(flt));
+`else
     ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1)) u_g (
         .clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr_i), .rd(data),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
         .sw_v(sw), .sw_addr(stage_addr_i), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data_i),
         .lw(1'b0), .lwa(24'd0), .lwd(32'd0), .s1_v(1'b0), .s1_a(15'd0), .s1_d(32'd0), .flt(flt));
+`endif
 endmodule
 module ot_hgi_sfu_opsa_group0 (
     input  wire clk, rst_n, scalar_load, scalar_enable, input wire [31:0] scalar_data, input wire [15:0] rd_re, input wire [383:0] rd_addr, input wire [31:0] rd_src,

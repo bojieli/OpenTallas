@@ -1,0 +1,232 @@
+{
+ "schema": "die-hbm-83-opsg.reg_guide_boxes.v1",
+ "boxes": [
+  {
+   "name": "bk0",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[0].",
+    "u_fcore.u_t.u_g.b_q[0]["
+   ],
+   "box_um": [
+    12.6,
+    4.32,
+    123.264,
+    58.392
+   ]
+  },
+  {
+   "name": "bk1",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[1].",
+    "u_fcore.u_t.u_g.b_q[1]["
+   ],
+   "box_um": [
+    12.6,
+    60.056,
+    123.264,
+    115.808
+   ]
+  },
+  {
+   "name": "bk2",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[2].",
+    "u_fcore.u_t.u_g.b_q[2]["
+   ],
+   "box_um": [
+    12.6,
+    117.472,
+    123.264,
+    173.224
+   ]
+  },
+  {
+   "name": "bk3",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[3].",
+    "u_fcore.u_t.u_g.b_q[3]["
+   ],
+   "box_um": [
+    12.6,
+    174.888,
+    123.264,
+    228.96
+   ]
+  },
+  {
+   "name": "bk4",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[4].",
+    "u_fcore.u_t.u_g.b_q[4]["
+   ],
+   "box_um": [
+    124.704,
+    4.32,
+    235.368,
+    58.392
+   ]
+  },
+  {
+   "name": "bk5",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[5].",
+    "u_fcore.u_t.u_g.b_q[5]["
+   ],
+   "box_um": [
+    124.704,
+    60.056,
+    235.368,
+    115.808
+   ]
+  },
+  {
+   "name": "bk6",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[6].",
+    "u_fcore.u_t.u_g.b_q[6]["
+   ],
+   "box_um": [
+    124.704,
+    117.472,
+    235.368,
+    173.224
+   ]
+  },
+  {
+   "name": "bk7",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[7].",
+    "u_fcore.u_t.u_g.b_q[7]["
+   ],
+   "box_um": [
+    124.704,
+    174.888,
+    235.368,
+    228.96
+   ]
+  },
+  {
+   "name": "bk8",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[8].",
+    "u_fcore.u_t.u_g.b_q[8]["
+   ],
+   "box_um": [
+    236.808,
+    4.32,
+    347.472,
+    58.392
+   ]
+  },
+  {
+   "name": "bk9",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[9].",
+    "u_fcore.u_t.u_g.b_q[9]["
+   ],
+   "box_um": [
+    236.808,
+    60.056,
+    347.472,
+    115.808
+   ]
+  },
+  {
+   "name": "bk10",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[10].",
+    "u_fcore.u_t.u_g.b_q[10]["
+   ],
+   "box_um": [
+    236.808,
+    117.472,
+    347.472,
+    173.224
+   ]
+  },
+  {
+   "name": "bk11",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[11].",
+    "u_fcore.u_t.u_g.b_q[11]["
+   ],
+   "box_um": [
+    236.808,
+    174.888,
+    347.472,
+    228.96
+   ]
+  },
+  {
+   "name": "bk12",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[12].",
+    "u_fcore.u_t.u_g.b_q[12]["
+   ],
+   "box_um": [
+    516.312,
+    4.32,
+    626.976,
+    58.392
+   ]
+  },
+  {
+   "name": "bk13",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[13].",
+    "u_fcore.u_t.u_g.b_q[13]["
+   ],
+   "box_um": [
+    516.312,
+    60.056,
+    626.976,
+    115.808
+   ]
+  },
+  {
+   "name": "bk14",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[14].",
+    "u_fcore.u_t.u_g.b_q[14]["
+   ],
+   "box_um": [
+    628.416,
+    4.32,
+    739.08,
+    58.392
+   ]
+  },
+  {
+   "name": "bk15",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_bank[15].",
+    "u_fcore.u_t.u_g.b_q[15]["
+   ],
+   "box_um": [
+    628.416,
+    60.056,
+    739.08,
+    115.808
+   ]
+  },
+  {
+   "name": "hub",
+   "prefixes": [
+    "u_fcore.u_t.u_g.g_s1.",
+    "u_fcore.u_t.u_g.g_s2.",
+    "u_fcore.u_t.u_g.g_hc.",
+    "u_fcore.u_t.u_g.g_lane[",
+    "u_fcore.u_t.u_g.q_out[",
+    "u_fcore.u_t.u_g.fq[",
+    "u_fcore.u_t.u_g.wcoll_q",
+    "u_fcore.u_t.u_g.hc["
+   ],
+   "box_um": [
+    349.0,
+    9.0,
+    514.0,
+    224.0
+   ]
+  }
+ ]
+}
