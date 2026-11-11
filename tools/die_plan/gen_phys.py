@@ -6352,7 +6352,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     if dead_macros:
         P = S.Plan(praw, plan_path)
         for tn, rec in sorted(dead_macros.items()):
-            print(f"OT_DEAD_MACROS type {tn}: {len(rec[removed])} unloaded hard core(s) not placed: "
+            print(f"OT_DEAD_MACROS type {tn}: {len(rec['removed'])} unloaded hard core(s) not placed: "
                   + ", ".join(r["inst"] for r in rec["removed"]))
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
