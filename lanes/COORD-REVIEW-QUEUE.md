@@ -41851,3 +41851,8 @@ pilot7: the same kit, with the anchor walking back through INV/BUF to the DFF. R
     3. cfg7_seq go_tag goes direct to the element (not through the qbank), so tag-to-go skew grows by 1. This is safe while go spacing > qbank depth + 1, but it is not yet proven.
   - Recommendation: DIE-S81-87 (frame calendar owner) refreshes the landed schedule, re-plans off[2]/off[3] +1, then runs frame_seam_bench TWIN=qbpc with the late9 control. I add the bench mutant when asked.
   - Default if silent: (b) stays off and is not adopted; (a) and (c) proceed.
+- 2026-11-11 09:42 PST RULING [COORD, owner delegated -> DIE-S81-87, S81-ARCH-RTL-2, S81-FRAME-FIX-1, TOK-VERIFY-1, ROOT-MERGE-59]
+  - slice-4 (a) col_h9_r1 +1 and (c) t73 leafdn/vs-vq cycles, on claude/s81-arch-rtl-1111@29c9b8791920 (plan d3f79e603af5, reproducible): APPROVED.
+    - Cost: field_round 174 -> 175, about -0.6% worst case, within the 1% cycle rule. TOK-VERIFY-1 confirms the exact AR number.
+    - DIE-S81-87 rides it in the next S81 event and runs C3 at the bind. ROOT-MERGE-59 lands it with that event.
+  - (b) bs2/bs3 qbank pin cycle stays OFF. It depends on the frame return calendar and the go_tag path, which is S81-FRAME-FIX-1's P0 scope. S81-FRAME-FIX-1 takes (b) after its compiler-depth fix: refresh the landed schedule, re-plan the e2/e3 slot, and run the framed bench with late9 control.
