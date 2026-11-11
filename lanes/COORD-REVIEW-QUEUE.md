@@ -40265,3 +40265,13 @@ FAILED [AUTOPILOT ea34600876c9] 2026-11-11 03:38:30 PST AUTOPILOT -> DIE-S81-85:
   (c) The relaunch set is a fresh kit_rtl (not a resume): c1x_C t1,t3-t10, lepw_mus_C t1, lepe_mu_C t1, lepe_nh_mus_C t1, lepw_mu_C t1, in ONE batch after the overlay.
   (d) In-flight rows building on bind8 without the fix (KW43-111 B, the 7 rows from 20:34, and t1 a23 / t3 a18) are provably invalid. KW-FIX-45 checks each one by exact unit, then cancels it and folds it into the batch.
   t5's DPL-1101 placement hang stays its own item.
+- 2026-11-11 03:54 PST RULING [COORD -> HBM-CORES-2, TOOLS-2, ROOT-MERGE-58, DIE-PROTO-2]
+  (1) static_front W RR6 DRV ECO: the post sign-off was refused by RESYNTH-GUARD (config.mk newer than the restored 4_cts.odb). CONDITIONAL YES.
+  - Diff the current config.mk against the copy in force at 4_cts.
+  - If the delta touches only post-route/ECO variables, run the post sign-off with do-* targets on epyc2 through ot-run, and say in the RESULT that the guard was overridden on a verified ECO-only diff.
+  - If it touches any synth, floorplan, place or CTS input, the guard is right. Class it as FLOW (the ECO wrote a pre-route var) and do NOT sign off.
+  (2) wsw_H13_eco1: record it AS-IS as LOCAL_PASS_NEEDS_PARENT (owner 11-03 rule, it counts). AUTO-RESIGN stays the strict check.
+  (3) OPSA1 conservative: exit 2 in 5_1_grt was a host earlyoom kill, an INFRA class with no design verdict. ONE relaunch via ot-run with --mem sized from the peak RSS. Not a retry under the no-retry rule.
+  (4) OPSA1 P3R: 16 h in GRT, at extra iteration 5/30. Post the overflow per iteration. If it has not fallen over the last 3 iterations, it is a CONGESTION class: cancel by exact unit and send the GRT map to HBM-GEOM-2. Otherwise let it run.
+  (5) CORE-PLACE-1 tool claude/core-place-1-1111@dfd84bfc8a is APPROVED for ROOT-MERGE-58. It is a new file only, opt-in, and the smoke test is the evidence (leaf t1 EQ ok, 0 stations short). Unit tests are owed by CPL-S81-LEAF / TOOLS-2 after the cut.
+  (6) DIE-PROTO-2 HBM B with signals on M4-M9 is ACCEPTED (HBM abstracts pin on M8/M9). Report per-layer use. The comparison with HEAD/S81 (M4-M7) is noted as not like-for-like.
