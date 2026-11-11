@@ -20,7 +20,13 @@ Keys written (everything else byte-identical to BASE, asserted):
   2 types' clock          lk_EN0 / svc_14 landing pins (+ moved edge_clocks tap) set to the loader-separated sites
                           (schema.Plan._separate_landing_pins); the loaded types are identical.
 
-usage: delta_feed_bal2_1111.py PLAN_IN PLAN_OUT [REPORT.json]
+Base: ca10ae6afbab, or 64eb2c89c94c (ca10ae + SVCPROV-PHYSINST-1111; DS85-COMPOSE-1111 BASE_1200 chain).
+
+--svc-as-base: leave the 14 svc_rs types' windows as in BASE also on 64eb2c89 (the ca10ae behaviour, a pure commute
+with SVCPROV-PHYSINST): their measured tables (ebea5f / 66466e) are from the pre-v5 svc_rs types, whose clk_c* / clk_t*
+port names do not name the same taps after the v5 rebuild (v5 has 32 core taps; 66466e measured clk_c0..c63).
+
+usage: delta_feed_bal2_1111.py [--svc-as-base] PLAN_IN PLAN_OUT [REPORT.json]
        delta_feed_bal2_1111.py --check PLAN_IN PLAN_OUT"""
 import copy
 import hashlib
@@ -42,6 +48,12 @@ EVENT = "FEED-BAL-2-1111"
 EV1 = HERE / "events" / "feed_bal_1111"
 EV2 = HERE / "events" / "feed_bal2_1111"
 BASE_SHA = "ca10ae6afbab2337fd8c87e165b2037c37bd3f173f33f99dd34d4228793b3bb9"
+# accepted bases: ca10ae (v5) and 64eb2c89 = ca10ae + SVCPROV-PHYSINST-1111 (the 56 physical_inst keys on the svc_rs
+# TRX provider boxes).  On 64eb2c89 gen_phys can list the 14 svc_rs types' window ports, so their measured windows
+# apply too (on ca10ae they raised and were left as in BASE).
+BASES = {BASE_SHA: "ca10ae6afbab PGR1 + SVCPROV-V5-POR",
+         "64eb2c89c94c197fee42a5d5c2cb45e36dd03bcfa1f08ca964de7b33c8ac990f":
+             "64eb2c89c94c ca10ae + SVCPROV-PHYSINST-1111 (events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f)"}
 KW2 = ("kitwin_auto_66466e86ebcd.json", "9149770f950a979af32ff08a22f08037ce92490fd9139300d76ecd62e18f4d44")
 CAP_PS = 208.0
 SVC_V5 = tuple(V1.HI_TYPES) + tuple(V1.LO_TYPES)   # the 14 svc_rs types v5 rebuilds (windows measured pre-grow)
@@ -55,9 +67,10 @@ def window_ps(v):
     return int(v) if float(v) == int(v) else v
 
 
-def derive(pin_path):
+def derive(pin_path, svc_as_base=False):
     text = open(pin_path).read()
-    assert hashlib.sha256(text.encode()).hexdigest() == BASE_SHA, "base is not ca10ae6afbab (POR + PGR1 + SVCPROV-V5-POR)"
+    base_sha = hashlib.sha256(text.encode()).hexdigest()
+    assert base_sha in BASES, f"base {base_sha[:12]} is not ca10ae6afbab or 64eb2c89c94c"
     assert json.dumps(json.loads(text)) + "\n" == text, "base is not in the compact json.dumps form"
     FB.check_inputs()
     assert FB.sha(EV2 / KW2[0]) == KW2[1], KW2
@@ -65,7 +78,7 @@ def derive(pin_path):
     orig = copy.deepcopy(raw)
     P = S.Plan(S.load(pin_path), Path(pin_path))
     parts = {p["name"]: p for p in raw["partitions"]}
-    rep = dict(event=EVENT, base_plan_sha256=BASE_SHA, sources=dict(FB.SRC, **SRC2),
+    rep = dict(event=EVENT, base_plan_sha256=base_sha, base=BASES[base_sha], sources=dict(FB.SRC, **SRC2),
                inputs=dict({f: FB.sha(EV1 / f) for f in FB.INPUTS}, **{KW2[0]: KW2[1]}))
 
     # ---- tap windows: max(current, m1, m2), cap 208
@@ -77,6 +90,9 @@ def derive(pin_path):
     changed, blocked, skipped, gen_error = {}, {}, {}, {}
     for tn in sorted(set(m1["per_port_ps"]) | set(m2["per_port_ps"])):
         a, b = m1["per_port_ps"].get(tn, {}), m2["per_port_ps"].get(tn, {})
+        if svc_as_base and tn in SVC_V5:   # --svc-as-base: the 14 v5 types keep their BASE window (pure commute)
+            gen_error[tn] = "--svc-as-base: measured before the v5 rebuild (port names clk_c*/clk_t* not the v5 taps)"
+            continue
         try:
             names = GP.window_port_names(P, tn)
         except ValueError as e:      # gen_phys cannot list the type's clock ports: the type is left as in BASE
@@ -221,12 +237,15 @@ def derive(pin_path):
 
 
 def main():
+    svc_as_base = "--svc-as-base" in sys.argv
+    if svc_as_base:
+        sys.argv.remove("--svc-as-base")
     if sys.argv[1] == "--check":
-        text, _ = derive(sys.argv[2])
+        text, _ = derive(sys.argv[2], svc_as_base)
         assert open(sys.argv[3]).read() == text, "output differs from re-derivation"
         print("CHECK PASS", hashlib.sha256(text.encode()).hexdigest())
         return
-    text, rep = derive(sys.argv[1])
+    text, rep = derive(sys.argv[1], svc_as_base)
     open(sys.argv[2], "w").write(text)
     rep["output_plan_sha256"] = hashlib.sha256(text.encode()).hexdigest()
     if len(sys.argv) > 3:
