@@ -1,0 +1,1862 @@
+{
+ "schema": "opentallas.s81_svc_pin_cycles.v6",
+ "tool": "physical/die_plan/s81/svc_prov_pcd_v6_1110.py",
+ "lane": "DIE-S81-85 (sub-lane ds85-svc-irg-pcd)",
+ "do_not_count": true,
+ "request": "S81-SVCRS-3 11-10 14:05: COORD approved recipe-4 pin registers on s81svc_irg (+1 every data input, +1 every data output, clk / rst_n 0)",
+ "supersedes_pin_cycle_deltas_of": {
+  "event": "physical/die_plan/s81/events/svc_prov_1109_v5_event.json",
+  "sha256": "29fc537b7d23d95697193610b8ab5f31f39823af0da7ecf86df8e2e061c7e317",
+  "plan_output_sha256": "f206e83ffcc6617dfd56aca5a26d1d00c0efaee43685c26256bafb4bba9d9cbe"
+ },
+ "plan_change": "none: pin registers are box-internal; boxes, outlines, soft regions and the v5 plan are unchanged",
+ "model": {
+  "rule": "delta = out_stages(src) + in_stages(dst) + relay_stations (v5 geometry)",
+  "stages": {
+   "SML": {
+    "in": 1,
+    "out": 1
+   },
+   "SMC": {
+    "in": 1,
+    "out": 1
+   },
+   "SMR": {
+    "in": 1,
+    "out": 1
+   },
+   "SMD": {
+    "in": 1,
+    "out": 1
+   },
+   "H4": {
+    "in": 1,
+    "out": 1
+   },
+   "TRX": {
+    "in": 1,
+    "out": 1
+   },
+   "IRG": {
+    "in": 1,
+    "out": 1
+   },
+   "SOFT": {
+    "in": 0,
+    "out": 0
+   },
+   "TILE": {
+    "in": 0,
+    "out": 0
+   }
+  },
+  "v5_rule": "delta = 1 + relay_stations (one pin stage per crossing)"
+ },
+ "pin_cycle_deltas": {
+  "svc_hi_dsdv_svc_rs__t1": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 1,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 3,
+   "SOFT*->SML*": 2,
+   "SML*->SMC": 7,
+   "SMC->SMR": 2,
+   "SMR->SMD*": 3,
+   "SMD*->SOFT*": 3
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "SOFT*->TRX*": 1,
+   "TRX*->TILE*": 3,
+   "TILE*->H4*": 2,
+   "H4*->SOFT*": 5,
+   "SOFT*->SML*": 3,
+   "SML*->SMC": 8,
+   "SMC->SMR": 3,
+   "SMR->SMD*": 2,
+   "SMD*->SOFT*": 2,
+   "SOFT*->IRG*": 1,
+   "IRG*->SOFT*": 4,
+   "IRG*->IRG*": 2
+  }
+ },
+ "pin_cycles": {
+  "svc_hi_dsdv_svc_rs__t1": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 364.0,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 388.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 570.2,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 925.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 709.6,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2151.4,
+    "v5_delta": 6,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 5,
+    "delta": 7
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 172.8,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 496.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 858.6,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "SOFT*->TRX*": {
+    "note": "staging fill -> tr_x",
+    "worst_um": 77.8,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "TRX*->TILE*": {
+    "note": "tr_x ib -> hcores",
+    "worst_um": 846.7,
+    "v5_delta": 3,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "TILE*->H4*": {
+    "note": "t_y -> merge providers",
+    "worst_um": 673.9,
+    "v5_delta": 2,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "H4*->SOFT*": {
+    "note": "merged p.v -> u_att",
+    "worst_um": 1624.3,
+    "v5_delta": 5,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 4,
+    "delta": 5
+   },
+   "SOFT*->SML*": {
+    "note": "scores -> SM lanes",
+    "worst_um": 1162.1,
+    "v5_delta": 3,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 2,
+    "delta": 3
+   },
+   "SML*->SMC": {
+    "note": "l_mx / l_e -> smc",
+    "worst_um": 2600.6,
+    "v5_delta": 7,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 6,
+    "delta": 8
+   },
+   "SMC->SMR": {
+    "note": "smc -> smr",
+    "worst_um": 756.0,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 1,
+    "delta": 3
+   },
+   "SMR->SMD*": {
+    "note": "smr -> smd",
+    "worst_um": 146.9,
+    "v5_delta": 1,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   },
+   "SMD*->SOFT*": {
+    "note": "SM out -> rs faces",
+    "worst_um": 725.8,
+    "v5_delta": 2,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 1,
+    "delta": 2
+   },
+   "SOFT*->IRG*": {
+    "note": "idx key / Q -> hslices (lo)",
+    "worst_um": 345.6,
+    "v5_delta": 1,
+    "src_out": 0,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 1
+   },
+   "IRG*->SOFT*": {
+    "note": "hslice scores -> irg tail (lo)",
+    "worst_um": 1525.0,
+    "v5_delta": 4,
+    "src_out": 1,
+    "dst_in": 0,
+    "relay_stations": 3,
+    "delta": 4
+   },
+   "IRG*->IRG*": {
+    "note": "hslice chain h -> h+1: ql_* / k_key / cs_* / cf_* (lo)",
+    "worst_um": 8.64,
+    "v5_delta": null,
+    "chain_hops": 28,
+    "src_out": 1,
+    "dst_in": 1,
+    "relay_stations": 0,
+    "delta": 2
+   }
+  }
+ },
+ "irg_engine": {
+  "added_edges": 16,
+  "el_v5": 124,
+  "el_v6": 140,
+  "breakdown": "IRG input stage at slice 0 (1) + 7 chain hops x 2 + IRG output stage at slice 7 (1)",
+  "where": "dsdv_idx_rg3_nq #(.EL(...)) u_irg in the svc_lo bind (bound with .EL(124), KR 0; tools/die_plan/test_s81_svc_memory_closure.py:80) and dsdv_idx_rg3 / dsdv_idx_rg3_nq_native EL (metadata ring ra = mw - (EL + KR - 1), warm at EL + KR + 2)",
+  "relays_not_in_el": "the reader-side relay stations priced on SOFT*->IRG* / IRG*->SOFT* are not in EL either: if they are built as flop stages on the slice-0 input / slice-7 cs_out paths, EL grows by their count on those two paths too",
+  "intra_chunk": "unchanged: key, Q and cs hops all grow by the same 2 edges, so the term pad FPL * hid[2:0] (cs step - key step = 7) still meets cs_in at its date; no hslice constant changes"
+ },
+ "changed_vs_v5": {
+  "svc_hi_dsdv_svc_rs__t1": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "SML*->SMC": [
+    6,
+    7
+   ],
+   "SMC->SMR": [
+    1,
+    2
+   ],
+   "SMR->SMD*": [
+    2,
+    3
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "SML*->SMC": [
+    7,
+    8
+   ],
+   "SMC->SMR": [
+    2,
+    3
+   ],
+   "SMR->SMD*": [
+    1,
+    2
+   ],
+   "IRG*->IRG*": [
+    null,
+    2
+   ]
+  }
+ }
+}

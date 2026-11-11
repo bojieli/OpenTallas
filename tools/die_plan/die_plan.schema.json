@@ -5835,6 +5835,12 @@
         "fall"
        ]
       },
+      "sender_ps_types": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number"
+       }
+      },
       "write_fall_types": {
        "type": "array",
        "items": {

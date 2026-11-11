@@ -29,6 +29,24 @@
 // 31 relay leaf 17 selects on the E valid, 32 table-tap leaf 5 drops the SID match, 33 insertion leaf E 9 stuck 0,
 // 34 tree 3 write-any copy stuck 0, 35 tree 5 mask copy never updates, 37 eword enable leaf 7 stuck 0,
 // 38 tag high-half config leaf never enables.
+// STM-DQ (DIE-QC-97 11-10, QC-FAIL-22; opt-in per plan type: verilog_defines OT_QC_STMDQ, default OFF = the form above,
+// netlist unchanged).  Routed slw_stm_v1__cl05fc43f7__cl389df4e9 a22: we_c[0] -> dupq -669.7 ps TT, u_rl.rst -> tag[19]
+// recovery -225.2 ps.  Cause (measured, 6_final.def): we_c[0] (copy 0) also fed the beat fault beat_bad / w0q, whose
+// cone sits at wb_q (y 42..67 um, next to the xw_addr pins), so placement parked we_c[0] at y 774 and its shared
+// inverter at y 424 while the slot decode it drives is at y ~1000: ~990 um of detour, 822 ps of buffers.  The dupq
+// compare itself is local (all own-write flops within x 198..297, y 952..1160).  The form adds NO edge on any port:
+//   (a) the beat fault beat_bad reads its own kept 8-bit enable root we_b (= xw_we, same edge as we_c) next to wb_q,
+//       so every we_c copy serves only the own-write cluster (slot decode; we_c[0] also w0q, which is in the cluster);
+//   (b) dupq is registered as 8 partial ORs (slots 8j..8j+7) and reduced after the register (|dupv == the old dupq on
+//       every edge; the 64-way OR leaves the decode->register path);
+//   (c) the tile lands rst_n itself: 7 kept two-stage landing copies, one per reset group (face/pass, config/tag,
+//       own-write face + trees, P2 leaves, relay valids, beat-fault root, taps/fault).  qfd_dv_s6_stm under the same
+//       define drives u_stream.rst_n with its raw rst_n (u_rl keeps tload / twv), so every reset flop of the tile
+//       releases on the same edge as before (2 landing stages), from a copy placed with its group.
+// STM-DQ MUT (must FAIL the old-vs-new bench, OT_QC_STMDQ only): 41 we_b never loads, 42 dup partial 3 one edge late,
+// 43 own-write face reset group (we_c / wy_r / wa1 / op_k) lands one edge late.  (A one-edge-late CONFIG group is
+// unobservable by construction -- cv_r is released with the face roots, so the first config write lands 2 edges after
+// release -- which the bench measured: that variant passes 200,000 edges.)
 // =====================================================================================================================
 module qfd_dv_stream_tile #(
     parameter integer MUT = 0
@@ -70,9 +88,29 @@ module qfd_dv_stream_tile #(
     localparam integer NK  = 9;                  // complete trees
     localparam integer NL2 = 2 * (NGR + 1) + NGB + 3;   // P2 leaves: ie_E 79, ie_W 79, cm_e 74, cm_b 2, cm_x 1 = 235
     localparam integer LPT = (NL2 + NK - 1) / NK;      // P2 leaves per tree (27)
+`ifdef OT_QC_STMDQ
+    localparam integer STMDQ = 1;
+`else
+    localparam integer STMDQ = 0;
+`endif
     wire [1087:0] sw_i = {sw_v, sw_hi, sw_lo};
     wire [1087:0] se_i = {se_v, se_hi, se_lo};
     integer gi, li, qi;
+    // ================================================================================================ reset groups
+    // rn_g[i]: 0 face roots + pass leaves, 1 configuration, 2 own-write face + trees, 3 P2 leaves, 4 relay valids,
+    //          5 beat-fault enable root, 6 taps + fault.  STMDQ 0: all = rst_n (the landed reset, as before).
+    wire [6:0] rn_g;
+    generate if (STMDQ != 0) begin: g_rn
+        (* keep = "true" *) reg [6:0] rs1_g;               // landing stage 1, one kept copy per group
+        (* keep = "true" *) reg [6:0] rs2_g;               // landing stage 2 (= the old u_rl.rst edge)
+        reg rs3_m;                                          // MUT 43 only
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin rs1_g <= 7'd0; rs2_g <= 7'd0; rs3_m <= 1'b0; end
+            else begin rs1_g <= 7'h7F; rs2_g <= rs1_g; rs3_m <= rs2_g[2]; end
+        assign rn_g = (MUT == 43) ? {rs2_g[6:3], rs3_m, rs2_g[1:0]} : rs2_g;
+    end else begin: g_rn0
+        assign rn_g = {7{rst_n}};
+    end endgenerate
     // ================================================================================================ face: roots
     reg [1086:0] sw_q0, se_q0, sw_q1, se_q1;   // payload + header, carried two edges (no reset)
     reg [3:0]    sid_q0, sid_q1;
@@ -93,8 +131,8 @@ module qfd_dv_stream_tile #(
         for (integer gi = 0; gi < NRT; gi = gi + 1) begin ste_r[4*gi +: 4] <= sid; end
         stw_r <= sid;
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge ck or negedge rn_g[0])
+        if (!rn_g[0]) begin
             vpe_r <= 0; vpw_r <= 0; hte_r <= 0; htw_r <= 0; hxe_r <= 0; hxw_r <= 0; ub_r <= 1'b0; cv_r <= 3'd0;
         end else begin
             vpe_r <= {NRT{sw_i[1087]}}; vpw_r <= {NRT{se_i[1087]}};
@@ -121,8 +159,8 @@ module qfd_dv_stream_tile #(
     (* keep = "true" *) reg [NGT:0] te_l, xe_l, xw_l;        // [NGT] = valid / fault leaf
     (* keep = "true" *) reg         tw_x;
     (* keep = "true" *) reg         ub_l;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin pe_l <= 0; pw_l <= 0; te_l <= 0; xe_l <= 0; xw_l <= 0; tw_x <= 1'b0; ub_l <= 1'b0; end
+    always @(posedge ck or negedge rn_g[0])
+        if (!rn_g[0]) begin pe_l <= 0; pw_l <= 0; te_l <= 0; xe_l <= 0; xw_l <= 0; tw_x <= 1'b0; ub_l <= 1'b0; end
         else begin
             for (integer gi = 0; gi <= NGR; gi = gi + 1) begin
                 pe_l[gi] <= (MUT == 31 && gi == 17) ? vpw_r[gi * NRT / (NGR + 1)] : vpe_r[gi * NRT / (NGR + 1)];
@@ -141,8 +179,8 @@ module qfd_dv_stream_tile #(
     (* keep = "true" *) reg [NK-1:0] de_k, dw_k;              // direction copies, one per complete tree
     (* keep = "true" *) reg [1:0]    cv_l;                    // tag-enable leaves (14 bits each)
     reg [27:0] tag;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin de_k <= 0; dw_k <= 0; cv_l <= 2'd0; tag <= 28'd0; end
+    always @(posedge ck or negedge rn_g[1])
+        if (!rn_g[1]) begin de_k <= 0; dw_k <= 0; cv_l <= 2'd0; tag <= 28'd0; end
         else begin
             for (integer gi = 0; gi < NK; gi = gi + 1) begin
                 if (cv_r[0]) de_k[gi] <= cdir_q[0];
@@ -174,9 +212,20 @@ module qfd_dv_stream_tile #(
         end
         wd_q <= xw_data;
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin we_c <= 32'd0; wy_r <= 1'b0; end
+    always @(posedge ck or negedge rn_g[2])
+        if (!rn_g[2]) begin we_c <= 32'd0; wy_r <= 1'b0; end
         else begin we_c <= {4{xw_we}}; wy_r <= xw_we != 8'd0; end
+    // STM-DQ (a): the beat-fault enable root.  STMDQ 0: decoder copy 0 (we_c[7:0]) as before.
+    wire [7:0] we_bf;
+    generate if (STMDQ != 0) begin: g_web
+        (* keep = "true" *) reg [7:0] we_b;
+        always @(posedge ck or negedge rn_g[5])
+            if (!rn_g[5]) we_b <= 8'd0;
+            else we_b <= (MUT == 41) ? 8'd0 : xw_we;
+        assign we_bf = we_b;
+    end else begin: g_web0
+        assign we_bf = we_c[7:0];
+    end endgenerate
     // ---------------------------------------------------------------------------------------------- P1 (comb)
     genvar l, d, s, b, k;
     wire [511:0] sel_n;                                       // [8*s + l]: lane l writes slot s (highest lane wins)
@@ -185,7 +234,7 @@ module qfd_dv_stream_tile #(
     wire [255:0] lo_c, hi_c;                                  // [64c + 8l + d]
     generate
         for (l = 0; l < 8; l = l + 1) begin: g_bb
-            assign beat_bad[l] = we_c[l] && (!we_c[0] || wb_q[16*l +: 16] != wb_q[0 +: 16]);
+            assign beat_bad[l] = we_bf[l] && (!we_bf[0] || wb_q[16*l +: 16] != wb_q[0 +: 16]);
         end
         // two-level decode per lane and per copy: low digit addr[2:0], high digit addr[5:3] with the lane enable;
         // a copy uses 4 low and 4 high terms, each term -> 4 slots (x the ~4 priority / duplicate uses of a hit)
@@ -230,9 +279,23 @@ module qfd_dv_stream_tile #(
             for (integer li = 0; li < 8; li = li + 1)
                 lane_c[128*qi + 16*li +: 16] <= bf16(wd_q[32*li +: 32]);
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) wa1 <= 0;
+    always @(posedge ck or negedge rn_g[2])
+        if (!rn_g[2]) wa1 <= 0;
         else for (integer gi = 0; gi < NK + 2; gi = gi + 1) wa1[gi] <= (MUT == 34 && gi == 3) ? 1'b0 : wy_r;
+    // STM-DQ (b): duplicate fault registered as 8 partial ORs, reduced after the register (same edge as dupq).
+    wire dup_f;
+    generate if (STMDQ != 0) begin: g_dq
+        reg [7:0] dupv;
+        reg       dupm;                                       // MUT 42 only: partial 3 one edge late
+        always @(posedge ck) begin
+            for (integer gi = 0; gi < 8; gi = gi + 1)
+                dupv[gi] <= (MUT == 42 && gi == 3) ? dupm : |dup_n[8*gi +: 8];
+            dupm <= |dup_n[24 +: 8];
+        end
+        assign dup_f = |dupv;
+    end else begin: g_dq0
+        assign dup_f = dupq;
+    end endgenerate
     // ---------------------------------------------------------------------------------------------- P2
     reg [1023:0] xb;                                          // beat assembly (no reset; written only on slot hits)
     reg [15:0]   xbeat;
@@ -261,8 +324,8 @@ module qfd_dv_stream_tile #(
             // &nm = op ? &(xm | sh) : &sh  (op drives one select instead of 64 AND terms)
             assign complete_k[k] = op_k[3*k] ? &(xmk | shk) : &shk;
             always @(posedge ck) xm_k[64*k +: 64] <= (MUT == 35 && k == 5) ? xmk : nmk;
-            always @(posedge ck or negedge rst_n)
-                if (!rst_n) op_k[3*k +: 3] <= 3'd0;
+            always @(posedge ck or negedge rn_g[2])
+                if (!rn_g[2]) op_k[3*k +: 3] <= 3'd0;
                 else if (wa1[k]) op_k[3*k +: 3] <= {3{!complete_k[k]}};
         end
     endgenerate
@@ -271,7 +334,7 @@ module qfd_dv_stream_tile #(
         for (integer gi = 0; gi < 16; gi = gi + 1) if (wa1[NK + gi / 8]) xbeat[gi] <= abq[gi];
     end
     // completion fault (combinational on the P2 cycle = the reference's pbad cycle), from tree 0's copies
-    wire sbad = (MUT == 22) ? 1'b0 : ((op_k[0] && |(xm_k[63:0] & shq_t[63:0])) || dupq);
+    wire sbad = (MUT == 22) ? 1'b0 : ((op_k[0] && |(xm_k[63:0] & shq_t[63:0])) || dup_f);
     wire pbad = sbad || bbq || (w0q && op_k[0] && abq != xbeat);
     // P2 leaves: complete is only ever 1 on a write edge (op = 1 holds a not-complete mask), so no write-any term
     // The held-word enables cm_e / cm_b carry no reset: like the reference eword (captured on the completion edge
@@ -283,8 +346,8 @@ module qfd_dv_stream_tile #(
         p2d = (MUT == 33 && i == 9) ? 1'b0 : (MUT == 37 && i == L2E0 + 7) ? 1'b0 :
               c[i / LPT] && (i <= NGR ? de[i / LPT] : i < L2E0 ? dw[i / LPT] : 1'b1);
     endfunction
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end
+    always @(posedge ck or negedge rn_g[3])
+        if (!rn_g[3]) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end
         else begin
             for (integer gi = 0; gi < L2E0; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
             p2l[L2X] <= p2d(L2X, complete_k, de_k, dw_k);
@@ -312,8 +375,8 @@ module qfd_dv_stream_tile #(
     always @(posedge ck) begin eword <= eword_n; ebeat <= ebeat_n; end
     // ================================================================================================ relay + insertion
     wire [1087:0] own = {1'b1, 3'd0, 4'hF, sid_q1, 2'b00, xbeat, 6'd0, tag, xb};
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin so_e[1087] <= 1'b0; so_w[1087] <= 1'b0; end
+    always @(posedge ck or negedge rn_g[4])
+        if (!rn_g[4]) begin so_e[1087] <= 1'b0; so_w[1087] <= 1'b0; end
         else begin
             so_e[1087] <= pe_l[NGR] || ie_e[NGR];
             so_w[1087] <= pw_l[NGR] || ie_w[NGR];
@@ -336,8 +399,8 @@ module qfd_dv_stream_tile #(
         for (integer gi = 0; gi < 1050; gi = gi + 1) r_tw[gi] <= te_l[gi / G] ? tv_e[gi] : tv_w[gi];
         for (integer gi = 0; gi < 1048; gi = gi + 1) r_xt[gi] <= xe_l[gi / G] ? xv_e[gi] : xw_l[gi / G] ? xv_w[gi] : xv_o[gi];
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin r_tw_we <= 1'b0; r_xt_v <= 1'b0; r_xt_bad <= 1'b0; end
+    always @(posedge ck or negedge rn_g[6])
+        if (!rn_g[6]) begin r_tw_we <= 1'b0; r_xt_v <= 1'b0; r_xt_bad <= 1'b0; end
         else begin
             r_tw_we <= te_l[NGT] || tw_x;
             r_xt_v <= xe_l[NGT] || xw_l[NGT] || cm_x;
@@ -347,12 +410,12 @@ module qfd_dv_stream_tile #(
         tw_kind <= r_tw[1049:1048]; tw_addr <= r_tw[1047:1024]; tw_data_lo <= r_tw[511:0]; tw_data_hi <= r_tw[1023:512];
         xt_a <= r_xt[1047:1024]; xt_d_lo <= r_xt[511:0]; xt_d_hi <= r_xt[1023:512];
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin tw_we <= 1'b0; xt_v <= 1'b0; xt_bad <= 1'b0; end
+    always @(posedge ck or negedge rn_g[6])
+        if (!rn_g[6]) begin tw_we <= 1'b0; xt_v <= 1'b0; xt_bad <= 1'b0; end
         else begin tw_we <= r_tw_we; xt_v <= r_xt_v; xt_bad <= r_xt_bad; end
     // ================================================================================================ fault (sticky)
     wire bad = pbad || (pe_l[NGR] && ie_e[NGR]) || (pw_l[NGR] && ie_w[NGR]) || (te_l[NGT] && tw_x) || ub_l;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) fault <= 1'b0;
+    always @(posedge ck or negedge rn_g[6])
+        if (!rn_g[6]) fault <= 1'b0;
         else fault <= fault | bad;
 endmodule

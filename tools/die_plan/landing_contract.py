@@ -434,6 +434,18 @@ def ring_fall_clocks(P,tn):
     return {ck for ck,_sel in ring_input_ports(P,tn)}
 
 
+def ring_sender_ps(P,tn):
+    """KV-PLAN-2 RINGHOLD-TYPES (COORD 11-10): the ring input sender min (ps) of receiver type tn under plan
+    clock.ring_hold: sender_ps_types[tn] (a split copy "<base>__<suffix>" matches its base) when listed, else the
+    die-wide sender_ps.  None when the plan has no ring_hold.  A per-type value is a measured sender guarantee for
+    that receiver's ring senders; the real seam stays a parent obligation (io_hold NEEDS_PARENT)."""
+    rh=P.clock.get("ring_hold")
+    if rh is None:return None
+    per=rh.get("sender_ps_types") or {}
+    v=per.get(tn,per.get(tn.split("__")[0]))
+    return float(rh["sender_ps"] if v is None else v)
+
+
 def ring_input_sdc(P,tn):
     """DIE-HEAD-36 (COORD 10-29 21:11 ruling (3)): source-synchronous ring inputs are timed against the forwarded
     write clock that captures them, not the local virtual IO clock vclk.  The sender's fclk_out leaves from its clk
@@ -455,7 +467,7 @@ def ring_input_sdc(P,tn):
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
             raise ValueError(f"{tn}: forwarded ring input with die_sta per-bit hold demand (unsupported, fail closed)")
-        if rh is not None and not out:out.append(f"{RING_MIN_TAG} {G.t_lib(float(rh['sender_ps'])):.4f}")
+        if rh is not None and not out:out.append(f"{RING_MIN_TAG} {G.t_lib(ring_sender_ps(P,tn)):.4f}")
         out.append(f"{RING_INPUTS_TAG} {ck} {' '.join(sel)}")
         for s in sel:
             bus=s.split("[")[0]
@@ -470,7 +482,7 @@ def ring_input_sdc(P,tn):
             # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed
             # locally while the real parent (tile_p tW0o10 -> turn_a) measured TT -55.8 (kit at +166.6: ~-50).
             mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
-            if rh is not None:mn=float(rh["sender_ps"])   # one measured class value (sender guarantee, all ring ports)
+            if rh is not None:mn=ring_sender_ps(P,tn)   # measured sender guarantee (die-wide or per receiver type)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
             out.append(f"set_input_delay -min {G.t_lib(mn):.4f} -clock {ck} [get_ports {{{s}}}]")
     return ("# source-synchronous ring inputs (COORD 10-29 21:11): timed against their forwarded write clock, "

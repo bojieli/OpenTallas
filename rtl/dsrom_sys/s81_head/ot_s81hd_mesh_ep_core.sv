@@ -1502,7 +1502,19 @@ module ot_s81ph_coll_lane_safe4_hd #(
     localparam integer R_LOC = 0, R_CRX = 1, R_CTX = 2, R_HEAD = 3, R_EP = R_HEAD + HEAD_RL, R_MEM = R_EP + EP_RN,
                        R_GB = R_MEM + MEM_RST, NREG = R_GB + GB_RN;
     wire [NREG-1:0] rr;
+`ifdef OT_HE_EPC
+    // HEAD-92/H2 11-10: u_rr + u_ep live in the hard core u_epc (ot_s81hd_he_epc, same params / names / wiring);
+    // the leaves this module uses come back as rr_lo / rr_gb, the EP / MEM leaves stay inside the core.
+    wire [R_EP-1:0] epc_rr_lo; wire [GB_RN-1:0] epc_rr_gb;
+    assign rr[R_EP-1:0] = epc_rr_lo;
+    assign rr[R_GB +: GB_RN] = epc_rr_gb;
+    assign rr[R_GB-1:R_EP] = {(R_GB-R_EP){1'b1}};   // unused here (read only inside the core)
+    generate if (CH_UCIE != 100 || CH_BOARD != 700 || IDLE_P != 1024 || REACH != 2 || RBL != 0) begin : g_epc_param_check
+        ot_s81hd_he_epc_param_mismatch u_bad ();   // the hard core is built for these values only
+    end endgenerate
+`else
     ot_rst_relay_tree3 #(.REGIONS(NREG)) u_rr (.clk(clk), .rst_n_in(rs_n), .rst_n(rr));
+`endif
     wire rst_n = rr[R_LOC];
     wire [HEAD_NS-1:0] head_rst_n;
     genvar k;
@@ -1565,6 +1577,13 @@ module ot_s81ph_coll_lane_safe4_hd #(
     end else begin : g_rt1
         assign rtv = rtv0; assign rt = rt0;
     end endgenerate
+`ifdef OT_HE_EPC
+    ot_s81hd_he_epc u_epc (.clk(clk), .rst_n(rs_n), .ch_b(ch_b),
+        .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
+        .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
+        .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
+        .fault(ep_f), .rr_lo(epc_rr_lo), .rr_gb(epc_rr_gb));
+`else
     ot_s81ph_link_ep_safe4_hd #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(REACH != 0 ? 5 : 3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
         .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0), .RBL(RBL)) u_ep (
@@ -1574,6 +1593,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
         .st_naks(), .st_replays(), .st_timeouts(), .st_retx_flits(), .st_max_replay_occ());
+`endif
     ot_s81ph_link_gbx_safe3_hd #(.FFW(FFW), .RFW(RFW), .IDLE_P(IDLE_P), .RN(GB_RN),
 `ifdef OT_S81PH_GBX3_MUT
         .MUT(`OT_S81PH_GBX3_MUT)

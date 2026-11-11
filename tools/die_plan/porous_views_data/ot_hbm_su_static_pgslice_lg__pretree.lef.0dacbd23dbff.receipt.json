@@ -1,0 +1,59 @@
+{
+ "access": {
+  "lost": [],
+  "top_layer": "M5",
+  "without_access_base": [],
+  "without_access_new": []
+ },
+ "base": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_hbm_su_static_pgslice_lg__pretree/base_kit.lef",
+ "base_sha256": "044e93ecacbbe52b51399abad780a279d50c3b2821409e9815c6c491056c94ea",
+ "bloat_factor": 1,
+ "check_ok": true,
+ "coupling": "NOT_MODELED",
+ "detail": "/srv/opentallas-scratch2/claude/porous-all-1/out/ot_hbm_su_static_pgslice_lg__pretree/detail.lef",
+ "detail_sha256": "d767e82405b426db1a8c5f26ba4e381c672b5ca3e798d4a9b36cc1169e9d1050",
+ "helper_sha256": "9d80447b100761853af9211b69db642ec59df7d2b4fcfd2516cd26fc08ea2442",
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "layers_requested": [
+  "M4",
+  "M5",
+  "M6",
+  "M7"
+ ],
+ "out": "/srv/opentallas-scratch2/claude/porous-all-1/views/ot_hbm_su_static_pgslice_lg__pretree/porous.lef",
+ "out_sha256": "0dacbd23dbffd778164b27f1b92d224beac31962dad67b8e93bbe1e673408c06",
+ "pg_guard_rects": {},
+ "pins": {
+  "match": true,
+  "mismatch": [],
+  "only_base": [],
+  "only_detail": [],
+  "pg_shapes_equal": true,
+  "signal_pins": 1138,
+  "size_base": [
+   164.16,
+   241.92
+  ],
+  "size_detail": [
+   164.16,
+   241.92
+  ]
+ },
+ "problems": [],
+ "rects": {
+  "M4": 108570,
+  "M5": 11350
+ },
+ "source": {
+  "archive": "/archive/opentallas-signed-1106/epyc2",
+  "db_path": "home/ubuntu/scratch-root/claude/ss24/pgslice_kit/run/results/asap7/hbc_ot_hbm_su_static_pgslice_lg__pretree/base/6_final.odb",
+  "odb_sha256": "fb3da6da1071d16250f6af6f3fd3b83ed5861b18222b672e89faa7548d0ed0f8",
+  "origin": "signed store stage (sha-verified)",
+  "store_id": "da8fd266d1a89ceed6d8bebe6e596f4cf4ccf2daf00acce98c27c979648f7d61",
+  "verdict": "SIGNED"
+ },
+ "tool_sha256": "a13099b82cc5718f16daf1fa8cecb99b5887eb5fb112e56dddb64740da1b107b"
+}

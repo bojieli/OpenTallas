@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "n4x_1110",
+ "plan": "d44v_gqi_cp1109_q3vm_smk_n4x",
+ "base": "d44v_gqi_cp1109_q3vm_smk die_plan.json (sha256 a75de57e1e88e9e91412b1f53bd9617c984cc8c8f65f4213dbf1e86bae400f9c)",
+ "source": "plan event n4ext1110 (physical/die_plan/hbm/n4ext_1110, main 4b05fb41165f; COORD 11-10 ruling A)",
+ "lane": "COUNT-ARCHIVE-2",
+ "date": "2026-11-10",
+ "module": "ot_hnx_fused_hub_n4ext",
+ "inst": "root.u_mu_fused_root",
+ "origin_um": [
+  734.4,
+  5503.68
+ ],
+ "outline_um": {
+  "to": [
+   293.76,
+   250.56
+  ],
+  "from": [
+   216.0,
+   207.36
+  ]
+ },
+ "pins_file": "cores/ot_hnx_fused_hub_n4ext__293.76x250.56__n4rf.json",
+ "pins_file_sha256": "c756b86982b8092d261c63ac1c9b70b592b640afdd9c620cb756c79450d72fe1",
+ "pins_moved": 446,
+ "stations": 2,
+ "taps": 1,
+ "clock_entries": 1,
+ "leaves_changed": [
+  "/note",
+  "/partition_types/root/clock/taps[11]/xy[0]",
+  "/partition_types/root/clock/taps[11]/xy[1]",
+  "/partition_types/root/contents[20]/outline_um[0]",
+  "/partition_types/root/contents[20]/outline_um[1]",
+  "/partition_types/root/hard_cores[80]/note",
+  "/partition_types/root/hard_cores[80]/outline_um[0]",
+  "/partition_types/root/hard_cores[80]/outline_um[1]",
+  "/partition_types/root/hard_cores[80]/pins_file",
+  "/partition_types/root/internal_stations[79]/to_um[0]",
+  "/partition_types/root/internal_stations[80]/to_um[0]"
+ ],
+ "plan_sha256": "79b57c3f875d9c38ca4db9ee8bb04ce493e72b58253ac0faa9a2625f72982dd8",
+ "not_changed": "partitions, ports, lanes, every other type and hard core, core_conns/core_macros sidecars"
+}

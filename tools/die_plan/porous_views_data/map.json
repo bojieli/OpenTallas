@@ -1,0 +1,808 @@
+{
+ "dsfd_cfifo_crs4.lef": {
+  "base_sha256": "2274f4fb64feec52861bae446887416e9cb9f73b84d32715930c3dbd9d2b7503",
+  "die": "s81",
+  "file": "dsfd_cfifo_crs4.lef.baed2bbef911.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_cfifo_crs4",
+  "receipt": "dsfd_cfifo_crs4.lef.baed2bbef911.receipt.json",
+  "receipt_sha256": "ab3e1de4cba5d6bd6177aac2ee2ffbe0cc2454c98903dbd3713483236486255e",
+  "sha256": "baed2bbef911338446bbc9aab487078ec8115c15c072b454cb783e386fe52a47",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck13/crs4/crs4_k13A/run/results/asap7/kl_dsfd_cfifo_crs4_cfix4/base/6_final.odb",
+   "odb_sha256": "be76a1e3db98eeabb130e39da5793ae596e08b82adafa2175e8d7995ae17aa09",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "a6e0639ea2a34cb1ff02e8503d6898d17af435ebec12e48dfbb3dfe21df8b068",
+   "verdict": "SIGNED"
+  }
+ },
+ "dsfd_node_NNfd.lef": {
+  "base_sha256": "240fb5cd7c053a7fa2323a3fe0052f712d10636af362aadc57b07e886af21fed",
+  "die": "s81",
+  "file": "dsfd_node_NNfd.lef.fa1a9917c6e4.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_node_NNfd",
+  "receipt": "dsfd_node_NNfd.lef.fa1a9917c6e4.receipt.json",
+  "receipt_sha256": "0f9fcfa4ab646c07ed3d9b3257be06f55eba5c3355359c0f65c98bb7024a22d4",
+  "sha256": "fa1a9917c6e48db21455240e4b341aea4f9820618dd8a5d39145c11f5b2e1ace",
+  "source": {
+   "archive": "-",
+   "db_path": "-",
+   "odb_sha256": "0ba4441bfb4b38c800878ce8d333caf227fd39186e7a548bc506d4d728efd3cb",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "(none: archived autopilot run intel2 autopilot/closed/s81/dsfd_node_NNfd__abcf698a79, signoff PASS 10-27)"
+  }
+ },
+ "dsfd_node_NNfu.lef": {
+  "base_sha256": "f4e0985f2836bdafb992d3954e6424b87fdd97dbdbdedd8d9c62d8667e0851de",
+  "die": "s81",
+  "file": "dsfd_node_NNfu.lef.c226a31af0db.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_node_NNfu",
+  "receipt": "dsfd_node_NNfu.lef.c226a31af0db.receipt.json",
+  "receipt_sha256": "229bd70807b14a1d0469ad81bbdce1b6038c8655f83a078899d33310197213de",
+  "sha256": "c226a31af0db9f3e80c2c306a6e1462f0cc22b305eb17087119b58c272f743fe",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/die-s81-48/nnfu/r1/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb",
+   "odb_sha256": "6a9459a0a974c0fb6d2b84da589efd42041cecf8121bb1ad528efdec566a2eed",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "3e50533987f04881c657aedc644eadc2b57b4265bf74a40ab514e722f1b43a38"
+  }
+ },
+ "dsfd_qbank_N.lef": {
+  "base_sha256": "68732dce65a36221d1b0e6a47bf6ef66c5a2f862af5237137760b4195a74e9fa",
+  "die": "s81",
+  "file": "dsfd_qbank_N.lef.54a739c0c2e2.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_qbank_N",
+  "receipt": "dsfd_qbank_N.lef.54a739c0c2e2.receipt.json",
+  "receipt_sha256": "c87b51c00818ed854f8f0cf723660d1e6fb1c1d3e59af99f214ce396ea13c12a",
+  "sha256": "54a739c0c2e2ba75069123236577f6886043bcf696d4c713685341c3f8e4c2a6",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13B/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb",
+   "odb_sha256": "7c9b7c86b8e8996a5a41bb1fb35c34e68a22ee40ec97ab932e064a8a635ad247",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "045c83c5362683d4b4d06d6457097d0735e6e9dd74be388dd891066c457d494e"
+  }
+ },
+ "dsfd_qbank_S.lef": {
+  "base_sha256": "31134d920412b76acd31f36b6195237e6667d5bec854621b5dc32043a37c7035",
+  "die": "s81",
+  "file": "dsfd_qbank_S.lef.41e2db4f211b.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_qbank_S",
+  "receipt": "dsfd_qbank_S.lef.41e2db4f211b.receipt.json",
+  "receipt_sha256": "1d906270b88d0d3ca65615ab5be5f7acc37146731e1640a8f0fb5baa3f2b4d9b",
+  "sha256": "41e2db4f211b3203cbadbba31b872e5825ebccf6853d48a0b4aee66ccdf396c5",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/die-s81-50/nparent/qbank_S/eco_m0b/i1/run/results/asap7/kl_dsfd_qbank_S_cqS20/base/6_final.odb",
+   "odb_sha256": "9449f1c8154a2d7a29d7b242651aef891deeec036ef640df25edd02baae3848b",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "ce8483bc7e8475cd9d2931e343d50778181bd9ea1a3845dec59239967430b63c"
+  }
+ },
+ "dsfd_rstg.lef": {
+  "base_sha256": "9c458cd0efdb8dee1215855023866a932a82952aba9da49b7c3c1e96be272a2e",
+  "die": "s81",
+  "file": "dsfd_rstg.lef.8604ebac86a6.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_rstg",
+  "receipt": "dsfd_rstg.lef.8604ebac86a6.receipt.json",
+  "receipt_sha256": "10f82be3e08a3056d62006a07f97d7020e3c6947922fb10bf13d5548652f122e",
+  "sha256": "8604ebac86a6e875eedb5b89746a1586eb269168c27fd694d0d1319579356d71",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb",
+   "odb_sha256": "4491a8aa8e79cc53b6a721631992cd5634305ae5d36ae6c1108d73cb8d1f17e5",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "48ce559aaf7e46e8189d05975a8d7d94543ee209ece17d767aea5fba1ca8ba0a",
+   "verdict": "SIGNED"
+  }
+ },
+ "dsfd_su_t_rxsf.lef": {
+  "base_sha256": "cc7807bcc48b63551e8dc2610b043271188bb4edb8522cc4b82e0b88859431b4",
+  "die": "s81",
+  "file": "dsfd_su_t_rxsf.lef.9553b026e457.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "dsfd_su_t_rxsf",
+  "receipt": "dsfd_su_t_rxsf.lef.9553b026e457.receipt.json",
+  "receipt_sha256": "a6e3f4f273edaca5b0b7dfdf0bec1a06f196b6f77446b80e3c8c9ed5c76d4fd7",
+  "sha256": "9553b026e45748d732e90b7b7ad156e41c59c7ca2999ba8742d18d8f72f99e05",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck13/rxsf/rxsf_k13_t40/run/results/asap7/kl_dsfd_su_t_rxsf_r1t/base/6_final.odb",
+   "odb_sha256": "fd8a6e2aea5ef7b4c0af90fa8e6de586d5ec9e68ed6cad01ced77f5f0a25d934",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "74a3ba103088e5c3094e383001c447b6a4189ccea6f434e20e800af63fd6d76d"
+  }
+ },
+ "hfd_ep_host_vc.lef": {
+  "base_sha256": "1163192a84fb79292379ea77790903b424f48c604caae091fe733014192aa9dc",
+  "die": "hbm",
+  "file": "hfd_ep_host_vc.lef.c3423f1b647f.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "hfd_ep_host_vc",
+  "receipt": "hfd_ep_host_vc.lef.c3423f1b647f.receipt.json",
+  "receipt_sha256": "ae3d3c0e76dca7bdeea3454f9d231643213e9730a3c06fda7352c0f9968b33c0",
+  "sha256": "c3423f1b647fd5540be9571e59ade3a250f806cd978374860434db2a1212c52e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc6",
+   "db_path": "srv/opentallas-scratch3/claude/hbm-hard-7/ephost_A3_eco/eco1/i1/run/results/asap7/hbc_hfd_ep_host_vc/base/6_final.odb",
+   "odb_sha256": "a93c98134d1f14d67d1861dd1545bd5989c2f44b654f926c280a3538e2fe0418",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "823427120b87e64ebb64f9a630949cd3e50306ec2b7f2726d7cfc908da56fff2",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT"
+  }
+ },
+ "hfd_ep_static_vc2.lef": {
+  "base_sha256": "1ff1b9f79e0cca0e6c88fa570b2c8a8263be317ca408073d276445a92b8d6790",
+  "die": "hbm",
+  "file": "hfd_ep_static_vc2.lef.7bdce3ee583d.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "hfd_ep_static_vc2",
+  "receipt": "hfd_ep_static_vc2.lef.7bdce3ee583d.receipt.json",
+  "receipt_sha256": "d9783abe6c335222b3e2a225760a5c501c7211606f5ed031f03ed8f37e878f38",
+  "sha256": "7bdce3ee583d48fc73b3a776873708ae380ad676fbc38052f7caf98c7e512c23",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc6",
+   "db_path": "srv/opentallas-scratch3/claude/hbm-hard-7/vc2_eco/eco1/i1/run/results/asap7/hbc_hfd_ep_static_vc2/base/6_final.odb",
+   "odb_sha256": "55a58a4b77457ac8dafa5ca37582958d8edfcf79b5541c427bb92029c4b04008",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "7bbbf36fe41b40ff485722684b02b5444a977550b85447e8f43b14cc9277a478",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT"
+  }
+ },
+ "kv3_pv_pair.lef": {
+  "base_sha256": "25ada09fdd3be06646804a725d7d828bf962fdc92e2f6c5458c1f2f1d7c2fa39",
+  "die": "qwen_kvsys",
+  "file": "kv3_pv_pair.lef.72b87f89bbad.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "module": "kv3_pv_pair",
+  "receipt": "kv3_pv_pair.lef.72b87f89bbad.receipt.json",
+  "receipt_sha256": "30d8ee1b7afad12e0d4226b9d5e84adfb98fd7c5c6eff68a0e1ef9a72779d186",
+  "sha256": "72b87f89bbad91674b4e1b0eba1849ff744278639079dcc4d523eb406090545a",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/die-kv-49/pv/kit/run/results/asap7/hc_kv3_pv_pair__380_16x190_08_fMX/base/6_final.odb",
+   "odb_sha256": "5361273f29fd1f66161b85d9237553dfa9053d12492cb807d2771d5f98cb29c2",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "f5bfe35ecda046695336a41f6c0964a5b0a0b04d7a6c9f84340551beb2637a98",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_dsrom_su_hcpost_lane_pr.lef": {
+  "base_sha256": "6d30752d8cca3bd70a5f045cf5327ca4c2bc083cf3b21776251640b7e88764ec",
+  "die": "s81",
+  "file": "ot_dsrom_su_hcpost_lane_pr.lef.3c1a07302d62.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_dsrom_su_hcpost_lane_pr",
+  "receipt": "ot_dsrom_su_hcpost_lane_pr.lef.3c1a07302d62.receipt.json",
+  "receipt_sha256": "740a9319ec6c59fb9a2cd219b2743011f6016855f43d2ab423b52e15a3b316d1",
+  "sha256": "3c1a07302d626f275366386daf9bd9bb046c539802badcd4724de0b39d0e76ef",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base/6_final.odb",
+   "odb_sha256": "ae9461d88bbb9cee88f01c74f3a1c0bf5fe5e130245dc7830a43b1689a249e44",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "893ee1a20e6303f96acffb49f9728f0f727cf6dba27c37061c323eb6d4d044cd"
+  }
+ },
+ "ot_hbm_su_pg_lane1_core.lef": {
+  "base_sha256": "5154e6236b9c1786e755942d7237da9ca2634cf5ccb9bb18144e749517101dc1",
+  "die": "hbm",
+  "file": "ot_hbm_su_pg_lane1_core.lef.e83d48b1a58a.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_hbm_su_pg_lane1_core",
+  "receipt": "ot_hbm_su_pg_lane1_core.lef.e83d48b1a58a.receipt.json",
+  "receipt_sha256": "88cabeec2c3198961858ebdd478224f98f0fc105bb7dd3aae65415b927bd468e",
+  "sha256": "e83d48b1a58af39a182ce6f49cbf3dc6d94788b7cd6dadc3aa9c666a41875788",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch3/claude/hbm-form-timing/eco/l1r5/run/i3/run/results/asap7/hbc_ot_hbm_su_pg_lane1_core/base/6_final.odb",
+   "odb_sha256": "3b717c4bceb6aebaec1f1fbdd08ccb6f20de130de6218e284aa92ee86a23dfb1",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "f0fe213bbd6e2a5f70d71b0d3d9da87b8caab9d7a618187514c06d65d6dfc592",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_hbm_su_static_pgslice_lg__pretree.lef": {
+  "base_sha256": "044e93ecacbbe52b51399abad780a279d50c3b2821409e9815c6c491056c94ea",
+  "die": "hbm",
+  "file": "ot_hbm_su_static_pgslice_lg__pretree.lef.0dacbd23dbff.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_hbm_su_static_pgslice_lg__pretree",
+  "receipt": "ot_hbm_su_static_pgslice_lg__pretree.lef.0dacbd23dbff.receipt.json",
+  "receipt_sha256": "4f8f9846b7f06a90a1a77b8f8935394fd5cb38cfb09b7f5fced652ac4f947f51",
+  "sha256": "0dacbd23dbffd778164b27f1b92d224beac31962dad67b8e93bbe1e673408c06",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "home/ubuntu/scratch-root/claude/ss24/pgslice_kit/run/results/asap7/hbc_ot_hbm_su_static_pgslice_lg__pretree/base/6_final.odb",
+   "odb_sha256": "fb3da6da1071d16250f6af6f3fd3b83ed5861b18222b672e89faa7548d0ed0f8",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "da8fd266d1a89ceed6d8bebe6e596f4cf4ccf2daf00acce98c27c979648f7d61",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_hbm_svc_sm_xcal_rel_t.lef": {
+  "base_sha256": "24b7acfba572b0c2d31466f7edbc0b5e9a2f29c1dade232d9f805c98b4472073",
+  "die": "hbm",
+  "file": "ot_hbm_svc_sm_xcal_rel_t.lef.40007252cf1b.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_hbm_svc_sm_xcal_rel_t",
+  "receipt": "ot_hbm_svc_sm_xcal_rel_t.lef.40007252cf1b.receipt.json",
+  "receipt_sha256": "34d1727fdea25fb02982121e75515fb39ec05f84146b0a9bedcde9125ebe88ca",
+  "sha256": "40007252cf1b216083b39c0d846434551a3f208c013d92a89b5bdc858f908062",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal_view/i1/run/results/asap7/hbc_ot_hbm_svc_sm_xcal_rel_t/base/6_final.odb",
+   "odb_sha256": "8c44a15eb4c86c38fc5274dd76a64b637ec009cd40b0e0764ad060de3ad9c956",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "83878e9b3b8802dc3fb7742102b2e684be632276f8883e4e84f92c01b645a475",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_pdie_serdes_rx_bm_native.lef": {
+  "base_sha256": "39758e44687976d93dc9893dc307b34f1a8b162315d8eb448dfdd820ed5861de",
+  "die": "hbm",
+  "file": "ot_pdie_serdes_rx_bm_native.lef.a65177902681.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_pdie_serdes_rx_bm_native",
+  "receipt": "ot_pdie_serdes_rx_bm_native.lef.a65177902681.receipt.json",
+  "receipt_sha256": "1286b16a2568357118be092cf53368363b9151187dff31716043549f619f5d35",
+  "sha256": "a651779026813df7e762d8b4ba0494e1404a59d96207f0f0e0723e03f41e8c3e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch3/claude/hbm-gaps-7/rxgen/kits/ot_pdie_serdes_rx_bm_native_cefde5fe417d-vB/eco_hg7/i2/run/results/asap7/hbc_ot_pdie_serdes_rx_bm_native/base/6_final.odb",
+   "odb_sha256": "ae12dd6b493b1e5cbc6a37f44ed3cf79a31a69c261f9141098ca31aeca154c83",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "6b1a821351392ed664e2009b422b2262708a2c688968316742a2e50638afcb03",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_pdie_serdes_tx.lef": {
+  "base_sha256": "a2c0cbf61130b79c035ad716999a63b474e7b465838be4054b664dc966f34c0e",
+  "die": "hbm",
+  "file": "ot_pdie_serdes_tx.lef.f98d2e845f91.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "ot_pdie_serdes_tx",
+  "receipt": "ot_pdie_serdes_tx.lef.f98d2e845f91.receipt.json",
+  "receipt_sha256": "fb6913fec7b8a00d2b89263a0f50475330d2ab91a71159beb976b468db8f753c",
+  "sha256": "f98d2e845f91d1e4a4da285724ac8d552323733ab12a14d96388da5b6708b79a",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch2/claude/hbm-gaps-9/txff/ot_pdie_serdes_tx_c77a41179db8-FF-i3/eco_hg9/i1/run/results/asap7/hbc_ot_pdie_serdes_tx/base/6_final.odb",
+   "odb_sha256": "c8e36705342e3bbd3439181e0ff74be9660e782b4689a42dbc7ab675a9b2d865",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "f6fdb3af9e4514a38301b0acd1ea9d3c00cbc5dc989c5cf2771d3601e7bdf9ae",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_qwen_tp8_pv_join_t.lef": {
+  "base_sha256": "dd2dfba96f1989dd9381274a92e885b312b490fa7c5d7586d8796f49d0dd34a0",
+  "die": "qwen_kvsys",
+  "file": "ot_qwen_tp8_pv_join_t.lef.c1d193b5cde7.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_qwen_tp8_pv_join_t",
+  "receipt": "ot_qwen_tp8_pv_join_t.lef.c1d193b5cde7.receipt.json",
+  "receipt_sha256": "adf598b47e4356d3b26fcb8028264c07e2f2de9e729dd17c18ced838fbd33cd2",
+  "sha256": "c1d193b5cde77dd84dcea9a68f086ab884f5e6c4e8e542c2994233bde3856563",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "home/ubuntu/scratch-root/claude/dkv61/pvjoin/R0_A/prd_w60_p2/run/results/asap7/hc_ot_qwen_tp8_pv_join_t__172_8x172_8/base/6_final.odb",
+   "odb_sha256": "ceda73b2ce306242fb26a3f230863561f0a4680677e905a911b1fcb1960be3d7",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "ce849299a035d91f3691c6372d0e4cb7828bd1b093ff005c9ab31bf16fe74249",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_s81_cfg7_seq.lef": {
+  "base_sha256": "1e03ff7754b9f61a1bb9e35fb1773369280f5111ab51b43924c3dfa1af3917bd",
+  "die": "s81",
+  "file": "ot_s81_cfg7_seq.lef.845124f5722b.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81_cfg7_seq",
+  "receipt": "ot_s81_cfg7_seq.lef.845124f5722b.receipt.json",
+  "receipt_sha256": "c07c3421d627c749c47c73da34e93d460a3d23e24852943ac60529cd532bbb23",
+  "sha256": "845124f5722b34bac66fc5e1a0f02d57949debd487f78a79d3c56ce7d3c5acc3",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/ot_s81_cfg7_seq_cs7/run/results/asap7/kl_ot_s81_cfg7_seq_cs7/base/6_final.odb",
+   "odb_sha256": "89af798af04d01b0ada98fabec366aff967fe04d3f3d559f567693b118d9d389",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "d166824df8b2bc8256f89c51a8499e7b74f88da07afdf9fa6d7def6f002ff26c"
+  }
+ },
+ "ot_s81_cfg7_seq_bfp.lef": {
+  "base_sha256": "a9190358baf97bb53a865e9340f7a231feb59668c9f96750cfd1f1469fe59a49",
+  "die": "s81",
+  "file": "ot_s81_cfg7_seq_bfp.lef.e5fe932b021e.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81_cfg7_seq_bfp",
+  "receipt": "ot_s81_cfg7_seq_bfp.lef.e5fe932b021e.receipt.json",
+  "receipt_sha256": "9e52756ea79fb215ceb41bc76cc9bb734033c8825fbcb74e0276ba1b683d73bd",
+  "sha256": "e5fe932b021e43e57d14d088294a076340f9adbdccb559a08c27118276c7011e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/die-s81-51/sign/cfg7_seq_bfp/kitR/run/results/asap7/kl_ot_s81_cfg7_seq_bfp_g49/base/6_final.odb",
+   "odb_sha256": "ba6f142adeaaa0e64e5348c8551aefbe4ecfdd51600d1c3e93ae00736ba2bfa1",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "d8e7d12fc05ef5fc3febf524449220394cedb0c2ab36eda79522a86c61e916c6"
+  }
+ },
+ "ot_s81_kp4_dchn.lef": {
+  "base_sha256": "16155b5365b05f92666d964fd5e3a05c26cc5855bcb6d6ce9207bc27b6974ddb",
+  "die": "hbm,s81",
+  "file": "ot_s81_kp4_dchn.lef.023cf5b24821.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81_kp4_dchn",
+  "receipt": "ot_s81_kp4_dchn.lef.023cf5b24821.receipt.json",
+  "receipt_sha256": "35fd096416c94c97f9fd90513b82bbc46000076ab14369461f75c159c4496d46",
+  "sha256": "023cf5b248216c1f623f6de1bc5c4d91dd92978f99f5a8c26af4785cd7ee2f6c",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/head-serdes-2/e13a/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.odb",
+   "odb_sha256": "3afdd80f74adcaa464c8a2b848c81c49f1cb1e58812e61c19644945c2ca5e4e6",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "7904569fa0c3591d93cc68218998b55355f9606466778f8af41c50dbb454705c",
+   "verdict": "SIGNED"
+  }
+ },
+ "ot_s81_sstn_base566.lef": {
+  "base_sha256": "99e0e97ed11347542a8ed9b9dda1a1589d2c34aa71abb8a8a9e3953fbdcb28e1",
+  "die": "s81",
+  "file": "ot_s81_sstn_base566.lef.07ce518d3a4e.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81_sstn_base566",
+  "receipt": "ot_s81_sstn_base566.lef.07ce518d3a4e.receipt.json",
+  "receipt_sha256": "8d5d3b45055d082afdef74c14a8138e00909d2540777ab5544013ba5b9fb9aee",
+  "sha256": "07ce518d3a4e8cf79374e15fd55b6aa4bf7423bd6b8d0060ea9a8d0bd367a73c",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/die-s81-50/nparent/sstn_base566/eco_m0/i3/run/results/asap7/kl_ot_s81_sstn_base566_bodyA/base/6_final.odb",
+   "odb_sha256": "f13e2df909f5f71ceaa6ee667e2e0f619d425ea9297efb0f9a4b1e2603c4d771",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "93d5f534ad41eea6ee2d111c21a23984ea585f7dc1cd62b460987f52a5129597"
+  }
+ },
+ "ot_s81_sstn_payload536.lef": {
+  "base_sha256": "5c14147f7d851126987c5a03532880a00070159f6655ad7b49b8b49aaff78381",
+  "die": "s81",
+  "file": "ot_s81_sstn_payload536.lef.0122d70d2318.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81_sstn_payload536",
+  "receipt": "ot_s81_sstn_payload536.lef.0122d70d2318.receipt.json",
+  "receipt_sha256": "a4c1b7c15d8617e6329ba6dc665cf2fd2042844c3a8750e88f740548d0cac7ac",
+  "sha256": "0122d70d23187e30b31559b60ba4e6fa5467b79b0025e44e9c7f649c44d6e1c5",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_e1027/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb",
+   "odb_sha256": "4508bc7cafa28ae278bef594493cf29aeee9f196771d4e31e1a3870cab88e679",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "143e8a50bfe5a9d20ddc93087fd9bf83e94249e9b979d63715071c512e877fe4"
+  }
+ },
+ "ot_s81sl_ve_m_tpl.lef": {
+  "base_sha256": "d1253ccf988540e8ce501c584d745ebbb26de483e6fae81e03610bafa31da2b8",
+  "die": "s81",
+  "file": "ot_s81sl_ve_m_tpl.lef.898dbc4012a2.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_ve_m",
+  "receipt": "ot_s81sl_ve_m_tpl.lef.898dbc4012a2.receipt.json",
+  "receipt_sha256": "4c103e6a45018f2d5ef1e122d98b2bb1ab31b8e24843351123f46fab0a507d41",
+  "sha256": "898dbc4012a28890b1bc074c0270f0f99641ac3ce28271860b73bc06b7a09f0e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m_hxh/run/results/asap7/kl_ot_s81sl_ve_m_rt22/base/6_final.odb",
+   "odb_sha256": "2e13f623b612f5ba9598ac806206cdfdf325c27c871a6de596a820c2183c3505",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "1d20e3ba3151cf94d1f45f5f41cdfa9cc46851b76aaec624e64aa88c48bb1eb9"
+  }
+ },
+ "ot_s81sl_ve_s_tpl_w1728.lef": {
+  "base_sha256": "76b41f3caf7cd698b56b8a7a5544ffc19b3585123a8a7f2983ad1277b9388304",
+  "die": "s81",
+  "file": "ot_s81sl_ve_s_tpl_w1728.lef.031db56f6477.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_ve_s",
+  "receipt": "ot_s81sl_ve_s_tpl_w1728.lef.031db56f6477.receipt.json",
+  "receipt_sha256": "1bc10132ea6947303d1125fba6e5dd598ace2f29fc7e5866dd963fd6c6d1f1ae",
+  "sha256": "031db56f6477b3edc01a4af748e3c9157d384c7f7a0fd66bea1c13216123d76c",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/ss21-resign/ves_eco/i1/run/results/asap7/kl_ot_s81sl_ve_s_cw1728/base/6_final.odb",
+   "odb_sha256": "cb9be51d939d5be99af44de23b52ac13b1352e860358b4f4a8abad4a24b67cb5",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "0648c3e9a7fd3a2caf1d782ad22182afa351ff6ce14a0f88e86f7679d43de1a2"
+  }
+ },
+ "ot_s81sl_vn_a_tpl.lef": {
+  "base_sha256": "7e1999201817af45e0c1e4071c0f0598527ee9562a506d34fec810768845e204",
+  "die": "s81",
+  "file": "ot_s81sl_vn_a_tpl.lef.8e14f07bd78d.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_vn_a",
+  "receipt": "ot_s81sl_vn_a_tpl.lef.8e14f07bd78d.receipt.json",
+  "receipt_sha256": "50a236dc208380d14f5b8bfaacc4d34082a58c74caa4ffe16a22de9fe8012af9",
+  "sha256": "8e14f07bd78ddb2b6ef5026a684a0dc96e3861da914848f8387b438150543c00",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_a_rt22p_hxh2/run/results/asap7/kl_ot_s81sl_vn_a_rt22/base/6_final.odb",
+   "odb_sha256": "3dd80461ccd502d2b039ef1092ba84a8b3d94790d711b1902d9a569ba9030e53",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "e12164f7de31a2bbb8a24d0c7c40352a5d107fc68481232e55ded8f84f499573"
+  }
+ },
+ "ot_s81sl_vn_b_tpl.lef": {
+  "base_sha256": "866dd8bcfc9356653d65607fd90c899831d12277056dbe698b63ceaf3a4f8956",
+  "die": "s81",
+  "file": "ot_s81sl_vn_b_tpl.lef.784caf86a0ea.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_vn_b",
+  "receipt": "ot_s81sl_vn_b_tpl.lef.784caf86a0ea.receipt.json",
+  "receipt_sha256": "92e602203e0210baa962229cfcd2d4d718854dfc6b56ecc1ebdf1b6073ec644e",
+  "sha256": "784caf86a0ea21eaf3e8eec0fe97e4fccae61a6b5c40fdb47275f5002347965e",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh/run/results/asap7/kl_ot_s81sl_vn_b_rt22/base/6_final.odb",
+   "odb_sha256": "5f7472e812915fd747edc29a7709b2eea1c6e3941f0cd2633a0d047fec0bbcb9",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "ccd2dd5718ef580305e61f876e09fc4053b50fc84c9f1d5cc27ea4ac68b610ef"
+  }
+ },
+ "ot_s81sl_vq_tpl.lef": {
+  "base_sha256": "7f2c6cb19dd5f31d770cfd87563600823a0cabc198dd6760d6c05241d0c6e172",
+  "die": "s81",
+  "file": "ot_s81sl_vq_tpl.lef.ce8fc290f255.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_vq",
+  "receipt": "ot_s81sl_vq_tpl.lef.ce8fc290f255.receipt.json",
+  "receipt_sha256": "973411f6e42632a1fbf5518894c001e4f6601396f3e4568bac523a67efb486dc",
+  "sha256": "ce8fc290f255efdff49173d9739105f5f343ef4e947d31c18362226104c9a201",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3/run/results/asap7/kl_ot_s81sl_vq_rt6/base/6_final.odb",
+   "odb_sha256": "9e4df6ba54ba9220f59a4c60b856aa1d3aebfa9fc98c7b062b2fe69b5169fe45",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "7b85e57567b6452212da06158eb3f4cd6e10a3b231eb26ba85744c47c51cb99d"
+  }
+ },
+ "ot_s81sl_vs.lef": {
+  "base_sha256": "95545c1475d73d0da43f0bdbd20fbf461a75915b92688e5c854fc5ebf53104e7",
+  "die": "s81",
+  "file": "ot_s81sl_vs.lef.e0eadd50b9ab.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_vs",
+  "receipt": "ot_s81sl_vs.lef.e0eadd50b9ab.receipt.json",
+  "receipt_sha256": "7c8c2682d118999c19ee8a4e88f074e3a08801766aa7eb5f53f00bc726e9544e",
+  "sha256": "e0eadd50b9ab8cc59d8b1db265b1d5c8b124d721a90e7048d302796ca45574d1",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/ss32/resign/kit_vs5/run/results/asap7/kl_ot_s81sl_vs_rf1s/base/6_final.odb",
+   "odb_sha256": "812b98c5fe770eb5d3af4df1775068771b4f253d83d5a9c8f5010ffda3b15a8e",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "13ba73e418fcfe120076193786db2606c660ef49cbfd99d4cbf1388ffc610464"
+  }
+ },
+ "ot_s81sl_vsw_tpl.lef": {
+  "base_sha256": "1d76f8c9bc4cd1a7003f2665d4b45436fd0a89437573dfe30a459a252df1f005",
+  "die": "s81",
+  "file": "ot_s81sl_vsw_tpl.lef.e6ce5c6e0ab9.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_s81sl_vsw",
+  "receipt": "ot_s81sl_vsw_tpl.lef.e6ce5c6e0ab9.receipt.json",
+  "receipt_sha256": "f06f72351c70d8ae82ae65090a118362b9408168fcaa76825f0c2b9694e3dcec",
+  "sha256": "e6ce5c6e0ab9ab7b81366a3a3311588c93a76a08664783aba1565327f24829f1",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/codex-s81-vsw-2302/eco/i1/run/results/asap7/kl_ot_s81sl_vsw_cvB/base/6_final.odb",
+   "odb_sha256": "1b153a66d6971fdb5acb6d36cf6bdc2a1a0fe7a141160c20f3763a3f51b6ce75",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "3a104b1cc7102cd5ffcb7c6e7f1ada24a7f40f261c09bb9dfae15729acab8a3d"
+  }
+ },
+ "ot_v41_bf16_half.lef": {
+  "base_sha256": "ee99b0590ce67acfe1a3d046bac34c1beb5a04dc42c33396341ab8e2bc7f2464",
+  "die": "s81",
+  "file": "ot_v41_bf16_half.lef.8f4ec85f24d9.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_v41_bf16_half",
+  "receipt": "ot_v41_bf16_half.lef.8f4ec85f24d9.receipt.json",
+  "receipt_sha256": "547518bda14cfd2379b3bbdb9023faf92b587e8229e56964f7a843f81b419a00",
+  "sha256": "8f4ec85f24d9cd9bec950a4c99917b90caf1347b860d93c3aa56e616a099fc64",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch2/claude/ss29/resign/kit_half/run/results/asap7/kl_ot_v41_bf16_half_rfh6/base/6_final.odb",
+   "odb_sha256": "3f6755b8bc626a24ec5ce3cf7a1c7572dfb9f24160d63e86d5b565c4a9d4aa37",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "c5184cdd9580f850019bc2325f2d4fec78da5c2bc6e01ccc8f5a4d60358dccbd"
+  }
+ },
+ "ot_v41_bf_col3_c.lef": {
+  "base_sha256": "e4d242448770775b961e69ebac8449f17887f9420e2e8ddbaec992653c0227cd",
+  "die": "s81",
+  "file": "ot_v41_bf_col3_c.lef.ef7d9e7206dd.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6"
+  ],
+  "module": "ot_v41_bf_col3_c",
+  "receipt": "ot_v41_bf_col3_c.lef.ef7d9e7206dd.receipt.json",
+  "receipt_sha256": "340de3ae2e3d30e6f6bf5a844212385382666bfb0c97ec504198150f44e25f95",
+  "sha256": "ef7d9e7206dd2bac2ddfead023c9cae9eeee7e8120250c91a4fbc6697be642f5",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch2/claude/die-s81-56/eco/run/col3c6/i1/run/results/asap7/kl_ot_v41_bf_col3_c_rfh6/base/6_final.odb",
+   "odb_sha256": "9228721635f516867f592fc7ef8878d56432b5356622d938bca4cf77b62803e3",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "08ba12e024c9301fb24830a699c40fa3b87840e11e3a6212e2ea92ca45172527"
+  }
+ },
+ "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef": {
+  "base_sha256": "2b6de51c97b5f915c861950b0d207ad9a4eb28b16259b4ec0667154ab15e09a7",
+  "die": "s81",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.c01fcad181df.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_v41_rom_elem_q_qxpq_w10_gb_he",
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.c01fcad181df.receipt.json",
+  "receipt_sha256": "64700e5066ef86cb85592141bbff3ecded6531413b16433f94c249673de518c5",
+  "sha256": "c01fcad181df95991993a8b5a8032f810353e95b2dbb9107cef6581e6c073539",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc5",
+   "db_path": "srv/opentallas-scratch3/claude/s81-romq-b4/he_tgt/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_he_vB/base/6_final.odb",
+   "odb_sha256": "8096babd0bb2994f3fb320b62a6c181c08cc048103e9ae0284f0cd4d660f51ce",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "1e98435529d2d4756d2b86e87732fd34dbb86c1304cc8a520fcece7bd60d3897"
+  }
+ },
+ "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef": {
+  "base_sha256": "996bfbfe9fcf3e5187858478efb7972b1e00c4e75ee66107dfdca6c54a52b3b6",
+  "die": "s81",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.6323241b635b.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "ot_v41_rom_elem_q_qxpq_w10_gb_hw",
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.6323241b635b.receipt.json",
+  "receipt_sha256": "4d2325cfca8bb9892d8c1d03783c507686b9f8f13d2b1addc45812d33c14fe96",
+  "sha256": "6323241b635bbecb611fc2097595c2de084066bb9bea228633a44d9ce6e41040",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc5",
+   "db_path": "srv/opentallas-scratch2/claude/s81-romq-b5/hw_x8/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_hw_vB/base/6_final.odb",
+   "odb_sha256": "45250970cbb500f0127da86ec8133545988aa7c78fe7da9401cf50c643bfd8cf",
+   "origin": "DS85-HCA export (epyc2 die-s81-85/hcabs)",
+   "store_id": "62644f7ff97fc052a264bd982f2087f2535f80e7de6fff46029659fd4eadbe67"
+  }
+ },
+ "qfd_dv_s5_red2_leaf.lef": {
+  "base_sha256": "22f446d2ea27f728084dadd6bc9ff13e6614c7dfb4dd3bf6ec78e56445f62cf0",
+  "die": "qwen_compute",
+  "file": "qfd_dv_s5_red2_leaf.lef.17fa801f9ca7.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "qfd_dv_s5_red2_leaf",
+  "receipt": "qfd_dv_s5_red2_leaf.lef.17fa801f9ca7.receipt.json",
+  "receipt_sha256": "5ea070b248a800184e9a0bfb8c88b13b70e20ae6c23cf64a5ed237b1b8cd1c7b",
+  "sha256": "17fa801f9ca7a4089afbae6c32490d0a467b053d395e5eed9dc7b159c80bf6e9",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "home/ubuntu/scratch-root/claude/dq67-red/eco3/i1/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/6_final.odb",
+   "odb_sha256": "468d77ec169eb744814f992998759b8fc76b6dfdc67ea88a53af33f4a43e9d1b",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "1122586a813b7e1f425c72d3c20fc285228186005c33a254df47b9b4e1612255",
+   "verdict": "SIGNED"
+  }
+ },
+ "qfd_dv_s5_sc2_leaf.lef": {
+  "base_sha256": "7a90ce8f7fc2f1b5ce51303467380693734256d5b563e576e5c6be08c202e425",
+  "die": "qwen_compute",
+  "file": "qfd_dv_s5_sc2_leaf.lef.f7750fcec47f.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "qfd_dv_s5_sc2_leaf",
+  "receipt": "qfd_dv_s5_sc2_leaf.lef.f7750fcec47f.receipt.json",
+  "receipt_sha256": "b92f1c504e5c53fec52bc1fb15b848d32a29f132ada96b91c4a51306caca4c70",
+  "sha256": "f7750fcec47ff009a2067e94c8cccf5215c4e6983bb3fb369dda93564162fe42",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc4",
+   "db_path": "srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_hab5fca/base/6_final.odb",
+   "odb_sha256": "09dbfae5cdcdea83dc2a30840efe6946e73ef942367231dee3bb2723c8402137",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "5a101fddc5a85a3c93dab9fe578379834ce1829bf579284addff18550d8d5cf5",
+   "verdict": "SIGNED"
+  }
+ },
+ "qfd_dv_s5_su8_rst3.lef": {
+  "base_sha256": "e56fadd2a9e778b425757ae897bf5de8c4b13bf8e83c94e610a1e3b7f24f4db4",
+  "die": "qwen_compute",
+  "file": "qfd_dv_s5_su8_rst3.lef.3ee214684e82.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "qfd_dv_s5_su8_rst3",
+  "receipt": "qfd_dv_s5_su8_rst3.lef.3ee214684e82.receipt.json",
+  "receipt_sha256": "4a05112b9c976d75cebc303e99831a3d0ce24caaa0d769938e872557d96615d3",
+  "sha256": "3ee214684e821c0276d1175ae431e590f9365ebcab762242aaef568fba817602",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel1",
+   "db_path": "srv/opentallas-scratch/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/kit_recon/run/results/asap7/kq_qfd_dv_s5_su8_rst3_c/base/6_final.odb",
+   "odb_sha256": "db3f2140b67266e0388b969bc45c8336b0cbe91f623def4a76d3939c69f2a7bd",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "429b350f9cd289a3deb5499b5a2ae6d8bb62c47ce7a7edf15756189d0c94e231",
+   "verdict": "SIGNED"
+  }
+ },
+ "qfd_dv_s8x_btab.lef": {
+  "base_sha256": "1e5397eedc8b9fb1522f2891616041e6b6e1e87a1fe160d553097e4de8903d51",
+  "die": "qwen_compute",
+  "file": "qfd_dv_s8x_btab.lef.709c193acf59.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "qfd_dv_s8x_btab",
+  "receipt": "qfd_dv_s8x_btab.lef.709c193acf59.receipt.json",
+  "receipt_sha256": "8aa414880a3c43cc58f05185a3fb04ef70967263b7bc421b6b377d3fc3d8f9f1",
+  "sha256": "709c193acf59d02d9a9aca5205df700286e4fcc9dbf1186146212893233de076",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/run/results/asap7/codex_btab_mif1_1847/base/6_final.odb",
+   "odb_sha256": "f2c8b17e1677571034859b26ba1b09cf8c8f66ce00e4a4cf29201270b29a94b0",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "7c72774ca3ae7f4da047d90a63254e7122cc961893a7c813ab8718a411f2c579",
+   "verdict": "SIGNED"
+  }
+ },
+ "qfd_dv_s8x_prog.lef": {
+  "base_sha256": "dec688ca053e04ce230c5eb1227a901e05fea673d2f2d3c815c499d3dcb40a85",
+  "die": "qwen_compute",
+  "file": "qfd_dv_s8x_prog.lef.88fc9ddfcd50.gz",
+  "layers": [
+   "M4",
+   "M5"
+  ],
+  "module": "qfd_dv_s8x_prog",
+  "receipt": "qfd_dv_s8x_prog.lef.88fc9ddfcd50.receipt.json",
+  "receipt_sha256": "47e45a32dd16b12840c3c2e8ec13259ea0c8dd2be82f886b3518d410f108f7eb",
+  "sha256": "88fc9ddfcd5076f48465e2221876d6ae0ea29933980bd0fb0c7ab00c79110af6",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/intel2",
+   "db_path": "srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb",
+   "odb_sha256": "66fba74578449eb3eb3fe47f5270ab18a4664b99ce5f4fa760977144dc0a5527",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "1756e1285b37167c54c5de4a004a6d406441d76ec5f3c0c456421eb159dbafda",
+   "verdict": "SIGNED"
+  }
+ },
+ "qfd_tile_nl_a0c.lef": {
+  "base_sha256": "f1befcbbb9693ca99e6ec0d371d57ab59d6c854045f17d955b5da5e64cd3dc90",
+  "die": "qwen_compute",
+  "file": "qfd_tile_nl_a0c.lef.c17828597581.gz",
+  "layers": [
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "module": "qfd_tile_nl_a0c",
+  "receipt": "qfd_tile_nl_a0c.lef.c17828597581.receipt.json",
+  "receipt_sha256": "9afada63e4e1cdee670a7d8b096c04fe837d37ff8deda9f6d5708a1c88bf43d8",
+  "sha256": "c17828597581ec69da51201e86a92fd7c52b563e5ff49c2733959118690bb15d",
+  "source": {
+   "archive": "/archive/opentallas-signed-1106/epyc2",
+   "db_path": "srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1/run/results/asap7/kq_qfd_tile_nl_a0c_vB2/base/6_final.odb",
+   "odb_sha256": "68815b07d435a0ad938127d6d1769a9d23100c9a30303b4229a0d02ad4d34a11",
+   "origin": "signed store stage (sha-verified)",
+   "store_id": "5799265f54a1f7bbe7c5df71cabe30f023feeb5b64cd76e1f5e13318d4f291e5",
+   "verdict": "SIGNED"
+  }
+ }
+}

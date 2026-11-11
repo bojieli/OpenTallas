@@ -634,7 +634,10 @@ if ("TT global-routing insertion gate failed: PASS exit 1" in marker
     m = re.search(r"(?m)^Error: grt_policy_tt\.tcl, \d+ clock [^\n]+ has no unique rise source insertion arrival\s*$", rd(q))
     if m:
         out["clock_source_error"] = m.group(0).strip()[:300]
-pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*",
+# KW-FIX-44 11-10 (COORD (3)): grt183_make.sh OT_GRT_CONGESTED_FAIL (full GRT ended congested, overflow over the floor)
+# is the congestion class; OT_GRT_TIMECAP (post-route repair over the stage cap) is its own TIMING kind
+pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
+       "grt_timecap": r"OT_GRT_TIMECAP[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
        # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
@@ -1026,6 +1029,9 @@ def classify(c, client):
         return "STRUCTURAL", "hold-structural", c["hold_structural"]
     if c.get("congestion"):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
+    if c.get("grt_timecap"):
+        # KW-FIX-44 11-10 (COORD (3)): GRT stage stopped at its post-route time cap; the line carries the last slack
+        return "STRUCTURAL", "grt-timecap", c["grt_timecap"]
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file

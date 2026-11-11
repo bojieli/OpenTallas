@@ -37,6 +37,14 @@ class DetailPlan(unittest.TestCase):
         self.assertFalse(AD.export_plan(lef(pin_rect="0 10 0.048 10.48"))["needed"])
         self.assertFalse(AD.export_plan(lef(obs=("M5",)))["needed"])
 
+    def test_open_own_layer_but_blocked_above_takes_exact_shapes(self):
+        # hcol_h0_ra clk (DRT-0073 11-10): M5 free around the pin, bloated M6 over it -> no via landing, not enclosed
+        base = lef(obs=("M6",))
+        self.assertEqual(AD.enclosed_signal_pins(base), {})
+        p = AD.export_plan(base)
+        self.assertEqual((p["needed"], p["layers"], p["bloat_factor"], p["pin_window"]["pins"]),
+                         (True, ["M6"], 0, ["ck"]))
+
     def test_pin_below_the_replaced_layers_is_not_claimed_fixable(self):
         self.assertFalse(AD.export_plan(lef(pg_layer="M6", obs=("M5", "M6", "M7")))["needed"])
 

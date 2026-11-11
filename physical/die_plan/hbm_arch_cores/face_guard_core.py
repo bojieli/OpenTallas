@@ -25,7 +25,8 @@ elif (fz.get("face_shell") or {}).get("native_endpoint_contract"):
     r = ICG.mixed_guard(Path(net).read_text(), fz["design"], kd, fz, skip)
 else:
     r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins,
-                 straps=FG.kit_strap_list(kd), dead=FG.kit_dead_list(kd))
+                 straps=FG.kit_strap_list(kd), dead=FG.kit_dead_list(kd),
+                 timed=FG.kit_timed_list(kd))   # HEAD-92/H2 11-10: a core kit timed_face.json, as face_guard.py main
 r["skip_re"] = skip
 (kd / "face_guard.json").write_text(json.dumps(r, indent=1) + "\n")
 print(f"FACE_GUARD {r['verdict']} top {fz['design']} checked {r.get('checked')} ok {r.get('ok')} fails "

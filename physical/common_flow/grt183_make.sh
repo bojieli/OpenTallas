@@ -117,11 +117,63 @@ restore   # a re-run killed hard left the swap in place; its marker stays, so it
 # '-end_incremental' as its last command and a save from THIS run exists; the stage then re-runs ONCE in a fresh process from
 # that design, exactly as the GRT-0183 resume below (same marker: one fresh re-run per kit in total).  No gate, margin or
 # repair change.  OT_GRT_STALL_RESUME=0 (env or config.mk export) opts out.
-T0=$(date +%s); stall=0
+T0=$(date +%s); stall=0; gstop=""
 stall_off() { [ "${OT_GRT_STALL_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT_STALL_RESUME = 0' "$W/config.mk" 2>/dev/null; }
+# KW-FIX-44 11-10 GRT-INCR-CONGESTED + GRT time cap (COORD rulings 11-10 (3)).  Two stops of the 5_1_grt stage, judged on
+# THIS run's 5_1_grt.tmp.log (mtime >= wrapper start), measured from the end of the full global route (first GRT-0303
+# 'Global routing runtime' line); the full route itself is never cut.
+#  (a) congested: the full route ended with congestion (GRT-0115, only possible under -allow_congestion = KW-FIX-8
+#      opt-in) and its final total overflow is >= OT_GRT_CONGESTED_FAIL_MIN (default 1000: FLOW-TIME-1 measured
+#      2,594 kit logs, no form at >= 1000 overflow at iteration 20 later reached overflow 0, DRT or sign-off).  Below
+#      that the KW-FIX-8 rule stands: DRT decides.  t53__clb66fa5cb a7: full route 13h46 at overflow 83,032, then the
+#      incremental reroute after the leaf-repeat pass was silent 6h02 until the hub watchdog.  Stops the stage at once
+#      and prints OT_GRT_CONGESTED_FAIL (autopilot: STRUCTURAL grt-overflow -> wave class ROUTING).
+#      'export OT_GRT_CONGESTED_FAIL = 0' in config.mk (or env) opts out.
+#  (b) time cap: everything after the full route (repair_design, incremental reroutes, hold repair) may take
+#      OT_GRT_POST_MAX_S (default 21600 = 6 h).  t68 a5: full route 4h05, then post-GRT repair_design ran ~13 h (14,000
+#      of 129,591 nets) before an outside kill; slw_fw_v1 cl592e3d37 a16: incremental route silent 6h06 at overflow 0
+#      (neither matched the GRT-STALL rule below: last line was not the bare -end_incremental command).  The hold
+#      guard alone caps hold repair at 3 h (hold_guard_grt.tcl).  Stops the stage and prints OT_GRT_TIMECAP with the
+#      last hold/setup slack the log carries (autopilot: STRUCTURAL grt-timecap -> wave class TIMING).
+#      'export OT_GRT_POST_MAX_S = 0' in config.mk (or env) opts out.
+# Either stop: no fresh-process re-run, the stage's rc is replaced by 21.
+cfg_num() { local v; v=$(sed -n "s/^export $1[[:space:]]*=[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p" "$W/config.mk" 2>/dev/null | tail -1)
+  printf '%s' "${v:-$2}"; }
+cong_off() { [ "${OT_GRT_CONGESTED_FAIL:-1}" = 0 ] || grep -Eq '^export OT_GRT_CONGESTED_FAIL[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; }
+CONG_MIN=${OT_GRT_CONGESTED_FAIL_MIN:-$(cfg_num OT_GRT_CONGESTED_FAIL_MIN 1000)}
+POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 21600)}
+grt_overflow() { awk '/GRT-0096\] Final congestion report/{f=1} f && /^Total[[:space:]]/{v=$NF} END{print (v==""?"":v)}' "$1"; }
+grt_slack() {   # last slack figures the log carries (hold guard chunks / start, repair_timing tables); never a new STA
+  local h s
+  h=$(grep -oE 'OT_HOLD_GUARD_GRT (chunk [0-9]+|start): hold ws -?[0-9.]+' "$1" | tail -1 | sed 's/.*hold ws //')
+  s=$(grep -oE '(setup|Setup)[^|]*WNS[^0-9-]*-?[0-9.]+' "$1" | tail -1 | grep -oE -- '-?[0-9.]+$')
+  printf 'hold_ws_ps=%s setup_wns=%s' "${h:-unmeasured}" "${s:-unmeasured}"; }
+gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop and stops the stage
+  local Tl=$1 pid=$2 now ov last
+  [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
+  if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
+  now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
+  if [ "$cong_seen" = 0 ]; then
+    cong_seen=1
+    if ! cong_off && grep -q 'GRT-0115\]' "$Tl"; then
+      ov=$(grt_overflow "$Tl")
+      if [ -n "$ov" ] && [ "$ov" -ge "$CONG_MIN" ]; then
+        echo "OT_GRT_CONGESTED_FAIL stage=grt full global route ended with congestion: total overflow $ov >= $CONG_MIN; stopping before repair/incremental reroute (KW-FIX-44 GRT-INCR-CONGESTED) $(date -u '+%F %T')"
+        gstop=congested
+      fi
+    fi
+  fi
+  if [ -z "$gstop" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
+    echo "OT_GRT_TIMECAP stage=grt post-route repair over $((now - tpost)) s (cap $POST_MAX s) $(grt_slack "$Tl") last='$last' (KW-FIX-44) $(date -u '+%F %T')"
+    gstop=timecap
+  fi
+  [ -n "$gstop" ] || return 1
+  kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
+  return 0
+}
 watch_run() {
-  stall=0
-  if stall_off; then "$@"; return $?; fi
+  stall=0; gstop=""; tpost=""; cong_seen=0
+  if stall_off && cong_off && [ "$POST_MAX" -le 0 ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT
@@ -129,6 +181,8 @@ watch_run() {
     local i=0; while [ $i -lt "${OT_GRT_STALL_POLL:-60}" ] && kill -0 $pid 2>/dev/null; do sleep 1; i=$((i + 1)); done   # no added latency
     kill -0 $pid 2>/dev/null || break
     Rw=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); Tl=$(ls "$W"/run/logs/asap7/*/base/5_1_grt.tmp.log 2>/dev/null | head -1)
+    if [ -n "$Tl" ] && gstop_check "$Tl" $pid; then break; fi
+    stall_off && continue
     [ -n "$Rw" ] && [ -n "$Tl" ] && [ -f "$Rw/5_1_grt.stall_resume.odb" ] && [ ! -f "$Rw/5_1_grt.grt183_recovered.json" ] || continue
     [ "$(stat -c %Y "$Rw/5_1_grt.stall_resume.odb")" -ge "$T0" ] || continue      # a save from this run only
     age=$(( $(date +%s) - $(stat -c %Y "$Tl") )); [ "$age" -ge "${OT_GRT_STALL_S:-5400}" ] || continue
@@ -141,6 +195,7 @@ watch_run() {
 }
 stall_clean() { local Rc; Rc=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); [ -z "$Rc" ] || rm -f "$Rc/5_1_grt.stall_resume.odb" "$Rc/5_1_grt.stall_resume.shapes"; }
 watch_run "$@"; rc=$?
+if [ -n "$gstop" ]; then stall_clean; echo "OT_GRT_STOP $gstop: stage rc $rc -> 21 (no re-run)"; exit 21; fi
 [ "$rc" != 0 ] || { stall_clean; exit 0; }
 R=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1)
 [ -n "$R" ] || exit "$rc"

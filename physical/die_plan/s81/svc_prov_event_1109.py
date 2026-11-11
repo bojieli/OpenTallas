@@ -345,6 +345,9 @@ def main():
     ap.add_argument("meas")
     ap.add_argument("--lo-pack", choices=("a", "b"), default="a")
     ap.add_argument("--rdpipe", action="store_true", help="add -DOT_SVC_ATT_RDPIPE (u_att read-data retime, 0 cycle delta)")
+    ap.add_argument("--pin-model", choices=("v5", "v6"), default="v5",
+                    help="v6 (11-10, svc_prov_pcd_v6_1110.py): pin stages per end (box -> box = 2) + the IRG recipe-4 "
+                         "chain edge IRG*->IRG*; default v5 = 1 + relay stations (reproduces the v5 event)")
     a = ap.parse_args()
     global LO_PACK
     LO_PACK = a.lo_pack
@@ -392,6 +395,11 @@ def main():
                 P["reset"]["in_sites"][tn][1] = fy(P["reset"]["in_sites"][tn][1])
             fails = validate(t, boxes, M, side, macros)
             pc = pin_cycles(boxes, soft, fy)
+            if a.pin_model == "v6":
+                import svc_prov_pcd_v6_1110 as PCD6
+                pc = {e: dict(note=v["note"], worst_um=v["worst_um"],
+                              **{k: v[k] for k in ("src_out", "dst_in", "relay_stations", "delta")})
+                      for e, v in PCD6.v6_type(dict(pin_cycles=pc, boxes=boxes)).items()}
             ev["types"][tn] = dict(outline_um=t["outline_um"], grow_um=V1.G_TOTAL if grow else 0.0, points_moved=moved,
                                    parent_soft_cells=M["parent_soft"][side]["cells"], hard_core_instances=len(t["hard_cores"]),
                                    parent_run_instances=M["parent_soft"][side]["cells"] + len(t["hard_cores"]),

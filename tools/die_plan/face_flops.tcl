@@ -464,6 +464,29 @@ proc ff_hits_explicit {x y w h} {
   }
   return 0
 }
+# KW-FIX-43 11-10 LAND-RESERVE (opt-in OT_LAND_RESERVE=1; KV kv3_pv_v2n/v3/v4, COORD on KW43-56): a station bundle spirals out
+# of ff_put_near on the 2.16 um station grid as a comb of 1.08 um flops and 1.08 um gaps, FIRM before landing runs, and a
+# landing window under it has no site for a flop that needs its 1.188 um resize footprint.  Every non-ring landing window
+# (reader/writer start, writer face, collector, literal local reset) is reserved here, so ff_put_near leaves it free and the
+# landing cells keep their sites.  Ring bands are the band planner's and stay open.  Unset = byte-identical behaviour.
+if {[info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} {
+  set ff_lr_fh [open /work/landing_placement.tcl r]; set ff_lr_txt [read $ff_lr_fh]; close $ff_lr_fh
+  set ff_lr_i [string first "set cland_groups \{\n" $ff_lr_txt]
+  set ff_lr_j [string first "\n\}\n" $ff_lr_txt $ff_lr_i]
+  if {$ff_lr_i < 0 || $ff_lr_j < 0} { error "OT_LAND_RESERVE: landing_placement.tcl has no cland_groups list" }
+  set ff_lr_n 0
+  foreach ff_lr_spec [string range $ff_lr_txt [expr {$ff_lr_i + 18}] $ff_lr_j] {
+    lassign $ff_lr_spec ff_lr_name ff_lr_rect ff_lr_tag
+    if {[string match {ring:*} $ff_lr_tag]} continue
+    lassign $ff_lr_rect ff_lr_a ff_lr_b ff_lr_c ff_lr_d
+    set ff_lr_a [expr {max($ff_x0, round($ff_lr_a*$ff_dbu))}]; set ff_lr_b [expr {max($ff_y0, round($ff_lr_b*$ff_dbu))}]
+    set ff_lr_c [expr {min($ff_x1, round($ff_lr_c*$ff_dbu))}]; set ff_lr_d [expr {min($ff_y1, round($ff_lr_d*$ff_dbu))}]
+    if {$ff_lr_c <= $ff_lr_a || $ff_lr_d <= $ff_lr_b} continue
+    ff_reserve_explicit $ff_lr_a $ff_lr_b [expr {$ff_lr_c-$ff_lr_a}] [expr {$ff_lr_d-$ff_lr_b}]
+    incr ff_lr_n
+  }
+  puts "OT_LAND_RESERVE reserved $ff_lr_n non-ring landing windows for the station grid"
+}
 if {[info exists ff_bit_sites] && [info exists ff_bit_site_cells]} {
   dict for {key xy} $ff_bit_sites {
     set slot [lindex [split $key ,] 0]
