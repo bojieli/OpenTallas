@@ -272,7 +272,9 @@ def gate(cfg, die, descends=None):
     if rule is None and die not in COORD_ONLY:
         return False, f"no plan-of-record rule for {die}"
     if rule:
-        if "exact" in rule and ev not in rule["exact"]:
+        # KW-FIX-45 11-11: the accepted event labels come from the die config too (die option gate_events_extra), so a
+        # cut label such as hcut1111 does not need a code change; without the option the code list decides as before.
+        if "exact" in rule and ev not in rule["exact"] and ev not in (d.get("gate_events_extra") or ()):
             return False, f"event '{ev}' is not a COORD plan of record ({'/'.join(rule['exact'])})"
         if "descends" in rule:
             base = rule["descends"]
