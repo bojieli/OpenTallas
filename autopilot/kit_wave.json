@@ -28406,7 +28406,8 @@
     "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b003": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (1): 3 strikes in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
     "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
-    "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)"
+    "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)",
+    "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key."
    },
    "gen_hosts": [
     "epyc7",
@@ -39136,7 +39137,8 @@
    "rebuild_counted_prev_kw43h98_added": [
     "ot_hidx_s3_q"
    ],
-   "note_kw43h98": "KW-FIX-43 11-10 23:3x (COORD 23:10 (5), FTRES 23:10 ROW AMENDMENT, DIE-HBM-98 list): src -> kw43/src_hbm_tc1111p = cp -al of tc1111 (read-only) + phy_slices_overlay.tar.gz 958c77ef51b4 (21 files added, none replaced; epyc7/epyc8/epyc4); q_spu1/pv1 plan -> plan_p11t_taps_spu1 70c3e990f40e (staged epyc4, SHA256SUMS OK); PHY_NC/NE/NW + q_mcb rows on the taps plan+bind; root HELD (split-rebind, DIE-HBM-98), root@5 retry dropped; ot_hidx_s3_q in rebuild_counted (COORD 22:5x released the taps cycle core; its counted block is unchanged so the wave skipped it). Revert: src <- src_prev_kw43h98, plan <- plan_prev_kw43h98, drop the *_prev_kw43h98_added names, re-add root@5, drop hold root."
+   "note_kw43h98": "KW-FIX-43 11-10 23:3x (COORD 23:10 (5), FTRES 23:10 ROW AMENDMENT, DIE-HBM-98 list): src -> kw43/src_hbm_tc1111p = cp -al of tc1111 (read-only) + phy_slices_overlay.tar.gz 958c77ef51b4 (21 files added, none replaced; epyc7/epyc8/epyc4); q_spu1/pv1 plan -> plan_p11t_taps_spu1 70c3e990f40e (staged epyc4, SHA256SUMS OK); PHY_NC/NE/NW + q_mcb rows on the taps plan+bind; root HELD (split-rebind, DIE-HBM-98), root@5 retry dropped; ot_hidx_s3_q in rebuild_counted (COORD 22:5x released the taps cycle core; its counted block is unchanged so the wave skipped it). Revert: src <- src_prev_kw43h98, plan <- plan_prev_kw43h98, drop the *_prev_kw43h98_added names, re-add root@5, drop hold root.",
+   "note_kw43mcb": "KW-FIX-43 11-11 00:2x DIE-HBM-98: hold q_mcb (a1 kit_rtl FAIL 2 instances differ S_u_refcfg_Q_tgt), no retry."
   }
  },
  "place_prefer": [
