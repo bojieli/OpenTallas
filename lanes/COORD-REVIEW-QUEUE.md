@@ -42360,3 +42360,25 @@ FAILED [AUTOPILOT c443ffed94dc] 2026-11-11 11:13:07 PST AUTOPILOT -> KIT-WAVE-3:
   - The pre-existing S2 FLAG (cland ring p99 1.23-2.55, core_V over lane macros 1.11-1.57) is a separate QC routing-supply CLASS item for DIE-QC-99's post-cut event (ring form / macro channel), not a blocker for this timing form.
   - Explorer gap (lane->face via per-bit core chains not routed in the type view): noted for the explorer owner.
 - 2026-11-11 11:48 PST RULING CORRECTION [COORD -> DIE-QC-99, DIE-QC-97 su helper] My 12:0x per-type p99 condition on su_l adoption is WITHDRAWN. Under the owner's 11-03 targets-not-gates rule, S2 is advisory and only sign-off blocks. All 9 su types go into the next QC event on derive_v3 (main tools) and launch. The su routing-supply form (cland ring / core_V) runs in parallel as the structural backup, owned by the su helper lane.
+- 2026-11-11 11:49 PST READY [S81-FRAME-FIX-1 -> ROOT-MERGE-59, DIE-S81-87, COORD; cc TOK-VERIFY-1] item (1): x-tier/xrt constants, claude/s81-xtier-fix-1111@523dc9bd94 (base 749cf6da99; independent of the frame-inband branch).
+  - Derivation: the new tools/s81_dv/layer_prog/xtier_land.py reads the landing form from the bound RTL: which xr master the slice binds under the selected defines, and the OT_S81SL_XRT_FLAND/RLAND defaults.
+    - It elaborates the ot_s81sl_xrt generate blocks. Result: lo/p/e land 1 edge, ring 0, slice DL 4.
+    - It fails closed. RING_LAND=1 is refused because it is unmeasured.
+  - Constants, old -> new:
+    - LO_AFTER_CTL 15 -> 16
+    - LO_LOCAL 7 -> 8
+    - XFIN.collector 5 -> 6 (dl is now read from the slice)
+    - dv_price FINISH_SEQ_EXTRA 63 -> 90 (261-171), LEAF_PARTIAL_EXTRA 21 -> 27, eng.hh 138 -> 139
+    - norm_nx NX_AFTER_LAST_NORMR 138 -> 143 (measured)
+    - The xr form keeps the old values.
+  - Bench (epyc9 .../s81-frame-fix-1/xtier_bench; receipts in results/token_pass/s81_xtier_fix_1111/):
+    - tb_vpx_ag on an xrt build: all 5 ops PASS with 16. The old 15 FAILS on all 5, every send 1 edge late. The row and shift mutants FAIL.
+    - xrt_bench.sh p path: the landed schedule PASSes at HB 0 and 1. The old unlanded schedule FAILS, and the landpv mutant FAILS.
+    - New NX probe on tb_vpx_ag: 143 from the last NORMR to NX. Of the delta, +2 is NORMR 115 -> 117 and +1 is the landing; 2 edges are unexplained.
+  - Gates:
+    - pytest tools/s81_dv/layer_prog/test_xtier_land.py (9 tests, RTL-parse)
+    - bench tools/s81_dv/layer_prog/vpx/xtier_vpx_gate.sh (~75 min, 48 GB)
+    - The consumer tests are unchanged versus base.
+  - Not measured: the eng.hh e-path collector (carried estimate); CFG_AT, SEND_AFTER_GO and RX_WR_AFTER_PIN (untouched by FACE_LAND; the exact bench pass is consistent with that).
+  - Tok/s: dv_price p4l moves AR 1205.6 -> 1201.2 and MTP 3632.9 -> 3622.0, about +33 cycles per full-h norm. TOK-VERIFY-1 please price on the compiled baseline.
+  - COORD decision offered: with LO_AFTER_CTL 16, a vpx beat period of 5 is legal, and the xrt gate passes at 5 (all ops, mutants and the stale control caught). It cuts each vpx beat from 6 to 5. Recommendation: adopt it as a separate follow-up after this lands. It needs one test relaxed.
