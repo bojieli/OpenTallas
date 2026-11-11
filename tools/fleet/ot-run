@@ -138,7 +138,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc7", "epyc8", "epyc9"]   # ONBOARD-EPYC9 11-11: + epyc9 (renewed-glider, EPYC 7443, 1 TB). ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc7", "epyc8", "epyc9"]   # ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
@@ -731,9 +731,25 @@ def reserved(h, r):
     return r
 
 
+LOAD_GATE_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_FACTOR", "1.25"))   # = ot-heavy LOADGATE_1110 (0 = off)
+
+
+def load_gated(r):
+    """LOADGATE_1110 (KW-FIX-44, COORD 11-10: epyc8 load1 507 / 96 threads): ot-heavy holds EVERY job (crit, direct,
+    short too) while load1 + fresh admits >= LOAD_GATE_FACTOR x nproc.  Placement sees the same: the fresh units of the
+    --free row count at THREADS each (as ratio()), nproc = the row's cores before HOST_RESERVE."""
+    if LOAD_GATE_FACTOR <= 0:
+        return False
+    n = (r.get("ncpu") or 0) + (r.get("reserve_threads") or 0)
+    return n > 0 and load1(r) + THREADS * (r.get("fresh") or 0) >= LOAD_GATE_FACTOR * n
+
+
 def load_capped(r, mem, threads):
     """QUEUE-BAL-1: ot-heavy on this host would hold this job on its load cap now (LOADCAP_1101): load1 >=
-    LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool"""
+    LOAD_CAP_FACTOR x nproc (nproc = the row's cores before HOST_RESERVE), for a non-crit job outside the short pool;
+    LOADGATE_1110: or on its load gate, for any job"""
+    if load_gated(r):
+        return True
     f = host_load_cap(r)
     if f <= 0 or crit_job() or (mem <= SHORT_MAX_GB and threads <= SHORT_MAX_THREADS):
         return False
@@ -758,7 +774,7 @@ def choose(res, mem, threads=THREADS, die=False):
     if not ok:
         return None, False
     if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
-        fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB]
+        fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB and not load_gated(ok[h])]
         return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit
     if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
         ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
@@ -887,6 +903,12 @@ def memory_charge_note(row):
 STATUS_DIR = os.environ.get("OT_RUN_STATUS_DIR", "/srv/opentallas-scratch2/claude")
 
 
+def default_dir_refusal(row):
+    """host_refusal for a job whose run dir is not on the host's separate scratch disk (no --dir, or one on the root fs):
+    the status probe of a dir-aware host is made with STATUS_DIR (scratch2), which skips the root-fs guard"""
+    return host_refusal(dict(row, dir_onroot=None)) if row.get("dir_onroot") is False else ""
+
+
 def status(hosts):
     """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
     held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
@@ -904,15 +926,24 @@ def status(hosts):
         if host_refusal(r):
             out.append(f"{h} REFUSED ({host_refusal(r)})")
             continue
+        rootref = default_dir_refusal(r)
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}" + (" LOADCAP" if load_capped(r, 32, 16) else "")
                    + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
-                   + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else ""))
+                   + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else "")
+                   + (f" ONLY --dir on scratch2 (a job without one: {rootref})" if rootref else ""))
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
             and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r)}
-    best, queue = choose(live, 32)
+    # STATUSGUARD_1111 (KW-FIX-44, COORD 11-11 20:0x): the next-job choice applies the same DISK GUARD as --pick for a
+    # job without a scratch2 --dir (the status probe of a dir-aware host reports as for a scratch2 job, so epyc2 at
+    # 144 GB root free < 150 showed "next job -> epyc2" while --pick refused it); the scratch2-dir choice is shown apart
+    # when it differs.
+    best, queue = choose({h: r for h, r in live.items() if not default_dir_refusal(r)}, 32)
     next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
+    best2, queue2 = choose(live, 32)
+    if best2 and best2 != best:
+        next_job += f" | with --dir on scratch2 -> {best2}" + (" (would queue)" if queue2 else "")
     print("ot-run status: " + " | ".join(out) + next_job)
 
 
@@ -1575,7 +1606,7 @@ SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hos
 # scratch2/claude/<lane> -> scratch-root) under the owner's 500 GB floor.  A spill whose lane lands on the root fs of a host named
 # here needs that much root free; any other spill needs the host's scratch disk above SPILL_DST_SCRATCH_FLOOR.  The host comes
 # back by itself once the disk has room; jobs whose --dir already lives there are unaffected; a probe without the field: not refused.
-SPILL_DST_ROOT_FLOOR = {"epyc2": 150, "epyc7": 150, "epyc8": 150}   # OWNER 11-06 22:4x: 150 (was 500)
+SPILL_DST_ROOT_FLOOR = {"epyc2": 150, "epyc7": 150, "epyc8": 150, "epyc9": 150}   # OWNER 11-06 22:4x: 150 (was 500)
 SPILL_DST_SCRATCH_FLOOR = {"epyc2": 140, "intel1": 50,  # KW-FIX-42 11-09 COORD 08:5x(4): intel1 50 (dedicated nvme scratch2; was 100)
     "intel2": 100, "localhost": 100}   # epyc2 80 -> 140 KW-FIX-8 11-04 (COORD: scratch2 118 GB, 30 GB/h)
 # COORD 11-04 00:2x: epyc4 queue 53 waiters while epyc2 admits; a --stage ECO job may use the epyc2 scratch disk down to this floor.
@@ -1708,7 +1739,7 @@ def spill_lands_on_root(host, roots):
         return r.returncode != 0 or "OK" not in r.stdout or "ONROOT" in r.stdout
     except Exception:
         return True
-NO_AVX512 = {"epyc2", "epyc7", "epyc8", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
+NO_AVX512 = {"epyc2", "epyc7", "epyc8", "epyc9", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
 

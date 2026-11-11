@@ -12,6 +12,7 @@ def load():
     loader = importlib.machinery.SourceFileLoader("ot_run_direct", str(HERE / "ot-run"))
     m = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
     loader.exec_module(m)
+    m.LOAD_GATE_FACTOR = 0   # LOADGATE_1110 (load 300 on 128 threads is gated) is tested in test_ot_run_load_gate.py; these cases pin the memory rules
     return m
 
 
@@ -34,6 +35,16 @@ class Choose(unittest.TestCase):
         os.environ["OT_RUN_DIRECT"] = "1"
         self.assertEqual(self.m.choose({"a": row(500, 79), "b": row(500, 80)}, 48), ("b", False))
         self.assertEqual(self.m.choose({"a": row(500, 79), "b": row(500, 70)}, 48), ("a", True))    # waits, no start
+
+    def test_a_load_gated_host_is_not_chosen_for_a_direct_job(self):
+        # LOADGATE_1110: ot-heavy holds even --direct jobs on a host over 1.25 x nproc, so choose() must queue instead of picking it
+        os.environ["OT_RUN_DIRECT"] = "1"
+        m = load()
+        m.LOAD_GATE_FACTOR = 1.25
+        host, queue = m.choose({"a": row(500, 400, load=300.0), "b": row(500, 400, load=10.0)}, 48)
+        self.assertEqual((host, queue), ("b", False))
+        host, queue = m.choose({"a": row(500, 400, load=300.0)}, 48)
+        self.assertTrue(queue)
 
     def test_off_by_default(self):
         self.assertEqual(self.m.choose({"a": row(-50, 300), "b": row(500, 200, load=1.0)}, 48)[0], "b")

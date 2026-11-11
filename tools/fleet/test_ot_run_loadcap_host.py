@@ -21,6 +21,9 @@ def load(name, mod):
     spec = importlib.util.spec_from_loader(loader.name, loader)
     m = importlib.util.module_from_spec(spec)
     loader.exec_module(m)
+    # LOADGATE_1110 (ot-heavy load gate) is covered by test_ot_run_load_gate.py; these cases pin the older rules with the gate off
+    if hasattr(m, 'LOAD_GATE_FACTOR'):
+        m.LOAD_GATE_FACTOR = 0
     return m
 
 
