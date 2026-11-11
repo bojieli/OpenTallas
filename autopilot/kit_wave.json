@@ -20327,7 +20327,6 @@
    "pilot_mode": "queue",
    "hold_items": {
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
-    "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
@@ -20340,8 +20339,7 @@
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
-    "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
-    "slw_fw_v1__clf51c11d8__cl592e3d37": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: incremental GRT hang 6h06 after repair_design (full GRT overflow 0, NDR disabled on clknet_0_clk_t22/t34, then silent); hand to DIE-QC-97 for a form, no wave relaunch. Lift = delete this key."
+    "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -20882,7 +20880,20 @@
     "cbf_q00_s2@22",
     "cbn_q11__cl5cc92dfe@11",
     "cbn_q11__cl49ae4555@13",
-    "cbx_q10__cl94a12200@21"
+    "cbx_q10__cl94a12200@21",
+    "coll_ftm@9",
+    "sle_fe_v2@6",
+    "sle_fw_v1__cl9d029624@18",
+    "sle_hc0__cl929603c0__cl38badc56@21",
+    "sle_hc1__cl22c1ff36@32",
+    "sle_hc1__cl7d360508@16",
+    "sle_hc2__cl9c4c4509__cl3edce1b8@13",
+    "sle_hc2__cl9c4c4509__clf60c5152@9",
+    "sle_hc2__clcc5e3e61@15",
+    "slw_fw_v1__cl51d45468@14",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@16",
+    "slw_fw_v1__clf51c11d8__clc7ddab13@15",
+    "slw_st_a_v2__cl9f076a5c@15"
    ],
    "queue_src": "main@730345725942+genscope@716f40ea7e2c",
    "type_args": {
@@ -21246,7 +21257,7 @@
     "coll_ft__cla4a25d77@3": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "coll_ft__cla4a25d77@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "coll_ftc@1": "CODEX-WAVE class recovery: coll_ftn externally stopped noOOM INFRA; coll_ftc current type old checkpoint gone, one fresh vehicle with merged reg2reg-only hold gate; actual timing still gates.",
-    "coll_n@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
+    "coll_n@7": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
     "coll_s@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "sle_hc1__cl22c1ff36@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "sle_hc1__cl22c1ff36@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -21402,7 +21413,7 @@
     "slw_sc_v1__cl64543eaf__cl4590432d@5": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (F): structural GRT congestion -> conservative form OT_CONS_KIT=1 (util 0.35, ring strip 3, signals <=M6); fresh kit",
     "slw_sc_v2@6": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (F): structural GRT congestion -> conservative form OT_CONS_KIT=1 (util 0.35, ring strip 3, signals <=M6); fresh kit",
     "slw_sc_v3@11": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (F): structural GRT congestion -> conservative form OT_CONS_KIT=1 (util 0.35, ring strip 3, signals <=M6); fresh kit",
-    "coll_ftn@5": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (G): large DRV after route (TT slew 1318) -> conservative form OT_CONS_KIT=1; fresh kit",
+    "coll_ftn@5": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
     "coll_core@3": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): REDESIGN: QC-TYPES-9 04:51 (G): stale FAIL_PREFLOOR marker in the old kit; fresh kit on bind_v4s",
     "sle_stm_v1__clbe630b9c@10": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
     "slw_stm_v1__cle34a73c3@13": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): INFRA: QC-TYPES-9 04:51 (D): sat in KW12_DISK_WAIT on intel1 since 01:28, never started; KW-FIX-35 stopped the 3 units; relaunch on bind_v4s",
@@ -21459,7 +21470,7 @@
     "slw_fw_v1__cl51d45468@8": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 12 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
     "slw_fw_v1__clf51c11d8__cl592e3d37@9": "KW-FIX-37 18:4x: REDESIGN: GRT near miss class (QC-TYPES-9 04:40 (B), OWNER 04:46 all class fixes): final GRT overflow 43 <= 100 -> OT_GRT_ALLOW_CONGESTION=1, routed DRC decides; one relaunch [CHECKED 5_1_grt.log Final congestion report]",
     "cbx_q10__cl94a12200@12": "KW-FIX-37 19:1x INFRA no design change: route job stopped by infra, class INFRA",
-    "coll_ftc@4": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -141.3 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
+    "coll_ftc@4": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
     "coll_ft__cl78c7b300@9": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -86.69 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
     "coll_ft__cla4a25d77@10": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -87.0 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
     "cbn_q00__cl622f65d2@13": "landing_evidence + provenance.json staged beside a counted hard-landing child LEF (QC-TYPES-10 class N, KW-FIX-40 c52ad880bd7, overlay dd955394dd0); gen failed reading prov/views/<child>/provenance.json",
@@ -21513,7 +21524,20 @@
     "cbf_q00_s2@22": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
     "cbn_q11__cl5cc92dfe@11": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
     "cbn_q11__cl49ae4555@13": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
-    "cbx_q10__cl94a12200@21": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)"
+    "cbx_q10__cl94a12200@21": "KW-FIX-43 11-11 COORD 00:3x NK-VIEW: relaunch on the signed NK view 53a7be5c8092 (was PROVISIONAL contract LEF f922482c11b9)",
+    "coll_ftm@9": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_fe_v2@6": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_fw_v1__cl9d029624@18": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc0__cl929603c0__cl38badc56@21": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc1__cl22c1ff36@32": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc1__cl7d360508@16": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc2__cl9c4c4509__cl3edce1b8@13": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc2__cl9c4c4509__clf60c5152@9": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "sle_hc2__clcc5e3e61@15": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "slw_fw_v1__cl51d45468@14": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@16": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "slw_fw_v1__clf51c11d8__clc7ddab13@15": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed",
+    "slw_st_a_v2__cl9f076a5c@15": "KW-FIX-45 11-11 10:2x: QC cut launch list (DIE-QC-99 READY, plan s15 7f425f00b48a, BIND_OK on the cut tree): relaunch on the cut src/plan/bind; item_inputs repointed, GRT-ARM and gen-validate leaks fixed"
    },
    "gen_hosts": [
     "epyc8",
@@ -27284,6 +27308,15 @@
     "epyc7",
     "epyc9",
     "epyc2"
+   ],
+   "hold_items_removed_kw45_1111": {
+    "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
+    "slw_fw_v1__clf51c11d8__cl592e3d37": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: incremental GRT hang 6h06 after repair_design (full GRT overflow 0, NDR disabled on clknet_0_clk_t22/t34, then silent); hand to DIE-QC-97 for a form, no wave relaunch. Lift = delete this key."
+   },
+   "hard_wrappers": [
+    "phy_serdes",
+    "phy_serdes_b",
+    "phy_ucie_kv"
    ]
   },
   "hbm": {
