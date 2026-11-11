@@ -1,0 +1,97 @@
+# vT4 serdes__t14 FAIL_POSTCTS FF hold -474.60/4167 (stop -380); vT3 same gate -331.22/4050. W=180 (SDC early -180 on clk_t*), CTS DB 4_1_cts (vT3 4_cts), placement RC setRC_rcx
+## TT setup  vT3 | vT4
+  -454.6 (  28)    -577.8 (  31)  u_bound.u_rrl_N -> u_bound.u_rrl_N
+  -458.9 ( 512)        closed    u_rm -> u_rm
+   -91.8 (  27)    -447.5 ( 214)  u_bound.u_cland_coll_i0 -> u_bound.u_bin_coll_i0
+  -431.0 (  48)    -100.3 (  80)  u_dec.u_syn -> u_dec.u_syn
+   -52.2 (   4)    -422.7 (  38)  u_bound.u_bin_coll_i0 -> u_enc
+  -309.1 (   1)        closed    u_dec.u_rck_transport4 -> u_dec.u_syn
+  -252.1 ( 666)    -271.8 ( 345)  u_enc -> u_enc
+      closed      -265.1 ( 861)  u_enc -> u_enc.g_ppc
+      closed      -180.6 ( 109)  u_txl -> u_ptx
+      closed      -178.4 (   2)  u_bound.u_cland_collect_rst_rl_N -> u_bound.u_cland_collect_rst_rl_N
+  -154.4 (   1)        closed    u_rm -> st[]
+   -93.4 (  24)        closed    u_bound.u_rrl_N -> u_bound.u_cland_coll_i0
+      closed       -76.1 (  15)  u_enc -> u_txl.g_reg
+      closed       -55.4 (  20)  u_bound.u_cland_coll_i0 -> u_bound.u_cland_coll_i0
+      closed       -14.3 (   1)  u_txl.g_reg -> u_txl
+## FF hold  vT3 | vT4
+  -331.2 (1726)    -474.6 (1595)  u_enc -> u_enc [cross]
+      closed      -429.1 ( 212)  u_enc.u_rst -> u_enc [cross]
+  -220.9 ( 445)    -426.9 ( 153)  u_enc -> u_txl.g_reg [cross]
+  -270.7 ( 132)    -387.3 ( 132)  u_bound.u_bin_coll_i0 -> u_enc [cross]
+    -7.6 (   3)    -367.9 (   4)  u_bound.u_rst_in -> u_bound.u_rrl_N [cross]
+      closed      -363.9 (  36)  u_enc.g_ppc -> u_enc [cross]
+      closed      -338.7 ( 512)  u_rm.u_rmo -> u_rm.u_rmo [cross]
+  -293.4 (  10)     -34.4 (  24)  u_bound.u_cland_coll_i0 -> u_bound.u_bin_coll_i0 [cross]
+  -277.6 (  22)    -276.4 (  10)  u_bound.u_cland_coll_i0 -> u_bound.u_cland_coll_i0 [cross]
+  -265.5 ( 329)    -257.9 ( 406)  u_txl.g_reg -> u_txl.g_reg [cross]
+  -259.3 ( 213)    -248.9 ( 200)  u_txl.g_reg -> u_txl [cross]
+  -223.1 (   1)        closed    g_rst_tree -> lk_s[] [cross]
+      closed      -196.5 ( 178)  u_enc -> u_enc.g_ppc [cross]
+      closed      -179.3 (   2)  u_bound.u_rrl_N -> u_bound.u_rrl_N [cross]
+  -162.4 ( 271)    -124.9 (  10)  u_rm -> u_rm [cross]
+      closed      -130.1 (   2)  u_bound.u_cland_collect_rst_n_t22 -> u_bound.u_cland_collect_rst_rl_N [cross]
+      closed      -121.5 (   2)  st[] -> u_bound.u_bout_coll_o0 [cross]
+   -76.6 (  26)    -118.3 (  13)  u_rm.g_rleaf -> u_rm [same]
+      closed      -113.6 (  34)  u_bound.u_rrl_N -> u_bound.u_cland_coll_i0 [cross]
+      closed      -108.0 (  38)  u_dec.u_syn -> u_dec.u_lpl_2_w [same]
+  -106.4 ( 160)     -86.9 (  81)  u_txl -> u_ptx [cross]
+      closed       -97.0 (  84)  u_dec.u_lpl_2_w -> u_dec.u_lpl_2_r [same]
+   -85.6 (  21)     -14.4 (  28)  u_txl.g_reg -> u_txl.g_reg [same]
+   -84.6 (   1)        closed    lk_s[] -> lk_s[] [cross]
+   -78.2 (   9)     -12.8 (  12)  u_txl.g_reg -> u_txl [same]
+   -69.7 ( 168)     -62.2 (  97)  u_dec.u_lpl_2_r -> u_dec [same]
+   -34.1 (   3)     -64.6 (  15)  u_rm -> u_rm [same]
+   -52.8 (  20)     -56.9 (  10)  u_dec.u_rck_transport4 -> u_dec.u_rck_transport4 [same]
+   -33.7 ( 414)     -54.3 (  93)  u_prx -> u_dec.u_face_p_d [cross]
+   -47.9 (   1)     -51.6 (   1)  arst_n -> u_bound.u_rst_in [port]
+## tap arrivals (TT CTS, ps)
+tap   vT3 n/med/min/max            vT4 n/med/min/max
+clk_t1      3   61.7   61.6   61.7       3   61.6   61.4   61.6
+clk_t2      5   61.3   61.3   61.4       5   61.8   61.7   61.8
+clk_t3      7   61.7   61.7   61.8       7   61.3   61.3   61.3
+clk_t4      9   61.8   61.7   61.8       9   61.8   61.8   62.0
+clk_t5     11   61.7   61.6   61.8      11   61.7   61.4   61.8
+clk_t6     15   50.9   48.8   69.3      13   62.1   62.0   62.3
+clk_t7     20   63.1   62.9   76.1      20   61.5   61.2   77.0
+clk_t8      2  235.3  231.0  239.6       2  235.9  232.1  239.7
+clk_t9     28  224.3  203.3  228.8      29  221.4  212.2  229.2
+clk_t10     8  138.2  138.1  140.8       7  138.0  137.9  139.2
+clk_t11    11  139.8  137.6  139.9      16  143.3  140.3  143.7
+clk_t12    21  146.6  141.8  146.9      26  151.1  150.2  152.0
+clk_t13   399  273.9  265.4  303.4     901  283.4  266.4  317.9
+clk_t14   435  173.3  163.3  229.0     761  210.6  202.4  320.6
+clk_t15  1369  112.5  101.0  200.3    1372  556.6  543.2  908.4
+clk_t16     1   57.2   57.2   57.2       1   57.3   57.3   57.3
+clk_t17     5  141.1  135.4  141.2       3  298.7  156.5  299.6
+clk_t18    88  274.4  268.6  476.9     100  274.2  269.0  441.8
+clk_t19   168  257.6  247.0  416.4     187  264.5  247.9  440.1
+clk_t20   296  258.2  241.6  360.4     284  261.0  242.4  361.6
+clk_t21   824  299.5  283.9  328.6     559  287.4  257.0  392.7
+clk_t22  3000  287.8  275.7  350.3    3000  454.9  440.5  575.9
+clk_t23  3000  213.2  202.7  414.1    3000  202.7  190.4  381.7
+clk_t24     1   57.1   57.1   57.1       3   77.0   77.0   78.0
+clk_t25    52  294.7  289.0  472.8      56  361.8  350.7  673.6
+clk_t26     5  138.1  136.5  138.2       4  140.9  136.7  141.0
+clk_t27   131  261.3  248.2  418.6     123  361.6  351.6  690.7
+clk_t28  1616  321.3  309.4  466.3    1457  281.4  267.3  490.9
+clk_t29     1   57.3   57.3   57.3       5  166.9  165.8  170.6
+clk_t30     1   57.5   57.5   57.5       5  191.5  187.4  192.5
+clk_t31   539  264.0  255.9  429.8    2338  542.3  530.4  804.2
+vT3 u_enc.d4[ {'clk_t23': 512}
+vT4 u_enc.d4[ {'clk_t23': 273, 'clk_t31': 230, 'clk_t22': 9}
+vT3 u_enc.d5[ {'clk_t23': 480, 'clk_t31': 32}
+vT4 u_enc.d5[ {'clk_t31': 277, 'clk_t23': 235}
+vT3 u_enc.rem_q[ {'clk_t23': 194, 'clk_t13': 60, 'clk_t22': 46}
+vT4 u_enc.rem_q[ {'clk_t23': 300}
+vT3 u_enc.u_rst.rs_n[ {'clk_t22': 2, 'clk_t23': 1}
+vT4 u_enc.u_rst.rs_n[ {'clk_t23': 2, 'clk_t22': 1}
+vT3 u_enc.so[ {'clk_t23': 40}
+vT4 u_enc.so[ {'clk_t31': 47, 'clk_t23': 3}
+vT3 u_enc.par[ {'clk_t23': 298, 'clk_t13': 2}
+vT4 u_enc.par[ {'clk_t31': 216, 'clk_t23': 82, 'clk_t13': 2}
+vT3 u_enc.ch_q[ {'clk_t22': 442, 'clk_t14': 78}
+vT4 u_enc.ch_q[ {'clk_t22': 513, 'clk_t13': 7}
+vT3 u_enc.sk[ {'clk_t22': 40}
+vT4 u_enc.sk[ {'clk_t22': 26, 'clk_t23': 14}
