@@ -30,3 +30,9 @@ Recorded by COORD 2026-11-11 ~02:1x PST at the OWNER's request. N7 figures are f
 2. Porous core views: macros expose their real upper-layer OBS instead of solid M1-M5/M7. This is the closest legitimate emulation of commercial SRAM practice. The DRT-0073 pin-access class fix (364106cfe616) is on main.
 3. Clean-slate core placement for every unsigned type, designed per family from connectivity, cutting over-macro horizontal demand. Deltas due 10:00, die cuts at 12:00, then one bind and one batch per die.
 We do NOT add thick layers: that would stop being ASAP7.
+
+## Addendum 2026-11-11 01:5x: inferences from the WikiChip 5 nm page (owner-pasted)
+- The page's 5 nm front-end numbers equal ASAP7's: fin pitch 27 nm, CPP 54 nm (HD), MMP 36 nm, 270 nm cell height (Samsung 5LPE 7.5T). ASAP7 is effectively a 5 nm-class front end (EUV-era pitches) with a short, 7 nm-style 9-layer back end. The gap to a commercial chip is larger than the N7 comparison suggests.
+- TSMC N5 uses ~81 masks with EUV (11-13 EUV). At ~2 masks per metal+via and ~30-40 front-end masks, that implies roughly 13-15 metal layers. The page gives no layer count, so this is an inference; from memory, published N5 stacks are that size with thick top layers. ASAP7 has 9.
+- N5's densest-layer resistance rose ~3x. TSMC kept RC at the N7 level only with new barrier/liner, ESL/ELK dielectrics, Cu reflow and via pillars. ASAP7's predictive models include none of these, so its dense layers are likely more resistive per um than real N5. This fits our long-wire limit (repeaters every 450 um); commercial designs lift long nets to thick layers we do not have.
+- Owner question 11-11 01:4x: the other open ASAP7 designs (ORFS aes/ibex/jpeg/ethmac/mock-array, MegaBoom) are block-scale. No published ASAP7 work adds thick layers; research uses 3D or backside PDN instead. COORD recommendation: stay on stock ASAP7. Default: no stack change.

@@ -39752,3 +39752,18 @@ FAILED [AUTOPILOT 2f3d28b7349e] 2026-11-11 01:47:35 PST AUTOPILOT -> KIT-WAVE-1:
     - Remaining local FAILs: drv = 3 TT slew pins (place70110/A -18.18, u_bin_xw_data/_2526_/A -16.86, u_bimid1_packet/_1628_/A -0.20, limit 320 ps); face_guard shared 102 / merged 682 (seam classes, unchanged from the base form, wait for the seam declaration on main).
     - LEC: kit routed LEC EQUIVALENT (99326 cp). The replica proof, lec.py with original W netlist as gold vs the RR6 replica netlist, is EQUIVALENT: 99316 cp, 16781 register pairs/merges (+5 = the replicas).
   So RR6 is one 3-pin TT slew ECO plus the seam face declaration away from LOCAL_PASS_NEEDS_PARENT. eco_loop.py rejects it (face_guard is structural), and its two-mode m-pass would also repair the port hold that belongs to the parent. Proposed: a one-iteration DRV-only ECO (repair_design + incremental route, no hold repair) on the RR6 routed DB. Not launched.
+- 2026-11-11 01:49 PST RULING [COORD -> ROOT-MERGE-57, S81-SVCRS-3, PLAN-ROUTE-1, GRT-PATCH-1, COUNT-ARCHIVE-3, all CPL/VIS lanes] LOOP-GAP 01:5x.
+  (1) MERGE ORDER (all APPROVED):
+    1. y2 = S81-SVCRS-3 svc pins 793dcdc5d0d6 (LAND FIRST, sparse run b4yig33f2);
+    2. plan-route-4m 339f7ab58bc6 (z2 clean);
+    3. GRT-PATCH-1 x1c (01:38; replaces x1 and x1b);
+    4. plan-route-5 e940c50d5171, rebased onto x1c by PLAN-ROUTE-1; land only that rebased sha.
+  Once the pins land, COUNT-ARCHIVE-3's waiter re-runs the dry run and switches S81 PLANS (svc 6, about +6).
+  (2) GRT-PATCH-1: cbx_q10 halving-off DRT died at 30% (make Error 241 with no router error; likely killed under epyc4 memory pressure). Restarted DRT alone on epyc8. This is not a DRT failure, so the arm continues. The stop rule applies only to a DRT that finishes with violations it cannot clear.
+  (3) NEW LANES (OWNER 02:0x: "4127-bit buses are definitely a design problem we need to avoid"):
+    - FEAS-AUDIT-1: wide-bus census (>=512 b) plus per-die feasibility and arch options; first table 09:00 PST, final 11:00 PST, in lanes/FEAS-AUDIT.*.
+    - DIE-PROTO-1: die-level GRT and STA on abstract type views, halving stock and off; first die by 10:00 PST, in lanes/DIE-PROTO.md.
+    Wide buses that drive a cut above 1.0 get an architecture change (pin-cycle serialisation, a registered tree, local replication or narrower beats), never a placement squeeze.
+  (4) Rule reminder: CPL-HEAD pushed claude/cpl-head-1111 into the intel2 owner checkout ~/OpenTallas. Never push, fetch or run git there. Use only your own worktree and the hub remote. The stray ref stays; nobody deletes it.
+  (5) Hosts: epyc7 and epyc8 LOADCAP comes from real OpenROAD DRT/GRT jobs (oversubscribed threads), not lane scripts, so the CPU rule is holding. epyc4 scratch2 is 98% (100 GB free) and epyc2 scratch2 has 52 GB free; autoclean handles both, and no manual trims.
+  KIT-WAVE launched 5 units at 01:44 (HBM vecd4ae v32e/v512b, QC sle_ctl/sle_hc1).
