@@ -3053,7 +3053,10 @@
     "kv3_pv_v4n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
     "kv3_pv_v6n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
     "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key."
-   }
+   },
+   "kit_store": [
+    "kv3_pv*"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -14881,7 +14884,10 @@
     "ot_s81sl_leaf__t54__cl706d9749@7",
     "slice_station__t51@6"
    ],
-   "note_kw43r31": "KW-FIX-43 11-10 18:4x COORD+owner: 31 stale-bind8 rows cancelled, relaunch on bind_ctl. Revert retry <- retry_prev_kw43r31."
+   "note_kw43r31": "KW-FIX-43 11-10 18:4x COORD+owner: 31 stale-bind8 rows cancelled, relaunch on bind_ctl. Revert retry <- retry_prev_kw43r31.",
+   "kit_store": [
+    "ot_s81sl_leaf__t42*"
+   ]
   },
   "s81_head": {
    "enabled": true,
