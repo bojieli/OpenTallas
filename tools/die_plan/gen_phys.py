@@ -4356,7 +4356,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if macros:
         (kd / "macros").mkdir(exist_ok=True)
         base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+        placed = []                                  # KW-FIX-44 11-10: placements, snapped to the track grid below
         for inst, mod, lef, lib, x, y, o in macros:
+            lef_file = None
             for src, lst in ((lef, mlef), (lib, mlib)):
                 if src:
                     # an absolute view path (pair.py --core-views) stays as is; a path the source checkout does not
@@ -4364,6 +4366,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                     f = _CR.resolve(src, base)
                     if not f.is_file():
                         raise FileNotFoundError(f"type {tn}: macro {inst} view {f} missing")
+                    if lst is mlef:
+                        lef_file = f
                     if f"/work/macros/{f.name}" not in lst:
                         shutil.copyfile(f, kd / "macros" / f.name)
                         lst.append(f"/work/macros/{f.name}")
@@ -4382,7 +4386,21 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
             if inst in macro_moves:
                 x, y, o = macro_moves[inst]["x"], macro_moves[inst]["y"], macro_moves[inst]["orient"]
-            mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+            placed.append({"inst": inst, "inst_db": inst_db, "master": mod, "lef": lef_file, "x": x, "y": y, "o": o})
+        # KW-FIX-44 11-10 (COORD, DIE-S81-85 bksel vC2 P at y 201.96: half an M4 pitch off, 1000 DRT-0418 + DRT-0073):
+        # a macro whose signal pins miss the kit's routing tracks moves to the nearest on-track origin (row / site grid
+        # kept, 2.16 preferred, inside the outline, no overlap); on-grid macros and kits are unchanged
+        # (macro_grid_snap.py; OT_MACRO_GRID_SNAP=0 off; receipt macro_grid_snap.json)
+        import macro_grid_snap as _MGS
+        placed, snap_rows = _MGS.snap_all(placed, (w, h), _MGS.tracks_for(make_tracks_tcl(P)))
+        _MGS.write_receipt(kd, snap_rows)
+        for r in snap_rows:
+            print(f"OT_MACRO_GRID_SNAP type {tn}: {r['inst']} ({r['master']} {r['orient']}) {r['off_track_pins']} pin(s) "
+                  f"off track at {r['plan_um']} -> " + (str(r['snapped_um']) if 'snapped_um' in r else
+                                                        "UNRESOLVED: " + r['unresolved']))
+        for q in placed:
+            mplace.append(f"place_macro -macro_name {{{q['inst_db']}}} -location {{{q['x']:.4f} {q['y']:.4f}}} "
+                          f"-orientation {q['o']} -exact")
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
