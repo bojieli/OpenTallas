@@ -2889,6 +2889,24 @@ def _ssh(host, hub):
     return [] if host in ("localhost", hub) else ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host]
 
 
+SEALED_COPY_BACK = re.compile(r"(?m)^ot-run-sealed: copy-back (\S+) -> (\S+) rc 0\b")
+
+
+def copy_back_host(txt, default):
+    """KW-FIX-46 11-11 (COORD 05:3x, ot_hbm_sm_i8w_front a8): a sealed place run copies its kit back to the host its inputs were
+    fetched from ('ot-run-sealed: copy-back intel2 -> epyc7 rc 0'), which is not always the spec's gen host.  The place probe
+    and everything after it must look where the sealed run record says the kit is.  Last successful copy-back wins; no record
+    (an unsealed run) = the gen host, as before."""
+    got = SEALED_COPY_BACK.findall(txt or "")
+    return got[-1][1] if got else default
+
+
+def remote_argv(host, hub, cmd):
+    """ssh joins argv with spaces: send ONE quoted command (host None/local = run here)"""
+    s = _ssh(host, hub)
+    return s + ["bash -c " + shlex.quote(cmd)] if s else ["bash", "-c", cmd]
+
+
 def geom_result_line(txt):
     """Ignore PNG/GRT status lines after the actual geometry verdict."""
     return next((ln for ln in reversed(txt.splitlines())
@@ -3119,6 +3137,11 @@ def run_item(spec_path):
     def after_place(K, rc, txt):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
         released by its fresh physical_completion receipt while the original proof owner keeps running)"""
+        kh = copy_back_host(txt, G)      # the host that holds the kit (sealed copy-back record)
+        rem = lambda cmd: remote_argv(kh, hub, cmd)
+        if kh != G:
+            print(f"KW_KIT_HOST {T}: sealed copy-back put the kit on {kh}, not the gen host {G}", flush=True)
+
         probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
                  f"if [ -f {q(K)}/native_cell_count.json ]; then sed 's/^/NATIVE_CELL_COUNT /' {q(K)}/native_cell_count.json; fi; "
@@ -3127,7 +3150,7 @@ def run_item(spec_path):
                  f"for f in {q(K)}/run/logs/asap7/*/base/3_3_place_gp*.log; do [ -f \"$f\" ] && {GPL_PROBE_AWK} \"$f\"; "
                  f"done 2>/dev/null | tail -40; "
                  f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
-        _, ptxt = run("place_probe", remote(probe), idempotent=True)
+        _, ptxt = run("place_probe", rem(probe), idempotent=True)
         odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
         cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
         res["cells"] = int(cells.group(1)) if cells else None
@@ -3142,7 +3165,7 @@ def run_item(spec_path):
         if sp.get("cell_check") and res["cells"]:
             cc_cmd = (f"cd / && python3 -I {q(src)}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
                       f"--cells {int(res['cells'])} --stat \"$(ls {q(K)}/run/reports/asap7/*/base/synth_stat.txt | head -1)\"")
-            _, cct = run("cell_check", remote(cc_cmd), idempotent=True)
+            _, cct = run("cell_check", rem(cc_cmd), idempotent=True)
             m = re.search(r"(?m)^CELL_CHECK (\{.*\})$", cct)
             if m:
                 try:
@@ -3150,29 +3173,29 @@ def run_item(spec_path):
                 except ValueError:
                     pass
         if rc or not odb:
-            return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
+            return fail("place", txt[-2000:] + "\n" + ptxt, f"{kh}:{K}")
         if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
-            return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
+            return fail("cells", f"{res['cells']} cells", f"{kh}:{K}")
         olc = outline_cmd(K)
-        _, ol = run("outline", remote(olc), idempotent=True)
+        _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
         chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
                "grt": True, "grt_wall_s": int(sp.get("geom_grt_wall_s", 1800)), "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
                + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
         gd = f"{W}/geom"
-        rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
+        rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
             return fail("geom_cfg", txt)
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [kh]))
         line = geom_result_line(txt)
-        res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
+        res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
-            return fail("geom_run", txt[-3000:], f"{G}:{gd}")
+            return fail("geom_run", txt[-3000:], f"{kh}:{gd}")
         v, failing, tag = geom_gate(line, sp.get("geom_waivers"), sp.get("geom_advisory", True))
         if v not in ("PASS", "PASS-COND"):
-            return fail("geom", line, f"{G}:{gd}/auto_geom.json")
-        res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
+            return fail("geom", line, f"{kh}:{gd}/auto_geom.json")
+        res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{kh}:{gd}/auto_geom.json")
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 0
 
