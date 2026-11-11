@@ -271,7 +271,9 @@
     "kv3_hg_v1@10",
     "kv3_io_cor@8",
     "kv3_io_cor_v1@9",
-    "kv3_sys_SD_v1@20"
+    "kv3_sys_SD_v1@20",
+    "kv3_hg@9",
+    "kv3_hg_v3@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -339,7 +341,8 @@
     "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
     "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
     "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
-    "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build"
+    "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -573,7 +576,9 @@
     "kv3_hg_v1@10": "INFRA relaunch (COORD STALE batch): RETRY-INFRA row held by LOAD-HOLD; S81 gen inputs now whole on epyc4 (codex-wave-bind-1106 macro dir staged), epyc2 back for KV",
     "kv3_io_cor@8": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_io_cor_v1@9": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
-    "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold"
+    "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
+    "kv3_hg@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch.",
+    "kv3_hg_v3@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch."
    },
    "only_items": [
     "kv3_astk",
@@ -3441,7 +3446,11 @@
     "epyc9",
     "epyc2"
    ],
-   "plan_note_kw45": "KW-FIX-45 11-11: KV 12:00 cut REVISED plan 5091ada33f14 (sha256 dfbbd3a9dd3d; DIE-KV-98 BIND_OK epyc4 a5e8c5aa6b2d716b) installed in the cut tree plan_of_record/plan_c.json; GATE (b) strict bind on the cut tree (pure main 2041e424bb56, epyc9, asbuilt_rel with kw32 src path -> scratch3/kw32src): BIND_RC 0, 0 errors, 160 partitions, 2545 crossings, 429,530 bits, 3094 straps (= DIE-KV-98). bus_groups a03ea3e3."
+   "plan_note_kw45": "KW-FIX-45 11-11: KV 12:00 cut REVISED plan 5091ada33f14 (sha256 dfbbd3a9dd3d; DIE-KV-98 BIND_OK epyc4 a5e8c5aa6b2d716b) installed in the cut tree plan_of_record/plan_c.json; GATE (b) strict bind on the cut tree (pure main 2041e424bb56, epyc9, asbuilt_rel with kw32 src path -> scratch3/kw32src): BIND_RC 0, 0 errors, 160 partitions, 2545 crossings, 429,530 bits, 3094 straps (= DIE-KV-98). bus_groups a03ea3e3.",
+   "hold_items_removed_kw45_kvclassa": {
+    "kv3_hg": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (a) macro lib kv3_head_eighth_e2_tt.lib has no ff view kv3_head_eighth_e2_ff.lib in the kit; held until the FF lib reaches the kit (no relaunch loop)",
+    "kv3_hg_v3": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (a) macro lib kv3_head_eighth_e2_tt.lib has no ff view kv3_head_eighth_e2_ff.lib in the kit; held until the FF lib reaches the kit (no relaunch loop)"
+   }
   },
   "s81": {
    "enabled": true,
@@ -29096,7 +29105,11 @@
     "q_b101": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
     "q_b101_nw": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
     "q_b103": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
-    "q_b103__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens"
+    "q_b103__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b000": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b000__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)"
    },
    "gen_hosts": [
     "epyc8",
