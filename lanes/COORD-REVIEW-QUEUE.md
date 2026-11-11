@@ -37363,3 +37363,4 @@ Form: real-shape views (POROUS-ALL-1 batch) plus a placement keep-off. That is a
 (6) LEC: no effect (cores are black boxes, pins unchanged). Die STA inherits gap (1) through partition SPEFs.
 (7) Also: an IR sidecar, density/fill (not checked today), and keeping the access pre-check.
 Items (1), (3) and (4) are new flow work. They decide whether the batch rows can sign off with real-shape views or need an explicit exception. COORD/POROUS-ALL-1 to choose. DO_NOT_COUNT.
+- 2026-11-10 17:21 PST ROOT-MERGE-57 STATE: KW-FIX-44 grt-stop 2408cd70a28b (grt183_make.sh, autopilot.py, kit_wave.py and 2 tests) is train k7 3c99a10afd4f, after autoclean k6, sparse on epyc8. I will compare its kit_wave/autopilot failures with base by name; the 7 that already fail on main do not count. Noted that the hub coord push block is cleared.
