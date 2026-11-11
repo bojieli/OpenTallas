@@ -37819,3 +37819,24 @@ Exports go to POROUS-ALL-1 with a pincheck as each lands.
 - rxsb: ds85-child-rxsb, 96g / 16 cpu, 140.4x140.4, PD 0.5 (conservative; the record ran at 0.6), 131 pins, ETA 4-6 h. This is a NEW re-sign candidate from current RTL, not a view of d92768be.
 - LLd / LLfd / LLfu: ds85-child-LL*, 24g / 8 cpu each, about 1 h each.
 front_roots DECISION, asked of KW-FIX-43, COORD may veto: option (a). The kit view of dsfd_bf_front_roots is STALE. Its PIN section advertises a cfg[47] M3 stub to y 1.723 that the signed DB (3ad323860e44) does not have, so a parent could route to metal that isn't there. Fix: a lef_override / kit view event that binds the signed export LEF (new_signed.lef, hcabs/out/dsfd_bf_front_roots; all 3,272 plan pins match) for every parent of front_roots. POROUS-ALL-1 then builds those rows the same day. Option (b) (keep the stale kit PIN section) is rejected for that reason.
+- 2026-11-10 18:40 PST RESULT+PROPOSAL [DIE-RECHECK-1 -> DIE-HBM-97, DIE-QC-97, KV-PLAN-2, DIE-KV-97, HEAD-92, DIE-S81-85, COORD] COORD 11-10 items (1) and (2). ADVISORY, DO_NOT_COUNT. Source views are the ledger rows from the epyc8 watch checkout on main a8a7f27eb0.
+(1) NEEDS_PARENT port-hold debt per die, over signed + NEAR-CLOSE views flagged port-only:
+  HBM: 32 port-hold designs; 31 fail kit hold, 46,334 endpoints, sum of kit WNS -2,799 ps. 8 have FF insertion more than 60 ps above the 202.5 vclk bound: opsb_output 410 vs 202.5 (kit -290, 937 endpoints), q3_vm_core 392 (-283, 4,903), q2nf_qout 316 (-187, 4,991), smh_xs 300 (-180, 2,916), rootctl_static_am 294 (-181, 3,053), svgr_bk 280, svgr_own 267, smh_pt_e 265 (-128, 3,708). After an ideal per-core early tap, 9 designs remain < 0, sum -148 ps nominal (rows posted 18:02).
+  S81: 32 designs; 12 fail kit hold, 2,821 endpoints, sum -100. 3 deep cores (gunit_l1f_ba1 367 / ba0 322 / l0r 306 vs 202.5) are positive now. At die all are >= 0 with taps.
+  HEAD: 21 designs; 6 fail kit hold, 6,384 endpoints, sum -116. Die >= 0.
+  KV: 2 designs (e0, hr_core_prompt), 3,478 endpoints, sum -149. Die: e0 -0.2.
+  QC: 1 port-hold view read (coll_ft, +118). The QC deep cores (hc0, NL a0c, NK) are not port-flagged in what I read, so their debt is not in this sum.
+  Mechanism [inferred from rows]: the kit SDC launches inputs from vclk bound at 202.5 FF while the capture tree is 300-410 FF. Inputs therefore look ~100-207 ps early, and the kit cannot repair that without breaking setup. The view is flagged port-only, and the whole gap lands on die STA, which must then early-tap that core by exactly the gap.
+  GENERATOR PROPOSAL (needs a COORD ruling; not applied):
+  (a) Plan: every type whose planned or measured TT insertion is more than 40 ps above common_latency_ps gets clock.insertion_ps / insertion_ff_ps (values from lanes/DIE-RECHECK-TAPS.tsv, rounded up to 10 ps), as vsN4/vsN6 already have at 380. tools/die_plan/gen_phys.py insertion_binding() already turns that into OT_VCLK_TT/FF, clock_binding.json and early_tap_ps = tt - common, so the kit SDC, sign-off --ff-bound-ps and the die tap all agree.
+  (b) tools/ref_tile/ref_tile.py CORE_VIEW_VCLK_FF_PS = 202.5 is a constant for every core view. Read it from the type's insertion binding instead (gen_phys.insertion_binding(P, tn)['ff']).
+  (c) flow_canary already checks OT_VCLK_* against clock_binding.json; with (a) and (b) it guards the new basis.
+  Effect: kit port hold is timed against the real launch, the NEEDS_PARENT gap closes at the kit, and the die early-tap becomes a plan number rather than an inferred one.
+(2) Types whose CTS reported a clock net above OT_TAP_MAX_SINKS 3000: 33 designs, table lanes/DIE-RECHECK-CTSTAPS.tsv. Coverage: CTS log found for 56 of 235 views read; the rest are archived or cleaned, so the real count is higher. With the plan rule taps = ceil(sinks/3000):
+  QC: qfd_dv_s5_sc2_leaf / leaf_dn0 42.6k sinks on ONE net (needs 15), coll_fold_slice 10.5k (4), NK vR7n 23.9k (8).
+  KV: kv3_head_eighth_e2 29.0k on one net (10), hr_cdc_ci 10.0k (4).
+  S81: eng_rr_h0 18.5k on one net (7), gunit_l1c 11.9k (4), su_t_rxsf 9.9k (4), sl_vn_b 29.9k (10, now 5 sub-roots of 7.3k), vn_a (9), ve_m (9), gunit_l3, l1, hcpost_lane_pr (2 each).
+  HEAD: lep_pair 28.2k on one net (10), hd_host_e forms 30.8k (11; clk_regs 10.0k), hd_ctl form 4 fclk_in_lepk_i0 4.5k.
+  HBM: idx_tail_native 8.5k one net (3), opsa_rest 5.5k (2), static_front_w and q3_vm_core 5.0k sub-roots, q2nf_rest bd2 6.6k sub-root, vm_query_static_n12 3.9k.
+  Note [inferred]: more than 3000 sinks on one net does not by itself mean a deep tree (e2 at 29k is 238 TT), but 15 of the 33 sit above 290 TT. Owners: please check your own rows.
+Incremental: lanes/die-recheck-1/die_recheck_cron.sh, localhost cron 13,43. It re-runs the ledger when a plan sha or the signed-view set changes, re-runs the S81 die clock + die STA when the S81 plan sha changes, and posts deltas to the die owners.
