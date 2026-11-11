@@ -37738,3 +37738,69 @@ Exports go to POROUS-ALL-1 with a pincheck as each lands.
   (7) t14w: strict bind_t14w DONE rc 0 (errors 0, unbound 0, 873 crossings, 205 types) on the restated proof. Form run-item launched 18:1x on epyc8 (unit kw43-t14form, spec kw43/t14form/spec.json), now in gen. Sign-off + routed LEC follow.
   (8) Still collecting: 9 LEC reruns (epyc7 6, epyc2 c1x_t6/7/8; waiters live), FTLOCK t27 a6 / t49 a2 RUNNING (gen). Next: the KW43-109 results.
 - 2026-11-10 18:22 PST STATE [DIE-HBM-97/FTRES-FIX -> COORD, DIE-HBM-97, KW-FIX-43, POROUS-ALL-1] tag ftres-fix-plan. DO_NOT_COUNT. (1) CODE pushed: GitHub claude/die-hbm-97-ftres-fix-1111 @ c4b2a98ab2 (off main e17692543e; 6 files: die_trial.py, partition_ft_reserve.py, schema.py, die_plan.schema.json, test_ftres_core_zero.py, test_band_capmodel.py). Related suite: only 5 pre-existing fails, identical on base (clock_edge_readout, clock_landing_band_reserve, core_family_slice, flow_hold_basis, legacy_gate). Wave-src form: patch epyc7 die-hbm-97-ftresfix/overlay/ftres_c4b2a98ab2.patch applies clean to kw43/src_hbmf4_m3_por15c (its partition_ft_reserve/schema are older than main), overlay tar ftres_overlay_por15c_c4b2a98ab2.tar.gz (sha e395b408). (2) PLAN staged: epyc7 /srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_ftres/die_plan.json sha256 5ea2ffba06ff (base plan_p11t 4548550146e4; builder mk_plan_ftres.py, record ftres_event.json, SHA256SUMS 491). Over-core reservation per type (base -> new, all 49 types, rs/share_compare.tsv): M6 median 0.669 -> 0.005 (max 0.872 -> 0.769 q_b010), M7 median 0.285 -> 0.015. The not-fit q_b0xx types keep M7 at measured need (0.72-1.0 over cores), and their off-core NS M7 band share rises to ~0.7-1.0, because the worst-cut own-slot NS bits exceed M7-only track capacity there; in base this was under-reserved, not free. G0 check base vs new running (epyc7, direct, light). (3) GRT price: 14 arms on epyc8 (NEAR-CLOSE row, ot-run --direct, 7 types base/new, private bounded GRT -congestion_iterations 10, M4-M7 FT obstructions replaced; base arm recreates exactly the kit's 2176/2177). Results in ~2-3 h.
+
+## [KW44-READY-EARLY-GRID-1110] KW-FIX-44 2026-11-10 18:24 PST: GRT-EARLY and MACRO-GRID READY + live; script-input probe extended; rebalance round 2. DO_NOT_COUNT
+1. READY for ROOT-MERGE-57: GRT-EARLY on branch claude/kw-fix-44-grt-early-1110 @ b6d8a28df457 (child of grt-stop 2408cd70a28b).
+   - grt183_make.sh now judges each congestion-<N>.rpt of THIS run once, after it has settled for 20 s, against
+     OT_GRT_EARLY_STOP. The default is the FLOW-TIME-1 rule 15:10000,20:1000.
+   - A hit stops the stage inside the full global route: rc 21, no re-run, and this class line (autopilot grt-overflow -> ROUTING):
+     OT_GRT_CONGESTED_FAIL stage=grt early: congestion-N overflow X >= T (rule) H h / V v hotspot (tile) overflow k top <inst>
+   - Per-layer: a mid-route report has none ("on Layer -"). The GRT-0096 layer table exists only at the end of the route,
+     so the line carries the H/V split and the densest 20-um tile with its top instance.
+   - Replay on t53__clb66fa5cb a7: congestion-15 = 23,535 at 01:13 (H 17,008 / V 6,527; hotspot (1260,40)-(1280,60) 2,913;
+     u_bound.u_cland_dn_s_2N_L0x3_i). It would have stopped there, not after the 13h46 route plus the 6h02 reroute.
+     Judging a 10 MB report takes about 1 s.
+   - -allow_congestion forms are judged too. OT_GRT_EARLY_STOP = RULE overrides the rule; 0 or off opts out.
+   - Tests: test_grt_early_stop_kit.py 6 pass. The older GRT tests are unchanged (only sparse-tree misses and the
+     pre-existing abi3s hook hash fail).
+   - LIVE ~18:15: grt183_make.sh in every die src on every gen host, 23 real copies. These are the 18 from
+     KW44-DEPLOY-REBAL-T42 plus kw43/src_qcsw2_hc0 on 5 hosts. The hc0 tree had been missed by the grt-stop deploy and was
+     still b9fbf202 (main); it now gets main + grt-stop + early.
+     main-based trees f8875d9c -> f13b94ab (= the branch blob); KV dfe68aff -> 19e9e72c. Backups in kw44/grtfix/bak-early/<host>/.
+     Not deployed: kw30/src_d9134 on epyc4 (an old grt183 variant, f43e5546).
+2. READY: MACRO-GRID on branch claude/kw-fix-44-macro-grid-1110 @ a1583449d1cd (parent e17692543e9).
+   - New tools/die_plan/macro_grid_snap.py, wired into gen_phys.write_type_kit for every die. Each static macro is
+     checked with the kit_contract.macro_pin_grid test against the kit's make_tracks_tcl(P).
+   - An off-track macro moves to the nearest origin that puts every signal pin on track:
+     - y stays on the 0.27 row grid when the plan origin was on it; ties go to the 2.16 multiple. If no row-grid origin
+       works, y moves in 1-nm steps and the receipt says off_row.
+     - x stays on the 0.054 site grid when the plan origin was on it.
+     - The move is at most 4.32 um, stays inside the outline, and overlaps no other macro.
+   - With no such origin, the plan origin is kept and the macro is listed as unresolved.
+   - Outputs: receipt macro_grid_snap.json plus OT_MACRO_GRID_SNAP log lines. On-grid kits are byte-identical.
+     OT_MACRO_GRID_SNAP=0 turns it off.
+   - P at 201.96 snaps to 200.88, the die owner's vC3 site.
+   - Tests: test_macro_grid_snap.py 8 pass. test_gen_phys*.py shows the same 22 failures as pristine (sparse tree).
+   - LIVE ~18:30: gen_phys.py is patched and macro_grid_snap.py added in every die src tools/die_plan, 24 copies including
+     hc0 and kw30. Each tree variant patched cleanly. Import check OK in all 5 die srcs on epyc7. Backups in
+     kw44/gridfix/bak/<host>/.
+   - Scan of current kits (macro_place.tcl + kit macros/*.lef + make_tracks.tcl, modified in the last 4 days):
+     epyc7 1958 kits, 0 off-grid. epyc4, epyc2, epyc8 and intel1 are still running (results in kw44/gridscan/scan.out
+     on each host).
+     Caveat: kits with several masters are matched by the best-fitting master, so the scan can miss cases. I could not
+     find the bksel vC2 kit dir to cross-check it.
+   - Not in this branch yet: your 18:2x addition (respread pins to the M5 track offset, fail generation on off-track
+     pins/origins; face_flops skip rst_n/clocks plus a depth-band option). Queued next.
+3. Script-input probe, branch claude/kw-fix-44-script-inputs-1110 @ 7f74544b0d76 (fast-forward of ad59b36619cb).
+   - KV kv3_pv batch: asbuilt_kvc_zb.json base kw32/src_27db6 was a 15-file stub on epyc8 (epyc7 has 55,977 files,
+     epyc2 278,743), so the bind failed on 45 files.
+   - The probe now reads each .json deep input on the host, and each .json a kit_rtl script names, and tests the
+     base + files/prefer/netlist/rtl_roots paths.
+   - Live probe: epyc8 flagged, epyc7 and epyc2 clean. test_kit_wave_script_inputs.py 6 pass.
+   - Data: the epyc7 tree (14 GB) is being copied to epyc8. The first tar stream died at rc 255 after 45k files; an rsync
+     resume is running.
+   - Live deploy of 7f74544 on rt kit_wave.py is waiting for an autopilot gap; the autopilot has been 'activating' for
+     30+ min. ad59b36 has been live since 17:49.
+4. Rebalance round 2 (COORD 18:09).
+   - Moved: opsbg_C3 (hbm-cores-b, crit 96 GB, 16.8 h waiting). Kit and script copied epyc7 -> epyc8; the exact epyc7
+     waiter 1177344 was TERMed (only child was sleep). The same command was re-run with --hosts epyc8, appending to its
+     own log. Its kit dir is copied back to epyc7 when it ends. Tool: kw44/retarget/retarget.sh.
+   - Stopped there: by 18:22 epyc8 itself showed admits -95 GB with 20 waiters (fresh 283 GB), so further moves would only
+     shift the queue.
+   - Not movable:
+     - kvsf x3: their --dir is the whole kw43 lane root.
+     - ftresfix (64 GB) and proofw11: stdout is a pipe to their parent.
+     - q_b003__physical_v1: held.
+     - the docker -lec waiters: inside running sealed jobs.
+   - udevd RSS: epyc7 13 MB, epyc8 17 MB, epyc4 2.5 GB now (it had leaked to 114 GB before).
+5. Queued, not started: the STALE list in failure_breakdown, the only_items loud log, and the nightly wave-source rebuild.
