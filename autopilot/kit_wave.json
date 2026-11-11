@@ -25504,7 +25504,11 @@
     "hnx_fused_lane_c",
     "ot_hidx_s3_q",
     "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4",
-    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b"
+    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b",
+    "PHY_NC",
+    "PHY_NE",
+    "PHY_NW",
+    "q_mcb"
    ],
    "place_prefer": [
     "epyc4",
@@ -25515,7 +25519,7 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_r2_restore/die_plan.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw43/src_hbm_tc1111",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_hbm_tc1111p",
    "src_sha": "aac286936589f567b335a3ff7337edc47f8a9ffb",
    "gate": {
     "g0c": "PASS",
@@ -26703,7 +26707,6 @@
     "ot_hbm_sm_pv_merge@3",
     "ot_hbm_sm_i8w_front@5",
     "NE_io@14",
-    "root@5",
     "q_mca@2"
    ],
    "pilot_max": 2,
@@ -26751,7 +26754,8 @@
     "q_b113": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b113__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b003": "KW-FIX-44 2026-11-10 14:59 PST COORD ruling (1): 3 strikes in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
-    "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key."
+    "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
+    "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)"
    },
    "gen_hosts": [
     "epyc7",
@@ -27055,7 +27059,6 @@
     "ot_hbm_sm_i8w_front@5": "KW-FIX-43 11-10 22:2x COORD (HBM-CORES-B READY+ASK 8d3230a3fa approved): a5 PORT_MISMATCH 'command' (face-shell drop deferred) fixed by gen_core_kit_hbm.py direct_port_check; relaunch from gen as INFRA",
     "NE_io@14": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a14 FLOW kit-RTL bind of record named pruned HDL sources; the taps batch uses the fresh strict bind 11b1d121579",
     "q_su11@10": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a10 INFRA (COORD-authorized stop before detail route); relaunch on the taps plan",
-    "root@5": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a5 PLAN preflight macro-inst/bound-path on the old bind; fresh gen on the taps plan + fresh strict bind",
     "q_mca@2": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a2 CANCELLED (drained epyc5); q_mca is new in the taps batch (type clock insertion 335.7/259.6)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
@@ -29496,20 +29499,24 @@
      "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_spu1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_spu1/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
     },
     "q_spu1__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_spu1/die_plan.json",
      "kit_rtl": {
       "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
     },
     "q_su30": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
@@ -29816,28 +29823,28 @@
      "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "PHY_NC": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
     },
     "PHY_NE": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
     },
     "PHY_NW": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
     },
     "q_b010": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
@@ -29888,12 +29895,12 @@
      "note": "KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
     },
     "q_mcb": {
-     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+     "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
     },
     "q_spt0__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
@@ -37461,7 +37468,24 @@
     "ot_hidx_s3_q"
    ],
    "note_kw43cyc2": "KW-FIX-43 11-10 23:2x: ot_hbm_su_pg_lane_exp_x_core is two core-view items in the plan probe (pin variants a8815b8d3cb4, ec6b144f732b, same in r2_restore and the taps plan): only_items/plan_core_items/item_inputs name the two view items (NO-ROW-SOURCE on the bare module); core_kit.item_args stays on the module (looked up by core_module). Revert: *_prev_kw43cyc2.",
-   "note_kw43tcr": "KW-FIX-43 11-10 23:2x: retries NE_io@14 q_su11@10 root@5 q_mca@2 (taps batch, fresh gen). Revert: drop them."
+   "note_kw43tcr": "KW-FIX-43 11-10 23:2x: retries NE_io@14 q_su11@10 root@5 q_mca@2 (taps batch, fresh gen). Revert: drop them.",
+   "src_prev_kw43h98": "/srv/opentallas-scratch2/claude/kw43/src_hbm_tc1111",
+   "only_items_prev_kw43h98_added": [
+    "PHY_NC",
+    "PHY_NE",
+    "PHY_NW",
+    "q_mcb"
+   ],
+   "retry_prev_kw43h98_removed": [
+    "root@5"
+   ],
+   "rebuild_counted": [
+    "ot_hidx_s3_q"
+   ],
+   "rebuild_counted_prev_kw43h98_added": [
+    "ot_hidx_s3_q"
+   ],
+   "note_kw43h98": "KW-FIX-43 11-10 23:3x (COORD 23:10 (5), FTRES 23:10 ROW AMENDMENT, DIE-HBM-98 list): src -> kw43/src_hbm_tc1111p = cp -al of tc1111 (read-only) + phy_slices_overlay.tar.gz 958c77ef51b4 (21 files added, none replaced; epyc7/epyc8/epyc4); q_spu1/pv1 plan -> plan_p11t_taps_spu1 70c3e990f40e (staged epyc4, SHA256SUMS OK); PHY_NC/NE/NW + q_mcb rows on the taps plan+bind; root HELD (split-rebind, DIE-HBM-98), root@5 retry dropped; ot_hidx_s3_q in rebuild_counted (COORD 22:5x released the taps cycle core; its counted block is unchanged so the wave skipped it). Revert: src <- src_prev_kw43h98, plan <- plan_prev_kw43h98, drop the *_prev_kw43h98_added names, re-add root@5, drop hold root."
   }
  },
  "place_prefer": [
