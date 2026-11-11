@@ -58,6 +58,20 @@ def decide(raw, wr):
     return raw
 
 
+def ca_form(cs, P, M, base=3):
+    """(DEPTH, K) of ot_dp_clk_landing_ca for one landing, equal count origins: lag L = K P + d must sit in the ring
+    window [0.5 P + M, (DEPTH - 0.5) P - M] at every corner (d range = [lo, hi] incl. pessimism).  Measured on the real
+    cell (ca_sweep, K 3: offset exactly K for d in (-2.5P, 0.5P] at DEPTH 4, (-2.5P, 4.5P] at DEPTH 8, fault outside).
+    Prefer K = base (schedule = bind + 1) at DEPTH 4, then DEPTH 8, then the nearest larger K (more cycles, the lever)."""
+    def ok(k, depth):
+        return all(c['lo_ps'] + k * P >= 0.5 * P + M and c['hi_ps'] + k * P <= (depth - 0.5) * P - M for c in cs.values())
+    for k in [base] + [base + e for e in range(1, 8)] + [base - e for e in range(1, base + 1)]:
+        for depth in (4, 8):
+            if ok(k, depth):
+                return depth, k
+    return None, None
+
+
 def run(lps, bind_latency, P=833.0, M=100.0, bind_cycles=3, views=None, declared_to_ca=False):
     views = views or {}
     rows = []
@@ -72,11 +86,12 @@ def run(lps, bind_latency, P=833.0, M=100.0, bind_cycles=3, views=None, declared
             reason = 'raw NEAR' if raw == 'NEAR' else f'wrapped {wr}' if wr in ('NEAR', 'EDGE') else 'sign flips between models'
         elif declared_to_ca and view == 'both_declared':
             dec, reason = 'CA', 'both ends declared'      # COORD 11-10: no measured end -> CA until a real clock
-        new = {'CA': bind_cycles + 1, 'LEAD': bind_cycles, 'LAG': bind_cycles - 1}[dec]
+        depth, k = ca_form(cs, P, M) if dec == 'CA' else (None, None)
+        new = {'CA': (k + 1) if k is not None else bind_cycles + 1, 'LEAD': bind_cycles, 'LAG': bind_cycles - 1}[dec]
         clear = min(max(-cs[k]['hi_ps'], cs[k]['lo_ps']) for k in cs)
         rows.append(dict(port=r['port'], lane=r['lane'], src=r['src'], dst=r['dst'], dst_bus=r.get('dst_bus'),
                          kind=r.get('kind'), wneg=r.get('wneg'), raw=raw, wrapped=wr, ds85_cls=r.get('cls'),
-                         view=view, decision=dec, ca_reason=reason, bind_cycles=r.get('bind_cycles', bind_cycles), new_cycles=new,
+                         view=view, decision=dec, ca_reason=reason, ca_depth=depth, ca_k=k, bind_cycles=r.get('bind_cycles', bind_cycles), new_cycles=new,
                          delta=new - r.get('bind_cycles', bind_cycles), raw_clearance_ps=round(clear, 1),
                          TT_d_ps=cs['TT']['d_ps'], FF_d_ps=cs['FF']['d_ps']))
     lat = {b['lane']: b for b in bind_latency['buses']}
@@ -133,6 +148,7 @@ def main():
                 declared_to_ca=a.declared_to_ca,
                 ca_reason=dict(Counter(x['ca_reason'] for x in rows if x['decision'] == 'CA')),
                 by_view=dict(Counter(f"{x['view']}:{x['decision']}" for x in rows)),
+                ca_form=dict(Counter(f"D{x['ca_depth']}/K{x['ca_k']}" for x in rows if x['decision'] == 'CA')),
                 lanes=len(lanes), lanes_changed=sum(1 for x in lanes if x['delta']),
                 lane_delta_hist=dict(sorted(Counter(x['delta'] for x in lanes).items())),
                 total_added_cycles=sum(x['delta'] for x in rows if x['delta'] > 0),
