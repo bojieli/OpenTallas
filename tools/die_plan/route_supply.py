@@ -61,6 +61,26 @@ import numpy as np
 
 SCHEMA = "opentallas.route_supply.v1"
 LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
+# OpenROAD GRT macro-obstruction rules (build 26Q3-1510-g6cb3f2b704 in openroad/orfs:asap7lock, src/grt/src/
+# GlobalRouter.cpp; PLAN-ROUTE-1 11-10, verified on the DIE-QC-97 NK H-channel arms A/B/C):
+#  * transition layers (default via = first tech via per bottom layer, no OR_DEFAULT in ASAP7; via enclosure on the
+#    layer / track pitch > 0.8): VIA23 0.028/0.039 no; VIA34 .034/.036, VIA45 .046/.048, VIA56 .054/.048,
+#    VIA67 .054/.064, VIA78 .054/.064 yes -> M3..M7 lose 50% capacity over a macro OBS on the layer below
+#    (adjustTransitionLayers, l.2158; adjustTileSet floor(cap*0.5), l.2177)
+#  * per macro, the max routing layer (M7) inherits every OBS of the layer below (layerIsBlocked l.5513) and a layer
+#    between two obstructed layers is blocked where they overlap (extendObstructions l.5557)
+GRT_TRANSITION = ("M3", "M4", "M5", "M6", "M7")
+GRT_MAX_LAYER = "M7"
+
+
+def grt_macro_rules(obs):
+    """macro OBS extension as findInstancesObstructions applies it (bottom-up, in place)."""
+    for i in range(1, len(LAYERS) - 1):
+        lo, mid, hi = LAYERS[i - 1], LAYERS[i], LAYERS[i + 1]
+        obs[mid] = np.maximum(obs[mid], np.minimum(obs[lo], obs[hi]))
+    top = GRT_MAX_LAYER
+    below = LAYERS[LAYERS.index(top) - 1]
+    obs[top] = np.maximum(obs[top], obs[below])
 # Effective track pitch = drawn pitch after PG / rail blockage, MEASURED as the GRT-0053 "Original Resources" ratio
 # to M4 on macro-free kits (S81 slice_station__t46 / t24 / t49, HEAD hd_spn, HBM q_spt1: identical to 3 digits),
 # with M4 at its drawn 0.048 um (drawn: M2/M3 0.036, M4/M5 0.048, M6/M7 0.064).
@@ -426,9 +446,17 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         macro_cov = np.maximum(macro_cov, c)
         if kind == "mem":
             mem_cov = np.maximum(mem_cov, c)
+    if cfg.get("grt_rules", True):
+        grt_macro_rules(obs)
     sup = {}
     for L in LAYERS:
         sup[L] = b / PITCH[L] * (1 - cfg["derate"][L]) * (1 - np.clip(obs[L], 0, 1))
+        if cfg.get("grt_rules", True) and L in GRT_TRANSITION:
+            # fat-via transition layer: OpenROAD halves L's capacity over every gcell under a MACRO OBS on L-1
+            # (GlobalRouter::adjustTransitionLayers / adjustTileSet, floor(cap * 0.5))
+            below = LAYERS[LAYERS.index(L) - 1] if LAYERS.index(L) > 0 else None
+            if below:
+                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1))
     supH = sup["M2"] + sup["M4"] + sup["M6"]
     supV = sup["M3"] + sup["M5"] + sup["M7"]
     # ---------------- demand
