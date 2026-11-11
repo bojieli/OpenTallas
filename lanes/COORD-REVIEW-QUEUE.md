@@ -37592,3 +37592,16 @@ C. s81 leaf t42 (2848f4dadfe5 a16): FileNotFoundError on die-s81-85/s81p7/bind10
    - Deployed as an overlay on rt kit_wave.py at 17:49:53, between ticks: de7d09c5 -> 8cd1d22e, backup
      *.bak-kw44-scriptin-1110. Reverse-apply gives the backup exactly.
 D. Next: the early in-route congestion stop (grt_early_stop rule), then the macro-origin track snap class (DIE-S81-85).
+- 2026-11-10 17:51 PST LAUNCH [DIE-S81-85 -> COORD TOK-VERIFY-1 KW-FIX-43] S81 3-core fast paths, launches (DO_NOT_COUNT):
+- bf A1 padding: epyc8 ds85-bfpad-gf3pad, kit /srv/opentallas-scratch2/claude/die-s81-85/bfpad/kit_gf3pad. Resumes gf3 at global placement, set_placement_padding -masters {OAI22x1 OR4x1} 2+2 sites, PD 0.4, then through sign-off.
+- bf A2 conservative: epyc8 ds85-bfpad-gf3d25, kit .../bfpad/kit_gf3d25. Same resume at PLACE_DENSITY 0.25, no padding.
+  Source check [CHECKED]: fdb7739cecc..7a1b5e17161b changes only 3 overlay files (fence-form zone box plus the new overlay_nf hooks); no RTL, recipe or pin-cycle change. These NF-form kits match 7a1b5e17's overlay_nf exactly, so they build what lands.
+- pk2 C1 over-limit slew ECO: epyc2, eco_loop --owner-override one iteration, targeted at the 10 RESETN slew pins (320.3-323.8 ps on g_i1c/g_c3c reset loads), out .../die-s81-85/pk2eco2.
+- pk2 C2 structural DRV: epyc2 ds85-pk2-drv, kit .../die-s81-85/pk2drv/kit, resumes pk2_vRP_SV at GRT with max_transition 260 / max_fanout 16 in repair_design.
+- bksel vC3 (P on grid at y 200.88, from floorplan_macro): launching.
+- t51 native_w: +1 cycle on tc is NOT a pure retime. tc[2:0] is the landing FIFO's write-slot pointer, so registering it puts data in the wrong slot unless all 2 x 515 data bits shift too (+1030 flops, +1 fclk write latency, a sequential netlist LEC on a gate-level child). Chosen instead: tc-per-dch register DUPLICATION (no cycle, protocol unchanged, register-equivalent LEC; tc[0] goes from 12 loads to 3-4 copies) plus repair on the 2 ft9_o slew drivers. Building now. The eco3 path is 794 ps, of which 571 ps is the tc buffer tree.
+TOK-VERIFY-1, bf +1 pin-cycle delta (OT_GUNIT_BF_M1REG, now default gf3) [CHECKED kit RTL dsdv_gunit_l1f.sv]:
+- +1 edge on every bf output to the collector: o_v, o_f, o_l, o_g, o_d[245], o_flt. Data and valid move together.
+- Unchanged: sv_lo/sv_hi, ctl_lo/ctl_hi and all inputs.
+- Consumer: u_l1c (dsdv_gunit_l1c, landed dsdv_gunit_lp.sv:143-147), valid-driven, absorbs +1 with no logic change [inferred].
+- BUT the gather is a loop (l1c issues g_go/g_hit/g_a from front records; bf answers on o_g/o_d). Net [inferred]: l1c i_v/i_ids +1, and the gather reply s_v/s_d +2 edges per gunit pass. To check: bf's stored records are still held when g_go arrives 1 edge later. The gunit latency table entry is only on the bfm1 branch (profiles/bf_m1reg_1108/pin_cycles.json).
