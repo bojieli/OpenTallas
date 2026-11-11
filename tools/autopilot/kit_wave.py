@@ -4454,6 +4454,9 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
                 continue
             if any(fnmatch.fnmatchcase(item, pat) for pat in (d.get("hold_items") or {})):
                 continue                                  # an operator hold holds the arm too
+            if d.get("only_items") is not None and item not in d["only_items"]:
+                continue                                  # KW-FIX-45 11-11: a paused / restricted die (only_items) launches no arm
+                                                          # either (QC only_items=[] still got 6 arm relaunches at 08:42)
             if load_hold(cfg, die, item, brec.get("parent_item"), core_module(item)):
                 continue
             r = {"item": item, "kind": brec.get("kind") or "type", "parent_item": brec.get("parent_item"),
