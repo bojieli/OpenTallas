@@ -137,7 +137,7 @@ def load_derived(paths):
         d = json.loads(Path(p).read_text())
         for tn, v in d.items():
             assert tn not in out, f"derived companions overlap on type {tn}"
-            assert set(v) <= {"track_offset_um", "core_taps", "internal_stations"}, (p, tn, sorted(v))
+            assert set(v) <= {"track_offset_um", "core_taps", "internal_stations", "ft_slots"}, (p, tn, sorted(v))
             out[tn] = dict(v, _src=str(p))
         srcs.append(dict(path=str(p), sha256=fsha(p)))
     return out, srcs
@@ -254,6 +254,46 @@ def apply_pos(plan, deltas, derived=None):
                             ch += 1
                             a_.update(copy.deepcopy(b_))
                     st_rec = dict(stations=len(sb), changed=ch, regs=sum(len(x.get("regs_um", [])) for x in sb))
+            # derived ft_slots re-site (DIE-S81-85 / COORD 03:2x, CPL-S81-SVC): a moved type may take the lane's ft_slots
+            # regs_um / bit_sites_um; slot count, names, stations, per-slot reg count and every other key kept;
+            # every reg and bit site in-outline
+            ft_new = dv.get("ft_slots")
+            ft_rec = None
+            if ft_new is not None:
+                fb = t.get("ft_slots") or []
+                W_, H_ = t["outline_um"]
+                inside_ = lambda q: -EPS <= q[0] <= W_ + EPS and -EPS <= q[1] <= H_ + EPS  # noqa: E731
+                if not old:
+                    problems.append(f"{tn}: companion re-sites ft_slots but the delta moves no core")
+                elif [s["name"] for s in fb] != [s["name"] for s in ft_new]:
+                    problems.append(f"{tn}: companion ft_slots {[s['name'] for s in ft_new]} != BASE {[s['name'] for s in fb]}")
+                else:
+                    ch, bits = 0, 0
+                    for a_, b_ in zip(fb, ft_new):
+                        other = sorted(k for k in set(a_) | set(b_) if k not in ("regs_um", "bit_sites_um") and a_.get(k) != b_.get(k))
+                        if other:
+                            problems.append(f"{tn}: ft slot {a_['name']}: companion changes non-derived keys {other}")
+                            continue
+                        if len(b_.get("regs_um") or []) != len(a_.get("regs_um") or []):
+                            problems.append(f"{tn}: ft slot {a_['name']} reg count {len(a_.get('regs_um') or [])} -> "
+                                            f"{len(b_.get('regs_um') or [])}")
+                            continue
+                        if len(b_.get("bit_sites_um") or []) != len(a_.get("bit_sites_um") or []) or any(
+                                len(x) != len(y) for x, y in zip(a_.get("bit_sites_um") or [], b_.get("bit_sites_um") or [])):
+                            problems.append(f"{tn}: ft slot {a_['name']} bit_sites_um shape changed")
+                            continue
+                        pts = list(b_.get("regs_um") or []) + [q for row in b_.get("bit_sites_um") or [] for q in row]
+                        bad = [q for q in pts if not inside_(q)]
+                        if bad:
+                            problems.append(f"{tn}: ft slot {a_['name']}: {len(bad)} regs/bit sites outside the outline, e.g. {bad[:2]}")
+                            continue
+                        bits += sum(len(row) for row in b_.get("bit_sites_um") or [])
+                        if any(a_.get(k) != b_.get(k) for k in ("regs_um", "bit_sites_um")):
+                            ch += 1
+                            for k in ("regs_um", "bit_sites_um"):
+                                if k in b_:
+                                    a_[k] = copy.deepcopy(b_[k])
+                    ft_rec = dict(slots=len(fb), changed=ch, regs=sum(len(x.get("regs_um") or []) for x in fb), bit_sites=bits)
             ct = dv.get("core_taps", {})
             mine = {r["tap"]: r["to"] for r in taps}
             tap_cmp = dict(companion=len(ct), agree=0, differ=[], companion_only=sorted(set(ct) - set(mine))[:10],
@@ -276,6 +316,7 @@ def apply_pos(plan, deltas, derived=None):
                 r["displacement_um"] = round(abs(r["to"][0] - r["from_"][0]) + abs(r["to"][1] - r["from_"][1]), 4)
             rec[tn] = dict(delta=path, delta_sha256=dsha, moved=moved, unchanged_listed=unchanged,
                            core_taps_moved=taps, core_taps_moved_n=len(taps), companion_taps=tap_cmp, stations_derived=st_rec,
+                           ft_slots_derived=ft_rec,
                            track_offsets_changed=sum(1 for x in moved if "track_offset_to" in x),
                            core_tap_max_displacement_um=max((r["displacement_um"] for r in taps), default=0.0))
     return rec, problems
@@ -380,14 +421,39 @@ def apply_face(plan, path):
     return dict(delta=str(path), delta_sha256=fsha(path), types=rec, ports_derived=ports), problems
 
 
-def keep_clear(plan, path):
+def window_span(face_rec, tn):
+    """[lo, hi] over the APPLIED face-stage windows of type tn."""
+    m = ((face_rec or {}).get("types") or {}).get(tn)
+    if not m:
+        return None
+    ws = [v["to"]["window_um"] for v in m.values() if "window_um" in v["to"]]
+    return [min(w[0] for w in ws), max(w[1] for w in ws)] if ws else None
+
+
+def keep_clear(plan, path, face_rec=None):
     """keep-clear rules of an accompanying face event: rect rule = no placed core (with obs_min: whose obs_max layer
     >= obs_min) intersects rect_um (type frame, open interior); max_top rule = every core whose module matches
-    module_re has box top <= max_top_um."""
+    module_re has box top <= max_top_um.
+    Window-derived form (DIE-S81-85 11-11: the bounds follow WHICHEVER window the face stage applied, not the +590 one):
+    "windows_of": TYPE -> span [lo, hi] of that type's applied windows; a rect rule with "x_um": [X0, X1] takes
+    rect_um = [X0, lo, X1, hi]; a max-top rule with "below_window_um": d takes max_top_um = lo - d."""
     import re
     rules = json.loads(Path(path).read_text())
-    bad = []
+    bad, derived = [], []
     for r in rules:
+        if "windows_of" in r:
+            sp = window_span(face_rec, r["windows_of"])
+            if sp is None:
+                bad.append(f"keep-clear rule on {r['type']} derives from {r['windows_of']}'s applied windows, but the face "
+                           "stage moved none")
+                continue
+            r = dict(r)
+            if "x_um" in r:
+                r["rect_um"] = [r["x_um"][0], sp[0], r["x_um"][1], sp[1]]
+            if "below_window_um" in r:
+                r["max_top_um"] = round(sp[0] - r["below_window_um"], 4)
+            derived.append(dict(type=r["type"], windows_of=r["windows_of"], span=sp,
+                                **{k: r[k] for k in ("rect_um", "max_top_um") if k in r}))
         t = plan["partition_types"][r["type"]]
         for e in t.get("hard_cores") or []:
             x0, y0, x1, y1 = box(e)
@@ -399,7 +465,7 @@ def keep_clear(plan, path):
                                f"{[round(v, 3) for v in (x0, y0, x1, y1)]} in keep-clear {r['rect_um']} ({r.get('why', '')})")
             if "module_re" in r and re.search(r["module_re"], e["module"]) and y1 > r["max_top_um"] + EPS:
                 bad.append(f"{r['type']} {e['inst']} ({e['module']}) top {y1:.3f} > {r['max_top_um']} ({r.get('why', '')})")
-    return dict(pass_=not bad, rules=path, rules_sha256=fsha(path), violations=bad)
+    return dict(pass_=not bad, rules=path, rules_sha256=fsha(path), derived=derived, violations=bad)
 
 
 # ------------------------------------------------------------------------------------------- (d) signed box heights
@@ -469,10 +535,25 @@ def apply_resize(plan, spec_path):
 
 
 # ------------------------------------------------------------------------------------------- EQ gate
-def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None):
+def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None, script_recs=None):
     """restore every key the event may move from BASE and compare: anything else moved = FAIL."""
     x = json.loads(json.dumps(out))
     T, B = x["partition_types"], base["partition_types"]
+    for s_ in script_recs or []:      # script stages: the keys they declared (checked per stage against its input)
+        for tn in s_["touched"]:
+            for k in s_["type_keys"]:
+                if k in B[tn]:
+                    T[tn][k] = copy.deepcopy(B[tn][k])
+                else:
+                    T[tn].pop(k, None)
+        for k in s_["top_keys"]:
+            a_, b_ = (k.split(".", 1) + [None])[:2]
+            if b_ is None:
+                x[a_] = copy.deepcopy(base.get(a_))
+            elif b_ in (base.get(a_) or {}):
+                x[a_][b_] = copy.deepcopy(base[a_][b_])
+            else:
+                x[a_].pop(b_, None)
     for tn, r in pos_rec.items():
         bi = {e["inst"]: e for k in ("hard_cores", "contents") for e in B[tn].get(k) or []}
         for k in ("hard_cores", "contents"):
@@ -487,7 +568,11 @@ def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None):
             for f in ("from_um", "to_um", "regs_um"):
                 if f in b_:
                     a_[f] = copy.deepcopy(b_[f])
-        bt = {tp["name"]: tp for tp in (B[tn].get("clock") or {}).get("taps", []) or []}
+        for a_, b_ in zip(T[tn].get("ft_slots") or [], B[tn].get("ft_slots") or []):
+            for f in ("regs_um", "bit_sites_um"):
+                if f in b_:
+                    a_[f] = copy.deepcopy(b_[f])
+        bt ={tp["name"]: tp for tp in (B[tn].get("clock") or {}).get("taps", []) or []}
         for tp in (T[tn].get("clock") or {}).get("taps", []) or []:
             if tp["name"] in bt:
                 tp["xy"] = copy.deepcopy(bt[tp["name"]]["xy"])
@@ -586,7 +671,8 @@ def g0(plan_path, out_dir):
     """check.py reads its sidecars from PLANDIR (census/, core_conns.json, r8/, lat/ ... of physical/die_plan/s81):
     the plan is copied into this directory under a temporary dot-name for the run and removed after."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    tmp = HERE / f".compose_g0_{fsha(plan_path)[:16]}_{out_dir.name}.json"
+    import uuid
+    tmp = HERE / f".compose_g0_{fsha(plan_path)[:12]}_{uuid.uuid4().hex}.json"   # unique: concurrent runs share HERE
     tmp.write_bytes(Path(plan_path).read_bytes())
     try:
         r = subprocess.run([sys.executable, "-I", str(REPO / "tools/die_plan/check.py"), str(tmp), "--out",
@@ -711,6 +797,57 @@ def compose(a):
                            core_tap_max_displacement_um=max((r["core_tap_max_displacement_um"]
                                                              for r in pos_rec.values()), default=0.0)))
         cur = s_out
+    script_recs = []
+    for spec_path in getattr(a, "stage_script", None) or []:
+        # (e) and optional extras (DIE-S81-85 11-11): a lane's own applier run on the current plan; its declared keys
+        # are the only ones it may change (checked here against the pre-stage plan), and the final EQ gate restores them
+        sp = json.loads(Path(spec_path).read_text())
+        sp["script"] = str(Path(sp["script"]) if Path(sp["script"]).is_absolute() else REPO / sp["script"])
+        text0 = dump(plan).encode()
+        mid, so, srep = out_dir / f"pre_{sp['name']}.json", out_dir / f"{sp['name']}_plan.json", out_dir / f"{sp['name']}_report.json"
+        mid.write_bytes(text0)
+        sub = dict(**{"in": str(mid), "out": str(so), "in_sha": cur, "report": str(srep)})
+        argv = [str(x).format(**sub) for x in sp["argv"]]
+        r = subprocess.run([sys.executable, "-I", sp["script"], *argv], capture_output=True, text=True, cwd=REPO)
+        mid.unlink()
+        if r.returncode:
+            problems.append(f"stage {sp['name']} failed: {(r.stdout + r.stderr)[-1500:]}")
+            continue
+        new = json.loads(so.read_bytes())
+        so.unlink()
+        tk, topk = set(sp.get("type_keys", [])), set(sp.get("top_keys", []))
+        bad, touched = [], {}
+        for k in set(plan) | set(new):
+            if k == "partition_types" or plan.get(k) == new.get(k):
+                continue
+            if k in topk:
+                continue
+            subk = [f"{k}.{s}" for s in set(plan.get(k) or {}) | set(new.get(k) or {})
+                    if isinstance(plan.get(k), dict) and (plan[k].get(s) != (new.get(k) or {}).get(s))]
+            if not subk or any(s not in topk for s in subk):
+                bad.append(k if not subk else ",".join(s for s in subk if s not in topk))
+        P0, P1 = plan["partition_types"], new["partition_types"]
+        if set(P0) != set(P1):
+            bad.append("partition_types set")
+        for tn in P0:
+            ks = sorted(k for k in set(P0[tn]) | set(P1.get(tn, {})) if P0[tn].get(k) != P1.get(tn, {}).get(k))
+            if ks:
+                touched[tn] = ks
+                bad += [f"{tn}.{k}" for k in ks if k not in tk]
+        if bad:
+            problems.append(f"stage {sp['name']}: changed undeclared keys {sorted(bad)[:10]}")
+        overlap = sorted(set(touched) & (set(pos_rec) | {t for s in script_recs for t in s["touched"]}))
+        plan = new
+        s_out = sha(dump(plan).encode())
+        rep_sha = fsha(srep) if srep.is_file() else None
+        srec = dict(stage=sp["name"], spec=str(spec_path), spec_sha256=fsha(spec_path), touched=touched,
+                    type_keys=sorted(tk), top_keys=sorted(topk), overlap_with_earlier_stages=overlap,
+                    report=str(srep) if rep_sha else None, report_sha256=rep_sha, stdout=r.stdout[-600:])
+        script_recs.append(srec)
+        stages.append(dict(stage=sp["name"], inputs=[dict(path=str(spec_path), sha256=fsha(spec_path)),
+                                                     dict(path=sp["script"], sha256=fsha(sp["script"]))],
+                           in_sha256=cur, out_sha256=s_out, types=sorted(touched), overlap=overlap))
+        cur = s_out
     if a.face:
         pre = dump(plan).encode()
         face_rec, pr = apply_face(plan, a.face)
@@ -723,7 +860,12 @@ def compose(a):
             # must be byte-identical to the generic apply (cross-check of both implementations)
             mid, fo = out_dir / "pre_face_plan.json", out_dir / "face_script_plan.json"
             mid.write_bytes(pre)
-            r = subprocess.run([sys.executable, "-I", a.face_script, "--rebase", str(mid), str(fo),
+            # DIE-S81-85 11-11: the script takes the APPLIED window's numbers (--delta, its own form), not its built-in +590
+            fsd = out_dir / "face_script_delta.json"
+            fsd.write_text(json.dumps({tn: {bn: dict(window_um=v["to"]["window_um"], **({"layers": v["to"]["layers"]}
+                                                                                       if "layers" in v["to"] else {}))
+                                            for bn, v in m.items()} for tn, m in face_rec["types"].items()}, indent=1))
+            r = subprocess.run([sys.executable, "-I", a.face_script, "--rebase", "--delta", str(fsd), str(mid), str(fo),
                                 str(out_dir / "face_script_report.json")], capture_output=True, text=True, cwd=REPO)
             if r.returncode:
                 problems.append(f"face script failed: {(r.stdout + r.stderr)[-1500:]}")
@@ -768,11 +910,12 @@ def compose(a):
         plan = json.loads(text)
         cur = sha(text)
     out_sha = sha(text)
-    changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})) | set((resize_rec or {}).get("types", {})))
-    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad), resize_rec)
+    changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})) | set((resize_rec or {}).get("types", {}))
+                           | {t for s_ in script_recs for t in s_["touched"]})
+    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad), resize_rec, script_recs)
     leg = legality_diff(base, plan, changed_types, a.gap, a.edge)
     if a.keep_clear:
-        kc = keep_clear(plan, a.keep_clear)
+        kc = keep_clear(plan, a.keep_clear, face_rec)
         leg["keep_clear"] = kc
         leg["pass_"] = leg["pass_"] and kc["pass_"]
     rec = dict(schema="opentallas.s81.compose_cleanslate.v1", event=TAG, do_not_count=True,
@@ -780,11 +923,13 @@ def compose(a):
                serialisation=form, args=dict(pos=a.pos or [], face=a.face, face_script=a.face_script,
                                              keep_clear=a.keep_clear, resize=getattr(a, "resize", None),
                                              derived=getattr(a, "derived", None) or [],
+                                             stage_script=getattr(a, "stage_script", None) or [],
                                              pad=a.pad, pad_script=a.pad_script if a.pad else None,
                                              gap=a.gap, edge=a.edge),
                stages=stages, output_plan_sha256=out_sha, changed_types=changed_types,
                eq_gate=dict(eq, rtl_change=False, pin_change=False, outline_change=False, cycle_change=False),
-               legality=leg, problems=problems, positions=pos_rec, face=face_rec, resize=resize_rec)
+               legality=leg, problems=problems, positions=pos_rec, face=face_rec, resize=resize_rec,
+               script_stages=script_recs)
     if not a.dry_run:
         (out_dir / "plan.json").write_bytes(text)
     if not a.no_g0:
@@ -838,6 +983,7 @@ def check(out_dir):
     tmp = out_dir / "check_rederive"
     ns = argparse.Namespace(base=rec["base"], out_dir=str(tmp), pos=ar["pos"], face=ar["face"], pad=ar["pad"],
                             face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"), resize=ar.get("resize"), derived=ar.get("derived"),
+                            stage_script=ar.get("stage_script"),
                             pad_script=ar["pad_script"], base_sha=[rec["base_plan_sha256"]], no_g0=True, phys=False,
                             dry_run=False, gap=ar["gap"], edge=ar["edge"])
     compose(ns)
@@ -861,6 +1007,9 @@ def main():
                                           "its output must equal the generic apply")
     ap.add_argument("--keep-clear", help="keep-clear rules JSON [{type, rect_um, obs_min?, why}, "
                                          "{type, module_re, max_top_um, why}]")
+    ap.add_argument("--stage-script", action="append",
+                    help="script stage spec JSON {name, script, argv ({in},{out},{in_sha},{report}), type_keys, top_keys}; "
+                         "run after (a), in order (e station-dir, optional extras)")
     ap.add_argument("--resize", help="stage (d) signed box heights spec (events/compose_cleanslate_1111/resize_svcprov_1111.json)")
     ap.add_argument("--pad", help="DS85-LATETAP-1111 pads_delta.json (optional stage c, default OFF)")
     ap.add_argument("--pad-script", default=str(HERE / "delta_latetap_pad_1111.py"))

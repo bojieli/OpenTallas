@@ -1,0 +1,5 @@
+{"name": "x_s4n_ftlane",
+ "why": "DIE-S81-85 11-11 optional extra: s_4N ft-lane cut (claude/ds85-s4n-ftlane-1111 9f1afc9ef818); touches leaf types t43/t44__clf6cf8492/t52/t53__cl958451dd (KW-FIX-43 holds leaves)",
+ "script": "physical/die_plan/s81/delta_s4n_ftlane_1111.py",
+ "argv": ["{in}", "{out}", "{report}", "--base-sha", "{in_sha}"],
+ "type_keys": ["ft_slots", "clock"], "top_keys": ["clock.landing_network", "ports"]}
