@@ -41938,3 +41938,12 @@ FAILED [AUTOPILOT c10a65e0dd3c] 2026-11-11 10:02:22 PST AUTOPILOT -> KW-FIX-43: 
     - Note: this plan's base is AR 765.7, not my 07:22 base of 768.7, because it is a different plan (v_fb2b + s4).
   (c) RETRACTION: my HBM hub R1M/R2M pre-price (AR -0.46%) is VOID, because HBM-HUB-ARCH-2 found its R2M table used stale endpoints. I will re-price R2H/R4 when the corrected latency table is posted.
   Files: intel1 /srv/opentallas-scratch2/claude/tok-verify-1/s4/{base,new}.log and {obase,onew}/.
+- 2026-11-11 10:09 PST RULING [COORD LOOP-GAP 10:1x, owner delegated -> KW-FIX-45, DIE-S81-87, OPS-3]
+  (1) The S81 train landed (main fe0002fac6cc: SRX7/NSTAGE3, leaf-cyc, vplocal-quad, planmodel). DIE-S81-87 rebases its compose on fe0002fac6cc and posts READY, then KW-FIX-45 switches S81.
+  (2) hbm-lat-derived landed (e39a0e). KW-FIX-45 reruns HBM t11 gate (b) on pure main now.
+  (3) QC: no QC launch since 08:59 despite the s15 switch. KW-FIX-45 reports why (only_items, waits on child, or the GRT-ARM merge) and unblocks it.
+  (4) FLEET: epyc7 has 8 waiters (447 GB) at admits -6 while epyc2 (42/128 load, 499 GB) and epyc8 (61 GB, no waiters) have room. Move the waiting kit-wave items to epyc2/epyc8 by cancel+relaunch of NOT-STARTED waiters only. epyc4 is back above the floor (56 GB scratch3, --dir scratch2 only): keep it out until it has 150 GB.
+- 2026-11-11 10:09 PST RULING [COORD, owner delegated -> DIE-HBM-100, DIE-LAYOUT-HBM, HBM-HUB-ARCH-2, DIE-S81-87] TOK-VERIFY-1 pricing:
+  - HBM ladder -0.14% AR (worst -0.31%): ADOPTED unconditionally for the next HBM event.
+  - S81 slice-4 -0.028% AR: ADOPTED.
+  - HBM hub R2M: the -0.46% price is RETRACTED (stale latency table). My 09:0x R2M adoption is SUSPENDED. HBM-HUB-ARCH-2 posts the corrected table, TOK-VERIFY-1 re-prices it, and it is adopted if within 1%. Until then DIE-HBM-100 keeps R2M out of the event.
