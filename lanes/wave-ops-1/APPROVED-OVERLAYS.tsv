@@ -1,2 +1,3 @@
 # branch	sha	owner	ruling   (approved overlays named by hand; the nightly plan adds them after the ROOT-MERGE train and KW-FIX-44 queue overlays)
 claude/kw-fix-44-pingrid-1111	0bd2b6f0b13f	KW-FIX-44	COORD 11-11 (head 0bd2b6f0b13f replaces 22fb938f7d7a, face_flops.tcl fix): pingrid generator files live on all 5 die wave srcs since 11-10 21:52
+wave-ovl/grt-patch-1-genphys-1111	aef743c06d75	KW-FIX-44	OWNER 11-11 halving-off arm (COORD 01:0x): GRT-PATCH-1 848b4e2031cc tools/die_plan/gen_phys.py ONLY (derived commit on 40f6c59b6409, byte-identical file; route_supply.py + test left out); hub branch wave-ovl/grt-patch-1-genphys-1111
