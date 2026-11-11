@@ -1,0 +1,107 @@
+{
+ "schema": "s81svcrs3.svcprov_v5_por_eqgate.v1",
+ "inputs": [
+  "/srv/opentallas-scratch2/claude/die-s81-85/pgr1/out_s81_meas_1111_0332/plan.json",
+  "plan_v5pgr_s3.json",
+  "v5base_d67f.json",
+  "v5out.json"
+ ],
+ "sections": {
+  "clock": {
+   "paths": 1,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "die": {
+   "paths": 137,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t1": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t2": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t3": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t4": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t5": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_hi_dsdv_svc_rs__t6": {
+   "paths": 2157,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t1": {
+   "paths": 9100,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t2": {
+   "paths": 3473,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t3": {
+   "paths": 3504,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t4": {
+   "paths": 3502,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t5": {
+   "paths": 3495,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t6": {
+   "paths": 10426,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs__t7": {
+   "paths": 8506,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partition_types/svc_lo_dsdv_svc_rs_w__t1": {
+   "paths": 7415,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "partitions": {
+   "paths": 353,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "ports": {
+   "paths": 1586,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  },
+  "reset": {
+   "paths": 8,
+   "same_patch": true,
+   "base_value_mismatch": 0
+  }
+ },
+ "verdict": "PASS"
+}
