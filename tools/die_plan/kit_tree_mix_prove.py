@@ -84,7 +84,7 @@ def main(argv=None):
                 f"hierarchy -check -top {M} {ch}", "proc", "flatten", "async2sync", "opt -fast", "opt_dff", "opt_clean",
                 f"rename {M} {nm}", f"design -stash {nm}"]
         ys = side + ["design -reset", "design -copy-from gold -as gold gold", "design -copy-from gate -as gate gate",
-                     "equiv_make gold gate eq", "hierarchy -top eq", "equiv_struct", "equiv_simple -seq 8", "equiv_induct -seq 8",
+                     "equiv_make gold gate eq", "hierarchy -top eq", "equiv_struct", "equiv_induct -seq 4", "equiv_simple -seq 8", "equiv_induct -seq 8",
                      "equiv_status -assert"]
         (work / f"{tag}.ys").write_text("\n".join(ys) + "\n")
         r = subprocess.run([a.yosys, "-q", "-l", str(work / f"{tag}.log"), "-s", str(work / f"{tag}.ys")],
@@ -98,7 +98,7 @@ def main(argv=None):
                  twin_files={L.tree(f)[2] and f"{L.tree(f)[0]}:{L.tree(f)[2]}" or f: sha(f) for f in twin_files},
                  domain={n: g for n, g in zip(names, grid)}, results=[dict(params=x["params"], proven=x["proven"])
                                                                      for x in results],
-                 method="yosys flatten+async2sync+opt_dff, equiv_make/equiv_struct/equiv_simple -seq 8/equiv_induct -seq 8/equiv_status -assert",
+                 method="yosys flatten+async2sync+opt_dff, equiv_make/equiv_struct/equiv_induct -seq 4/equiv_simple -seq 8/equiv_induct -seq 8/equiv_status -assert",
                  kit=str(a.kit))
     if allok:
         reg = Path(a.registry)
