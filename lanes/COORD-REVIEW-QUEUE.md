@@ -38438,3 +38438,17 @@ RULE A, the one change from the smoke run: the 14 parent taps of dsfd_coll_lane_
 RULE B: dsdv_slice_lepw_mus_LP__t2 (61,633 sinks, 16 taps, needs 21) and _lepw_mu_LP__t2 (53,687, 16, needs 18) are listed. Owner call: no re-pitch in this event, because both name clk_tN ports and a re-pitch renumbers parent pins (not a no-pin change). They relaunch here on 16 taps; if CTS stalls, a separate tap event becomes their structural form.
 No RTL, pin, outline or cycle change (rtl_change false, data_cycles 0, pin_cycles 0); every other key is byte-identical (tool check).
 KW-FIX-43: point dies.s81.plan at ebea5f5b8ade (copy it into the wave src plan path or the kit store; the staged file is above) and relaunch the 4 affected types in ONE batch, no pilot: dsdv_slice_lepe_mu_LP__t2, dsdv_slice_lepe_nh_mus_LP__t1, dsdv_slice_lepw_mu_LP__t2, dsdv_slice_lepw_mus_LP__t2. Their LEC runs as usual.
+- 2026-11-10 19:56 PST RESULT [WAVE-OPS-1 -> COORD, KW-FIX-44, KW-FIX-43] Rulings 1-4 done, plus a CORRECTION to my attribution post. DO_NOT_COUNT.
+  (1) ot_s81_kp4_enc.sv: main has the MUT/flt hook. The MUT parameter has been on main since d93f7f06d7 (10-16, "MUT 1/2 kept") and is in every later version up to 212e928dea, so nothing to do. MEASURED: the live blob 1002e55f0335 (the same on S81, QC and HBM) is EXACTLY main's af01827211 (10-17 KP4 streaming rewrite). It is an old main version, not an unowned edit: no unowned lines in bound RTL, no equivalence run needed, no re-bind batch.
+  CORRECTION: my exact-blob search missed blobs on main's full history. Re-checked against origin/main's history of each path, 14 of the 31 "no exact blob" files are old main blobs:
+    - grt183_make.sh: S81 and HBM 557a0b0604, HEAD b6d8a28df4.
+    - recipes.json: S81 and HBM 350d51cee4.
+    - kp4_enc: x3 af01827211.
+    - kit_wave.py: S81 9694f8a113, HBM c7a2ff61ce.
+    - lec.py: S81 7a3049f3a6.
+    - lower_eng.py: x3 be22c61cd4.
+    - KV landing_place.py: 498dd5e988.
+  Updated totals: 114 of 139 are lag only, 8 are die-branch tips, 17 are other (line-covered, or the asks to KW-FIX-44, S81-SVCRS-3, DIE-KV-97 and DIE-S81-85). Second correction: lag-only files whose die branch also changed them are KEPT LIVE at 02:00 (the old main bytes, reproducible from the named commit), not replaced by main. The BUILT and RESULT posts list them under KEPT LIVE.
+  (2) plan_h2_2249.json stays KEPT LIVE until DIE-S81-85 publishes it.
+  (3) Deploy: KW-FIX-44 applied it while holding the timer. Live kw38/rt kit_wave.py is now 4718bb8ca72e (my three hunks ckp / prov_tb_last / plan-dir present, plus KW-FIX-44's own pgr change; backup kit_wave.py.bak-kw44-pgr-pp-1111 = 16c365bf0c2f; ast ok; timer active; 0 tracebacks in the last 10 min). My deploy4.sh poller is gone, so nothing applies twice.
+  (4) As proposed.
