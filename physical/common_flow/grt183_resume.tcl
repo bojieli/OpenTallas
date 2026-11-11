@@ -63,6 +63,27 @@ namespace eval ot_g183 {
     }
     return $out
   }
+  # QC fw 11-11 (RSZ-3006 class, slw_fw_v3 a20, COORD 11-11): the in-flow hold repair (repair_timing -hold inside 5_1_grt)
+  # buffers a net before its loads; a dont_touch HB4 hold-pad load (u_hdly_<bus>.g_b[].g_k[].u_hb) makes ODB-1211
+  # "InsertBufferBeforeLoads: Load pin ... is dont_touch" and RSZ-3006 kills the stage (3 h 18 min lost).  The pads are the
+  # planned hold fix, so the nets feeding them must not be buffered: set them dont_touch for the repair call only (the
+  # instances stay dont_touch; no other cell, clock net or power net is touched).  OT_HB4_PAD_NETS_DNT=0 restores the old flow.
+  proc protect_pad_nets {} {
+    if {[info exists ::env(OT_HB4_PAD_NETS_DNT)] && $::env(OT_HB4_PAD_NETS_DNT) eq "0"} { return 0 }
+    set n 0
+    foreach inst [[ord::get_db_block] getInsts] {
+      if {![$inst isDoNotTouch] || [string first "u_hdly_" [$inst getName]] < 0} continue
+      foreach it [$inst getITerms] {
+        if {![$it isInputSignal]} continue
+        set net [$it getNet]
+        if {$net eq "NULL" || $net eq "" || [$net getSigType] ne "SIGNAL" || [$net isDoNotTouch]} continue
+        $net setDoNotTouch 1
+        incr n
+      }
+    }
+    puts "OT_HB4_PAD_NETS_DNT nets=$n: dont_touch on nets feeding dont_touch u_hdly_ pad loads for repair_timing (RSZ-3006 class)"
+    return $n
+  }
   variable start {}
   foreach {k o} [keys] { dict incr start $k }
   proc strip_hook_shapes {} {
@@ -81,6 +102,7 @@ foreach ot_g183_helper {repair_design_helper repair_timing_helper} {
   if {[llength [info commands $ot_g183_helper]] && ![llength [info commands ot_g183_orig_$ot_g183_helper]]} {
     rename $ot_g183_helper ot_g183_orig_$ot_g183_helper
     proc $ot_g183_helper {args} [string map [list @H@ $ot_g183_helper] {
+      if {"@H@" eq "repair_timing_helper"} { catch {ot_g183::protect_pad_nets} ot_pn_err; if {$ot_pn_err ne "" && ![string is integer -strict $ot_pn_err]} { puts "OT_HB4_PAD_NETS_DNT_FAILED: $ot_pn_err" } }
       set rc [catch {uplevel 1 [linsert $args 0 ot_g183_orig_@H@]} msg opts]
       if {$rc == 0} { return $msg }
       set dir $::env(RESULTS_DIR)
