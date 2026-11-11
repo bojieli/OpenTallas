@@ -3200,7 +3200,8 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
     // clear of every valid flop, and the relay-line placement spreads those over the whole 613 x 829 outline): 14 reset
     // regions (W landing, E row, relay 1 / relay 2 / port per rl / bk, N and S), two relay tree stages so each copy
     // sits next to its few flops.  Assert stays asynchronous; release +1 cycle (SYNC 2 + TREE 2).  Data paths unchanged.
-    localparam integer RR = 14;
+    // HBM-COLLECT-1/PTW-F 11-10: +4 regions (relay 3 per rl / bk, N and S) for the third relay stage; same tree.
+    localparam integer RR = 18;
     wire [RR-1:0] rwv;
 `ifdef OT_SMH_RSTRELAY
     ot_rst_relay #(.REGIONS(RR), .TREE_STAGES(2)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rwv));
@@ -3251,14 +3252,28 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
     ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm2dn (.clk(clk), .rst_n(rwv[8]), .d(bkm_n[BBW-2:0]), .q(bkm2_n[BBW-2:0]));
     ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkm2vs (.clk(clk), .rst_n(rwv[9]), .d(bkm_s[BBW-1]), .q(bkm2_s[BBW-1]));
     ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm2ds (.clk(clk), .rst_n(rwv[9]), .d(bkm_s[BBW-2:0]), .q(bkm2_s[BBW-2:0]));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rwv[10]), .d(rlm2_n), .q(rl1_n_q));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rwv[11]), .d(rlm2_s), .q(rl1_s_q));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rwv[12]), .d(bkm2_n[BBW-1]), .q(bk1_n_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rwv[12]), .d(bkm2_n[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rwv[12]), .d(bkm2_n[2048 +: NBEAT]), .q(ohl1_n_q));
-    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rwv[13]), .d(bkm2_s[BBW-1]), .q(bk1_s_q[BBW-1]));
-    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rwv[13]), .d(bkm2_s[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
-    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rwv[13]), .d(bkm2_s[2048 +: NBEAT]), .q(ohl1_s_q));
+    // HBM-COLLECT-1/PTW-F 11-10 (COORD ruling (c), pt_w strike 3: PTW-C2 / PTW-D GRT overflow 5 / 4 / 2 with a broad
+    // 90-103 % band along the landing -> port relay lines, M2/M3 62-64 % vs M6/M7 24 %): a THIRD relay stage per leaf
+    // copy, so every W-in -> N/S-face span is four register hops of <= ~360 um (the kit places relays 1..3 at 1/4, 2/4,
+    // 3/4 of each landing -> port line, --relay-line depth 3).  rl/bk/ohl move together (+1 more leaf-landing cycle,
+    // +4 in total vs as-built), x-store write/read order in the leaf unchanged; row path rp->rpm / bl->bm and HOPD
+    // unchanged.  Kept (K).
+    wire [RBW-1:0] rlm3_n, rlm3_s;
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlm3n (.clk(clk), .rst_n(rwv[14]), .d(rlm2_n), .q(rlm3_n));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rlm3s (.clk(clk), .rst_n(rwv[15]), .d(rlm2_s), .q(rlm3_s));
+    wire [BBW-1:0] bkm3_n, bkm3_s;
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkm3vn (.clk(clk), .rst_n(rwv[16]), .d(bkm2_n[BBW-1]), .q(bkm3_n[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm3dn (.clk(clk), .rst_n(rwv[16]), .d(bkm2_n[BBW-2:0]), .q(bkm3_n[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkm3vs (.clk(clk), .rst_n(rwv[17]), .d(bkm2_s[BBW-1]), .q(bkm3_s[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkm3ds (.clk(clk), .rst_n(rwv[17]), .d(bkm2_s[BBW-2:0]), .q(bkm3_s[BBW-2:0]));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rln (.clk(clk), .rst_n(rwv[10]), .d(rlm3_n), .q(rl1_n_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW), .K(1)) u_rls (.clk(clk), .rst_n(rwv[11]), .d(rlm3_s), .q(rl1_s_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rwv[12]), .d(bkm3_n[BBW-1]), .q(bk1_n_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rwv[12]), .d(bkm3_n[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rwv[12]), .d(bkm3_n[2048 +: NBEAT]), .q(ohl1_n_q));
+    ot_hbm_accel_smh_kregk #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rwv[13]), .d(bkm3_s[BBW-1]), .q(bk1_s_q[BBW-1]));
+    ot_hbm_accel_smh_kregk #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rwv[13]), .d(bkm3_s[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
+    ot_hbm_accel_smh_kregk #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rwv[13]), .d(bkm3_s[2048 +: NBEAT]), .q(ohl1_s_q));
 endmodule
 // pt_e: the third (u_rpn / u_bln) and launch (u_rp2 / u_bl2) registers
 module ot_hbm_accel_smh_pt_e #(parameter integer TAGW = 16, parameter integer NBEAT = 13) (
