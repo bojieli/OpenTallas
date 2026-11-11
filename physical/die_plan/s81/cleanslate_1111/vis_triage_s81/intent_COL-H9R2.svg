@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1130" height="1018" font-family="sans-serif" font-size="9">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#c0392b"/></marker></defs>
+<text x="10" y="20" font-size="14">COL-H9R2 intent: S window -> t6/t6p -> t7/t7p -> t8/t8p -> e13 (payload stations beside their base stations)</text>
+<rect x="60" y="60" width="1010.02" height="858.816" fill="none" stroke="black"/>
+<line x1="64.27" y1="918.816" x2="241.79" y2="918.816" stroke="#2563eb" stroke-width="5"/>
+<text x="64.27" y="932.816" fill="#2563eb">frame_int_i0 1167 in</text>
+<line x1="242.63" y1="918.816" x2="290.23" y2="918.816" stroke="#2563eb" stroke-width="5"/>
+<text x="242.63" y="932.816" fill="#2563eb">frame_int_o0 321 out</text>
+<rect x="301.92" y="580.128" width="42.336" height="6.048" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="303.92" y="589.128">u_bn10 R0</text>
+<rect x="846.24" y="580.128" width="42.336" height="6.048" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="848.24" y="589.128">u_bn11 R0</text>
+<rect x="350.304" y="332.16" width="42.336" height="6.048" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="352.304" y="341.16">u_bn12 R0</text>
+<rect x="664.8" y="338.208" width="42.336" height="6.048" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="666.8" y="347.208">u_bn14 R0</text>
+<rect x="326.112" y="834.144" width="42.336" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="328.112" y="843.144">u_bs10 R0</text>
+<rect x="852.288" y="791.808" width="42.336" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="854.288" y="800.808">u_bs11 R0</text>
+<rect x="247.488" y="561.984" width="42.336" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="249.488" y="570.984">u_bs12 R0</text>
+<rect x="598.272" y="561.984" width="42.336" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="600.272" y="570.984">u_bs14 R0</text>
+<rect x="72.096" y="673.116" width="187.866" height="154.98" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="74.096" y="682.116">u_e10.u_w R0</text>
+<rect x="259.584" y="673.116" width="187.866" height="154.98" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="261.584" y="682.116">u_e10.u_e R0</text>
+<rect x="465.216" y="673.116" width="187.866" height="154.98" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="467.216" y="682.116">u_e11.u_w R0</text>
+<rect x="652.704" y="673.116" width="187.866" height="154.98" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="654.704" y="682.116">u_e11.u_e R0</text>
+<rect x="90.24" y="400.956" width="187.866" height="154.98" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="92.24" y="409.956">u_e12.u_w R0</text>
+<rect x="277.728" y="400.956" width="187.866" height="154.98" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="279.728" y="409.956">u_e12.u_e R0</text>
+<rect x="425.904" y="183.984" width="81.648" height="139.104" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="427.904" y="192.984">u_e13 R0</text>
+<rect x="531.744" y="168.864" width="145.774" height="139.104" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="533.744" y="177.864">u_e13e.u_c MY</text>
+<rect x="676.896" y="241.44" width="169.344" height="66.528" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="678.896" y="250.44">u_e13e.u_ha MY</text>
+<rect x="676.896" y="168.864" width="169.344" height="66.528" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="678.896" y="177.864">u_e13e.u_hb MY</text>
+<rect x="256.56" y="168.864" width="145.774" height="139.104" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="258.56" y="177.864">u_e13w.u_c R0</text>
+<rect x="87.216" y="241.44" width="169.344" height="66.528" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="89.216" y="250.44">u_e13w.u_ha R0</text>
+<rect x="87.216" y="168.864" width="169.344" height="66.528" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="89.216" y="177.864">u_e13w.u_hb R0</text>
+<rect x="483.36" y="400.956" width="187.866" height="154.98" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="485.36" y="409.956">u_e14.u_w R0</text>
+<rect x="670.848" y="400.956" width="187.866" height="154.98" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="672.848" y="409.956">u_e14.u_e R0</text>
+<rect x="809.952" y="840.192" width="30.24" height="54.432" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="811.952" y="849.192">u_n23 R0</text>
+<rect x="873.456" y="822.048" width="30.24" height="54.432" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="875.456" y="831.048">u_n24 R0</text>
+<rect x="882.528" y="716.208" width="30.24" height="54.432" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="884.528" y="725.208">u_n25 R0</text>
+<rect x="882.528" y="658.752" width="30.24" height="54.432" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="884.528" y="667.752">u_n26 R0</text>
+<rect x="876.48" y="501.504" width="30.24" height="54.432" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="878.48" y="510.504">u_n27 R0</text>
+<rect x="936.96" y="501.504" width="30.24" height="54.432" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="938.96" y="510.504">u_n28 R0</text>
+<rect x="301.92" y="852.288" width="12.096" height="36.288" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<rect x="646.656" y="864.384" width="12.096" height="36.288" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<rect x="295.872" y="619.44" width="12.096" height="36.288" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<rect x="256.56" y="338.208" width="21.168" height="42.336" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="258.56" y="347.208">u_s13 R0</text>
+<rect x="655.728" y="622.464" width="12.096" height="36.288" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<rect x="332.16" y="867.408" width="58.968" height="21.168" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="334.16" y="876.408">u_t6 R0</text>
+<rect x="344.256" y="646.656" width="60.48" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="346.256" y="655.656">u_t6__payload R0</text>
+<rect x="477.312" y="571.056" width="58.968" height="21.168" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="479.312" y="580.056">u_t7 R0</text>
+<rect x="338.208" y="598.272" width="60.48" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="340.208" y="607.272">u_t7__payload R0</text>
+<rect x="332.16" y="353.328" width="58.968" height="21.168" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="334.16" y="362.328">u_t8 R0</text>
+<rect x="389.616" y="135.6" width="60.48" height="18.144" fill="#f6d38b" stroke="#333" stroke-width="0.6"/>
+<text x="391.616" y="144.6">u_t8__payload R0</text>
+<rect x="96.288" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="98.288" y="865.606">u_c10_0 MY</text>
+<rect x="132.576" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="134.576" y="865.606">u_c10_1 MY</text>
+<rect x="177.936" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="179.936" y="865.606">u_c10_2 MY</text>
+<rect x="253.536" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="255.536" y="865.606">u_c10_3 MY</text>
+<rect x="217.248" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="219.248" y="865.606">u_c10_4 MY</text>
+<rect x="404.736" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="406.736" y="865.606">u_c10_5 R0</text>
+<rect x="434.976" y="862.654" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="436.976" y="871.654">u_c10_6 MX</text>
+<rect x="610.368" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="612.368" y="865.606">u_c11_0 MY</text>
+<rect x="537.792" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="539.792" y="865.606">u_c11_1 MY</text>
+<rect x="574.08" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="576.08" y="865.606">u_c11_2 MY</text>
+<rect x="779.712" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="781.712" y="865.606">u_c11_3 R0</text>
+<rect x="701.088" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="703.088" y="865.606">u_c11_4 R0</text>
+<rect x="734.352" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="736.352" y="865.606">u_c11_5 R0</text>
+<rect x="670.848" y="856.606" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="672.848" y="865.606">u_c11_6 R0</text>
+<rect x="171.888" y="593.518" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="173.888" y="602.518">u_c12_0 MY</text>
+<rect x="141.648" y="593.518" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="143.648" y="602.518">u_c12_1 MY</text>
+<rect x="111.408" y="614.686" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="113.408" y="623.686">u_c12_2 MY</text>
+<rect x="205.152" y="596.542" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="207.152" y="605.542">u_c12_3 MY</text>
+<rect x="247.488" y="599.566" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="249.488" y="608.566">u_c12_4 MY</text>
+<rect x="425.904" y="623.758" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="427.904" y="632.758">u_c12_5 R0</text>
+<rect x="310.992" y="623.758" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="312.992" y="632.758">u_c12_6 R0</text>
+<rect x="126.528" y="321.358" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="128.528" y="330.358">u_c13_0 MY</text>
+<rect x="156.768" y="324.382" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="158.768" y="333.382">u_c13_1 MY</text>
+<rect x="190.032" y="324.382" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="192.032" y="333.382">u_c13_2 MY</text>
+<rect x="220.272" y="333.454" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="222.272" y="342.454">u_c13_3 MY</text>
+<rect x="280.752" y="315.31" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="282.752" y="324.31">u_c13_4 R0</text>
+<rect x="404.736" y="336.478" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="406.736" y="345.478">u_c13_5 R0</text>
+<rect x="447.072" y="336.478" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="449.072" y="345.478">u_c13_6 R0</text>
+<rect x="574.08" y="596.542" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="576.08" y="605.542">u_c14_0 MY</text>
+<rect x="522.672" y="620.734" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="524.672" y="629.734">u_c14_1 MY</text>
+<rect x="622.464" y="596.542" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="624.464" y="605.542">u_c14_2 MY</text>
+<rect x="704.112" y="602.59" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="706.112" y="611.59">u_c14_3 R0</text>
+<rect x="767.616" y="623.758" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="769.616" y="632.758">u_c14_4 R0</text>
+<rect x="670.848" y="620.734" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="672.848" y="629.734">u_c14_5 R0</text>
+<rect x="734.352" y="620.734" width="26.628" height="44.0664" fill="#e5e7eb" stroke="#333" stroke-width="0.6"/>
+<text x="736.352" y="629.734">u_c14_6 R0</text>
+<line x1="151" y1="918.816" x2="361.644" y2="877.992" stroke="#c0392b" stroke-width="2.88" marker-end="url(#a)" opacity="0.8"/>
+<text x="259.322" y="898.404" fill="#c0392b">564 p2p xai/xbi</text>
+<line x1="151" y1="918.816" x2="374.496" y2="655.728" stroke="#c0392b" stroke-width="2.78667" marker-end="url(#a)" opacity="0.8"/>
+<text x="265.748" y="787.272" fill="#c0392b">536 p2p i</text>
+<line x1="361.644" y1="877.992" x2="506.796" y2="581.64" stroke="#c0392b" stroke-width="4.24667" marker-end="url(#a)" opacity="0.8"/>
+<text x="437.22" y="729.816" fill="#c0392b">974 pipe</text>
+<line x1="374.496" y1="655.728" x2="368.448" y2="607.344" stroke="#c0392b" stroke-width="4.41333" marker-end="url(#a)" opacity="0.8"/>
+<text x="374.472" y="631.536" fill="#c0392b">1024 pipe</text>
+<line x1="506.796" y1="581.64" x2="361.644" y2="363.912" stroke="#c0392b" stroke-width="4.51" marker-end="url(#a)" opacity="0.8"/>
+<text x="437.22" y="472.776" fill="#c0392b">1053 pipe</text>
+<line x1="368.448" y1="607.344" x2="419.856" y2="144.672" stroke="#c0392b" stroke-width="4.49333" marker-end="url(#a)" opacity="0.8"/>
+<text x="397.152" y="376.008" fill="#c0392b">1048 pipe</text>
+<line x1="361.644" y1="363.912" x2="466.728" y2="253.536" stroke="#c0392b" stroke-width="8.11333" marker-end="url(#a)" opacity="0.8"/>
+<text x="417.186" y="308.724" fill="#c0392b">2134 p2p x0/x1</text>
+<line x1="419.856" y1="144.672" x2="466.728" y2="253.536" stroke="#c0392b" stroke-width="4.42667" marker-end="url(#a)" opacity="0.8"/>
+<text x="446.292" y="199.104" fill="#c0392b">1028 p2p xb_data</text>
+<line x1="466.728" y1="253.536" x2="329.447" y2="238.416" stroke="#c0392b" stroke-width="3.51333" marker-end="url(#a)" opacity="0.8"/>
+<text x="401.087" y="245.976" fill="#c0392b">754 p2p c0</text>
+<line x1="466.728" y1="253.536" x2="604.631" y2="238.416" stroke="#c0392b" stroke-width="3.51333" marker-end="url(#a)" opacity="0.8"/>
+<text x="538.679" y="245.976" fill="#c0392b">754 p2p c1</text>
+<line x1="347.28" y1="843.216" x2="361.644" y2="877.992" stroke="#c0392b" stroke-width="4.66" marker-end="url(#a)" opacity="0.8"/>
+<text x="357.462" y="860.604" fill="#c0392b">1098 p2p</text>
+<line x1="873.456" y1="800.88" x2="559.149" y2="750.606" stroke="#c0392b" stroke-width="4.73333" marker-end="url(#a)" opacity="0.8"/>
+<text x="719.302" y="775.743" fill="#c0392b">1120 bcast bank-sel</text>
+<line x1="873.456" y1="800.88" x2="506.796" y2="581.64" stroke="#c0392b" stroke-width="3.34667" marker-end="url(#a)" opacity="0.8"/>
+<text x="693.126" y="691.26" fill="#c0392b">704 p2p</text>
+<line x1="347.28" y1="843.216" x2="166.029" y2="750.606" stroke="#c0392b" stroke-width="4.47333" marker-end="url(#a)" opacity="0.8"/>
+<text x="259.654" y="796.911" fill="#c0392b">1042 bcast</text>
+<line x1="268.656" y1="571.056" x2="361.644" y2="363.912" stroke="#c0392b" stroke-width="4.66" marker-end="url(#a)" opacity="0.8"/>
+<text x="318.15" y="467.484" fill="#c0392b">1098 p2p</text>
+<line x1="619.44" y1="571.056" x2="764.781" y2="478.446" stroke="#c0392b" stroke-width="3.86333" marker-end="url(#a)" opacity="0.8"/>
+<text x="695.111" y="524.751" fill="#c0392b">859 bcast</text>
+<line x1="825.072" y1="867.408" x2="266.5" y2="918.816" stroke="#c0392b" stroke-width="1.22" marker-end="url(#a)" opacity="0.8"/>
+<text x="548.786" y="893.112" fill="#c0392b">66 p2p</text>
+</svg>
