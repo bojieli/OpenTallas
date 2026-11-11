@@ -147,6 +147,30 @@ def check_transport_self(text):
     return dict(landings=len(ld), stations=len(st), links_with_stations=len(chains), transport_self_check='PASS')
 
 
+def manifest_content(path):
+    """an as-built manifest's selection by CONTENT: every key except 'base' compared exactly, with each string that
+    names an existing file (absolute, or relative to the manifest base) replaced by (basename, sha256).  A repo-relative
+    copy of a manifest with absolute paths therefore matches iff it selects the same bytes with the same options; a
+    path that resolves in one copy and not the other stays a raw string and differs (fail closed)."""
+    path = Path(path)
+    m = json.loads(path.read_text())
+    b = Path(m.get('base', '.'))
+    base = b if b.is_absolute() else (path.parent / b).resolve()
+    roots = [base, ROOT]
+
+    def canon(v):
+        if isinstance(v, dict):
+            return {k: canon(x) for k, x in v.items()}
+        if isinstance(v, list):
+            return [canon(x) for x in v]
+        if isinstance(v, str) and '\n' not in v and len(v) < 4096 and ('/' in v or v.endswith(('.v', '.sv', '.json', '.svh'))):
+            for r in ([Path(v)] if Path(v).is_absolute() else [r / v for r in roots]):
+                if r.is_file():
+                    return ['FILE', r.name, hashlib.sha256(r.read_bytes()).hexdigest()]
+        return v
+    return canon({k: v for k, v in m.items() if k not in ('base', 'frame_root_note')})   # frame_root.py provenance note
+
+
 class Die:
     """bind9 die.v: instances (master, params, port expressions, straps) and the relay / landing links.
     netlist (S81-PLAN-1 11-10, --bound-data): the bind's OWN as-built die top (the manifest netlist, die_b178.v) replaces
@@ -1090,6 +1114,19 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             else Die(tree)
         bound_rec = BD.rebind_links(die, B, diagnostic=bound_data.get('diagnostic', False))
         bound_rec['die_source'] = die.die_source
+        # S81-PLAN-1 11-10: as-built frame schedules bind the bind's OWN manifest (its romq / gb_split frame sources);
+        # an explicit OT_S81_FRAME_ASBUILT_MANIFEST must be that manifest (same file bytes), else refuse
+        fm = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST')
+        bm = Path(bound_data['manifest'])
+        bm = bm if bm.is_absolute() else ROOT / bm
+        if fm is None:
+            os.environ['OT_S81_FRAME_ASBUILT_MANIFEST'] = str(bound_data['manifest'])
+        else:
+            fp = Path(fm) if Path(fm).is_absolute() else Path(os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or ROOT) / fm
+            if manifest_content(fp) != manifest_content(bm):
+                raise ValueError(f'OT_S81_FRAME_ASBUILT_MANIFEST {fm} selects other sources than the bound-data manifest '
+                                 f'{bound_data["manifest"]}')
+        bound_rec['frame_manifest'] = os.environ['OT_S81_FRAME_ASBUILT_MANIFEST']
         (out / 'bound_data_links.json').write_text(json.dumps(bound_rec, indent=1) + '\n')
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
     sched = layer_schedule(tree, layer, wl)
@@ -1113,6 +1150,13 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         # S81-PLAN-1 11-10: the statically scheduled control lanes (idx / TP4 / query / MU / svc unit) from the same bind
         from layer_prog import bound_ctl_lanes as BCL
         ctx['bound_ctl'] = BCL.load(B['bound'])
+        # S81-PLAN-1 11-10: Engram lookup RETURN_AGE from the bind's own RTL (main 1536, candidate 640), never main's
+        from layer_prog import lower_eng as LENG
+        ra, found = LENG.bound_return_age(Path(B['bound']) / 'rtl')
+        ctx['bound_eng'] = dict(return_age=ra, instances=[f'{f}:{i}' for f, i, _ in found], latency=LENG.latency(ra))
+        (out / 'bound_eng.json').write_text(json.dumps(dict(
+            schema='opentallas.s81_dv.bound_eng.v1', bind_dir=str(B['bound']), **ctx['bound_eng']), indent=1,
+            sort_keys=True) + '\n')
         # TOK-VERIFY-1 11-10: record the control-lane depths this programme was compiled from (all 30 lanes, also the
         # ones no op of this layer reads), so a programme can be checked against a bind without recompiling
         (out / 'bound_ctl_lanes.json').write_text(json.dumps(dict(
@@ -1325,6 +1369,12 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if p.is_file() and p.name != 'manifest.json':
             man['files'][str(p.relative_to(out))] = sha256(p)
     (out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
+    used = {}   # S81-PLAN-1 D: GB provider qualification records this programme used (lower_xs may load under two names)
+    for _n, _m in list(sys.modules.items()):
+        if _n.split('.')[-1] == 'lower_xs':
+            used.update(getattr(_m, 'GB_QUAL_USED', {}) or {})
+    if used:
+        (out / 'gb_provider_qualification_used.json').write_text(json.dumps(used, indent=1, sort_keys=True) + '\n')
     return dict(layer=layer, ops=len(low), status=stat, rows=len(prog.rows), templates=len(prog.templates), smoke=sub)
 
 

@@ -78,6 +78,12 @@ CAP = 96          # depth cap: a data path deeper than this is a loop (reported)
 ELEMS = ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb', 'ot_v41_rom_elem_q_qxpq_w10_gb_split')
 BOUND_EXTRA = {}  # --bound-plan: plan-derived stages per seam (never perturbed by a control); expectation side
 SEAM_EXTRA = {}  # --bound-plan: as-built seam instance (u_s01, ...) -> register stages added after its 2 flops
+SROOT = [None]   # selected-source root (--source-root: the bind's own frame root, layer_prog/frame_root.py); None = ROOT
+
+
+def sroot():
+    """the selected-source root: --source-root when given, else ROOT (read at call time, so the default is ROOT itself)"""
+    return SROOT[0] if SROOT[0] is not None else ROOT
 SRC = [ROOT]     # RTL source root: the work tree, or (validation) an archive of the LP schedule's own revision
 
 
@@ -94,9 +100,9 @@ def sources(top, asbuilt, lp_files=()):
     """(full files, black-box files, defines): module picks by the binder precedence (as-built), or for the LP frame
     by the exact source files the LP schedule was extracted against (lp_files, hash-checked by the caller)."""
     import slice_source
-    ab = json.loads((ROOT / MANIFEST).read_text())
+    ab = json.loads((sroot() / MANIFEST).read_text())
     if asbuilt:
-        _p, _ab, idx, prefer = slice_source.manifest_selection(ROOT.resolve(), MANIFEST)
+        _p, _ab, idx, prefer = slice_source.manifest_selection(sroot().resolve(), MANIFEST)
     else:
         idx = bind_elab.module_index(['rtl', 'physical/asap7_memory_macros_v2'], [], str(SRC[0]))
         prefer = tuple(str(SRC[0] / f) for f in lp_files)
@@ -145,8 +151,8 @@ def header(text, name):
 
 def HARD_PARAMS(_c={}):
     if 'v' not in _c:
-        ab = json.loads((ROOT / MANIFEST).read_text())
-        _c['v'] = bind_elab.load_hard_params(ab.get('hard_params', []), (ROOT / MANIFEST).parent / ab.get('base', '.'))
+        ab = json.loads((sroot() / MANIFEST).read_text())
+        _c['v'] = bind_elab.load_hard_params(ab.get('hard_params', []), (sroot() / MANIFEST).parent / ab.get('base', '.'))
         # Approved R5 opt-in primitive: retain every actual legacy shape parameter.
         if 'ot_v41_rom_elem_q_qxpq_w10' in _c['v']:
             _c['v'].setdefault('ot_v41_rom_elem_q_qxpq_w10_gb', dict(
@@ -552,7 +558,7 @@ def validate(meas_v, lp_sched):
 def plan_lanes(master):
     """die plan frame_int lane latencies of this master's frames: {(src band, dst band): sorted set of cycles}"""
     # OT_S81_FRAME_PLAN: the plan being compiled, when it is not die_plan.json (a relay/hold event moves fi_* cycles)
-    d = json.loads(Path(os.environ.get('OT_S81_FRAME_PLAN', ROOT / 'physical/die_plan/s81/die_plan.json')).read_text())
+    d = json.loads(Path(os.environ.get('OT_S81_FRAME_PLAN', sroot() / 'physical/die_plan/s81/die_plan.json')).read_text())
     ptype = {p['name']: p['type'] for p in d['partitions']}
     ports = {p['id']: p for p in d['ports']} if isinstance(d['ports'], list) else d['ports']
     lat = d['latency']['lanes']
@@ -705,16 +711,26 @@ def main():
                          'must then FAIL (the receipt is marked control and is never a schedule of record)')
     ap.add_argument('--manifest', default=MANIFEST,
                     help='selected source manifest within this source root; canonical default unchanged')
+    ap.add_argument('--source-root', type=Path, default=None,
+                    help='S81-PLAN-1 11-10: trace the as-built frame from this source root (a frame root made by '
+                         'layer_prog/frame_root.py from a bind\'s own manifest); --manifest is relative to it. The LP '
+                         'validation still archives the LP schedule revision from this git tree.')
     a = ap.parse_args()
+    if a.source_root is not None:
+        SROOT[0] = a.source_root.resolve()
+        own = Path(__file__).resolve().read_bytes()
+        twin = sroot() / 'tools/s81_dv/frame_schedule_asb.py'
+        if not twin.is_file() or twin.read_bytes() != own:
+            raise ValueError('source root does not carry this extractor (its hash is part of the schedule): ' + str(twin))
     import slice_source
-    selected, ab, _, _ = slice_source.manifest_selection(ROOT.resolve(), a.manifest)
-    MANIFEST = str(selected.relative_to(ROOT.resolve()))
+    selected, ab, _, _ = slice_source.manifest_selection(sroot().resolve(), a.manifest)
+    MANIFEST = str(selected.relative_to(sroot().resolve()))
     m, v = a.master, a.var
     work = a.work or a.out / 'work'
     work.mkdir(parents=True, exist_ok=True)
     lp_top, ab_top = f'{m}_l4_lp', f'{m}_l4_lp_asb_{v}'
-    lp_sched = json.loads((ROOT / LP_SCHED.format(m=m)).read_text())
-    plan_map = json.loads((ROOT / PLAN_MAP.format(m=m)).read_text())
+    lp_sched = json.loads((sroot() / LP_SCHED.format(m=m)).read_text())
+    plan_map = json.loads((sroot() / PLAN_MAP.format(m=m)).read_text())
     lp_files = list(lp_sched['source_sha256']) + [LP_TWIN.format(m=m)]
     bound = None
     if a.bound_plan is not None:
@@ -749,14 +765,14 @@ def main():
     meas_v = measure(json.loads(js_v.read_text()), lp_top)
     vrows, vfails = validate(meas_v, lp_sched)
     # (2) head: the twin (what the LP calendar is on current RTL) and the as-built frame
-    SRC[0] = ROOT
+    SRC[0] = sroot()
     stale = [f for f, h in lp_sched['source_sha256'].items() if sha(f) != h]
     js_t, _ = elaborate(lp_top, False, work, a.mem_gb, lp_files)
     js_ab, sha_ab = elaborate(ab_top, True, work, a.mem_gb)
     meas_t = measure(json.loads(js_t.read_text()), lp_top)
     selected_json = json.loads(js_ab.read_text())
     netlists = ab['netlist'] if isinstance(ab['netlist'], list) else [ab['netlist']]
-    die_text = '\n'.join((ROOT / f).read_text() for f in netlists)
+    die_text = '\n'.join((sroot() / f).read_text() for f in netlists)
     selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS())
     (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
     meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None)
@@ -780,6 +796,8 @@ def main():
     sched['selected_station_variants'] = selected_variants
     if bound is not None:
         sched['bound_plan'] = bound
+    if a.source_root is not None:
+        sched['source_root'] = str(sroot())
     fails += pf
     sp = a.out / f'{ab_top}_schedule.json'
     sp.write_text(json.dumps(sched, indent=1) + '\n')

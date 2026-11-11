@@ -23,15 +23,73 @@ OPS = [r'^eng\.(lead_flit|hash|hbm_read)$']
 UNIT = 'dsdv_eng_rr (window former + dsfd_engram_lkp_static14 + head + XQ join) + dsdv_eng_tap x16 on the reader links'
 INSTS = ['u_eng (dsdv_eng_rr)'] + [f'u_etap_{k:02d} (dsdv_eng_tap{"_w" if k == 0 else ""})' for k in range(16)]
 BENCH = 'results/rtl/s81_rtlgap_eng_1021'
-RETURN_AGE = 1536  # default of dsdv_eng_rr_e; measured first/last fragment and lookup II are RETURN_AGE + 44 / 139 / 64
-LAT = dict(win=4, first_request=26, return_age=RETURN_AGE, first_fragment=RETURN_AGE + 44, last_fragment=RETURN_AGE + 139,
-           ii=RETURN_AGE + 64)
+RETURN_AGE = 1536  # main's default of dsdv_eng_rr_e; measured first/last fragment and lookup II are RETURN_AGE + 44 / 139 / 64
+
+
+def latency(return_age):
+    """the row-read table at one lookup RETURN_AGE (the fixed offsets are measured relative to it)"""
+    return dict(win=4, first_request=26, return_age=return_age, first_fragment=return_age + 44,
+                last_fragment=return_age + 139, ii=return_age + 64)
+
+
+ENG_RE = r'(?<![\w$])(?<!module )(dsdv_eng_rr(?:_e)?)\s*(?:#\s*\((.*?)\))?\s*(\w+)\s*\('
+
+
+def bound_return_age(rtl_dir):
+    """S81-PLAN-1 11-10 (TOK-VERIFY-1: main schedules 1536, the candidate eng partition is 640): the lookup RETURN_AGE
+    of a bind = the explicit .RETURN_AGE(n) on every dsdv_eng_rr / dsdv_eng_rr_e instance in its emitted RTL.  At least
+    one instance, every one explicit, all equal; else refuse (never fall back to this module's constant)."""
+    import re
+    from pathlib import Path
+    found = []
+    for f in sorted(Path(rtl_dir).glob('*.sv')) + sorted(Path(rtl_dir).glob('*.v')):
+        text = f.read_text(errors='replace')
+        if 'dsdv_eng_rr' not in text:
+            continue
+        for m in re.finditer(ENG_RE, text, re.S):
+            v = re.search(r'\.RETURN_AGE\s*\(\s*(\d+)\s*\)', m.group(2) or '')
+            if v is None:
+                raise ValueError(f'bound eng instance {m.group(3)} ({m.group(1)}, {f.name}) has no explicit RETURN_AGE')
+            found.append((f.name, m.group(3), int(v.group(1))))
+    if not found:
+        raise ValueError(f'no dsdv_eng_rr / dsdv_eng_rr_e instance in the bound RTL {rtl_dir}')
+    ages = {a for _, _, a in found}
+    if len(ages) != 1:
+        raise ValueError(f'bound eng instances disagree on RETURN_AGE: {found}')
+    return ages.pop(), found
+
+
+def lat_for(ctx=None):
+    """the table the compiler schedules: the bind's own RETURN_AGE under --bound-data (ctx['bound_eng']), else the
+    OT_BOUND_DATA bind's (tools that import this table at module level), else main's constant"""
+    import os
+    from pathlib import Path
+    if ctx is not None and ctx.get('bound_eng') is not None:
+        return latency(ctx['bound_eng']['return_age'])
+    if os.environ.get('OT_BOUND_DATA'):
+        return latency(bound_return_age(Path(os.environ['OT_BOUND_DATA']) / 'rtl')[0])
+    return latency(RETURN_AGE)
+
+
+LAT = lat_for()
+
+
+def check_programme(record, rtl_dir):
+    """a compiled programme's Engram table (its bound_eng.json record, or a latency dict) against a bind's RTL;
+    raises on any difference (a programme compiled at another RETURN_AGE expects the rows early or late)"""
+    lat = record.get('latency', record)
+    want = latency(bound_return_age(rtl_dir)[0])
+    diff = {k: (lat.get(k), v) for k, v in want.items() if lat.get(k) != v}
+    if diff:
+        raise ValueError(f'programme Engram latency differs from the bind RTL (programme, bind): {diff}')
+    return want
 
 
 def lower(die, op, ctx):
     t = int(ctx.get('t_issue', 0))
     name = op['op']
     ev = []
+    LAT = lat_for(ctx)
     if name == 'eng.lead_flit':
         ev.append(dict(cycle=t, inst='u_eng', port='f_ks', dir='in', kind='KS', tag=name, plan_only=True,
                        payload='{start, user, tok, pos} of the token start (tap of the s_7N -> seqhost start lane)'))

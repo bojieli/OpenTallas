@@ -346,7 +346,35 @@ def check_plan_lk(frame, measured):
         raise ValueError(f'as-built frame cfifo lk {measured:03x} lands at E {lanes}, plan K {row["K"]}: ' + frame)
 
 
-def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
+GB_QUAL = 'gb_provider_qualification.json'
+GB_QUAL_USED = {}   # master -> sha256 of the qualification record a compile used
+
+
+def gb_provider_record(record_dir, source_root, schedule, master):
+    """S81-PLAN-1 D (COORD ruling 11-10): the sha-bound GB GO/TAG provider qualification record
+    (tools/s81_dv/tokfunc/check_native_go_split.py) beside the frame schedules.  Usable only when its verdict is PASS, every
+    provider source it was benched on is byte-identical under the frame source root, and its element sha is the schedule's
+    own gb_split source hash.  Returns (record, sha256) or (None, None) when there is no record."""
+    if record_dir is None:
+        return None, None
+    path = Path(record_dir) / GB_QUAL
+    if not path.is_file():
+        return None, None
+    raw = path.read_bytes()
+    rec = json.loads(raw)
+    if rec.get('schema') != 'opentallas.s81.gb_provider_qualification.v1' or rec.get('verdict') != 'PASS':
+        raise ValueError('GB provider qualification record is not a PASS record: ' + str(path))
+    for name, expected in rec['provider_source_sha256'].items():
+        f = Path(source_root) / name
+        if not f.is_file() or hashlib.sha256(f.read_bytes()).hexdigest() != expected:
+            raise ValueError('GB provider qualification was benched on other bytes than the selected source: ' + name)
+    el = rec['element']
+    if schedule['source_sha256'].get(el['source']) != el['sha256']:
+        raise ValueError(f'GB provider qualification element {el["source"]} is not the schedule\'s own ({master})')
+    return rec, hashlib.sha256(raw).hexdigest()
+
+
+def qualify_frame_source(schedule, master, source_root, selected_manifest=None, record_dir=None):
     """A bound receipt qualifies its exact selected sources and GO interface, not just a filename."""
     hashes = schedule.get('source_sha256')
     if not isinstance(hashes, dict) or not hashes:
@@ -366,9 +394,30 @@ def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
     if gb:
         if len(gb) != len(stations):
             raise ValueError('mixed legacy/GB QX stations cannot use a global GO advance: ' + master)
-        if any(s.get('required_go_issue_advance_edges') != 1 or
-               (s.get('native_provider_qualified') is not True and not gb_provider_under_test()) for s in gb):
-            raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master)
+        rec, rsha = gb_provider_record(record_dir, source_root, schedule, master)
+        ages = set(rec['qualified_x_ages']) if rec is not None else set()
+        for name, s in stations.items():
+            added = s.get('added_edges') or []
+            by_record = (rec is not None and len(added) == 1 and added[0] in ages and s.get('all_x_inputs_equal_added_edges')
+                         and rec.get('required_go_issue_advance_edges') == 1)
+            if s.get('required_go_issue_advance_edges') != 1 or not (
+                    s.get('native_provider_qualified') is True or by_record or gb_provider_under_test()):
+                raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master
+                                 + (f' (station {name} X age {added} not in the qualification record {sorted(ages)})'
+                                    if rec is not None else ''))
+        return rsha
+
+
+def frame_manifest():
+    """(source root, manifest) a frame schedule must hash-bind.  S81-PLAN-1 11-10: the FRAME sources (romq / gb_split
+    ROM elements, plan kits) come from the bind's own as-built manifest, which is not the slice-source selection
+    (OT_S81_SELECTED_ASBUILT_MANIFEST resolves slice internals that are not manifest files).  OT_S81_FRAME_ASBUILT_MANIFEST
+    / OT_S81_FRAME_SOURCE_ROOT name it separately (dv_layer_compile --bound-data sets them to the bind's manifest);
+    unset, the frame check binds the slice selection exactly as before."""
+    root = os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))
+    man = os.environ.get('OT_S81_FRAME_ASBUILT_MANIFEST') or os.environ.get(
+        'OT_S81_SELECTED_ASBUILT_MANIFEST', 'physical/die_plan/s81/bind/asbuilt_b178_coll.json')
+    return Path(root), man
 
 
 def gb_provider_under_test():
@@ -405,10 +454,9 @@ def source_frame_schedule(master):
                              + ', '.join(c.get('fails', [])[:8]))
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
-        qualify_frame_source(json.loads(path.read_text()), master,
-                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))),
-                             os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST',
-                                            'physical/die_plan/s81/bind/asbuilt_b178_coll.json'))
+        rsha = qualify_frame_source(json.loads(path.read_text()), master, *frame_manifest(), record_dir=directory)
+        if rsha is not None:
+            GB_QUAL_USED[master] = rsha
         return path
     if not master.endswith('_lp'):
         return None
