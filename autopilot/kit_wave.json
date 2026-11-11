@@ -3590,7 +3590,8 @@
     "dsdv_slice_lepe_mu_LP__t2@7",
     "dsdv_slice_lepw_mu_LP__t2@7",
     "dsdv_slice_lepw_mus_LP__t2@8",
-    "dsdv_slice_iq_C__t1@22"
+    "dsdv_slice_iq_C__t1@22",
+    "ot_s81sl_leaf__t42@15"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4580,7 +4581,8 @@
     "dsdv_slice_lepe_nh_mus_C__t1@11": "DPL-0033 legalizer class fix: --dpl-diamond (KW-FIX-42, COORD NEWFAIL 04:0x); one retry, then DIE-S81-85 form",
     "svc_hi_dsdv_svc_pvso_entry__t1@6": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch FORCE: key does not move but bound RTL changed (bind6)",
     "svc_hi_dsdv_svc_pvso_entry__t2@6": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch FORCE: key does not move but bound RTL changed (bind6)",
-    "dsdv_slice_iq_C__t1@22": "KW-FIX-44 2026-11-10: COORD retry once after disk room (a22 INFRA no host with 60 GB at 03:29; epyc2 scratch2 now 118 GB after store GC)"
+    "dsdv_slice_iq_C__t1@22": "KW-FIX-44 2026-11-10: COORD retry once after disk room (a22 INFRA no host with 60 GB at 03:29; epyc2 scratch2 now 118 GB after store GC)",
+    "ot_s81sl_leaf__t42@15": "KW-FIX-44 2026-11-10 17:10 PST COORD: INFRA, not a stale path. kit_rtl script kw43-canon/s81/kit_rtl_ctapw.sh exists on epyc7/epyc2/epyc4/intel1 but was missing on gen host epyc8 (a hole in the KW-FIX-44 epyc8 staging; the SRC-INCOMPLETE probe does not read 'script' keys). Every /srv path named in live kit_wave.json values checked on epyc8: the 50 present on epyc7 but missing on epyc8 (21 GB) copied add-only; ctapw md5 4cb6220d = epyc7. Same script path in other FAIL rows today: none."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
