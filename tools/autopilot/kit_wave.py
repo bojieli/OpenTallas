@@ -2886,6 +2886,14 @@ def future_lec_snapshot(snapshot, commit=None):
     return meta
 
 
+def future_lec_for(cfg, die, snapshot):
+    """the future-LEC snapshot of a new attempt.  KW-FIX-43 11-10 (COORD class fix, false LEC NOT EQUIVALENT on the
+    3c6f29fb pin; q_b100__physical_v1 a13 proves EQUIVALENT 101,250/101,250 with main >= f502d8a): option
+    future_lec_commit (die > global) pins lec.py / kit_resume.py / the RUN_KIT template to that reviewed commit of the
+    scheduler repo; unset = the scheduler checkout HEAD, as before."""
+    return future_lec_snapshot(snapshot, commit=opt(cfg, die, "future_lec_commit") or None)
+
+
 def ensure_future_lec(out, meta):
     """KW-FIX-44 11-10 (COORD, LEC-SNAP class: TYPE-SAFE-5 p4, st_b_v2 a2, sfw_proof a6 failed lec_tools_copy rsync rc 23
     after their queue wait because the spec named a snapshot that was never staged next to it).  Before any stage: a
@@ -3910,7 +3918,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     jd.mkdir(parents=True, exist_ok=True)
     # Snapshot current approved tool bytes into this new attempt, never another lane's kit.
     if opt(cfg, die, "future_lec") is not False:
-        sp["future_lec"] = future_lec_snapshot(jd / "future_lec")
+        sp["future_lec"] = future_lec_for(cfg, die, jd / "future_lec")
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
