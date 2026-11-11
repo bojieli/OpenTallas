@@ -71,6 +71,7 @@ AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i 
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
 MIN_BYTES = 1024
+WAVE_ROOT_RE = re.compile(r"/runs/[^/]+/kit-wave$")   # a kit-wave work root (protect.d/kit_wave.txt source line)
 GENERATED_UNION = "protected-dbs.txt"   # protect.d copy of write_union output (wt-reaper --protected-dbs)
 LANE_DEPTH = 4                     # /srv/<scratch>/claude/<lane>
 TRIM_B = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb")
@@ -800,6 +801,12 @@ class Job:
         for t in alternates_targets(self.found["git"]):
             rows.append((t, "git alternates target"))
         self.localkeep = PathSet(rows, deep=self.deep, canon=self.paths.canon)
+        # COORD 11-10 20:3x (AUTOCLEAN-12): protect.d/kit_wave.txt publishes whole wave roots (.../runs/<die>/kit-wave) as
+        # wt-reaper SOURCE paths ("worktrees holding these paths are kit-wave sources").  For the class b/c file trims of
+        # intermediate stage ODBs such a root holds only itself and its ancestors, not every run below it; the 3 protected
+        # lists, counted, kit-wave keep (active/resume/spec), resume_hold, queue, live and age checks still apply.
+        self.localkeep_trim = PathSet(rows, deep=lambda q: self.deep(q) and not WAVE_ROOT_RE.search(self.paths.canon(q)),
+                                      canon=self.paths.canon)
 
     def load_counted(self):
         rows, self.signed_records = [], []
@@ -880,7 +887,7 @@ class Job:
         g = self.guard_hits(k)
         if g:
             return g
-        h = self.localkeep.hit(k)
+        h = (self.localkeep_trim if getattr(self, "_trim_cls", "") in ("b", "c") else self.localkeep).hit(k)
         if h:
             return "local keep: " + h
         h = self.queue.hit(k)
