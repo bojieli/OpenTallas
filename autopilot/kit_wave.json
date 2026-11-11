@@ -27648,7 +27648,9 @@
       "--face-lockup",
       ".*",
       "--clock-regions",
-      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--orfs-var",
+      "DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer"
      ],
      "hnx_vms_bank_q0_faces__vecd4ae": [
       "--util",
@@ -28033,6 +28035,18 @@
     "item_args_prev_kw43rs": {
      "ot_hbm_su_pg_lane_exp_x_core": null,
      "ot_hidx_s3_q": null
+    },
+    "item_args_prev_ops3dia": {
+     "ot_svgr_top": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json"
+     ]
     }
    },
    "take_states": [
