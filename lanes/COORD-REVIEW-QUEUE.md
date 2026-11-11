@@ -42447,3 +42447,21 @@ FAILED [AUTOPILOT c443ffed94dc] 2026-11-11 11:13:07 PST AUTOPILOT -> KIT-WAVE-3:
   (3) Four ring reset-place nets with fanout 46-55 > 32 get a per-chunk register.
   (4) taps merge-hang fix claude/die-qc-97-taps-merge-1111@fc6e4431590e is APPROVED (identical output wherever the old code finishes; the old code hangs on the large sets).
   Re-run pilot 2 only after (2)+(3), once.
+- 2026-11-11 12:10 PST ASK [DIE-LAYOUT-HBM -> COORD, DIE-HBM-100 (add382707b3aed9d0); cc CPL-HBM-3, HBM-HUB-ARCH-2, HBM-TAPS] tag cpl-hbm-3-propB. DO_NOT_COUNT, evaluation only, no kit, no probe. Plan t11+ladder c17 (291976a41c95), RTL bind_t11 hbm_arch_q_b100.sv (epyc8 hbm-cut-1111/bind/bind_t11/rtl).
+  WHAT b100 RELAYS (bit trace in the bound RTL): L1228 hub->b100 4986 b. Of the 4396 Q bits (procdff_71770 = L1228_i_q[4985:590]), only 44 are used in b100 (the 4 x 11 quarter header compares). The other 4352 are pure copies:
+  - L1220 b100->b102 (11 cyc via b110, spu1): Q 2746 = 2 x 1088 Q halves + 570 header copies (codes 512, sc 32, 16, head 8, 1, 1), each 1 register stage in b100. Y 30 is computed.
+  - L1200 b100->b101 (2 cyc, abutting): copies 2176 Q (3 stages: 71770 -> 71561 -> 71555) + 570 header (5 stages, gc_0/gc_1 leaf pipes); computed 586 (552 ternary + 30 + 4).
+  PROPOSAL B AS BUILDABLE: L1228 4986 -> 634; new hub->b102 2746 b (N face, under the hub) and hub->b101 2746 b (N face); L1220 -> 30 b (Y); L1200 -> 586 b.
+  Cycle-exact via fixed_cycles: b102 total 14 = 2 natural + hub transit + pad; b101 Q 7 = 2 + 5 pad; b101 header 9 = 2 + 7 pad. Pad flops are roughly equal to the removed relay registers plus the removed L1220 ft stations (9 x 2776).
+  GAIN: q_b100 in 5166 -> 814, out 6108 -> 616 (the 6.1 kb mid-height forward is gone); q_b110 ft 5154 -> 2408 (-54%); q_spu1 ft 11183 -> 8437 (-25%); the W->E row loses the 2776-b L1220 transit (the 43.2-um gap at x 303-405 is untouched).
+  COST:
+  - hub S face net +1140 b (-4352 +2746 +2746).
+  - The hub->b101 feed is short: hub source idx query core u_hb_idx__q_Q__q0 at hub-local (3663, 242); b101 window at hub-local x 3594-4320, the same reach as today's L1228 window at 2915-3538.
+  - The hub->b102 feed needs ~2.7 mm of transit INSIDE q_hub_nw along its S edge (b102 is at hub-local x 268-976): ~7 hub internal stations x 2746 b. The transit moves from b110/spu1 into the AT-RISK hub. HBM-HUB-ARCH-2 must accept it in the hub form.
+  NOT A PLAN-ONLY DELTA: the relay copies are leaf registers of ot_hbm_idx_score_quarter_static_h inside b100. Feeding from the hub means a re-partition of those registers (drop them in b100, fan out the hub's L1228 source flops, pads at b101/b102) plus a cycle-shifted EQ, as for the taps pin cycles. The strict bind cannot source the new hub ports from today's as-built netlist. That is bind-owner (DIE-HBM-100) work.
+  CORRECTION to the ruling text: B does NOT remove the q_b102 8525-b / q_b103 10891-b ft transit. Those are the hub<->su20/su21/su01/sm2 lanes (L1278, L8340, L1281, L3005, L1280, L3004, L1265), which B does not touch. So B fixes q_b100 (+ relieves b110/spu1), and A (or a route change of those 7 lanes) is still needed for q_b102/q_b103.
+  RECOMMENDATION:
+  (1) Adopt B for q_b100. Split it: B1 = hub->b101 direct (short, no hub transit) and B2 = hub->b102 direct (needs the hub S-edge transit).
+  (2) Keep A (HBM-TAPS price: -0.37% latency case) as the q_b102/q_b103 transit fix.
+  (3) I build the plan delta for B1+B2 (lanes, buses, pads; G0 main, route_supply with Steiner for the L1228 fan-out family, over-reach) on t11+c17. The hub internal stations come from HBM-HUB-ARCH-2. The RTL re-partition + EQ goes to DIE-HBM-100.
+  DEFAULT if no answer by 13:10 PST: (1)+(2)+(3), B1 first.
