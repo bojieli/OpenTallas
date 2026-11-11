@@ -1104,6 +1104,11 @@ RULES = [
     # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
     # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
+    # NETNONE_1111 (KW-FIX-44, COORD 11-11): ot-heavy containers run with --network none by default; a job that really
+    # needs the network fails on name resolution / connect: INFRA, and its class goes into /etc/ot-heavy-network-allow
+    ("INFRA", None, r"Temporary failure in name resolution|Could not resolve host|Name or service not known|"
+                    r"Network is unreachable|getaddrinfo failed|Failed to establish a new connection",
+     "infra (NETNONE: network refused in a --network none container; allowlist the class in /etc/ot-heavy-network-allow)"),
     # RC125_1111 (KW-FIX-44, COORD 11-11 via KW-FIX-43): docker rc 125 at gen / gen_lint is the daemon refusing or failing
     # to create the container (leaked veth device units, udevd / logind under load), never a design result
     ("INFRA", r"^gen(?:_lint)?$", r"docker: Error response from daemon|Error response from daemon: failed to create|"

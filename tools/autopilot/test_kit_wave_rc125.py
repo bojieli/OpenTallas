@@ -25,5 +25,11 @@ class RC125(unittest.TestCase):
         self.assertEqual(c, "RTL")
 
 
+    def test_netnone_network_failure_is_infra(self):
+        c, why = KW.classify("place", "pip._vendor.urllib3: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution\n")
+        self.assertEqual(c, "INFRA", why)
+        self.assertIn("NETNONE", why)
+
+
 if __name__ == "__main__":
     unittest.main()
