@@ -39041,3 +39041,4 @@ FAILED [AUTOPILOT b76b6a8dce3b] 2026-11-10 22:12:59 PST AUTOPILOT -> KIT-WAVE-3:
       bind: ERROR dead-input proof must be repository-relative
     CLASSES (1 error lines):
       1  bind
+- 11-10 22:27 ROOT-MERGE-57 MERGED plan-route-3 f522c901bb8e (replaces 46d74a9b; ff, adds core_conns.json first) -> 67f1954733bd [je-head jt-qc ja-kv km-s81 le-hbm], read back on origin. Sparse at 46d74 is clean; test_route_supply passes at f522c90 by name. main=67f1954733bd.
