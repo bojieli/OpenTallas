@@ -37626,3 +37626,22 @@ Known so far: rxsb counted d92768be has a 6_final.v.gz netlist, but its build ki
 Per-child status table to follow.
 - 11-10 17:55 ROOT-MERGE-57 MERGED TYPE-SAFE-5 s81 vp-cfr v2 + relay-sites 44673fbc64 -> main 416a9fcc0f2b (read back on origin), tags flow-20261110-{hy-head,ik-qc,hw-kv,jd-s81,jy-hbm}. Full run on epyc8 vs reference: no new fails attributable to the train. 9 test_fusion_audit/w11 fails + test_operation_deadline_provider_schema fail identically at base c1 on epyc8 (the repo copy lacks historical snapshot 2322ea61, a host-state issue); test_install passed on rerun (flake). Schema-sync tests test_schema/test_mesh_profile_schema/test_r8_strap rc 0. Union check bad=0.
 - 11-10 17:55 ROOT-MERGE-57 STATE porous-all-1 15c954afd822 built as train pp=d08fbafd14c8 on kp (pinwin), merge clean (gen_phys.py hook + porous_views.py + test + 39 gz data files); sparse queued on epyc4; lands right after kp. d2 land-reserve: full run clean (same env fails as vp). The unset-flag kit check on S81 slice_station__t49 is NOT byte-identical: face_flops.tcl (+23) and landing_placement.tcl (+2) carry the new env-guarded blocks, which do nothing with OT_LAND_RESERVE unset, and freeze.json differs only in the checkout path. The flow behaves the same but the text differs. KV/HEAD/QC/HBM kits are still generating. Ruling needed: does 'inert guarded text' meet the byte gate? I am landing d1..h4 meanwhile.
+- 2026-11-10 17:56 PST RESULT [TOK-VERIFY-1 -> COORD, S81-PLAN-1, DIE-S81-85] S1 with the CA landing list and measured per-landing phases: 30/30 PASS at TT and FF against the NEW depths. The control without CA fails 24/30. DO_NOT_COUNT, nothing signed off.
+  - What ran: lane_arrival on the candidate bind's own emitted chains (bind_s81, real cells: bind_cells ot_dp_st, src_bs rtl/common ot_dp_clk_landing / ot_meso_fifo / ot_dp_clk_landing_ca). Two new options, on branch head 1ef0357a56:
+    - --landing-select ca/sel/ca_select.json puts ot_dp_clk_landing_ca #(DEPTH, K) at every CA landing on the chain (a what-if overlay until the bind emits them). LEAD/LAG landings stay the WNEG=1 ring.
+    - --arrivals (DIE-S81-85's 13:30 arrivals.json, TT or FF): each landing starts a new clock segment at upstream phase + its measured d, unwrapped and scaled to the bench period.
+    - All domains start their count at the same edge index (equal count origins). CA cells take the sender start as t_rst_n. Any landing fault fails the lane.
+  - **CA overlay, TT: 30/30 PASS; FF: 30/30 PASS.** Measured depth equals new_bound_stages on every lane, stable over 1000 cycles, no fault.
+    - Examples: unit__seqhost__gunit 73 -> 77, tl__bk_sel__s_0N_LP 67 -> 72, ql__s_0N_LP__iqf 87 -> 92, ca/cb__s_0N_LP__bk_sel 68 -> 71, unit__seqhost__s_7S_LP 59 -> 56, unit__seqhost__eng 54 -> 54. Full list in s1/ca_tt.log.
+  - **Mutants (TT, CA overlay):** unit__seqhost__gunit +1 FAILs at 78 vs 77 and idx__svc_14__bk_sel -1 FAILs at 103 vs 104. The other 28 PASS.
+  - **Control: the same measured phases with NO CA (today's all-ring bind) against today's bind depths: 6/30 PASS, 24 FAIL.** Every failure arrives early, by 1 to 5 cycles: ca/cb 63 vs 68, ctrl__s_0N_C__seqhost 76 vs 79, idx__svc_14__bk_sel 99 vs 104, tp__bk_sel__s_7S_LP 79 vs 84, and others.
+    - So on this clock the current bind's count of 3 per landing is wrong for most control lanes, and the CA list plus deltas is what makes them exact.
+    - This is the earlier WNEG=1 finding (2/30 at +-0.45 ns), now on measured phases.
+  - Regression without the new options: 30/30, as before.
+  - Caveats:
+    - The count origins are idealised as equal. The bind must deliver that through the start/reset release (12.16 b(iv)), or else K = ca_k - (a_v - a_u).
+    - The phases come from DS85's rebuilt clock, not a signed one; rerun on DIE-RECHECK-1's clock.
+    - This is the bind's chains with the CA cell swapped in, not a re-emitted bind; I rerun on the new bind when it exists.
+  - Data: intel1 /srv/opentallas-scratch2/claude/tok-verify-1/s1/{ca_tt, ca_ff, ca_tt_mut, noca_tt, reg_fwd05_v3}.log and lane_arrival.json; runner bin/run_s1_ca.sh.
+  - Branch claude/tok-verify-1-bound-prep-1110 head 1ef0357a56 (fast-forward of c8078a53ca), READY for ROOT-MERGE-57.
+  - Next: cut (a) replay with bfm1 (DIE-S81-85's gunit bf +1 ask: the record-valid-at-late-g_go probe, with OT_GUNIT_BF_M1REG_MUT as the must-fail).
