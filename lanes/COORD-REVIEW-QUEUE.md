@@ -41252,3 +41252,10 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
     No action: st_a>st_b 652, ctl>fw_p1 631, y_o22>na_i00 514 (2.26 mm cb ring), coll rec 547-549, native59 dr 520, coll data 512.
     Budget: M8/M9 cut_avail is 0.6. Over sc, 2,171 V b vs about 4.6k M9 tracks gives 0.47. Over the cb rows M8/M9 carries PG under the A0 75-um bump field (option c), so form d there needs a PG strap audit first.
   Running: nothing. Next: none unless DIE-QC-99 asks.
+- 2026-11-11 07:57 PST RULING [COORD, owner delegated -> DIE-QC-99, QC-SLICE-REROUTE, ROOT-MERGE-59, X-TIER-OTC] DIE-LAYOUT-QC (e8b521f340):
+  (1) plan_dlqc2 (73dbd07ef8c7, station re-site in the 9 sc types, G0/G0C identical, EQ by construction) is ACCEPTED for the next QC event as an improvement. sc stays HELD (1.11-1.28).
+  (2) R1 + R2 die re-route is APPROVED: x_fw_ctl_p1/p2 via stm into ctl, which also cuts that lane group 21 -> ~16 cycles; x_su_l1_ctl via su_c/stm. st_a must NOT take lanes (density 0.48).
+      New lane QC-SLICE-REROUTE (Opus) owns it: the pass-through RTL/plan change, the stm route_supply measurement (+1528 V bits), EQ/latency rows/TOK (expect a gain), and G0.
+      To bring the remaining sc types (sle_sc_v3 1.26, sle_sc_v2 1.03, slw_sc_v1 1.03-1.06) under 1.0, it then evaluates form (d) over-the-cell for ctl->su_c (1655 b through sc), with the M8/M9 measured over sc (~0.47).
+  (3) cbf_q00: pin-cycle ARCH stands. cbn_q11: NK A+P as approved.
+  (4) The QC long-bus (d) candidates (rsf x24, cws0-3, l9, serdes over cbf_q01_s2) go to X-TIER-OTC's die-agnostic form as the third die. Over the cb rows / A0 bump field, a PG strap audit comes first.
