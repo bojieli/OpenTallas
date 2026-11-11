@@ -7,7 +7,7 @@ Question: what can only be fixed by an ARCHITECTURE change, and not by placement
 
 | die | verdict | ARCH-REQUIRED items (recommended fix, when) |
 |---|---|---|
-| HBM | **AT-RISK** | **HBM-A1** L14 (q_b000 -> q_b001, 4127 b). DIE-HBM-98 pick: per-key-group point-to-point lanes, each with its own window, plus a key-group stack layout, at 0 cycles. Query N=4 only if V is still above 0.8. Owner CPL-HBM-B1, POST-CUT. **HBM-A2** q_hub_ne/nw spine H 1.86/1.72 with ft around. Pick, staged: (a) 0 cycles: svg/vmks co-location in the hub core_place redo, plus word-rate checks, with N=2 or a kin tree only on rows that are not streams; (b) hub height sized from the H left after (a). The Q-row split is rejected. Owner VIS-TRIAGE-HBM, POST-CUT. q_b101(_nw) is AT-RISK until CPL-HBM-B1 bounds it. |
+| HBM | **AT-RISK** | **HBM-A1** L14 (q_b000 -> q_b001, 4127 b). DIE-HBM-98 pick: per-key-group point-to-point lanes, each with its own window, plus a key-group stack layout, at 0 cycles. Query N=4 only if V is still above 0.8. Owner CPL-HBM-B1, POST-CUT. **HBM-A2** q_hub_ne/nw spine H 1.86/1.72 with ft around. Pick, staged: (a) 0 cycles: svg/vmks co-location in the hub core_place redo, plus word-rate checks, with N=2 or a kin tree only on rows that are not streams; (b) hub height sized from the H left after (a). The Q-row split is rejected. Owner VIS-TRIAGE-HBM, POST-CUT. HBM stays AT-RISK because no HBM-A2 fix has been shown to reach 0.8. q_b101(_nw) is cleared: CPL-HBM-B1's bound on real nets is H 0.285/0.300 with V band 0, and a GRT confirm is queued. |
 | S81 | FEASIBLE-WITH-ARCH | **S81-A1** svc_rs staging -> transposer (16 types). This is a reach problem, not a track problem. Fix: a centre staging strip plus 2 pin-cycle stages (fallback: N band plus 5). Cost about AR -0.008% / -0.021% (upper bound, UNCHECKED). POST-CUT. Die: **S81-D1**, the s_4N_L1 leaf segment 1.07 (plan re-route, not arch). |
 | QC | FEASIBLE-WITH-ARCH | **QC-A1** cbf_q00_s2 + cbf_q00__cl870de686/__cl1b5a6458 NK tile ring. Fix: a core-free H channel between the tile rows (0 cycles), or a 2:1 glue serialiser on the one crossing link if its word rate allows. POST-CUT. Band: sle_su_c / slw_su_c x2, ring 0.99. |
 | KV | FEASIBLE | No type-level arch item. Die: **KV-D1**, hgi_EN/WN column segments 0.84-0.96 against the G0 limit of 0.6. That is a ft-band plan item. kv3_pv_v*n street_V is about 1.0, which is placement (CPL-KV-PV). |
@@ -23,7 +23,7 @@ Nothing here is ready for the 12:00 cut as an ARCH change. Every ARCH item needs
 | HEAD (26) | 0 | 0 | 0 | 0 | 1 (hd_lep0N) | 1 (hd_ctl 0.63) | 0 | 24 |
 | QC (123) | 3 (cbf_q00*) | 3 (su_c) | 0 | 0 | 0 | 31 | 22 | 64 |
 | KV (56) | 0 | 0 | 0 | 0 | 0 | 7 (kv3_hg* 0.48-0.54) | 24 | 25 |
-| HBM (81) | 4 (q_b001 x2, q_hub x2) | 0 | 2 (q_b101 x2) | 12 | 6 | 0 | 28 | 29 |
+| HBM (81) | 4 (q_b001 x2, q_hub x2) | 0 | 0 | 12 | 6 | 0 | 30 (incl q_b101 x2, CPL-HBM-B1 bound) | 29 |
 
 Class rules:
 - ARCH-REQUIRED: stays above 1.0 with every die pass-through routed around AND at the best placement found. A lane bound wins where one exists (CPL-HBM-B1, CPL-QC-SU, VIS-TRIAGE-HBM B34, CPL-HEAD, COORD rulings). Otherwise the model full-line cut is used.
