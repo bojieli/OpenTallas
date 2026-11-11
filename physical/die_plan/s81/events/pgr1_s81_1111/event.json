@@ -1,0 +1,632 @@
+{
+ "schema": "opentallas.plan_gen_rules_event.v1",
+ "rule": "PLAN-GEN-RULES-1 (OWNER 2026-11-10)",
+ "die": "s81",
+ "rules": [
+  "A",
+  "B"
+ ],
+ "base_plan": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
+ "base_plan_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "plan_output": "/srv/opentallas-scratch2/claude/die-s81-85/pgr1/out_s81_meas_1111_0332/plan.json",
+ "plan_output_sha256": "ebea5f5b8ade7a2311458f2aa9b7ea5647c4acd7d8cb6030f39bd114208d7e31",
+ "serialization": "indent=1 (base style not reproducible; canonical content checked)",
+ "affected_types": [
+  "dsdv_slice_lepe_mu_LP__t2",
+  "dsdv_slice_lepe_nh_mus_LP__t1",
+  "dsdv_slice_lepw_mu_LP__t2",
+  "dsdv_slice_lepw_mus_LP__t2"
+ ],
+ "affected_cores": [
+  "dsfd_coll_lane_e_safe8_ntf",
+  "dsfd_coll_lane_w_safe8_ntf"
+ ],
+ "core_kit_args": {
+  "dsfd_coll_lane_w_safe8_ntf": [
+   "--io-tt-ps",
+   "405",
+   "--io-ff-ps",
+   "340"
+  ],
+  "dsfd_coll_lane_e_safe8_ntf": [
+   "--io-tt-ps",
+   "405",
+   "--io-ff-ps",
+   "340"
+  ]
+ },
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "rtl_change": false,
+ "preservation": "every top-level key and every type key outside clock.tap_pitch_um / clock.insertion_ps / insertion_ff_ps / insertion_basis and core-tap insertion keys byte-identical (apply())",
+ "record": {
+  "B": {
+   "dsdv_slice_lepw_mus_LP__t2": {
+    "sinks": 61633,
+    "sinks_basis": "measured synth flops dsdv_slice_lepw_mus_LP__t2 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mus_LP__t2/attempt_9/gen/dsdv_slice_lepw_mus_LP__t2]",
+    "cap": 3000,
+    "need": 21,
+    "taps_before": 16,
+    "action": "list",
+    "proposed_um": 288.58,
+    "taps_proposed": 25,
+    "why": "the plan names tap ports clk_t1, clk_t10, clk_t11, clk_t12, clk_t13, clk_t14 ...: a re-pitch renumbers them, die-owner form (proposed pitch given)"
+   },
+   "dsdv_slice_lepw_mu_LP__t2": {
+    "sinks": 53687,
+    "sinks_basis": "measured synth flops dsdv_slice_lepw_mu_LP__t2 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2]",
+    "cap": 3000,
+    "need": 18,
+    "taps_before": 16,
+    "action": "list",
+    "proposed_um": 306.72,
+    "taps_proposed": 20,
+    "why": "the plan names tap ports clk_t1, clk_t10, clk_t11, clk_t12, clk_t13, clk_t14 ...: a re-pitch renumbers them, die-owner form (proposed pitch given)"
+   }
+  },
+  "A": {
+   "cores": {
+    "dsfd_coll_lane_w_safe8_ntf": {
+     "tt": 405.0,
+     "ff": 340.0,
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "taps": 8,
+     "parents": [
+      "dsdv_slice_lepw_mu_LP__t2",
+      "dsdv_slice_lepw_mus_LP__t2"
+     ],
+     "basis": "measured"
+    },
+    "dsfd_coll_lane_e_safe8_ntf": {
+     "tt": 405.0,
+     "ff": 340.0,
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "taps": 6,
+     "parents": [
+      "dsdv_slice_lepe_mu_LP__t2",
+      "dsdv_slice_lepe_nh_mus_LP__t1"
+     ],
+     "basis": "measured"
+    }
+   },
+   "types": {},
+   "listed": {}
+  }
+ },
+ "sinks": {
+  "col_h9_r0_p5__t1": {
+   "sinks": 26628,
+   "basis": "measured synth flops col_h9_r0_p5__t1 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p5__t1/attempt_20/gen/col_h9_r0_p5__t1]"
+  },
+  "col_h9_r0_p6__t1": {
+   "sinks": 17125,
+   "basis": "measured synth flops col_h9_r0_p6__t1 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p6__t1/attempt_19/gen/col_h9_r0_p6__t1]"
+  },
+  "serdes__t16": {
+   "sinks": 47753,
+   "basis": "measured synth flops serdes__t16 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t16/attempt_12/gen/serdes__t16]"
+  },
+  "serdes__t3": {
+   "sinks": 61803,
+   "basis": "measured synth flops serdes__t3 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t3/attempt_18/gen/serdes__t3]"
+  },
+  "serdes__t4": {
+   "sinks": 47595,
+   "basis": "measured synth flops serdes__t4 [intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t4/attempt_12/gen/serdes__t4]"
+  },
+  "serdes__t12": {
+   "sinks": 37794,
+   "basis": "measured synth flops serdes__t12 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t12/attempt_16/gen/serdes__t12]"
+  },
+  "serdes__t13": {
+   "sinks": 47067,
+   "basis": "measured synth flops serdes__t13 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t13/attempt_22/gen/serdes__t13]"
+  },
+  "iqf__t1": {
+   "sinks": 38543,
+   "basis": "measured synth flops iqf__t1 [intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/iqf__t1/attempt_11/gen/iqf__t1]"
+  },
+  "seqhost__t1": {
+   "sinks": 50713,
+   "basis": "measured synth flops seqhost__t1 [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/seqhost__t1/attempt_7/gen/seqhost__t1]"
+  },
+  "slice_station__t49": {
+   "sinks": 39974,
+   "basis": "measured synth flops slice_station__t49 [epyc4:/srv/opentallas-scratch2/claude/s81-wave-1105f2/kit-wave/s81/bf1e2233ce05/items/slice_station__t49/gen/slice_station__t49]"
+  },
+  "slice_station__t36": {
+   "sinks": 29992,
+   "basis": "ESTIMATE cells.py 85252 x die median flop share 0.352"
+  },
+  "slice_station__t37": {
+   "sinks": 17826,
+   "basis": "ESTIMATE cells.py 50672 x die median flop share 0.352"
+  },
+  "slice_station__t38": {
+   "sinks": 15607,
+   "basis": "ESTIMATE cells.py 44364 x die median flop share 0.352"
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "sinks": 61633,
+   "basis": "measured synth flops dsdv_slice_lepw_mus_LP__t2 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mus_LP__t2/attempt_9/gen/dsdv_slice_lepw_mus_LP__t2]"
+  },
+  "slice_station__t8": {
+   "sinks": 15773,
+   "basis": "ESTIMATE cells.py 44836 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t1": {
+   "sinks": 56931,
+   "basis": "measured synth flops ot_s81sl_leaf__t1 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t1/attempt_5/gen/ot_s81sl_leaf__t1]"
+  },
+  "ot_s81sl_leaf__t3": {
+   "sinks": 67181,
+   "basis": "measured synth flops ot_s81sl_leaf__t3 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t3/attempt_9/gen/ot_s81sl_leaf__t3]"
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "sinks": 53687,
+   "basis": "measured synth flops dsdv_slice_lepw_mu_LP__t2 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_lepw_mu_LP__t2/attempt_8/gen/dsdv_slice_lepw_mu_LP__t2]"
+  },
+  "slice_station__t41": {
+   "sinks": 62489,
+   "basis": "measured synth flops slice_station__t41 [epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t41/attempt_4/gen/slice_station__t41]"
+  },
+  "slice_station__t43": {
+   "sinks": 19622,
+   "basis": "ESTIMATE cells.py 55776 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t6": {
+   "sinks": 42914,
+   "basis": "measured synth flops ot_s81sl_leaf__t6 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t6/attempt_5/gen/ot_s81sl_leaf__t6]"
+  },
+  "ot_s81sl_leaf__t8": {
+   "sinks": 80628,
+   "basis": "measured synth flops ot_s81sl_leaf__t8 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t8/attempt_7/gen/ot_s81sl_leaf__t8]"
+  },
+  "ot_s81sl_leaf__t9": {
+   "sinks": 45886,
+   "basis": "measured synth flops ot_s81sl_leaf__t9 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t9/attempt_6/gen/ot_s81sl_leaf__t9]"
+  },
+  "slice_station__t44": {
+   "sinks": 25305,
+   "basis": "measured synth flops slice_station__t44 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t44/attempt_8/gen/slice_station__t44]"
+  },
+  "ot_s81sl_leaf__t12": {
+   "sinks": 40315,
+   "basis": "measured synth flops ot_s81sl_leaf__t12 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t12/attempt_7/gen/ot_s81sl_leaf__t12]"
+  },
+  "ot_s81sl_leaf__t13": {
+   "sinks": 34082,
+   "basis": "measured synth flops ot_s81sl_leaf__t13 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t13/attempt_4/gen/ot_s81sl_leaf__t13]"
+  },
+  "ot_s81sl_leaf__t15": {
+   "sinks": 16774,
+   "basis": "measured synth flops ot_s81sl_leaf__t15 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t15/attempt_8/gen/ot_s81sl_leaf__t15]"
+  },
+  "slice_station__t12": {
+   "sinks": 5613,
+   "basis": "measured synth flops slice_station__t12 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t12/attempt_8/gen/slice_station__t12]"
+  },
+  "ot_s81sl_leaf__t16": {
+   "sinks": 30370,
+   "basis": "measured synth flops ot_s81sl_leaf__t16 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t16/attempt_6/gen/ot_s81sl_leaf__t16]"
+  },
+  "ot_s81sl_leaf__t17": {
+   "sinks": 37131,
+   "basis": "measured synth flops ot_s81sl_leaf__t17 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t17/attempt_16/gen/ot_s81sl_leaf__t17]"
+  },
+  "ot_s81sl_leaf__t75": {
+   "sinks": 60150,
+   "basis": "measured synth flops ot_s81sl_leaf__t75 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t75/gen/ot_s81sl_leaf__t75]"
+  },
+  "slice_station__t45": {
+   "sinks": 7830,
+   "basis": "ESTIMATE cells.py 22256 x die median flop share 0.352"
+  },
+  "slice_station__t14": {
+   "sinks": 24118,
+   "basis": "measured synth flops slice_station__t14 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t14/attempt_13/gen/slice_station__t14]"
+  },
+  "ot_s81sl_leaf__t21": {
+   "sinks": 20687,
+   "basis": "measured synth flops ot_s81sl_leaf__t21 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t21/attempt_20/gen/ot_s81sl_leaf__t21]"
+  },
+  "ot_s81sl_leaf__t22": {
+   "sinks": 46706,
+   "basis": "measured synth flops ot_s81sl_leaf__t22 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t22/attempt_8/gen/ot_s81sl_leaf__t22]"
+  },
+  "ot_s81sl_leaf__t23": {
+   "sinks": 47029,
+   "basis": "measured synth flops ot_s81sl_leaf__t23 [epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t23/attempt_2/gen/ot_s81sl_leaf__t23]"
+  },
+  "ot_s81sl_leaf__t27": {
+   "sinks": 7022,
+   "basis": "measured synth flops ot_s81sl_leaf__t27 [epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t27/attempt_11/gen/ot_s81sl_leaf__t27]"
+  },
+  "ot_s81sl_leaf__t29": {
+   "sinks": 22755,
+   "basis": "measured synth flops ot_s81sl_leaf__t29 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t29/attempt_12/gen/ot_s81sl_leaf__t29]"
+  },
+  "slice_station__t46": {
+   "sinks": 7973,
+   "basis": "measured synth flops slice_station__t46 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t46/attempt_5/gen/slice_station__t46]"
+  },
+  "ot_s81sl_leaf__t31": {
+   "sinks": 20213,
+   "basis": "measured synth flops ot_s81sl_leaf__t31 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t31/attempt_11/gen/ot_s81sl_leaf__t31]"
+  },
+  "ot_s81sl_leaf__t32": {
+   "sinks": 39822,
+   "basis": "measured synth flops ot_s81sl_leaf__t32 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t32/attempt_6/gen/ot_s81sl_leaf__t32]"
+  },
+  "ot_s81sl_leaf__t33": {
+   "sinks": 44883,
+   "basis": "measured synth flops ot_s81sl_leaf__t33 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t33/attempt_8/gen/ot_s81sl_leaf__t33]"
+  },
+  "ot_s81sl_leaf__t34": {
+   "sinks": 31025,
+   "basis": "measured synth flops ot_s81sl_leaf__t34 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t34/attempt_2/gen/ot_s81sl_leaf__t34]"
+  },
+  "ot_s81sl_leaf__t35": {
+   "sinks": 16018,
+   "basis": "measured synth flops ot_s81sl_leaf__t35 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t35/attempt_5/gen/ot_s81sl_leaf__t35]"
+  },
+  "ot_s81sl_kv_leaf__t2": {
+   "sinks": 162685,
+   "basis": "ESTIMATE cells.py 462435 x die median flop share 0.352"
+  },
+  "ot_s81sl_kv_leaf__t3": {
+   "sinks": 72358,
+   "basis": "measured synth flops ot_s81sl_kv_leaf__t3 [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t3/attempt_4/gen/ot_s81sl_kv_leaf__t3]"
+  },
+  "slice_station__t47": {
+   "sinks": 16643,
+   "basis": "measured synth flops slice_station__t47 [epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t47/attempt_20/gen/slice_station__t47]"
+  },
+  "ot_s81sl_leaf__t36": {
+   "sinks": 30370,
+   "basis": "measured synth flops ot_s81sl_leaf__t36 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t36/attempt_6/gen/ot_s81sl_leaf__t36]"
+  },
+  "ot_s81sl_leaf__t38": {
+   "sinks": 32290,
+   "basis": "measured synth flops ot_s81sl_leaf__t38 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t38/attempt_5/gen/ot_s81sl_leaf__t38]"
+  },
+  "ot_s81sl_leaf__t39": {
+   "sinks": 27683,
+   "basis": "measured synth flops ot_s81sl_leaf__t39 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t39/attempt_11/gen/ot_s81sl_leaf__t39]"
+  },
+  "slice_station__t17": {
+   "sinks": 4075,
+   "basis": "ESTIMATE cells.py 11584 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t41": {
+   "sinks": 28313,
+   "basis": "measured synth flops ot_s81sl_leaf__t41 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t41/attempt_7/gen/ot_s81sl_leaf__t41]"
+  },
+  "ot_s81sl_leaf__t42": {
+   "sinks": 6985,
+   "basis": "measured synth flops ot_s81sl_leaf__t42 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t42/attempt_13/gen/ot_s81sl_leaf__t42]"
+  },
+  "ot_s81sl_leaf__t43": {
+   "sinks": 43766,
+   "basis": "measured synth flops ot_s81sl_leaf__t43 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t43/attempt_7/gen/ot_s81sl_leaf__t43]"
+  },
+  "slice_station__t48": {
+   "sinks": 13663,
+   "basis": "measured synth flops slice_station__t48 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t48/attempt_5/gen/slice_station__t48]"
+  },
+  "slice_station__t18": {
+   "sinks": 24207,
+   "basis": "measured synth flops slice_station__t18 [intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t18/attempt_14/gen/slice_station__t18]"
+  },
+  "ot_s81sl_leaf__t47": {
+   "sinks": 48837,
+   "basis": "measured synth flops ot_s81sl_leaf__t47 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t47/attempt_7/gen/ot_s81sl_leaf__t47]"
+  },
+  "ot_s81sl_leaf__t51": {
+   "sinks": 25852,
+   "basis": "measured synth flops ot_s81sl_leaf__t51 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t51/attempt_6/gen/ot_s81sl_leaf__t51]"
+  },
+  "ot_s81sl_leaf__t52": {
+   "sinks": 40203,
+   "basis": "measured synth flops ot_s81sl_leaf__t52 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t52/gen/ot_s81sl_leaf__t52]"
+  },
+  "ot_s81sl_leaf__t55": {
+   "sinks": 34253,
+   "basis": "measured synth flops ot_s81sl_leaf__t55 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t55/gen/ot_s81sl_leaf__t55]"
+  },
+  "ot_s81sl_leaf__t57": {
+   "sinks": 43590,
+   "basis": "measured synth flops ot_s81sl_leaf__t57 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t57/attempt_7/gen/ot_s81sl_leaf__t57]"
+  },
+  "ot_s81sl_leaf__t58": {
+   "sinks": 40276,
+   "basis": "measured synth flops ot_s81sl_leaf__t58 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t58/attempt_5/gen/ot_s81sl_leaf__t58]"
+  },
+  "ot_s81sl_leaf__t59": {
+   "sinks": 20786,
+   "basis": "measured synth flops ot_s81sl_leaf__t59 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t59/attempt_5/gen/ot_s81sl_leaf__t59]"
+  },
+  "slice_station__t20": {
+   "sinks": 8289,
+   "basis": "measured synth flops slice_station__t20 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t20/attempt_5/gen/slice_station__t20]"
+  },
+  "ot_s81sl_leaf__t60": {
+   "sinks": 34128,
+   "basis": "measured synth flops ot_s81sl_leaf__t60 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t60/attempt_7/gen/ot_s81sl_leaf__t60]"
+  },
+  "ot_s81sl_leaf__t61": {
+   "sinks": 43915,
+   "basis": "measured synth flops ot_s81sl_leaf__t61 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t61/attempt_7/gen/ot_s81sl_leaf__t61]"
+  },
+  "ot_s81sl_leaf__t62": {
+   "sinks": 54447,
+   "basis": "measured synth flops ot_s81sl_leaf__t62 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t62/gen/ot_s81sl_leaf__t62]"
+  },
+  "slice_station__t21": {
+   "sinks": 6301,
+   "basis": "ESTIMATE cells.py 17912 x die median flop share 0.352"
+  },
+  "slice_station__t22": {
+   "sinks": 15840,
+   "basis": "ESTIMATE cells.py 45024 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t65": {
+   "sinks": 53510,
+   "basis": "measured synth flops ot_s81sl_leaf__t65 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t65/attempt_7/gen/ot_s81sl_leaf__t65]"
+  },
+  "ot_s81sl_leaf__t66": {
+   "sinks": 51303,
+   "basis": "measured synth flops ot_s81sl_leaf__t66 [epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t66/attempt_2/gen/ot_s81sl_leaf__t66]"
+  },
+  "ot_s81sl_leaf__t68": {
+   "sinks": 27314,
+   "basis": "measured synth flops ot_s81sl_leaf__t68 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t68/attempt_5/gen/ot_s81sl_leaf__t68]"
+  },
+  "ot_s81sl_leaf__t69": {
+   "sinks": 14215,
+   "basis": "measured synth flops ot_s81sl_leaf__t69 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t69/attempt_4/gen/ot_s81sl_leaf__t69]"
+  },
+  "slice_station__t23": {
+   "sinks": 11401,
+   "basis": "measured synth flops slice_station__t23 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t23/attempt_5/gen/slice_station__t23]"
+  },
+  "slice_station__t25": {
+   "sinks": 18130,
+   "basis": "ESTIMATE cells.py 51536 x die median flop share 0.352"
+  },
+  "slice_station__t26": {
+   "sinks": 10494,
+   "basis": "ESTIMATE cells.py 29828 x die median flop share 0.352"
+  },
+  "slice_station__t27": {
+   "sinks": 41588,
+   "basis": "measured synth flops slice_station__t27 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t27/attempt_2/gen/slice_station__t27]"
+  },
+  "slice_station__t28": {
+   "sinks": 10226,
+   "basis": "ESTIMATE cells.py 29068 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t70": {
+   "sinks": 41748,
+   "basis": "measured synth flops ot_s81sl_leaf__t70 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t70/attempt_5/gen/ot_s81sl_leaf__t70]"
+  },
+  "ot_s81sl_leaf__t71": {
+   "sinks": 28738,
+   "basis": "measured synth flops ot_s81sl_leaf__t71 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t71/attempt_3/gen/ot_s81sl_leaf__t71]"
+  },
+  "ot_s81sl_leaf__t72": {
+   "sinks": 80478,
+   "basis": "measured synth flops ot_s81sl_leaf__t72 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t72/attempt_8/gen/ot_s81sl_leaf__t72]"
+  },
+  "ot_s81sl_leaf__t73": {
+   "sinks": 45843,
+   "basis": "measured synth flops ot_s81sl_leaf__t73 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t73/gen/ot_s81sl_leaf__t73]"
+  },
+  "slice_station__t31": {
+   "sinks": 26543,
+   "basis": "measured synth flops slice_station__t31 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t31/attempt_3/gen/slice_station__t31]"
+  },
+  "slice_station__t52": {
+   "sinks": 58735,
+   "basis": "measured synth flops slice_station__t52 [intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t52/attempt_18/gen/slice_station__t52]"
+  },
+  "bk_sel__t2": {
+   "sinks": 11924,
+   "basis": "measured synth flops bk_sel__t2 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/bk_sel__t2/attempt_34/gen/bk_sel__t2]"
+  },
+  "col_h10_r0_p1__t1__cl574cc59d": {
+   "sinks": 40440,
+   "basis": "measured synth flops col_h10_r0_p1__t1__cl574cc59d [epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl574cc59d/attempt_20/gen/col_h10_r0_p1__t1__cl574cc59d]"
+  },
+  "col_h10_r0_p1__t1__cl911743eb": {
+   "sinks": 28966,
+   "basis": "measured synth flops col_h10_r0_p1__t1__cl911743eb [epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r0_p1__t1__cl911743eb/attempt_20/gen/col_h10_r0_p1__t1__cl911743eb]"
+  },
+  "col_h10_r1__t1__cl95b37463": {
+   "sinks": 21909,
+   "basis": "measured synth flops col_h10_r1__t1__cl95b37463 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r1__t1__cl95b37463/attempt_14/gen/col_h10_r1__t1__cl95b37463]"
+  },
+  "col_h10_r2__t1__cl8b686b3e": {
+   "sinks": 14841,
+   "basis": "measured synth flops col_h10_r2__t1__cl8b686b3e [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl8b686b3e/attempt_21/gen/col_h10_r2__t1__cl8b686b3e]"
+  },
+  "col_h10_r2__t1__cl99efd374": {
+   "sinks": 14644,
+   "basis": "measured synth flops col_h10_r2__t1__cl99efd374 [epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h10_r2__t1__cl99efd374/attempt_23/gen/col_h10_r2__t1__cl99efd374]"
+  },
+  "col_h9_r0_p2__t1__cl0045af7b": {
+   "sinks": 30730,
+   "basis": "measured synth flops col_h9_r0_p2__t1__cl0045af7b [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r0_p2__t1__cl0045af7b/attempt_22/gen/col_h9_r0_p2__t1__cl0045af7b]"
+  },
+  "col_h9_r1__t1__cl49d7a23e": {
+   "sinks": 18314,
+   "basis": "measured synth flops col_h9_r1__t1__cl49d7a23e [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__cl49d7a23e/attempt_17/gen/col_h9_r1__t1__cl49d7a23e]"
+  },
+  "col_h9_r1__t1__clf32cde8d": {
+   "sinks": 18309,
+   "basis": "measured synth flops col_h9_r1__t1__clf32cde8d [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r1__t1__clf32cde8d/attempt_17/gen/col_h9_r1__t1__clf32cde8d]"
+  },
+  "col_h9_r2__t1__clc9ad8f7e": {
+   "sinks": 13034,
+   "basis": "measured synth flops col_h9_r2__t1__clc9ad8f7e [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clc9ad8f7e/attempt_9/gen/col_h9_r2__t1__clc9ad8f7e]"
+  },
+  "col_h9_r2__t1__clce45cab5": {
+   "sinks": 12865,
+   "basis": "measured synth flops col_h9_r2__t1__clce45cab5 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clce45cab5/attempt_27/gen/col_h9_r2__t1__clce45cab5]"
+  },
+  "col_h9_r2__t1__clb8d86cd5": {
+   "sinks": 12882,
+   "basis": "measured synth flops col_h9_r2__t1__clb8d86cd5 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__clb8d86cd5/attempt_9/gen/col_h9_r2__t1__clb8d86cd5]"
+  },
+  "col_h9_r2__t1__cl87f3ff59": {
+   "sinks": 13195,
+   "basis": "measured synth flops col_h9_r2__t1__cl87f3ff59 [epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl87f3ff59/attempt_2/gen/col_h9_r2__t1__cl87f3ff59]"
+  },
+  "col_h9_r2__t1__cl774acf45": {
+   "sinks": 13025,
+   "basis": "measured synth flops col_h9_r2__t1__cl774acf45 [epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/col_h9_r2__t1__cl774acf45/attempt_10/gen/col_h9_r2__t1__cl774acf45]"
+  },
+  "serdes__t15__cla2127225": {
+   "sinks": 53320,
+   "basis": "measured synth flops serdes__t15__cla2127225 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla2127225/attempt_22/gen/serdes__t15__cla2127225]"
+  },
+  "serdes__t15__cla3d02796": {
+   "sinks": 61881,
+   "basis": "measured synth flops serdes__t15__cla3d02796 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d02796/attempt_4/gen/serdes__t15__cla3d02796]"
+  },
+  "serdes__t1__clfe1f0815": {
+   "sinks": 47734,
+   "basis": "measured synth flops serdes__t1__clfe1f0815 [intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clfe1f0815/attempt_14/gen/serdes__t1__clfe1f0815]"
+  },
+  "serdes__t1__clb45db5be": {
+   "sinks": 42374,
+   "basis": "measured synth flops serdes__t1__clb45db5be [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clb45db5be/attempt_13/gen/serdes__t1__clb45db5be]"
+  },
+  "slice_station__t50__cl39451317": {
+   "sinks": 39770,
+   "basis": "measured synth flops slice_station__t50__cl39451317 [epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cl39451317/attempt_2/gen/slice_station__t50__cl39451317]"
+  },
+  "slice_station__t50__cld84c9e24": {
+   "sinks": 40839,
+   "basis": "measured synth flops slice_station__t50__cld84c9e24 [epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cld84c9e24/attempt_12/gen/slice_station__t50__cld84c9e24]"
+  },
+  "slice_station__t6__cl54a9ceeb": {
+   "sinks": 27863,
+   "basis": "measured synth flops slice_station__t6__cl54a9ceeb [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t6__cl54a9ceeb/attempt_14/gen/slice_station__t6__cl54a9ceeb]"
+  },
+  "slice_station__t6__cl0755c26e": {
+   "sinks": 8827,
+   "basis": "ESTIMATE cells.py 25092 x die median flop share 0.352"
+  },
+  "slice_station__t7__cl362204c4": {
+   "sinks": 5357,
+   "basis": "ESTIMATE cells.py 15228 x die median flop share 0.352"
+  },
+  "slice_station__t7__cl945bc067": {
+   "sinks": 9322,
+   "basis": "measured synth flops slice_station__t7__cl945bc067 [epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t7__cl945bc067/attempt_12/gen/slice_station__t7__cl945bc067]"
+  },
+  "slice_station__t7__cl503f4913": {
+   "sinks": 9488,
+   "basis": "measured synth flops slice_station__t7__cl503f4913 [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t7__cl503f4913/attempt_19/gen/slice_station__t7__cl503f4913]"
+  },
+  "slice_station__t42__clcf44e680": {
+   "sinks": 15885,
+   "basis": "ESTIMATE cells.py 45152 x die median flop share 0.352"
+  },
+  "slice_station__t42__cl4bd1432c": {
+   "sinks": 14114,
+   "basis": "ESTIMATE cells.py 40120 x die median flop share 0.352"
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "sinks": 28634,
+   "basis": "measured synth flops ot_s81sl_leaf__t53__clb66fa5cb [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t53__clb66fa5cb/attempt_7/gen/ot_s81sl_leaf__t53__clb66fa5cb]"
+  },
+  "ot_s81sl_leaf__t53__cl958451dd": {
+   "sinks": 29545,
+   "basis": "measured synth flops ot_s81sl_leaf__t53__cl958451dd [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t53__cl958451dd/attempt_11/gen/ot_s81sl_leaf__t53__cl958451dd]"
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "sinks": 28844,
+   "basis": "measured synth flops ot_s81sl_leaf__t24__cl2456157b [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t24__cl2456157b/attempt_6/gen/ot_s81sl_leaf__t24__cl2456157b]"
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "sinks": 28507,
+   "basis": "measured synth flops ot_s81sl_leaf__t24__cl81374cd8 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t24__cl81374cd8/attempt_4/gen/ot_s81sl_leaf__t24__cl81374cd8]"
+  },
+  "ot_s81sl_leaf__t25__cl55642d17": {
+   "sinks": 12504,
+   "basis": "measured synth flops ot_s81sl_leaf__t25__cl55642d17 [intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t25__cl55642d17/attempt_2/gen/ot_s81sl_leaf__t25__cl55642d17]"
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "sinks": 12547,
+   "basis": "measured synth flops ot_s81sl_leaf__t25__cl431c660f [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t25__cl431c660f/attempt_4/gen/ot_s81sl_leaf__t25__cl431c660f]"
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "sinks": 15694,
+   "basis": "measured synth flops ot_s81sl_leaf__t40__clf8bbdae1 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__clf8bbdae1/attempt_16/gen/ot_s81sl_leaf__t40__clf8bbdae1]"
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "sinks": 11686,
+   "basis": "measured synth flops ot_s81sl_leaf__t40__cl86ea32b3 [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__cl86ea32b3/attempt_10/gen/ot_s81sl_leaf__t40__cl86ea32b3]"
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+   "sinks": 11686,
+   "basis": "measured synth flops ot_s81sl_leaf__t40__cl86ea32b3__sid5S [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t40__cl86ea32b3__sid5S/attempt_8/gen/ot_s81sl_leaf__t40__cl86ea32b3__sid5S]"
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "sinks": 37265,
+   "basis": "measured synth flops ot_s81sl_leaf__t44__clf6cf8492 [epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t44__clf6cf8492/attempt_6/gen/ot_s81sl_leaf__t44__clf6cf8492]"
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "sinks": 26019,
+   "basis": "measured synth flops ot_s81sl_leaf__t44__clf4ea6d4b [epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t44__clf4ea6d4b/attempt_9/gen/ot_s81sl_leaf__t44__clf4ea6d4b]"
+  },
+  "slice_station__t24__cleece78ec": {
+   "sinks": 16896,
+   "basis": "measured synth flops slice_station__t24__cleece78ec [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t24__cleece78ec/attempt_14/gen/slice_station__t24__cleece78ec]"
+  },
+  "slice_station__t24__cl64811a5d": {
+   "sinks": 7447,
+   "basis": "ESTIMATE cells.py 21168 x die median flop share 0.352"
+  },
+  "slice_station__t24__cl66b71008": {
+   "sinks": 7447,
+   "basis": "ESTIMATE cells.py 21168 x die median flop share 0.352"
+  },
+  "slice_station__t29__cl2e5c855a": {
+   "sinks": 10063,
+   "basis": "ESTIMATE cells.py 28604 x die median flop share 0.352"
+  },
+  "slice_station__t29__clc7772371": {
+   "sinks": 25757,
+   "basis": "measured synth flops slice_station__t29__clc7772371 [epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t29__clc7772371/attempt_14/gen/slice_station__t29__clc7772371]"
+  },
+  "slice_station__t30__clcedefe91": {
+   "sinks": 7385,
+   "basis": "measured synth flops slice_station__t30__clcedefe91 [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__clcedefe91/attempt_17/gen/slice_station__t30__clcedefe91]"
+  },
+  "slice_station__t30__cl1653104c": {
+   "sinks": 6325,
+   "basis": "ESTIMATE cells.py 17980 x die median flop share 0.352"
+  },
+  "slice_station__t30__cl6a190133": {
+   "sinks": 11370,
+   "basis": "measured synth flops slice_station__t30__cl6a190133 [epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__cl6a190133/attempt_18/gen/slice_station__t30__cl6a190133]"
+  },
+  "slice_station__t40__clc8fb2c8c": {
+   "sinks": 14370,
+   "basis": "ESTIMATE cells.py 40848 x die median flop share 0.352"
+  },
+  "slice_station__t40__cl1ea9de02": {
+   "sinks": 15628,
+   "basis": "ESTIMATE cells.py 44424 x die median flop share 0.352"
+  }
+ }
+}

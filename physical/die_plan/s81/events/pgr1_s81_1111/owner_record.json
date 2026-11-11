@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.die_owner_plan_event.v1",
+ "event": "PGR1-S81-1111",
+ "owner": "DIE-S81-85",
+ "rule": "PLAN-GEN-RULES-1 (OWNER 2026-11-10), rules A,B",
+ "base_plan": "physical/die_plan/s81/plan_h2_2249.json",
+ "base_plan_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "plan_output_sha256": "ebea5f5b8ade7a2311458f2aa9b7ea5647c4acd7d8cb6030f39bd114208d7e31",
+ "plan_output_staged": "epyc7:/srv/opentallas-scratch2/claude/die-s81-85/pgr1/out_s81_meas_1111_0332/plan.json",
+ "command": "ssh epyc7 /srv/opentallas-scratch2/claude/plan-gen-rules-1/events/plan_event.sh s81 '' OUT --measured-cores s81_measured_cores_1111.json (overlay pgr_common_0059c5de77)",
+ "rule_A": {
+  "cores": {"dsfd_coll_lane_w_safe8_ntf": {"tt": 405.0, "ff": 340.0, "taps": 8}, "dsfd_coll_lane_e_safe8_ntf": {"tt": 405.0, "ff": 340.0, "taps": 6}},
+  "basis": "measured = the published FORM-COLL 11-05 core arrival contract 405/340 that both COUNTED views are signed against (cert_input1/clock_binding.json; views/dsfd_coll_lane_*_safe8_ntf_signed_1107/provenance.json insertion_ps 405 / insertion_ff_ps 340; sign-off sdc vclk source latency 405, FF bound_ff 340)",
+  "why_not_model": "the default event's 12.9d model gives 385.3/312.1, below the signed contract; FF hold of the signed views is +0.02 at 340, so a 312.1 core vclk moves input-port hold about 28 ps the wrong way against that margin and forces a re-sign of 2 counted cores",
+  "core_recipe": "unchanged: recipe insertion_ps/insertion_ff_ps already 405/340 = event.core_kit_args; the counted views stay signed, no core relaunch"
+ },
+ "rule_B": {
+  "listed": {"dsdv_slice_lepw_mus_LP__t2": {"sinks": 61633, "taps": 16, "need": 21, "proposed_um": 288.58}, "dsdv_slice_lepw_mu_LP__t2": {"sinks": 53687, "taps": 16, "need": 18, "proposed_um": 306.72}},
+  "decision": "no re-pitch in this event: both reference named clk_tN ports, a re-pitch renumbers parent pins and is not EQ/no-pin; they relaunch in this batch (rule A) on 16 taps; if CTS stalls on either, a separate tap event follows as their conservative form"
+ },
+ "affected_types": ["dsdv_slice_lepe_mu_LP__t2", "dsdv_slice_lepe_nh_mus_LP__t1", "dsdv_slice_lepw_mu_LP__t2", "dsdv_slice_lepw_mus_LP__t2"],
+ "affected_cores_relaunch": [],
+ "rtl_change": false, "pin_change": false, "outline_change": false, "data_cycles": 0, "pin_cycles": 0,
+ "gate": "EQ-gated: relaunched kits prove LEC as usual",
+ "count": "DO_NOT_COUNT"
+}
