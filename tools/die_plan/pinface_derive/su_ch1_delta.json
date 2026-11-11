@@ -1,0 +1,584 @@
+{
+ "base_plan": "s18 = plan_qc99_s18.json a99af678cb32 (claude/die-qc-99-s18-1111)",
+ "plan_sha12": "bf5769723c51",
+ "sidecar_sha12": "0cd376957c97",
+ "sidecar_base_sha12": "12ede4d3caf0",
+ "note": "SU-CH-1 11-11: su_l0 along_first core chains -> leg_order channel, channel_um [8,120] (W face, KIT-CHAN-1) where the channel Z path has the L route length on every bit (stations, hops, lanes, pin cycles unchanged); reset relay names re-picked by site (remap24) and clock.reset_tree_anchor re-recorded; collector_reattach moves 1-2 collector sources in each sle_su_l0 type (new sidecar).",
+ "types": {
+  "slw_su_l0__cl76fb247e": {
+   "changed_keys": [
+    "clock",
+    "internal_stations"
+   ],
+   "clock_keys": [
+    "landing_contract",
+    "landing_local_resets",
+    "landing_reader_start",
+    "landing_writer_start",
+    "reset_tree_anchor"
+   ],
+   "channel_chains": [
+    {
+     "index": 13,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane0",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 15,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 17,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 18,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 22,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 24,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 25,
+     "conn": "bus:x_su_c_p1_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 33,
+     "conn": "bus:x_su_c_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 34,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 35,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 36,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    }
+   ],
+   "other_station_entries_changed": []
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "changed_keys": [
+    "clock",
+    "internal_stations"
+   ],
+   "clock_keys": [
+    "landing_contract",
+    "landing_local_resets",
+    "landing_reader_start",
+    "landing_writer_start",
+    "reset_tree_anchor"
+   ],
+   "channel_chains": [
+    {
+     "index": 13,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane0",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 15,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 17,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 18,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 22,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 24,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 25,
+     "conn": "bus:x_su_c_p1_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 33,
+     "conn": "bus:x_su_c_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 34,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 35,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 36,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    }
+   ],
+   "other_station_entries_changed": []
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "changed_keys": [
+    "clock",
+    "internal_stations"
+   ],
+   "clock_keys": [
+    "landing_contract",
+    "landing_local_resets",
+    "landing_reader_start",
+    "landing_writer_start",
+    "reset_tree_anchor"
+   ],
+   "channel_chains": [
+    {
+     "index": 13,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane0",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 15,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 17,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 18,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 22,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 24,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 25,
+     "conn": "bus:x_su_c_p1_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 33,
+     "conn": "bus:x_su_c_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 34,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 35,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 36,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    }
+   ],
+   "other_station_entries_changed": []
+  },
+  "sle_su_l0__cl7a55c676": {
+   "changed_keys": [
+    "clock",
+    "internal_stations"
+   ],
+   "clock_keys": [
+    "landing_contract",
+    "landing_local_resets",
+    "landing_reader_start",
+    "landing_writer_start",
+    "reset_tree_anchor"
+   ],
+   "channel_chains": [
+    {
+     "index": 13,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane0",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 15,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 17,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 18,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 22,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 24,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 25,
+     "conn": "bus:x_su_c_p1_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 33,
+     "conn": "bus:x_su_c_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 34,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 35,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 36,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    }
+   ],
+   "other_station_entries_changed": []
+  },
+  "sle_su_l0__cl086d85ba": {
+   "changed_keys": [
+    "clock",
+    "internal_stations"
+   ],
+   "clock_keys": [
+    "landing_contract",
+    "landing_local_resets",
+    "landing_reader_start",
+    "landing_writer_start",
+    "reset_tree_anchor"
+   ],
+   "channel_chains": [
+    {
+     "index": 13,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane0",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 15,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 17,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 18,
+     "conn": "bus:x_stm_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 22,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane1",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 24,
+     "conn": "bus:x_su_c_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 25,
+     "conn": "bus:x_su_c_p1_i",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 33,
+     "conn": "bus:x_su_c_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 34,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane3",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 35,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    },
+    {
+     "index": 36,
+     "conn": "bus:x_su_c_p1_o",
+     "core": "u_lane2",
+     "channel_um": [
+      8.0,
+      120.0
+     ]
+    }
+   ],
+   "other_station_entries_changed": []
+  }
+ }
+}
