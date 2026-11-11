@@ -2361,20 +2361,93 @@ def edge_clocks(P):
                                       "period_mult": m, "source": src} for k, (n, m, src) in enumerate(lst)]
 
 
-def ft_fracs(P):
+# PLAN-ROUTE-1 / DIE-QC-97 FTFR 11-10 (COORD ruling): ft_fracs priced fill from P.cells (area x UTIL / CELL_UM2 guesses,
+# ~19k cells for sle_hc1) at CELL_UM2 0.52, so dense slice types read fill 0.02 and got 50% of M4-M7 for feedthroughs.
+# Measured kit synth: sle_hc1 381,548 cells / 51,649 um2 std area = 0.135 um2 per cell.  ft_fracs now takes the cell
+# count from tools/die_plan/cells.py (measured evidence first) and prices it at FT_STD_UM2; a type without a measured
+# count keeps the old estimate at CELL_UM2 (its own unit).  CELL_UM2 stays 0.52 everywhere else (area -> cells).
+FT_STD_UM2 = 0.135
+FT_CELLS_EVIDENCE = (Path(__file__).resolve().parent / "plan_of_record" / "cells" / "qc_cells_evidence_1102.json",)
+FT_FILL_SPARSE, FT_FILL_DENSE = 0.10, 0.25    # fill < 0.10 -> 0.5 of M4-M7 to ft; < 0.25 -> 0.4; else the G0 default
+
+
+def ft_fill(cells, um2_per_cell, w, h):
+    return cells * um2_per_cell / UTIL / (w * h)
+
+
+def ft_frac_of(fill):
+    """ft share of the M4-M7 tracks for a std-cell fill; None = no key (G0 cut model default 0.25)."""
+    if fill >= FT_FILL_DENSE:
+        return None
+    # METHODOLOGY 9.3 (10-24): M8/M9 carry no signals any more, so the cut capacity is the partitions' own
+    # M4-M7 share; very sparse types (fill < 0.10) give half of it to feedthroughs
+    return 0.5 if fill < FT_FILL_SPARSE else 0.4
+
+
+def ft_note(fill, fr, cells=None):
+    """the note fragment ft_fracs appends (the unmeasured form is the historic text, byte for byte)."""
+    if cells is None:
+        return f"est. std-cell fill {fill:.2f} at util {UTIL}: {fr:.0%} of M4-M7 to ft"
+    return (f"std-cell fill {fill:.2f} at util {UTIL} (measured {cells} cells x {FT_STD_UM2} um2, FTFR-1110): "
+            f"{fr:.0%} of M4-M7 to ft")
+
+
+def _measured_row(row):
+    return isinstance(row, dict) and str(row.get("basis", "")).startswith("measured")
+
+
+def ft_cells(raw, evidence=None):
+    """{type: (cells, basis)} for the types with a MEASURED std-cell count (tools/die_plan/cells.py order).
+
+    Measured = plan type.cells (cells.py: taken as complete), or a by_type evidence row whose basis starts with
+    "measured" (Yosys synth_stat of the type's kit / landing-cohort sibling; cells.py adds the landing rings back).
+    Evidence rows that are themselves plan estimates are NOT measured.  A type absent from the evidence (gen_plan's
+    pre-cohort base names) takes the largest measured row of its landing cohorts (<type>__cl<hash>...)."""
+    import cells as _C   # tools/die_plan (sys.path above)
+    files = [Path(f) for f in (FT_CELLS_EVIDENCE if evidence is None else evidence) if Path(f).is_file()]
+    est, _ = _C.estimate(raw, None, files, auto=False)
+    rows = {}
+    for f in files:
+        js = json.loads(f.read_text())
+        for k, v in ((js.get("cells_per_type") if isinstance(js, dict) else None) or {}).items():
+            rows.setdefault(k, v)
+    out = {}
+    for tn, t in raw["partition_types"].items():
+        if tn in est:
+            c, basis = est[tn]
+            if basis == "plan":
+                out[tn] = (c, "plan type.cells")
+                continue
+            row = rows.get(tn) if tn in rows else rows.get(t.get("landing_base_type"))
+            if basis.startswith(("by_type", "landing cohort of")) and _measured_row(row):
+                out[tn] = (c, basis)
+            continue
+        fam = [(int(v.get("measured_total", v["cells"])), k) for k, v in rows.items()
+               if k.split("__cl")[0] == tn and _measured_row(v) and isinstance(v.get("cells"), (int, float))]
+        if fam:
+            c, k = max(fam)
+            out[tn] = (c, f"measured cohort {k}")
+    return out
+
+
+def ft_fracs(P, evidence=None):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
+    raw = {"partition_types": P.types, "partitions": [{"name": n, "type": p["type"]} for n, p in P.parts.items()]}
+    meas = ft_cells(raw, evidence)
     for tn, t in P.types.items():
         if t.get("hard") or (tn.startswith("coll_") and not tn.startswith("coll_ft")):
             continue
         w, h = t["outline_um"]
-        cells = P.cells.get(tn) or 0
-        fill = cells * CELL_UM2 / UTIL / (w * h)
-        if fill < 0.25:
-            # METHODOLOGY 9.3 (10-24): M8/M9 carry no signals any more, so the cut capacity is the partitions' own
-            # M4-M7 share; very sparse types (est. fill < 0.10) give half of it to feedthroughs
-            fr = 0.5 if fill < 0.10 else 0.4
+        if tn in meas:
+            cells = meas[tn][0]
+            fill = ft_fill(cells, FT_STD_UM2, w, h)
+        else:
+            cells = None
+            fill = ft_fill(P.cells.get(tn) or 0, CELL_UM2, w, h)
+        fr = ft_frac_of(fill)
+        if fr is not None:
             t["ft_track_frac"] = fr
-            t["note"] = (t.get("note", "") + f"; est. std-cell fill {fill:.2f} at util {UTIL}: {fr:.0%} of M4-M7 to ft").lstrip("; ")
+            t["note"] = (t.get("note", "") + "; " + ft_note(fill, fr, cells)).lstrip("; ")
 
 
 def bind_leaves(P):
