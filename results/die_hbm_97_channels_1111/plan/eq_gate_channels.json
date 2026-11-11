@@ -1,26 +1,11 @@
 {
  "base_sha": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
- "new_sha": "85df1184ecea45080cd79da7941ee5464f32c54f83fa436262429af471c46b79",
- "changed_paths": 5359,
+ "new_sha": "1a1647f7c2e15b36285007048a7d586292dbebaf3f3cd5c740f31d0f5236ddb8",
+ "changed_paths": 5384,
  "non_position_paths": [],
  "outline_paths": [
   [
    "partition_types",
-   "q_sm3",
-   "hard_cores",
-   "232",
-   "pins_file"
-  ],
-  [
-   "partition_types",
-   "q_sm3",
-   "hard_cores",
-   "232",
-   "outline_um",
-   "1"
-  ],
-  [
-   "partition_types",
    "q_sm2",
    "hard_cores",
    "232",
@@ -59,6 +44,21 @@
   [
    "partition_types",
    "q_sm1",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ],
+  [
+   "partition_types",
+   "q_sm3",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm3",
    "hard_cores",
    "232",
    "outline_um",
@@ -66,13 +66,6 @@
   ]
  ],
  "outline_pins_check": [
-  {
-   "type": "q_sm3",
-   "inst": "u_sm_front_kv",
-   "pins": 2158,
-   "same_names_layers_dirs_faces": true,
-   "ew_y_inside_old_span": true
-  },
   {
    "type": "q_sm2",
    "inst": "u_sm_front_kv",
@@ -89,6 +82,13 @@
   },
   {
    "type": "q_sm1",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  },
+  {
+   "type": "q_sm3",
    "inst": "u_sm_front_kv",
    "pins": 2158,
    "same_names_layers_dirs_faces": true,
@@ -128,10 +128,12 @@
   "q_b002__physical_v1",
   "q_b011",
   "q_b011__physical_v1",
+  "q_b113",
   "q_sm0",
   "q_sm1",
   "q_sm2",
   "q_sm3",
+  "q_su00__physical_v1",
   "q_su01",
   "q_su01__physical_v1",
   "q_su11",
@@ -153,38 +155,8 @@
    [
     "latency",
     "lanes",
-    "L8314m",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314m",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8314m",
-    "stations"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302m",
-    "stations"
+    "L5091",
+    "fixed"
    ],
    [
     "latency",
@@ -201,7 +173,7 @@
    [
     "latency",
     "lanes",
-    "L5091",
+    "L5090",
     "fixed"
    ],
    [
@@ -219,43 +191,25 @@
    [
     "latency",
     "lanes",
-    "L5090",
-    "fixed"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302",
-    "cycles"
-   ],
-   [
-    "latency",
-    "lanes",
-    "L8302",
-    "natural"
-   ],
-   [
-    "latency",
-    "lanes",
     "L8302",
     "stations"
    ],
    [
     "latency",
     "lanes",
-    "L8314",
+    "L8302",
     "cycles"
    ],
    [
     "latency",
     "lanes",
-    "L8314",
+    "L8302",
     "natural"
    ],
    [
     "latency",
     "lanes",
-    "L8314",
+    "L8301m",
     "stations"
    ],
    [
@@ -273,7 +227,69 @@
    [
     "latency",
     "lanes",
-    "L8301m",
+    "L8314m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "natural"
+   ],
+   [
+    "partition_types",
+    "q_su11__physical_v1",
+    "ft_slots",
+    "3",
+    "stations"
+   ],
+   [
+    "partition_types",
+    "q_su11__physical_v1",
+    "ft_slots",
+    "6",
     "stations"
    ],
    [
@@ -295,20 +311,6 @@
     "q_su11",
     "ft_slots",
     "5",
-    "stations"
-   ],
-   [
-    "partition_types",
-    "q_su11__physical_v1",
-    "ft_slots",
-    "3",
-    "stations"
-   ],
-   [
-    "partition_types",
-    "q_su11__physical_v1",
-    "ft_slots",
-    "6",
     "stations"
    ]
   ],
@@ -340,6 +342,28 @@
    {
     "path": [
      "partition_types",
+     "q_su11__physical_v1",
+     "ft_slots",
+     "3",
+     "regs_um"
+    ],
+    "base": 6,
+    "new": 7
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su11__physical_v1",
+     "ft_slots",
+     "6",
+     "regs_um"
+    ],
+    "base": 7,
+    "new": 8
+   },
+   {
+    "path": [
+     "partition_types",
      "q_su11",
      "ft_slots",
      "1",
@@ -365,28 +389,6 @@
      "q_su11",
      "ft_slots",
      "5",
-     "regs_um"
-    ],
-    "base": 7,
-    "new": 8
-   },
-   {
-    "path": [
-     "partition_types",
-     "q_su11__physical_v1",
-     "ft_slots",
-     "3",
-     "regs_um"
-    ],
-    "base": 6,
-    "new": 7
-   },
-   {
-    "path": [
-     "partition_types",
-     "q_su11__physical_v1",
-     "ft_slots",
-     "6",
      "regs_um"
     ],
     "base": 7,

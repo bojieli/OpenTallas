@@ -258,6 +258,11 @@ def ft_chain(t, seg, k0=None):
 
 _LB = {}
 _SB = {}
+# (F, optional) lanes cleaned end to end: every hop of the listed lanes within reach in the re-stationed slots
+FORCE_STRICT = set(x for x in os.environ.get("CHAN_STRICT_LANES", "").split(",") if x)
+EXTRA_SLOTS = set(tuple(x.split(":")) for x in os.environ.get("CHAN_EXTRA_SLOTS", "").split(",") if x)
+# (F) rev 3 (DIE-HBM-98 11-11): extra slots re-stationed strictly (every hop <= reach), lane-wide strict not required
+STRICT_SLOTS = set(EXTRA_SLOTS)
 
 
 def lane_max(P, lid):
@@ -308,7 +313,9 @@ def slot_ok(P, tn, sl, lanes, base_lane, base_slot_hops=None):
         for i, (inner, hin, hout, _o) in enumerate(slot_hops(P, lid, tn, sl["name"])):
             if i < len(bb):
                 b_inner, b_in, b_out, b_out_side = bb[i]
-                lim = P.reach if b_out_side <= P.reach + 1e-6 else max(P.reach, max(list(b_inner) + [b_in, b_out]))
+                strict = lid in FORCE_STRICT or (tn, sl["name"]) in STRICT_SLOTS
+                lim = P.reach if (b_out_side <= P.reach + 1e-6 or strict) else max(P.reach, max(list(b_inner) + [b_in, b_out]))
+                if strict: b_in = b_out = 0.0
             else:
                 b_in = b_out = 0.0; lim = P.reach
             if any(x > lim + 1e-6 for x in inner):
@@ -627,6 +634,7 @@ for wdt, tn, part, sn, npart, nt, nsn, nbus in cand:
 P1 = S.Plan(plan)
 want = {(tn, s["name"]) for tn in SU for s in T[tn].get("ft_slots", [])}
 want |= {(r["type"], r["slot"]) for r in rep["straight"]} | {(r["neighbour_type"], r["neighbour_slot"]) for r in rep["straight"]}
+want |= EXTRA_SLOTS
 res = restation_slots(P1, want, f"{TAG}: regs re-derived (b2n rule, HOP 360), count kept")
 for (tn, sn), (n0, n1, _) in res.items():
     if n1 > n0:
@@ -647,6 +655,26 @@ for tn in BT:
     left = sum(1 for e in t.get("internal_stations", []) for q in e["regs_um"] if q[0] < x0 - 1e-6)
     rep["b"][tn] = dict(r, strip_links=n_strip, strip_reg_bits=rb0, regs_left_in_w_strip=left,
                         street_x=[round(x1 + 4.32, 3), round(t["outline_um"][0] - 4.32, 3)])
+
+# ---------------------------------------------------------------- (F) rev 3: L8008 su11pv1 hand siting (DIE-HBM-98 11-11)
+# The b2n router zig-zags L8008x2 between y 786 (inside the plain p3 band) and y 885.6 (the 17-um channel between the
+# plain p3 tops 881.28 and the exp row 898.56), leaving three 436-um hops. Same 7 stations, re-sited on one line:
+# reg0 stays at the E pin row, regs 1-4 run on the y 885.6 channel, reg5/reg6 drop to the pin row W of the plain block
+# (x < 760.32). Lattice 4.32 um; every hop <= 372 um, first input hop (S0->S1) <= 405 (checked below).
+if "q_su11__physical_v1" in T:
+    sl = next(x for x in T["q_su11__physical_v1"]["ft_slots"] if x["name"] == "L8008x2")
+    r0 = sl["regs_um"][0]
+    assert int(sl["stations"]) == 7 and abs(r0[0] - 2354.4) < 1e-6, (sl["stations"], r0)
+    old = [list(q) for q in sl["regs_um"]]
+    yc, yp = 885.6, r0[1]
+    sl["regs_um"] = [list(r0), [2095.2, yc], [1723.68, yc], [1352.16, yc], [980.64, yc], [708.48, yp], [336.96, yp]]
+    sl["note"] = (sl.get("note", "") + f" | {TAG} rev3: L8008x2 hand-sited on one line (7 stations kept, hops <= 372 um)").lstrip(" |")
+    P3 = S.Plan(plan); tb = P3.types["q_su11__physical_v1"]; bxx = boxes_of(tb)
+    assert not any(inside(q, bxx, -1e-3) for q in sl["regs_um"][1:]), "L8008x2 reg in macro"
+    fh = max((d for _, d in DH.first_internal_hops(P3, "q_su11__physical_v1", sl, pins=DH.pin_table(P3, "q_su11__physical_v1"))), default=0.0)
+    assert fh <= REACH + 1e-6, fh
+    lm = lane_max(P3, "L8008")
+    rep["l8008_su11pv1_hand"] = dict(old=old, new=sl["regs_um"], first_input_hop=round(fh, 1), lane_L8008_max_hop=round(lm, 1))
 
 # ---------------------------------------------------------------- (C) kv_line south grow (DIE-HBM-98 ruling 11-11)
 KV_OLD, KV_NEW, KV_Y = [734.4, 233.28], [734.4, 388.8], 1848.96

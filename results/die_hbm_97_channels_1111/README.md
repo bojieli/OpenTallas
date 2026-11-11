@@ -236,3 +236,7 @@ Replay: `delta/replay_chan.sh BASE OUT REPO BOUND_RTL`. The expected die_plan sh
 **(c) Intent sheet.** See `plan/intent/INTENT_SU_CHAN.md`, the 4 SVGs, and `intent_su_chan.json`.
 
 **(d) q_b112pv1 0.778->1.18.** This was a model artifact of the trace-only core_conns. The plan does not touch q_b112. With the merged sidecar (`delta/cc_merge.py`) the value is 0.778 -> 0.778. On like-for-like route_supply runs, 26 types are better and 2 are worse; see `route_supply/route_supply_*_*.tsv`.
+
+## Rev 3 (11-11): die_plan 1a1647f7c2e1…
+
+Every L8008 hop is now <= 405 um (lane max 402.6). The change is position-only against rev 2, on q_su00__physical_v1, q_b113 and q_su11__physical_v1, with no new cycles. G0 errors go from 639 to 624, with no new errors. The proofs are unchanged. See `plan/README_EVENT.txt` (rev 3 section). The plan dir is `plan_p11t_chan` (SHA256SUMS ccb9372c…); rev 2 is kept in `plan_p11t_chan_rev2_85df1184`.

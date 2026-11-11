@@ -6,10 +6,10 @@
  "ruling": "COORD ruling on hbm-channels-ask (relayed by DIE-HBM-97 11-11): (1) SU-CHAN q_su11/pv1 q_su01/pv1; (2) b-type E-street stations + straight opposite-face crossings",
  "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
  "base_sha256": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
- "plan": "/tmp/tmp.w38sApwVDW/die_plan.json",
- "plan_sha256": "85df1184ecea45080cd79da7941ee5464f32c54f83fa436262429af471c46b79",
+ "plan": "/tmp/tmp.Ss38fH00gR/die_plan.json",
+ "plan_sha256": "1a1647f7c2e15b36285007048a7d586292dbebaf3f3cd5c740f31d0f5236ddb8",
  "tool": "mk_chan_event.py",
- "tool_sha256": "425ebf7e5cfa1782b7b8fe04bdaedd223a144d3bc81d5115093d1b5b799f53f7",
+ "tool_sha256": "5b4c88ae84a0f1ecb1fe7d24edf524bb9bcf3b402ca6df27e0e9fa0229247128",
  "report": {
   "su": {
    "q_su11": {
@@ -1328,6 +1328,14 @@
     2,
     2
    ],
+   "q_b113.L8008x5": [
+    6,
+    6
+   ],
+   "q_su00__physical_v1.L8008x6": [
+    6,
+    6
+   ],
    "q_su01.L3008x2": [
     5,
     5
@@ -1860,6 +1868,70 @@
    "q_su11__physical_v1",
    "q_su01__physical_v1"
   ],
+  "l8008_su11pv1_hand": {
+   "old": [
+    [
+     2354.4,
+     786.231
+    ],
+    [
+     2021.76,
+     786.231
+    ],
+    [
+     1684.8,
+     885.6
+    ],
+    [
+     1347.84,
+     786.231
+    ],
+    [
+     1010.88,
+     885.6
+    ],
+    [
+     678.24,
+     786.231
+    ],
+    [
+     336.96,
+     786.231
+    ]
+   ],
+   "new": [
+    [
+     2354.4,
+     786.231
+    ],
+    [
+     2095.2,
+     885.6
+    ],
+    [
+     1723.68,
+     885.6
+    ],
+    [
+     1352.16,
+     885.6
+    ],
+    [
+     980.64,
+     885.6
+    ],
+    [
+     708.48,
+     786.231
+    ],
+    [
+     336.96,
+     786.231
+    ]
+   ],
+   "first_input_hop": 388.2,
+   "lane_L8008_max_hop": 402.6
+  },
   "kv_line": {
    "types": [
     {

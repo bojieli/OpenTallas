@@ -94,3 +94,22 @@ Checks:
    - Worse: NE_io 1.40->1.79. NE_io is unchanged in the plan; this is the sidecar, where u_ep_N2 now has its traced
      entry. Also root 7.74->7.84.
    - Files: route_supply_base_oldcc.tsv and route_supply_chan_merged.tsv.
+
+== hbm-channels-1111 rev 3 (HBM-CHANNELS, DO_NOT_COUNT; for the 12:00 combined HBM compose) ==
+Plan: die_plan.json 1a1647f7c2e15b36285007048a7d586292dbebaf3f3cd5c740f31d0f5236ddb8.
+  This replaces rev 2 85df1184 at DIE-HBM-98's request (11-11): every L8008 hop must be <= 405 um.
+Rev 3 against rev 2 (eq_gate_rev3_vs_rev2.json): EQ_BY_CONSTRUCTION, position-only, on 3 types: q_su00__physical_v1,
+q_b113 and q_su11__physical_v1. Station counts and cycles are unchanged. There is no new cycle to price.
+Section F:
+ - q_su00__physical_v1 L8008x6 and q_b113 L8008x5 are re-stationed with the generator, strictly: every hop <= 405, and
+   the station counts are kept. Replay env CHAN_EXTRA_SLOTS, default set in replay_chan.sh.
+   First input hop: su00pv1 737 -> 377 um, b113 712 -> 388 um.
+ - q_su11__physical_v1 L8008x2 is hand-sited on one line with the same 7 stations (report key l8008_su11pv1_hand).
+   - The b2n router zig-zagged between y 786 and the y 885.6 channel, which gave three 436-um hops.
+   - New layout: reg0 stays at the E pin row; regs 1-4 run on the y 885.6 channel (between the plain p3 tops at 881.28 and
+     the exp row at 898.56); regs 5 and 6 drop to the pin row W of the plain block. Lattice 4.32 um.
+   - Hops <= 372 um; first input hop 388 um.
+ - Lane L8008 max hop: 402.6 um (base 742, rev 2 737).
+ - G0 (g0diff_channels.json): errors 639 -> 624, new errors none; against rev 2 the L8008 lane hop error and 2 type-slot station errors (q_su00pv1 x6, q_b113 x5) are gone.
+ - Stage proof eq_stations.json re-run on rev 3: ALL_EQ_CYCLE_SHIFTED, the same 7 links; the L8008 slots keep their counts.
+ - route_supply (route_supply_chan_merged.tsv against route_supply_base_oldcc.tsv): 27 types better, 2 worse (NE_io sidecar-only, root +0.1). Against rev 2 only q_su00__physical_v1 changes, 5.31 -> 4.46.

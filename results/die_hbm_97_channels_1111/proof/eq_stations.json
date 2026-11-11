@@ -1,6 +1,6 @@
 {
  "base": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
- "event": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/ev7/die_plan.json",
+ "event": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/evH/die_plan.json",
  "bound_rtl": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl",
  "links": {
   "q_su11.L8301mx1": {
@@ -17,21 +17,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8301mx1/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8301mx1/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
@@ -50,21 +50,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8302mx1/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8302mx1/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8302mx1/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8302mx1/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
@@ -83,21 +83,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8314mx1/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8314mx1/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__L8314mx1/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__L8314mx1/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
@@ -116,21 +116,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5090_o/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5090_o/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5090_o/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5090_o/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+2"
@@ -149,21 +149,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5091_o/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5091_o/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su01__physical_v1__L5091_o/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su01__physical_v1__L5091_o/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
@@ -182,21 +182,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8302x1/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8302x1/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8302x1/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8302x1/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
@@ -215,21 +215,21 @@
     "rc": 0,
     "proved": true,
     "induction": true,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8314x1/pass/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/pass/yosys.log",
     "tail": ""
    },
    "NEG1_short_delay": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8314x1/neg1/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/neg1/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "NEG2_bit_bypass": {
     "rc": 1,
     "proved": false,
     "induction": false,
-    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst/q_su11__physical_v1__L8314x1/neg2/yosys.log",
+    "log": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/eqst3/q_su11__physical_v1__L8314x1/neg2/yosys.log",
     "tail": "ERROR: Called with -verify and proof did fail!\n"
    },
    "verdict": "EQ_CYCLE_SHIFTED_+1"
