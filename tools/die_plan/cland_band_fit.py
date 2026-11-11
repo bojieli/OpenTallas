@@ -15,6 +15,13 @@ if FACTOR x reserve exceeds it), moves by the least Manhattan shift to a spot cl
 + reset clearance, clock keepouts, other bands, ft station sites, die islands / clock reserved sites, PHY supply,
 reset relay / start / status groups), inside the 17.28-um margin, row/site aligned, with pin hop <= 402.84 um.
 Bands no macro overlaps are reported, never moved, so the event moves only broken bands.
+
+DIE-QC-97 11-11 HARD-CHILD band (QC cbn_q00__cl622f65d2 / __cldbcda913: 10 bands "macro-free 0.0 um2"): a band with
+"hard_core" (QC-SLECTL-B, RING-SPLIT-1106) is the footprint of the hard cland child that implements the ring; the ring
+cells live inside that child, not in rows under it.  face-home (clock_landing_plan) and landing_place already skip such
+bands; this check counted the child as the macro that blocks its own band.  A hard-child band is never moved; it is
+checked instead: the child is placed, its box equals the band (<= HARD_TOL_UM, the track offset), no other macro
+overlaps it, and its pin hop is <= REACH.  Any miss is a failure.  Kept in rep["hard_child"].
 usage: cland_band_fit.py PLAN SIDECAR OUT_PLAN REPORT [--types REGEX] [--reserve TSV] [--factor 1.25] [--check]
 """
 import argparse, copy, json, re, sys
@@ -31,6 +38,7 @@ from placement_obstacles import placement_boxes  # noqa: E402
 A_W, B_0 = 7.25, 125.0           # DIE-KV-64 measured ring reserve envelope (um2 = A_W * width + B_0)
 MARGIN, REACH = 17.28, 405 - 2.16
 INSET, ROW, SITE = 4.32, 0.27, 0.054
+HARD_TOL_UM = 0.05               # hard child box vs band rect: the child track offset (12 nm on QC) stays inside
 
 
 def model_reserve(w):
@@ -136,11 +144,31 @@ def resite(r, tgt, W, H, obs, pxy, reach=REACH):
     return None
 
 
+def hard_child_row(t, lc, tn, bus, b, boxes):
+    """Check of a band implemented by a hard cland child (b["hard_core"]): (row, error or None)."""
+    r, hc = b["rect_um"], b["hard_core"]
+    own = boxes.get(hc)
+    pxy = pin_xy(t, lc, bus)
+    hp = round(hop(r, pxy), 3) if pxy is not None else b.get("max_pin_to_band_hop_um")
+    row = dict(type=tn, bus=bus, hard_core=hc, rect_um=r, child_box_um=None if own is None else [round(v, 4) for v in own],
+               others=sorted(k for k, o in boxes.items() if k != hc and ov(r, o)), hop_um=hp,
+               hop_from="pin" if pxy is not None else "plan")
+    if own is None:
+        return row, f"hard child {hc} is not placed"
+    if max(abs(a - c) for a, c in zip(own, r)) > HARD_TOL_UM:
+        return row, f"hard child {hc} box {row['child_box_um']} is not the band {r}"
+    if row["others"]:
+        return row, f"hard child band overlaps {row['others']}"
+    if hp is None or hp > REACH + 1e-6:
+        return row, f"pin hop {hp} > {REACH}"
+    return row, None
+
+
 def run(raw, side, types=r".", reserve=None, factor=1.25, check=False):
     out = copy.deepcopy(raw)
     P = S.Plan(out) if (out.get("die") or {}).get("pg", {}).get("domains") and out.get("partitions") else None
     used = {p["type"] for p in out.get("partitions", [])}
-    rep = dict(moved=[], failed=[], blocked_not_moved=[])
+    rep = dict(moved=[], failed=[], blocked_not_moved=[], hard_child=[])
     for tn in sorted(out["partition_types"]):
         if not re.search(types, tn) or (used and tn not in used):
             continue
@@ -149,13 +177,18 @@ def run(raw, side, types=r".", reserve=None, factor=1.25, check=False):
         bands = lc.get("bands") or {}
         if not bands:
             continue
-        macros = [list(b) for b in placement_boxes(t).values()]
+        boxes = placement_boxes(t)
+        macros = [list(b) for b in boxes.values()]
         W, H = t["outline_um"]
         for bus in sorted(bands):
             b = bands[bus]
             if not b.get("rect_um") or b.get("rects_um") or "width" not in b:
                 continue
             r = b["rect_um"]
+            if b.get("hard_core"):
+                row, err = hard_child_row(t, lc, tn, bus, b, boxes)
+                (rep["failed"].append(dict(row, error=err)) if err else rep["hard_child"].append(row))
+                continue
             if not any(ov(r, m) for m in macros):
                 continue
             res = (reserve or {}).get((tn, bus)) or model_reserve(b["width"])
@@ -203,7 +236,8 @@ def main(argv=None):
     if not a.check:
         Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
-    print(f"moved {len(rep['moved'])} failed {len(rep['failed'])} blocked-but-fits {len(rep['blocked_not_moved'])}")
+    print(f"moved {len(rep['moved'])} failed {len(rep['failed'])} blocked-but-fits {len(rep['blocked_not_moved'])} "
+          f"hard-child ok {len(rep['hard_child'])}")
     for m in rep["moved"]:
         print("MOVED", m["type"], m["bus"], m["rect_um"], "->", m["new_rect_um"], "shift", m["shift_um"], "hop", m["hop_um"])
     for f in rep["failed"]:
