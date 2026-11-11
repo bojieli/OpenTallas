@@ -1383,6 +1383,44 @@ def _station_lint():
     return sl
 
 
+_SCAN = {}
+
+
+def load_station_scan(path):
+    """stscan --detail JSON (VIS-TRIAGE-HBM stscan.py: plan internal_stations vs the bound netlist): {type: {phantom:
+    [{idx, conn, launch, capture, bits}], ...}}.  Cached per path."""
+    if path not in _SCAN:
+        _SCAN[path] = json.loads(Path(path).read_text())
+    return _SCAN[path]
+
+
+def drop_phantoms(tn, t, scan):
+    """t with the bind-PHANTOM internal_stations removed (the plan station's endpoint pair has no bound connection,
+    DIE-HBM-98 S7 class): kits do not build them, so they are not wire.  Records match on idx + conn, else on
+    (conn, launch, capture).  Returns (t', dropped, dropped_bits, unmatched)."""
+    rec = (scan.get(tn) or {}).get("phantom") or []
+    st = list(t.get("internal_stations") or [])
+    if not rec or not st:
+        return t, 0, 0, 0
+    key = lambda e: (str(e.get("conn", "")), str(e.get("launch", "")), str(e.get("capture", "")))
+    by_key = defaultdict(list)
+    for i, e in enumerate(st):
+        by_key[key(e)].append(i)
+    drop, unmatched = set(), 0
+    for r_ in rec:
+        i = r_.get("idx")
+        if isinstance(i, int) and 0 <= i < len(st) and str(st[i].get("conn", "")) == str(r_.get("conn", "")):
+            drop.add(i)
+            continue
+        c = [j for j in by_key.get(key(r_), []) if j not in drop]
+        if c:
+            drop.add(c[0])
+        else:
+            unmatched += 1
+    bits = sum(int(st[i].get("bits", 1) or 1) for i in drop)
+    return dict(t, internal_stations=[e for i, e in enumerate(st) if i not in drop]), len(drop), bits, unmatched
+
+
 def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=False, out=None, die=None):
     """route_supply rows (verdict, flag regions, fix) for the named types of partition_types T."""
     rows = []
@@ -1390,10 +1428,21 @@ def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=F
         t = T[n]
         if not t.get("outline_um"):
             continue
+        ph = None
+        if cfg.get("station_scan"):
+            t, nd, nb, nu = drop_phantoms(n, t, load_station_scan(cfg["station_scan"]))
+            ph = dict(phantom_stations_dropped=nd, phantom_bits_dropped=nb, phantom_unmatched=nu)
         r = analyze_type(n, t, die_dir, repo, conns, cfg)
         if r is None:
             continue
         add_density(r, t, cells_of(n, bool(t.get("hard_cores"))))
+        if ph is not None:
+            r.update(ph)
+            if ph["phantom_stations_dropped"]:
+                r.setdefault("notes", []).append(
+                    f"PHANTOM {ph['phantom_stations_dropped']} plan station(s) / {ph['phantom_bits_dropped']} b with no "
+                    f"bound path dropped (--station-scan)" + (f", {ph['phantom_unmatched']} scan rows unmatched"
+                                                              if ph["phantom_unmatched"] else ""))
         r["verdict"], r["flag_regions"] = verdict(r, flag_ratio)
         if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
             r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
@@ -1541,6 +1590,8 @@ def main(argv=None):
                     help="old model: an ft slot whose stations_in are hard cores still runs as parent wire over them")
     ap.add_argument("--template-cap-default", action="store_true",
                     help="old model: cap whole-block template LEFs at --core-ceiling even when the plan gives obs_max")
+    ap.add_argument("--station-scan", help="stscan --detail JSON (plan internal_stations vs the bound netlist): "
+                    "PHANTOM stations (no bound path) are not scored as wire (DIE-HBM-98 S7, COORD 02:5x)")
     ap.add_argument("--station-face-double", action="store_true",
                     help="old model: a core pin whose face bus is carried by an internal_stations chain also counts "
                          "its own pin -> face net (counted twice)")
@@ -1589,6 +1640,7 @@ def main(argv=None):
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
                empty_conns_unchecked=not a.empty_conns_glue, station_face_dedupe=not a.station_face_double,
+               station_scan=a.station_scan,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
                grt_halving_types=grt_halving_types(a.grt_halving_type))
     conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])

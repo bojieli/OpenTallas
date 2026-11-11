@@ -477,3 +477,24 @@ def test_face_bus_carried_by_station_chain_counts_once(tmp_path):
     _, r2, _ = run(tmp_path, "--station-face-double")
     assert r1["station_carried_pins"] == 800 and r2["station_carried_pins"] == 0
     assert r1["wirelength_mm"] < r2["wirelength_mm"]
+
+
+def test_station_scan_drops_bind_phantoms(tmp_path):
+    """--station-scan: an internal station the bound netlist has no path for (stscan PHANTOM) is not wire."""
+    plan(tmp_path, n=800, macro=False)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    t = P["partition_types"]["t"]
+    t["internal_stations"] = [{"conn": "u_a.d|u_b", "launch": "u_a.d", "capture": "u_b", "from_um": [50, 100],
+                               "to_um": [350, 400], "regs_um": [[200, 100], [200, 400]], "bits": 400},
+                              {"conn": "u_b.d|u_a", "launch": "u_b.d", "capture": "u_a", "from_um": [350, 100],
+                               "to_um": [50, 400], "regs_um": [[200, 450]], "bits": 400}]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    scan = {"t": {"phantom": [{"idx": 1, "conn": "u_b.d|u_a", "launch": "u_b.d", "capture": "u_a", "bits": 400},
+                              {"idx": 7, "conn": "u_a.d|u_b", "launch": "u_a.d", "capture": "u_b", "bits": 400}]}}
+    (tmp_path / "scan.json").write_text(json.dumps(scan))
+    _, r0, _ = run(tmp_path)
+    _, r1, _ = run(tmp_path, "--station-scan", str(tmp_path / "scan.json"))
+    assert "phantom_stations_dropped" not in r0
+    assert r1["phantom_stations_dropped"] == 2 and r1["phantom_bits_dropped"] == 800 and r1["phantom_unmatched"] == 0
+    assert r1["station_bits"] == 0 < r0["station_bits"]
+    assert any(n.startswith("PHANTOM 2") for n in r1["notes"])
