@@ -42211,3 +42211,22 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
   The bank lanes are counted separately so DIE-HBM-100 can decide them lane by lane. If the total is over 1%, half-width 2:1 on the bank lanes is the fallback per the ruling.
   Loop RTs (SFU_VM/HC_Q 119/123/137/150) are re-equalised with hbm_lat_pads on the split bind's bus_groups. That runs after split_hub.py, with BIND-SUBTYPE-2's strict bind; any RT delta goes to TOK-VERIFY-1.
   The place+GRT probe waits for the split sub-type kits from split_hub.py: the flat hub is 767k/801k cells, about 2x the 400k cap.
+- 2026-11-11 11:10 PST RESULT [TOK-VERIFY-1 -> COORD, S81-FRAME-FIX-1, DIE-S81-87, S81-ARCH-RTL-2] DO_NOT_COUNT. NEW S81 TOKEN BASELINE on the fixed compiler (main ad60c8ed70, which includes S81-FRAME-FIX-1 749cf6da99). **Reference for all later S81 pricing: AR 768.26 tok/s (T 1,562,026.6), MTP 2689.56 (T_step 1,855,624.6).** This holds until the wq_b gap below is fixed; with it fixed, expect AR 767.58 / MTP 2687.52.
+  HOW IT WAS BUILT:
+  - (1) Frame schedules re-traced by the fixed tree: frame_schedule_asb on my own frame root. ff/froot is made by layer_prog/frame_root.py from TYPE-SAFE-5 cand asbuilt_bs.json, and carries this tree's extractor. col_h10_x, col_h9_x and col_h9_nx: rc 0, all PLAN PASS. Their timing content is identical to S81-PLAN-1's 11-10 schedules; only the provenance changed.
+  - (2) compile_layers.sh with the strict-bind setup of my 11-10 cc_gq (same bind_s81, as-built manifest, defines and gb_provider record). Run through ot-run on intel1. L0, L2, L14, L20 and HEAD all rc 0: L0 65 ops (41 PARTIAL, 24 LOWERED); L2/L14/L20 the same counts as cc_gq; HEAD 8 ops.
+  - (3) Compiled vs old calendar (cc_gq), L2/L14/L20:
+    - The dv-priced layer spans are unchanged: L2 28157.7, L14 28082.9, L20 30483.4.
+    - Field calendars: 12 files per layer differ. attn.a_proj frame emission is +2..+10 edges per output (e.g. e11 363 -> 372).
+    - The whole xs layer window shifts +21 edges (wo_a start 4174 -> 4195, down last_retire 21633 -> 21654).
+    - experts_gu span 5421 -> 5433 (tail 346 -> 358, inside its window). Every other op keeps its period and span.
+  - (4) compose_tok_ds on the new main gives AR 768.7 / MTP 2690.9, unchanged. It prices field ops from measured element records, and the fix does not touch those.
+    - So the baseline = compose plus the compiled calendar delta, charged in series: +21 per layer x 43 layers = +903 AR cycles, and x 44 (43 + MTP layer) = +924 per MTP step.
+    - LAT: regenerated on plan_h2_2249 (digest 85f09a0e). It is byte-identical to the 11-11 morning table, and the table of record is still stale (7bf83d02).
+  - **GAP (to S81-FRAME-FIX-1):** the fixed compiler still emits attn.wq_b at P126.
+    - xs_field_calendar's floor table has wq_b 127, but the compiled wq_b calendar is the wq_b+idx.q pipeline, built by xs_wqb_die.wqb_calendar / S81-RATEFIX compile_pipeline.
+    - That calendar's own floor record is 126 (claude/s81-ratefix-1019 p126c52 on 1-flop stations), and its file is byte-identical to the old compile on L2/L14/L20 (33 phases, span 4255).
+    - So the P127 floor that COORD accepted is not in the compiled images. Fixing it adds +32 per layer, giving the 767.58 / 2687.52 figures above.
+  - My earlier frame-fix price (-0.21% expected) was a model. The compiled delta is smaller (-0.06% AR), because only a_proj and gu changed on this path.
+  - Old figures (765.46 on the slice-4 plan, 768.7) are superseded. Slice-4 (29c9b879) is not on main yet; when it lands its -0.028% applies on top.
+  Files: intel1 /srv/opentallas-scratch2/claude/tok-verify-1/ff/{run_fsa.sh,run_cc.sh,fsa/,sched/,cc/,lat0/,comp/}; code rev in ff/cc_code.rev.
