@@ -22,12 +22,14 @@ echo "KW_STAGE check $(date '+%F %T %Z')"
 [ "$(realpath "$SRC")" = "$SRC" ] || { echo SRC_SYMLINK_FAIL; exit 7; }
 [ "$(stat -c %d "$SRC")" = "$(stat -c %d "$L")" ] || { echo OV_DEV_FAIL; exit 8; }
 [ -d "$OV" ] && { find "$OV" -type d ! -perm -u+w -exec chmod u+w {} + ; rm -rf "$OV"; }
+case "$(realpath -m "$OV")" in "$L"/*) ;; *) echo OV_PATH_FAIL; exit 7;; esac
 cp -al "$SRC" "$OV" || { echo OV_CPAL_FAIL; exit 8; }
 find "$OV" -type d ! -perm -u+w -exec chmod u+w {} +
 rm -rf "$OV/tools/die_plan"
 cp -r "$SRC/tools/die_plan" "$OV/tools/die_plan"; chmod -R u+w "$OV/tools/die_plan"
 [ "$(find "$OV/tools/die_plan" -type f -links +1 | wc -l)" = 0 ] || { echo OV_DIEPLAN_SHARED_FAIL; exit 8; }
 (cd "$OV" && git apply --exclude='tools/die_plan/test_*' "$PATCH") || { echo OV_PATCH_FAIL; exit 8; }
+grep -q insertion_basis "$OV/tools/die_plan/schema.py" && grep -q core_share "$OV/tools/die_plan/schema.py" || { echo OV_CHECK_FAIL; exit 8; }
 cp "$L/overlay/bind_subtype.py" "$OV/tools/die_plan/bind_subtype.py" && python3 -I "$L/overlay/hook_subtype.py" "$OV/tools/die_plan/bind.py" || { echo OV_SUBTYPE_HOOK_FAIL; exit 8; }
 cp "$L/overlay/tools/die_plan/hbm_subtype_asbuilt.py" "$OV/tools/die_plan/"
 mkdir -p "$OV/physical/die_plan/hbm/bind/subtype"
@@ -35,6 +37,9 @@ cp "$L/overlay/physical/die_plan/hbm/bind/subtype/ot_hgi_sfu_split3_lane_core__i
 python3 -I "$OV/tools/die_plan/hbm_subtype_asbuilt.py" "$BASE_AB" "$AB" --repo "$OV" || { echo AB_GEN_FAIL; exit 8; }
 echo "KW_STAGE bind $(date '+%F %T %Z')"
 rm -rf "$BIND"; mkdir -p "$BIND"; touch "$BIND/DO_NOT_COUNT"
+# taps recipe line 43 (bind_taps.sh): the bind out dir carries the as-built die asbuilt.json; real-file copy here (no symlink)
+cp /srv/opentallas-scratch2/claude/die-hbm-92-su/exp/bind_e0/asbuilt.json "$BIND/asbuilt.json" || { echo ASBUILT_COPY_FAIL; exit 9; }
+[ "$(md5sum < "$BIND/asbuilt.json" | cut -c1-32)" = 81959d086954ba3c0b2156221acdd02a ] || { echo ASBUILT_MD5_FAIL; exit 9; }
 cd "$OV" || exit 9
 python3 tools/die_plan/bind.py bind "$PLAN" --out "$BIND" --asbuilt "$AB" --mem 32 --strict > "$L/bind.log" 2>&1 || { echo "BIND_RC $?"; tail -20 "$L/bind.log"; echo BIND_NOT_OK; exit 10; }
 python3 -I -c "import json,sys;r=json.load(open('$BIND/bind_report.json'));print('BIND',json.dumps({k:r.get(k) for k in ('partitions','types','crossings','errors','unbound','n_errors')}));print('SUBTYPE',len(r.get('subtype_bind',[])));sys.exit(0 if r.get('n_errors',r.get('errors'))==0 else 3)" || { echo BIND_NOT_OK; exit 10; }
