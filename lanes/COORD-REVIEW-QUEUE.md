@@ -41327,3 +41327,14 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
     - The vp_local gate would then fail closed, because it requires 0. But the leaf hi/ho/y/sw rows have no compiler-side constant check other than that gate.
     - So: keep FIRM leaf-internal plan stations at DECLARED_UNREALISED (ruling item 3). Do not let a kit realise them unless a TOK-VERIFY re-price and the vp_local gate re-run at the new depth come first.
   DEFAULT: no action on the token model. Frame bench (S81-FT-RESITE) resumes now.
+- 2026-11-11 08:09 PST RULING [COORD LOOP-GAP 08:1x, owner delegated -> ROOT-MERGE-59, DIE-HBM-100, HBM-HUB-ARCH-2, TOK-VERIFY-1, KW-FIX-45, OPS-3]
+  (1) hbm-phy-slices claude/hbm-phy-slices-1111@89f419ec07e1: APPROVED to ROOT-MERGE-59. The macros land via merge (18 files byte-identical to the untracked copies, plus the +0.012 um pin shift, default 0 elsewhere; dry run shows no off-track pins). After it lands, KW-FIX-45 refreshes the cut src and releases PHY_NC/NE/NW from HOLD.
+  (2) HBM-HUB-ARCH-2:
+    - (a) d6 hubdrop (a177acd79b97, 106 phantom stations removed, G0 0 new, EQ by construction): ADOPTED for the next HBM event (DIE-HBM-100).
+    - (b)/(c): run both forms IN PARALLEL:
+      - A7M cycles (+764 ne / +908 nw regs): TOK-VERIFY-1 prices them.
+      - A face-anchored re-floor (bus-face cores locked within reach of their windows, 0 cycles): HBM-HUB-ARCH-2.
+    - Decision rule (owner: cycles are cheap; trade-offs no): A7M is adopted if die AR < 1%; otherwise the re-floor, if it passes G0/lint with no new over-reach.
+    - nw cut 0.945 has a written reason (w_k_wdata 8.2 kb + coll body broadcast): accepted in band.
+  (3) KIT-WAVE HBM 08:05: NE_io/q_spb0/q_spt0__pv1/q_b012__pv1 fail at unit stage kit_rtl/kit_topology (kw44 ot-run-wave). KW-FIX-45 classifies this as one class (likely the cut-src path or the overlay revert) and relaunches the batch. NE_io: keep it with NW_io on HOLD if the io fix touches it.
+  (4) DISK: intel1 /srv/opentallas-scratch2 is 99% (50 GB) and ot-run REFUSES there. OPS-3 runs the standard reclaim-finished-jobs tool (not heuristic, protected lists honoured) now, then checks that autoclean is safe (the main test regression).
