@@ -1,0 +1,1987 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "hbm-channels-1111",
+ "by": "DIE-HBM-97/HBM-CHANNELS",
+ "do_not_count": true,
+ "ruling": "COORD ruling on hbm-channels-ask (relayed by DIE-HBM-97 11-11): (1) SU-CHAN q_su11/pv1 q_su01/pv1; (2) b-type E-street stations + straight opposite-face crossings",
+ "base_plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+ "base_sha256": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
+ "plan": "/tmp/tmp.Mwx8UdWQLT/die_plan.json",
+ "plan_sha256": "fd5123010508864c82549536c8a04b4db9bc826cd60b945384f3f489c9c3e02a",
+ "tool": "mk_chan_event.py",
+ "tool_sha256": "3abdad4910cc2a1059680472c8fab075216dc55c3c522c4a8912063e6714aa34",
+ "report": {
+  "su": {
+   "q_su11": {
+    "street_um": 69.12,
+    "col_x_old": [
+     941.76,
+     1356.48,
+     1900.8
+    ],
+    "col_x_new": [
+     708.48,
+     1278.72,
+     1892.16
+    ],
+    "row_y_old": [
+     380.16,
+     1131.84,
+     1347.84
+    ],
+    "row_dy": [
+     -43.2,
+     -34.56,
+     -34.56
+    ],
+    "geom_errors": [],
+    "geom_preexisting": [
+     [
+      "outline",
+      "u_su_Q1_lane_exp5__s"
+     ],
+     [
+      "outline",
+      "u_su_Q1_lane_exp11__s"
+     ],
+     [
+      "NSband",
+      "u_cxdl_Q1_q"
+     ],
+     [
+      "NSband",
+      "u_cxdl_Q1_s"
+     ],
+     [
+      "overlap",
+      "u_su_Q1_lane_exp1__l",
+      "u_fl_Q1"
+     ]
+    ],
+    "lattice_off": 0,
+    "ist": {
+     "links": 258,
+     "regs_base": 430,
+     "regs_new": 430,
+     "links_up": 0,
+     "blocked_route_ok": 0
+    }
+   },
+   "q_su11__physical_v1": {
+    "street_um": 69.12,
+    "col_x_old": [
+     941.76,
+     1356.48,
+     1900.8
+    ],
+    "col_x_new": [
+     708.48,
+     1278.72,
+     1892.16
+    ],
+    "row_y_old": [
+     380.16,
+     1131.84,
+     1347.84
+    ],
+    "row_dy": [
+     -17.28,
+     -17.28,
+     -17.28
+    ],
+    "clock_tap_moved": [
+     1205.28,
+     518.4
+    ],
+    "reset_tap_moved": [
+     1205.28,
+     518.4
+    ],
+    "geom_errors": [],
+    "geom_preexisting": [
+     [
+      "outline",
+      "u_su_Q1_lane_exp5__s"
+     ],
+     [
+      "outline",
+      "u_su_Q1_lane_exp11__s"
+     ],
+     [
+      "NSband",
+      "u_cxdl_Q1_q"
+     ],
+     [
+      "NSband",
+      "u_cxdl_Q1_s"
+     ],
+     [
+      "overlap",
+      "u_su_Q1_lane_exp1__l",
+      "u_fl_Q1"
+     ]
+    ],
+    "lattice_off": 0,
+    "ist": {
+     "links": 258,
+     "regs_base": 430,
+     "regs_new": 430,
+     "links_up": 0,
+     "blocked_route_ok": 0
+    }
+   },
+   "q_su01": {
+    "street_um": 120.96,
+    "col_x_old": [
+     319.68,
+     777.6,
+     1235.52
+    ],
+    "col_x_new": [
+     319.68,
+     889.92,
+     1460.16
+    ],
+    "row_y_old": [
+     449.28,
+     915.84,
+     1131.84,
+     1347.84
+    ],
+    "row_dy": [
+     -103.68,
+     -86.4,
+     -60.48,
+     -34.56
+    ],
+    "clock_tap_moved": [
+     885.6,
+     470.88
+    ],
+    "reset_tap_moved": [
+     885.6,
+     470.88
+    ],
+    "geom_errors": [],
+    "geom_preexisting": [],
+    "lattice_off": 0,
+    "ist": {
+     "links": 0,
+     "regs_base": 0,
+     "regs_new": 0,
+     "links_up": 0,
+     "blocked_route_ok": 0
+    }
+   },
+   "q_su01__physical_v1": {
+    "street_um": 120.96,
+    "col_x_old": [
+     319.68,
+     777.6,
+     1235.52
+    ],
+    "col_x_new": [
+     319.68,
+     889.92,
+     1460.16
+    ],
+    "row_y_old": [
+     449.28,
+     915.84,
+     1131.84,
+     1347.84
+    ],
+    "row_dy": [
+     -103.68,
+     -86.4,
+     -60.48,
+     -34.56
+    ],
+    "clock_tap_moved": [
+     885.6,
+     470.88
+    ],
+    "reset_tap_moved": [
+     885.6,
+     470.88
+    ],
+    "geom_errors": [],
+    "geom_preexisting": [],
+    "lattice_off": 0,
+    "ist": {
+     "links": 9,
+     "regs_base": 23,
+     "regs_new": 26,
+     "links_up": 2,
+     "blocked_route_ok": 0
+    }
+   }
+  },
+  "b": {
+   "q_b000": {
+    "links": 15,
+    "regs_base": 72,
+    "regs_new": 72,
+    "links_up": 0,
+    "blocked_route_ok": 9,
+    "strip_links": 15,
+    "strip_reg_bits": 19014,
+    "regs_left_in_w_strip": 0,
+    "street_x": [
+     280.8,
+     453.6
+    ]
+   },
+   "q_b000__physical_v1": {
+    "links": 15,
+    "regs_base": 72,
+    "regs_new": 72,
+    "links_up": 0,
+    "blocked_route_ok": 9,
+    "strip_links": 15,
+    "strip_reg_bits": 19014,
+    "regs_left_in_w_strip": 0,
+    "street_x": [
+     280.8,
+     453.6
+    ]
+   },
+   "q_b011": {
+    "links": 51,
+    "regs_base": 192,
+    "regs_new": 192,
+    "links_up": 0,
+    "blocked_route_ok": 36,
+    "strip_links": 51,
+    "strip_reg_bits": 10696,
+    "regs_left_in_w_strip": 0,
+    "street_x": [
+     280.8,
+     375.84
+    ]
+   },
+   "q_b011__physical_v1": {
+    "links": 51,
+    "regs_base": 192,
+    "regs_new": 192,
+    "links_up": 0,
+    "blocked_route_ok": 36,
+    "strip_links": 51,
+    "strip_reg_bits": 10696,
+    "regs_left_in_w_strip": 0,
+    "street_x": [
+     280.8,
+     375.84
+    ]
+   }
+  },
+  "straight": [
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L51x4",
+    "width": 612,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L51x5_i",
+    "neighbour_slot": "L51x5",
+    "window_old": [
+     796.608,
+     908.16
+    ],
+    "window_new": [
+     629.376,
+     740.928
+    ],
+    "stations": {
+     "q_b002.L51x5": [
+      2,
+      2
+     ],
+     "q_b011.L51x4": [
+      2,
+      2
+     ]
+    }
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L51x4",
+    "width": 612,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L51x5_i",
+    "neighbour_slot": "L51x5",
+    "window_old": [
+     796.608,
+     908.16
+    ],
+    "window_new": [
+     629.376,
+     740.928
+    ],
+    "stations": {
+     "q_b002__physical_v1.L51x5": [
+      2,
+      2
+     ],
+     "q_b011__physical_v1.L51x4": [
+      2,
+      2
+     ]
+    }
+   }
+  ],
+  "straight_skipped": [
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L15x1",
+    "width": 4128,
+    "face": "E->W",
+    "offset_um": -801.024,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L15_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L15x1",
+    "width": 4128,
+    "face": "E->W",
+    "offset_um": -801.024,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L15_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L8300mx1",
+    "width": 1615,
+    "face": "E->W",
+    "offset_um": -693.939,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L8300mx2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L8300x1",
+    "width": 1615,
+    "face": "E->W",
+    "offset_um": -699.231,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L8300x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5063x1",
+    "width": 1457,
+    "face": "E->W",
+    "offset_um": -692.352,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5063x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1259x1",
+    "width": 1457,
+    "face": "E->W",
+    "offset_um": 529.36,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1259x2_i",
+    "why": "window overlap own ['L20_i'] neighbour ['L20_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5064x1",
+    "width": 1091,
+    "face": "E->W",
+    "offset_um": 529.36,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5064x2_i",
+    "why": "window overlap own ['L20_i'] neighbour ['L20_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5065x3",
+    "width": 883,
+    "face": "W->E",
+    "offset_um": 44.839,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L5065_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1262x3",
+    "width": 883,
+    "face": "W->E",
+    "offset_um": 44.839,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L1262_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L42x1",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": 537.408,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L42x2_i",
+    "why": "window overlap own ['L167m_o', 'L168m_o'] neighbour ['L167mx1.in', 'L168mx1.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L43x1",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": 537.408,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L43x2_i",
+    "why": "window overlap own ['L167m_o'] neighbour ['L167mx1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L42x1",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": 537.408,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L42x2_i",
+    "why": "window overlap own ['L167_o', 'L168_o'] neighbour ['L167x1.in', 'L168x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L43x1",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": 537.408,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L43x2_i",
+    "why": "window overlap own ['L167_o'] neighbour ['L167x1.in']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L42x4",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": -148.8,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L42_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L42x4",
+    "width": 788,
+    "face": "E->W",
+    "offset_um": -148.8,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L42_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1261x1",
+    "width": 728,
+    "face": "E->W",
+    "offset_um": -644.852,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1261x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1263x3",
+    "width": 667,
+    "face": "W->E",
+    "offset_um": -229.061,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L1263_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L51x1",
+    "width": 612,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L51x2_i",
+    "why": "window overlap own ['L43x1.out'] neighbour ['L43x2.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L52x8",
+    "width": 612,
+    "face": "W->E",
+    "offset_um": -528.192,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L52_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L51x1",
+    "width": 612,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L51x2_i",
+    "why": "window overlap own ['L43x1.out'] neighbour ['L43x2.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L52x8",
+    "width": 612,
+    "face": "W->E",
+    "offset_um": -528.192,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L52_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L52x5",
+    "width": 612,
+    "face": "W->E",
+    "offset_um": 167.232,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L52x6_i",
+    "why": "window overlap own ['L42x4.in', 'L101x4.in', 'L126x5.out'] neighbour ['L42x3.out', 'L101x3.out', 'L126x6.in']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L52x5",
+    "width": 612,
+    "face": "W->E",
+    "offset_um": 167.232,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L52x6_i",
+    "why": "window overlap own ['L42x4.in', 'L101x4.in', 'L126x5.out'] neighbour ['L42x3.out', 'L101x3.out', 'L126x6.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L8003mx1",
+    "width": 568,
+    "face": "E->W",
+    "offset_um": -693.939,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L8003mx2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L1271x4",
+    "width": 512,
+    "face": "W->E",
+    "offset_um": -330.833,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L1271x5_i",
+    "why": "window overlap own ['L166_i'] neighbour ['L166_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5070x1",
+    "width": 486,
+    "face": "E->W",
+    "offset_um": 2002.061,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5070x2_i",
+    "why": "window overlap own ['L161m_o'] neighbour ['L161m_i']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1267x1",
+    "width": 486,
+    "face": "E->W",
+    "offset_um": 2058.811,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1267x2_i",
+    "why": "window overlap own ['L161_o'] neighbour ['L161_i']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1257x2",
+    "width": 472,
+    "face": "E->W",
+    "offset_um": -692.352,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1257x3_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L1282x1",
+    "width": 297,
+    "face": "W->E",
+    "offset_um": -330.833,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L1282x2_i",
+    "why": "window overlap own ['L166_i'] neighbour ['L166_o']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1277x2",
+    "width": 279,
+    "face": "W->E",
+    "offset_um": -490.448,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L1277x3_i",
+    "why": "window overlap own ['L19_o'] neighbour []"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L73x1",
+    "width": 274,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L73x2_i",
+    "why": "window overlap own ['L168m_o'] neighbour ['L168mx1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L73x1",
+    "width": 274,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L73x2_i",
+    "why": "window overlap own ['L168_o'] neighbour ['L168x1.in']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L71x1",
+    "width": 274,
+    "face": "W->E",
+    "offset_um": 73.728,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L71_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L73x4",
+    "width": 274,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L73x5_i",
+    "why": "neighbour/own chain needs more stations",
+    "stations": {
+     "q_b002.L73x5": [
+      2,
+      2
+     ]
+    }
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L71x1",
+    "width": 274,
+    "face": "W->E",
+    "offset_um": 73.728,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L71_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L73x4",
+    "width": 274,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L73x5_i",
+    "why": "neighbour/own chain needs more stations",
+    "stations": {
+     "q_b002__physical_v1.L73x5": [
+      2,
+      2
+     ]
+    }
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1268x1",
+    "width": 273,
+    "face": "E->W",
+    "offset_um": 2715.398,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1268x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L8004x1",
+    "width": 245,
+    "face": "E->W",
+    "offset_um": -699.231,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L8004x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5067x3",
+    "width": 213,
+    "face": "W->E",
+    "offset_um": -197.727,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L5067_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5077x1",
+    "width": 201,
+    "face": "E->W",
+    "offset_um": -1586.062,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5077x2_i",
+    "why": "window overlap own ['L168m_o'] neighbour ['L168mx1.in']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5078x1",
+    "width": 163,
+    "face": "E->W",
+    "offset_um": 1433.146,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5078x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5078x4",
+    "width": 163,
+    "face": "E->W",
+    "offset_um": 179.104,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L5078x5_i",
+    "why": "window overlap own ['L52x5.in'] neighbour ['L52x4.out']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5074x3",
+    "width": 147,
+    "face": "W->E",
+    "offset_um": -485.616,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L5074_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L1279x1",
+    "width": 141,
+    "face": "E->W",
+    "offset_um": 574.272,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L1279x2_i",
+    "why": "window overlap own ['L168_o'] neighbour ['L168x1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L3006x6",
+    "width": 84,
+    "face": "W->E",
+    "offset_um": -562.131,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L3006_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L3006x3",
+    "width": 84,
+    "face": "W->E",
+    "offset_um": -49.008,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L3006x4_i",
+    "why": "window overlap own ['L71x1.out'] neighbour ['L71_i']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5096x5",
+    "width": 70,
+    "face": "W->E",
+    "offset_um": -158.252,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L5096x6_i",
+    "why": "window overlap own ['L166m_i'] neighbour ['L166m_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L5079x1",
+    "width": 26,
+    "face": "E->W",
+    "offset_um": 909.168,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L5079x2_i",
+    "why": "window overlap own ['L14_o'] neighbour ['L14x1.in']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5079x4",
+    "width": 26,
+    "face": "E->W",
+    "offset_um": 146.24,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L5079x5_i",
+    "why": "window overlap own ['L52x5.in'] neighbour ['L52x4.out']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5099x5",
+    "width": 23,
+    "face": "W->E",
+    "offset_um": -158.039,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L5099x6_i",
+    "why": "window overlap own ['L166m_i'] neighbour ['L166m_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L101x1",
+    "width": 21,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NE_b010",
+    "neighbour_type": "q_b010",
+    "neighbour_bus": "L101x2_i",
+    "why": "window overlap own ['L168m_o'] neighbour ['L168mx1.in']"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L101x1",
+    "width": 21,
+    "face": "E->W",
+    "offset_um": 528.192,
+    "neighbour": "NW_b010",
+    "neighbour_type": "q_b010__physical_v1",
+    "neighbour_bus": "L101x2_i",
+    "why": "window overlap own ['L168_o'] neighbour ['L168x1.in']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L101x4",
+    "width": 21,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L101x5_i",
+    "why": "window overlap own ['L52x5.in'] neighbour ['L52x4.out']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L101x4",
+    "width": 21,
+    "face": "E->W",
+    "offset_um": -167.232,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L101x5_i",
+    "why": "window overlap own ['L52x5.in'] neighbour ['L52x4.out']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5095x5",
+    "width": 20,
+    "face": "W->E",
+    "offset_um": -158.267,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L5095x6_i",
+    "why": "window overlap own ['L166m_i'] neighbour ['L166m_o']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L5100x5",
+    "width": 19,
+    "face": "W->E",
+    "offset_um": -157.687,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L5100x6_i",
+    "why": "window overlap own ['L166m_i'] neighbour ['L166m_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L8006x8",
+    "width": 13,
+    "face": "W->E",
+    "offset_um": 449.856,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L8006x9_i",
+    "why": "window overlap own ['L160m_i'] neighbour ['L160m_o']"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L8006x5",
+    "width": 13,
+    "face": "W->E",
+    "offset_um": -157.162,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L8006x6_i",
+    "why": "window overlap own ['L166m_i'] neighbour ['L166m_o']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L126x8",
+    "width": 5,
+    "face": "W->E",
+    "offset_um": -528.192,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L126_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L126x8",
+    "width": 5,
+    "face": "W->E",
+    "offset_um": -528.192,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L126_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L126x5",
+    "width": 5,
+    "face": "W->E",
+    "offset_um": 158.016,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L126x6_i",
+    "why": "window overlap own ['L42x4.in'] neighbour ['L42x3.out']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L126x5",
+    "width": 5,
+    "face": "W->E",
+    "offset_um": 158.016,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L126x6_i",
+    "why": "window overlap own ['L42x4.in'] neighbour ['L42x3.out']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L732x4",
+    "width": 4,
+    "face": "W->E",
+    "offset_um": 217.728,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L732_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L732x4",
+    "width": 4,
+    "face": "W->E",
+    "offset_um": 217.728,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L732_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L732x1",
+    "width": 4,
+    "face": "W->E",
+    "offset_um": 15.04,
+    "neighbour": "NE_b001",
+    "neighbour_type": "q_b001",
+    "neighbour_bus": "L732x2_i",
+    "why": "window overlap own ['L71x1.out'] neighbour ['L71_i']"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L732x1",
+    "width": 4,
+    "face": "W->E",
+    "offset_um": 15.04,
+    "neighbour": "NW_b001",
+    "neighbour_type": "q_b001__physical_v1",
+    "neighbour_bus": "L732x2_i",
+    "why": "window overlap own ['L71x1.out'] neighbour ['L71_i']"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L733x3",
+    "width": 3,
+    "face": "W->E",
+    "offset_um": 217.728,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L733_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L733x3",
+    "width": 3,
+    "face": "W->E",
+    "offset_um": 217.728,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L733_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000",
+    "part": "NE_b000",
+    "slot": "L734x7",
+    "width": 1,
+    "face": "W->E",
+    "offset_um": 511.168,
+    "neighbour": "NE_hub",
+    "neighbour_type": "q_hub_ne",
+    "neighbour_bus": "L734_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b000__physical_v1",
+    "part": "NW_b000",
+    "slot": "L734x7",
+    "width": 1,
+    "face": "W->E",
+    "offset_um": 511.168,
+    "neighbour": "NW_hub",
+    "neighbour_type": "q_hub_nw",
+    "neighbour_bus": "L734_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011",
+    "part": "NE_b011",
+    "slot": "L204mx3",
+    "width": 1,
+    "face": "E->W",
+    "offset_um": -4.608,
+    "neighbour": "NE_b002",
+    "neighbour_type": "q_b002",
+    "neighbour_bus": "L204m_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   },
+   {
+    "type": "q_b011__physical_v1",
+    "part": "NW_b011",
+    "slot": "L204x3",
+    "width": 1,
+    "face": "E->W",
+    "offset_um": -4.608,
+    "neighbour": "NW_b002",
+    "neighbour_type": "q_b002__physical_v1",
+    "neighbour_bus": "L204_i",
+    "why": "neighbour end is a bus, not an ft slot (bus pin move not in scope)"
+   }
+  ],
+  "neighbour_types": {
+   "q_b002": [
+    {
+     "slot": "L51x5",
+     "in_window_old": [
+      796.608,
+      908.16
+     ],
+     "in_window_new": [
+      629.376,
+      740.928
+     ]
+    }
+   ],
+   "q_b002__physical_v1": [
+    {
+     "slot": "L51x5",
+     "in_window_old": [
+      796.608,
+      908.16
+     ],
+     "in_window_new": [
+      629.376,
+      740.928
+     ]
+    }
+   ]
+  },
+  "cycle_delta": [
+   {
+    "type": "q_su11",
+    "slot": "L8301mx1",
+    "stations_base": 6,
+    "stations_rule": 7
+   },
+   {
+    "type": "q_su11",
+    "slot": "L8302mx1",
+    "stations_base": 6,
+    "stations_rule": 7
+   },
+   {
+    "type": "q_su11",
+    "slot": "L8314mx1",
+    "stations_base": 7,
+    "stations_rule": 8
+   },
+   {
+    "type": "q_su11__physical_v1",
+    "slot": "L8302x1",
+    "stations_base": 6,
+    "stations_rule": 7
+   },
+   {
+    "type": "q_su11__physical_v1",
+    "slot": "L8314x1",
+    "stations_base": 7,
+    "stations_rule": 8
+   },
+   {
+    "type": "q_su01__physical_v1",
+    "internal": "bus:L5090_o",
+    "regs_base": 3,
+    "regs_new": 5,
+    "bits": 21
+   },
+   {
+    "type": "q_su01__physical_v1",
+    "internal": "bus:L5091_o",
+    "regs_base": 3,
+    "regs_new": 4,
+    "bits": 41
+   }
+  ],
+  "fails": [],
+  "ft_restation": {
+   "q_b002.L51x5": [
+    2,
+    2
+   ],
+   "q_b002__physical_v1.L51x5": [
+    2,
+    2
+   ],
+   "q_b011.L51x4": [
+    2,
+    2
+   ],
+   "q_b011__physical_v1.L51x4": [
+    2,
+    2
+   ],
+   "q_su01.L3008x2": [
+    5,
+    5
+   ],
+   "q_su01.L8007x1": [
+    7,
+    7
+   ],
+   "q_su01.L8008x7": [
+    7,
+    7
+   ],
+   "q_su11.L7504x5": [
+    9,
+    9
+   ],
+   "q_su11.L8301mx1": [
+    6,
+    7
+   ],
+   "q_su11.L8302mx1": [
+    6,
+    7
+   ],
+   "q_su11.L8306mx1": [
+    5,
+    5
+   ],
+   "q_su11.L8310mx1": [
+    3,
+    3
+   ],
+   "q_su11.L8314mx1": [
+    7,
+    8
+   ],
+   "q_su11__physical_v1.L8007x6": [
+    8,
+    8
+   ],
+   "q_su11__physical_v1.L8008x2": [
+    7,
+    7
+   ],
+   "q_su11__physical_v1.L8301x1": [
+    6,
+    6
+   ],
+   "q_su11__physical_v1.L8302x1": [
+    6,
+    7
+   ],
+   "q_su11__physical_v1.L8306x1": [
+    5,
+    5
+   ],
+   "q_su11__physical_v1.L8310x1": [
+    3,
+    3
+   ],
+   "q_su11__physical_v1.L8314x1": [
+    7,
+    8
+   ]
+  },
+  "even_ist": [
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su01__physical_v1",
+   "q_su01__physical_v1",
+   "q_b000",
+   "q_b000",
+   "q_b000",
+   "q_b000",
+   "q_b000",
+   "q_b000",
+   "q_b000__physical_v1",
+   "q_b000__physical_v1",
+   "q_b000__physical_v1",
+   "q_b000__physical_v1",
+   "q_b000__physical_v1",
+   "q_b000__physical_v1",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1",
+   "q_b011__physical_v1"
+  ],
+  "fine_ist": [
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su11__physical_v1",
+   "q_su01__physical_v1"
+  ],
+  "kv_line": {
+   "types": [
+    {
+     "type": "q_sm0",
+     "origin_old": [
+      3231.36,
+      2004.48
+     ],
+     "origin_new": [
+      3231.36,
+      1848.96
+     ],
+     "slot_check": "clear (cores/leaves/ft/stations/bands, 17.28 um S clearance)"
+    },
+    {
+     "type": "q_sm1",
+     "origin_old": [
+      3231.36,
+      2004.48
+     ],
+     "origin_new": [
+      3231.36,
+      1848.96
+     ],
+     "slot_check": "clear (cores/leaves/ft/stations/bands, 17.28 um S clearance)"
+    },
+    {
+     "type": "q_sm2",
+     "origin_old": [
+      3231.36,
+      2004.48
+     ],
+     "origin_new": [
+      3231.36,
+      1848.96
+     ],
+     "slot_check": "clear (cores/leaves/ft/stations/bands, 17.28 um S clearance)"
+    },
+    {
+     "type": "q_sm3",
+     "origin_old": [
+      3231.36,
+      2004.48
+     ],
+     "origin_new": [
+      3231.36,
+      1848.96
+     ],
+     "slot_check": "clear (cores/leaves/ft/stations/bands, 17.28 um S clearance)"
+    }
+   ],
+   "pins_file": "cores/ot_hbm_sm_kv_line__734.4x388.8__kvs1111.json",
+   "pins_by_face": {
+    "N": 1024,
+    "S": 1088,
+    "E": 23,
+    "W": 22,
+    "I": 1
+   }
+  },
+  "mcb_split": {
+   "old_type": "q_mcb",
+   "new_types": {
+    "q_mcb_ne": "NE_mcb",
+    "q_mcb_nw": "NW_mcb"
+   },
+   "param": "S_u_refcfg_Q_tgt (NE 8b10000001, NW 8b01111111) -> u_refcfg_Q.tgt"
+  },
+  "root_reset_source": {
+   "old": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192_p.sv u.rst_n; ot_hgi_coll_tkm_static_p.sv:116/127/178 (root flops + u_buffer; tiles reset-free)",
+   "new": "ot_hgi_coll_tkm_m_tp192__root = rest_extract_mem.sh part 19 extraction of ot_hgi_coll_tkm_m_tp192_pfdh32 (static_pdh, PTILE 32) minus the 64 half-tile cells (BIND-SUBTYPE-2); u.rst_n -> root flops + u_buffer, tiles reset-free.  Replaces the 10-23 static_p extraction citation (hbm-channels-1111 (E), note only)"
+  },
+  "fixed_cycles_changed": {
+   "L5090": [
+    3,
+    5
+   ],
+   "L5091": [
+    3,
+    4
+   ]
+  },
+  "lane_cycles_changed": {
+   "L5090": 2,
+   "L5091": 1,
+   "L8301m": 1,
+   "L8302": 1,
+   "L8302m": 1,
+   "L8314": 1,
+   "L8314m": 1
+  },
+  "stored_latency_stale_in_base": 4,
+  "audit": {
+   "q_b000": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 27,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_b000__physical_v1": {
+    "ft_regs_in_core": 1,
+    "ist_regs_in_core": 27,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_b002": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_b002__physical_v1": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_b011": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 23,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_b011__physical_v1": {
+    "ft_regs_in_core": 1,
+    "ist_regs_in_core": 23,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_su01": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_su01__physical_v1": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_su11": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   },
+   "q_su11__physical_v1": {
+    "ft_regs_in_core": 0,
+    "ist_regs_in_core": 0,
+    "ist_links_hop_gt_405": 0
+   }
+  }
+ }
+}

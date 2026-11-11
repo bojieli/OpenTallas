@@ -1,0 +1,398 @@
+{
+ "base_sha": "29333b2b19c992511d31720f0b80ae1c7fe4021036a59b0fd417f950b42162d1",
+ "new_sha": "fd5123010508864c82549536c8a04b4db9bc826cd60b945384f3f489c9c3e02a",
+ "changed_paths": 5359,
+ "non_position_paths": [],
+ "outline_paths": [
+  [
+   "partition_types",
+   "q_sm3",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm3",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ],
+  [
+   "partition_types",
+   "q_sm1",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm1",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ],
+  [
+   "partition_types",
+   "q_sm2",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm2",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ],
+  [
+   "partition_types",
+   "q_sm0",
+   "hard_cores",
+   "232",
+   "pins_file"
+  ],
+  [
+   "partition_types",
+   "q_sm0",
+   "hard_cores",
+   "232",
+   "outline_um",
+   "1"
+  ]
+ ],
+ "outline_pins_check": [
+  {
+   "type": "q_sm3",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  },
+  {
+   "type": "q_sm1",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  },
+  {
+   "type": "q_sm2",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  },
+  {
+   "type": "q_sm0",
+   "inst": "u_sm_front_kv",
+   "pins": 2158,
+   "same_names_layers_dirs_faces": true,
+   "ew_y_inside_old_span": true
+  }
+ ],
+ "type_split": {
+  "q_mcb_ne": {
+   "json_equal_except_module_note": true,
+   "module": "hbm_arch_q_mcb_ne",
+   "partitions": [
+    "NE_mcb"
+   ]
+  },
+  "q_mcb_nw": {
+   "json_equal_except_module_note": true,
+   "module": "hbm_arch_q_mcb_nw",
+   "partitions": [
+    "NW_mcb"
+   ]
+  }
+ },
+ "note_text_paths": [
+  [
+   "partition_types",
+   "root",
+   "hard_cores",
+   "64",
+   "reset_from_master",
+   "source"
+  ]
+ ],
+ "types_changed": [
+  "q_b000",
+  "q_b000__physical_v1",
+  "q_b002",
+  "q_b002__physical_v1",
+  "q_b011",
+  "q_b011__physical_v1",
+  "q_sm0",
+  "q_sm1",
+  "q_sm2",
+  "q_sm3",
+  "q_su01",
+  "q_su01__physical_v1",
+  "q_su11",
+  "q_su11__physical_v1",
+  "root"
+ ],
+ "contract_changes": {
+  "stations_or_latency_paths": [
+   [
+    "partition_types",
+    "q_su11",
+    "ft_slots",
+    "1",
+    "stations"
+   ],
+   [
+    "partition_types",
+    "q_su11",
+    "ft_slots",
+    "2",
+    "stations"
+   ],
+   [
+    "partition_types",
+    "q_su11",
+    "ft_slots",
+    "5",
+    "stations"
+   ],
+   [
+    "partition_types",
+    "q_su11__physical_v1",
+    "ft_slots",
+    "3",
+    "stations"
+   ],
+   [
+    "partition_types",
+    "q_su11__physical_v1",
+    "ft_slots",
+    "6",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "fixed"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5090",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8301m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302m",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8314",
+    "stations"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "fixed"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L5091",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "cycles"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "natural"
+   ],
+   [
+    "latency",
+    "lanes",
+    "L8302",
+    "stations"
+   ],
+   [
+    "lanes",
+    "345",
+    "fixed_cycles"
+   ],
+   [
+    "lanes",
+    "346",
+    "fixed_cycles"
+   ]
+  ],
+  "internal_station_reg_count": [
+   {
+    "path": [
+     "partition_types",
+     "q_su01__physical_v1",
+     "internal_stations",
+     "0",
+     "regs_um"
+    ],
+    "base": 3,
+    "new": 5
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su01__physical_v1",
+     "internal_stations",
+     "1",
+     "regs_um"
+    ],
+    "base": 3,
+    "new": 4
+   }
+  ],
+  "ft_reg_count": [
+   {
+    "path": [
+     "partition_types",
+     "q_su11",
+     "ft_slots",
+     "1",
+     "regs_um"
+    ],
+    "base": 6,
+    "new": 7
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su11",
+     "ft_slots",
+     "2",
+     "regs_um"
+    ],
+    "base": 6,
+    "new": 7
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su11",
+     "ft_slots",
+     "5",
+     "regs_um"
+    ],
+    "base": 7,
+    "new": 8
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su11__physical_v1",
+     "ft_slots",
+     "3",
+     "regs_um"
+    ],
+    "base": 6,
+    "new": 7
+   },
+   {
+    "path": [
+     "partition_types",
+     "q_su11__physical_v1",
+     "ft_slots",
+     "6",
+     "regs_um"
+    ],
+    "base": 7,
+    "new": 8
+   }
+  ]
+ },
+ "verdict": "EQ_BY_CONSTRUCTION_EXCEPT_CONTRACT"
+}

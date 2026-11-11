@@ -1,0 +1,390 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/die-hbm-97-channels/plan_p11t_chan/die_plan.json",
+ "base": null,
+ "types": {
+  "NE_io": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_NE_io.sv",
+   "cores": 7,
+   "cores_wired": 1,
+   "wiring_paths": 625
+  },
+  "NW_io": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_NW_io.sv",
+   "cores": 8,
+   "cores_wired": 2,
+   "wiring_paths": 641
+  },
+  "q_b000": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b000.sv",
+   "cores": 19,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b000__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b000__physical_v1.sv",
+   "cores": 19,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b001": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b001.sv",
+   "cores": 48,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b001__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b001__physical_v1.sv",
+   "cores": 48,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b002": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b002.sv",
+   "cores": 11,
+   "cores_wired": 7,
+   "wiring_paths": 20
+  },
+  "q_b002__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b002__physical_v1.sv",
+   "cores": 11,
+   "cores_wired": 7,
+   "wiring_paths": 20
+  },
+  "q_b003": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b003.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b003__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b003__physical_v1.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b010": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b010.sv",
+   "cores": 41,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b010__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b010__physical_v1.sv",
+   "cores": 41,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b011": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b011.sv",
+   "cores": 19,
+   "cores_wired": 7,
+   "wiring_paths": 20
+  },
+  "q_b011__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b011__physical_v1.sv",
+   "cores": 19,
+   "cores_wired": 7,
+   "wiring_paths": 20
+  },
+  "q_b012": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b012.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b012__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b012__physical_v1.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b013": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b013.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b013__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b013__physical_v1.sv",
+   "cores": 8,
+   "cores_wired": 7,
+   "wiring_paths": 7
+  },
+  "q_b100": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b100.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b100__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b100__physical_v1.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b101": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b101__q_b101.sv",
+   "cores": 25,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b101_nw": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b101__q_b101_nw.sv",
+   "cores": 25,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b102": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b102.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b102__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b102__physical_v1.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b103": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b103.sv",
+   "cores": 25,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b103__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b103__physical_v1.sv",
+   "cores": 25,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b110": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b110.sv",
+   "cores": 12,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b110__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b110__physical_v1.sv",
+   "cores": 12,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b111": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b111.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b111__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b111__physical_v1.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b112": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b112.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b112__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b112__physical_v1.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b113": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b113.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_b113__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_b113__physical_v1.sv",
+   "cores": 15,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_hub_ne": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+   "cores": 256,
+   "cores_wired": 71,
+   "wiring_paths": 1319
+  },
+  "q_hub_nw": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+   "cores": 265,
+   "cores_wired": 72,
+   "wiring_paths": 1136
+  },
+  "q_sm0": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_sm0.sv",
+   "cores": 236,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_sm1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_sm1.sv",
+   "cores": 236,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_sm2": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_sm2.sv",
+   "cores": 236,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_sm3": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_sm3.sv",
+   "cores": 236,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_spb0": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spb0.sv",
+   "cores": 7,
+   "cores_wired": 1,
+   "wiring_paths": 12
+  },
+  "q_spb0__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spb0__physical_v1.sv",
+   "cores": 7,
+   "cores_wired": 1,
+   "wiring_paths": 12
+  },
+  "q_spb2": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spb2.sv",
+   "cores": 2,
+   "cores_wired": 2,
+   "wiring_paths": 31
+  },
+  "q_spb2__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spb2__physical_v1.sv",
+   "cores": 2,
+   "cores_wired": 2,
+   "wiring_paths": 31
+  },
+  "q_spt0": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spt0.sv",
+   "cores": 2,
+   "cores_wired": 2,
+   "wiring_paths": 31
+  },
+  "q_spt0__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_spt0__physical_v1.sv",
+   "cores": 2,
+   "cores_wired": 2,
+   "wiring_paths": 31
+  },
+  "q_su00": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su00.sv",
+   "cores": 25,
+   "cores_wired": 1,
+   "wiring_paths": 281
+  },
+  "q_su00__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su00__physical_v1.sv",
+   "cores": 25,
+   "cores_wired": 1,
+   "wiring_paths": 281
+  },
+  "q_su01": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su01.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su01__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su01__physical_v1.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su10": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su10.sv",
+   "cores": 25,
+   "cores_wired": 1,
+   "wiring_paths": 33
+  },
+  "q_su10__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su10__physical_v1.sv",
+   "cores": 25,
+   "cores_wired": 1,
+   "wiring_paths": 33
+  },
+  "q_su11": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su11.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su11__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su11__physical_v1.sv",
+   "cores": 24,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su20": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su20.sv",
+   "cores": 17,
+   "cores_wired": 1,
+   "wiring_paths": 21
+  },
+  "q_su20__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su20__physical_v1.sv",
+   "cores": 17,
+   "cores_wired": 1,
+   "wiring_paths": 530
+  },
+  "q_su21": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su21.sv",
+   "cores": 16,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su21__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su21__physical_v1.sv",
+   "cores": 16,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su30": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su30.sv",
+   "cores": 17,
+   "cores_wired": 1,
+   "wiring_paths": 21
+  },
+  "q_su30__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su30__physical_v1.sv",
+   "cores": 17,
+   "cores_wired": 1,
+   "wiring_paths": 21
+  },
+  "q_su31": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su31.sv",
+   "cores": 16,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "q_su31__physical_v1": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_q_su31__physical_v1.sv",
+   "cores": 16,
+   "cores_wired": 0,
+   "wiring_paths": 0
+  },
+  "root": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_root.sv",
+   "cores": 82,
+   "cores_wired": 4,
+   "wiring_paths": 38
+  },
+  "vsN0": {
+   "src": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12/rtl/hbm_arch_vsN0.sv",
+   "cores": 7,
+   "cores_wired": 1,
+   "wiring_paths": 14
+  }
+ }
+}
