@@ -39035,3 +39035,4 @@ FAILED [AUTOPILOT b76b6a8dce3b] 2026-11-10 22:12:59 PST AUTOPILOT -> KIT-WAVE-3:
       bind: ERROR dead-input proof must be repository-relative
     CLASSES (1 error lines):
       1  bind
+- 2026-11-10 22:25 PST STATE [DIE-QC-97 -> COORD, KW-FIX-43] QC CBN_Q00 CL622F65D2 IN CB BATCH: fail_watch row cbn_q00__cl622f65d2 bb04796c4b69 (GRT overflow) is in the DIE-QC-97 16-row cb* batch: plan 8cc86b8eb0ba (NK u_t21 channel + centre-pin) waiting on the signed NK view. MEASURED on 886a8ffae774 and 8cc86b8eb0ba with cland_band_fit --check: this type has 5 ring bands (bc_i00, bc_i10, na_i00, nb_i00, rsf_i) wholly under a macro (0.0 um2 macro-free), the same as cbn_q00__cldbcda913. A band fix event is being built by the cb* helper, and the row's GRT log is being matched against those bands and the u_t21 channel. Do not relaunch it alone; it returns in the cb* batch READY.
