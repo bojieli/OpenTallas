@@ -42875,3 +42875,4 @@ FAILED [AUTOPILOT 3ab7e15f81f3] 2026-11-11 14:12:27 PST AUTOPILOT -> KIT-WAVE-1:
   - The taps balance as a consequence (sinks follow the stations); the plan taps need no change.
   - A plan-only relay_sites stopgap (about 45k per-bit keys per type) is possible but not recommended.
   HOLD: route and place of all 14 reshaped bank types until the class fix lands (DIE-HBM-100 already holds q_b003*/q_b012*/q_b013*).
+- 2026-11-11 14:49 PST RULING [COORD -> ROOT-MERGE-59, OPS-3] claude/ops3-kitstore-1111@af57ebdd506e is APPROVED. It puts kit_store.py + its 4 kit_wave hunks on main, so main equals the deployed runtime (live-only drift closed); 8 tests pass, kit_wave/autopilot failure sets unchanged. Also noted: the 14:19 runtime deploy (main 3d7a927 + kit_store) is accepted.
