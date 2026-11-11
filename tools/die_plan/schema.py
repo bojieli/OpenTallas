@@ -1387,6 +1387,19 @@ _CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["prop
 _CKPROPS["landing_writer_start"]["properties"]["reuse_relay_origin"] = {"type": "boolean"}
 # KV-TYPES-3 11-07: optional FIRM home of the whole START origin (landing_place._origin_home_groups).
 _CKPROPS["landing_origin_rect_um"] = {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+# RELAY-ANCHOR (DIE-QC-97 11-10, reset_anchor.py): the site of every generated relay the START transport / local
+# resets name, and the reset-tree input shas it was recorded on; bind re-picks a renumbered name by site.
+_ANCHOR_SHA = {"type": "string"}
+_CKPROPS["reset_tree_anchor"] = {
+    "type": "object", "additionalProperties": False, "required": ["inputs", "tol_um", "relays"],
+    "properties": {
+        "inputs": {"type": "object", "additionalProperties": False,
+                   "properties": {"sink_bins": _ANCHOR_SHA, "ft_slots": _ANCHOR_SHA, "taps": _ANCHOR_SHA}},
+        "tol_um": {"type": "number", "minimum": 0},
+        "relays": {"type": "object", "propertyNames": {"pattern": "^rst_rl_\\d+$"}, "additionalProperties": {
+            "type": "object", "additionalProperties": False, "required": ["depth", "xy"],
+            "properties": {"depth": {"type": "integer", "minimum": 0},
+                           "xy": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}}}}}
 _CKPROPS["landing_raw_branches"] = {
     "type": "array", "minItems": 1, "items": {
         "type": "object", "additionalProperties": False,
