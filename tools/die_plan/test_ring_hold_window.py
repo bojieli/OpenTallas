@@ -83,6 +83,34 @@ def test_ring_hold_sender_min_everywhere():
     assert f"set_input_delay -min -40 -clock {ck} [get_ports {{{sel}}}]" in t0
 
 
+def test_ring_hold_sender_ps_types_overrides_one_type():
+    """KV-PLAN-2 RINGHOLD-TYPES: a listed receiver type (or its split copy) takes its own sender min in the kit SDC,
+    the RING_MIN tag and sdc_lint; an unlisted type keeps the die-wide sender_ps byte-for-byte."""
+    P0, tn, b, w = _ring_kit()
+    ck = f"fclk_in_{b}"
+    sel = b + ("[*]" if w > 1 else "")
+    base = _windowed(P0, sender=-385.0)
+    s0 = _sdc(base, tn)
+    assert f"set_input_delay -min -385.0000 -clock {ck} [get_ports {{{sel}}}]" in s0
+    for key in (tn, tn.split("__")[0]):
+        raw = copy.deepcopy(base.raw)
+        raw["clock"]["ring_hold"]["sender_ps_types"] = {key: -50.0}
+        assert not [e for e in schema.validate_structure(raw) if "ring_hold" in e]
+        P = schema.Plan(raw)
+        assert LC.ring_sender_ps(P, tn) == -50.0
+        s = _sdc(P, tn)
+        assert f"set_input_delay -min -50.0000 -clock {ck} [get_ports {{{sel}}}]" in s
+        assert s.count(f"{LC.RING_MIN_TAG} -50.0000\n") == 1 and "-385.0000" not in s
+        assert _errs(s, sdc_lint.kit_context(P, tn)) == []
+        assert signoff.fwd_ring_min(s) == -50.0
+    raw = copy.deepcopy(base.raw)
+    raw["clock"]["ring_hold"]["sender_ps_types"] = {"some_other_type": -50.0}
+    P = schema.Plan(raw)
+    assert LC.ring_sender_ps(P, tn) == -385.0 and _sdc(P, tn) == s0
+    raw["clock"]["ring_hold"]["sender_ps_types"] = {tn: "x"}
+    assert [e for e in schema.validate_structure(raw) if "ring_hold" in e or "sender_ps_types" in e]
+
+
 def test_ring_hold_schema_rejects_extra_keys():
     P0, tn, b, w = _ring_kit()
     raw = copy.deepcopy(P0.raw)

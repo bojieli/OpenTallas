@@ -1172,7 +1172,8 @@ def _io_hold_ctx(P, tn):
     rh = P.clock.get("ring_hold")      # S81-RINGHOLD-3: ring inputs take the measured sender min (ring_input_sdc)
     if rh is not None:
         import landing_contract as LC
-        m.update({s.split("[")[0]: float(rh["sender_ps"]) for _ck, sel in LC.ring_input_ports(P, tn) for s in sel})
+        snd = LC.ring_sender_ps(P, tn)
+        m.update({s.split("[")[0]: snd for _ck, sel in LC.ring_input_ports(P, tn) for s in sel})
     return dict(hold_in_min_ports_ps=dict(sorted(m.items()))) if m else {}
 
 
