@@ -55,3 +55,13 @@ def test_slice_update_and_cli(tmp_path):
     assert s["keepouts"][1]["layers"] == ["M5", "M6"] and s["keepouts"][1]["use"] == []
     assert json.loads(pl.read_text()) == _plan()        # --out leaves the base plan untouched
     assert json.loads(rep.read_text())["module"] == "qfd_tile_nk_a0c"
+
+
+def test_compact_input_stays_compact(tmp_path):
+    pl = tmp_path / "plan.json"
+    pl.write_text(json.dumps(_plan(), separators=(",", ":")) + "\n")
+    out = tmp_path / "out.json"
+    assert D.main([str(pl), "--out", str(out)]) == 0
+    text = out.read_text()
+    assert "\n " not in text and text.endswith("\n")
+    assert json.dumps(json.loads(text)["partition_types"]["sle"], separators=(",", ":")) in text

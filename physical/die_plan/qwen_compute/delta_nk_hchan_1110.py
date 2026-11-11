@@ -89,9 +89,12 @@ def main(argv=None):
     ap.add_argument("--report")
     ap.add_argument("--slice", help="core master-plan slice JSON of qfd_tile_nk_a0c to update in place")
     a = ap.parse_args(argv)
-    plan = json.loads(Path(a.plan).read_text())
-    p, rep = apply(plan)
-    Path(a.out or a.plan).write_text(json.dumps(p, indent=1) + "\n")
+    text = Path(a.plan).read_text()
+    p, rep = apply(json.loads(text))
+    # keep the input serialization (compact wave plans stay compact), so every other type is byte-same
+    compact = "\n " not in text[:65536]
+    Path(a.out or a.plan).write_text((json.dumps(p, separators=(",", ":")) if compact else json.dumps(p, indent=1))
+                                     + "\n")
     if a.slice:
         sp = Path(a.slice)
         sp.write_text(json.dumps(apply_slice(json.loads(sp.read_text()), rep), indent=1) + "\n")
