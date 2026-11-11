@@ -242,8 +242,11 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
     set nm [$i getName]
     if {![string match "*${inst}/*" $nm]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+    # DIE-QC-97 11-11 (a20 slw_fw_v3): a 1-bit station flop is the scalar /q$ (no [0]); it was is_miss, never FIRM, and
+    # GPL pulled u_ist_arl_wo_1 (and 9 more) 360 um back to its launch (r2r 562 um ist_*_wo_1 -> bout_*_wo)
     if {[regexp {/q\\\\?\\[([0-9]+)\\\\?\\]} $nm -> b]} {
-    } elseif {[regexp {/eq\\$} $nm]} { set b $W } else { lappend is_miss $nm; continue }
+    } elseif {[regexp {/eq\\$} $nm]} { set b $W
+    } elseif {$W == 1 && [regexp {/q\\$} $nm]} { set b 0 } else { lappend is_miss $nm; continue }
     set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
     if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
     set bb [$bt getBBox]
