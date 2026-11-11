@@ -38744,3 +38744,17 @@ Automation: lanes/die-recheck-1/die_recheck_cron.sh (cron 13,43) re-runs the led
   (6) The direct epyc8 docker run (advisory diagnostic, 32 GB cap) is OK under checks-bypass.
 - 2026-11-10 21:02 PST RESULT [PLAN-ROUTE-1 -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, COORD] plan event -> route_supply re-run, rows appended to lanes/FLAGS-1110.tsv (stamp 2026-11-10 21:00 PST; ADVISORY ranking, never a gate; DO_NOT_COUNT; automatic, lanes/plan-route-1/flags_cron.sh):
     hbm: re-run rc=0 # hbm: 81 types, 56 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
+
+## KW44-VETH-1111 (11-10 20:59 PST) KW-FIX-44: veth unit leak, unit guard live, docker rc 125 = INFRA (COORD via KW-FIX-43)
+- (1) Loaded units now: intel2 878 (72 veth device units / 36 veth links), epyc2 859 (92/46), epyc4 797 (28/36), epyc7 917 (102/51), intel1 819 (96/48), epyc8 898 (104/55). That is 2 device units per live veth on every host, so nothing is leaking at the moment. udevd RSS is 11-13 MB everywhere except epyc4 at 1.5 GB.
+- (2) Why: every container is on the default bridge network (epyc4: 36/36 bridge), so each docker run makes a veth pair and two systemd device units. epyc4 created 50,292 container veths in 24 h (kernel "renamed from veth"), up to 7,765/h (11-10 20h) and 216/min (11-11 01:46). docker's event buffer and the ot-heavy logs show only about 35 containers/h. So the bursts are short unnamed containers (orfs:latest, random names) started outside ot-heavy scopes.
+  - At that rate, units pile up whenever udevd lags or restarts. Remove events are lost while it restarts, and the 11-10 udevd guard restarted it at 03:01. Those piled-up units are the 130k.
+  - The networkd catch-all (zzzz-dracut-default.network: Kind=!*) does not manage veths ("enslaved" only); it is the same on all hosts.
+  - Recommendation (not deployed, it needs your call because python:3.12 jobs on epyc2 may need pip/network): run sealed and flow containers with --network none. That removes the veth pair and both units per job.
+- (3) Unit guard live: ot-udevd-guard UNITGUARD_1111, every 5 min. If `systemctl show -p NNames` > 20000 (OT_UNITS_MAX), it runs systemctl reset-failed + daemon-reload and logs before/after counts and the veth device units to /var/tmp/ot-heavy/udevd-guard.log. The udevd RSS restart is unchanged.
+  - Deployed 96e1fa42d2c0 -> 5b4a4a357edd on all 6 hosts. Backup at ot-udevd-guard.bak-96e1fa42d2c0-<ts>. Dry run on each host shows the rule firing at OT_UNITS_MAX=10. 6 tests pass. Branch claude/kw-fix-44-chargemax-1111 @ 9a08fe7918d1.
+- rc 125: kit_wave RC125_1111. Docker rc 125 at gen / gen_lint ("yosys elaboration failed rc 125", "docker: Error response from daemon", rc/exit 125) now classifies INFRA. Other stages are unchanged.
+  - Live in the hub rt kit_wave.py since 20:58:54 PST. The timer was held for the tick, then: 4718bb8ca72e -> WAVE-OPS-1 srccheck 576f49b58fd7 -> 9127baca35e3, BYTES-OK, backup kit_wave.py.bak-kw44-srccheck-rc125-1111.
+  - Suite: same 12 failures as the live copy, plus 8 new tests passing.
+  - Branch claude/kw-fix-44-rc125-1111 @ 2b9cf93a2729, on WAVE-OPS-1 915bc0b6ceaa, merge-tree clean.
+  - Rows already failed this way: qwen_compute cbn_q01__clab6e67f2 gen_lint (marked RTL). It goes to KW-FIX-43 for an INFRA relaunch.
