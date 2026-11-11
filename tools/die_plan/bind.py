@@ -729,8 +729,9 @@ def core_input_lockup(plan, tn, module):
     Why: the NK ETM books its internal clock insertion as hold arcs (hold_rising 457-774 ps; min/max_clock_tree_path
     237/658-700 ps FF), and the plan pre-skews the core tap clk_c<N> early (-415.8/-565.8 ps) to buy setup.  No core
     pre-skew closes both sides (to-NK hold vs from-NK hold trade 1:1, 120 ps short).  A latch transparent while the
-    FABRIC clock is low, clocked from its launch flop's tap (instances u_fl_*: clock_taps.tcl follow-D hop-latch pass,
-    NOT the pre-skewed clk_c<N>), releases new data only at the falling edge: the latch -> NK hold check gains T/2
+    FABRIC clock is low, on the nearest fabric tap (instances u_lk_nk_*, deliberately NOT u_fl_: the follow-D hop-latch pass
+    re-hung 2,097 latches onto far launch taps in pilot 1 and blew clk_t27 insertion to ~980 ps; never the pre-skewed
+    clk_c<N>), releases new data only at the falling edge: the latch -> NK hold check gains T/2
     (416 ps at 833 ps) while the fabric -> latch check is an ordinary same-tap flop check.  Cycle-neutral (lec.py
     latch_to_wire; bind_verify ot_dp_lk stages 0).  Plan clock.core_input_lockup (absent = off, byte-identical):
     {"modules": {"<module>": ["<port>", ...]}, "all": true, "except": [types]} or {..., "types": [types]}."""
@@ -3894,7 +3895,7 @@ class Binder:
                     if pn in core_input_lockup(self.plan, tn, c.module):
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
                         decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
-                        body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_fl_nk_' + sv_id(r) + '_' + pn, 100)} "
+                        body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                     f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
                         e = [lk]
                     conns.append((pn, _concat(e)))
