@@ -40932,3 +40932,13 @@ Evidence: scratchpad/coreplace/qc-nk-hold/{base_a14,pilot1,pilot2,pilot3}_measur
   Station-row borrow: REJECTED. The bottom 141 um of the station row above pvso carries die-wide W<->E lanes (ft0 513 b at y 6-117 through t8/t11/t14/seqhost; 53/276/276 b at y 6-141 through t36/t18/t55/t22), so it would mean a 9-type window re-site on REDESIGN leaves.
   (3) REDESIGN/ARCH (S81-ARCH-RTL-2, S81-A1/A3). F1 uses the top-band slack that a soft u_tr would need, so u_tr = hard tr_x sites (or the S81-A1 centre-strip relays). After F1 the S2 residual is interior: street_H 3.01 / core_H 2.65 (the 15-17 um streets between 157.68 x 259.2 hcores; only M6 runs H). The ring_V 4.12/4.35 raw (1.37x/1.45x) is the E-face attn_i1 1607-b cland, unchanged by any S option; halved landing depth takes it to 1.23x/1.32x. CPL-S81-SVC's "in-outline best 11.08/7.90, no gain" was scored on a ring-dominated objective, so re-run the svc_hi_rs-style arrangement (that took svc_hi_rs 8.04 -> 1.21) on pvso with ring excluded (ROUTE_SUPPLY_SKIP=ring) after F1.
   VERDICT on the OWNER-ASK: growth NOT needed. It buys 0.15 on street_H over F1 and does not reach S2. pvso stays HELD for the svc event: F1 + hard tr_x + S2 interior re-arrangement. NOT RUN: G0/EQ on F1 (contents repack coordinates not written yet; I write them with the S1 READY if COORD takes F1).
+- 2026-11-11 07:20 PST READY [QC-NK-HOLD -> ROOT-MERGE-59, COORD; cc DIE-QC-99] (S4 flow fix, needed before the cbx_q10 NK-latch build; DO_NOT_COUNT). Hub branch claude/qc-nk-hold-1111@3261d74d4aaf827e1c1a0d87e17974fabb00c939. 4 commits on c90382b467; merge-tree with main cd03a1f33f is CLEAN. Files: tools/die_plan/{lec.py, bind.py, test_lec_bbi_lockup.py, test_core_input_lockup.py}.
+lec.py: new bbi_ff(): a transparent-low lockup latch Q may feed a black-box input compare point (lec_bbi_*, rising-edge stub) like a rising-edge flop. That is the latch_to_wire rule. Otherwise the result was UNPROVEN.
+bind.py: plan clock.core_input_lockup. Default off, byte-identical when absent.
+TESTS, run on intel2 via ot-run. pytest is not installed on the hosts, so a shim runner was used; plain pytest also works.
+  New test_lec_bbi_lockup: 4/4 PASS. Gate latch -> bb pin EQUIVALENT; latch on both sides EQUIVALENT; latch reading the input NOT EQUIVALENT; rule present.
+  Control with origin/main lec.py: all 3 integration cases are UNPROVEN on the old rule, so the tests exercise the change.
+  Regression: test_lec_lockup 25/25 and test_lec_latch_face 15/15 PASS with the patched lec.py.
+  test_core_input_lockup 4/4 PASS.
+  Kit evidence: the cbn_q11 pilot2/pilot3 inline LEC is EQUIVALENT 58171/58171.
+Note: the hook names the latches u_lk_nk_*, the pilot3 form.
