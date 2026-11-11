@@ -243,6 +243,22 @@ def check(kit, plan_dir=None, contract=False):
                     errors.append(f'{name}: {result.stderr.strip()}')
         return errors
     run('staged_inputs', staged_inputs)
+    if (kit/'kit_source.json').is_file():
+        # T51-NETSRC 11-10 (only kits that declare a kit_source; others unchanged): the hash-pinned netlist is staged,
+        # unchanged, and is the only synthesised source
+        def kit_source():
+            import hashlib
+            rec = json.loads((kit/'kit_source.json').read_text())
+            staged = str(rec.get('staged', ''))
+            f = kit/staged[6:] if staged.startswith('/work/') else None
+            if f is None or not f.is_file():
+                return [f'kit_source netlist {staged or "(none)"} not staged']
+            got = hashlib.sha256(f.read_bytes()).hexdigest()
+            errors = [] if got == rec.get('sha256') else [f'kit_source netlist {staged} sha256 {got} != pin {rec.get("sha256")}']
+            if cfg.get('VERILOG_FILES') != [staged]:
+                errors.append(f'kit_source: VERILOG_FILES {cfg.get("VERILOG_FILES")} != [{staged}]')
+            return errors
+        run('kit_source', kit_source)
     run('sdc_and_ff_binding', lambda: sdc_lint.lint_kit_files(kit))
     def cast_forms():
         hits = rtl_lint.yosys_cast_scan(rtl_lint._kit_sources(kit))

@@ -2826,6 +2826,65 @@ def content_physical_identity(c):
     return (inst, master) if inst is not None else (c["inst"], c["module"])
 
 
+KIT_SOURCE_SCHEMA = "opentallas.kit_source.v1"
+KIT_SOURCE_RECEIPT = "kit_source.json"
+
+
+def kit_source_text(t, tn, root=None):
+    """T51-NETSRC 11-10: (resolved path, text) of the plan type's opt-in kit_source.parent_netlist (.v or .v.gz), its
+    content sha256 checked against kit_source.sha256; None when the type declares no kit_source.  Refuses a netlist
+    that is missing, differs from its pin, does not define the type module exactly once, or defines a placed hard core
+    (the children must stay black boxes: their LEF / liberty views are the implementation)."""
+    ks = t.get("kit_source")
+    if not ks:
+        return None
+    import gzip
+    import hashlib
+    src, want = ks.get("parent_netlist"), ks.get("sha256")
+    if not src or not re.fullmatch(r"[0-9a-f]{64}", str(want or "")):
+        raise ValueError(f"type {tn}: kit_source needs parent_netlist and a 64-hex sha256 (content of the netlist)")
+    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    f = Path(src) if Path(src).is_absolute() else _CR.resolve(src, base)
+    if not Path(f).is_file():
+        raise FileNotFoundError(f"type {tn}: kit_source.parent_netlist {src} missing")
+    raw = Path(f).read_bytes()
+    text = (gzip.decompress(raw) if str(f).endswith(".gz") else raw).decode()
+    got = hashlib.sha256(text.encode()).hexdigest()
+    if got != want:
+        raise ValueError(f"type {tn}: kit_source.parent_netlist {src} sha256 {got} != plan pin {want}")
+    mods = re.findall(r"^\s*module\s+\\?([A-Za-z_][\w$]*)", text, re.M)
+    if mods.count(t["module"]) != 1:
+        raise ValueError(f"type {tn}: kit_source.parent_netlist defines module {t['module']} {mods.count(t['module'])} "
+                         f"times (want exactly 1)")
+    cores = {c.get("module") for c in t.get("hard_cores", []) or [] if c.get("lef")}
+    inside = sorted(cores & set(mods))
+    if inside:
+        raise ValueError(f"type {tn}: kit_source.parent_netlist defines hard core module(s) {inside}; the children are "
+                         f"black boxes from their LEF / liberty views")
+    return Path(f), text
+
+
+def stage_kit_source(t, tn, kd, root=None):
+    """Stage the type's kit_source netlist as kd/rtl/<module>__kit_source.v plus the hash receipt kd/kit_source.json
+    (kit_preflight refuses the kit if the staged file is missing or its sha256 differs).  None: no kit_source."""
+    got = kit_source_text(t, tn, root)
+    if got is None:
+        return None
+    f, text = got
+    name = f"{t['module']}__kit_source.v"
+    (kd / "rtl" / name).write_text(text)
+    ks = t["kit_source"]
+    rec = dict(schema=KIT_SOURCE_SCHEMA, type=tn, module=t["module"], staged=f"/work/rtl/{name}",
+               parent_netlist=ks["parent_netlist"], resolved=str(f), sha256=ks["sha256"],
+               black_boxes=sorted({c["module"] for c in t.get("hard_cores", []) or [] if c.get("lef")}),
+               bound_rtl_reference=sorted(p.name for p in (kd / "rtl").iterdir() if p.name != name and p.is_file()),
+               rule="VERILOG_FILES = the hash-pinned netlist only; the bound RTL in rtl/ is reference, not synthesised; "
+                    "function identity bound RTL == netlist + children is the plan event's LEC receipt",
+               lec_receipt=ks.get("lec_receipt"))
+    (kd / KIT_SOURCE_RECEIPT).write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 _VIEW_LEF = {}
 
 
@@ -4369,6 +4428,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
+    # T51-NETSRC 11-10 (opt-in plan type kit_source; absent = byte-identical kits): the kit synthesises a hash-pinned
+    # mapped parent netlist instead of its bound RTL (S81 slice_station__t51 native split: the hard children exist only
+    # as cuts of the mapped netlist).  The bound RTL stays staged in rtl/ (reference + metadata), not in VERILOG_FILES.
+    ks = stage_kit_source(t, tn, kd, root)
+    if ks:
+        srcs = [ks["staged"]]
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
     # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
     # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
@@ -6292,9 +6357,13 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             if dup:
                 raise gen_rtl.GenError(f"type {tn}: kit-rtl files share a basename {dup[:5]} (the kit flattens rtl/)")
             # T51-INST 11-10: refuse a placed macro the kit source certainly lacks (was a KIT_PREFLIGHT FAIL after kit-gen)
-            bf = BMP._bound_file(kit_rtl[tn])
-            bad = BMP.unplaceable(tn, t, fl[0].read_text(errors="replace"),
-                                  bf.read_text(errors="replace") if bf else None, source=f"kit RTL {fl[0].name}")
+            ksrc = kit_source_text(t, tn, root)
+            if ksrc:                     # T51-NETSRC: the kit synthesises the pinned netlist; its top is the scope
+                bad = BMP.unplaceable(tn, t, ksrc[1], None, source=f"kit_source netlist {ksrc[0].name}")
+            else:
+                bf = BMP._bound_file(kit_rtl[tn])
+                bad = BMP.unplaceable(tn, t, fl[0].read_text(errors="replace"),
+                                      bf.read_text(errors="replace") if bf else None, source=f"kit RTL {fl[0].name}")
             if bad:
                 raise gen_rtl.GenError("\n  ".join(bad))
             mine = fl
