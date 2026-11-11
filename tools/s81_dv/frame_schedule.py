@@ -49,8 +49,11 @@ def extract(specfile):
             m = it['module']
             if mode == 'control' and m.startswith('ot_s81_cfg7_seq'):
                 upstream = back(bits(it['conns']['lc'])[0], i, 'station')
+                # S81-FRAME-FIX-1 11-11: path_edges = the whole in-band station path (this leg + the cfg7_seq lc
+                # upstream chain), the quantity priced against the emission measurement (frame_return_plan.inband_shift)
                 return dict(source=upstream['source'], flat_link_edges=flat, added_edges=add+upstream['added_edges'],
-                            link_edges=flat+add+upstream['added_edges'], crossings=crossings+upstream['crossings'])
+                            link_edges=flat+add+upstream['added_edges'], crossings=crossings+upstream['crossings'],
+                            path_edges=flat+upstream['flat_link_edges'])
             # S81-FRAME-FIX-1 11-11: the station wiring and its register depth come from station_depth (bound RTL);
             # a 2-flop station (dc23a738 qbank / rstg / sstn) is 2 edges, not a constant 1
             st = SD.step(m, pin)
@@ -98,7 +101,8 @@ def extract(specfile):
                     paths[pin] = dict(paths=[dict(source=a, flat_link_edges=b, added_edges=c)
                                                   for a,b,c in sorted(signatures)], aligned=len(signatures)==1)
             added = {b['added_edges'] for pin in paths.values() for b in pin['paths']}
-            control = {pin: back(bits(i['conns'][pin])[-1], i['inst'], 'control') for pin in ['go', 'cfg_v']}
+            control = {pin: back(bits(i['conns'][pin])[-1], i['inst'], 'control') for pin in ['go', 'cfg_v', 'go_tag']
+                       if pin in i['conns']}
             stations[i['inst'][2:]] = dict(inputs=paths, control=control, added_edges=sorted(added),
                                           all_x_inputs_equal_added_edges=len(added)==1)
     sources = {f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()
@@ -111,11 +115,42 @@ def extract(specfile):
                 station_inputs=stations, topology=topo,
                 qualification='EXTRACTED ONLY: emission/go/reset alignment, legalised return calendar and actual frame bench required')
 
+def station_ref(masters=('col_h9', 'col_h10')):
+    """S81-FRAME-FIX-1 11-11: emission.json station_path_at_measure = per pair in-band station paths of the
+    col_h*_l4 landed frames at the station depths the emission was measured on (station_depth_measured), the
+    reference frame_return_plan.inband_shift prices every landed schedule against.  Runs in a child process with the
+    measured depths forced (station_depth override), so this process's depth cache is untouched."""
+    import os
+    import subprocess
+    d = json.loads(RP.EMISSION.read_text())
+    ov = {m: v for m, pins in d['station_depth_measured'].items() for v in {*pins.values()}}
+    assert len(ov) == len(d['station_depth_measured']), 'per-pin measured depths are not one value per master'
+    code = ('import json,sys;sys.path[:0]=%r;import frame_schedule as FS,frame_return_plan as P;'
+            'print(json.dumps({m:{str(k):v for k,v in P.schedule_paths(FS.extract(%r %% m)).items()} for m in %r}))'
+            % ([str(ROOT/'tools/s81_dv'), str(ROOT/'tools/landed_parent')],
+               str(ROOT/'results/arch/s81_dv_1016/frame_l4_cluster/compiler/%s_spec.json'), list(masters)))
+    env = dict(os.environ, OT_S81_STATION_DEPTH_OVERRIDE=json.dumps(ov), PYTHONDONTWRITEBYTECODE='1')
+    ref = json.loads(subprocess.run([sys.executable, '-c', code], env=env, check=True, capture_output=True,
+                                    text=True).stdout.strip().splitlines()[-1])
+    d['station_path_at_measure'] = ref
+    d['station_path_note'] = ('S81-FRAME-FIX-1 11-11: per pair in-band station path edges (x / go / cfg_v / go_tag, '
+                              'frame_schedule.py path_edges) of the col_h*_l4 landed frames at station_depth_measured '
+                              '(the 10-17 emission measurement); frame_return_plan.inband_shift prices every landed '
+                              'schedule against it.  Regenerate: tools/s81_dv/frame_schedule.py --station-ref')
+    RP.EMISSION.write_text(json.dumps(d, indent=1) + '\n')
+    return ref
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('spec',type=Path)
-    ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('spec',type=Path,nargs='?')
+    ap.add_argument('--out',type=Path)
+    ap.add_argument('--station-ref',action='store_true',help='rewrite emission.json station_path_at_measure')
     a=ap.parse_args()
+    if a.station_ref:
+        print('station_path_at_measure', json.dumps(station_ref())[:300])
+        sys.exit(0)
+    assert a.spec and a.out, 'spec and --out required'
     d=extract(a.spec.resolve())
     a.out.write_text(json.dumps(d,indent=1)+'\n')
     print('station added edges', {k:v['added_edges'] for k,v in d['station_inputs'].items()})

@@ -64,5 +64,156 @@
    "o": 1
   }
  },
- "station_depth_note": "S81-FRAME-FIX-1 11-11: the 10-17 off/e0 measurement ran before dc23a738f3 (10-24), when every pass-through station was 1 flop; frame_return_plan.emission adds each pair's station-depth shift from the bound RTL"
+ "station_depth_note": "S81-FRAME-FIX-1 11-11: the 10-17 off/e0 measurement ran before dc23a738f3 (10-24), when every pass-through station was 1 flop; frame_return_plan.emission adds each pair's station-depth shift from the bound RTL",
+ "station_path_at_measure": {
+  "col_h9": {
+   "0": {
+    "x": 3,
+    "go": 3,
+    "cfg_v": 3,
+    "go_tag": 2
+   },
+   "1": {
+    "x": 3,
+    "go": 3,
+    "cfg_v": 3,
+    "go_tag": 2
+   },
+   "2": {
+    "x": 5,
+    "go": 5,
+    "cfg_v": 5,
+    "go_tag": 4
+   },
+   "3": {
+    "x": 5,
+    "go": 5,
+    "cfg_v": 5,
+    "go_tag": 4
+   },
+   "5": {
+    "x": 9,
+    "go": 9,
+    "cfg_v": 9,
+    "go_tag": 8
+   },
+   "6": {
+    "x": 9,
+    "go": 9,
+    "cfg_v": 9,
+    "go_tag": 8
+   },
+   "7": {
+    "x": 11,
+    "go": 11,
+    "cfg_v": 11,
+    "go_tag": 10
+   },
+   "9": {
+    "x": 11,
+    "go": 11,
+    "cfg_v": 11,
+    "go_tag": 10
+   },
+   "10": {
+    "x": 15,
+    "go": 15,
+    "cfg_v": 15,
+    "go_tag": 14
+   },
+   "11": {
+    "x": 15,
+    "go": 15,
+    "cfg_v": 15,
+    "go_tag": 14
+   },
+   "12": {
+    "x": 17,
+    "go": 17,
+    "cfg_v": 17,
+    "go_tag": 16
+   },
+   "14": {
+    "x": 17,
+    "go": 17,
+    "cfg_v": 17,
+    "go_tag": 16
+   }
+  },
+  "col_h10": {
+   "0": {
+    "x": 3,
+    "go": 3,
+    "cfg_v": 3,
+    "go_tag": 2
+   },
+   "2": {
+    "x": 3,
+    "go": 3,
+    "cfg_v": 3,
+    "go_tag": 2
+   },
+   "3": {
+    "x": 7,
+    "go": 7,
+    "cfg_v": 7,
+    "go_tag": 6
+   },
+   "4": {
+    "x": 7,
+    "go": 7,
+    "cfg_v": 7,
+    "go_tag": 6
+   },
+   "6": {
+    "x": 11,
+    "go": 11,
+    "cfg_v": 11,
+    "go_tag": 10
+   },
+   "7": {
+    "x": 11,
+    "go": 11,
+    "cfg_v": 11,
+    "go_tag": 10
+   },
+   "8": {
+    "x": 13,
+    "go": 13,
+    "cfg_v": 13,
+    "go_tag": 12
+   },
+   "9": {
+    "x": 13,
+    "go": 13,
+    "cfg_v": 13,
+    "go_tag": 12
+   },
+   "11": {
+    "x": 17,
+    "go": 17,
+    "cfg_v": 17,
+    "go_tag": 16
+   },
+   "12": {
+    "x": 17,
+    "go": 17,
+    "cfg_v": 17,
+    "go_tag": 16
+   },
+   "13": {
+    "x": 19,
+    "go": 19,
+    "cfg_v": 19,
+    "go_tag": 18
+   },
+   "14": {
+    "x": 19,
+    "go": 19,
+    "cfg_v": 19,
+    "go_tag": 18
+   }
+  }
+ },
+ "station_path_note": "S81-FRAME-FIX-1 11-11: per pair in-band station path edges (x / go / cfg_v / go_tag, frame_schedule.py path_edges) of the col_h*_l4 landed frames at station_depth_measured (the 10-17 emission measurement); frame_return_plan.inband_shift prices every landed schedule against it.  Regenerate: tools/s81_dv/frame_schedule.py --station-ref"
 }

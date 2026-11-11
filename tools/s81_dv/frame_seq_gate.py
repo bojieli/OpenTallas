@@ -26,6 +26,7 @@ import argparse
 import concurrent.futures as cf
 import hashlib
 import json
+import re
 import os
 import subprocess
 import sys
@@ -50,7 +51,33 @@ def env():
     return e
 
 
-def build(out):
+QBANK_S = 'rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv'
+
+
+def qbank_s_3flop(out):
+    """bench-only copy of dsfd_qbank_S with ONE more register on every output (o_x0 / o_x1 / o_go / o_cfg), the
+    qbank pin-cycle form: x, go and cfg reach the element one edge later together, go_tag (cfg7_seq -> element, no
+    qbank) does not, so the go_tag lead over go grows 2 -> 3 on every element"""
+    src = (ROOT / QBANK_S).read_text()
+    for n in ('cfg', 'go', 'x0', 'x1'):
+        old = f'else r_{n} <= l_{n};'
+        assert src.count(old) == 1, n
+        w = re.search(rf'reg (\[\d+:0\] )?l_{n}\b', src).group(1) or ''
+        L = src.split('\n')
+        i = next(k for k, ln in enumerate(L) if old in ln)
+        L[i] = L[i].replace(old, f'else r_{n} <= p_{n};')
+        L.insert(i, f'    reg {w}p_{n}; always @(posedge ck[0] or negedge rn) if (!rn) p_{n} <= 0; else p_{n} <= l_{n};')
+        src = '\n'.join(L)
+    f = out / 'dsfd_qbank_S_3flop.sv'
+    f.write_text(src)
+    fl = out / 'frame_bench_qb3.f'
+    lines = (ROOT / 'tools/s81_dv/frame_bench.f').read_text().splitlines()
+    assert sum(ln.strip() == QBANK_S for ln in lines) == 1
+    fl.write_text('\n'.join(str(f) if ln.strip() == QBANK_S else ln for ln in lines) + '\n')
+    return fl
+
+
+def build(out, flist='tools/s81_dv/frame_bench.f', defines=()):
     obj = out / 'build/obj'
     exe = obj / 'Vtb_toksim_fgu_seq'
     if exe.exists():
@@ -59,7 +86,7 @@ def build(out):
     cmd = [str(VERILATOR), '--binary', '--timing', '-O1', '-Wno-fatal', '-Wno-WIDTH', '-Wno-TIMESCALEMOD', '-Wno-lint',
            '-Wno-style', '-Wno-MULTIDRIVEN', '-DLK=2', '-DTB_FWD_GATE', '-DTB_LDLY=0', '-DFRAME=col_h10_l4_b',
            '-DDSFD_PQ_STATIC_X2', '-DDSFD_PQ_HAS_BF_X2',
-           '--top-module', 'tb_toksim_fgu_seq', '-Mdir', str(obj), '-f', 'tools/s81_dv/frame_bench.f',
+           *defines, '--top-module', 'tb_toksim_fgu_seq', '-Mdir', str(obj), '-f', str(flist),
            'rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4.sv', 'rtl/dsrom_sys/s81_dv/frame_l4/col_h10_l4_b.sv',
            'rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv', 'rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv',
            'rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv',
@@ -87,11 +114,13 @@ for ph in rec['phases']:
 '''
 
 
-def gen(out, fx, op, wrong):
-    V = out / ('vec_wrongdepth' if wrong else 'vec') / op.split('.')[-1]
+def gen(out, fx, op, wrong, depth=None, name=None):
+    V = out / (name or ('vec_wrongdepth' if wrong else 'vec')) / op.split('.')[-1]
     e = env()
     if wrong:
         e['OT_S81_STATION_DEPTH_OVERRIDE'] = json.dumps(WRONG_DEPTH)
+    if depth:
+        e['OT_S81_STATION_DEPTH_OVERRIDE'] = json.dumps(depth)
     log = V.parent / f'{op}.gen.log'
     V.parent.mkdir(parents=True, exist_ok=True)
     with log.open('w') as f:
@@ -107,11 +136,11 @@ def gen(out, fx, op, wrong):
     return V
 
 
-def run(exe, V, P, tag):
+def run(exe, V, P, tag, sfx=''):
     sd = next(V.glob('seq_*'))
     s = json.loads((sd / 'seq.json').read_text())
     nph = len(s['phases'])
-    log = V / f'run_P{P}.log'
+    log = V / f'run_P{P}{sfx}.log'
     args = [str(exe), f'+OT_ROM_DIR={sd}', f'+T={nph * (P + 160) + 3000}', f'+K={s["K"]}', f'+OPS={max(s["rows"])}',
             f'+PH={s["phases"][0]}', f'+NPH={nph}', f'+PER={P}', '+RETIRE=1', f'+PHASE_VM={1 if s.get("phase_vm") else 0}']
     with log.open('w') as f:
@@ -120,7 +149,7 @@ def run(exe, V, P, tag):
     faults = sum(1 for ln in txt.splitlines() if ln.startswith('FAULT'))
     end = sum(1 for ln in txt.splitlines() if ln.startswith('END'))
     chk = subprocess.run([sys.executable, str(SRC / 'toksim_fgu_check.py'), 'seq', '--seq', str(sd), '--vec', str(V),
-                          '--log', str(log), '--out', str(V / f'check_P{P}.json'), '--per', str(P), '--ref-go', '63'],
+                          '--log', str(log), '--out', str(V / f'check_P{P}{sfx}.json'), '--per', str(P), '--ref-go', '63'],
                          cwd=ROOT, env=env(), capture_output=True, text=True)
     last = (chk.stdout.strip().splitlines() or [''])[-1]
     ok = r.returncode == 0 and faults == 0 and end == 1 and chk.returncode == 0 and ' PASS ' in f' {last} '
@@ -132,7 +161,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--fixtures', required=True)
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--go-tag-lead3', action='store_true',
+                    help='go_tag skew proof (summary_lead3.json): bench with a 3-flop dsfd_qbank_S (go_tag leads go by 3)')
     a = ap.parse_args()
+    if a.go_tag_lead3:
+        return lead3(a)
     a.out.mkdir(parents=True, exist_ok=True)
     fx = Path(a.fixtures)
     man = (fx / 'manifest.sha256').read_text().split('\n')
@@ -163,6 +196,81 @@ def main():
         print('FRAME_SEQ', r['case'], r['op'], 'P', r['period'], 'faults', r['faults'], 'end', r['end'],
               'clean', r['clean'], '|', r['check'][:160])
     print('FRAME_SEQ_GATE', verdict, 'positive_clean', pos_ok, 'negative_detected', neg_ok)
+    return 0 if verdict == 'PASS' else 1
+
+
+# experts_gu at its floor P145 FAULTs 11 on the lead-3 build (cfg7 load overrun: the element's bank_free / sh_free reach
+# cfg7_seq one edge later through the extra element-side register, so the go spacing floor moves +1); P146 is the form's
+# floor point.  That is a floor cost of the pin cycle, not a go_tag effect (the P145 run has no calendar mismatch).
+def ret_tags(log):
+    """the PQ op tag of every RET word in edge order: row id bits [15:14] (frame_return_plan OPTAG field) = word bits
+    [29:28].  The per-phase calendar check (xs_place check) compares the compiled OPTAG-free row, so the element's
+    sampled go_tag is checked here, against the bound-depth build on the same op / period."""
+    return [(int(m.group(2), 16) >> 28) & 3 for m in re.finditer(r'^RET (\d+) ([0-9a-fA-F]+)\s*$', Path(log).read_text(), re.M)]
+
+
+LEAD3_POS = [('attn.wq_b', 128), ('ffn.experts_gu', 146)]
+
+
+def lead3(a):
+    """S81-FRAME-FIX-1 11-11 (COORD item 3, qbank pin cycle): go_tag-to-go lead 3 proof.  The element captures go_tag
+    in the same pin register stage as go (ot_v41_rom_elem_qx_pq_w10 b_go_tag / r_go_tag beside go), and cfg7_seq launches
+    go_tag = the op tag from the go edge on (tag advances on go_x; ot_s81_cfg7_seq.sv:271/309), held until the next go,
+    so any lead 1 <= L < go spacing samples the same tag.  Bench: every element on a 3-flop qbank_S (lead 3):
+      positive   compiled at qbank_S depth 3 (the RTL copy)      -> must be clean (strict calendar + tag check)
+      negative   compiled at the bound depth 2 (calendar 1 early) -> must FAULT / mismatch
+      tag ctrl   lead-3 build with OT_S81_CFG7_MUT_TAG (tag one op ahead), compiled at depth 3 -> must FAIL
+      tag check  the strict calendar checker does not compare the op tag (bits [29:28] of a RET word), so the RET tag
+                 sequence of every lead-3 run must equal the bound (lead 2) build's on the same op / period, and the
+                 MUT_TAG run's must differ"""
+    a.out.mkdir(parents=True, exist_ok=True)
+    fx = Path(a.fixtures)
+    fl = qbank_s_3flop(a.out)
+    d3 = {'dsfd_qbank_S': 3}
+    with cf.ThreadPoolExecutor(8) as ex:
+        b3 = ex.submit(build, a.out / 'lead3', fl)
+        bt = ex.submit(build, a.out / 'lead3_mut_tag', fl, ('-DOT_S81_CFG7_MUT_TAG',))
+        ops = sorted({o for o, _ in LEAD3_POS})
+        v3 = {o: ex.submit(gen, a.out, str(fx), o, False, d3, 'vec_qb3') for o in ops}
+        v2 = ex.submit(gen, a.out, str(fx), 'attn.wq_b', False, None, 'vec_qb2')
+        bb = ex.submit(build, a.out)
+        e3, et, eb = b3.result(), bt.result(), bb.result()
+        runs = [ex.submit(run, e3, v3[o].result(), P, 'positive_lead3', '_lead3') for o, P in LEAD3_POS]
+        runs += [ex.submit(run, e3, v3['ffn.experts_gu'].result(), 145, 'floor_lead3', '_lead3')]
+        runs += [ex.submit(run, e3, v2.result(), 128, 'negative_depth2_on_lead3', '_lead3')]
+        runs += [ex.submit(run, et, v3['attn.wq_b'].result(), 128, 'negative_mut_tag_lead3', '_mut_tag')]
+        refs = {(o, P): ex.submit(run, eb, v2.result() if o == 'attn.wq_b' else
+                                  ex.submit(gen, a.out, str(fx), o, False, None, 'vec_qb2').result(), P, 'bound_lead2', '_bound')
+                for o, P in LEAD3_POS}
+        res = [r.result() for r in runs]
+        refs = {k: v.result() for k, v in refs.items()}
+    for r in res:
+        key = next(((o, P) for o, P in LEAD3_POS if o.endswith(r['op']) and P == r['period']), None)
+        if key is None:
+            continue
+        ref = refs[key]
+        same = ret_tags(r['log']) == ret_tags(ref['log']) and bool(ret_tags(ref['log'])) and ref['clean']
+        r['tags_equal_bound'] = same
+        if r['case'] == 'negative_mut_tag_lead3':
+            r['clean'] = r['clean'] and same          # a tag change the calendar checker misses is caught here
+        elif r['case'] == 'positive_lead3':
+            r['clean'] = r['clean'] and same
+    res += list(refs.values())
+    pos_ok = all(r['clean'] for r in res if r['case'].startswith(('positive', 'bound')))
+    neg_ok = all(not r['clean'] for r in res if r['case'].startswith('negative'))
+    verdict = 'PASS' if pos_ok and neg_ok else 'FAIL'
+    # floor_lead3 (experts_gu P145) is reported, not gated: it measures the form's floor cost
+    summary = dict(schema='opentallas.s81.frame_seq_gate.lead3.v1', verdict=verdict, go_tag_lead=3,
+                   positive_clean=pos_ok, negative_detected=neg_ok, runs=res,
+                   qbank_s_3flop_sha256=hashlib.sha256((a.out / 'dsfd_qbank_S_3flop.sv').read_bytes()).hexdigest(),
+                   head=subprocess.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], capture_output=True,
+                                       text=True).stdout.strip())
+    (a.out / 'summary_lead3.json').write_text(json.dumps(summary, indent=1) + '\n')
+    for r in res:
+        print('FRAME_SEQ_LEAD3', r['case'], r['op'], 'P', r['period'], 'faults', r['faults'], 'clean', r['clean'],
+              'tags_equal_bound', r.get('tags_equal_bound'), '|',
+              r['check'][:160])
+    print('FRAME_SEQ_GATE_LEAD3', verdict, 'positive_clean', pos_ok, 'negative_detected', neg_ok)
     return 0 if verdict == 'PASS' else 1
 
 

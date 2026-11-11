@@ -3,11 +3,11 @@
  "source_sha256": {
   "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5",
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
-  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "27c5011a850421fb85f3b653e9a07e5165b7544d5c4322dd388e6749635efdde",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
   "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
-  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "18bdaf923dcedd45bd34617fcd26e592461a2c974c2ebc09898f199f1ca0551c",
-  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "1cd45a7d8bfab8880024cfdc093bf02f6419b37c6e35dc20990f50bcd6345cf7",
-  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "fe714548181c0ab2cb534a396bb7c264d1d3aeb1527fd9146e355dc07dc39736",
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "44e30c7a2c33a725b2f15ff85f23d2916cf35e3146b0de5db5ed07fb188a4fbd",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "a16f419740eb01a4eb9650fe6ba21cf970a681b792d0b677fe589335e0e87295",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "1b70fec0ddb421efcad47164657ce726d6740a21b4608174a41b0444e5cb7d57",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
@@ -16,18 +16,45 @@
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
   "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "0c1238dc3f1938dae8fa2ed50f4df5e98c4202f7f78cc513e413761dc396bef9",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "72bb6701509b62937ccb57116e4a2ed3b3f8b52b8c7bf3ddee0f46041b4af8a9",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "976cba9f2a9a3a774dee119ab54fc351c9b2b1cd4370c2f82a7f4f5032efdc40",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "66c7dac657cc3f060671a74cbf08d293c9c5644f99144a12ff91bfffcc191d25",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "b3e9ee193f05c981baf3e38fdc4163ea60119fbc7992b761831f4d465a93ac27",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "240eea63e11cace472a2ba37c9f21147b2a593d1dddd8c28ae1afe26498b8e0f",
-  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2",
-  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3",
-  "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
-  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
-  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "1efb43d0d9d2b3e532a9e599b3500c11a0f1fdeca88ee8490bdbce67aa13adc9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "699976528bd30ae44b123ae180e392d4eb19bfaf0ae8c5fc8d4137845d88d94e",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "4e85c913cc19eac3d9a88c766b4c4aaadbd8a1dbd159ec6ead71353bfe5ef85d",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "7af10d34479d2cbb56a4baf3479bad7cc30f27e06e520cc16f2418e66d11443f",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "ada4232d19db40c1b47248d40e7bc9bac814e8d9a5631933bcf4b671a869ef12",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "b40694f6fdb6a36bd461c5c0b9c436933231ea56d060dc5fbcc7474d5534e3cf",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "7467c59d1cad40f3cb3e4146506dd32d7ad8dbb5f0fbd21270c05b0c790d0c0a",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "9acc1f62ca6e800988a420a3fd1335c7b3f65c756831d35d5ae168687a18d714",
+  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "6e36b1e26fe71717374dcd09edcefce18d8758ca1b4b19a0a0f79b51b60a4a7c",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "3aeb9ba257f9d6e89b122d7d3008e1880deb732c1f97f2445aa6686180976387",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "47c5b902622710e2099e030fcc9b2fd3e08587c00bcc2e2ea918036980b1f72e",
   "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv": "f3db079b569c686ee026feb5b3cdd78131da158e83a33e676ed4bde65efcbcd6"
+ },
+ "station_depth": {
+  "dsfd_qbank_N": {
+   "d_r0": 2,
+   "d_r1": 2,
+   "d_st": 2
+  },
+  "dsfd_qbank_S": {
+   "o_cfg": 2,
+   "o_go": 2,
+   "o_x0": 2,
+   "o_x1": 2
+  },
+  "dsfd_rstg": {
+   "o": 2
+  },
+  "ot_s81_rly": {
+   "o": 1
+  },
+  "ot_s81_sstn_base566": {
+   "xa": 2,
+   "xb": 2,
+   "cc": 2
+  },
+  "ot_s81_sstn_payload536": {
+   "o": 2
+  }
  },
  "spec": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_spec.json",
  "added_edges_per_crossing": 3,
@@ -38,7 +65,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -48,7 +75,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -58,7 +85,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -68,7 +95,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -78,7 +105,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -88,7 +115,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -98,7 +125,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -108,7 +135,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -118,7 +145,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -128,17 +155,27 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 5
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 5
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": [],
+     "path_edges": 3
     }
    },
    "added_edges": [
@@ -152,7 +189,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -162,7 +199,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -172,7 +209,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -182,7 +219,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -192,7 +229,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -202,7 +239,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -212,7 +249,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -222,7 +259,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -232,7 +269,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 3,
+       "flat_link_edges": 5,
        "added_edges": 0
       }
      ],
@@ -242,17 +279,27 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 5
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 5
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": [],
+     "path_edges": 3
     }
    },
    "added_edges": [
@@ -266,7 +313,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -276,7 +323,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -286,7 +333,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -296,7 +343,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -306,7 +353,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -316,7 +363,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -326,7 +373,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -336,7 +383,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -346,7 +393,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -356,17 +403,27 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 8
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 8
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": [],
+     "path_edges": 6
     }
    },
    "added_edges": [
@@ -380,7 +437,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -390,7 +447,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -400,7 +457,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -410,7 +467,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -420,7 +477,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -430,7 +487,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -440,7 +497,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -450,7 +507,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -460,7 +517,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 5,
+       "flat_link_edges": 8,
        "added_edges": 0
       }
      ],
@@ -470,17 +527,27 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 8
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 0,
-     "link_edges": 1,
-     "crossings": []
+     "link_edges": 2,
+     "crossings": [],
+     "path_edges": 8
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 0,
+     "link_edges": 0,
+     "crossings": [],
+     "path_edges": 6
     }
    },
    "added_edges": [
@@ -494,7 +561,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -504,7 +571,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -514,7 +581,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -524,7 +591,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -534,7 +601,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -544,7 +611,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -554,7 +621,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -564,7 +631,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -574,7 +641,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -584,9 +651,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -594,13 +661,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 14
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -608,7 +676,23 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 14
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 3,
+     "link_edges": 3,
+     "crossings": [
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 12
     }
    },
    "added_edges": [
@@ -622,7 +706,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -632,7 +716,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -642,7 +726,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -652,7 +736,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -662,7 +746,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -672,7 +756,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -682,7 +766,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -692,7 +776,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -702,7 +786,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 9,
+       "flat_link_edges": 14,
        "added_edges": 3
       }
      ],
@@ -712,9 +796,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -722,13 +806,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 14
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -736,7 +821,23 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 14
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 3,
+     "link_edges": 3,
+     "crossings": [
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 12
     }
    },
    "added_edges": [
@@ -750,7 +851,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -760,7 +861,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -770,7 +871,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -780,7 +881,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -790,7 +891,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -800,7 +901,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -810,7 +911,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -820,7 +921,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -830,7 +931,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -840,9 +941,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -850,13 +951,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 17
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -864,7 +966,23 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 17
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 3,
+     "link_edges": 3,
+     "crossings": [
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 15
     }
    },
    "added_edges": [
@@ -878,7 +996,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -888,7 +1006,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -898,7 +1016,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -908,7 +1026,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -918,7 +1036,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -928,7 +1046,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -938,7 +1056,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -948,7 +1066,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -958,7 +1076,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 11,
+       "flat_link_edges": 17,
        "added_edges": 3
       }
      ],
@@ -968,9 +1086,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -978,13 +1096,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 17
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 3,
-     "link_edges": 4,
+     "link_edges": 5,
      "crossings": [
       {
        "net": "n36687",
@@ -992,7 +1111,23 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 17
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 3,
+     "link_edges": 3,
+     "crossings": [
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 15
     }
    },
    "added_edges": [
@@ -1006,7 +1141,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1016,7 +1151,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1026,7 +1161,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1036,7 +1171,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1046,7 +1181,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1056,7 +1191,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1066,7 +1201,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1076,7 +1211,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1086,7 +1221,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1096,9 +1231,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1112,13 +1247,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 23
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1132,7 +1268,29 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 23
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 6,
+     "link_edges": 6,
+     "crossings": [
+      {
+       "net": "n36833",
+       "source": "u_t5",
+       "reader": "u_y_cc_6_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 21
     }
    },
    "added_edges": [
@@ -1146,7 +1304,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1156,7 +1314,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1166,7 +1324,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1176,7 +1334,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1186,7 +1344,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1196,7 +1354,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1206,7 +1364,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1216,7 +1374,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1226,7 +1384,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 15,
+       "flat_link_edges": 23,
        "added_edges": 6
       }
      ],
@@ -1236,9 +1394,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1252,13 +1410,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 23
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1272,7 +1431,29 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 23
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 6,
+     "link_edges": 6,
+     "crossings": [
+      {
+       "net": "n36833",
+       "source": "u_t5",
+       "reader": "u_y_cc_6_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 21
     }
    },
    "added_edges": [
@@ -1286,7 +1467,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1296,7 +1477,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1306,7 +1487,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1316,7 +1497,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1326,7 +1507,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1336,7 +1517,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1346,7 +1527,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1356,7 +1537,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1366,7 +1547,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1376,9 +1557,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1392,13 +1573,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 26
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1412,7 +1594,29 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 26
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 6,
+     "link_edges": 6,
+     "crossings": [
+      {
+       "net": "n36833",
+       "source": "u_t5",
+       "reader": "u_y_cc_6_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 24
     }
    },
    "added_edges": [
@@ -1426,7 +1630,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1436,7 +1640,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1446,7 +1650,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1456,7 +1660,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1466,7 +1670,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1476,7 +1680,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1486,7 +1690,7 @@
      "paths": [
       {
        "source": "cf.xa",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1496,7 +1700,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1506,7 +1710,7 @@
      "paths": [
       {
        "source": "cf.xb",
-       "flat_link_edges": 17,
+       "flat_link_edges": 26,
        "added_edges": 6
       }
      ],
@@ -1516,9 +1720,9 @@
    "control": {
     "go": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1532,13 +1736,14 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 26
     },
     "cfg_v": {
      "source": "cf.cc",
-     "flat_link_edges": 1,
+     "flat_link_edges": 2,
      "added_edges": 6,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n36833",
@@ -1552,7 +1757,29 @@
        "reader": "u_y_cc_3_0",
        "added_edges": 3
       }
-     ]
+     ],
+     "path_edges": 26
+    },
+    "go_tag": {
+     "source": "cf.cc",
+     "flat_link_edges": 0,
+     "added_edges": 6,
+     "link_edges": 6,
+     "crossings": [
+      {
+       "net": "n36833",
+       "source": "u_t5",
+       "reader": "u_y_cc_6_0",
+       "added_edges": 3
+      },
+      {
+       "net": "n36687",
+       "source": "u_t2",
+       "reader": "u_y_cc_3_0",
+       "added_edges": 3
+      }
+     ],
+     "path_edges": 24
     }
    },
    "added_edges": [
@@ -1570,21 +1797,21 @@
   "nodes": {
    "n0": {
     "a": "e0.r0",
-    "link_a": 6,
+    "link_a": 7,
     "evidence_a": {
      "source": "e0.r0",
-     "flat_link_edges": 6,
-     "added_edges": 0,
-     "link_edges": 6,
-     "crossings": []
-    },
-    "b": "e0.r1",
-    "link_b": 7,
-    "evidence_b": {
-     "source": "e0.r1",
      "flat_link_edges": 7,
      "added_edges": 0,
      "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e0.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e0.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
      "crossings": []
     }
    },
@@ -1610,21 +1837,21 @@
    },
    "n10": {
     "a": "e5.r0",
-    "link_a": 7,
+    "link_a": 8,
     "evidence_a": {
      "source": "e5.r0",
-     "flat_link_edges": 7,
-     "added_edges": 0,
-     "link_edges": 7,
-     "crossings": []
-    },
-    "b": "e5.r1",
-    "link_b": 8,
-    "evidence_b": {
-     "source": "e5.r1",
      "flat_link_edges": 8,
      "added_edges": 0,
      "link_edges": 8,
+     "crossings": []
+    },
+    "b": "e5.r1",
+    "link_b": 9,
+    "evidence_b": {
+     "source": "e5.r1",
+     "flat_link_edges": 9,
+     "added_edges": 0,
+     "link_edges": 9,
      "crossings": []
     }
    },
@@ -1650,21 +1877,21 @@
    },
    "n12": {
     "a": "e6.r0",
-    "link_a": 3,
+    "link_a": 4,
     "evidence_a": {
      "source": "e6.r0",
-     "flat_link_edges": 3,
-     "added_edges": 0,
-     "link_edges": 3,
-     "crossings": []
-    },
-    "b": "e6.r1",
-    "link_b": 4,
-    "evidence_b": {
-     "source": "e6.r1",
      "flat_link_edges": 4,
      "added_edges": 0,
      "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e6.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e6.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
      "crossings": []
     }
    },
@@ -1690,21 +1917,21 @@
    },
    "n14": {
     "a": "e7.r0",
-    "link_a": 6,
+    "link_a": 7,
     "evidence_a": {
      "source": "e7.r0",
-     "flat_link_edges": 6,
-     "added_edges": 0,
-     "link_edges": 6,
-     "crossings": []
-    },
-    "b": "e7.r1",
-    "link_b": 7,
-    "evidence_b": {
-     "source": "e7.r1",
      "flat_link_edges": 7,
      "added_edges": 0,
      "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e7.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e7.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
      "crossings": []
     }
    },
@@ -1797,21 +2024,21 @@
    },
    "n18": {
     "a": "e9.r0",
-    "link_a": 3,
+    "link_a": 4,
     "evidence_a": {
      "source": "e9.r0",
-     "flat_link_edges": 3,
-     "added_edges": 0,
-     "link_edges": 3,
-     "crossings": []
-    },
-    "b": "e9.r1",
-    "link_b": 4,
-    "evidence_b": {
-     "source": "e9.r1",
      "flat_link_edges": 4,
      "added_edges": 0,
      "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e9.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e9.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
      "crossings": []
     }
    },
@@ -1837,32 +2064,32 @@
    },
    "n2": {
     "a": "e1.r0",
-    "link_a": 3,
+    "link_a": 4,
     "evidence_a": {
      "source": "e1.r0",
-     "flat_link_edges": 3,
-     "added_edges": 0,
-     "link_edges": 3,
-     "crossings": []
-    },
-    "b": "e1.r1",
-    "link_b": 4,
-    "evidence_b": {
-     "source": "e1.r1",
      "flat_link_edges": 4,
      "added_edges": 0,
      "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e1.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e1.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
      "crossings": []
     }
    },
    "n20": {
     "a": "e10.r0",
-    "link_a": 10,
+    "link_a": 11,
     "evidence_a": {
      "source": "e10.r0",
-     "flat_link_edges": 7,
+     "flat_link_edges": 8,
      "added_edges": 3,
-     "link_edges": 10,
+     "link_edges": 11,
      "crossings": [
       {
        "net": "n33936",
@@ -1873,12 +2100,12 @@
      ]
     },
     "b": "e10.r1",
-    "link_b": 11,
+    "link_b": 12,
     "evidence_b": {
      "source": "e10.r1",
-     "flat_link_edges": 8,
+     "flat_link_edges": 9,
      "added_edges": 3,
-     "link_edges": 11,
+     "link_edges": 12,
      "crossings": [
       {
        "net": "sk_n20_62",
@@ -1911,12 +2138,12 @@
    },
    "n22": {
     "a": "e11.r0",
-    "link_a": 7,
+    "link_a": 8,
     "evidence_a": {
      "source": "e11.r0",
-     "flat_link_edges": 4,
+     "flat_link_edges": 5,
      "added_edges": 3,
-     "link_edges": 7,
+     "link_edges": 8,
      "crossings": [
       {
        "net": "n34196",
@@ -1927,12 +2154,12 @@
      ]
     },
     "b": "e11.r1",
-    "link_b": 8,
+    "link_b": 9,
     "evidence_b": {
      "source": "e11.r1",
-     "flat_link_edges": 5,
+     "flat_link_edges": 6,
      "added_edges": 3,
-     "link_edges": 8,
+     "link_edges": 9,
      "crossings": [
       {
        "net": "sk_n22_62",
@@ -1972,21 +2199,21 @@
    },
    "n24": {
     "a": "e12.r0",
-    "link_a": 7,
+    "link_a": 8,
     "evidence_a": {
      "source": "e12.r0",
-     "flat_link_edges": 7,
-     "added_edges": 0,
-     "link_edges": 7,
-     "crossings": []
-    },
-    "b": "e12.r1",
-    "link_b": 8,
-    "evidence_b": {
-     "source": "e12.r1",
      "flat_link_edges": 8,
      "added_edges": 0,
      "link_edges": 8,
+     "crossings": []
+    },
+    "b": "e12.r1",
+    "link_b": 9,
+    "evidence_b": {
+     "source": "e12.r1",
+     "flat_link_edges": 9,
+     "added_edges": 0,
+     "link_edges": 9,
      "crossings": []
     }
    },
@@ -2052,21 +2279,21 @@
    },
    "n28": {
     "a": "e14.r0",
-    "link_a": 3,
+    "link_a": 4,
     "evidence_a": {
      "source": "e14.r0",
-     "flat_link_edges": 3,
-     "added_edges": 0,
-     "link_edges": 3,
-     "crossings": []
-    },
-    "b": "e14.r1",
-    "link_b": 4,
-    "evidence_b": {
-     "source": "e14.r1",
      "flat_link_edges": 4,
      "added_edges": 0,
      "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e14.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e14.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
      "crossings": []
     }
    },
@@ -2092,21 +2319,21 @@
    },
    "n4": {
     "a": "e2.r0",
-    "link_a": 6,
+    "link_a": 7,
     "evidence_a": {
      "source": "e2.r0",
-     "flat_link_edges": 6,
-     "added_edges": 0,
-     "link_edges": 6,
-     "crossings": []
-    },
-    "b": "e2.r1",
-    "link_b": 7,
-    "evidence_b": {
-     "source": "e2.r1",
      "flat_link_edges": 7,
      "added_edges": 0,
      "link_edges": 7,
+     "crossings": []
+    },
+    "b": "e2.r1",
+    "link_b": 8,
+    "evidence_b": {
+     "source": "e2.r1",
+     "flat_link_edges": 8,
+     "added_edges": 0,
+     "link_edges": 8,
      "crossings": []
     }
    },
@@ -2132,21 +2359,21 @@
    },
    "n6": {
     "a": "e3.r0",
-    "link_a": 3,
+    "link_a": 4,
     "evidence_a": {
      "source": "e3.r0",
-     "flat_link_edges": 3,
-     "added_edges": 0,
-     "link_edges": 3,
-     "crossings": []
-    },
-    "b": "e3.r1",
-    "link_b": 4,
-    "evidence_b": {
-     "source": "e3.r1",
      "flat_link_edges": 4,
      "added_edges": 0,
      "link_edges": 4,
+     "crossings": []
+    },
+    "b": "e3.r1",
+    "link_b": 5,
+    "evidence_b": {
+     "source": "e3.r1",
+     "flat_link_edges": 5,
+     "added_edges": 0,
+     "link_edges": 5,
      "crossings": []
     }
    },
@@ -2219,12 +2446,12 @@
    }
   },
   "root": "n15",
-  "root_link": 13,
+  "root_link": 16,
   "root_evidence": {
    "source": "n15",
-   "flat_link_edges": 10,
+   "flat_link_edges": 13,
    "added_edges": 3,
-   "link_edges": 13,
+   "link_edges": 16,
    "crossings": [
     {
      "net": "n36278",
