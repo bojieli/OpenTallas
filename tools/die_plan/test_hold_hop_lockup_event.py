@@ -24,6 +24,25 @@ def test_extends_lists_only():
     assert H.apply(out, ["c"], ["b", "c"]) == out          # idempotent
 
 
+def test_relay_plain_removes_only_named():
+    p = _plan()
+    p["reset"]["relay_lockup"] = dict(form="negedge", types=["a", "b", "c"], note="n")
+    out = H.apply(p, [], [], relay_plain=["b"])
+    assert out["reset"]["relay_lockup"] == dict(form="negedge", types=["a", "c"], note="n")
+    assert out["clock"] == p["clock"] and out["reset"]["y"] == 2 and out["lanes"] == [1]
+    assert H.apply(p, [], []) == p                         # no option: nothing moves
+
+
+def test_relay_plain_fails_closed():
+    p = _plan()
+    with pytest.raises(ValueError):
+        H.apply(p, [], [], relay_plain=["c"])              # c is not on the list
+    with pytest.raises(ValueError):
+        H.apply(p, [], [], relay_plain=["nope"])           # unknown type
+    with pytest.raises(ValueError):
+        H.apply(p, [], ["a"], relay_plain=["a"])           # add and remove together
+
+
 def test_refuses_collisions():
     p = _plan()
     p["reset"]["relay_lockup"]["form"] = "negedge"
