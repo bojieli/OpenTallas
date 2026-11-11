@@ -1,0 +1,40 @@
+# HBM-TAPS-1111 (DIE-HBM-97/HBM-TAPS, DO_NOT_COUNT): per-core early taps in plan_p11t_taps_cyc 29333b2b19c9 (event hbm-taps-cycles-1111). early_tap_ps = TT - 250. Source lanes/DIE-RECHECK-TAPS.tsv (measured).
+module_or_type	label	tt_ps	ff_ps	early_tap_ps	taps	before_tt/ff	before_basis	view	note
+ot_q2nf_rest	NEAR-CLOSE	599.4	474.8	349.4	1	250.0/202.5	default	epyc7:/srv/opentallas-scratch2/claude/hbm-q2nf-rf/kit_bd2/signoff/signoff.json	NEAR-CLOSE split kit_bd2 (the only measured ot_q2nf_rest view)
+ot_hgi_sfu_opsb_output	SIGNED	499.6	409.9	249.6	2	250.0/202.5	default	epyc4:/srv/opentallas-scratch2/claude/hbm-cores-b/opsb_PS2f_eco1/i1/resign_gd/signoff/signoff.json	
+ot_hfd_coll_q3_vm_core	SIGNED	486.2	392.4	236.2	1	250.0/202.5	default	epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/q3vm_vF_eco1/i1/resign_gq/signoff/signoff.json	SIGNED view used; NEAR-CLOSE vL repeater pitch 484.4/388.1 is 1.8 ps lower
+ot_hbm_idx_rootctl_static_am	SIGNED	368.6	293.6	118.6	1	754.0/608.0	plan-earlier-measured	intel1:/srv/opentallas-scratch2/claude/hbm-open-a/rootctl_E_so/signoff/signoff.json	SIGNED view rootctl_E_so used; NEAR-CLOSE e1 ECO2 461.9/370.1 replaces it only if it becomes the counted view
+ot_hbm_su_pg_lane1p_core	NEAR-CLOSE	409.4	322.2	159.4	64	309.6/250.8	RuleA-model	epyc8:/srv/opentallas-scratch2/claude/hbm-collect-1/l1phs/ot_hbm_su_pg_lane1p_core_l1phs1110/signoff/signoff.json	L1P-HS (HBM-COLLECT-1 READY-COUNT 11-10 17:52, the counted form); D2L 421.6/332.9 not used
+ot_hbm_hc_bank128_pair_first_core	SIGNED	404.8	323.6	154.8	16	295.7/239.5	RuleA-model	epyc2:/srv/opentallas-scratch2/claude/die-hbm-74/resign/b128h1/signoff/signoff.json	
+ot_hbm_su_pg_lane1_core	SIGNED	404.6	321.1	154.6	128	288.7/233.8	RuleA-model	epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_pg_lane1_core__flow-20261106-o-hbm__3b717c4b/signoff/signoff.json	
+ot_q2nf_qout	SIGNED	391.5	315.5	141.5	1	250.0/202.5	default	intel2:/srv/opentallas-scratch2/claude/codex-hbm-open-0222/qout_resign_fa_i2/signoff/signoff.json	
+hfd_ep_static	SIGNED	384.4	304.6	134.4	4	435.0/352.0	plan-earlier-measured	epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hfd_ep_static__flow-20261106-cr-hbm__57373ed8/signoff/signoff.json	
+ot_hbm_accel_smh_xs	SIGNED	376.5	300.1	126.5	128	288.7/233.8	RuleA-model	epyc4:/srv/opentallas-scratch3/claude/hbm-collect-1/kfx6c/xs_mw_ecohm/i1/signoff/signoff.json	
+ot_hgi_sm_xload_cl2_bfqg	SIGNED	370.1	294.5	120.1	16	212.8/174.4	plan-earlier-measured	epyc4:/srv/opentallas-scratch3/claude/ss29/resign/bfqg_k/signoff/signoff.json	
+ot_hbm_su_static_sfustore_hw	SIGNED	364.0	298.0	114.0	4	354.0/289.3	plan-earlier-measured	epyc2:/srv/opentallas-scratch2/claude/ss25/resign/sfustore_b/signoff/signoff.json	
+ot_hgi_sm_xload_cl2_ctlx	SIGNED	358.2	292.4	108.2	4	437.3/358.7	plan-earlier-measured	epyc2:/srv/opentallas-scratch2/claude/ss29/resign/ctlx2_k/signoff/signoff.json	
+ot_svgr_bk	SIGNED	350.5	279.6	100.5	16	274.8/222.6	RuleA-model	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/svgrbk_e2_resign_dq/signoff/signoff.json	
+ot_hbm_host_cp_rxs	SIGNED	350.0	278.3	100.0	1	479.9/390.3	plan-earlier-measured	epyc4:/srv/opentallas-scratch3/claude/die-hbm-71/resign/cprxsn2/signoff/signoff.json	
+ot_hbm_sm_vm_wr_q_t_lanes4	SIGNED	336.9	272.9	86.9	4	132.1/108.5	plan-earlier-measured	epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_sm_vm_wr_q_t_lanes4__flow-20261106-cr-hbm__11685eb6/signoff/signoff.json	
+ot_svgr_own	SIGNED	334.5	267.3	84.5	8	313.1/253.6	RuleA-model	epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/own_RF4T_eco1k/i1/resign_hm/signoff/signoff.json	
+ot_hbm_accel_smh_pt_e	SIGNED	332.7	264.9	82.7	64	250.0/202.5	default	intel1:/srv/opentallas-scratch2/claude/hbm-collect-1/smk/pt_e/so_ho/signoff/signoff.json	
+ot_hbm_su_static_cxport_ij_q	SIGNED	329.9	262.4	79.9	4	305.4/252.2	plan-earlier-measured	epyc4:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hbm_su_static_cxport_ij_q__flow-20261104-i-hbm__ee407cf1/signoff/signoff.json	
+ot_hbm_su_pcol_l	SIGNED	326.2	267.7	76.2	12	361.0/292.4	RuleA-model	intel1:/srv/opentallas-scratch2/claude/hbm-form-cong/resign/pcol_l_i2/signoff/signoff.json	
+ot_hbm_svc_sm_xcal_rel_t	SIGNED	325.1	263.0	75.1	8	527.0/426.9	RuleA-measured(b2l)	intel2:/srv/opentallas-scratch2/claude/die-hbm-72/resign/xcal/signoff/signoff.json	
+ot_hbm_su_pcol_s	SIGNED	323.6	263.7	73.6	28	270.5/219.1	RuleA-model	epyc4:/srv/opentallas-scratch2/claude/hbm-form-timing-9/resign/pcol_s4_bg/signoff/signoff.json	
+ot_hbm_su_pg_lane_exp_x_core	SIGNED	320.8	259.0	70.8	64	295.98/243.06;299.2/242.4	RuleA-model;plan-earlier-measured	intel1:/srv/opentallas-scratch2/claude/die-hbm-89/expx/resign_ed/signoff/signoff.json	
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	SIGNED	319.5	250.3	69.5	32	455.4/363.2	plan-earlier-measured	intel1:/srv/opentallas-scratch2/claude/hbm-hard-9/h9b_resign/so_gj/signoff/signoff.json	
+ot_hfd_coll_q3_qcol4	SIGNED	309.6	250.3	59.6	4	347.9/281.8	RuleA-model	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/qcol4_e1_resign/signoff/signoff.json	
+ot_hfd_coll_q3_edge_link	SIGNED	307.0	248.7	57.0	3	334.0/270.5	RuleA-model	epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/ot_hfd_coll_q3_edge_link__flow-20261106-dm-hbm__a0b2e7ee/signoff/signoff.json	
+ot_hnx_idxn_keybuf_slice	SIGNED	306.8	246.4	56.8	16	302.7/245.2	RuleA-model	epyc2:/srv/opentallas-scratch2/claude/ss25/resign/keybuf_b/signoff/signoff.json	
+ot_hgi_coll_inj_idx_join_rg	SIGNED	302.4	239.9	52.4	4	244.8/201.6	plan-earlier-measured	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/inj_e2_resign_dq/signoff/signoff.json	
+ot_hgi_sfu_split3_lane_core_fr	SIGNED	299.4	237.1	49.4	32	274.8/222.6	RuleA-model	epyc2:/srv/opentallas-scratch2/claude/die-hbm-82-b128/resign/fr_dc/signoff/signoff.json	
+ot_hidx_s3_q	SIGNED	295.4	243.6	45.4	4	278.3/225.4	RuleA-model	intel1:/srv/opentallas-scratch2/claude/die-hbm-92-open/s3_eco_resign_fg/signoff/signoff.json	
+ot_hfd_coll_q2_hard_v8g__reduce	SIGNED	294.8	230.6	44.8	2	274.8/222.6	RuleA-model	epyc4:/srv/opentallas-scratch2/claude/die-hbm-82/resign/q2r_cr/signoff/signoff.json	
+ot_hbm_svc_vmdel_lane_n	SIGNED	293.8	226.7	43.8	16	280.7/236.2	plan-earlier-measured	epyc4:/srv/opentallas-scratch3/claude/ss29/resign/vm8_k/signoff/signoff.json	
+ot_hgi_sfu_split3_lane_core_ex	SIGNED	293.7	237.4	43.7	32	264.4/214.2	RuleA-model	epyc4:/srv/opentallas-scratch3/claude/ss29/resign/e2_s3_ex_k/signoff/signoff.json	
+ot_hbm_hc_bank128_pair_core	SIGNED	291.6	234.5	41.6	112	295.7/239.5	RuleA-model	epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json	two SIGNED pin variants 291.6/234.5 (10ac9d74) and 290.1/234.1 (7eaeff6b): one value per module (core_io_insertion), the larger one; spread 1.5 ps
+type:q_mca	SIGNED	335.7	259.6	85.7	type	250/-	default	intel1:/srv/opentallas-scratch2/claude/hbm-cores-b/qmca_vSR3_eco1/i1/resign_hm/signoff/signoff.json	partition type form (vsN4 style)
+type:vsN4	KEPT	380		130	type	380/-	form C		form C insertion 380 (plan form, DIE-HBM-97/VSN4 basis) kept; the TSV row is form B (362.1/284.6), a different form, not the plan's kit
+ot_hfd_coll_q3_body_ctl q3bc_CF2 build	LISTED				0				early tap 454.3 > T/2 416.5: Rule A guard (a tap moved by more than half a cycle changes the related edge) -> die-owner form, not planned
+ot_smh_static_front_w SF-SPLIT W half (COORD form b)	LISTED				0				SF-SPLIT W half is not a core of this plan (plan has ot_smh_static_front, Rule A listed multi-tree): no plan tap
