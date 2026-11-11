@@ -4491,5 +4491,23 @@
    "wire_um_in": 1641.4,
    "wire_um_out": 1060.4
   }
- ]
+ ],
+ "gates": {
+  "station_lint": "station_lint.py c0550f9c3d05: INVERTED 68 -> 0; NONMONOTONE 21 -> 14 (7 SUB-THRESHOLD gone, 14 ft_slot rows unchanged, 0 new)",
+  "g0": "check.py on the compose1111 tree: 84 ERROR / 8737 WARN -> 84 / 8737, 0 new, 0 gone",
+  "native_topology": {
+   "asbuilt": "physical/die_plan/s81/final_1109/asbuilt_b178_coll_h2_2249_final.json (all 29 types native, no bus scope)",
+   "main_a804c119": {
+    "before": "a44f20aaed4d39e5",
+    "after": "614296bd3febae75",
+    "types_changed": 29
+   },
+   "stationfix_hbm_57a3d8fd": {
+    "before": "a44f20aaed4d39e5",
+    "after": "a44f20aaed4d39e5",
+    "types_changed": 0
+   },
+   "needs": "tools/die_plan/native_istations.py >= 7c4c129b340e (md5 57a3d8fd) in the S81 bind/kit src, else a rebind"
+  }
+ }
 }

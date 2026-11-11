@@ -19,6 +19,13 @@ SKIP row instead (an upstream stage already wrote that chain in data order).  CH
 the same form that the lint reports only NONMONOTONE (2-3 stages, below its 25% INVERTED threshold); --listed-only
 applies the 68 alone.
 
+DEPENDENCY (native OUT stations): all 29 types are in the S81 asbuilt internal_stations_types (final_1109
+asbuilt_b178_coll_h2_2249_final.json, no bus scope), so every reversed entry is a native OUT entry.  main's
+tools/die_plan/native_istations.py (md5 a804c119) reverses every face-captured OUT entry unconditionally and would
+re-invert them: native_topology digest a44f20aaed4d39e5 -> 614296bd3febae75 (29 of 30 types change -> rebind).  With
+the STATION-FIX-HBM direction-aware native_istations.py (7c4c129b340e or later, md5 57a3d8fd, as KW-FIX-43 overlays
+for HBM) the digest is unchanged (a44f20aaed4d39e5 before and after) and the native stations are identical.
+
 The plan text is edited in place: the three JSON values of each entry are swapped / their items reordered in their own
 text, so the diff is only those values.  Asserted: nothing outside partition_types changes, unlisted types are equal,
 in listed types only from_um / to_um / regs_um of the listed entries change, each as an exact swap + reversal.
