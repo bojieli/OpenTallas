@@ -8,6 +8,9 @@ sha256 differs from the newest plan_sha of that die in the TSV (or with --force)
 route_supply_flags.py.  Exits 0 always; prints one line per die.
 
   route_supply_watch.py --repo REPO --tsv FLAGS.tsv --out-root DIR [--release-cache J] [--stamp S] [--force] < plans
+
+--grt-halving edge [--grt-edge-gcells K] models the GRT-PATCH-1 patched OpenROAD image (default: stock, full); keep
+one TSV per image, since a die is skipped when its plan sha is already in the TSV.
 """
 import argparse
 import concurrent.futures as cf
@@ -22,13 +25,14 @@ sys.path.insert(0, str(HERE))
 import route_supply_flags as F  # noqa: E402
 
 
-def run_die(repo, p, out, cache):
+def run_die(repo, p, out, cache, grt=("full", 2)):
     cmd = [sys.executable, "-I", str(HERE / "route_supply.py"), str(repo / p["plan"]), "--die", p["die"],
            "--repo", str(repo), "--out", str(out)]
     refs = list(p.get("refs") or []) + [p["die"]]
     cmd += ["--ref-dirs"] + refs
     if cache:
         cmd += ["--release-cache", cache]
+    cmd += ["--grt-halving", grt[0], "--grt-edge-gcells", str(grt[1])]
     r = subprocess.run(cmd, capture_output=True, text=True)
     return p["die"], r.returncode, (r.stderr.strip().splitlines() or [""])[-1]
 
@@ -43,6 +47,8 @@ def main(argv=None):
     ap.add_argument("--stamp")
     ap.add_argument("--main", default="-")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--grt-halving", choices=("full", "edge", "none"), default="full")
+    ap.add_argument("--grt-edge-gcells", type=int, default=2)
     a = ap.parse_args(argv)
     repo = Path(a.repo)
     src = open(a.plans) if a.plans else sys.stdin
@@ -62,10 +68,13 @@ def main(argv=None):
     if not todo:
         return 0
     stamp = a.stamp or F.datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z")
+    if a.grt_halving != "full":
+        stamp += " grt=" + a.grt_halving + (f"K{a.grt_edge_gcells}" if a.grt_halving == "edge" else "")
+    grt = (a.grt_halving, a.grt_edge_gcells)
     out = Path(a.out_root) / stamp.replace(" ", "_").replace(":", "")
     out.mkdir(parents=True, exist_ok=True)
     with cf.ThreadPoolExecutor(max_workers=len(todo)) as ex:
-        res = list(ex.map(lambda t: run_die(repo, t[0], out, a.release_cache), todo))
+        res = list(ex.map(lambda t: run_die(repo, t[0], out, a.release_cache, grt), todo))
     for die, rc, last in res:
         print(f"{die}: re-run rc={rc} {last}")
     F.main([str(out), "--tsv", a.tsv, "--stamp", stamp, "--main", a.main,

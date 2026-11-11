@@ -71,6 +71,29 @@ LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
 #    between two obstructed layers is blocked where they overlap (extendObstructions l.5557)
 GRT_TRANSITION = ("M3", "M4", "M5", "M6", "M7")
 GRT_MAX_LAYER = "M7"
+GRT_GCELL_UM = 0.585   # dbBlock::getGCellTileSize: 15 x median(M2, M3, M4 pitch) on ASAP7 (GlobalRouter.cpp l.2513)
+
+
+def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
+    """GRT-PATCH-1 'edge' image: the transition-layer halving applies only to gcells within K gcells of a macro edge
+    or one of its pins. Returns, per bin, the fraction of the macro area under it that is still halved (1 = stock
+    image, everywhere under the OBS)."""
+    d = k_gcells * gcell_um
+    w = np.zeros((g.ny, g.nx))
+    b = g.b
+    for (x0, y0, x1, y1, h) in mrects:
+        (c, _), = coverage(g, [(x0, y0, x1, y1, h)])
+        ix0, iy0, ix1, iy1 = x0 + d, y0 + d, x1 - d, y1 - d
+        inner = coverage(g, [(ix0, iy0, ix1, iy1, h)])[0][0] if ix1 > ix0 and iy1 > iy0 else np.zeros_like(c)
+        band = c - inner
+        if ix1 > ix0 and iy1 > iy0:
+            for (_, px, py) in pins.get(h["inst"], []):
+                if ix0 < px < ix1 and iy0 < py < iy1:      # interior pin: its own K-gcell square is halved
+                    sq = coverage(g, [(max(px - d, ix0), max(py - d, iy0), min(px + d, ix1), min(py + d, iy1), h)])
+                    band = band + sq[0][0]
+        frac = np.where(c > 1e-9, np.clip(band / np.maximum(c, 1e-9), 0, 1), 0.0)
+        w = np.maximum(w, frac)
+    return w
 
 
 def grt_macro_rules(obs):
@@ -488,6 +511,14 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             mem_cov = np.maximum(mem_cov, c)
     if cfg.get("grt_rules", True):
         grt_macro_rules(obs)
+    pins = {}
+    for (_, _, _, _, h) in mrects:
+        pins[h["inst"]] = core_pins(h, die_dir, repo)
+    halve_w = 1.0
+    if cfg.get("grt_halving", "full") == "edge":
+        halve_w = grt_halving_weight(g, mrects, pins, cfg.get("grt_edge_gcells", 2))
+    elif cfg.get("grt_halving", "full") == "none":
+        halve_w = 0.0
     sup = {}
     for L in LAYERS:
         sup[L] = b / PITCH[L] * (1 - cfg["derate"][L]) * (1 - np.clip(obs[L], 0, 1))
@@ -496,13 +527,10 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             # (GlobalRouter::adjustTransitionLayers / adjustTileSet, floor(cap * 0.5))
             below = LAYERS[LAYERS.index(L) - 1] if LAYERS.index(L) > 0 else None
             if below:
-                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1))
+                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1) * halve_w)
     supH = sup["M2"] + sup["M4"] + sup["M6"]
     supV = sup["M3"] + sup["M5"] + sup["M7"]
     # ---------------- demand
-    pins = {}
-    for (_, _, _, _, h) in mrects:
-        pins[h["inst"]] = core_pins(h, die_dir, repo)
     npins = sum(len(v) for v in pins.values())
     if npins == 0 and mrects:
         notes.append("no core pin files found")
@@ -1000,6 +1028,12 @@ def main(argv=None):
     ap.add_argument("--station-spread", action="store_true",
                     help="what-if: station hops spread over the detour window (moves leaf V to H, 8/14 vs 6/15 FAIL "
                          "directions right, but loses leaf t24; off by default)")
+    ap.add_argument("--grt-halving", choices=("full", "edge", "none"), default="full",
+                    help="OpenROAD transition-layer halving over macro OBS: full = stock image (adjustTransitionLayers "
+                         "under the whole OBS), edge = GRT-PATCH-1 patched image (only within --grt-edge-gcells of macro "
+                         "edges and pins), none = no halving")
+    ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge (gcells of %.3f um)"
+                    % GRT_GCELL_UM)
     ap.add_argument("--pin-escape", action="store_true",
                     help="what-if: 2-pin core links as an L whose first leg follows the pin face normal (off by default)")
     ap.add_argument("--margin-bins", type=int, default=DEFAULTS["margin_bins"],
@@ -1037,7 +1071,8 @@ def main(argv=None):
     cfg = dict(DEFAULTS, bin_um=a.bin, window=a.window, derate=der, core_ceiling=a.core_ceiling,
                cell_fill=a.cell_fill, ring_tracks_per_bit=a.ring_tracks_per_bit,
                ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
-               pin_escape=a.pin_escape, station_spread=a.station_spread)
+               pin_escape=a.pin_escape, station_spread=a.station_spread,
+               grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells)
     conns = load_conns(die_dir, a.core_conns)
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
@@ -1112,7 +1147,8 @@ def main(argv=None):
         (od / f"route_supply_{die}.json").write_text(json.dumps(out, indent=1))
     print("\n".join(lines))
     nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
-    print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}); ADVISORY, not a gate",
+    print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}; GRT halving "
+          f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving == 'edge' else ''}); ADVISORY, not a gate",
           file=sys.stderr)
     return 0
 

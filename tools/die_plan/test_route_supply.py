@@ -176,3 +176,20 @@ def test_margin_default_and_what_if_options_run(tmp_path):
     _, rw, _ = run(tmp_path, "--pin-escape", "--station-spread")
     assert r9["regions"]["core_H"]["p99"] <= r2["regions"]["core_H"]["p99"] + 1e-9   # wider detour pool never worse
     assert rw["verdict"] in ("FLAG", "ok")
+
+
+def test_grt_edge_halving_mode_between_full_and_none(tmp_path):
+    """GRT-PATCH-1 edge image: halving only within K gcells of macro edges/pins -> core_H between stock and none."""
+    plan(tmp_path, n=2500)
+    _, rf, _ = run(tmp_path)
+    _, re_, _ = run(tmp_path, "--grt-halving", "edge", "--grt-edge-gcells", "2")
+    _, rb, _ = run(tmp_path, "--grt-halving", "edge", "--grt-edge-gcells", "400")
+    _, rn, _ = run(tmp_path, "--grt-halving", "none")
+    f, e, b, n = (r["regions"]["core_H"]["p99"] for r in (rf, re_, rb, rn))
+    assert n <= e <= f and n < f
+    assert abs(b - f) < 1e-6                           # K beyond the macro half-width = the stock image
+    g = rs.Grid(400, 500, 10.8)
+    w = rs.grt_halving_weight(g, [(100, 0, 300, 500, {"inst": "m"})], {"m": [("d", 200, 250)]}, 2)
+    assert 0.1 < w[0, 9] < 0.3                         # edge bin: only the 1.17 um band along x=100 and y=0
+    assert w[10, 15] == 0.0 and w[23, 18] > 0.0         # interior: halved only around the pin at (200, 250)
+    assert w.max() <= 1.0
