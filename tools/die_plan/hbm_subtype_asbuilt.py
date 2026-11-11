@@ -8,9 +8,9 @@
         ot_hgi_sfu_split3_lane_core__idpin__bsub (u_fcore.u_core.u_{fr,ex,bk} = the bare plan masters), one-to-one
         (bind_subtype, asbuilt.subtype_bind): bound names unchanged.  Port map: glue sfu_* = native lane_* (the cut
         renamed the sp2 ports), glue map_* = native map_*, sfu_clk / sfu_rst_n on the native map_clk / map_rst_n nets
-        (the native lane clocks and resets map and sfu from those two pins).  sub_core_leaf u_sfucore_Q_laneK ->
-        sfucore_NW.__cut_laneK, variants sfucore_NE.__cut_laneK (the base table named u_sfucore_Q_laneK, which is not
-        an as-built path, so bound_macro_paths emitted no row and KIT_PREFLIGHT macro_instances failed).
+        (the native lane clocks and resets map and sfu from those two pins).  sub_core_leaf_variants u_sfucore_Q_laneK
+        -> [sfucore_NW.__cut_laneK, sfucore_NE.__cut_laneK] (the base sub_core_leaf u_sfucore_Q_laneK is no as-built
+        path, so bound_macro_paths emitted no row and KIT_PREFLIGHT macro_instances failed); sub_core_leaf unchanged.
 --tkm   an N-way rule file (JSON list of subtype_bind rules + "sub_core_leaf" table) appended as given.
 Cycle relation: d44v part 6 (+4 on sfu_vm/kv/ro/fault/coll), priced in the plan of record; the bind is wiring only.
 """
@@ -41,8 +41,11 @@ def build(base, repo, sfu=True, tkm=None):
         rules.append(sfu_rule(repo))
         scl, var = dict(out.get("sub_core_leaf", {})), dict(out.get("sub_core_leaf_variants", {}))
         for k in range(16):
-            scl[f"u_sfucore_Q_lane{k}"] = f"sfucore_NW.__cut_lane{k}"
-            var[f"u_sfucore_Q_lane{k}"] = [f"sfucore_NE.__cut_lane{k}"]
+            # sub_core_leaf stays the base value (the partition-local leaf name u_sfucore_Q_laneK): bind.py keys the
+            # plan's parent_id_straps (h["parent_id_leaf"]) by it; the as-built cut paths go to the variants only,
+            # which bound_macro_paths reads (exactly one of NW / NE is in a bound file).  11-11 epyc4 bind: the cut path
+            # in sub_core_leaf made EMIT "parent ID q_b110: declarations do not match bound known strap inputs".
+            var[f"u_sfucore_Q_lane{k}"] = [f"sfucore_NW.__cut_lane{k}", f"sfucore_NE.__cut_lane{k}"]
         out["sub_core_leaf"], out["sub_core_leaf_variants"] = scl, var
         files = [str(Path(repo) / f) for f in [GLUE] + SUBS]
         out["files"] = list(out.get("files", [])) + [f for f in files if f not in out.get("files", [])]
@@ -56,7 +59,7 @@ def build(base, repo, sfu=True, tkm=None):
         out["prefer"] = fs + [f for f in out.get("prefer", []) if f not in fs]
     out["subtype_bind"] = rules
     out["note_bind_subtype"] = ("BIND-SUBTYPE 11-11: base + subtype_bind (" + ("sfu" if sfu else "")
-                                + (" tkm" if tkm else "") + "); sub_core_leaf sfu lanes -> as-built cut paths")
+                                + (" tkm" if tkm else "") + "); sub_core_leaf_variants sfu lanes -> as-built cut paths")
     return out
 
 

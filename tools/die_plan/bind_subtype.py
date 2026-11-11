@@ -247,6 +247,7 @@ def apply(binder, rules):
         mods = load(r, binder.base)
         prepared.append((re.compile(r["leaf"]), r, composition(r, mods), mods))
     hits = [0] * len(prepared)
+    alias = {}
     for c in F.cells:
         rule = None
         if c.kind == "leaf":
@@ -262,6 +263,12 @@ def apply(binder, rules):
         if c.module != r["native"]:
             raise SubtypeError(f"{c.path}: native module {c.module} != rule native {r['native']}")
         cells, rec = replace(F, R, c, r, comp)
+        if len(cells) == 1 and cells[0].path == c.path:
+            # one-to-one substitution: the leaf keeps its path and every native port bit is the same bit of the renamed
+            # top port, so a table written on the native bind (r8 landing) names (leaf, native port) -> (leaf, top port)
+            for tp, np_ in rec["port_map"].items():
+                if tp != np_:
+                    alias[(c.path, np_)] = (c.path, tp)
         hits[k] += 1
         out.extend(cells)
         receipts.append(rec)
@@ -273,4 +280,5 @@ def apply(binder, rules):
             if p not in binder.extra_lib:
                 binder.extra_lib.append(p)
     F.cells[:] = out
+    binder.subtype_alias = alias
     return receipts
