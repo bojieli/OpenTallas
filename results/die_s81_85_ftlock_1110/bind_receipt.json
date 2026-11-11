@@ -1,0 +1,44 @@
+{
+ "lane": "FTLOCK-S81 (DIE-S81-85 sub-lane)",
+ "host": "epyc8",
+ "dir": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock",
+ "binds": {
+  "bind_ftlk": {
+   "plan": "s81/plan_ftlk_9c9ac92a70d1.json (sha256 9c9ac92a70d162a8278c0b5b725122df6033669d537281560ce6e6fd3c6cbc6e) = wave plan b05c29bb + clock.ft_hop_lockup {slice_station__t27, slice_station__t49}",
+   "src": "bsrc = hard-link tree of kw43/src_t51f_pbp (writable files privately copied, tools/ + physical/die_plan/s81 real copies, plan replaced)",
+   "launcher": "bind_ftlk_docker.sh",
+   "result": "BIND rc=0, errors 0, unbound 0, undriven 0, multiply_bound 0; 398 partitions, 205 types",
+   "manifest_sha256": "003f1d5ed6f50a6fb80c5dc756f7886b92cb2e3895ef22ae2c2ff3f34465e855 (bind_ftlk.sha256, 1486 files)",
+   "staged": [
+    "epyc8",
+    "epyc2",
+    "epyc4",
+    "epyc7"
+   ]
+  },
+  "bind_ctl": {
+   "plan": "plain wave plan b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50 (no ft_hop_lockup)",
+   "src": "bsrc_ctl = cp -al of bsrc with only the plan file replaced (private read-only copy)",
+   "launcher": "bind_ctl_docker.sh",
+   "purpose": "control: ctl vs bind_ftlk isolates the event; bind8 vs ctl isolates wave-src tool drift",
+   "staged": [
+    "epyc8"
+   ],
+   "result": "BIND rc=0, errors 0, unbound 0; 0 files with u_fl_"
+  }
+ },
+ "memory_caps": {
+  "bind_python": "docker python:3.14-slim --memory 64g --memory-swap 64g --cpus 2 (first epyc7 attempt peaked 38 GB; epyc8 peaks ~37 GB)",
+  "yosys_child": "bind_elab.run_yosys starts each yosys as a SIBLING container (openroad/orfs:asap7lock) with --memory=32g --memory-swap=32g (bind_elab default mem_gb=32)",
+  "precheck": "MemAvailable >= 64 + 32 + 32 GB before launch",
+  "docker_socket_note": "The bind container mounts the host /var/run/docker.sock and /usr/bin/docker so bind_elab can start its yosys container. A container with the host docker socket can start ANY sibling container, including uncapped ones; the only caps on those siblings are the ones the caller passes. Here the only sibling started is bind_elab's yosys run, which always passes --memory=32g --memory-swap=32g (tools/die_plan/bind_elab.py run_yosys). Do not reuse this launcher pattern with code that starts other containers without checking each docker run carries a memory cap.",
+  "try1": "bind_ftlk_try1_noyosys: same launcher without the socket -> 'EMIT no yosys' (rc 1)"
+ },
+ "other_caps": "bind_check / binddiff / dry kit_rtl: docker python:3.14-slim --memory 32g; nothing ran on localhost",
+ "diffs": {
+  "tool": "results/die_s81_85_ftlock_1110/binddiff.py (fixed, f5512aef79)",
+  "ctl_vs_ftlk": "2 types changed: slice_station__t27, slice_station__t49 (rtl .sv + reset_tree.json bound_rtl_sha256); 203 unchanged; non-type: rtl/bind_cells.sv (+module ot_dp_lk only) and 166 native_glue yosys .log files that differ only in path/CPU-time lines",
+  "bind8_vs_ctl": "100 types changed, none of them t27/t49 = wave-src tool drift (src_t51f -> src_t51f_pbp): ot_s81sl_leaf 59, col_h9 15, col_h10 7, dsdv_slice_*_C 17, eng__t1, iqf__t1, slice_station__t51",
+  "bind8_vs_ftlk": "102 = the same 100 drift types + t27/t49"
+ }
+}

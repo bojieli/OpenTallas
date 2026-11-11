@@ -1,0 +1,559 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "b05c29bbaafa9842f541802672e6e2ff44963e13286bec6e08f7e50898001c50",
+ "rows": [
+  {
+   "type": "slice_station__t12",
+   "hops": 11,
+   "latch_bits": 2471,
+   "max_hop_um": 307.28,
+   "W_ps": 130,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t14",
+   "hops": 31,
+   "latch_bits": 9071,
+   "max_hop_um": 389.769,
+   "W_ps": 140,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t17",
+   "hops": 7,
+   "latch_bits": 1939,
+   "max_hop_um": 307.28,
+   "W_ps": 100,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t18",
+   "hops": 35,
+   "latch_bits": 10581,
+   "max_hop_um": 361.387,
+   "W_ps": 140,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t20",
+   "hops": 15,
+   "latch_bits": 4155,
+   "max_hop_um": 307.298,
+   "W_ps": 110,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t21",
+   "hops": 18,
+   "latch_bits": 4986,
+   "max_hop_um": 309.512,
+   "W_ps": 110,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t22",
+   "hops": 45,
+   "latch_bits": 12362,
+   "max_hop_um": 361.374,
+   "W_ps": 130,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t23",
+   "hops": 15,
+   "latch_bits": 7709,
+   "max_hop_um": 379.669,
+   "W_ps": 110,
+   "wave": [
+    "count:SIGNED:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t24__cl64811a5d",
+   "hops": 14,
+   "latch_bits": 7194,
+   "max_hop_um": 307.284,
+   "W_ps": 110,
+   "wave": [
+    "geom:CANCELLED:SUPERSEDED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t24__cl66b71008",
+   "hops": 14,
+   "latch_bits": 7194,
+   "max_hop_um": 307.284,
+   "W_ps": 130,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t24__cleece78ec",
+   "hops": 14,
+   "latch_bits": 7198,
+   "max_hop_um": 307.307,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "FACE: worst FF ft2_i->u_ft_ft2_o_0 -16.73 (input face); no hop in printed clk group",
+   "named": false
+  },
+  {
+   "type": "slice_station__t25",
+   "hops": 44,
+   "latch_bits": 15532,
+   "max_hop_um": 361.349,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t26",
+   "hops": 27,
+   "latch_bits": 10556,
+   "max_hop_um": 373.67,
+   "W_ps": 120,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t27",
+   "hops": 50,
+   "latch_bits": 20401,
+   "max_hop_um": 361.237,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "HOP: ECO i1 FF -15.26 ft6_o_1->2, 91 ep; top-40 FF clk paths 40/40 hops",
+   "named": true
+  },
+  {
+   "type": "slice_station__t28",
+   "hops": 25,
+   "latch_bits": 9905,
+   "max_hop_um": 386.11,
+   "W_ps": 130,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t29__cl2e5c855a",
+   "hops": 36,
+   "latch_bits": 13472,
+   "max_hop_um": 361.237,
+   "W_ps": 120,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t29__clc7772371",
+   "hops": 37,
+   "latch_bits": 14177,
+   "max_hop_um": 361.237,
+   "W_ps": 130,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "FACE: worst FF ft0_i->u_ft_ft0_o_0 -47.57 (input face); no hop printed",
+   "named": false
+  },
+  {
+   "type": "slice_station__t30__cl1653104c",
+   "hops": 10,
+   "latch_bits": 3354,
+   "max_hop_um": 307.351,
+   "W_ps": 100,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t30__cl6a190133",
+   "hops": 12,
+   "latch_bits": 4136,
+   "max_hop_um": 374.58,
+   "W_ps": 110,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t30__clcedefe91",
+   "hops": 11,
+   "latch_bits": 4059,
+   "max_hop_um": 307.282,
+   "W_ps": 130,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t31",
+   "hops": 42,
+   "latch_bits": 7110,
+   "max_hop_um": 361.387,
+   "W_ps": 140,
+   "wave": [
+    "signoff:SIGNED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t36",
+   "hops": 59,
+   "latch_bits": 24882,
+   "max_hop_um": 307.307,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "UNKNOWN: TIMING FAIL hold_ff -113.62->-26.43 (late ECO); kit dir gone",
+   "named": false
+  },
+  {
+   "type": "slice_station__t37",
+   "hops": 73,
+   "latch_bits": 27839,
+   "max_hop_um": 385.772,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "UNKNOWN: TIMING FAIL hold_ff -80.72->-24.93; kit dir gone",
+   "named": false
+  },
+  {
+   "type": "slice_station__t38",
+   "hops": 46,
+   "latch_bits": 17441,
+   "max_hop_um": 399.664,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:SUPERSEDED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t40__cl1ea9de02",
+   "hops": 38,
+   "latch_bits": 17158,
+   "max_hop_um": 307.284,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t40__clc8fb2c8c",
+   "hops": 39,
+   "latch_bits": 17443,
+   "max_hop_um": 307.307,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t41",
+   "hops": 70,
+   "latch_bits": 29888,
+   "max_hop_um": 385.449,
+   "W_ps": 140,
+   "wave": [
+    "route:RUNNING:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t42__cl4bd1432c",
+   "hops": 39,
+   "latch_bits": 17435,
+   "max_hop_um": 307.332,
+   "W_ps": 130,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t42__clcf44e680",
+   "hops": 38,
+   "latch_bits": 17166,
+   "max_hop_um": 307.296,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:SUPERSEDED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t43",
+   "hops": 61,
+   "latch_bits": 26453,
+   "max_hop_um": 361.232,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "UNKNOWN: TIMING FAIL hold_ff -80.19->-25.52; kit dir gone",
+   "named": false
+  },
+  {
+   "type": "slice_station__t44",
+   "hops": 43,
+   "latch_bits": 7387,
+   "max_hop_um": 361.379,
+   "W_ps": 120,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t45",
+   "hops": 19,
+   "latch_bits": 8507,
+   "max_hop_um": 401.76,
+   "W_ps": 100,
+   "wave": [
+    "geom:RUNNING:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t46",
+   "hops": 15,
+   "latch_bits": 4155,
+   "max_hop_um": 361.499,
+   "W_ps": 100,
+   "wave": [
+    "signoff:SIGNED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t47",
+   "hops": 28,
+   "latch_bits": 6629,
+   "max_hop_um": 361.254,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "FACE: ECO i3 FF -4.09 ft0_o_5->ft0_o (output face)",
+   "named": false
+  },
+  {
+   "type": "slice_station__t48",
+   "hops": 21,
+   "latch_bits": 5817,
+   "max_hop_um": 374.861,
+   "W_ps": 100,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t49",
+   "hops": 35,
+   "latch_bits": 17221,
+   "max_hop_um": 308.336,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "HOP: ECO i1 FF -20.86 ft9_o_3->4, 199 ep; top-40 FF clk paths 39/40 hops",
+   "named": true
+  },
+  {
+   "type": "slice_station__t50__cl39451317",
+   "hops": 35,
+   "latch_bits": 17221,
+   "max_hop_um": 307.285,
+   "W_ps": 140,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t50__cld84c9e24",
+   "hops": 35,
+   "latch_bits": 16974,
+   "max_hop_um": 307.307,
+   "W_ps": 140,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t51",
+   "hops": 65,
+   "latch_bits": 27791,
+   "max_hop_um": 388.811,
+   "W_ps": 140,
+   "wave": [
+    "preflight:FAIL:PLAN",
+    "prelint:LINT-ADVISORY:LINT"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t52",
+   "hops": 66,
+   "latch_bits": 27838,
+   "max_hop_um": 361.237,
+   "W_ps": 140,
+   "wave": [
+    "signoff:FAIL:TIMING"
+   ],
+   "measured": "FACE: worst FF ft6_i->u_ft_ft6_o_0 -65.63 (input face); no hop printed",
+   "named": false
+  },
+  {
+   "type": "slice_station__t6__cl0755c26e",
+   "hops": 43,
+   "latch_bits": 14052,
+   "max_hop_um": 361.237,
+   "W_ps": 110,
+   "wave": [
+    "geom:CANCELLED:SUPERSEDED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t6__cl54a9ceeb",
+   "hops": 44,
+   "latch_bits": 14087,
+   "max_hop_um": 361.237,
+   "W_ps": 120,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t7__cl362204c4",
+   "hops": 17,
+   "latch_bits": 3934,
+   "max_hop_um": 307.287,
+   "W_ps": 110,
+   "wave": [
+    "geom:CANCELLED:SUPERSEDED"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t7__cl503f4913",
+   "hops": 18,
+   "latch_bits": 3969,
+   "max_hop_um": 307.385,
+   "W_ps": 100,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t7__cl945bc067",
+   "hops": 18,
+   "latch_bits": 3969,
+   "max_hop_um": 307.385,
+   "W_ps": 90,
+   "wave": [
+    "queue:WAIT-PARENT:"
+   ],
+   "measured": "",
+   "named": false
+  },
+  {
+   "type": "slice_station__t8",
+   "hops": 43,
+   "latch_bits": 11036,
+   "max_hop_um": 331.064,
+   "W_ps": 140,
+   "wave": [
+    "geom:CANCELLED:COUNTED"
+   ],
+   "measured": "",
+   "named": false
+  }
+ ]
+}

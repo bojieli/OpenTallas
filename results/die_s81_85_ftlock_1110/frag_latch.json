@@ -1,0 +1,33 @@
+{
+ "event": "FTLOCK-S81",
+ "form": "latch",
+ "die": "s81",
+ "items": [
+  "slice_station__t27",
+  "slice_station__t49"
+ ],
+ "set": {
+  "item_inputs": {
+   "slice_station__t27": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
+    },
+    "note": "FTLOCK-S81 latch (DIE-S81-85 11-10): plan 9c9ac92a70d1 = die plan b05c29bb + clock.ft_hop_lockup {t27,t49}; strict bind ftlock/bind_ftlk; 0 pin cycles"
+   },
+   "slice_station__t49": {
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+    "kit_rtl": {
+     "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
+    },
+    "note": "FTLOCK-S81 latch (DIE-S81-85 11-10): plan 9c9ac92a70d1 = die plan b05c29bb + clock.ft_hop_lockup {t27,t49}; strict bind ftlock/bind_ftlk; 0 pin cycles"
+   }
+  }
+ },
+ "applied": false,
+ "note": "proposal only: kit_wave.json is not touched by this tool",
+ "retry_fix_template": {
+  "slice_station__t27@<attempt>": "REDESIGN: FTLOCK-S81 latch form on internal ft station hops (0 pin cycles)",
+  "slice_station__t49@<attempt>": "REDESIGN: FTLOCK-S81 latch form on internal ft station hops (0 pin cycles)"
+ }
+}
