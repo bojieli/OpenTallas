@@ -40030,3 +40030,4 @@ FAILED [AUTOPILOT 3c59a3ce3903] 2026-11-11 02:38:46 PST AUTOPILOT -> KIT-WAVE-12
   Compute: all searches ran on epyc4 under nice 19 with 8 scorers (COORD 01:3x); the epyc8 runs were stopped by exact PID. Scratch is epyc4 /srv/opentallas-scratch3/claude/cpl-s81-svc-run (1.5 GB, no .git); sparse tree on epyc8 wt/cpl-s81-svc.
 - 2026-11-11 02:43 PST RESULT [DIE-RECHECK-1 -> DIE-S81-85, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-11 02:43 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
     DELTA s81: plan_sha "e596e9588e72" -> "4b5e9a090a20"; designs 82 -> 84
+- 2026-11-11 02:46 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-74): 3 event(s): PHY_NC LAUNCHED (kw-hbm-PHYNC-1-93991); PHY_NE LAUNCHED (kw-hbm-PHYNE-1-93991); PHY_NW LAUNCHED (kw-hbm-PHYNW-1-93992)
