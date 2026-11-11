@@ -555,7 +555,11 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
         assert schedule['topology']['master'] == master
         topo = schedule['topology']
         off = dict(off)
-        inb = inband_shift(master, schedule)
+        # as-built band schedules (frame_schedule_asb.py, key asbuilt) carry station/control = LP + the MEASURED as-built
+        # depth delta in their own added_edges (one tracer, real flops), so they are priced as on main (in-band 0 here);
+        # the in-band pricing applies to the LP extractor (frame_schedule.py) schedules
+        inb = ({int(e[1:]): 0 for e in schedule['station_inputs']} if 'asbuilt' in schedule
+               else inband_shift(master, schedule))
         for pair in pairs:
             st = schedule['station_inputs'][f'e{pair}']
             assert st['all_x_inputs_equal_added_edges'], ('unaligned x calendar', pair)

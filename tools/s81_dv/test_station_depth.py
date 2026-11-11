@@ -140,6 +140,14 @@ class InbandPricing(unittest.TestCase):
             P.inband_shift('col_h9', s)
         self.assertIn('skew', str(cm.exception))
 
+    def test_asbuilt_schedule_not_refused(self):
+        # TOK-VERIFY-1 11-11: the strict-bind compile uses as-built schedules (no station_depth / path_edges); plan_phase
+        # keeps the main behaviour for them (crossing added_edges only), inband_shift itself would refuse them
+        import inspect
+        import frame_return_plan as P
+        src = inspect.getsource(P.plan_phase)
+        self.assertIn("for e in schedule['station_inputs']} if 'asbuilt' in schedule", src)
+
     def test_stale_schedule_refused(self):
         import frame_return_plan as P
         s = self.sched('col_h10')
