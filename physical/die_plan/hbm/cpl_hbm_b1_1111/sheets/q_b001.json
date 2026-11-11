@@ -1,0 +1,570 @@
+{
+ "type": "q_b001",
+ "base_plan": "t19 6391dea6a0b38710e0da6365e279d9bd3e89ab50f3777cc94c8765546ee06b71",
+ "outline_um": [
+  1874.88,
+  1840.32
+ ],
+ "layout": {
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair0": [
+   47.52,
+   717.12,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair1": [
+   345.6,
+   717.12,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair2": [
+   643.68,
+   717.12,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair3": [
+   941.76,
+   717.12,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair4": [
+   1239.84,
+   717.12,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair5": [
+   64.8,
+   1054.08,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair6": [
+   380.16,
+   1054.08,
+   "R0"
+  ],
+  "u_hcb_Q1.ot_hbm_hc_bank128_pair7": [
+   695.52,
+   1054.08,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r0c3_k2h1": [
+   808.704,
+   4.32,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r0c3_k3h0__ra": [
+   1613.088,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r0c3_k3h0__rb": [
+   1725.408,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r0c3_k3h1": [
+   1613.088,
+   43.2,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k0h0__ra": [
+   596.16,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k0h0__rb": [
+   708.48,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k0h1": [
+   596.16,
+   1334.88,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k1h0__ra": [
+   846.72,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k1h0__rb": [
+   959.04,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k1h1": [
+   846.72,
+   1334.88,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k2h0__ra": [
+   1096.416,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k2h0__rb": [
+   1208.736,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k2h1": [
+   1096.416,
+   1334.88,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k3h0__ra": [
+   1346.112,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k3h0__rb": [
+   1458.432,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c0_k3h1": [
+   1346.112,
+   1334.88,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k0h0__ra": [
+   629.856,
+   400.896,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k0h0__rb": [
+   742.176,
+   400.896,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k0h1": [
+   629.856,
+   209.088,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k1h0__ra": [
+   946.944,
+   400.896,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k1h0__rb": [
+   1059.264,
+   400.896,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k1h1": [
+   946.944,
+   209.088,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k2h0__ra": [
+   347.328,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k2h0__rb": [
+   459.648,
+   1526.688,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k2h1": [
+   347.328,
+   1334.88,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k3h0__ra": [
+   1555.2,
+   880.416,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k3h0__rb": [
+   1667.52,
+   880.416,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c1_k3h1": [
+   1555.2,
+   688.608,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k0h0__ra": [
+   4.32,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k0h0__rb": [
+   116.64,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k0h1": [
+   4.32,
+   43.2,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k1h0__ra": [
+   406.08,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k1h0__rb": [
+   518.4,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k1h1": [
+   406.08,
+   43.2,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k2h0__ra": [
+   1211.328,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k2h0__rb": [
+   1323.648,
+   235.008,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k2h1": [
+   1211.328,
+   43.2,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k3h0__ra": [
+   959.04,
+   997.92,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k3h0__rb": [
+   1071.36,
+   997.92,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c2_k3h1": [
+   1181.952,
+   997.92,
+   "R0"
+  ]
+ },
+ "chain_roles": {
+  "c3": [
+   "r0c3_k2",
+   "r0c3_k3"
+  ],
+  "c0": [
+   "r1c0_k0",
+   "r1c0_k1",
+   "r1c0_k2",
+   "r1c0_k3"
+  ],
+  "c1": [
+   "r1c1_k0",
+   "r1c1_k1",
+   "r1c1_k2",
+   "r1c1_k3"
+  ],
+  "c2": [
+   "r1c2_k0",
+   "r1c2_k1",
+   "r1c2_k2",
+   "r1c2_k3"
+  ]
+ },
+ "window_links": [
+  {
+   "chain": "c0",
+   "half": "h0",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 14,
+   "n": 8
+  },
+  {
+   "chain": "c0",
+   "half": "h1",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 14,
+   "n": 4
+  },
+  {
+   "chain": "c0",
+   "half": "h1",
+   "bus": "L166m_o",
+   "dir": "out",
+   "regs": 7,
+   "n": 4
+  },
+  {
+   "chain": "c1",
+   "half": "h0",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 15,
+   "n": 8
+  },
+  {
+   "chain": "c1",
+   "half": "h1",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 15,
+   "n": 4
+  },
+  {
+   "chain": "c1",
+   "half": "h1",
+   "bus": "L166m_o",
+   "dir": "out",
+   "regs": 5,
+   "n": 4
+  },
+  {
+   "chain": "c2",
+   "half": "h0",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 15,
+   "n": 8
+  },
+  {
+   "chain": "c2",
+   "half": "h1",
+   "bus": "L14_i",
+   "dir": "in",
+   "regs": 15,
+   "n": 4
+  },
+  {
+   "chain": "c2",
+   "half": "h1",
+   "bus": "L166m_o",
+   "dir": "out",
+   "regs": 3,
+   "n": 4
+  },
+  {
+   "chain": "c3",
+   "half": "h0",
+   "bus": "L175m_i",
+   "dir": "in",
+   "regs": 1,
+   "n": 2
+  },
+  {
+   "chain": "c3",
+   "half": "h0",
+   "bus": "L186m_o",
+   "dir": "out",
+   "regs": 1,
+   "n": 2
+  },
+  {
+   "chain": "c3",
+   "half": "h1",
+   "bus": "L175m_i",
+   "dir": "in",
+   "regs": 1,
+   "n": 2
+  },
+  {
+   "chain": "c3",
+   "half": "h1",
+   "bus": "L186m_o",
+   "dir": "out",
+   "regs": 1,
+   "n": 2
+  }
+ ],
+ "critical_pairs": {
+  "h0_h1": "bound 33-bit direct (0 regs) h0 ra->rb->h1 per stack: centre <= 405 um (stscan missing>405 gate)",
+  "one_reg_face_links": "window <-> core with 1 relay register: L1 <= 810 um",
+  "h0h1_max_um": 330.5,
+  "reach_violations_after": [
+   {
+    "bus": "L168m_i",
+    "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair6",
+    "regs": 2,
+    "bits": 514,
+    "L1": 1585,
+    "lim": 1215.0,
+    "ok": false
+   },
+   {
+    "bus": "L168m_i",
+    "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair7",
+    "regs": 2,
+    "bits": 514,
+    "L1": 1270,
+    "lim": 1215.0,
+    "ok": false
+   },
+   {
+    "bus": "L168m_i",
+    "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair5",
+    "regs": 2,
+    "bits": 364,
+    "L1": 1900,
+    "lim": 1215.0,
+    "ok": false
+   },
+   {
+    "bus": "L168m_i",
+    "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair0",
+    "regs": 4,
+    "bits": 2,
+    "L1": 2255,
+    "lim": 2025.0,
+    "ok": false
+   }
+  ]
+ },
+ "re_sited": {
+  "ft_slots": [
+   {
+    "slot": "L28y2",
+    "moved": 6,
+    "max_hop": 401.8,
+    "first": 400.2,
+    "last": 399.2
+   },
+   {
+    "slot": "L5063y1",
+    "moved": 2,
+    "max_hop": 401.8,
+    "first": 392.8,
+    "last": 410.8
+   },
+   {
+    "slot": "L5064y3",
+    "moved": 5,
+    "max_hop": 401.8,
+    "first": 403.3,
+    "last": 249.7
+   },
+   {
+    "slot": "L5065y0",
+    "moved": 1,
+    "max_hop": 401.8,
+    "first": 392.4,
+    "last": 387.8
+   },
+   {
+    "slot": "L42y1",
+    "moved": 3,
+    "max_hop": 401.8,
+    "first": 392.5,
+    "last": 257.8
+   },
+   {
+    "slot": "L5060y0",
+    "moved": 4,
+    "max_hop": 401.8,
+    "first": 400.2,
+    "last": 137.2
+   },
+   {
+    "slot": "L5066y0",
+    "moved": 7,
+    "max_hop": 401.8,
+    "first": 400.6,
+    "last": 179.4
+   },
+   {
+    "slot": "L5059y0",
+    "moved": 6,
+    "max_hop": 401.8,
+    "first": 401.3,
+    "last": 396.7
+   },
+   {
+    "slot": "L5056y2",
+    "moved": 3,
+    "max_hop": 401.8,
+    "first": 372.2,
+    "last": 41.0
+   },
+   {
+    "slot": "L5054y0",
+    "moved": 4,
+    "max_hop": 401.8,
+    "first": 395.7,
+    "last": 29.2
+   },
+   {
+    "slot": "L5055y0",
+    "moved": 4,
+    "max_hop": 401.8,
+    "first": 401.5,
+    "last": 29.2
+   },
+   {
+    "slot": "L5067y0",
+    "moved": 3,
+    "max_hop": 401.8,
+    "first": 402.1,
+    "last": 74.4
+   },
+   {
+    "slot": "L5077y1",
+    "moved": 2,
+    "max_hop": 401.8,
+    "first": 391.7,
+    "last": 317.0
+   },
+   {
+    "slot": "L5096y2",
+    "moved": 11,
+    "max_hop": 216.0,
+    "first": 99.2,
+    "last": 16.7
+   },
+   {
+    "slot": "L5079y2",
+    "moved": 3,
+    "max_hop": 401.8,
+    "first": 398.0,
+    "last": 11.1
+   },
+   {
+    "slot": "L5099y2",
+    "moved": 9,
+    "max_hop": 241.9,
+    "first": 94.5,
+    "last": 13.7
+   },
+   {
+    "slot": "L5095y2",
+    "moved": 9,
+    "max_hop": 250.6,
+    "first": 91.3,
+    "last": 12.7
+   },
+   {
+    "slot": "L5100y2",
+    "moved": 12,
+    "max_hop": 241.9,
+    "first": 88.0,
+    "last": 10.2
+   },
+   {
+    "slot": "L732y1",
+    "moved": 5,
+    "max_hop": 401.8,
+    "first": 401.3,
+    "last": 37.1
+   },
+   {
+    "slot": "L204my1",
+    "moved": 2,
+    "max_hop": 397.4,
+    "first": 334.0,
+    "last": 13.1
+   }
+  ],
+  "plan_stations": 73,
+  "plan_station_regs": 127
+ },
+ "rationale": "Ladder c18 shelf-packed each idx stack's h0 halves and h1 on different shelves (h0->h1 centre up to 2.4 mm, stscan missing>405). Here each stack is one frame (h1 + ra + rb, 4.32/6.05 um apart, h0->h1 centre <= 331 um). Banks keep their ladder sites (q_b011 pair7 and the q_b010__physical_v1 bank rows 1 and 3 move to open frame slots), so plan-station counts stay as bound; frames are placed where their soft relay counts reach their windows (1-reg links <= 810 um, 3-reg <= 1620 um), frame rows sit between the 250-um die cut lines (or put a line through the 4.32-um h1/h0 gap) so no partition cut-segment ratio rises above max(0.6, t19), the clock tap stays in a street, and ft-slot / plan-station register sites covered by a frame are re-sited on free sites with the same count (hops <= 405 um, first/last hop measured to the far end of the window)."
+}

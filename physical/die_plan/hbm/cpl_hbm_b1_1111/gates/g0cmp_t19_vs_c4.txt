@@ -1,0 +1,15 @@
+{"base_errors": 554, "new_errors": 552, "base_warnings": 1807, "new_warnings": 1850, "err_findings_base": 554, "err_findings_new": 552, "new_err": 6, "lost_err": 8}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 10000: NW_b001 segment carries 6094 bits on 8368 tracks = 0.73 > 0.6", "part": "NW_b001"}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 10250: NW_b001 segment carries 6759 bits on 8557 tracks = 0.79 > 0.6", "part": "NW_b001"}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 6250: NW_b010 segment carries 3796 bits on 5814 tracks = 0.65 > 0.6", "part": "NW_b010"}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 7750: NW_b010 segment carries 4184 bits on 5418 tracks = 0.77 > 0.6", "part": "NW_b010"}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 8000: NW_b010 segment carries 3180 bits on 4707 tracks = 0.68 > 0.6", "part": "NW_b010"}
++ {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 9750: NW_b001 segment carries 6094 bits on 8840 tracks = 0.69 > 0.6", "part": "NW_b001"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 10000: NE_b001 segment carries 6668 bits on 9119 tracks = 0.73 > 0.6", "part": "NE_b001"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 10250: NW_b001 segment carries 6759 bits on 8368 tracks = 0.81 > 0.6", "part": "NW_b001"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 6250: NW_b010 segment carries 3796 bits on 5260 tracks = 0.72 > 0.6", "part": "NW_b010"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 7250: NW_b010 segment carries 2960 bits on 4666 tracks = 0.63 > 0.6", "part": "NW_b010"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 7750: NW_b010 segment carries 4184 bits on 5387 tracks = 0.78 > 0.6", "part": "NW_b010"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 8000: NE_b011 segment carries 3101 bits on 4451 tracks = 0.70 > 0.6", "part": "NE_b011"}
+- {"check": "cuts", "level": "ERROR", "msg": "horizontal cut at 9750: NW_b001 segment carries 6094 bits on 7702 tracks = 0.79 > 0.6", "part": "NW_b001"}
+- {"check": "cuts", "level": "ERROR", "msg": "vertical cut at 24750: NE_b010 segment carries 9552 bits on 13439 tracks = 0.71 > 0.6", "part": "NE_b010"}
