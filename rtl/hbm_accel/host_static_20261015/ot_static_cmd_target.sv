@@ -124,7 +124,22 @@ module ot_static_cmd_target_core #(
         assign rd_word = '0; assign tab_w_ce = '0;
     end endgenerate
     wire [31:0] fire_at = (MUT == 1) ? head_fire + 32'd1 : head_fire;
+`ifdef OT_CMD_FIRE_EARLY
+    // OT_CMD_FIRE_EARLY (DIE-HBM-97 11-10): fire is a flop computed one edge early from the next state (0 latency).
+    localparam [31:0] FE_M = (MUT == 1) ? 32'd1 : 32'd0;
+    reg fire_q;
+    reg [31:0] fe_cyc1, fe_rel;
+    wire fire = fire_q;
+    wire fe_ld = nxt_v && (!head_v || fire);
+    wire fe_hv_n = !fault_r && (fe_ld || (head_v && !fire));
+`ifdef OT_CMD_FIRE_EARLY_NEG
+    wire fe_hit_n = fe_ld ? (fe_rel == nxt[31:0] + 32'd1) : (fe_cyc1 == head_fire + 32'd1);   // negative control: 1 late
+`else
+    wire fe_hit_n = fe_ld ? (fe_rel == nxt[31:0]) : (fe_cyc1 == head_fire);
+`endif
+`else
     wire fire = head_v && cyc == fire_at;
+`endif
     wire late = head_v && $signed(fire_at - cyc) < 0;
     // payload of nxt with the launch-relative fields rebased
     wire [CW-1:0] nxt_pl;
@@ -147,6 +162,9 @@ module ot_static_cmd_target_core #(
             // tab_w_ce (wr_q_t_lanes4 / xload_cl2_ctlx _k10).  tab_w_ce is gated by the reset tw_we, which is set together
             // with tw_sel, so behaviour from reset is unchanged; the constant bits are now true constants.
             tw_sel <= 2'd0;
+`ifdef OT_CMD_FIRE_EARLY
+            fire_q <= 1'b0; fe_cyc1 <= 32'd1 - FE_M; fe_rel <= 32'd0;
+`endif
         end else begin
             a_we <= 0; b_we <= 0; run_v <= 0; tw_we <= 0;
             // HBM-CORES-KITS-4 10-28: MODE 1 has no run window; run_base / run_count were never assigned there, so
@@ -213,8 +231,24 @@ module ot_static_cmd_target_core #(
             // ---- status
             fault <= fault_r || (|flt_q);
             active <= seq_on || (|act_q);
+`ifdef OT_CMD_FIRE_EARLY
+            // ---- one-edge-early fire (next-state compare; see the header of cmd_fire_early_patch.py)
+            fe_cyc1 <= fe_cyc1 + 32'd1;
+            fe_rel <= rd_q ? (cyc + 32'd2 - rd_lb - FE_M) : (fe_rel + 32'd1);
+            fire_q <= fe_hv_n && fe_hit_n;
+`endif
         end
     end
+`ifdef OT_CMD_FIRE_EARLY
+`ifdef FORMAL
+    // inductive invariant: the early flop equals the original combinational fire in every reachable state
+    always @* begin
+        assert (fire_q == (head_v && cyc == fire_at));
+        assert (fe_cyc1 == cyc + 32'd1 - FE_M);
+        assert (!nxt_v || fe_rel == cyc + 32'd1 - nxt_lb - FE_M);
+    end
+`endif
+`endif
 endmodule
 // The die master: the core with its command table on the same clock -- ports and behaviour exactly as before the split.
 module ot_static_cmd_target #(

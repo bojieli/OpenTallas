@@ -1,0 +1,380 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/eq/inv.ys' --
+
+1. Executing Verilog-2005 frontend: /eq/candidate.sv
+Parsing formal SystemVerilog input from `/eq/candidate.sv' to AST representation.
+Generating RTLIL representation for module `\cp_rstrep_core'.
+Generating RTLIL representation for module `\cp_rstrep_wrapper'.
+Successfully finished Verilog frontend.
+Parameter \DATA_RESET_REPLICAS = 1
+Parameter \MODE = 1
+Parameter \CW = 308
+Parameter \RELF = 2
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \TGT_PIN = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\cp_rstrep_core'.
+Parameter \DATA_RESET_REPLICAS = 1
+Parameter \MODE = 1
+Parameter \CW = 308
+Parameter \RELF = 2
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$829b02f437caa05165700e8b20f4986902fd271e\cp_rstrep_core'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \cp_rstrep_core
+
+3.2. Analyzing design hierarchy..
+Top module:  \cp_rstrep_core
+Removing unused module `\cp_rstrep_wrapper'.
+Removed 1 unused modules.
+Module cp_rstrep_core directly or indirectly contains formal properties -> setting "keep" attribute.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+Found and cleaned up 5 empty switches in `\cp_rstrep_core.$proc$/eq/candidate.sv:79$415'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:79$415'.
+Cleaned up 8 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/eq/candidate.sv:99$208 in module cp_rstrep_core.
+Marked 15 switch rules as full_case in process $proc$/eq/candidate.sv:167$237 in module cp_rstrep_core.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 21 redundant assignments.
+Promoted 10 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+Found async reset \rst_n in `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~30 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+     1/5: $0\flt_q[0:0]
+     2/5: $0\act_q[0:0]
+     3/5: $0\lv[0:0]
+     4/5: $0\dv[0:0]
+     5/5: $0\cv[0:0]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:102$210'.
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+     1/40: $0\rd_q[0:0]
+     2/40: $0\fire_q[0:0]
+     3/40: $0\fe_rel[31:0]
+     4/40: $0\fe_cyc1[31:0]
+     5/40: $0\active[0:0]
+     6/40: $0\fault[0:0]
+     7/40: $0\cmd_v[0:0]
+     8/40: $0\cycle[31:0]
+     9/40: $0\cyc[31:0]
+    10/40: $0\tw_we[0:0]
+    11/40: $0\run_v[0:0]
+    12/40: $0\b_we[0:0]
+    13/40: $0\a_we[0:0]
+    14/40: $0\tw_sel[1:0]
+    15/40: $0\tw_addr[6:0]
+    16/40: $0\head_pl[307:0]
+    17/40: $0\nxt[339:0]
+    18/40: $0\rem[15:0]
+    19/40: $0\s_loops[15:0]
+    20/40: $0\s_base[12:0]
+    21/40: $0\s_limit[12:0]
+    22/40: $0\idx[6:0]
+    23/40: $0\fault_r[0:0]
+    24/40: $0\head_v[0:0]
+    25/40: $0\nxt_v[0:0]
+    26/40: $0\rd_end[0:0]
+    27/40: $0\seq_on[0:0]
+    28/40: $0\head_fire[31:0]
+    29/40: $0\nxt_lb[31:0]
+    30/40: $0\rd_lb[31:0]
+    31/40: $0\lbase[31:0]
+    32/40: $0\period[31:0]
+    33/40: $0\configured[0:0]
+    34/40: $0\cmd[307:0]
+    35/40: $0\run_count[0:0]
+    36/40: $0\run_base[0:0]
+    37/40: $0\b_data[255:0]
+    38/40: $0\b_addr[0:0]
+    39/40: $0\a_data[255:0]
+    40/40: $0\a_addr[0:0]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:257$305'.
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$327'.
+     1/1: $0\tw_data[31:0]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$338'.
+     1/1: $0\tw_data[63:32]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$349'.
+     1/1: $0\tw_data[95:64]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$360'.
+     1/1: $0\tw_data[127:96]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$371'.
+     1/1: $0\tw_data[159:128]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$382'.
+     1/1: $0\tw_data[191:160]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$393'.
+     1/1: $0\tw_data[223:192]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$404'.
+     1/1: $0\tw_data[255:224]
+Creating decoders for process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\cp_rstrep_core.\cv' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+  created $adff cell `$procdff$733' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\dv' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+  created $adff cell `$procdff$738' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\lv' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+  created $adff cell `$procdff$743' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\act_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+  created $adff cell `$procdff$748' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\flt_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+  created $adff cell `$procdff$753' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\tgt_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:102$210'.
+  created $dff cell `$procdff$754' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\a_we' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$759' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\a_addr' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$766' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\a_data' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$773' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\b_we' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$778' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\b_addr' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$785' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\b_data' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$792' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\run_v' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$797' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\run_base' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$804' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\run_count' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$811' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\cmd_v' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$816' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\cmd' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$823' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\cycle' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$828' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\configured' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$833' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\fault' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$838' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\active' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$843' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\cyc' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$848' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\period' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$853' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\lbase' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$858' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\rd_lb' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$865' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\nxt_lb' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$872' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\head_fire' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$879' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\seq_on' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$884' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\rd_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$889' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\rd_end' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$894' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\nxt_v' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$899' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\head_v' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$904' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\fault_r' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$909' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\idx' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$914' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\s_limit' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$921' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\s_base' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$928' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\s_loops' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$935' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\rem' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$940' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\nxt' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$947' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\head_pl' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$954' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_we' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$959' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\tw_addr' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $dff cell `$procdff$966' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_sel' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$971' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\fire_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$976' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\fe_cyc1' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$981' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\fe_rel' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+  created $adff cell `$procdff$986' with positive edge clock and positive level reset.
+Creating register for signal `\cp_rstrep_core.\tw_data [31:0]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$327'.
+  created $dff cell `$procdff$987' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [63:32]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$338'.
+  created $dff cell `$procdff$988' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [95:64]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$349'.
+  created $dff cell `$procdff$989' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [127:96]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$360'.
+  created $dff cell `$procdff$990' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [159:128]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$371'.
+  created $dff cell `$procdff$991' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [191:160]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$382'.
+  created $dff cell `$procdff$992' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [223:192]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$393'.
+  created $dff cell `$procdff$993' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\tw_data [255:224]' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:161$404'.
+  created $dff cell `$procdff$994' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\target_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$995' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\addr_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$996' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\base_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$997' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\limit_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$998' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\loops_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$999' with positive edge clock.
+Creating register for signal `\cp_rstrep_core.\data_q' using process `\cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+  created $dff cell `$procdff$1000' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:99$208'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:102$210'.
+Found and cleaned up 22 empty switches in `\cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:167$237'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:257$305'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$327'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$327'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$338'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$338'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$349'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$349'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$360'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$360'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$371'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$371'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$382'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$382'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$393'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$393'.
+Found and cleaned up 1 empty switch in `\cp_rstrep_core.$proc$/eq/candidate.sv:161$404'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:161$404'.
+Removing empty process `cp_rstrep_core.$proc$/eq/candidate.sv:95$207'.
+Cleaned up 30 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cp_rstrep_core.
+<suppressed ~146 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cp_rstrep_core..
+Removed 55 unused cells and 323 unused wires.
+<suppressed ~56 debug messages>
+
+7. Executing ASYNC2SYNC pass.
+Replacing cp_rstrep_core.$procdff$759 ($adff): ARST=\rst_n, D=1'0, Q=\a_we
+Replacing cp_rstrep_core.$procdff$843 ($adff): ARST=\rst_n, D=$0\active[0:0], Q=\active
+Replacing cp_rstrep_core.$procdff$753 ($adff): ARST=\rst_n, D=\tgt_fault, Q=\flt_q
+Replacing cp_rstrep_core.$procdff$959 ($adff): ARST=\rst_n, D=$0\tw_we[0:0], Q=\tw_we
+Replacing cp_rstrep_core.$procdff$748 ($adff): ARST=\rst_n, D=\tgt_active, Q=\act_q
+Replacing cp_rstrep_core.$procdff$904 ($adff): ARST=\rst_n, D=$0\head_v[0:0], Q=\head_v
+Replacing cp_rstrep_core.$procdff$858 ($adff): ARST=\rst_n, D=$0\lbase[31:0], Q=\lbase
+Replacing cp_rstrep_core.$procdff$743 ($adff): ARST=\rst_n, D=\launch_v, Q=\lv
+Replacing cp_rstrep_core.$procdff$853 ($adff): ARST=\rst_n, D=$0\period[31:0], Q=\period
+Replacing cp_rstrep_core.$procdff$738 ($adff): ARST=\rst_n, D=\desc_v, Q=\dv
+Replacing cp_rstrep_core.$procdff$797 ($adff): ARST=\rst_n, D=1'0, Q=\run_v
+Replacing cp_rstrep_core.$procdff$733 ($adff): ARST=\rst_n, D=\cfg_v, Q=\cv
+Replacing cp_rstrep_core.$procdff$899 ($adff): ARST=\rst_n, D=$0\nxt_v[0:0], Q=\nxt_v
+Replacing cp_rstrep_core.$procdff$778 ($adff): ARST=\rst_n, D=1'0, Q=\b_we
+Replacing cp_rstrep_core.$procdff$909 ($adff): ARST=\rst_n, D=$0\fault_r[0:0], Q=\fault_r
+Replacing cp_rstrep_core.$procdff$833 ($adff): ARST=\rst_n, D=$0\configured[0:0], Q=\configured
+Replacing cp_rstrep_core.$procdff$986 ($adff): ARST=\rst_n, D=$0\fe_rel[31:0], Q=\fe_rel
+Replacing cp_rstrep_core.$procdff$914 ($adff): ARST=\rst_n, D=$0\idx[6:0], Q=\idx
+Replacing cp_rstrep_core.$procdff$838 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing cp_rstrep_core.$procdff$816 ($adff): ARST=\rst_n, D=$0\cmd_v[0:0], Q=\cmd_v
+Replacing cp_rstrep_core.$procdff$940 ($adff): ARST=\rst_n, D=$0\rem[15:0], Q=\rem
+Replacing cp_rstrep_core.$procdff$971 ($adff): ARST=\rst_n, D=$0\tw_sel[1:0], Q=\tw_sel
+Replacing cp_rstrep_core.$procdff$848 ($adff): ARST=\rst_n, D=$0\cyc[31:0], Q=\cyc
+Replacing cp_rstrep_core.$procdff$981 ($adff): ARST=\rst_n, D=$0\fe_cyc1[31:0], Q=\fe_cyc1
+Replacing cp_rstrep_core.$procdff$828 ($adff): ARST=\rst_n, D=\cyc, Q=\cycle
+Replacing cp_rstrep_core.$procdff$894 ($adff): ARST=\rst_n, D=$0\rd_end[0:0], Q=\rd_end
+Replacing cp_rstrep_core.$procdff$889 ($adff): ARST=\rst_n, D=$0\rd_q[0:0], Q=\rd_q
+Replacing cp_rstrep_core.$procdff$884 ($adff): ARST=\rst_n, D=$0\seq_on[0:0], Q=\seq_on
+Replacing cp_rstrep_core.$procdff$976 ($adff): ARST=\rst_n, D=$0\fire_q[0:0], Q=\fire_q
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 377 cells to SAT database.
+Import proof for assert: $logic_or$/eq/candidate.sv:260$320_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:259$313_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:258$309_Y when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Imported 377 cells to SAT database.
+No constraints for initial state found.
+
+Import proof for assert: $logic_or$/eq/candidate.sv:260$320_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:259$313_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:258$309_Y when 1'1.
+
+[base case 1] Solving problem with 41495 variables and 108057 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 377 cells to SAT database.
+Import proof for assert: $logic_or$/eq/candidate.sv:260$320_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:259$313_Y when 1'1.
+Import proof for assert: $eq$/eq/candidate.sv:258$309_Y when 1'1.
+
+[induction step 1] Solving problem with 91090 variables and 241866 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 93a361e0ab, time: 2.10s, user: 2.03s, system: 0.14s, MEM: 122.98 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 92% 1x sat (1 sec), 1% 2x read_verilog (0 sec), ...

@@ -1,0 +1,333 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/eq/inv.ys' --
+
+1. Executing Verilog-2005 frontend: /eq/ot_static_cmd_target.sv
+Parsing formal SystemVerilog input from `/eq/ot_static_cmd_target.sv' to AST representation.
+Generating RTLIL representation for module `\ot_static_cmd_target_core'.
+Generating RTLIL representation for module `\ot_static_cmd_target'.
+Successfully finished Verilog frontend.
+Parameter \MODE = 1
+Parameter \CW = 308
+Parameter \RELF = 2
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \TGT_PIN = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_cmd_target_core'.
+Parameter \MODE = 1
+Parameter \CW = 308
+Parameter \RELF = 2
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$ff7ecfd5fda27b887209dd173cc218c0a38d30bf\ot_static_cmd_target_core'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_static_cmd_target_core
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_static_cmd_target_core
+Removing unused module `\ot_static_cmd_target'.
+Removed 1 unused modules.
+Module ot_static_cmd_target_core directly or indirectly contains formal properties -> setting "keep" attribute.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+Found and cleaned up 5 empty switches in `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:77$238'.
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:77$238'.
+Cleaned up 8 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/eq/ot_static_cmd_target.sv:97$119 in module ot_static_cmd_target_core.
+Marked 15 switch rules as full_case in process $proc$/eq/ot_static_cmd_target.sv:155$148 in module ot_static_cmd_target_core.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 21 redundant assignments.
+Promoted 10 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+Found async reset \rst_n in `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~22 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+     1/5: $0\flt_q[0:0]
+     2/5: $0\act_q[0:0]
+     3/5: $0\lv[0:0]
+     4/5: $0\dv[0:0]
+     5/5: $0\cv[0:0]
+Creating decoders for process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:100$121'.
+Creating decoders for process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+     1/41: $0\rd_q[0:0]
+     2/41: $0\fire_q[0:0]
+     3/41: $0\fe_rel[31:0]
+     4/41: $0\fe_cyc1[31:0]
+     5/41: $0\active[0:0]
+     6/41: $0\fault[0:0]
+     7/41: $0\cmd_v[0:0]
+     8/41: $0\cycle[31:0]
+     9/41: $0\cyc[31:0]
+    10/41: $0\tw_we[0:0]
+    11/41: $0\run_v[0:0]
+    12/41: $0\b_we[0:0]
+    13/41: $0\a_we[0:0]
+    14/41: $0\tw_data[255:0]
+    15/41: $0\tw_sel[1:0]
+    16/41: $0\tw_addr[6:0]
+    17/41: $0\head_pl[307:0]
+    18/41: $0\nxt[339:0]
+    19/41: $0\rem[15:0]
+    20/41: $0\s_loops[15:0]
+    21/41: $0\s_base[12:0]
+    22/41: $0\s_limit[12:0]
+    23/41: $0\idx[6:0]
+    24/41: $0\fault_r[0:0]
+    25/41: $0\head_v[0:0]
+    26/41: $0\nxt_v[0:0]
+    27/41: $0\rd_end[0:0]
+    28/41: $0\seq_on[0:0]
+    29/41: $0\head_fire[31:0]
+    30/41: $0\nxt_lb[31:0]
+    31/41: $0\rd_lb[31:0]
+    32/41: $0\lbase[31:0]
+    33/41: $0\period[31:0]
+    34/41: $0\configured[0:0]
+    35/41: $0\cmd[307:0]
+    36/41: $0\run_count[0:0]
+    37/41: $0\run_base[0:0]
+    38/41: $0\b_data[255:0]
+    39/41: $0\b_addr[0:0]
+    40/41: $0\a_data[255:0]
+    41/41: $0\a_addr[0:0]
+Creating decoders for process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:245$216'.
+Creating decoders for process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_static_cmd_target_core.\cv' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+  created $adff cell `$procdff$551' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\dv' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+  created $adff cell `$procdff$556' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\lv' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+  created $adff cell `$procdff$561' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\act_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+  created $adff cell `$procdff$566' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\flt_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+  created $adff cell `$procdff$571' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\tgt_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:100$121'.
+  created $dff cell `$procdff$572' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\a_we' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$577' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\a_addr' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$584' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\a_data' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$591' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\b_we' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$596' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\b_addr' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$603' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\b_data' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$610' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\run_v' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$615' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\run_base' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$622' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\run_count' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$629' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\cmd_v' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$634' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\cmd' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$641' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\cycle' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$646' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\configured' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$651' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\fault' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$656' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\active' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$661' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\cyc' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$666' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\period' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$671' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\lbase' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$676' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\rd_lb' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$683' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\nxt_lb' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$690' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\head_fire' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$697' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\seq_on' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$702' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\rd_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$707' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\rd_end' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$712' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\nxt_v' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$717' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\head_v' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$722' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\fault_r' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$727' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\idx' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$732' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\s_limit' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$739' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\s_base' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$746' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\s_loops' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$753' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\rem' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$758' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\nxt' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$765' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\head_pl' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$772' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\tw_we' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$777' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\tw_addr' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$784' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\tw_sel' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$789' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\tw_data' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $dff cell `$procdff$796' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\fire_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$801' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\fe_cyc1' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$806' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\fe_rel' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+  created $adff cell `$procdff$811' with positive edge clock and positive level reset.
+Creating register for signal `\ot_static_cmd_target_core.\target_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$812' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\addr_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$813' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\base_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$814' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\limit_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$815' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\loops_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$816' with positive edge clock.
+Creating register for signal `\ot_static_cmd_target_core.\data_q' using process `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+  created $dff cell `$procdff$817' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:97$119'.
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:100$121'.
+Found and cleaned up 22 empty switches in `\ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:155$148'.
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:245$216'.
+Removing empty process `ot_static_cmd_target_core.$proc$/eq/ot_static_cmd_target.sv:93$118'.
+Cleaned up 22 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_static_cmd_target_core.
+<suppressed ~140 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_static_cmd_target_core..
+Removed 56 unused cells and 305 unused wires.
+<suppressed ~57 debug messages>
+
+7. Executing ASYNC2SYNC pass.
+Replacing ot_static_cmd_target_core.$procdff$577 ($adff): ARST=\rst_n, D=1'0, Q=\a_we
+Replacing ot_static_cmd_target_core.$procdff$717 ($adff): ARST=\rst_n, D=$0\nxt_v[0:0], Q=\nxt_v
+Replacing ot_static_cmd_target_core.$procdff$571 ($adff): ARST=\rst_n, D=\tgt_fault, Q=\flt_q
+Replacing ot_static_cmd_target_core.$procdff$671 ($adff): ARST=\rst_n, D=$0\period[31:0], Q=\period
+Replacing ot_static_cmd_target_core.$procdff$777 ($adff): ARST=\rst_n, D=$0\tw_we[0:0], Q=\tw_we
+Replacing ot_static_cmd_target_core.$procdff$566 ($adff): ARST=\rst_n, D=\tgt_active, Q=\act_q
+Replacing ot_static_cmd_target_core.$procdff$806 ($adff): ARST=\rst_n, D=$0\fe_cyc1[31:0], Q=\fe_cyc1
+Replacing ot_static_cmd_target_core.$procdff$561 ($adff): ARST=\rst_n, D=\launch_v, Q=\lv
+Replacing ot_static_cmd_target_core.$procdff$712 ($adff): ARST=\rst_n, D=$0\rd_end[0:0], Q=\rd_end
+Replacing ot_static_cmd_target_core.$procdff$556 ($adff): ARST=\rst_n, D=\desc_v, Q=\dv
+Replacing ot_static_cmd_target_core.$procdff$789 ($adff): ARST=\rst_n, D=$0\tw_sel[1:0], Q=\tw_sel
+Replacing ot_static_cmd_target_core.$procdff$551 ($adff): ARST=\rst_n, D=\cfg_v, Q=\cv
+Replacing ot_static_cmd_target_core.$procdff$651 ($adff): ARST=\rst_n, D=$0\configured[0:0], Q=\configured
+Replacing ot_static_cmd_target_core.$procdff$722 ($adff): ARST=\rst_n, D=$0\head_v[0:0], Q=\head_v
+Replacing ot_static_cmd_target_core.$procdff$727 ($adff): ARST=\rst_n, D=$0\fault_r[0:0], Q=\fault_r
+Replacing ot_static_cmd_target_core.$procdff$732 ($adff): ARST=\rst_n, D=$0\idx[6:0], Q=\idx
+Replacing ot_static_cmd_target_core.$procdff$634 ($adff): ARST=\rst_n, D=$0\cmd_v[0:0], Q=\cmd_v
+Replacing ot_static_cmd_target_core.$procdff$801 ($adff): ARST=\rst_n, D=$0\fire_q[0:0], Q=\fire_q
+Replacing ot_static_cmd_target_core.$procdff$666 ($adff): ARST=\rst_n, D=$0\cyc[31:0], Q=\cyc
+Replacing ot_static_cmd_target_core.$procdff$676 ($adff): ARST=\rst_n, D=$0\lbase[31:0], Q=\lbase
+Replacing ot_static_cmd_target_core.$procdff$615 ($adff): ARST=\rst_n, D=1'0, Q=\run_v
+Replacing ot_static_cmd_target_core.$procdff$596 ($adff): ARST=\rst_n, D=1'0, Q=\b_we
+Replacing ot_static_cmd_target_core.$procdff$656 ($adff): ARST=\rst_n, D=$0\fault[0:0], Q=\fault
+Replacing ot_static_cmd_target_core.$procdff$758 ($adff): ARST=\rst_n, D=$0\rem[15:0], Q=\rem
+Replacing ot_static_cmd_target_core.$procdff$661 ($adff): ARST=\rst_n, D=$0\active[0:0], Q=\active
+Replacing ot_static_cmd_target_core.$procdff$707 ($adff): ARST=\rst_n, D=$0\rd_q[0:0], Q=\rd_q
+Replacing ot_static_cmd_target_core.$procdff$811 ($adff): ARST=\rst_n, D=$0\fe_rel[31:0], Q=\fe_rel
+Replacing ot_static_cmd_target_core.$procdff$646 ($adff): ARST=\rst_n, D=\cyc, Q=\cycle
+Replacing ot_static_cmd_target_core.$procdff$702 ($adff): ARST=\rst_n, D=$0\seq_on[0:0], Q=\seq_on
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 296 cells to SAT database.
+Import proof for assert: $logic_or$/eq/ot_static_cmd_target.sv:248$231_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:247$224_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:246$220_Y when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Imported 296 cells to SAT database.
+No constraints for initial state found.
+
+Import proof for assert: $logic_or$/eq/ot_static_cmd_target.sv:248$231_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:247$224_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:246$220_Y when 1'1.
+
+[base case 1] Solving problem with 48331 variables and 126683 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 296 cells to SAT database.
+Import proof for assert: $logic_or$/eq/ot_static_cmd_target.sv:248$231_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:247$224_Y when 1'1.
+Import proof for assert: $eq$/eq/ot_static_cmd_target.sv:246$220_Y when 1'1.
+
+[induction step 1] Solving problem with 104762 variables and 279118 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: ed73af0355, time: 2.32s, user: 2.23s, system: 0.15s, MEM: 140.75 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 93% 1x sat (2 sec), 1% 1x opt_clean (0 sec), ...

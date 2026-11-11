@@ -1,0 +1,5 @@
+read_verilog -sv -formal -DSYNTHESIS -DOT_CMD_FIRE_EARLY -DFORMAL  /eq/ot_static_cmd_target.sv
+chparam -set MODE 1 -set CW 308 -set RELF 2 -set TGT_PIN 1 -set NA 1 -set NF 1 -set MUT 1 ot_static_cmd_target_core
+hierarchy -top ot_static_cmd_target_core
+proc; flatten; opt_clean; async2sync
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -maxsteps 12 -verify
