@@ -27680,7 +27680,10 @@
     "epyc9",
     "epyc2"
    ],
-   "pilot_max_prev_kw45_1111": 2
+   "pilot_max_prev_kw45_1111": 2,
+   "route_hold_items": {
+    "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-45 11-11 (COORD): GRT-ARM[off] enqueue refused each tick (src must be branch@sha); route held until the enqueue_src class fix claude/kw-fix-45-queue-src-free-text-1111@db68b01991cb is deployed"
+   }
   },
   "hbm": {
    "enabled": true,
@@ -27876,7 +27879,7 @@
    ],
    "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 0 rows | KW-FIX-18 19:4x: tag flow-20261106-r-hbm 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-p-hbm e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-o-hbm 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-n-hbm 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-m-hbm 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-17 16:4x: HBM tag flow-20261106-l-hbm c299a5dfc10 (B7..B10 forms, recipes_b2) -> src kw11/src_hbml | KW-FIX-17 16:2x: HBM tag flow-20261106-k-hbm 7040684e850 -> src kw11/src_x (scratch2); plan d44v11 + core_clock_regions unchanged (outside src); d44v/ev74 plan_of_record change in the tag is DIE-HBM-75's event, not adopted here | KW-FIX-8 21:4x I62: plan d44v11 = d44v10 + main d5f67b31226 plan_of_record/d44v, parts 13 8 14; src src_y (cp -al); cancel_superseded false so the stage stops no live row. | KW-FIX-6 05:5x COORD 05:42 (4): plan d44v10 = fold 80ac3f4decbd (main df511fc9ae6, flow-20261104-f-hbm), src hbmsrc2; cancel_superseded false so the fold stops no live row; 22 of 24 live rows keep their keys, hnx_fused_lane@9 + hnx_rp3lp3h_s@6 run on as old-key reads; hnx_rp3h_xs in only_items for the xs class fix. | KW-FIX-6 03:5x COORD 03:41: LEC + tkm root class batch, src kw-fix-6/hbmsrc = main 902085405d8; DIE-HBM-63 hand-flow items and clock-window resumes untouched | KW-FIX-5 01:1x HBM-STAGE: 3 recipe pin refs fetched into hbmsrc store; wr_q @4 retry; 7 stale names out of only_items; NO_RECIPE and PORT_MISMATCH held | KW-FIX-5: d44v9 lacked 74 PoR core files + macro views in sparse src (DIE-HBM /FLOW 00:1x); staged 00:20; tkm root held on /FLOW MAP_AMBIGUOUS | KW-FIX-5 00:0x (DIE-HBM-62 23:19 list, COORD 23:2x): plan d44v9 = d44v part 6+6a (die_plan 0b93e32e4ce8), src sparse kw-fix-5/hbmsrc = main 386f7a71f8a; 6 sub-cores RF1 recipe, 4 stale vms_bank, tkm_m root retry | KW-FIX-4 20:3x LEC-EQCONST batch: src kw-fix-4-hbmi8 = main 34659669869 (I8 lecneq 298bfc55e92 LEC-EQCONST-RESTORE); RF1 d35a67594c7 included | KW-FIX-4 19:5x HBM-RF1 (OWNER 18:57, COORD 19:04, DIE-HBM-61/RF1-BUILD): src kw-fix-4-hbmrf1 = d35a67594c7 (b07b52ff0c7 + q2_reduce oneclk / llr RW if-generate fixes, approved I6); RF1 item_args (util 0.40, face-reset-relay 2, regions rf1 69ed115a) on 6 not-in-flight items; the 6 in-flight RF1 items are launched by RF1-BUILD via ot-run (no double launch); old item_args in item_args_rf1prev | KW-FIX-4 19:0x I4 batch: src kw-fix-4-hbmi4 = main b07b52ff0c7 (hold/CLK-BAND 9855c866403: multiport density + hard_core_latency default-on) | KW-FIX-4 11-03 12:0x (COORD 10:4x item 2, DIE-HBM-61 11:4x d44v_por FROZEN 8/84): d44o -> d44v (prev d44o /srv/opentallas-scratch2/claude/kit-wave/hbm/d44o_cm/die_plan.json src 89eb1d03dba84a57aae71fa7c662ba005c8c6acc). KW-FIX-4-HBMV 2026-11-03 11:56 PST: d44o -> d44v (COORD 10:4x, DIE-HBM-61 11:0x). src claude/kw-fix-4-hbmv-1103@78e511e3a45 = main 5ef0158c8fa + gen_core_kit_hbm_rw.py (opt-in MEM recipe delta wrapper). RF1 item_args: --clock-regions 33 modules, --face-lockup '.*' 38 RF1 cores (census+regions), --rw-recipe-delta ['hfd_ep_static', 'ot_hbm_host_cp_rxs', 'ot_hnx_idxn_keybuf_slice'] (held until KNOWN RW rects: ['hfd_ep_static', 'ot_hbm_host_cp_rxs']), q3_edge on its current recipe. retry += 19 unchanged-key terminal records (move every row to d44v). | KW-FIX-3 2026-11-03 04:3x: retry += ot_hbm_idx_score_hcol_h1@1 (GEOM-111 class R member, pin_reg_max 156.3; fix merged 65396c58159, wave src rfh 53d3ca14368 carries the same face_flops change). The other 10 class R kits already run on rfh (KW-FIX-2 batch 00:0x), collected, not relaunched. | KW-FIX-2 11-03 00:0x (GEOM-111 class R, COORD 23:0x): src e96f241822a + reset-face-home (gen_core_kit_hbm skip set = clocks+straps; main branch claude/kw-fix-2-1102@d483825fd6e) = 53d3ca14368, locked sparse intel2 wt kit-wave-15-hbmtaps-rfh; 11 class-R holds released, batch retry item@last; retry q3_edge_core@2 / opstore_b@3 dropped (those attempts are RUNNING; kept they would HOLD at enqueue on the src change). | DIE-HBM-58/CORES 11-02 18:2x: take_states += REVIEW, KIT-PLACED so the 7 ccband CANCELLED-SOURCE rows (first_core, tailx_rest x2, lane_exp0_id, qcore_r13, xcal_rel_t, q2_reduce; OWNERS state REVIEW/KIT-PLACED) and never-waved bank128_pair_core / hcp_sys1 / tkm root relaunch on the fixed src (no-blind-retry guard still holds every other stored FAIL). | KIT-WAVE-15 18:3x ccband: src e5b857a7e34 (taps) + cherry-pick of ccband 0c1986bda = e96f241822a (branch pushed), new locked sparse intel2 wt kit-wave-15-hbmtaps (same cone as kit-wave-14-hbmtaps, which other procs still read). | KIT-WAVE-14 14:5x DIE-HBM-57 RULING (OWNER 12.23 fully automatic): the wave re-cuts the 21 lane-built single-root views on e5b857a7e34 whatever their OWNERS state: take_states += REVIEW/ROUTING/GEOM-REQ/KIT-PLACED/SIGNED-UNVERSIONED; the 13 other lan",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-   "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
    "gen_host": "epyc9",
    "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_fe0002fac6",
    "src_sha": "fe0002fac6ccd8e154f89c997302c9836884f69a",
@@ -28291,6 +28294,22 @@
       "243.6",
       "--face-in-stage",
       "^(cw|in_line|thr|ties)$=1"
+     ],
+     "ot_hgi_sfu_split3_ctl_rest_1c": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--orfs-var",
+      "OT_FF_CHAIN_PIN=1"
+     ],
+     "ot_hgi_sfu_opsb_group": [
+      "--orfs-var",
+      "OT_FF_CHAIN_PIN=1"
      ]
     },
     "args": [
@@ -29157,7 +29176,8 @@
     "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
-    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)"
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
+    "ot_hgi_sfu_opsb_group": "KW-FIX-45 11-11 (HBM-CORES-B/DIE-HBM-100 batch): opsb_group RTL (-DOT_OPSG_GP -DOT_OPSG_ROT) is not on main; held until the merge and the branch@sha ASK"
    },
    "gen_hosts": [
     "epyc8",
@@ -29527,7 +29547,9 @@
     "ot_hgi_sfu_split3_lane_core_fr",
     "ot_hidx_s3_q",
     "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4",
-    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b"
+    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b",
+    "ot_hgi_sfu_split3_ctl_rest_1c",
+    "ot_hgi_sfu_opsb_group"
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -30091,8 +30113,8 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
     "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
    },
    "gen_hosts_prev_kw32g": [
@@ -31816,152 +31838,152 @@
    "item_inputs_prev_kw38h": null,
    "item_inputs": {
     "q_spb0": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spb0__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "NE_io": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "NW_io": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "vsN0": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_hub_nw": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_hub_ne": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_sm0": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_sm1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_sm2": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_sm3": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b113": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b113__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spu1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_spu1); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)",
      "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
     },
     "q_spu1__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_spu1); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)",
      "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
      "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
     },
     "q_su30": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su30__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spb2__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_hub_ne__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
@@ -31980,244 +32002,244 @@
      "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
     },
     "q_b001": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b001__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b002": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b002__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b003__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b011": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b011__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b012": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b012__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b013": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b013__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b100__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b102": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b102__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b103__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b110": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b110__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b111": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b111__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b112": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b112__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spt0": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b003": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b000": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b000__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b101": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spb2": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su01__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su11__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su20": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "vsN2": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -32236,84 +32258,84 @@
      "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
     },
     "q_su01": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "PHY_NC": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "PHY_NE": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "PHY_NW": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b010": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b010__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b100": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b101_nw": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b103": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_mca": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_mcb": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
@@ -32324,20 +32346,20 @@
      "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
     },
     "q_spt0__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spt1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_spt2": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -32348,92 +32370,92 @@
      "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
     },
     "q_su00": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su00__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su10": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su10__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su11": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su20__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su21": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su21__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su31": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su31__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "root": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "vsN5": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
@@ -32460,12 +32482,12 @@
      "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
     },
     "vsN4": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "ot_hidx_s3_q": {
      "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
@@ -40580,7 +40602,686 @@
    "pilot_max_prev_kw45_1111": 2,
    "place_mem_gb_by_item": {
     "q_su20": 96
-   }
+   },
+   "item_inputs_prev_kw45_t19": {
+    "q_spb0": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spb0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "NE_io": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "NW_io": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "vsN0": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_hub_nw": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_hub_ne": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_sm0": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_sm1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_sm2": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_sm3": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b113": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b113__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spu1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_spu1); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
+    },
+    "q_spu1__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_spu1); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind",
+     "plan_prev_kw43h98": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "note_kw43h98": "KW-FIX-43 11-10 23:3x FTRES 23:10 ROW AMENDMENT: q_spu1 builds from plan_p11t_taps_spu1 70c3e990f40e (M7 band fix, GRT-0183); same bind/asbuilt/porous env"
+    },
+    "q_su30": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su30__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spb2__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_hub_ne__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_hub_nw__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p9_wsw_r/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_wsw15_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 16:4x COORD URGENT BIND_STALE class fix: canonical read-only kw43-canon/hbm (strict 0 errors, vK5d_c12), staged on epyc7/epyc2/intel1/epyc4"
+    },
+    "q_b001": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b001__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b002": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b002__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b003__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b011": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b011__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b012": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b012__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b013": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b013__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b100__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b102": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b102__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b103__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b110": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b110__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b111": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b111__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b112": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b112__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spt0": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b003": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b000": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b000__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b101": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spb2": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su01__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su11__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su20": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "vsN2": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "vsN6": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
+    },
+    "q_su01": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "PHY_NC": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+    },
+    "PHY_NE": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+    },
+    "PHY_NW": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+    },
+    "q_b010": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b010__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b100": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b101_nw": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_b103": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_mca": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_mcb": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 23:3x COORD 23:10 (5) / DIE-HBM-98: HBM-97 batch row on taps plan 29333b2b19c9 + taps bind 11b1d121579"
+    },
+    "q_spt0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spt1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_spt2": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_su00": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su00__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su10": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su10__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su11": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su20__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su21": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su21__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su31": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "q_su31__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "root": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "vsN5": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD ruling (extension after first p11t kit_topology pass, q_b000 a8): types with bind_matches True on p11t. Revert: delete item_inputs[k] for k in item_inputs_prev_kw43bsext."
+    },
+    "q_spu0": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p12t_spu0/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
+    },
+    "q_spu0__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p12t_spu0/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
+    },
+    "vsN4": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t11",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_cut1111_t10.json"
+     },
+     "note": "KW-FIX-45 11-11: repointed to the 12:00 cut plan t10 e6bb764f1f22 + its strict bind (78ea88152b23) + asbuilt_cut1111_t10 (was plan_p11t_taps_cyc); previous inputs in item_inputs_prev_kw45_1111. | KW-FIX-43 11-10 COORD 22:0x (2): ftres+PGR batch on HBM-TAPS plan_p11t_taps_cyc 29333b2b19c9 + its one fresh strict bind"
+    },
+    "ot_hidx_s3_q": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
+    },
+    "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
+    },
+    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b": {
+     "plan": "/srv/opentallas-scratch2/claude/die-hbm-97/plan_p11t_taps_cyc/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/die-hbm-97-taps/bind/bind_p11t_taps_cyc_vK5d_c12",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
+     },
+     "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
+    }
+   },
+   "plan_prev_kw45_t19": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json"
   }
  },
  "place_prefer": [
