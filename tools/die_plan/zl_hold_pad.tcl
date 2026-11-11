@@ -9,12 +9,14 @@
 # Clock nets never qualify (their drivers are ports / clock cells, not register outputs).  Pads are buffers:
 # logic unchanged.  NOT dont_touch (a dont_touch load blocks repair_design buffering of the driver net, RSZ-3006);
 # zero-logic hops carry no setup demand, so setup repair has no reason to touch them.  CTS detailed_placement legalizes.
-# Env: OT_ZLP (1 = on), OT_ZLP_DEPTH (default 4), OT_ZLP_MAX (abort above, default 150000), OT_ZLP_REPORT_ONLY.
+# Env: OT_ZLP (1 = on), OT_ZLP_DEPTH (default 4), OT_ZLP_MAX (abort above, default 150000), OT_ZLP_REPORT_ONLY,
+#      OT_ZLP_PORTS (1 = also pad register D pins fed by an input data port: port-start hold, hd_spn LK/LK0).
 proc zlp_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 if {[zlp_env OT_ZLP 0] eq "1"} {
   set zlp_depth [zlp_env OT_ZLP_DEPTH 4]
   set zlp_max [zlp_env OT_ZLP_MAX 150000]
   set zlp_ronly [zlp_env OT_ZLP_REPORT_ONLY 0]
+  set ::zlp_ports [zlp_env OT_ZLP_PORTS 0]
   set zlp_blk [ord::get_db_block]
   set zlp_master [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$zlp_master eq "NULL" || $zlp_master eq ""} { error "OT_ZLP: HB4xp67_ASAP7_75t_R master missing" }
@@ -32,7 +34,14 @@ if {[zlp_env OT_ZLP 0] eq "1"} {
       set st [$n getSigType]
       if {$st eq "CLOCK" || $st eq "POWER" || $st eq "GROUND"} { return 0 }
       set drv [zlp_driver $n]
-      if {$drv eq ""} { return 0 }
+      if {$drv eq ""} {
+        # OT_ZLP_PORTS=1: an input data port (not a clock / forwarded clock port) also counts as a launch point
+        if {$::zlp_ports ne "1"} { return 0 }
+        foreach bt [$n getBTerms] {
+          if {[$bt getIoType] eq "INPUT" && [$bt getSigType] ne "CLOCK" && ![regexp {^(f?clk|arst)} [$bt getName]]} { return 1 }
+        }
+        return 0
+      }
       set m [[$drv getInst] getMaster]
       if {[zlp_is_reg $m]} { return [regexp {^QN?$} [[$drv getMTerm] getName]] }
       if {![zlp_is_bufinv $m]} { return 0 }
