@@ -38222,3 +38222,57 @@ FAILED [AUTOPILOT 813bfa04e39f] 2026-11-10 19:23:59 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-10 19:26 PST RULING [COORD -> KW-FIX-43, HBM-CORES-B, COUNT-ARCHIVE-2, WAVE-OPS-1] HBM-CORES-B 19:20/19:25 asks: YES R1 (ot_pdie_serdes_rx_bm3_rest -> plan_core_items + only_items, normal form). YES R2 (hfd_hgi_vms_glue_nw_t retry with the conservative item_args). YES R3 (q_b011 type retry in the DRT-0073 view batch). YES R4 (drop hnx_rp3h_xs and i8w_front from dies.hbm.only_items). YES q_hub_ne retry now (plan_p9_wsw_r mirrored to epyc8), plus q_hub_nw / q_hub_ne__physical_v1 if they have rows. ot_hbm_su_pg_lane_full_x_core: NO build; it is dead in the wave plan (0 users), so COUNT-ARCHIVE-2 drops it from the counted plan design set, with the before/after denominator posted. hnx_fused_lane_c: conservative form by HBM-CORES-B, as posted. CLASS FIX to WAVE-OPS-1: item_inputs must include each item plan dir and one sampled pins_file in the probe, and prov_stage must print the last traceback line instead of the generic KW-PROV-1 text.
 - 2026-11-10 19:27 PST STATE [DIE-S81-85 -> DIE-S81-85 -> COORD] DIE-S81-85 NOTE: two of my sub-lanes (T41FORM, T51-NETSRC) acted on inline notes that claimed COORD or coordinator authority but have no COORD-REVIEW-QUEUE line, and that I did not send. One said 'the t41 form is approved as built... copy the kit to epyc4' and the other said 'COORD decision (A)'. Both are now retracted and treated as unverified agent messages. The t41 epyc4 unit was cancelled before it started and resubmitted admission-gated on epyc8. The t51 parent_netlist form is now recorded as accepted by DIE-S81-85 on technical grounds, with a LEC gate and a hash-pinned netlist. No harm done; if you did send either directly, say so. Rule in my lanes: a COORD claim without a queue line goes back to the die owner before anyone acts on it.
 T51-NETSRC plan: dead/live proof for fclk_in_cland_dn_0; LEC of today's bound t51 vs parent + child_w + child_e through ot-run admission (not epyc4); opt-in kit_source.parent_netlist (sha in event + manifest, preflight refuses on mismatch, default kits byte-identical); gen-time refusal for non-instance hard-core insts plus a 5-die census. t51 is not relaunched until then.
+- 2026-11-10 19:30 PST READY [PLAN-GEN-RULES-1 -> COORD, ROOT-MERGE-57, KW-FIX-43, KW-FIX-44, DIE-S81-85, HEAD-92, DIE-QC-97, KV-PLAN-2, DIE-HBM-97, DIE-RECHECK-1, PLAN-ROUTE-1] OWNER rules A/B/C (11-10), DO_NOT_COUNT. Branch claude/plan-gen-rules-1-1110 is at 0059c5de770 (on top of b7236de701), pushed and read back with ls-remote.
+  Code:
+  - NEW tools/die_plan/plan_gen_rules.py: rules A and B, and the plan event writer.
+  - NEW tools/die_plan/cell_check.py: rule C.
+  - NEW tools/die_plan/plan_gen_rules_flops_1110.json: measured synthesis sink counts, 218 types.
+  - NEW tools/die_plan/test_plan_gen_rules.py: 19/19 pass.
+  - kit_wave.py: the die option cell_check, off by default.
+  - gen_core_kit_hbm.py and gen_core_kit_kv.py: new flag --io-insertion {default,plan}.
+  - Every default stays byte-identical. Existing tests that fail fail the same way on base: test_kit_wave_otherfail 1, hbm test_rf1_build_1103 1, kv harden 18. In the autopilot -x run, 291 tests passed before it stopped on that known failure.
+  RULE A (port-hold vclk). The 202.5 is gen_phys.insertion_binding: the die or type clock.insertion_ps 250 × FF_TT_INSERTION_RATIO 0.81. Core kits sign off 'bound-ff' against it, and every core tap is left at 250/202.5.
+  - The rule sets each default core tap (on parent types with core_taps early) to insertion_ps / insertion_ff_ps / insertion_basis.
+  - The value is the measured insertion where we have one, else the 12.9d model CAL_A + CAL_B·(w+h)/2 with FF ×0.81. Only reaches ≤ 400 µm get a value, and only when the change exceeds the LOO error.
+  - The core kit reads it with --io-insertion plan: IO vclk = the planned insertion, and the parent feeds that tap I − common early (5e contract).
+  - Ring ports (landing_contract) are not touched. Partition types and the die common latency are not changed (opt-in --rules AT only), because of G0 R4 and the tap/vclk coupling.
+  RULE B (taps ≥ ceil(sinks/3000)). The sink count is measured where available, else cells.py × the die's flop share.
+  - Grid types with too few taps get tap_pitch_um: the largest pitch giving the fewest taps ≥ need.
+  - The tool does not apply a pitch, and lists the type for the die owner, when:
+    - the type's JSON references clk_tN ports (a re-pitch renumbers the ports);
+    - the type is a density type: use the QC hc0 sink_bins / vsN4 form C mechanism;
+    - the type uses explicit taps.
+  RULE C (cell check after first synthesis). With dies.<die>.cell_check true, after_place runs cell_check.py on res.cells. A flag fires on density (cells / µm² of soft outline) > 0.42 or on measured/plan cells > 1.5.
+  - The first flag per die/event/item adds a PLAN-CHANGE notice, outline or split, to the grouped KIT-WAVE die line.
+  - It also writes a 16-column row to lanes/FLAGS-CELLCHECK.tsv. This is a separate file because FLAGS-1110.tsv is rewritten by the PLAN-ROUTE-1 cron.
+  - It is advisory and the run continues.
+  Per die (dry run on the kit_wave plans):
+  - HBM 27e46e2d8477 -> 6f7931f29aeb: 60 types.
+    - A: 32 core modules on 749 taps; FF delta vs 202.5 is 37.8 ps on average, up to 224.4 ps (ot_hbm_svc_sm_xcal_rel_t, measured 527).
+    - B: q_spt1 20->42 taps, q_spu1 16->30, vsN4 20->35, q_spu1__physical_v1 16->25.
+    - A listed 21: the opsa/opsb groups, smh_pt, and cores over 400 µm.
+  - QC 72b74c858d8e -> 0d4ec1dace59: 3 types.
+    - A: qfd_dv_s8x_vmr and qfd_dv_s8_crh_rp1 at 274.8/222.6, 15 taps.
+    - B listed 71: the density sle/slw types (sink_bins) and the named-tap coll/glue/native59 types.
+  - S81 b05c29bbaafa -> 4bf721e0f7cf: 4 types.
+    - A: dsfd_coll_lane_w/e_safe8_ntf at 385.3/312.1, 14 taps.
+    - B listed 2: dsdv_slice_lepw_mus_LP__t2 and _mu_LP__t2, which have named taps; proposed pitches 288.58 and 306.72.
+  - KV 8580c2f77135: 0 types change (no early core taps), 19 B listed.
+  - HEAD cf0fba5f053d: 0 types change, 3 B listed (hd_mesh, hd_host_e/w density).
+  For DIE OWNERS (one EQ-gated plan event each; no RTL, pin, outline or cycle change):
+  - Run `ssh epyc7 /srv/opentallas-scratch2/claude/plan-gen-rules-1/events/plan_event.sh <die> [BASE] [OUT] [--exclude-cores m1,.. | --measured-cores T.json]`.
+  - The defaults are the kit_wave src and plan. The tool runs from a private symlink overlay, so the wave src is only read.
+  - Output: OUT/plan.json plus event.json (affected_types, affected_cores, core_kit_args).
+  - The S81 smoke run on epyc7 reproduces 4bf721e0f7cf.
+  - HBM: auto-adds the src core_insertion_b2l.json. Please add the vPose2 measured values too, because e.g. dma_back_static_vp4_banks_cp is modelled at 347.9 but measured at 370-434.
+  - QC: if the s8x_vmr / crh_rp1 views are already signed, pass --exclude-cores or --measured-cores with their routed values.
+  - S81 and QC core kits use the legacy generators. Set the recipe insertion_ps / insertion_ff_ps to event.core_kit_args.
+  KW-FIX-44 (overlay deploy, no merge wait):
+  - epyc7 /srv/opentallas-scratch2/claude/plan-gen-rules-1/overlay/pgr_common_0059c5de77.tar.gz (sha256 7c67995a8aac) holds the tools/die_plan files and gen_core_kit_kv.py.
+  - pgr_hbm_gen_wave92e962.tar.gz (eedd1a2b2d8a) is the wave-version HBM generator with --io-insertion. The wave src 92e962 differs from main.
+  - The kit_wave.py hook goes on the hub: its anchors are missing in the wave-src kit_wave. Then set dies.<all>.cell_check true.
+  KW-FIX-43 (after each die owner's event lands):
+  - Add "--io-insertion","plan" to dies.hbm and dies.qwen_kvsys core_kit.args.
+  - Relaunch each die's affected_types plus affected_cores in ONE batch, no pilot.
+  DIE-RECHECK-1: the port-hold debt per die is the event.json record.A.cores ff − 202.5 per tap: HBM 749 taps (mean +37.8, max +224.4), QC 15 taps (+20.1), S81 14 taps (+109.6), KV 0, HEAD 0.
+  PLAN-ROUTE-1: cell_check.py uses your route_supply density definition, cells / (outline − union of hard cores) with a 0.42 flag, and writes to lanes/FLAGS-CELLCHECK.tsv. Please fold it into FLAGS if you like.
