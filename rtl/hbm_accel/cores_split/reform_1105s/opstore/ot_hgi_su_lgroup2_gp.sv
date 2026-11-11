@@ -82,6 +82,9 @@ module ot_hgi_su_lgroup2_gp #(
     // ---- decode: stage writes.  Bank b takes word off = b - addr[3:0] (mod 16, off < 8) of each sector lane; the HIGHEST lane
     // that hits wins; two hits = collision.  The winner is kept as a one-hot over the 64 stage words (lane * 8 + off).
     wire [N-1:0] i_we, i_cb; wire [RB-1:0] i_wa [0:N-1]; wire [NW-1:0] i_sel [0:N-1];
+`ifdef OT_OPSG_ROT
+    wire [NS-1:0] i_oh [0:N-1];
+`endif
     for (genvar b = 0; b < N; b = b + 1) begin : g_ws
         wire [NS-1:0] h, oh; wire [RB-1:0] rw [0:NS-1]; wire [2:0] o3 [0:NS-1];
         for (genvar s = 0; s < NS; s = s + 1) begin : g_h
@@ -106,7 +109,38 @@ module ot_hgi_su_lgroup2_gp #(
             end
         end
         assign i_we[b] = |h; assign i_wa[b] = row; assign i_cb[b] = two; assign i_sel[b] = sel;
+`ifdef OT_OPSG_ROT
+        assign i_oh[b] = oh;
+`endif
     end
+`ifdef OT_OPSG_ROT
+    // ---- opsbg_C3 (HBM-CORES-B 11-09), ROT form of the write crossbar, cycle-exact: the 64-word to 16-bank AND-OR (32768 terms, the
+    // C2q GRT-0116 ball at x 560-720) is cut in two.  word = s*8 + off and off[2:0] = (b[2:0] - a[2:0]) mod 8 depends on the bank
+    // only through b[2:0], so before S1 each sector lane rotates its 8 words by a[2:0] (3-stage barrel), and after S1 each bank
+    // takes one of 8 lanes by the winner one-hot (4096 terms; a q_rot flop drives banks p and p+8 only).
+    wire [2047:0] i_rot;
+    for (genvar s = 0; s < NS; s = s + 1) begin : g_rot
+        wire [2:0]   a3 = sw_addr[s*LWB +: 3];
+        wire [255:0] r0 = sw_d[s*256 +: 256];
+        wire [255:0] r1 = a3[0] ? {r0[223:0], r0[255:224]} : r0;
+        wire [255:0] r2 = a3[1] ? {r1[191:0], r1[255:192]} : r1;
+        wire [255:0] r3 = a3[2] ? {r2[127:0], r2[255:128]} : r2;
+        assign i_rot[s*256 +: 256] = r3;
+    end
+    wire [N-1:0] s1_re, s1_we; wire [RB-1:0] s1_ra [0:N-1], s1_wa [0:N-1]; wire [NS-1:0] s1_oh [0:N-1]; wire [2047:0] s1_d;
+    if (1) begin : g_s1
+        (* keep *) reg [N-1:0] q_re, q_we; (* keep *) reg [N*RB-1:0] q_ra, q_wa; (* keep *) reg [N*NS-1:0] q_oh; (* keep *) reg [2047:0] q_rot;
+        integer b_;
+        always @(posedge clk) begin
+            q_re <= i_re; q_we <= i_we; q_rot <= i_rot;
+            for (b_ = 0; b_ < N; b_ = b_ + 1) begin q_ra[b_*RB +: RB] <= i_ra[b_]; q_wa[b_*RB +: RB] <= i_wa[b_]; q_oh[b_*NS +: NS] <= i_oh[b_]; end
+        end
+        for (genvar b = 0; b < N; b = b + 1) begin : g_o
+            assign s1_ra[b] = q_ra[b*RB +: RB]; assign s1_wa[b] = q_wa[b*RB +: RB]; assign s1_oh[b] = q_oh[b*NS +: NS];
+        end
+        assign s1_re = q_re; assign s1_we = q_we; assign s1_d = q_rot;
+    end
+`else
     // ---- S1 (hub): decoded ops, kept stage data copy.  wa_1/ra_1 hold the decoded rows.
     wire [N-1:0] s1_re, s1_we; wire [RB-1:0] s1_ra [0:N-1], s1_wa [0:N-1]; wire [NW-1:0] s1_sel [0:N-1]; wire [2047:0] s1_d;
     if (1) begin : g_s1
@@ -121,6 +155,7 @@ module ot_hgi_su_lgroup2_gp #(
         end
         assign s1_re = q_re; assign s1_we = q_we; assign s1_d = q_d;
     end
+`endif
     // ---- S2 (hub): write AND-OR; read / write controls delayed
     wire [N-1:0] s2_re, s2_we; wire [RB-1:0] s2_ra [0:N-1], s2_wa [0:N-1]; wire [31:0] s2_wd [0:N-1];
     if (1) begin : g_s2
@@ -130,7 +165,11 @@ module ot_hgi_su_lgroup2_gp #(
             integer b_, w_;
             for (b_ = 0; b_ < N; b_ = b_ + 1) begin
                 wdat[b_] = 32'd0;
+`ifdef OT_OPSG_ROT
+                for (w_ = 0; w_ < NS; w_ = w_ + 1) wdat[b_] = wdat[b_] | ({32{s1_oh[b_][w_]}} & s1_d[32*(w_*8 + (b_ & 7)) +: 32]);
+`else
                 for (w_ = 0; w_ < NW; w_ = w_ + 1) wdat[b_] = wdat[b_] | ({32{s1_sel[b_][w_]}} & s1_d[32*w_ +: 32]);
+`endif
             end
         end
         integer b_;
