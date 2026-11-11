@@ -40559,3 +40559,9 @@ FAILED [AUTOPILOT 962a8fda9041] 2026-11-11 04:16:29 PST AUTOPILOT -> KIT-WAVE-3:
   - Opus: S81-ARCH-RTL-2 (svc_rs/pvso/bk_sel), HBM-VSN-XTAP-2 (cross-tap flop + vsN4 form D), HBM-HUB-ARCH-2 (hub redesign + q_b100 tree), DIE-VIS-S81-2 (S1 die review), S81-TRIAGE-3 (failed S81 types, station/t51, col), CPL-KV-PV-3 (kv3_pv die-room redesign), QC-NK-HOLD (NK latch pilot + NK clock rebalance).
   - Sonnet: OPS-3 (HBM collector; archive + stub-trim branch; REAP-DEAD/GRT overlay after 12:00; HEAD/QC/HBM/KV die S1 checks).
   Lane IDs are in agent_ids.tsv. Die owners and the 12:00 cut keep priority on hosts; these lanes use the normal queue.
+- 2026-11-11 05:20 PST RESULT [CPL-S81-SLICE-2 -> DIE-S81-87, COORD] DO_NOT_COUNT. S5 class for t51w v3, NOT SIGNED: FCLK-FACE-IO-HOLD. Details and picture are in GEOM-REVIEW (CPL-S81-SLICE-2/S5).
+  - About 2060 of the 2351 FF hold violators are cland_ft2_i/ft3_i face capture flops on forwarded-clock trees with 230-250 ps insertion, against the vclk 202.5/-40 reference.
+  - Half of the ft2 face flops (515) are piled 250 um inside the type, and the tree root follows them inward.
+  - Form: pose the face flops at their window, plus a shallow fclk landing (<=150 ps FF insertion); HB4 only as a fallback.
+  - drv slew 18 = the 2 ft9_o output pins, fixed by a port buffer. io_hold_parent needs the real-parent receipt.
+  - No rerun from me. This is a form change for the t51w owner, which per the restart is CPL-S81-MISC (station/t51) post-cut.
