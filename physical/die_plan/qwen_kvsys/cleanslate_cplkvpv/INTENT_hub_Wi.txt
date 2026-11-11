@@ -1,0 +1,29 @@
+INTENT SHEET  KV kv3_hub_Wi (CPL-KV-PV, 2026-11-11, DO_NOT_COUNT)
+Cores: 21 qkd_hr_* hard cores (SIGNED, not re-pinned). Plan of record: plan_c.json (event28w_c). SVG: intent_hub_Wi.svg (+PNG).
+
+1. DATAFLOW CHAIN (bound parent hubwi_parent.sv + bind core_conns, fan-out > 8 dropped)
+   Host serdes windows on the N face
+     -> rx_flit 147 b per lane -> qkd_hr_phy_adp_k (k = 0..7, one lane per adp)        [point-to-point, per lane]
+     -> adp r_d / in_* 128 b <-> qkd_hr_phy_pad (W of the comb)                          [point-to-point, 8 lanes merge]
+     -> phy_pad out_d / out_cr 546 b -> qkd_hr_cdc_pc (NW) -> host cores (core_rx/prompt/peer/order/ingest)
+   Return: cdc_pc u_tx__o_d -> adp c_d 128 b -> tx_flit 147 b -> serdes window (N face).
+   Other: cdc_ci / cdc_hi (E of the comb) talk to core_rx/core_queue; untouched.
+   Pass-through: ft slots and stations of the face buses (fixed, unchanged).
+
+2. TIMING-CRITICAL PAIRS
+   No routed kv3_hub_Wi attempt with STA (attempt_9 has no logs kept). From structure: adp <-> phy_pad (128 b x 8, short,
+   but all 8 lanes escape on the W faces) and adp <-> cdc_pc (128 b); the tx/rx flits to the N face are the long legs
+   (registered at the face, ft stations unchanged).
+
+3. HAND LAYOUT
+   The 8 adps stay one lane each, side by side, in the existing comb row (y 120.96), W faces toward phy_pad, N faces toward
+   the serdes. What was wrong: each adp has 409 pins on its W face and only an 8.64-um gap to escape into (V supply
+   8.64 x 44.6 tracks/um = 385 < 409 b, ratio 1.06; route_supply street_H 1.753 at (469.8, 221.4) = inside the comb).
+   Gap rule: 409 b / (44.6 x 0.8) = 11.5 um minimum. Chosen: 25.92 um (6 gaps) and 17.28 um (adp3|adp7), 0.35/0.53 of
+   supply, on the 8.64 lattice; cdc_ci slides +103.68 um east (still 8.64 um from cdc_hi) to make room.
+   phy_pad, cdc_pc, the serdes windows and every ft/station/band stay where they are. legal.py: 0 violations.
+4. SEARCH: none (hand layout; gaps sized from bits).
+5. RATIONALE (CLEANSLATE note): the adp comb packed 8 lanes with 409 W-face pins each into 8.64-um gaps (escape demand >
+   supply by design of the comb, not of the type: whole-type cuts are far below 0.8); widening the gaps to 17-26 um from
+   the bit count clears the comb (route_supply street_H 1.753 -> 1.087). Remaining FLAG is ring_V 1.568 (landing ring,
+   DIE-KV-97 / KV-PLAN-2 class) and street_H 1.087 elsewhere.

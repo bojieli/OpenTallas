@@ -1,0 +1,47 @@
+INTENT SHEET  KV pv family (CPL-KV-PV, 2026-11-11, DO_NOT_COUNT)
+Types: S family (one core set, positions hash e72248): kv3_pv, kv3_pv_v1..v8, kv3_pv_v12 (10 types).
+       N family (same cores and wiring, other slot orients, hash 7a3c4d): kv3_pv_v1n..v6n (6 types).
+Cores per type: 16 x kv3_pv_pair (380.16 x 190.08, all pins on one long face, M5; SIGNED, not re-pinned) in 4 groups g0..g3,
+                4 x ot_qwen_tp8_pv_join_t (172.8 x 172.8; SIGNED), one per group. Plan of record: plan_c.json (event28w_c).
+SVG: intent_pv_S.svg / intent_pv_N.svg (PNG next to them).
+
+1. DATAFLOW CHAIN (read from the bound netlist kv3_pv_v2_part_bound.sv / kv3_pv_v4n_bound.sv and the plan buses)
+   N face inputs: i_pvw__u_TNQN_N_rN_b (259 b, d0..d3 stages), i_vport_E/W_N_vo (397 b, d3 800 b), i_pvw__u_ctl_cmd (33 b)
+     -> pd* pipeline registers (glue, near the N face and in the streets)
+     -> BROADCAST into the pairs: s*__pv2 256 b per slice to 8 pairs (rows p0+p2 or p1+p3 of all 4 groups),
+        s*__pe2 32 b to 2 pairs, s*__bc / bcx 19-23 b control to all 16 pairs  (broadcast, registered at the pd flops)
+     -> pair p_k (compute) -> s0__ts[511:0] | s1__ts[511:0]  = 1024 b POINT-TO-POINT -> join input ts_k of its group
+        (join R0 faces: ts0 S, ts1 W, ts2 N, ts3 E; MX swaps N/S; MY swaps W/E)
+     -> join (reduce) -> y / y_valid -> output face bus; sf (8 fault bits) pass-through to the join.
+   Pass-through: internal stations of the face-bus forward legs (i_pvw ctl, i_vport_E_N_vo ...) run through the streets
+   and over the pair slots (FIRM stations, unchanged by this delta).
+   Serialisable: none (ts is a 1024-b parallel handoff per cycle).
+
+2. TIMING-CRITICAL PAIRS
+   No kv3_pv* attempt has reached STA (KIT-WAVE: FAIL place / CLAND ring band, kv3_pv_v2 attempt_10; v4n attempt_14 no
+   routed DB), so the critical pairs come from the structure and the stations:
+   - pair p_k -> join ts_k (1024 b, reg-to-reg across the type): the hop length is fixed by the slots (far slot face to join
+     <= 371 um, near slots 26-78 um; under the 405-um reach) -> the placement must not add detour: no bit-order crossing in the
+     25.9-um join/pair streets, no wrap around the join for N/S partners.
+   - pd regs -> pv2 broadcast rows (8 pairs): unchanged rows, slot set unchanged.
+   - station chains of the face buses: FIRM, untouched (slot footprints identical before/after).
+
+3. HAND LAYOUT (rules, then the SVG)
+   Fixed by the plan (not moved): the 16 pair SLOTS with their orients (in-core die H-tree island, ft bit sites hugging the
+   slot edges), the join sites, all stations/ft/bands. The structure is chosen per group by two rules:
+   Rule A (pair x-mirror == join x-mirror, bit order runs the same way): the pair feeding the join's S face sits in the
+   near-S slot, the one feeding the N face in the near-N slot, the W/E partners in the two far slots (they come round the
+   join sides, where the 100-um side streets have the V tracks).
+   Rule B (pair x-mirror != join x-mirror, e.g. S-family g0/g1: R180/MY pairs, R0 join): a near N/S partner would cross
+   all 1024 bits inside the 25.9-um street (bit-matched H crossings 1019/1020 measured at base). So the N/S partners go to
+   the FAR slots: the reversed order untwists over the near pair (M6/M7) and in the 300-um vertical run; W/E partners near.
+   The join keeps its x-mirror state (R0<->MX only): an x-mirrored join puts its M3 pins off the plan track by 0.018 um
+   and no sub-lattice shift fixes M3 (pitch 0.036) and M5 (pitch 0.048) together (G0C WARN measured, 1024 pins/join).
+4. SEARCH (fine-tune only): within the rule-A/B structure, per group: which W/E partner takes which far/near slot and
+   join R0 vs MX: 4 candidates per group, scored by the bit-matched RUDY (search_pv.py INTENT=2 KEEPX=1 NOFT=1).
+
+5. RATIONALE (CLEANSLATE note): S family: g0/g1 pairs are x-mirrored against R0 joins, so the base puts the N/S partners
+   next to the join with all 1024 ts bits reversed across a 25.9-um street (street H 1.76 max); the intent layout puts
+   those partners in the far slots (rule B) and keeps rule A in g2/g3; slots, islands, ft sites and stations unchanged.
+   N family: same rules; its far slots' pin faces point AWAY from the join (slot orients are pinned by the in-core die
+   H-tree island), which no position/orient-only delta can fix -> REDESIGN item for DIE-KV-97.
