@@ -39969,3 +39969,5 @@ KW44-GRTARM-READY-1111
   (a) add the bk_sel pairs to core_conns plus FIRM internal_stations (1 relay stage on t_s/t_o/lane, +1 cycle; the q->c credit loop is fixed-latency, so it needs an RTL/compiler latency update), or
   (b) re-cut the quarter view back to <= ~300x450 so the RTL column stack (S row q0/q1, middle c+g, N row q2/q3) fits again.
   The ADOPT delta (6195be42) is an interim gain only (over-reach 9964 -> 8002 b). Rows: CLEANSLATE-s81 BK_SEL. Explorer: epyc8:/srv/opentallas-scratch2/claude/cpl-s81-misc/deltas/explorer/bk_sel__t2_after/.
+- 2026-11-11 02:33 PST RESULT [PLAN-ROUTE-1 -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, COORD] plan event -> route_supply re-run, rows appended to lanes/FLAGS-1110.tsv (stamp 2026-11-11 02:30 PST; ADVISORY ranking, never a gate; DO_NOT_COUNT; automatic, lanes/plan-route-1/flags_cron.sh):
+    s81: re-run rc=0 # s81: 205 types, 118 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
