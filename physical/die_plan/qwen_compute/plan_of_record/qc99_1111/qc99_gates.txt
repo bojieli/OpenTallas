@@ -1,0 +1,9 @@
+QC 12:00 event plan s13_nosul1w sha256 54afd4ad68de (DIE-QC-99, 2026-11-11)
+base: anchored head 08a1c69f4431 (= aace4c lineage + sreg anchor)
+chain: s1_stdir, s2_vis (st/stm/cbf core place), s3-s6 (cbf, su_c), s7_egap, s8_sul1w, s9_reach, + CPL-QC-4 delta_cb_qc4 (c913f7e32292)
+REVERTED to s1_stdir hard_cores: 16 st_a/st_b types (reverted_types.json) -> 23 station-in-macro G0 errors; 11 stm types (reverted_stm.json) -> G0C off-lattice origins
+REVERTED sul1w in 9 sc types (sul1w_types.json) to s7_egap: strict bind of s12 failed R8_STALE (kv_waddr bound 20 vs table 19)
+G0: 268 errors = head 268 (0 new). G0C: 334 vs head 331 (+3 advisory core_faces: cbn_q11/cbf_q11/cbx_q10 n_y, su_c su_prog/su_rows)
+station_lint: head 27 INVERTED -> 0; 3 NONMONOTONE 19 um step-backs (sle_sc_v1 x_stm_fe)
+EQ: 9 sc types ft_slots bit_sites_um/regs_um positions only (qc_s1_reach); station counts, latency block identical to head
+route_supply: 45 types <=0.8, 27 in (0.8,1.0], 51 >1.0
