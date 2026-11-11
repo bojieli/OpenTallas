@@ -1,0 +1,994 @@
+port	lane	src	dst	dst_bus	kind	wneg	raw	wrapped	ds85_cls	view	decision	ca_reason	ca_depth	ca_k	bind_cycles	new_cycles	delta	raw_clearance_ps	TT_d_ps	FF_d_ps	rc1_metric_307
+attn__s_3S_C__svc_5__0	attn__s_3S_C__svc_5	s_3S_C	s_3S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	48.7	169.44	138.47	1
+attn__s_3S_C__svc_5__3	attn__s_3S_C__svc_5	seqhost	s_2S_x00	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	70.0	173.02	146.56	1
+attn__s_4S_C__svc_11__0	attn__s_4S_C__svc_11	s_4S_C	s_5S_C	ft0_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	115.0	200.46	174.99	0
+attn__s_4S_C__svc_11__1	attn__s_4S_C__svc_11	s_5S_C	s_5S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	51.0	155.19	124.97	1
+attn__s_4S_C__svc_11__3	attn__s_4S_C__svc_11	s_5S_L2	s_5S_x00	ft5_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	206.7	386.63	332.8	0
+attn__svc_0__svc_1__0	attn__svc_0__svc_1	svc_0	svc_1	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	539.8	-718.57	-604.52	1
+attn__svc_10__svc_11__0	attn__svc_10__svc_11	svc_10	svc_11	attn_i3	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	555.3	-724.74	-619.93	1
+attn__svc_11__s_4S_C__1	attn__svc_11__s_4S_C	s_5S_x00	s_4S_L4	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	216.1	-345.71	-288.49	0
+attn__svc_11__s_4S_C__4	attn__svc_11__s_4S_C	s_4S_L0	s_4S_C	attn_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	207.3	-320.64	-260.16	0
+attn__svc_11__svc_10__0	attn__svc_11__svc_10	svc_11	svc_10	attn_i1	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	305.4	435.51	376.45	0
+attn__svc_11__svc_5__0	attn__svc_11__svc_5	svc_11	svc_9	ft1_i	data	1	LEAD	LAG	LEAD	both_declared	CA	sign flips between models	4	3	3	4	1	463.9	-619.68	-523.73	0
+attn__svc_11__svc_5__2	attn__svc_11__svc_5	svc_7	svc_5	attn_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	87.3	177.66	153.74	1
+attn__svc_11__svc_9__0	attn__svc_11__svc_9	svc_11	svc_9	attn_i2	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	367.4	-507.11	-430.55	0
+attn__svc_12__svc_13__0	attn__svc_12__svc_13	svc_12	svc_13	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	585.7	-757.23	-647.62	1
+attn__svc_13__svc_12__0	attn__svc_13__svc_12	svc_13	svc_12	attn_i1	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	380.8	520.01	449.41	0
+attn__svc_13__svc_15__0	attn__svc_13__svc_15	svc_13	svc_15	attn_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	76.5	160.35	146.65	1
+attn__svc_14__svc_15__0	attn__svc_14__svc_15	svc_14	svc_15	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	553.3	-735.74	-617.98	1
+attn__svc_15__svc_13__0	attn__svc_15__svc_13	svc_15	svc_13	attn_i2	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	412.2	-563.8	-474.87	0
+attn__svc_15__svc_14__0	attn__svc_15__svc_14	svc_15	svc_14	attn_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	221.3	335.15	291.37	0
+attn__svc_1__svc_0__0	attn__svc_1__svc_0	svc_1	svc_0	attn_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	268.1	399.25	340.32	0
+attn__svc_2__svc_3__0	attn__svc_2__svc_3	svc_2	svc_3	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	599.2	-778.83	-662.47	1
+attn__svc_3__svc_2__0	attn__svc_3__svc_2	svc_3	svc_2	attn_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	289.1	404.43	356.86	0
+attn__svc_4__svc_5__0	attn__svc_4__svc_5	svc_4	svc_5	attn_i3	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	601.2	-784.64	-666.6	1
+attn__svc_5__s_3S_C__1	attn__svc_5__s_3S_C	s_2S_x00	seqhost	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	242.2	-359.03	-296.52	0
+attn__svc_5__s_3S_C__4	attn__svc_5__s_3S_C	s_3S_L0	s_3S_C	attn_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	284.7	-413.18	-338.12	0
+attn__svc_5__svc_11__0	attn__svc_5__svc_11	svc_5	svc_7	ft1_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	296.2	-427.9	-358.37	0
+attn__svc_5__svc_11__2	attn__svc_5__svc_11	svc_9	svc_11	attn_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	179.8	279.67	246.88	0
+attn__svc_5__svc_4__0	attn__svc_5__svc_4	svc_5	svc_4	attn_i1	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	331.6	458.65	400.71	0
+attn__svc_5__svc_7__0	attn__svc_5__svc_7	svc_5	svc_7	attn_i2	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	296.4	-428.34	-359.34	0
+attn__svc_6__svc_7__0	attn__svc_6__svc_7	svc_6	svc_7	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	544.3	-720.97	-608.41	1
+attn__svc_7__svc_5__0	attn__svc_7__svc_5	svc_7	svc_5	attn_i1	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	64.1	148.73	129.79	1
+attn__svc_7__svc_6__0	attn__svc_7__svc_6	svc_7	svc_6	attn_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	233.6	346.03	302.78	0
+attn__svc_8__svc_9__0	attn__svc_8__svc_9	svc_8	svc_9	attn_i1	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	561.0	-731.94	-622.7	1
+attn__svc_9__svc_11__0	attn__svc_9__svc_11	svc_9	svc_11	attn_i1	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	128.1	216.68	194.22	0
+attn__svc_9__svc_8__0	attn__svc_9__svc_8	svc_9	svc_8	attn_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	369.9	509.31	437.75	0
+attnh__svc_0__svc_1__0	attnh__svc_0__svc_1	svc_0	svc_1	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	566.3	-752.46	-631.17	1
+attnh__svc_10__svc_11__0	attnh__svc_10__svc_11	svc_10	svc_11	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	578.9	-759.42	-644.07	1
+attnh__svc_14__svc_15__0	attnh__svc_14__svc_15	svc_14	svc_15	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	522.9	-699.5	-587.13	1
+attnh__svc_15__svc_14__0	attnh__svc_15__svc_14	svc_15	svc_14	attnh_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	358.6	501.29	427.05	0
+attnh__svc_2__svc_3__0	attnh__svc_2__svc_3	svc_2	svc_3	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	565.2	-734.27	-628.11	1
+attnh__svc_3__svc_2__0	attnh__svc_3__svc_2	svc_3	svc_2	attnh_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	379.2	515.02	447.43	0
+attnh__svc_4__svc_5__0	attnh__svc_4__svc_5	svc_4	svc_5	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	634.1	-818.52	-696.54	1
+attnh__svc_5__svc_4__0	attnh__svc_5__svc_4	svc_5	svc_4	attnh_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	378.3	517.08	448.97	0
+attnh__svc_6__svc_7__0	attnh__svc_6__svc_7	svc_6	svc_7	attnh_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	510.5	-676.61	-574.47	1
+attnh__svc_7__svc_6__0	attnh__svc_7__svc_6	svc_7	svc_6	attnh_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	329.5	463.05	398.25	0
+attnh__svc_9__svc_8__0	attnh__svc_9__svc_8	svc_9	svc_8	attnh_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	377.7	520.43	446.56	0
+ca__s_0N_LP__bk_sel__1	ca__s_0N_LP__bk_sel	s_0N_x03	s_0N_x04	ft9_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	114.2	198.43	172.88	0
+ca__s_0N_LP__bk_sel__3	ca__s_0N_LP__bk_sel	s_0N_x05	s_0N_x06	ft11_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	151.9	226.35	207.86	0
+ca__s_0N_LP__bk_sel__5	ca__s_0N_LP__bk_sel	s_0N_x16	s_1N_x06	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	159.9	-349.37	-278.59	0
+ca__s_0N_LP__bk_sel__7	ca__s_0N_LP__bk_sel	s_2N_x06	s_3N_x06	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	273.6	-511.92	-435.92	0
+ca__s_0N_LP__bk_sel__9	ca__s_0N_LP__bk_sel	s_4N_x06	bk_sel	ca_i0	data	1	LAG	NEAR	LAG	one_declared	CA	wrapped NEAR	8	3	3	4	1	667.6	835.62	727.1	1
+cb__s_0N_LP__bk_sel__1	cb__s_0N_LP__bk_sel	s_0N_x03	s_0N_x04	ft10_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	114.6	198.92	173.3	0
+cb__s_0N_LP__bk_sel__3	cb__s_0N_LP__bk_sel	s_0N_x05	s_0N_x06	ft12_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	158.7	232.76	214.38	0
+cb__s_0N_LP__bk_sel__5	cb__s_0N_LP__bk_sel	s_0N_x16	s_1N_x06	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	131.5	-322.58	-257.12	0
+cb__s_0N_LP__bk_sel__7	cb__s_0N_LP__bk_sel	s_2N_x06	s_3N_x06	ft7_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	287.0	-512.96	-434.94	0
+cb__s_0N_LP__bk_sel__9	cb__s_0N_LP__bk_sel	s_4N_x06	bk_sel	cb_i0	data	1	LAG	NEAR	LAG	one_declared	CA	wrapped NEAR	8	3	3	4	1	669.2	837.35	728.69	1
+coll__lk_EN0__s_7N_LP__0	coll__lk_EN0__s_7N_LP	lk_EN0	lk_EN2	ft4_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	472.2	-637.01	-541.32	1
+coll__lk_EN0__s_7N_LP__2	coll__lk_EN0__s_7N_LP	s_7N_x16	s_7N_x15	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	200.9	-319.4	-270.08	0
+coll__lk_EN0__s_7N_LP__4	coll__lk_EN0__s_7N_LP	s_7N_x14	s_7N_x13	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-59.6	30.4	41.88	1
+coll__lk_EN1__s_7N_LP__0	coll__lk_EN1__s_7N_LP	lk_EN1	lk_EN0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	357.7	-520.11	-435.71	0
+coll__lk_EN1__s_7N_LP__1	coll__lk_EN1__s_7N_LP	lk_EN0	lk_EN2	ft3_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	492.0	-689.53	-575.74	1
+coll__lk_EN1__s_7N_LP__3	coll__lk_EN1__s_7N_LP	s_7N_x16	s_7N_x15	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	299.1	-428.89	-360.67	0
+coll__lk_EN1__s_7N_LP__5	coll__lk_EN1__s_7N_LP	s_7N_x14	s_7N_x13	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-42.4	47.01	53.93	1
+coll__lk_EN2__s_7N_LP__1	coll__lk_EN2__s_7N_LP	s_7N_x16	s_7N_x15	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	290.2	-417.76	-355.6	0
+coll__lk_EN2__s_7N_LP__3	coll__lk_EN2__s_7N_LP	s_7N_x14	s_7N_x13	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-74.0	15.69	31.37	1
+coll__lk_EN3__s_7N_LP__0	coll__lk_EN3__s_7N_LP	lk_EN3	lk_EN1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	400.6	-569.76	-486.51	0
+coll__lk_EN3__s_7N_LP__1	coll__lk_EN3__s_7N_LP	lk_EN1	lk_EN0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	374.5	-548.19	-459.2	0
+coll__lk_EN3__s_7N_LP__2	coll__lk_EN3__s_7N_LP	lk_EN0	lk_EN2	ft5_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	444.8	-611.11	-516.53	0
+coll__lk_EN3__s_7N_LP__4	coll__lk_EN3__s_7N_LP	s_7N_x16	s_7N_x15	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	243.0	-360.89	-308.88	0
+coll__lk_EN3__s_7N_LP__6	coll__lk_EN3__s_7N_LP	s_7N_x14	s_7N_x13	ft6_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-76.5	-12.01	7.5	1
+coll__lk_ES0__s_7S_LP__2	coll__lk_ES0__s_7S_LP	s_7S_x11	s_7S_x12	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	60.5	-179.12	-149.32	1
+coll__lk_ES0__s_7S_LP__4	coll__lk_ES0__s_7S_LP	s_7S_x13	s_7S_x14	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-100.6	12.64	14.44	1
+coll__lk_ES0__s_7S_LP__6	coll__lk_ES0__s_7S_LP	s_7S_x15	s_7S_x16	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	198.8	-315.4	-264.74	0
+coll__lk_ES0__s_7S_LP__8	coll__lk_ES0__s_7S_LP	s_7S_x17	s_7S_LP	coll_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	203.1	-319.35	-253.18	0
+coll__lk_ES1__s_7S_LP__0	coll__lk_ES1__s_7S_LP	lk_ES1	lk_ES0	ft1_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	454.8	-633.1	-530.93	1
+coll__lk_ES1__s_7S_LP__3	coll__lk_ES1__s_7S_LP	s_7S_x11	s_7S_x12	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	60.1	-181.09	-151.67	1
+coll__lk_ES1__s_7S_LP__5	coll__lk_ES1__s_7S_LP	s_7S_x13	s_7S_x14	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-76.6	-40.34	-31.42	1
+coll__lk_ES1__s_7S_LP__7	coll__lk_ES1__s_7S_LP	s_7S_x15	s_7S_x16	ft6_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	194.7	-315.14	-263.35	0
+coll__lk_ES1__s_7S_LP__9	coll__lk_ES1__s_7S_LP	s_7S_x17	s_7S_LP	coll_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	244.4	-373.45	-295.23	0
+coll__lk_WN0__s_0N_LP__0	coll__lk_WN0__s_0N_LP	lk_WN0	lk_WN3	ft5_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	533.0	-709.56	-605.77	1
+coll__lk_WN0__s_0N_LP__2	coll__lk_WN0__s_0N_LP	s_0N_x06	s_0N_x05	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	317.5	-444.26	-385.86	0
+coll__lk_WN0__s_0N_LP__4	coll__lk_WN0__s_0N_LP	s_0N_x04	s_0N_x03	ft2_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	315.5	-440.18	-369.86	0
+coll__lk_WN1__s_0N_LP__0	coll__lk_WN1__s_0N_LP	lk_WN1	lk_WN0	ft3_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	475.6	-669.2	-557.16	1
+coll__lk_WN1__s_0N_LP__1	coll__lk_WN1__s_0N_LP	lk_WN0	lk_WN3	ft4_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	430.2	-606.76	-517.1	0
+coll__lk_WN1__s_0N_LP__3	coll__lk_WN1__s_0N_LP	s_0N_x06	s_0N_x05	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	328.1	-451.0	-391.68	0
+coll__lk_WN1__s_0N_LP__5	coll__lk_WN1__s_0N_LP	s_0N_x04	s_0N_x03	ft3_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	313.6	-438.12	-367.92	0
+coll__lk_WN2__s_0N_LP__0	coll__lk_WN2__s_0N_LP	lk_WN2	lk_WN1	ft1_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	433.2	-607.85	-508.65	0
+coll__lk_WN2__s_0N_LP__1	coll__lk_WN2__s_0N_LP	lk_WN1	lk_WN0	ft2_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	493.3	-685.79	-569.6	1
+coll__lk_WN2__s_0N_LP__2	coll__lk_WN2__s_0N_LP	lk_WN0	lk_WN3	ft3_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	563.4	-765.01	-642.69	1
+coll__lk_WN2__s_0N_LP__4	coll__lk_WN2__s_0N_LP	s_0N_x06	s_0N_x05	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	327.6	-452.63	-394.65	0
+coll__lk_WN2__s_0N_LP__6	coll__lk_WN2__s_0N_LP	s_0N_x04	s_0N_x03	ft4_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	319.3	-444.11	-373.24	0
+coll__lk_WN3__s_0N_LP__1	coll__lk_WN3__s_0N_LP	s_0N_x06	s_0N_x05	ft3_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	331.8	-466.08	-407.47	0
+coll__lk_WN3__s_0N_LP__3	coll__lk_WN3__s_0N_LP	s_0N_x04	s_0N_x03	ft5_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	296.9	-420.75	-351.83	0
+coll__s_0N_LP__lk_WN0__1	coll__s_0N_LP__lk_WN0	s_0N_x03	s_0N_x04	ft5_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	94.1	176.51	153.16	0
+coll__s_0N_LP__lk_WN0__3	coll__s_0N_LP__lk_WN0	s_0N_x05	s_0N_x06	ft7_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	176.7	248.93	231.72	0
+coll__s_0N_LP__lk_WN0__5	coll__s_0N_LP__lk_WN0	lk_WN3	lk_WN0	coll_i0	data	1	LAG	LEAD	LAG	both_measured	CA	sign flips between models	8	3	3	4	1	434.2	585.11	507.25	0
+coll__s_0N_LP__lk_WN1__1	coll__s_0N_LP__lk_WN1	s_0N_x03	s_0N_x04	ft6_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	98.3	180.83	156.93	0
+coll__s_0N_LP__lk_WN1__3	coll__s_0N_LP__lk_WN1	s_0N_x05	s_0N_x06	ft8_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	151.5	224.17	206.77	0
+coll__s_0N_LP__lk_WN1__5	coll__s_0N_LP__lk_WN1	lk_WN3	lk_WN0	ft1_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	370.4	519.49	452.19	0
+coll__s_0N_LP__lk_WN1__6	coll__s_0N_LP__lk_WN1	lk_WN0	lk_WN1	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	398.9	572.41	478.55	0
+coll__s_0N_LP__lk_WN2__1	coll__s_0N_LP__lk_WN2	s_0N_x03	s_0N_x04	ft7_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	109.9	193.43	167.82	0
+coll__s_0N_LP__lk_WN2__3	coll__s_0N_LP__lk_WN2	s_0N_x05	s_0N_x06	ft9_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	148.8	221.64	204.08	0
+coll__s_0N_LP__lk_WN2__5	coll__s_0N_LP__lk_WN2	lk_WN3	lk_WN0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	380.8	541.04	462.46	0
+coll__s_0N_LP__lk_WN2__6	coll__s_0N_LP__lk_WN2	lk_WN0	lk_WN1	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	390.0	556.66	467.53	0
+coll__s_0N_LP__lk_WN2__7	coll__s_0N_LP__lk_WN2	lk_WN1	lk_WN2	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	306.5	455.3	394.08	0
+coll__s_0N_LP__lk_WN3__1	coll__s_0N_LP__lk_WN3	s_0N_x03	s_0N_x04	ft8_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	108.4	191.83	166.39	0
+coll__s_0N_LP__lk_WN3__3	coll__s_0N_LP__lk_WN3	s_0N_x05	s_0N_x06	ft10_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	141.0	214.12	196.7	0
+coll__s_7N_LP__lk_EN0__1	coll__s_7N_LP__lk_EN0	s_7N_x13	s_7N_x14	ft6_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	113.5	-222.99	-196.79	0
+coll__s_7N_LP__lk_EN0__3	coll__s_7N_LP__lk_EN0	s_7N_x15	s_7N_x16	ft8_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	134.8	234.25	202.32	0
+coll__s_7N_LP__lk_EN0__5	coll__s_7N_LP__lk_EN0	lk_EN2	lk_EN0	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	358.4	511.5	443.39	0
+coll__s_7N_LP__lk_EN1__1	coll__s_7N_LP__lk_EN1	s_7N_x13	s_7N_x14	ft7_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	108.6	-220.51	-193.54	0
+coll__s_7N_LP__lk_EN1__3	coll__s_7N_LP__lk_EN1	s_7N_x15	s_7N_x16	ft9_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	147.6	245.34	218.91	0
+coll__s_7N_LP__lk_EN1__5	coll__s_7N_LP__lk_EN1	lk_EN2	lk_EN0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	345.7	506.87	438.95	0
+coll__s_7N_LP__lk_EN1__6	coll__s_7N_LP__lk_EN1	lk_EN0	lk_EN1	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	249.2	378.04	327.28	0
+coll__s_7N_LP__lk_EN2__1	coll__s_7N_LP__lk_EN2	s_7N_x13	s_7N_x14	ft9_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	92.5	-195.16	-175.5	1
+coll__s_7N_LP__lk_EN2__3	coll__s_7N_LP__lk_EN2	s_7N_x15	s_7N_x16	ft11_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	129.3	235.92	206.44	0
+coll__s_7N_LP__lk_EN3__1	coll__s_7N_LP__lk_EN3	s_7N_x13	s_7N_x14	ft10_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	104.0	-211.95	-187.29	0
+coll__s_7N_LP__lk_EN3__3	coll__s_7N_LP__lk_EN3	s_7N_x15	s_7N_x16	ft12_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	113.8	216.06	188.17	0
+coll__s_7N_LP__lk_EN3__5	coll__s_7N_LP__lk_EN3	lk_EN2	lk_EN0	ft1_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	364.5	516.36	441.19	0
+coll__s_7N_LP__lk_EN3__6	coll__s_7N_LP__lk_EN3	lk_EN0	lk_EN1	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	298.5	446.18	379.11	0
+coll__s_7N_LP__lk_EN3__7	coll__s_7N_LP__lk_EN3	lk_EN1	lk_EN3	coll_i0	data	1	LAG	NEAR	LAG	both_measured	CA	wrapped NEAR	8	3	3	4	1	568.4	760.79	647.99	1
+coll__s_7S_LP__lk_ES0__0	coll__s_7S_LP__lk_ES0	s_7S_LP	s_7S_x17	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	39.2	142.23	112.09	1
+coll__s_7S_LP__lk_ES0__2	coll__s_7S_LP__lk_ES0	s_7S_x16	s_7S_x15	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	21.5	104.1	94.87	1
+coll__s_7S_LP__lk_ES0__4	coll__s_7S_LP__lk_ES0	s_7S_x14	s_7S_x13	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	23.3	-159.64	-124.97	1
+coll__s_7S_LP__lk_ES0__6	coll__s_7S_LP__lk_ES0	s_7S_x12	s_7S_x11	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-107.5	-1.32	7.89	1
+coll__s_7S_LP__lk_ES1__0	coll__s_7S_LP__lk_ES1	s_7S_LP	s_7S_x17	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	28.6	135.87	105.94	1
+coll__s_7S_LP__lk_ES1__2	coll__s_7S_LP__lk_ES1	s_7S_x16	s_7S_x15	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	32.6	118.48	108.5	1
+coll__s_7S_LP__lk_ES1__4	coll__s_7S_LP__lk_ES1	s_7S_x14	s_7S_x13	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	35.3	-157.08	-124.58	1
+coll__s_7S_LP__lk_ES1__6	coll__s_7S_LP__lk_ES1	s_7S_x12	s_7S_x11	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-89.3	23.78	28.59	1
+coll__s_7S_LP__lk_ES1__9	coll__s_7S_LP__lk_ES1	lk_ES0	lk_ES1	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	281.8	426.22	375.27	0
+ctrl__s_0N_C__seqhost__0	ctrl__s_0N_C__seqhost	s_0N_C	s_0N_L0	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	367.4	-505.58	-440.65	0
+ctrl__s_0N_C__seqhost__11	ctrl__s_0N_C__seqhost	s_2S_x00	seqhost	ctrl_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	249.4	-378.53	-304.2	0
+ctrl__s_0N_C__seqhost__2	ctrl__s_0N_C__seqhost	s_0N_L2	s_0S_L4	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	209.0	-382.95	-328.43	0
+ctrl__s_0N_C__seqhost__4	ctrl__s_0N_C__seqhost	s_0S_L3	s_0S_L1	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	162.9	-296.66	-253.43	0
+ctrl__s_0N_C__seqhost__6	ctrl__s_0N_C__seqhost	s_0S_C	s_0S_L0	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-9.4	87.38	72.61	1
+ctrl__s_0N_C__seqhost__8	ctrl__s_0N_C__seqhost	s_0S_L2	s_0S_x13	ft4_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-2.7	96.44	90.14	1
+ctrl__s_0N_LP__seqhost__0	ctrl__s_0N_LP__seqhost	s_0N_LP	s_0N_x01	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	312.9	-436.89	-382.28	0
+ctrl__s_0N_LP__seqhost__11	ctrl__s_0N_LP__seqhost	s_2S_L2	s_3S_L2	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	235.7	-360.46	-299.74	0
+ctrl__s_0N_LP__seqhost__2	ctrl__s_0N_LP__seqhost	s_0N_x00	s_0S_x09	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	216.6	-327.39	-279.42	0
+ctrl__s_0N_LP__seqhost__4	ctrl__s_0N_LP__seqhost	s_0S_x08	s_0S_x07	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	223.6	-345.77	-291.54	0
+ctrl__s_0N_LP__seqhost__6	ctrl__s_0N_LP__seqhost	s_0S_LP	s_0S_x05	ft3_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	107.0	206.05	166.81	0
+ctrl__s_0N_LP__seqhost__9	ctrl__s_0N_LP__seqhost	s_0S_L2	s_1S_L2	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	195.1	-303.87	-263.24	0
+dfi__svc_14__phy_hbm__0	dfi__svc_14__phy_hbm	svc_14	eng	ft0_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	86.3	172.49	148.66	1
+dn_s_0N_L0__0	dn_s_0N_L0	s_0N_C	s_0N_L0	leafdn_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	276.2	-398.51	-349.25	0
+dn_s_0N_L2__0	dn_s_0N_L2	s_0N_C	s_0N_L0	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	339.8	-507.79	-434.99	0
+dn_s_0N_L3__1	dn_s_0N_L3	s_0N_L1	s_0N_L3	leafdn_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	191.7	315.7	260.9	0
+dn_s_0N_L4__1	dn_s_0N_L4	s_0N_L1	s_0N_L3	ft9_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	87.0	181.2	155.92	1
+dn_s_0S_L0__0	dn_s_0S_L0	s_0S_C	s_0S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	16.4	110.36	96.07	1
+dn_s_0S_L2__0	dn_s_0S_L2	s_0S_C	s_0S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	23.4	110.59	93.81	1
+dn_s_0S_L3__1	dn_s_0S_L3	s_0S_L1	s_0S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	74.9	164.25	153.91	1
+dn_s_0S_L4__1	dn_s_0S_L4	s_0S_L1	s_0S_L3	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	136.4	232.16	212.64	0
+dn_s_1N_L0__0	dn_s_1N_L0	s_1N_C	s_1N_L0	leafdn_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	202.2	-290.84	-255.09	0
+dn_s_1N_L2__0	dn_s_1N_L2	s_1N_C	s_1N_L0	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	359.8	-493.4	-415.88	0
+dn_s_1N_L3__1	dn_s_1N_L3	s_1N_L1	s_1N_L3	leafdn_i0	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	190.9	328.85	276.23	0
+dn_s_1N_L4__1	dn_s_1N_L4	s_1N_L1	s_1N_L3	ft1_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	153.0	278.57	233.7	0
+dn_s_1S_L0__0	dn_s_1S_L0	s_1S_C	s_1S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-45.0	60.74	51.25	1
+dn_s_1S_L2__0	dn_s_1S_L2	s_1S_C	s_1S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-77.6	23.14	14.37	1
+dn_s_1S_L3__1	dn_s_1S_L3	s_1S_L1	s_1S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-62.5	32.6	42.28	1
+dn_s_1S_L4__0	dn_s_1S_L4	s_1S_C	s_1S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-27.2	-66.24	-63.74	1
+dn_s_1S_L4__2	dn_s_1S_L4	s_1S_L2	s_1S_L4	leafdn_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	106.2	193.39	175.46	0
+dn_s_2N_L2__0	dn_s_2N_L2	s_2N_C	s_3N_L0	ft11_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	284.0	-416.77	-357.86	0
+dn_s_2N_L3__1	dn_s_2N_L3	s_2N_L1	s_2N_L3	leafdn_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	256.5	388.49	330.8	0
+dn_s_2N_L4__1	dn_s_2N_L4	s_2N_L1	s_2N_L3	ft2_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	177.0	332.0	277.73	0
+dn_s_2S_L0__0	dn_s_2S_L0	s_2S_C	s_2S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	13.9	124.79	97.63	1
+dn_s_2S_L2__0	dn_s_2S_L2	s_2S_C	s_2S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-51.1	62.21	45.17	1
+dn_s_2S_L3__1	dn_s_2S_L3	s_2S_L1	s_2S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	92.7	181.07	164.65	1
+dn_s_2S_L4__1	dn_s_2S_L4	s_2S_L1	s_2S_L3	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	132.8	233.16	200.66	0
+dn_s_3N_L0__0	dn_s_3N_L0	s_3N_C	s_3N_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	20.6	-108.69	-89.75	1
+dn_s_3N_L2__0	dn_s_3N_L2	s_3N_C	s_3N_L0	ft3_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	95.9	-194.82	-163.93	0
+dn_s_3N_L3__1	dn_s_3N_L3	s_3N_L1	s_3N_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	32.9	106.93	106.86	1
+dn_s_3N_L4__1	dn_s_3N_L4	s_3N_L1	s_3N_L3	ft6_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	152.9	246.55	205.22	0
+dn_s_3S_L0__0	dn_s_3S_L0	s_3S_C	s_3S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	39.4	139.74	129.86	1
+dn_s_3S_L2__0	dn_s_3S_L2	s_3S_C	s_3S_L0	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	66.3	170.22	143.68	1
+dn_s_3S_L3__1	dn_s_3S_L3	s_3S_L1	s_3S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-49.6	44.49	42.37	1
+dn_s_3S_L4__1	dn_s_3S_L4	s_3S_L1	s_3S_L3	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-10.7	73.47	61.49	1
+dn_s_4N_L2__0	dn_s_4N_L2	s_4N_C	s_3N_L0	ft17_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	343.6	-484.43	-417.19	0
+dn_s_4N_L3__1	dn_s_4N_L3	s_4N_L1	s_4N_L3	leafdn_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	175.1	287.1	249.74	0
+dn_s_4N_L4__1	dn_s_4N_L4	s_4N_L1	s_4N_L3	ft3_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	290.3	436.58	365.79	0
+dn_s_4S_L0__0	dn_s_4S_L0	s_4S_C	s_4S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	92.5	211.39	176.15	0
+dn_s_4S_L2__0	dn_s_4S_L2	s_4S_C	s_4S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	29.8	151.6	125.95	1
+dn_s_4S_L3__1	dn_s_4S_L3	s_4S_L1	s_4S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	58.5	149.78	131.42	1
+dn_s_4S_L4__0	dn_s_4S_L4	s_4S_C	s_4S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	11.8	118.0	99.86	1
+dn_s_5N_L0__0	dn_s_5N_L0	s_5N_C	s_5N_L0	leafdn_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	262.3	-387.44	-339.5	0
+dn_s_5N_L2__0	dn_s_5N_L2	s_5N_C	s_5N_L0	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	274.4	-427.81	-364.79	0
+dn_s_5N_L3__1	dn_s_5N_L3	s_5N_L1	s_5N_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	91.7	194.9	171.08	1
+dn_s_5N_L4__1	dn_s_5N_L4	s_5N_L1	s_5N_L3	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	85.0	194.0	165.21	1
+dn_s_5S_L0__0	dn_s_5S_L0	s_5S_C	s_5S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	19.4	124.7	108.49	1
+dn_s_5S_L2__0	dn_s_5S_L2	s_5S_C	s_5S_L0	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	23.8	125.19	98.21	1
+dn_s_5S_L3__1	dn_s_5S_L3	s_5S_L1	s_5S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	15.6	105.43	103.58	1
+dn_s_5S_L4__1	dn_s_5S_L4	s_5S_L1	s_5S_L3	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	71.8	162.99	148.14	1
+dn_s_6N_L0__0	dn_s_6N_L0	s_6N_C	s_6N_L0	leafdn_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	380.6	-527.74	-456.54	0
+dn_s_6N_L2__0	dn_s_6N_L2	s_6N_C	s_6N_L0	ft2_i	data	1	LEAD	LAG	LEAD	one_declared	CA	sign flips between models	4	3	3	4	1	433.8	-595.87	-510.75	0
+dn_s_6N_L3__1	dn_s_6N_L3	s_6N_L1	s_6N_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	94.2	195.16	185.79	1
+dn_s_6N_L4__1	dn_s_6N_L4	s_6N_L1	s_6N_L3	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	132.9	231.86	199.01	0
+dn_s_6S_L0__0	dn_s_6S_L0	s_6S_C	s_6S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-50.1	44.6	32.61	1
+dn_s_6S_L2__0	dn_s_6S_L2	s_6S_C	s_6S_L0	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-65.9	28.74	21.9	1
+dn_s_6S_L3__1	dn_s_6S_L3	s_6S_L1	s_6S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	96.6	211.83	189.79	0
+dn_s_6S_L4__0	dn_s_6S_L4	s_6S_C	s_6S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-29.8	-63.04	-62.2	1
+dn_s_6S_L4__2	dn_s_6S_L4	s_6S_L2	s_6S_L4	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-95.3	15.28	21.81	1
+dn_s_7N_L0__0	dn_s_7N_L0	s_7N_C	s_7N_L0	leafdn_i0	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	520.7	-697.9	-589.04	1
+dn_s_7N_L2__0	dn_s_7N_L2	s_7N_C	s_7N_L0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	366.4	-510.3	-448.56	0
+dn_s_7N_L3__1	dn_s_7N_L3	s_7N_L1	s_7N_L3	leafdn_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	187.7	311.71	265.72	0
+dn_s_7N_L4__1	dn_s_7N_L4	s_7N_L1	s_7N_L3	ft9_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	109.0	208.64	179.73	0
+dn_s_7S_L0__0	dn_s_7S_L0	s_7S_C	s_7S_L0	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-64.0	-31.08	-30.03	1
+dn_s_7S_L2__0	dn_s_7S_L2	s_7S_C	s_7S_L0	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-80.9	12.82	7.55	1
+dn_s_7S_L3__1	dn_s_7S_L3	s_7S_L1	s_7S_L3	leafdn_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	18.9	108.61	104.16	1
+dn_s_7S_L4__1	dn_s_7S_L4	s_7S_L1	s_7S_L3	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	86.7	183.43	155.96	1
+flt__bk_sel__gunit__0	flt__bk_sel__gunit	bk_sel	gunit	flt_i0	ctl	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	473.2	-763.96	-655.14	1
+flt__eng__svc_14__0	flt__eng__svc_14	eng	svc_14	flt_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	230.6	-341.32	-289.01	0
+flt__gunit__s_3N_C__1	flt__gunit__s_3N_C	s_3N_x06	s_3N_L4	ft2_i	ctl	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	232.7	-356.48	-283.55	0
+flt__gunit__s_3N_C__3	flt__gunit__s_3N_C	s_3N_L3	s_3N_L1	ft4_i	ctl	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	143.3	-226.5	-199.73	0
+hbm__svc_0__svc_1__0	hbm__svc_0__svc_1	svc_0	svc_1	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	532.2	-708.39	-597.36	1
+hbm__svc_10__svc_11__0	hbm__svc_10__svc_11	svc_10	svc_11	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	542.2	-719.09	-607.43	1
+hbm__svc_11__svc_10__0	hbm__svc_11__svc_10	svc_11	svc_10	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	295.4	421.33	366.57	0
+hbm__svc_12__svc_13__0	hbm__svc_12__svc_13	svc_12	svc_13	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	615.2	-792.99	-677.89	1
+hbm__svc_13__svc_12__0	hbm__svc_13__svc_12	svc_13	svc_12	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	287.5	406.77	359.39	0
+hbm__svc_14__svc_15__0	hbm__svc_14__svc_15	svc_14	svc_15	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	510.8	-684.51	-575.36	1
+hbm__svc_15__svc_14__0	hbm__svc_15__svc_14	svc_15	svc_14	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	323.7	457.9	391.71	0
+hbm__svc_1__svc_0__0	hbm__svc_1__svc_0	svc_1	svc_0	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	318.8	457.67	389.08	0
+hbm__svc_2__svc_3__0	hbm__svc_2__svc_3	svc_2	svc_3	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	569.6	-741.36	-631.93	1
+hbm__svc_3__svc_2__0	hbm__svc_3__svc_2	svc_3	svc_2	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	363.6	495.49	430.83	0
+hbm__svc_4__svc_5__0	hbm__svc_4__svc_5	svc_4	svc_5	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	596.9	-773.2	-660.81	1
+hbm__svc_5__svc_4__0	hbm__svc_5__svc_4	svc_5	svc_4	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	384.6	519.82	453.24	0
+hbm__svc_6__svc_7__0	hbm__svc_6__svc_7	svc_6	svc_7	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	518.5	-687.19	-582.0	1
+hbm__svc_7__svc_6__0	hbm__svc_7__svc_6	svc_7	svc_6	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	319.9	449.72	387.81	0
+hbm__svc_8__svc_9__0	hbm__svc_8__svc_9	svc_8	svc_9	hbm_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	586.0	-763.33	-648.23	1
+hbm__svc_9__svc_8__0	hbm__svc_9__svc_8	svc_9	svc_8	hbm_i0	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	369.1	508.89	436.68	0
+hbmrd__phy_hbm__svc_14__1	hbmrd__phy_hbm__svc_14	eng	svc_14	hbmrd_i0	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	266.7	-386.15	-325.42	0
+idx__svc_0__svc_2__0	idx__svc_0__svc_2	svc_0	svc_2	idx_i0	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	310.9	-486.9	-402.87	0
+idx__svc_12__svc_14__0	idx__svc_12__svc_14	svc_12	svc_14	idx_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	52.1	173.69	152.19	1
+idx__svc_14__bk_sel__0	idx__svc_14__bk_sel	svc_14	svc_12	ft1_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	256.0	-418.08	-351.0	0
+idx__svc_14__bk_sel__1	idx__svc_14__bk_sel	svc_12	svc_13	ft1_i	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	586.3	-757.87	-648.22	1
+idx__svc_14__bk_sel__11	idx__svc_14__bk_sel	s_6N_L0	s_6N_C	ft1_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	140.5	213.37	209.61	0
+idx__svc_14__bk_sel__13	idx__svc_14__bk_sel	s_6N_L1	s_6N_L3	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	162.6	273.89	243.62	0
+idx__svc_14__bk_sel__15	idx__svc_14__bk_sel	s_6N_L4	s_6N_x06	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	182.5	276.19	248.88	0
+idx__svc_14__bk_sel__3	idx__svc_14__bk_sel	s_6S_L4	s_6S_L2	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	98.9	-231.52	-189.38	0
+idx__svc_14__bk_sel__5	idx__svc_14__bk_sel	s_6S_L0	s_6S_C	ft2_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	133.2	-246.22	-191.06	0
+idx__svc_14__bk_sel__7	idx__svc_14__bk_sel	s_6S_L1	s_6S_L3	ft1_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	189.3	297.8	255.46	0
+idx__svc_14__bk_sel__9	idx__svc_14__bk_sel	s_6S_x06	s_6N_L2	ft3_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	264.5	377.88	330.9	0
+rsv__svc_0__svc_1__0	rsv__svc_0__svc_1	svc_0	svc_1	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	522.8	-702.95	-588.71	1
+rsv__svc_10__svc_11__0	rsv__svc_10__svc_11	svc_10	svc_11	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	553.1	-722.27	-617.71	1
+rsv__svc_12__svc_13__0	rsv__svc_12__svc_13	svc_12	svc_13	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	615.4	-793.24	-678.12	1
+rsv__svc_14__svc_15__0	rsv__svc_14__svc_15	svc_14	svc_15	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	510.8	-684.5	-575.35	1
+rsv__svc_2__svc_3__0	rsv__svc_2__svc_3	svc_2	svc_3	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	569.7	-741.6	-632.15	1
+rsv__svc_4__svc_5__0	rsv__svc_4__svc_5	svc_4	svc_5	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	596.7	-772.96	-660.59	1
+rsv__svc_6__svc_7__0	rsv__svc_6__svc_7	svc_6	svc_7	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	520.1	-689.09	-583.7	1
+rsv__svc_8__svc_9__0	rsv__svc_8__svc_9	svc_8	svc_9	rsv_i0	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	577.4	-752.02	-640.32	1
+rt_E0_in_0__1	rt_E0_in_0	s_7S_x13	svc_15	ft4_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	158.8	-280.04	-221.81	0
+rt_E0_in_0__3	rt_E0_in_0	s_7S_x05	s_7S_L2	ft5_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	220.5	-343.35	-283.61	0
+rt_E0_in_0__5	rt_E0_in_0	s_7S_L0	s_7S_C	ret_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	105.5	-202.56	-160.11	0
+rt_E0_in_1__2	rt_E0_in_1	s_7S_x13	svc_15	ft5_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	158.9	-280.01	-221.94	0
+rt_E0_in_1__4	rt_E0_in_1	s_7S_x05	s_7S_L2	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	218.9	-342.81	-283.19	0
+rt_E0_in_1__6	rt_E0_in_1	s_7S_L0	s_7S_C	ret_i1	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	130.3	-238.18	-185.31	0
+rt_E0_in_2__0	rt_E0_in_2	fE0_p3_b0	fE0_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	260.0	-390.48	-324.29	0
+rt_E0_in_2__3	rt_E0_in_2	s_7S_x13	svc_15	ft6_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	159.6	-280.86	-222.67	0
+rt_E0_in_2__5	rt_E0_in_2	s_7S_x05	s_7S_L2	ft7_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	225.4	-336.98	-287.25	0
+rt_E0_in_2__7	rt_E0_in_2	s_7S_L0	s_7S_C	ret_i2	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	130.3	-238.12	-185.31	0
+rt_E0_out_0__1	rt_E0_out_0	fE0_p3_b0	fE0_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	261.9	-390.98	-325.07	0
+rt_E0_out_0__4	rt_E0_out_0	s_7S_x13	svc_15	ft7_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	159.5	-280.76	-222.56	0
+rt_E0_out_0__6	rt_E0_out_0	s_7S_x05	s_7S_L2	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	230.4	-342.48	-292.76	0
+rt_E0_out_0__8	rt_E0_out_0	s_7S_L0	s_7S_C	ret_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	133.8	-242.23	-188.91	0
+rt_E0_out_1__0	rt_E0_out_1	fE0_p5_b0	fE0_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	261.0	-400.11	-331.87	0
+rt_E0_out_1__2	rt_E0_out_1	fE0_p3_b0	fE0_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	263.0	-401.67	-334.72	0
+rt_E0_out_1__5	rt_E0_out_1	s_7S_x13	svc_15	ft8_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	212.8	-342.13	-273.51	0
+rt_E0_out_1__7	rt_E0_out_1	s_7S_x05	s_7S_L2	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	225.6	-339.89	-289.85	0
+rt_E0_out_1__9	rt_E0_out_1	s_7S_L0	s_7S_C	ret_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	136.8	-245.38	-191.93	0
+rt_E0_out_2__1	rt_E0_out_2	fE0_p5_b0	fE0_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	251.5	-386.26	-318.94	0
+rt_E0_out_2__10	rt_E0_out_2	s_7S_L0	s_7S_C	ret_i5	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	138.5	-246.97	-193.68	0
+rt_E0_out_2__3	rt_E0_out_2	fE0_p3_b0	fE0_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	250.9	-382.3	-316.59	0
+rt_E0_out_2__6	rt_E0_out_2	s_7S_x13	svc_15	ft9_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	213.4	-342.82	-274.18	0
+rt_E0_out_2__8	rt_E0_out_2	s_7S_x05	s_7S_L2	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	225.5	-336.11	-285.01	0
+rt_E1_in_0__0	rt_E1_in_0	fE1_p1_b0	s_7S_x16	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	275.4	-412.0	-338.05	0
+rt_E1_in_0__2	rt_E1_in_0	s_7S_L2	s_6S_L2	ft10_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	123.1	-233.32	-190.9	0
+rt_E1_in_0__5	rt_E1_in_0	s_5S_L0	s_5S_C	ret_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	255.9	-378.65	-309.31	0
+rt_E1_in_1__1	rt_E1_in_1	fE1_p1_b0	s_7S_x16	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	276.1	-418.06	-344.11	0
+rt_E1_in_1__3	rt_E1_in_1	s_7S_L2	s_6S_L2	ft11_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	116.3	-229.55	-187.45	0
+rt_E1_in_1__6	rt_E1_in_1	s_5S_L0	s_5S_C	ret_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	254.0	-376.85	-307.38	0
+rt_E1_in_2__0	rt_E1_in_2	fE1_p3_b0	fE1_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	222.3	-348.94	-287.62	0
+rt_E1_in_2__2	rt_E1_in_2	fE1_p1_b0	s_7S_x16	ft11_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	282.2	-425.05	-350.91	0
+rt_E1_in_2__4	rt_E1_in_2	s_7S_L2	s_6S_L2	ft12_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	115.2	-227.32	-184.94	0
+rt_E1_in_2__7	rt_E1_in_2	s_5S_L0	s_5S_C	ret_i2	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	258.4	-381.25	-311.83	0
+rt_E1_out_0__1	rt_E1_out_0	fE1_p3_b0	fE1_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	224.2	-349.44	-288.4	0
+rt_E1_out_0__3	rt_E1_out_0	fE1_p1_b0	s_7S_x16	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	283.2	-423.27	-349.0	0
+rt_E1_out_0__5	rt_E1_out_0	s_7S_L2	s_6S_L2	ft13_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	115.1	-234.53	-191.37	0
+rt_E1_out_0__8	rt_E1_out_0	s_5S_L0	s_5S_C	ret_i3	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	262.1	-385.18	-315.66	0
+rt_E1_out_1__0	rt_E1_out_1	fE1_p5_b0	fE1_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	232.4	-365.47	-303.46	0
+rt_E1_out_1__2	rt_E1_out_1	fE1_p3_b0	fE1_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	225.3	-360.13	-298.05	0
+rt_E1_out_1__4	rt_E1_out_1	fE1_p1_b0	s_7S_x16	ft13_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	283.0	-427.5	-353.41	0
+rt_E1_out_1__6	rt_E1_out_1	s_7S_L2	s_6S_L2	ft14_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	108.8	-230.97	-187.94	0
+rt_E1_out_1__9	rt_E1_out_1	s_5S_L0	s_5S_C	ret_i4	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	265.0	-387.95	-318.56	0
+rt_E1_out_2__1	rt_E1_out_2	fE1_p5_b0	fE1_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	223.0	-351.61	-290.53	0
+rt_E1_out_2__10	rt_E1_out_2	s_5S_L0	s_5S_C	ret_i5	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	275.8	-404.66	-329.28	0
+rt_E1_out_2__3	rt_E1_out_2	fE1_p3_b0	fE1_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	213.2	-340.76	-279.92	0
+rt_E1_out_2__5	rt_E1_out_2	fE1_p1_b0	s_7S_x16	ft14_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	294.2	-432.28	-357.15	0
+rt_E1_out_2__7	rt_E1_out_2	s_7S_L2	s_6S_L2	ft15_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	113.3	-249.67	-204.36	0
+rt_E2_in_0__0	rt_E2_in_0	fE2_p1_b0	s_7S_x19	ft5_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	371.1	-522.91	-432.02	0
+rt_E2_in_0__2	rt_E2_in_0	s_7S_L1	s_6S_L1	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	311.5	-443.69	-372.85	0
+rt_E2_in_1__1	rt_E2_in_1	fE2_p1_b0	s_7S_x19	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	375.6	-527.68	-437.05	0
+rt_E2_in_1__3	rt_E2_in_1	s_7S_L1	s_6S_L1	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	308.2	-442.1	-371.56	0
+rt_E2_in_2__0	rt_E2_in_2	fE2_p3_b0	fE2_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.7	-375.35	-312.17	0
+rt_E2_in_2__2	rt_E2_in_2	fE2_p1_b0	s_7S_x19	ft7_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	378.0	-531.19	-440.11	0
+rt_E2_in_2__4	rt_E2_in_2	s_7S_L1	s_6S_L1	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	305.7	-443.83	-372.35	0
+rt_E2_out_0__1	rt_E2_out_0	fE2_p3_b0	fE2_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.9	-374.64	-311.78	0
+rt_E2_out_0__3	rt_E2_out_0	fE2_p1_b0	s_7S_x19	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	384.7	-539.8	-448.4	0
+rt_E2_out_0__5	rt_E2_out_0	s_7S_L1	s_6S_L1	ft11_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	306.6	-445.28	-373.2	0
+rt_E2_out_0__7	rt_E2_out_0	s_5S_L1	s_4S_L1	ft5_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	332.1	-483.61	-385.04	0
+rt_E2_out_1__0	rt_E2_out_1	fE2_p5_b0	fE2_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	266.9	-409.61	-339.44	0
+rt_E2_out_1__2	rt_E2_out_1	fE2_p3_b0	fE2_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	249.8	-386.64	-322.6	0
+rt_E2_out_1__4	rt_E2_out_1	fE2_p1_b0	s_7S_x19	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	388.2	-540.62	-449.19	0
+rt_E2_out_1__6	rt_E2_out_1	s_7S_L1	s_6S_L1	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	300.4	-437.96	-366.42	0
+rt_E2_out_1__8	rt_E2_out_1	s_5S_L1	s_4S_L1	ft6_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	330.1	-481.2	-382.95	0
+rt_E2_out_2__1	rt_E2_out_2	fE2_p5_b0	fE2_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	258.2	-396.54	-327.27	0
+rt_E2_out_2__3	rt_E2_out_2	fE2_p3_b0	fE2_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	238.3	-367.18	-304.58	0
+rt_E2_out_2__5	rt_E2_out_2	fE2_p1_b0	s_7S_x19	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	391.1	-542.73	-450.94	0
+rt_E2_out_2__7	rt_E2_out_2	s_7S_L1	s_6S_L1	ft13_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	318.5	-464.63	-390.4	0
+rt_E2_out_2__9	rt_E2_out_2	s_5S_L1	s_4S_L1	ft7_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	330.9	-482.14	-383.79	0
+rt_E3_in_0__0	rt_E3_in_0	fE3_p1_b0	s_7N_x10	ft5_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	461.9	-627.44	-523.78	0
+rt_E3_in_0__2	rt_E3_in_0	s_7N_L2	s_6N_L2	ft6_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	427.6	-590.1	-492.64	0
+rt_E3_in_0__4	rt_E3_in_0	s_6N_L0	s_6N_C	ret_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	189.6	273.19	248.86	0
+rt_E3_in_1__1	rt_E3_in_1	fE3_p1_b0	s_7N_x10	ft6_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	467.6	-634.07	-530.46	0
+rt_E3_in_1__3	rt_E3_in_1	s_7N_L2	s_6N_L2	ft7_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	441.3	-608.07	-508.94	0
+rt_E3_in_1__5	rt_E3_in_1	s_6N_L0	s_6N_C	ret_i1	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	309.1	425.89	361.85	0
+rt_E3_in_2__0	rt_E3_in_2	fE3_p3_b0	fE3_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	253.5	-377.76	-317.45	0
+rt_E3_in_2__2	rt_E3_in_2	fE3_p1_b0	s_7N_x10	ft7_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	468.2	-636.45	-532.6	1
+rt_E3_in_2__4	rt_E3_in_2	s_7N_L2	s_6N_L2	ft8_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	452.0	-620.47	-520.62	0
+rt_E3_in_2__6	rt_E3_in_2	s_6N_L0	s_6N_C	ret_i2	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	314.7	431.18	367.14	0
+rt_E3_out_0__1	rt_E3_out_0	fE3_p3_b0	fE3_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	254.7	-377.93	-318.05	0
+rt_E3_out_0__3	rt_E3_out_0	fE3_p1_b0	s_7N_x10	ft8_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	476.4	-643.21	-538.96	1
+rt_E3_out_0__5	rt_E3_out_0	s_7N_L2	s_6N_L2	ft9_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	454.9	-622.18	-522.33	0
+rt_E3_out_0__9	rt_E3_out_0	s_3N_L0	s_4N_C	ret_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	138.2	237.46	215.95	0
+rt_E3_out_1__0	rt_E3_out_1	fE3_p5_b0	fE3_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	279.5	-415.03	-345.89	0
+rt_E3_out_1__10	rt_E3_out_1	s_3N_L0	s_4N_C	ret_i1	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	139.5	238.87	217.25	0
+rt_E3_out_1__2	rt_E3_out_1	fE3_p3_b0	fE3_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	257.3	-390.55	-329.52	0
+rt_E3_out_1__4	rt_E3_out_1	fE3_p1_b0	s_7N_x10	ft9_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	479.3	-646.03	-541.96	1
+rt_E3_out_1__6	rt_E3_out_1	s_7N_L2	s_6N_L2	ft10_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	462.8	-630.98	-530.83	1
+rt_E3_out_2__1	rt_E3_out_2	fE3_p5_b0	fE3_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	269.1	-402.32	-334.06	0
+rt_E3_out_2__11	rt_E3_out_2	s_3N_L0	s_4N_C	ret_i2	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	139.2	238.5	216.92	0
+rt_E3_out_2__3	rt_E3_out_2	fE3_p3_b0	fE3_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	244.7	-370.02	-310.41	0
+rt_E3_out_2__5	rt_E3_out_2	fE3_p1_b0	s_7N_x10	ft10_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	482.6	-648.24	-543.86	1
+rt_E3_out_2__7	rt_E3_out_2	s_7N_L2	s_6N_L2	ft11_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	484.6	-653.06	-548.64	1
+rt_E4_in_0__0	rt_E4_in_0	fE4_p1_b0	s_7N_x13	ft13_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	194.8	-340.48	-273.31	0
+rt_E4_in_0__2	rt_E4_in_0	s_7N_L1	s_6N_L1	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	277.7	-383.25	-340.99	0
+rt_E4_in_1__1	rt_E4_in_1	fE4_p1_b0	s_7N_x13	ft14_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	195.2	-340.88	-273.73	0
+rt_E4_in_1__3	rt_E4_in_1	s_7N_L1	s_6N_L1	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	283.2	-391.73	-349.04	0
+rt_E4_in_2__0	rt_E4_in_2	fE4_p3_b0	fE4_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	241.6	-365.74	-305.1	0
+rt_E4_in_2__2	rt_E4_in_2	fE4_p1_b0	s_7N_x13	ft15_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	196.5	-342.49	-275.11	0
+rt_E4_in_2__4	rt_E4_in_2	s_7N_L1	s_6N_L1	ft11_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	294.3	-398.61	-356.13	0
+rt_E4_out_0__1	rt_E4_out_0	fE4_p3_b0	fE4_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	243.8	-366.99	-306.69	0
+rt_E4_out_0__3	rt_E4_out_0	fE4_p1_b0	s_7N_x13	ft16_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	199.3	-345.68	-277.93	0
+rt_E4_out_0__5	rt_E4_out_0	s_7N_L1	s_6N_L1	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	308.0	-416.36	-372.99	0
+rt_E4_out_1__0	rt_E4_out_1	fE4_p5_b0	fE4_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	283.5	-423.73	-351.68	0
+rt_E4_out_1__2	rt_E4_out_1	fE4_p3_b0	fE4_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	246.1	-379.35	-317.92	0
+rt_E4_out_1__4	rt_E4_out_1	fE4_p1_b0	s_7N_x13	ft17_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	203.1	-349.63	-281.82	0
+rt_E4_out_1__6	rt_E4_out_1	s_7N_L1	s_6N_L1	ft13_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	310.1	-423.8	-379.16	0
+rt_E4_out_2__1	rt_E4_out_2	fE4_p5_b0	fE4_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	271.9	-409.66	-338.56	0
+rt_E4_out_2__3	rt_E4_out_2	fE4_p3_b0	fE4_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	232.8	-357.98	-298.02	0
+rt_E4_out_2__5	rt_E4_out_2	fE4_p1_b0	s_7N_x13	ft18_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	205.4	-352.09	-284.19	0
+rt_E4_out_2__7	rt_E4_out_2	s_7N_L1	s_6N_L1	ft14_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	330.7	-457.16	-408.86	0
+rt_E5_in_0__0	rt_E5_in_0	fE5_p1_b0	s_7N_x16	ft13_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	475.8	-639.94	-539.61	1
+rt_E5_in_0__2	rt_E5_in_0	s_7N_x06	s_7N_L4	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	156.3	-260.84	-216.24	0
+rt_E5_in_0__4	rt_E5_in_0	s_7N_L3	s_7N_L1	ft2_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	207.0	-329.49	-268.8	0
+rt_E5_in_1__1	rt_E5_in_1	fE5_p1_b0	s_7N_x16	ft14_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	474.1	-637.9	-537.8	1
+rt_E5_in_1__3	rt_E5_in_1	s_7N_x06	s_7N_L4	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	155.6	-263.12	-217.28	0
+rt_E5_in_1__5	rt_E5_in_1	s_7N_L3	s_7N_L1	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	206.8	-332.82	-272.17	0
+rt_E5_in_2__0	rt_E5_in_2	fE5_p3_b0	fE5_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	215.9	-339.13	-279.87	0
+rt_E5_in_2__2	rt_E5_in_2	fE5_p1_b0	s_7N_x16	ft15_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	475.9	-640.81	-540.09	1
+rt_E5_in_2__4	rt_E5_in_2	s_7N_x06	s_7N_L4	ft2_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	158.0	-264.62	-218.65	0
+rt_E5_in_2__6	rt_E5_in_2	s_7N_L3	s_7N_L1	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	208.9	-335.17	-274.51	0
+rt_E5_out_0__1	rt_E5_out_0	fE5_p3_b0	fE5_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	218.9	-340.64	-281.72	0
+rt_E5_out_0__3	rt_E5_out_0	fE5_p1_b0	s_7N_x16	ft16_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	485.1	-650.39	-548.52	1
+rt_E5_out_0__5	rt_E5_out_0	s_7N_x06	s_7N_L4	ft3_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	152.7	-257.05	-211.82	0
+rt_E5_out_0__7	rt_E5_out_0	s_7N_L3	s_7N_L1	ft5_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	198.4	-334.87	-274.66	0
+rt_E5_out_1__0	rt_E5_out_1	fE5_p5_b0	fE5_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	293.3	-430.3	-361.6	0
+rt_E5_out_1__2	rt_E5_out_1	fE5_p3_b0	fE5_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	220.0	-351.35	-291.45	0
+rt_E5_out_1__4	rt_E5_out_1	fE5_p1_b0	s_7N_x16	ft17_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	454.3	-604.75	-519.16	0
+rt_E5_out_1__6	rt_E5_out_1	s_7N_x06	s_7N_L4	ft4_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	157.6	-264.19	-218.69	0
+rt_E5_out_1__8	rt_E5_out_1	s_7N_L3	s_7N_L1	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	204.2	-344.93	-284.17	0
+rt_E5_out_2__1	rt_E5_out_2	fE5_p5_b0	fE5_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	285.6	-417.94	-350.07	0
+rt_E5_out_2__3	rt_E5_out_2	fE5_p3_b0	fE5_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	206.7	-330.73	-272.08	0
+rt_E5_out_2__5	rt_E5_out_2	fE5_p1_b0	s_7N_x16	ft18_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	466.7	-621.23	-534.22	0
+rt_E5_out_2__7	rt_E5_out_2	s_7N_x06	s_7N_L4	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	157.5	-261.61	-216.09	0
+rt_E5_out_2__9	rt_E5_out_2	s_7N_L3	s_7N_L1	ft7_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	208.8	-341.23	-281.65	0
+rt_W0_in_0__0	rt_W0_in_0	fW0_p1_b0	s_0S_x01	ft12_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	305.6	-443.73	-358.28	0
+rt_W0_in_0__1	rt_W0_in_0	s_0S_x01	svc_1	ft4_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	260.0	-382.31	-322.37	0
+rt_W0_in_0__3	rt_W0_in_0	s_0S_x13	s_0S_L2	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	187.7	-298.81	-251.4	0
+rt_W0_in_0__5	rt_W0_in_0	s_0S_L0	s_0S_C	ret_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	255.5	-379.01	-307.0	0
+rt_W0_in_1__1	rt_W0_in_1	fW0_p1_b0	s_0S_x01	ft13_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	305.4	-443.57	-358.13	0
+rt_W0_in_1__2	rt_W0_in_1	s_0S_x01	svc_1	ft5_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	259.6	-381.79	-321.87	0
+rt_W0_in_1__4	rt_W0_in_1	s_0S_x13	s_0S_L2	ft8_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	186.2	-304.17	-256.0	0
+rt_W0_in_1__6	rt_W0_in_1	s_0S_L0	s_0S_C	ret_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	250.4	-373.87	-301.76	0
+rt_W0_in_2__0	rt_W0_in_2	fW0_p3_b0	fW0_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	296.8	-427.75	-357.67	0
+rt_W0_in_2__2	rt_W0_in_2	fW0_p1_b0	s_0S_x01	ft14_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	308.8	-447.3	-361.55	0
+rt_W0_in_2__3	rt_W0_in_2	s_0S_x01	svc_1	ft6_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	260.2	-382.54	-322.58	0
+rt_W0_in_2__5	rt_W0_in_2	s_0S_x13	s_0S_L2	ft9_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	203.2	-318.95	-267.73	0
+rt_W0_in_2__7	rt_W0_in_2	s_0S_L0	s_0S_C	ret_i2	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	226.8	-343.26	-279.43	0
+rt_W0_out_0__1	rt_W0_out_0	fW0_p3_b0	fW0_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	298.8	-428.33	-358.5	0
+rt_W0_out_0__3	rt_W0_out_0	fW0_p1_b0	s_0S_x01	ft15_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	311.4	-450.2	-364.16	0
+rt_W0_out_0__4	rt_W0_out_0	s_0S_x01	svc_1	ft7_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	260.3	-382.61	-322.65	0
+rt_W0_out_0__6	rt_W0_out_0	s_0S_x13	s_0S_L2	ft10_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	209.3	-324.83	-272.9	0
+rt_W0_out_0__8	rt_W0_out_0	s_0S_L0	s_0S_C	ret_i3	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	229.7	-346.45	-282.33	0
+rt_W0_out_1__0	rt_W0_out_1	fW0_p5_b0	fW0_p4_b0	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	182.6	-302.65	-256.28	0
+rt_W0_out_1__2	rt_W0_out_1	fW0_p3_b0	fW0_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	298.8	-437.92	-367.09	0
+rt_W0_out_1__4	rt_W0_out_1	fW0_p1_b0	s_0S_x01	ft16_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	312.8	-451.74	-365.67	0
+rt_W0_out_1__5	rt_W0_out_1	s_0S_x01	svc_1	ft8_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	340.9	-471.58	-399.64	0
+rt_W0_out_1__7	rt_W0_out_1	s_0S_x13	s_0S_L2	ft11_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	201.4	-314.38	-262.94	0
+rt_W0_out_1__9	rt_W0_out_1	s_0S_L0	s_0S_C	ret_i4	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	231.7	-348.27	-284.34	0
+rt_W0_out_2__1	rt_W0_out_2	fW0_p5_b0	fW0_p4_b0	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	173.0	-288.73	-243.27	0
+rt_W0_out_2__10	rt_W0_out_2	s_0S_L0	s_0S_C	ret_i5	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	237.2	-354.07	-289.94	0
+rt_W0_out_2__3	rt_W0_out_2	fW0_p3_b0	fW0_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	287.2	-419.14	-349.49	0
+rt_W0_out_2__5	rt_W0_out_2	fW0_p1_b0	s_0S_x01	ft17_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	315.2	-454.49	-368.23	0
+rt_W0_out_2__6	rt_W0_out_2	s_0S_x01	svc_1	ft9_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	341.4	-472.15	-400.16	0
+rt_W0_out_2__8	rt_W0_out_2	s_0S_x13	s_0S_L2	ft12_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	200.2	-309.79	-258.4	0
+rt_W1_in_0__0	rt_W1_in_0	fW1_p1_b0	s_0S_x04	ft15_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	254.3	-386.15	-311.92	0
+rt_W1_in_0__2	rt_W1_in_0	s_0S_L2	s_1S_L2	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	284.9	-406.03	-342.67	0
+rt_W1_in_0__5	rt_W1_in_0	s_2S_L0	s_2S_C	ret_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	123.7	-234.03	-182.29	0
+rt_W1_in_1__1	rt_W1_in_1	fW1_p1_b0	s_0S_x04	ft16_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	254.2	-385.99	-311.77	0
+rt_W1_in_1__3	rt_W1_in_1	s_0S_L2	s_1S_L2	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	257.9	-374.04	-319.09	0
+rt_W1_in_1__6	rt_W1_in_1	s_2S_L0	s_2S_C	ret_i1	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	125.3	-235.7	-183.9	0
+rt_W1_in_2__0	rt_W1_in_2	fW1_p3_b0	fW1_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	265.9	-402.26	-331.33	0
+rt_W1_in_2__2	rt_W1_in_2	fW1_p1_b0	s_0S_x04	ft17_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	257.5	-389.72	-315.19	0
+rt_W1_in_2__4	rt_W1_in_2	s_0S_L2	s_1S_L2	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	274.6	-392.83	-331.19	0
+rt_W1_in_2__7	rt_W1_in_2	s_2S_L0	s_2S_C	ret_i2	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	128.7	-239.67	-187.42	0
+rt_W1_out_0__1	rt_W1_out_0	fW1_p3_b0	fW1_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	267.9	-402.83	-332.17	0
+rt_W1_out_0__3	rt_W1_out_0	fW1_p1_b0	s_0S_x04	ft18_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	260.1	-392.61	-317.8	0
+rt_W1_out_0__5	rt_W1_out_0	s_0S_L2	s_1S_L2	ft11_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	249.4	-375.88	-315.29	0
+rt_W1_out_0__8	rt_W1_out_0	s_2S_L0	s_2S_C	ret_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	130.3	-241.33	-189.01	0
+rt_W1_out_1__0	rt_W1_out_1	fW1_p5_b0	fW1_p4_b0	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	114.0	-225.72	-187.69	0
+rt_W1_out_1__2	rt_W1_out_1	fW1_p3_b0	fW1_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	268.1	-412.55	-340.93	0
+rt_W1_out_1__4	rt_W1_out_1	fW1_p1_b0	s_0S_x04	ft19_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	261.6	-394.16	-319.31	0
+rt_W1_out_1__6	rt_W1_out_1	s_0S_L2	s_1S_L2	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	240.3	-381.85	-320.57	0
+rt_W1_out_1__9	rt_W1_out_1	s_2S_L0	s_2S_C	ret_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	133.3	-244.41	-192.06	0
+rt_W1_out_2__1	rt_W1_out_2	fW1_p5_b0	fW1_p4_b0	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	104.5	-211.8	-174.69	0
+rt_W1_out_2__10	rt_W1_out_2	s_2S_L0	s_2S_C	ret_i5	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	139.8	-251.19	-198.69	0
+rt_W1_out_2__3	rt_W1_out_2	fW1_p3_b0	fW1_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	256.6	-393.83	-323.4	0
+rt_W1_out_2__5	rt_W1_out_2	fW1_p1_b0	s_0S_x04	ft20_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	265.7	-398.54	-323.52	0
+rt_W1_out_2__7	rt_W1_out_2	s_0S_L2	s_1S_L2	ft13_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	263.1	-408.62	-344.6	0
+rt_W2_in_0__0	rt_W2_in_0	fW2_p1_b0	s_0S_x07	ft7_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	309.4	-455.46	-376.92	0
+rt_W2_in_0__2	rt_W2_in_0	s_0S_L1	s_1S_L1	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	173.4	-274.46	-240.13	0
+rt_W2_in_1__1	rt_W2_in_1	fW2_p1_b0	s_0S_x07	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	319.1	-457.11	-379.01	0
+rt_W2_in_1__3	rt_W2_in_1	s_0S_L1	s_1S_L1	ft8_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	206.5	-320.86	-283.13	0
+rt_W2_in_2__0	rt_W2_in_2	fW2_p3_b0	fW2_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	246.9	-374.33	-309.8	0
+rt_W2_in_2__2	rt_W2_in_2	fW2_p1_b0	s_0S_x07	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	322.6	-461.33	-382.81	0
+rt_W2_in_2__4	rt_W2_in_2	s_0S_L1	s_1S_L1	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	223.1	-335.17	-296.48	0
+rt_W2_out_0__1	rt_W2_out_0	fW2_p3_b0	fW2_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.0	-372.77	-308.66	0
+rt_W2_out_0__3	rt_W2_out_0	fW2_p1_b0	s_0S_x07	ft10_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	322.2	-464.68	-385.73	0
+rt_W2_out_0__5	rt_W2_out_0	s_0S_L1	s_1S_L1	ft10_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	223.1	-321.54	-284.05	0
+rt_W2_out_0__7	rt_W2_out_0	s_2S_L1	s_3S_L1	ft9_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	143.9	-239.79	-204.03	0
+rt_W2_out_1__0	rt_W2_out_1	fW2_p5_b0	fW2_p4_b0	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	103.2	-213.78	-177.4	0
+rt_W2_out_1__2	rt_W2_out_1	fW2_p3_b0	fW2_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	248.9	-384.36	-319.16	0
+rt_W2_out_1__4	rt_W2_out_1	fW2_p1_b0	s_0S_x07	ft11_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	321.7	-460.94	-382.92	0
+rt_W2_out_1__6	rt_W2_out_1	s_0S_L1	s_1S_L1	ft11_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	214.8	-319.83	-279.4	0
+rt_W2_out_1__8	rt_W2_out_1	s_2S_L1	s_3S_L1	ft10_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	106.7	-195.14	-166.72	0
+rt_W2_out_2__1	rt_W2_out_2	fW2_p5_b0	fW2_p4_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	94.5	-200.64	-165.18	0
+rt_W2_out_2__3	rt_W2_out_2	fW2_p3_b0	fW2_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	237.9	-366.25	-302.19	0
+rt_W2_out_2__5	rt_W2_out_2	fW2_p1_b0	s_0S_x07	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	336.4	-476.56	-396.74	0
+rt_W2_out_2__7	rt_W2_out_2	s_0S_L1	s_1S_L1	ft12_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	244.1	-354.18	-310.63	0
+rt_W2_out_2__9	rt_W2_out_2	s_2S_L1	s_3S_L1	ft11_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	118.7	-206.69	-176.74	0
+rt_W3_in_0__0	rt_W3_in_0	fW3_p1_b0	s_0N_x00	ft7_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	463.2	-619.14	-524.14	0
+rt_W3_in_0__2	rt_W3_in_0	s_0N_L2	s_1N_L2	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	71.6	-164.35	-138.09	1
+rt_W3_in_0__4	rt_W3_in_0	s_1N_L0	s_1N_C	ret_i0	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	251.7	368.45	321.57	0
+rt_W3_in_1__1	rt_W3_in_1	fW3_p1_b0	s_0N_x00	ft8_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	467.6	-622.74	-527.75	0
+rt_W3_in_1__3	rt_W3_in_1	s_0N_L2	s_1N_L2	ft6_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	70.0	-168.87	-142.35	1
+rt_W3_in_1__5	rt_W3_in_1	s_1N_L0	s_1N_C	ret_i1	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	254.1	366.96	319.79	0
+rt_W3_in_2__0	rt_W3_in_2	fW3_p3_b0	fW3_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	243.6	-365.55	-304.47	0
+rt_W3_in_2__2	rt_W3_in_2	fW3_p1_b0	s_0N_x00	ft9_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	464.2	-628.62	-532.43	0
+rt_W3_in_2__4	rt_W3_in_2	s_0N_L2	s_1N_L2	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	81.5	-176.82	-149.89	1
+rt_W3_in_2__6	rt_W3_in_2	s_1N_L0	s_1N_C	ret_i2	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	246.1	360.62	313.86	0
+rt_W3_out_0__1	rt_W3_out_0	fW3_p3_b0	fW3_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	244.2	-365.06	-304.44	0
+rt_W3_out_0__3	rt_W3_out_0	fW3_p1_b0	s_0N_x00	ft10_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	466.3	-630.62	-534.35	0
+rt_W3_out_0__5	rt_W3_out_0	s_0N_L2	s_1N_L2	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	83.5	-182.76	-156.61	1
+rt_W3_out_0__9	rt_W3_out_0	s_3N_L0	s_3N_C	ret_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-36.6	-50.01	-35.43	1
+rt_W3_out_1__0	rt_W3_out_1	fW3_p5_b0	fW3_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	240.4	-367.78	-305.31	0
+rt_W3_out_1__10	rt_W3_out_1	s_3N_L0	s_3N_C	ret_i1	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-35.7	-50.89	-36.26	1
+rt_W3_out_1__2	rt_W3_out_1	fW3_p3_b0	fW3_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.6	-378.65	-316.81	0
+rt_W3_out_1__4	rt_W3_out_1	fW3_p1_b0	s_0N_x00	ft11_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	472.2	-629.02	-534.13	0
+rt_W3_out_1__6	rt_W3_out_1	s_0N_L2	s_1N_L2	ft9_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	103.5	-204.06	-175.91	0
+rt_W3_out_2__1	rt_W3_out_2	fW3_p5_b0	fW3_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	230.1	-355.06	-293.49	0
+rt_W3_out_2__11	rt_W3_out_2	s_3N_L0	s_3N_C	ret_i2	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-35.6	-50.98	-36.33	1
+rt_W3_out_2__3	rt_W3_out_2	fW3_p3_b0	fW3_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	235.0	-358.07	-297.65	0
+rt_W3_out_2__5	rt_W3_out_2	fW3_p1_b0	s_0N_x00	ft12_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	483.2	-641.4	-545.08	1
+rt_W3_out_2__7	rt_W3_out_2	s_0N_L2	s_1N_L2	ft10_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	86.8	-195.24	-166.62	1
+rt_W4_in_0__0	rt_W4_in_0	fW4_p1_b0	s_0N_x03	ft13_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	372.7	-531.15	-427.78	0
+rt_W4_in_0__2	rt_W4_in_0	s_0N_L1	s_1N_L1	ft6_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	291.6	-404.98	-347.96	0
+rt_W4_in_1__1	rt_W4_in_1	fW4_p1_b0	s_0N_x03	ft14_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	373.1	-531.53	-428.19	0
+rt_W4_in_1__3	rt_W4_in_1	s_0N_L1	s_1N_L1	ft7_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	297.4	-411.85	-353.83	0
+rt_W4_in_2__0	rt_W4_in_2	fW4_p3_b0	fW4_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	284.7	-411.09	-345.33	0
+rt_W4_in_2__2	rt_W4_in_2	fW4_p1_b0	s_0N_x03	ft15_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	373.9	-532.55	-428.98	0
+rt_W4_in_2__4	rt_W4_in_2	s_0N_L1	s_1N_L1	ft8_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	307.9	-421.86	-364.52	0
+rt_W4_out_0__1	rt_W4_out_0	fW4_p3_b0	fW4_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	287.4	-412.9	-347.44	0
+rt_W4_out_0__3	rt_W4_out_0	fW4_p1_b0	s_0N_x03	ft16_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	376.8	-535.86	-431.91	0
+rt_W4_out_0__5	rt_W4_out_0	s_0N_L1	s_1N_L1	ft9_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	318.3	-433.14	-375.15	0
+rt_W4_out_1__0	rt_W4_out_1	fW4_p5_b0	fW4_p4_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	277.2	-409.68	-343.45	0
+rt_W4_out_1__2	rt_W4_out_1	fW4_p3_b0	fW4_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	290.2	-425.88	-359.24	0
+rt_W4_out_1__4	rt_W4_out_1	fW4_p1_b0	s_0N_x03	ft17_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	380.8	-540.11	-436.09	0
+rt_W4_out_1__6	rt_W4_out_1	s_0N_L1	s_1N_L1	ft10_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	326.0	-441.67	-383.01	0
+rt_W4_out_2__1	rt_W4_out_2	fW4_p5_b0	fW4_p4_b0	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	265.6	-395.67	-330.38	0
+rt_W4_out_2__3	rt_W4_out_2	fW4_p3_b0	fW4_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	276.1	-403.56	-338.47	0
+rt_W4_out_2__5	rt_W4_out_2	fW4_p1_b0	s_0N_x03	ft18_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	381.5	-540.94	-436.86	0
+rt_W4_out_2__7	rt_W4_out_2	s_0N_L1	s_1N_L1	ft11_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	332.5	-448.95	-389.59	0
+rt_W5_in_0__0	rt_W5_in_0	fW5_p1_b0	s_0N_x06	ft13_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	484.2	-655.97	-539.33	1
+rt_W5_in_0__2	rt_W5_in_0	s_0N_x16	s_0N_L4	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	163.2	-269.41	-223.45	0
+rt_W5_in_0__4	rt_W5_in_0	s_0N_L3	s_0N_L1	ft2_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	161.8	-270.13	-221.04	0
+rt_W5_in_1__1	rt_W5_in_1	fW5_p1_b0	s_0N_x06	ft14_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	483.1	-654.72	-538.17	1
+rt_W5_in_1__3	rt_W5_in_1	s_0N_x16	s_0N_L4	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	154.5	-260.27	-216.6	0
+rt_W5_in_1__5	rt_W5_in_1	s_0N_L3	s_0N_L1	ft3_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	160.6	-275.47	-226.48	0
+rt_W5_in_2__0	rt_W5_in_2	fW5_p3_b0	fW5_p2_b0	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	293.7	-418.46	-354.42	0
+rt_W5_in_2__2	rt_W5_in_2	fW5_p1_b0	s_0N_x06	ft15_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	485.1	-657.03	-540.2	1
+rt_W5_in_2__4	rt_W5_in_2	s_0N_x16	s_0N_L4	ft2_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	159.2	-267.89	-223.77	0
+rt_W5_in_2__6	rt_W5_in_2	s_0N_L3	s_0N_L1	ft4_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	172.0	-286.0	-236.6	0
+rt_W5_out_0__1	rt_W5_out_0	fW5_p3_b0	fW5_p2_b0	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	297.6	-421.02	-357.23	0
+rt_W5_out_0__3	rt_W5_out_0	fW5_p1_b0	s_0N_x06	ft16_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	489.1	-661.49	-544.25	1
+rt_W5_out_0__5	rt_W5_out_0	s_0N_x16	s_0N_L4	ft3_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	157.4	-262.42	-218.92	0
+rt_W5_out_0__7	rt_W5_out_0	s_0N_L3	s_0N_L1	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	166.1	-289.68	-240.64	0
+rt_W5_out_1__0	rt_W5_out_1	fW5_p5_b0	fW5_p4_b0	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	155.0	-272.04	-227.68	0
+rt_W5_out_1__2	rt_W5_out_1	fW5_p3_b0	fW5_p2_b0	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	298.1	-431.02	-366.32	0
+rt_W5_out_1__4	rt_W5_out_1	fW5_p1_b0	s_0N_x06	ft17_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	490.2	-662.72	-545.5	1
+rt_W5_out_1__6	rt_W5_out_1	s_0N_x16	s_0N_L4	ft4_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	159.0	-265.85	-222.48	0
+rt_W5_out_1__8	rt_W5_out_1	s_0N_L3	s_0N_L1	ft6_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	171.6	-299.41	-250.42	0
+rt_W5_out_2__1	rt_W5_out_2	fW5_p5_b0	fW5_p4_b0	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	147.3	-259.73	-216.22	0
+rt_W5_out_2__3	rt_W5_out_2	fW5_p3_b0	fW5_p2_b0	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	284.4	-409.84	-346.42	0
+rt_W5_out_2__5	rt_W5_out_2	fW5_p1_b0	s_0N_x06	ft18_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	493.2	-665.8	-548.48	1
+rt_W5_out_2__7	rt_W5_out_2	s_0N_x16	s_0N_L4	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	158.9	-263.81	-220.24	0
+rt_W5_out_2__9	rt_W5_out_2	s_0N_L3	s_0N_L1	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	180.0	-301.91	-254.11	0
+sid_s_0N_C__s_1N_C__0	sid_s_0N_C__s_1N_C	s_0N_C	s_1N_C	sid_i0	ctl	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	175.3	-313.43	-261.83	0
+sid_s_0S_C__s_0N_C__1	sid_s_0S_C__s_0N_C	s_0S_L1	s_0S_L3	ft5_i	ctl	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	235.4	352.35	289.71	0
+sid_s_0S_C__s_0N_C__3	sid_s_0S_C__s_0N_C	s_0S_L4	s_0N_L2	ft5_i	ctl	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	147.2	295.9	259.71	0
+sid_s_0S_C__s_0N_C__5	sid_s_0S_C__s_0N_C	s_0N_L0	s_0N_C	sid_i0	ctl	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	115.3	193.12	186.5	0
+sid_s_1S_C__s_0S_C__0	sid_s_1S_C__s_0S_C	s_1S_C	s_0S_C	sid_i0	ctl	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	52.6	132.13	116.69	1
+sid_s_2N_C__s_3N_C__0	sid_s_2N_C__s_3N_C	s_2N_C	s_3N_C	sid_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	239.1	-366.91	-311.75	0
+sid_s_3S_C__s_2S_C__0	sid_s_3S_C__s_2S_C	s_3S_C	s_2S_C	sid_i0	ctl	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	232.3	331.45	292.03	0
+sid_s_4N_C__s_5N_C__0	sid_s_4N_C__s_5N_C	s_4N_C	s_5N_C	sid_i0	ctl	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	42.5	168.27	138.54	1
+sid_s_5S_C__s_4S_C__0	sid_s_5S_C__s_4S_C	s_5S_C	s_4S_C	sid_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	319.8	-446.95	-375.66	0
+sid_s_6N_C__s_7N_C__0	sid_s_6N_C__s_7N_C	s_6N_C	s_7N_C	sid_i0	ctl	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	187.0	330.8	276.37	0
+sid_s_7N_C__seqhost__0	sid_s_7N_C__seqhost	s_7N_C	s_7N_L0	ft3_i	ctl	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	199.9	-277.33	-259.2	0
+sid_s_7N_C__seqhost__10	sid_s_7N_C__seqhost	s_3S_C	s_3S_L0	ft0_i	ctl	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	179.7	293.24	240.22	0
+sid_s_7N_C__seqhost__2	sid_s_7N_C__seqhost	s_7N_L2	s_7S_L4	ft2_i	ctl	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	421.6	-616.63	-530.8	1
+sid_s_7N_C__seqhost__4	sid_s_7N_C__seqhost	s_7S_L3	s_7S_L1	ft6_i	ctl	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	106.5	-208.16	-170.81	0
+sid_s_7N_C__seqhost__6	sid_s_7N_C__seqhost	s_7S_C	s_6S_C	ft5_i	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	291.2	-408.95	-351.66	0
+sid_s_7N_C__seqhost__8	sid_s_7N_C__seqhost	s_5S_C	s_4S_C	ft1_i	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	318.4	-445.45	-374.29	0
+sid_s_7S_C__s_6S_C__0	sid_s_7S_C__s_6S_C	s_7S_C	s_6S_C	sid_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	310.9	-438.16	-372.03	0
+sid_seqhost__s_7S_C__3	sid_seqhost__s_7S_C	s_4S_L0	s_4S_C	ft0_i	ctl	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	258.2	-387.21	-312.05	0
+sid_seqhost__s_7S_C__4	sid_seqhost__s_7S_C	s_4S_C	s_5S_C	ft1_i	ctl	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	114.5	199.89	174.46	0
+sid_seqhost__s_7S_C__6	sid_seqhost__s_7S_C	s_6S_C	s_7S_C	sid_i0	ctl	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	83.3	163.69	152.03	1
+tl__bk_sel__s_0N_LP__0	tl__bk_sel__s_0N_LP	bk_sel	s_4N_x06	ft3_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	776.0	-983.73	-847.31	1
+tl__bk_sel__s_0N_LP__2	tl__bk_sel__s_0N_LP	s_3N_x06	s_2N_x06	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	204.8	402.13	351.66	0
+tl__bk_sel__s_0N_LP__4	tl__bk_sel__s_0N_LP	s_1N_x06	s_0N_x16	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	8	3	3	4	1	80.0	233.31	190.96	1
+tl__bk_sel__s_0N_LP__6	tl__bk_sel__s_0N_LP	s_0N_x06	s_0N_x05	ft4_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	303.9	-423.81	-369.27	0
+tl__bk_sel__s_0N_LP__8	tl__bk_sel__s_0N_LP	s_0N_x04	s_0N_x03	ft6_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	317.4	-443.0	-371.82	0
+tp__bk_sel__s_7N_LP__1	tp__bk_sel__s_7N_LP	s_6N_x06	s_7N_x06	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	8	3	3	4	1	55.1	200.07	173.06	1
+tp__bk_sel__s_7N_LP__3	tp__bk_sel__s_7N_LP	s_7N_x16	s_7N_x15	ft5_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	212.3	-329.32	-279.31	0
+tp__bk_sel__s_7N_LP__5	tp__bk_sel__s_7N_LP	s_7N_x14	s_7N_x13	ft7_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-71.7	-21.88	0.82	1
+tp__bk_sel__s_7S_LP__1	tp__bk_sel__s_7S_LP	s_6N_x06	s_7N_x06	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	28.1	166.12	144.18	1
+tp__bk_sel__s_7S_LP__11	tp__bk_sel__s_7S_LP	s_7S_x110	s_7S_x19	ft2_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	164.5	-267.5	-230.59	0
+tp__bk_sel__s_7S_LP__3	tp__bk_sel__s_7S_LP	s_7N_x16	s_7N_x15	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	261.1	-382.91	-329.41	0
+tp__bk_sel__s_7S_LP__5	tp__bk_sel__s_7S_LP	s_7N_x14	s_7N_x13	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-84.0	5.2	18.48	1
+tp__bk_sel__s_7S_LP__7	tp__bk_sel__s_7S_LP	s_7N_LP	s_7N_x11	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	251.7	-379.02	-317.12	0
+tp__bk_sel__s_7S_LP__9	tp__bk_sel__s_7S_LP	s_7N_x10	s_7S_x111	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	300.2	-430.6	-362.02	0
+tp__s_0S_LP__s_0N_LP__1	tp__s_0S_LP__s_0N_LP	s_0S_x07	s_0S_x08	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	105.7	202.78	171.65	0
+tp__s_0S_LP__s_0N_LP__3	tp__s_0S_LP__s_0N_LP	s_0S_x09	s_0N_x00	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	184.5	286.26	248.78	0
+tp__s_0S_LP__s_0N_LP__5	tp__s_0S_LP__s_0N_LP	s_0N_x01	s_0N_LP	tp_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	186.7	266.23	240.76	0
+tp__s_7N_LP__bk_sel__1	tp__s_7N_LP__bk_sel	s_7N_x13	s_7N_x14	ft8_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	85.3	-190.7	-171.02	1
+tp__s_7N_LP__bk_sel__3	tp__s_7N_LP__bk_sel	s_7N_x15	s_7N_x16	ft10_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	127.5	221.08	192.63	0
+tp__s_7N_LP__bk_sel__5	tp__s_7N_LP__bk_sel	s_7N_x06	s_6N_x06	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	86.3	-256.99	-213.06	0
+unit__eng__svc_14__0	unit__eng__svc_14	eng	svc_14	unit_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	229.9	-340.55	-288.3	0
+unit__s_7N_LP__seqhost__0	unit__s_7N_LP__seqhost	s_7N_LP	s_7N_x11	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	236.1	-361.05	-310.61	0
+unit__s_7N_LP__seqhost__10	unit__s_7N_LP__seqhost	s_7S_x05	s_6S_L4	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	184.4	-331.33	-274.79	0
+unit__s_7N_LP__seqhost__12	unit__s_7N_LP__seqhost	s_5S_x00	s_4S_L4	ft9_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	198.9	-326.96	-272.31	0
+unit__s_7N_LP__seqhost__2	unit__s_7N_LP__seqhost	s_7N_x10	s_7S_x111	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	281.6	-408.64	-342.52	0
+unit__s_7N_LP__seqhost__4	unit__s_7N_LP__seqhost	s_7S_x110	s_7S_x19	ft3_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	188.8	-305.32	-258.96	0
+unit__s_7N_LP__seqhost__6	unit__s_7N_LP__seqhost	s_7S_LP	s_7S_x17	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	43.4	156.45	124.36	1
+unit__s_7N_LP__seqhost__8	unit__s_7N_LP__seqhost	s_7S_x16	s_7S_x15	ft4_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	69.9	160.09	140.12	1
+unit__seqhost__eng__1	unit__seqhost__eng	s_4S_L4	s_5S_x00	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	209.6	315.79	267.89	0
+unit__seqhost__eng__3	unit__seqhost__eng	s_6S_L4	s_7S_x05	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	108.9	213.21	188.67	0
+unit__seqhost__eng__5	unit__seqhost__eng	svc_15	svc_14	ft1_i	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	343.8	482.66	411.28	0
+unit__seqhost__eng__6	unit__seqhost__eng	svc_14	eng	unit_i1	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	28.4	106.19	95.4	1
+unit__seqhost__gunit__10	unit__seqhost__gunit	s_3N_L1	s_3N_L3	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-7.1	67.02	76.33	1
+unit__seqhost__gunit__12	unit__seqhost__gunit	s_3N_L4	s_3N_x06	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-10.3	80.9	60.7	1
+unit__seqhost__gunit__2	unit__seqhost__gunit	s_3S_L0	s_3S_C	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	277.1	-410.57	-331.18	0
+unit__seqhost__gunit__4	unit__seqhost__gunit	s_3S_L1	s_3S_L3	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	46.4	127.89	108.21	1
+unit__seqhost__gunit__6	unit__seqhost__gunit	s_3S_L4	s_3N_L2	ft3_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	173.8	249.05	227.9	0
+unit__seqhost__gunit__8	unit__seqhost__gunit	s_3N_L0	s_3N_C	ft2_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-31.8	-54.14	-43.39	1
+unit__seqhost__s_0N_C__0	unit__seqhost__s_0N_C	seqhost	s_2S_x00	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	89.4	195.33	158.37	0
+unit__seqhost__s_0N_C__10	unit__seqhost__s_0N_C	s_1N_L0	s_1N_C	ft0_i	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	237.0	346.52	302.18	0
+unit__seqhost__s_0N_C__11	unit__seqhost__s_0N_C	s_1N_C	s_0N_C	unit_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	68.0	171.34	151.91	1
+unit__seqhost__s_0N_C__2	unit__seqhost__s_0N_C	s_1S_L4	s_1S_L2	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	222.8	-349.18	-289.78	0
+unit__seqhost__s_0N_C__4	unit__seqhost__s_0N_C	s_1S_L0	s_1S_C	ft0_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	162.6	-274.85	-218.89	0
+unit__seqhost__s_0N_C__6	unit__seqhost__s_0N_C	s_1S_L1	s_1S_L3	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	102.2	186.7	165.43	0
+unit__seqhost__s_0N_C__8	unit__seqhost__s_0N_C	s_1S_x06	s_1N_L2	ft4_i	data	1	LAG	LEAD	LAG	both_measured	CA	sign flips between models	8	3	3	4	1	429.9	578.27	501.13	0
+unit__seqhost__s_0N_LP__1	unit__seqhost__s_0N_LP	s_3S_L2	s_2S_L2	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	205.3	302.67	258.69	0
+unit__seqhost__s_0N_LP__10	unit__seqhost__s_0N_LP	s_0S_x09	s_0N_x00	ft6_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	182.7	277.62	241.07	0
+unit__seqhost__s_0N_LP__12	unit__seqhost__s_0N_LP	s_0N_x01	s_0N_LP	unit_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	193.4	272.15	247.17	0
+unit__seqhost__s_0N_LP__3	unit__seqhost__s_0N_LP	s_1S_L2	s_0S_L2	ft2_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	294.8	422.35	356.14	0
+unit__seqhost__s_0N_LP__6	unit__seqhost__s_0N_LP	s_0S_x05	s_0S_LP	ft3_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	193.4	-302.05	-242.26	0
+unit__seqhost__s_0N_LP__8	unit__seqhost__s_0N_LP	s_0S_x07	s_0S_x08	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	195.4	295.74	251.77	0
+unit__seqhost__s_0S_LP__1	unit__seqhost__s_0S_LP	s_3S_L2	s_2S_L2	ft1_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	212.2	308.89	265.08	0
+unit__seqhost__s_0S_LP__3	unit__seqhost__s_0S_LP	s_1S_L2	s_0S_L2	ft3_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	297.6	418.41	352.46	0
+unit__seqhost__s_0S_LP__6	unit__seqhost__s_0S_LP	s_0S_x05	s_0S_LP	unit_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	192.1	-300.57	-240.87	0
+unit__seqhost__s_7N_LP__1	unit__seqhost__s_7N_LP	s_4S_L4	s_5S_x00	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	183.7	306.11	245.05	0
+unit__seqhost__s_7N_LP__11	unit__seqhost__s_7N_LP	s_7S_x111	s_7N_x10	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	200.6	306.48	264.56	0
+unit__seqhost__s_7N_LP__13	unit__seqhost__s_7N_LP	s_7N_x11	s_7N_LP	unit_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	74.3	141.77	134.69	1
+unit__seqhost__s_7N_LP__3	unit__seqhost__s_7N_LP	s_6S_L4	s_7S_x05	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	52.2	156.87	137.68	1
+unit__seqhost__s_7N_LP__5	unit__seqhost__s_7N_LP	s_7S_x15	s_7S_x16	ft8_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	157.1	-260.35	-220.2	0
+unit__seqhost__s_7N_LP__7	unit__seqhost__s_7N_LP	s_7S_x17	s_7S_LP	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	222.5	-344.85	-274.0	0
+unit__seqhost__s_7N_LP__9	unit__seqhost__s_7N_LP	s_7S_x19	s_7S_x110	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	114.7	209.49	186.1	0
+unit__seqhost__s_7S_LP__1	unit__seqhost__s_7S_LP	s_4S_L4	s_5S_x00	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	195.5	313.93	252.54	0
+unit__seqhost__s_7S_LP__3	unit__seqhost__s_7S_LP	s_6S_L4	s_7S_x05	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	75.0	175.3	154.65	1
+unit__seqhost__s_7S_LP__5	unit__seqhost__s_7S_LP	s_7S_x15	s_7S_x16	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	173.6	-273.8	-231.0	0
+unit__seqhost__s_7S_LP__7	unit__seqhost__s_7S_LP	s_7S_x17	s_7S_LP	unit_i0	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	222.7	-345.18	-274.25	0
+unit__seqhost__svc_11__1	unit__seqhost__svc_11	s_4S_L4	s_5S_x00	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	198.0	328.77	259.83	0
+unit__seqhost__svc_5__0	unit__seqhost__svc_5	seqhost	s_2S_x00	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	75.2	173.0	146.65	1
+unit__svc_0__svc_2__0	unit__svc_0__svc_2	svc_0	svc_2	unit_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	310.7	-486.47	-402.46	0
+unit__svc_11__seqhost__1	unit__svc_11__seqhost	s_5S_x00	s_4S_L4	ft7_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	163.2	-281.23	-234.82	0
+unit__svc_12__svc_14__0	unit__svc_12__svc_14	svc_12	svc_14	unit_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	50.0	171.84	149.96	1
+unit__svc_14__eng__0	unit__svc_14__eng	svc_14	eng	unit_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	38.7	115.64	105.56	1
+unit__svc_14__svc_12__0	unit__svc_14__svc_12	svc_14	svc_12	unit_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	260.2	-423.3	-355.46	0
+unit__svc_2__svc_0__0	unit__svc_2__svc_0	svc_2	svc_0	unit_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	8	3	3	4	1	90.2	220.81	186.92	0
+unit__svc_5__seqhost__1	unit__svc_5__seqhost	s_2S_x00	seqhost	unit_i2	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	235.7	-349.38	-289.1	0
+up_s_0N_L0__0	up_s_0N_L0	s_0N_L0	s_0N_C	leafup_i4	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	251.3	345.7	307.08	0
+up_s_0N_L2__1	up_s_0N_L2	s_0N_L0	s_0N_C	leafup_i3	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	309.5	421.0	363.59	0
+up_s_0N_L3__0	up_s_0N_L3	s_0N_L3	s_0N_L1	ft9_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	112.7	-225.48	-193.31	0
+up_s_0N_L4__1	up_s_0N_L4	s_0N_L3	s_0N_L1	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	181.5	-331.18	-277.12	0
+up_s_0S_L0__0	up_s_0S_L0	s_0S_L0	s_0S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	172.0	-272.79	-225.0	0
+up_s_0S_L2__1	up_s_0S_L2	s_0S_L0	s_0S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	188.1	-292.98	-240.22	0
+up_s_0S_L3__0	up_s_0S_L3	s_0S_L3	s_0S_L1	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	234.0	-362.31	-311.0	0
+up_s_0S_L4__1	up_s_0S_L4	s_0S_L3	s_0S_L1	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	335.6	-483.01	-413.21	0
+up_s_1N_L0__0	up_s_1N_L0	s_1N_L0	s_1N_C	leafup_i4	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	189.8	308.7	271.28	0
+up_s_1N_L2__1	up_s_1N_L2	s_1N_L0	s_1N_C	leafup_i3	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	8	3	3	4	1	87.5	197.84	181.37	1
+up_s_1N_L3__0	up_s_1N_L3	s_1N_L3	s_1N_L1	ft3_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	329.0	-467.53	-384.33	0
+up_s_1N_L4__1	up_s_1N_L4	s_1N_L3	s_1N_L1	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	311.9	-450.5	-369.31	0
+up_s_1S_L0__0	up_s_1S_L0	s_1S_L0	s_1S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	149.6	-256.72	-205.89	0
+up_s_1S_L2__1	up_s_1S_L2	s_1S_L0	s_1S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	125.5	-240.6	-183.27	0
+up_s_1S_L3__0	up_s_1S_L3	s_1S_L3	s_1S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	198.7	-327.27	-271.32	0
+up_s_1S_L4__0	up_s_1S_L4	s_1S_L4	s_1S_L2	ft5_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	232.6	-364.93	-305.48	0
+up_s_1S_L4__2	up_s_1S_L4	s_1S_L0	s_1S_C	leafup_i2	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	173.1	-285.06	-230.03	0
+up_s_2N_L2__1	up_s_2N_L2	s_3N_L0	s_2N_C	leafup_i3	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	116.3	216.69	193.26	0
+up_s_2N_L3__0	up_s_2N_L3	s_2N_L3	s_2N_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	238.7	-382.91	-331.51	0
+up_s_2N_L4__1	up_s_2N_L4	s_2N_L3	s_2N_L1	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	177.6	-279.67	-254.42	0
+up_s_2S_L0__0	up_s_2S_L0	s_2S_L0	s_2S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	140.1	-253.28	-198.76	0
+up_s_2S_L2__1	up_s_2S_L2	s_2S_L0	s_2S_C	leafup_i3	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	219.4	-344.51	-275.1	0
+up_s_2S_L3__0	up_s_2S_L3	s_2S_L3	s_2S_L1	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	205.9	-344.54	-288.65	0
+up_s_2S_L4__1	up_s_2S_L4	s_2S_L3	s_2S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	190.7	-337.03	-278.98	0
+up_s_3N_L0__0	up_s_3N_L0	s_3N_L0	s_3N_C	leafup_i4	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	42.0	-137.61	-110.95	1
+up_s_3N_L2__1	up_s_3N_L2	s_3N_L0	s_3N_C	leafup_i3	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-26.8	-59.2	-44.42	1
+up_s_3N_L3__0	up_s_3N_L3	s_3N_L3	s_3N_L1	ft3_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	196.7	-320.91	-277.16	0
+up_s_3N_L4__1	up_s_3N_L4	s_3N_L3	s_3N_L1	ft2_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	209.4	-346.65	-284.49	0
+up_s_3S_L0__0	up_s_3S_L0	s_3S_L0	s_3S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	171.7	-256.11	-223.9	0
+up_s_3S_L2__1	up_s_3S_L2	s_3S_L0	s_3S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	212.8	-322.4	-266.05	0
+up_s_3S_L3__0	up_s_3S_L3	s_3S_L3	s_3S_L1	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	53.8	-153.83	-123.35	1
+up_s_3S_L4__1	up_s_3S_L4	s_3S_L3	s_3S_L1	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	73.5	-197.08	-154.54	1
+up_s_4N_L2__1	up_s_4N_L2	s_3N_L0	s_4N_C	leafup_i3	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	67.6	163.2	155.05	1
+up_s_4N_L3__0	up_s_4N_L3	s_4N_L3	s_4N_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	265.2	-443.8	-370.87	0
+up_s_4N_L4__1	up_s_4N_L4	s_4N_L3	s_4N_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	288.0	-421.59	-354.42	0
+up_s_4S_L0__0	up_s_4S_L0	s_4S_L0	s_4S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	210.7	-324.95	-263.97	0
+up_s_4S_L2__1	up_s_4S_L2	s_4S_L0	s_4S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	203.5	-314.05	-256.64	0
+up_s_4S_L3__0	up_s_4S_L3	s_4S_L3	s_4S_L1	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	306.2	-436.51	-357.64	0
+up_s_4S_L4__2	up_s_4S_L4	s_4S_L0	s_4S_C	leafup_i2	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	264.6	-386.05	-319.0	0
+up_s_5N_L0__0	up_s_5N_L0	s_5N_L0	s_5N_C	leafup_i4	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	147.1	219.39	198.34	0
+up_s_5N_L2__1	up_s_5N_L2	s_5N_L0	s_5N_C	leafup_i3	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	200.7	291.16	251.8	0
+up_s_5N_L3__0	up_s_5N_L3	s_5N_L3	s_5N_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	245.9	-389.71	-326.34	0
+up_s_5N_L4__1	up_s_5N_L4	s_5N_L3	s_5N_L1	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	265.0	-412.14	-342.77	0
+up_s_5S_L0__0	up_s_5S_L0	s_5S_L0	s_5S_C	leafup_i4	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	244.1	-368.25	-297.72	0
+up_s_5S_L2__1	up_s_5S_L2	s_5S_L0	s_5S_C	leafup_i3	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	229.4	-355.52	-285.28	0
+up_s_5S_L3__0	up_s_5S_L3	s_5S_L3	s_5S_L1	ft3_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	170.6	-294.42	-248.51	0
+up_s_5S_L4__1	up_s_5S_L4	s_5S_L3	s_5S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.4	-380.76	-320.99	0
+up_s_6N_L0__0	up_s_6N_L0	s_6N_L0	s_6N_C	leafup_i4	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	331.6	447.36	382.98	0
+up_s_6N_L2__1	up_s_6N_L2	s_6N_L0	s_6N_C	leafup_i3	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	237.1	315.35	295.54	0
+up_s_6N_L3__0	up_s_6N_L3	s_6N_L3	s_6N_L1	ft4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	201.6	-330.83	-281.44	0
+up_s_6N_L4__1	up_s_6N_L4	s_6N_L3	s_6N_L1	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	227.6	-383.68	-318.77	0
+up_s_6S_L0__0	up_s_6S_L0	s_6S_L0	s_6S_C	leafup_i4	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	117.9	-220.81	-174.64	0
+up_s_6S_L2__1	up_s_6S_L2	s_6S_L0	s_6S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	156.3	-267.82	-213.25	0
+up_s_6S_L3__0	up_s_6S_L3	s_6S_L3	s_6S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	191.2	-329.65	-273.12	0
+up_s_6S_L4__0	up_s_6S_L4	s_6S_L4	s_6S_L2	ft9_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	60.9	-164.93	-139.8	1
+up_s_6S_L4__2	up_s_6S_L4	s_6S_L0	s_6S_C	leafup_i2	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	188.7	-306.69	-244.95	0
+up_s_7N_L0__0	up_s_7N_L0	s_7N_L0	s_7N_C	leafup_i4	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	363.4	525.8	445.76	0
+up_s_7N_L2__1	up_s_7N_L2	s_7N_L0	s_7N_C	leafup_i3	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	205.4	336.14	299.0	0
+up_s_7N_L3__0	up_s_7N_L3	s_7N_L3	s_7N_L1	ft9_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	130.4	-251.45	-214.89	0
+up_s_7N_L4__1	up_s_7N_L4	s_7N_L3	s_7N_L1	ft8_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	206.2	-340.67	-283.34	0
+up_s_7S_L0__0	up_s_7S_L0	s_7S_L0	s_7S_C	leafup_i4	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	77.7	-168.98	-132.15	0
+up_s_7S_L2__1	up_s_7S_L2	s_7S_L0	s_7S_C	leafup_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	116.2	-214.58	-171.18	0
+up_s_7S_L3__0	up_s_7S_L3	s_7S_L3	s_7S_L1	ft5_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	124.7	-255.85	-213.09	0
+up_s_7S_L4__1	up_s_7S_L4	s_7S_L3	s_7S_L1	ft4_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	133.1	-278.24	-229.45	0
+vid_seqhost__svc_0__0	vid_seqhost__svc_0	seqhost	s_2S_x00	ft3_i	ctl	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	135.3	239.18	193.66	0
+vid_seqhost__svc_0__4	vid_seqhost__svc_0	svc_1	svc_0	vid_i0	ctl	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	338.8	484.1	409.48	0
+vid_svc_0__svc_2__0	vid_svc_0__svc_2	svc_0	svc_2	vid_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	310.9	-486.66	-402.65	0
+vid_svc_11__svc_9__0	vid_svc_11__svc_9	svc_11	svc_9	vid_i0	ctl	1	LEAD	LAG	LEAD	both_declared	CA	sign flips between models	4	3	3	4	1	463.6	-613.25	-524.36	0
+vid_svc_12__svc_14__0	vid_svc_12__svc_14	svc_12	svc_14	vid_i0	ctl	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	51.8	173.48	151.49	1
+vid_svc_14__svc_15__0	vid_svc_14__svc_15	svc_14	svc_15	vid_i0	ctl	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	509.3	-682.85	-573.82	1
+vid_svc_15__svc_13__0	vid_svc_15__svc_13	svc_15	svc_13	vid_i0	ctl	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	355.9	-495.75	-419.23	0
+vid_svc_1__seqhost__3	vid_svc_1__seqhost	s_2S_x00	seqhost	vid_i0	ctl	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	246.8	-373.79	-301.6	0
+vid_svc_7__svc_5__0	vid_svc_7__svc_5	svc_7	svc_5	vid_i0	ctl	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	83.7	174.31	149.17	1
+x_E0_in__0	x_E0_in	s_7S_C	s_7S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-49.7	-41.79	-36.56	1
+x_E0_in__2	x_E0_in	s_7S_L2	s_7S_x05	ft4_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	71.0	166.42	145.97	1
+x_E0_in__4	x_E0_in	svc_15	s_7S_x13	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-25.6	73.72	63.13	1
+x_E0_out__0	x_E0_out	s_7S_C	s_7S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	21.9	-123.26	-104.7	1
+x_E0_out__2	x_E0_out	s_7S_L2	s_7S_x05	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-32.8	127.8	112.23	1
+x_E0_out__4	x_E0_out	svc_15	s_7S_x13	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	7.6	120.81	101.72	1
+x_E0_out__7	x_E0_out	fE0_p2_b0	fE0_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	93.2	198.45	174.05	0
+x_E1_in__0	x_E1_in	s_5S_C	s_5S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	22.7	137.19	109.01	1
+x_E1_in__3	x_E1_in	s_6S_L2	s_7S_L2	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-100.3	-2.91	9.32	1
+x_E1_in__5	x_E1_in	s_7S_x16	fE1_p1_b0	x_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	169.4	271.99	245.74	0
+x_E1_out__0	x_E1_out	s_5S_C	s_5S_L0	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-6.3	100.88	78.97	1
+x_E1_out__3	x_E1_out	s_6S_L2	s_7S_L2	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-62.8	46.1	47.42	1
+x_E1_out__5	x_E1_out	s_7S_x16	fE1_p1_b0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	211.4	321.5	287.19	0
+x_E1_out__7	x_E1_out	fE1_p2_b0	fE1_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	53.7	155.22	135.73	1
+x_E2_in__1	x_E2_in	s_6S_L1	s_7S_L1	ft1_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	167.2	297.96	264.28	0
+x_E2_in__3	x_E2_in	s_7S_x19	fE2_p1_b0	x_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	151.0	256.55	229.81	0
+x_E2_out__1	x_E2_out	s_4S_L1	s_5S_L1	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-16.9	108.88	90.49	1
+x_E2_out__3	x_E2_out	s_6S_L1	s_7S_L1	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	139.7	231.65	214.11	0
+x_E2_out__5	x_E2_out	s_7S_x19	fE2_p1_b0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	235.6	355.4	311.43	0
+x_E2_out__7	x_E2_out	fE2_p2_b0	fE2_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	61.1	160.3	140.73	1
+x_E3_in__0	x_E3_in	s_6N_C	s_6N_L0	ft1_i	data	1	LEAD	LAG	LEAD	one_declared	CA	sign flips between models	4	3	3	4	1	442.5	-588.6	-519.28	0
+x_E3_in__2	x_E3_in	s_6N_L2	s_7N_L2	ft1_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	201.0	332.1	287.14	0
+x_E3_in__4	x_E3_in	s_7N_x10	fE3_p1_b0	x_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	277.7	395.65	351.95	0
+x_E3_out__0	x_E3_out	s_4N_C	s_3N_L0	ft16_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	327.2	-466.35	-401.76	0
+x_E3_out__4	x_E3_out	s_6N_L2	s_7N_L2	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	175.7	306.04	259.0	0
+x_E3_out__6	x_E3_out	s_7N_x10	fE3_p1_b0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	306.4	441.7	379.85	0
+x_E3_out__8	x_E3_out	fE3_p2_b0	fE3_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	97.1	191.03	180.05	1
+x_E4_in__2	x_E4_in	s_6N_L1	s_7N_L1	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-84.8	64.51	63.73	1
+x_E4_in__4	x_E4_in	s_7N_x13	fE4_p1_b0	x_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-64.9	53.15	48.45	1
+x_E4_out__2	x_E4_out	s_6N_L1	s_7N_L1	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-19.4	149.54	135.71	1
+x_E4_out__4	x_E4_out	s_7N_x13	fE4_p1_b0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-53.0	68.18	55.24	1
+x_E4_out__6	x_E4_out	fE4_p2_b0	fE4_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	66.7	161.91	151.54	1
+x_E5_in__1	x_E5_in	s_7N_L1	s_7N_L3	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-30.0	74.49	72.69	1
+x_E5_in__3	x_E5_in	s_7N_L4	s_7N_x06	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-21.7	74.75	63.35	1
+x_E5_in__5	x_E5_in	s_7N_x16	fE5_p1_b0	x_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	276.5	397.82	352.41	0
+x_E5_out__1	x_E5_out	s_7N_L1	s_7N_L3	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	29.7	149.08	130.26	1
+x_E5_out__3	x_E5_out	s_7N_L4	s_7N_x06	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-47.4	44.35	39.65	1
+x_E5_out__5	x_E5_out	s_7N_x16	fE5_p1_b0	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	325.6	464.67	402.67	0
+x_E5_out__7	x_E5_out	fE5_p2_b0	fE5_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	54.3	151.73	142.02	1
+x_W0_in__0	x_W0_in	s_0S_C	s_0S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	37.0	149.87	122.42	1
+x_W0_in__2	x_W0_in	s_0S_L2	s_0S_x13	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	56.5	143.46	132.37	1
+x_W0_in__4	x_W0_in	svc_1	s_0S_x01	ft1_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-3.3	80.98	75.26	1
+x_W0_in__5	x_W0_in	s_0S_x01	fW0_p1_b0	x_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	39.3	142.71	117.03	1
+x_W0_out__0	x_W0_out	s_0S_C	s_0S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-3.9	136.92	112.32	1
+x_W0_out__2	x_W0_out	s_0S_L2	s_0S_x13	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	30.4	122.06	110.05	1
+x_W0_out__4	x_W0_out	svc_1	s_0S_x01	ft0_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	11.9	95.41	84.97	1
+x_W0_out__5	x_W0_out	s_0S_x01	fW0_p1_b0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	85.0	190.63	160.54	1
+x_W0_out__7	x_W0_out	fW0_p2_b0	fW0_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	91.8	187.27	174.52	1
+x_W1_in__0	x_W1_in	s_2S_C	s_2S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-34.4	66.85	54.42	1
+x_W1_in__3	x_W1_in	s_1S_L2	s_0S_L2	ft1_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	164.9	277.75	233.81	0
+x_W1_in__5	x_W1_in	s_0S_x04	fW1_p1_b0	x_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-10.7	87.88	70.03	1
+x_W1_out__0	x_W1_out	s_2S_C	s_2S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-78.8	62.8	47.33	1
+x_W1_out__3	x_W1_out	s_1S_L2	s_0S_L2	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	141.9	246.18	222.65	0
+x_W1_out__5	x_W1_out	s_0S_x04	fW1_p1_b0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	29.9	130.19	108.7	1
+x_W1_out__7	x_W1_out	fW1_p2_b0	fW1_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	3.0	103.36	93.57	1
+x_W2_in__1	x_W2_in	s_1S_L1	s_0S_L1	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	66.2	160.42	141.68	1
+x_W2_in__3	x_W2_in	s_0S_x07	fW2_p1_b0	x_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	119.0	214.2	192.55	0
+x_W2_out__1	x_W2_out	s_3S_L1	s_2S_L1	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-77.4	20.03	22.71	1
+x_W2_out__3	x_W2_out	s_1S_L1	s_0S_L1	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	148.5	280.73	229.68	0
+x_W2_out__5	x_W2_out	s_0S_x07	fW2_p1_b0	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	149.5	248.66	222.72	0
+x_W2_out__7	x_W2_out	fW2_p2_b0	fW2_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	92.7	191.51	172.38	1
+x_W3_in__0	x_W3_in	s_1N_C	s_1N_L0	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	405.9	-553.01	-465.21	0
+x_W3_in__2	x_W3_in	s_1N_L2	s_0N_L2	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	37.4	153.55	119.07	1
+x_W3_in__4	x_W3_in	s_0N_x00	fW3_p1_b0	x_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	262.0	376.32	332.4	0
+x_W3_out__0	x_W3_out	s_3N_C	s_3N_L0	ft2_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	99.1	-197.99	-166.51	0
+x_W3_out__4	x_W3_out	s_1N_L2	s_0N_L2	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-40.1	-63.92	-54.11	1
+x_W3_out__6	x_W3_out	s_0N_x00	fW3_p1_b0	ft0_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	169.6	279.98	242.08	0
+x_W3_out__8	x_W3_out	fW3_p2_b0	fW3_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	71.2	163.03	158.02	1
+x_W4_in__2	x_W4_in	s_1N_L1	s_0N_L1	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-114.5	38.33	38.41	1
+x_W4_in__4	x_W4_in	s_0N_x03	fW4_p1_b0	x_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	103.9	212.81	181.56	0
+x_W4_out__2	x_W4_out	s_1N_L1	s_0N_L1	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	20.9	144.08	125.3	1
+x_W4_out__4	x_W4_out	s_0N_x03	fW4_p1_b0	ft0_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	128.8	246.44	206.36	0
+x_W4_out__6	x_W4_out	fW4_p2_b0	fW4_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	56.3	150.01	143.35	1
+x_W5_in__1	x_W5_in	s_0N_L1	s_0N_L3	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	74.8	178.02	151.67	1
+x_W5_in__3	x_W5_in	s_0N_L4	s_0N_x16	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-29.9	70.51	71.87	1
+x_W5_in__5	x_W5_in	s_0N_x06	fW5_p1_b0	x_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	158.0	275.32	235.08	0
+x_W5_out__1	x_W5_out	s_0N_L1	s_0N_L3	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	7.2	108.78	96.15	1
+x_W5_out__3	x_W5_out	s_0N_L4	s_0N_x16	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-0.2	99.7	92.77	1
+x_W5_out__5	x_W5_out	s_0N_x06	fW5_p1_b0	ft0_i	data	1	LAG	EDGE	LAG	one_declared	CA	wrapped EDGE	8	3	3	4	1	189.7	315.72	267.38	0
+x_W5_out__7	x_W5_out	fW5_p2_b0	fW5_p3_b0	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	57.7	152.57	144.2	1
+xo_E0_in_b__0	xo_E0_in_b	fE0_p2_b0	fE0_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	67.1	165.62	153.21	1
+xo_E0_out_a__0	xo_E0_out_a	fE0_p4_b0	fE0_p5_b0	xo_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	174.1	315.87	263.8	0
+xo_E1_in_b__0	xo_E1_in_b	fE1_p2_b0	fE1_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	18.7	118.78	111.7	1
+xo_E1_out_a__0	xo_E1_out_a	fE1_p4_b0	fE1_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	145.4	280.92	235.15	0
+xo_E2_in_b__0	xo_E2_in_b	fE2_p2_b0	fE2_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	14.4	111.52	104.7	1
+xo_E2_out_a__0	xo_E2_out_a	fE2_p4_b0	fE2_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	132.1	264.47	222.15	0
+xo_E3_in_b__0	xo_E3_in_b	fE3_p2_b0	fE3_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	26.6	123.17	118.4	1
+xo_E3_out_a__0	xo_E3_out_a	fE3_p4_b0	fE3_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	149.0	275.68	239.72	0
+xo_E4_in_b__0	xo_E4_in_b	fE4_p2_b0	fE4_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	17.6	115.29	109.94	1
+xo_E4_out_a__0	xo_E4_out_a	fE4_p4_b0	fE4_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	166.0	297.46	258.39	0
+xo_E5_in_b__0	xo_E5_in_b	fE5_p2_b0	fE5_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	9.0	108.85	103.88	1
+xo_E5_out_a__0	xo_E5_out_a	fE5_p4_b0	fE5_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	143.8	261.21	235.93	0
+xo_W0_in_b__0	xo_W0_in_b	fW0_p2_b0	fW0_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	66.5	161.12	152.93	1
+xo_W0_out_a__0	xo_W0_out_a	fW0_p4_b0	fW0_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	142.8	284.5	235.03	0
+xo_W1_in_b__0	xo_W1_in_b	fW1_p2_b0	fW1_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-22.9	79.87	81.25	1
+xo_W1_out_a__0	xo_W1_out_a	fW1_p4_b0	fW1_p5_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	75.4	206.74	167.81	1
+xo_W2_in_b__0	xo_W2_in_b	fW2_p2_b0	fW2_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	70.2	168.36	160.77	1
+xo_W2_out_a__0	xo_W2_out_a	fW2_p4_b0	fW2_p5_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	8	3	3	4	1	90.9	224.23	182.3	0
+xo_W3_in_b__0	xo_W3_in_b	fW3_p2_b0	fW3_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	36.1	131.32	129.43	1
+xo_W3_out_a__0	xo_W3_out_a	fW3_p4_b0	fW3_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	105.2	225.29	197.44	0
+xo_W4_in_b__0	xo_W4_in_b	fW4_p2_b0	fW4_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	28.8	126.12	123.11	1
+xo_W4_out_a__0	xo_W4_out_a	fW4_p4_b0	fW4_p5_b0	xo_i0	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	154.6	282.64	245.03	0
+xo_W5_in_b__0	xo_W5_in_b	fW5_p2_b0	fW5_p3_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	29.2	128.1	123.54	1
+xo_W5_out_a__0	xo_W5_out_a	fW5_p4_b0	fW5_p5_b0	xo_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	52.7	164.38	146.69	1
+xring__s_0N_C__s_1N_C__0	xring__s_0N_C__s_1N_C	s_0N_C	s_1N_C	xring_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	297.2	-472.68	-397.91	0
+xring__s_0S_C__s_1S_C__0	xring__s_0S_C__s_1S_C	s_0S_C	s_1S_C	xring_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	332.4	-462.67	-386.51	0
+xring__s_1N_C__s_0N_C__0	xring__s_1N_C__s_0N_C	s_1N_C	s_0N_C	xring_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	24.1	129.23	120.09	1
+xring__s_1S_C__s_0S_C__0	xring__s_1S_C__s_0S_C	s_1S_C	s_0S_C	xring_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	40.4	124.17	103.37	1
+xring__s_2N_C__s_3N_C__0	xring__s_2N_C__s_3N_C	s_2N_C	s_3N_C	xring_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	212.5	-330.19	-284.75	0
+xring__s_2S_C__s_3S_C__0	xring__s_2S_C__s_3S_C	s_2S_C	s_3S_C	xring_i1	data	1	LEAD	LAG	LEAD	both_declared	CA	sign flips between models	4	3	3	4	1	418.3	-553.48	-474.08	0
+xring__s_3N_C__s_2N_C__0	xring__s_3N_C__s_2N_C	s_3N_C	s_2N_C	xring_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-49.9	44.05	46.2	1
+xring__s_3S_C__s_2S_C__0	xring__s_3S_C__s_2S_C	s_3S_C	s_2S_C	xring_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	213.1	311.59	273.15	0
+xring__s_4N_C__s_5N_C__0	xring__s_4N_C__s_5N_C	s_4N_C	s_5N_C	xring_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	19.8	140.7	115.97	1
+xring__s_4S_C__s_5S_C__0	xring__s_4S_C__s_5S_C	s_4S_C	s_5S_C	xring_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	149.9	237.71	210.25	0
+xring__s_5N_C__s_4N_C__0	xring__s_5N_C__s_4N_C	s_5N_C	s_4N_C	xring_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	325.1	-500.35	-413.63	0
+xring__s_5S_C__s_4S_C__0	xring__s_5S_C__s_4S_C	s_5S_C	s_4S_C	xring_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	338.3	-467.73	-394.53	0
+xring__s_6N_C__s_7N_C__0	xring__s_6N_C__s_7N_C	s_6N_C	s_7N_C	xring_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	16.2	151.35	124.62	1
+xring__s_6S_C__s_7S_C__0	xring__s_6S_C__s_7S_C	s_6S_C	s_7S_C	xring_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	108.5	192.51	174.4	0
+xring__s_7N_C__s_6N_C__0	xring__s_7N_C__s_6N_C	s_7N_C	s_6N_C	xring_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	269.1	-407.36	-341.27	0
+xring__s_7S_C__s_6S_C__0	xring__s_7S_C__s_6S_C	s_7S_C	s_6S_C	xring_i1	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	327.3	-454.7	-387.62	0
+xtier__bk_sel__s_4S_C__0	xtier__bk_sel__s_4S_C	bk_sel	s_4N_x06	ft2_i	data	1	LEAD	NEAR	LEAD	one_declared	CA	wrapped NEAR	4	3	3	4	1	796.5	-1010.77	-868.92	1
+xtier__bk_sel__s_4S_C__1	xtier__bk_sel__s_4S_C	s_4N_x06	s_4N_L4	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	244.1	-362.58	-307.78	0
+xtier__bk_sel__s_4S_C__3	xtier__bk_sel__s_4S_C	s_4N_L3	s_4N_L1	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	223.7	-349.16	-293.2	0
+xtier__bk_sel__s_4S_C__5	xtier__bk_sel__s_4S_C	s_4N_C	s_3N_L0	ft15_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	312.6	-446.75	-387.62	0
+xtier__bk_sel__s_4S_C__7	xtier__bk_sel__s_4S_C	s_4N_L2	s_4S_x06	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	370.4	-517.13	-436.4	0
+xtier__bk_sel__s_4S_C__9	xtier__bk_sel__s_4S_C	s_4S_L3	s_4S_L1	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	322.4	-453.8	-374.41	0
+xtier__bk_sel__seqhost__1	xtier__bk_sel__seqhost	s_6N_x06	s_6N_L4	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	272.4	-388.27	-335.42	0
+xtier__bk_sel__seqhost__11	xtier__bk_sel__seqhost	s_6S_C	s_6S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-0.9	98.15	71.93	1
+xtier__bk_sel__seqhost__13	xtier__bk_sel__seqhost	s_6S_L2	s_6S_L4	ft4_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	32.5	128.67	108.84	1
+xtier__bk_sel__seqhost__15	xtier__bk_sel__seqhost	s_5S_x00	s_4S_L4	ft6_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	253.1	-381.5	-316.42	0
+xtier__bk_sel__seqhost__3	xtier__bk_sel__seqhost	s_6N_L3	s_6N_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	241.3	-357.01	-307.05	0
+xtier__bk_sel__seqhost__5	xtier__bk_sel__seqhost	s_6N_C	s_6N_L0	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	373.1	-494.46	-442.43	0
+xtier__bk_sel__seqhost__7	xtier__bk_sel__seqhost	s_6N_L2	s_6S_x06	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	342.0	-475.99	-404.98	0
+xtier__bk_sel__seqhost__9	xtier__bk_sel__seqhost	s_6S_L3	s_6S_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	259.4	-394.22	-331.91	0
+xtier__eng__s_6N_C__0	xtier__eng__s_6N_C	eng	svc_14	ft3_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	231.1	-341.84	-289.49	0
+xtier__eng__s_6N_C__1	xtier__eng__s_6N_C	svc_14	svc_12	ft2_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	258.1	-420.44	-353.19	0
+xtier__eng__s_6N_C__10	xtier__eng__s_6N_C	s_6S_x06	s_6N_L2	ft5_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	298.8	432.47	371.48	0
+xtier__eng__s_6N_C__12	xtier__eng__s_6N_C	s_6N_L0	s_6N_C	xtier_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	244.6	323.95	302.73	0
+xtier__eng__s_6N_C__2	xtier__eng__s_6N_C	svc_12	svc_13	ft2_i	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	586.5	-758.1	-648.43	1
+xtier__eng__s_6N_C__4	xtier__eng__s_6N_C	s_6S_L4	s_6S_L2	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	61.1	-157.26	-138.53	1
+xtier__eng__s_6N_C__6	xtier__eng__s_6N_C	s_6S_L0	s_6S_C	ft4_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	170.3	-288.14	-226.5	0
+xtier__eng__s_6N_C__8	xtier__eng__s_6N_C	s_6S_L1	s_6S_L3	ft3_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	91.4	190.77	165.36	0
+xtier__eng__s_6S_C__0	xtier__eng__s_6S_C	eng	svc_14	ft4_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	238.6	-351.68	-296.49	0
+xtier__eng__s_6S_C__1	xtier__eng__s_6S_C	svc_14	svc_12	ft3_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	313.8	-483.92	-406.27	0
+xtier__eng__s_6S_C__2	xtier__eng__s_6S_C	svc_12	svc_13	ft3_i	data	1	LEAD	NEAR	LEAD	both_declared	CA	wrapped NEAR	4	3	3	4	1	587.5	-759.22	-649.47	1
+xtier__eng__s_6S_C__4	xtier__eng__s_6S_C	s_6S_L4	s_6S_L2	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	4.2	-108.08	-91.85	1
+xtier__eng__s_6S_C__6	xtier__eng__s_6S_C	s_6S_L0	s_6S_C	xtier_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	160.8	-278.2	-216.74	0
+xtier__gunit__s_3N_C__1	xtier__gunit__s_3N_C	s_3N_x06	s_3N_L4	ft1_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	154.4	-257.05	-203.21	0
+xtier__gunit__s_3N_C__3	xtier__gunit__s_3N_C	s_3N_L3	s_3N_L1	ft1_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	132.9	-240.9	-215.78	0
+xtier__gunit__s_3S_C__1	xtier__gunit__s_3S_C	s_3N_x06	s_3N_L4	ft0_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	154.4	-258.36	-203.2	0
+xtier__gunit__s_3S_C__3	xtier__gunit__s_3S_C	s_3N_L3	s_3N_L1	ft0_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	135.7	-236.03	-210.63	0
+xtier__gunit__s_3S_C__5	xtier__gunit__s_3S_C	s_3N_C	s_3N_L0	ft0_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	88.6	-190.58	-155.74	0
+xtier__gunit__s_3S_C__7	xtier__gunit__s_3S_C	s_3N_L2	s_3S_L4	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	284.5	-414.62	-358.81	0
+xtier__gunit__s_3S_C__9	xtier__gunit__s_3S_C	s_3S_L3	s_3S_L1	ft0_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	103.8	-210.16	-170.76	0
+xtier__s_0N_C__s_0S_C__0	xtier__s_0N_C__s_0S_C	s_0N_C	s_0N_L0	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	375.7	-508.62	-443.5	0
+xtier__s_0N_C__s_0S_C__2	xtier__s_0N_C__s_0S_C	s_0N_L2	s_0S_L4	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	217.3	-404.16	-338.98	0
+xtier__s_0N_C__s_0S_C__4	xtier__s_0N_C__s_0S_C	s_0S_L3	s_0S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	269.3	-389.93	-336.38	0
+xtier__s_0S_C__s_0N_C__1	xtier__s_0S_C__s_0N_C	s_0S_L1	s_0S_L3	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	187.2	289.52	261.25	0
+xtier__s_0S_C__s_0N_C__3	xtier__s_0S_C__s_0N_C	s_0S_L4	s_0N_L2	ft4_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	126.1	294.52	255.38	0
+xtier__s_0S_C__s_0N_C__5	xtier__s_0S_C__s_0N_C	s_0N_L0	s_0N_C	xtier_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	228.7	320.42	287.41	0
+xtier__s_1N_C__s_1S_C__0	xtier__s_1N_C__s_1S_C	s_1N_C	s_1N_L0	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	405.1	-550.31	-464.84	0
+xtier__s_1N_C__s_1S_C__2	xtier__s_1N_C__s_1S_C	s_1N_L2	s_1S_x06	ft0_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	538.7	-729.44	-611.94	1
+xtier__s_1N_C__s_1S_C__4	xtier__s_1N_C__s_1S_C	s_1S_L3	s_1S_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	207.5	-328.61	-278.56	0
+xtier__s_1S_C__s_1N_C__1	xtier__s_1S_C__s_1N_C	s_1S_L1	s_1S_L3	ft1_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	145.1	254.02	217.29	0
+xtier__s_1S_C__s_1N_C__3	xtier__s_1S_C__s_1N_C	s_1S_x06	s_1N_L2	ft3_i	data	1	LAG	NEAR	LAG	both_measured	CA	wrapped NEAR	8	3	3	4	1	471.5	634.87	540.13	1
+xtier__s_1S_C__s_1N_C__5	xtier__s_1S_C__s_1N_C	s_1N_L0	s_1N_C	xtier_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	161.1	270.56	235.88	0
+xtier__s_2N_C__s_2S_C__0	xtier__s_2N_C__s_2S_C	s_2N_C	s_3N_L0	ft10_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	324.4	-466.36	-397.16	0
+xtier__s_2N_C__s_2S_C__2	xtier__s_2N_C__s_2S_C	s_2N_L2	s_2S_L4	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	284.3	-419.86	-348.56	0
+xtier__s_2N_C__s_2S_C__4	xtier__s_2N_C__s_2S_C	s_2S_L3	s_2S_L1	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	217.0	-332.85	-281.77	0
+xtier__s_2S_C__s_2N_C__1	xtier__s_2S_C__s_2N_C	s_2S_L1	s_2S_L3	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	120.4	218.2	190.14	0
+xtier__s_2S_C__s_2N_C__3	xtier__s_2S_C__s_2N_C	s_2S_L4	s_2N_L2	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	162.9	272.55	230.82	0
+xtier__s_2S_C__s_2N_C__5	xtier__s_2S_C__s_2N_C	s_3N_L0	s_2N_C	xtier_i0	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	116.5	216.83	193.39	0
+xtier__s_3N_C__gunit__1	xtier__s_3N_C__gunit	s_3N_L1	s_3N_L3	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-35.4	40.7	50.78	1
+xtier__s_3N_C__gunit__3	xtier__s_3N_C__gunit	s_3N_L4	s_3N_x06	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-7.6	77.25	57.78	1
+xtier__s_3S_C__gunit__0	xtier__s_3S_C__gunit	s_3S_C	s_2S_C	ft0_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	232.4	331.58	292.16	0
+xtier__s_3S_C__gunit__11	xtier__s_3S_C__gunit	s_2N_x06	gunit	xtier_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	8	3	3	4	1	-8.0	188.06	165.04	1
+xtier__s_3S_C__gunit__2	xtier__s_3S_C__gunit	s_2S_L1	s_2S_L3	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	108.7	193.3	170.55	0
+xtier__s_3S_C__gunit__4	xtier__s_3S_C__gunit	s_2S_L4	s_2N_L2	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	190.8	303.7	259.04	0
+xtier__s_3S_C__gunit__6	xtier__s_3S_C__gunit	s_3N_L0	s_2N_C	ft0_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	8	3	3	4	1	119.8	220.18	196.66	0
+xtier__s_3S_C__gunit__8	xtier__s_3S_C__gunit	s_2N_L1	s_2N_L3	ft1_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	286.4	459.92	384.28	0
+xtier__s_4N_C__seqhost__1	xtier__s_4N_C__seqhost	s_3N_C	s_3N_L0	ft1_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	90.5	-192.7	-157.71	0
+xtier__s_4N_C__seqhost__3	xtier__s_4N_C__seqhost	s_3N_L2	s_3S_L4	ft1_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	294.6	-420.49	-364.54	0
+xtier__s_4N_C__seqhost__5	xtier__s_4N_C__seqhost	s_3S_L3	s_3S_L1	ft1_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	68.4	-162.66	-133.53	1
+xtier__s_4N_C__seqhost__7	xtier__s_4N_C__seqhost	s_3S_C	s_3S_L0	ft1_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	122.8	243.57	199.96	0
+xtier__s_4S_C__bk_sel__1	xtier__s_4S_C__bk_sel	s_4S_L1	s_4S_L3	ft1_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	179.5	304.41	251.76	0
+xtier__s_4S_C__bk_sel__10	xtier__s_4S_C__bk_sel	s_4N_x06	bk_sel	xtier_i0	data	1	LAG	NEAR	LAG	one_declared	CA	wrapped NEAR	8	3	3	4	1	665.7	832.46	725.37	1
+xtier__s_4S_C__bk_sel__3	xtier__s_4S_C__bk_sel	s_4S_x06	s_4N_L2	ft2_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	331.2	457.83	392.01	0
+xtier__s_4S_C__bk_sel__5	xtier__s_4S_C__bk_sel	s_3N_L0	s_4N_C	ft1_i	data	1	LAG	LAG	LAG	both_declared	CA	both ends declared	4	3	3	4	1	104.9	202.58	189.0	0
+xtier__s_4S_C__bk_sel__7	xtier__s_4S_C__bk_sel	s_4N_L1	s_4N_L3	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	159.7	269.66	232.84	0
+xtier__s_4S_C__bk_sel__9	xtier__s_4S_C__bk_sel	s_4N_L4	s_4N_x06	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	130.6	232.3	203.06	0
+xtier__s_5N_C__s_5S_C__0	xtier__s_5N_C__s_5S_C	s_5N_C	s_5N_L0	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	289.1	-403.6	-353.38	0
+xtier__s_5N_C__s_5S_C__2	xtier__s_5N_C__s_5S_C	s_5N_L2	s_5S_L4	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	224.6	-344.19	-285.64	0
+xtier__s_5N_C__s_5S_C__4	xtier__s_5N_C__s_5S_C	s_5S_L3	s_5S_L1	ft1_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	188.4	-303.46	-256.82	0
+xtier__s_5S_C__s_5N_C__1	xtier__s_5S_C__s_5N_C	s_5S_L1	s_5S_L3	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	126.5	223.81	195.44	0
+xtier__s_5S_C__s_5N_C__3	xtier__s_5S_C__s_5N_C	s_5S_L4	s_5N_L2	ft2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	117.3	214.41	182.6	0
+xtier__s_5S_C__s_5N_C__5	xtier__s_5S_C__s_5N_C	s_5N_L0	s_5N_C	xtier_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	136.4	206.1	191.38	0
+xtier__s_6N_C__eng__0	xtier__s_6N_C__eng	s_6N_C	s_7N_C	ft0_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	136.5	277.31	232.81	0
+xtier__s_6N_C__eng__1	xtier__s_6N_C__eng	s_7N_C	s_7N_L0	ft0_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	549.8	-735.02	-621.77	1
+xtier__s_6N_C__eng__11	xtier__s_6N_C__eng	svc_15	svc_14	ft2_i	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	343.0	481.8	410.49	0
+xtier__s_6N_C__eng__12	xtier__s_6N_C__eng	svc_14	eng	xtier_i1	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	79.8	163.97	142.32	1
+xtier__s_6N_C__eng__3	xtier__s_6N_C__eng	s_7N_L2	s_7S_L4	ft0_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	464.1	-692.91	-591.06	1
+xtier__s_6N_C__eng__5	xtier__s_6N_C__eng	s_7S_L3	s_7S_L1	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	196.3	-363.16	-295.0	0
+xtier__s_6N_C__eng__7	xtier__s_6N_C__eng	s_7S_C	s_7S_L0	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-54.7	30.89	19.94	1
+xtier__s_6N_C__eng__9	xtier__s_6N_C__eng	s_7S_L2	s_7S_x05	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	163.2	263.07	232.07	0
+xtier__s_6S_C__eng__0	xtier__s_6S_C__eng	s_6S_C	s_6S_L0	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	12.2	114.36	89.21	1
+xtier__s_6S_C__eng__2	xtier__s_6S_C__eng	s_6S_L2	s_6S_L4	ft5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-21.2	75.61	74.57	1
+xtier__s_6S_C__eng__4	xtier__s_6S_C__eng	svc_13	svc_12	ft0_i	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	308.4	431.74	379.68	0
+xtier__s_6S_C__eng__5	xtier__s_6S_C__eng	svc_12	svc_14	ft0_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	33.5	155.62	133.87	1
+xtier__s_6S_C__eng__6	xtier__s_6S_C__eng	svc_14	eng	xtier_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	39.3	116.23	106.12	1
+xtier__s_7N_C__s_7S_C__0	xtier__s_7N_C__s_7S_C	s_7N_C	s_7N_L0	ft1_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	508.2	-686.57	-582.08	1
+xtier__s_7N_C__s_7S_C__2	xtier__s_7N_C__s_7S_C	s_7N_L2	s_7S_L4	ft1_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	377.9	-565.99	-498.14	0
+xtier__s_7N_C__s_7S_C__4	xtier__s_7N_C__s_7S_C	s_7S_L3	s_7S_L1	ft3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	192.8	-331.23	-272.57	0
+xtier__s_7S_C__s_7N_C__1	xtier__s_7S_C__s_7N_C	s_7S_L1	s_7S_L3	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	135.2	236.73	203.16	0
+xtier__s_7S_C__s_7N_C__3	xtier__s_7S_C__s_7N_C	s_7S_L4	s_7N_L2	ft5_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	304.1	491.17	428.43	0
+xtier__s_7S_C__s_7N_C__5	xtier__s_7S_C__s_7N_C	s_7N_L0	s_7N_C	xtier_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	274.7	400.27	354.09	0
+xtier__seqhost__bk_sel__1	xtier__seqhost__bk_sel	s_4S_L4	s_5S_x00	ft1_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	176.8	283.81	239.35	0
+xtier__seqhost__bk_sel__11	xtier__seqhost__bk_sel	s_6N_L0	s_6N_C	ft2_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	214.3	289.29	275.25	0
+xtier__seqhost__bk_sel__13	xtier__seqhost__bk_sel	s_6N_L1	s_6N_L3	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	148.2	246.27	217.22	0
+xtier__seqhost__bk_sel__15	xtier__seqhost__bk_sel	s_6N_L4	s_6N_x06	ft4_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	176.1	275.39	242.37	0
+xtier__seqhost__bk_sel__3	xtier__seqhost__bk_sel	s_6S_L4	s_6S_L2	ft6_i	data	1	LEAD	LEAD	LEAD	both_measured	LEAD	None	None	None	3	3	0	132.2	-251.2	-210.94	0
+xtier__seqhost__bk_sel__5	xtier__seqhost__bk_sel	s_6S_L0	s_6S_C	ft3_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	181.7	-301.81	-238.19	0
+xtier__seqhost__bk_sel__7	xtier__seqhost__bk_sel	s_6S_L1	s_6S_L3	ft2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	33.8	139.45	129.78	1
+xtier__seqhost__bk_sel__9	xtier__seqhost__bk_sel	s_6S_x06	s_6N_L2	ft4_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	298.5	435.02	374.25	0
+xtier__seqhost__s_4N_C__2	xtier__seqhost__s_4N_C	s_3S_L0	s_3S_C	ft3_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	324.3	-467.59	-378.6	0
+xtier__seqhost__s_4N_C__4	xtier__seqhost__s_4N_C	s_3S_L1	s_3S_L3	ft4_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-68.7	15.98	24.91	1
+xtier__seqhost__s_4N_C__6	xtier__seqhost__s_4N_C	s_3S_L4	s_3N_L2	ft4_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	144.3	220.73	200.13	0
+xtier__seqhost__s_4N_C__8	xtier__seqhost__s_4N_C	s_3N_L0	s_3N_C	ft3_i	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	4	3	3	4	1	-49.3	-37.28	-23.56	1
+coll__lk_WS0__s_0S_LP__2	coll__lk_WS0__s_0S_LP	iqf	s_0S_x00	ft6_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-62.9	-46.64	-41.19	1
+coll__lk_WS0__s_0S_LP__4	coll__lk_WS0__s_0S_LP	s_0S_x01	s_0S_x02	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	41.6	-146.02	-130.73	1
+coll__lk_WS0__s_0S_LP__6	coll__lk_WS0__s_0S_LP	s_0S_x03	s_0S_x04	ft10_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	186.5	-299.03	-241.04	0
+coll__lk_WS0__s_0S_LP__8	coll__lk_WS0__s_0S_LP	s_0S_x05	s_0S_LP	coll_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	229.0	-342.58	-278.77	0
+coll__lk_WS1__s_0S_LP__0	coll__lk_WS1__s_0S_LP	lk_WS1	lk_WS0	ft2_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	471.5	-645.47	-542.71	1
+coll__lk_WS1__s_0S_LP__3	coll__lk_WS1__s_0S_LP	iqf	s_0S_x00	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-83.9	-20.72	-18.52	1
+coll__lk_WS1__s_0S_LP__5	coll__lk_WS1__s_0S_LP	s_0S_x01	s_0S_x02	ft6_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	67.9	-172.65	-152.23	1
+coll__lk_WS1__s_0S_LP__7	coll__lk_WS1__s_0S_LP	s_0S_x03	s_0S_x04	ft11_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	203.1	-320.96	-257.06	0
+coll__lk_WS1__s_0S_LP__9	coll__lk_WS1__s_0S_LP	s_0S_x05	s_0S_LP	coll_i1	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	270.5	-397.52	-319.79	0
+coll__lk_WS2__s_0S_LP__0	coll__lk_WS2__s_0S_LP	lk_WS2	lk_WS1	ft1_i	data	1	LEAD	LAG	LEAD	both_measured	CA	sign flips between models	4	3	3	4	1	431.2	-604.1	-518.74	0
+coll__lk_WS2__s_0S_LP__1	coll__lk_WS2__s_0S_LP	lk_WS1	lk_WS0	ft3_i	data	1	LEAD	NEAR	LEAD	both_measured	CA	wrapped NEAR	4	3	3	4	1	489.0	-659.56	-560.0	1
+coll__lk_WS2__s_0S_LP__10	coll__lk_WS2__s_0S_LP	s_0S_x05	s_0S_LP	coll_i2	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	182.8	-289.2	-231.38	0
+coll__lk_WS2__s_0S_LP__4	coll__lk_WS2__s_0S_LP	iqf	s_0S_x00	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-64.3	-39.18	-34.84	1
+coll__lk_WS2__s_0S_LP__6	coll__lk_WS2__s_0S_LP	s_0S_x01	s_0S_x02	ft8_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-6.9	-95.09	-89.71	1
+coll__lk_WS2__s_0S_LP__8	coll__lk_WS2__s_0S_LP	s_0S_x03	s_0S_x04	ft13_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	201.3	-313.45	-255.51	0
+coll__lk_WS3__s_0S_LP__1	coll__lk_WS3__s_0S_LP	iqf	s_0S_x00	ft9_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-34.8	-69.64	-59.39	1
+coll__lk_WS3__s_0S_LP__3	coll__lk_WS3__s_0S_LP	s_0S_x01	s_0S_x02	ft9_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-21.6	-86.05	-82.13	1
+coll__lk_WS3__s_0S_LP__5	coll__lk_WS3__s_0S_LP	s_0S_x03	s_0S_x04	ft14_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	172.3	-277.43	-225.63	0
+coll__lk_WS3__s_0S_LP__7	coll__lk_WS3__s_0S_LP	s_0S_x05	s_0S_LP	coll_i3	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	215.1	-329.53	-264.87	0
+coll__s_0S_LP__lk_WS0__0	coll__s_0S_LP__lk_WS0	s_0S_LP	s_0S_x05	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	60.6	163.64	136.99	1
+coll__s_0S_LP__lk_WS0__2	coll__s_0S_LP__lk_WS0	s_0S_x04	s_0S_x03	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	14.4	107.22	83.74	1
+coll__s_0S_LP__lk_WS0__4	coll__s_0S_LP__lk_WS0	s_0S_x02	s_0S_x01	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-65.1	-28.08	-6.76	1
+coll__s_0S_LP__lk_WS0__6	coll__s_0S_LP__lk_WS0	s_0S_x00	iqf	ft6_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-6.0	-128.39	-87.11	1
+coll__s_0S_LP__lk_WS1__0	coll__s_0S_LP__lk_WS1	s_0S_LP	s_0S_x05	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	71.8	186.6	152.68	1
+coll__s_0S_LP__lk_WS1__2	coll__s_0S_LP__lk_WS1	s_0S_x04	s_0S_x03	ft1_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-6.8	84.67	67.53	1
+coll__s_0S_LP__lk_WS1__4	coll__s_0S_LP__lk_WS1	s_0S_x02	s_0S_x01	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-71.5	-19.06	1.55	1
+coll__s_0S_LP__lk_WS1__6	coll__s_0S_LP__lk_WS1	s_0S_x00	iqf	ft7_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-1.7	-125.09	-85.45	1
+coll__s_0S_LP__lk_WS1__9	coll__s_0S_LP__lk_WS1	lk_WS0	lk_WS1	coll_i0	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	332.9	474.79	409.5	0
+coll__s_0S_LP__lk_WS2__0	coll__s_0S_LP__lk_WS2	s_0S_LP	s_0S_x05	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	24.1	125.09	100.18	1
+coll__s_0S_LP__lk_WS2__10	coll__s_0S_LP__lk_WS2	lk_WS1	lk_WS2	coll_i0	data	1	LAG	NEAR	LAG	both_measured	CA	wrapped NEAR	8	3	3	4	1	595.0	791.01	676.45	1
+coll__s_0S_LP__lk_WS2__2	coll__s_0S_LP__lk_WS2	s_0S_x04	s_0S_x03	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	24.5	120.06	94.28	1
+coll__s_0S_LP__lk_WS2__4	coll__s_0S_LP__lk_WS2	s_0S_x02	s_0S_x01	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-13.1	-92.67	-59.97	1
+coll__s_0S_LP__lk_WS2__6	coll__s_0S_LP__lk_WS2	s_0S_x00	iqf	ft8_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-12.2	-105.99	-72.52	1
+coll__s_0S_LP__lk_WS2__9	coll__s_0S_LP__lk_WS2	lk_WS0	lk_WS1	ft0_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	372.5	522.13	451.2	0
+coll__s_0S_LP__lk_WS3__0	coll__s_0S_LP__lk_WS3	s_0S_LP	s_0S_x05	ft5_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	28.7	124.15	99.57	1
+coll__s_0S_LP__lk_WS3__2	coll__s_0S_LP__lk_WS3	s_0S_x04	s_0S_x03	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	17.0	112.52	89.47	1
+coll__s_0S_LP__lk_WS3__4	coll__s_0S_LP__lk_WS3	s_0S_x02	s_0S_x01	ft6_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-15.4	-90.66	-57.6	1
+coll__s_0S_LP__lk_WS3__6	coll__s_0S_LP__lk_WS3	s_0S_x00	iqf	ft9_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-17.9	-109.93	-76.05	1
+dfi__svc_0__phy_hbm__0	dfi__svc_0__phy_hbm	svc_0	svc_2	ft0_i	data	1	LEAD	EDGE	LEAD	both_declared	CA	wrapped EDGE	4	3	3	4	1	302.7	-477.8	-394.55	0
+flt__iqf__svc_0__0	flt__iqf__svc_0	iqf	svc_0	flt_i0	ctl	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	211.3	-330.72	-270.65	0
+hbmrd__phy_hbm__svc_0__1	hbmrd__phy_hbm__svc_0	svc_2	svc_0	hbmrd_i0	data	1	NEAR	NEAR	NEAR	both_declared	CA	raw NEAR	8	3	3	4	1	74.9	206.02	171.12	1
+idx__iqf__svc_0__0	idx__iqf__svc_0	iqf	svc_0	idx_i0	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	175.2	-277.28	-234.04	0
+idx__s_3S_C__iqf__0	idx__s_3S_C__iqf	s_3S_C	s_3S_L0	ft3_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	32.8	144.7	120.3	1
+idx__s_3S_C__iqf__3	idx__s_3S_C__iqf	seqhost	s_2S_x00	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	63.3	156.78	134.7	1
+idx__s_3S_C__iqf__7	idx__s_3S_C__iqf	svc_1	svc_0	ft0_i	data	1	LAG	EDGE	LAG	both_declared	CA	wrapped EDGE	8	3	3	4	1	245.3	372.21	318.29	0
+idx__s_3S_C__iqf__8	idx__s_3S_C__iqf	svc_0	iqf	idx_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	76.4	186.26	155.85	1
+qc__iqf__s_0N_LP__0	qc__iqf__s_0N_LP	iqf	s_0S_x00	ft0_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-101.2	-4.48	-6.7	1
+qc__iqf__s_0N_LP__10	qc__iqf__s_0N_LP	s_0S_x09	s_0N_x00	ft5_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	158.9	259.54	227.89	0
+qc__iqf__s_0N_LP__12	qc__iqf__s_0N_LP	s_0N_x01	s_0N_LP	qc_i0	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	194.5	273.31	248.26	0
+qc__iqf__s_0N_LP__2	qc__iqf__s_0N_LP	s_0S_x01	s_0S_x02	ft7_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	63.2	-163.14	-148.75	1
+qc__iqf__s_0N_LP__4	qc__iqf__s_0N_LP	s_0S_x03	s_0S_x04	ft12_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	215.3	-336.03	-268.14	0
+qc__iqf__s_0N_LP__6	qc__iqf__s_0N_LP	s_0S_x05	s_0S_LP	ft2_i	data	1	LEAD	LEAD	LEAD	one_declared	LEAD	None	None	None	3	3	0	196.3	-305.39	-245.2	0
+qc__iqf__s_0N_LP__8	qc__iqf__s_0N_LP	s_0S_x07	s_0S_x08	ft3_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	180.2	286.4	244.38	0
+ql__s_0N_LP__iqf__0	ql__s_0N_LP__iqf	s_0N_LP	s_0N_x01	ft0_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	361.2	-497.08	-425.8	0
+ql__s_0N_LP__iqf__10	ql__s_0N_LP__iqf	s_0S_x02	s_0S_x01	ft4_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-76.2	-12.57	7.68	1
+ql__s_0N_LP__iqf__12	ql__s_0N_LP__iqf	s_0S_x00	iqf	ql_i0	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	-32.7	-83.41	-58.0	1
+ql__s_0N_LP__iqf__2	ql__s_0N_LP__iqf	s_0N_x00	s_0S_x09	ft0_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	247.6	-375.23	-313.94	0
+ql__s_0N_LP__iqf__4	ql__s_0N_LP__iqf	s_0S_x08	s_0S_x07	ft2_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	262.5	-397.06	-331.01	0
+ql__s_0N_LP__iqf__6	ql__s_0N_LP__iqf	s_0S_LP	s_0S_x05	ft2_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	105.8	216.31	175.88	0
+ql__s_0N_LP__iqf__8	ql__s_0N_LP__iqf	s_0S_x04	s_0S_x03	ft2_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	21.4	121.13	94.75	1
+dn_s_2N_L0_2	dn_s_2N_L0	s_1N_L1	s_1N_L3	dn_s_2N_L0x3_i	data	1	LAG	LAG	LAG	one_declared	LAG	None	None	None	3	2	-1	145.4	267.99	228.95	0
+dn_s_2N_L0_4	dn_s_2N_L0	s_1N_L4	s_1N_x06	dn_s_2N_L0x5_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	79.0	189.75	166.71	1
+dn_s_4N_L0_1	dn_s_4N_L0	s_4N_L1	s_4N_L3	dn_s_4N_L0x2_i	data	1	LAG	LAG	LAG	both_measured	LAG	None	None	None	3	2	-1	150.3	247.83	220.18	0
+dn_s_4N_L0_2	dn_s_4N_L0	s_4N_L3	s_5N_L3	dn_s_4N_L0x3_i	data	1	LAG	EDGE	LAG	both_measured	CA	wrapped EDGE	8	3	3	4	1	198.8	406.59	336.99	0
+dn_s_4N_L2__1	dn_s_4N_L2	s_3N_L0	s_4N_L2	leafdn_i0	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	10.5	-194.9	-161.2	1
+rt_E3_out_0__8	rt_E3_out_0	s_4N_L2	s_3N_L0	ft20_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-117.4	-44.8	-26.69	1
+rt_E3_out_1__9	rt_E3_out_1	s_4N_L2	s_3N_L0	ft21_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-116.0	-46.11	-27.83	1
+rt_E3_out_2__10	rt_E3_out_2	s_4N_L2	s_3N_L0	ft22_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-113.0	-49.24	-30.52	1
+up_s_2N_L0_1	up_s_2N_L0	s_1N_x06	s_1N_L4	up_s_2N_L0x2_i	data	1	NEAR	NEAR	NEAR	both_measured	CA	raw NEAR	4	3	3	4	1	87.1	-169.08	-154.0	1
+up_s_2N_L0_3	up_s_2N_L0	s_1N_L3	s_1N_L1	up_s_2N_L0x4_i	data	1	LEAD	EDGE	LEAD	one_declared	CA	wrapped EDGE	4	3	3	4	1	379.3	-531.75	-434.24	0
+up_s_4N_L0_2	up_s_4N_L0	s_5N_L3	s_4N_L3	up_s_4N_L0x3_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	160.2	-349.06	-300.29	0
+up_s_4N_L0_3	up_s_4N_L0	s_4N_L3	s_4N_L1	up_s_4N_L0x4_i	data	1	LEAD	EDGE	LEAD	both_measured	CA	wrapped EDGE	4	3	3	4	1	228.1	-379.47	-320.27	0
+up_s_4N_L2__0	up_s_4N_L2	s_4N_L2	s_3N_L0	ft19_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-147.4	-14.45	-7.46	1
+x_E3_out__1	x_E3_out	s_3N_L0	s_4N_L2	ft1_i	data	1	NEAR	EDGE	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	94.5	-297.14	-247.25	0
+xtier__bk_sel__s_4S_C__6	xtier__bk_sel__s_4S_C	s_3N_L0	s_4N_L2	ft0_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-102.2	-83.19	-67.49	1
+xtier__s_4S_C__bk_sel__4	xtier__s_4S_C__bk_sel	s_4N_L2	s_3N_L0	ft18_i	data	1	NEAR	NEAR	NEAR	one_declared	CA	raw NEAR	4	3	3	4	1	-75.9	-88.08	-68.85	1
