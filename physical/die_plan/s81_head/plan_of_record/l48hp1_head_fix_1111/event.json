@@ -1,0 +1,21 @@
+{
+ "event": "HEAD class fix for the two l48uj HEAD kit FAILs (hd_host_e PDN-0006, hd_st_n4 OT_CLAND status-anchor band), HEAD-94 11-11",
+ "stage": "S3 plan delta (classes: PLAN geometry left behind by lepB crop; abstract view Class C). Pre-check added at S2.",
+ "classification": {
+  "hd_host_e": "PDN-0006 'VDD on M5 is blocked by obstructions on M6, M7 for u_epc': NOT an outline/strap pitch mismatch and NOT a missing grid/domain. The H2 child abstract has one blanket M6 and one blanket M7 OBS rect over 97.2% of the macro while its PG pins are M5, so the die M6/M7 straps cannot reach the M5 stripes (the abstract_detail.py Class C). The lep_pair view has 38960/12526 sparse rects (4.7%/2.0%) and passes.",
+  "hd_st_n4": "OT_CLAND no legal nonoverlapping row/site in reserved band for u_cland_agg_5 (status-anchor): plan geometry. lepB cropped hd_st_n4 1123.2 -> 993.6 and x-scaled bands, stages and sites but not clock.landing_status_anchors; agg_5 x=1011.845 lies outside the 993.6 outline (agg_1..4 are inside but off the scaled collinear line)."
+ },
+ "base": "physical/die_plan/s81_head/plan_of_record/l48hp1_head_cut1111/source_plan_cut.json.gz (merged cut, sha a09b33bc23b2)",
+ "results": {
+  "source_plan_cut_fix.json.gz": "cut + fix, sha256 f607376dd928183ffcaf1ed6511a48384b4c9b0b1af87f1d54e66d060e07d6a9",
+  "source_plan_mesh_fix.json.gz": "hd_mesh re-form (claude/head-94-mesh-1111, be4ec885a1d4) + fix, sha256 de2130703bd3d921f5e62950401653305634e2ebe6aeecaf02ace207fe5f494f; use it if the mesh branch is approved"
+ },
+ "apply": "python3 -I .../l48hp1_head_fix_1111/fix_event.py <repo> BASE.json[.gz] OUT.json ; then prepare_cut.py + republish.py as in l48hp1_head_cut1111 / l48hp1_head_mesh_1111",
+ "changes": [
+  "hd_host_e hard core ot_s81hd_he_epc: lef -> physical/die_plan/s81_head/plan_of_record/l48hp1_h2/views/ot_s81hd_he_epc.lef (M6/M7 OBS spliced from the exact routed ODB of the same core, write_abstract_lef -bloat_factor 1; abstract_detail.py splice, check_ok true, pins/PG/lower OBS unchanged, base sha 06a5ea77d535 -> 4ccb218430234ecf; largest single M6/M7 rect 0.0003/0.0007 of the macro). epc_splice.json is the receipt (views/splice.json). lib paths unchanged.",
+  "hd_st_n4 clock.landing_status_anchors x * 993.6/1123.2 (5 anchors, y unchanged)"
+ ],
+ "precheck": "l48hp1_head_fix_1111/precheck.py PLAN REPO: (A) every point/rect of each type inside its outline (finds the agg_5 anchor), (B) no hard-core LEF with a single M6/M7 OBS rect > 50% of the macro (finds PDN-0006). Result on the fix plan, all 7 HEAD types incl hd_ctl and hd_mesh: PASS 0. On the merged cut: A-FAIL hd_st_n4 agg_5, B-FAIL hd_host_e epc. hd_ctl (4 SRAM cores, obs_max M4), hd_mesh (110 SRAMs) and hd_serdes/hd_lep0N LEFs pass.",
+ "g0": {"base_errors": 153, "event_errors": 153, "new": 0},
+ "status": "DO_NOT_COUNT"
+}
