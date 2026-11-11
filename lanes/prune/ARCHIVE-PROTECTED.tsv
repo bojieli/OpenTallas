@@ -4486,3 +4486,10 @@ intel2	/srv/opentallas-scratch3/claude/kwf21/wt/physical/die_plan/qwen_kvsys/bin
 intel2	/srv/opentallas-scratch3/claude/kwf21/wt/physical/die_plan/s81/bind	ARCHIVE-1106B asbuilt/bind.f 21:3x
 intel2	/srv/opentallas-scratch/claude/hbm-hc/r18h5_src	ARCHIVE-1106B asbuilt/bind.f 21:3x
 intel2	/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/src;	ARCHIVE-1106B asbuilt/bind.f 21:3x
+any	/srv/opentallas-scratch2/claude/die-s81-85/ftlock/bind_ctl	KW-FIX-43 2026-11-10 COORD: S81 bind of record for the 100 bind8-drift types (kit_rtl_bctl.sh); staged epyc7/epyc4/epyc2/epyc8
+any	/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh	KW-FIX-43 2026-11-10 S81 bind_ctl kit_rtl script
+any	/srv/opentallas-scratch2/claude/kw43/src_t51f_pbp_por15c	KW-FIX-43 2026-11-10 live S81 wave src (porous overlay)
+any	/srv/opentallas-scratch2/claude/kw43/src_qcsw2_hc0_por15c	KW-FIX-43 2026-11-10 live QC wave src (porous overlay)
+any	/srv/opentallas-scratch2/claude/kw43/src_zb_lr_sf_por15c	KW-FIX-43 2026-11-10 live KV wave src (porous overlay)
+any	/srv/opentallas-scratch2/claude/kw43/src_hbmf4_m3_por15c	KW-FIX-43 2026-11-10 live HBM wave src (porous overlay)
+any	/srv/opentallas-scratch3/claude/kw43	KW-FIX-43 2026-11-10 scratch3 halves of the _por15c src trees (symlink targets)
