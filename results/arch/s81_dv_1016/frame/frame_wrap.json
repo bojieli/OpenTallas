@@ -14,25 +14,25 @@
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
-  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "d48d1c3c613f6d1012fa9347589d87f925cfe60124b2fe2f8ac22c7c4565b7d2",
-  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "642702e7299c6977317fccd991e0a6c3f6df736f134f6bd3a2bd3f97ebc986b3",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "b40694f6fdb6a36bd461c5c0b9c436933231ea56d060dc5fbcc7474d5534e3cf",
+  "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "7467c59d1cad40f3cb3e4146506dd32d7ad8dbb5f0fbd21270c05b0c790d0c0a",
   "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv": "2f4b3bf9c3ddd4ab04ae5f04e39e65fbc65692e0c26f199619a2694360e8bfeb",
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5",
-  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
-  "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
-  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+  "rtl/v41die/ot_s81_cfg7_seq.sv": "9acc1f62ca6e800988a420a3fd1335c7b3f65c756831d35d5ae168687a18d714",
+  "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "6e36b1e26fe71717374dcd09edcefce18d8758ca1b4b19a0a0f79b51b60a4a7c",
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "3aeb9ba257f9d6e89b122d7d3008e1880deb732c1f97f2445aa6686180976387",
   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "b3e9ee193f05c981baf3e38fdc4163ea60119fbc7992b761831f4d465a93ac27",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "66c7dac657cc3f060671a74cbf08d293c9c5644f99144a12ff91bfffcc191d25",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "976cba9f2a9a3a774dee119ab54fc351c9b2b1cd4370c2f82a7f4f5032efdc40",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "72bb6701509b62937ccb57116e4a2ed3b3f8b52b8c7bf3ddee0f46041b4af8a9",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "7af10d34479d2cbb56a4baf3479bad7cc30f27e06e520cc16f2418e66d11443f",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "4e85c913cc19eac3d9a88c766b4c4aaadbd8a1dbd159ec6ead71353bfe5ef85d",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "699976528bd30ae44b123ae180e392d4eb19bfaf0ae8c5fc8d4137845d88d94e",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "1efb43d0d9d2b3e532a9e599b3500c11a0f1fdeca88ee8490bdbce67aa13adc9",
   "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "0c1238dc3f1938dae8fa2ed50f4df5e98c4202f7f78cc513e413761dc396bef9",
-  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "240eea63e11cace472a2ba37c9f21147b2a593d1dddd8c28ae1afe26498b8e0f",
+  "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "ada4232d19db40c1b47248d40e7bc9bac814e8d9a5631933bcf4b671a869ef12",
   "rtl/dsrom_sys/s81_static_net/gen/dsfd_sstn_e0e1c0c1_cp1.sv": "e9b0dfe0e45c2f3e41f138e429b0aceed4f6e748d7fb10997aecb66b294dc1ce",
-  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "1cd45a7d8bfab8880024cfdc093bf02f6419b37c6e35dc20990f50bcd6345cf7",
-  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "fe714548181c0ab2cb534a396bb7c264d1d3aeb1527fd9146e355dc07dc39736"
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "a16f419740eb01a4eb9650fe6ba21cf970a681b792d0b677fe589335e0e87295",
+  "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "1b70fec0ddb421efcad47164657ce726d6740a21b4608174a41b0444e5cb7d57"
  },
  "ports": [
   {
@@ -154,6 +154,27 @@
       "dsfd_rly_63_NS": 12
      },
      "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
+    },
+    {
+     "kind": "bf_go_align",
+     "fronts": {
+      "e13": {
+       "x_edges": 26,
+       "ctl_edges": 25,
+       "added": 1
+      },
+      "e4": {
+       "x_edges": 9,
+       "ctl_edges": 9,
+       "added": 0
+      },
+      "e8": {
+       "x_edges": 18,
+       "ctl_edges": 18,
+       "added": 0
+      }
+     },
+     "note": "x2 payload depth == control depth (cfifo cc -> lc + seq outputs) at every BF front; the missing stages go on go / cfg / f_prog (the master of each pin's last relay); go_bf = xb_meta[0] rides x2"
     }
    ],
    "params": {
@@ -207,7 +228,7 @@
     "dsfd_rly_15_NS": 2,
     "dsfd_rly_15_SN": 4,
     "dsfd_rly_1_EW": 2,
-    "dsfd_rly_1_WN": 3,
+    "dsfd_rly_1_WN": 4,
     "dsfd_rly_266_EW": 8,
     "dsfd_rly_283_EW": 8,
     "dsfd_rly_2_ES": 6,
@@ -216,11 +237,11 @@
     "dsfd_rly_2_NW": 5,
     "dsfd_rly_2_WE": 6,
     "dsfd_rly_2_WS": 6,
-    "dsfd_rly_38_WN": 3,
+    "dsfd_rly_38_WN": 4,
     "dsfd_rly_536_EN": 2,
     "dsfd_rly_536_SN": 3,
     "dsfd_rly_536_SW": 3,
-    "dsfd_rly_54_WN": 3,
+    "dsfd_rly_54_WN": 4,
     "dsfd_rly_63_ES": 1,
     "dsfd_rly_63_NE": 9,
     "dsfd_rly_63_NS": 29,
@@ -244,7 +265,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h9.sv",
-    "sha256": "2c72ec5e69943e8b031accc9cc963edb4e798b305de2aca88853ea7c0fbba0d9"
+    "sha256": "c53f683835b5ed25e272e04edbc0b22dfb6e058f24ff33f90484cdff4fb42279"
    }
   },
   "col_h10": {
@@ -299,6 +320,32 @@
       "dsfd_rly_63_NS": 10
      },
      "note": "one relay stage at every q leaf node b (r1) input: r1 reaches the leaf one edge after r0 (D2, ot_s81_retn_static F1); compiler calendar tools/s81_dv/frame_return_plan.py"
+    },
+    {
+     "kind": "bf_go_align",
+     "fronts": {
+      "e1": {
+       "x_edges": 6,
+       "ctl_edges": 6,
+       "added": 0
+      },
+      "e10": {
+       "x_edges": 21,
+       "ctl_edges": 21,
+       "added": 0
+      },
+      "e15": {
+       "x_edges": 29,
+       "ctl_edges": 28,
+       "added": 1
+      },
+      "e5": {
+       "x_edges": 12,
+       "ctl_edges": 12,
+       "added": 0
+      }
+     },
+     "note": "x2 payload depth == control depth (cfifo cc -> lc + seq outputs) at every BF front; the missing stages go on go / cfg / f_prog (the master of each pin's last relay); go_bf = xb_meta[0] rides x2"
     }
    ],
    "params": {
@@ -352,7 +399,7 @@
     "dsfd_rly_15_NS": 4,
     "dsfd_rly_15_SN": 3,
     "dsfd_rly_1_EW": 2,
-    "dsfd_rly_1_WN": 4,
+    "dsfd_rly_1_WN": 5,
     "dsfd_rly_266_EW": 9,
     "dsfd_rly_283_EW": 9,
     "dsfd_rly_2_ES": 5,
@@ -361,11 +408,11 @@
     "dsfd_rly_2_NW": 5,
     "dsfd_rly_2_WE": 6,
     "dsfd_rly_2_WS": 7,
-    "dsfd_rly_38_WN": 4,
+    "dsfd_rly_38_WN": 5,
     "dsfd_rly_536_EN": 3,
     "dsfd_rly_536_SN": 2,
     "dsfd_rly_536_SW": 4,
-    "dsfd_rly_54_WN": 4,
+    "dsfd_rly_54_WN": 5,
     "dsfd_rly_63_NE": 8,
     "dsfd_rly_63_NS": 50,
     "dsfd_rly_63_SE": 8,
@@ -387,7 +434,7 @@
    },
    "rtl": {
     "path": "rtl/dsrom_sys/s81_dv/frame/col_h10.sv",
-    "sha256": "545607e877553c15791fc86528fe0f8ef55be6e0114576943d5c3863ab5ccab3"
+    "sha256": "e53267f294113f9b18ac5127cebfa2534fe256ce657e38ec4f9db40f9ff4a028"
    }
   },
   "col_h9_MX": {
@@ -401,5 +448,8 @@
   }
  },
  "rstp": true,
+ "cpr": false,
+ "q_receipt": "results/rtl/dsrom_qelem_pq_20261006/closed_qs5f/receipt.json",
+ "q_go_command_lead_edges": 0,
  "bf_front": "roots"
 }

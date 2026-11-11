@@ -39,6 +39,13 @@ frame_<r>), as tools/s81/cluster_extract.py extracted it from the c26l GEN (resu
     * return r1 skew (S81U-3F2, D2): one dsfd_rly_63_NS / _WE stage at every q leaf node's b (second-row) input, so an
       element's two rows reach its leaf on consecutive edges (ot_s81_retn_static F1); the row / slot placement that
       keeps every node fault-free is the compiler's frame return plan (tools/s81_dv/frame_return_plan.py)
+    * BF go / x2 alignment (S81-BF-GOBF 11-11): a BF front samples go_bf (= xb_meta[0], carried on the x2 payload) with
+      its sequencer's go_e, so the x2 path (cfifo x2 -> payload stations / relays -> x0 / x1 / xb) and the control
+      path (cfifo cc -> base stations / relays -> cfg7_seq_bfp lc, then go_e / cfg / f_prog relays) must have the same
+      register depth (tools/s81_dv/station_depth.py, read from the bound RTL).  The c26l column taps the LAST BF
+      front's sequencer before the last base station but its x2 after the last payload station: equal only while a
+      station was 1 flop (dc23a738f3 made them 2: x2 one edge late, col_h9 e13 / col_h10 e15 fault).  Every BF front
+      whose two depths differ gets the missing stages on its shallower side, same master as that pin's last stage.
 
     python3 tools/s81_dv/frame_wrap.py emit [--out-rtl rtl/dsrom_sys/s81_dv/frame] [--record results/arch/s81_dv_1016/frame]
 """
@@ -55,8 +62,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
+sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 import die_port_bind as DPB  # noqa: E402
 import dsrom_s81_fulldie as F  # noqa: E402
+import station_depth as SD  # noqa: E402
 
 SCHEMA = 'opentallas.s81_dv.frame_wrap.v1'
 SRC = ROOT / 'results/arch/s81_dv_1016/frame/src'
@@ -174,7 +183,7 @@ def local_names(children, insts):
 
 
 # ------------------------------------------------------------------------------------------------ transform
-def build(master, idx, params_q, rstp, bf_front='roots', r1_skew=True):
+def build(master, idx, params_q, rstp, bf_front='roots', r1_skew=True, bf_align=True):
     fn, mod, slots, nq, nbf = CLASSES[master]
     text = gzip.decompress((SRC / fn).read_bytes()).decode()
     ports, insts = parse_column(text, mod)
@@ -320,6 +329,9 @@ def build(master, idx, params_q, rstp, bf_front='roots', r1_skew=True):
     # ---- return-tree r1 skew (lane S81U-3F2, decision D2): one register stage on every q element's second-row leaf path
     if r1_skew:
         rec['changes'].append(add_r1_skew(insts, names, idx))
+    # ---- BF go_bf alignment (S81-BF-GOBF 11-11): x2 payload depth == sequencer control depth at every BF front
+    if bf_align:
+        rec['changes'].append(add_bf_go_align(insts, names, idx))
     # ---- parameters
     pmap = {}
     for it in insts:
@@ -404,7 +416,118 @@ def add_r1_skew(insts, names, idx):
                 'tools/s81_dv/frame_return_plan.py')
 
 
-MUTANTS = ('xlane', 'marker', 'tree', 'cfgbank', 'noskew')
+CTRL_SEQ = ('ot_s81_cfg7_seq_bfp', 'ot_s81_cfg7_seq')
+BF_FRONTS = ('dsfd_bf_front_roots', 'dsfd_bf_front_static')
+BF_X_PINS = ('x0', 'x1', 'xb_data', 'xb_meta', 'xb')            # the x2 payload (go_bf = xb_meta[0] / xb[0])
+BF_CTL_PINS = ('go', 'cfg', 'f_prog')                           # the cfg7_seq_bfp outputs
+Q_X_PINS = ('xs_v', 'xs_q0', 'xs_e0', 'xs_b', 'xs_p', 'xs_pos', 'xs_sv', 'xs_q1', 'xs_e1')
+Q_CTL_PINS = ('go', 'cfg_v', 'cfg_a', 'cfg_d')
+
+
+def drivers(insts, idx):
+    """net -> (instance, output pin, bit) over the frame instances (masters outside idx: o / ck_o are the outputs)"""
+    drv = {}
+    for it in insts:
+        m_ = it['master']
+        for p, v in it['conns'].items():
+            d = port_dir(idx, m_, p) if m_ in idx else ('output' if p in ('o', 'ck_o') else 'input')
+            if d == 'output':
+                for k, b in enumerate(v):
+                    drv[b] = (it, p, k)
+    return drv
+
+
+def walk(net, drv):
+    """register edges from net back through the pass-through stations / relays (tools/s81_dv/station_depth.py, read
+    from the bound RTL) -> (edges, root instance or None, root pin, the stage nearest net or None)"""
+    edges, last = 0, None
+    while net in drv:
+        it, p, k = drv[net]
+        st = SD.step(it['master'], p)
+        if st is None:
+            return edges, it, p, last
+        src, d = st
+        edges += d
+        last = last or it
+        net = it['conns'][src][k]
+    return edges, None, None, last
+
+
+def elem_skew(insts, idx, masters=BF_FRONTS, xpins=BF_X_PINS, ctlpins=BF_CTL_PINS):
+    """{element instance: {x, ctl}}: register depth of the x payload (cfifo -> element x pins) and of the control
+    (cfifo cc -> sequencer lc, + sequencer output -> element go / cfg pins); the sequencer's own go_e latency is common
+    to every element and outside both.  Every bit of a group must agree (else AssertionError)."""
+    drv = drivers(insts, idx)
+    lc_memo = {}
+    out = {}
+    for it in insts:
+        if it['master'] not in masters:
+            continue
+        x, c = collections.defaultdict(set), collections.defaultdict(set)
+        for p in xpins:
+            for b in it['conns'].get(p, []):
+                e, r, _, _ = walk(b, drv)
+                if r is not None and r['master'].startswith('dsfd_cfifo'):
+                    x[p].add(e)
+        for p in ctlpins:
+            for b in it['conns'].get(p, []):
+                e, r, _, _ = walk(b, drv)
+                assert r is not None and r['master'] in CTRL_SEQ, (it['name'], p, r and r['master'])
+                if r['name'] not in lc_memo:
+                    ls = set()
+                    for lb in r['conns']['lc']:
+                        e2, r2, _, _ = walk(lb, drv)
+                        assert r2 is not None and r2['master'].startswith('dsfd_cfifo'), (r['name'], r2 and r2['master'])
+                        ls.add(e2)
+                    assert len(ls) == 1, (r['name'], 'lc depth', ls)
+                    lc_memo[r['name']] = ls.pop()
+                c[p].add(e + lc_memo[r['name']])
+        xs, cs = set().union(*x.values()) if x else set(), set().union(*c.values()) if c else set()
+        assert len(xs) == 1 and len(cs) == 1 and set(x) and set(c), (it['name'], dict(x), dict(c))
+        out[it['name']] = dict(x=xs.pop(), ctl=cs.pop())
+    return out
+
+
+def add_bf_go_align(insts, names, idx):
+    """S81-BF-GOBF 11-11: a BF front whose x2 payload is deeper than its control path (go / cfg / f_prog from its
+    cfg7_seq_bfp) gets the missing stages on go / cfg / f_prog, each the master of that pin's last relay (same face,
+    ck, rs), so go_bf (xb_meta[0]) and go_e meet at the front on the same edge whatever the station depth."""
+    sk = elem_skew(insts, idx)
+    drv = drivers(insts, idx)
+    by = {i['name']: i for i in insts}
+    fronts = {}
+    for nm, d in sorted(sk.items(), key=lambda kv: names[kv[0]]):
+        n = d['x'] - d['ctl']
+        loc = names[nm][2:]
+        fronts[loc] = dict(x_edges=d['x'], ctl_edges=d['ctl'], added=max(n, 0))
+        if n == 0:
+            continue
+        # a control path deeper than x2 would need stages on the shared x2 bus slice (not a per-front pin): refuse
+        assert n > 0, f'{loc}: control path {-n} edge(s) deeper than the x2 payload; no alignment form defined'
+        it = by[nm]
+        for p in BF_CTL_PINS:
+            old = it['conns'][p]
+            lasts = {(walk(b, drv)[3] or {}).get('name') for b in old}
+            assert len(lasts) == 1 and None not in lasts, (loc, p, lasts)
+            last = by[lasts.pop()]
+            assert last['conns']['o'] == old, (loc, p, 'last relay output is not exactly the pin')
+            cur = list(old)
+            for s in range(n):
+                sn = f'ga_{loc}_{p}{s}'
+                new = [f'{sn}_{j}' for j in range(len(old))]
+                insts.append(dict(master=last['master'], name=sn, conns=collections.OrderedDict(
+                    i=cur, o=new, ck=list(last['conns']['ck']), rs=list(last['conns']['rs']))))
+                names[sn] = f'u_y_ga_{loc}_{p}_{s}'
+                cur = new
+            it['conns'][p] = cur
+    after = elem_skew(insts, idx)
+    assert all(d['x'] == d['ctl'] for d in after.values()), after
+    return dict(kind='bf_go_align', fronts=fronts,
+                note='x2 payload depth == control depth (cfifo cc -> lc + seq outputs) at every BF front; the missing '
+                     'stages go on go / cfg / f_prog (the master of each pin\'s last relay); go_bf = xb_meta[0] rides x2')
+
+
+MUTANTS = ('xlane', 'marker', 'tree', 'cfgbank', 'noskew', 'nobfalign')
 
 
 def apply_mutant(kind, insts, names):
@@ -508,10 +631,14 @@ def cmd_emit(a):
     recd.mkdir(parents=True, exist_ok=True)
     exact_all, recs = {}, {}
     for master in CLASSES:
-        insts, names, pmap, exact, rec = build(master, idx, params_q, a.rstp, a.bf_front, r1_skew=a.mutant != 'noskew')
+        insts, names, pmap, exact, rec = build(master, idx, params_q, a.rstp, a.bf_front, r1_skew=a.mutant != 'noskew',
+                                               bf_align=a.mutant != 'nobfalign')
         if a.mutant == 'noskew':
             rec['mutant'] = 'no r1 skew stage (the c26l leaf pairing: r0 / r1 on one edge)'
             print(f'{master}: MUTANT noskew')
+        elif a.mutant == 'nobfalign':
+            rec['mutant'] = 'no BF go_bf alignment stage (the c26l taps: x2 one edge late at the last BF front)'
+            print(f'{master}: MUTANT nobfalign')
         elif a.mutant:
             rec['mutant'] = apply_mutant(a.mutant, insts, names)
             print(f'{master}: MUTANT {a.mutant}: {rec["mutant"]}')
