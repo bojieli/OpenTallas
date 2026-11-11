@@ -96,6 +96,38 @@ def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
     return w
 
 
+def grt_halving_weight_obs(g, cov, mrects, pins, k_gcells, macro_obs, notes, gcell_um=GRT_GCELL_UM):
+    """GRT-PATCH-1 plain 'edge' image: K gcells from the boundary of every OBS rect of the layer below (a porous view
+    fragmented into many rects is then halved almost everywhere). Per macro and layer the halved share of the OBS is
+    spread evenly over the macro (the rects are not placed); interior pins add their outline-mode squares. A view
+    without known rects (template, obs_max, ceiling, a kit view harvested without bands) is one solid rect = its
+    outline, i.e. edge_outline."""
+    d = k_gcells * gcell_um
+    out = {L: np.zeros((g.ny, g.nx)) for L in LAYERS}
+    outline_w = None
+    nfb = 0
+    for (c, h), r in zip(cov, mrects):
+        bd = macro_band(h["inst"], d, k_gcells)
+        if bd is None:
+            nfb += 1
+            if outline_w is None:
+                outline_w = grt_halving_weight(g, mrects, pins, k_gcells)
+            for L in LAYERS:
+                out[L] = np.maximum(out[L], np.where(c > 1e-9, outline_w, 0.0))
+            continue
+        pw = grt_halving_weight(g, [r], {h["inst"]: pins.get(h["inst"], [])}, k_gcells)
+        po = grt_halving_weight(g, [r], {}, k_gcells)
+        pin_extra = np.clip(pw - po, 0, 1)                 # interior-pin squares only
+        o = macro_obs.get(h["inst"]) or {}
+        for L in LAYERS:
+            f = o.get(L, 0.0)
+            share = min(1.0, bd.get(L, 0.0) / f) if f > 1e-9 else 0.0
+            out[L] = np.maximum(out[L], np.where(c > 1e-9, np.clip(share + pin_extra, 0, 1), 0.0))
+    if nfb:
+        notes.append(f"grt edge: {nfb} macro views without OBS rects taken as solid (= edge_outline)")
+    return out
+
+
 def grt_macro_rules(obs):
     """macro OBS extension as findInstancesObstructions applies it (bottom-up, in place)."""
     for i in range(1, len(LAYERS) - 1):
@@ -156,6 +188,7 @@ def lef_obs(path):
     if key in _LEF_CACHE:
         return _LEF_CACHE[key]
     out = None
+    rects = defaultdict(list)
     try:
         txt = Path(path).read_text(errors="replace")
     except OSError:
@@ -179,11 +212,38 @@ def lef_obs(path):
             if mm and cur:
                 x0, y0, x1, y1 = map(float, mm.groups())
                 acc[cur] += abs(x1 - x0) * abs(y1 - y0)
+                rects[cur].append((abs(x1 - x0), abs(y1 - y0)))
         for L, a in acc.items():
             if re.fullmatch(r"M\d", L) and area:
                 out[L] = min(1.0, a / area)
+        _LEF_RECTS[key] = (area, {L: np.array(v) for L, v in rects.items() if re.fullmatch(r"M\d", L)})
     _LEF_CACHE[key] = out
     return out
+
+
+_LEF_RECTS = {}
+
+
+def obs_band(wh, area, d):
+    """share of the macro area within d of the boundary of its own OBS rect, summed over the rects of one layer
+    (the halved area of the plain GRT-PATCH-1 'edge' image: every OBS rect has its own edge band)."""
+    if wh is None or not len(wh) or not area:
+        return 0.0
+    w, h = wh[:, 0], wh[:, 1]
+    band = w * h - np.clip(w - 2 * d, 0, None) * np.clip(h - 2 * d, 0, None)
+    return float(min(1.0, band.sum() / area))
+
+
+def lef_band(path, d):
+    """{layer: obs_band} for a LEF read by lef_obs, or None when its rects are unknown."""
+    key = str(path)
+    if key not in _LEF_RECTS:
+        lef_obs(path)
+    ar = _LEF_RECTS.get(key)
+    if not ar:
+        return None
+    area, rr = ar
+    return {L: obs_band(wh, area, d) for L, wh in rr.items()}
 
 
 _SIGNED_CACHE = {}
@@ -210,6 +270,21 @@ def signed_view_lefs(die_dir):
     return out
 
 
+_VIEW_SRC = {}   # inst -> ("lef", path) | ("kit", kit_views entry): where the OBS rects of the chosen view live
+
+
+def macro_band(inst, d, k_gcells):
+    """{layer: OBS-rect edge band share} of the view macro_view chose for inst, or None (no rects known: a solid
+    block whose only OBS edge is its outline)."""
+    v = _VIEW_SRC.get(inst)
+    if not v:
+        return None
+    if v[0] == "lef":
+        return lef_band(v[1], d)
+    kb = (v[1].get("band") or {}).get(str(k_gcells))
+    return {L: float(f) for L, f in kb.items()} if kb is not None else None
+
+
 def macro_view(h, die_dir, repo, cfg):
     """(obs {layer: frac}, kind core|mem, source, provisional) for one hard core / macro.
 
@@ -224,6 +299,8 @@ def macro_view(h, die_dir, repo, cfg):
     if v:
         if v.get("lef"):
             obs = lef_obs(find_ref(v["lef"], repo))
+            if obs is not None:
+                _VIEW_SRC[h["inst"]] = ("lef", find_ref(v["lef"], repo))
         if obs is None and v.get("obs_top"):
             top = int(v["obs_top"][1:])
             obs = {f"M{k}": float(v.get("coverage", 1.0)) for k in range(1, top + 1)}
@@ -233,6 +310,7 @@ def macro_view(h, die_dir, repo, cfg):
         if sl:
             obs = lef_obs(sl)
             src = "signed-repo"
+            _VIEW_SRC[h["inst"]] = ("lef", sl)
     kv = None
     kvt = cfg.get("kit_views") or {}
     stem = Path(str(h.get("lef") or "")).stem
@@ -244,7 +322,9 @@ def macro_view(h, die_dir, repo, cfg):
         obs = lef_obs(find_ref(h["lef"], repo))
         if obs is not None:
             src = "plan-lef"
+            _VIEW_SRC[h["inst"]] = ("lef", find_ref(h["lef"], repo))
             if all(obs.get(f"M{k}", 0) > 0.99 for k in range(1, 8)):
+                _VIEW_SRC.pop(h["inst"], None)          # template: solid block, its outline is the OBS edge
                 if kv:
                     obs, src = None, None          # whole-block template: the kit's real view LEF wins
                 else:
@@ -254,6 +334,7 @@ def macro_view(h, die_dir, repo, cfg):
         # repo LEF missing (or a template): the macro LEF the kit hands to GRT (route_supply_kit_views.json)
         obs = {L: float(f) for L, f in kv["obs"].items()}
         src = "kit-lef"
+        _VIEW_SRC[h["inst"]] = ("kit", kv)
     if obs is None and h.get("obs_max"):
         top = min(int(str(h["obs_max"])[1:]), 9)
         obs = {f"M{k}": 1.0 for k in range(1, top + 1)}
@@ -494,10 +575,13 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     macro_cov = np.zeros((g.ny, g.nx))
     mem_cov = np.zeros((g.ny, g.nx))
     obs_src = defaultdict(int)
+    macro_obs = {}
+    _VIEW_SRC.clear()
     h_kind = {}
     provisional = set()
     for (c, h) in cov:
         o, kind, src, prov = macro_view(h, die_dir, repo, cfg)
+        macro_obs[h["inst"]] = o
         obs_src[src] += 1
         h_kind[h["inst"]] = kind
         sm = cfg.get("signed_modules")
@@ -514,11 +598,16 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     pins = {}
     for (_, _, _, _, h) in mrects:
         pins[h["inst"]] = core_pins(h, die_dir, repo)
-    halve_w = 1.0
-    if cfg.get("grt_halving", "full") == "edge":
-        halve_w = grt_halving_weight(g, mrects, pins, cfg.get("grt_edge_gcells", 2))
-    elif cfg.get("grt_halving", "full") == "none":
-        halve_w = 0.0
+    mode = cfg.get("grt_halving", "full")
+    K = cfg.get("grt_edge_gcells", 2)
+    halve_w = {L: 1.0 for L in LAYERS}
+    if mode == "none":
+        halve_w = {L: 0.0 for L in LAYERS}
+    elif mode == "edge_outline":
+        w = grt_halving_weight(g, mrects, pins, K)
+        halve_w = {L: w for L in LAYERS}
+    elif mode == "edge":
+        halve_w = grt_halving_weight_obs(g, cov, mrects, pins, K, macro_obs, notes)
     sup = {}
     for L in LAYERS:
         sup[L] = b / PITCH[L] * (1 - cfg["derate"][L]) * (1 - np.clip(obs[L], 0, 1))
@@ -527,7 +616,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             # (GlobalRouter::adjustTransitionLayers / adjustTileSet, floor(cap * 0.5))
             below = LAYERS[LAYERS.index(L) - 1] if LAYERS.index(L) > 0 else None
             if below:
-                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1) * halve_w)
+                sup[L] = sup[L] * (1 - 0.5 * np.clip(obs[below], 0, 1) * halve_w[below])
     supH = sup["M2"] + sup["M4"] + sup["M6"]
     supV = sup["M3"] + sup["M5"] + sup["M7"]
     # ---------------- demand
@@ -1028,11 +1117,12 @@ def main(argv=None):
     ap.add_argument("--station-spread", action="store_true",
                     help="what-if: station hops spread over the detour window (moves leaf V to H, 8/14 vs 6/15 FAIL "
                          "directions right, but loses leaf t24; off by default)")
-    ap.add_argument("--grt-halving", choices=("full", "edge", "none"), default="full",
+    ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default="full",
                     help="OpenROAD transition-layer halving over macro OBS: full = stock image (adjustTransitionLayers "
-                         "under the whole OBS), edge = GRT-PATCH-1 patched image (only within --grt-edge-gcells of macro "
-                         "edges and pins), none = no halving")
-    ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge (gcells of %.3f um)"
+                         "under the whole OBS); GRT-PATCH-1 patched images: edge = only within --grt-edge-gcells of "
+                         "each OBS rect boundary (+ pins), edge_outline = only within K of the macro instance bbox "
+                         "(+ pins); none = no halving")
+    ap.add_argument("--grt-edge-gcells", type=int, default=2, help="K for --grt-halving edge / edge_outline (gcells of %.3f um)"
                     % GRT_GCELL_UM)
     ap.add_argument("--pin-escape", action="store_true",
                     help="what-if: 2-pin core links as an L whose first leg follows the pin face normal (off by default)")
@@ -1148,7 +1238,7 @@ def main(argv=None):
     print("\n".join(lines))
     nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
     print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}; GRT halving "
-          f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving == 'edge' else ''}); ADVISORY, not a gate",
+          f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving.startswith('edge') else ''}); ADVISORY, not a gate",
           file=sys.stderr)
     return 0
 

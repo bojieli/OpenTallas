@@ -193,3 +193,35 @@ def test_grt_edge_halving_mode_between_full_and_none(tmp_path):
     assert 0.1 < w[0, 9] < 0.3                         # edge bin: only the 1.17 um band along x=100 and y=0
     assert w[10, 15] == 0.0 and w[23, 18] > 0.0         # interior: halved only around the pin at (200, 250)
     assert w.max() <= 1.0
+
+
+def test_grt_edge_on_obs_rects_vs_edge_outline(tmp_path):
+    """plain edge measures K from every OBS rect: a porous view (M5 in 2-um strips) stays ~fully halved, while
+    edge_outline (K from the instance bbox) frees the interior; a solid OBS gives the same answer both ways."""
+    plan(tmp_path, n=2500)
+    _, rs_e, _ = run(tmp_path, "--grt-halving", "edge")
+    _, rs_o, _ = run(tmp_path, "--grt-halving", "edge_outline")
+    # same halved area; edge spreads it evenly over the macro, edge_outline places it on the rim
+    assert abs(rs_e["regions"]["core_H"]["p99"] - rs_o["regions"]["core_H"]["p99"]) < 0.02 * rs_o["regions"]["core_H"]["p99"]
+    strips = "".join(f"      RECT {x} 0 {x + 2} 400 ;\n" for x in range(0, 200, 4))
+    (tmp_path / "blk.lef").write_text(
+        "MACRO blk\n  CLASS BLOCK ;\n  ORIGIN 0 0 ;\n  SIZE 200 BY 400 ;\n  OBS\n"
+        + "".join(f"    LAYER {L} ;\n      RECT 0 0 200 400 ;\n" for L in ("M1", "M2", "M3", "M4"))
+        + "    LAYER M5 ;\n" + strips + "  END\nEND blk\nEND LIBRARY\n")
+    rs._LEF_CACHE.clear()
+    rs._LEF_RECTS.clear()
+    _, pf, _ = run(tmp_path)
+    _, pe, _ = run(tmp_path, "--grt-halving", "edge")
+    assert pe["regions"]["core_H"]["p99"] <= pf["regions"]["core_H"]["p99"]
+    lefp = tmp_path / "blk.lef"
+    bd = rs.lef_band(lefp, 2 * rs.GRT_GCELL_UM)
+    assert abs(bd["M5"] - rs.lef_obs(lefp)["M5"]) < 1e-9 and bd["M3"] < 0.05   # strips: all band; solid: rim only
+    g = rs.Grid(400, 500, 10.8)
+    mr = [(100, 0, 300, 400, {"inst": "m"})]
+    cov = rs.coverage(g, mr)
+    rs._VIEW_SRC.clear()
+    rs._VIEW_SRC["m"] = ("lef", lefp)
+    w = rs.grt_halving_weight_obs(g, cov, mr, {}, 2, {"m": rs.lef_obs(lefp)}, [])
+    wo = rs.grt_halving_weight(g, mr, {}, 2)
+    assert w["M5"][18, 18] == 1.0 and wo[18, 18] == 0.0   # interior: porous OBS still halves M6, outline frees it
+    assert w["M3"][18, 18] < 0.05                          # solid M3: M4 over it only halved on the rim

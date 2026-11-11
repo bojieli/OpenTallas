@@ -9,7 +9,7 @@ route_supply_flags.py.  Exits 0 always; prints one line per die.
 
   route_supply_watch.py --repo REPO --tsv FLAGS.tsv --out-root DIR [--release-cache J] [--stamp S] [--force] < plans
 
---grt-halving edge [--grt-edge-gcells K] models the GRT-PATCH-1 patched OpenROAD image (default: stock, full); keep
+--grt-halving edge|edge_outline [--grt-edge-gcells K] models a GRT-PATCH-1 patched OpenROAD image (default: stock, full); keep
 one TSV per image, since a die is skipped when its plan sha is already in the TSV.
 """
 import argparse
@@ -47,7 +47,7 @@ def main(argv=None):
     ap.add_argument("--stamp")
     ap.add_argument("--main", default="-")
     ap.add_argument("--force", action="store_true")
-    ap.add_argument("--grt-halving", choices=("full", "edge", "none"), default="full")
+    ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default="full")
     ap.add_argument("--grt-edge-gcells", type=int, default=2)
     a = ap.parse_args(argv)
     repo = Path(a.repo)
@@ -69,7 +69,7 @@ def main(argv=None):
         return 0
     stamp = a.stamp or F.datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z")
     if a.grt_halving != "full":
-        stamp += " grt=" + a.grt_halving + (f"K{a.grt_edge_gcells}" if a.grt_halving == "edge" else "")
+        stamp += " grt=" + a.grt_halving + (f"K{a.grt_edge_gcells}" if a.grt_halving.startswith("edge") else "")
     grt = (a.grt_halving, a.grt_edge_gcells)
     out = Path(a.out_root) / stamp.replace(" ", "_").replace(":", "")
     out.mkdir(parents=True, exist_ok=True)
