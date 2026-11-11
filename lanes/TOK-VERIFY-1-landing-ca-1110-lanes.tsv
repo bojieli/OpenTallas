@@ -1,6 +1,6 @@
 lane	src	dst	landings	CA	LEAD	LAG	delta	bound_stages	new_bound_stages	ports	s1_ctl
 attn__s_3S_C__svc_5	s_3S_C	svc_5	2	2	0	0	2	28	30	attn__s_3S_C__svc_5__0,attn__s_3S_C__svc_5__3	0
-attn__s_4S_C__svc_11	s_4S_C	svc_11	3	3	0	0	3	36	39	attn__s_4S_C__svc_11__0,attn__s_4S_C__svc_11__1,attn__s_4S_C__svc_11__3	0
+attn__s_4S_C__svc_11	s_4S_C	svc_11	3	3	0	0	4	36	40	attn__s_4S_C__svc_11__0,attn__s_4S_C__svc_11__1,attn__s_4S_C__svc_11__3	0
 attn__svc_0__svc_1	svc_0	svc_1	1	1	0	0	1	5	6	attn__svc_0__svc_1__0	0
 attn__svc_10__svc_11	svc_10	svc_11	1	1	0	0	1	5	6	attn__svc_10__svc_11__0	0
 attn__svc_11__s_4S_C	svc_11	s_4S_C	2	0	2	0	0	32	32	attn__svc_11__s_4S_C__1,attn__svc_11__s_4S_C__4	1
@@ -156,7 +156,7 @@ hbm__svc_6__svc_7	svc_6	svc_7	1	1	0	0	1	5	6	hbm__svc_6__svc_7__0	0
 hbm__svc_7__svc_6	svc_7	svc_6	1	1	0	0	1	5	6	hbm__svc_7__svc_6__0	0
 hbm__svc_8__svc_9	svc_8	svc_9	1	1	0	0	1	5	6	hbm__svc_8__svc_9__0	0
 hbm__svc_9__svc_8	svc_9	svc_8	1	1	0	0	1	5	6	hbm__svc_9__svc_8__0	0
-hbmrd__phy_hbm__svc_0	phy_hbm	svc_0	1	1	0	0	1	9	10	hbmrd__phy_hbm__svc_0__1	0
+hbmrd__phy_hbm__svc_0	phy_hbm	svc_0	1	1	0	0	3	9	12	hbmrd__phy_hbm__svc_0__1	0
 hbmrd__phy_hbm__svc_14	phy_hbm	svc_14	1	1	0	0	1	12	13	hbmrd__phy_hbm__svc_14__1	0
 idx__iqf__svc_0	iqf	svc_0	1	0	1	0	0	5	5	idx__iqf__svc_0__0	0
 idx__s_3S_C__iqf	s_3S_C	iqf	4	4	0	0	4	63	67	idx__s_3S_C__iqf__0,idx__s_3S_C__iqf__3,idx__s_3S_C__iqf__7,idx__s_3S_C__iqf__8	1
@@ -277,7 +277,7 @@ unit__svc_11__seqhost	svc_11	seqhost	1	1	0	0	1	17	18	unit__svc_11__seqhost__1	1
 unit__svc_12__svc_14	svc_12	svc_14	1	1	0	0	1	5	6	unit__svc_12__svc_14__0	0
 unit__svc_14__eng	svc_14	eng	1	1	0	0	1	5	6	unit__svc_14__eng__0	0
 unit__svc_14__svc_12	svc_14	svc_12	1	1	0	0	1	5	6	unit__svc_14__svc_12__0	0
-unit__svc_2__svc_0	svc_2	svc_0	1	1	0	0	1	5	6	unit__svc_2__svc_0__0	0
+unit__svc_2__svc_0	svc_2	svc_0	1	1	0	0	3	5	8	unit__svc_2__svc_0__0	0
 unit__svc_5__seqhost	svc_5	seqhost	1	0	0	1	-1	12	11	unit__svc_5__seqhost__1	1
 up_s_0N_L0	s_0N_L0	s_0N_C	1	1	0	0	1	5	6	up_s_0N_L0__0	0
 up_s_0N_L2	s_0N_L2	s_0N_C	1	1	0	0	1	11	12	up_s_0N_L2__1	0
