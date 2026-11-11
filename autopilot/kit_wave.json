@@ -19837,7 +19837,6 @@
     "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
    },
    "gen_hosts": [
-    "epyc8",
     "epyc9"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -20599,7 +20598,11 @@
     "epyc9",
     "epyc2"
    ],
-   "pilot_max_prev_kw45_1111": 2
+   "pilot_max_prev_kw45_1111": 2,
+   "gen_hosts_prev_kw45_1111": [
+    "epyc8",
+    "epyc9"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
@@ -21879,7 +21882,6 @@
     "slw_st_a_v2__cl9f076a5c@1": "KW-FIX-45 11-11 11:4x: QC cut launch list: relaunch the hcut1111 row on plan s15 (retry names the hcut1111 attempt; epoch re-armed)"
    },
    "gen_hosts": [
-    "epyc8",
     "epyc9"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -27683,7 +27685,11 @@
    "pilot_max_prev_kw45_1111": 2,
    "route_hold_items": {
     "slw_hc2__cla3497502__cl16607c7a": "KW-FIX-45 11-11 (COORD): GRT-ARM[off] enqueue refused each tick (src must be branch@sha); route held until the enqueue_src class fix claude/kw-fix-45-queue-src-free-text-1111@db68b01991cb is deployed"
-   }
+   },
+   "gen_hosts_prev_kw45_1111": [
+    "epyc8",
+    "epyc9"
+   ]
   },
   "hbm": {
    "enabled": true,
@@ -29180,7 +29186,6 @@
     "ot_hgi_sfu_opsb_group": "KW-FIX-45 11-11 (HBM-CORES-B/DIE-HBM-100 batch): opsb_group RTL (-DOT_OPSG_GP -DOT_OPSG_ROT) is not on main; held until the merge and the branch@sha ASK"
    },
    "gen_hosts": [
-    "epyc8",
     "epyc9"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -41281,7 +41286,11 @@
      "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
     }
    },
-   "plan_prev_kw45_t19": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json"
+   "plan_prev_kw45_t19": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json",
+   "gen_hosts_prev_kw45_1111": [
+    "epyc8",
+    "epyc9"
+   ]
   }
  },
  "place_prefer": [
