@@ -19489,7 +19489,7 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
-   "queue_src": "main cd03a1f33fb7 (HEAD-94 cut af8b094a2c60 landed becc495b1467)",
+   "queue_src": "main@cd03a1f33fb7",
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min"
@@ -20843,7 +20843,7 @@
     "cbn_q11__cl49ae4555@13",
     "cbx_q10__cl94a12200@21"
    ],
-   "queue_src": "main 730345725942 (QC 12:00 event aa80315f8fd4 landed)",
+   "queue_src": "main@730345725942",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -28619,7 +28619,7 @@
    "pilot_max": 2,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
    "pilot_mode": "queue",
-   "queue_src": "main cd03a1f33fb7 + m5full 7f09deb2a68 (HBM cut 63189bfdfddd landed cd03a1f33fb7)",
+   "queue_src": "main@cd03a1f33fb7+m5full@7f09deb2a68",
    "hold_items": {
     "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -28879,7 +28879,7 @@
     "vsN4@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
     "vsN5@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
     "vsN6@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
-    "q_spt1@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
+    "q_spt1@1": "KW-FIX-45 11-11: a1 FAIL 'enqueue source identity: queue_src ... is not a composition a@sha+b@sha' (free-text label). queue_src is now main@cd03a1f33fb7+m5full@7f09deb2a68 with queue_src_exact -> claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c (main cd03a1f33fb7 + m5full 2 files). Relaunch.",
     "q_spt2@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): Fix A: FT + relay hop latches, local polarity, 80-um repeaters (measured FF -218/-191 at 13-16k hold endpoints); on plan_final2 + bind vJ, fresh kit",
     "q_su00@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): face guard 224a127d48; on plan_final2 + bind vJ, fresh kit",
     "q_su00__physical_v1@1": "REDESIGN: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): face guard 224a127d48; on plan_final2 + bind vJ, fresh kit",
@@ -30977,7 +30977,8 @@
     "q_b013": "KW-FIX-35-L 2026-11-08 05:47 PST: BB-PORT-FOLD LEC resume kit (branch lec.py d25a79da9f) running in kw35L-lec-qb013 (intel1 /srv/opentallas-scratch2/claude/kw35/lecfold/q_b013_a3R); release after it ends or after ROOT-MERGE-52 lands the fix"
    },
    "queue_src_exact": {
-    "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b"
+    "claude/die-hbm-92-int-1108@cad9c038fb+claude/kw-fix-35-providx-1108@9ba1e6f86e2": "claude/kw-fix-36-hbm-cad9p-exact-1108@8b33e210590edacd102f0ca53768395aab2f761b",
+    "main@cd03a1f33fb7+m5full@7f09deb2a68": "claude/kw-fix-45-hbm-cut-comp-1111@fbdf6b6fc55c"
    },
    "note_kw36_qsrc": "KW-FIX-36 (e): rows pinned to the composed cad9c038+providx string (q_spb1, vsN2) use the exact composition commit; 3 changed paths equal src_cad9p.",
    "plan_prev_kw37h": "/srv/opentallas-scratch2/claude/die-hbm-92-su/plan_exp0/die_plan.json",
