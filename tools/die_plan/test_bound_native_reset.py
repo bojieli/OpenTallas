@@ -163,7 +163,8 @@ def test_wrapper_tied_reset_and_recomputed_tree_rejected(tmp_path):
     p,f=fixture(tmp_path)
     rec=B.emitted(f,'t',tree())
     p.types['t']['clock']['landing_contract']['collector_tree']['relays'][0]['xy']=[30,30]
-    with pytest.raises(gen_rtl.GenError,match='differs from captured'):G.install_bound_native_reset(p,'t',[f],source_contract=rec)
+    # RESET-SOLVE-ERR 11-10: this fixture plan cannot be solved; the rejection now names the solve error
+    with pytest.raises(gen_rtl.GenError,match='differs from captured|reset solve failed'):G.install_bound_native_reset(p,'t',[f],source_contract=rec)
     p,f=fixture(tmp_path,mutate=lambda s:s.replace('.arst_n(arst_n)',".arst_n(1'b1)"))
     with pytest.raises(gen_rtl.GenError,match='exact passthrough'):G.install_bound_native_reset(p,'t',[f])
 

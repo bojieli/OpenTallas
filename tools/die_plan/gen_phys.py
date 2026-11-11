@@ -5972,12 +5972,21 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
             # The plan's published collector_tree is a snapshot; bind emits RT.for_type(plan). A snapshot older than the
             # solve is provably stale when the current solve IS the captured tree: the RTL is right, use its tree and say so.
             # Any other difference (bind from another plan, edited graph) still stops.
+            # RESET-SOLVE-ERR 11-10 (KV kv3_pv_v8 a14: this error at gen, not reproducible on the same inputs 1 h later,
+            # where the solve equals the captured tree): a solve that RAISES was swallowed and reported as an identity
+            # difference.  Name the solve error instead (a transient input gap is not a plan/bind difference), and name
+            # the differing keys when the solve does run.
             try:
                 solved = json.loads(json.dumps(RT.for_type(P, tn)))
-            except Exception:
-                solved = None
-            if _bound_reset_identity(solved) != _bound_reset_identity(tree):
-                raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates")
+            except Exception as e:
+                raise gen_rtl.GenError(f"type {tn}: reset solve failed while checking the published collector_tree "
+                                       f"against the captured bound reset tree (not an identity difference): {e!r}"[:900])
+            a, b = _bound_reset_identity(solved), _bound_reset_identity(tree)
+            if a != b:
+                keys = sorted(k for k in set(a or {}) | set(b or {}) if (a or {}).get(k) != (b or {}).get(k))
+                raise gen_rtl.GenError(f"type {tn}: physical collector_tree differs from captured bound reset identity; "
+                                       f"preserve original IDs/edges/coordinates (current solve != captured tree on {keys[:8]}: "
+                                       f"bind and plan are from different solves)")
             P.types[tn].setdefault("clock", {}).setdefault("landing_contract", {})["collector_tree"] = copy.deepcopy(tree)
             print(f"gen phys: NOTE type {tn}: published collector_tree is stale, the current solve equals the captured bound reset tree; using the captured tree", flush=True)
     else:
