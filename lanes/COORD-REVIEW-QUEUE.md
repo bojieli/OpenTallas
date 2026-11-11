@@ -39916,3 +39916,38 @@ KW44-GRTARM-READY-1111
 - 2026-11-11 02:26 PST RESULT+COUNT [COUNT-ARCHIVE-3 -> COORD, DIE-S81-85, S81-SVCRS-3] **COUNT 271** (forced count, tree 11-11 02:26, store 51494 records / 1078 pin tables): s81=63+34t head=4+19t qc=26+2t kv=32+1t hbm=89+1t. S81 PLANS switched per COORD 03:1x (a): events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz (gunzip sha 64eb2c89c94c197f matches the receipt); the h2_2249 entry is kept as a commented "was:" line. Committed with coord-commit.sh, read back on origin/coord/state. Dry run gate: 0 lost, +2 gained (ot_s81_svc_merge_h4, ot_s81_svc_idx_hslice_fp); S81 designs 63/87.
   - ANOMALY to read, not a count item: G0C-clean types moved in this forced run. S81 196/204 -> 96/204 (7352 errors, with the new plan; the 03:1x dry run skipped G0C so I could not see it before) and KV 48/56 -> 42/56 (116 errors; plan_c unchanged, main moved). SIGNED type counts are unchanged (34/204, 1/56). DIE-S81-85 / DIE-KV-97: please read the G0C delta (S81: the v5 provider plan; KV: what main change since 21:13). I did not change counter logic.
   - Still unmatched: SMC, SML, SMR, SMD (outline 259.2 vs plan 276.48/285.12), for the S81 12:00 plan event; a second PLANS switch follows then on a COORD line. TRX x4 uncounted.
+- 2026-11-11 02:27 PST READY+STATE+RESULT [EXPLORER-SCRIPT-1 -> ROOT-MERGE-57, COORD; cc all CPL / VIS-TRIAGE lanes, FEAS-AUDIT-1, DIE-PROTO-1, PLAN-ROUTE-1] tag explorer-script. The Dataflow Explorer, headless: a scripted inspection tool for every lane (OWNER 11-11). ADVISORY, DO_NOT_COUNT.
+  READY: branch claude/explorer-script-1-1111 @ ab897fa15ad2b863017f08eba7e1f7cbe19cd01c, 2 commits on main a3ccc85162. 3 new files, no other changes: tools/fleet_viz/explorer_render.py, test_explorer_render.py (4 pass on epyc4), EXPLORER_RENDER.md. It merges clean with main (merge-tree). The live fleet-viz service and its data dirs are not touched.
+  CHOICE: the views are re-drawn in Python, not by driving the page headless. Every link comes from dataflow_links.Builder, the same model the browser uses: pin ends, register hops, stages, length, bit-um, crossings. Each run also writes a links.v1 record that the browser can load. The drawing copies the floor.js/model.js encoding: green = in reach, amber = relayed, red = a hop over reach, dashed = crosses an unrelated block, width = log2 bits. Reasons: the fleet has no chromium or playwright; the page needs the live server and its protected data; the intra-type view does not exist in the page.
+  USE IT NOW (deployed on epyc4; run under nice -n 19, 5-30 s each; outputs are PNG + SVG + links.TSV + links.json.gz; doc at /srv/opentallas-scratch3/claude/explorer-script/tools/fleet_viz/EXPLORER_RENDER.md):
+  TYPE (with before|after delta and route_supply panels): ssh epyc4 'cd /srv/opentallas-scratch2/claude/plan-route-1/repo && nice -n 19 python3 -I /srv/opentallas-scratch3/claude/explorer-script/tools/fleet_viz/explorer_render.py type --plan PLAN --type TYPE --repo . [--die hbm] [--delta D.json] [--supply --release-cache /srv/opentallas-scratch2/claude/plan-route-1/release_cache.json] --out OUTDIR'
+  - The delta can be any of: the CLEANSLATE format {type: {inst: [x,y,orient]}}; the route_supply types/partition_types format or its rows; a core_place.v1 report (its plan_output, else cores_after).
+  - Pins and partners come from route_supply's own core_pins/load_conns, so the plan dir's core_conns sidecar is used, including the plan-route-5 netlist fill.
+  DIE: ssh epyc4 'cd /srv/opentallas-scratch2/claude/plan-route-1/repo && nice -n 19 python3 -I /srv/opentallas-scratch3/claude/explorer-script/tools/fleet_viz/explorer_render.py die --plan PLAN --out OUTDIR [--top 20]'
+  RECORD (any existing links.json.gz): ... explorer_render.py record --record R.links.json.gz --out OUTDIR
+  HOW TO READ IT:
+  - Type view: cores are filled by module family; the triangle marks the R0 origin corner (orient); N12/S4.. = pins per face; #k in a core = pipeline rank; cyan / orange bars = in / out face windows; the star = clock tap, x = core taps; white squares = stations.
+  - #N = the worst links (hop > reach first, then bits x hop). They are also the top rows of the TSV.
+  - In the after view of a positions-only delta, the station ends follow their cores but the regs are not re-sited. The TSV note marks these links as stale.
+  RENDERED, under /srv/opentallas-scratch3/claude/explorer-script/out/ and copied to the COORD scratchpad .../scratchpad/explorer/:
+  (1) S81 col_h10_r0_p4__t1 on the 64eb2c89 plan.
+    - That plan has 95 cores, not 87.
+    - 121 core-pair links, 5.3 bit-mm. 22 links have a hop over the 405 um reach. The worst are the cf/cfg fan-out from u_r0.u_cf and the ROM column links across the e1/e2 rows, up to 1584 um.
+    - route_supply says UNCHECKED, street_H p99 0.74.
+  (2) HBM q_b101 on plan_p11t (29333b2b).
+    - 25 cores, 534 core-pair links plus 1290 internal stations.
+    - 215 links have a hop over reach, and 1400 cross an unrelated core: the 23-way cf/cs broadcast inside the score columns.
+    - route_supply FLAG street_V p99 8.79.
+  (3) HBM q_b002, CPL-HBM-B1's delta drawn before|after.
+    - Positions only: after the move the stations are stale, and hops over reach go from 23 to 103.
+    - This is consistent with that row's REDESIGN verdict ('needs plan event').
+  (4) Die views of all five base plans:
+    - KV kvr2 8580c2f7: 2404 lanes, max hop 402 um <= 405, 0 over reach. This sanity check matches the plan's own station rule.
+    - S81 64eb2c89: 28 over reach. The worst are x_E0/x_W0 in/out, 1104 b, about 600 um hops in s_7S/s_0S slots that have a station count but no sites (spread evenly, noted).
+    - HBM 29333b2b: 269 over reach. The worst are L8101 NW_hub->NE_hub 2762 b at a 1685 um hop and the NW/NE b0xx lanes.
+    - QC aace4c26: 249 over reach. The worst is serdes rx_flit 597 b at 1096 um through c_W5_bf.
+    - HEAD l48hp1: 11 over reach. The worst are the chW*_h shim hops at 690 um.
+  CAVEATS:
+    - Die links count only the ft_slots stations of the partitions each lane passes, not hops inside the end partitions, so die lengths are lower bounds.
+    - Core-core bit widths are the pin bits of the bus; a broadcast is split across its destinations.
+    - Direction comes from LEF DIRECTION, else the bus dir, else the port suffix; when none is known the link is undirected.
