@@ -461,3 +461,19 @@ def test_route_supply_reports_station_inversion(tmp_path):
     _, r, _ = run(tmp_path)
     assert r["station_inverted"] == ["internal_station:bus:o_q#0"]
     assert any(n.startswith("STATION-INVERTED 1") for n in r["notes"])
+
+
+def test_face_bus_carried_by_station_chain_counts_once(tmp_path):
+    """FEAS-AUDIT-1: a core pin whose bus:X is carried by an internal_stations chain is not a second face net."""
+    plan(tmp_path, n=800, macro=False)
+    P = json.loads((tmp_path / "plan.json").read_text())
+    t = P["partition_types"]["t"]
+    t["buses"] = [{"name": "o_q", "dir": "out", "face": "E", "width": 800}]
+    t["internal_stations"] = [{"conn": "bus:o_q", "launch": "u_a.d", "capture": "face flop", "from_um": [50, 250],
+                               "to_um": [400, 250], "regs_um": [[150, 250], [250, 250]], "bits": 800}]
+    (tmp_path / "plan.json").write_text(json.dumps(P))
+    (tmp_path / "core_conns.json").write_text(json.dumps({"t": {"u_a": {"d": ["bus:o_q"]}, "u_b": {"d": ["glue"]}}}))
+    _, r1, _ = run(tmp_path)
+    _, r2, _ = run(tmp_path, "--station-face-double")
+    assert r1["station_carried_pins"] == 800 and r2["station_carried_pins"] == 0
+    assert r1["wirelength_mm"] < r2["wirelength_mm"]
