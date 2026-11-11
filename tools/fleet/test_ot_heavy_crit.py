@@ -48,6 +48,7 @@ class Heavy(unittest.TestCase):
         s = s.replace('sudo -n ' + str(self.prot), str(self.prot))
         s = s.replace('sleep 20', 'sleep 0.2').replace('sleep 5;', 'sleep 0.2;')
         self.h = d / 'ot-heavy'; self.h.write_text(s); self.h.chmod(0o755)
+        (d / 'conf').write_text('LOAD_GATE_FACTOR=0\n')   # LOADGATE_1110 is tested below; these cases pin the LOADCAP rules
 
     def run_(self, load, crit=False, maxwait='1', mem='4'):
         self.load.write_text(f'{load} 1.0 1.0 1/1 1\n')
@@ -90,9 +91,36 @@ class Heavy(unittest.TestCase):
         self.assertFalse((self.d / 'args.prot').exists())
 
     def test_cap_disabled(self):
-        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=0\n')
         r, a = self.run_('500')
         self.assertIsNotNone(a, r.stderr)
+
+
+    # LOADGATE_1110 (KW-FIX-44, COORD 11-10): EVERY job waits while load1 + fresh admits >= LOAD_GATE_FACTOR (1.25) x nproc
+    def test_gate_holds_a_crit_job_too(self):
+        (self.d / 'conf').write_text('')
+        r, a = self.run_('500', crit=True)
+        self.assertIsNone(a); self.assertEqual(r.returncode, 75)
+        self.assertIn('load gate', r.stderr)
+
+    def test_gate_threshold_is_1_25_x_nproc(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        r, a = self.run_('12.4')
+        self.assertIsNotNone(a, r.stderr)
+        r, a = self.run_('12.5')
+        self.assertIsNone(a); self.assertIn('load gate: load1 12.5', r.stderr)
+
+    def test_gate_disabled_by_factor_zero(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=0\n')
+        r, a = self.run_('500', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+
+    def test_fresh_admits_count_toward_the_gate(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        st = self.d / 'state'; st.mkdir(exist_ok=True)
+        (st / 'thr.fakeunit').write_text('8\n')                  # a job admitted here just now, 8 threads
+        r, a = self.run_('5')                                      # 5 + 8 = 13 >= 12.5
+        self.assertIsNone(a); self.assertIn('load gate', r.stderr)
 
 
 class Run(unittest.TestCase):

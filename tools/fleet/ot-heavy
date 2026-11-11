@@ -13,6 +13,14 @@
 # Unknown classes are charged their request.  The headroom is kept, so a job is never admitted beyond MemAvailable.
 # The size is looked up again on every attempt, so a queued waiter picks up a class measured while it waits.
 set -u
+# USERBUS_1111 (KW-FIX-44, COORD 11-11 19:3x): an ssh session whose pam_systemd CreateSession failed (epyc4 03:10-03:24
+# UTC, logind under load) has no XDG_RUNTIME_DIR, and the systemd-run --user below failed with 'Failed to connect to
+# user scope bus' after admission (9 S81 rows).  Every host lingers ubuntu, so the user manager's bus is at
+# /run/user/UID/bus: use it when the session did not set it.
+if [ -z "${XDG_RUNTIME_DIR:-}" ] && [ -S "/run/user/$(id -u)/bus" ]; then export XDG_RUNTIME_DIR="/run/user/$(id -u)"; fi
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && [ -n "${XDG_RUNTIME_DIR:-}" ] && [ -S "$XDG_RUNTIME_DIR/bus" ]; then
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+fi
 MEM=""; TAG=""; MAXWAIT=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -109,10 +117,36 @@ while :; do
       V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - fresh (<${DIRECT_FRESH_S:-300} s) earlier direct $_pend GB < $MEM + 32 GB"
     fi
   fi
+  # LOADGATE_1110 (KW-FIX-44, COORD 11-10 18:3x: epyc8 load1 507 on 96 threads, every job ~5x slow, while ot-run showed
+  # LOADCAP).  LOADCAP_1101 above holds only non-crit, non-short jobs, and DIRECT_1107 re-decides V after it, so --crit
+  # and --direct jobs (12 FTRES-FIX grt_arm runs admitted 02:20-02:25 UTC, each -threads 8) and short-pool stages started
+  # at any load.  load1 also lags a burst by about a minute.  The gate applies to EVERY job (crit, direct, short, die):
+  # it waits while load1 + the declared threads of jobs admitted here in the last LOAD_FRESH_S (default 300 s, the
+  # DIRECT_FRESH_S window, so a direct burst is counted before load1 shows it) >= LOAD_GATE_FACTOR (default 1.25) x nproc.
+  # Running jobs are never touched.  LOAD_GATE_FACTOR=0 (/etc/ot-heavy.conf or env) disables it.
+  if [ "$V" = OK ] && [ "${LOAD_GATE_FACTOR:-1.25}" != 0 ]; then
+    _now=$(date +%s); _fr=0
+    for _f in "$D"/thr.*; do
+      [ -e "$_f" ] || continue
+      if [ $(( _now - $(stat -c %Y "$_f" 2>/dev/null || echo 0) )) -gt "${LOAD_FRESH_S:-300}" ]; then rm -f "$_f"; continue; fi
+      read -r _t < "$_f" || continue
+      case "$_t" in ''|*[!0-9]*) continue;; esac
+      _fr=$(( _fr + _t ))
+    done
+    _gl=$(awk -v f="${LOAD_GATE_FACTOR:-1.25}" -v n="$(nproc)" -v x="$_fr" \
+      'NR==1{l=$1+x; c=f*n; printf "%s %.1f %.0f", (l < c ? "OK" : "NO"), $1, c}' /proc/loadavg)
+    if [ "${_gl%% *}" = NO ]; then
+      _g=(${_gl})
+      [ "$_short" = 1 ] && { exec 9>&-; _short=0; }
+      [ "${OT_HEAVY_DIRECT:-}" = 1 ] && rm -f "$D/direct.$UNIT"
+      V=NO; WHY="load gate: load1 ${_g[1]} + fresh admits ${_fr} threads >= ${LOAD_GATE_FACTOR:-1.25} x $(nproc) = ${_g[2]} (every job waits, crit/direct/short too; running jobs untouched)"
+    fi
+  fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2
   LASTRES=$RES
   if [ "$V" = OK ]; then
     echo "$UNIT $RES" > "$D/res.$UNIT"
+    echo "${OT_HEAVY_THREADS:-8}" > "$D/thr.$UNIT"   # LOADGATE_1110: counted as fresh load for LOAD_FRESH_S
     echo "$MEM $CLS" > "$D/meta.$UNIT"
     [ "$RES" != "$MEM" ] && echo "$(date -Is) $UNIT DOWNSIZE request ${MEM}G -> reserved ${RES}G (${WHY##*; })" >> "$D/admit.log"
     A=${WHY#*available }; G=${WHY#*growth charged }
@@ -163,7 +197,7 @@ while :; do
     exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
   fi
   flock -u 8; exec 8>&-
-  case "$WHY" in "load cap:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac
+  case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac
   [ $waited = 0 ] && echo "ot-heavy: waiting for $_wf on $(hostname): $WHY" >&2
   waited=1
   case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s ($WHY): $*" >&2; exit 75; };; esac
