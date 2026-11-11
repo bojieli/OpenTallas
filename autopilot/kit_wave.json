@@ -11659,7 +11659,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/dq97/stb/plan_pv/plan_qc53v4nS_mem9_vml_pv.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw41/src_qcsw2",
+   "src": "/srv/opentallas-scratch2/claude/kw43/src_qcsw2_hc0",
    "src_sha": "5333b7dca834ab36b02ba86d7133e2061ba878ba",
    "kit_rtl": {
     "mode": "bind",
@@ -15838,6 +15838,22 @@
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-43 21:2x COORD (2): cand12 44ad2835bc71 one generate (DIE-QC-97 READY 21:02); bind_out unset, strict bind in the wave root; revert item_inputs_prev_kw43sctl12"
+    },
+    "sle_hc0__cl05696ed1": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/src_qcsw2_hc0/physical/die_plan/qwen_compute/plan_hc0bins_cf03.json",
+     "kit_rtl": {
+      "bind_out": null,
+      "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
+     },
+     "note": "KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built on cand23d_fh 4052bb53c794; only 4 hc rows x clock keys sink_bins_file + tap_pair_affinity) staged inside src; kit_rtl = strict bind in the wave root (bind_out unset, as sle_ctl cand12). Fresh kit (new key). DO_NOT_COUNT until signed."
+    },
+    "sle_hc0__cl929603c0__cl4baa7c9c": {
+     "plan": "/srv/opentallas-scratch2/claude/kw43/src_qcsw2_hc0/physical/die_plan/qwen_compute/plan_hc0bins_cf03.json",
+     "kit_rtl": {
+      "bind_out": null,
+      "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
+     },
+     "note": "KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built on cand23d_fh 4052bb53c794; only 4 hc rows x clock keys sink_bins_file + tap_pair_affinity) staged inside src; kit_rtl = strict bind in the wave root (bind_out unset, as sle_ctl cand12). Fresh kit (new key). DO_NOT_COUNT until signed."
     }
    },
    "notes_kw42": {
@@ -17645,7 +17661,13 @@
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x."
-   }
+   },
+   "src_prev_kw43hc0": "/srv/opentallas-scratch2/claude/kw41/src_qcsw2",
+   "item_inputs_prev_kw43hc0": {
+    "sle_hc0__cl05696ed1": null,
+    "sle_hc0__cl929603c0__cl4baa7c9c": null
+   },
+   "note_kw43hc0": "KW-FIX-43 11-10 17:4x COORD QC hc0: src -> kw43/src_qcsw2_hc0 = cp -al kw41/src_qcsw2 (same fs, symlinked from kw43) + NEW files plan_of_record/sink_bins/{sle_hc0__cl05696ed1,sle_hc0__cl929603c0__cl38badc56,sle_hc0__cl929603c0__cl4baa7c9c,slw_hc0__cl4f54b7a3}.json (claude/die-qc-97-hc0-hold-1110@c77cf5f0069c; md5 2d8f31f6 373bd074 9cb6ccaf 3a5cb883) + plan_hc0bins_cf03.json; staged sha-checked epyc7/epyc4/epyc2/intel2/epyc8; no existing file changed, so other rows input_hash unchanged. (A) wave rows: sle_hc0__cl05696ed1, sle_hc0__cl929603c0__cl4baa7c9c (not live). Live sle_hc0__cl929603c0__cl38badc56 a21 and slw_hc0__cl4f54b7a3 a7 untouched in the wave (their (A) runs as private --direct forms). Revert: src=src_prev_kw43hc0; item_inputs rows <- item_inputs_prev_kw43hc0 (delete)."
   },
   "hbm": {
    "enabled": true,
