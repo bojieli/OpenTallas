@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "image": "relay_station_review.png (this directory; the kit record names /srv/opentallas-scratch2/claude/die-s81-85/vt5_gen/relay_station_review.png on epyc7 and epyc8)",
+ "findings": [
+  "viewed 11-11: all serdes__t14 reset relays sit on one y = 229 row; the three moved pad relays u_rrl_59 / u_rrl_79 / u_rrl_88 land at the midpoint of the hop that feeds them (x 1803.6 / 1447.2 / 1086.48)",
+  "the hops 361 / 369 / 369 um become 180+180, 185+185, 185+185 um; no other relay lies within 150 um of a new site; the longest hop of the tree stays 375 um (not touched)",
+  "only PAD relays move: graph, relay IDs and the depth of every tap unchanged (depth map identical)"
+ ],
+ "reviewer": "DIE-S81-85 serdes lane"
+}

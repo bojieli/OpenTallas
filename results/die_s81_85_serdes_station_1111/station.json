@@ -1,0 +1,61 @@
+{
+ "event": "serdes__t14 relay stations on the 3 TT-negative plain-relay hops (COORD 11-11 via DIE-S81-87)",
+ "tool": "tools/die_plan/bound_reset_edit.py --station SRC:DST (sites only, bound_reset_contract placement semantics)",
+ "form": "the PAD relay that the long hop feeds moves to the hop midpoint; pads only delay, so graph, relay IDs and every tap depth are unchanged",
+ "hops": {
+  "u_rrl_53->u_rrl_59": {
+   "before_um": 361,
+   "after_um": [
+    180,
+    180
+   ],
+   "site": [
+    1803.6,
+    228.96
+   ]
+  },
+  "u_rrl_74->u_rrl_79": {
+   "before_um": 369,
+   "after_um": [
+    185,
+    185
+   ],
+   "site": [
+    1447.2,
+    228.96
+   ]
+  },
+  "u_rrl_84->u_rrl_88": {
+   "before_um": 369,
+   "after_um": [
+    185,
+    185
+   ],
+   "site": [
+    1086.48,
+    228.96
+   ]
+  }
+ },
+ "latency_rows_reset_release_cycles": {
+  "u_rrl_53->u_rrl_59": 0,
+  "u_rrl_74->u_rrl_79": 0,
+  "u_rrl_84->u_rrl_88": 0,
+  "note": "0 added boot cycles: no relay is added; an existing pad of the destination chain becomes the mid-hop station. depth map of all 130 tap outputs identical (tool check); every tap still releases at depth 8; 0 tokens"
+ },
+ "deviation_from_ruling": "COORD asked for +1 relay stage per hop; the station re-site gives the same two-leg hop at +0 cycles. A real +1 stage would add 1 reset-release cycle to that subtree and break the equal-depth tree unless one pad is removed, which is this form.",
+ "measured": {
+  "W": "W=180 (vT3 kit SDC), CTS stage, placement RC, vT3 serdes__t14 4_cts.odb sha256 84a9d8fec820, read-only",
+  "method": "plain relay (98 negedge relay flops re-mastered to DFFHQNx1) + the 3 pad relays (state + q flops and their 2 cells) moved to the sites, then the kit FF hold repair (repair_timing -hold -hold_margin 5 -max_buffer_percent 100, HB4 allowed), then TT setup",
+  "FF_hold_relay_to_relay_after_repair": "0 negative (before repair 16, worst -309.0)",
+  "FF_hold_design_after_repair": "+5.0 ps / 0",
+  "TT_setup_relay_to_relay": {
+   "plain_no_station": "3 negative: 53->59 -119.2, 74->79 -53.9, 84->88 -31.2",
+   "plain_with_station": "1 negative: 53->59 -17.3; 74->79 and 84->88 closed"
+  },
+  "TT_setup_design": "-471.7 / 1544 (u_enc / u_rrl tap classes, unchanged by the stations)",
+  "caveat": "the moved cells are not legalised and keep their clock leaf; vT5 places them through reset_tree.tcl and builds its own tree, with the per-port window (29..98 ps) instead of 180, so the hold pad on these hops is expected to be smaller"
+ },
+ "review": "review_station.json + relay_station_review.png (viewed: PASS)",
+ "vT5_kit_edit": "kit5_edit.json (plain: 98 relays; stations; depth_map_unchanged true; max hop 374.76 um <= reach 405)"
+}
