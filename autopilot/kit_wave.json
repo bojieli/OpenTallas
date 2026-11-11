@@ -40130,10 +40130,12 @@
  "note_substep_1105": "KW-FIX-14 COORD 11:2x: SUBSTEP-1 off until the hook reads the PROTECTED union (lanes/ + root PROTECTED-DBS.txt) | 11-05 11:2x KW-FIX-15: back on after protunion I122 (main 692b0ef4c36) on origin, COORD 11:17.",
  "hosts_base": [
   "epyc2",
+  "intel1",
   "intel2"
  ],
  "place_prefer_base": [
   "epyc2",
+  "intel1",
   "intel2"
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
@@ -40781,5 +40783,13 @@
   "epyc2",
   "intel2",
   "epyc4"
+ ],
+ "hosts_base_prev_kw45_intel1_return": [
+  "epyc2",
+  "intel2"
+ ],
+ "place_prefer_base_prev_kw45_intel1_return": [
+  "epyc2",
+  "intel2"
  ]
 }
