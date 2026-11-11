@@ -198,12 +198,38 @@ def legacy_input_freg(plan, tn, bus):
     return bus in cfg
 
 
+def ca_mixed(ca):
+    """CA-MIXED-1 (TOK-VERIFY-1 11-11, opt-in count_aligned.mixed): the count-aligned / ring choice is made PER
+    LANDING.  A landed crossing listed in count_aligned.ports gets the count-aligned ring and its region's count
+    origin; every other landed crossing keeps today's ring (ot_dp_clk_landing, its own phase), priced at
+    count_aligned.ring_cycles[pid] (the measured LEAD/LAG count, landing_ca_select.py) or the nominal 3.
+    Without the flag a count-aligned table covers the whole network (every crossing must be in the bind)."""
+    return bool(ca) and bool(ca.get("mixed"))
+
+
+def ca_port(ca, pid):
+    """True when landed crossing pid takes the count-aligned form: every crossing of a whole-network table, only
+    the bind's crossings of a mixed table (CA-MIXED-1)."""
+    if not ca:
+        return False
+    return pid in ca["ports"] if ca_mixed(ca) else True
+
+
+def ring_cycles(ca, pid):
+    """Priced data cycles of a ring (not count-aligned) crossing: nominal 3, or in a mixed table the per-landing
+    measured count count_aligned.ring_cycles[pid] (positive integer)."""
+    n = (ca.get("ring_cycles") or {}).get(pid, 3) if ca_mixed(ca) else 3
+    if isinstance(n, bool) or not isinstance(n, int) or n < 1:
+        raise LandingError(f"{pid}: ring_cycles must be a positive integer, got {n!r}")
+    return n
+
+
 def crossing_cycles(plan, ca, pid):
     """The plan selects hardware; its explicit capture is counted exactly once."""
     p = next(p for p in plan["ports"] if p["id"] == pid)
     tn = next(r["type"] for r in plan["partitions"] if r["name"] == p["dst"]["part"])
     capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
-    if ca and capture:
+    if ca_port(ca, pid) and capture:
         raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
     return ca_cycles(ca, pid) + int(capture)
 
@@ -248,6 +274,9 @@ def network_lane_cycles(plan):
     ca=net.get("data_cycles_per_crossing")=="count_aligned"
     if not ca and net.get("data_cycles_per_crossing")!=3:raise LandingError("clock landing network requires the proved nominal +3 contract")
     if ca and not isinstance(net.get("count_aligned_cycles"),dict):raise LandingError("count-aligned landing network needs per-crossing count_aligned_cycles")
+    # CA-MIXED-1: per-landing form; a crossing outside count_aligned_cycles is a ring at ring_cycles[pid] (default 3)
+    mixed=ca and bool(net.get("count_aligned_mixed"))
+    mca=dict(mixed=True,ports=net["count_aligned_cycles"],ring_cycles=net.get("ring_cycles") or {}) if mixed else None
     ports={p["id"]:p for p in plan["ports"]};owners=defaultdict(list)
     for lane in plan["lanes"]:
         for pid in lane["ports"]:owners[pid].append(lane["id"])
@@ -261,12 +290,24 @@ def network_lane_cycles(plan):
         if edge.get("kind")!="clock" or any(edge[k]!=expected[k] for k in ("src","dst")):
             raise LandingError("clock landing physical endpoints changed "+pid)
         if len(owners[pid])!=1:raise LandingError("clock landing must identify exactly one logical lane "+pid)
+        if mixed:
+            tn = next(q["type"] for q in plan["partitions"] if q["name"] == p["dst"]["part"])
+            capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
+            if pid in mca["ports"]:
+                if capture:raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
+                out[owners[pid][0]] += int(mca["ports"][pid])
+            else:
+                out[owners[pid][0]] += ring_cycles(mca, pid) + int(capture)
+            continue
         if ca and pid not in net["count_aligned_cycles"]:raise LandingError("count-aligned crossing has no planned latency "+pid)
         tn = next(q["type"] for q in plan["partitions"] if q["name"] == p["dst"]["part"])
         capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
         if ca and capture:
             raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
         out[owners[pid][0]] += int(net["count_aligned_cycles"][pid]) if ca else 3 + int(capture)
+    if mixed:
+        stale=sorted(set(net["count_aligned_cycles"])-seen)
+        if stale:raise LandingError(f"count-aligned latency for {len(stale)} crossings with no landing edge: {stale[:3]}")
     return dict(out)
 
 
@@ -356,14 +397,16 @@ def requirements(plan, table):
         masks[dp]["inputs"].add(db)
         cyc = crossing_cycles(plan, ca, r["port"])
         lanes[r["lane"]] += cyc
+        rca = ca_port(ca, r["port"])
         pin_refs.append(dict(port=r["port"], lane=r["lane"], src=sp, dst=dp,
                              src_bus=sb, dst_bus=db, width=p["width"],
                              required_src_pin=f"fclk_out_{sb}",
                              required_dst_pins=[f"fclk_in_{db}", f"landing_ready_{db}", f"landing_fault_{db}"]
-                             + ([f"cland_fstart_in_{db}"] if ca else []),
-                             **({"required_src_start_pin": f"cland_fstart_out_{sb}"} if ca else {}),
+                             + ([f"cland_fstart_in_{db}"] if rca else []),
+                             **({"required_src_start_pin": f"cland_fstart_out_{sb}"} if rca else {}),
+                             **({"form": "count_aligned" if rca else "ring"} if ca_mixed(ca) else {}),
                              extra_cycles=cyc))
-        if not ca and legacy_input_freg(plan, parts[dp]["type"], db):
+        if not rca and legacy_input_freg(plan, parts[dp]["type"], db):
             status = 2 if (table.get("collector") or {}).get("monitor") in ("dataflow", "region") else 0
             pin_refs[-1].update(input_capture_cycles=1, input_capture_flops=int(p["width"]) + 1 + status)
     cohorts = defaultdict(dict)
@@ -395,7 +438,8 @@ def requirements(plan, table):
                 type_count_before=len(types), type_count_after=sum(map(len, groups.values())),
                 split_types={tn: g for tn, g in groups.items() if len(g) > 1},
                 cohorts=groups, ports=pin_refs, lane_added_cycles=dict(sorted(lanes.items())),
-                nominal_added_cycles_per_crossing=("count_aligned (per crossing)" if ca else
+                nominal_added_cycles_per_crossing=("per landing: count_aligned or ring (CA-MIXED-1)" if ca_mixed(ca) else
+                    "count_aligned (per crossing)" if ca else
                     "legacy per crossing: base3 + explicit input capture" if any(r.get("input_capture_cycles") for r in pin_refs) else 3),
                 pending=["reserve forwarded-clock and observed status pin tracks", "split nonuniform landing masks",
                          "update lane/R8/calendar price", "emit actual landing RTL", "ring window STA and token pass"])
@@ -418,6 +462,8 @@ def ca_cycles(ca, pid):
     plan's per-crossing schedule latency K + 1 + n_dst - n_src (count_align_bind.py)."""
     if not ca:
         return 3
+    if not ca_port(ca, pid):
+        return ring_cycles(ca, pid)
     c = ca["ports"].get(pid)
     if c is None:
         raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
@@ -492,6 +538,25 @@ def expand_station_types(binder,table):
     binder.ab["internal_stations_types"]=sorted(out)
 
 
+def _ca_in(obj, pn):
+    """CA-MIXED-1: count-aligned landed input buses of partition pn (all of them in the whole-network form)"""
+    return obj.ca_ins[pn] if getattr(obj, "mixed", False) else set(obj.ins[pn])
+
+
+def _ca_out(obj, pn):
+    """CA-MIXED-1: output buses of pn that forward a count-aligned start (all landed outputs in the whole-network form)"""
+    return obj.ca_outs[pn] if getattr(obj, "mixed", False) else set(obj.outs[pn])
+
+
+def _cam(obj, tn):
+    """CA-MIXED-1: the count-aligned subset {inputs, outputs} of type tn's landed buses; the whole-network form reads
+    the type mask itself (by_type), so it is exactly the previous behaviour"""
+    if getattr(obj, "mixed", False):
+        return obj.ca_by_type.get(tn) or dict(inputs=(), outputs=())
+    m = (getattr(obj, "by_type", None) or {}).get(tn) or {}
+    return dict(inputs=tuple(m.get("inputs", ())), outputs=tuple(m.get("outputs", ())))
+
+
 class Landings:
     def __init__(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None):
         """ca_variants (MESO-STRAP-1, LEC only): count-aligned PARAMETER form without the TYPE_SPLIT stop, so
@@ -527,6 +592,10 @@ class Landings:
         self.ins = defaultdict(dict)
         self.outs = defaultdict(set)
         self.ca = table.get("count_aligned")
+        # CA-MIXED-1: count-aligned input / forwarded-start output buses per partition (== ins / outs without mixed)
+        self.mixed = ca_mixed(self.ca)
+        self.ca_ins = defaultdict(set)
+        self.ca_outs = defaultdict(set)
         # MESO-STRAP-1 (OWNER 12.15a, opt-in: count_aligned.strap_form): K / PAD / EDGE_FALL / tree select / root become
         # strap_ca_* input pins of ONE design per type, tied at the parent to count_align_bind.strap_ties() values
         self.strap = None
@@ -571,21 +640,24 @@ class Landings:
                     raise LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}")
             if {"W", "fclk", "clk", "rst_n", "d", "q", "ready", "fault"} & (set(rpar) | set(rports)):
                 raise LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W")
+            rca = ca_port(self.ca, pid)     # CA-MIXED-1: per-landing form (whole network without count_aligned.mixed)
             capture = legacy_input_freg(plan, self.parts[dp]["type"], db)
-            if capture and (self.ca or rmod != "ot_dp_clk_landing"):
+            if capture and (rca or rmod != "ot_dp_clk_landing"):
                 raise LandingError(f"{pid}: input FREG requires the legacy ring, not a count-aligned variant")
             if rmod == "ot_dp_clk_landing" and "FREG" in rpar and int(rpar["FREG"]) != int(capture):
                 raise LandingError(f"{pid}: legacy FREG parameter must match its explicit plan selection")
             if capture:
                 rpar["FREG"] = 1
-            cycles = 3 + int(capture)
+            cycles = (ring_cycles(self.ca, pid) if self.ca and not rca else 3) + int(capture)
             if capture and int(r.get("added_cycles", cycles)) != cycles:
                 raise LandingError(f"{pid}: legacy landing added_cycles must be {cycles}")
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=cycles,
                        module=rmod, ring_params=rpar, ring_ports=rports,
                        ring_depth=int(rpar.get("DEPTH", 4)), ring_offset=int(rpar.get("K", 2)),
                        ring_read_registered=True)
-            if self.ca:
+            if self.mixed:
+                row["landing_form"] = "count_aligned" if rca else "ring"
+            if rca:
                 if "ring_module" in r or "ring_params" in r or "ring_ports" in r:
                     raise LandingError(f"clock landing {pid}: per-row ring_module/params/ports and the table "
                                        "count_aligned form are exclusive")
@@ -612,13 +684,21 @@ class Landings:
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
+            if rca:
+                self.ca_ins[dp].add(db)
+                self.ca_outs[sp].add(sb)
+        if self.mixed:
+            stale = sorted(set(self.ca["ports"]) - seen)
+            if stale:
+                raise LandingError(f"mixed count-aligned table: {len(stale)} bind crossings are not landed rows: {stale[:3]}")
         # All copies of a type must expose identical hardware. Re-plan a type
         # split rather than changing only the first bound replica's wrapper.
         masks = defaultdict(dict)
         for pn, p in self.parts.items():
             form = tuple((b, r["module"], tuple(sorted(r["ring_params"].items())), tuple(sorted(r["ring_ports"].items())))
                          for b, r in sorted(self.ins[pn].items()))
-            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])), form)
+            # CA-MIXED-1: which output buses forward a start (cland_fstart_out) is part of the type's hardware too
+            mask = (tuple(sorted(self.ins[pn])), tuple(sorted(self.outs[pn])), form, tuple(sorted(self.ca_outs[pn])))
             masks[p["type"]].setdefault(mask, []).append(pn)
         bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
         if bad:
@@ -628,9 +708,12 @@ class Landings:
             self._region_links(ports)
         self.ca_type = self._count_aligned_types() if self.ca else {}
         self.by_type = {}
+        self.ca_by_type = {}
         for tn, ms in masks.items():
             mask = next(iter(ms))
             self.by_type[tn] = dict(inputs=mask[0], outputs=mask[1])
+            pn0 = ms[mask][0]
+            self.ca_by_type[tn] = dict(inputs=tuple(sorted(self.ca_ins[pn0])), outputs=mask[3])
             if not require_geometry:
                 continue
             declared = {b["name"]: b for b in self.types[tn].get("buses", [])}
@@ -639,8 +722,9 @@ class Landings:
                 declared[pin["name"]]=dict(pin,width=1,face="interior",window_um=[0,1],layers=[pin["layer"]])
             required = {f"fclk_out_{b}": "out" for b in mask[1]}
             if self.ca:
-                required.update({f"cland_fstart_out_{b}": "out" for b in mask[1]})
-                required.update({f"cland_fstart_in_{b}": "in" for b in mask[0]})
+                cm = _cam(self, tn)
+                required.update({f"cland_fstart_out_{b}": "out" for b in cm["outputs"]})
+                required.update({f"cland_fstart_in_{b}": "in" for b in cm["inputs"]})
                 cat = self.ca_type.get(tn)
                 if self.tstart:
                     required.update({pin: d for pin, d in self.tstart["type_pins"].get(tn, {}).items()})
@@ -783,7 +867,8 @@ class Landings:
                 if pn in self.parts and frames.get(pi["region"]) != self.region[pn]:
                     raise LandingError(f"count frame clock mismatch for {pn}")
         for pn in self.parts:
-            if self.ins[pn] or self.outs[pn]:
+            # CA-MIXED-1: only partitions with a count-aligned crossing hold count frames (ring-only ones keep none)
+            if _ca_in(self, pn) or _ca_out(self, pn):
                 frame = ca["parts"][pn]["region"] if frames is not None else self.region[pn]
                 regs[frame].append(pn)
         cparts = ca.get("parts")
@@ -830,13 +915,14 @@ class Landings:
                     role = ("child", r["dst_bus"], bool(rg["edge_fall"]), int(rg["pad"]))
                 tx = pn == org and len(ps) > 1
                 self.ca_part_role[pn] = dict(region=reg, role=role[0], origin=org, relay_tx=tx)
-                sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())),
+                sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())
+                             if b in _ca_in(self, pn)),
                        role if role[0] != "relay" else role[::2], tx)
                 self.ca_part_cat[pn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in sig[0]}, role=sig[1], relay_tx=tx)
                 if self.strap:
                     # strap form: K, PAD, EDGE_FALL, tree select and root/child are strap values, not type identity;
                     # only the relay pin list (rx in / tx out) still separates copies (residual TYPE_SPLIT)
-                    sig = (tuple(sorted(self.ins[pn])), role[0] == "relay", tx)
+                    sig = (tuple(sorted(_ca_in(self, pn))), role[0] == "relay", tx)
                 per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
         bad = {tn: [ps for ps in sigs.values()] for tn, sigs in per_type.items() if len(sigs) > 1}
         self.ca_type_split = dict(types_needing_split=len(bad), type_count_before=len(per_type),
@@ -1044,17 +1130,19 @@ class Landings:
         # hardware is per plan type (mask uniformity over all T instances is checked in __init__).
         key = base or tn
         mask = self.by_type[key]
+        # CA-MIXED-1: the count-aligned subset of the type's landed buses (all of them without count_aligned.mixed)
+        cmask = _cam(self, key)
         reader_cfg = self.types[key].get("clock", {}).get("landing_reader_start")
         if reader_cfg is not None:
             if not self.ca:
                 raise LandingError(f"{tn}: landing_reader_start requires count-aligned rings")
-            if set(reader_cfg.get("branches", {})) != set(mask["inputs"]):
+            if set(reader_cfg.get("branches", {})) != set(cmask["inputs"]):
                 raise LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring")
         writer_cfg = self.types[key].get("clock", {}).get("landing_writer_start")
         if writer_cfg is not None:
             if not self.ca or not self.strap:
                 raise LandingError(f"{tn}: landing_writer_start requires strap-form count-aligned rings")
-            if not writer_cfg.get("branches") or not set(writer_cfg["branches"]) <= set(mask["outputs"]):
+            if not writer_cfg.get("branches") or not set(writer_cfg["branches"]) <= set(cmask["outputs"]):
                 raise LandingError(f"{tn}: landing_writer_start branches must name output rings of the type")
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
@@ -1153,7 +1241,7 @@ class Landings:
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
             logic.append(f"    assign fclk_out_{b} = {_exp(f'fclk_out_{b}')};")
-            if cat:
+            if cat and b in cmask["outputs"]:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
@@ -1238,7 +1326,7 @@ class Landings:
                     copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
                     must_be_ready_before_start=True, boot_settle_cycles=21)
             extra += [f"    input wire fclk_in_{b}"]
-            if cat:
+            if cat and b in cmask["inputs"]:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
                 reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head)
@@ -1958,7 +2046,9 @@ class Landings:
         fwd = {(r["src"], r["src_bus"]): f"clock_landing_fwd_{ident(r['src'])}__{ident(r['src_bus'])}"
                for r in self.rows}
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
-        fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
+        # CA-MIXED-1: a start wire only beside a count-aligned sender bus
+        fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()
+               if k[1] in _ca_out(self, k[0])} if self.ca else {}
         decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
         tsw, tsi, trw = {}, {}, {}
 
@@ -2038,7 +2128,7 @@ class Landings:
             for tap in self.forwarded_clock_only_inputs.get(p["type"], []):
                 if not re.search(r"\." + re.escape(tap) + r"\s*\(", body):
                     conn.append(f"        .{tap}(clk_region_{ident(self.region[pn])})")
-            conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
+            conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(_ca_out(self, pn)) if self.ca]
             if ts:
                 tpins = ts["type_pins"].get(p["type"], {})
                 if RAW_RESET_PIN_OUT in tpins:
@@ -2076,7 +2166,7 @@ class Landings:
             for b, r in sorted(self.ins[pn].items()):
                 i = index[(pn,b)]
                 conn += [f"        .fclk_in_{b}({fwd[(r['src'],r['src_bus'])]})"]
-                if self.ca:
+                if self.ca and b in _ca_in(self, pn):
                     conn += [f"        .cland_fstart_in_{b}({fst[(r['src'],r['src_bus'])]})"]
                 if self.dataflow:
                     w = mon[(r["src"], r["src_bus"])]
@@ -2142,7 +2232,8 @@ class Landings:
         no count-aligned table or no landed input on tn (the default ot_dp_clk_landing ring and non-landed kits stay as
         they are)."""
         cat = self.ca_type.get(tn) if self.ca else None
-        ins = (self.by_type.get(tn) or {}).get("inputs") or ()
+        # CA-MIXED-1: only the count-aligned rings (a ring landing keeps the default ring, which is not declared)
+        ins = _cam(self, tn)["inputs"]
         if not cat:
             return None
         buses = {}
@@ -2171,7 +2262,7 @@ class Landings:
             # is no longer a same-D copy after an explicit writer branch.
             cfg = self.types[tn].get("clock", {}).get("landing_writer_start") or {}
             copies, stages = [], []
-            for b in sorted(self.by_type[tn]["outputs"]):
+            for b in sorted(_cam(self, tn)["outputs"]):
                 if b not in cfg.get("branches", {}):
                     copies.append(f"u_cland_fstart_{b}")
                 elif not cfg.get("reuse_relay_origin", False):
@@ -2196,7 +2287,8 @@ class Landings:
         result = dict(schema="opentallas.clock_landing_rtl.v1",
                     implemented=self.emitted_top and self.emitted_types == set(self.types),
                     physical_qualified=False,
-                    added_cycles_per_crossing=("count_aligned (per crossing)" if self.ca else
+                    added_cycles_per_crossing=("per landing: count_aligned or ring (CA-MIXED-1)" if getattr(self, "mixed", False) else
+                        "count_aligned (per crossing)" if self.ca else
                         "legacy per crossing: base3 + explicit input capture" if any(r.get("input_capture_cycles") for r in self.rows) else 3),
                     count_aligned=bool(self.ca),
                     count_straps=self.strap,
@@ -2209,6 +2301,11 @@ class Landings:
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
+        if getattr(self, "mixed", False):
+            result["count_aligned_mixed"] = dict(
+                count_aligned=sum(1 for r in self.rows if r.get("landing_form") == "count_aligned"),
+                ring=sum(1 for r in self.rows if r.get("landing_form") == "ring"),
+                ca_types={tn: dict(v) for tn, v in sorted(self.ca_by_type.items()) if v["inputs"] or v["outputs"]})
         pending = getattr(self, "regional_source_pending", {})
         if pending:
             result["implemented"] = False
