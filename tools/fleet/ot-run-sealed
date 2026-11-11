@@ -213,6 +213,22 @@ def remote_ok(host, runner, K, bundle=None):
 
 
 FETCH_JOBS = "/srv/opentallas-scratch2/claude/ot-jobs"      # ot-run --dir of a sealed job (it is skipped where absent)
+HUB_LOCAL = {os.environ.get("OT_HUB_NAME", "intel2"), "localhost"}
+
+
+def on(host, sh, n=True, timeout_flag=True):
+    """argv that runs shell `sh` on host; the hub runs it itself (it cannot ssh to its own name)"""
+    if host in HUB_LOCAL:
+        return ["bash", "-c", sh]
+    return (["ssh"] + (["-n"] if n else []) + ["-o", "ControlPath=none", "-o", "BatchMode=yes"]
+            + (["-o", "ConnectTimeout=20"] if timeout_flag else []) + [host, sh])
+
+
+def otrun_host(host):
+    """the name ot-run knows a host by (the hub is localhost there)"""
+    return "localhost" if host in HUB_LOCAL else host
+
+
 FETCH_DISK_GB = 60      # ot-run refuses a scratch disk under its 50 GB floor (kv 98b92a196255 a3 13:4x on epyc2: 43 GB -> NOT RUN)
 # KW-FIX-44 COORD 14:3x (OWNER 11-05 every disk is scratch): the job dir (ot-job spec "root", ot-run --dir) is the first of
 # these roots with >= FETCH_DISK_GB free on that host; scratch2 first, scratch3 when scratch2 is under the floor
@@ -228,8 +244,7 @@ JOB_ROOT_SH = ("for r in " + " ".join(JOB_ROOTS) + "; do c=$(dirname $r); [ -d $
 def job_root(host):
     """-> the job root to use on `host` (JOB_ROOTS order, >= FETCH_DISK_GB free), or None"""
     try:
-        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host,
-                            JOB_ROOT_SH], capture_output=True, text=True, timeout=60)
+        p = subprocess.run(on(host, JOB_ROOT_SH), capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
         return None
     m = [w[len("JOBROOT="):] for w in p.stdout.split() if w.startswith("JOBROOT=")]
@@ -279,6 +294,17 @@ print("SCAN " + json.dumps(out))
 
 
 DECLARE_WARN = []
+STAGE = []          # HUB-FETCH: set by decide() when the fetch host already holds a copy of K
+
+
+def stage_return(spec, root, K):
+    """HUB-FETCH: the job returns into <job root>/.return/<pid>-<t>/<basename K> on its host, the copy-back sends that"""
+    if not STAGE:
+        return
+    st = f"{(root or JOB_ROOTS[0]).rstrip('/')}/.return/{os.getpid()}-{int(time.time())}/{os.path.basename(K)}"
+    spec["return"] = dict(spec.get("return") or {}, to=st)
+    spec["copy_back"]["stage"] = st
+    STAGE[:] = []
 
 
 def kit_refs(host, K):
@@ -362,16 +388,17 @@ def source_ok(host, runner, K):
 def fetch_ok(host, bundle=None, K=None):
     """KW-FIX-44 (COORD 13:0x cross-host): a host that does NOT hold K but can run a sealed job that fetches its inputs:
     ot-job + bwrap there.  -> (ok, ['BUNDLE_OK'] when the sha-pinned bundle is already on it)"""
-    # K must be ABSENT there: the returned copy is then ours alone and is removed after the copy-back
-    sh = (f"test ! -e {shlex.quote(K)} && " if K else "") + f"{{ {JOB_ROOT_SH}; }} | grep -q JOBROOT= && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
+    # HUB-FETCH 11-10: a host that already holds a copy of K (the hub's sync_hub copy) reports K_PRESENT; the job then
+    # returns into a private stage dir (decide), so that copy is never overwritten and never removed by the copy-back
+    sh = (f"{{ test -e {shlex.quote(K)} && echo K_PRESENT; true; }} && " if K else "") + f"{{ {JOB_ROOT_SH}; }} | grep -q JOBROOT= && test -x $HOME/.local/bin/ot-job && bwrap --ro-bind / / --dev /dev true && echo SEALED_OK"
     if bundle:
         sh += f" && python3 -I -c {shlex.quote(BUNDLE_PY)} {shlex.quote(bundle[0])} {shlex.quote(bundle[1])}"
     try:
-        p = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, sh],
-                           capture_output=True, text=True, timeout=60)
+        p = subprocess.run(on(host, sh), capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
         return False, []
-    return "SEALED_OK" in p.stdout and p.returncode == 0, (["BUNDLE_OK"] if "BUNDLE_OK" in p.stdout.split() else [])
+    w = p.stdout.split()
+    return "SEALED_OK" in p.stdout and p.returncode == 0, ([x for x in ("BUNDLE_OK", "K_PRESENT") if x in w])
 
 
 def fetched(spec, src):
@@ -383,26 +410,30 @@ def fetched(spec, src):
     return spec
 
 
-def copy_back(host, src, K):
+def copy_back(host, src, K, stage=None):
     """after a fetched job: the returned K on `host` goes back to K on `src` (where the wave and autopilot read it),
-    as ot-run's spill copy-back does; the marker is never copied.  -> rc"""
+    as ot-run's spill copy-back does; the marker is never copied.  stage (HUB-FETCH): the job returned into this
+    private dir on `host` (basename = basename K) instead of K; it is sent and then removed, K there is untouched.
+    -> rc"""
     par, base = os.path.dirname(K), os.path.basename(K)
+    got = stage.rstrip("/") if stage else K
+    if stage and os.path.basename(got) != base:
+        return 99
     try:            # the job never ran there (NOT RUN): nothing came back, nothing to copy
-        if subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host, f"test -d {shlex.quote(K)}"],
-                          timeout=60).returncode:
+        if subprocess.run(on(host, f"test -d {shlex.quote(got)}", timeout_flag=False), timeout=60).returncode:
             return 0
     except (OSError, subprocess.TimeoutExpired):
         return 98
-    pull = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
-            f"tar -C {shlex.quote(par)} --exclude=.ot-run-spill-copy -cf - {shlex.quote(base)}"]
-    push = ["ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", src, f"tar -C {shlex.quote(par)} -xf -"]
+    pull = on(host, f"tar -C {shlex.quote(os.path.dirname(got))} --exclude=.ot-run-spill-copy -cf - {shlex.quote(base)}",
+              timeout_flag=False)
+    push = on(src, f"tar -C {shlex.quote(par)} -xf -", n=False, timeout_flag=False)
     a = subprocess.Popen(pull, stdout=subprocess.PIPE)
     b = subprocess.run(push, stdin=a.stdout)
     a.stdout.close()
     rc = a.wait() or b.returncode
     if not rc:      # K was absent on `host` before the job (fetch_ok), so this copy is ours alone
-        subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
-                        f"rm -rf --one-file-system -- {shlex.quote(K.rstrip('/'))}"], timeout=1800)
+        subprocess.run(on(host, f"rm -rf --one-file-system -- {shlex.quote(os.path.dirname(got) if stage else K.rstrip('/'))}",
+                          timeout_flag=False), timeout=1800)
     return rc
 
 
@@ -747,6 +778,9 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
             best = pick_host(rows, {h: kd for h, (okh, kd) in fr.items() if okh}, o["mem"])
             if best:
                 src, host, kids = host, best, [k for k in kids if k != "BUNDLE_OK"] + fr[best][1]
+                if "K_PRESENT" in kids:                     # HUB-FETCH: K exists there; return into a private stage
+                    kids = [k for k in kids if k != "K_PRESENT"]
+                    STAGE[:] = [None]
     if not src and conf.get("capacity_passthru", True):
         rows = status_rows(backend)
         if rows is not None:
@@ -783,6 +817,7 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
             if src:
                 s = fetched(s, src)
                 s["copy_back"] = {"from": host, "to": src, "path": K}
+                stage_return(s, root, K)
             if root:
                 s["root"] = root
             json.dump(s, fh)
@@ -791,10 +826,12 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
             if src:
                 s = fetched(s, src)
                 s["copy_back"] = {"from": host, "to": src, "path": K}
+                stage_return(s, root, K)
             if root:
                 s["root"] = root
             json.dump(s, fh)
-    out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", host, "--job", sp]
+    out = [conf["sealed_backend"], "--mem", o["mem"], "--threads", o.get("threads", "16"), "--hosts", otrun_host(host),
+           "--job", sp]
     if root:
         out += ["--dir", root]         # ot-run's placement / disk guard / cd use the job root (its default is scratch2)
     out += [f for f in flags if f != "--no-spill"]
@@ -918,7 +955,7 @@ def rehand(argv, conf, why):
         host = argv[argv.index("--hosts") + 1]
         tried.append(host)
         n += 1
-        argv2, why2 = decide(sys.argv[1:], conf, exclude=(host,))
+        argv2, why2 = decide(sys.argv[1:], conf, exclude=(host,) + (tuple(HUB_LOCAL) if host in HUB_LOCAL else ()))
         if argv2[0] == backend_of(conf):          # never fall back to unsealed on a re-hand: wait sealed where it was
             argv2, why2 = argv, why
         if argv2[argv2.index("--hosts") + 1] == host:
@@ -957,7 +994,7 @@ def main():
         except (OSError, ValueError):
             cb = None
         if cb:
-            crc = copy_back(cb["from"], cb["to"], cb["path"])
+            crc = copy_back(cb["from"], cb["to"], cb["path"], cb.get("stage"))
             log(conf, f"COPY-BACK {cb['path']} {cb['from']} -> {cb['to']} rc {crc}")
             print(f"ot-run-sealed: copy-back {cb['from']} -> {cb['to']} rc {crc}", file=sys.stderr, flush=True)
             if crc and not rc:
