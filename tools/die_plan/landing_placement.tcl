@@ -414,6 +414,21 @@ proc cland_put_start {i rect tag} {
   cland_put_grow $i $rect $tag start
  } else { cland_put $i $rect $tag }
 }
+# DIE-QC-97 11-10 (QC cbn_q01__clab6e67f2 a26 3_3 'no legal ... u_cland_fstart_rsf_o/q$_SDFF_PN0_ (writer-face:rsf_o)'): the
+# writer-face window is the final START relay's out pin +-4.32 um, so on a face only 16 core rows (y 4.32..8.64) exist,
+# 32 with the in-core slide.  face_flops.tcl had placed the a00 ft slot's stage-7 stations (u_ft_a00_o_6, explicit plan
+# bit sites 228.96..254.88 x 4.32..21.6) FIRM over all of them: 4 DFFHQNx1 per row on the 2.16-um grid, 50% of the band
+# area, but every gap is 1.08 um and the relay flop reserves its resize-family width (DFFHQNx3 1.188 um,
+# OT_CLAND_FIT_RESERVE=resize).  A writer-face cell with no site takes the same grow as START / status / collector /
+# local-reset cells (cland_put_grow: the window x2..x32 about the same centre, clamped to the core; same fail-closed
+# error); a26 replay: x2, q at 228.474 10.53 (14.8 um from its pin), landing complete.  A window that has a site
+# places exactly as before (x1 is the plain cland_put).  OT_CLAND_FACE_GROW=0 restores the plain path.
+proc cland_face_grows {} {
+ return [expr {!([info exists ::env(OT_CLAND_FACE_GROW)] && $::env(OT_CLAND_FACE_GROW) eq "0")}]
+}
+proc cland_put_face {i rect tag} {
+ if {[cland_face_grows]} { cland_put_grow $i $rect $tag face } else { cland_put $i $rect $tag }
+}
 # S81-TYPES-4 11-07 (S81 leaf macro-facing batch: t7 t10 t56 t67 place FAIL, relay window inside a moved macro, deeper
 # than the x32 window reaches; t10 rst_rl_148 is 73.8 um inside u_vsw): OT_MACRO_MOVES edits macro_place.tcl only, so the
 # plan's relay xy stands inside the moved macro (the relay flop itself is legalized out later; its pre-DPL site is still
@@ -1074,6 +1089,8 @@ proc cland_band_fit {prefix rect tag} {
  if {$tag eq "local-reset" || (([string match {reader-start:*} $tag] || [string match {writer-start:*} $tag])
      && [cland_start_grows $rect]) || ($tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)]
      && $::env(OT_LAND_RESERVE) eq "1")} return
+ # DIE-QC-97 11-10: writer-face bands take the grow law too (cland_put_face); OT_CLAND_FACE_GROW=0 keeps the bound
+ if {[string match {writer-face:*} $tag] && [cland_face_grows]} return
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
  foreach i [cland_group_insts $prefix] {
@@ -1343,9 +1360,10 @@ foreach spec $cland_groups {
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
   # DIE-QC-97 11-09: reader/writer START relay windows take the status/collector grow (cland_put_start).
+  # DIE-QC-97 11-10: writer-face (final START relay at its out pin) windows take the same grow (cland_put_face).
   # KW43 LAND-RESERVE (opt-in OT_LAND_RESERVE=1): a literal local reset window grows like local-reset; the dispatch below is unchanged
  if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_put_grow $i $rect $tag literal-reset; incr hit; continue }
- if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } else { cland_put $i $rect $tag };incr hit
+ if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {writer-face:*} $tag]} { cland_put_face $i $rect $tag } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }
