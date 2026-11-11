@@ -13,6 +13,14 @@
 # Unknown classes are charged their request.  The headroom is kept, so a job is never admitted beyond MemAvailable.
 # The size is looked up again on every attempt, so a queued waiter picks up a class measured while it waits.
 set -u
+# USERBUS_1111 (KW-FIX-44, COORD 11-11 19:3x): an ssh session whose pam_systemd CreateSession failed (epyc4 03:10-03:24
+# UTC, logind under load) has no XDG_RUNTIME_DIR, and the systemd-run --user below failed with 'Failed to connect to
+# user scope bus' after admission (9 S81 rows).  Every host lingers ubuntu, so the user manager's bus is at
+# /run/user/UID/bus: use it when the session did not set it.
+if [ -z "${XDG_RUNTIME_DIR:-}" ] && [ -S "/run/user/$(id -u)/bus" ]; then export XDG_RUNTIME_DIR="/run/user/$(id -u)"; fi
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && [ -n "${XDG_RUNTIME_DIR:-}" ] && [ -S "$XDG_RUNTIME_DIR/bus" ]; then
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+fi
 MEM=""; TAG=""; MAXWAIT=""
 while [ $# -gt 0 ]; do
   case "$1" in
