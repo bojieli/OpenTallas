@@ -352,6 +352,15 @@ class TypeModel:
                 if any(re.search(rx, self.inst[i]) or re.search(rx, self.C[i].get("module", "")) for i in g):
                     d[face] = max(d.get(face, 0.0), um)
             self.cclr.append(d)
+        # street rules (--street-gap UM:REGEX, CPL-S81-LEAF): a cluster with a matching core keeps >= UM to every
+        # other cluster (lane streets sized from the bits they carry instead of the global --gap)
+        self.cstr = []
+        for g in self.CL:
+            u = 0.0
+            for um, rx in self.cfg.get("street_gap") or []:
+                if any(re.search(rx, self.inst[i]) or re.search(rx, self.C[i].get("module", "")) for i in g):
+                    u = max(u, um)
+            self.cstr.append(u)
         self.reset_state()
 
     def reset_state(self):
@@ -416,10 +425,11 @@ class TypeModel:
         if cl and (x < cl.get("W", 0) - EPS or y < cl.get("S", 0) - EPS or x + w > W - cl.get("E", 0) + EPS or
                    y + h > H - cl.get("N", 0) + EPS):
             return False
-        gap = self.cfg["gap"]
+        gap0 = self.cfg["gap"]
         for j in range(self.m):
             if j == k or j in ignore:
                 continue
+            gap = max(gap0, self.cstr[k], self.cstr[j])
             X0, Y0 = self.cpos[j]
             X1, Y1 = X0 + self.cbb[j, 2], Y0 + self.cbb[j, 3]
             gx = max(X0 - (x + w), x - X1)
@@ -469,10 +479,11 @@ class TypeModel:
         if cl and (x < cl.get("W", 0) - EPS or y < cl.get("S", 0) - EPS or x + w > W - cl.get("E", 0) + EPS or
                    y + h > H - cl.get("N", 0) + EPS):
             return 'rule3 %s' % (locals().get('j', ''),)
-        gap = self.cfg["gap"]
+        gap0 = self.cfg["gap"]
         for j in range(self.m):
             if j == k or j in ignore:
                 continue
+            gap = max(gap0, self.cstr[k], self.cstr[j])
             X0, Y0 = self.cpos[j]
             X1, Y1 = X0 + self.cbb[j, 2], Y0 + self.cbb[j, 3]
             gx = max(X0 - (x + w), x - X1)
@@ -1481,6 +1492,8 @@ def main(argv=None):
     ap.add_argument("--face-clear", action="append", default=[], metavar="FACE:UM:REGEX",
                     help="cores whose inst/module match REGEX keep >= UM from FACE (S/N/E/W); a column too near is "
                          "re-packed off the face before the search")
+    ap.add_argument("--street-gap", action="append", default=[], metavar="UM:REGEX",
+                    help="clusters whose inst/module match REGEX keep >= UM to every other cluster")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -1508,7 +1521,8 @@ def main(argv=None):
     cfg = dict(gap=a.gap, sweeps=a.sweeps, topk=a.topk, lam=a.lam, reach=a.reach, grid_um=a.grid_um,
                grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg,
                flips_only=a.flips_only,
-               face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear])
+               face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
+               street_gap=[(float(f.split(":", 1)[0]), f.split(":", 1)[1]) for f in a.street_gap])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
