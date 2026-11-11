@@ -9,7 +9,12 @@
 // adds pin/leaf register edges on the request and return paths adds them here.
 // PERIOD (HBMc/CHAIN2 10-22, P40 fold of 5bdf1a9c5 without SAFE/LAND): the compiler-priced cadence in edges (default 24 =
 // unchanged); a parent whose request/return path adds edges past the 24-edge window raises it (qhub RD/GATHER 39: PERIOD 40).
-module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,parameter integer PERIOD=24)(
+// HBM-HUB-RTL-1 11-11: PERIOD DEFAULTS to the transport cadence the token lowering prices (hc_layer_lower_1021
+// gather_period = max(24, RESP_PHASE+1)), so a parent that passes only RESP_PHASE (e.g. a q_static without
+// GATHER_PERIOD, or a padded round trip like GATHER_PHASE 174) elaborates with a legal period instead of
+// tripping the RESP_PHASE<PERIOD guard. RESP_PHASE<=23 keeps PERIOD 24: unchanged logic.
+module ot_hgi_hc_gathered_mix_reader_static #(parameter integer RESP_PHASE=19,
+    parameter integer PERIOD=(RESP_PHASE>=24)?RESP_PHASE+1:24)(
     input wire clk,rst_n,launch,
     input wire [3:0] npos,
     input wire [15:0] base_sector,position_stride_sector,
