@@ -4273,7 +4273,7 @@ def queue_class(j):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
             return stage, "FAIL", "ROUTING", f"{kind}: drc {drc} {why}".strip()
-        if kind in ("post-cts-hold", "hold-structural") or (fails & TIMING_FAILS) or any(
+        if kind in ("post-cts-hold", "hold-structural", "grt-timecap") or (fails & TIMING_FAILS) or any(
                 w is not None and w < 0 for w in (tt, ff)):
             # KIT-TRIAGE-1/G5: pre-route stops have no sign-off record -> no 'TT None FF None'; the gate line is in why
             wns = f"TT {tt} FF {ff} ps " if (tt is not None or ff is not None) else ""
