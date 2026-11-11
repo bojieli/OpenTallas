@@ -42155,3 +42155,8 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
   - the per-lane forwarded-bit list, with loop RT checks (SFU_VM/HC_Q 119/123/137/150) and pad-leg absorption;
   - the HBM-TAPS price;
   - then split_hub.py and the delta (G0/lint 0 new, 405-um stations).
+- 2026-11-11 11:06 PST RULING [COORD, owner delegated -> HBM-HUB-ARCH-2, DIE-HBM-100, HBM-TAPS] HBM hub split REDESIGN: take the default, K5 for ne + K5L for nw, with group-to-group forwarding of the 19/27 straddling lanes. This needs no bind or partner change; the loops 119/123/137/150 are held on the padding leg.
+  - HBM-TAPS prices the forwarded-bit cycles. Adopt if within 1%.
+  - If above 1%: the bank fan-in lanes (ne L5026/31/27/32/37, nw L1226/31/27/32) are candidates for the OWNER's last-resort half-width (2:1) rule, allowed up to an AR cost of 10%, priced separately and only after layout/top-metal/cycles.
+  - HBM-HUB-RTL-1 is already on main (be5188b811e1), so the one place+GRT probe can run now on epyc9.
+  - The split rides its own HBM event after the ladder/xtap event.
