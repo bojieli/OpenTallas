@@ -3,7 +3,7 @@
 
 Input: the report of emitted_leaf_routes.py for the plan being compiled.  The DL 4 + 4 constants in lower_vpx.py,
 lower_vs.py and entry_norm.py are the as-built case of these terms:
-  lo send       LO_AFTER_CTL(leaf) = 7 + dn + up          (15 at dn = up = 4; lower_vpx.leg_program(lo_after_ctl=))
+  lo send       LO_AFTER_CTL(leaf) = LO_LOCAL + dn + up   (lower_vpx.LO_AFTER_CTL at dn = up = DL; leg_program(lo_after_ctl=))
   Engram REDUCE issue offset(leaf) = max(dn + up) - (dn + up), leaves with one offset share one CTL (the mask carries them;
                 the REDUCE body is the same on every leaf)
   norm NORMR    issue offset(leaf) = max(dn + up + pdsk) - (dn + up + pdsk); every NORMR needs its own CTL because its
@@ -11,7 +11,16 @@ lower_vs.py and entry_norm.py are the as-built case of these terms:
 """
 import json
 
-LO_LOCAL = 7          # lower_vpx edge chain with the DL 4 + 4 relays removed
+try:
+    from . import lower_vpx as _LV
+    from . import xtier_land as _XT
+except ImportError:
+    import lower_vpx as _LV
+    import xtier_land as _XT
+
+# lower_vpx edge chain with the slice's DL + DL leaf relays removed (S81-XTIER-FIX 11-11: was a hand 7 = 15 - 4 - 4, the
+# unlanded ot_s81sl_xr value; the bound xrt lands lo one more edge -> 8; DL = ot_s81sl_slice default, from the RTL)
+LO_LOCAL = _LV.LO_AFTER_CTL - 2 * _XT.form()['slice_dl']
 
 
 def load(path):

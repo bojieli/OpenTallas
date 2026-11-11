@@ -38,7 +38,9 @@ case ${XR_DSK:-1} in 1) DEF="$DEF +define+OT_XR_DSK_TB";; 0) DEF="$DEF +define+O
 # S81-KITS-RTLB 10-24: XR_LAND=1 -> the DUT with FACE_LAND = 1 (lo / p / e leaf-interface landing, +1 cycle) and the tb in
 # OT_XR_LAND_TB mode (the compiler issues lo / p one cycle earlier; expected outputs unchanged)
 # S81-KITS-RTLC 10-24: FACE_LAND = 1 is the RTL default now; XR_LAND defaults to 1 and XR_LAND=0 builds FACE_LAND(0)
-XL=${XR_LAND:-1}; [ "$XL" = 1 ] && DEF="$DEF +define+OT_XR_LAND_TB"
+# S81-XTIER-FIX 11-11: env XR_LAND_TB (default = XR_LAND) picks the tb schedule independently of the DUT: XR_LAND=1
+# XR_LAND_TB=0 = the landed DUT driven with the unlanded (pre-fix compiler) lo / p schedule -> must FAIL (stale control)
+XL=${XR_LAND:-1}; [ "${XR_LAND_TB:-$XL}" = 1 ] && DEF="$DEF +define+OT_XR_LAND_TB"
 sed -i -e "s/ot_s81sl_xrt3 u (/ot_s81sl_xrt3 #(.FACE_LAND($XL)) u (/" -e "s/ot_s81sl_xrt1 u (/ot_s81sl_xrt1 #(.FACE_LAND($XL)) u (/" $O/tb_s81sl_xrt.sv
 grep -q "FACE_LAND($XL)) u (" $O/tb_s81sl_xrt.sv || { echo "LAND_NOT_APPLIED"; exit 4; }
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GSEED=$S -GNC=$N --top-module tb_s81sl_xr \

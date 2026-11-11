@@ -165,6 +165,13 @@ def test_compile_l0():
     lr = sch['price']['vsw_lr_extra_edges'] * sum(
         o['critical'] and bool(re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', o['op']))
         for o in sch['ops'])
+    # S81-XTIER-FIX 11-11: dv_price's norm terms read the compiler's values (finish 261 - 171, leaf 117 + DL 4 + collector
+    # 6 - 100) instead of the 10-16 copies this snapshot priced (234 - 171, 112 + 4 + 5 - 100): charge the difference
+    # once per critical full-h norm node (dv_price norm_finish_seq + leaf_measured rules).
+    import dv_price as DP
+    nrm = (DP.FINISH_SEQ_EXTRA - (234 - 171)) + (DP.LEAF_PARTIAL_EXTRA - ((112 + 4 + 5) - 100))
+    lr += nrm * sum(o['critical'] and (o['op'] in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or o['op'].endswith('hc.sumsq'))
+                    for o in sch['ops'])
     assert len(sch['ops']) == lp['nodes'] and abs(sch['price']['crit'] - lp['dv_crit'] - lr) < 0.5, (sch['price'], lp, lr)
     die_insts = C.Die(tree).inst
     assert all(e['inst'] in die_insts for e in sch['events'] if not e.get('plan_only') and e['dir'] != 'internal')

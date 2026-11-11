@@ -44,6 +44,11 @@ import math
 import json
 import re
 
+try:
+    from . import xtier_land as _XT
+except ImportError:
+    import xtier_land as _XT
+
 OPS = [
     r'(^|\.)(attn|ffn)\.hc_pre$',
     r'(^|\.)(attn|ffn)\.norm\.(sumsq|rsqrt|scale)$',
@@ -82,14 +87,24 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 #   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> XR7 stage-1 register (1,
 #   ot_s81sl_xr.sv:181-204, "every CTL / RD / lo / V / SC consequence moves +1 cycle") -> cvld / tg: CFG_AT = 4
 #   cvld (target 0) -> c_d flop (1) -> leaf relay DL 4 -> vp pin flop (1) -> sequencer step 0 (1) -> macro + output
-#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1) = lov: first lo pair at xr = CFG_AT + LO_AFTER_CTL
+#   register + dv (2) -> lo flop (1) -> relay DL 4 -> [bound xrt: FACE_LAND landing flop (1)] -> xr lo pin flop (1) = lov:
+#   first lo pair at xr = CFG_AT + LO_AFTER_CTL
 #   XR7 (TOK-DS-9 10-27): the packer reads lov1 = lov one edge later (ot_s81sl_xr.sv:204, 250-251), and a send config
 #   (tg[4]) in a cycle with |lov1 is a sticky fault (xr.sv:558): the config slot is the lov1-free edge = LO_PACK after lov
 #   pk_go the edge after the 4th lov1 pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
 # Measured TOK-DS-9 on tb_vpx_ag (current main RTL, the TOK-DS-8 binary; sources sha-identical to main 0f9789993e):
 # RDOUT pin 8136 -> cvld 8140 (CFG_AT 4), lov 8155 (LO_AFTER_CTL 15); 10-18 values were CFG_AT 3, no LO_PACK, RX 5.
+# That bench bound ot_s81sl_xr (vpx/sources.f, no OT_S81SL_KV_TRANSPORT): LO_AFTER_CTL_XR = 15 is the UNLANDED lo face.
+# S81-XTIER-FIX 11-11: the die binds ot_s81sl_xrt1 / xrt3 (every as-built manifest defines OT_S81SL_KV_TRANSPORT), whose
+# FACE_LAND landing (default 1 since dc23a738f3, RTLC 10-24) lands lo one more edge before the xr lo pin flop; the
+# compiler kept 15, i.e. issued every lo beat one edge late on the bound die.  LO_AFTER_CTL = 15 + the lo face edges of
+# the bound u_xr, read from the RTL by xtier_land (selected defines; fail-closed); measured 16 on the xrt build of
+# tb_vpx_ag (VPX_DEFINES=OT_S81SL_KV_TRANSPORT run_vpx_ag.sh, all 5 ops PASS; LO_AFTER_CTL 15 on xrt FAILS).
+# CFG_AT / SEND_AFTER_GO / RX_WR_AFTER_PIN ride the CTL / RD / send paths FACE_LAND does not touch (xrt header); a
+# ring-landing form (RING_LAND 1) moves them and xtier_land refuses it until re-measured.
 CFG_AT = 4
-LO_AFTER_CTL = 15
+LO_AFTER_CTL_XR = 15
+LO_AFTER_CTL = LO_AFTER_CTL_XR + _XT.face_edges('lo')
 LO_PACK = 1
 SEND_AFTER_GO = 3
 RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> XR7 stage 1
@@ -100,10 +115,14 @@ PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 def beat_period(lo_after_ctl=None):
     """issue period of one 4-pair beat: 4 lo cycles + the one lo-free cycle that takes the next config (= pk_go of the
     previous beat; xr.sv:137-143), with the config CTL and the RDOUT CTL on distinct pin cycles.  lo_after_ctl = the
-    leaf's landed LO_AFTER_CTL (leaf_transport.py); None = the as-built DL 4 + 4 value."""
-    landed = lo_after_ctl is not None        # a bound leaf: two lo-free edges, so one edge of leaf-latency model error still lands
+    leaf's landed LO_AFTER_CTL (leaf_transport.py); None = the as-built DL 4 + 4 value.
+    Two lo-free edges per beat, so one edge of leaf-latency model error still lands.  S81-XTIER-FIX 11-11: the as-built
+    value (None) takes the same two-free-edge rule: leg_program has always passed its resolved value here, so the emitted
+    as-built period was the landed one; the one-free-edge rule this branch had for None agreed with it only at
+    LO_AFTER_CTL 15 (both 6) and at the bound xrt's 16 would give 5, splitting leg_program (6) from _stage_trel(None) /
+    gen_vpx_ag (5).  Period stays 6 (no schedule change); 5 is a separate, unadopted option."""
     lo_after_ctl = LO_AFTER_CTL if lo_after_ctl is None else lo_after_ctl
-    p = PAIRS + (2 if landed else 1)
+    p = PAIRS + 2
     while (lo_after_ctl + LO_PACK - 1) % p == 0:   # config of beat i (pin t_i + LO_AFTER_CTL + LO_PACK - 1) vs RDOUT j (t0 + p j)
         p += 1
     return p

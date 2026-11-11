@@ -45,6 +45,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
 
 from xr_timing import source_contract
+from layer_prog import xtier_land as XTIER
 
 DIE_REF = 'origin/main'   # p4l bind9 / plan / land plan / unit RTL of record (main 711fb3da3+ = die7 77083deda; byte-identical to die6 3923ae6de)
 DIE_PATHS = ['results/arch/s81_dv_1016/bind9', 'results/arch/s81_dv_1016/p4l', 'results/arch/s81_dv_1016/landing/p4l',
@@ -79,7 +80,13 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=117, rstd_to_y0=18, rstd_to_x
 # The old 234 + 14 mixed the pre-form first-root date with the latest-root shift: 248 was 13 edges before all
 # slices had their norm. Use the measured latest date for these plan-only publication edges. This changes no
 # issue row or hardware word; QDELAYS remains 0 and the full native snake/all-gather schedule is still open.
-XFIN = dict(dl=4, collector=5, last_partial_to_rstd=261, rstd_to_xq_ring=59 + 16 + 4)
+# S81-XTIER-FIX 11-11: collector 5 is the UNLANDED ot_s81sl_xr p face; the bound xrt lands p one more edge before the
+# deskew / collector (FACE_LAND, xrt header "+1 cycle on ... p -> xfin partials"; xrt_bench.sh XR_LAND=1 PASS with the
+# partial sets issued one edge earlier, the unshifted schedule FAILS) -> collector = 5 + the p face edges of the bound
+# u_xr (xtier_land, from the RTL); dl = the slice's leaf relay depth DL (ot_s81sl_slice default, from the RTL).
+XFIN_COLLECTOR_XR = 5
+XFIN = dict(dl=XTIER.form()['slice_dl'], collector=XFIN_COLLECTOR_XR + XTIER.face_edges('p'), last_partial_to_rstd=261)
+XFIN['rstd_to_xq_ring'] = BEAT['rstd_to_xq'] + 4 * 4 + XFIN['dl']        # 59 + 4 * 4 (last leaf) + DL 4
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
 # depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
 # issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.

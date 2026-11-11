@@ -1,10 +1,13 @@
 # tb_vpx_ag sources, regenerated TOK-DS-8 2026-10-27 by script on the current RTL (the 10-18 list missed ve_qadd/ve_kand/ve_qmul/capc2/r0c0 SRAM):
 #   python3 tools/die_port_bind.py tools/s81_dv/layer_prog/vpx/tb_vpx_ag.sv --closure tb_vpx_ag --rtl-root rtl --rtl-file tools/s81_dv/layer_prog/vpx/tb_vpx_ag.sv --prefer-list <the 10-18 sources.f> --define DSFD_PQ_STATIC_X2
 #   + physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v (instantiated by ot_s81sl_xs; kept from the 10-18 list, missed by the closure index)
+#   + rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv (S81-XTIER-FIX 11-11: the die's u_xr masters xrt1 / xrt3, selected with
+#     VPX_DEFINES=OT_S81SL_KV_TRANSPORT run_vpx_ag.sh; the default build stays the ot_s81sl_xr bench of TOK-DS-9)
 tools/s81_dv/layer_prog/vpx/tb_vpx_ag.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv
+rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv
 rtl/lib/ot_rst_relay.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv

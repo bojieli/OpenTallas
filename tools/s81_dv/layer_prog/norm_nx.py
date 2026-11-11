@@ -44,6 +44,17 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[3]
 
 NX_AFTER_LAST_NORMR_NODSK = 138   # measured on the RECLOCKED cut_0S (zero-data L0 run, gaps/zero_reclock); 136 was the frozen-clock bench
+# S81-XTIER-FIX 11-11: RE-MEASURED on the current RTL: tb_vpx_ag xrt build (die A = the u_s_0S end-slice master, real vp /
+# vn / xrt / xfin / rstop; vpx/nx_probe_vpx.py, the compiler's lower_norm_smoke CTL beats on A's inward pin, zero data):
+# last NORMR pin edge 8164 -> first K_NX beat (eo, hops 8) on A's ro_e at 8307 = 143; NORMRs one edge later -> 8308
+# (same 143), no fault.  Edge convention = the vpx bench's (CTL pin event / outward-beat event cycles, the ones the vpx
+# sends and read-backs are checked on).  143 = go_to_partial_normr 117 (SS34) + DL 4 + XFIN collector 6 (5 + the bound
+# xrt p face landing) + NX_TAIL 16 (xfin inj / xstop / rstop flops).  The 10-24 value 138 (fc31 cut, fc30 kits) is
+# 5 edges less: NORMR 115 -> 117 (+2), FACE_LAND p landing (+1, if those kits predate RTLC), 2 edges not decomposed (no
+# per-stage probe in this build; the old cut replay cannot be rerun, kits retired).  NX_AFTER_LAST_NORMR composes the
+# compiler's current terms with that measured tail, so the unlanded xr form gives 142.
+NX_MEAS_XRT, NX_MEAS_NORMR, NX_MEAS_DL, NX_MEAS_COLLECTOR = 143, 117, 4, 6
+NX_TAIL = NX_MEAS_XRT - NX_MEAS_NORMR - NX_MEAS_DL - NX_MEAS_COLLECTOR
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34): ot_s81sl_xrt aligns the 5 leaf partials on leaf 4's arrival edge with
 # static per-leaf deskew registers (depth 4 - k). The old faulting serializer
 # restarted on every partial, so its final pass also began on leaf 4's edge.
@@ -51,7 +62,14 @@ NX_AFTER_LAST_NORMR_NODSK = 138   # measured on the RECLOCKED cut_0S (zero-data 
 # consecutive command dates; it adds none after the last command. Full-cut
 # confirmation is pending the inherited builds (the old 138 was measured).
 XR_DESKEW = 4
-NX_AFTER_LAST_NORMR = NX_AFTER_LAST_NORMR_NODSK
+
+def _nx_after_last_normr():
+    sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
+    import dv_layer_compile as D
+    return D.BEAT['go_to_partial_normr'] + D.XFIN['dl'] + D.XFIN['collector'] + NX_TAIL
+
+
+NX_AFTER_LAST_NORMR = _nx_after_last_normr()
 # the plan offsets of the deskew registers: NORMR k reaches the slice exactly k edges after NORMR 0 (one CTL a cycle)
 NORMR_OFFSET = (0, 1, 2, 3, 4)
 G_SHIFT_MAX = 6           # per-slice shift of the aligned k4 edge (NX words of one stop stay > 6 edges apart)

@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.s81.xtier_land.v1",
+ "defines": [
+  "OT_S81SL_KV_TRANSPORT"
+ ],
+ "rtl_root": "/srv/opentallas-scratch2/claude/s81-frame-fix-1/wt_x",
+ "family": "ot_s81sl_xrt",
+ "masters": [
+  "ot_s81sl_xrt1",
+  "ot_s81sl_xrt3"
+ ],
+ "slice_dl": 4,
+ "sources": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv": "210b540911cb8be8ab1811f8d10c669c4745ee9055f7cb215834215ac14be65c",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "d2a543e4fd9f25b13ccece85058652ecb9ccae366353738b6da20346e9c030a9"
+ },
+ "face_edges": {
+  "e": 1,
+  "lo": 1,
+  "p": 1
+ },
+ "face_land": 1,
+ "ring_edges": 0,
+ "ring_land": 0,
+ "macros": {
+  "OT_S81SL_XRT_FLAND_DEF": "1",
+  "OT_S81SL_XRT_RLAND_DEF": "0"
+ }
+}

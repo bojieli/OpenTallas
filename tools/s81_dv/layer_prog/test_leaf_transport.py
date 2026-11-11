@@ -31,6 +31,7 @@ class Test(unittest.TestCase):
 
     def test_period_default_unchanged_and_landed_margin(self):
         self.assertEqual(V.beat_period(), 6)
+        self.assertEqual(V.beat_period(), V.beat_period(V.LO_AFTER_CTL))     # S81-XTIER-FIX: as-built = its own value
         self.assertGreaterEqual(V.beat_period(17), 6)
         self.assertNotEqual(V.beat_period(18) and 18 % V.beat_period(18), 0)
 
