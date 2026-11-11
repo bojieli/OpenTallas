@@ -4308,7 +4308,8 @@
     "ot_s81sl_leaf__t71@3",
     "ot_s81sl_leaf__t72@8",
     "ot_s81sl_leaf__t74@10",
-    "ot_s81sl_leaf__t9@6"
+    "ot_s81sl_leaf__t9@6",
+    "ot_s81sl_kv_leaf__t2@12"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -5359,7 +5360,8 @@
     "ot_s81sl_leaf__t68@5": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
     "ot_s81sl_leaf__t72@8": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
     "ot_s81sl_leaf__t74@10": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
-    "ot_s81sl_leaf__t9@6": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)"
+    "ot_s81sl_leaf__t9@6": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
+    "ot_s81sl_kv_leaf__t2@12": "INFRA (KW-FIX-43 COORD 19:5x): epyc8 earlyoom SIGTERM to yosys 02:47Z (host 953/1007 GB used, VmRSS 33 GB; make Error 241 after 5 h, REHAND epyc7->epyc8); place request 48 -> 64 GB"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -14887,7 +14889,12 @@
    "note_kw43r31": "KW-FIX-43 11-10 18:4x COORD+owner: 31 stale-bind8 rows cancelled, relaunch on bind_ctl. Revert retry <- retry_prev_kw43r31.",
    "kit_store": [
     "ot_s81sl_leaf__t42*"
-   ]
+   ],
+   "place_mem_gb_by_item_prev_kw43kvl2": null,
+   "place_mem_gb_by_item": {
+    "ot_s81sl_kv_leaf__t2": 64
+   },
+   "note_kw43kvl2": "KW-FIX-43 11-10: kv_leaf t2 place 64 GB + retry @12. Revert place_mem_gb_by_item <- *_prev_kw43kvl2."
   },
   "s81_head": {
    "enabled": true,
