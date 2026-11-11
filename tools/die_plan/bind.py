@@ -722,6 +722,29 @@ def ft_hop_lockup(plan, tn):
     return gen_rtl.ft_hop_lockup(plan, tn)
 
 
+def core_input_lockup(plan, tn, module):
+    """QC-NK-HOLD 11-11 (COORD 05:02 ruling, NK post-CTS hold class, form A): the hard-core data-input ports of
+    `module` that get an ot_dp_lk negative-level lockup latch per bit in type tn, else ().
+
+    Why: the NK ETM books its internal clock insertion as hold arcs (hold_rising 457-774 ps; min/max_clock_tree_path
+    237/658-700 ps FF), and the plan pre-skews the core tap clk_c<N> early (-415.8/-565.8 ps) to buy setup.  No core
+    pre-skew closes both sides (to-NK hold vs from-NK hold trade 1:1, 120 ps short).  A latch transparent while the
+    FABRIC clock is low, clocked from its launch flop's tap (instances u_fl_*: clock_taps.tcl follow-D hop-latch pass,
+    NOT the pre-skewed clk_c<N>), releases new data only at the falling edge: the latch -> NK hold check gains T/2
+    (416 ps at 833 ps) while the fabric -> latch check is an ordinary same-tap flop check.  Cycle-neutral (lec.py
+    latch_to_wire; bind_verify ot_dp_lk stages 0).  Plan clock.core_input_lockup (absent = off, byte-identical):
+    {"modules": {"<module>": ["<port>", ...]}, "all": true, "except": [types]} or {..., "types": [types]}."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup")
+    if not cfg:
+        return ()
+    if cfg.get("all"):
+        if tn in set(cfg.get("except") or []):
+            return ()
+    elif tn not in set(cfg.get("types") or []):
+        return ()
+    return tuple((cfg.get("modules") or {}).get(module) or ())
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -3070,7 +3093,8 @@ class Binder:
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
             (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
-        if (self.plan.get("clock") or {}).get("ft_hop_lockup") and "module ot_dp_lk " not in cells:
+        if ((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("core_input_lockup")) \
+                and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         import gen_rtl
         if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
@@ -3867,6 +3891,12 @@ class Binder:
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     if pn in core_gate_ports.get(c.module, ()):
                         e = [core_reset_gate(x, c, r, pn) for x in e]
+                    if pn in core_input_lockup(self.plan, tn, c.module):
+                        lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
+                        decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
+                        body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_fl_nk_' + sv_id(r) + '_' + pn, 100)} "
+                                    f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
+                        e = [lk]
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
