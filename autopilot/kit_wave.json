@@ -28471,8 +28471,9 @@
     "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
     "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)",
     "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key.",
-    "q_b001": "superseded-redesign: KW-FIX-43 11-11 DIE-HBM-98 (COORD fail_watch 02:0x): a15 PDN-0179 at place; rebuild only from the post-cut q_b001 REDESIGN plan (ft-around + L14 serialised query/key); pv1 a15 runs to the end as data",
-    "q_b001__physical_v1": "superseded-redesign: KW-FIX-43 11-11 DIE-HBM-98 (COORD fail_watch 02:0x): a15 PDN-0179 at place; rebuild only from the post-cut q_b001 REDESIGN plan (ft-around + L14 serialised query/key); pv1 a15 runs to the end as data"
+    "q_b001": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
+    "q_b001__physical_v1": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
+    "q_b001*": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1"
    },
    "gen_hosts": [
     "epyc7",
