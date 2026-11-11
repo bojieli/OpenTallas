@@ -700,12 +700,14 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "place_prefer": [
     "epyc4",
@@ -3083,7 +3085,18 @@
     "epyc4"
    ],
    "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2.",
-   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK)."
+   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK).",
+   "hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc8",
+    "epyc4"
+   ],
+   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b."
   },
   "s81": {
    "enabled": true,
@@ -5435,7 +5448,8 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -17465,7 +17479,18 @@
     "epyc8"
    ],
    "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2.",
-   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK)."
+   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK).",
+   "hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "epyc8"
+   ],
+   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b."
   },
   "s81_head": {
    "enabled": true,
@@ -19700,13 +19725,15 @@
     "epyc7",
     "epyc4",
     "intel2",
-    "epyc8"
+    "epyc8",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
@@ -25269,7 +25296,19 @@
     "epyc8"
    ],
    "note_kw43e2": "KW-FIX-43 11-10 19:5x COORD 19:5x: epyc2 back (root 160 GB, admits 255 GB, load 58/128, no waiters): + hosts of 4 dies, + gen_hosts of hbm/qwen_kvsys/qwen_compute (src probe complete on epyc2 for these). S81 gen stays off epyc2: kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10 (31 GB), epyc2 scratch2 56 GB (floor 50) and root 147 GB (floor 150) cannot take it. Revert: hosts/gen_hosts <- *_prev_kw43e2.",
-   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK)."
+   "note_kw43e2r": "KW-FIX-43 11-10 20:2x COORD 20:1x: REVERT of kw43e2 (epyc2 off hosts/gen_hosts again). Both wave lane dirs on epyc2 (kw43-wave-1109, kw43-wave-1109n) are symlinks to /srv/opentallas-scratch3 = epyc2 ROOT fs (147 GB < floor 150), so any epyc2 --dir is refused; epyc2 scratch2 has 56 GB (floor 50), no room for a new scratch2 lane. Retry slice_station__t41@4 (earlyoom kill of its late-ECO detail route, epyc7 02:18 UTC, KW-FIX-44 SEALDOCK).",
+   "hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "intel2",
+    "epyc8"
+   ],
+   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b."
   },
   "hbm": {
    "enabled": true,
@@ -26684,7 +26723,8 @@
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc4"
+    "epyc4",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -27025,7 +27065,8 @@
    "hosts": [
     "epyc7",
     "epyc4",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "cancel_superseded": false,
    "plan_core_items": [
@@ -35413,7 +35454,18 @@
    "src_prev_kw43hsrc": "/srv/opentallas-scratch2/claude/kw43/src_hbmf4_m3_por15c",
    "src_sha_prev_kw43hsrc": "4393753cf0b438ba3d15257e9eb651760e35869b",
    "queue_src_prev_kw43hsrc": "claude/hbm-plan-1-1109@4393753cf0b4",
-   "note_src_kw43hsrc": "KW-FIX-43 11-10 20:5x COORD 20:3x (2) + WAVE-OPS-1 handoff: dies.hbm src -> wave-src/20261110hbm2/hbm (main c894884b42 + ROOT-MERGE-57 train + KW-FIX-44 overlays; recipes.json 3 -> 20; 322,308 files byte-checked on epyc7/8/4; live-kept gen_core_kit_hbm.py/bind.py/gen_phys.py; porous 81 files identical to the por15c tree, gen_phys identical) for NEW launches only: running kits keep their pinned spec. src_sha aac2869365, queue_src on the hub ref refs/wave-src/20261110hbm2/hbm. Retry ot_hbm_sm_i8w_front@3 + ot_hbm_sm_pv_merge@3 (NO_RECIPE on the stale recipes.json, INFRA). Revert: src/src_sha/queue_src <- *_prev_kw43hsrc."
+   "note_src_kw43hsrc": "KW-FIX-43 11-10 20:5x COORD 20:3x (2) + WAVE-OPS-1 handoff: dies.hbm src -> wave-src/20261110hbm2/hbm (main c894884b42 + ROOT-MERGE-57 train + KW-FIX-44 overlays; recipes.json 3 -> 20; 322,308 files byte-checked on epyc7/8/4; live-kept gen_core_kit_hbm.py/bind.py/gen_phys.py; porous 81 files identical to the por15c tree, gen_phys identical) for NEW launches only: running kits keep their pinned spec. src_sha aac2869365, queue_src on the hub ref refs/wave-src/20261110hbm2/hbm. Retry ot_hbm_sm_i8w_front@3 + ot_hbm_sm_pv_merge@3 (NO_RECIPE on the stale recipes.json, INFRA). Revert: src/src_sha/queue_src <- *_prev_kw43hsrc.",
+   "hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc4",
+    "intel2"
+   ],
+   "gen_hosts_prev_kw43e2b": [
+    "epyc7",
+    "epyc8",
+    "epyc4"
+   ],
+   "note_kw43e2b": "KW-FIX-43 11-10 21:4x COORD 21:3x: epyc2 back as wave host. On epyc2 both wave lane dirs (kw43-wave-1109, -1109n) are symlinks to /srv/opentallas-scratch3 (root fs, 233 GB, about 80 GB usable above the 150 floor), and wave/autopilot ot-run counts scratch3 as the second root there (OT_RUN_ROOT_SCRATCH_ROOTS, ROOTSCR_1101; it refuses below 20 GB usable), so gen and P&R outputs land on scratch3, not scratch2. Sealed ot-jobs (scratch2) stay off epyc2 (sealed-ap/wave hosts, note_kw43_e2out). Gen host for hbm/qwen_kvsys/qwen_compute (src probe whole on epyc2); s81 gen stays off (kit_rtl_s81_final_1109.sh needs wt/kw-fix-4-s81h10, 31 GB). Revert: hosts/gen_hosts <- *_prev_kw43e2b."
   }
  },
  "place_prefer": [
