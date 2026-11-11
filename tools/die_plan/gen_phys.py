@@ -708,7 +708,7 @@ def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     import kit_reset_contract
     source = kit_reset_contract.die_contract(P.name)   # DIE-HBM-97 11-09: plan die name -> contract dir
     if source is not None:
-        reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
+        reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source, plan_type=True)
         if reset_contract is not None:
             fz["reset_contract"] = reset_contract
     # Match the core-generator recipe form: candidates only, never an EQ waiver.
