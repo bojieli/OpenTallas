@@ -101,9 +101,16 @@ def core_tap_matches(name, insts):
 
 
 # ------------------------------------------------------------------------------------------- (a) positions / orients
+def split_sheet(arg):
+    """--pos DELTA.json[::INTENT_SHEET] (COORD 02:1x adoption gate: the family's intent sheet is recorded per delta)."""
+    p, _, sh = arg.partition("::")
+    return p, (sh or None)
+
+
 def load_pos(paths):
     out, owner = [], {}
     for p in paths:
+        p, _ = split_sheet(p)
         d = json.loads(Path(p).read_text())
         assert isinstance(d, dict) and d, f"{p}: not a non-empty {{type: {{inst: [x, y, orient]}}}}"
         for tn, m in d.items():
@@ -404,12 +411,20 @@ def legality_diff(base, out, types, gap, edge):
 
 # ------------------------------------------------------------------------------------------- G0 / phys
 def g0(plan_path, out_dir):
+    """check.py reads its sidecars from PLANDIR (census/, core_conns.json, r8/, lat/ ... of physical/die_plan/s81):
+    the plan is copied into this directory under a temporary dot-name for the run and removed after."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    r = subprocess.run([sys.executable, "-I", str(REPO / "tools/die_plan/check.py"), str(plan_path), "--out",
-                        str(out_dir), "--quiet"], capture_output=True, text=True, cwd=REPO)
+    tmp = HERE / f".compose_g0_{fsha(plan_path)[:16]}_{out_dir.name}.json"
+    tmp.write_bytes(Path(plan_path).read_bytes())
+    try:
+        r = subprocess.run([sys.executable, "-I", str(REPO / "tools/die_plan/check.py"), str(tmp), "--out",
+                            str(out_dir), "--quiet"], capture_output=True, text=True, cwd=REPO)
+    finally:
+        tmp.unlink()
     (out_dir / "g0.log").write_text(r.stdout + r.stderr)
-    rep = json.loads((out_dir / "g0_report.json").read_text())
-    return rep
+    if not (out_dir / "g0_report.json").is_file():
+        raise SystemExit(f"G0 did not run on {plan_path}: {(r.stdout + r.stderr)[-1500:]}")
+    return json.loads((out_dir / "g0_report.json").read_text())
 
 
 def g0_diff(rb, ro):
@@ -475,7 +490,14 @@ def compose(a):
         pos_rec, pr = apply_pos(plan, deltas)
         problems += pr
         s_out = sha(dump(plan).encode())
-        stages.append(dict(stage="a_positions", inputs=[dict(path=p, sha256=s) for p, s, _ in deltas],
+        sheets = [split_sheet(x)[1] for x in a.pos]
+        for sh in sheets:
+            if sh and not Path(sh).is_file():
+                problems.append(f"intent sheet {sh} does not exist")
+        stages.append(dict(stage="a_positions",
+                           inputs=[dict(path=p, sha256=s, intent_sheet=sh,
+                                        intent_sheet_sha256=fsha(sh) if sh and Path(sh).is_file() else None)
+                                   for (p, s, _), sh in zip(deltas, sheets)],
                            in_sha256=cur, out_sha256=s_out, types=sorted(pos_rec),
                            moved=sum(len(r["moved"]) for r in pos_rec.values()),
                            core_taps_moved=sum(len(r["core_taps_moved"]) for r in pos_rec.values()),
@@ -553,7 +575,7 @@ def compose(a):
         if a.dry_run:
             pp = out_dir / "dry_plan.json"
             pp.write_bytes(text)
-        gb_dir = out_dir / "g0_base"
+        gb_dir = Path(a.g0_base) if getattr(a, "g0_base", None) else out_dir / "g0_base"   # cached per base sha
         rb = json.loads((gb_dir / "g0_report.json").read_text()) if (
             (gb_dir / "g0_report.json").is_file() and (gb_dir / "base.sha").is_file()
             and (gb_dir / "base.sha").read_text().strip() == bsha) else None
@@ -613,7 +635,7 @@ def main():
     ap.add_argument("cmd", choices=["compose"])
     ap.add_argument("base")
     ap.add_argument("out_dir")
-    ap.add_argument("--pos", action="append", help="positions/orients delta JSON (repeatable)")
+    ap.add_argument("--pos", action="append", help="positions/orients delta JSON[::intent sheet] (repeatable)")
     ap.add_argument("--face", help="face-window delta JSON")
     ap.add_argument("--face-script", help="the face event's own applier, run with --rebase on the same pre-stage plan; "
                                           "its output must equal the generic apply")
@@ -623,13 +645,14 @@ def main():
     ap.add_argument("--pad-script", default=str(HERE / "delta_latetap_pad_1111.py"))
     ap.add_argument("--base-sha", action="append", help="accepted base sha256 (in addition to BASES)")
     ap.add_argument("--no-g0", action="store_true")
+    ap.add_argument("--g0-base", help="shared dir caching BASE's G0 report (reused when its base.sha matches)")
     ap.add_argument("--phys", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="validate + gates, write dry_record.json only")
     ap.add_argument("--gap", type=float, default=34.56, help="B34 street: non-abutted cores >= gap apart")
     ap.add_argument("--edge", type=float, default=0.0, help="core box >= edge from the type outline")
     a = ap.parse_args()
     if a.pos:
-        a.pos = [str(Path(p).resolve()) for p in a.pos]
+        a.pos = ["::".join(str(Path(x).resolve()) for x in split_sheet(p) if x) for p in a.pos]
     for k in ("face", "face_script", "keep_clear", "pad", "base"):
         if getattr(a, k):
             setattr(a, k, str(Path(getattr(a, k)).resolve()))
