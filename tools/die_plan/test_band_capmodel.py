@@ -92,7 +92,8 @@ def test_strip_over_core_is_compensated_for_the_transition_halving():
 
 
 def test_strips_cover_cores_no_halo_and_band_keeps_all():
-    bl, regs = T.band_region_adjust(_P, 0.75)
+    # the pre-FTRES-FIX model (core_zero=False): default share kept over cores too
+    bl, regs = T.band_region_adjust(_P, 0.75, core_zero=False)
     assert bl == ["M6", "M7"]
     m6 = [r for r in regs if r[0] == "M6"]
     rows = Counter(round(r[2] / g) for r in m6)

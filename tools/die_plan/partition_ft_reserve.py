@@ -33,7 +33,11 @@ def reservation(P, typ):
     frac=min(float(q.get('ft_track_frac',.25)) for q in P.types.values())
     _,regions=D.band_region_adjust(P,round(1-frac,3))
     by={L:[] for L in layers}
-    for L,*rect in D.band_share_obs(P,regions):
+    # FTRES-FIX 11-10: complement the die's OWNERSHIP map (band_share_obs owner=True), not its GRT capacity stripes.
+    # They differ only over a halved transition gcell (M6 over an M5-OBS core), where the die really has 0.5 a of the
+    # tracks: the partition now reserves that, not 0.5 + 0.5 a.  Outside a band the die keeps 0 over hard cores
+    # (band_region_adjust core_zero, 12.10c), so nothing is reserved there; a band's core_share sets its share over cores.
+    for L,*rect in D.band_share_obs(P,regions,owner=True):
         if L in by:by[L].append(tuple(rect))
     for L in layers:by[L].extend(D.die_core_rects(P,L))
     w,h=t['outline_um'];maps=[]
@@ -58,7 +62,8 @@ def reservation(P, typ):
     rows=maps[0][1]
     return dict(schema='opentallas.partition_ft_reservation.v1',type=typ,
                 instances=[name for name,_ in maps], default_die_share=frac,
-                basis='physical complement of die_trial band_share_obs plus die macro OBS',
+                core_zero=bool(D.FT_CORE_ZERO),
+                basis='physical complement of die_trial band_share_obs(owner=True) plus die macro OBS',
                 plan_sha256=hashlib.sha256(json.dumps(P.raw,sort_keys=True).encode()).hexdigest(),
                 rectangles_um=[dict(layer=L,rect=list(r)) for L,*r in rows])
 

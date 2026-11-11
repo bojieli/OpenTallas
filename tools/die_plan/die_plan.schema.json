@@ -2444,6 +2444,9 @@
            "type": "number",
            "exclusiveMinimum": 0
           },
+          "insertion_basis": {
+           "type": "string"
+          },
           "insertion_tol_ps": {
            "type": "number",
            "minimum": 0
@@ -5139,6 +5142,11 @@
          "minItems": 1
         },
         "die_share": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "core_share": {
          "type": "number",
          "minimum": 0,
          "maximum": 1
