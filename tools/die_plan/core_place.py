@@ -1542,93 +1542,136 @@ def main(argv=None):
             Path(a.svg).mkdir(parents=True, exist_ok=True)
             svg_view(M, Gd, "%s BEFORE  bit-mm %.0f  ovf H/V %.0f/%.0f" % (tn, base_bitum / 1e3, b_oH, b_oV),
                      Path(a.svg) / f"{tn}__before.svg", b_cut, (b_rH, b_rV))
-        seeded = 0
-        if tn in seeds:
-            seeded = apply_seed(M, seeds[tn], log)
-        fc_moved, fc_failed = face_clear_legalise(M, log) if cfg.get("face_clear") else (0, [])
-        st = {"moves": {}}
-        if not a.no_search:
-            st = search(M, Gd, cfg, log)
-            # station repair: a station that hub_repack.route_station cannot re-site with its old register count
-            # (length limit, or no free street sites along it) gets its end clusters reverted to the base placement,
-            # most-implicated cluster first, while the revert is legal (the base is feasible, so this converges)
-            qmap = {si: q for (si, q, _) in M.stations}
-            reverted = []
-            # first: swap an over-station end with a same-size cluster (identical lanes) when that lowers the count
-            swapped = []
-            nbad = lambda: len(write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"])  # noqa: E731
-            cur = nbad()
-            for rnd in range(8):
-                if not cur:
-                    break
-                bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
-                ends = collections.Counter()
-                for si in bad:
-                    a_, b_, _, _ = M.L[qmap[si]]
-                    for e in (a_, b_):
-                        if e[0] is not None:
-                            ends[M.cid[e[0]]] += 1
-                best = (cur, None)
-                tv_cur = M.tviol(range(len(M.L)))
-                for k_, _ in ends.most_common(3):
-                    for j_ in range(M.m):
-                        if j_ == k_ or M.cfix[j_] or M.cfix[k_] or \
-                                abs(M.cbb[j_, 2] - M.cbb[k_, 2]) > EPS or abs(M.cbb[j_, 3] - M.cbb[k_, 3]) > EPS:
-                            continue
-                        pk, pj = tuple(M.cpos[k_]), tuple(M.cpos[j_])
-                        fk, fj = M.cflip[k_], M.cflip[j_]
-                        M.cpos[k_], M.cpos[j_] = pj, pk
-                        if M.legal(k_, *pj, ignore=(j_,)) and M.legal(j_, *pk) and M.tviol(range(len(M.L))) <= tv_cur:
-                            n_ = nbad()
-                            if n_ < best[0]:
-                                best = (n_, (k_, j_))
-                        M.cpos[k_], M.cpos[j_] = pk, pj
-                        M.cflip[k_], M.cflip[j_] = fk, fj
-                if best[1] is None:
-                    break
-                k_, j_ = best[1]
-                M.cpos[k_], M.cpos[j_] = tuple(M.cpos[j_]), tuple(M.cpos[k_])
+        pinned = []
+        for attempt in range(3):
+            # a retry starts from the base with the end clusters of the stations that could not keep their
+            # register count pinned at their base spot (a station's count is its latency: EQ keeps it)
+            if attempt:
+                M.reset_state()
+                for k_ in pinned:
+                    M.cfix[k_] = True
                 if M.bands:
                     M.band_now = np.zeros(len(M.bands))
                     for kk in range(M.m):
                         M.band_now += M._band_k(kk)
-                swapped.append((M.inst[M.CL[k_][0]], M.inst[M.CL[j_][0]]))
-                cur = best[0]
-            if swapped:
-                log("  station repair: %d same-size swaps, %d stations still over: %s" % (len(swapped), cur, swapped))
-                st["swapped"] = swapped
-            for rnd in range(M.m):
-                bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
-                if not bad:
-                    break
-                cnt = collections.Counter()
-                for si in bad:
-                    a_, b_, _, _ = M.L[qmap[si]]
-                    for e in (a_, b_):
-                        if e[0] is not None:
-                            k_ = M.cid[e[0]]
-                            if tuple(M.cpos[k_]) != tuple(M.cbb[k_, :2]) or M.cflip[k_] != "R0":
-                                cnt[k_] += 1
-                done_ = False
-                # face-rule clusters (--face-clear) revert last: the rule is the point of the move
-                for k_, _ in sorted(cnt.most_common(), key=lambda kv: bool(M.cclr[kv[0]])):
-                    old = (tuple(M.cpos[k_]), M.cflip[k_])
-                    ob = M._band_k(k_) if M.bands else None
-                    tvb = M.tviol(range(len(M.L)))
-                    M.cpos[k_] = tuple(M.cbb[k_, :2]); M.cflip[k_] = "R0"
-                    if (M.legal(k_, *M.cpos[k_]) or base_ok(M, k_)) and M.tviol(range(len(M.L))) <= tvb:
-                        if M.bands:
-                            M.band_now += M._band_k(k_) - ob
-                        reverted.append(M.inst[M.CL[k_][0]])
-                        done_ = True
+            seeded = 0
+            if tn in seeds:
+                seeded = apply_seed(M, seeds[tn], log)
+            fc_moved, fc_failed = face_clear_legalise(M, log) if cfg.get("face_clear") else (0, [])
+            st = {"moves": {}}
+            if not a.no_search:
+                st = search(M, Gd, cfg, log)
+                # station repair: a station that hub_repack.route_station cannot re-site with its old register count
+                # (length limit, or no free street sites along it) gets its end clusters reverted to the base placement,
+                # most-implicated cluster first, while the revert is legal (the base is feasible, so this converges)
+                qmap = {si: q for (si, q, _) in M.stations}
+                reverted = []
+                # first: swap an over-station end with a same-size cluster (identical lanes) when that lowers the count
+                swapped = []
+                nbad = lambda: len(write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"])  # noqa: E731
+                cur = nbad()
+                for rnd in range(8):
+                    if not cur:
                         break
-                    M.cpos[k_], M.cflip[k_] = old
-                if not done_:
-                    log("  station repair: no legal revert left (%d stations over)" % len(bad))
-                    break
-            if reverted:
-                log("  station repair: reverted %d clusters to base: %s" % (len(reverted), reverted))
-                st["reverted"] = reverted
+                    bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
+                    ends = collections.Counter()
+                    for si in bad:
+                        a_, b_, _, _ = M.L[qmap[si]]
+                        for e in (a_, b_):
+                            if e[0] is not None:
+                                ends[M.cid[e[0]]] += 1
+                    best = (cur, None)
+                    tv_cur = M.tviol(range(len(M.L)))
+                    for k_, _ in ends.most_common(3):
+                        for j_ in range(M.m):
+                            if j_ == k_ or M.cfix[j_] or M.cfix[k_] or \
+                                    abs(M.cbb[j_, 2] - M.cbb[k_, 2]) > EPS or abs(M.cbb[j_, 3] - M.cbb[k_, 3]) > EPS:
+                                continue
+                            pk, pj = tuple(M.cpos[k_]), tuple(M.cpos[j_])
+                            fk, fj = M.cflip[k_], M.cflip[j_]
+                            M.cpos[k_], M.cpos[j_] = pj, pk
+                            if M.legal(k_, *pj, ignore=(j_,)) and M.legal(j_, *pk) and M.tviol(range(len(M.L))) <= tv_cur:
+                                n_ = nbad()
+                                if n_ < best[0]:
+                                    best = (n_, (k_, j_))
+                            M.cpos[k_], M.cpos[j_] = pk, pj
+                            M.cflip[k_], M.cflip[j_] = fk, fj
+                    if best[1] is None:
+                        break
+                    k_, j_ = best[1]
+                    M.cpos[k_], M.cpos[j_] = tuple(M.cpos[j_]), tuple(M.cpos[k_])
+                    if M.bands:
+                        M.band_now = np.zeros(len(M.bands))
+                        for kk in range(M.m):
+                            M.band_now += M._band_k(kk)
+                    swapped.append((M.inst[M.CL[k_][0]], M.inst[M.CL[j_][0]]))
+                    cur = best[0]
+                if swapped:
+                    log("  station repair: %d same-size swaps, %d stations still over: %s" % (len(swapped), cur, swapped))
+                    st["swapped"] = swapped
+                for rnd in range(M.m):
+                    bad = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
+                    if not bad:
+                        break
+                    cnt = collections.Counter()
+                    for si in bad:
+                        a_, b_, _, _ = M.L[qmap[si]]
+                        for e in (a_, b_):
+                            if e[0] is not None:
+                                k_ = M.cid[e[0]]
+                                if tuple(M.cpos[k_]) != tuple(M.cbb[k_, :2]) or M.cflip[k_] != "R0":
+                                    cnt[k_] += 1
+                    done_ = False
+                    # face-rule clusters (--face-clear) revert last: the rule is the point of the move
+                    for k_, _ in sorted(cnt.most_common(), key=lambda kv: bool(M.cclr[kv[0]])):
+                        old = (tuple(M.cpos[k_]), M.cflip[k_])
+                        ob = M._band_k(k_) if M.bands else None
+                        tvb = M.tviol(range(len(M.L)))
+                        M.cpos[k_] = tuple(M.cbb[k_, :2]); M.cflip[k_] = "R0"
+                        if (M.legal(k_, *M.cpos[k_]) or base_ok(M, k_)) and M.tviol(range(len(M.L))) <= tvb:
+                            if M.bands:
+                                M.band_now += M._band_k(k_) - ob
+                            reverted.append(M.inst[M.CL[k_][0]])
+                            done_ = True
+                            break
+                        M.cpos[k_], M.cflip[k_] = old
+                    if not done_:
+                        log("  station repair: no legal revert left (%d stations over)" % len(bad))
+                        break
+                if reverted:
+                    log("  station repair: reverted %d clusters to base: %s" % (len(reverted), reverted))
+                    st["reverted"] = reverted
+            if a.no_search:
+                break
+            bad_end = write_type(M, copy.deepcopy(t), cfg, lambda s_: None)["need_more_idx"]
+            if not bad_end:
+                break
+            add = set()
+            S_ = t.get("internal_stations") or []
+            for si in bad_end:
+                a_, b_, _, _ = M.L[qmap[si]]
+                for e in (a_, b_):
+                    if e[0] is not None and not M.cfix[M.cid[e[0]]]:
+                        add.add(M.cid[e[0]])
+                # clusters that moved onto the station's base path (pins -> its registers, bbox per hop + 10 um)
+                pts = [tuple(S_[si]["from_um"])] + [tuple(r) for r in S_[si].get("regs_um") or []] + \
+                    [tuple(S_[si]["to_um"])]
+                for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+                    bx0, bx1 = min(x0, x1) - 10, max(x0, x1) + 10
+                    by0, by1 = min(y0, y1) - 10, max(y0, y1) + 10
+                    for k_ in range(M.m):
+                        if M.cfix[k_]:
+                            continue
+                        def hit(px, py):
+                            return px < bx1 and px + M.cbb[k_, 2] > bx0 and py < by1 and py + M.cbb[k_, 3] > by0
+                        if hit(*M.cpos[k_]) and not hit(*M.cbb[k_, :2]):
+                            add.add(k_)
+            if not add or attempt == 2:
+                break
+            pinned += sorted(add)
+            log("  station retry %d: pin %d station-end clusters at base: %s" % (
+                attempt + 1, len(add), [M.inst[M.CL[k_][0]] for k_ in sorted(add)]))
+        st["pinned_for_stations"] = [M.inst[M.CL[k_][0]] for k_ in pinned]
         new_bitum = M.cost(range(len(M.L)))
         tviol_end = M.tviol(range(len(M.L)))
         SH, SV = Gd.supply(); DH, DV = Gd.demand()
