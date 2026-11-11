@@ -72,3 +72,40 @@ Cost: 16 bank type outlines change (8 per side) and need new hcol S2 layouts (CP
 
 ## 4. Die cut E1 (unchanged by this delta)
 feas_die on the cut plan: worst full line 0.21; segments NE_b000 0.959 / NW_b000 0.849 (L8300m 1615 + L5063 1457 + L5042 1266 climbing in the 458-um b000). This stays with the L14 split re-stack (COORD 04:51 accepted DIE-VIS E1), or is absorbed by the ladder, where the hub->su00/sm transits use the x > 946 band instead of b000.
+
+## 5. Top metal (M8/M9 over the cell, S81 form d) for HBM long/wide buses (OWNER question)
+
+INVENTORY: tables/inventory_wide_long.tsv, scripts/inventory.py, from the explorer links.tsv of plan e6bb764f1f22. It lists 164 links of >= 256 b that are > 1 mm or over reach, each with bits, length, max hop, stages, status, endpoints, NS/EW and the crossed blocks. Every one of them crosses at least one block that is not an endpoint.
+
+| group | links | bits (NS / EW) | over reach | bit-mm | longest |
+|---|---|---|---|---|---|
+| A bank ring / bank-bank | 8 | 14.9 kb (0 / 14.9k) | 0 | 23.6k | L168 1388 b 2163 um |
+| B hub<->su/sm transits (#35/#36) | 64 | 56.8 kb (14.0k / 42.8k) | 39 | 263.2k | L1278 1483 b 17.2 mm |
+| C vsN column / root / PHY_NC | 13 | 12.4 kb (8.0k / 4.4k) | 4 | 96.9k | L9 1842 b 9.0 mm |
+| D mcb/spt/spu columns | 6 | 3.9 kb (3.9k / 0) | 0 | 9.1k | L66 268 b 6.4 mm |
+| E su rows (su/sfu/b1xx) | 45 | 35.3 kb (13.8k / 21.5k) | 16 | 141.1k | L5059 585 b 9.7 mm |
+| F hub<->PHY_NW/NE, hub<->hub, hub<->spb/io | 28 | 34.4 kb (17.1k / 17.3k) | 1 | 201.9k | L8 3070 b 10.3 mm |
+
+The ring is NOT the only long-and-wide class. It is the smallest by bit-mm. Most of its hops are < 1 mm and they are all relayed. B, F and E carry 87% of the long-wide bit-mm and 56 of the 60 over-reach links.
+
+SUPPLY model (stated assumptions, not measured):
+- ASAP7 M8 (H) / M9 (V) pitch 80 nm = 12.5 tracks/um raw.
+- Die PG (plan die.pg): M8 0.48 at 4.32 pitch (13%) and M9 12.96 at 34.56 (38%).
+- The plan's own die-layer budget after PG + clock/reset pre-routes is cut_avail 0.6, so 7.5 tracks/um.
+- Bump landing on M9 (150-um C4, about 40-um pads): x 0.73 on M9, so 5.5 tracks/um.
+- HBM PHY (PHY_NC/NE/NW) and SPB escape use M6/M7 (DIE-VIS SPB: modelled M6/M7). The PHY band has dense micro-bump landing on top metal, so I count 0 M8/M9 over the PHY macros: form d must drop to M7 before the PHY band.
+- Note: route_supply ruling 9.3 still models 0 signal M8/M9, and DIE-PROTO-2 HBM B already pins the abstracts on M8/M9 (not yet measured).
+
+PER GROUP:
+- A ring: POSSIBLE on M8. The worst vertical cut of the fold carries about 11 kb of E-W ring (2 overlapping skip-one hops) against 4320 um x 7.5 = 32.4k M8 tracks, i.e. 0.34. But form d keeps the in-block register bays, so the 133k ring flops per side and b010's cell cap stay. The LADDER (section 3) makes the hops abut: 0 wire, 0 flops, 0 windows. Ladder first; ring-on-M8 is the no-re-floor fallback. COORD's read is CONFIRMED, with that one correction (top metal is possible for the ring, just not better).
+- B hub<->su/sm: THE REAL CANDIDATE.
+  - E-W per side about 21.4 kb over the 4320-tall hub on M8: <= 21.4k / 32.4k = 0.66 if every transit overlapped one cut, which is the upper bound.
+  - N-S per side about 7.0 kb over the 4.49-mm bank block on M9: 7.0k / (4493 x 5.5) = 0.28.
+  - Form d frees the type FACE WINDOWS these transits pack today. That window packing is the cause of the E1 b000 cut (0.959) and of the b0xx "offset ft" REDESIGN rows.
+  - Bays still cost flops (as today), plus a via stack per bay. Recommended over any re-floor for B.
+- E su rows: PARTLY. E-W about 10.7 kb per side along a 1555/1572-um row is 0.92 on M8 if fully overlapped, so M8 alone is too tight. Use form d for the over-reach 16 (e.g. L5058/59/60 7-9.7 mm) plus the section-3 Y growth of the rows. NS 13.8k on M9 is fine (< 0.3).
+- F hub<->PHY_NW/NE (L8 3070 b, L21 2560 b, 9-10 mm): M9 through the spt/spu column (about 1.7-1.8 mm wide) needs 5.6k / (1750 x 5.5) = 0.59 per side. That is a candidate down to the PHY band edge (drop to M7 there), and it relieves q_spu0, whose overflow sits inside the plan ft corridors. hub<->hub L8100/L8101/L4 across root (8.4 kb, E-W): M8 over root (root p99 7.7 today) is a candidate, 8.4k / (root height x 7.5) < 0.5.
+- C vsN column: NO. It is already a 0-core ft column (supply is ample on M4-M7), and its failures are timing/hold (HBM-VSN-XTAP-2), not wiring.
+- D mcb/spt: NO. It is small (3.9 kb).
+
+RECOMMENDATION: a form-d die-top net class for HBM groups B and F (and E's over-reach links), owned like S81's X-TIER-OTC, with the same gates. Bank ring: the ladder. The two are independent.
