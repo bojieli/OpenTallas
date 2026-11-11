@@ -801,6 +801,54 @@ def check_m89_signals(P, R, max_msgs=40):
     return dict(total=n[0], by=dict(cnt))
 
 
+def ft_s0_window_um(t, slot):
+    """distance (um) from an ft slot's plan station 0 (regs_um[0]) to where the kit puts station 0, or None.
+
+    face_flops.tcl registers each in bit at its in-port face flop, placed in the face band at the bit's pin (the pins
+    sit on in_face inside in_window_um) and ignores regs_um[0].  Returns (near, far): Manhattan distance from
+    regs_um[0] to the nearest and to the farthest point of the in window on the in face edge (near = lower bound for
+    every bit, far = the worst bit)."""
+    regs, win, face = slot.get("regs_um"), slot.get("in_window_um"), slot.get("in_face")
+    if not regs or not win or face not in ("N", "S", "E", "W") or not t.get("outline_um"):
+        return None
+    w, h = map(float, t["outline_um"])
+    x, y = map(float, regs[0])
+    lo, hi = sorted(map(float, win[:2]))
+    if face in ("E", "W"):
+        e, a = abs((0.0 if face == "W" else w) - x), y
+    else:
+        e, a = abs((0.0 if face == "S" else h) - y), x
+    return e + max(lo - a, 0.0, a - hi), e + max(abs(a - lo), abs(a - hi))
+
+
+def check_ft_s0_window(P, R, max_msgs=40):
+    """ft_s0_window (COORD 11-11 03:0x, explorer hop audit HBM q_b010 L1259x2 2004 um): an ft slot whose plan
+    station 0 (regs_um[0]) is more than one reach (ft_station_max_um, <= 405) from its own in window is an ERROR: the
+    kit places station 0 at the window pin, so the real first hop is pin -> regs_um[1], not the planned one."""
+    reach = station_max(P)
+    n = 0
+    worst = []
+    slots = 0
+    for tn, t in P.types.items():
+        for sl in t.get("ft_slots", []) or []:
+            d = ft_s0_window_um(t, sl)
+            if d is None:
+                continue
+            slots += 1
+            if d[0] > reach + EPS:
+                n += 1
+                worst.append((round(d[0], 1), tn, sl["name"]))
+                if n <= max_msgs:
+                    R.err("ft_s0_window", f"type {tn} ft slot {sl['name']}: regs_um[0] {list(sl['regs_um'][0])} is "
+                          f"{d[0]:.0f} um (worst bit {d[1]:.0f} um) from its {sl['in_face']} in window "
+                          f"{list(sl['in_window_um'])} > reach {reach:.0f}; the kit puts station 0 at the window pin "
+                          f"(face_flops.tcl), so re-derive regs_um from the in window", type=tn)
+    if n > max_msgs:
+        R.err("ft_s0_window", f"... {n - max_msgs} more ft slots with regs_um[0] over reach from the in window")
+    worst.sort(reverse=True)
+    return dict(slots=slots, over_reach=n, worst=[dict(um=a, type=b, slot=c) for a, b, c in worst[:10]])
+
+
 def check_hops(P, R, geo):
     worst = []
     from die_hop_scan import pin_table, first_internal_hops
@@ -2424,6 +2472,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
     summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
+    summ["ft_s0_window"] = check_ft_s0_window(P, R)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
