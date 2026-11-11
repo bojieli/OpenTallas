@@ -9,8 +9,8 @@ def _proc(name):
     return SRC[i:SRC.index("\n}\n", i) + 3]
 
 
-def _check(cf, ref, tol=1.0):
-    p = subprocess.run(["tclsh"], input=_proc("ta_fresh_check") + f"if {{[catch {{puts [ta_fresh_check t p {cf} {{{ref}}} {tol}]}} e]}} {{puts \"ERR $e\"; exit 3}}\n",
+def _check(cf, ref, tol=1.0, mode="fail"):
+    p = subprocess.run(["tclsh"], input=_proc("ta_fresh_check") + f"if {{[catch {{puts [ta_fresh_check t p {cf} {{{ref}}} {tol} {mode}]}} e]}} {{puts \"ERR $e\"; exit 3}}\n",
                        text=True, capture_output=True)
     return p.returncode, p.stdout + p.stderr
 
@@ -46,3 +46,15 @@ def test_direct_reference_takes_the_active_edge_off():
     body = _proc("ta_measure")
     assert "lappend wf [sta::time_sta_ui $t]" in body
     assert 'set ref [expr {$ref - [lindex $wf [expr {$tr eq "fall" ? 1 : 0}]]}]' in body
+
+
+def test_default_mode_warns_and_continues():
+    rc, out = _check(617.0, 822.6, mode="warn")
+    assert rc == 0 and "WARN OT_DTAP_ALIGN STALE t" in out and out.strip().endswith("0")
+    assert 'set ta_xcheck_mode [expr {[info exists ::env(OT_DTAP_XCHECK_MODE)] ? $::env(OT_DTAP_XCHECK_MODE) : "warn"}]' in SRC
+
+
+def test_forced_search_is_unconditional():
+    body = _proc("ta_measure")
+    line = next(l for l in body.splitlines() if "sta::find_timing 1" in l)
+    assert line.strip() == "sta::find_timing 1"

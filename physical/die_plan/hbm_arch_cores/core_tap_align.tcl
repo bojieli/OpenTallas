@@ -32,19 +32,25 @@ proc ta_sinks {net} {
 # DIE-HBM-97 11-11 (tapalign-stale-measure): ot_cf_wire reads stored vertex arrivals and never forces a search, so
 # after delay cells are inserted a tap could read its pre-edit mean (vecd4ae v512b ot_dtap_700011: 617 -> 617 after 1
 # and after 12 cells, final 1067 vs target 860).  Every measurement now forces a full arrival search first, and the
-# first sink of every tap is cross-checked against a direct arrival query; a mismatch stops the flow.
+# first sink of every tap is cross-checked against a direct arrival query.  COORD 11-11: a mismatch WARNs by default
+# (OT_DTAP_XCHECK_MODE=warn); OT_DTAP_XCHECK_MODE=fail stops the flow (promote after 24 h of real kits with 0 STALE).
 set ta_xcheck_ps [expr {[info exists ::env(OT_DTAP_XCHECK_PS)] ? $::env(OT_DTAP_XCHECK_PS) : 1.0}]
-proc ta_fresh_check {tap pin cf ref tol} {
+set ta_xcheck_mode [expr {[info exists ::env(OT_DTAP_XCHECK_MODE)] ? $::env(OT_DTAP_XCHECK_MODE) : "warn"}]
+if {$ta_xcheck_mode ni {warn fail}} { error "OT_DTAP_XCHECK_MODE must be warn or fail, got $ta_xcheck_mode" }
+proc ta_fresh_check {tap pin cf ref tol {mode warn}} {
+  set msg ""
   if {$ref eq "" || $ref eq "INF" || ![string is double -strict $ref]} {
-    error "OT_DTAP_ALIGN STALE $tap: no direct arrival for $pin (cross-check impossible)"
+    set msg "OT_DTAP_ALIGN STALE $tap: no direct arrival for $pin (cross-check impossible)"
+  } elseif {abs($cf - $ref) > $tol} {
+    set msg "OT_DTAP_ALIGN STALE $tap: $pin measured [format %.2f $cf] ps, direct arrival [format %.2f $ref] ps (tol $tol)"
   }
-  if {abs($cf - $ref) > $tol} {
-    error "OT_DTAP_ALIGN STALE $tap: $pin measured [format %.2f $cf] ps, direct arrival [format %.2f $ref] ps (tol $tol)"
-  }
-  return 1
+  if {$msg eq ""} { return 1 }
+  if {$mode eq "fail"} { error $msg }
+  puts "WARN $msg"
+  return 0
 }
 proc ta_measure {} {
-  global ta_blk ta_xcheck_ps
+  global ta_blk ta_xcheck_ps ta_xcheck_mode
   set_propagated_clock [all_clocks]
   estimate_parasitics -placement
   ot_cf_refresh
@@ -69,7 +75,7 @@ proc ta_measure {} {
         set wf {}; foreach t [$clk waveform] {lappend wf [sta::time_sta_ui $t]}
         set ref [get_property $pin [expr {$tr eq "fall" ? "arrival_max_fall" : "arrival_max_rise"}]]
         if {[string is double -strict $ref]} {set ref [expr {$ref - [lindex $wf [expr {$tr eq "fall" ? 1 : 0}]]}]}
-        ta_fresh_check $n $p $a $ref $ta_xcheck_ps
+        ta_fresh_check $n $p $a $ref $ta_xcheck_ps $ta_xcheck_mode
         set xc 1
       }
       set s [expr {$s + $a}]; incr k; set mn [expr {min($mn, $a)}]; set mx [expr {max($mx, $a)}]
