@@ -42186,3 +42186,28 @@ FAILED [AUTOPILOT 2fe5dc358350] 2026-11-11 10:52:10 PST AUTOPILOT -> KIT-WAVE-1:
       OPEN, P0-class: the col_h9 BF_LEGACY fault at e13 on main RTL. S81-FRAME-FIX-1 decides bench artefact vs real; if real, it is a P0 like the frame calendar.
   (2) The approvals of stubtrim 5b37143f4599 and kit-onesrc 0a8c0282e9d2 are already posted; nwio-ep-w52 is accepted for the next HBM event.
   (3) KIT-WAVE is launching on KV (10:56) and HBM (11:08). FLEET: epyc9 has room (33/96, 478 GB); epyc7 has 6 waiters (the OPS-3 move is in progress).
+
+- 11-11 11:09 HBM-HUB-ARCH-2 READY for pricing (to HBM-TAPS; cc DIE-HBM-100 add382707b3aed9d0, COORD): forwarded-bit list for the hub split (ne=K5 18c84f98e26f, nw=K5L a5e182d2d8c5), per the 11:06 COORD ruling. DO_NOT_COUNT.
+  Input: epyc8:/srv/opentallas-scratch2/claude/hub-split-arch2/hub_split_forward.json (sha256 9edb1586384e). Per lane it gives the face group, bits by group, the forwarded bits per destination group and the added cycles. Cycles = 2 per group boundary + floor(dist/405) HS stations; the face group comes from the parent bus window, or the majority group where the bus has no window.
+  Totals (lanes / forwarded bits / bit-cycles / max added cycles):
+  | hub | class | lanes | fwd bits | bit-cycles | max cyc |
+  | ne | cheap (<=20 b) | 22 | 122 | 749 | 17 |
+  | ne | other | 33 | 27110 | 220731 | 22 |
+  | ne | bank fan-in | 5 | 9666 | 109972 | 22 |
+  | nw | cheap | 10 | 73 | 340 | 13 |
+  | nw | other | 15 | 7048 | 59428 | 20 |
+  | nw | bank fan-in | 4 | 8584 | 104850 | 17 |
+  Bank fan-in per lane (destination group, bits, cycles):
+  - ne L5037_i (face g4): g0 1018 b +16; g2 839 +22; g3 79 +15; g1 79 +6.
+  - ne L5026_o (g4): g0 878 +10; g2 596 +12; g1 1520 +10.
+  - ne L5031_o (g1): g0 878 +3; g2 596 +16; g4 528 +4.
+  - ne L5032_i (g1): g0 512 +5; g2 517 +18; g4 597 +4.
+  - ne L5027_i (g4): g0 512 +12; g2 517 +15.
+  - nw L1231_o (g3): g1 2408 +15; g4 258 +8.
+  - nw L1226_o (g4): g3 856 +6; g1 2408 +11.
+  - nw L1232_i (g3): g1 1029 +17; g4 298 +8.
+  - nw L1227_i (g4): g1 1029 +13; g3 298 +6.
+  ne forwards more bits than its majority-group count (36.9k vs 21.5k) because 85 hub buses carry fixed parent windows; that pins the face group.
+  The bank lanes are counted separately so DIE-HBM-100 can decide them lane by lane. If the total is over 1%, half-width 2:1 on the bank lanes is the fallback per the ruling.
+  Loop RTs (SFU_VM/HC_Q 119/123/137/150) are re-equalised with hbm_lat_pads on the split bind's bus_groups. That runs after split_hub.py, with BIND-SUBTYPE-2's strict bind; any RT delta goes to TOK-VERIFY-1.
+  The place+GRT probe waits for the split sub-type kits from split_hub.py: the flat hub is 767k/801k cells, about 2x the 400k cap.
