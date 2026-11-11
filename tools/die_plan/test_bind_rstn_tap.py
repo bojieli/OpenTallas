@@ -126,3 +126,27 @@ def test_epoch_pin_site_without_relay_sites(tmp_path):
             assert rows[inst]["site_from"] == "epoch_pin" and rows[inst]["site_um"] == [round(x, 3), round(y, 3)]
             assert abs(taps[i][0] - x) + abs(taps[i][1] - y) <= RT.relay_um(P) < dl
     assert rows                                                       # the 864-um tiny faces sit > 405 um out
+
+
+def test_kit_rsync_keeps_rstn_tap_epoch_flop_as_ste(tmp_path):
+    """an RSTN-TAP bout (ea = its tap net rst_n_t<i>) becomes ot_dp_ste in the kit like an ea(rst_n) one"""
+    import kit_rsync
+    from test_reset_tree import PAIR, piped
+    raw = piped(PAIR)
+    P = schema.Plan(raw)
+    (tmp_path / "plan.json").write_text(json.dumps(raw))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    mod = P.types["fa"]["module"]
+    b = kd / f"{mod}.sv"
+    b.write_text(f"module {mod} (input wire clk, input wire arst_n, input wire [3:0] x, output wire [4:0] y);\n"
+                 "    wire rst_n;\n"
+                 "    ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));\n"
+                 "    ot_dp_st #(.W(4)) u_bout_y (.clk(clk), .rst_n(rst_n_t1), .d(x), .ea(rst_n_t1), .q(y[3:0]), .eq(y[4]));\n"
+                 "endmodule\n")
+    c = kd / "bind_cells.sv"
+    c.write_text("// cells\nmodule ot_dp_st #(parameter W = 1) (input wire clk);\nendmodule\n")
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(files=[str(b), str(c)], bound_module=mod)))
+    assert kit_rsync.main([str(tmp_path / "plan.json"), "fa", str(kd)]) == 0
+    v = b.read_text()
+    assert "ot_dp_ste #(.W(4)) u_bout_y (.clk(clk), .rst_n(rst_n_t1), .d(x), .ea(rst_n_t1)" in v

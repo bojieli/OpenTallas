@@ -59,6 +59,14 @@ class T(unittest.TestCase):
         with self.assertRaises(AssertionError):
             F.transform(BOUND, {'nope': {'stages': 1}})
 
+    def test_transform_rstn_tap_face_flop(self):
+        # RSTN-TAP (bind.py boundary_reset_selector): a far face flop on its same-depth tap net rst_n_t<i>
+        b = BOUND.replace('u_bout_cw_n2 (.clk(clk), .rst_n(rst_n), .d(w_u_xh2_n_d[3:0]), .ea(rst_n)',
+                          'u_bout_cw_n2 (.clk(clk), .rst_n(rst_n_t5), .d(w_u_xh2_n_d[3:0]), .ea(rst_n_t5)')
+        new, olds, news, w = F.transform(b, {'cw_n2': {'stages': 1}})
+        self.assertIn('u_reach_cw_n2 (.clk(clk), .rst_n(rst_n_t5), .d(w_u_xh2_n_d[3:0]), .ea(rst_n_t5)', new)
+        self.assertIn('u_bout_cw_n2 (.clk(clk), .rst_n(rst_n_t5), .d(reach_cw_n2), .ea(reach_cw_n2_eq)', new)
+
     def test_module_stage_names(self):
         m = F.reach_module(3)
         for j in range(3):
