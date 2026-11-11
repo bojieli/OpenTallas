@@ -176,3 +176,28 @@ if __name__ == "__main__":
             else:
                 f()
             print("PASS", n)
+
+
+def _gr_case(rect, extra=None):
+    base = _plan(_tree([450.0, 0.0]), copy.deepcopy(SRC))
+    cand = _plan(_tree([0.0, 900.0]), copy.deepcopy(SRC))
+    lc = cand["partition_types"]["ctl"]["clock"]["landing_contract"]
+    lc["group_rects_um"] = {"u_cland_collect_rst_n_t1": rect, **(extra or {})}
+    rep = CR.reattach_plan(base, cand)
+    return lc["group_rects_um"], rep["reattached"]["ctl"].get("group_rects")
+
+
+def test_stale_collector_rect_rekeyed_keeps_site():
+    # cand21b2 sle_fw_v3: u_cland_collect_rst_n_t14 left behind when its sources moved to rst_n_t38 -> gen ValueError
+    gr, rk = _gr_case([480.0, 0.0, 484.0, 4.0])
+    assert gr == {"u_cland_collect_rst_n_t0": [480.0, 0.0, 484.0, 4.0]}
+    assert rk[0]["new"] == "u_cland_collect_rst_n_t0" and rk[0]["hop_um"] == 280.0
+
+
+def test_stale_collector_rect_dropped_when_out_of_reach_or_taken():
+    gr, rk = _gr_case([900.0, 600.0, 904.0, 604.0])
+    assert gr == {} and rk[0]["new"] is None and "> 405" in rk[0]["why"]
+    gr, rk = _gr_case([480.0, 0.0, 484.0, 4.0], {"u_cland_collect_rst_n_t0": [290.0, 90.0, 294.0, 94.0],
+                                                "u_cland_rst_x": [1.0, 1.0, 2.0, 2.0]})
+    assert gr == {"u_cland_collect_rst_n_t0": [290.0, 90.0, 294.0, 94.0], "u_cland_rst_x": [1.0, 1.0, 2.0, 2.0]}
+    assert rk[0]["new"] is None and "own override" in rk[0]["why"]

@@ -99,6 +99,43 @@ def _reroot(blc, lc, reach_um):
     return dict(old_node=root, node=best[0][1], shift_um=round(best[0][0], 3), site_um=list(oxy), depth=depth)
 
 
+def rekey_group_rects(lc, moved, reach_um):
+    """in place on lc: a landing_contract.group_rects_um override u_cland_collect_<node> whose node is no longer an
+    active collector node (landing_place.collector_nodes) after the reattach is an unknown prefix at gen
+    (landing_place._group_rect_overrides; cand21b2 sle_fw_v3 u_cland_collect_rst_n_t14).  It keeps its SITE: re-keyed
+    to the one active node every source moved off <node> went to, when that node has no override of its own and the
+    rect centre is within reach_um of it; otherwise dropped.  -> [{old, new | None, rect, hop_um, why}]"""
+    import landing_place as LP
+    gr = lc.get("group_rects_um")
+    if not isinstance(gr, dict) or not gr:
+        return []
+    ev = dict(tree=lc["collector_tree"], collector_root_node=lc.get("collector_root_node", "rst_root_n"),
+              local_sources=lc.get("collector_local_sources") or [], children=lc.get("collector_children") or [])
+    active, xy = LP.collector_nodes(ev)
+    act = {"u_cland_collect_" + LP.safe(n): n for n in active}
+    out = []
+    for key in sorted(k for k in gr if k.startswith("u_cland_collect_") and k not in act):
+        old = key[len("u_cland_collect_"):]
+        dest = sorted({m["node"] for m in moved if LP.safe(m["old_node"]) == old})
+        rect = gr.pop(key)
+        cx, cy = (rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2
+        row = dict(old=key, new=None, rect=rect, hop_um=None)
+        if len(dest) != 1 or dest[0] not in active:
+            row["why"] = f"moved sources go to {dest}, not one active node"
+        else:
+            nk, (nx, ny) = "u_cland_collect_" + LP.safe(dest[0]), xy[dest[0]]
+            row["hop_um"] = round(abs(cx - nx) + abs(cy - ny), 3)
+            if nk in gr:
+                row["why"] = f"{nk} has its own override"
+            elif row["hop_um"] > reach_um + 1e-6:
+                row["why"] = f"site {row['hop_um']}um from {dest[0]} > {reach_um:g}"
+            else:
+                gr[nk] = rect
+                row.update(new=nk, why="site kept")
+        out.append(row)
+    return out
+
+
 def reattach_plan(base, cand, reach_um=405):
     """in place on cand -> report {reattached: {type: ...}, over: {type: [(name, node, hop)]}}"""
     rep = {"reattached": {}, "over": {}}
@@ -123,6 +160,9 @@ def reattach_plan(base, cand, reach_um=405):
                                          max_source_hop_um=r["max_source_hop_um"],
                                          moved=[x for x in r["sources"] if x["old_node"] != x["node"]],
                                          **(dict(rerooted=reroot) if reroot else {}))
+            rk = rekey_group_rects(lc, rep["reattached"][tn]["moved"], reach_um)
+            if rk:
+                rep["reattached"][tn]["group_rects"] = rk
         bad = [h for h in source_hops(lc) if h[2] is None or h[2] > reach_um + 1e-6]
         if bad:
             rep["over"][tn] = bad
