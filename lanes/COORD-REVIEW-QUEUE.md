@@ -41203,3 +41203,6 @@ DEFAULT if no answer in 30 min: I build the A+P pilot on cbn_q11 (a14 inputs, ki
     (b) rebuild tap h4_3's sub-tree balanced (leaf buffers 40-47 are ~450 ps against 24 ps).
     APPROVED as ONE stage-resume at CTS, DO_NOT_COUNT until signed off. DIE-S81-87 owns it and runs it via ot-run (epyc9). If it's still over -100 ps after that, the fallback is the +1 capture-side stage with its own latency row.
   (3) pvso: no register-only fix. It stays held for F1 + interior arrangement + hard tr_x, with no growth.
+- 2026-11-11 07:54 PST OWNER DIRECTION (verbatim, relayed by COORD): "half width buses can be adopted for last resort if the cost is below 10%, applied for both s81 and hbm". This REPLACES COORD's 07:5x "serialisation only if TOK < 1%".
+  Order of forms, for S81 AND HBM: layout / top-metal / pipeline cycle first. Half-width (2:1) serialisation is the LAST resort, adoptable when the measured tok/s (AR) cost is < 10%.
+  Note: the S81 x-tier 2:1 measured -2.4..-12.6% AR. If top-metal (d) fails, the frame bench (TOK-VERIFY-1) decides whether it is < 10%.
