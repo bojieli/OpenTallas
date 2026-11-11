@@ -535,10 +535,15 @@ def apply_resize(plan, spec_path):
 
 
 # ------------------------------------------------------------------------------------------- EQ gate
-def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None, script_recs=None):
+def eq_gate(base, out, pos_rec, face_rec, pad_on, resize_rec=None, script_recs=None, wtap_rec=None):
     """restore every key the event may move from BASE and compare: anything else moved = FAIL."""
     x = json.loads(json.dumps(out))
     T, B = x["partition_types"], base["partition_types"]
+    for tn, m in (wtap_rec or {}).items():
+        bt = {q["name"]: q for q in B[tn]["clock"]["added_taps"]}
+        for q in T[tn]["clock"]["added_taps"]:
+            if q["name"] in m:
+                q["xy"] = copy.deepcopy(bt[q["name"]]["xy"])
     for s_ in script_recs or []:      # script stages: the keys they declared (checked per stage against its input)
         for tn in s_["touched"]:
             for k in s_["type_keys"]:
@@ -881,6 +886,37 @@ def compose(a):
                            types=sorted(face_rec["types"]), ports_derived=len(face_rec["ports_derived"]),
                            script_cross_check=cross))
         cur = s_out
+    wtap_rec = None
+    if getattr(a, "window_tap", None):
+        # (b2) CPL-S81-SLICE window tap move (DIE-S81-85 11-11): grid+explicit added taps that follow the applied
+        # face windows; {type: {"clock.added_taps": {name: {from, to}}}}; from asserted, to in-outline
+        wt = json.loads(Path(a.window_tap).read_text())
+        wtap_rec = {}
+        for tn, m in wt.items():
+            t = plan["partition_types"].get(tn)
+            if t is None:
+                problems.append(f"window tap: type {tn} not in the plan")
+                continue
+            assert set(m) == {"clock.added_taps"}, (tn, sorted(m))
+            at = {q["name"]: q for q in (t.get("clock") or {}).get("added_taps") or []}
+            W_, H_ = t["outline_um"]
+            for nm, v in m["clock.added_taps"].items():
+                if nm not in at:
+                    problems.append(f"window tap: {tn} has no added tap {nm}")
+                    continue
+                if [round(x, 4) for x in at[nm]["xy"]] != [round(x, 4) for x in v["from"]]:
+                    problems.append(f"window tap: {tn} {nm} at {at[nm]['xy']}, the lane's from is {v['from']}")
+                    continue
+                if not (-EPS <= v["to"][0] <= W_ + EPS and -EPS <= v["to"][1] <= H_ + EPS):
+                    problems.append(f"window tap: {tn} {nm} -> {v['to']} outside the outline")
+                    continue
+                at[nm]["xy"] = list(v["to"])
+                wtap_rec.setdefault(tn, {})[nm] = dict(from_=v["from"], to=v["to"])
+        s_out = sha(dump(plan).encode())
+        stages.append(dict(stage="b2_window_taps", inputs=[dict(path=a.window_tap, sha256=fsha(a.window_tap))],
+                           in_sha256=cur, out_sha256=s_out, types=sorted(wtap_rec),
+                           taps=sum(len(v) for v in wtap_rec.values())))
+        cur = s_out
     resize_rec = None
     if getattr(a, "resize", None):
         resize_rec, pr = apply_resize(plan, a.resize)
@@ -911,8 +947,8 @@ def compose(a):
         cur = sha(text)
     out_sha = sha(text)
     changed_types = sorted(set(pos_rec) | set((face_rec or {}).get("types", {})) | set((resize_rec or {}).get("types", {}))
-                           | {t for s_ in script_recs for t in s_["touched"]})
-    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad), resize_rec, script_recs)
+                           | {t for s_ in script_recs for t in s_["touched"]} | set(wtap_rec or {}))
+    eq = eq_gate(base, plan, pos_rec, face_rec, bool(a.pad), resize_rec, script_recs, wtap_rec)
     leg = legality_diff(base, plan, changed_types, a.gap, a.edge)
     if a.keep_clear:
         kc = keep_clear(plan, a.keep_clear, face_rec)
@@ -924,12 +960,13 @@ def compose(a):
                                              keep_clear=a.keep_clear, resize=getattr(a, "resize", None),
                                              derived=getattr(a, "derived", None) or [],
                                              stage_script=getattr(a, "stage_script", None) or [],
+                                             window_tap=getattr(a, "window_tap", None),
                                              pad=a.pad, pad_script=a.pad_script if a.pad else None,
                                              gap=a.gap, edge=a.edge),
                stages=stages, output_plan_sha256=out_sha, changed_types=changed_types,
                eq_gate=dict(eq, rtl_change=False, pin_change=False, outline_change=False, cycle_change=False),
                legality=leg, problems=problems, positions=pos_rec, face=face_rec, resize=resize_rec,
-               script_stages=script_recs)
+               script_stages=script_recs, window_taps=wtap_rec)
     if not a.dry_run:
         (out_dir / "plan.json").write_bytes(text)
     if not a.no_g0:
@@ -983,7 +1020,7 @@ def check(out_dir):
     tmp = out_dir / "check_rederive"
     ns = argparse.Namespace(base=rec["base"], out_dir=str(tmp), pos=ar["pos"], face=ar["face"], pad=ar["pad"],
                             face_script=ar.get("face_script"), keep_clear=ar.get("keep_clear"), resize=ar.get("resize"), derived=ar.get("derived"),
-                            stage_script=ar.get("stage_script"),
+                            stage_script=ar.get("stage_script"), window_tap=ar.get("window_tap"),
                             pad_script=ar["pad_script"], base_sha=[rec["base_plan_sha256"]], no_g0=True, phys=False,
                             dry_run=False, gap=ar["gap"], edge=ar["edge"])
     compose(ns)
@@ -1010,6 +1047,8 @@ def main():
     ap.add_argument("--stage-script", action="append",
                     help="script stage spec JSON {name, script, argv ({in},{out},{in_sha},{report}), type_keys, top_keys}; "
                          "run after (a), in order (e station-dir, optional extras)")
+    ap.add_argument("--window-tap", help="(b2) grid+explicit added-tap moves that follow the applied windows "
+                                         "{type: {clock.added_taps: {name: {from, to}}}}")
     ap.add_argument("--resize", help="stage (d) signed box heights spec (events/compose_cleanslate_1111/resize_svcprov_1111.json)")
     ap.add_argument("--pad", help="DS85-LATETAP-1111 pads_delta.json (optional stage c, default OFF)")
     ap.add_argument("--pad-script", default=str(HERE / "delta_latetap_pad_1111.py"))
