@@ -437,19 +437,41 @@ def capacity_sample_count(cls, entry):
     return entry.get("n", 0) + (0 if completion_only_class(cls) else entry.get("proved", 0))
 
 
-def admit_size(mem, cls, table=None):
+def hard_capped(argv):
+    """True when the job's memory has a hard kernel cap at its request: every ot-heavy job runs in a scope with
+    MemoryMax = --mem, and a `docker run` found on PATH goes through the ot-heavy docker shim (--memory = --mem).  Only
+    a docker CLI named by path (/usr/bin/docker, a sealed docker.real) bypasses the shim: capped only by its own -m."""
+    if not argv:
+        return True
+    a = list(argv)
+    if not (os.path.basename(a[0]) in DOCKER_CLIENTS and "run" in a[1:4]) or a[0] == "docker":
+        return True
+    return any(x in ("-m", "--memory") or x.startswith(("--memory=", "-m=")) for x in a[1:])
+
+
+def specific_class(cls):
+    """a qualified class (script:target, e.g. lec.py:kit); a bare script class (lec.py, 54 jobs from 16 to 300 GB) is a
+    fleet-wide mix and never raises a charge"""
+    return bool(cls) and cls not in ("?", "cd") and ":" in cls
+
+
+def admit_size(mem, cls, table=None, argv=None):
     """(GB charged, why) when a request is over 2x the measured peak of its class, else None.
     CHARGEMAX_1111 (KW-FIX-44, COORD 11-11 ruling on DIE-S81-85 20:19: lec.py:kit n=1 peak 1.7 GB charged 10 GB against
     --mem 96 on epyc7, the OOM mechanism again): the charge is max(--mem request, learned class peak) on every path; a
-    class (or family seed) with fewer than CLASS_LOWER_MIN_N (3) finished samples never lowers a declared request."""
+    class (or family seed) with fewer than CLASS_LOWER_MIN_N (3) finished samples never lowers a declared request.
+    COORD 11-11 refinement: only the job's own SPECIFIC class (qualified, n >= 3) may raise the charge above the request,
+    and never above a hard cap (the scope's MemoryMax, or the container's --memory): the kernel enforces the cap, so
+    charging more only wastes a full fleet.  argv None (a waiter / report path) = capped."""
     e = (sizes() if table is None else table).get(cls)
     r = _admit_size_lowered(mem, cls, table, e)
     n = (e or {}).get("n", 0)
-    pk = e.get("peak_gb", 0) if e and cls not in ("?", "cd") and n >= 1 else 0
     if r and r[0] < mem and n < conf("CLASS_LOWER_MIN_N"):
         r = None                                       # too few samples: the declared request stands
-    if pk > mem and (not r or r[0] < math.ceil(pk)):
-        return math.ceil(pk), f"class '{cls}' measured peak {pk}G above the request {mem}G (n={n}): charge = max(request, peak)"
+    pk = e.get("peak_gb", 0) if e and specific_class(cls) and n >= conf("CLASS_LOWER_MIN_N") else 0
+    if pk > mem and not hard_capped(argv) and (not r or r[0] < math.ceil(pk)):
+        return math.ceil(pk), (f"class '{cls}' measured peak {pk}G above the request {mem}G (n={n}), container has no "
+                               f"--memory cap: charge = max(request, peak)")
     return r
 
 
@@ -1148,8 +1170,8 @@ def gate(mem, argv):
 def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
-    a = admit_size(mem, cls, table)
-    res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a class peak above the request raises the charge
+    a = admit_size(mem, cls, table, argv)
+    res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
     rows = read_units()
     for r in rows:                                     # finished long ago: drop the reservation and its side files
@@ -1708,8 +1730,16 @@ def selftest():
     chk("CHARGEMAX_1111: lec.py:kit n=1 peak 1.7 GB keeps --mem 96 (epyc7 OOM)", (admit_size(96, "lec.py:kit", lec) or [96])[0], 96)
     chk("CHARGEMAX_1111: n=3 lowers 96 -> max(1.5 x 1.7, 1.7 + 8)",
         (admit_size(96, "lec.py:kit", {"lec.py:kit": dict(n=3, proved=0, peak_gb=1.7)}) or [96])[0], 10)
-    chk("CHARGEMAX_1111: a class peak above the request raises the charge",
-        (admit_size(8, "lec.py:kit", {"lec.py:kit": dict(n=1, proved=0, peak_gb=20.4)}) or [8])[0], 21)
+    big = {"lec.py:kit": dict(n=3, proved=0, peak_gb=20.4), "lec.py": dict(n=54, proved=0, peak_gb=178.1)}
+    dock = ["/usr/bin/docker", "run", "--rm", "img", "python3", "lec.py"]
+    chk("CHARGEMAX_1111: capped job (scope MemoryMax) is never charged above its request",
+        (admit_size(8, "lec.py:kit", big, ["python3", "/w/lec.py", "kit"]) or [8])[0], 8)
+    chk("CHARGEMAX_1111: uncapped container, specific class n=3 -> raised to its peak",
+        (admit_size(8, "lec.py:kit", big, dock) or [8])[0], 21)
+    chk("CHARGEMAX_1111: container with --memory is clamped at its cap",
+        (admit_size(8, "lec.py:kit", big, dock[:2] + ["--memory=8g"] + dock[2:]) or [8])[0], 8)
+    chk("CHARGEMAX_1111: a bare fleet class (lec.py, 178 GB) never raises",
+        (admit_size(96, "lec.py", big, dock) or [96])[0], 96)
     chk("v17.4 phase: settled unit -> no margin", phase_target(dict(cls="a", now=10.0, decl=160.0, phase=""), {}), 0.0)
     chk("v17.4 phase: compiling verilator, no class peak -> declared cap",
         phase_target(dict(cls="a", now=10.0, decl=160.0, phase="vl", compiling=True), {}), 160.0)

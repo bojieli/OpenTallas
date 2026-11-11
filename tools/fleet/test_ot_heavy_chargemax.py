@@ -33,10 +33,24 @@ class ChargeMax(unittest.TestCase):
     def test_three_samples_may_lower(self):
         self.assertEqual(R.admit_size(96, "lec.py:kit", {"lec.py:kit": dict(n=3, proved=0, peak_gb=1.7)})[0], 10)
 
-    def test_peak_above_request_raises(self):
-        a = R.admit_size(8, "x.sh", {"x.sh": dict(n=1, proved=0, peak_gb=20.4)})
+    def test_raise_only_specific_uncapped_n3(self):
+        dock = ["/usr/bin/docker", "run", "--rm", "img", "bash", "x.sh"]
+        self.assertIsNone(R.admit_size(8, "x.sh:k", {"x.sh:k": dict(n=3, proved=0, peak_gb=20.4)},
+                                       ["docker", "run", "img"]))                       # PATH docker = shim: capped
+        t3 = {"x.sh:k": dict(n=3, proved=0, peak_gb=20.4), "x.sh": dict(n=50, proved=0, peak_gb=178.0)}
+        a = R.admit_size(8, "x.sh:k", t3, dock)
         self.assertEqual(a[0], 21)
         self.assertIn("max(request, peak)", a[1])
+        self.assertIsNone(R.admit_size(8, "x.sh:k", t3, ["bash", "x.sh"]))                 # scope MemoryMax: clamp
+        self.assertIsNone(R.admit_size(8, "x.sh:k", t3, dock[:2] + ["-m", "8g"] + dock[2:]))  # container cap: clamp
+        self.assertIsNone(R.admit_size(8, "x.sh:k", t3))                                 # no argv: capped
+        self.assertIsNone(R.admit_size(96, "x.sh", t3, dock))                            # bare fleet class never raises
+        self.assertIsNone(R.admit_size(8, "x.sh:k", {"x.sh:k": dict(n=2, proved=0, peak_gb=20.4)}, dock))  # n < 3
+
+    def test_epyc7_lec_96_charged_96(self):
+        t = {"lec.py": dict(n=54, proved=0, peak_gb=178.1), "lec.py:kit": dict(n=1, proved=0, peak_gb=1.7)}
+        self.assertIsNone(R.admit_size(96, "lec.py:kit", t, ["python3", "/work/lec.py", "kit"]))
+        self.assertIsNone(R.admit_size(96, "lec.py", t, ["python3", "/work/lec.py", "/work/kit"]))
 
     def test_unmeasured_and_seed_keep_request(self):
         self.assertIsNone(R.admit_size(96, "never.sh", {}))

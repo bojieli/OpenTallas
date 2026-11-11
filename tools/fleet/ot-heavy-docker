@@ -48,6 +48,23 @@ done
 # (never -1000: that also exempts it from its own --memory cgroup OOM, a livelock at the cap), anything else >= 0.
 if [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-999" "--label=opentallas.priority=die" "${out[@]}")
 elif [ -z "$hadj" ]; then out=("--oom-score-adj=0" "${out[@]}"); fi
+# NETNONE_1111 (KW-FIX-44, COORD 11-11; epyc4 systemd 130,302 leaked veth device units): EDA containers need no network,
+# and each bridge container costs a veth pair + two systemd device units.  Every run gets --network=none unless it names
+# its own (--network / --net), OT_HEAVY_NETWORK=1, or its command line matches a line (extended regex) of the allowlist
+# ($OT_HEAVY_NETWORK_ALLOW, default /etc/ot-heavy-network-allow; '#' comments).  A network failure in such a job is INFRA
+# (kit_wave NETNONE rule): add its class to the allowlist.
+hasnet=
+for x in "${out[@]}"; do case "$x" in --network|--network=*|--net|--net=*) hasnet=1; break;; esac; done
+if [ -z "$hasnet" ] && [ "${OT_HEAVY_NETWORK:-}" != 1 ]; then
+  allow=${OT_HEAVY_NETWORK_ALLOW:-/etc/ot-heavy-network-allow}; line="${pre[*]} ${out[*]}"; ok=
+  if [ -r "$allow" ]; then
+    while IFS= read -r re; do
+      case "$re" in ''|'#'*) continue;; esac
+      [[ "$line" =~ $re ]] && { ok=1; break; }
+    done < "$allow"
+  fi
+  [ -z "$ok" ] && out=("--network=none" "${out[@]}")
+fi
 # CRIT_1101 (FLOW-21, COORD 11-01 09:1x/09:2x): a crit job's container competes where the volume runs, as a sibling of
 # the kit containers in system.slice: --cpu-shares 17600 = cpu.weight ~1000 (Docker 29 cgroup v2 mapping; default 100).
 # An explicit --cpu-shares is kept.
