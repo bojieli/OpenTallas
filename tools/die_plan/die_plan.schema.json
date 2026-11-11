@@ -3806,6 +3806,47 @@
          "type": "string",
          "pattern": "^M[1-9]$"
         },
+        "route_channels": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "dir",
+           "span_um",
+           "layers",
+           "reason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "dir": {
+            "enum": [
+             "EW",
+             "NS"
+            ]
+           },
+           "span_um": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           },
+           "layers": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "pattern": "^M[1-9]$"
+            },
+            "minItems": 1
+           },
+           "reason": {
+            "type": "string",
+            "minLength": 3
+           }
+          }
+         }
+        },
         "note": {
          "type": "string"
         },
