@@ -1,0 +1,22 @@
+== t11 Wed Nov 11 16:40:47 UTC 2026
+delta a177acd79b97573e5212e6d8f8c00062cadcfa0c6309572200fd5a97135c4f6c  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d6_hubdrop_1111.json
+delta 3490d4ae29d3b9c8c032e2b3773c7d97bd8d8cf9c5d27e50cff1c1bc00697fe8  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d8_cells_q_spt1.json
+delta 1d7bd7a30db595621df545fb14b704a08f9c0d51336793cbee89631cbc62e8fa  /srv/opentallas-scratch2/claude/hbm-cut-1111/deltas/d7_dl_die_layout_hbm_1111.json
+conflicts rc 0
+overlap 0 identical 0 settled 0 open 0
+applied hubdrop_1111 {"die_plan.json": {"ops": 2, "changed_leaf_paths": 2, "noop_ops": 0, "sha256": "9a5eeea2ab30a0e2aca44bb7d93babc9cd527af920265a28656732b1d67b04dd"}}
+applied cells_q_spt1 {"die_plan.json": {"ops": 1, "changed_leaf_paths": 1, "noop_ops": 0, "sha256": "df8619a6a122e26e035e097c7a2be112214627b5634637bb73827fb6bbfc25c7"}}
+applied die_layout_hbm_1111 {"die_plan.json": {"ops": 112, "changed_leaf_paths": 112, "noop_ops": 0, "sha256": "584df6bfcfc227e00a0d6ad6a1aaf90bcbb80e3596226fdedd3e5eea94195935"}}
+584df6bfcfc227e00a0d6ad6a1aaf90bcbb80e3596226fdedd3e5eea94195935  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/die_plan.json
+f6369f8eb7af01784f38cabd38c83619406cdc5474b2040735cd4d6ce218517e  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/compiler_core_delta.json
+163da56aad47fe396a82bf7ec967a33052b07490b6ad16fb91a704bcc45b176b  /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t11/core_conns.json
+{'clock': 1, 'positions_orients': 2, 'ft_bands_windows': 104, 'notes': 7, 'other': 1} types 8 removed [] added []
+== G0
+{"base_errors": 624, "new_errors": 621, "base_warnings": 1571, "new_warnings": 1571, "err_findings_base": 624, "err_findings_new": 621, "new_err": 0, "lost_err": 3}
+== route_supply WORSE
+WORSE []
+== stscan (type base_phantom new_phantom base_miss405 new_miss405)
+NW_io stations 59 -> 59 phantom 0 -> 0 miss>405 1 -> 0 misattr 0 -> 0
+q_hub_ne stations 2605 -> 2499 phantom 104 -> 0 miss>405 37 -> 37 misattr 246 -> 246
+q_hub_nw stations 2716 -> 2610 phantom 104 -> 0 miss>405 20 -> 20 misattr 285 -> 285
+PIPE_DONE

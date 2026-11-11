@@ -1,0 +1,21 @@
+{
+ "name": "cells_q_spt1",
+ "source": "DIE-HBM-100 11-11 08:5x, kit-wave 08:32 q_spt1 PLAN-CHANGE rule C: plan cells 1000 was a placeholder (16 types carry exactly 1000); measured 167601 cells (kit-wave census)",
+ "base": "/srv/opentallas-scratch2/claude/hbm-cut-1111/base",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "q_spt1",
+      "cells"
+     ],
+     "set",
+     167601
+    ]
+   ]
+  }
+ }
+}

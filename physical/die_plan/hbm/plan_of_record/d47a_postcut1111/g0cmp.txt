@@ -1,0 +1,4 @@
+{"base_errors": 624, "new_errors": 621, "base_warnings": 1571, "new_warnings": 1571, "err_findings_base": 624, "err_findings_new": 621, "new_err": 0, "lost_err": 3}
+- {"check": "stations", "level": "ERROR", "msg": "type q_su30 slot L1258x1: real normal input S0->S1 = 556 um > ft_station_max_um 405", "type": "q_su30"}
+- {"check": "stations", "level": "ERROR", "msg": "type q_su31 slot L8370mx7: real normal input S0->S1 = 561 um > ft_station_max_um 405", "type": "q_su31"}
+- {"check": "stations", "level": "ERROR", "msg": "type q_su31__physical_v1 slot L8371x7: real normal input S0->S1 = 571 um > ft_station_max_um 405", "type": "q_su31__physical_v1"}
