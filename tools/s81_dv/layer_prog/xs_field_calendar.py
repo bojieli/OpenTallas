@@ -11,7 +11,7 @@ The period of each op is its MEASURED floor on the release frame RTL (tb_toksim_
 release 19bf4121e frame exes); a period below it is a COMPILE FAULT (CalendarFault), never a runtime stall:
 
   op                fam   floor  first FAIL      measured span law (go0 -> last frame-root RET)      evidence
-  attn.wq_b         fp8   126    124 (Q_LIFETIME) (n-1) P + 223 (capture->RET, fullsix)             S81-RATEFIX / WQBP
+  attn.wq_b         fp8   127    126 (FAULT 11)   (n-1) P + 223 (capture->RET, fullsix)             S81-RATEFIX / WQBP
   attn.idx.q        fp8   126    125 (FAULT 11)  (n-1) P + 295                                     TOKSIM-S81C/FSEQ
   attn.wo_b         fp8   127    126 (4 words)   (n-1) P + 320  (u_f_0L01 P127 701, L00 699)       S81-CALPIPE wob
   ffn.shared_gu     fp8   146    145 (FAULT)     (n-1) P + 360                                     TOKSIM-S81B/FGU
@@ -66,7 +66,10 @@ import bf_col_form as BFF  # noqa: E402
 _BF_ADD = BFF.deltas()[0]
 BF_SEG_LABEL_FLOOR = BFF.seg_label_floor()
 FLOORS = {     # op: (family, measured floor period, first FAIL, span tail (go0 -> last RET beyond (n-1) P), evidence)
-    'attn.wq_b': ('fp8', 126, 124, 223, 'claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS / p124c50 FAIL; claude/s81-wqbp-1020'),
+    # S81-FRAME-FIX-1 11-11: re-measured on main RTL (dc23a738 2-flop stations) with the station-depth calendar, frame
+    # bench col_h10_l4_b u_f_0L01: P127..136 PASS (strict checker 0 errors), P126 / P125 FAULT 11 (cfg7 load overrun);
+    # the 10-19 floor 126 was measured on 1-flop stations.  Tail 223 (fullsix capture law) not re-measured.
+    'attn.wq_b': ('fp8', 127, 126, 223, 'S81-FRAME-FIX-1 11-11 frame_seq_gate P127 PASS / P126 FAULT 11 (was claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS on 1-flop stations)'),
     'attn.idx.q': ('fp8', 126, 125, 295, 'claude/toksim-s81c-fseq-1019 (lanes/TOKSIM-S81C-FSEQ.md: 6-phase PASS 8/8 to P126, P125 FAULT)'),
     'attn.wo_b': ('fp8', 127, 126, 320, 'results/rtl/s81_calpipe_1020/wob (u_f_0L00 / 0L01 P127 PASS 699 / 701, P126 FAIL 4 words)'),
     'ffn.shared_gu': ('fp8', 146, 145, 360, 'results/rtl/toksim_s81b_fgu_1019/job5 P146 PASS 798, job4 P145 FAIL'),
@@ -112,7 +115,10 @@ EXEC_ORDER = ['attn.wq_b', 'attn.idx.q', 'attn.cmp.wk', 'attn.wo_a', 'attn.wo_b'
 # max over the frames u_f_0L00 / u_f_2L00 / u_f_3L01 / u_f_3L02 (8-, 7-, 6-, 6-frame slices; h9 / h9 / h10 / h9_MX release FSEQ
 # exes, Verilator 5.050): results/rtl/s81_romopt_1020/a/fseq_<cfg>; keyed by (OT_XS_QPAIRS, OT_XS_COMPACT_TAILS):
 # (12, 1) = O1 + O2 release default (fseq_o1o2c), (12, 0) = O1 + O2 without compact tails (fseq_o1o2), (10, 0) = O1 only (fseq_o1)
-ROMOPT_TAIL = {(12, 1): {'attn.wq_b': 306, 'attn.wo_b': 322, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
+# S81-FRAME-FIX-1 11-11: (12, 1) wq_b / experts_gu re-measured on main RTL (2-flop stations, station-depth calendar):
+# wq_b P127 span 1589 = 10 x 127 + 319 (was 306), experts_gu P145 span 2823 = 17 x 145 + 358 (was 346); the other
+# entries were measured on 1-flop stations and are expected ~+12..13 late (not re-measured: frame_seq_gate extension)
+ROMOPT_TAIL = {(12, 1): {'attn.wq_b': 319, 'attn.wo_b': 322, 'ffn.shared_gu': 363, 'ffn.experts_gu': 358, 'ffn.down': 296},
                (12, 0): {'attn.wq_b': 304, 'attn.wo_b': 320, 'ffn.shared_gu': 363, 'ffn.experts_gu': 346, 'ffn.down': 296},
                (10, 0): {'attn.wq_b': 296, 'attn.wo_b': 320, 'ffn.shared_gu': 361, 'ffn.experts_gu': 346, 'ffn.down': 292}}
 ROMOPT_DIR = {(12, 1): 'fseq_o1o2c', (12, 0): 'fseq_o1o2', (10, 0): 'fseq_o1'}
