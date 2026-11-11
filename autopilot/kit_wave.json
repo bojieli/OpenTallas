@@ -28572,7 +28572,7 @@
     "q_su00__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child pgslice_lg__pretree/lane_exp has no routed abstract yet; release when signed/routed",
     "q_su10__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child lane_exp_x_core has no routed abstract yet (vec LEC fix landed); release when routed",
     "NE_io": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse, no Steiner reason",
-    "q_hub_ne": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse",
+    "q_hub_ne": "KW-FIX-45 11-11 COORD 08:1x: q_hub_ne prov FAIL; HOLD until the d6 event (HUB-ARCH-2); also route_supply >1.0 and worse",
     "NW_io*": "KW-FIX-45 11-11 COORD URGENT: 12:00 cut plan NW_io regression (u_host_ep 2998 um from u_ep_N0 on a 1230-b unregistered link); fix 878d7f061328 rides the next HBM event"
    },
    "gen_hosts": [
