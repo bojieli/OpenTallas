@@ -6364,3 +6364,10 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - Matches the ruled redesign (A half-width + B1 + r1). route_supply 26.7 is overstated (fan-out scorer gap), but the hop/crossing counts are real.
   - The pv1 twin should not relaunch on its current plan; HOLD q_b102__pv1 until the redesign event.
 - 2026-11-11 14:15 PST GEOM REQ [KIT-WAVE-1 sample hbm/q_b003__physical_v1] 3_place epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_2/gen/q_b003__physical_v1 (event hcut1111); AUTO-GEOM PASS epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_2/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
+- 2026-11-11 14:42 PST GEOM [COORD hourly] hbm/q_b003__physical_v1 attempt_2 3_place (epyc8 kw43 hcut1111): BAD. The REQ line said PASS, but auto_geom.json reads FAIL.
+  - Outline 1287x1788 with fill 0.031 (empty 0.86). The std cells collapse onto the E edge and S band (relay_collapse 4601, r2r 1558 um, pin_reg_max 433).
+  - Clock taps are badly unbalanced: clk_t3 12606 / clk_t2 11247 / clk_t7 7436 sinks vs clk_t4 2 / clk 21. The farthest sink is 2642 um from its own driver.
+  - Channel_h 9.16 beside the E hard-core column.
+  - Hard-core rows are fine. The problem is that the glue logic has no anchor in the middle, so it lands on the face pins.
+  - HOLD routing of this attempt. Root cause to DIE-HBM-100: per-tap sink assignment (taps by placement, not by fan-out) + relay sites for E-face lanes.
+- 2026-11-11 14:42 PST GEOM [COORD hourly] hbm/hnx_vms_bank_q0_faces__vecd4ae__v512b GRT-ARM attempt_11: OK as an arm. GRT ov 0, fill 0.087, cells banked along the S and W faces around 3 macros; one clock tap with the farthest sink 370 um. No new smell; the arm data goes to GRT-PATCH-1.
