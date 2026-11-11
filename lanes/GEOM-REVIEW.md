@@ -6307,3 +6307,12 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - Density is 40-60% over the left ~60% with no hot bin above ~60%. The right ~35% is near-empty: the outline is generous, which is not a congestion risk.
   - Pins are on the N/S edges. The flagged fanout spread (583 um) is the main risk, so watch the CTS/repair_timing report for that net. If it causes setup failure, the fix is a pipeline cycle or a register duplicate, not an outline change.
   - Proceed to the finish run (autopilot row 069b13d3db7e).
+- 2026-11-11 09:31 PST GEOM-REVIEW [COORD hourly] HBM-HUB-ARCH-2 type_q_hub_ne_R2F.png (BEFORE/AFTER): R2F is BAD.
+  - hop>reach goes 497 -> 1636 and max hop 6794 -> 8270 um, with 139 moved cores.
+  - The AFTER panel shows long red fans from the top-centre face window (x~4000) and spaghetti across the west half.
+  - R2F is NOT the adopted form. R2M's AFTER view must show hop>reach <= 497 and no new fans from the top window before DIE-HBM-100 takes it.
+- 2026-11-11 09:31 PST GEOM-REVIEW [COORD hourly] CPL-S81-SLICE-5 st6_pm_ex.png (t73 ST6, quad clusters): FAIL S2.
+  - route_supply max 2.02 (ring_V p99 1.47, street_V 1.42), 31 hop>reach.
+  - The hot column is the vn_a/vn_b east street at x~1150 (the 16 g_ln on the east edge, 2 columns).
+  - Every g_ln link funnels through one 30-um street (#2/#5/#6/#7/#8/#14/#15 converge at x~1130-1150, y 400-700). A second hot spot is the street between ve_m and ve_s at x~380.
+  - Two layout arms have now failed (ST4 2x8, ST6), so RE-FORM per the two-strikes rule: an ARCH item to S81-ARCH-RTL-2. Options: split the g_ln group into two halves fed from vn_a (north) and vn_b (south) with their own pin cycles, or move the g_ln quad to the west of vn so the vs/ve block is not crossed.
