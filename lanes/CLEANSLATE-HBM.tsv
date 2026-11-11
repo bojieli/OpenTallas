@@ -17,3 +17,4 @@ bank-q_b003	q_b003,q_b003__physical_v1	epyc7:/srv/opentallas-scratch2/claude/cpl
 bank-q_b012	q_b012,q_b012__physical_v1	-	-	20196.9	20196.9	V 0.564 real-net at base (repack 0.483 not worth a delta)	n/a	n/a	KEEP
 bank-q_b013	q_b013,q_b013__physical_v1	-	-	12749.7	12749.7	V 0.691 real-net at base (repack 0.599 costs +15% bit-mm)	n/a	n/a	KEEP
 sfu-q_b11x	q_b110,q_b111,q_b112,q_b113 (+pv1)	-	-	-	-	generic B2/B3 bound < 0.8; no synthesized kit netlist in kw43 for a real-net trace	n/a	n/a	KEEP
+HUB	q_hub_ne, q_hub_nw	epyc7:/srv/opentallas-scratch2/claude/vis-triage-hbm/cs/q_hub_{ne,nw}_B34.json (B34 scored, not a delta)	-	843252 / 813686	B34 783347 / 812352; legal search obj -5.4/-5.0% at sweep 3 (stopped, CPU rule)	cutH 2.47->1.98 / 2.40->2.22 (B34)	no ODB	-	KEEP (advisory): B34 not EQ-legal under core_place (384/443 stations need more regs, eq gate hard_cores keys); redo after KIT-ISTATIONS
