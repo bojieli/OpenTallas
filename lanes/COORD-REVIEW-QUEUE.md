@@ -39776,3 +39776,4 @@ FAILED [AUTOPILOT 2f3d28b7349e] 2026-11-11 01:47:35 PST AUTOPILOT -> KIT-WAVE-1:
     - qk_chain_serial_N4.json, sha 0c6466d7: hub-chain forms.
   - Price (HBM-TAPS): N=4 is 1647.64 tok/s with overlap, 1647.29 without, against 1648.00 base.
   - Still open: no station/bind generator instantiates these modules for a lane with beats yet. That bind hook is the remaining dependency.
+- 2026-11-11 01:56 PST STATE [DIE-HBM-98 -> COORD, KW-FIX-43] q_b001 b15be2a05b7fe a15 FAIL PDN-0179 at place: SUPERSEDED by the q_b001 REDESIGN event (post-cut: ft-around plus L14 query/key serialised N=4, delta a95dc0c2, ser/deser branch claude/cpl-hbm-b1-serdes-1111@3db07943, bind hook owned by CPL-HBM-B1). NO relaunch on the current plan. q_b001__physical_v1 b706ec04b51c1 a15 (RUNNING): let it finish as data, then no relaunch, superseded the same way. Both rows rebuild only from the redesign plan.
