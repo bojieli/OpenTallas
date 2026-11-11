@@ -108,6 +108,23 @@ def is_mem_macro(h):
     return str(h.get('lef') or '').startswith(MEM_MACRO_LEF)
 
 
+def hard_ip_types(T):
+    """HARD-IP types (COORD DECIDES 2026-11-10): partition types whose only contents are a reused PHY macro with
+    nothing to place or route -- plan 'hard': true, every contents entry status 'reuse' naming a committed lib, and no
+    hard_cores, ft_slots or std cells.  They leave BOTH the type numerator and the denominator (no sign-off needed;
+    the die uses the macro's committed LEF/libs).  Structural rule, no name list: a PHY type with rework/new contents,
+    wrapper logic, cells or feedthrough slots (KV kv3_phy*, HBM PHY_N*) stays a type.  -> {type: {macros, lef, lib}}"""
+    out = {}
+    for k, v in (T or {}).items():
+        c = v.get('contents') or []
+        if v.get('hard') is not True or not c: continue
+        if v.get('hard_cores') or v.get('ft_slots') or v.get('cells'): continue
+        if not all(isinstance(x, dict) and x.get('status') == 'reuse' and x.get('lib') for x in c): continue
+        out[k] = dict(macros=sorted({str(x.get('physical_master') or x.get('module')) for x in c}),
+                      lef=sorted({x['lef'] for x in c if x.get('lef')}), lib=sorted({x['lib'] for x in c}))
+    return out
+
+
 def plan_label(src):
     """cache / page key of a plan of record: its path below physical/die_plan (else the repo path), without .gz"""
     s = src[:-3] if src.endswith('.gz') else src
@@ -1334,8 +1351,12 @@ def refresh(log=lambda *a: None, old=None):
                     ent['pin_aliases'] = materialize_pin_aliases(pj.parent, PIN_ALIASES.get(key))
                     P = json.loads(pj.read_text())
                     T = P.get('partition_types') or {}
-                    ent['types'] = len(T); ent['partitions'] = len(P.get('partitions') or [])
-                    ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items()}
+                    # HARD-IP (COORD DECIDES 11-10): a type that is only a reused PHY macro (nothing to place or
+                    # route) is out of BOTH the type numerator and denominator; the die uses its committed LEF/libs
+                    hip = hard_ip_types(T)
+                    ent['hard_ip_types'] = hip; ent['types_incl_hard_ip'] = len(T)
+                    ent['types'] = len(T) - len(hip); ent['partitions'] = len(P.get('partitions') or [])
+                    ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items() if k not in hip}
                     ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and not is_mem_macro(h)})
                     ent['memory_macros'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and is_mem_macro(h)})
                     ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
@@ -1343,7 +1364,7 @@ def refresh(log=lambda *a: None, old=None):
                     # RTP-PAR-1102 (FLOW-22): the five G0C checks run in parallel (sequential 12.8 min > the render
                     # unit's 600 s start timeout since 11-01 21:40, so the cache froze at a0f8f0ad60); materialization
                     # above stays sequential (shared tmp tree)
-                    if not SKIP_G0C: g0c_jobs.append((d, ent, list(T), out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
+                    if not SKIP_G0C: g0c_jobs.append((d, ent, [k for k in T if k not in hip], out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
                 except Exception as e:
                     errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
                 res['plans'][d] = dict(ent, die=key)
@@ -1613,7 +1634,8 @@ def die_counts(cache, key):
                          signed_cores=len(ent.get('signed_cores') or {}), signed_list=sorted(ent.get('signed_types') or {}) + sorted(ent.get('signed_cores') or {}),
                          modules=len(ent.get('hard_cores') or []), signed_modules=len(ent.get('signed_cores') or {}),
                          stale=ent.get('stale_since'), error=ent.get('error'),
-                         geom_report_types=(ent.get('geom_report') or {}).get('types')))
+                         geom_report_types=(ent.get('geom_report') or {}).get('types'),
+                         hard_ip_types=sorted(ent.get('hard_ip_types') or {}), types_incl_hard_ip=ent.get('types_incl_hard_ip')))
         rows[-1].update(design_counts(ent))
     return rows
 

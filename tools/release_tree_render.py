@@ -317,7 +317,8 @@ def plan_html(rows, cache):
             (' (placed copies %s/%s%s)' % (r['signed_instances'], r['instances'],
                                             '; NOT credited, pins match no plan design: ' + E(', '.join(r['design_unmatched'])) if r.get('design_unmatched') else '')) if 'instances' in r else '',
             ' <span class="why">not clean: %s%s</span>' % (E(bad), ('; die-level ' + E(json.dumps(r['die_level']))) if r['die_level'] else '') if bad or r['die_level'] else '',
-            ' <span class="mono muted">SIGNED: %s</span>' % E(', '.join(r['signed_list'])) if r['signed_list'] else '',
+            (' <span class="mono muted">SIGNED: %s</span>' % E(', '.join(r['signed_list'])) if r['signed_list'] else '') + (
+                ' <span class="mono muted">HARD-IP (reused PHY macro, out of both type counts, COORD 11-10): %s</span>' % E(', '.join(r['hard_ip_types'])) if r.get('hard_ip_types') else ''),
             ' <span class="warn">stale since %s</span>' % E(datetime.datetime.fromtimestamp(r['stale']).strftime('%m-%d %H:%M')) if r.get('stale') else ''))
     gen = (cache or {}).get('generated')
     out.append('</ul><p class="mono muted" style="margin:0 0 8px">origin/main %s · refreshed %s · SIGNED = signoff.py record verdict SIGNED (TT setup / FF hold) found on origin/main or fleet scratch (%s)</p></div></details>' % (
