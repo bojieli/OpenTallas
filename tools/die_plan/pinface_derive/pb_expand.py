@@ -56,6 +56,10 @@ for tn in types:
                 continue
             cx, cy = (lx, py) if (face in ('E', 'W')) != along else (px, ly)
             path = [(px, py), (cx, cy), (lx, ly)]
+            if e.get('leg_order') == 'channel':   # KIT-CHAN-1 geometry
+                import istation_channel as IC
+                path = IC.path(px, py, lx, ly, face, 'in' if str(e.get('launch', '')).startswith('face') else 'out',
+                               IC.column(*IC.entry_channel(e), bit, max(bat) + 1))   # kit: nbits = bound W + 1
             ch = CHAN.get((tn, face)) or CHAN.get(('*', face))
             if ch and along and face in ('E', 'W'):     # WHAT-IF: Z route, vertical leg in a channel column spread by bit
                 want = ch[0] + (ch[1] - ch[0]) * ((bit + 0.5) / max(1, len(bat)))
