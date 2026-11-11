@@ -139,3 +139,12 @@ Cycle prices are per pass or per token as stated. Area prices use one ASAP7 DFF 
 - The 20-core pv_v2 skeleton puts every one of the 20 cores and the pins into 2160 x 1520 um. A stock overflow in the millions with an ideal cut under 0.5 means the shelf packing, not the architecture, causes it. Verdict stays FEASIBLE.
 - Probe caveat: the four arms in epyc8 cpl-kv-pv-work/probe (pv_v2_base/srch, pv_v4n_base/srch) all ended rc=1 ("make_tracks.tcl: no such file") when I looked, so the number came from an earlier run and no arm result existed yet. A decision to move KV to REDESIGN rests on the arms' GRT, not on this stock count.
 - kv3_pv_*n: street_V stays 0.87-0.98 with legal moves; needs the die fix (flip far pairs vertically, own model core_H 1.95 -> 0.91, or widen the join/p2 street via ft_corridor.py). That is a PLAN item for DIE-KV-97 and does not make KV ARCH.
+
+## FINAL addendum: HBM-A4 priced per link (DIE-VIS-HBM, epyc4 die-vis-hbm/PROPOSAL_S1_HBM_postcut.md, slot_plan_post_cut.tsv, missing_gt405_plan.tsv)
+
+Supersedes the flat "+1 cycle per hop" price of HBM-A4. Source numbers are DIE-VIS-HBM's; I checked file presence and row counts (104 + 145 rows) only.
+- Over-reach ft slots: 145 remain after the cut (the 21 ft_s0_window slots are inside). 118 are fixed at 0 cycles (110 re-space, 8 jog), 19 need +20 stations, 8 need a core-free N-S corridor (hub L1256, L7002, L7502, L7503; q_b113 L8305/L8305m, L8309/L8309m). Corridor not granted -> those lanes go FT-AROUND.
+- 104 missing links over 405 um: 22 hub co-locations (0 cycles), 35 hub ARCH items, 14 in q_b113, 2 core moves, 3 in su20pv1, 28 hcol idx links of 33 b at +1 cycle (about 28 x 33 = 920 flops, 270 um2).
+- HBM-A2 correction: stations on the missing hub links at today's geometry would cost about 355k station-bits, so stations are rejected for the hubs. A2 is co-location plus an op_Q broadcast tree or an RTL re-split (+1 cycle tree as priced above).
+- Die cuts NE_b000 0.96 / NW_b000 0.85 fix = seam re-stack tied to the HBM-A1 L14 split. A1 and the die cut therefore become one post-cut event.
+Verdicts unchanged (HBM AT-RISK).
