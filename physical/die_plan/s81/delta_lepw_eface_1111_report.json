@@ -165,5 +165,36 @@
  "relaunch": [
   "dsdv_slice_lepw_mus_LP__t2 (fresh kit: pins change)",
   "dsdv_slice_lepw_mus_C__t1 (fresh kit: pins change)"
- ]
+ ],
+ "grt_probe": {
+  "host": "epyc7 /srv/opentallas-scratch2/claude/die-s81-85/lepwface/probe (docker --memory 48g, DO_NOT_COUNT)",
+  "method": "copy of kw43-wave-1109n e9eda32d41c attempt_9 kit; io.tcl lepk_i0/lepk_o0 pins re-placed from schema.port_pins on plan c3d22064f68c (2210 pins); ORFS do-floorplan + do-place (face_flops hook re-places the face flops at the new pins); GRT deck geom_grt.tcl M2-M7, adjustment 0.25, 50 congestion iterations, 5 h cap",
+  "after": {
+   "total": 0,
+   "M2": 0,
+   "M3": 0,
+   "M4": 0,
+   "M5": 0,
+   "M6": 0,
+   "M7": 0,
+   "runtime": "02:02:48",
+   "usage_pct": 10.58
+  },
+  "before_reference": {
+   "src": "ORFS 5_1_grt attempt_9 (post-CTS, same core positions)",
+   "total": 463070,
+   "M2": 932,
+   "M3": 12728,
+   "M4": 6796,
+   "M5": 23115,
+   "M6": 291438,
+   "M7": 128061
+  },
+  "control": {
+   "status": "control, stopped (COORD: stop it after the after-run's 0 overflow)",
+   "deck": "same deck on unmodified attempt_9 3_place.odb",
+   "progress": "extra iteration 18/50 after ~4 h 05 without converging; the deck prints no per-iteration overflow, so there is no partial per-layer number"
+  },
+  "caveat": "the probe ran on the e9eda32d41c kit (same core origins and windows as 99f40d35071d); mus_C was not probed"
+ }
 }
