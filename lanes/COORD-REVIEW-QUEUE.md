@@ -38496,3 +38496,39 @@ S81 gen_phys.py MACRO-GRID hand overlay: no new branch needed. origin/main alrea
   SPLIT (read-only, E kits2 x 320-545): at 3_3 GPL the column holds 8595 um2, of which FIRM 649 (7.6%, all face_flops u_bout_bl/br band cells) and PLACED 7947 (92.4%). relay_line_place.tcl sets its stations PLACED, not FIXED/FIRM, and they hold no lock. After the hook (3_4) it is 10227 (FIRM 649) and at 4_cts 10934, all PLACED. u_bmid0/1 relay area in the column: 2962 at 3_3, 2533 at 3_4. So locked cells do not cause the clump.
   BUT density alone is weak: a 50-um strip of the column is only ~21% utilized (2.4k of 11.6k um2), so PLACE_DENSITY 0.4 hardly binds. The congestion is wire demand: nets crossing x=450 number 8621 (x=545: 7359), vs 4675 at x=320 and 4011 at x=700. The excess comes from relay-station nets (u_bmid0_bl 944, u_bmid1_br 835, u_bmid0_br 448, u_bmid1_bl 294) plus u_fcore.u_xs3/4. GPL never reacted: GPL-1017 routability iterations 0, final weighted congestion 0.9153 (< target), artificial inflation 0.00%.
   FORM D04R (parallel to D04): D04 + GLOBAL_PLACEMENT_ARGS -routability_target_rc_metric 0.80 -routability_use_grt (mtime kept), so GPL inflates the clump from a real GRT estimate. Same resume at global placement, no allow-congestion. Kit epyc8 .../kits3/ot_smh_static_front_e_e05e0710a4deb256_d04r, ot-run --direct --mem 64 epyc8 (queued: load gate 330/96, 84 GB free); NEAR-CLOSE row added. Relay-hook station spreading not built: the hook already puts the stations at 1/3 and 2/3 of each core->port line, and moving stations along a line does not change how many nets cross a vertical cut. The next lever if both forms still fail is the bl/br pin order against the source x (a plan event).
+- 2026-11-10 20:06 PST STATE [DIE-S81-85 -> DIE-S81-85 -> COORD, KW-FIX-43, KW-FIX-44, WAVE-OPS-1, S81-PLAN-1, S81-SVCRS-3] S81 STALE ROUTING, all S81 type rows in one pass (DIE-S81-85). DO_NOT_COUNT. Source: lanes/STALE.tsv 19:25 lists 48 S81 type rows, not 43 (plus phy__t1 and 3 cores, routed separately). Read from the LIVE hub kit_wave state on intel2; the coord/state copy is about 24 h old because hub-git-sync has failed since 11-09 19:08 [CHECKED].
+CLASS BUG FIRST (why TIMING/ROUTING rows never relaunched) [CHECKED]: the 18:0x POROUS/bind_ctl retry entries (leaf t6@5, t16@6, t38@5, t70@5, t69@4, t25__cl431c660f@4, t25__cl55642d17@2; also leaf t1@5 and col_h9_r2__t1__cl87f3ff59@2) were already in retry_seen, first seen 11-06 14:07. The KW-FIX-23 retry-epoch rule then drops them as stale, with no log after the first one on 11-09.
+- KW-FIX-43: delete retry_seen["s81|e9eda32d41c|<item>@<N>"] for these, and for every entry below marked "clear seen", under kit_wave.lock.
+- KW-FIX-44 class fix: reset first-seen when an entry's retry_fix text changes.
+LOAD-HOLD: epyc7 load is 157 and epyc8 325, against a cap of about 106; epyc2 is GEN-DISK-LOW (55 of 70 GB). epyc4 has room (load 65/256, 184 GB memory, 273 GB scratch2), but its "SRC-INCOMPLETE epyc4 s81" probe is FALSE: the file it names (codex-wave-bind-1106/src_28fc7/.../ot_sram_1r1w2c_16x257_m1_p192_bb.v) exists on epyc4. WAVE-OPS-1/KW-FIX-44: fix the probe so S81 can generate on epyc4.
+row | class | age_h | action | owner
+dsdv_slice_c1x_C__t1 | RETRY-INFRA | 26 | relaunch now (epyc4 gen once the probe is fixed) | KW-FIX-43
+dsdv_slice_c1x_C__t3 | RETRY-INFRA | 26 | relaunch now (same) | KW-FIX-43
+col_h10_r0_p4__t1 | RETRY-INFRA | 26 | relaunch after the LL view event (stale LL LEF) | KW-FIX-43
+col_h9_r0_p4__t1__cl8ef405e8 | RETRY-INFRA | 26 | relaunch after the LL view event | KW-FIX-43
+col_h9_r0_p4__t1__clcb2fbfe8 | RETRY-INFRA | 26 | relaunch after the LL view event | KW-FIX-43
+ot_s81sl_leaf__t6 | ROUTING GRT-0116 (pre-porous) | 24 | batch; clear seen @5 (porous + REDESIGN already set) | KW-FIX-43
+ot_s81sl_leaf__t16 | ROUTING | 24 | batch; clear seen @6 | KW-FIX-43
+ot_s81sl_leaf__t38 | ROUTING | 26 | batch; clear seen @5 | KW-FIX-43
+ot_s81sl_leaf__t70 | ROUTING x3 (pre-porous) | 23 | batch (clear seen @5) + structural form in parallel: edge corridor, hcpost/vn_b about 80-110 um off the dense pin edge (leaf class 18:28) | KW-FIX-43 / S81-PLAN-1
+ot_s81sl_leaf__t69 | FLOW (route exit 2; earlier ROUTING) | 24 | batch; clear seen @4; add OT_POROUS_VIEWS=all (not in the porous set) | KW-FIX-43
+ot_s81sl_leaf__t25__cl431c660f | TIMING post-CTS setup -221.9 | 27 | batch on bind_ctl (REDESIGN set); clear seen @4 | KW-FIX-43
+ot_s81sl_leaf__t25__cl55642d17 | FLOW (6 h route watchdog hang) | 26 | batch with KW-FIX-44 grt-stop (b1f68a14) + porous; clear seen @2 | KW-FIX-43
+ot_s81sl_leaf__t10 | CANCELLED SUPERSEDED; current a5 FLOW cland band | 25 | carry fix aa1420b0404 into wave src por15c (absent there [CHECKED]), then fresh retry @5 | WAVE-OPS-1 / KW-FIX-43
+serdes__t16 | FLOW = earlyoom at GRT (46.5 GB) | 49 | batch: fresh retry @12, route memory 96 GB, GRT resume on a host with free memory | KW-FIX-43
+serdes__t3 | FLOW = earlyoom at GRT (47.9 GB) | 43 | same, fresh retry @18 | KW-FIX-43
+slice_station__t36 | TIMING hold FF -113.6 (10,622 endpoints), one strike before HB4/type-safe/ftlock | 151 | batch; clear seen @4; REDESIGN names HB4 + type-safe relays. If it fails again -> T41 form (port hold pad + fanout cap) | KW-FIX-43 / DIE-S81-85
+slice_station__t37 | TIMING hold FF -80.7 (12,978), one strike | 133 | same; clear seen @7 | KW-FIX-43 / DIE-S81-85
+slice_station__t43 | TIMING hold FF -80.2 (12,151), one strike | 151 | same; clear seen @4 | KW-FIX-43 / DIE-S81-85
+ot_s81sl_kv_leaf__t1 | CANCELLED SUPERSEDED (bind6), no successor | 37 | create successor; retry @4 (clear seen); place_mem 64 (as for t2) | KW-FIX-43
+ot_s81sl_kv_leaf__t3 | CANCELLED SUPERSEDED, no successor | 37 | same | KW-FIX-43
+ot_s81sl_kv_leaf__t4 | CANCELLED SUPERSEDED, no successor | 37 | same | KW-FIX-43
+ot_s81sl_kv_leaf__t5 | CANCELLED SUPERSEDED, no successor | 37 | same; the existing @4 entry is stale, clear it | KW-FIX-43
+slice_station__t6__cl0755c26e | CANCELLED SUPERSEDED (epyc5 drained), no successor; last hold -45.9 | 76 | create successor; fresh retry @17. If hold fails again -> T41 form | KW-FIX-43
+slice_station__t42__clcf44e680 | CANCELLED SUPERSEDED (epyc5), no successor; last hold -50.6 | 73 | create successor; fresh retry @9 | KW-FIX-43
+serdes__t1__clfe1f0815 | INFRA (exit 137; COORD stop), held under RESET-KEY | 45 | DIE-S81-85 decides the RESET-KEY release, then fresh relaunch | DIE-S81-85
+serdes__t1__clb45db5be | RTL LEC NEQ preflight (sibling of the above) | 48 | fresh kit after the same RESET-KEY decision | DIE-S81-85
+dsdv_slice_c1x_C__t8 | RTL LEC NEQ, held for the J3 re-bind | 22 | build once on the re-bind, with c1x t5-t7 | DIE-S81-85
+dsdv_slice_{lepw_mus,lepw_mu,lepe_mu,lepe_nh_mus}_C__t1, c1x_C__t4/t9/t10 (7) | FLOW, RUNNING since 19:31 | 15 | none, live [CHECKED] | KW-FIX-43
+svc_lo_dsdv_svc_rs_w__t1, svc_hi_dsdv_svc_rs__t1..t6, svc_lo_dsdv_svc_rs__t1..t7 (14) | CANCELLED RULING (1.5-4.6M flat, over the 400k cap) | 10 | successor = the S81-SVCRS-3 hslice redesign; no relaunch | S81-SVCRS-3
+COUNTS (48): relaunch now 2 | after LL view event 3 | current-plan batch 12 | batch + structural form 1 | two strikes, structural 0 (no row has failed twice in the same class after its fix) | create successor 6 | live 7 | held by ruling 17 (svc 14, c1x t8, serdes t1 x2). Current plan = plan_h2_2249 b05c29bb + PGR1-S81 ebea5f5b; PGR1 touches only the 4 _LP types and the coll-lane taps, so every row above keeps its block key and needs a retry entry (with REDESIGN text for TIMING/ROUTING).
