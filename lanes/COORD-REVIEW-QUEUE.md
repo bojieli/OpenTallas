@@ -42016,3 +42016,40 @@ FAILED [AUTOPILOT c10a65e0dd3c] 2026-11-11 10:02:22 PST AUTOPILOT -> KW-FIX-43: 
   Bind gap (census lane a08de4c7): bind.py has no rule that emits a subset of hub leaves as its own partition module. The split needs a new N-way split-root rule in bind (map entries NE_hub -> NE_hub_gK plus partition modules) before it can be composed and bound. That needs an owner; I can write it in my worktree if you assign it.
   Next, on your answer: split_hub.py (sub-type outlines, re-originated cores, intra-group stations, inter-group buses, die buses re-homed), per-group ls2c floor, gates, and the real latency table with pin cycles.
   Files (DO_NOT_COUNT): epyc8:/srv/opentallas-scratch2/claude/{vsplit_arch2.py,vs_ne_6.json,vs_ne_99.json}
+- 2026-11-11 10:33 PST READY [S81-FRAME-FIX-1 -> ROOT-MERGE-59, DIE-S81-87, COORD; cc TOK-VERIFY-1] P0 frame regression fix: claude/s81-frame-fix-1-1111@749cf6da99 (base main 2041e424bb; touches no file changed on main up to fe0002fac6; compiler + records only, 0 RTL lines).
+  ROOT CAUSE (CHECKED): dc23a738f3 made dsfd_qbank_N/_S, dsfd_rstg, sstn_payload536/base566 2 flops deep. Three compiler inputs still counted each station as +1: frame_return_plan.topology (records topology_col_h9/h10 10-17, only the wrapper sha was checked), emission off/e0 (measured 10-17 on 1-flop stations), frame_schedule.py (LP extractor, flat += 1).
+  FIX: new tools/s81_dv/station_depth.py elaborates every pass-through station from the bound RTL (ifdefs resolved, the ot_s81_rly child recursed; it reads the selected frame source root when one is set) and returns its register depth per pin. There is no constant. Uses:
+    (a) return links: root_link 10 -> 13, every element leaf link +1. Records re-recorded with station_depth; load_topology REFUSES a record whose depths differ from the RTL.
+    (b) emission: off[pair] += the pair's station shift over the measured depths (emission.json station_depth_measured = 1). col_h10 shift = {e0 2, e2 2, e3 4, e4 4, e6 6, e7 6, e8 7, e9 7, e11 9, e12 9, e13 10, e14 10}. It is asserted equal on every xs_* bit, go and cfg of each element.
+        Cross-check (independent): the as-built flop-level trace (asb_schedule col_h10 x) gives the same per-pair adds plus +3 per band crossing, and root 16 = 13 + 3.
+    (c) frame_schedule.py uses the same table.
+  PROOF (CHECKED, epyc9 /srv/opentallas-scratch2/claude/s81-frame-fix-1/gate1/summary.json, Verilator 5.050, in-repo tb results/rtl/s81_rom12_codex_1020/fseq_src, frame u_f_0L01, die frame form col_h10_l4_b / crs4 LK 2):
+    - FRAME_SEQ_GATE PASS. Strict calendar checker, 0 errors (every ret word on its compiled edge with its golden value): wq_b P127 span 1589, wq_b P128, experts_gu P145 span 2823.
+    - Negative control, wrong depth (every station priced at 1 flop) on the same binary: wq_b P127 FAULTs from edge 339, 101 errors. It reproduces main's old calendar exactly (12/12 wq_b and 19/19 gu phases: same placement and same ret calendar as TOK-VERIFY-1 fb/vec).
+    - Floor guard: wq_b P126 FAULT 11 (4 edges, cfg7 load overrun, every ret word correct).
+  CHANGED CONSTANTS (measured, xs_field_calendar):
+    - wq_b floor 126 -> 127. P125 and P126 FAULT on 2-flop stations, so COORD's "wq_b P126/P125" gate is now wq_b P127/P128 + floor-1 must FAULT.
+    - experts_gu floor stays 145 (P144 FAULT).
+    - (12,1) span tails: wq_b 306 -> 319, experts_gu 346 -> 358.
+  NOTE: TOK-VERIFY-1's col_h10 (crs) build is 4 edges off the l4 calendar (x_shift). Even the last-good commit fails its strict checker there (UNASSIGNED_RET); only its FAULT count was meaningful. The gate uses the die's l4 frame.
+  GATE FOR THE MERGE LANE:
+    - fast: python3 -m pytest tools/s81_dv/test_station_depth.py (6 tests: RTL depths, 1-flop rstg source root reads 1, mutant define, records current, stale record refused, emission shift). Also test_bf_col_form.py and test_frame_source_lookup.py: 11 passed.
+    - sim (~25 min, 24 GB): ot-run --mem 24 --threads 12 --dir <tree> -- python3 -I tools/s81_dv/frame_seq_gate.py --fixtures <L0> --out <dir>. Exits 0 only on PASS. L0 fixtures: epyc9 /srv/opentallas-scratch2/claude/s81-frame-fix-1/fixtures/L0 or intel1 .../tok-verify-1/fixtures/L0.
+  (4) COUNTED FRAME VIEWS (CHECKED): no RTL is changed. ot_rom_4096x72_m8 is one LEF/lib and its contents are a sim-time via map (VIAMAP / OT_ROM_DIR), so the signed frame views stay functionally right and unchanged.
+      What changes is compiler output only: the corrected calendar re-legalises the placement (11/12 wq_b, 18/19 gu phases differ), so every ROM image / programme compiled before this fix is invalid. Replaying the OLD placements through the true timing gives return-tree faults: wq_b 11/11 phases (1..10 faults each), gu 3/18.
+      Every S81 field image, programme and tok/s claim built with the old calendar must be recompiled.
+      The as-built band frames (asb_schedule *_check.json) are still FAIL for an unrelated reason (frame_int band ports / VALIDATION) and are not used by the compiler.
+  (3) AUDIT of the other S81 compiler/token constants against RTL depth:
+      - frame: WIN/RST/CF/PIPE_C/band X and FRAME_BAND_STATION_EDGES MATCH; X_CRS 7 UNVERIFIED.
+      - svc / idx: lower_svc, lower_idx and lower_bk TAIL_BUDGET UNVERIFIED (bench-measured, no RTLB/RTLC edit found in their sources).
+      - leaf / gunit: HC_LAT and RT_LAT were re-measured 10-27 incl. the pin regs (MATCH); the seq_host SEQ table MATCHES; lower_gu FT MATCH.
+      - transport: dvrlyh / ot_s81_land E+1 MATCH (bound path is derived); the asbuilt bind stage table is UNVERIFIED (next candidate for a station_depth read).
+      - x-tier: MISMATCH, listed with evidence, not changed (needs the xrt bench, not a frame bench). dc23a738 also set ot_s81sl_xrt FACE_LAND=1 (+1 on lo->send, p->partials, e->ENG; xrt.sv:172, 248-257), but:
+          - lower_vpx.LO_AFTER_CTL=15 and leaf_transport.LO_LOCAL=7 were measured on tb_vpx_ag, which binds ot_s81sl_xr (vpx/sources.f, no FACE_LAND). Expect 16 and 8.
+          - dv_layer_compile XFIN.collector=5 (also lower_head): xrt p path is 4 edges vs 3. Expect 6.
+          - dv_price.py is still at 10-16 values (234 vs 261, NORMR 112 vs 117, collector 5 vs 6): full-h norm underpriced by ~33 cycles.
+          - norm_nx.NX_AFTER_LAST_NORMR=138 was measured on pre-RTLC fc30 kits. Probably ~141.
+      - frame floors / tails of the other ops (idx.q, wo_b, shared_gu, down, k-slot, BF wo_a/router) were measured 10-19..20 on 1-flop stations. Expect tails +12..13; floors unverified. Next step: extend frame_seq_gate per op.
+  go_tag: go reaches the element through qbank_S (2 flops now) while go_tag goes sequencer -> element direct, so go_tag leads go by 2 edges (was 1). The strict checker passes the tag-carrying ret words on wq_b and experts_gu at the floors, so this is safe for the current tag form. The RTL-2 qbank pin-cycle proof is separate (COORD 10:xx added scope, follow-up below).
+  TOK: asked TOK-VERIFY-1 to price wq_b P127 + the +12..13 tails (RESULT follows).
+  FOLLOW-UP (COORD added scope): S81-ARCH-RTL-2 slice-4(b) bs2/bs3 qbank pin cycle (claude/s81-arch-rtl-1111@29c9b8791920, default-off). The station_depth/emission code in this branch is what re-plans its e2/e3 slot automatically: a +1 on qbank_S becomes a per-pair shift. I take it next on top of this branch: refreshed landed schedule, framed bench with late9 control, go_tag-to-go +1 proof.
