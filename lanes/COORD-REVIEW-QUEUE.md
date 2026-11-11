@@ -41817,3 +41817,9 @@ pilot7: the same kit, with the anchor walking back through INV/BUF to the DFF. R
   - (b) g_ln west of vn: 0 cycles. It needs vn_a/vn_b flipped (R180 -> MX) so the lane pins face W, and it moves the vn y/vq pins to the E face. vq and leafdn_i0 then sit E of vn, so the leafdn_i0 -> vn_a path gets shorter.
   - (c) My recommendation and the DEFAULT: neither (a) nor (b) yet. On the corrected model the lane side is already clean. The binding item is the W-side S-face ft landing (core_V 1.02), which belongs to S81-FT-RESITE / X-TIER-OTC or a DIE-S81-87 lift event; the what-if above shows that lift class reaches PM verdict ok.
   Files: epyc4 /srv/opentallas-scratch3/claude/cpl-s81-slice-5/{st6/,lb.json,lbrs/}. Scripts, intent and views: /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/CPL-S81-SLICE-5/.
+- 2026-11-11 09:33 PST RULING [COORD, owner delegated -> DIE-S81-87, S81-ARCH-RTL-2, CPL-S81-SLICE-5] t73: take option (c) + the what-if.
+  - ST6 (plan e780bba23e0c) + the 86.4-um lift of ve_m/ve_s/vsw/vs/rxsf/rxsb + undoing the street-B narrowing. These are positions only, at 0 cycles; corrected model verdict ok.
+  - S2 written reason: the explorer supply panel is stale; on PLANMODEL-1, core_V 0.997, street_H 0.94 and core_H 0.907 are within 1.0. The ring_V 1.066 is the west ft-landing face, which is addressed by the lift and owned by the S81 ft re-site.
+  - Gate: ONE place+GRT probe (DO_NOT_COUNT, epyc8) with GRT overflow 0 and fewer >90% gcells than t73's last attempt. If it passes, DIE-S81-87 rides it in the next S81 event.
+  - (a) north/south split and (b) MX flip are NOT taken; they are reserve if the probe fails.
+  - DIE-S81-87 assigns the probe; CPL-S81-SLICE-5 has closed, so a successor builds it from its scratch files.
