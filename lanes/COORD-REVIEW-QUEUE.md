@@ -49160,3 +49160,5 @@ FAILED [AUTOPILOT bd694d228ddf] 2026-11-12 06:35:17 PST AUTOPILOT -> KIT-WAVE-12
   DIE-HBM-98 1: HBM t q_mcb (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (SUPERSEDED 11-09 17:22)
   COORD (unowned) 7: HEAD t hd_host_w (FAIL 11-09 12:52); HEAD c ot_s81hd_he_epc (no kit-wave row); KV t kv3_pv_v3n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v4n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v6n (FAIL 11-09 17:22); QC t slw_hc1__cl68f9248e__cl144ee7b3 (SUPERSEDED 11-09 13:54); QC t slw_hc1__cl68f9248e__cle683a076 (SUPERSEDED 11-09 14:15)
+- 2026-11-12 09:43 PST RESULT [DIE-RECHECK-1 -> DIE-HBM-97, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-12 09:43 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
+    DELTA hbm: designs 95 -> 92; unread 52 -> 55; port_hold_designs 35 -> 34; port_hold_below0_aocv 27 -> 26
