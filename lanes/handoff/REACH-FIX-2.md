@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 08:43 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 09:00 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -17,8 +17,7 @@ tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 p
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
 
 ## 3 Running jobs
-- intel1 ot-run s4.sh: regeq.py (region equalisation by wire, up to 7 build+STA iterations) -> .../reach-fix-2/s4/best/ (best.log, regeq.json).
-None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are their partial outputs.
+- intel1 ot-run kvreg.sh: KV vN dieclock_regeq (same flags as HEAD) -> .../reach-fix-2/kvleg/b/ (b.log; KV_DONE at end).
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -30,6 +29,9 @@ None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are th
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 09:00 HEAD STEP 1 CONVERGED (posted): dieclock_regeq (d19e52b867) on intel1 s4/b2/it2: tap spread 2.4 TT / 4.2 FF, insertion 3953 TT,
+  0 balance cells, pad 5.29 m; die STA dp/head/leg (epyc9; REF regions = die-proto-3/head/fix2/proof, NOT fix2_bal which has 1 region):
+  landed dmg 2.01/3.17, margin 414.6/413.4 PASS; intra setup 647.05; FF contract 34 need 2.42. OCV5 worst landed 391 TT.
 - 2026-11-12 08:43 STEP-1 (decision B, posted): die_clock --pad leg (commit eed85b641c): root spread 788 -> 15.6 TT; best = aware 0, window 0,
   --wide-levels 10 --ndr 4w: tap spread 109 TT (region last-mile residual), insertion 3880/3945 TT; seam OCV5 386 ps (unc 3829).
   Channel-only HB4: median 1.37 mm to a channel (HEAD is 90.6% type area; the tree's own cells are 90% inside types) -> residual by wire (regeq.py).
@@ -45,11 +47,10 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-COORD decision B (11-12): H-tree to region roots; A (BUFx24 realize) REJECTED; KV NDR waits until HEAD converges.
-1. Read s4/best.log. If TT spread <= ~20 ps: dieclock_arrivals.py s4/best/itN -> proof, then dcsta.sh (die_sta_related nominal) and post
-   seam/intra pair slack + OCV5. Code on intel1: code_bal_head_g5p/tools/die_plan (die_clock_leg.py = branch die_clock.py).
-2. Routed check: dieclock_routed prep --no-pads + rt_grt.sh NDR=1 (needs the 8W/4W NDR on levels: extend create_ndr) + pads --route-ndr.
-3. Then KV vN with the same flags. Hourly STATE; keep this file current.
+1. KV: read kvleg/b.log; copy it<N> (tree.json arr_TT/FF.txt) to epyc9 dp/dc/kv_leg; dp/legsta.sh pattern with REF = DIE-PROTO-2 KV region proof
+   (find the one with regions > 1, e.g. /srv/opentallas-scratch2/claude/die-proto-3/kv/*/proof) and dcsta.sh kv leg PLAN; post.
+2. Step 2 (proposed, waiting on COORD): routed check of the leg tree: rt_grt.sh NDR with 8W on levels 1-10 and 4W, plus the pads (dieclock_routed pads --route-ndr).
+3. Hourly STATE; keep this file current.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
