@@ -5,7 +5,7 @@ W face) would need a detour around g0 with +2 stations (+2 cycles).
 MX kept, bottom (toward g1) fixed; the band above g0 stays 41.04 um (1531.44-1572.48) and every station that sat in
 1495-1531 moves up into it (y 1551.96); L5096x8 S5 (1071,1344, now inside) -> (1050.0, 1250.0) under g0, S6 into the
 band.  Station counts unchanged (0 cycles), all hops <= 405 um (asserted).
-pins file (provisional, HBM-CORES-B owns the real view): x + 135 for every pin (physical x kept), core-frame N-face
+pins file (provisional, HBM-CORES-B owns the real view): x + 135 for every pin except W-face pins (stay at x 0.096, new W edge), core-frame N-face
 pins (y >= 233.0, toward g1) y + 36.72.
 usage: opsa_b.py PLAN_IN PLAN_OUT CORES_DIR"""
 import json, sys, os
@@ -19,7 +19,9 @@ BAND_Y = 1551.96
 pins = json.load(open(os.path.join(cores, os.path.basename(OLD))))
 out = []
 for p in pins:
-    q = dict(p); q['x'] = round(p['x'] + DX, 4)
+    q = dict(p)
+    # W-face pins stay on the (new) W edge: the core grew 135 um to the left (fix 11-12, HBM-CORES-B)
+    q['x'] = p['x'] if p['x'] < 1.0 else round(p['x'] + DX, 4)
     if p['y'] >= 233.0: q['y'] = round(p['y'] + DY, 4)
     out.append(q)
 newp = os.path.join(os.path.dirname(os.path.abspath(dst)), 'cores_d51', os.path.basename(NEW))
