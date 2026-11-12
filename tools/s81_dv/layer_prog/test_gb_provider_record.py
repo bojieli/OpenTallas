@@ -75,3 +75,56 @@ def test_advance_must_be_one(tmp_path):
     sched['station_inputs']['e0']['required_go_issue_advance_edges'] = 2
     with pytest.raises(ValueError, match='qualified one-edge-early'):
         X.qualify_frame_source(sched, 'm', root, record_dir=d)
+
+
+# DIE-S81-88 11-12: X ages are added_edges over the schedule's LP calendar; a record is admitted only on its own basis.
+LP = 'results/arch/s81_dv_1016/frame_l4_cluster/compiler/m_schedule.json'
+FIX1 = {'dsfd_qbank_S': {'o_go': 2, 'o_x0': 2}, 'ot_s81_rly': {'o': 1}, 'ot_s81_sstn_base566': {'xa': 2}}
+
+
+def with_lp(root, sched, d, station_depth, basis):
+    lp = dict(station_inputs={}) if station_depth is None else dict(station_inputs={}, station_depth=station_depth)
+    (root / LP).parent.mkdir(parents=True, exist_ok=True); (root / LP).write_text(json.dumps(lp))
+    sched['asbuilt'] = dict(lp_schedule=LP); sched['source_sha256'][LP] = h((root / LP).read_bytes())
+    if basis is not None:
+        rec = json.loads((d / X.GB_QUAL).read_text()); rec['age_basis'] = dict(station_depth=basis, x_age_minus_dd=0)
+        (d / X.GB_QUAL).write_text(json.dumps(rec))
+
+
+def test_legacy_record_admits_on_legacy_calendar(tmp_path):
+    root, sched, d = setup(tmp_path)
+    with_lp(root, sched, d, None, None)
+    assert X.qualify_frame_source(sched, 'm', root, record_dir=d) == h((d / X.GB_QUAL).read_bytes())
+
+
+def test_basis_record_admits_age_zero_on_its_calendar(tmp_path):
+    root, sched, d = setup(tmp_path, ages=(0, 12, 19), qualified=(0, 12, 19))
+    with_lp(root, sched, d, FIX1, FIX1)
+    assert X.qualify_frame_source(sched, 'm', root, record_dir=d) == h((d / X.GB_QUAL).read_bytes())
+
+
+def test_legacy_record_refused_on_fix1_calendar(tmp_path):
+    # same age numbers, other calendar: legacy age 2 is the bench's dd 0, FIX-1 age 2 is dd 2
+    root, sched, d = setup(tmp_path)
+    with_lp(root, sched, d, FIX1, None)
+    with pytest.raises(ValueError, match='another LP calendar basis'):
+        X.qualify_frame_source(sched, 'm', root, record_dir=d)
+
+
+def test_basis_record_refused_on_other_calendar(tmp_path):
+    root, sched, d = setup(tmp_path, ages=(0,), qualified=(0,))
+    with_lp(root, sched, d, None, FIX1)
+    with pytest.raises(ValueError, match='another LP calendar basis'):
+        X.qualify_frame_source(sched, 'm', root, record_dir=d)
+    root, sched, d = setup(tmp_path / 'b', ages=(0,), qualified=(0,))
+    with_lp(root, sched, d, dict(FIX1, dsfd_qbank_S={'o_go': 3, 'o_x0': 3}), FIX1)
+    with pytest.raises(ValueError, match='another LP calendar basis'):
+        X.qualify_frame_source(sched, 'm', root, record_dir=d)
+
+
+def test_basis_record_needs_bound_calendar(tmp_path):
+    root, sched, d = setup(tmp_path, ages=(0,), qualified=(0,))
+    rec = json.loads((d / X.GB_QUAL).read_text()); rec['age_basis'] = dict(station_depth=FIX1)
+    (d / X.GB_QUAL).write_text(json.dumps(rec))
+    with pytest.raises(ValueError, match='bound LP calendar'):
+        X.qualify_frame_source(sched, 'm', root, record_dir=d)
