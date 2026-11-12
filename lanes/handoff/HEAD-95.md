@@ -34,6 +34,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - lep0N v3: GEOM-VIS-8 GOOD 11:51; ROUTE epyc9 head-95/lep0N_v3, log ~/head95log/lep0N_v3_route.log (sign-off at end).
 
+- wshim_rx main kit: NOT SIGNED drv only (TT 154 / FF 134 slew pins, worst 419 u_cland_origin s2 D; CLAND-SLEW-1 copies present but nets still ~360 ps). Class fix requested from GEN-CLASS-1 / CLAND-SLEW owner; no re-run until it lands.
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
