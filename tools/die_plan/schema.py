@@ -639,6 +639,11 @@ SCHEMA = {
                         "tap_chain_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
                                            "max_group": {"type": "integer", "minimum": 2, "maximum": 1200}}},
+                        # Default-off (DIE-QC-97 11-10, gen_phys.tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl
+                        # CLOCK-RESET group form): every sink matching re goes with its group (capture 1 = key) to the
+                        # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
+                        "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
+                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
                         # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
                         "tap_pair_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
