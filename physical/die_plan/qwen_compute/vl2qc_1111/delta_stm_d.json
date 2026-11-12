@@ -1,0 +1,1768 @@
+{
+ "base_sha256": "2a52c330044fbf1bcf5c316abdf9f28d0ed9d72e204c5b13a1ed6276f8a2dda0",
+ "plan_sha256": "0219933a3e8ab523cafd08ab0e229b9e6a578735229b8e002cc951460c15cd32",
+ "blocks": {
+  "sle_stm_v1__cl27746664": [
+   17.28,
+   233.28,
+   1218.24,
+   1140.48
+  ],
+  "sle_stm_v1__clbe630b9c": [
+   17.28,
+   233.28,
+   1218.24,
+   1140.48
+  ],
+  "sle_stm_v2__cl55be2264": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "sle_stm_v2__cl7b3062fa": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "sle_stm_v3": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "slw_stm_v1__cl05fc43f7__cl2086fa2c": [
+   17.28,
+   233.28,
+   1235.52,
+   1157.76
+  ],
+  "slw_stm_v1__cl05fc43f7__cl389df4e9": [
+   17.28,
+   233.28,
+   1235.52,
+   1157.76
+  ],
+  "slw_stm_v1__cle34a73c3": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "slw_stm_v2__cl1ca9c415": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "slw_stm_v2__cl9beb65e6": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ],
+  "slw_stm_v3": [
+   34.56,
+   216.0,
+   1244.16,
+   1166.4
+  ]
+ },
+ "edits": [
+  {
+   "type": "sle_stm_v1__cl27746664",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1218.24
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__cl27746664",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1218.24
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__cl27746664",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1140.48
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__cl27746664",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1140.48
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__clbe630b9c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1218.24
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__clbe630b9c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1218.24
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__clbe630b9c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1140.48
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v1__clbe630b9c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1140.48
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl55be2264",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl55be2264",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl55be2264",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl55be2264",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "sle_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1235.52
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1235.52
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1157.76
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1157.76
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1235.52
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1235.52
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     17.28,
+     1157.76
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     233.28,
+     1157.76
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cle34a73c3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cle34a73c3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cle34a73c3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v1__cle34a73c3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl9beb65e6",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl9beb65e6",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl9beb65e6",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v2__cl9beb65e6",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m0",
+   "was": {
+    "origin_um": [
+     164.16,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m1",
+   "was": {
+    "origin_um": [
+     319.68,
+     587.52
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1244.16
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m2",
+   "was": {
+    "origin_um": [
+     164.16,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     34.56,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "type": "slw_stm_v3",
+   "inst": "u_bound.u_core.u_tload.u_ld.m3",
+   "was": {
+    "origin_um": [
+     319.68,
+     682.56
+    ],
+    "orient": "R0"
+   },
+   "now": {
+    "origin_um": [
+     216.0,
+     1166.4
+    ],
+    "orient": "MX"
+   }
+  }
+ ],
+ "inside_box_xy": [
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[78].xy",
+   [
+    242.976,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[79].xy",
+   [
+    242.976,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[81].xy",
+   [
+    275.424,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[82].xy",
+   [
+    275.424,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[90].xy",
+   [
+    351.008,
+    1139.424
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[91].xy",
+   [
+    307.808,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[100].xy",
+   [
+    296.992,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[112].xy",
+   [
+    329.376,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[113].xy",
+   [
+    329.376,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[144].xy",
+   [
+    275.424,
+    1160.992
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[145].xy",
+   [
+    275.424,
+    1160.992
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[148].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[149].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[150].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.landing_contract.collector_tree.relays[151].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "clock.reset_tree_anchor.relays.rst_rl_112.xy",
+   [
+    329.4,
+    1236.6
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "count_straps[10].sites_um[0]",
+   [
+    259.2,
+    1207.752
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__cl27746664",
+   "count_straps[13].sites_um[5]",
+   [
+    263.52,
+    1207.752
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[85].xy",
+   [
+    286.176,
+    1160.992
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[86].xy",
+   [
+    275.424,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[111].xy",
+   [
+    242.976,
+    1160.992
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[112].xy",
+   [
+    242.976,
+    1160.992
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[115].xy",
+   [
+    242.976,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[116].xy",
+   [
+    242.976,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[118].xy",
+   [
+    307.808,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[119].xy",
+   [
+    307.808,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[120].xy",
+   [
+    286.176,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[121].xy",
+   [
+    286.176,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[154].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[155].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[156].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[157].xy",
+   [
+    17.76,
+    1182.624
+   ],
+   "m2"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.landing_contract.collector_tree.relays[158].xy",
+   [
+    329.376,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.reset_tree_anchor.relays.rst_rl_118.xy",
+   [
+    307.8,
+    1204.2
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "clock.reset_tree_anchor.relays.rst_rl_120.xy",
+   [
+    286.2,
+    1236.6
+   ],
+   "m1"
+  ],
+  [
+   "sle_stm_v1__clbe630b9c",
+   "count_straps[9].sites_um[1]",
+   [
+    259.2,
+    1207.752
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v2__cl55be2264",
+   "clock.landing_contract.collector_tree.relays[88].xy",
+   [
+    340.192,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v2__cl55be2264",
+   "clock.landing_contract.collector_tree.relays[118].xy",
+   [
+    307.808,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v2__cl7b3062fa",
+   "clock.landing_contract.collector_tree.relays[96].xy",
+   [
+    264.608,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v2__cl7b3062fa",
+   "clock.landing_contract.collector_tree.relays[97].xy",
+   [
+    296.992,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v2__cl7b3062fa",
+   "clock.landing_contract.collector_tree.relays[155].xy",
+   [
+    329.376,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_contract.collector_tree.relays[93].xy",
+   [
+    221.408,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_contract.collector_tree.relays[94].xy",
+   [
+    221.408,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_contract.collector_tree.relays[95].xy",
+   [
+    253.792,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_contract.collector_tree.relays[96].xy",
+   [
+    253.792,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_contract.collector_tree.relays[134].xy",
+   [
+    264.608,
+    1171.808
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_reader_start.branches.x_sc_fw_i.stages[1].xy_um",
+   [
+    295.638,
+    1193.482
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_writer_start.branches.x_fe_p1_o.stages[1].xy_um",
+   [
+    277.188,
+    1165.722
+   ],
+   "m3"
+  ],
+  [
+   "sle_stm_v3",
+   "clock.landing_writer_start.branches.x_fw_sc_o.stages[1].xy_um",
+   [
+    277.248,
+    1196.962
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[75].xy",
+   [
+    232.224,
+    1247.392
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[109].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[110].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[111].xy",
+   [
+    296.992,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[112].xy",
+   [
+    296.992,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_contract.collector_tree.relays[142].xy",
+   [
+    296.992,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_reader_start.branches.x_sc_fw_i.stages[1].xy_um",
+   [
+    296.118,
+    1163.502
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.landing_writer_start.branches.x_fe_p1_o.stages[0].xy_um",
+   [
+    359.348,
+    1191.182
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "clock.reset_tree_anchor.relays.rst_rl_111.xy",
+   [
+    297.0,
+    1204.2
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "count_straps[10].sites_um[0]",
+   [
+    86.4,
+    1225.032
+   ],
+   "m2"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[105].xy",
+   [
+    275.424,
+    1236.576
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[124].xy",
+   [
+    242.976,
+    1247.392
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[142].xy",
+   [
+    242.976,
+    1171.808
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[143].xy",
+   [
+    242.976,
+    1171.808
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[144].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[145].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[147].xy",
+   [
+    307.808,
+    1215.008
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_contract.collector_tree.relays[148].xy",
+   [
+    307.808,
+    1215.008
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_writer_start.branches.x_fw_fe_o.stages[0].xy_um",
+   [
+    281.938,
+    1185.072
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.landing_reader_start.branches.x_fe_fw_p1_i.stages[0].xy_um",
+   [
+    281.058,
+    1164.852
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "clock.reset_tree_anchor.relays.rst_rl_142.xy",
+   [
+    243.0,
+    1171.8
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "count_straps[9].sites_um[1]",
+   [
+    86.4,
+    1225.032
+   ],
+   "m2"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[76].xy",
+   [
+    232.224,
+    1247.392
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[110].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[111].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[112].xy",
+   [
+    296.992,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[113].xy",
+   [
+    296.992,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.landing_contract.collector_tree.relays[142].xy",
+   [
+    221.408,
+    1171.808
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v1__cle34a73c3",
+   "clock.reset_tree_anchor.relays.rst_rl_112.xy",
+   [
+    297.0,
+    1204.2
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_contract.collector_tree.relays[95].xy",
+   [
+    286.176,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_contract.collector_tree.relays[96].xy",
+   [
+    286.176,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_contract.collector_tree.relays[97].xy",
+   [
+    286.176,
+    1193.376
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_contract.collector_tree.relays[154].xy",
+   [
+    286.176,
+    1225.824
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_reader_start.branches.flt_ctl_i.stages[0].xy_um",
+   [
+    277.79,
+    1203.052
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_reader_start.branches.x_ctl_i.stages[0].xy_um",
+   [
+    307.02,
+    1202.122
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_writer_start.branches.x_fe_p1_o.stages[0].xy_um",
+   [
+    313.55,
+    1206.662
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.landing_writer_start.branches.x_su_c_ctl_o.stages[0].xy_um",
+   [
+    309.03,
+    1165.662
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl1ca9c415",
+   "clock.reset_tree_anchor.relays.rst_rl_96.xy",
+   [
+    286.2,
+    1193.4
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl9beb65e6",
+   "clock.landing_contract.collector_tree.relays[153].xy",
+   [
+    296.992,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl9beb65e6",
+   "clock.landing_contract.collector_tree.relays[163].xy",
+   [
+    242.976,
+    1204.192
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v2__cl9beb65e6",
+   "clock.landing_reader_start.branches.x_sc_fw_i.stages[0].xy_um",
+   [
+    238.27,
+    1273.712
+   ],
+   "m1"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[142].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[143].xy",
+   [
+    275.424,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[145].xy",
+   [
+    307.808,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[146].xy",
+   [
+    307.808,
+    1182.624
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[147].xy",
+   [
+    318.624,
+    1225.824
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_contract.collector_tree.relays[148].xy",
+   [
+    318.624,
+    1225.824
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_reader_start.branches.flt_ctl_i.stages[0].xy_um",
+   [
+    295.16,
+    1203.142
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_reader_start.branches.x_ctl_i.stages[0].xy_um",
+   [
+    324.39,
+    1202.212
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_writer_start.branches.x_fe_p1_o.stages[0].xy_um",
+   [
+    330.91,
+    1208.902
+   ],
+   "m3"
+  ],
+  [
+   "slw_stm_v3",
+   "clock.landing_writer_start.branches.x_su_c_ctl_o.stages[0].xy_um",
+   [
+    326.4,
+    1165.752
+   ],
+   "m3"
+  ]
+ ]
+}

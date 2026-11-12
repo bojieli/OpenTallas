@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Append route_supply.py results to a FLAGS TSV (PLAN-ROUTE-1; ADVISORY, never a gate).
 
-One row per type and run: flagged yes/no, flagged region + direction, layer, p99 ratio, and the suggested plan change
+One row per type and run: flagged yes/no (fail = GRT-CALIB-1 --verdict-mode calib FAIL), flagged region + direction, layer, p99 ratio, and the suggested plan change
 (street/channel, porous M4/M5 share, outline, ring form).  Rows carry a run stamp and the plan file sha256, so the TSV
 is an append-only history: re-run after every plan event; `--changed-only` skips dies whose plan sha is already the
 newest one in the TSV.
@@ -83,7 +83,7 @@ def rows_of(path, stamp, main, plan_sha, plan):
             w = r["worst"]
             reg, dr, layer, p99, ratio = w["region"], w["dir"], w.get("layer", ""), w["p99"], "-"
         sug, nf = suggestion(r)
-        yield [stamp, main, d["die"], plan, plan_sha, r["type"], "yes" if fl else ("unchecked" if r.get("verdict") == "UNCHECKED" else "no"), reg, dr, layer, p99, ratio,
+        yield [stamp, main, d["die"], plan, plan_sha, r["type"], "fail" if r.get("verdict") == "FAIL" else ("yes" if fl else ("unchecked" if r.get("verdict") == "UNCHECKED" else "no")), reg, dr, layer, p99, ratio,
                ",".join(f"{k}:{v}" for k, v in fl) or "-", sug, nf, ",".join(r.get("provisional_children") or []) or "-"]
 
 

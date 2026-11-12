@@ -421,6 +421,81 @@ def _start_origin_xy(t):
     return _centre(rect) if rect is not None else None
 
 
+# CLAND-FACEWIN-1 11-11 (QC cbn_q01__cldd6ea846 kw43 hcut1111 3_3 "OT_CLAND no legal nonoverlapping row/site in
+# reserved band for u_bound.u_cland_fstart_rsf_o ... (writer-face:rsf_o)"): the final writer-face relay window is the
+# fstart pin +-4.32 um, drawn blind.  rsf_o's pin (237.09, 2.66) sat on the 64 FIRM FT bit sites of a00 stage 7
+# (x 233.28..241.3, y 0..9.2) and on the local-reset window lrst_start_3, so the window had no free row/site.
+# _face_window_clear moves a window that overlaps FT bit sites / FT regs or a hard core (+4.32 um) to the nearest free
+# segment of the same face (along the face, or up to the reach deeper), clear of those and of the other START /
+# local-reset / status windows; a window with no FIRM blocker is returned unchanged (identical output).  With no free window within FACE_WINDOW_REACH_UM
+# the window stays and the reason is recorded (FACE_WINDOW_NOTES -> "puts OT_CLAND face-window ..." in the tcl).
+FACE_WINDOW_REACH_UM = 60.0
+FACE_WINDOW_NOTES = []
+
+
+def _ft_site_rects(t):
+    """FIRM FT bit-site / FT register boxes of a type (one box per FT stage), as clock_landing_plan._band_obstacles"""
+    out = []
+    for slot in (t or {}).get('ft_slots') or []:
+        cw, ch = slot.get('bit_site_cell_um', [1.404, .27])
+        for stage in slot.get('bit_sites_um') or []:
+            if stage:
+                out.append((min(p[0] for p in stage) - cw / 2, min(p[1] for p in stage) - ch / 2,
+                            max(p[0] for p in stage) + cw, max(p[1] for p in stage) + ch))
+        if not slot.get('bit_sites_um'):
+            out += [(x - 2.16, y - 2.16, x + 2.16, y + 2.16) for x, y in slot.get('regs_um') or []]
+    return out
+
+
+def _overlaps(r, o, m=0.0):
+    return r[0] < o[2] + m - 1e-6 and r[2] > o[0] - m + 1e-6 and r[1] < o[3] + m - 1e-6 and r[3] > o[1] - m + 1e-6
+
+
+def face_window_blockers(t, rect, others=()):
+    """names of what blocks a writer-face window: ft (FT bit sites/regs), core (hard core +4.32 um), window (others)"""
+    why = []
+    if any(_overlaps(rect, o) for o in _ft_site_rects(t)):
+        why.append('ft')
+    if any(_overlaps(rect, o, 4.32) for o in _hard_core_rects(t)):
+        why.append('core')
+    if any(_overlaps(rect, o) for o in others):
+        why.append('window')
+    return why
+
+
+def _face_window_clear(t, name, rect, others=(), reach=None):
+    reach = FACE_WINDOW_REACH_UM if reach is None else reach
+    # FIRM blockers only: an FT bit site or a hard core.  The START / local-reset windows are ~4.32-um grow windows placed
+    # after this one (each fstart pin has its own local reset beside it), so they only bar the destination of a move.
+    if not set(face_window_blockers(t, rect)) & {'ft', 'core'}:
+        return rect
+    x0, y0, x1, y1 = rect
+    w, h = x1 - x0, y1 - y0
+    width, height = t['outline_um']
+    obs = [('ft', o, 0.0) for o in _ft_site_rects(t)] + [('core', o, 4.32) for o in _hard_core_rects(t)] + \
+          [('window', tuple(o), 0.0) for o in others]
+    face = min((y0, 'S'), (height - y1, 'N'), (x0, 'W'), (width - x1, 'E'))[1]
+    xs = {x0} | {v for _, o, m in obs for v in (o[0] - m - w, o[2] + m)}
+    ys = {y0} | {v for _, o, m in obs for v in (o[1] - m - h, o[3] + m)}
+    if face in 'SN':
+        ys = {y0} | {y for y in ys if abs(y - y0) <= reach}
+    else:
+        xs = {x0} | {x for x in xs if abs(x - x0) <= reach}
+    cands = sorted((abs(x - x0) + abs(y - y0), x, y) for x in xs for y in ys
+                   if 0 <= x and x + w <= width and 0 <= y and y + h <= height)
+    for d, x, y in cands:
+        if d > reach:
+            break
+        r = [round(x, 5), round(y, 5), round(x + w, 5), round(y + h, 5)]
+        if not any(_overlaps(r, o, m) for _, o, m in obs) and _row_free_fraction(_hard_core_rects(t), r) >= 0.25:
+            FACE_WINDOW_NOTES.append(f'{name} moved {d:.2f} um along/off face {face}: {list(rect)} -> {r} '
+                                     f'(was blocked by {"+".join(face_window_blockers(t, rect, others))})')
+            return r
+    FACE_WINDOW_NOTES.append(f'{name} kept {list(rect)}: no free {face}-face window within {reach:g} um '
+                             f'(blocked by {"+".join(face_window_blockers(t, rect, others))})')
+    return rect
+
+
 def _writer_start_groups(t):
     """W1 writer START relays at declared sites (DIE-HEAD-38), same FIRM packing; [] when absent.
     CLAND-WSTART-1 (11-11, QC cbn_q11 NK pilot TT -1065.5 / base -667: u_cland_origin start_d -> writer_start_y_o23_0
@@ -433,6 +508,7 @@ def _writer_start_groups(t):
         return []
     groups = []
     origin_xy = _start_origin_xy(t)
+    others = [tuple(r) for _, r, _ in _status_reset_groups(t)]
     for bus, branch in sorted(cfg['branches'].items()):
         for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
             groups.append((f'u_cland_writer_start_{safe(bus)}_{i}', rect, 'writer-start:'+bus))
@@ -448,8 +524,9 @@ def _writer_start_groups(t):
         x, y = pins[0]['xy_um']
         x = min(max(x, 4.32), width - 4.32)
         y = min(max(y, 4.32), height - 4.32)
-        groups.append((f'u_cland_fstart_{safe(bus)}',
-                       [x-4.32, y-4.32, x+4.32, y+4.32], 'writer-face:'+bus))
+        others += [tuple(r) for _, r, _ in groups]
+        rect = _face_window_clear(t, f'u_cland_fstart_{safe(bus)}', [x-4.32, y-4.32, x+4.32, y+4.32], others)
+        groups.append((f'u_cland_fstart_{safe(bus)}', rect, 'writer-face:'+bus))
     return groups
 
 
@@ -594,6 +671,7 @@ def tcl(P,tn,macro_moves=None):
     windows are cleared of (_collector_window); None / {} = plan origins."""
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
     ev=collector_event(c)
+    FACE_WINDOW_NOTES.clear()
     groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_origin_home_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=ev['tree'];root=ev['collector_root_node']
     cwin={};tmoved=_moved_type(P.types[tn],macro_moves)
     def near(xy,node=None):
@@ -619,7 +697,7 @@ def tcl(P,tn,macro_moves=None):
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
     groups, override_check = _group_rect_overrides(P.types[tn], groups)
-    out=['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
         if tag=='raw-copy-optional':continue
@@ -637,6 +715,7 @@ def tcl(P,tn,macro_moves=None):
 def _dataflow_tcl(tn,c,t=None):
     """monitor="dataflow" (opt-in, FALLBACK-HEAD-2): ring storage bands plus the dedicated registered status
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
+    FACE_WINDOW_NOTES.clear()
     groups=_reader_start_groups(t)+_writer_start_groups(t)+_status_reset_groups(t);status=[]
     for name,band in sorted(c.get('bands',{}).items()):
         if band.get('hard_core'):raise ValueError(f"{tn}: band {name} is a hard child; dataflow monitor form unsupported")
@@ -645,7 +724,7 @@ def _dataflow_tcl(tn,c,t=None):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
     groups, override_check = _group_rect_overrides(t or {}, groups)
-    out=['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]

@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:429b350f9cd2",
+ "die": "qwen_compute",
+ "type": "qfd_dv_s5_su8_rst3",
+ "src": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit/signoff/signoff.json",
+ "tt_wns_ps": 93.04,
+ "ff_wns_ps": 2.39,
+ "gates": {},
+ "routed_lec": null,
+ "routed_lec_all_shown": null,
+ "routed_lec_record": null,
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

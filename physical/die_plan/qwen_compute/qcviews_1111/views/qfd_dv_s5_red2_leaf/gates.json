@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:1122586a813b",
+ "die": "qwen_compute",
+ "type": "qfd_dv_s5_red2_leaf",
+ "src": "/home/ubuntu/scratch-root/claude/dq67-red/eco3/i1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch3/claude/dq67-red/eco3/i1/resign_d_qc/signoff/signoff.json",
+ "tt_wns_ps": 23.2,
+ "ff_wns_ps": 4.96,
+ "gates": {},
+ "routed_lec": null,
+ "routed_lec_all_shown": null,
+ "routed_lec_record": null,
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

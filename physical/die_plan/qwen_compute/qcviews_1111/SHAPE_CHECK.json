@@ -1,0 +1,1049 @@
+{
+ "ot_coll_fold_slice": {
+  "n_entries": 8,
+  "lef_size": [
+   190.08,
+   211.68
+  ],
+  "plan_outlines": [
+   [
+    190.08,
+    211.68
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/coll/ot_coll_fold_slice_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/coll/ot_coll_fold_slice_pins.json",
+    "plan_pins": 645,
+    "lef_pins": 645,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     190.08,
+     211.68
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s5_red2_leaf": {
+  "n_entries": 3,
+  "lef_size": [
+   276.48,
+   276.48
+  ],
+  "plan_outlines": [
+   [
+    276.48,
+    276.48
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/qfd_dv_s5_red2_leaf_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/qfd_dv_s5_red2_leaf_pins.json",
+    "plan_pins": 354,
+    "lef_pins": 354,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s5_sc2_leaf": {
+  "n_entries": 7,
+  "lef_size": [
+   244.56,
+   514.08
+  ],
+  "plan_outlines": [
+   [
+    244.56,
+    514.08
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+    "plan_pins": 572,
+    "lef_pins": 572,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     244.56,
+     514.08
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s5_sc2_leaf_dn0": {
+  "n_entries": 1,
+  "lef_size": [
+   244.56,
+   514.08
+  ],
+  "plan_outlines": [
+   [
+    244.56,
+    514.08
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sc/qfd_dv_s5_sc2_leaf_dn0_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_dn0_pins.json",
+    "plan_pins": 524,
+    "lef_pins": 524,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     244.56,
+     514.08
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s5_sc2_leaf_up0": {
+  "n_entries": 1,
+  "lef_size": [
+   244.56,
+   514.08
+  ],
+  "plan_outlines": [
+   [
+    244.56,
+    514.08
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sc/qfd_dv_s5_sc2_leaf_up0_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_up0_pins.json",
+    "plan_pins": 524,
+    "lef_pins": 524,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     244.56,
+     514.08
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s5_su8_rst3": {
+  "n_entries": 3,
+  "lef_size": [
+   172.8,
+   129.6
+  ],
+  "plan_outlines": [
+   [
+    172.8,
+    129.6
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/signed/qfd_dv_s5_su8_rst3_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/signed/qfd_dv_s5_su8_rst3_pins.json",
+    "plan_pins": 1547,
+    "lef_pins": 1547,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_dv_s8_crh_rp1": {
+  "n_entries": 6,
+  "lef_size": [
+   250.56,
+   216.0
+  ],
+  "plan_outlines": [
+   [
+    250.56,
+    216.0
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+    "plan_pins": 998,
+    "lef_pins": 1002,
+    "missing_in_lef": 0,
+    "extra_in_lef": 4,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [
+     "ft_ck_i",
+     "ft_ck_o",
+     "ft_rst_i"
+    ],
+    "equal": false
+   }
+  ],
+  "bind": false
+ },
+ "qfd_dv_s8x_btab": {
+  "n_entries": 3,
+  "status": "NO-VIEW"
+ },
+ "qfd_dv_s8x_prog": {
+  "n_entries": 3,
+  "status": "NO-VIEW"
+ },
+ "qfd_dv_s8x_vmr": {
+  "n_entries": 9,
+  "lef_size": [
+   250.56,
+   216.0
+  ],
+  "plan_outlines": [
+   [
+    250.56,
+    216.0
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+    "plan_pins": 1509,
+    "lef_pins": 1513,
+    "missing_in_lef": 0,
+    "extra_in_lef": 4,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [
+     "ft_ck_i",
+     "ft_ck_o",
+     "ft_rst_i"
+    ],
+    "equal": false
+   }
+  ],
+  "bind": false
+ },
+ "qfd_qc_su_lane_w_l0": {
+  "n_entries": 5,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l0_u_lane0_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+    "plan_pins": 1064,
+    "lef_pins": 1064,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l1": {
+  "n_entries": 5,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l0_u_lane1_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l2": {
+  "n_entries": 5,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l0_u_lane2_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l3": {
+  "n_entries": 5,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l0_u_lane3_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l4": {
+  "n_entries": 4,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l1_u_lane4_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l5": {
+  "n_entries": 4,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l1_u_lane5_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l6": {
+  "n_entries": 4,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l1_u_lane6_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_qc_su_lane_w_l7": {
+  "n_entries": 4,
+  "lef_size": [
+   414.72,
+   267.84
+  ],
+  "plan_outlines": [
+   [
+    414.72,
+    267.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/su/slw_su_l1_u_lane7_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+    "plan_pins": 1010,
+    "lef_pins": 1010,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "qfd_tile_nk_a0c": {
+  "n_entries": 62,
+  "lef_size": [
+   457.92,
+   1157.76
+  ],
+  "plan_outlines": [
+   [
+    457.92,
+    1157.76
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/a0_nk_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/a0_nk_pins.json",
+    "plan_pins": 2584,
+    "lef_pins": 2584,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 1,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": false
+   }
+  ],
+  "bind": false
+ },
+ "qfd_tile_nl_a0c": {
+  "n_entries": 2,
+  "lef_size": [
+   457.92,
+   1157.76
+  ],
+  "plan_outlines": [
+   [
+    457.92,
+    1157.76
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/a0_nl_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/a0_nl_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 1,
+    "max_dev_um": 0.012,
+    "pins_file_outline": null,
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": false
+   }
+  ],
+  "bind": false
+ },
+ "sle_cland_w2_e_200": {
+  "n_entries": 2,
+  "lef_size": [
+   23.76,
+   30.24
+  ],
+  "plan_outlines": [
+   [
+    23.76,
+    30.24
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w2_e_200_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w2_e_200_pins.json",
+    "plan_pins": 16,
+    "lef_pins": 16,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     23.76,
+     30.24
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w515_n": {
+  "n_entries": 2,
+  "lef_size": [
+   88.56,
+   51.84
+  ],
+  "plan_outlines": [
+   [
+    88.56,
+    51.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/cbn_ring/sle_cland_w515_n_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/cbn_ring/sle_cland_w515_n_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     88.56,
+     51.84
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w515_n_300": {
+  "n_entries": 2,
+  "lef_size": [
+   88.56,
+   51.84
+  ],
+  "plan_outlines": [
+   [
+    88.56,
+    51.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/cbn_ring/sle_cland_w515_n_300_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/cbn_ring/sle_cland_w515_n_300_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     88.56,
+     51.84
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w515_n_301": {
+  "n_entries": 2,
+  "lef_size": [
+   88.56,
+   51.84
+  ],
+  "plan_outlines": [
+   [
+    88.56,
+    51.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/cbn_ring/sle_cland_w515_n_301_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/cbn_ring/sle_cland_w515_n_301_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     88.56,
+     51.84
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w515_s_200": {
+  "n_entries": 2,
+  "lef_size": [
+   113.184,
+   45.36
+  ],
+  "plan_outlines": [
+   [
+    113.184,
+    45.36
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w515_s_200_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w515_s_200_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     113.184,
+     45.36
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w515_s_201": {
+  "n_entries": 2,
+  "lef_size": [
+   228.96,
+   25.92
+  ],
+  "plan_outlines": [
+   [
+    228.96,
+    25.92
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w515_s_201_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w515_s_201_pins.json",
+    "plan_pins": 1042,
+    "lef_pins": 1042,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     228.96,
+     25.92
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w517_n_200": {
+  "n_entries": 2,
+  "lef_size": [
+   118.368,
+   43.632
+  ],
+  "plan_outlines": [
+   [
+    118.368,
+    43.632
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w517_n_200_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w517_n_200_pins.json",
+    "plan_pins": 1046,
+    "lef_pins": 1046,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     118.368,
+     43.632
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w517_s_300": {
+  "n_entries": 2,
+  "lef_size": [
+   89.184,
+   51.84
+  ],
+  "plan_outlines": [
+   [
+    89.184,
+    51.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/cbn_ring/sle_cland_w517_s_300_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/cbn_ring/sle_cland_w517_s_300_pins.json",
+    "plan_pins": 1046,
+    "lef_pins": 1046,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     89.184,
+     51.84
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w517_s_301": {
+  "n_entries": 2,
+  "lef_size": [
+   89.184,
+   51.84
+  ],
+  "plan_outlines": [
+   [
+    89.184,
+    51.84
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/cbn_ring/sle_cland_w517_s_301_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/cbn_ring/sle_cland_w517_s_301_pins.json",
+    "plan_pins": 1046,
+    "lef_pins": 1046,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     89.184,
+     51.84
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w765_e_200": {
+  "n_entries": 2,
+  "lef_size": [
+   63.504,
+   110.592
+  ],
+  "plan_outlines": [
+   [
+    63.504,
+    110.592
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w765_e_200_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w765_e_200_pins.json",
+    "plan_pins": 1542,
+    "lef_pins": 1542,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     63.504,
+     110.592
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ },
+ "sle_cland_w767_e_200": {
+  "n_entries": 2,
+  "lef_size": [
+   77.76,
+   89.856
+  ],
+  "plan_outlines": [
+   [
+    77.76,
+    89.856
+   ]
+  ],
+  "outline_equal": true,
+  "pins_files": [
+   "cores/sul1_ring2/sle_cland_w767_e_200_pins.json"
+  ],
+  "pin_checks": [
+   {
+    "pins_file": "cores/sul1_ring2/sle_cland_w767_e_200_pins.json",
+    "plan_pins": 1546,
+    "lef_pins": 1546,
+    "missing_in_lef": 0,
+    "extra_in_lef": 0,
+    "pos_off": 0,
+    "layer_mismatch": 0,
+    "max_dev_um": 0.0,
+    "pins_file_outline": [
+     77.76,
+     89.856
+    ],
+    "miss_ex": [],
+    "extra_ex": [],
+    "equal": true
+   }
+  ],
+  "bind": true
+ }
+}
