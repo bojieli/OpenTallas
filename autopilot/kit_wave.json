@@ -32347,7 +32347,9 @@
      {
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/qout_views/views",
-      "job": "HBM-CORES-C 11-12 signed ot_q2nf_qout (DIE-HBM-92 re-sign 11-08 b1284d74fe, LOCAL_PASS_NEEDS_PARENT) + abstract LEF via write_abstract_lef, pins match t39w (10,890, 0 diff)"
+      "job": "HBM-CORES-C 11-12 signed ot_q2nf_qout (DIE-HBM-92 re-sign 11-08 b1284d74fe, LOCAL_PASS_NEEDS_PARENT) + abstract LEF via write_abstract_lef, pins match t39w (10,890, 0 diff) | detail view c3b188c9 (exact M6, receipt 75f3d458)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
      }
     ],
     "ot_hgi_sfu_opsb_output": [
