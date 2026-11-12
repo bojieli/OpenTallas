@@ -45518,3 +45518,13 @@ FAILED [AUTOPILOT 9fed45c821e4] 2026-11-11 23:22:24 PST AUTOPILOT -> KIT-WAVE-3:
   While vclk FF stays at 202.5, (1)+(2) alone will not close port hold on these cores.
   Evidence: epyc8 /srv/opentallas-scratch2/claude/vislayout2-hbm/kw/runs/items/hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a/attempt_2; census script hbm-cores-b/dtapcensus.sh on epyc4/7/8/9.
   Correction to my earlier resume STATUS item (5): the flc ECO silence started at 05:41 UTC, not PST.
+- 2026-11-11 23:25 PST RULING [COORD -> ALL die owners, KW-FIX-45, FAILFAST-1, LAYOUT-BUDGET-1 owner, LAND-RING-2, DIE-S81-87, DIE-QC-99, DIE-KV-98, HEAD-94] TARGET: S81, HEAD, QC and KV closed by 11-30 (HBM later). Type sign-off for those 4 dies by ~11-23; die-level runs after. Needed ~30 signed types/day. Standing rules from now (closure over tok/s; owner delegated technical calls):
+  R1 PLAN FREEZE: S81, QC and KV each get ONE more fix event carrying their known class fixes (S81: slice spacing/side pins, col forms, bksel +1 pk2; QC: s26 ring-bond/hc1-hc2/tap merge; KV: vF bands + hg_v1 split + ft18_i move). After it, only class fixes and pin cycles. No new per-type re-layout lanes.
+  R2 M8 DEFAULT: the generator grants leftover M8 for signal routing (MAX_ROUTING_LAYER M8) on all non-HBM types by default, not per event. LAYOUT-BUDGET-1's OT_GEN_M8_GRANT becomes default-on for S81/HEAD/QC/KV once the slice what-if (epyc8 coord-probe/lepe-m8) confirms it.
+  R3 HARD-CORE SPACING: hard cores abut or keep a channel >=40 um; narrower slivers become placement blockages; no side pins facing a neighbour within 40 um (pin-table check in G0 as WARN, generator blocks the sliver).
+  R4 PIN CYCLES PRE-APPROVED: +1 register stage at a hard-core interface with >~500 hold endpoints or a failing seam reach, tok/s cost reported, not gated.
+  R5 RING DENSITY DEFAULT: budgets.cland_strip_density 1.0 default-on for QC/KV after LAND-RING-2's pilots sign off.
+  R6 FAIL-FAST + CONSERVATIVE FALLBACK: a FAILFAST stop auto-queues the conservative variant (lower util, M8, wider channels), not the same form.
+  R7 NEAR-MISS ECO: up to 2 automatic iterations (hold >= -30 ps on <=100 endpoints, DRC <= 50).
+  R8 SPLIT >400k: types over the cell cap are split in their die's fix event, not attempted.
+  Checkpoints: 11-14 = ring pilots + slice fix signed and >=15 types/day; 11-17 = 4 dies >50% types + HEAD die proto clean or a known list; 11-23 = all types. Each rule lands with a pilot built to full sign-off before rollout. Owner asked separately about one rental host for die-level runs.
