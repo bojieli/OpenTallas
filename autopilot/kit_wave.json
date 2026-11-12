@@ -29810,7 +29810,10 @@
     "q_b011__physical_v1@2",
     "q_spu0__physical_v1@5",
     "ot_hbm_sm_i8w_front@8",
-    "ot_hbm_sm_pv_merge@6"
+    "ot_hbm_sm_pv_merge@6",
+    "PHY_NC@1",
+    "PHY_NE@1",
+    "PHY_NW@1"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -32532,6 +32535,15 @@
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "ot_hbm_sm_pv_merge": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "PHY_NC": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "PHY_NE": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "PHY_NW": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
