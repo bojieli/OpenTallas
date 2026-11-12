@@ -210,6 +210,15 @@ def pin_cycles(ctx, rules):
     return out, clients
 
 
+def vlit(v):
+    """as-built parameter value -> int: 75, "75", 64'd75, 64'b1001..., 32'h4b (raises ValueError otherwise)"""
+    s = str(v).strip().strip('"').replace("_", "")
+    m = re.fullmatch(r"(?:\d+)?'s?([bdhoBDHO])([0-9a-fA-F]+)", s)
+    if m:
+        return int(m.group(2), {"b": 2, "d": 10, "h": 16, "o": 8}[m.group(1).lower()])
+    return int(s)
+
+
 def cut_guard(ctx, leaf, xs, single):
     """None: not a guarded cut; "": the elaborated top parameter already carries base + X; else the error"""
     for rx, grp, par, base in CUT_PARAMS:
@@ -277,7 +286,7 @@ def pin_plan(ctx, px, clients, params):
                     pv = c.params.get(par)
                     if pv is None:                 # not overridden at the instance: the elaborated master default
                         pv = (getattr(ctx, "param_defaults", None) or {}).get((getattr(c, "ytype", None), c.module), {}).get(par)
-                    asb = int(str(pv).strip('"').replace("64'd", "").replace("'d", ""))
+                    asb = vlit(pv)
                 except ValueError:
                     err.append(f"core pin cycles {s}.{par}: as-built value {pv!r} not an integer")
                     break
