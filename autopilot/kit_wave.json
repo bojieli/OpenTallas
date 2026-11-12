@@ -19857,7 +19857,8 @@
     "hd_st_n4",
     "hd_spn",
     "hd_spn_end",
-    "hd_lep0N"
+    "hd_lep0N",
+    "hd_serdes"
    ],
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (HEAD-94)",
@@ -20024,7 +20025,6 @@
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
-    "hd_serdes": "KW-FIX-43 COORD 11-10 00:5x: HEAD-92 stopped a2 on purpose (20:37), the wave read exit 137 as INFRA and relaunched the unchanged form as a3. Held until HEAD-92's form 3 (epyc7 head-92/ser3) is the source. Revert: delete hold_items.hd_serdes.",
     "hd_lep0N": "KW-FIX-45 11-11 (COORD ruling HEAD cut): hd_lep0N lepB+S03 route_supply 1.68, KIT launch CONDITIONAL on the post-cut lep0N GRT0 check (HEAD-94)",
     "hd_ctl": "KW-FIX-45 11-11 (HEAD-94): hd_ctl FAIL rebuild is a die-owner hand launch (claude/head-94-ctl-1111@7c501990c29f needs COORD approval + merge; ZLP hold hook not wired in the wave); not in the TX batch"
    },
@@ -20955,7 +20955,10 @@
     "src": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952",
     "src_sha": "9ddabba952d94d6e4686fbbc4c62b1d607b4fe54",
     "queue_src": "claude/head-94-heads-1112@9ddabba952d9"
-   }
+   },
+   "stage_resume_off": [
+    "hd_serdes"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
@@ -43444,7 +43447,15 @@
      "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
     }
    },
-   "note_hg2p18": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2). | retry +q_su10__physical_v1@2 +q_su00__physical_v1@2; removed ['q_su11@1', 'q_su11__physical_v1@1'] for a fresh re-arm next pass (KW-FIX-45 11-11 re-arm rule); q_su01/q_su01pv1 keep their KW-FIX-45 hold (child views). | 02:17 re-added q_su11@1 q_su11__physical_v1@1 (absent at the 02:12 pass -> fresh release; both still RUNNING on the pre-p18 bind and will fail KIT_PREFLIGHT, then relaunch @2 on rd1p18)."
+   "note_hg2p18": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2). | retry +q_su10__physical_v1@2 +q_su00__physical_v1@2; removed ['q_su11@1', 'q_su11__physical_v1@1'] for a fresh re-arm next pass (KW-FIX-45 11-11 re-arm rule); q_su01/q_su01pv1 keep their KW-FIX-45 hold (child views). | 02:17 re-added q_su11@1 q_su11__physical_v1@1 (absent at the 02:12 pass -> fresh release; both still RUNNING on the pre-p18 bind and will fail KIT_PREFLIGHT, then relaunch @2 on rd1p18).",
+   "stage_resume_off": [
+    "q_b012__physical_v1",
+    "q_b013__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1"
+   ]
   }
  },
  "place_prefer": [
