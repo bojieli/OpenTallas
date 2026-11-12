@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 14:10 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 15:15 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,7 +8,7 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD 54d2a1ec4b (pushed, clean) =
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD b251146029 (pushed, clean; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell) =
 main d3f85cdf01 + 7 cherry-picked REACH-FIX-2 commits (5e19ca2647..72e2c1295a) + FIXED-CYCLES 54d2a1ec4b. READY posted 13:00
 (ROOT-MERGE-60) and 13:2x (adds 54d2a1ec4b). Old branch claude/reach-fix-1112 (370eac82bd) is superseded by it.
 Tests (epyc7 repo root, --basetemp under reach-fix-2/pyt): test_reach_fix (20) test_dieclock_routed test_die_clock*.py
@@ -30,6 +30,10 @@ None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 15:0x DELAY-CELL STEP (posted): gate FAIL. 17/41 capped leaves have a channel on their own leg; 24 are 0.25-6.4 mm inside types.
+  HB4 measured 51-81 ps TT (125-269 with 126-154 um detours), FF/TT 0.55-0.60 -> ~25 ps FF tracking error per cell. Run2 B: 122.9 TT /
+  59.3 FF, landed 316.85/377.24, FF contract 61. Best form still wire step 2. Proposed (a) leaf cap 2000 um on the 41 leaves; awaiting COORD.
+- 2026-11-12 14:3x FAIL-LOUD READY (c81d837870): reach_fix check/fix exit 3 + REACH-FIX-FAIL type list on any per-type error / broken bind rule.
 - 2026-11-12 14:0x ROUTED RE-BALANCE (posted + correction): step0 136.2 -> step1 42.1 TT / 36.9 FF -> step2 43.3 no gain; overflow 0 all steps;
   landed margin 375.39/382.49 (step1); FF contract 308 -> 44 -> 33 (need 4.66). Stall = 41 leaves at the 1500 um cap (n10_694 needs 43.3 ps).
   Proposed: 1 HB4xp67 at each capped leaf root (channel site) or lift cap ~2000 um; awaiting COORD. epyc9 rl/rloop.py, rl/rloop.json.
@@ -62,10 +66,10 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. On COORD's pick: HB4 at the 41 capped leaf roots (realize --sites channel) or leaf cap 2000 -> one more routed step (rloop.py, start pads rl/rleafpad2.json).
-   rloop.py rebuilds with die_clock_leg2.py + rl/g5p plan (exact it2 repro); rt_leg.sh takes RUN= D= env.
-2. Merge lane: answer ROOT-MERGE-60 questions on claude/reach-fix-2-main-1112 @54d2a1ec4b. S81 re-price is DIE-S81-88's (2d689bfae217).
-3. KV regeq after DIE-KV-99 vN2e tap-site event.
+1. On COORD go for (a): rloop variant with per-leaf cap 2000 on rl/lc_leaves.json leaves, from rl/rleafpad2.json (one routed step, rt_leg.sh RUN= D=).
+   If the gate passes -> emit as tool output for HEAD-95 rp17 (no hand edit).
+2. If HEAD-95 SP3n2 fails GRT hold on W/E bin register bars (u_bin_bw_i/u_bin_be_i, like SP2 -110 ps): mine, type-level tap latency item.
+3. Merge lane questions on @b251146029. S81 re-price = DIE-S81-88. KV regeq after DIE-KV-99 vN2e.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
