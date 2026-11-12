@@ -136,9 +136,20 @@ def repo_lef_index(repo):
     return idx
 
 
-def repo_lef_for(module, repo, die_dir=None):
-    """Best non-template repo LEF of a module name: prefer the die's own tree, then physical/die_plan, ref_tile, rest
-    (ties: shortest path, then lexicographic).  None when the repo holds none."""
+def size_matches(size, outline, tol=SIZE_TOL_UM):
+    """LEF SIZE equals the plan outline (either orientation) within tol."""
+    if not size or not outline:
+        return True
+    a = max(abs(size[0] - outline[0]), abs(size[1] - outline[1]))
+    b = max(abs(size[0] - outline[1]), abs(size[1] - outline[0]))
+    return min(a, b) <= tol
+
+
+def repo_lef_for(module, repo, die_dir=None, outline=None):
+    """Best non-template repo LEF (with an OBS block) of a module name: prefer the die's own tree, then
+    physical/die_plan, ref_tile, rest (ties: shortest path, then lexicographic).  With  (the plan's
+    outline_um) a copy whose SIZE differs is a stale view of another form of the module and is skipped.  None when
+    the repo holds none."""
     c = [p for p in repo_lef_index(repo).get(module, []) if "_tpl" not in p]
     if not c:
         return None
@@ -149,7 +160,8 @@ def repo_lef_for(module, repo, die_dir=None):
                 len(p), p)
     for p in sorted(c, key=rank):
         f = lef_facts(Path(p))
-        if f and f["obs"] and not is_template(f):      # a pin-only contract LEF (no OBS block) is not a blockage truth
+        # a pin-only contract LEF (no OBS block) is not a blockage truth
+        if f and f["obs"] and not is_template(f) and size_matches(f["size"], outline):
             return p
     return None
 

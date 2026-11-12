@@ -143,3 +143,15 @@ def test_sync_lowers_only_on_request(tmp_path):
         assert osy.write_sync("tst", tmp_path, True, lower=True) == [("t", "u_c", "M7", "M5")]
     finally:
         osy.PLAN_OF_RECORD.pop("tst")
+
+
+def test_repo_lef_of_another_size_is_not_used_by_route_supply(tmp_path):
+    """a same-name LEF of a different form (stale SIZE) must not set the blockage: fall back to the plan ceiling."""
+    P = _repo(tmp_path, {"M1": 1, "M2": 1, "M3": 0.6})
+    h = dict(P["partition_types"]["t"]["hard_cores"][0], outline_um=[80, 80])        # LEF is 40x40
+    rs.REF_DIRS[:] = []
+    cfg = dict(rs.DEFAULTS, template_cap_obs_max=True, views={}, kit_views={}, signed_modules=None)
+    obs, kind, src, _ = rs.macro_view(h, tmp_path / "physical/die_plan/tst", tmp_path, cfg)
+    assert src == "plan-obs_max"
+    assert osy.repo_lef_for("c", tmp_path, outline=[40, 40]) and osy.repo_lef_for("c", tmp_path, outline=[80, 80]) is None
+    assert osy.repo_lef_for("c", tmp_path, outline=[40.0, 40.01])                      # inside the 0.02 um tolerance

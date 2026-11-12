@@ -392,14 +392,14 @@ def macro_band(inst, k_gcells, gcell_um=None):
     return {L: float(f) for L, f in kb.items()} if kb is not None else None
 
 
-def _repo_lef_for(mod, repo, die_dir):
-    """non-template repo LEF of module `mod` (obs_sync.repo_lef_for), or None."""
+def _repo_lef_for(mod, repo, die_dir, outline=None):
+    """non-template repo LEF of module `mod` whose SIZE matches the plan outline (obs_sync.repo_lef_for), or None."""
     try:
         import obs_sync as OSY
     except ImportError:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import obs_sync as OSY
-    return OSY.repo_lef_for(mod, repo, die_dir)
+    return OSY.repo_lef_for(mod, repo, die_dir, outline)
 
 
 def macro_view(h, die_dir, repo, cfg):
@@ -464,7 +464,7 @@ def macro_view(h, die_dir, repo, cfg):
     if obs is None and cfg.get("lef_by_module", True):
         # OBS-SYNC-1 11-12: a core whose plan row carries no lef (QC/KV/HBM) used to fall to obs_max / the ceiling even
         # when the repo holds its real LEF; derive the blockage from that LEF (obs_sync.repo_lef_for), not the ceiling
-        rl = _repo_lef_for(mod, repo, die_dir)
+        rl = _repo_lef_for(mod, repo, die_dir, h.get("outline_um"))
         if rl:
             obs = lef_obs(rl)
             if obs is not None:
