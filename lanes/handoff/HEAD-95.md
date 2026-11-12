@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 09:15 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 06:58 PST (earlier queue posts 07:20/08:33/09:00 were mis-stamped, see 06:58 CORRECTION)
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -10,15 +10,15 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - Work dir: /srv/opentallas-scratch2/claude/head-95/ : pd/ = prep dir (plans must sit in it: side files resolve relative to the plan dir; symlinks to HEAD-94 srx_pd). Plans: pd/k1_plan.json (base, = HEAD-94 k1, G0 153 errors), pd/srx3_plan.json (HEAD-94 west move), pd/wp1*.json (west pass, abandoned), pd/rp1/rp2/rp3*.json (re-pack fallback). Scripts: west_pass.py, repack_lep.py, relocate_empty_taps.py, genchk.sh (gen phys --trial per type), g0diff.py. Copies of scripts + drawings: intel2 ~/coord/lanes/head-95-west-1112/.
 
 ## 3 Running jobs
-- wshim_rx DRV ECO: epyc4 ot-run unit oth-ubuntu-223592-1794492924, pass dir epyc4 /srv/opentallas-scratch3/claude/head-94/prd_wshim/pass_t10r (prd t10, OT_PRD_FROM=route, source kit prd_wshim/kit = pf_wshim fanout-cap route), log intel2 ~/head95log/prd_wshim_t10r.log; result = pass_t10r/prd_result.json then the kit GOAL=post sign-off (signoff.log in the final dir). At 09:00 in 5_2_route.
+- wshim_rx DRV ECO: epyc4 ot-run unit oth-ubuntu-223592-1794492924, pass dir epyc4 /srv/opentallas-scratch3/claude/head-94/prd_wshim/pass_t10r (prd t10, OT_PRD_FROM=route, source kit prd_wshim/kit = pf_wshim fanout-cap route), log intel2 ~/head95log/prd_wshim_t10r.log; result = pass_t10r/prd_result.json then the kit GOAL=post sign-off (signoff.log in the final dir). Pass 1 done: TT slew 265 -> 3, FF 147 -> 1; pass 2 running (pass_t10r_p2).
 - wshim_tx DRV ECO: queued on epyc8 load gate since 06:30, pass dir epyc8 /srv/opentallas-scratch/claude/head-95/prd_wtx_t10r (SO dir epyc8 /srv/opentallas-scratch/claude/head-95/so), log intel2 ~/head95log/prd_wtx_t10r.log.
-- HEAD-94 routes (logs intel2 ~/head94log/*.log, run logs in kit run/logs/asap7/*/base/): lb_mesh_st, lb_mesh_eo (epyc7 scratch2/claude/head-94/lb_mesh_*), lbal_hd_mesh/_eo (epyc7 scratch2/claude/head-lep0n-bal/build/hd_mesh*/gen/hd_mesh, containers dpkit-hd_mesh-3631383/3632102), pf_ctl (epyc2 scratch2/claude/head-94/pf_ctl), meshk hd_mesh sign-off (epyc8 scratch2/claude/head-94/meshk). All were in GRT repair at 09:00.
+- HEAD-94 routes (logs intel2 ~/head94log/*.log, run logs in kit run/logs/asap7/*/base/): lb_mesh_st, lb_mesh_eo (epyc7 scratch2/claude/head-94/lb_mesh_*), lbal_hd_mesh/_eo (epyc7 scratch2/claude/head-lep0n-bal/build/hd_mesh*/gen/hd_mesh, containers dpkit-hd_mesh-3631383/3632102), pf_ctl (epyc2 scratch2/claude/head-94/pf_ctl), meshk hd_mesh sign-off (epyc8 scratch2/claude/head-94/meshk). All in GRT repair at 06:40 PST.
 
 ## 4 Watchers
 None armed. Posting helper: localhost scratchpad h95/post.sh (scp a one-line post to intel2 + coord-commit).
 
 ## 5 Results not yet posted
-- re-pack v3 (rp3: v2 + blocked local reset taps moved vertically off macros) was launched 09:10 and lost its ssh; NOT run. v2 result: street_rule street 0, tap_street 0, outline_street 0, sliver 33 (stacked rx see-through), outline_sliver 3; REACH-FIX c2 36 -> 0, c5 1 left; gen FAIL 'local reset tap [1287.36, 652.32] is blocked' (top tx row).
+- re-pack v3 (pd/rp3_rf.json): gen PASS, G0 6 NEW (lep0N rst_start_raw_1..3 raw export mismatch), REACH-FIX c5 2. street_rule resetfix -> pd/rp4.json running (log localhost scratchpad h95/rp4.out); then G0 + gen on rp4.
 
 ## 6 NEXT STEPS
 1. epyc4: cd /srv/opentallas-scratch2/claude/head-95/pd && python3 -I ../repack_lep.py k1_plan.json rp3.json ; then in wt/head-95-rfsr: reach_fix.py fix pd/rp3.json --out-plan pd/rp3_rf.json --event ../rf_rp3_event.json --repo /srv/opentallas-scratch3/claude/head-94/wtM8 --types '^hd_lep0N$' ; then ../genchk.sh <rfsr> pd/rp3_rf.json pd/sidecar.json hd_lep0N. Rule: gen rc 0 -> step 2; a new blocked tap/macro error -> fix in repack_lep.py (class, not per point) and repeat.
