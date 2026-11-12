@@ -2313,8 +2313,11 @@ def gen_hosts(cfg, die, item=None):
     low = cfg.get("_workroot_low") or {}
     imiss = cfg.get("_item_incomplete") or {}
     ch = (cfg.get("_phase_calm_hosts") or {}).get(die)
-    if ch:
-        hs = [h for h in hs if h in ch] or hs          # KW-FIX-46: phase split calm hosts (see phase_split_apply)
+    # KW-FIX-46 11-12 (COORD 08:5x, hbm PHY_NE@4 kit_rtl "cd ... No such file" on intel1): the calm filter is applied only
+    # among hosts that hold the die's inputs; narrowing first let the fallback chain below return a SRC-INCOMPLETE calm host
+    if ch and any(h in ch and die not in bad.get(h, {}) and die not in low.get(h, {}) and lane not in marked.get(h, ())
+                  for h in hs):
+        hs = [h for h in hs if h in ch]                # KW-FIX-46: phase split calm hosts (see phase_split_apply)
     if item:
         hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})
               and core_module(item) not in (imiss.get(h) or {}).get(die, {})] or hs   # WAVE-OPS-1: core_kit.item_args
@@ -2621,19 +2624,20 @@ def src_incomplete(AP, cfg, run=None):
             # KW-FIX-45 11-12: the probe script (bind.f source lists, 500+ required files) exceeded the 128 KB single-argument
             # limit of exec: ssh failed with 'Argument list too long', every probe returned 'unknown' and NO host was ever
             # dropped (the S81 / QC rows launched on epyc4 / intel1 without their bind dirs).  The script goes over stdin.
-            try:
-                if h in (hub, "localhost"):
-                    p = subprocess.run(["bash", "-s"], input=cmd, capture_output=True, text=True, timeout=180)
-                else:
-                    for _try in range(3):                        # sshd MaxStartups resets ('Connection closed') are transient
-                        p = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h,
-                                            "bash -s"], input=cmd, capture_output=True, text=True, timeout=180)
-                        if p.returncode != 255:
-                            break
-                        time.sleep(3 + 4 * _try)
-            except subprocess.TimeoutExpired:
-                return 124, ""
-            return p.returncode, p.stdout
+            # KW-FIX-46 11-12 (ROOT-MERGE-60 gate): through AP.sh (stdin via input=) as on main, not subprocess directly, so the
+            # caller's AP decides how a command runs (the test fakes never reach a real host; the live AP.sh = subprocess.run).
+            # An AP.sh without input= (old fakes) gets the argv form.
+            argv = ["bash", "-s"] if h in (hub, "localhost") else \
+                ["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "bash -s"]
+            for _try in range(3):                                # sshd MaxStartups resets ('Connection closed') are transient
+                try:
+                    rc, o, _ = AP.sh(argv, timeout=180, input=cmd)
+                except TypeError:
+                    rc, o, _ = AP.sh(argv[:-1] + ["bash", "-c", cmd] if argv[0] == "ssh" else ["bash", "-c", cmd], timeout=180)
+                if rc != 255 or h in (hub, "localhost"):
+                    break
+                time.sleep(3 + 4 * _try)
+            return rc, o
     need = {}
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or d.get("src_probe") is False:
@@ -2976,7 +2980,9 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         # lowest load fraction or a fixed list order (epyc9 97/96 with 30 waiters while epyc2 sat at 26/128)
         # KW-FIX-46 11-12 (COORD 08:2x (d): never restage / gen onto a LOADCAP host while an uncapped one stays; with
         # load_hold false 'room' is empty and the score alone sent HBM rows to epyc8 at 148/96 while epyc9 sat at 25/96)
-        uncapped = [h for h in hs if key(h) and not over_load_cap(key(h))]
+        # (and never onto a host under the die's gen disk floor: with no room anywhere the old score order decides)
+        uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
+                    and die not in low.get(h, {})]
         best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
                 else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
@@ -5910,7 +5916,9 @@ def phase_split_apply(cfg, st, per_die, waiting=None):
         dd = (cfg.get("dies") or {}).get(d) or {}
         hs = list(dict.fromkeys((dd.get("gen_hosts") or []) + ([dd["gen_host"]] if dd.get("gen_host") else [])))
         calm[d] = [h for h in hs if not waiting.get(h) and (stt.get("localhost" if h == hub else h))
-                   and not over_load_cap(stt.get("localhost" if h == hub else h))]
+                   and not over_load_cap(stt.get("localhost" if h == hub else h))
+                   and d not in ((cfg.get("_src_incomplete") or {}).get(h) or {})        # KW-FIX-46: a host without the
+                   and d not in ((cfg.get("_workroot_low") or {}).get(h) or {})]         # die's inputs is never calm
     cfg.setdefault("_phase_calm_hosts", {})
     reserved = int(ps.get("reserved_threads", 96))
     out = []; held = 0

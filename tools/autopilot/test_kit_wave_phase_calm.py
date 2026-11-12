@@ -41,6 +41,20 @@ class PhaseCalm(unittest.TestCase):
         out, _ = K.phase_split_apply(c, {"items": {}}, [[("s81", {"item": "a", "kind": "type"})], rows(5)], waiting={})
         self.assertNotIn("hbm", c.get("_phase_calm_hosts") or {})
 
+    def test_src_incomplete_host_is_never_calm(self):
+        # KW-FIX-46 11-12 08:5x (COORD: hbm PHY_NE@4 kit_rtl 'cd src: No such file' on intel1): the calm hosts were intel1
+        # and epyc2, both SRC-INCOMPLETE for hbm, and the gen_hosts fallback then returned intel1
+        c = cfg()
+        c["dies"]["hbm"]["gen_hosts"] = ["epyc7", "epyc9", "epyc8", "intel1"]
+        c["_otrun_status"]["intel1"] = {"admit": 500, "cores": 112, "load": 10}
+        c["_src_incomplete"] = {"intel1": {"hbm": "src missing"}, "epyc9": {"hbm": "src missing"}}
+        with mock.patch.object(K, "volume_started", return_value=False):
+            K.phase_split_apply(c, {"items": {}}, [rows(4)], waiting={"epyc7": 30, "epyc8": 20})
+        self.assertNotIn("hbm", c["_phase_calm_hosts"])            # no calm host holds the inputs: no calm narrowing
+        self.assertNotIn("intel1", K.gen_hosts(c, "hbm"))
+        c["_phase_calm_hosts"] = {"hbm": ["intel1"]}                 # a stale calm list cannot bring back a src-bad host
+        self.assertEqual(K.gen_hosts(c, "hbm"), ["epyc7", "epyc8"])
+
 
 if __name__ == "__main__":
     unittest.main()
