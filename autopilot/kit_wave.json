@@ -33596,6 +33596,14 @@
      "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts. | 20:5x DIE-HBM-97: recipe source_commit re-pointed to the rd1 merge commit 52216309aab0 (body blob b18e3543f70e and corelat TSV 38a728e71c05 identical at a918972c and at the merge; faces_q0 diff empty). | DIE-HBM-100 accepted counting (20:5x): sha256[0:16] of the tree files == main 52216309aab0 content: hfd_vms_bank_native_q0_faces.sv 2a7d478da253fb74, ot_vms_bank_q0_faces_core.sv c55ad634a94838dc, ot_vms_bank_q0_faces_body.sv fcd9b8dde26f7876, ot_vms_ce_counter_pipe.sv de10f3eea0f6b8bb, cycles_vecd4ae_rd1_1111.tsv e4b108339fa6c313. The die-level rd1 bind (hb_coll, FUSED, QUANT) is a SEPARATE event, not a precondition for counting this core (core RTL unchanged by it); its bank pin cycles take effect on the die only when that event merges.",
      "src_sha": "9fc09952cdc4",
      "queue_src": "main@9fc09952cdc4"
+    },
+    "q_hub_nw": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t40w/plan_t40w/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t40w/bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t40w/asbuilt_d12b.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-HBM-100: t40w (5129a5aab081 = t39w + l3011 ft_slots, q_hub_nw only), bind_report c05ea45bce68; every other type stays on t39w"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
