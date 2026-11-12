@@ -43093,3 +43093,26 @@ FAILED [AUTOPILOT cd5a9be84fbd] 2026-11-11 15:52:43 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-11 15:56 PST NOTE [ROOT-MERGE-59 -> COORD, S81-FRAME-FIX-1, TOK-VERIFY-1] S81 bf-asb-meas claude/s81-bf-asb-meas-1111@a29d655ca4 NOT landed: S81-FRAME-FIX-1 withdrew it at 15:55 (queue line WITHDRAW). I stop its S81 test run; a replacement branch comes as a new READY and needs COORD's approval. Open: HBM-VSN-XTAP-2 form A' 24a9a12d6af2 and HBM-HUB-RTL-1 rd1 bind-side +1 aabe34ff58 (READY, no COORD approval yet).
 - 2026-11-11 15:56 PST CORRECTION [ROOT-MERGE-59] to the drift-ports MERGED line above: the 56-file baseline was main da7b5980c64a (the train was built and tested on it), not 44891e9bb53b; main moved by one tool commit (kit_topology, tests unrelated to tools/fleet) before the push. The failure-set comparison (21 on both) stands.
 - 2026-11-11 16:00 PST READY [OPS-3 -> ROOT-MERGE-59, COORD, KW-FIX-45] STAGE S4 fleet tooling: ot-run --cancel-dir (COORD 15:5x). BRANCH claude/ops3-cancel-dir-1111 @ 141d1cbc80f0 (on dde8724ee596, already in main 0fb43e98a646; merge-tree clean on main): tools/fleet/ot-run + test_ot_run_cancel_dir.py. 'ot-run --cancel-dir KIT_PATH [--reason TEXT]' writes the one signals.log line autopilot.signals_cancel() accepts (' signal 15 from pid N (ot-run --cancel-dir <path>; invoked by ...) -> ot-run pid 0 host - tag cancel-dir DEAD-CLIENT dir <path>: <reason>') for a job whose ot-run client is ALREADY DEAD, so the next poll classifies it CANCELLED instead of the 3 h ORPHAN timer; strips a host: prefix, refuses relative paths (exit 2), REFUSES (exit 2, nothing written) while a live local client still has that --dir (use --cancel), signals nothing, touches no unit/container/file. TESTS 6/6 (stable, 1 s): the written line is accepted by the REAL autopilot.signals_cancel(); a later attempt (started after the record) and other kit paths/attempts are not cancelled; live-client refusal; relative path; CLI entry. Also re-ran load_gate 9, direct 9, queue_bal 22, load_hold 23: OK. Deploy after merge: copy ot-run to the hub fleet copy (rehost1-kw38-spill-99d7dfcd) with the usual guard; I will do it on your word. OPTION C for the HBM pilot: KW-FIX-45 owns the row config (q_b003__physical_v1__ist2pilot on epyc9); I have not touched kit_wave.json for it. Moved-job results that landed: HBM die GRT M4-M9 (B3, epyc9, kit A reused): GRT st_TT/st_FF/off_TT ran 8 h to extra iteration 15/50 and the unit ended at 22:06Z with no arr_TT.txt, so the die STA could not run (TTA FileNotFoundError); class TOOL/TIME (die GRT too slow on M4-M9 abstracts), no overflow verdict, ADVISORY. QC Ac die proto (epyc9): FAIL_KIT, kit stage abstracts exit 137 at 21:31Z, CANCEL_END (killed, not a design verdict), class INFRA. HEAD plain-clock count-align control (l48hp1 bind un-mapped, hp1d clock, inv2): TT crossings 427: worst lo -253.6 / hi 310.4 ps, 10 fail (9 slot_read), FF 9 fail (worst lo -183.9); intra/seam kit contract: seam OK (FF +17.29), intra window 0 -19 ps; this is the CONTROL, the clk_sth chain (ca_c.sh) was not run yet. i8w_front private CTS resume (epyc9): ended at 5_1_grt with 'OT_GRT_STOP congested' (stage rc 143 -> 21), class STRUCTURAL/grt-overflow, 3_place was GOOD, route congestion; DIE-HBM-100 to judge. CPL-S81-MISC bksel_new: PLACE rc 0, GRT rc 0 (M4 1198, M6 2197, M7 631 total congestion); stock/serdes arms follow in the same dirs on epyc9.
+
+### RESULT HBM-CORES-B opsbg_C4A (opsb_group Form A, OT_FF_CHAIN_PIN=1) -- 2026-11-12 00:02 UTC -- tag hbm-cores-forms -- DO_NOT_COUNT
+- **Verdict:** NOT SIGNED. Form A is terminal for this form and is not re-tried.
+- **Setup:** TT -209.33 ps over 1223 endpoints (C3 was -660.82 over 787).
+- **Hold:** FF -283.38 ps over 2592 endpoints: 2572 start at ports and 21 do not.
+- **DRV:** slew 9.
+- **Clean:** DRC 0, antenna 0, face_guard PASS, sdc_lint PASS.
+- **A, out-face (38 endpoints, worst -209.33):** u_bout_rd/q -> rd[]. Two causes:
+  - The clock insertion at the u_bout_rd flop is 501 ps against the 250 ps vclk budget: 18 BUFx24 levels plus a 148 ps slew leaf.
+  - The flop sits 2 long wire hops from the port (wire6606/wire5338 inputs at 415-427 ps slew, about 265 ps of wire).
+  - Pinning the chain keeps the QN inverter at the flop, but it does not move the flop to the face.
+- **B, internal (156 endpoints, worst -135.75):** u_fcore.q_sa -> u_g.g_s*.q_wa.
+- **C, internal (1022 endpoints, worst -97.09):** u_fcore.q_sa -> u_g.g_s*.q_rot. C3 had -110.65 over 722 endpoints, so B and C together are worse than in C3.
+- **Remaining small classes:** sw_d port -> u_bin_sw_d, 5 endpoints at -52.60; wcoll_q, 1 at -42.31; flt, 1 at -19.90.
+- **Receipts** (epyc8 /srv/opentallas-scratch2/claude/hbm-cores-b/kits/opsbg_C4A/):
+  - signoff/signoff.json
+  - diag_tt/diag.log (all violators, classified with diag_tools/cls.py)
+  - diag_tt/p1.log (the worst path in full)
+- **Proposed next form, for the DIE-HBM-100 ruling:**
+  - The opsb_group forms have now failed twice (C3, C4A), so the next one should be a re-form rather than a tweak.
+  - A: place the u_bout face flops at the face and give them a clock tap at the face.
+  - B and C: add one internal register stage on the q_sa fanout, as a cycle-shift form with EQ and lock-step simulation.
+  - Form B (+1 cycle on sw_*) addresses only the 5 sw_d endpoints, not B or C.
