@@ -4145,7 +4145,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "s81": {
    "enabled": true,
@@ -5641,7 +5642,8 @@
     "dsdv_slice_lepw_mus_LP__t2": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "serdes__t14": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
-    "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind."
+    "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind.",
+    "col_h*": "COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept"
    },
    "queue_src": "main@7b84010b1c6e",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -19897,7 +19899,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "s81_head": {
    "enabled": true,
@@ -21097,7 +21100,8 @@
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "cbx_q10__cl89936551": "KW-FIX-45 11-12 DIE-QC-99: QC-S28-C cbx_q* structural fix supersedes a build now; launch with the family on the final s28",
-    "cbx_q10__cl94a12200": "KW-FIX-45 11-12 DIE-QC-99: QC-S28-C cbx_q* structural fix supersedes a build now; launch with the family on the final s28"
+    "cbx_q10__cl94a12200": "KW-FIX-45 11-12 DIE-QC-99: QC-S28-C cbx_q* structural fix supersedes a build now; launch with the family on the final s28",
+    "slw_hc*": "WAIT-FORM (COORD 11-12 04:2x): hc family moves to VISLAYOUT2-QC form e in s28; old-floor hc rows (GRTM edge_outline plan geometry) are not relaunched; running rows kept"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
