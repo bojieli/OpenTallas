@@ -110,6 +110,7 @@ def topk_record(A, O, i_rec, k, order, cal_delta=CAL_DELTA, t_frames=16, mutant=
     # flops): engine capture n+9, hub echo +1, ACK 13 -- needs hb_idx__ctl = ot_hbm_idx_rootctl_static_pin.
     ev0, end0, legal = schedule(rec, 0, pin_in)
     assert legal
+    end0 += resp_shift                            # rd1: the engine ack/end windows follow the response edge (+N); 0 = unchanged
     # calendar: the events are relative to G; word 0 is sampled at E0 = G - G_AFTER_E0
     # shift (probe only, never evidence): per calendar event kind R/H/P/A edge offset, to localise a die timing
     # mismatch against the engine's documented timeline; recorded in the replay assumptions

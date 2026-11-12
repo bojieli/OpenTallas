@@ -114,3 +114,43 @@ def test_idx_calendar_a_event_only_moves_responses():
         assert strip(out[i]) == strip(w)
     assert out[10]['response_enable'] == words[9]['response_enable']
     assert out[11]['response_enable'] == words[10]['response_enable']
+
+
+def _idx_world(shift):
+    """rd1 physical world: every hub echo is +1 late.  Returns (calendar response edges == physical echo edges,
+    end window moved by the shift)."""
+    import hbm_layer_vehicle.idx_images as II
+    from hbm_idx_topk_static_vectors import schedule
+    rec = dict(k=6, n=384, m=1, order=1, has_r=0, am=1, a=4096, a_str=384, o=60000, o_str=8, r=0, r_str=0)
+    ev, end, legal = schedule(rec, 0, 1)
+    assert legal
+    words = II.calendar_words([(k, e, v) for k, e, v in ev], 0)
+    cal = VM.shift_response(words, shift)
+    cal_edges = [i for i, w in enumerate(cal) if w.get('response_enable')]
+    phys_edges = [e + 1 for k, e, v in ev if k == 'A']        # rd1 echo +1
+    return cal_edges, phys_edges, end + shift
+
+
+@pytest.mark.parametrize('shift,ok', [(0, False), (1, True), (2, False)])
+def test_idx_window_check_trips_unless_plus_one(shift, ok):
+    cal_edges, phys_edges, end = _idx_world(shift)
+    assert (cal_edges == phys_edges) is ok                     # +0 / +2 negative controls trip, +1 passes
+    _, _, end0 = _idx_world(0)
+    assert end - end0 == shift                                 # ack/end window moves with the response edge
+
+
+def test_idx_topk_record_windows_follow_shift():
+    import numpy as np
+    import hbm_layer_vehicle.idx_images as II
+    A = np.arange(16, dtype=np.float32).view(np.uint32)
+    O = np.array([15, 14, 13, 12], np.uint32)
+    from hgi_sim.machine import topk_ids
+    O = topk_ids(A.view(np.float32), 4, False).astype(np.uint32)
+    g0 = II.topk_record(A, O, 1, 4, 0)
+    g1 = II.topk_record(A, O, 1, 4, 0, resp_shift=1)
+    # absolute cycles also move with the longer calendar install (pad row); the windows are checked relative to G
+    assert g1['engine_end_rel_G'] == g0['engine_end_rel_G'] + 1
+    assert g1['check_cyc'] - g1['G'] == g0['check_cyc'] - g0['G'] + 1
+    busy0 = [c['cyc'] - g0['G'] for c in g0['checks'] if c['port'].endswith('topk_busy')]
+    busy1 = [c['cyc'] - g1['G'] for c in g1['checks'] if c['port'].endswith('topk_busy')]
+    assert busy1[0] == busy0[0] and busy1[1] == busy0[1] + 1

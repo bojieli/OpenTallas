@@ -582,6 +582,7 @@ class Cx:
         sh = P["vm_shift"]
         rel = [(kind, e + II.G_AFTER_E0 + sh, v) for kind, e, v in ev0]
         end0 = end0 + sh + P["ack_shift"]
+        end0 += int(os.environ.get("CX_RD1_RESP_SHIFT", "0") or 0)   # rd1: ack/end windows follow the response edge
         words = II.calendar_words(rel, 0)
         abi = json.loads((Path(CI.ROOT) / "results/arch/hbm_vm_static_1014/quadrant_abi.json").read_text())
         spec = C.layout(abi, "SW", universal=True)
