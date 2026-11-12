@@ -1,0 +1,606 @@
+{
+ "type": "q_b001__physical_v1",
+ "illegal": [],
+ "unplaced": [],
+ "h0h1_max": 299.4,
+ "h0h1_over405": [],
+ "reach_viol": [
+  {
+   "bus": "L168_i",
+   "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair5",
+   "regs": 2,
+   "bits": 364,
+   "L1": 1351,
+   "lim": 1215.0,
+   "ok": false
+  }
+ ],
+ "ft_changes": [
+  {
+   "slot": "L28y2",
+   "moved": 5,
+   "max_hop": 401.8,
+   "first": 399.9,
+   "last": 318.7
+  },
+  {
+   "slot": "L1259y2",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 393.7,
+   "last": 233.7
+  },
+  {
+   "slot": "L1262y0",
+   "moved": 2,
+   "max_hop": 311.0,
+   "first": 397.4,
+   "last": 343.3
+  },
+  {
+   "slot": "L42y1",
+   "moved": 1,
+   "max_hop": 401.8,
+   "first": 395.3,
+   "last": 339.9
+  },
+  {
+   "slot": "L1261y1",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 401.4,
+   "last": 196.8
+  },
+  {
+   "slot": "L1263y0",
+   "moved": 4,
+   "max_hop": 375.8,
+   "first": 342.8,
+   "last": 298.4
+  },
+  {
+   "slot": "L183y1",
+   "moved": 2,
+   "max_hop": 397.4,
+   "first": 376.8,
+   "last": 216.5
+  },
+  {
+   "slot": "L1271y2",
+   "moved": 2,
+   "max_hop": 285.1,
+   "first": 397.6,
+   "last": 291.0
+  },
+  {
+   "slot": "L3001y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 402.6,
+   "last": 282.6
+  },
+  {
+   "slot": "L1269y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 342.2,
+   "last": 347.8
+  },
+  {
+   "slot": "L1257y1",
+   "moved": 5,
+   "max_hop": 401.8,
+   "first": 268.0,
+   "last": 169.9
+  },
+  {
+   "slot": "L1252y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 400.0,
+   "last": 343.4
+  },
+  {
+   "slot": "L1253y0",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 345.3,
+   "last": 223.2
+  },
+  {
+   "slot": "L1277y0",
+   "moved": 6,
+   "max_hop": 401.8,
+   "first": 403.2,
+   "last": 366.7
+  },
+  {
+   "slot": "L3002y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 400.7,
+   "last": 174.5
+  },
+  {
+   "slot": "L3003y0",
+   "moved": 2,
+   "max_hop": 401.8,
+   "first": 303.5,
+   "last": 24.2
+  },
+  {
+   "slot": "L204y1",
+   "moved": 2,
+   "max_hop": 397.4,
+   "first": 402.3,
+   "last": 124.6
+  },
+  {
+   "slot": "L205y1",
+   "moved": 7,
+   "max_hop": 401.8,
+   "first": 400.3,
+   "last": 154.6
+  },
+  {
+   "slot": "L1275y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 284.9,
+   "last": 10.0
+  }
+ ],
+ "st_changes": [
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.write_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.sum_in",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.sum_out",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.write_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.go",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.lane_valid",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.square",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_read",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_we0",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_we1",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.write_addr",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.x_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.x_read",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.x_write",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.write_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.weight_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.x_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.go",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.lane_valid",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.square",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.sum_in",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_read",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_we0",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_we1",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.write_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_read",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_write",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.write_data",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.x_read",
+   "moved": 1
+  }
+ ],
+ "moved": 43
+}
