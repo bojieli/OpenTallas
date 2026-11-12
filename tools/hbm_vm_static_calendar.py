@@ -59,6 +59,62 @@ def layout(abi, quadrant, universal=False):
                 **(dict(master='hfd_hgi_vm_calendar', reset_release_edges=2) if universal else {}))
 
 
+RESPONSE_FIELDS = ('response_enable', 'response_seq')
+
+
+def shift_response(rows, n=1, spec=None):
+    """rd1 hub response calendar +n (COMPILER-CAL-3, default-off): move the response_enable and response_seq field
+    bits of row i to row i+n and leave every other field alone.  The DONE outputs are not calendar fields and never
+    move.  n=0 returns an unchanged copy.  Runs on dict rows BEFORE pack() (rows may also be packed ints when the
+    layout `spec` is given: the two field bit ranges are masked and moved, no other bit is touched).
+
+    Loop wrap: when a response would land after the last row, exactly the rows needed to hold it are appended
+    (n=1: one pad row, only if the last row carries a response; the pad row carries nothing but the response); the
+    caller records len(result)-len(rows) as pad rows so the programme length and output_edges stay consistent.
+    A destination that already holds a response raises 'two responses on one edge'.
+    """
+    if type(n) is not int or n < 0:
+        raise ValueError('response shift must be a nonnegative integer')
+    if spec is not None and any(type(r) is int for r in rows):
+        if n == 0:
+            return list(rows)
+        mask = 0
+        for f in spec['fields']:
+            if f['name'] in RESPONSE_FIELDS:
+                mask |= ((1 << f['bits']) - 1) << f['lo']
+        moved = [r & mask for r in rows]
+        keep = [r & ~mask for r in rows]
+        out = list(keep)
+        for i, bits in enumerate(moved):
+            if not bits:
+                continue
+            j = i + n
+            while j >= len(out):
+                out.append(0)
+            if out[j] & mask:
+                raise ValueError(f'two responses on one edge ({j})')
+            out[j] |= bits
+        return out
+    if n == 0:
+        return [dict(r) for r in rows]
+    out, moved = [], []
+    for r in rows:
+        row = dict(r)
+        resp = {k: row.pop(k) for k in RESPONSE_FIELDS if k in row}
+        moved.append({k: v for k, v in resp.items() if (int(v, 0) if isinstance(v, str) else v)})
+        out.append(row)
+    for i, resp in enumerate(moved):
+        if not resp:
+            continue
+        j = i + n
+        while j >= len(out):
+            out.append({})
+        if any(k in out[j] for k in RESPONSE_FIELDS):
+            raise ValueError(f'two responses on one edge ({j})')
+        out[j].update(resp)
+    return out
+
+
 def pack(spec, values):
     unknown = set(values) - set(FIELDS)
     if unknown:
@@ -218,6 +274,12 @@ def compile_schedule(spec, schedule):
     base = schedule.get('base', 0)
     loops = schedule.get('loops', 1)
     cycles = schedule['cycles']
+    resp_shift = schedule.get('resp_shift', 0)
+    if type(resp_shift) is not int or resp_shift < 0:
+        raise ValueError('resp_shift must be a nonnegative integer')
+    if resp_shift:
+        cycles = shift_response(cycles, resp_shift)
+    pad_rows = len(cycles) - len(schedule['cycles'])
     if not (0 <= base < 1024 and cycles and base + len(cycles) <= 1024):
         raise ValueError('Programme must occupy a nonempty range of actual 1024-word SRAM')
     if not 1 <= loops <= 65535:
@@ -237,6 +299,9 @@ def compile_schedule(spec, schedule):
                 first_output_after_start=4,
                 configuration='Writes and launch are consumed by real input pin registers; no ready/credit path',
                 limits='Caller must prove these calendars against actual producer requests, transport latency and response identities.')
+    if resp_shift:
+        result['resp_shift'] = dict(n=resp_shift, pad_rows=pad_rows, words=len(cycles),
+                                    scope='rd1 response calendar +n; only response_enable/response_seq moved')
     if absence is not None:
         result['local_su_absence'] = absence
     if backing is not None:
@@ -327,6 +392,9 @@ def main():
     parser.add_argument('--quadrant', choices=['SW', 'SE', 'NW', 'NE'])
     parser.add_argument('--schedule', type=Path)
     parser.add_argument('--out', type=Path)
+    parser.add_argument('--rd1-resp-shift', type=int, default=0,
+                        help='rd1 hub response calendar +N (default 0 = byte-identical to before); '
+                             'overrides schedule key resp_shift when nonzero')
     args = parser.parse_args()
     abi = json.loads((ROOT / 'results/arch/hbm_vm_static_1014/quadrant_abi.json').read_text())
     if args.emit_wrappers:
@@ -336,7 +404,12 @@ def main():
     if args.schedule:
         if not args.quadrant or not args.out:
             parser.error('--schedule requires --quadrant and --out')
-        result = compile_schedule(layout(abi, args.quadrant, args.universal), json.loads(args.schedule.read_text()))
+        schedule = json.loads(args.schedule.read_text())
+        if args.rd1_resp_shift:
+            if schedule.get('resp_shift', 0) not in (0, args.rd1_resp_shift):
+                parser.error('--rd1-resp-shift conflicts with the schedule resp_shift')
+            schedule['resp_shift'] = args.rd1_resp_shift
+        result = compile_schedule(layout(abi, args.quadrant, args.universal), schedule)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(result, indent=2) + '\n')
 
