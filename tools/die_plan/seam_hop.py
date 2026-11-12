@@ -12,7 +12,15 @@ placement, else the slot regs_um hints, else evenly spaced on the slot route); a
 sink / source type's internal_stations entry for that bus.  Advisory: findings are WARN
 check "seam_hop"; they never change an ERROR count.  A geometric lower bound, not a routed length.
 
-    python3 tools/die_plan/seam_hop.py PLAN.json [--limit 405] [--top 10] [--json OUT.json]
+FACE REGISTER (settled 11-12 by reading kit_istations.py / face_flops.tcl): every bound bus has a boundary flop
+(u_bin_<bus> in, u_bout_<bus> out) pinned at the face pin, and a type's internal_stations[] chain runs BEHIND it
+("stations between the face register and the leaf"; from_um is the face register, R3-INTERNAL already checks
+from_um -> regs_um -> to_um at <= 405).  So the seam-side flop of a lane-end partition is the face register AT the pin
+(leg 0) and the first internal station is NOT a seam hop; counting it (first-internal-station reading, as the
+17:11 HBM note did for NW_io) double-counts a hop R3-INTERNAL already judges.  Default = face-register model;
+internal_first=True / --internal-first reproduces the other reading.
+
+    python3 tools/die_plan/seam_hop.py PLAN.json [--limit 405] [--top 10] [--json OUT.json] [--internal-first]
 """
 import argparse
 import json
@@ -67,7 +75,7 @@ def _join(src, dst):
     return best
 
 
-def seam_hops(P, geo, limit=None):
+def seam_hops(P, geo, limit=None, internal_first=False):
     """[dict(lane, bus, src, dst, hop_um, ...)] for every seam leg of every lane (all legs, not only the long ones).
 
     Port i of a lane is one seam; hop = (source-side leg) + (sink-side leg) through the seam pin.  The source side is
@@ -100,15 +108,19 @@ def seam_hops(P, geo, limit=None):
                 L = [] if p is None else [(_man(p, pin), p, None)]
                 slab = f"{cross[i - 1][0]}.{cross[i - 1][1]}[{xs[i - 1]['stations'] - 1}]"
             else:
-                L = _internal_legs(P, sp["part"], sp["bus"], pin)
-                slab = f"{sp['part']}.bus:{sp['bus']}[internal]"
+                L = (_internal_legs(P, sp["part"], sp["bus"], pin) if internal_first
+                     else [(0.0, pin, None)])          # u_bout face register at the pin
+                slab = f"{sp['part']}.bus:{sp['bus']}[internal]" if internal_first else f"{sp['part']}.{sp['bus']}[face reg]"
             if i < len(cross):
                 q = regs[first[i]] if 0 <= first[i] < len(regs) else None
                 Rr = [] if q is None else [(_man(q, pin), q, None)]
                 dlab = f"{cross[i][0]}.{cross[i][1]}[0]"
             else:
-                Rr = _internal_legs(P, dp["part"], dp["bus"], pin)
-                dlab = f"{dp['part']}.bus:{dp['bus']}[internal]"
+                Rr = (_internal_legs(P, dp["part"], dp["bus"], pin) if internal_first
+                      else [(0.0, pin, None)])         # u_bin face register at the pin
+                dlab = f"{dp['part']}.bus:{dp['bus']}[internal]" if internal_first else f"{dp['part']}.{dp['bus']}[face reg]"
+            if not internal_first and i == 0 and i >= len(cross):
+                continue            # no slot on either side: face register to face register, nothing to measure
             j = _join(L, Rr)
             if j is None:
                 continue
@@ -121,10 +133,10 @@ def seam_hops(P, geo, limit=None):
     return rows
 
 
-def check_seam_hops(P, R, geo, limit=None, max_msgs=20, top=10):
+def check_seam_hops(P, R, geo, limit=None, max_msgs=20, top=10, internal_first=False):
     """Advisory: one WARN per hop over the limit (first max_msgs, then a count), summary dict for the report."""
     limit = S.SIGNAL_REACH_UM if limit is None else float(limit)
-    rows = seam_hops(P, geo, limit)
+    rows = seam_hops(P, geo, limit, internal_first)
     over = sorted((r for r in rows if r["over"]), key=lambda r: -r["hop_um"])
     for r in over[:max_msgs]:
         R.warn("seam_hop", f"lane {r['lane']} seam hop {r['src']} -> {r['dst']} (bus {r['bus']}): {r['hop_um']:.0f} um "
@@ -141,6 +153,7 @@ def main(argv=None):
     ap.add_argument("plan")
     ap.add_argument("--limit", type=float, default=S.SIGNAL_REACH_UM)
     ap.add_argument("--top", type=int, default=10)
+    ap.add_argument("--internal-first", action="store_true", help="count the first internal station as the seam-side flop (pessimistic reading)")
     ap.add_argument("--json", help="write every over-limit hop here")
     a = ap.parse_args(argv)
     import check
@@ -151,7 +164,7 @@ def main(argv=None):
         raw = S.load(a.plan)
     P = S.Plan(raw, Path(a.plan).resolve())
     geo = {lid: check.lane_geometry(P, lid) for lid in P.lanes}
-    rows = seam_hops(P, geo, a.limit)
+    rows = seam_hops(P, geo, a.limit, a.internal_first)
     over = sorted((r for r in rows if r["over"]), key=lambda r: -r["hop_um"])
     print(f"{P.name}: {len(rows)} seam hops, {len(over)} over {a.limit:g} um on {len({r['lane'] for r in over})} lanes")
     for r in over[:a.top]:
