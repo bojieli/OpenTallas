@@ -91,7 +91,10 @@ class Form:
         each = math.floor(left / len(rest) / L + 1e-9) * L
         for k in rest:
             gaps[k] = each
-        gaps[0] += round(left - each * len(rest), 4)        # remainder to the bottom ring (keeps the top on the outline)
+        if spec.get("remainder_to") == "top":           # keeps every core origin on the lattice
+            gaps[-1] += round(left - each * len(rest), 4)
+        else:
+            gaps[0] += round(left - each * len(rest), 4)    # remainder to the bottom ring (keeps the top on the outline)
         self.gaps = gaps
         y = gaps[0]; newy = []
         for k, (a, b, n) in enumerate(sol):
@@ -107,6 +110,16 @@ class Form:
         for i in self.hrow:
             self.row_of[i] = names.index("hrow")
         self.L = L
+        # x: optional column re-pitch inside the growth (spec col_pitch): column k shifts by m0 + k*(P - P0), the
+        # W ring keeps m0 = the remainder split evenly on the lattice, the E ring takes the rest
+        self.cols = sorted(set(round(hc[i]["origin_um"][0], 4) for i in self.attn))
+        self.cw = hc[self.attn[0]]["outline_um"][0]
+        P0 = self.cols[1] - self.cols[0]
+        P = float(spec.get("col_pitch") or P0)
+        ex = P - P0; n = len(self.cols)
+        m0 = math.floor((self.dxg - (n - 1) * ex) / 2 / L + 1e-9) * L if spec.get("col_pitch") else snap(self.dxg / 2, L / 2)
+        assert m0 >= -1e-6, ("col_pitch needs more growth", self.dxg, ex)
+        self.colshift = [round(m0 + k * ex, 4) for k in range(n)]
         self.boxes0 = [(h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0],
                         h["origin_um"][1] + h["outline_um"][1]) for h in hc]
 
@@ -153,7 +166,16 @@ class Form:
             return x
         if x > self.cx1:
             return x + self.dxg
-        return x + snap(self.dxg / 2, self.L / 2)
+        for k, c in enumerate(self.cols):
+            if c - 1e-6 <= x <= c + self.cw + 1e-6:
+                return x + self.colshift[k]
+            if k + 1 < len(self.cols) and c + self.cw < x < self.cols[k + 1]:
+                return x + snap((self.colshift[k] + self.colshift[k + 1]) / 2, self.L / 2)
+        return x + self.colshift[-1]
+
+    def fx_core(self, x0, w):
+        """a core / macro origin rides the column under its centre"""
+        return x0 + (self.fx(x0 + w / 2) - (x0 + w / 2))
 
     def pt(self, p, halo=0.0):
         x, y = p
@@ -166,7 +188,7 @@ class Form:
             v = y - y0
             if self.orient[self.names[k]] == "MX":
                 v = (y1 - y0) - v
-            return [round(self.fx(x), 4), round(self.newy[k] + v, 4)]
+            return [round(x + self.fx_core(x0, x1 - x0) - x0, 4), round(self.newy[k] + v, 4)]
         return [round(self.fx(x), 4), round(self.fy_free(y), 4)]
 
     def rect(self, r):
@@ -199,13 +221,14 @@ class Form:
         t = copy.deepcopy(self.t)
         for i, h in enumerate(t["hard_cores"]):
             k = self.row_of[i]
-            h["origin_um"] = [round(self.fx(h["origin_um"][0]), 4), round(self.newy[k], 4)]
+            h["origin_um"] = [round(self.fx_core(h["origin_um"][0], h["outline_um"][0]), 4), round(self.newy[k], 4)]
             o = self.orient[self.names[k]]
             if o != "R0" or "orient" in h:
                 h["orient"] = o
         for c in t.get("contents") or []:
             if "origin_um" in c:
-                c["origin_um"] = [round(self.fx(c["origin_um"][0]), 4), round(c["origin_um"][1] + self.dy[-1], 4)]
+                c["origin_um"] = [round(self.fx_core(c["origin_um"][0], c["outline_um"][0]) if "outline_um" in c else self.fx(c["origin_um"][0]), 4),
+                                  round(c["origin_um"][1] + self.dy[-1], 4)]
         if self.dxg or self.dyg:
             t["outline_um"] = [round(self.W, 4), round(self.H, 4)]
         self.walk(t)
@@ -324,7 +347,7 @@ def main():
         if eq:
             msgs.append("EQ_GATE %s" % eq); b += 1
         rep["types"][tn] = dict(F.report(), points=npts, problems=msgs)
-        print(tn, "gaps", F.gaps, "points", npts, "OK" if not b else "BAD %s" % msgs)
+        print(tn, "gaps", F.gaps, "colshift", F.colshift, "points", npts, "OK" if not b else "BAD %s" % msgs)
         bad += b
         P["partition_types"][tn] = t1
     json.dump(P, open(a.plan_out, "w"), indent=1)
