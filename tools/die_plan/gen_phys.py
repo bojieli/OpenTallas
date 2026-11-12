@@ -191,6 +191,31 @@ def _gutter_block_min_span_um(budgets):
     return float(v) if v and float(v) > 0 else None
 
 
+def _core_out_src(budgets, tn):
+    """KIT-NK-SRCPIN 11-11 (opt-in, absent = unchanged kits): core->core register chains of this type keep their stages
+    at the source pin (core_out_src.tcl), so a one-core crossing falls on the hop into the core input.  On for the exact
+    type names in plan budgets.core_out_src_types, or per kit-wave row through item_env (GEN env OT_CORE_OUT_SRC=1)."""
+    return os.environ.get("OT_CORE_OUT_SRC") == "1" or tn in (budgets.get("core_out_src_types") or ())
+
+
+def _core_out_land(budgets, tn):
+    """DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan
+    budgets.core_out_land_types).  core_out_src.tcl starts from the landing flops, so a core_out_src type lands too."""
+    return (os.environ.get("OT_CORE_OUT_LAND") == "1" or tn in (budgets.get("core_out_land_types") or ())
+            or _core_out_src(budgets, tn))
+
+
+CORE_OUT_SRC_HOOK = "uplevel #0 {source /work/core_out_src.tcl}"
+
+
+def core_out_src_install(kd):
+    """KIT-NK-SRCPIN 11-11: copy core_out_src.tcl into the kit and run it at the end of the PRE_GLOBAL_PLACE hook
+    (face_flops.tcl, after core_out_land.tcl; its stages join ot_core_out_land.txt, released before DPL)."""
+    shutil.copyfile(Path(__file__).with_name("core_out_src.tcl"), Path(kd) / "core_out_src.tcl")
+    hook = Path(kd) / "face_flops.tcl"
+    hook.write_text(hook.read_text() + "\n" + CORE_OUT_SRC_HOOK + "\n")
+
+
 # FW-ROWS-1 11-09 (DIE-QC-97, COORD class: sle_fw_v2, slw_fw_v3, slw_fw_v2, slw_fw_v1 all GRT-0116 in the N-face
 # x_ctl_i / cws0_i ring_ff column strip): every sle_fw* / slw_fw* type takes every 2nd strip row by default.  A plan
 # cland_strip_rows_types entry (type or base) still wins, and 1 opts a type out; other families are unchanged.
@@ -4804,8 +4829,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
              if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
-           *(["export OT_CORE_OUT_LAND = 1"] if macros and (os.environ.get("OT_CORE_OUT_LAND") == "1"
-                                                       or tn in (P.budgets.get("core_out_land_types") or ())) else []),
+           # (KIT-NK-SRCPIN 11-11: a budgets.core_out_src_types type lands too, _core_out_land)
+           *(["export OT_CORE_OUT_LAND = 1"] if macros and _core_out_land(P.budgets, tn) else []),
            # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
            # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
            # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
@@ -4991,6 +5016,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "chain_even_cfg.tcl").write_text(chain_even_cfg(t["chain_even"]))
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + CHAIN_EVEN_HOOK + "\n")
+    if macros and _core_out_src(P.budgets, tn):
+        # KIT-NK-SRCPIN 11-11 (opt-in budgets.core_out_src_types): one-crossing core->core chain stages FIRM at the source
+        core_out_src_install(kd)
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at

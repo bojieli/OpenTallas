@@ -6793,6 +6793,14 @@
       "minLength": 1
      }
     },
+    "core_out_src_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "cland_strip_rows": {
      "type": "integer",
      "minimum": 1

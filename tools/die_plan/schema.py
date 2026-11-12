@@ -1210,6 +1210,11 @@ SCHEMA = {
             # DIE-KV-62/stations 11-02 opt-in: these types (or unsplit base names) export OT_CLAND_PINSLOT_DENSE=1 (y-column
             # pinslot rows pack the ring slot flops body to body); absent/empty = unchanged kits
             cland_pinslot_dense_types={"type": "array", "uniqueItems": True, "items": _name},
+            # KIT-NK-SRCPIN 11-11 opt-in (absent = unchanged kits): for these exact type names gen_phys lands core outputs
+            # (OT_CORE_OUT_LAND=1) and installs core_out_src.tcl: a core->core register chain whose source->destination
+            # route crosses exactly one hard core keeps its stages FIRM at the source pin before GPL, so the crossing
+            # falls on the hop into the core input (QC NK: ~630-790 ps) instead of a fabric hop (~587 ps)
+            core_out_src_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-QC-97 11-09 (opt-in, absent = unchanged kits): OT_CLAND_STRIP_ROWS for the N/S-face ring_ff column
             # strip (landing_placement.tcl, clamped to what the band depth fits).  cland_strip_rows = plan-wide rows;
             # cland_strip_rows_types = {type or unsplit base name: rows}, which wins.  rows 1 packs every strip row
