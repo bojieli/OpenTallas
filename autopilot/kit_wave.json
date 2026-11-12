@@ -336,7 +336,10 @@
     "kv3_sys_c@13",
     "kv3_hgi_v8@17",
     "kv3_io_ft_v1@18",
-    "kv3_pc_v3@6"
+    "kv3_pc_v3@6",
+    "kv3_io_ft_v1@19",
+    "kv3_phy@12",
+    "kv3_phy_v1@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -31031,7 +31034,13 @@
     "q_sm3@6",
     "q_spb1@5",
     "q_spb2@3",
-    "vsN1@3"
+    "vsN1@3",
+    "ot_hidx_s3_q@3",
+    "q_b013@14",
+    "q_spu1@7",
+    "q_spu1__physical_v1@9",
+    "q_su30@10",
+    "q_su30__physical_v1@11"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
