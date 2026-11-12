@@ -319,8 +319,24 @@ def apply_lef_ceilings(plan, die, repo, sources=None):
 
 
 # --------------------------------------------------------------------------------------------- audit
+def counted_plans(coord=None):
+    """{die: repo-relative plan file} the release-tree counter counted last (~/coord/tools/release_tree_plan.py
+    current_plans(): it follows the kit-wave declared plan_sha256 when that plan is on main), else PLAN_OF_RECORD
+    (WAVE-POR 11-12)"""
+    import importlib.util
+    f = Path(coord or os.environ.get("OT_COORD_DIR") or Path.home() / "coord") / "tools" / "release_tree_plan.py"
+    try:
+        spec = importlib.util.spec_from_file_location("release_tree_plan", f)
+        m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+        got = {p[0]: p[2] for p in m.current_plans()}
+        if set(got) >= set(DIES): return got
+    except Exception:
+        pass
+    return dict(PLAN_OF_RECORD)
+
+
 def plan_path(die, repo, plan=None):
-    return Path(repo) / (plan or PLAN_OF_RECORD[die])
+    return Path(repo) / (plan or counted_plans().get(die) or PLAN_OF_RECORD[die])
 
 
 def audit_die(die, repo, plan_rel=None):
