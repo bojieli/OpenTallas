@@ -277,6 +277,12 @@ def run(raw, lanes, limit=405.0, pad=250.0):
                              new_points_um=pts_t))
         else:
             report["lanes"][lid] = dict(status="bridged", inserted=info)
+            import check as _CK                     # verify with G0's own metric (lane_pin_hops through every seam pin)
+            _Pt = S.Plan(raw2)
+            _g = _CK.lane_geometry(_Pt, lid)
+            _h = max(_CK.lane_pin_hops(_Pt, lid, _g[1]) or [0.0])
+            if _h > limit + EPS:
+                report["lanes"][lid] = dict(status="verify_failed", worst_hop_um=round(_h, 1), inserted=info)
         if report["lanes"][lid]["status"] not in ("bridged", "ok", "s0_moved"):      # failed lane: undo its partial changes
             for tn_, sls in _snap.items():
                 raw2["partition_types"][tn_]["ft_slots"] = sls
