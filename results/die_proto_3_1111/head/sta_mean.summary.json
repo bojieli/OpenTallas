@@ -1,0 +1,157 @@
+{
+ "plan_sha256": "e5cc216807021c7fb76182efd8fef7204412bde80a793c40d8ab13163b0dd1b8",
+ "summary": {
+  "intra": {
+   "tt_setup_ps": 510.71,
+   "ff_hold_margin_ps": -113.73,
+   "hold_pairs_measured": 512074,
+   "hold_pairs_unmeasured": 45282,
+   "missing_views": [
+    "core:ot_s81hd_lep_pair",
+    "type:hd_ctl",
+    "type:hd_host_e",
+    "type:hd_host_w",
+    "type:hd_lep0N",
+    "type:hd_mesh",
+    "type:hd_serdes",
+    "type:hd_spn"
+   ],
+   "hold_status": "FAIL",
+   "ff_hold_all_pairs_diag_ps": -192.45,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": -29.48,
+   "kit_contract_window_ps": 20.0,
+   "kit_contract_window_needed_ps": 49.48,
+   "kit_contract_verdict": "FAIL",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "real_view": {
+    "pairs": "512074/557356",
+    "tt_setup_ps": 615.94,
+    "ff_hold_ps": -113.73
+   }
+  },
+  "seam": {
+   "tt_setup_ps": 629.18,
+   "ff_hold_margin_ps": -46.58,
+   "hold_pairs_measured": 990,
+   "hold_pairs_unmeasured": 9876,
+   "missing_views": [
+    "type:hd_ctl",
+    "type:hd_host_e",
+    "type:hd_host_w",
+    "type:hd_mesh",
+    "type:hd_spn"
+   ],
+   "hold_status": "FAIL",
+   "ff_hold_all_pairs_diag_ps": -148.58,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": 17.29,
+   "kit_contract_window_ps": 90.0,
+   "kit_contract_window_needed_ps": 72.71,
+   "kit_contract_verdict": "PASS",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "real_view": {
+    "pairs": "10626/10866",
+    "tt_setup_ps": 629.18,
+    "ff_hold_ps": -148.58
+   }
+  },
+  "core_insertion": {
+   "mode": "declared",
+   "early_core_taps": 4,
+   "source": {
+    "TT": {
+     "view": 0,
+     "declared": 4,
+     "missing": 0
+    },
+    "FF": {
+     "view": 0,
+     "declared": 4,
+     "missing": 0
+    }
+   },
+   "verdict": "DECLARED",
+   "note": "BLOCKED(kits) = early core taps without a signed core view (OWNER 12.19, never PASS); DECLARED = planning estimate on plan per-tap insertion, not a gate pass"
+  },
+  "landed": {
+   "form": "count_aligned",
+   "bind": "/srv/opentallas-scratch2/claude/die-proto-3/head/bind_freg_ca2.json",
+   "worst_margin_lo_ps": {
+    "TT": -919.2,
+    "FF": -777.2
+   },
+   "worst_margin_hi_ps": {
+    "TT": -101.3,
+    "FF": -47.6
+   },
+   "half_period_INFO": {
+    "tt_setup_margin_ps": -821.43,
+    "ff_hold_margin_ps": -690.31,
+    "verdict": "FAIL"
+   },
+   "ss_INFO": {
+    "SS": "FAIL"
+   },
+   "clock_variation": {
+    "TT": "none",
+    "FF": "none"
+   },
+   "verdict": "FAIL"
+  },
+  "die_clock_gate": {
+   "rule": "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+   "tt_setup_ps": 510.71,
+   "ff_hold_ps": -113.73,
+   "hold_min_ps": 0.0,
+   "contract_violations": 4198,
+   "skew_max_ps": 1302.02,
+   "skew_target_ps": 150.0,
+   "skew_role": "TARGET (WARN only, never FAIL)",
+   "reasons": [
+    "FF hold -113.73 ps < +0 ps",
+    "4198 block arrival-contract violation(s)"
+   ],
+   "warnings": [
+    "related-pair skew 1302.02 ps > target 150 ps (WARN only)"
+   ],
+   "verdict": "FAIL",
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 0.0,
+     "below_threshold": 11,
+     "other_fail": 1619,
+     "crossings": 427,
+     "below_need_INFO": 13,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 12,
+     "other_fail": 1620,
+     "crossings": 427,
+     "below_need_INFO": 14,
+     "need_ps_INFO": 100.0
+    }
+   }
+  },
+  "period_policy": {
+   "period_ps": 833.0,
+   "required_period_ps": 833.0,
+   "verdict": "PASS",
+   "role": "canonical timing"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "real-view (0 core views, 19 kits) + declared-budget rest",
+  "margin_policy": {
+   "policy": "nominal",
+   "rule": "OWNER 12.24b",
+   "overridden": {}
+  },
+  "nominal_arrival": "single"
+ },
+ "count_aligned_verdict": {
+  "TT": "FAIL",
+  "FF": "FAIL"
+ }
+}
