@@ -1,0 +1,8 @@
+{
+ "name": "q_leaf_cyc2",
+ "why": "S81-LEAF-CYC quad2 (claude/s81-leaf-cyc2-1111, RTL 63676d718d59 CS_HI/HO D2 GS2 G4): lane permutation on current slots + 2-stage quad stations, 70 non-KV leaf types",
+ "script": "physical/die_plan/s81/leaf_cyc_1111/stage_leaf_cyc2.py",
+ "argv": ["{in}", "{out}", "{report}"],
+ "type_keys": ["hard_cores", "internal_stations"],
+ "top_keys": []
+}
