@@ -3147,7 +3147,80 @@ HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (
 WAIT_FORM = "WAIT-FORM: latest visual verdict BAD and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
 WAIT_FORM_LOG = "kit_wave_wait_form.tsv"
 _GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[[^\]]*viewed\] (\w+)[/ ](\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK|GOOD)\b")
-_GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}}
+_GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}, "ts": {}}
+_VERDICT_TS_RE = re.compile(r"^-\s+(\d{4}-\d\d-\d\d \d\d:\d\d)")
+VERDICT_FORMS = "kit_wave_verdict_forms.json"
+VERDICT_SLACK_S = 60                                   # verdict lines carry minutes only
+
+
+def verdict_line_ts(ln):
+    """epoch (hub local time) of a '- YYYY-MM-DD HH:MM ...' review line, None when the line has no time"""
+    m = _VERDICT_TS_RE.match(ln)
+    if not m:
+        return None
+    try:
+        return time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M"))
+    except ValueError:
+        return None
+
+
+def _verdict_forms_path():
+    return Path.home() / "coord" / "autopilot" / VERDICT_FORMS
+
+
+def _verdict_key(die, item, attempt, ts):
+    return f"{die}|{item}|{int(attempt)}|{int(ts)}"
+
+
+def verdict_form(die, item, attempt, ts):
+    """the form fingerprint bound to the verdict at ts on die/item attempt N, or None (never bound)"""
+    try:
+        return json.loads(_verdict_forms_path().read_text()).get(_verdict_key(die, item, attempt, ts))
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def bind_verdict_form(die, item, attempt, ts, form):
+    try:
+        p = _verdict_forms_path()
+        tab = json.loads(p.read_text()) if p.exists() else {}
+        k = _verdict_key(die, item, attempt, ts)
+        if tab.get(k) == form:
+            return
+        tab[k] = form
+        tmp = p.with_name(p.name + ".tmp")
+        tmp.write_text(json.dumps(tab, sort_keys=True))
+        os.replace(tmp, p)
+    except (OSError, ValueError, TypeError):
+        pass
+
+
+def verdict_applies(cfg, rec, ts):
+    """KW-FIX-46 11-12 (COORD, hbm PHY_NC: GEOM-VIS-1's 01:20 BAD on the 11-11 attempt_4 held the NEW a4 of 14:57): a visual
+    verdict binds to (row, attempt, form fingerprint).  Attempt numbers repeat (a new event or block restarts them), so a verdict
+    given BEFORE this build started rated an earlier build: it applies only when that build's bound form equals this build's
+    form.  A verdict given after this build started rated it, and its form is bound then.  No bound form (a verdict older than
+    the binding, another lane's build), an unreadable spec or an unknown form = the verdict does not apply (WAIT-VISUAL).
+    A line without a time keeps the old behaviour (applies)."""
+    if ts is None:
+        return True
+    try:
+        started = float(rec.get("started") or 0)
+    except (TypeError, ValueError):
+        started = 0.0
+    spec_file = Path(rec["dir"]) / "spec.json" if rec.get("dir") else None
+    try:
+        spec = json.loads(spec_file.read_text()) if spec_file else None
+    except (OSError, ValueError):
+        spec = None
+    gh = list((((cfg.get("dies") or {}).get(rec.get("die")) or {}).get("gen_hosts") or []))
+    cur = form_fp(spec, spec_file, gh) if spec is not None else None
+    if started and ts + VERDICT_SLACK_S < started:
+        bound = verdict_form(rec["die"], rec["item"], rec.get("attempt") or 0, ts)
+        return bound is not None and cur is not None and bound == cur
+    if cur is not None:
+        bind_verdict_form(rec["die"], rec["item"], rec.get("attempt") or 0, ts, cur)
+    return True
 
 
 def geom_verdicts():
@@ -3161,12 +3234,13 @@ def geom_verdicts():
         mt = p.stat().st_mtime
         if _GEOM_CACHE["mtime"] == (str(p), mt):
             return _GEOM_CACHE["v"]
-        v = {}
+        v, ts = {}, {}
         for ln in p.read_text(errors="replace").splitlines():
             m = _GEOM_VERDICT_RE.search(ln)
             if m:
                 v[(m.group(1), m.group(2))] = (int(m.group(3)), m.group(4))
-        _GEOM_CACHE.update(mtime=(str(p), mt), v=v)
+                ts[(m.group(1), m.group(2))] = verdict_line_ts(ln)
+        _GEOM_CACHE.update(mtime=(str(p), mt), v=v, ts=ts)
         return v
     except OSError:
         return _GEOM_CACHE["v"]
@@ -3311,7 +3385,15 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
                         kind=kind or rec.get("kind") or "type")
         gh = list((cfg["dies"][die].get("gen_hosts") or []))
-        fo, fc = form_fp(old, old_dir / "spec.json", gh), form_fp(cand, None, gh)
+        vts = (_GEOM_CACHE.get("ts") or {}).get(({"qwen_kvsys": "qwen_kvsys", "qwen_compute": "qwen_compute"}.get(die, die), item))
+        bound = verdict_form(die, item, v[0], vts) if vts is not None else None
+        if bound is not None:
+            fo = bound                     # KW-FIX-46 verdict binding: the form the verdict rated
+        elif vts is not None and (old_dir / "spec.json").stat().st_mtime > vts + VERDICT_SLACK_S:
+            return False                   # that attempt dir now holds a newer build: the rated form is unknown, never a hold
+        else:
+            fo = form_fp(old, old_dir / "spec.json", gh)
+        fc = form_fp(cand, None, gh)
         hold = fo is not None and fo == fc
         if hold:
             try:
@@ -6117,12 +6199,13 @@ def visual_verdicts():
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v = {}
+            v, ts = {}, {}
             for ln in p.read_text(errors="replace").splitlines():
                 m = _VISUAL_RE.search(ln)
                 if m:
                     v[(m.group(1), m.group(2), int(m.group(3)))] = m.group(4)
-            _VISUAL_CACHE.update(mtime=mt, v=v)
+                    ts[(m.group(1), m.group(2), int(m.group(3)))] = verdict_line_ts(ln)
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
@@ -6135,7 +6218,12 @@ def visual_hold(cfg, rec):
     form fingerprint changes); no verdict or ISSUES = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
-    v = visual_verdicts().get((rec["die"], rec["item"], int(rec.get("attempt") or 0)))
+    vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
+    v = visual_verdicts().get(vk)
+    if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+        return (f"WAIT-VISUAL: place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
+                "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
+                "lanes/GEOM-REVIEW.md")
     if v in VISUAL_ACCEPT:
         return None
     if v == "BAD":
