@@ -48208,3 +48208,11 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
 - QC s28a-only launch (DIE-QC-99): 22 items (14 a0c, coll_n, 7 st_b; cbx_q10__cl89936551 / cl94a12200 held for QC-S28-C) on item_inputs: plan_qc99_s28a from /srv/opentallas-scratch2/claude/qc-s28a/src28ap (s28a delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged views), bind /srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap: strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; copied to epyc8 and epyc2 (and on epyc9). Config commit deb3a16b9d6. queue_src names claude/qc-s28a-1112@23d5388aa8 although the tree also carries the paramwrap generator file.
 - KV: kv3_hg_v1p* held as WAIT-FORM (hold_items) until KV repoints to vN (77533c39...); config commit 75e74d6b2e2.
 - HBM signed core views registered (2a5de916869): 9 cores + ot_hbm_idx_qctl_static (h9b abstract only).
+- 2026-11-12 04:25 PST OWNER RULING [COORD -> DIE-S81-87, DIE-QC-99, DIE-KV-98, HEAD-94, DIE-HBM-100, GEOM-VIS-2, REACH-FIX-1, ALL]
+  OWNER (verbatim): "yes, go at the human level".
+  Every die plan event is now a HAND top-level floorplan, made the way a human PD lead does it:
+  (1) a data-flow diagram (blocks, bus widths, cycle budgets);
+  (2) the 20-50 big regions, macro rows and clusters placed by hand on a coarse grid, with channels and ft bands sized from the bus bits that cross them, and the clock trunk and taps drawn;
+  (3) tools fill in only the detail inside the regions (slot outlines, pins, taps, relays, REACH-FIX) and run the checks;
+  (4) the drawing (PNG) plus a decision table are posted to COORD before compose, and every visual call is backed by measured numbers.
+  Scope: QC s28, S81 ready12b, KV vN2, HEAD fix2 (phase 1, by 11-14). HBM t40w follows in phase 2. The ready12 and vN binds already running continue.
