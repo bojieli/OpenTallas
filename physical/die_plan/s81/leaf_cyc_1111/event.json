@@ -1,0 +1,307 @@
+{
+ "schema": "opentallas.s81.leaf_cyc_event.v1",
+ "lane": "S81-LEAF-CYC",
+ "advisory": false,
+ "base_plan": "../b16/st_base/plan_x.json",
+ "base_plan_sha256": "b5faa1bacc5f6e80c6167856ee1597a7a775ea81dad9305424a3c47de0786d7b",
+ "plan_output": "st_after/plan_x.json",
+ "plan_output_sha256": "3608c6097a9100708d0c5819b1bd4ac5ed2c0237b1130f5bb64decdf5a537909",
+ "rtl": {
+  "branch": "claude/s81-leaf-cyc2-1111",
+  "sha": "63676d718d59",
+  "base_merged": "e46e22c3d777 + 237539f02426 (quad D1, on main)"
+ },
+ "latency": {
+  "vp_hc_post_writeback_edges": 4,
+  "leaf_port_pin_cycles": 0,
+  "compiler_reschedule": "none (hc_post lowered PARTIAL, no fixed POST constant)",
+  "tok": "TOK-VERIFY-1 +2 edges AR -0.010% MTP -0.009% (upper bound); +4 edges linear -0.020% AR, -0.018% MTP"
+ },
+ "eq": "positions/orients of identical hcpost lane cores + internal_stations sites; RTL depth from the bind (63676d718d59)",
+ "types": {
+  "ot_s81sl_leaf__t17": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t36": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t15": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t16": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t38": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t65": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t6": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t12": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t57": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t32": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t70": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t50": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t31": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t61": {
+   "lanes_moved": 11,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t56": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t11": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t42": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t10": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t13": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t14": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t2": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t21": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t22": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t23": {
+   "lanes_moved": 9,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t25__cl55642d17": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t26": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t27": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t28": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t29": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t30": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t33": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t34": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t35": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t37": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t39": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t41": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t43": {
+   "lanes_moved": 11,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t45": {
+   "lanes_moved": 11,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t46": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t47": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t51": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t52": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t53__cl958451dd": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t54__cl501e5681": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t54__cl706d9749": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t55": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t58": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t59": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t60": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t62": {
+   "lanes_moved": 9,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t66": {
+   "lanes_moved": 12,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t67": {
+   "lanes_moved": 9,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t68": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t69": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t7": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t71": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t72": {
+   "lanes_moved": 13,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t73": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t74": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t75": {
+   "lanes_moved": 16,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t8": {
+   "lanes_moved": 14,
+   "h_entries": 288
+  },
+  "ot_s81sl_leaf__t9": {
+   "lanes_moved": 15,
+   "h_entries": 288
+  }
+ }
+}

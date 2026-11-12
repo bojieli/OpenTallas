@@ -22,6 +22,8 @@ def test_forms():
     assert form_of(effective({})) == 'default'
     assert form_of(effective(QUAD_OVR)) == 'quad'
     assert form_of(effective(dict(CS_HI_D=1, CS_HO_D=1))) == 'kv_lane'
+    assert form_of(effective(dict(CS_HI_D=2, CS_HI_GS=2, CS_HO_D=2, CS_HO_GS=2))) == 'quad2'
+    assert form_of(effective(dict(CS_HI_D=2, CS_HI_GS=1, CS_HO_D=2, CS_HO_GS=2))) is None   # mixed tree not measured
     assert form_of(effective(dict(CS_HI_D=1))) is None          # half a form is not measured
     assert form_of(effective(dict(ML=6))) is None
     with pytest.raises(ValueError):
