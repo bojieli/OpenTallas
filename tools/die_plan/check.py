@@ -325,6 +325,37 @@ def channel_flows(P):
     return out
 
 
+def phy_core_station_exempt(P, ko, pts):
+    """COORD 11-12 (DIE-KV-99 ask a, APPROVED): a die lane station INSIDE a signed PHY hard core is that core's own
+    interior, which the core builds and signs itself, so it is not a die leg over a foreign core (street_die_leg).
+    Exempt only when the keepout is a die io rect of kind phy_macro whose part is a hard partition and the station
+    lies in no other keepout.  Hops from the PHY pins to the first station outside the core stay checked (lane hop
+    rules are unchanged), and clock legs / clock points are never exempt.  Returns (kept points, exempt points)."""
+    hard_phy = set()
+    for e in P.die.get("io") or []:
+        if str(e.get("kind")) != "phy_macro":
+            continue
+        part = P.parts.get(e.get("part"))
+        if part is not None and P.types.get(part.get("type"), {}).get("hard"):
+            hard_phy.add("io/" + str(e.get("name")))
+    if not hard_phy:
+        return pts, []
+
+    def _in(q, r):
+        return r[0] < q[0] < r[2] and r[1] < q[1] < r[3]
+
+    phy = [r for r in ko if str(r[4]) in hard_phy]
+    rest = [r for r in ko if str(r[4]) not in hard_phy]
+    kept, ex = [], []
+    for q in pts:
+        if (q[2] == "lane_station" and any(_in(q[1], r) for r in phy)
+                and not any(_in(q[1], r) for r in rest)):
+            ex.append(q)
+        else:
+            kept.append(q)
+    return kept, ex
+
+
 def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None, keep=None):
     """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
     (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
@@ -348,11 +379,13 @@ def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, p
             bits = 0
         flows.append((lid, bits, [tuple(q) for q in lpts]))
     flows += channel_flows(P)
+    pts, phy_exempt = phy_core_station_exempt(P, ko, pts)
     # HBM-STREETS-2 (COORD 10-27 18:52): per-street demand replaces the flat 34.56-um width; a plan may still pin the
     # legacy flat width with die.streets.mode = "flat"
     if str((P.die.get("streets") or {}).get("mode", "demand")) == "flat":
         flows = None
     A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl, flows=flows)
+    A["phy_core_exempt"] = [dict(name=q[0], xy=list(q[1])) for q in phy_exempt]
     if png:
         ST.render(A, ko, png, float(P.W), float(P.H), P.name)
     if keep is not None:
