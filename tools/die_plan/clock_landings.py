@@ -247,6 +247,22 @@ def ring_reset_copies_reach(w, read_chunk=0):
     return 1 + nch if nch > 1 else 0
 
 
+def reader_reset_copies(plan, tn, bus, w, read_chunk=0):
+    """CLAND-RING-LOCALITY (COORD-approved whole-family rule): the RSTREP count the LAST reader-START stage of a soft
+    count-aligned strap ring takes by default, for the reach stage (reader_start_reach) AND for an explicit
+    landing_reader_start chain: 1 (oh) + one copy per read chunk (ring_reset_copies_reach), 0 for a single-chunk ring,
+    a signed hard child (hard_ring_params / band hard_core) or clock.landing_reader_start_reach false.  Same-D kept
+    copies at the stage: 0 cycles, no K change.  Read by the generator and clock_landing_verify."""
+    pt = (plan or {}).get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    c = t.get("clock") or {}
+    if c.get("landing_reader_start_reach") is False or hard_ring_params(plan, tn, bus) is not None:
+        return 0
+    if ((c.get("landing_contract") or {}).get("bands") or {}).get(bus, {}).get("hard_core"):
+        return 0
+    return ring_reset_copies_reach(w, read_chunk)
+
+
 def ring_write_reg(plan, tn, bus):
     """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
     ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
@@ -1647,9 +1663,9 @@ class Landings:
                     nrep = ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
                                              int(cat["rings"][b]["depth"]),
                                              wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
-                    if self.reset_placements[tn][b]["reader_start"].get("reach") and hard is None:
-                        nrep = max(nrep, ring_reset_copies_reach(w + 2 if self.dataflow else w,
-                                                                 (wreg or {}).get("read_chunk", 0)))
+                    if hard is None:   # CLAND-RING-LOCALITY: reach AND explicit chains, one shared rule
+                        nrep = max(nrep, reader_reset_copies(self.plan, key, b, w + 2 if self.dataflow else w,
+                                                             (wreg or {}).get("read_chunk", 0)))
                     if nrep:
                         rx = re.compile(r'^(    \(\* keep = "true" \*\) )ot_dp_landing_relay (u_cland_reader_start_\w+) '
                                         r'(\(.*\.q\(' + re.escape(reader_start) + r'\))\);$')
