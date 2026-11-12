@@ -6353,6 +6353,19 @@
          }
         }
        }
+      },
+      "hops": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "array",
+         "items": {
+          "type": "integer",
+          "minimum": 0
+         }
+        }
+       }
       }
      }
     },

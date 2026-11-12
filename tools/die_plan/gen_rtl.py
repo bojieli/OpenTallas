@@ -600,8 +600,9 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 body.append(f"    ot_dp_st #(.W({W})) u_fx_{n}_s{j} (.clk(clk), .rst_n(1'b1), .d({q}), .ea({eq}), "
                             f".q({n}_s{j}_x), .eq({n}_s{j}_xe));")
                 d, ea = f"{n}_s{j}_x", f"{n}_s{j}_xe"
-            elif lk and not last:
+            elif lk and not last and S.ft_hop_latched(P.raw, tn, s["name"], j):
                 # TYPE-SAFE-1 11-06 hop lockup (ft_hop_lockup): station j -> transparent-low latch -> station j+1
+                # (HBM-VSN-XTAP-2 11-12: only the listed hops when the type is in ft_hop_lockup.hops)
                 decl.append(f"    wire [{W}:0] {n}_s{j}_l;")
                 body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{n}_s{j} (.clk(clk), .d({{{eq}, {q}}}), .q({n}_s{j}_l));")
                 d, ea = f"{n}_s{j}_l[{W - 1}:0]", f"{n}_s{j}_l[{W}]"

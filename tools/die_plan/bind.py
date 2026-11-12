@@ -752,6 +752,12 @@ def ft_hop_xtap(plan, tn, slot):
     return schema.ft_hop_xtap(plan, tn, slot)
 
 
+def ft_hop_latched(plan, tn, slot, k):
+    """schema.ft_hop_latched on the bind plan: hop k of slot carries the lockup latch (HBM-VSN-XTAP-2 11-12 hops list)"""
+    import schema
+    return schema.ft_hop_latched(plan, tn, slot, k)
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -3714,8 +3720,9 @@ class Binder:
                     body.append(f"    ot_dp_st #(.W({W})) u_fx_{o}_{k} (.clk(clk), .rst_n(1'b1), .d({nxt}[{W - 1}:0]), "
                                 f".ea({nxt}[{W}]), .q({nxt}_x[{W - 1}:0]), .eq({nxt}_x[{W}]));")
                     prev = f"{nxt}_x"
-                elif lk and k < n - 1:
+                elif lk and k < n - 1 and ft_hop_latched(self.plan, tn, h["slot"], k):
                     # TYPE-SAFE-1 11-06 hop lockup (ft_hop_lockup docstring): station k -> latch -> station k+1
+                    # (HBM-VSN-XTAP-2 11-12: only the listed hops when the type is in ft_hop_lockup.hops)
                     decl.append(f"    wire [{W}:0] {nxt}_l;")
                     body.append(f"    ot_dp_lk #(.W({W + 1})) u_fl_{o}_{k} (.clk(clk), .d({nxt}), .q({nxt}_l));")
                     prev = f"{nxt}_l"
@@ -5637,7 +5644,7 @@ def cmd_kit_rtl(a):
                 chain.append(f"    ot_dp_st #(.W({wd})) u_fx_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({q}), .ea(1'b0), "
                              f".q({q}_x), .eq());")
                 prev = f"{q}_x"
-            elif lk and j < k - 1:      # TYPE-SAFE-1 11-06 hop lockup, as the bound stations (ft_hop_lockup)
+            elif lk and j < k - 1 and ft_hop_latched(raw, tn, sl["name"], j):   # TYPE-SAFE-1 hop lockup
                 chain.append(f"    wire [{wd - 1}:0] {q}_l;")
                 chain.append(f"    ot_dp_lk #(.W({wd})) u_fl_spare_{no}_s{j} (.clk(clk), .d({q}), .q({q}_l));")
                 prev = f"{q}_l"
