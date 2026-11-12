@@ -4222,7 +4222,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         # KW-FIX-45 11-11 (COORD/OWNER "edge-only halving default"): a row whose last attempt failed on GRT overflow relaunches
         # with edge_outline (ORFS main run on the asap7lock-grtoff image); item_env or die option auto_grt_edge false wins.
         sp["gen_env"] = dict(sp["gen_env"], OT_GRT_TRANSITION_MODE="edge_outline")
-        AP.log(f"KIT-WAVE GRT-EDGE auto {die}/{r[item]}: previous attempt failed on GRT overflow -> OT_GRT_TRANSITION_MODE=edge_outline")
+        AP.log(f"KIT-WAVE GRT-EDGE auto {die}/{r['item']}: previous attempt failed on GRT overflow -> OT_GRT_TRANSITION_MODE=edge_outline")
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
