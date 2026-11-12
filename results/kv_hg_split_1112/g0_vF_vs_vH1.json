@@ -1,0 +1,25 @@
+{
+ "vF": {
+  "die": "qwen_kvsys",
+  "partitions": 160,
+  "ports": 3915,
+  "lanes": 2404,
+  "bits": 598087
+ },
+ "vH1": {
+  "die": "qwen_kvsys",
+  "partitions": 160,
+  "ports": 3915,
+  "lanes": 2404,
+  "bits": 598087
+ },
+ "errors": [
+  130,
+  130
+ ],
+ "warnings": [
+  2280,
+  2280
+ ],
+ "finding_diff": "10 vs 10: core_faces 20->23 hard cores x8 HG types; xtap unlocked hops 5079->5071"
+}

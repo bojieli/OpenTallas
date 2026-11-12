@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.kit_soft_clones.v1",
+ "type": "kv3_hg_v1",
+ "rows": [
+  {
+   "base": "qkd_astk_ex_s",
+   "master": "qkd_astk_ex_s_soft",
+   "source": "/srv/opentallas-scratch2/claude/kv-hg-split-1/b_vH1/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+   "body_sha256": "b6730d1355a45f83323e3d6d10d84a11f455ecb700ec4cc63f9be5fec50aeab0",
+   "clone_body_sha256": "b6730d1355a45f83323e3d6d10d84a11f455ecb700ec4cc63f9be5fec50aeab0",
+   "macro_guards": 1,
+   "cycles_changed": 0,
+   "physical_inst": "u_bound.u_astk_u_strip_u_strip_g_ep_p_g_ex_0_u_ex"
+  }
+ ],
+ "cycles_changed": 0
+}
