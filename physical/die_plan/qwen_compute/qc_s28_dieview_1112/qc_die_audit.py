@@ -209,6 +209,32 @@ def one(args):
     r["hops"] = len(hops)
     r["hops_gt405"] = len(over)
     r["max_hop_um"] = max((x["d"] for x in hops), default=0)
+    # outline containment (DIE-QC-99 11-12, re-slot check): cores / landing bands / taps / station + ft registers /
+    # bus windows that fall outside the type outline (stranded by a reshape)
+    eps = 0.01
+
+    def _out(x, y):
+        return x < -eps or y < -eps or x > W + eps or y > H + eps
+    r["cores_outside"] = sum(1 for a in R if a[1] < -eps or a[2] < -eps or a[3] > W + eps or a[4] > H + eps)
+    r["bands_outside"] = sum(1 for b in bands.values() if b.get("rect_um") and
+                             (_out(b["rect_um"][0], b["rect_um"][1]) or _out(b["rect_um"][2], b["rect_um"][3])))
+    r["taps_outside"] = sum(1 for x in tap_rows if _out(x["x"], x["y"]))
+    regs = [p for s in t.get("internal_stations", []) or [] for p in s.get("regs_um", [])]
+    regs += [p for s in ft for p in s.get("regs_um", [])]
+    r["regs_outside"] = sum(1 for p in regs if _out(p[0], p[1]))
+    lim = {"N": W, "S": W, "E": H, "W": H}
+    r["windows_outside"] = sum(1 for b in t.get("buses", []) or [] if b.get("window_um") and
+                               (b["window_um"][0] < -eps or b["window_um"][1] > lim.get(b["face"], 1e12) + eps))
+    # face density: bits per um of face, all buses + ft in/out on that face
+    fb = {"N": 0, "S": 0, "E": 0, "W": 0}
+    for b in t.get("buses", []) or []:
+        fb[b["face"]] = fb.get(b["face"], 0) + int(b.get("width", 0))
+    for s in ft:
+        for k in ("in_face", "out_face"):
+            if s.get(k) in fb:
+                fb[s[k]] += int(s.get("width", 0))
+    r["face_b_per_um_EW"] = round(max(fb["E"], fb["W"]) / H, 2)
+    r["face_b_per_um_NS"] = round(max(fb["N"], fb["S"]) / W, 2)
     r["route_p99"] = row.get("p99_ratio")
     r["route_region"] = f"{row.get('worst_region', '')}_{row.get('dir', '')}" if row else None
     r["route_verdict"] = row.get("verdict")
@@ -247,6 +273,19 @@ def main():
     geom = {r["type"]: g for r, g in res}
     parts = [dict(name=p["name"], type=p["type"], origin=p["origin_um"], orient=p.get("orient", "R0"))
              for p in raw["partitions"]]
+    # die-level: partition overlaps and partitions outside the die (re-slot check)
+    DW, DH = raw["die"]["outline_um"]
+    boxes = sorted(((p["origin"][0], p["origin"][1], p["origin"][0] + rows[p["type"]]["W"],
+                     p["origin"][1] + rows[p["type"]]["H"], p["name"]) for p in parts))
+    overlaps = []
+    for i, a_ in enumerate(boxes):
+        for b_ in boxes[i + 1:]:
+            if b_[0] >= a_[2] - 0.01:
+                break
+            if min(a_[3], b_[3]) - max(a_[1], b_[1]) > 0.01:
+                overlaps.append([a_[4], b_[4]])
+    outside = [b_[4] for b_ in boxes if b_[0] < -0.01 or b_[1] < -0.01 or b_[2] > DW + 0.01 or b_[3] > DH + 0.01]
+    print(f"partitions {len(parts)}: overlaps {len(overlaps)}, outside die {len(outside)}")
     cnt = {}
     for p in parts:
         cnt[p["type"]] = cnt.get(p["type"], 0) + 1
@@ -285,14 +324,14 @@ def main():
         else:
             r["fill_est"] = r["soft_fill"]
             r["fill_est_total"] = r["total_fill"]
-    doc = dict(plan=plan, die=raw["die"]["outline_um"], cells_per_reg=k, um2_per_cell_median=um2_med, rows=rows, geom=geom, parts=parts,
+    doc = dict(plan=plan, die=raw["die"]["outline_um"], cells_per_reg=k, um2_per_cell_median=um2_med, rows=rows, geom=geom, parts=parts, overlaps=overlaps, outside=outside,
                die_channels=raw["die"].get("channels", []))
     (out / "audit.json").write_text(json.dumps(doc) + "\n")
     cols = ["type", "instances", "W", "H", "aspect", "area_mm2", "n_cores", "macro_frac", "cells", "fill_src", "fill_est", "fill_est_total", "soft_fill",
             "total_fill", "natural_mm2", "slot_over_natural", "min_street_V", "min_street_H", "streets_lt20", "ft_slots",
             "ft_bits", "ft_track_frac", "ring_bands", "ring_band_um2", "tap_mode", "taps", "max_sinks_tap", "tap_cap",
             "taps_over_cap", "max_tap_far_um", "real_sinks", "sink_src", "edge_clocks", "hops", "hops_gt405",
-            "max_hop_um", "legs_gt405", "stale_station_ends", "stale_gt60", "stale_detail", "route_p99", "route_region", "route_verdict", "route_flags", "kw_rows", "kw_fail", "kw_last",
+            "max_hop_um", "legs_gt405", "cores_outside", "bands_outside", "taps_outside", "regs_outside", "windows_outside", "face_b_per_um_EW", "face_b_per_um_NS", "stale_station_ends", "stale_gt60", "stale_detail", "route_p99", "route_region", "route_verdict", "route_flags", "kw_rows", "kw_fail", "kw_last",
             "kw_last_reason", "tap_error"]
     with open(out / "audit.tsv", "w") as f:
         f.write("\t".join(cols) + "\n")
