@@ -384,7 +384,7 @@ def export_ds(a):
                 continue
             bb, bn, bm, bst, _, _, bf = e_["eff"]["B"]
             ent, ex, r0, c0 = man.find(bb)
-            w = wr(ent, ex, r0, bm, c0, bn, e_["L"])
+            w = wr(ent, ex, r0, bm, c0, bn, e_["L"], rank=die0.rank)    # per-die expert image: rank 0's rows
             img = SL.pack(fmtc[bf], w)
             assert img.shape == (bm, bst), (e_["tag"], img.shape, bm, bst)
             sm_img.append((bb, img.reshape(-1).tobytes()))

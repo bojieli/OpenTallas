@@ -177,7 +177,18 @@ EG_STG = (19 << 30) + (128 << 20)                     # per Engram layer: the ho
 EG_LIST = EG_STG + (64 << 10)
 EG_LSPAN = 128 << 10
 CUR_LAYER = [0]                      # the layer the per-die machine runs now (E-HOME unit model)
-MAN_END = 94 << 30                   # the weight manifest must end below the HC stripe rows (stack 2 local 30 GiB)
+# The weight manifest is stack 2 (WBASE = stack 2 local 0) and ends at that stack's physical bytes.  It was 94 GiB
+# (stack 2 local 30 GiB, the old HC stripe base): 9 GiB past STACK_BYTES, so an image that the window admitted could
+# still name bytes no die has (the L03 wq_b fault of 2026-11-11 hit the stale bound with 94 GiB of whole-matrix
+# expert tables).  Manifest.place asserts every extent against STACK_BYTES itself, not against this constant.
+MAN_END = WBASE + STACK_BYTES
+
+
+def expert_rows(n):
+    """rows of one expert's matrix in the PER-DIE expert image: the largest TP96 row shard of an n-row matrix.
+    Rank r owns rows W.even(n)[r] of every routed expert (the compiler's row ownership; the checkpoint residency
+    plan's rank_row_intervals), and its image holds those rows only, local row 0 = global row W.even(n)[r][0]."""
+    return max(hi - lo for lo, hi in W.even(n))
 HC_SLOT = 32768                      # aperture slot stride (words); bank k of a slot at + 4,096 k (spec db9ef1603)
 HC_BANK = 4096
 HC_DB = [True]                       # HC_MIX_ROWS weight row prefetched into the HC aperture (2 slots); --hc-hbm = off
@@ -337,8 +348,12 @@ class Manifest:
             base = -(-skip // 544) * 544 if lines else skip
             assert data_window_hit(base, size) is None, (key, base, size)
         if base + size > MAN_END:
-            raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
-                              f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
+            raise MC.Fault(3, f"per-die HBM footprint: {key} ends at stack-2 local "
+                              f"{(base + size - WBASE) / 2**30:.2f} GiB > the stack's {STACK_BYTES / 2**30:.2f} GiB "
+                              f"physical bytes (manifest window ends at {MAN_END / 2**30:.2f} GiB)")
+        # physical-stack bound (independent of MAN_END): the extent lies inside ONE stack's physical bytes
+        assert 0 <= base and (base & ((1 << 35) - 1)) + size <= STACK_BYTES, \
+            (key, hex(base), size, "weight extent outside its stack's physical bytes")
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=n_experts,
                  estride=rb * rows, **ex)
         self.cur = base
@@ -351,6 +366,9 @@ class Manifest:
         if data_window_hit(base, int(-(-cols * ESZ[fmt] // 32) * 32) * rows) is not None:
             raise MC.Fault(3, f"fixed-base extent {key} at {base:#x} lies in a stack's reserved data window")
         rb = -(-int(cols * ESZ[fmt]) // 32) * 32
+        # physical-stack bound: a fixed extent lies inside ONE stack's physical bytes
+        assert 0 <= base and (base & ((1 << 35) - 1)) + rb * rows <= STACK_BYTES, \
+            (key, hex(base), rb * rows, "fixed extent outside its stack's physical bytes")
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
         self.ent.append(e)
         return e
@@ -487,8 +505,11 @@ class Lower:
             k = op["k"] if kcols is None else kcols
             r0, r1 = rows
             if expert_slot is not None:
-                e = self.W(w_key, n, op["k"], fmt, n_experts=m.n_exp, lines=True)
-                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"] + r0 * e["rowbytes"], n=k, m=max(r1 - r0, 1),
+                # per-die expert image: the rank's own rows of every routed expert, from local row 0
+                assert [r0, r1] == W.even(n)[rank], (w_key, rank, rows, "routed expert rows != TP96 ownership")
+                e = self.W(w_key, expert_rows(n), op["k"], fmt, n_experts=m.n_exp, lines=True)
+                e["tp_rows"] = n
+                bd = MDesc(space="HBM", fmt=HFMT[fmt], base=e["base"], n=k, m=max(r1 - r0, 1),
                            stride=e["rowbytes"], indexed=1, dyn_mul=e["estride"])
             elif col0 or (wcols and wcols != k):
                 # a column slice is its own dense line image (the SM record needs B.stride = LPR x LB of THIS K)
@@ -754,13 +775,22 @@ class Lower:
                             raise ValueError("stacked expert requires adjacent matching w1 / w3")
                         # Each rank's [w1 rows; w3 rows] is contiguous in the physical image.
                         # The checkpoint remains unchanged; _wrows maps this explicit row order.
-                        key = (f"{P}ffn.experts.w13" if slot < m.k_exp else
-                               f"{P}ffn.shared_experts.w13.weight")
-                        ent = self.W(key, 2 * op["n"], op["k"], fmt,
-                                     n_experts=m.n_exp if slot < m.k_exp else 1, lines=True)
-                        ent["row_order"] = "tp96_w1_w3_shards"
-                        ent["matrix_rows"] = op["n"]
-                        bd = MDesc(space="HBM", fmt=HFMT[fmt], base=ent["base"] + 2 * r0 * ent["rowbytes"],
+                        if slot < m.k_exp:
+                            # routed: the PER-DIE image holds only this rank's [w1 rows; w3 rows] of every expert
+                            # (TP96 ownership W.even(n)[rank]), from local row 0
+                            assert [r0, r1] == W.even(op["n"])[rank], (L, slot, rank, "expert rows != ownership")
+                            ent = self.W(f"{P}ffn.experts.w13", 2 * expert_rows(op["n"]), op["k"], fmt,
+                                         n_experts=m.n_exp, lines=True)
+                            ent["row_order"] = "tp96_w1_w3_local"
+                            ent["tp_rows"] = op["n"]
+                            b0 = ent["base"]
+                        else:           # the shared expert: one whole-matrix image, shards in rank order
+                            ent = self.W(f"{P}ffn.shared_experts.w13.weight", 2 * op["n"], op["k"], fmt,
+                                         n_experts=1, lines=True)
+                            ent["row_order"] = "tp96_w1_w3_shards"
+                            ent["matrix_rows"] = op["n"]
+                            b0 = ent["base"] + 2 * r0 * ent["rowbytes"]
+                        bd = MDesc(space="HBM", fmt=HFMT[fmt], base=b0,
                                    n=op["k"], m=max(2 * (r1 - r0), 1), stride=ent["rowbytes"],
                                    indexed=int(slot < m.k_exp), dyn_mul=ent["estride"] if slot < m.k_exp else 0)
                         desc = dict(A=xd, B=bd, O=V(f"e{slot}.g", max(2 * (r1-r0), 1), fmt=out_fmt))
@@ -1262,9 +1292,32 @@ def build_tables(m, st, L, pos, rank, region=TBASE):
 def ds_units(m, man, golib):
     U = dict(MC.UNITS)
 
-    def wrows(e, ex, r0, nrows, c0, ncols, L):
+    def wrows(e, ex, r0, nrows, c0, ncols, L, rank=None):
+        """checkpoint rows behind image rows [r0, r0 + nrows) of expert ex of entry e.  A per-die expert image
+        (e["tp_rows"]) holds rank `rank`'s own rows only, so its image rows name checkpoint rows through the rank."""
         key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
         c0 = c0 + e.get("col_off", 0)
+        if e.get("tp_rows"):
+            if rank is None:
+                raise ValueError(f"{key}: a per-die expert image row needs the reading die's rank")
+            lo, hi = W.even(e["tp_rows"])[rank]
+            h = hi - lo
+            pre, kmat = key.rsplit(".", 1)
+            mats = (("w1", 0), ("w3", h)) if e.get("row_order") == "tp96_w1_w3_local" else ((kmat, 0),)
+            if r0 < 0 or r0 + nrows > h * len(mats):
+                raise MC.Fault(3, f"{key}: image rows {r0}+{nrows} outside rank {rank}'s own rows ({len(mats)} x {h})")
+            pieces = []
+            for mat, start in mats:
+                a, z = max(r0, start), min(r0 + nrows, start + h)
+                if a < z:
+                    pieces.append(golib.wrows(f"{pre}.{ex}.{mat}.weight", lo + a - start, lo + z - start))
+            if isinstance(pieces[0], V_.Q8):
+                w = V_.Q8(np.concatenate([p.q for p in pieces]), np.concatenate([p.e for p in pieces]))
+            else:
+                w = np.concatenate(pieces)
+            if c0 or ncols != (w.q if isinstance(w, V_.Q8) else w).shape[1]:
+                w = (w.q[:, c0:c0 + ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0 + ncols]
+            return w
         if e.get("row_order") == "tp96_w1_w3_shards":
             pieces = []
             end = r0 + nrows
@@ -1306,7 +1359,7 @@ def ds_units(m, man, golib):
         for die in M.dies:
             base, n, mrows, st, _ = M.eff(bd, die, L)
             e, ex, r0, c0 = man.find(base)
-            w = wrows(e, ex, r0, mrows, c0, n, L)
+            w = wrows(e, ex, r0, mrows, c0, n, L, rank=die.rank)
             x = M.read(a, die, L)
             if fmt in (1, 2):
                 out = V_.linear_q(w, x)
