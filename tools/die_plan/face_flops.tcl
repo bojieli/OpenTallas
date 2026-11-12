@@ -699,6 +699,8 @@ if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
 # S81-TYPES-5 11-07 NARROW-GUTTER class: hard placement blockages over macro gaps < OT_GUTTER_BLOCK_UM (opt-in, gutter_block.tcl)
 if {[file exists /work/gutter_block.tcl] && [info exists ::env(OT_GUTTER_BLOCK_UM)]} { source /work/gutter_block.tcl }
+# ROW-SLIVER class (KW-FIX-45 11-11, q_b011 DPL-0033): placement blockage over free row segments narrower than OT_ROW_SLIVER_UM (opt-in)
+if {[file exists /work/row_sliver_block.tcl] && [info exists ::env(OT_ROW_SLIVER_UM)]} { source /work/row_sliver_block.tcl }
 # DIE-HEAD-69 11-05: core-output landing flops at their hard-core pins (kits with hard cores; gen_phys copies it)
 if {[file exists /work/core_out_land.tcl]} { source /work/core_out_land.tcl }
 # DIE-HBM-92 11-08: optional FT polarity placement (OT_FT_POLARITY_LOCAL=1); before the GPL guard, which stays last
