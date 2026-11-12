@@ -1640,6 +1640,28 @@ def load_state(ap_dir=None):
 
 def save_state(st, ap_dir=None):
     p = Path(ap_dir or AP_DIR) / STATE_FILE
+    # KW-FIX-45 11-12 STATE-GUARD (COORD: kit_wave_state.json fell from 2655 to 2413 rows in one window): this code never
+    # deletes a row (a retired row becomes CANCELLED), so a writer holding a stale copy must not remove rows another writer
+    # added.  Rows on disk but missing from the copy being saved are carried over before the atomic replace, and the
+    # carry-over is logged; an empty copy over a populated file is refused.
+    try:
+        disk = json.loads(p.read_text()).get("items") or {}
+    except (OSError, ValueError):
+        disk = {}
+    mine = st.setdefault("items", {})
+    lost = [k for k in disk if k not in mine]
+    if disk and not mine:
+        print(f"KW_STATE_GUARD refused: empty state over {len(disk)} rows", flush=True)
+        return
+    for k in lost:
+        mine[k] = disk[k]
+    if lost:
+        print(f"KW_STATE_GUARD carried {len(lost)} rows over from disk (stale copy): {lost[:3]}", flush=True)
+        try:
+            with open(os.path.expanduser("~/coord/autopilot/kit_wave_state_guard.log"), "a") as _f:
+                _f.write(time.strftime("%Y-%m-%d %H:%M:%S ") + f"pid {os.getpid()} carried {len(lost)} rows: " + " ".join(lost[:8]) + "\n")
+        except OSError:
+            pass
     tmp = p.with_suffix(f".{os.getpid()}")
     tmp.write_text(json.dumps(st, indent=1, sort_keys=True))
     os.replace(tmp, p)
