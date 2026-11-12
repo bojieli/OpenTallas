@@ -394,7 +394,8 @@
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)"
+    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+    "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -21094,7 +21095,9 @@
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
+    "cbx_q10__cl89936551": "KW-FIX-45 11-12 DIE-QC-99: QC-S28-C cbx_q* structural fix supersedes a build now; launch with the family on the final s28",
+    "cbx_q10__cl94a12200": "KW-FIX-45 11-12 DIE-QC-99: QC-S28-C cbx_q* structural fix supersedes a build now; launch with the family on the final s28"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -21804,7 +21807,56 @@
     "slw_fw_v3@8",
     "slw_st_b_v2__pva66d0f22@2",
     "slw_stm_v1__cl05fc43f7__cl2086fa2c@2",
-    "slw_stm_v1__cl05fc43f7__cl389df4e9@2"
+    "slw_stm_v1__cl05fc43f7__cl389df4e9@2",
+    "cbf_q00__cl1b5a6458@11",
+    "cbf_q00__cl1b5a6458@1",
+    "cbf_q00__cl1b5a6458@6",
+    "cbf_q00__cl870de686@7",
+    "cbf_q00__cl870de686@11",
+    "cbf_q00__cl870de686@1",
+    "cbf_q00__cl870de686@10",
+    "cbf_q00_s2@10",
+    "cbf_q00_s2@8",
+    "cbf_q01_s2@2",
+    "cbf_q01@1",
+    "cbf_q01@8",
+    "cbf_q11@11",
+    "cbf_q11@6",
+    "cbf_q11@3",
+    "cbn_q00__cl622f65d2@12",
+    "cbn_q00__cl622f65d2@6",
+    "cbn_q00__cld7bf7197@6",
+    "cbn_q00__cld7bf7197@2",
+    "cbn_q00__cld7bf7197@9",
+    "cbn_q00__cld7bf7197@22",
+    "cbn_q00__cldbcda913@12",
+    "cbn_q00__cldbcda913@7",
+    "cbn_q00__cldbcda913@10",
+    "cbn_q00__cldbcda913@17",
+    "cbn_q01__clab6e67f2@24",
+    "cbn_q01__clab6e67f2@18",
+    "cbn_q01__clab6e67f2@2",
+    "cbn_q01__clab6e67f2@6",
+    "cbn_q01__cld9ff4c40@6",
+    "cbn_q01__cld9ff4c40@10",
+    "cbn_q01__cldd6ea846@7",
+    "cbn_q01__cldd6ea846@2",
+    "cbn_q01__cldd6ea846@10",
+    "cbn_q01__cldd6ea846@6",
+    "cbn_q11__cl49ae4555@4",
+    "cbn_q11__cl49ae4555@6",
+    "cbn_q11__cl49ae4555@9",
+    "cbn_q11__cl5cc92dfe@7",
+    "cbn_q11__cl5cc92dfe@3",
+    "cbn_q11__cl5cc92dfe@5",
+    "coll_n@4",
+    "sle_st_b_v1__pv0e7b1dcc@9",
+    "sle_st_b_v1__pv0e7b1dcc@2",
+    "sle_st_b_v1__pvc5a85fd4@2",
+    "sle_st_b_v1__pvc5a85fd4@4",
+    "sle_st_b_v1__pvc5a85fd4@9",
+    "sle_st_b_v2__cl14c98df5@2",
+    "sle_st_b_v2__clfde1249e@3"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -22600,7 +22652,10 @@
     "slw_su_l0__cl76fb247e",
     "slw_su_l1__cla2a78701",
     "slw_su_l1__clcc9d0155",
-    "tt_ctlm"
+    "tt_ctlm",
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00__cl870de686",
+    "cbf_q00_s2"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -25783,7 +25838,250 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {},
+   "item_inputs": {
+    "cbf_q00__cl1b5a6458": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q00__cl870de686": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q00_s2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q01": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q01_s2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q11": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cl622f65d2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cld7bf7197": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cldbcda913": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__clab6e67f2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__cld9ff4c40": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__cldd6ea846": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q11__cl49ae4555": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q11__cl5cc92dfe": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "coll_n": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v1__pv0e7b1dcc": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v1__pvc5a85fd4": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v2__cl14c98df5": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v2__clfde1249e": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v2__pva66d0f22": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v2__pvc2ec5bfb": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    }
+   },
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
@@ -29111,6 +29409,30 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
+   },
+   "item_inputs_prev_kw45_s28a": {
+    "cbf_q00__cl1b5a6458": null,
+    "cbf_q00__cl870de686": null,
+    "cbf_q00_s2": null,
+    "cbf_q01": null,
+    "cbf_q01_s2": null,
+    "cbf_q11": null,
+    "cbn_q00__cl622f65d2": null,
+    "cbn_q00__cld7bf7197": null,
+    "cbn_q00__cldbcda913": null,
+    "cbn_q01__clab6e67f2": null,
+    "cbn_q01__cld9ff4c40": null,
+    "cbn_q01__cldd6ea846": null,
+    "cbn_q11__cl49ae4555": null,
+    "cbn_q11__cl5cc92dfe": null,
+    "coll_n": null,
+    "sle_st_b_v1__pv0e7b1dcc": null,
+    "sle_st_b_v1__pvc5a85fd4": null,
+    "sle_st_b_v2__cl14c98df5": null,
+    "sle_st_b_v2__clfde1249e": null,
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc": null,
+    "slw_st_b_v2__pva66d0f22": null,
+    "slw_st_b_v2__pvc2ec5bfb": null
    }
   },
   "hbm": {
@@ -32416,6 +32738,97 @@
       "detailed_lef": "detail_view.lef",
       "detailed_receipt": "detail_receipt.json",
       "detail_bloat_factor": 0
+     }
+    ],
+    "ot_hnx_fused_host_program": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/fhp_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_argmax_static_sw_vm_r2": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/argmax_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_hc_root_static__hcp_sys1": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/hcpsys1_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hnx_fused_tnode": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/tnode_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_idx_rootctl_static_am": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/rootctl_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/h9b_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     }
+    ],
+    "ot_hbm_su_static_sfustore_hw": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/sfustore_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hgi_sm_xload_cl2_bfqg": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/bfqg_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_svc_vmdel_lane_n": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/vmdel_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_idx_qctl_static": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/autopilot/closed/hbm/ot_hbm_idx_qctl_static__e96f241822/kit/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     },
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/autopilot/closed/hbm/ot_hbm_idx_qctl_static__e96f241822/kit/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
      }
     ]
    },

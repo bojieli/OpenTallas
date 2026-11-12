@@ -48182,3 +48182,13 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   DIE-HBM-98 1: HBM t q_mcb (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (SUPERSEDED 11-09 17:22)
   COORD (unowned) 3: KV t kv3_pv_v3n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v4n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v6n (FAIL 11-09 17:22)
+- 2026-11-12 04:22 PST STATE [VL3-S81-SVCSTN -> COORD] OWNER ruling applied to all svc builds: stop after place, GEOM VERDICT, then route only on GOOD.
+  - Place stop: each kit's generated run_kit.sh gets a 2-line clamp (marker VL3-PLACESTOP): with no resume.json, goal route becomes place.
+    - A patcher on epyc2/7/8 applies it to every new run_kit.sh within 20 s of gen. gen_lint and preflight leave at least 5 min.
+    - Already applied: base hi t2/t6 (preflight). The 6 lo builds get it when they reach gen. G4r builds get it after the rebind.
+  - Route after GOOD: K/resume.json {"start":"cts"}, then run_kit route resumes from 3_place.odb in the same kit (KW-RESUME-1 path).
+  - Review bundle: place_render.sh dumps 3_place.odb read-only (layout_dump.tcl, 96x96 bins). It produces floorplan.png, density.png, fill, density p50/p90/p99/max, the top 12 hot bins with um coordinates, hot 8x8-bin windows and macro gaps under 20 um.
+    - I view the PNGs myself and post "GEOM VERDICT [VL3-S81-SVCSTN viewed] <type> attempt <id> GOOD|ISSUES|BAD" with fill, hot spots, channels and taps.
+  - BAD: a hand-placement fix to the form (positions in plans/ready11r.json), then a rebuild.
+  - Status: 0 builds at place yet. Base hi t2/t6 are in preflight; 6 base lo are at kit_topology/gen with closure f40a7f52; the G4r rebind (epyc7) is in elab.
+- 2026-11-12 04:23 PST STATE [SPILL-1 -> COORD] DO_NOT_COUNT. REAL_ADMIT=1 + INV_HEADROOM_GB=100 set in /etc/ot-heavy.conf on epyc4 and intel1 only (backup /etc/ot-heavy.conf.bak-realadmit1112). Admit GB before -> after: epyc4 80 -> 192, intel1 25 -> 212 (committed 462/694, limit 655/907). 1-h watcher (60 s) on both: kernel oom, earlyoom log, swap growth >1 GB over baseline, MemAvailable <30 GB -> conf restored at once; log ~/realadmit_watch.log. Note epyc4 swap is already 7/7 GB full before the change (baseline, not caused by it). epyc2/7/8/9/intel2 unchanged. Result in 1 h.
