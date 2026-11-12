@@ -4,7 +4,7 @@
 // Defaults CBREG=0/SSTOPREG=0 match vS6. Kit opt-in adds exactly +1 fifo_clk
 // input cycle on copy_bank and s_stop; parent fault/inflight qualification is
 // required before adoption. No payload/valid/output cycle added. No fences.
-module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG, parameter integer GREG=0)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -100,8 +100,20 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
  wire [3:0] ne=~fifo_empty;
  wire [1:0] sel=ne[0]?2'd0:ne[1]?2'd1:ne[2]?2'd2:2'd3;
  wire send=(|ne)&&credit!=0&&!h_stop&&hrst;
- assign g_v=send;
- assign g_d=fifo_head[sel][285:0];
+ // part 58 (HBM-CORES-C, DIE-HBM-100 11-12): GREG=1 = +1 pin cycle on g_v/g_d (registered output face, hbm_clk).
+ // Default GREG=0 = the combinational mux of vS6/S7.  send, credit and fifo_re are unchanged: the consumer sees valid
+ // and data one hbm_clk later, so its g_credit return is one cycle later (credit window CRED=4 must cover the longer loop).
+ wire [285:0] gd_c=fifo_head[sel][285:0];
+ if(GREG) begin : g_greg
+  reg gv_q; reg [285:0] gd_q;
+  always @(posedge hbm_clk or negedge hrst) if(!hrst) gv_q<=1'b0; else gv_q<=send;
+  always @(posedge hbm_clk) gd_q<=gd_c;
+  assign g_v=gv_q;
+  assign g_d=gd_q;
+ end else begin : g_gwire
+  assign g_v=send;
+  assign g_d=gd_c;
+ end
  assign fifo_re=send?(4'b1<<sel):4'b0;
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)credit<=(MUT==2)?3'(CRED+1):3'(CRED);
@@ -111,7 +123,7 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
 endmodule
 
 // the two hard-core masters of the split (d44v part 51): same pins, G fixed
-module ot_wbq_root_g0__fcore #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+module ot_wbq_root_g0__fcore #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG, parameter integer GREG=0)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -122,9 +134,9 @@ module ot_wbq_root_g0__fcore #(parameter integer CRED=4, parameter integer MUT=0
  output wire root_ready,
  output wire g_v,output wire [285:0] g_d
 );
- ot_wbq_root_s7_grp #(.G(0),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG)) u_grp(.*);
+ ot_wbq_root_s7_grp #(.G(0),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.GREG(GREG)) u_grp(.*);
 endmodule
-module ot_wbq_root_s7_g1 #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+module ot_wbq_root_s7_g1 #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG, parameter integer GREG=0)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -135,7 +147,7 @@ module ot_wbq_root_s7_g1 #(parameter integer CRED=4, parameter integer MUT=0, pa
  output wire root_ready,
  output wire g_v,output wire [285:0] g_d
 );
- ot_wbq_root_s7_grp #(.G(1),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG)) u_grp(.*);
+ ot_wbq_root_s7_grp #(.G(1),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.GREG(GREG)) u_grp(.*);
 endmodule
 
 
