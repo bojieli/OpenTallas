@@ -29265,7 +29265,8 @@
     "PHY_NE",
     "PHY_NW",
     "NW_iorly",
-    "NE_iorly"
+    "NE_iorly",
+    "q_mcb_ne"
    ],
    "place_prefer": [
     "epyc2",
@@ -31030,7 +31031,25 @@
     "ot_hgi_sfu_split3_ctl_rest_1c",
     "ot_hgi_sfu_opsb_group",
     "ot_hbm_sm_kv_line",
-    "ot_q2nf_rest"
+    "ot_q2nf_rest",
+    "hfd_ep_host_vc",
+    "hfd_ep_static_vc2",
+    "ot_hbm_accel_smh_bdc",
+    "ot_hbm_accel_smh_tcl_gu",
+    "ot_hbm_accel_smh_tct",
+    "ot_hbm_accel_smh_xs",
+    "ot_hbm_sm_attn_be__cd9",
+    "ot_hbm_sm_attn_be__cd13",
+    "ot_hbm_sm_attn_be__cd16",
+    "ot_hbm_sm_attn_be__cd17",
+    "ot_hbm_sm_attn_be_seed__cd20",
+    "ot_hbm_sm_attn_be_seed__cd21",
+    "ot_hbm_sm_attn_pstore",
+    "ot_hgi_coll_gqi_issue",
+    "ot_smh_static_front",
+    "ot_svgr_own",
+    "ot_wbq_root_g1",
+    "ot_wbq_sw"
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -33759,6 +33778,60 @@
      "OT_GEN_M8_GRANT": "1"
     },
     "ot_q2nf_qout": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "hfd_ep_host_vc": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "hfd_ep_static_vc2": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_accel_smh_bdc": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_accel_smh_tcl_gu": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_accel_smh_tct": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_accel_smh_xs": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be__cd9": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be__cd13": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be__cd16": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be__cd17": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be_seed__cd20": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_be_seed__cd21": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_attn_pstore": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hgi_coll_gqi_issue": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_smh_static_front": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_svgr_own": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_wbq_root_g1": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_wbq_sw": {
      "OT_GEN_M8_GRANT": "1"
     }
    },
