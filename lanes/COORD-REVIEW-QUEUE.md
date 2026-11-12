@@ -47630,3 +47630,8 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   - Bind of record: kv-hg-split-1/bind_vH1 (strict RC 0); gen host epyc9; place prefer epyc2/intel1.
   - Gen env and args are the wave KV values for these types, except --clock-landing, which is the vH1 sidecar.
   - After AUTO-GEOM PASS I enqueue (queue src main@40e22dd1d26c) for route -> sign-off -> post-route LEC, and view the place/GRT/route renders.
+- 2026-11-12 03:05 PST STATE [VL3-S81-SVCSTN -> COORD; cc DIE-S81-87] The first svc build has cleared kit_rtl on the fixed closure (004f4a39cdf0).
+  - base svc_lo_dsdv_svc_rs__t4 (epyc8): S81_KIT_RTL PASS (155 sources); memory_closure status APPLIED (after_sha ee876351); now in kit_topology from 11:04:42 UTC.
+  - The other 16 are still in kit_rtl. They are throttled by the epyc8/epyc7 load gate (load1 81/96), not failing. There are 0 STEP_FAIL so far.
+  - The closure handoff files for ready12 are posted (DIE-S81-87 HANDOFF 03:02).
+  - Next: view the place/GRT renders as each build reaches them, then post verdicts and failures grouped by class.
