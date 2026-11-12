@@ -45,6 +45,7 @@ Construction rules:
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import re
@@ -1572,9 +1573,14 @@ class Binder:
             st = sum(f["stations"] for f in ft)
             if L and int(L.get("stations", st)) != st:
                 self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
+            try:
+                hws = hw_lane_spec(ln, [x["width"] for x in hp])
+            except BindError as exc:
+                self.errors.append(str(exc))
+                hws = None
             by_pair[(a["src"]["part"], b["dst"]["part"])].append(dict(
                 id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
-                cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
+                hw=hws, cap=hws["word_bits"] if hws else min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
                 hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
                 cycles=int(L.get("cycles", 2 + st)), clock_landing_cycles=landing,
                 param=L.get("param"), kind=a.get("kind", "data")))
@@ -1591,6 +1597,80 @@ class Binder:
         s = re.sub(r"^[oi]_", "", s)
         toks = [t for t in re.split(r"[_.\[\]]+", s) if t and not re.fullmatch(r"Q|N|p|[EW][NS]|[NS]|\d+", t)]
         return "".join(toks).lower()
+
+    # -- HBM-HALFWIDTH-2 serialised (ot_hbm_hw_lane) lanes
+    def hw_classes(self):
+        if not hasattr(self, "_hwc"):
+            f = self.ab.get("hw_leaf_classes") or os.environ.get("OT_HW_CLASSES")
+            self._hwc = HwClasses(f) if f else None
+            self._hw_unclassified = []
+        return self._hwc
+
+    def hw_item_class(self, L, it):
+        """control | payload | level for one lane item; 'fwd' items inherit the class of the bit they forward"""
+        if it[0] == "fwd":
+            return self.hw_item_class(it[1], it[1]["items"][it[2]])
+        hc = self.hw_classes()
+        cl = hc.of(self.rel_of(it[1]), it[2], it[3]) if hc else None
+        if cl is None:
+            if hc is None or hc.default == "error":
+                self._hw_unclassified.append((L["lane"], self.rel_of(it[1]), it[2], it[3]))
+                return "level"
+            return hc.default
+        return cl
+
+    def hw_masks(self, L):
+        """-> (control, payload) python ints over the word bits (bit k = item k); cached on the lane"""
+        if "hw_m" not in L:
+            cm = pm = 0
+            for k, it in enumerate(L["items"]):
+                c = self.hw_item_class(L, it)
+                if c == "control":
+                    cm |= 1 << k
+                elif c == "payload":
+                    pm |= 1 << k
+            L["hw_m"] = (cm, pm)
+        return L["hw_m"]
+
+    def hw_tx_text(self, L, n, bits):
+        h = L["hw"]
+        WB, B, BW, PW = h["word_bits"], h["beats"], h["bw"], h["pw"]
+        if len(bits) > WB:
+            raise BindError(f"HW_LANE {L['lane']}: {len(bits)} source bits > word_bits {WB}")
+        cm, pm = self.hw_masks(L)
+        d = _concat(bits + ["1'b0"] * (WB - len(bits)))
+        spare = f"{{{h['spare']}'b0, " if h["spare"] else "{"
+        return (f"    wire [{BW - 1}:0] {n}_hb;\n    wire {n}_hf;\n"
+                f"    ot_hbm_hw_lane_tx #(.W({WB}), .HW(1), .BEATS({B}), .CONTROL_MASK({WB}'h{cm:x}), .PAYLOAD_MASK({WB}'h{pm:x}), "
+                f".GUARD_LEVELS(0)) u_hwtx_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .b_o({n}_hb), .f_o({n}_hf), .fault_o({n}_hwf));\n"
+                f"    assign {n}[{PW - 1}:0] = {spare}{n}_hf, {n}_hb}};   // beat bits [{BW - 1}:0], first-beat flag [{BW}]"
+                + (f", {h['spare']} spare tied 0" if h["spare"] else "") + "\n"
+                f"    ot_dp_st #(.W(1)) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(1'b0), .ea(rst_n), .q(), .eq({n}[{PW}]));  "
+                f"// epoch only: the data stage is the serialiser's output register")
+
+    def hw_rx_text(self, L, n, qp):
+        h = L["hw"]
+        WB, B, BW = h["word_bits"], h["beats"], h["bw"]
+        cm, _ = self.hw_masks(L)
+        return (f"    ot_hbm_hw_lane_rx #(.W({WB}), .HW(1), .BEATS({B}), .CONTROL_MASK({WB}'h{cm:x})) u_hwrx_{n} "
+                f"(.clk(clk), .rst_n(rst_n), .b_i({qp}[{BW - 1}:0]), .f_i({qp}[{BW}]), .q({n}_q));")
+
+    def hw_cells(self):
+        root = Path(__file__).resolve().parents[2]
+        return "\n".join((root / p).read_text() for p in HW_LANE_SRC)
+
+    def hw_report(self):
+        rows = []
+        for L in self.links:
+            if L.get("hw"):
+                cm, pm = self.hw_masks(L)
+                n = len(L["items"])
+                rows.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], **L["hw"], items=n,
+                                 control_bits=bin(cm).count("1"), payload_bits=bin(pm).count("1"),
+                                 level_bits=n - bin(cm).count("1") - bin(pm).count("1"),
+                                 control_mask=f"{cm:x}", payload_mask=f"{pm:x}",
+                                 classes=self.hw_classes().default if self.hw_classes() else None))
+        return rows
 
     def build_buses(self):
         """every crossing bit rides plan lanes from its source partition to each sink partition.
@@ -1762,7 +1842,10 @@ class Binder:
                 L.update(width=L["cap"], lane=L["id"], stages=[0])
                 self.links.append(L)
             elif L["items"]:
-                L.update(width=len(L["items"]), lane=L["id"],
+                if L.get("hw"):
+                    # HBM-HALFWIDTH-2: items = the word bits (zero-extended to word_bits); the physical port is narrow
+                    L["nword"] = len(L["items"])
+                L.update(width=L["hw"]["pw"] if L.get("hw") else len(L["items"]), lane=L["id"],
                          stages=sorted({st for it in L["items"] if it[0] == "leaf"
                                         for st in self.cross_stages.get((L["src"], L["dst"], it[1], it[2]), [])} or {0}))
                 self.links.append(L)
@@ -1909,7 +1992,9 @@ class Binder:
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
+        ibus = sorted((L["iname"], L["width"], lane_pad(L)) +
+                      (((tuple(sorted(L["hw"].items())), self.hw_masks(L)[0]),) if L.get("hw") else ())
+                      for L in self.in_bus[p])     # the source is outside the module
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
@@ -3152,6 +3237,8 @@ class Binder:
         import gen_rtl
         if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
             cells += "\n" + gen_rtl.HOLD_CELLS
+        if any(L.get("hw") for L in self.links):     # HBM-HALFWIDTH-2 (absent = byte-identical cell file)
+            cells += "\n" + self.hw_cells()
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
@@ -3623,12 +3710,19 @@ class Binder:
                 body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
                 continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
+            hw = L.get("hw")
+            qn = f"{n}_qp" if hw else f"{n}_q"
+            if hw:
+                if reg:
+                    raise BindError(f"HW_LANE {L['lane']}: registered-pin hard partition {p} cannot take a serialised lane")
+                decl.append(f"    wire [{hw['word_bits'] - 1}:0] {n}_q;")
+                body.append(self.hw_rx_text(L, n, qn))
             if reg:
-                decl.append(f"    wire [{W - 1}:0] {n}_q;")
-                body.append(f"    assign {n}_q = {n}[{W - 1}:0];  // registered hard pin: the macro's input register is "
+                decl.append(f"    wire [{W - 1}:0] {qn};")
+                body.append(f"    assign {qn} = {n}[{W - 1}:0];  // registered hard pin: the macro's input register is "
                             f"the boundary register (epoch [{W}] unread: no flop here)")
                 continue
-            decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
+            decl.append(f"    wire [{W - 1}:0] {qn};\n    wire {n}_eq;")
             din, dea = f"{n}[{W - 1}:0]", f"{n}[{W}]"
             import gen_rtl
             nhb = gen_rtl.hold_hb4(t, n)
@@ -3646,10 +3740,10 @@ class Binder:
                 body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
                             f".q({n}_b), .eq({n}_eb));")
                 body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
-                            f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
+                            f".q({{{n}_eq, {qn}}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
-                        f".q({n}_q), .eq({n}_eq));")
+                        f".q({qn}), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
         drv_w = {}
         for ci in self.members[p]:
@@ -3690,10 +3784,14 @@ class Binder:
                 body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
                 continue
             if L.get("plan"):
+                if L.get("hw"):
+                    raise BindError(f"HW_LANE {L['lane']}: a plan-cell bus cannot be a serialised lane")
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
                 continue
             if reg:
+                if L.get("hw"):
+                    raise BindError(f"HW_LANE {L['lane']}: registered-pin hard partition {p} cannot drive a serialised lane")
                 if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
                     raise BindError(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
@@ -3701,10 +3799,17 @@ class Binder:
                             f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
                 continue
             if getattr(self, "ptree", None) is not None:
+                if L.get("hw"):
+                    raise BindError(f"HW_LANE {L['lane']}: PAD_TREE taps on a serialised lane are not supported")
                 obus_tree.append(L)          # PAD_TREE: emitted after the tap helpers exist (below)
                 continue
-            d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
-                         for it in L["items"]])
+            bits = [f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
+                    for it in L["items"]]
+            if L.get("hw"):
+                decl.append(f"    wire {n}_hwf;   // HW_LANE sticky spacing/P1 fault (sim probe {n}_hwf; the kit leaves it open)")
+                body.append(self.hw_tx_text(L, n, bits))
+                continue
+            d = _concat(bits)
             body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
@@ -4197,6 +4302,9 @@ class Binder:
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if L.get("hw"):
+                lat[-1].update(hw_lane=True, beats=L["hw"]["beats"], word_bits=L["hw"]["word_bits"],
+                               word_cycles=bound + L["hw"]["beats"] - 1)
             if L["src"] in rh or L["dst"] in rh:
                 # the macro's registered pin is that end's boundary stage (bound_stages unchanged, 1:1)
                 lat[-1]["macro_pin_reg_ends"] = [e for e in ("src", "dst") if L[e] in rh]
@@ -4644,6 +4752,14 @@ def cmd_bind(a):
                 LPS.write_die_record(os.environ["OT_DIE_SIGNOFF_RECORD"], lps, detail=str(_lb / "landing_phase_sign.json"))
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
+    hwr = B.hw_report()                     # HBM-HALFWIDTH-2: serialised lanes (absent = no file, no report key)
+    if hwr:
+        unc = getattr(B, "_hw_unclassified", [])
+        for ln_ in sorted({u[0] for u in unc}):
+            us = [u for u in unc if u[0] == ln_]
+            B.errors.append(f"HW_CLASS {ln_}: {len(us)} source bits with no control/payload/level rule (first {us[0][1]}.{us[0][2]}[{us[0][3]}])")
+        (out / "bind_hw_lanes.json").write_text(json.dumps(dict(schema="opentallas.bind_hw_lanes.v1", lanes=hwr), indent=1))
+        rep["hw_lanes"] = dict(n=len(hwr), unclassified=len(unc), file="bind_hw_lanes.json")
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
@@ -5895,6 +6011,61 @@ def cmd_kit_rtl(a):
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
                           bound_only=[x["port"] for x in extra])))
     return 0
+
+
+HW_LANE_SRC = ("rtl/common/ot_bus_gear.sv", "rtl/hbm_accel/generic/transport/ot_hbm_hw_lane.sv")
+
+
+def hw_lane_spec(ln, widths):
+    """HBM-HALFWIDTH-2: the serialiser spec of a plan lane that opts in with `hw_lane: true` (plus `beats` 2|4 and
+    `word_bits`), else None (the lane binds exactly as before: DEC12 lanes whose endpoint RTL serialises are untouched).
+    The port carries BW = ceil(word_bits / beats) beat bits, the first-beat flag f and (beat_index_bits - 1) spare bits tied
+    0 (ot_hbm_hw_lane carries one flag bit; a plan that counts ceil(log2 beats) index bits has spare wires).  Epoch rides
+    on top as for every lane."""
+    if not ln.get("hw_lane"):
+        return None
+    b, wb = int(ln.get("beats", 0)), int(ln.get("word_bits", 0))
+    if b not in (2, 4) or wb <= 0:
+        raise BindError(f"HW_LANE {ln['id']}: hw_lane needs beats 2|4 and word_bits > 0 (beats {ln.get('beats')}, word_bits {ln.get('word_bits')})")
+    bw = -(-wb // b)
+    bib = int(ln.get("beat_index_bits", max(1, (b - 1).bit_length())))
+    pw = min(int(w) for w in widths)
+    if bib < 1 or pw != bw + bib or max(int(w) for w in widths) != pw:
+        raise BindError(f"HW_LANE {ln['id']}: port widths {sorted(set(int(w) for w in widths))} != ceil({wb}/{b}) + {bib} = {bw + bib}")
+    return dict(beats=b, word_bits=wb, bw=bw, bib=bib, pw=pw, spare=pw - (bw + 1))
+
+
+def hw_ranges(spec, nbits):
+    """rule `bits`: 'all' | [[lo, hi], ...] (inclusive) | {'every': n, 'at': [k, ...]} -> predicate"""
+    if spec in (None, "all"):
+        return lambda i: True
+    if isinstance(spec, dict):
+        n, at = int(spec["every"]), set(int(x) for x in spec["at"])
+        return lambda i: (i % n) in at
+    rs = [(int(a), int(b)) for a, b in spec]
+    return lambda i: any(a <= i <= b for a, b in rs)
+
+
+class HwClasses:
+    """leaf-bit classes for the hw lanes: control (pulse / valid / event), payload (data beside a control bit) or level
+    (everything else).  Rules: {'leaf': regex on the leaf instance path relative to the partition root (fullmatch), 'port':
+    name, 'bits': ..., 'class': ...}; first match wins.  `default`: 'error' (an unclassified bit is a bind error) or 'level'."""
+
+    def __init__(self, path):
+        js = json.loads(Path(path).read_text())
+        self.default = js.get("default", "error")
+        self.rules = [(re.compile(r["leaf"]), r["port"], hw_ranges(r.get("bits"), None), r["class"]) for r in js["rules"]]
+        for r in js["rules"]:
+            assert r["class"] in ("control", "payload", "level"), r
+        self.hits = defaultdict(int)
+
+    def of(self, rel, port, bit):
+        for k, (rx, pn, pred, cl) in enumerate(self.rules):
+            if pn == port and rx.fullmatch(rel) and pred(bit):
+                self.hits[k] += 1
+                return cl
+        return None
+
 
 
 def lane_pad(L):
