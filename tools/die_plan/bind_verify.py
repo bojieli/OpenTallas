@@ -428,6 +428,30 @@ def core_split_stubs(raw_ab, rep, stub_text, vdir):
     return [str(f)]
 
 
+# QC-FW-FORMS 11-12: HOLDFORM-1 hold pads (gen_rtl.ot_dp_hd, plan bus "hold_hb4") instantiate the Liberty buffer
+# HB4xp67_ASAP7_75t_R under SYNTHESIS, which Yosys always defines.  The verify read has no Liberty, so a bound plan with a
+# hold_hb4 bus stopped with "Module HB4xp67_ASAP7_75t_R ... is not part of the design" (VERIFY_RC 2).  Here the cell is
+# a wire, which is exactly the non-SYNTHESIS ot_dp_hd body (no register stage), so EQ on the boundary flop is unchanged.
+# Only cells that a bound file uses and no lib file defines get a model (other verify reads byte-identical).
+HOLD_PAD_CELLS = ("HB4xp67_ASAP7_75t_R",)
+
+
+def hold_pad_models(files, lib, vdir):
+    """-> [vdir/hold_pad_models.sv] (wire models of the HOLDFORM-1 pad cells the bound files use), or []."""
+    used = [c for c in HOLD_PAD_CELLS if any(c in Path(f).read_text(errors="ignore") for f in files if Path(f).is_file())]
+    if not used:
+        return []
+    mre = re.compile(r"\bmodule\s+(%s)\b" % "|".join(map(re.escape, used)))
+    have = {m.group(1) for f in lib if Path(f).is_file() for m in mre.finditer(Path(f).read_text(errors="ignore"))}
+    need = [c for c in used if c not in have]
+    if not need:
+        return []
+    f = Path(vdir) / "hold_pad_models.sv"
+    f.write_text("".join(f"// HOLDFORM-1 verify model: Liberty buffer {c} as a wire (= non-SYNTHESIS ot_dp_hd)\n"
+                         f"module {c} (input wire A, output wire Y);\n    assign Y = A;\nendmodule\n" for c in need))
+    return [str(f)]
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -450,6 +474,7 @@ def cmd_verify(a):
         ([str(rs)] if str(rs) not in srcs.get("lib", []) else [])
     vdir = out / "verify"
     vdir.mkdir(exist_ok=True)
+    full = full + hold_pad_models(full, lib, vdir)
     sc = vdir / "bound.ys"
     js = vdir / "bound.json"
     ylib = native_lib_stubs(lib, vdir)
