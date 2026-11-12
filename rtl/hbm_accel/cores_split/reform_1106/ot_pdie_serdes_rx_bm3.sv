@@ -91,8 +91,27 @@ module ot_s81_kp4_dsyn_bm3_rest #(parameter integer MUT = 0, parameter integer N
     wire [299:0] s_ar, s_p0, s_p1;
     reg  [299:0] S_q, sp0, sp1;
 `include "ot_s81_kp4_syn_mat.svh"
+`ifdef OT_RXBM3_SPCYC
+    // CORES-HBM-1 rxbm3 11-12 (opt-in, default off): port of S81 dsyn SPCYC (S81-TYPES-9-RCK 11-08) to the HBM bm3_rest
+    // syndrome tile.  M7T sign-off class: sc_q -> sp0/sp1 one-cycle dense GF(2) window matrix (296 of 389 TT setup
+    // endpoints, WNS -171.7).  Four registered partial products (one per 138-bit sc_q select copy), pair XOR into sp0/sp1
+    // one cycle later.  PIN CYCLE +1 rck on bm_ld (S final T + 13) and so on k_*; ddly DD +1 keeps words aligned at dout.
+    wire [299:0] s_q0, s_q1, s_q2, s_q3;
+`include "ot_s81_kp4_syn_mat_q4.svh"
+    reg  [299:0] sq0, sq1, sq2, sq3;
+    always @(posedge clk) begin
+        sq0 <= s_q0; sq1 <= s_q1; sq2 <= s_q2; sq3 <= s_q3;
+`ifdef RXBM3_MUT_SPCYC
+        sp0 <= sq0 ^ sq1; sp1 <= sq2;        // bench mutant: partial 3 dropped
+`else
+        sp0 <= sq0 ^ sq1; sp1 <= sq2 ^ sq3;
+`endif
+    end
+    reg  [3:0] g0, g9;                   // chunk-0 / chunk-9 flags: [0] sc stage (T + c + 1), [2] sp stage, [3] S final
+`else
     always @(posedge clk) begin sp0 <= s_p0; sp1 <= s_p1; end
     reg  [2:0] g0, g9;                   // chunk-0 / chunk-9 flags: [0] sc stage (T + c + 1), [1] sp stage, [2] S final
+`endif
     (* keep *) reg [3:0] g0s;            // chunk-0 flag at the sp stage, 4 copies (75 S bits each)
     reg  [NBM-1:0] bsel;                 // round robin: the unit that takes the next frame
     (* keep *) reg [3:0] ldr [0:NBM-1];  // unit load, one copy per PE group
@@ -101,11 +120,19 @@ module ot_s81_kp4_dsyn_bm3_rest #(parameter integer MUT = 0, parameter integer N
             g0 <= 0; g9 <= 0; g0s <= 0; bsel <= {{(NBM-1){1'b0}}, 1'b1};
             for (i = 0; i < NBM; i = i + 1) ldr[i] <= 4'd0;
         end else begin
+`ifdef OT_RXBM3_SPCYC
+            g0 <= {g0[2:0], xs[0][0]};
+            g9 <= {g9[2:0], xs[0][9]};
+            g0s <= {4{g0[1]}};
+            for (i = 0; i < NBM; i = i + 1) ldr[i] <= {4{g9[2] && bsel[i]}};     // ld at T + 13 (S final, +1 SPCYC)
+            if (g9[2]) bsel <= {bsel[NBM-2:0], bsel[NBM-1]};
+`else
             g0 <= {g0[1:0], xs[0][0]};
             g9 <= {g9[1:0], xs[0][9]};
             g0s <= {4{g0[0]}};
             for (i = 0; i < NBM; i = i + 1) ldr[i] <= {4{g9[1] && bsel[i]}};     // ld at T + 12 (S final)
             if (g9[1]) bsel <= {bsel[NBM-2:0], bsel[NBM-1]};
+`endif
         end
     generate for (gb = 0; gb < 300; gb = gb + 1) begin : g_S
         always @(posedge clk) S_q[gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp0[gb] ^ sp1[gb];  // MUT 3: no restart
@@ -220,6 +247,11 @@ module ot_pdie_serdes_rx_bm3_rest #(parameter integer PMA_LAT = 4, parameter int
     input wire [479:0] bm_lam, input wire [449:0] bm_om, input wire [14:0] bm_L,
     input wire [2:0] bm_any, input wire [11:0] bm_done
 );
+`ifdef OT_RXBM3_SPCYC
+    localparam integer RXB_SPCYC = 1;    // words wait one more rck (k_* +1 under OT_RXBM3_SPCYC)
+`else
+    localparam integer RXB_SPCYC = 0;
+`endif
     reg [1:0] rs_t, rs_r;
     always @(posedge clk or negedge rst) if (!rst) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
     always @(posedge rck_clk or negedge rst) if (!rst) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
@@ -230,11 +262,11 @@ module ot_pdie_serdes_rx_bm3_rest #(parameter integer PMA_LAT = 4, parameter int
     ot_s81_kp4_dsyn_bm3_rest #(.MUT(DMUT), .BMTHC(BMTHC)) u_syn (.clk(rck_clk), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_rl), .bm_S(bm_S), .bm_ld(bm_ld), .bm_rs_n(bm_rs_n), .bm_lam(bm_lam), .bm_om(bm_om), .bm_L(bm_L), .bm_any(bm_any), .bm_done(bm_done));
 `ifdef OT_RXBM3_SRAM_SPLIT
-    ot_s81_kp4_ddly_sp #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
+    ot_s81_kp4_ddly_sp #(.DD(55 + SEAM + RXB_SPCYC)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
     ot_s81_kp4_dout_sp u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
 `else
-    ot_s81_kp4_ddly #(.DD(55 + SEAM)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
+    ot_s81_kp4_ddly #(.DD(55 + SEAM + RXB_SPCYC)) u_dly (.clk(rck_clk), .rst_n(rn_r), .w_d(x_q), .r_d(d_q));
     ot_s81_kp4_dout u_out (.clk(rck_clk), .rst_n(rn_r), .d_q(d_q), .cw(cw_q), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));
 `endif
