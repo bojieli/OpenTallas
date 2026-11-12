@@ -42,6 +42,25 @@ def prune_stale(raw, todo):
     return out
 
 
+def prune_side(obj, nm, todo):
+    """The same stale-base rule for the bind inputs.  The bind (clock_landings.expand_station_types) requires every name in
+    asbuilt.internal_stations_types to be an actual plan type or the base of one ('native station families have no actual
+    cohort'): the split base name left in the list next to its clones fails the bind.  The sidecar keeps one collector.types
+    entry per clone (apply_side copies it), so the stale base entry goes too."""
+    out = []
+    for s in todo:
+        t = s["type"]
+        if nm == "asbuilt" and isinstance(obj.get("internal_stations_types"), list) and t in obj["internal_stations_types"]:
+            obj["internal_stations_types"].remove(t)
+            out.append(dict(path="internal_stations_types", item=t))
+        if nm == "sidecar":
+            d = (obj.get("collector") or {}).get("types")
+            if isinstance(d, dict) and t in d:
+                del d[t]
+                out.append(dict(path="collector/types", key=t))
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("inp")
@@ -99,6 +118,7 @@ def main(argv=None):
         st = Path(src).read_text()
         obj = json.loads(st)
         rep[nm + "_refs"] = P.apply_side(obj, todo, nm)
+        rep[nm + "_pruned_stale_base_refs"] = prune_side(obj, nm, todo)
         if nm == "asbuilt" and a.sidecar_ref and obj.get("clock_landing_table"):
             obj["clock_landing_table"] = a.sidecar_ref
         Path(dst).write_text(P._dump_like(obj, st))
