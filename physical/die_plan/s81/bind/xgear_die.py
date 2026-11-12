@@ -6,7 +6,9 @@ Rewrites the logical die top (physical/die_plan/s81/bind/inputs/die_b178.v) and 
 
   slices   every slice instance with an xc port: the xc port drives a new wire <slice>_xcw; a glue instance
            u_xg_<slice> (ot_s81_xc_gear_tx, lane clocks = the slice's ck_xc, reset = the slice's rst_n) drives the
-           original xc concatenation with every x lane at 139 b; xc groups that carry no x lane (nc) are GEN 0
+           original xc concatenation with every x lane at 139 b; xc groups that carry no x lane (nc) are GEN 0;
+           its sticky fault u_xg_<slice>_flt (BUS-GEAR-2: an x word on a beat-1 edge) joins the slice's fault-ring
+           stop u_frs_<slice minus u_>_C as one more f bit (NL + 1, MSB)
   stations every st_x_* station dsfd_dvrlyh_276_<dir> -> dsfd_dvrlyh_139_<dir>; x lane wires 276 -> 139 b
   frames   col_h<9|10>_l4_lp_asb_<x|nx> -> ..._<x|nx>g (x / xo 1104 -> 556 b: ot_s81_xframe_gear lands the beats in
            front of u_r0 and forwards them on xo through the frame's 2 x -> xo stages; u_r0's own xo is left open)
@@ -92,15 +94,31 @@ def die_rewrite(s, rep):
                 else:
                     xb.append('%s_xb[%d:0]' % (f, 4 * BL - 1))
             ln = ln.replace(mx.group(0), '.xc(%s_xcw)' % inst, 1)
-            glue = ['  wire [%d:0] %s_xcw;   // BUS-GEAR-1: slice xc -> u_xg_%s (ot_s81_xc_gear_tx)' % (ng * 4 * LW - 1, inst, inst)]
+            glue = ['  wire [%d:0] %s_xcw;   // BUS-GEAR-1: slice xc -> u_xg_%s (ot_s81_xc_gear_tx)' % (ng * 4 * LW - 1, inst, inst),
+                    '  wire u_xg_%s_flt;   // BUS-GEAR-2: gear TX sticky fault -> u_frs_%s_C' % (inst, inst[2:] if inst.startswith('u_') else inst)]
             glue += ['  wire [%d:0] %s_xb;' % (4 * BL - 1, f) for k, f in groups if k == 'nc']
-            glue.append("  ot_s81_xc_gear_tx #(.NG(%d), .GEN(%d'b%s)) u_xg_%s (.ck({%s}), .rst_n(%s), .xc(%s_xcw), .xb({%s}));"
-                        % (ng, ng, gen, inst, ', '.join(reversed(cks)), rst, inst, ', '.join(xb)))
+            glue.append("  ot_s81_xc_gear_tx #(.NG(%d), .GEN(%d'b%s)) u_xg_%s (.ck({%s}), .rst_n(%s), .xc(%s_xcw), .xb({%s}), .flt(u_xg_%s_flt));"
+                        % (ng, ng, gen, inst, ', '.join(reversed(cks)), rst, inst, ', '.join(xb), inst))
             sl_glue.append(dict(inst=inst, groups=[k + ':' + f for k, f in groups]))
             out.extend(glue)
             n_sl += 1
         out.append(ln)
     t = '\n'.join(out)
+    # BUS-GEAR-2: each gear TX fault joins its slice's fault-ring stop (same reset leaf as the TX)
+    n_frs = 0
+    for g in sl_glue:
+        inst = g['inst']
+        part = inst[2:] if inst.startswith('u_') else inst          # u_s_7S -> stop u_frs_s_7S_C
+        pat = re.compile(r'ot_s81_frs #\(\.NL\((\d+)\)\) (u_frs_%s_C) \((.*?)\.f\(\{([^}]*)\}\)' % re.escape(part))
+        hits = pat.findall(t)
+        if len(hits) != 1:
+            raise SystemExit('slice %s: %d fault-ring stops u_frs_%s_C (need 1)' % (inst, len(hits), part))
+        t, k = pat.subn(lambda m: 'ot_s81_frs #(.NL(%d)) %s (%s.f({u_xg_%s_flt, %s})'
+                        % (int(m.group(1)) + 1, m.group(2), m.group(3), inst, m.group(4)), t)
+        n_frs += k
+    if n_frs != n_sl:
+        raise SystemExit('fault-ring stops %d != geared slices %d' % (n_frs, n_sl))
+    rep['frs_stops'] = n_frs
     left = re.findall(r'\b(?:w_x_f_\w+?_l[0-3]_(?:src|dst)|r_x_f_\w+)\[275:0\]', t)
     if left:
         raise SystemExit('x lane 276-b slices left: %s' % left[:3])

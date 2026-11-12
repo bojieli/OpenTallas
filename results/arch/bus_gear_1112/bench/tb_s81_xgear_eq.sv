@@ -10,13 +10,18 @@
 //   G (geared):    face flop -> ot_s81_xc_gear_tx -> dsfd_dvrlyh_139 stations -> col_h<9|10>_l4_lp_asb_xg -> ... -> _asb_nxg
 //   R (reference): the slice word stream DELAYED BY THE DECLARED 1 EDGE -> face flop -> dsfd_dvrlyh_276 stations ->
 //                  _asb_x -> _asb_nx (the ungeared die)
-// Words leave the slice on the even edges after reset release (x cadence 2); every word sets the crs4 bundle markers
-// x[0] and x[566].  On odd edges G's slice output is random garbage (the TX must drop it) and R gets random payload with
-// an all-zero bubble.  PASS = on every edge (1) the word G lands at frame A and B (the RX x_land) is IDENTICAL to
-// the word R lands there, (2) the frame internal bands r0->r1, r1->r0, r1->r2, r2->r1 and (3) ret are identical in G
-// and R, and the landed words and bands change >50 times (non-vacuous: ret alone retires only a few results per run).  ROMs use a deterministic hash model (identical in G and R).
-// MUT 1: R not delayed (must FAIL: the declared +1 is needed); MUT 2: G slice garbage replaces the words on even edges
-// for one lane (must FAIL); MUT 3: words on the wrong parity (odd edges; must FAIL: the x cadence 2 contract).
+// Stimulus = the real slice xc format: every edge carries the crs4 bundle markers x[0] / x[566] = 1 (ot_s81sl_mk) and
+// the word valid xw_v at x[1] / x[567]; a word edge has xw_v = 1 and payload, a bubble edge xw_v = 0 and random payload
+// (G and R get DIFFERENT random bubble payload).  Words are 2..4 edges apart (x cadence 2 = never on consecutive edges)
+// and the first word sits SEED % 4 edges after release, so word edges take both parities in every run: the TX is
+// framed by xw_v, not by a reset parity.  PASS = (1) ret of frames A and B identical in G and R on every edge, (2) on
+// every edge where R lands a word (xw_v = 1) G lands the IDENTICAL 1104-b word at frames A and B (RX x_land vs the
+// reference frame input: the declared +1 edge), (3) on every other edge G lands no word (x[1] = x[567] = 0), (4) the TX
+// fault flt stays 0, and > 50 words are compared at each frame.  On bubble edges the RX upper beat is don't-care by design
+// (OGATE 0), so the frame internal bands are compared for information only (band_diff_edges).
+// MUT 1: R not delayed (must FAIL: the declared +1 is needed); MUT 2: one lane of G's words corrupted (must FAIL);
+// MUT 3: one pair of words on consecutive edges (breaks the cadence-2 contract: must FAIL and raise flt).
+// MUT 4: TX phase-lock removed (ot_s81_xc_gear_tx MUT 1 = reset-parity framing): must FAIL (words lost on the other parity).
 // +define+XEQ_H10 runs the col_h10 frames instead of col_h9.
 module ot_rom_4096x72_m8 #(parameter VIAMAP = "", parameter INSTANCE = "") (
     input wire clk, input wire ce_in, input wire [11:0] addr_in, output reg [71:0] rd_out);
@@ -44,7 +49,8 @@ module ICGx1_ASAP7_75t_R (input wire CLK, input wire ENA, input wire SE, output 
 endmodule
 
 module tb;
-  parameter integer H = 2, MUT = 0, NE = 6000;
+  parameter integer H = 2, NE = 6000;
+  integer MUT = 0, SEED = 1;                // runtime: +MUT=<n> +SEED=<n> (one build per H)
   localparam integer LW = 276, BL = 139;
   reg clk = 0; always #0.416 clk = ~clk;
   reg rst_n = 0;
@@ -55,8 +61,11 @@ module tb;
   wire [4*LW-1:0] r_in = (MUT == 1) ? w_r_now : r_q1;
   reg [4*LW-1:0] sf_g = 0; always @(posedge clk) sf_g <= w_now;  // G: the slice's own xc face flop
   // ---------------- G
-  wire [4*BL-1:0] gb0;
-  ot_s81_xc_gear_tx #(.NG(1), .GEN(1'b1)) u_gtx (.ck({4{clk}}), .rst_n(rst_n), .xc(sf_g), .xb(gb0));
+  wire [4*BL-1:0] gb_v, gb_p, gb0; wire g_flt_v, g_flt_p, g_flt;
+  ot_s81_xc_gear_tx #(.NG(1), .GEN(1'b1)) u_gtx (.ck({4{clk}}), .rst_n(rst_n), .xc(sf_g), .xb(gb_v), .flt(g_flt_v));
+  // MUT 4: the same TX with the xw_v phase-lock removed (reset-parity framing) must FAIL for some start parity
+  ot_s81_xc_gear_tx #(.NG(1), .GEN(1'b1), .MUT(1)) u_gtx_p (.ck({4{clk}}), .rst_n(rst_n), .xc(sf_g), .xb(gb_p), .flt(g_flt_p));
+  assign gb0 = (MUT == 4) ? gb_p : gb_v; assign g_flt = (MUT == 4) ? 1'b0 : g_flt_v;
   wire [4*BL-1:0] gA_in, gA_xo, gB_in; wire [3:0] gA_xok; wire [69:0] g_retA, g_retB;
   st139 #(.H(H)) u_gs1 (.ck(clk), .rs(rst_n), .i(gb0), .o(gA_in));
   `XEQ_FR(xg) #(.INSTANCE("u_f_0L02")) u_gA (.ck_r0(clk), .ck_r1(clk), .ck_r2(clk), .rst_n(rst_n), .x(gA_in),
@@ -74,7 +83,7 @@ module tb;
   // ---------------- stimulus: words on even edges after release
   function [4*LW-1:0] rnd; input integer d; integer q; reg [4*LW+31:0] t;
     begin t = 0; for (q = 0; q < 4*LW; q = q + 32) t[q +: 32] = $random; rnd = t[4*LW-1:0]; end endfunction
-  integer e = 0, errs = 0, chg = 0, words = 0, lchg = 0, bchg = 0; reg [69:0] pa = 0, pb = 0; reg ph = 1;
+  integer e = 0, errs = 0, chg = 0, words = 0, lchg = 0, bchg = 0, wa = 0, wb = 0, bdiff = 0, t = 0, sd = 1; reg [69:0] pa = 0, pb = 0;
   wire [4*LW-1:0] gA_land = u_gA.x_land, gB_land = u_gB.x_land;
   wire [2*1167+261+321-1:0] gbands = {u_gA.r0_o0, u_gA.r1_o0, u_gA.r1_o1, u_gA.r2_o0},
                             rbands = {u_rA.r0_o0, u_rA.r1_o0, u_rA.r1_o1, u_rA.r2_o0};
@@ -86,8 +95,11 @@ module tb;
     if (rst_n) begin
       e = e + 1;
       if (g_retA !== r_retA || g_retB !== r_retB) begin errs = errs + 1; if (errs < 5) $display("XEQ_MISMATCH edge %0d A %0d B %0d", e, g_retA !== r_retA, g_retB !== r_retB); end
-      if (gA_land !== rA_in || gB_land !== rB_in) begin errs = errs + 1; if (errs < 5) $display("XEQ_LAND_MISMATCH edge %0d A %0d B %0d", e, gA_land !== rA_in, gB_land !== rB_in); end
-      if (gbands !== rbands || gbandsB !== rbandsB) begin errs = errs + 1; if (errs < 5) $display("XEQ_BAND_MISMATCH edge %0d A %0d B %0d", e, gbands !== rbands, gbandsB !== rbandsB); end
+      if (rA_in[1]) begin wa = wa + 1; if (gA_land !== rA_in) begin errs = errs + 1; if (errs < 5) $display("XEQ_LAND_MISMATCH A edge %0d", e); end end
+      else if (gA_land[1] | gA_land[567]) begin errs = errs + 1; if (errs < 5) $display("XEQ_PHANTOM A edge %0d", e); end
+      if (rB_in[1]) begin wb = wb + 1; if (gB_land !== rB_in) begin errs = errs + 1; if (errs < 5) $display("XEQ_LAND_MISMATCH B edge %0d", e); end end
+      else if (gB_land[1] | gB_land[567]) begin errs = errs + 1; if (errs < 5) $display("XEQ_PHANTOM B edge %0d", e); end
+      if (gbands !== rbands || gbandsB !== rbandsB) bdiff = bdiff + 1;
       if (gA_land !== pl) lchg = lchg + 1;
       if (gbands !== pbd) bchg = bchg + 1;
       pl = gA_land; pbd = gbands;
@@ -96,21 +108,27 @@ module tb;
     end
   end
   initial begin
+    if (!$value$plusargs("MUT=%d", MUT)) MUT = 0;
+    if (!$value$plusargs("SEED=%d", SEED)) SEED = 1;
+    sd = SEED;
     repeat (8) @(posedge clk); @(negedge clk); rst_n = 1;
-    // the TX parity: the first edge after release is a word edge at the TX, so with the face flop in front the first
-    // stimulus tick after release is an odd (non-word) tick.  MUT 3 shifts the words to the wrong parity.
-    ph = (MUT == 3) ? 1 : 0;
+    t = SEED % 4;                            // idle edges before the first word (start parity)
     while (e < NE) begin
-      if (ph) begin
-        w_now = rnd(0); w_now[0] = 1'b1; w_now[566] = 1'b1; w_r_now = w_now; words = words + 1;
+      if (t == 0) begin
+        w_now = rnd(0); w_now[0] = 1'b1; w_now[566] = 1'b1; w_now[1] = 1'b1; w_now[567] = 1'b1;
+        w_r_now = w_now; words = words + 1;
         if (MUT == 2) w_now[LW*1 +: 32] = ~w_now[LW*1 +: 32];
+        t = (MUT == 3 && words == 200) ? 0 : 1 + (($random(sd) & 32'h7fffffff) % 3);   // next word 2..4 edges later
       end else begin
-        w_now = rnd(1); w_r_now = 0;
+        w_now = rnd(1); w_now[0] = 1'b1; w_now[566] = 1'b1; w_now[1] = 1'b0; w_now[567] = 1'b0;
+        w_r_now = rnd(2); w_r_now[0] = 1'b1; w_r_now[566] = 1'b1; w_r_now[1] = 1'b0; w_r_now[567] = 1'b0;
+        t = t - 1;
       end
-      @(negedge clk); ph = ~ph;
+      @(negedge clk);
     end
-    if (errs == 0 && lchg > 50 && bchg > 50) $display("XEQ PASS H=%0d edges=%0d words=%0d land_changes=%0d band_changes=%0d ret_changes=%0d", H, e, words, lchg, bchg, chg);
-    else $display("XEQ FAIL H=%0d MUT=%0d errs=%0d land_changes=%0d band_changes=%0d ret_changes=%0d", H, MUT, errs, lchg, bchg, chg);
+    if (g_flt) begin errs = errs + 1; $display("XEQ_TX_FAULT flt=1 (word on a beat-1 edge)"); end
+    if (errs == 0 && wa > 50 && wb > 50) $display("XEQ PASS H=%0d SEED=%0d edges=%0d words=%0d cmpA=%0d cmpB=%0d ret_changes=%0d band_diff_edges=%0d flt=%0d", H, SEED, e, words, wa, wb, chg, bdiff, g_flt);
+    else $display("XEQ FAIL H=%0d MUT=%0d SEED=%0d errs=%0d cmpA=%0d cmpB=%0d ret_changes=%0d band_diff_edges=%0d flt=%0d", H, MUT, SEED, errs, wa, wb, chg, bdiff, g_flt);
     $finish;
   end
 endmodule

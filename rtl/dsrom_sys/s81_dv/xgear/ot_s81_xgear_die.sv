@@ -5,13 +5,17 @@
 //
 // Slice side: ot_s81_xc_gear_tx sits in the slice C partition (bind map: u_xg_<slice> -> <slice>_C) between the slice's
 // xc port (NG groups x 4 lanes x 276 b; lane l of group g is launched on the slice's forwarded lane clock ck_xc[4g + l])
-// and the partition face (bind out-boundary flop / as-built hop-0 relay station).  Each lane takes a word on alternate
-// edges of its own lane clock: a parity flop set by the slice reset makes the first edge after release a word edge.
-// COMPILER CONTRACT (x cadence 2): an x word leaves the slice on an even edge counted from the slice C reset release; the
-// contents of odd edges are not sent.  BUS-GEAR-2 (11-12): beat 0 = xc[137:0] passes COMBINATIONALLY on the word edge
-// (the next flop is the partition's face flop, exactly where the ungeared word was captured) and only beat 1 =
-// xc[275:138] is held one edge in a datapath register, so the TX adds no stage.  Groups with GEN[g] = 0 (no x lane in the
-// plan) send nothing.
+// and the partition face (bind out-boundary flop / as-built hop-0 relay station).  BUS-GEAR-2 (11-12): the TX is framed
+// by the WORD VALID, not by a reset parity: the slice word carries xw_v (ot_s81sl_xs4 xw_v = xw_q[0]) at x[1] (lane 0)
+// and x[567] (lane 2) of every group word, and both are the same bit.  On an edge with xw_v = 1 the lane sends beat 0 =
+// xc[137:0] COMBINATIONALLY with f = 1 (the next flop is the partition's face flop, exactly where the ungeared word was
+// captured) and holds beat 1 = xc[275:138] in a datapath register for the next edge (f = 0).  An edge with xw_v = 0 that
+// is not a beat-1 edge sends f = 0, so the frame lands a zero bubble.  The TX adds no stage, and the word phase follows
+// the programme: the GO start time and the slice reset release parity do not matter (GO is host-timed; the 16 slice
+// reset leaves sit 47..77 relays from die rst_n with both parities, results/arch/bus_gear_1112/tx_release_r12ng.json).
+// COMPILER CONTRACT (x cadence 2): two x words of one slice are never on consecutive edges.  A word on the beat-1 edge
+// of the previous word would be lost, so the TX raises the sticky fault flt (into the slice's ot_s81_frs fault-ring stop).
+// Groups with GEN[g] = 0 (no x lane in the plan) send nothing.
 //
 // Frame side: ot_s81_xframe_gear lands the 4 beat lanes on the frame r0 clock with ot_bus_gear_rx OGATE 0 (every pin
 // feeds a flop directly; the crs4 bundle markers x[0] / x[566] are in beat 0, so non-word edges land as bubbles) and
@@ -25,30 +29,43 @@
 module ot_s81_xc_gear_tx #(
     parameter integer NG = 4,
     parameter [3:0] GEN = 4'b1111,
+    parameter integer MUT = 0,                        // bench only: 1 = phase-lock removed (reset-parity framing, pre-11-12)
     localparam integer LW = 276,
     localparam integer BL = 139
 ) (
     input  wire [4*NG-1:0] ck,                        // lane clocks = the slice's ck_xc
     input  wire rst_n,                                // slice C reset (synchronous)
     input  wire [NG*4*LW-1:0] xc,                     // the slice's xc port
-    output wire [NG*4*BL-1:0] xb                      // beat lanes, lane l of group g = xb[BL*(4g+l) +: BL]
+    output wire [NG*4*BL-1:0] xb,                     // beat lanes, lane l of group g = xb[BL*(4g+l) +: BL]
+    output wire flt                                   // sticky: an x word arrived on a beat-1 edge (cadence-2 contract)
 );
+    wire [4*NG-1:0] lf;
+    assign flt = |lf;
     genvar g, l;
     generate for (g = 0; g < NG; g = g + 1) begin : g_g
         for (l = 0; l < 4; l = l + 1) begin : g_l
             if (GEN[g]) begin : g_on
                 localparam integer HB = LW - (BL - 1);   // beat 1 bits (138)
-                reg ph;                               // word-edge parity (control flop, reset)
+                localparam integer VB = (l < 2) ? LW * (4 * g) + 1 : LW * (4 * g + 2) + 15;   // xw_v copy: x[1] / x[567]
+                wire v = xc[VB];
+                reg b1;                               // this edge sends beat 1 of the word taken on the last edge
+                reg ff;                               // sticky lane fault
                 reg [HB-1:0] hi;                      // beat 1 of the current word (datapath: no reset)
+                reg ph;                               // MUT 1 only: free-running reset parity
                 always @(posedge ck[4*g+l]) if (!rst_n) ph <= 1'b1; else ph <= ~ph;
-                always @(posedge ck[4*g+l]) if (ph) hi <= xc[LW*(4*g+l)+BL-1 +: HB];
-                assign xb[BL*(4*g+l) +: BL-1] = ph ? xc[LW*(4*g+l) +: BL-1] : hi;
-                assign xb[BL*(4*g+l)+BL-1] = ph;
+                wire w0 = (MUT == 1) ? ph : (v & ~b1);   // this edge is beat 0 of a word
+                always @(posedge ck[4*g+l]) if (!rst_n) b1 <= 1'b0; else b1 <= w0;
+                always @(posedge ck[4*g+l]) if (!rst_n) ff <= 1'b0; else if (v & b1) ff <= 1'b1;
+                always @(posedge ck[4*g+l]) if (w0) hi <= xc[LW*(4*g+l)+BL-1 +: HB];
+                assign xb[BL*(4*g+l) +: BL-1] = b1 ? hi : xc[LW*(4*g+l) +: BL-1];
+                assign xb[BL*(4*g+l)+BL-1] = w0;
+                assign lf[4*g+l] = ff;
             end else begin : g_off
                 /* verilator lint_off UNUSEDSIGNAL */
                 wire [LW-1:0] unused = xc[LW*(4*g+l) +: LW];
                 /* verilator lint_on UNUSEDSIGNAL */
                 assign xb[BL*(4*g+l) +: BL] = {BL{1'b0}};
+                assign lf[4*g+l] = 1'b0;
             end
         end
     end endgenerate
