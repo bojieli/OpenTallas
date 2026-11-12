@@ -4403,6 +4403,48 @@ def _gate_manifest_paths(ab, mpath, override):
                     f"(tools/die_plan/manifest_paths.py lists all; make them repository-relative)")
 
 
+def _gate_sources(raw, plan_path):
+    """Source-identity gate (COORD 11-12, manifest_src_gate.py): opt-in by asbuilt `src_sha` or --src-sha.  Every selected
+    file must be byte-identical to the same repo-relative path at that main sha unless declared in `declared_overrides`;
+    the manifest base must be the bind source tree (E.REPO).  No key and no flag = no change.  Returns the summary."""
+    _AB_OVERRIDE.pop("src_gate", None)
+    ab = raw["asbuilt"]
+    sha = _AB_OVERRIDE.get("src_sha") or ab.get("src_sha")
+    if not sha:
+        return None
+    import manifest_src_gate
+    res = manifest_src_gate.check(ab, plan_base(plan_path, raw), E.REPO, sha)
+    _AB_OVERRIDE["src_gate"] = res
+    if res["errors"]:
+        raise BindError(f"{plan_path}: source gate failed: {len(res['errors'])} selected source(s) are not main "
+                        f"{str(res['src_sha'] or sha)[:12]} (tools/die_plan/manifest_src_gate.py lists all); first: "
+                        + "; ".join(res["errors"][:3]))
+    return res
+
+
+def _gate_read(raw, plan_path, out):
+    """same gate on the files the bind actually read (out/asbuilt_sources.json)."""
+    g = _AB_OVERRIDE.get("src_gate")
+    f = Path(out) / "asbuilt_sources.json"
+    if not g or not f.is_file():
+        return
+    import manifest_src_gate
+    res = manifest_src_gate.check_read(raw["asbuilt"], plan_base(plan_path, raw), E.REPO, g["src_sha"],
+                                       json.loads(f.read_text()), out)
+    seen = {json.dumps(o, sort_keys=True) for o in g["overrides"]}
+    g["overrides"] += [o for o in res["overrides"] if json.dumps(o, sort_keys=True) not in seen]
+    g["checked"] += res["checked"]
+    if res["errors"]:
+        raise BindError(f"{plan_path}: source gate failed on files actually read: {len(res['errors'])}; first: "
+                        + "; ".join(res["errors"][:3]))
+
+
+def _gate_summary():
+    g = _AB_OVERRIDE.get("src_gate")
+    return dict(src_sha=g["src_sha"], checked=g["checked"], overrides=g["overrides"],
+                unused_declared=g["unused_declared"]) if g else {}
+
+
 def plan_base(path, raw):
     b = raw["asbuilt"].get("base")
     if _AB_OVERRIDE.get("path") and b and not Path(b).is_absolute():
@@ -4429,12 +4471,15 @@ def _write_provenance(a, step):
     rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
                external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
     rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
+    if _gate_summary():
+        rec["source_gate"] = _gate_summary()
     Path(a.out).mkdir(parents=True, exist_ok=True)
     (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
 
 
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    _gate_sources(raw, a.plan)
     import manifest_paths
     missing = manifest_paths.required_prefer_files(raw["asbuilt"], plan_base(a.plan, raw))
     if missing:
@@ -4442,12 +4487,14 @@ def cmd_elab(a):
                         "restore the declared source instead of falling back to an automatic stub:\n" + "\n".join(missing))
     _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
+    _gate_read(raw, a.plan, a.out)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
 
 
 def cmd_bind(a):
     raw = load_plan(a.plan)
+    _gate_sources(raw, a.plan)
     _write_provenance(a, "bind")
     out = Path(a.out)
     (out / "native_topology.json").unlink(missing_ok=True)
@@ -4542,6 +4589,9 @@ def cmd_bind(a):
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
     rep["files"] = [str(f) for f in files]
+    _gate_read(raw, a.plan, out)
+    if _gate_summary():
+        rep["source_gate"] = _gate_summary()      # declared overrides visible in the report (opt-in key/flag only)
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
     rep["parent_variants"] = B.F.parent_variants
@@ -5923,11 +5973,15 @@ def main(argv=None):
                        help="report every EMIT plan/source gap (core reset leaf, parent ID, glue) in one run instead of "
                             "stopping at the first; no new checks; the bound top is not emitted while gaps remain")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--src-sha", help="main commit this bind source tree was built from: every manifest-selected "
+                                         "source must equal that commit's file unless declared_overrides (or asbuilt "
+                                         "`src_sha`); opt-in, see tools/die_plan/manifest_src_gate.py")
         s.add_argument("--allow-external-paths", action="store_true",
                        help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
+    _AB_OVERRIDE["src_sha"] = getattr(a, "src_sha", None)
     try:
         if a.cmd == "component-proof":
             import bind_component
