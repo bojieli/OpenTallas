@@ -1,0 +1,1134 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/die-proto-3/kv/vFk/proof",
+ "timed_dir": "/srv/opentallas-scratch2/claude/die-proto-3/kv/vFk/proof",
+ "plan": "/srv/opentallas-scratch2/claude/die-proto-3/kv/plan_vF/plan_c.json",
+ "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
+ "period_ps": 833.0,
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "gate": "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only on every related pair; CPPR at last common tree node (12.4b); verdict = summary.die_clock_gate",
+ "block_model": {
+  "label": "declared-budget",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0,
+  "core_views_found": 0
+ },
+ "corners": {
+  "TT": {
+   "basis": null,
+   "tap_slew_max_ps": 120.25,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 120.252,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 99.21,
+    "clkq_min_nowire_ps": 67.311,
+    "setup_ps": 8.713,
+    "hold_ps": 30.406,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 796724,
+     "worst_setup_slack_ps": 453.08,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_pv_S_6__clk_t20",
+      "capture": "t_pv_S_6__clk_c19",
+      "where": "pv_S_6",
+      "clock_damage_ps": 231.88,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -260.09,
+     "hold_neg_pairs": 283199,
+     "worst_hold": {
+      "launch": "t_pv_S_6__clk_c19",
+      "capture": "t_pv_S_6__clk_t20",
+      "where": "pv_S_6",
+      "clock_damage_ps": 231.88,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 246.53,
+     "skew_diag_over_80": 36936,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 246.53,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 413.08,
+      "worst_hold_slack_ps": -300.09
+     },
+     "worst_skew": [
+      [
+       246.53,
+       "t_pv_S_6__clk_t20",
+       "t_pv_S_6__clk_c18"
+      ],
+      [
+       246.53,
+       "t_pv_S_6__clk_c18",
+       "t_pv_S_6__clk_t20"
+      ],
+      [
+       245.51,
+       "t_pv_S_6__clk_t21",
+       "t_pv_S_6__clk_c18"
+      ],
+      [
+       245.51,
+       "t_pv_S_6__clk_c18",
+       "t_pv_S_6__clk_t21"
+      ],
+      [
+       244.96,
+       "t_pv_S_6__clk_t29",
+       "t_pv_S_6__clk_c18"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 796724,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "core:kv3_head_eighth_e0": 11384,
+       "core:kv3_head_eighth_e1": 22256,
+       "core:kv3_head_eighth_e2": 11384,
+       "core:kv3_head_eighth_e5": 22256,
+       "core:kv3_head_eighth_e6": 22256,
+       "core:kv3_pv_pair": 93696,
+       "core:ot_qwen_tp8_pv_join_t": 24192,
+       "core:qkd_ectlk_q0": 2240,
+       "core:qkd_ectlk_q1": 2240,
+       "core:qkd_ectlk_q2": 2240,
+       "core:qkd_ectlk_q3": 2240,
+       "type:kv3_hg": 3520,
+       "type:kv3_hg_v1": 3520,
+       "type:kv3_hg_v1p2": 3520,
+       "type:kv3_hg_v1p3": 3520,
+       "type:kv3_hg_v1p4": 3520,
+       "type:kv3_hg_v1p5": 3520,
+       "type:kv3_hg_v1p6": 3520,
+       "type:kv3_hg_v3": 3520,
+       "type:kv3_hgi": 8632,
+       "type:kv3_hgi_v1__cl141fc26e": 4512,
+       "type:kv3_hgi_v1__cl42bc8b12": 4512,
+       "type:kv3_hgi_v2__cl2862d491": 752,
+       "type:kv3_hgi_v2__cle0015330": 752,
+       "type:kv3_hgi_v3": 5016,
+       "type:kv3_hgi_v4": 29232,
+       "type:kv3_hgi_v5": 5612,
+       "type:kv3_hgi_v6": 6402,
+       "type:kv3_hgi_v7": 41400,
+       "type:kv3_hgi_v8": 752,
+       "type:kv3_hroot": 5928,
+       "type:kv3_hub_C": 9702,
+       "type:kv3_hub_Ei": 6480,
+       "type:kv3_hub_Eo": 4556,
+       "type:kv3_hub_Wi": 5256,
+       "type:kv3_hub_Wo": 5112,
+       "type:kv3_io_cor": 1056,
+       "type:kv3_io_cor_v1": 1806,
+       "type:kv3_io_ft": 1056,
+       "type:kv3_io_ft_v1": 1056,
+       "type:kv3_pc__cl254f2e73": 264,
+       "type:kv3_pc__cl5a95b461": 264,
+       "type:kv3_pc_v1__cl23f6a148": 528,
+       "type:kv3_pc_v1__cl4ea58a5c": 1056,
+       "type:kv3_pc_v1__cl7f648944": 1584,
+       "type:kv3_pc_v3": 528,
+       "type:kv3_phy": 224,
+       "type:kv3_phy_v1": 2016,
+       "type:kv3_pv": 35152,
+       "type:kv3_pv_v1": 29722,
+       "type:kv3_pv_v12": 27010,
+       "type:kv3_pv_v1n": 28350,
+       "type:kv3_pv_v2": 48682,
+       "type:kv3_pv_v2n": 46492,
+       "type:kv3_pv_v3": 36676,
+       "type:kv3_pv_v3n": 31840,
+       "type:kv3_pv_v4": 48682,
+       "type:kv3_pv_v4n": 47362,
+       "type:kv3_pv_v5": 40626,
+       "type:kv3_pv_v5n": 43092,
+       "type:kv3_pv_v6": 28350,
+       "type:kv3_pv_v6n": 32200,
+       "type:kv3_pv_v7": 24426,
+       "type:kv3_pv_v8": 35910,
+       "type:kv3_sys_SD": 110,
+       "type:kv3_sys_SD_v1": 110,
+       "type:kv3_sys_c": 1806
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 796724,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "seam": {
+     "pairs": 6816,
+     "worst_setup_slack_ps": 622.38,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_pc_WS_7__clk",
+      "capture": "t_phy_WS_7__clk_t4",
+      "where": "pc_WS_7->phy_WS_7",
+      "clock_damage_ps": 102.69,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -90.79,
+     "hold_neg_pairs": 3036,
+     "worst_hold": {
+      "launch": "t_phy_WS_7__clk_t4",
+      "capture": "t_pc_WS_7__clk",
+      "where": "phy_WS_7->pc_WS_7",
+      "clock_damage_ps": 102.69,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 102.69,
+     "skew_diag_over_80": 146,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 102.69,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 582.38,
+      "worst_hold_slack_ps": -130.79
+     },
+     "worst_skew": [
+      [
+       102.69,
+       "t_phy_WS_7__clk_t4",
+       "t_pc_WS_7__clk"
+      ],
+      [
+       102.69,
+       "t_pc_WS_7__clk",
+       "t_phy_WS_7__clk_t4"
+      ],
+      [
+       101.97,
+       "t_phy_WS_2__clk_t4",
+       "t_pc_WS_2__clk"
+      ],
+      [
+       101.97,
+       "t_pc_WS_2__clk",
+       "t_phy_WS_2__clk_t4"
+      ],
+      [
+       99.43,
+       "t_phy_ES_7__clk_t4",
+       "t_pc_ES_7__clk_t2"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 6816,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "type:kv3_pc__cl254f2e73": 384,
+       "type:kv3_pc__cl5a95b461": 384,
+       "type:kv3_pc_v1__cl23f6a148": 864,
+       "type:kv3_pc_v1__cl4ea58a5c": 1728,
+       "type:kv3_pc_v1__cl7f648944": 2592,
+       "type:kv3_pc_v3": 864,
+       "type:kv3_phy": 768,
+       "type:kv3_phy_v1": 6048
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 6816,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "landed": {
+     "pairs": 2347732,
+     "worst_setup_slack_ps": -306.07,
+     "setup_neg_pairs": 23400,
+     "worst_setup": {
+      "launch": "t_sys_c__clk_t32",
+      "capture": "t_io_E5__clk_t9",
+      "where": "sys_c->io_E5",
+      "clock_damage_ps": 1031.15,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -1019.24,
+     "hold_neg_pairs": 1175684,
+     "worst_hold": {
+      "launch": "t_io_E5__clk_t9",
+      "capture": "t_sys_c__clk_t32",
+      "where": "io_E5->sys_c",
+      "clock_damage_ps": 1031.15,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 1031.15,
+     "skew_diag_over_80": 2347448,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 1031.15,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": -346.07,
+      "worst_hold_slack_ps": -1059.24
+     },
+     "worst_skew": [
+      [
+       1031.15,
+       "t_sys_c__clk_t32",
+       "t_io_E5__clk_t9"
+      ],
+      [
+       1031.15,
+       "t_io_E5__clk_t9",
+       "t_sys_c__clk_t32"
+      ],
+      [
+       1030.16,
+       "t_sys_c__clk_t32",
+       "t_io_E5__clk_t4"
+      ],
+      [
+       1030.16,
+       "t_io_E5__clk_t4",
+       "t_sys_c__clk_t32"
+      ],
+      [
+       1029.42,
+       "t_sys_c__clk_t33",
+       "t_io_E5__clk_t9"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 2347732,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "core:kv3_head_eighth_e0": 55920,
+       "core:kv3_head_eighth_e1": 110656,
+       "core:kv3_head_eighth_e2": 55920,
+       "core:kv3_head_eighth_e5": 110656,
+       "core:kv3_head_eighth_e6": 110656,
+       "core:kv3_pv_pair": 230016,
+       "core:ot_qwen_tp8_pv_join_t": 58848,
+       "core:qkd_ectlk_q0": 8884,
+       "core:qkd_ectlk_q1": 8884,
+       "core:qkd_ectlk_q2": 8884,
+       "core:qkd_ectlk_q3": 8884,
+       "type:kv3_hg": 15456,
+       "type:kv3_hg_v1": 17824,
+       "type:kv3_hg_v1p2": 17824,
+       "type:kv3_hg_v1p3": 17824,
+       "type:kv3_hg_v1p4": 17824,
+       "type:kv3_hg_v1p5": 17824,
+       "type:kv3_hg_v1p6": 17824,
+       "type:kv3_hg_v3": 20640,
+       "type:kv3_hgi": 46800,
+       "type:kv3_hgi_v1__cl141fc26e": 44800,
+       "type:kv3_hgi_v1__cl42bc8b12": 44800,
+       "type:kv3_hgi_v2__cl2862d491": 6208,
+       "type:kv3_hgi_v2__cle0015330": 6208,
+       "type:kv3_hgi_v3": 38988,
+       "type:kv3_hgi_v4": 221984,
+       "type:kv3_hgi_v5": 43310,
+       "type:kv3_hgi_v6": 45540,
+       "type:kv3_hgi_v7": 277518,
+       "type:kv3_hgi_v8": 11520,
+       "type:kv3_hroot": 26988,
+       "type:kv3_hub_C": 94644,
+       "type:kv3_hub_Ei": 39528,
+       "type:kv3_hub_Eo": 31416,
+       "type:kv3_hub_Wi": 29638,
+       "type:kv3_hub_Wo": 32112,
+       "type:kv3_io_cor": 10428,
+       "type:kv3_io_cor_v1": 12814,
+       "type:kv3_io_ft": 2904,
+       "type:kv3_io_ft_v1": 3564,
+       "type:kv3_pc__cl254f2e73": 2304,
+       "type:kv3_pc__cl5a95b461": 2304,
+       "type:kv3_pc_v1__cl23f6a148": 5760,
+       "type:kv3_pc_v1__cl4ea58a5c": 10368,
+       "type:kv3_pc_v1__cl7f648944": 14976,
+       "type:kv3_pc_v3": 8352,
+       "type:kv3_phy": 288,
+       "type:kv3_phy_v1": 3636,
+       "type:kv3_pv": 104780,
+       "type:kv3_pv_v1": 146300,
+       "type:kv3_pv_v12": 113588,
+       "type:kv3_pv_v1n": 169500,
+       "type:kv3_pv_v2": 174124,
+       "type:kv3_pv_v2n": 199758,
+       "type:kv3_pv_v3": 175768,
+       "type:kv3_pv_v3n": 189760,
+       "type:kv3_pv_v4": 185840,
+       "type:kv3_pv_v4n": 217308,
+       "type:kv3_pv_v5": 166896,
+       "type:kv3_pv_v5n": 210546,
+       "type:kv3_pv_v6": 127500,
+       "type:kv3_pv_v6n": 171304,
+       "type:kv3_pv_v7": 91908,
+       "type:kv3_pv_v8": 111150,
+       "type:kv3_sys_SD": 726,
+       "type:kv3_sys_SD_v1": 726,
+       "type:kv3_sys_c": 6536
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 2347732,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "plan_landing": {
+      "window_ps": 416.5,
+      "setup_margin_ps": -614.65,
+      "hold_margin_ps": -614.65,
+      "damage_max_ps": 1031.15,
+      "verdict": "FAIL",
+      "note": "plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs"
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    }
+   },
+   "core_insertion": {
+    "mode": "declared",
+    "early_core_taps": 1472,
+    "source": {
+     "view": 0,
+     "declared": 1472,
+     "missing": 0
+    },
+    "missing_taps": [],
+    "declared_taps": [
+     "t_hg_EN_0__clk_c0",
+     "t_hg_EN_0__clk_c1",
+     "t_hg_EN_0__clk_c10",
+     "t_hg_EN_0__clk_c11",
+     "t_hg_EN_0__clk_c12",
+     "t_hg_EN_0__clk_c13",
+     "t_hg_EN_0__clk_c14",
+     "t_hg_EN_0__clk_c15",
+     "t_hg_EN_0__clk_c16",
+     "t_hg_EN_0__clk_c17",
+     "t_hg_EN_0__clk_c18",
+     "t_hg_EN_0__clk_c19",
+     "t_hg_EN_0__clk_c2",
+     "t_hg_EN_0__clk_c3",
+     "t_hg_EN_0__clk_c4",
+     "t_hg_EN_0__clk_c5",
+     "t_hg_EN_0__clk_c6",
+     "t_hg_EN_0__clk_c7",
+     "t_hg_EN_0__clk_c8",
+     "t_hg_EN_0__clk_c9"
+    ],
+    "rule": "FLOW-ONEMODEL-3: early core tap endpoint = the core's own insertion (signed view); 'declared' = plan per-tap insertion, PLANNING ONLY, never a gate PASS; missing view -> FAIL CLOSED (timed at the common latency, labelled)",
+    "common_latency_ps": 250.0
+   }
+  },
+  "FF": {
+   "basis": null,
+   "tap_slew_max_ps": 114.5,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 114.499,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 69.414,
+    "clkq_min_nowire_ps": 47.62,
+    "setup_ps": 5.263,
+    "hold_ps": 22.832,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 796724,
+     "worst_setup_slack_ps": 529.64,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_pv_S_6__clk_t20",
+      "capture": "t_pv_S_6__clk_c19",
+      "where": "pv_S_6",
+      "clock_damage_ps": 195.8,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -228.9,
+     "hold_neg_pairs": 401288,
+     "worst_hold": {
+      "launch": "t_pv_S_6__clk_c19",
+      "capture": "t_pv_S_6__clk_t20",
+      "where": "pv_S_6",
+      "clock_damage_ps": 195.8,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 207.29,
+     "skew_diag_over_80": 21986,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 207.29,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 489.64,
+      "worst_hold_slack_ps": -268.9
+     },
+     "worst_skew": [
+      [
+       207.29,
+       "t_pv_S_6__clk_t20",
+       "t_pv_S_6__clk_c18"
+      ],
+      [
+       207.29,
+       "t_pv_S_6__clk_c18",
+       "t_pv_S_6__clk_t20"
+      ],
+      [
+       206.24,
+       "t_pv_S_6__clk_t21",
+       "t_pv_S_6__clk_c18"
+      ],
+      [
+       206.24,
+       "t_pv_S_6__clk_c18",
+       "t_pv_S_6__clk_t21"
+      ],
+      [
+       205.67,
+       "t_pv_S_6__clk_t29",
+       "t_pv_S_6__clk_c18"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 796724,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "core:kv3_head_eighth_e0": 11384,
+       "core:kv3_head_eighth_e1": 22256,
+       "core:kv3_head_eighth_e2": 11384,
+       "core:kv3_head_eighth_e5": 22256,
+       "core:kv3_head_eighth_e6": 22256,
+       "core:kv3_pv_pair": 93696,
+       "core:ot_qwen_tp8_pv_join_t": 24192,
+       "core:qkd_ectlk_q0": 2240,
+       "core:qkd_ectlk_q1": 2240,
+       "core:qkd_ectlk_q2": 2240,
+       "core:qkd_ectlk_q3": 2240,
+       "type:kv3_hg": 3520,
+       "type:kv3_hg_v1": 3520,
+       "type:kv3_hg_v1p2": 3520,
+       "type:kv3_hg_v1p3": 3520,
+       "type:kv3_hg_v1p4": 3520,
+       "type:kv3_hg_v1p5": 3520,
+       "type:kv3_hg_v1p6": 3520,
+       "type:kv3_hg_v3": 3520,
+       "type:kv3_hgi": 8632,
+       "type:kv3_hgi_v1__cl141fc26e": 4512,
+       "type:kv3_hgi_v1__cl42bc8b12": 4512,
+       "type:kv3_hgi_v2__cl2862d491": 752,
+       "type:kv3_hgi_v2__cle0015330": 752,
+       "type:kv3_hgi_v3": 5016,
+       "type:kv3_hgi_v4": 29232,
+       "type:kv3_hgi_v5": 5612,
+       "type:kv3_hgi_v6": 6402,
+       "type:kv3_hgi_v7": 41400,
+       "type:kv3_hgi_v8": 752,
+       "type:kv3_hroot": 5928,
+       "type:kv3_hub_C": 9702,
+       "type:kv3_hub_Ei": 6480,
+       "type:kv3_hub_Eo": 4556,
+       "type:kv3_hub_Wi": 5256,
+       "type:kv3_hub_Wo": 5112,
+       "type:kv3_io_cor": 1056,
+       "type:kv3_io_cor_v1": 1806,
+       "type:kv3_io_ft": 1056,
+       "type:kv3_io_ft_v1": 1056,
+       "type:kv3_pc__cl254f2e73": 264,
+       "type:kv3_pc__cl5a95b461": 264,
+       "type:kv3_pc_v1__cl23f6a148": 528,
+       "type:kv3_pc_v1__cl4ea58a5c": 1056,
+       "type:kv3_pc_v1__cl7f648944": 1584,
+       "type:kv3_pc_v3": 528,
+       "type:kv3_phy": 224,
+       "type:kv3_phy_v1": 2016,
+       "type:kv3_pv": 35152,
+       "type:kv3_pv_v1": 29722,
+       "type:kv3_pv_v12": 27010,
+       "type:kv3_pv_v1n": 28350,
+       "type:kv3_pv_v2": 48682,
+       "type:kv3_pv_v2n": 46492,
+       "type:kv3_pv_v3": 36676,
+       "type:kv3_pv_v3n": 31840,
+       "type:kv3_pv_v4": 48682,
+       "type:kv3_pv_v4n": 47362,
+       "type:kv3_pv_v5": 40626,
+       "type:kv3_pv_v5n": 43092,
+       "type:kv3_pv_v6": 28350,
+       "type:kv3_pv_v6n": 32200,
+       "type:kv3_pv_v7": 24426,
+       "type:kv3_pv_v8": 35910,
+       "type:kv3_sys_SD": 110,
+       "type:kv3_sys_SD_v1": 110,
+       "type:kv3_sys_c": 1806
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 796724,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "kit_contract_hold": {
+      "window_ps": 130.0,
+      "basis": "plan clock.tap_window.window_ps (gen_phys.tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap); per region: its type's clock.tap_window.per_type_ps (else window_ps)",
+      "worst_hold_bound_ps": -77.29,
+      "neg_pairs": 732,
+      "window_needed_ps": 207.29,
+      "worst": {
+       "launch": "t_pv_S_6__clk_c18",
+       "capture": "t_pv_S_6__clk_t20",
+       "where": "pv_S_6",
+       "damage_ps": 207.29
+      },
+      "damage_pctl_ps": {
+       "50": 0.0,
+       "99": 85.5,
+       "99.9": 132.21
+      },
+      "verdict": "FAIL",
+      "window_mode": "per_type",
+      "neg_regions": [
+       "pv_S_6",
+       "pv_S_7"
+      ],
+      "core_tap_offset": {
+       "taps": 1472,
+       "basis": "kit SDC set_clock_latency -source -early_ps on each early core tap (gen_phys core_tap_rows): arrival + declared earliness"
+      }
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "seam": {
+     "pairs": 6816,
+     "worst_setup_slack_ps": 658.63,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_pc_WS_7__clk",
+      "capture": "t_phy_WS_7__clk_t4",
+      "where": "pc_WS_7->phy_WS_7",
+      "clock_damage_ps": 99.69,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -99.91,
+     "hold_neg_pairs": 3420,
+     "worst_hold": {
+      "launch": "t_phy_WS_7__clk_t4",
+      "capture": "t_pc_WS_7__clk",
+      "where": "phy_WS_7->pc_WS_7",
+      "clock_damage_ps": 99.69,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 99.69,
+     "skew_diag_over_80": 94,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 99.69,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 618.63,
+      "worst_hold_slack_ps": -139.91
+     },
+     "worst_skew": [
+      [
+       99.69,
+       "t_phy_WS_7__clk_t4",
+       "t_pc_WS_7__clk"
+      ],
+      [
+       99.69,
+       "t_pc_WS_7__clk",
+       "t_phy_WS_7__clk_t4"
+      ],
+      [
+       98.75,
+       "t_phy_WS_2__clk_t4",
+       "t_pc_WS_2__clk"
+      ],
+      [
+       98.75,
+       "t_pc_WS_2__clk",
+       "t_phy_WS_2__clk_t4"
+      ],
+      [
+       93.02,
+       "t_phy_WS_7__clk_t5",
+       "t_pc_WS_7__clk"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 6816,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "type:kv3_pc__cl254f2e73": 384,
+       "type:kv3_pc__cl5a95b461": 384,
+       "type:kv3_pc_v1__cl23f6a148": 864,
+       "type:kv3_pc_v1__cl4ea58a5c": 1728,
+       "type:kv3_pc_v1__cl7f648944": 2592,
+       "type:kv3_pc_v3": 864,
+       "type:kv3_phy": 768,
+       "type:kv3_phy_v1": 6048
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 6816,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "kit_contract_hold": {
+      "window_ps": 180.0,
+      "basis": "plan clock.seam_hold.seam_ps (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": 80.31,
+      "neg_pairs": 0,
+      "window_needed_ps": 99.69,
+      "worst": {
+       "launch": "t_phy_WS_7__clk_t4",
+       "capture": "t_pc_WS_7__clk",
+       "where": "phy_WS_7->pc_WS_7",
+       "damage_ps": 99.69
+      },
+      "damage_pctl_ps": {
+       "50": -0.0,
+       "99": 77.68,
+       "99.9": 90.95
+      },
+      "verdict": "PASS",
+      "core_tap_offset": {
+       "taps": 1472,
+       "basis": "kit SDC set_clock_latency -source -early_ps on each early core tap (gen_phys core_tap_rows): arrival + declared earliness"
+      }
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    },
+    "landed": {
+     "pairs": 2347732,
+     "worst_setup_slack_ps": -164.89,
+     "setup_neg_pairs": 3617,
+     "worst_setup": {
+      "launch": "t_sys_c__clk_t32",
+      "capture": "t_io_W3__clk_t3",
+      "where": "sys_c->io_W3",
+      "clock_damage_ps": 923.21,
+      "cppr_ps": 0.0
+     },
+     "worst_hold_slack_ps": -923.42,
+     "hold_neg_pairs": 1175684,
+     "worst_hold": {
+      "launch": "t_io_W3__clk_t3",
+      "capture": "t_sys_c__clk_t32",
+      "where": "io_W3->sys_c",
+      "clock_damage_ps": 923.21,
+      "cppr_ps": 0.0
+     },
+     "skew_diag_max_ps": 923.21,
+     "skew_diag_over_80": 2347276,
+     "skew_diag_basis": "arrival minus planned target (early core tap + its declared earliness)",
+     "skew_raw_max_ps": 923.21,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": -204.89,
+      "worst_hold_slack_ps": -963.42
+     },
+     "worst_skew": [
+      [
+       923.21,
+       "t_sys_c__clk_t32",
+       "t_io_W3__clk_t3"
+      ],
+      [
+       923.21,
+       "t_io_W3__clk_t3",
+       "t_sys_c__clk_t32"
+      ],
+      [
+       919.52,
+       "t_sys_c__clk_t33",
+       "t_io_W3__clk_t3"
+      ],
+      [
+       919.52,
+       "t_io_W3__clk_t3",
+       "t_sys_c__clk_t33"
+      ],
+      [
+       918.59,
+       "t_sys_c__clk_t32",
+       "t_io_W3__clk_t7"
+      ]
+     ],
+     "hold_measured": {
+      "rule": "OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; others UNMEASURED (not tap-window failures); PASS needs 0 unmeasured and every measured >= 0",
+      "pairs_measured": 0,
+      "pairs_unmeasured": 2347732,
+      "hold_margin_ps": null,
+      "neg_pairs": 0,
+      "worst": null,
+      "missing_views": {
+       "core:kv3_head_eighth_e0": 55920,
+       "core:kv3_head_eighth_e1": 110656,
+       "core:kv3_head_eighth_e2": 55920,
+       "core:kv3_head_eighth_e5": 110656,
+       "core:kv3_head_eighth_e6": 110656,
+       "core:kv3_pv_pair": 230016,
+       "core:ot_qwen_tp8_pv_join_t": 58848,
+       "core:qkd_ectlk_q0": 8884,
+       "core:qkd_ectlk_q1": 8884,
+       "core:qkd_ectlk_q2": 8884,
+       "core:qkd_ectlk_q3": 8884,
+       "type:kv3_hg": 15456,
+       "type:kv3_hg_v1": 17824,
+       "type:kv3_hg_v1p2": 17824,
+       "type:kv3_hg_v1p3": 17824,
+       "type:kv3_hg_v1p4": 17824,
+       "type:kv3_hg_v1p5": 17824,
+       "type:kv3_hg_v1p6": 17824,
+       "type:kv3_hg_v3": 20640,
+       "type:kv3_hgi": 46800,
+       "type:kv3_hgi_v1__cl141fc26e": 44800,
+       "type:kv3_hgi_v1__cl42bc8b12": 44800,
+       "type:kv3_hgi_v2__cl2862d491": 6208,
+       "type:kv3_hgi_v2__cle0015330": 6208,
+       "type:kv3_hgi_v3": 38988,
+       "type:kv3_hgi_v4": 221984,
+       "type:kv3_hgi_v5": 43310,
+       "type:kv3_hgi_v6": 45540,
+       "type:kv3_hgi_v7": 277518,
+       "type:kv3_hgi_v8": 11520,
+       "type:kv3_hroot": 26988,
+       "type:kv3_hub_C": 94644,
+       "type:kv3_hub_Ei": 39528,
+       "type:kv3_hub_Eo": 31416,
+       "type:kv3_hub_Wi": 29638,
+       "type:kv3_hub_Wo": 32112,
+       "type:kv3_io_cor": 10428,
+       "type:kv3_io_cor_v1": 12814,
+       "type:kv3_io_ft": 2904,
+       "type:kv3_io_ft_v1": 3564,
+       "type:kv3_pc__cl254f2e73": 2304,
+       "type:kv3_pc__cl5a95b461": 2304,
+       "type:kv3_pc_v1__cl23f6a148": 5760,
+       "type:kv3_pc_v1__cl4ea58a5c": 10368,
+       "type:kv3_pc_v1__cl7f648944": 14976,
+       "type:kv3_pc_v3": 8352,
+       "type:kv3_phy": 288,
+       "type:kv3_phy_v1": 3636,
+       "type:kv3_pv": 104780,
+       "type:kv3_pv_v1": 146300,
+       "type:kv3_pv_v12": 113588,
+       "type:kv3_pv_v1n": 169500,
+       "type:kv3_pv_v2": 174124,
+       "type:kv3_pv_v2n": 199758,
+       "type:kv3_pv_v3": 175768,
+       "type:kv3_pv_v3n": 189760,
+       "type:kv3_pv_v4": 185840,
+       "type:kv3_pv_v4n": 217308,
+       "type:kv3_pv_v5": 166896,
+       "type:kv3_pv_v5n": 210546,
+       "type:kv3_pv_v6": 127500,
+       "type:kv3_pv_v6n": 171304,
+       "type:kv3_pv_v7": 91908,
+       "type:kv3_pv_v8": 111150,
+       "type:kv3_sys_SD": 726,
+       "type:kv3_sys_SD_v1": 726,
+       "type:kv3_sys_c": 6536
+      },
+      "status": "BLOCKED(kits)"
+     },
+     "real_view": {
+      "pairs_with_real_endpoint": 0,
+      "pairs_both_real": 0,
+      "pairs_total": 2347732,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 0
+     },
+     "plan_landing": {
+      "window_ps": 416.5,
+      "setup_margin_ps": -506.71,
+      "hold_margin_ps": -506.71,
+      "damage_max_ps": 923.21,
+      "verdict": "FAIL",
+      "note": "plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs"
+     },
+     "label": "declared-budget + core-tap insertion declared (view 0 / declared 1472 / missing 0)"
+    }
+   },
+   "core_insertion": {
+    "mode": "declared",
+    "early_core_taps": 1472,
+    "source": {
+     "view": 0,
+     "declared": 1472,
+     "missing": 0
+    },
+    "missing_taps": [],
+    "declared_taps": [
+     "t_hg_EN_0__clk_c0",
+     "t_hg_EN_0__clk_c1",
+     "t_hg_EN_0__clk_c10",
+     "t_hg_EN_0__clk_c11",
+     "t_hg_EN_0__clk_c12",
+     "t_hg_EN_0__clk_c13",
+     "t_hg_EN_0__clk_c14",
+     "t_hg_EN_0__clk_c15",
+     "t_hg_EN_0__clk_c16",
+     "t_hg_EN_0__clk_c17",
+     "t_hg_EN_0__clk_c18",
+     "t_hg_EN_0__clk_c19",
+     "t_hg_EN_0__clk_c2",
+     "t_hg_EN_0__clk_c3",
+     "t_hg_EN_0__clk_c4",
+     "t_hg_EN_0__clk_c5",
+     "t_hg_EN_0__clk_c6",
+     "t_hg_EN_0__clk_c7",
+     "t_hg_EN_0__clk_c8",
+     "t_hg_EN_0__clk_c9"
+    ],
+    "rule": "FLOW-ONEMODEL-3: early core tap endpoint = the core's own insertion (signed view); 'declared' = plan per-tap insertion, PLANNING ONLY, never a gate PASS; missing view -> FAIL CLOSED (timed at the common latency, labelled)",
+    "common_latency_ps": 202.5
+   }
+  }
+ },
+ "clock_cell": {
+  "TT": {
+   "cell": "inv",
+   "basis": "--clock-cell inv; netlist agrees (/srv/opentallas-scratch2/claude/die-proto-3/kv/vFk/grt_st_TT/clk/ctree.v: 27488 CKINVDCx16 / 0 BUFx24)",
+   "aocv_class": "Ainv",
+   "spice_factor": null
+  },
+  "FF": {
+   "cell": "inv",
+   "basis": "--clock-cell inv; netlist agrees (/srv/opentallas-scratch2/claude/die-proto-3/kv/vFk/grt_st_FF/clk/ctree.v: 27488 CKINVDCx16 / 0 BUFx24)",
+   "aocv_class": "Ainv",
+   "spice_factor": null
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 160,
+  "connected_part_pairs": 512,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": 453.08,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 796724,
+   "missing_views": [
+    "core:kv3_head_eighth_e0",
+    "core:kv3_head_eighth_e1",
+    "core:kv3_head_eighth_e2",
+    "core:kv3_head_eighth_e5",
+    "core:kv3_head_eighth_e6",
+    "core:kv3_pv_pair",
+    "core:ot_qwen_tp8_pv_join_t",
+    "core:qkd_ectlk_q0",
+    "core:qkd_ectlk_q1",
+    "core:qkd_ectlk_q2",
+    "core:qkd_ectlk_q3",
+    "type:kv3_hg",
+    "type:kv3_hg_v1",
+    "type:kv3_hg_v1p2",
+    "type:kv3_hg_v1p3",
+    "type:kv3_hg_v1p4",
+    "type:kv3_hg_v1p5",
+    "type:kv3_hg_v1p6",
+    "type:kv3_hg_v3",
+    "type:kv3_hgi",
+    "type:kv3_hgi_v1__cl141fc26e",
+    "type:kv3_hgi_v1__cl42bc8b12",
+    "type:kv3_hgi_v2__cl2862d491",
+    "type:kv3_hgi_v2__cle0015330",
+    "type:kv3_hgi_v3",
+    "type:kv3_hgi_v4",
+    "type:kv3_hgi_v5",
+    "type:kv3_hgi_v6",
+    "type:kv3_hgi_v7",
+    "type:kv3_hgi_v8",
+    "type:kv3_hroot",
+    "type:kv3_hub_C",
+    "type:kv3_hub_Ei",
+    "type:kv3_hub_Eo",
+    "type:kv3_hub_Wi",
+    "type:kv3_hub_Wo",
+    "type:kv3_io_cor",
+    "type:kv3_io_cor_v1",
+    "type:kv3_io_ft",
+    "type:kv3_io_ft_v1",
+    "type:kv3_pc__cl254f2e73",
+    "type:kv3_pc__cl5a95b461",
+    "type:kv3_pc_v1__cl23f6a148",
+    "type:kv3_pc_v1__cl4ea58a5c",
+    "type:kv3_pc_v1__cl7f648944",
+    "type:kv3_pc_v3",
+    "type:kv3_phy",
+    "type:kv3_phy_v1",
+    "type:kv3_pv",
+    "type:kv3_pv_v1",
+    "type:kv3_pv_v12",
+    "type:kv3_pv_v1n",
+    "type:kv3_pv_v2",
+    "type:kv3_pv_v2n",
+    "type:kv3_pv_v3",
+    "type:kv3_pv_v3n",
+    "type:kv3_pv_v4",
+    "type:kv3_pv_v4n",
+    "type:kv3_pv_v5",
+    "type:kv3_pv_v5n",
+    "type:kv3_pv_v6",
+    "type:kv3_pv_v6n",
+    "type:kv3_pv_v7",
+    "type:kv3_pv_v8",
+    "type:kv3_sys_SD",
+    "type:kv3_sys_SD_v1",
+    "type:kv3_sys_c"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -228.9,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": -77.29,
+   "kit_contract_window_ps": 130.0,
+   "kit_contract_window_needed_ps": 207.29,
+   "kit_contract_verdict": "FAIL",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
+  },
+  "seam": {
+   "tt_setup_ps": 622.38,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 6816,
+   "missing_views": [
+    "type:kv3_pc__cl254f2e73",
+    "type:kv3_pc__cl5a95b461",
+    "type:kv3_pc_v1__cl23f6a148",
+    "type:kv3_pc_v1__cl4ea58a5c",
+    "type:kv3_pc_v1__cl7f648944",
+    "type:kv3_pc_v3",
+    "type:kv3_phy",
+    "type:kv3_phy_v1"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -99.91,
+   "verdict": "BLOCKED(kits)",
+   "ff_hold_kit_contract_ps": 80.31,
+   "kit_contract_window_ps": 180.0,
+   "kit_contract_window_needed_ps": 99.69,
+   "kit_contract_verdict": "PASS",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
+  },
+  "core_insertion": {
+   "mode": "declared",
+   "early_core_taps": 1472,
+   "source": {
+    "TT": {
+     "view": 0,
+     "declared": 1472,
+     "missing": 0
+    },
+    "FF": {
+     "view": 0,
+     "declared": 1472,
+     "missing": 0
+    }
+   },
+   "verdict": "DECLARED",
+   "note": "BLOCKED(kits) = early core taps without a signed core view (OWNER 12.19, never PASS); DECLARED = planning estimate on plan per-tap insertion, not a gate pass"
+  },
+  "landed": {
+   "tt_setup_margin_ps": -614.65,
+   "ff_hold_margin_ps": -506.71,
+   "verdict": "FAIL"
+  },
+  "die_clock_gate": {
+   "rule": "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+   "tt_setup_ps": 453.08,
+   "ff_hold_ps": null,
+   "hold_min_ps": 0.0,
+   "contract_violations": 733,
+   "skew_max_ps": 1031.15,
+   "skew_target_ps": 150.0,
+   "skew_role": "TARGET (WARN only, never FAIL)",
+   "reasons": [
+    "733 block arrival-contract violation(s)"
+   ],
+   "warnings": [
+    "related-pair skew 1031.15 ps > target 150 ps (WARN only)"
+   ],
+   "verdict": "FAIL"
+  },
+  "period_policy": {
+   "period_ps": 833.0,
+   "required_period_ps": 833.0,
+   "verdict": "PASS",
+   "role": "canonical timing"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "declared-budget (no QC kit)",
+  "margin_policy": {
+   "policy": "nominal",
+   "rule": "OWNER 12.24b",
+   "overridden": {}
+  },
+  "nominal_arrival": "single"
+ }
+}
