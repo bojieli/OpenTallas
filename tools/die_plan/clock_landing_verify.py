@@ -40,6 +40,9 @@ class Verification:
         # emits (RT.for_type); reset_tree(tn) may be injected (tests).  No tree -> FAIL, never skip.
         self.plan_path,self._reset_tree_fn,self._plan_trees=plan_path,reset_tree,{}
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={};self._fstart_checked=set()
+        self.anchor_receipts=[]
+        if any('reset_tree_anchor' in ((t or {}).get('clock') or {}) for t in raw.get('partition_types',{}).values()):
+            raw=self.raw=self._anchored(raw)
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
         self.live_widths=live_widths
         self.ring_depths=planned_ring_depths(raw,table)
@@ -67,6 +70,21 @@ class Verification:
             if info['mask']['active']:
                 self.root_collect[pn]=ident(pn)+'.u_cland_collect_'+ident(info['collector_root_node'])
         self._check_all()
+
+    def _anchored(self,raw):
+        """RELAY-ANCHOR (as built: bind.cmd_bind runs reset_anchor.resolve_plan before the landings read the plan): the
+        plan's START-chain / local-reset raw names anchored by site are re-picked onto the generated wavefront tree
+        (same depth, nearest site).  The verifier re-derives the re-pick on its own copy of the plan (never reads the
+        bind's receipt); an anchor that does not resolve is a verify error."""
+        import copy,reset_anchor as RA,taps
+        raw=copy.deepcopy(raw)
+        if self._reset_tree_fn is not None:fn=self._reset_tree_fn
+        else:
+            import schema as S,reset_tree as RT
+            self._P=S.Plan(raw,self.plan_path);fn=lambda tn:RT.for_type(self._P,tn)
+        self.anchor_receipts,errs=RA.resolve_plan(raw,None,taps._root(),tree_fn=fn)
+        self.errors.extend(errs)
+        return raw
 
     def fail(self,s):self.errors.append(s)
     def pin(self,path,port,bit=0):return ('pin',path,port,bit)
@@ -190,10 +208,63 @@ class Verification:
     def clock(self,c,part,port='clk'):
         self.equal_input(c,port,[('top','clk_region_'+ident(self.region[part]),0)])
 
-    def check_reset(self,c,part,node,extra=None,port='rst_n'):
+    def _tclock(self,pn):
+        return (((getattr(self,'raw',None) or {}).get('partition_types',{}).get(self.parts[pn]['type']) or {}).get('clock') or {})
+
+    def local_resets(self,pn):
+        """QC-VERIFY-GAPS (DIE-HEAD-38 R1 as built by clock_landings._local_resets): plan clock.landing_local_resets of
+        pn's type -> {consumer instance: (copy instance u_cland_lrst_<name>, raw tree node)}.  Each copy is one kept
+        ot_dp_rrelay whose D is the raw node; it releases on the same edge as the consumer's planned reset only when
+        depth(raw) + 1 == depth(planned node) -- checked at every consumer, never assumed."""
+        cache=self.__dict__.setdefault('_lrst',{});tn=self.parts[pn]['type']
+        if tn not in cache:
+            m={}
+            for r in self._tclock(pn).get('landing_local_resets') or []:
+                for c in r.get('consumers') or []:m[c]=('u_cland_lrst_'+ident(str(r.get('name'))),r.get('raw'))
+            cache[tn]=m
+        return cache[tn]
+
+    @staticmethod
+    def tree_depths(tree):
+        rows={r['q']:r for r in tree['relays']};memo={'rst_root_n':0}
+        def depth(n,seen=()):
+            if n in memo:return memo[n]
+            if n in seen or n not in rows:return None
+            d=depth(rows[n]['d'],seen+(n,));memo[n]=None if d is None else d+1;return memo[n]
+        return {q:depth(q) for q in rows}|{'rst_root_n':0}
+
+    def release(self,net):
+        """(root term, plain relay hops) of a raw reset net: ot_dp_rrelay/_nl q +1, ot_dp_lk q and $buf 0; any other
+        driver is the root.  Two resets of one partition with equal release() deassert on the same edge."""
+        d=0;seen=set()
+        while True:
+            if net in seen:return (('loop',),d)
+            seen.add(net);ds=self.G.drv.get(net,[])
+            if net in self.G.top_in or len(ds)!=1:return (self.term(net),d)
+            ci,port,_=ds[0];c=self.F.cells[ci]
+            if c.kind=='glue' and port=='Y' and c.ytype in ('$buf','$pos') and len(c.ports.get('A',[]))==1:net=c.ports['A'][0];continue
+            if c.module in ('ot_dp_rrelay','ot_dp_rrelay_nl') and port=='q':d+=1
+            elif c.module!='ot_dp_lk' or port!='q':return (self.term(net),d)
+            ib=c.ports.get('d',[])
+            if len(ib)!=1:return (('bad',c.path),d)
+            net=ib[0]
+
+    def _local_copy(self,c,part,port,lr):
+        """The declared local reset copy lr=(instance, raw node) drives c.port: -> the copy cell, or None (failed)."""
+        bits=c.ports.get(port,[]);prefix=ident(part)+'.'
+        ds=self.G.drv.get(bits[0],[]) if len(bits)==1 else []
+        up=self.F.cells[ds[0][0]] if len(ds)==1 else None
+        if up is None or up.path!=prefix+lr[0] or up.module!='ot_dp_rrelay' or ds[0][1]!='q':
+            self.fail(f'{c.path}.{port}: declared local reset copy {prefix+lr[0]} is not its driver');return None
+        if [self.term(b) for b in up.ports.get('clk',[])]!=[self.term(b) for b in c.ports.get('clk',[])]:
+            self.fail(up.path+': local reset copy clock differs from its consumer clock');return None
+        return up
+
+    def check_reset(self,c,part,node,extra=None,port='rst_n',wave=False):
         bits=c.ports.get(port,[])
         if len(bits)!=1:self.fail(c.path+': exact one-bit raw reset required');return
-        tree=self.reset_tree(self.parts[part]['type'])
+        lr=self.local_resets(part).get(c.path[len(ident(part))+1:]) if c.path.startswith(ident(part)+'.') else None
+        tree=self.reset_tree(self.parts[part]['type'],wave=wave or bool(lr))
         if tree is None:
             self.fail(c.path+': no planned reset tree for type '+self.parts[part]['type']+' (inactive landing type)');return
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
@@ -235,14 +306,38 @@ class Verification:
                     if lc.module=='ot_dp_lk' and lds[0][1]=='q' and lc.path==prefix+RT.lockup_latch_names(row['name'])[0]:
                         ib=lc.ports.get('d',[])
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
+        if lr:
+            # declared same-cycle local copy: consumer <- u_cland_lrst_<name> <- the planned raw node, one level up
+            up=self._local_copy(c,part,port,lr)
+            if up is None:return
+            dep=self.tree_depths(tree)
+            if dep.get(lr[1]) is None or dep.get(node) is None or dep[lr[1]]+1!=dep[node]:
+                self.fail(f'{c.path}: local reset copy {lr[0]} raw {lr[1]} depth {dep.get(lr[1])} + 1 != planned {node} depth {dep.get(node)}');return
+            ib=up.ports.get('d',[])
+            if len(ib)!=1 or not walk(ib[0],lr[1],set()):
+                self.fail(up.path+': local reset copy D is not the exact planned raw node '+str(lr[1]))
+            return
         if not walk(bits[0],node,set()):
+            if not wave and self._wave_ok(c,part,node,extra,port):return
             self.fail(c.path+': raw reset is not the exact original local reset-parent/depth contract at '+node)
 
-    def reset_tree(self,tn):
+    def _wave_ok(self,c,part,node,extra,port):
+        """QC-VERIFY-GAPS: the type's relays are emitted from the plan wavefront tree the bind builds (RT.for_type); a
+        landing_contract.collector_tree copy whose relay names went stale after a tap re-bin (QC cbf_q01: rst_n_t62
+        <- rst_rl_487 as built, the copy names another parent) is not the as-built reference.  The same exact
+        parent/depth walk then holds on the bound wavefront tree."""
+        saved=self.errors;self.errors=[]
+        try:
+            self.check_reset(c,part,node,extra,port=port,wave=True);return not self.errors
+        finally:self.errors=saved
+
+    def reset_tree(self,tn,wave=False):
         """The reset tree a landing stage of type tn walks: the collector tree (active types), else the type's plan reset
-        tree as the bind emits it (RT.for_type on the plan); None (-> FAIL at the caller) if neither exists."""
+        tree as the bind emits it (RT.for_type on the plan); None (-> FAIL at the caller) if neither exists.
+        wave=True: always the plan wavefront tree (the raw_reset / local-reset names rst_rl_<n> of the START chains
+        and clock.landing_local_resets are its relay nets)."""
         import landing_collector as LC
-        tree=LC.effective_tree(self.raw['partition_types'].get(tn),self.collector['types'][tn]['tree'])  # S81-OTHERFAIL-1
+        tree=None if wave else LC.effective_tree(self.raw['partition_types'].get(tn),self.collector['types'][tn]['tree'])  # S81-OTHERFAIL-1
         if tree is not None:return tree
         if tn not in self._plan_trees:
             try:
@@ -306,7 +401,7 @@ class Verification:
                     if ca.get('strap_form'):
                         kb=c.ports.get('strap_k',[])
                         kw=depth.bit_length()-1+4
-                        expected=list(reversed(format(int(cfg['K']) & ((1<<kw)-1),f'0{kw}b')))
+                        expected=list(reversed(format(self.strap_k(r,pr,cfg) & ((1<<kw)-1),f'0{kw}b')))
                         if kb!=expected:self.fail(path+': actual strap_k differs from the bound count')
                     elif (int(params.get('K',2)) & 0xffffffff)!=(int(cfg['K']) & 0xffffffff):
                         self.fail(path+': actual count-aligned K differs from the bound contract')
@@ -315,7 +410,7 @@ class Verification:
                     self.transport_stages[path]=int(cfg['sched_lat'])
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
-                    self.equal_input(c,'rst_n',[self.start_net(r['dst'],'u_cland_'+bus)])
+                    self.equal_input(c,'rst_n',[self.reader_start(r['dst'],bus,c)])
                     self.equal_input(c,'t_rst_n',[self.fstart_net(r['src'],pr['src']['bus'])])
                 else:
                     self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
@@ -387,10 +482,97 @@ class Verification:
                     self.equal_input(c,port,list(reversed(want)))
         actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca','ot_dp_landing_face',
                                                              'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
-                                                             'ot_dp_clk_landing_cas','ot_dp_landing_origin_s','ot_dp_landing_origin_s_regional')}
+                                                             'ot_dp_clk_landing_cas','ot_dp_landing_origin_s','ot_dp_landing_origin_s_regional',
+                                                             'ot_dp_landing_relay_rep')}
         actual|={c.path for c in self.F.cells if c.module=='ot_dp_rrelay' and re.fullmatch(r'.*\.g_tt_raw_regions\.g_region\[[0-9]+\]\.u_raw_copy',c.path)}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
         for x in sorted(self.expected-actual):self.fail('missing infrastructure instance '+x)
+
+    def strap_k(self,r,pr,cfg):
+        """The strap K a strap-form ring of crossing r must carry: the bind K re-referenced to the as-built START edges
+        (count_align_bind.strap_ties contract, W1/R proof): the reader count starts R edges later (dst type
+        clock.landing_reader_start depth: -R), the sender's writer START W edges later (src type
+        clock.landing_writer_start on that output bus: +W), a registered ring writer (landing_ring_wreg: +depth) and an
+        output q register outside the ring (landing_output_qreg: -1)."""
+        import clock_landings as CL,count_align_bind as CAB
+        dt=self.parts[r['dst']]['type'];st=self.parts[pr['src']['part']]['type'];bus=pr['dst']['bus']
+        wreg=CL.ring_write_reg(self.raw,dt,bus)
+        return (int(cfg['K'])-CAB.reader_start_depth(self.raw,dt)+CAB.writer_start_depth(self.raw,st,pr['src']['bus'])
+                +(wreg['depth'] if wreg else 0)-int(CL.output_qreg(self.raw,dt,bus)))
+
+    def _stages(self,pn,key,bus,physical):
+        cfg=self._tclock(pn).get(key) or {};br=(cfg.get('branches') or {}).get(bus)
+        stages=br.get('stages',[]) if isinstance(br,dict) else []
+        if len(stages)!=physical:
+            self.fail(f'{pn}: {key}.{bus} plans {len(stages)} physical stages, as-built rule needs {physical}');return None
+        return stages
+
+    def reader_start(self,pn,bus,ring):
+        """The count start a count-aligned ring reader resets on.  Default: the partition's start.  With the type's
+        clock.landing_reader_start (clock_landings._reader_start_rtl): R kept ot_dp_landing_relay stages
+        u_cland_reader_start_<bus>_<i> (region clock, d = previous stage / start, rst_raw_n = the stage's planned raw
+        tree node), the ring rst_n = the last stage's q; RSTREP: the last stage is ot_dp_landing_relay_rep and the
+        ring's rst_xn = its qx copies."""
+        start=self.start_net(pn,'u_cland_'+bus)
+        rep=len(ring.ports.get('rst_xn',[]))
+        cfg=self._tclock(pn).get('landing_reader_start')
+        if cfg is None:
+            if rep:self.fail(ring.path+': unpriced ring reset copies rst_xn without a reader START chain')
+            return start
+        stages=self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
+        if not stages:return ('missing',ident(pn)+'.u_cland_reader_start_'+ident(bus))
+        prev=start;path=None
+        for i,st in enumerate(stages):
+            path=ident(pn)+f'.u_cland_reader_start_{ident(bus)}_{i}'
+            c=self.instance(path,'ot_dp_landing_relay_rep' if rep and i==len(stages)-1 else 'ot_dp_landing_relay')
+            if c:
+                self.clock(c,pn);self.equal_input(c,'d',[prev]);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
+            prev=self.output(path,'q')
+        if rep:self.equal_input(ring,'rst_xn',[self.output(path,'qx',k) for k in range(rep)])
+        return prev
+
+    def writer_start(self,pn,bus,start_d):
+        """The D of a sender's FSTART face flop u_cland_fstart_<bus>.  Default: start_d.  With the type's
+        clock.landing_writer_start naming bus (clock_landings._writer_start_rtl): depth - reuse kept ot_dp_landing_relay
+        stages u_cland_writer_start_<bus>_<i> (region clock, d = previous stage, first d = start_d, or the relay
+        origin's start under reuse_relay_origin, rst_raw_n = the planned raw tree node); the face flop d = the last q."""
+        cfg=self._tclock(pn).get('landing_writer_start')
+        if not cfg or bus not in (cfg.get('branches') or {}):return start_d
+        reuse=cfg.get('reuse_relay_origin',False)
+        if reuse and (self.table['count_aligned'].get('parts') or {}).get(pn,{}).get('role')!='relay':
+            self.fail(f'{pn}: writer START reuse_relay_origin on a partition without a relay origin');return [('missing',pn,bus)]
+        stages=self._stages(pn,'landing_writer_start',bus,int(cfg.get('depth',-1))-int(bool(reuse)))
+        if stages is None:return [('missing',pn,bus)]
+        prev=[self.start_net(pn)] if reuse else start_d
+        for i,st in enumerate(stages):
+            path=ident(pn)+f'.u_cland_writer_start_{ident(bus)}_{i}'
+            c=self.instance(path,'ot_dp_landing_relay')
+            if c:
+                self.clock(c,pn);self.equal_input(c,'d',prev);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
+            prev=[self.output(path,'q')]
+        return prev
+
+    def face_raw(self,c,pn,src):
+        """FSTART face flop raw reset: the start's own raw reset (src.rst_raw_n), or the type's declared local reset
+        copy (clock.landing_local_resets consumer): that copy, D = its planned raw tree node, releasing on the same
+        edge (equal root and relay depth) as the start's raw reset."""
+        default=[self.term(b) for b in src.ports.get('rst_raw_n',[])] if src is not None else [('missing',pn,'rst_raw_n')]
+        prefix=ident(pn)+'.';lr=self.local_resets(pn).get(c.path[len(prefix):])
+        own=self.local_resets(pn).get(src.path[len(prefix):]) if src is not None else None
+        if lr is None and own is None:
+            self.equal_input(c,'rst_raw_n',default);return
+        self.checks+=1
+        bits=c.ports.get('rst_raw_n',[]);sb=src.ports.get('rst_raw_n',[]) if src is not None else []
+        if len(bits)!=1 or len(sb)!=1:self.fail(c.path+': exact one-bit raw reset required');return
+        if lr is not None:
+            up=self._local_copy(c,pn,'rst_raw_n',lr)
+            if up is None:return
+            # the copy's D is exactly the planned raw tree node (same walk as every planned reset)
+            self.check_reset(up,pn,lr[1],port='d',wave=True)
+        elif self.term(bits[0])[1:2]!=() and str(self.term(bits[0])[1]).startswith(prefix+'u_cland_lrst_'):
+            self.fail(c.path+': undeclared local reset copy on rst_raw_n');return
+        if self.release(bits[0])!=self.release(sb[0]):
+            self.fail(f'{c.path}.rst_raw_n: release {self.release(bits[0])!r} != start raw release {self.release(sb[0])!r}')
 
     def start_net(self,pn,receiver=None):
         """a landed partition's count start: its origin's start, or (intra-region relay, DIE-KV-3/CAORIGIN) its rx
@@ -429,17 +611,26 @@ class Verification:
         if model:
             self._check_regional_origin(pn)
             return self.output(ident(pn)+'.u_cland_fstart_'+bus,'q')
-        if not ca.get('strap_form') or (ca.get('parts') or {}).get(pn,{}).get('role')=='relay':return self.start_net(pn)
+        relay=(ca.get('parts') or {}).get(pn,{}).get('role')=='relay'
+        # landing_relay_start_copy (clock_landings._origin_rtl): a strap-form relay partition keeps its own FSTART face
+        # flops: d-side = the rx flop's D (cland_rstart_in), raw reset = the rx flop's raw reset
+        relay_copy=relay and bool(ca.get('strap_form')) and \
+            (self.raw['partition_types'].get(self.parts[pn]['type']) or {}).get('landing_relay_start_copy') is True
+        if not ca.get('strap_form') or (relay and not relay_copy):return self.start_net(pn)
         path=ident(pn)+'.u_cland_fstart_'+bus
         if path not in self._fstart_checked:
             self._fstart_checked.add(path)
             c=self.instance(path,'ot_dp_landing_relay')
             if c:
-                src=ident(pn)+'.u_cland_root' if self._strap_root(pn) else self._origin_path(pn)
+                if relay_copy:
+                    o=self.byname.get(ident(pn)+'.u_cland_rstart_rx')
+                    start_d=[self.term(b) for b in o.ports.get('d',[])] if o is not None else [self.output(ident(pn)+'.u_cland_rstart_rx','d')]
+                else:
+                    src=ident(pn)+'.u_cland_root' if self._strap_root(pn) else self._origin_path(pn)
+                    start_d=[self.output(src,'start_d')];o=self.byname.get(src)
                 self.clock(c,pn)
-                self.equal_input(c,'d',[self.output(src,'start_d')])
-                o=self.byname.get(src)
-                if o is not None:self.equal_input(c,'rst_raw_n',[self.term(b) for b in o.ports.get('rst_raw_n',[])])
+                self.equal_input(c,'d',self.writer_start(pn,bus,start_d))
+                if o is not None:self.face_raw(c,pn,o)
         return self.output(path,'q')
 
     def _strap_root(self,pn):
@@ -537,8 +728,14 @@ class Verification:
             if not rel:continue
             tx=self.instance(ident(pn)+'.u_cland_rstart_tx','ot_dp_landing_relay')
             if tx:
-                node,relay=self._raw_node(pn,ins,info)
-                self.clock(tx,pn);self.check_reset(tx,pn,node,relay,port='rst_raw_n')
+                self.clock(tx,pn)
+                if ca.get('strap_form'):
+                    # strap origin (clock_landings._origin_rtl): the tx flop shares the origin's own raw reset (the
+                    # selected tree bus / START pin raw, or the root's), the origin's own raw is checked above
+                    self.face_raw(tx,pn,self.byname.get(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path))
+                else:
+                    node,relay=self._raw_node(pn,ins,info)
+                    self.check_reset(tx,pn,node,relay,port='rst_raw_n')
                 self.equal_input(tx,'d',[self.output(path,'start')])
             for q in sorted(rel):
                 v=cparts[q]
