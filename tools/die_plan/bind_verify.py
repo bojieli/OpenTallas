@@ -292,26 +292,49 @@ class LintSources:
         return ok, [q for q in prefer if str(Path(q).resolve()) not in bad]
 
     def _closure(self, names, extra_files):
+        """closure passes until the picks are stable: a pass whose pick a later-scanned instantiator cannot serve is
+        repeated with every PICKED instantiator's named parameters known up front (the result must not depend on scan
+        order); at most 4 passes, the last one's conflicts stand"""
+        files, missing, prov = self._closure_pass(names, extra_files, None)
+        for _ in range(3):
+            if not self.conflicts:
+                break
+            prev = dict(self.picks)
+            files, missing, prov = self._closure_pass(names, extra_files, self._picked_need())
+            if self.picks == prev:
+                break
+        return files, missing, prov
+
+    def _picked_need(self):
+        """{module: parameter names set by name in the PICKED definitions that instantiate it}: a sibling module of a
+        picked file whose own pick is another file is not elaborated (the split run reads one definition per module)"""
+        need = {}
+        for c, by in self._need_src.items():
+            for (f, owner), ps in by.items():
+                if owner is None or self.picks.get(owner, f) == f:
+                    need.setdefault(c, set()).update(ps)
+        return need
+
+    def _closure_pass(self, names, extra_files, seed):
         import bind as B
         known = set(self.idx) | set(self.wide)
         seen, files, missing = set(), [], set()
         self.picks, self.conflicts, self.moved = {}, {}, {}
-        need = {}                     # module -> parameter names its scanned instantiators set by name
+        # module -> parameter names the picked instantiating bodies set by name (seeded: from the previous pass)
+        need = {k: set(v) for k, v in (seed or {}).items()}
+        self._need_src = src = {}         # module -> {(file, instantiating module): parameter names}
 
-        def found(body):
+        def found(body, f, owner, picked):
             got = E.instantiated(body, known)
             for c, ps in B._named_param_overrides(body, got).items():
-                need.setdefault(c, set()).update(ps)
-                p = self.picks.get(c)
-                if p is not None and self.added.get(c) != "macro" and not need[c] <= self.declared_params(p, c):
-                    # reached again from an instantiator its picked definition cannot serve (two leaves needing two
-                    # different definitions of one name): one lint run cannot hold both -> lint_split splits the run
-                    self.conflicts.setdefault(c, set()).update(need[c] - self.declared_params(p, c))
+                src.setdefault(c, {}).setdefault((f, owner), set()).update(ps)
+                if picked and seed is None:
+                    need.setdefault(c, set()).update(ps)
             return sorted(got)
         todo = list(names)
         for f in extra_files:
             for m in E.MOD_RE.finditer(self.text(f)):
-                todo += found(self.body(f, m.group(1)))
+                todo += found(self.body(f, m.group(1)), f, None, True)
         while todo:
             n = todo.pop()
             if n in seen:
@@ -329,16 +352,20 @@ class LintSources:
                 if f not in files:
                     files.append(f)
                 continue
-            if need.get(n) and not need[n] <= self.declared_params(f, n):
-                self.conflicts.setdefault(n, set()).update(need[n] - self.declared_params(f, n))
             if f not in files:
                 files.append(f)
                 txt = self.text(f)
                 for m in E.MOD_RE.finditer(txt):
-                    todo += found(self.body(f, m.group(1)))
+                    todo += found(self.body(f, m.group(1)), f, m.group(1), False)
                 for d in DEFINE_RE.finditer(txt):          # a macro body names its module bare: `define ROM ot_rom_x
                     todo += sorted({w for w in re.findall(r"[A-Za-z_]\w*", d.group(1)) if w in known})
-            todo += found(self.body(f, n))
+            todo += found(self.body(f, n), f, n, True)
+        # a picked definition that does not declare a parameter a picked instantiator sets by name: one lint run
+        # cannot hold both (two leaves needing two definitions of one name) -> lint_split splits the run
+        for c, ps in self._picked_need().items():
+            p = self.picks.get(c)
+            if p is not None and self.added.get(c) != "macro" and not ps <= self.declared_params(p, c):
+                self.conflicts[c] = ps - self.declared_params(p, c)
         return files, sorted(missing), list(extra_files)
 
     def leaf_groups(self, leafm):
@@ -379,6 +406,45 @@ def split_stub_text(text):
             re.finditer(r"^[ \t]*module\s+([A-Za-z_]\w*)\b.*?^[ \t]*endmodule\b", text, re.S | re.M)}
 
 
+def dedup_by_pick(files, d, picks):
+    """bind.kit_strip_dups for one split lint run (QC cbx_q10: the NK group's closure reads nk_vr7n
+    ot_qwen_rom_tile_w12_land32.sv for ot_qwen_rom_tile_w12 AND rtl/hdc ot_qwen_rom_tile_w12.sv for a sibling module,
+    so two files define ot_qwen_rom_tile_w12 and Verilator keeps the first): every module defined by several run files
+    keeps the definition the closure picked (else the first); each other file is read as a copy with that module
+    removed (original unchanged; copies named by list position, two picked files may share a basename).
+    -> (files, the originals of the copies: their directories stay include dirs)"""
+    defs = {}
+    for f in files:
+        for m in E.MOD_RE.finditer(E._strip(Path(f).read_text(errors="replace"))):
+            defs.setdefault(m.group(1), [])
+            if f not in defs[m.group(1)]:
+                defs[m.group(1)].append(f)
+    if all(len(v) < 2 for v in defs.values()):
+        return list(files), []
+    dd = Path(d) / "dedup"
+    dd.mkdir(parents=True, exist_ok=True)
+    out, orig = [], []
+    for i, f in enumerate(files):
+        keep = {m: next((x for x in fs if m in picks and Path(x).resolve() == Path(picks[m]).resolve()), fs[0])
+                for m, fs in defs.items() if f in fs and len(fs) > 1}
+        if all(k == f for k in keep.values()):
+            out.append(f)
+            continue
+        new = Path(f).read_text(errors="replace")
+        for m in sorted(k for k, v in keep.items() if v != f):     # the bind.kit_strip_dups module cut
+            new, n = re.subn(r"^[ \t]*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(m) + r"\b.*?^[ \t]*endmodule\b[^\n]*\n?",
+                             "", new, count=1, flags=re.S | re.M)
+            if n != 1:
+                raise RuntimeError(f"lint dedup: cannot strip duplicate module {m} from {f}")
+        sub = dd / f"{i:03d}"
+        sub.mkdir(exist_ok=True)
+        c = sub / Path(f).name
+        c.write_text(new)
+        out.append(str(c))
+        orig.append(str(f))
+    return out, orig
+
+
 def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
     """asbuilt.lint_split: a die too large for one Verilator run is linted in pieces that together cover it:
     the bound top + every partition module against leaf INTERFACE stubs, then each partition module with the real
@@ -390,7 +456,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
     stubs = E.lib_stubs(lib, ldir / "leaf_stubs.sv")
     runs = {"top": [stubs, str(rs)] + gen_rtl}
     cells = [f for f in gen_rtl if Path(f).name == "bind_cells.sv"]
-    byfile, tops, stubbed = {}, {}, set()
+    byfile, tops, stubbed, incs_of = {}, {}, set(), {}
     for f in gen_rtl:
         if f.endswith("_bound_top.sv") or f in cells:
             continue
@@ -407,17 +473,23 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
             # the interface stubs of the partition's other leaves; together the runs cover every leaf once
             other = split_stub_text(Path(stubs).read_text(errors="replace"))
             m = mods[0]
-            if all(x in other for x in leafm):
+            # a leaf with no interface stub (a bind cell such as ot_dp_lk, read by every run via bind_cells.sv) is
+            # linted in every group's run; only stubbed leaves outside the group become stubs
+            shared = sorted(x for x in leafm if x not in other)
+            groups = [g for g in ([x for x in g if x in other] for g in groups) if g]
+            if len(groups) > 1:
                 for k, g in enumerate(groups):
                     name = m if k == 0 else f"{m}__group{k}"
                     sd = ldir / name
                     sd.mkdir(exist_ok=True)
                     sf = sd / "other_leaf_stubs.sv"
-                    sf.write_text("".join(other[x] for x in sorted(set(leafm) - set(g))))
-                    gl, _ = idx.closure(g)
+                    sf.write_text("".join(other[x] for x in sorted(set(leafm) - set(g) - set(shared))))
+                    gl, _ = idx.closure(sorted(set(g) | set(shared)))
+                    gl, orig = dedup_by_pick(gl, sd, dict(idx.picks))
                     byfile[name] = [f] + cells + [str(rs), str(sf)] + gl
                     tops[name] = m
                     stubbed.add(name)
+                    incs_of[name] = orig
     runs.update(byfile)
 
     def one(item):
@@ -426,7 +498,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         d.mkdir(exist_ok=True)
         # the top run reads leaf stubs, which keep the leaves' `include lines: their source directories are include dirs
         return name, lint(d, top if name == "top" else tops.get(name, name), files, defines, waive,
-                          lib if name == "top" or name in stubbed else ())
+                          (list(lib) + incs_of.get(name, [])) if name == "top" or name in stubbed else ())
     res = dict(ThreadPoolExecutor(int(ab0.get("lint_jobs", 4))).map(one, sorted(runs.items())))
     errs = sum(r.get("errors", 0) for r in res.values() if r.get("ran"))
     first = [f"[{n}] {e}" for n, r in sorted(res.items()) for e in r.get("first_errors", [])][:20]
