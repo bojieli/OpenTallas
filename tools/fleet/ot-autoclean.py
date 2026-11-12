@@ -70,6 +70,8 @@ HOSTNAME_ALIAS = {"ubuntu": "localhost", "key-cardinal": "intel1", "tolerant-swi
 AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
+GRACE_S = 2 * 3600          # --aggressive (OWNER 11-12): the only age wait, after a job ends
+D_SKIP_LANES = {"autopilot", "ot-jobs", "explorer-2-work", "explorer-2", "restore-head", "signed-keep", "_ot_autoclean_ctl", "hub-coord"}
 # LOCALHOST_1111: localhost holds lane and Codex trees outside the scratch roots (~/wt, ~/codex-*, ~/wt-codex-*,
 # ~/scratch-codex-*); `run --host localhost` scans them too (OWNER 11-06: finished runs in Codex trees are pruned on
 # localhost and fleet; 10-29: idle Codex worktrees > 12 h).  NEVER_TOUCH is refused on every host, by path and realpath.
@@ -1205,7 +1207,7 @@ class Job:
         if h:
             return "local keep: " + h
         h = self.queue.hit(k)
-        if h:
+        if h and not getattr(self, "_attempt_mode", False):          # OWNER 11-12: a queue post does not hold a terminal / superseded attempt
             return "queuepath: " + h
         rest = k.split("/claude/", 1)[1].split("/")[1:] if "/claude/" in k else []
         for i, n in enumerate(rest):
@@ -1216,7 +1218,7 @@ class Job:
         w = self.live.why(self.paths.forms(k))
         if w:
             return w
-        for f in files:
+        for f in ([] if getattr(self, "_attempt_mode", False) else files):
             try:
                 if os.stat(f).st_nlink > 1:
                     return "hardlink " + f
@@ -1366,6 +1368,7 @@ class Job:
         h = self.kwkeep.hit(c)
         if h:
             return "kitwave-keep: " + h, []
+        aggr = bool(getattr(self.a, "aggressive", False))
         if st and st["signed"]:
             return "kit-wave signed", []
         if st and st["active"]:
@@ -1378,18 +1381,20 @@ class Job:
             verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
         elif cur > int(m.group(2)):               # older attempt of a die|item now run from another plan dir
             verdict = f"superseded-xpath by attempt_{cur}"
+        elif aggr and not st:
+            verdict = "no kit-wave state row (aggressive)"
         else:
             return "kit-wave unknown", []
         h = self.signed_set.hit(c)
-        if h:
+        if h and not (aggr and self.stub_verified(c) is None):       # aggressive: a verified AGIdock copy lets the signed attempt go
             return "signed: " + h, []
         for g in self.found["git"]:
             if g.startswith(d + "/"):
                 return "git inside " + g, []
         newest, size, hl = tree_info(d)
-        if self.now - newest < AGE_S:
-            return "lt6h", []
-        if hl:
+        if self.now - newest < (GRACE_S if aggr else AGE_S):
+            return "lt6h" if not aggr else "lt2h", []
+        if hl and not aggr:                                          # aggressive: unlinking one name of a shared inode is safe
             return "hardlink " + hl, []
         h = self.dx_hold(d, "newest" if verdict.startswith("finished") else "superseded")
         if h:
@@ -1397,11 +1402,13 @@ class Job:
         self._attempt_note = verdict
         # --queuename-skip-superseded: a bare item NAME in a queue post protects the item's current attempt, not
         # older attempts the state has superseded (an exact queue PATH still protects them)
-        self._qn_skip = bool(getattr(self.a, "queuename_skip_superseded", False)) and verdict.startswith("superseded")
+        self._qn_skip = (bool(getattr(self.a, "queuename_skip_superseded", False)) and verdict.startswith("superseded")) or aggr
+        self._attempt_mode = aggr
         try:
             return self.common_why(d, []), [d]
         finally:
             self._qn_skip = False
+            self._attempt_mode = False
 
     # ---- recheck + delete
     def recheck(self, cls, path, files):
@@ -1437,6 +1444,11 @@ class Job:
                 _, size, _ = tree_info(f)
                 r = subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True,
                                    timeout=7200)
+                if r.returncode and "ermission denied" in r.stderr and getattr(self.a, "aggressive", False) \
+                        and os.path.realpath(f) == f and not os.path.islink(f):
+                    # root-owned files from docker jobs: the same path, already approved by every guard, removed as root
+                    r = subprocess.run(["sudo", "-n", "rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True,
+                                       timeout=7200)
                 if r.returncode:
                     raise OSError(r.stderr.strip()[:200])
                 freed += size
@@ -1474,6 +1486,122 @@ class Job:
         self.rows.append([time.strftime("%F %T"), self.host, cls, verdict, " ".join(reason.split())[:300], path,
                           ",".join(os.path.basename(f) for f in files) if cls != "a" else "<tree>", size, int(mtime)])
         return verdict
+
+
+    # ---- class d (OWNER 11-12 "aggressive cleanup ... the jobs are self contained"): lane trees that nothing keeps
+    def d_keepset(self):
+        """paths kept whole (live / referenced / signed-unarchived / git / never-touch) and their ancestors (never deleted whole)"""
+        keep = set()
+        for t in NEVER_TOUCH_PATHS:
+            keep.add(os.path.realpath(t))
+            keep.add(t)
+        for g in self.found["git"]:
+            keep.add(os.path.dirname(g))                 # a checkout / worktree (the worktree reaper owns it)
+        for r in self.found["record"]:
+            if read_record(r)[0]:
+                keep.add(unit_of(r))
+        for a in self.found["attempt"]:                  # attempts still on disk after class a (it decides them)
+            if os.path.isdir(a):
+                keep.add(a)
+        for kp in self.found["keep"]:
+            if not self.keep_expired(kp):
+                keep.add(os.path.dirname(kp))
+        anc = set()
+        for k in keep:
+            anc.update(ancestors(k))
+        return keep, anc
+
+    def d_why(self, p, keep, anc):
+        """None = deletable whole; 'recurse' = holds something kept, look inside; else the reason it stays"""
+        c = self.paths.canon(p)
+        if c in keep or p in keep:
+            return "kept: referenced / signed / git / keep"
+        for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep),
+                         ("local keep", self.localkeep_trim)):
+            for f in self.paths.forms(p):
+                h = ps.hit(f)
+                if h:
+                    return "recurse" if h.startswith("holds") else f"{name}: {h}"
+        w = self.live.why(self.paths.forms(p))
+        if w:
+            return w
+        g = git_locked(p)
+        if g:
+            return "gitlocked " + g
+        if c in anc or p in anc:
+            return "recurse"
+        return None
+
+    def prune_lane_trees(self, gone):
+        a = self.a
+        keep, anc = self.d_keepset()
+        n_del = 0
+
+        def visit(p, depth):
+            nonlocal n_del
+            try:
+                st = os.lstat(p)
+            except OSError:
+                return
+            if stat.S_ISLNK(st.st_mode) or never_touch(p):
+                return
+            if stat.S_ISDIR(st.st_mode):
+                if os.path.exists(os.path.join(p, ".ot-hold")):
+                    return
+                why = self.d_why(p, keep, anc)
+            else:
+                why = None
+            if why == "recurse":
+                try:
+                    kids = sorted(os.listdir(p))
+                except OSError:
+                    return
+                for n in kids:
+                    visit(os.path.join(p, n), depth + 1)
+                return
+            if depth < 2 and why is None and stat.S_ISDIR(st.st_mode):
+                pass
+            size = 0
+            if why is None:
+                newest, size, _hl = tree_info(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
+                if self.now - newest < GRACE_S:
+                    why = "lt2h"
+            verdict = "SKIP" if why else ("WOULD" if not a.apply else "DELETE")
+            if not why:
+                g = self.guard_hits(p) or self.indep_hit(p, [])
+                if g:
+                    self.recheck_hits += 1
+                    self.alerts.append(f"d\t{p}\t{g}")
+                    verdict, why = "ALERT", g
+                elif a.apply:
+                    self.load_protected()
+                    self.live.refresh()
+                    w2 = self.d_why(p, keep, anc)
+                    if w2:
+                        verdict, why = "SKIP", "recheck: " + w2
+                    else:
+                        try:
+                            self.delete("a", [p]) if stat.S_ISDIR(st.st_mode) else os.unlink(p)
+                            verdict = "DELETED"
+                            gone.append(p)
+                        except OSError as e:
+                            verdict, why = "ERROR", str(e)[:200]
+            if verdict in ("DELETED", "WOULD", "ERROR", "ALERT") or why not in (None,) and verdict == "SKIP" and size > (1 << 30):
+                self.rows.append([time.strftime("%F %T"), self.host, "d", verdict, " ".join((why or "aggressive lane tree").split())[:300],
+                                  p, "<tree>", size, int(st.st_mtime)])
+            return
+
+        for r in self.roots:
+            try:
+                lanes = sorted(os.listdir(r))
+            except OSError:
+                continue
+            for lane in lanes:
+                lp = os.path.join(r, lane)
+                if lane in D_SKIP_LANES or lane.startswith(("tok-", "kv-fn-")) or "tool" in lane or os.path.islink(lp) \
+                        or not os.path.isdir(lp):
+                    continue
+                visit(lp, 1)
 
     # ---- class s: stub-trim of a signed unit whose archive copy is verified (COORD 11-11, KW-FIX-46)
     def stub_verified(self, unit):
@@ -1809,6 +1937,8 @@ class Job:
                     continue
                 v = self.handle(cls, d, files, why, mt)
                 stop = v == "ALERT"
+        if "d" in classes and not stop and getattr(a, "aggressive", False):
+            self.prune_lane_trees(gone)
         if "s" in classes and not stop:
             for unit in sorted(self.stub_units()):
                 if stop:
@@ -2353,6 +2483,9 @@ def main(argv=None):
                    help="do not read protect.d/protected-dbs.txt (this job's own union) back as a keep source; a path stays "
                         "only while a real source names it; finished ot-run spill records (spill_pending/*.done) stop holding "
                         "paths, pending *.json records still hold (COORD 11-08)")
+    r.add_argument("--aggressive", action="store_true",
+                   help="OWNER 11-12 aggressive mode: keep only live jobs, kit-wave-referenced trees, unarchived signed units and the protected lists; "
+                        "2 h grace, no queue-name/path holds on terminal attempts, attempts without a state row go, class d prunes lane trees")
     r.add_argument("--keep-expire-h", type=float, default=0.0,
                    help="DISK-1111: a .keep file untouched for this many hours (168 = 7 days) no longer holds a unit; 0 = off")
     r.add_argument("--c-old-keep-h", type=float, default=0.0,
