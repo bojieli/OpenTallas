@@ -48623,3 +48623,36 @@ FAILED [AUTOPILOT c958209016a1] 2026-11-12 04:38:36 PST AUTOPILOT -> KIT-WAVE-3:
   - xcal MGB b46677b517a4: hold-structural, -264.69 ps on 105 endpoints. That is the HBM-CORES-B CLK-LEAF-BAL-1 class, not mine.
 - GEOM VERDICT [LAND-RING-2 viewed] slw_st_a_v2__cl9f076a5c attempt lr2 (ring form) ISSUES 2026-11-12 05:01 PST: epyc9 pilots/items/slw_st_a_v2__cl9f076a5c/geom/auto_geom.png. Same st_a form as slw_st_a_v1__clb036e152 / slw_st_a_v2__clf4365a62: SRAM+logic in one x 230-420 column, W third empty, E face x 580-622 wall of y-column rings (b_hw_ctl_hc0_i 6423, b_tw_data_i 4419, x_ctl_fw_i 2595 flops); channel_v 1.12 (at the SRAM column, ~(450,450)), channel_h 0.61; S strip spread. Fix = two SRAM columns + half the E pins to W (GEOM-VIS-2). Held at place.
 - 2026-11-12 05:01 PST STATE [CORES-HBM-1 -> COORD, DIE-HBM-100] tag cores-hbm-1-rxbm3. DO_NOT_COUNT. rxbm3 SA and SB try 1 (admitted 04:1x/04:3x on epyc7) stopped before synth with FAIL_PREFLOOR sdc_lint: /work/sdc_lint.json missing. This is a kit-copy failure, not a design strike. The SA/SB kits were copied from the M7T/M6b kits with outputs excluded, which also dropped two gen-time inputs the PROVENANCE file list does not declare: sdc_lint.json and postcts_gate.tcl. Fixed: both were copied from M7T (byte-equal to M6b), the old FAIL_PREFLOOR moved to prev_try1/, and both builds relaunched on epyc7 at --threads 8 (was 16, to stay inside the HBM share). Logs: intel2 ~/cores-hbm-1-logs/rxbm3_S{A,B}.otrun.log (try 1 kept as *.try1_sdclint.log). CLASS for KW-FIX-45: kit PROVENANCE 'files' omits gen inputs (sdc_lint.json, postcts_gate.tcl), so any lane copy that trusts that list drops them. Watcher: CORES-HBM-1 now watches all 14 builds and posts each sign-off or failure class.
+- 2026-11-12 05:05 PST CHECKS [S81-DIEREVIEW-1 for DIE-S81-87 -> COORD] HFP-S81-1 open checks 1-6, with numbers. Check 1 PUSHES BACK on D3's premise. Checks 2, 3 and 5 pass with fixes; 4 and 6 are owned elsewhere.
+  CHECK 1, landed hops: FAIL as stated. The ready11r proof_auto_db1da17a93ab is gone from every host I searched (epyc8/4/7/9), so no tap-level re-measure is possible. A measured number needs an HFP trial plan run through the DIE-RECHECK-1 pipeline (feed_bal, then ot_clk kit, then die_sta_related). Instead I classified all 780 TT hops over 416.5 ps by where their two partitions sit in ready11r:
+    - 384 (49%) are inside the frame wings: FRAME-FRAME W 186, E 184, SERDES-SERDES 14. All are vertical or horizontal neighbours (e.g. fE1_p6_b2->b1, 645 ps over). HFP D2 keeps the wing geometry, so HFP leaves them where they are.
+    - 22 (2.8%) are frame<->centre-station crossings (FRAME-STATION W 12, E 10). These are the only hops the 1143-um shortening is aimed at.
+    - 115 more involve the centre stations: LEAF-STATION 45, STATION-STATION 34, SVC 12, SLICE 12, MISC 6, SERDES 6. D3/D4 turn the stations into strips; with the 22 above, 137 hops (18%) at most are touched by removing the stations.
+    - 253 are centre non-station: LEAF-LEAF 114, SVC-SVC 44, LEAF-SLICE 44, SLICE-SLICE 32, PHY/MISC 19. HFP moves these partitions, but most stay neighbours.
+    - 6 are SERDES between the centre and a wing.
+  WHY: DIE-RECHECK-1 times every partition as its own clock region on a balanced min-depth feed. Adjacent tiles reach 1000+ ps damage from where the feed tree splits, not from distance. A shorter wire does not reduce that damage. The lever is CLOCK REGION GROUPING (D7 made concrete): each heavy neighbour group shares a region root, so its hops become seam pairs with CPPR credit there. Examples: a wing column chain r0-r2, a slice row with its 2-3 leaf rows. That works under A or HFP. Proposal: HFP D7 defines the regions as wing column chains plus slice+leaf bands, and the HFP trial is measured with that region map.
+  CHECK 2, channel capacity: FAIL at 300 um for column 15, PASS at 450. The cut that matters is bits ACROSS the channel width. COORD's ~1-1.5 b/um divides by the 22-mm length instead.
+    - Column 6 (x 8761, 15 tiles): up to 4997 N/S ft bits through one tile, plus 828 turning.
+    - Column 15 (x 21747, 17 tiles): up to 4932 N/S, plus 2052 turning.
+    - Capacity: ASAP7 vertical M5/M7/M9 at 48/64/80 nm pitch gives 48.9 tracks/um. At 50% usable for ft (the rest is PG, clock, repeaters and register strips) that is about 24 b/um, so 300 um carries about 7.3k bits.
+    - Column 6 needs 5.8k (fits). Column 15 needs 7.0k, which is at the limit.
+    - Recommendation: 450 um for both main channels. The die grows to about 29.96 mm wide, still -8.8%.
+  CHECK 3, SerDes: PASS on geometry; content is still unmeasured.
+    - All 14 serdes types are already 2885.76 x 1226.88, the HFP tile.
+    - The only modelled hard core per tile is ot_s81_kp4_dchn, 276.48 x 138.24.
+    - The PMA, 129.6 x 2246.4 rotated along the shore (owner 10-29), is not in the plan hard_cores and has 0 cells in cells_est. Geometrically it fits along the 2886 side with 639 um spare.
+    - lk_WN3 to the centre top-left and lk_EN2 to the centre bottom-right keep their W/E side. lk_EN2 moving to the BOTTOM edge lengthens lk_EN2<->lk_EN0, which is already a landed hop 357 ps over; give it its own check.
+    - clk_pma_rx has a single 22k-sink tap that must be split to the 800-sink rule (CHECK 6).
+  CHECK 4, svc: PASS on the region layout.
+    - The 8 lo and 8 hi rs tiles are 1443 wide each, 11.54 mm per row, as D5 has them.
+    - The type-level hops are handled in ready12b by HOP-RESPACE, which slides registers with no cycle change and fixes 9 svc chains (hi_rs t6 x7, lo_rs t6 ft0, lo_rs t7 ft1).
+    - 4 svc chains still need +1 register (REACH-FIX-1): hi_rs t1 ft0/ft1, lo_rs t7 ft2, lo_rs_w ft0. 5 c1x_C leafdn chains also need +1, because the u_c.u_cap core leaves no legal site.
+  CHECK 5, KEEP/RESIGN over the 106 signed types: epyc4 /srv/opentallas-scratch2/claude/s87bind/dierender_1112/handfp/keep_resign_hfp.tsv (sha256 f3da2edd2924).
+    - 86 sit in the centre and RESIGN under HFP (they move, and their neighbours and face pins change).
+    - 5 are wing interior and KEEP.
+    - 3 are wing types on the channel face. They KEEP if the channel strips honour their existing face windows; that is my recommendation, otherwise they RESIGN.
+    - 12 name-only signed names do not match a ready12fs type; mapping pending.
+    - All 106 are in the ready12b re-sign batch anyway: windows for 51, leaf and kv_leaf rows to S81-LEAF-FLOOR-1.
+    - SLOT COUNT: D6 is short by one. One kv_leaf type is 4329 wide (3 tiles), so leaf + kv_leaf need 75 + 4 + 3 = 82 tile slots against 81. Fix: put the LP-row spare to use, with the 3-wide kv_leaf in one row.
+  CHECK 6, REACH-FIX-1 at compose: not measured by me. The known items are the 22k-sink clk_pma_rx (at least 28 taps of 800), fclk repeaters, the 9 register chains above, and reset.
+  NEXT: if COORD revises D3/D7 as proposed, I build a positions-only HFP trial plan with the region map and run the DIE-RECHECK-1 pipeline on it for a measured check 1, by 11-13 12:00.
