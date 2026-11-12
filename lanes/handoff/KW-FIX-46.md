@@ -83,3 +83,11 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - GOTCHA: an ssh `timeout` kills the local client but NOT the remote loop. Kill your own remote loop by exact PID.
 - 09:3x: p6_relay (505 files) copied epyc7 -> epyc2/epyc9/intel2; manifests match; 0 wave rows needed relaunch. epyc9 load posted (09:29: 74/96, run 42). The calm class is relaunched: q_mcb_ne/q_spu0/q_spu0__physical_v1 @2 and PHY_NE@5, q_su00@2 are all on epyc9. q_b013__physical_v1@14 and q_spu1__physical_v1@10 wait on OWNERS state GEOM-REQ/REVIEW. Their state records were reclassified to INFRA, with class_was_kw46 kept.
 - OPEN (do AFTER ROOT-MERGE-60 lands edf6623be211, so the tip stays the one under test): at collect, a FLOW "tool input file missing" or KIT_NOT_SELF_CONTAINED on a host that the same tick's probe lists as SRC-INCOMPLETE for the die -> INFRA (hold_unchanged otherwise holds the retry). Also: rebase kw43-rootreal ot-run on the main backend (ASK 08:31).
+
+## 11-12 14:4x update
+- LIVE kit_wave.py md5 b34e97d7404c = claude/kw-fix-46-flowrepeat-1112@6e8bc43d6ef3 (FLOW-REPEAT hold + retry-epoch re-arm fix), deployed 14:29; backup kit_wave.py.bak-kw46-flowrepeat-1112. READY to ROOT-MERGE-60 (merges clean on main and with the wdcpu branch).
+- Branch claude/kw-fix-46-wdcpu-1112@2885660ba67e (watchdog idle = no log AND no CPU) is READY but not live (watchdog.py is in the owner checkout and goes live only through the merge).
+- hbm PHY_NC is held in kit_wave.json hold_items (coord ec5dfc851b5). Cause: c87611d612d9 (phy-core-area) was approved but never landed, so the src src_hbm_main_9fc09952cd_q0g_p18 lacks it. To release: land it, replace gen_phys.py on the HBM gen hosts as a new inode (it is hardlinked), set retry PHY_NC@3 with retry_fix "FLOW-FIX: c87611d612d9", and drop the hold_items entry.
+- dies.hbm.owner_lane is now DIE-HBM-101.
+- ap-2731c12447d5-a2 ended DONE-CRASH at 13:42 (the attempt_4 kit dir is gone): moot.
+- S81 STA2204 rows: 3 are past 3_4 and none shows STA-2204; the watcher /tmp/kw46_watch6.final on intel2 writes the final state.
