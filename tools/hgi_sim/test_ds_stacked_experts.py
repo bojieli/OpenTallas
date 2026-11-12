@@ -28,9 +28,11 @@ class StackedExperts(unittest.TestCase):
                 for slot, rec in enumerate(sm):
                     b, o = rec.desc['B'], rec.desc['O']
                     ent, ex, row, _ = self.man.find(b.base)
-                    self.assertEqual((b.m, b.n, row, o.n), (48, 5120, 48 * rank, 48))
+                    # routed: per-die image (the rank's 2 x 24 rows from local row 0, 48-row expert stride);
+                    # shared: one whole-matrix image, the rank's shard at 48 x rank
+                    self.assertEqual((b.m, b.n, row, o.n), (48, 5120, 0 if slot < 6 else 48 * rank, 48))
                     self.assertEqual(b.indexed, int(slot < 6))
-                    self.assertEqual(b.dyn_mul, 4608 * b.stride if slot < 6 else 0)
+                    self.assertEqual(b.dyn_mul, 48 * b.stride if slot < 6 else 0)
                     self.assertEqual(o.base, self.layout.vm[f'e{slot}.g'])
                     self.assertEqual(rec.src, (0, 3*slot, [3*slot+1]))
                     self.assertEqual(set(rec.writes), {f'e{slot}.g', f'e{slot}.u'})
@@ -56,6 +58,18 @@ class StackedExperts(unittest.TestCase):
         wrows = N.ds_units(self.model, self.man, Golden())['_wrows']
         for ent in self.man.ent:
             ex = 17 if ent['experts'] > 1 else 0
+            if ent.get('tp_rows'):          # routed: per-die image, image rows name the reading rank's own rows
+                for rank in (0, 1, 50, 95):
+                    want = np.concatenate([np.arange(rank*24, (rank+1)*24)[:,None]*32 + np.arange(32)[None,:] +
+                                           mat*100000 + ex*1000000 for mat in (1, 3)])
+                    for lo, n in ((0,48),(23,2),(47,1),(0,24),(24,24)):
+                        got = wrows(ent, ex, lo, n, 0, 32, 0, rank=rank)
+                        np.testing.assert_array_equal(got.q, want[lo:lo+n])
+                    with self.assertRaises(N.MC.Fault):
+                        wrows(ent, ex, 40, 9, 0, 32, 0, rank=rank)
+                with self.assertRaises(ValueError):
+                    wrows(ent, ex, 0, 48, 0, 32, 0)
+                continue
             want = []
             for rank in range(96):
                 for mat in (1,3):
