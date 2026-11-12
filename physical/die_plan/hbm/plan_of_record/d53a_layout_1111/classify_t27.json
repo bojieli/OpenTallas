@@ -1,0 +1,75 @@
+{
+ "base_sha256": "9a52537c5f067b1cf7ca33af831a7da77f1b13fefeb99e326b9123c6e69c0e52",
+ "new_sha256": "5988516c6cc62104420775a1455bf86758c7e4ff972329f91aa36d4a861da45f",
+ "changed_paths": 42,
+ "by_class": {
+  "ft_bands_windows": {
+   "n": 34,
+   "paths": [
+    "partition_types/q_b113/ft_slots/name=L1271x7/regs_um/11/1",
+    "partition_types/q_b113/ft_slots/name=L1271x7/regs_um/12/1",
+    "partition_types/q_b113/ft_slots/name=L1271x7/regs_um/13/1",
+    "partition_types/q_b113/ft_slots/name=L1271x7/regs_um/14/1",
+    "partition_types/q_b113/ft_slots/name=L1271x7/regs_um/15/1",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/3/0",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/3/1",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/4/0",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/4/1",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/5/0",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/5/1",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/6/0",
+    "partition_types/q_b113/ft_slots/name=L8350x3/regs_um/6/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5076x3/regs_um/1/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5076x3/regs_um/2/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5076x3/regs_um/3/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5076x3/bit_site_cell_um",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5076x3/bit_sites_um",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/5/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/5/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/6/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/6/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/7/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/7/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/8/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L5096x8/regs_um/8/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/3/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/3/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/4/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/4/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/5/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/5/1",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/6/0",
+    "partition_types/q_b113__physical_v1/ft_slots/name=L8350mx3/regs_um/6/1"
+   ]
+  },
+  "other": {
+   "n": 2,
+   "paths": [
+    "partition_types/q_b113/hard_cores/inst=u_sfucore_Q_opstore_a__g0/pins_file",
+    "partition_types/q_b113__physical_v1/hard_cores/inst=u_sfucore_Q_opstore_a__g0/pins_file"
+   ]
+  },
+  "outline": {
+   "n": 4,
+   "paths": [
+    "partition_types/q_b113/hard_cores/inst=u_sfucore_Q_opstore_a__g0/outline_um/0",
+    "partition_types/q_b113/hard_cores/inst=u_sfucore_Q_opstore_a__g0/outline_um/1",
+    "partition_types/q_b113__physical_v1/hard_cores/inst=u_sfucore_Q_opstore_a__g0/outline_um/0",
+    "partition_types/q_b113__physical_v1/hard_cores/inst=u_sfucore_Q_opstore_a__g0/outline_um/1"
+   ]
+  },
+  "positions_orients": {
+   "n": 2,
+   "paths": [
+    "partition_types/q_b113/hard_cores/inst=u_sfucore_Q_opstore_a__g0/origin_um/0",
+    "partition_types/q_b113__physical_v1/hard_cores/inst=u_sfucore_Q_opstore_a__g0/origin_um/0"
+   ]
+  }
+ },
+ "types_changed": [
+  "q_b113",
+  "q_b113__physical_v1"
+ ],
+ "types_removed": [],
+ "types_added": []
+}
