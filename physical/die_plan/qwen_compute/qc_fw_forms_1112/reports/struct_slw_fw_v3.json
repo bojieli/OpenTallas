@@ -1,0 +1,327 @@
+{
+ "reach_um": 350.0,
+ "out": [
+  {
+   "bus": "ard_wo",
+   "stations": 4,
+   "p99_um": 1499.3,
+   "leaf": [
+    281.622,
+    1321.92
+   ]
+  },
+  {
+   "bus": "arl_wo",
+   "stations": 2,
+   "p99_um": 610.2,
+   "leaf": [
+    610.2,
+    189.945
+   ]
+  },
+  {
+   "bus": "arm_wo",
+   "stations": 2,
+   "p99_um": 610.7,
+   "leaf": [
+    610.416,
+    191.025
+   ]
+  },
+  {
+   "bus": "art_wo",
+   "stations": 2,
+   "p99_um": 611.5,
+   "leaf": [
+    608.519,
+    195.109
+   ]
+  },
+  {
+   "bus": "arv_wo",
+   "stations": 2,
+   "p99_um": 609.9,
+   "leaf": [
+    608.364,
+    197.505
+   ]
+  },
+  {
+   "bus": "ccm_wo",
+   "stations": 2,
+   "p99_um": 610.1,
+   "leaf": [
+    609.984,
+    200.475
+   ]
+  },
+  {
+   "bus": "cct_wo",
+   "stations": 2,
+   "p99_um": 672.4,
+   "leaf": [
+    532.637,
+    309.285
+   ]
+  },
+  {
+   "bus": "ccv_wo",
+   "stations": 2,
+   "p99_um": 667.4,
+   "leaf": [
+    472.068,
+    403.515
+   ]
+  },
+  {
+   "bus": "ccw_wo",
+   "stations": 2,
+   "p99_um": 667.6,
+   "leaf": [
+    465.065,
+    405.506
+   ]
+  },
+  {
+   "bus": "dd_wo",
+   "stations": 1,
+   "p99_um": 353.4,
+   "leaf": [
+    350.055,
+    488.632
+   ]
+  },
+  {
+   "bus": "ss_wo",
+   "stations": 1,
+   "p99_um": 438.6,
+   "leaf": [
+    313.502,
+    293.673
+   ]
+  },
+  {
+   "bus": "x_ctl_o",
+   "stations": 3,
+   "p99_um": 954.0,
+   "leaf": [
+    517.278,
+    443.719
+   ]
+  },
+  {
+   "bus": "x_ctl_p1_o",
+   "stations": 3,
+   "p99_um": 433.4,
+   "leaf": [
+    381.402,
+    385.425
+   ]
+  },
+  {
+   "bus": "x_ctl_p2_o",
+   "stations": 3,
+   "p99_um": 537.5,
+   "leaf": [
+    319.129,
+    475.931
+   ]
+  },
+  {
+   "bus": "x_fe_o",
+   "stations": 2,
+   "p99_um": 163.0,
+   "leaf": [
+    325.89,
+    112.365
+   ]
+  },
+  {
+   "bus": "x_fe_p1_o",
+   "stations": 2,
+   "p99_um": 865.9,
+   "leaf": [
+    315.878,
+    144.47
+   ]
+  },
+  {
+   "bus": "x_fe_p2_o",
+   "stations": 2,
+   "p99_um": 574.9,
+   "leaf": [
+    319.129,
+    475.931
+   ]
+  },
+  {
+   "bus": "x_stm_o",
+   "stations": 2,
+   "p99_um": 669.1,
+   "leaf": [
+    315.19,
+    668.124
+   ]
+  },
+  {
+   "bus": "x_stm_p1_o",
+   "stations": 2,
+   "p99_um": 829.4,
+   "leaf": [
+    308.571,
+    704.145
+   ]
+  }
+ ],
+ "inn": [
+  {
+   "bus": "dr_wi",
+   "stations": 2,
+   "p99_um": 728.2,
+   "leaf": [
+    515.819,
+    442.351
+   ]
+  },
+  {
+   "bus": "x_ctl_i",
+   "stations": 3,
+   "p99_um": 1065.4,
+   "leaf": [
+    342.564,
+    359.837
+   ]
+  },
+  {
+   "bus": "x_ctl_p1_i",
+   "stations": 3,
+   "p99_um": 475.0,
+   "leaf": [
+    586.413,
+    192.79
+   ]
+  }
+ ],
+ "hops": {
+  "ring->bin": 244.2,
+  "bin->first": 330.0,
+  "chain": 350.4,
+  "chain_last->dest": 350.4
+ },
+ "far_bins": {},
+ "relay_sites": 9042,
+ "stations": [
+  {
+   "conn": "bus:ard_wo",
+   "n": 4
+  },
+  {
+   "conn": "bus:arl_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:arm_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:art_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:arv_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:ccm_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:cct_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:ccv_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:ccw_wo",
+   "n": 2
+  },
+  {
+   "conn": "bus:dd_wo",
+   "n": 1
+  },
+  {
+   "conn": "bus:ss_wo",
+   "n": 1
+  },
+  {
+   "conn": "bus:x_ctl_o",
+   "n": 3
+  },
+  {
+   "conn": "bus:x_ctl_p1_o",
+   "n": 3
+  },
+  {
+   "conn": "bus:x_ctl_p2_o",
+   "n": 3
+  },
+  {
+   "conn": "bus:x_fe_o",
+   "n": 2
+  },
+  {
+   "conn": "bus:x_fe_p1_o",
+   "n": 2
+  },
+  {
+   "conn": "bus:x_fe_p2_o",
+   "n": 2
+  },
+  {
+   "conn": "bus:x_stm_o",
+   "n": 2
+  },
+  {
+   "conn": "bus:x_stm_p1_o",
+   "n": 2
+  },
+  {
+   "conn": "bus:dr_wi",
+   "n": 2
+  },
+  {
+   "conn": "bus:x_ctl_i",
+   "n": 3
+  },
+  {
+   "conn": "bus:x_ctl_p1_i",
+   "n": 3
+  }
+ ],
+ "pin_cycles": {
+  "ard_wo": 4,
+  "arl_wo": 2,
+  "arm_wo": 2,
+  "art_wo": 2,
+  "arv_wo": 2,
+  "ccm_wo": 2,
+  "cct_wo": 2,
+  "ccv_wo": 2,
+  "ccw_wo": 2,
+  "dd_wo": 1,
+  "ss_wo": 1,
+  "x_ctl_o": 3,
+  "x_ctl_p1_o": 3,
+  "x_ctl_p2_o": 3,
+  "x_fe_o": 2,
+  "x_fe_p1_o": 2,
+  "x_fe_p2_o": 2,
+  "x_stm_o": 2,
+  "x_stm_p1_o": 2,
+  "dr_wi": 2,
+  "x_ctl_i": 3,
+  "x_ctl_p1_i": 3
+ }
+}

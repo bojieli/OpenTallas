@@ -1,0 +1,21 @@
+{
+ "plan": "/srv/opentallas-scratch3/claude/dq97/fw/anc/head_anc.json",
+ "plan_sha256": "08a1c69f4431984613853818825a77d02f4d8e1c8e21b85752895bab960300dc",
+ "rows": [
+  {
+   "type": "sle_fw_v3",
+   "sinks": 72427,
+   "old_max_load_actual": null,
+   "old_mode": "density",
+   "old_cap": 1200,
+   "cap": 1200,
+   "target": 900,
+   "radius": 200.0,
+   "status": "OK",
+   "new_taps": 127,
+   "new_max_load": 989,
+   "new_max_reach_um": 124.091,
+   "error": ""
+  }
+ ]
+}

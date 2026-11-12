@@ -1,0 +1,4659 @@
+{
+ "slw_fw_v3": {
+  "base_type_sha256": "9c6c21f35ee89794162e880c380c7c671431520392bb75d561267fb244008e70",
+  "clock": {
+   "edge_clocks": [
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_cmd_wi",
+     "tap_um": [
+      2.144,
+      432.224
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_cws0_i",
+     "tap_um": [
+      430.496,
+      1336.544
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_dr_wi",
+     "tap_um": [
+      2.144,
+      258.144
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_hr_wi",
+     "tap_um": [
+      2.144,
+      482.336
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rd_wi",
+     "tap_um": [
+      2.144,
+      48.608
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_re_wi",
+     "tap_um": [
+      2.144,
+      94.368
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rl_wi",
+     "tap_um": [
+      2.144,
+      95.712
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rr_wi",
+     "tap_um": [
+      2.144,
+      97.696
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rsf_i",
+     "tap_um": [
+      570.912,
+      2.656
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rsn_i",
+     "tap_um": [
+      56.8,
+      2.656
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_rv_wi",
+     "tap_um": [
+      2.144,
+      99.168
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_st_wi",
+     "tap_um": [
+      2.144,
+      619.296
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_treq_wi",
+     "tap_um": [
+      2.144,
+      523.36
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_x_ctl_i",
+     "tap_um": [
+      330.272,
+      1336.544
+     ]
+    },
+    {
+     "note": "source-forwarded ring write clock; actual source-export/window STA required",
+     "period_mult": 1,
+     "port": "fclk_in_x_st_a_fe_i",
+     "tap_um": [
+      591.2,
+      1336.544
+     ]
+    },
+    {
+     "note": "reverse monitor forwarded clock; 2bit landed ring, boot-only cost",
+     "period_mult": 1,
+     "port": "fclk_in_cland_dn_0",
+     "tap_um": [
+      2.144,
+      504.352
+     ]
+    },
+    {
+     "note": "reverse monitor forwarded clock; 2bit landed ring, boot-only cost",
+     "period_mult": 1,
+     "port": "fclk_in_cland_dn_1",
+     "tap_um": [
+      158.304,
+      1336.544
+     ]
+    },
+    {
+     "note": "reverse monitor forwarded clock; 2bit landed ring, boot-only cost",
+     "period_mult": 1,
+     "port": "fclk_in_cland_dn_2",
+     "tap_um": [
+      614.944,
+      2.656
+     ]
+    }
+   ],
+   "insertion_ps": 250,
+   "insertion_tol_ps": 40,
+   "landing_contract": {
+    "bands": {
+     "cmd_wi": {
+      "area_reserve_um2": 1189.9,
+      "clock_roles": {
+       "forwarded_write_flops": 512,
+       "local_read_flops": 128
+      },
+      "instance": "u_cland_cmd_wi",
+      "live_data_storage_flops": 585,
+      "max_pin_to_band_hop_um": 87.76,
+      "padded_data_storage_flops": 640,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       422.32,
+       77.76,
+       442.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       17.28,
+       422.32,
+       51.84,
+       442.32
+      ],
+      "ring_place": "ff",
+      "ring_width": 128,
+      "width": 116
+     },
+     "cws0_i": {
+      "area_reserve_um2": 4521.621,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "instance": "u_cland_cws0_i",
+      "live_data_storage_flops": 2585,
+      "max_pin_to_band_hop_um": 113.784,
+      "padded_data_storage_flops": 2880,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       385.728,
+       1270.08,
+       475.056,
+       1321.92
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       385.728,
+       1291.68,
+       475.056,
+       1321.92
+      ],
+      "ring_place": "ff",
+      "ring_width": 576,
+      "width": 516
+     },
+     "dr_wi": {
+      "area_reserve_um2": 4521.621,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "instance": "u_cland_dr_wi",
+      "live_data_storage_flops": 2605,
+      "max_pin_to_band_hop_um": 114.208,
+      "padded_data_storage_flops": 2880,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       213.168,
+       69.12,
+       303.344
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       17.28,
+       213.168,
+       47.52,
+       303.344
+      ],
+      "ring_place": "ff",
+      "ring_width": 576,
+      "width": 520
+     },
+     "hr_wi": {
+      "area_reserve_um2": 4045.661,
+      "clock_roles": {
+       "forwarded_write_flops": 2048,
+       "local_read_flops": 512
+      },
+      "instance": "u_cland_hr_wi",
+      "live_data_storage_flops": 2270,
+      "max_pin_to_band_hop_um": 186.112,
+      "padded_data_storage_flops": 2560,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       95.04,
+       443.28,
+       146.88,
+       521.744
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       17.28,
+       443.28,
+       47.52,
+       521.744
+      ],
+      "ring_place": "ff",
+      "ring_width": 512,
+      "width": 453
+     },
+     "monitor_0": {
+      "area_reserve_um2": 396.576,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_monitor_0",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 99.36,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       47.52,
+       502.2,
+       95.04,
+       510.84
+      ],
+      "ring_width": 64,
+      "width": 2
+     },
+     "monitor_1": {
+      "area_reserve_um2": 396.576,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_monitor_1",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 69.12,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       156.168,
+       1274.4,
+       164.808,
+       1321.92
+      ],
+      "ring_width": 64,
+      "width": 2
+     },
+     "monitor_2": {
+      "area_reserve_um2": 396.576,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_monitor_2",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 118.152,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       557.28,
+       49.68,
+       604.8,
+       58.32
+      ],
+      "ring_width": 64,
+      "width": 2
+     },
+     "rd_wi": {
+      "area_reserve_um2": 4521.621,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "instance": "u_cland_rd_wi",
+      "live_data_storage_flops": 2565,
+      "max_pin_to_band_hop_um": 209.88,
+      "padded_data_storage_flops": 2880,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       100.704,
+       106.032,
+       152.544
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       17.28,
+       17.28,
+       47.52,
+       106.032
+      ],
+      "ring_place": "ff",
+      "ring_width": 576,
+      "width": 512
+     },
+     "re_wi": {
+      "area_reserve_um2": 713.94,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_re_wi",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 113.56,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       82.184,
+       101.52,
+       90.824
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       47.52,
+       89.904,
+       95.04,
+       98.544
+      ],
+      "ring_place": "ff",
+      "ring_width": 64,
+      "width": 1
+     },
+     "rl_wi": {
+      "area_reserve_um2": 713.94,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_rl_wi",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 105.84,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       91.248,
+       101.52,
+       99.888
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       95.04,
+       91.248,
+       142.56,
+       99.888
+      ],
+      "ring_place": "ff",
+      "ring_width": 64,
+      "width": 1
+     },
+     "rr_wi": {
+      "area_reserve_um2": 713.94,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_rr_wi",
+      "live_data_storage_flops": 20,
+      "max_pin_to_band_hop_um": 127.44,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       71.384,
+       101.52,
+       80.024
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       142.56,
+       92.984,
+       190.08,
+       101.624
+      ],
+      "ring_place": "ff",
+      "ring_width": 64,
+      "width": 3
+     },
+     "rsf_i": {
+      "area_reserve_um2": 4521.621,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "instance": "u_cland_rsf_i",
+      "live_data_storage_flops": 2575,
+      "max_pin_to_band_hop_um": 167.352,
+      "padded_data_storage_flops": 2880,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       515.888,
+       60.48,
+       604.8,
+       112.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       515.888,
+       17.28,
+       604.8,
+       47.52
+      ],
+      "ring_place": "ff",
+      "ring_width": 576,
+      "width": 514
+     },
+     "rsn_i": {
+      "area_reserve_um2": 4521.621,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "instance": "u_cland_rsn_i",
+      "live_data_storage_flops": 2575,
+      "max_pin_to_band_hop_um": 117.44,
+      "padded_data_storage_flops": 2880,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       17.28,
+       17.28,
+       105.28,
+       69.12
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       49.68,
+       17.28,
+       137.68,
+       47.52
+      ],
+      "ring_place": "ff",
+      "ring_width": 576,
+      "width": 514
+     },
+     "rv_wi": {
+      "area_reserve_um2": 713.94,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_rv_wi",
+      "live_data_storage_flops": 10,
+      "max_pin_to_band_hop_um": 196.56,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       108.0,
+       94.72,
+       192.24,
+       103.36
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       190.08,
+       94.72,
+       237.6,
+       103.36
+      ],
+      "ring_place": "ff",
+      "ring_width": 64,
+      "width": 1
+     },
+     "st_wi": {
+      "area_reserve_um2": 8805.262,
+      "clock_roles": {
+       "forwarded_write_flops": 4608,
+       "local_read_flops": 1152
+      },
+      "instance": "u_cland_st_wi",
+      "live_data_storage_flops": 5445,
+      "max_pin_to_band_hop_um": 236.568,
+      "padded_data_storage_flops": 5760,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       95.04,
+       525.344,
+       142.56,
+       713.36
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       17.28,
+       525.344,
+       45.36,
+       713.36
+      ],
+      "ring_place": "ff",
+      "ring_width": 1152,
+      "width": 1088
+     },
+     "treq_wi": {
+      "area_reserve_um2": 713.94,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "instance": "u_cland_treq_wi",
+      "live_data_storage_flops": 50,
+      "max_pin_to_band_hop_um": 235.44,
+      "padded_data_storage_flops": 320,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       146.88,
+       519.224,
+       231.12,
+       527.864
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       47.52,
+       519.224,
+       95.04,
+       527.864
+      ],
+      "ring_place": "ff",
+      "ring_width": 64,
+      "width": 9
+     },
+     "x_ctl_i": {
+      "area_reserve_um2": 4997.581,
+      "clock_roles": {
+       "forwarded_write_flops": 2560,
+       "local_read_flops": 640
+      },
+      "instance": "u_cland_x_ctl_i",
+      "live_data_storage_flops": 3160,
+      "max_pin_to_band_hop_um": 119.4,
+      "padded_data_storage_flops": 3200,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       275.568,
+       1274.4,
+       384.768,
+       1321.92
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       275.568,
+       1293.84,
+       384.768,
+       1321.92
+      ],
+      "ring_place": "ff",
+      "ring_width": 640,
+      "width": 631
+     },
+     "x_st_a_fe_i": {
+      "area_reserve_um2": 2617.781,
+      "clock_roles": {
+       "forwarded_write_flops": 1280,
+       "local_read_flops": 320
+      },
+      "instance": "u_cland_x_st_a_fe_i",
+      "live_data_storage_flops": 1295,
+      "max_pin_to_band_hop_um": 108.816,
+      "padded_data_storage_flops": 1600,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "rect_um": [
+       560.352,
+       1261.44,
+       604.8,
+       1321.92
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "resized_from_um": [
+       560.352,
+       1287.36,
+       604.8,
+       1321.92
+      ],
+      "ring_place": "ff",
+      "ring_width": 320,
+      "width": 258
+     }
+    },
+    "base_type": "slw_fw_v3",
+    "collector_children": [
+     {
+      "fault": "cland_dn_fault_0",
+      "index": 0,
+      "node": "rst_n_t34",
+      "part": "coll_f5",
+      "ready": "cland_dn_ready_0",
+      "seam": true,
+      "xy_um": [
+       8.16,
+       502.176
+      ]
+     },
+     {
+      "fault": "cland_dn_fault_1",
+      "index": 1,
+      "node": "rst_n_t33",
+      "part": "coll_n",
+      "ready": "cland_dn_ready_1",
+      "seam": true,
+      "xy_um": [
+       156.0,
+       1330.592
+      ]
+     },
+     {
+      "fault": "cland_dn_fault_2",
+      "index": 2,
+      "node": "rst_root_n",
+      "part": "sl_W5_su_c",
+      "ready": "cland_dn_ready_2",
+      "seam": true,
+      "xy_um": [
+       612.96,
+       8.608
+      ]
+     }
+    ],
+    "collector_local_sources": [
+     {
+      "band": {
+       "area_reserve_um2": 676.512,
+       "clock_roles": {
+        "forwarded_write_flops": 512,
+        "local_read_flops": 128
+       },
+       "instance": "u_cland_cmd_wi",
+       "live_data_storage_flops": 585,
+       "max_pin_to_band_hop_um": 61.84,
+       "padded_data_storage_flops": 640,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        17.28,
+        422.32,
+        51.84,
+        442.32
+       ],
+       "ring_width": 128,
+       "width": 116
+      },
+      "fault": "landing_fault_cmd_wi",
+      "name": "cmd_wi",
+      "pin_xy_um": [
+       0,
+       432.32
+      ],
+      "ready": "landing_ready_cmd_wi",
+      "tap": 14,
+      "xy_um": [
+       0,
+       432.32
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2636.064,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "instance": "u_cland_cws0_i",
+       "live_data_storage_flops": 2585,
+       "max_pin_to_band_hop_um": 92.184,
+       "padded_data_storage_flops": 2880,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        385.728,
+        1291.68,
+        475.056,
+        1321.92
+       ],
+       "ring_width": 576,
+       "width": 516
+      },
+      "fault": "landing_fault_cws0_i",
+      "name": "cws0_i",
+      "pin_xy_um": [
+       430.392,
+       1339.2
+      ],
+      "ready": "landing_ready_cws0_i",
+      "tap": 30,
+      "xy_um": [
+       430.392,
+       1339.2
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2636.064,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "instance": "u_cland_dr_wi",
+       "live_data_storage_flops": 2605,
+       "max_pin_to_band_hop_um": 92.608,
+       "padded_data_storage_flops": 2880,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        17.28,
+        213.168,
+        47.52,
+        303.344
+       ],
+       "ring_width": 576,
+       "width": 520
+      },
+      "fault": "landing_fault_dr_wi",
+      "name": "dr_wi",
+      "pin_xy_um": [
+       0,
+       258.256
+      ],
+      "ready": "landing_ready_dr_wi",
+      "tap": 8,
+      "xy_um": [
+       0,
+       258.256
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2356.128,
+       "clock_roles": {
+        "forwarded_write_flops": 2048,
+        "local_read_flops": 512
+       },
+       "instance": "u_cland_hr_wi",
+       "live_data_storage_flops": 2270,
+       "max_pin_to_band_hop_um": 86.752,
+       "padded_data_storage_flops": 2560,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        17.28,
+        443.28,
+        47.52,
+        521.744
+       ],
+       "ring_width": 512,
+       "width": 453
+      },
+      "fault": "landing_fault_hr_wi",
+      "name": "hr_wi",
+      "pin_xy_um": [
+       0,
+       482.512
+      ],
+      "ready": "landing_ready_hr_wi",
+      "tap": 14,
+      "xy_um": [
+       0,
+       482.512
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2636.064,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "instance": "u_cland_rd_wi",
+       "live_data_storage_flops": 2565,
+       "max_pin_to_band_hop_um": 104.856,
+       "padded_data_storage_flops": 2880,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        17.28,
+        17.28,
+        47.52,
+        106.032
+       ],
+       "ring_width": 576,
+       "width": 512
+      },
+      "fault": "landing_fault_rd_wi",
+      "name": "rd_wi",
+      "pin_xy_um": [
+       0,
+       48.696
+      ],
+      "ready": "landing_ready_rd_wi",
+      "tap": 3,
+      "xy_um": [
+       0,
+       48.696
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 396.576,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "instance": "u_cland_re_wi",
+       "live_data_storage_flops": 10,
+       "max_pin_to_band_hop_um": 99.36,
+       "padded_data_storage_flops": 320,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        47.52,
+        89.904,
+        95.04,
+        98.544
+       ],
+       "ring_width": 64,
+       "width": 1
+      },
+      "fault": "landing_fault_re_wi",
+      "name": "re_wi",
+      "pin_xy_um": [
+       0,
+       94.22399999999999
+      ],
+      "ready": "landing_ready_re_wi",
+      "tap": 3,
+      "xy_um": [
+       0,
+       94.22399999999999
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 396.576,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "instance": "u_cland_rl_wi",
+       "live_data_storage_flops": 10,
+       "max_pin_to_band_hop_um": 146.88,
+       "padded_data_storage_flops": 320,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        95.04,
+        91.248,
+        142.56,
+        99.888
+       ],
+       "ring_width": 64,
+       "width": 1
+      },
+      "fault": "landing_fault_rl_wi",
+      "name": "rl_wi",
+      "pin_xy_um": [
+       0,
+       95.56800000000001
+      ],
+      "ready": "landing_ready_rl_wi",
+      "tap": 3,
+      "xy_um": [
+       0,
+       95.56800000000001
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 396.576,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "instance": "u_cland_rr_wi",
+       "live_data_storage_flops": 20,
+       "max_pin_to_band_hop_um": 194.4,
+       "padded_data_storage_flops": 320,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        142.56,
+        92.984,
+        190.08,
+        101.624
+       ],
+       "ring_width": 64,
+       "width": 3
+      },
+      "fault": "landing_fault_rr_wi",
+      "name": "rr_wi",
+      "pin_xy_um": [
+       0,
+       97.304
+      ],
+      "ready": "landing_ready_rr_wi",
+      "tap": 3,
+      "xy_um": [
+       0,
+       97.304
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2636.064,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "instance": "u_cland_rsf_i",
+       "live_data_storage_flops": 2575,
+       "max_pin_to_band_hop_um": 102.552,
+       "padded_data_storage_flops": 2880,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        515.888,
+        17.28,
+        604.8,
+        47.52
+       ],
+       "ring_width": 576,
+       "width": 514
+      },
+      "fault": "landing_fault_rsf_i",
+      "name": "rsf_i",
+      "pin_xy_um": [
+       570.9200000000001,
+       0
+      ],
+      "ready": "landing_ready_rsf_i",
+      "tap": 2,
+      "xy_um": [
+       570.9200000000001,
+       0
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2636.064,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "instance": "u_cland_rsn_i",
+       "live_data_storage_flops": 2575,
+       "max_pin_to_band_hop_um": 128.24,
+       "padded_data_storage_flops": 2880,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        49.68,
+        17.28,
+        137.68,
+        47.52
+       ],
+       "ring_width": 576,
+       "width": 514
+      },
+      "fault": "landing_fault_rsn_i",
+      "name": "rsn_i",
+      "pin_xy_um": [
+       56.959999999999994,
+       0
+      ],
+      "ready": "landing_ready_rsn_i",
+      "tap": 1,
+      "xy_um": [
+       56.959999999999994,
+       0
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 396.576,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "instance": "u_cland_rv_wi",
+       "live_data_storage_flops": 10,
+       "max_pin_to_band_hop_um": 241.92,
+       "padded_data_storage_flops": 320,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        190.08,
+        94.72,
+        237.6,
+        103.36
+       ],
+       "ring_width": 64,
+       "width": 1
+      },
+      "fault": "landing_fault_rv_wi",
+      "name": "rv_wi",
+      "pin_xy_um": [
+       0,
+       99.03999999999999
+      ],
+      "ready": "landing_ready_rv_wi",
+      "tap": 3,
+      "xy_um": [
+       0,
+       99.03999999999999
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 5155.488,
+       "clock_roles": {
+        "forwarded_write_flops": 4608,
+        "local_read_flops": 1152
+       },
+       "instance": "u_cland_st_wi",
+       "live_data_storage_flops": 5445,
+       "max_pin_to_band_hop_um": 139.368,
+       "padded_data_storage_flops": 5760,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        17.28,
+        525.344,
+        45.36,
+        713.36
+       ],
+       "ring_width": 1152,
+       "width": 1088
+      },
+      "fault": "landing_fault_st_wi",
+      "name": "st_wi",
+      "pin_xy_um": [
+       0,
+       619.3520000000001
+      ],
+      "ready": "landing_ready_st_wi",
+      "tap": 16,
+      "xy_um": [
+       0,
+       619.3520000000001
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 396.576,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "instance": "u_cland_treq_wi",
+       "live_data_storage_flops": 50,
+       "max_pin_to_band_hop_um": 99.36,
+       "padded_data_storage_flops": 320,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        47.52,
+        519.224,
+        95.04,
+        527.864
+       ],
+       "ring_width": 64,
+       "width": 9
+      },
+      "fault": "landing_fault_treq_wi",
+      "name": "treq_wi",
+      "pin_xy_um": [
+       0,
+       523.544
+      ],
+      "ready": "landing_ready_treq_wi",
+      "tap": 14,
+      "xy_um": [
+       0,
+       523.544
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 2916.0,
+       "clock_roles": {
+        "forwarded_write_flops": 2560,
+        "local_read_flops": 640
+       },
+       "instance": "u_cland_x_ctl_i",
+       "live_data_storage_flops": 3160,
+       "max_pin_to_band_hop_um": 99.96,
+       "padded_data_storage_flops": 3200,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        275.568,
+        1293.84,
+        384.768,
+        1321.92
+       ],
+       "ring_width": 640,
+       "width": 631
+      },
+      "fault": "landing_fault_x_ctl_i",
+      "name": "x_ctl_i",
+      "pin_xy_um": [
+       330.168,
+       1339.2
+      ],
+      "ready": "landing_ready_x_ctl_i",
+      "tap": 29,
+      "xy_um": [
+       330.168,
+       1339.2
+      ]
+     },
+     {
+      "band": {
+       "area_reserve_um2": 1516.32,
+       "clock_roles": {
+        "forwarded_write_flops": 1280,
+        "local_read_flops": 320
+       },
+       "instance": "u_cland_x_st_a_fe_i",
+       "live_data_storage_flops": 1295,
+       "max_pin_to_band_hop_um": 82.896,
+       "padded_data_storage_flops": 1600,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "rect_um": [
+        560.352,
+        1287.36,
+        604.8,
+        1321.92
+       ],
+       "ring_width": 320,
+       "width": 258
+      },
+      "fault": "landing_fault_x_st_a_fe_i",
+      "name": "x_st_a_fe_i",
+      "pin_xy_um": [
+       591.4079999999999,
+       1339.2
+      ],
+      "ready": "landing_ready_x_st_a_fe_i",
+      "tap": 31,
+      "xy_um": [
+       591.4079999999999,
+       1339.2
+      ]
+     }
+    ],
+    "collector_root_node": "rst_n_t8",
+    "collector_tree": {
+     "core_resets": [],
+     "depth": 5,
+     "entry": "relayed",
+     "local_reset_taps": false,
+     "max_hop_um": 378.4,
+     "n_clock_taps": 32,
+     "n_pad": 63,
+     "n_reset_consumers": 32,
+     "n_tree": 54,
+     "outs": [
+      [
+       156.0,
+       8.608
+      ],
+      [
+       156.0,
+       1330.592
+      ],
+      [
+       8.16,
+       502.176
+      ]
+     ],
+     "own_depth": 5,
+     "plan_reach_um": 380.0,
+     "reach_um": 405.0,
+     "relay_driver": false,
+     "relays": [
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_0",
+       "q": "rst_rl_0",
+       "tap": 2,
+       "xy": [
+        589.728,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_rl_0",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_1",
+       "q": "rst_rl_1",
+       "tap": 2,
+       "xy": [
+        589.728,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_rl_1",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_2",
+       "q": "rst_rl_2",
+       "tap": 2,
+       "xy": [
+        589.728,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_rl_2",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_3",
+       "q": "rst_rl_3",
+       "tap": 2,
+       "xy": [
+        589.728,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_rl_3",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_4",
+       "q": "rst_n_t2",
+       "tap": 2,
+       "xy": [
+        589.728,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_5",
+       "q": "rst_rl_5",
+       "tap": 4,
+       "xy": [
+        605.28,
+        85.408
+       ]
+      },
+      {
+       "d": "rst_rl_5",
+       "depth": 2,
+       "kind": "tap",
+       "name": "u_rrl_6",
+       "q": "rst_rl_6",
+       "tap": 4,
+       "xy": [
+        605.28,
+        85.408
+       ]
+      },
+      {
+       "d": "rst_rl_6",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_7",
+       "q": "rst_rl_7",
+       "tap": 4,
+       "xy": [
+        605.28,
+        85.408
+       ]
+      },
+      {
+       "d": "rst_rl_7",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_8",
+       "q": "rst_rl_8",
+       "tap": 4,
+       "xy": [
+        605.28,
+        85.408
+       ]
+      },
+      {
+       "d": "rst_rl_8",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_9",
+       "q": "rst_n_t4",
+       "tap": 4,
+       "xy": [
+        605.28,
+        85.408
+       ]
+      },
+      {
+       "d": "rst_rl_6",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_10",
+       "q": "rst_rl_10",
+       "tap": 9,
+       "xy": [
+        489.888,
+        347.232
+       ]
+      },
+      {
+       "d": "rst_rl_10",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_11",
+       "q": "rst_rl_11",
+       "tap": 9,
+       "xy": [
+        489.888,
+        347.232
+       ]
+      },
+      {
+       "d": "rst_rl_11",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_12",
+       "q": "rst_n_t9",
+       "tap": 9,
+       "xy": [
+        489.888,
+        347.232
+       ]
+      },
+      {
+       "d": "rst_rl_6",
+       "depth": 3,
+       "kind": "tap",
+       "name": "u_rrl_13",
+       "q": "rst_rl_13",
+       "tap": 13,
+       "xy": [
+        605.28,
+        458.592
+       ]
+      },
+      {
+       "d": "rst_rl_13",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_14",
+       "q": "rst_rl_14",
+       "tap": 13,
+       "xy": [
+        605.28,
+        458.592
+       ]
+      },
+      {
+       "d": "rst_rl_14",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_15",
+       "q": "rst_n_t13",
+       "tap": 13,
+       "xy": [
+        605.28,
+        458.592
+       ]
+      },
+      {
+       "d": "rst_rl_13",
+       "depth": 4,
+       "kind": "tap",
+       "name": "u_rrl_16",
+       "q": "rst_rl_16",
+       "tap": 19,
+       "xy": [
+        484.32,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_16",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_17",
+       "q": "rst_n_t19",
+       "tap": 19,
+       "xy": [
+        484.32,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_16",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_18",
+       "q": "rst_n_t26",
+       "tap": 26,
+       "xy": [
+        430.368,
+        991.968
+       ]
+      },
+      {
+       "d": "rst_rl_13",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_19",
+       "q": "rst_rl_19",
+       "tap": null,
+       "xy": [
+        252.832,
+        458.592
+       ]
+      },
+      {
+       "d": "rst_rl_19",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_20",
+       "q": "rst_n_t16",
+       "tap": 16,
+       "xy": [
+        17.76,
+        575.968
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_21",
+       "q": "rst_rl_21",
+       "tap": 6,
+       "xy": [
+        605.28,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_21",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_22",
+       "q": "rst_rl_22",
+       "tap": 6,
+       "xy": [
+        605.28,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_22",
+       "depth": 3,
+       "kind": "tap",
+       "name": "u_rrl_23",
+       "q": "rst_rl_23",
+       "tap": 6,
+       "xy": [
+        605.28,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_23",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_24",
+       "q": "rst_rl_24",
+       "tap": 6,
+       "xy": [
+        605.28,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_24",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_25",
+       "q": "rst_n_t6",
+       "tap": 6,
+       "xy": [
+        605.28,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_23",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_26",
+       "q": "rst_rl_26",
+       "tap": null,
+       "xy": [
+        236.22399999999993,
+        173.088
+       ]
+      },
+      {
+       "d": "rst_rl_26",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_27",
+       "q": "rst_n_t12",
+       "tap": 12,
+       "xy": [
+        72.608,
+        378.528
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "tap",
+       "name": "u_rrl_28",
+       "q": "rst_rl_28",
+       "tap": 7,
+       "xy": [
+        605.28,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_28",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_29",
+       "q": "rst_rl_29",
+       "tap": 7,
+       "xy": [
+        605.28,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_29",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_30",
+       "q": "rst_rl_30",
+       "tap": 7,
+       "xy": [
+        605.28,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_30",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_31",
+       "q": "rst_rl_31",
+       "tap": 7,
+       "xy": [
+        605.28,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_31",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_32",
+       "q": "rst_n_t7",
+       "tap": 7,
+       "xy": [
+        605.28,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_28",
+       "depth": 2,
+       "kind": "tap",
+       "name": "u_rrl_33",
+       "q": "rst_rl_33",
+       "tap": 15,
+       "xy": [
+        605.28,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_33",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_34",
+       "q": "rst_rl_34",
+       "tap": 15,
+       "xy": [
+        605.28,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_34",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_35",
+       "q": "rst_rl_35",
+       "tap": 15,
+       "xy": [
+        605.28,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_35",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_36",
+       "q": "rst_n_t15",
+       "tap": 15,
+       "xy": [
+        605.28,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_33",
+       "depth": 3,
+       "kind": "tap",
+       "name": "u_rrl_37",
+       "q": "rst_rl_37",
+       "tap": 22,
+       "xy": [
+        605.28,
+        881.696
+       ]
+      },
+      {
+       "d": "rst_rl_37",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_38",
+       "q": "rst_rl_38",
+       "tap": 22,
+       "xy": [
+        605.28,
+        881.696
+       ]
+      },
+      {
+       "d": "rst_rl_38",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_39",
+       "q": "rst_n_t22",
+       "tap": 22,
+       "xy": [
+        605.28,
+        881.696
+       ]
+      },
+      {
+       "d": "rst_rl_37",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_40",
+       "q": "rst_rl_40",
+       "tap": 28,
+       "xy": [
+        605.28,
+        1165.728
+       ]
+      },
+      {
+       "d": "rst_rl_40",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_41",
+       "q": "rst_n_t28",
+       "tap": 28,
+       "xy": [
+        605.28,
+        1165.728
+       ]
+      },
+      {
+       "d": "rst_rl_37",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_42",
+       "q": "rst_rl_42",
+       "tap": null,
+       "xy": [
+        331.36,
+        964.864
+       ]
+      },
+      {
+       "d": "rst_rl_42",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_43",
+       "q": "rst_n_t29",
+       "tap": 29,
+       "xy": [
+        331.36,
+        1321.952
+       ]
+      },
+      {
+       "d": "rst_rl_33",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_44",
+       "q": "rst_rl_44",
+       "tap": null,
+       "xy": [
+        259.328,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_44",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_45",
+       "q": "rst_rl_45",
+       "tap": null,
+       "xy": [
+        259.328,
+        564.256
+       ]
+      },
+      {
+       "d": "rst_rl_45",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_46",
+       "q": "rst_n_t17",
+       "tap": 17,
+       "xy": [
+        17.76,
+        668.64
+       ]
+      },
+      {
+       "d": "rst_rl_28",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_47",
+       "q": "rst_rl_47",
+       "tap": null,
+       "xy": [
+        306.816,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_47",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_48",
+       "q": "rst_rl_48",
+       "tap": null,
+       "xy": [
+        306.816,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_48",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_49",
+       "q": "rst_rl_49",
+       "tap": null,
+       "xy": [
+        306.816,
+        263.712
+       ]
+      },
+      {
+       "d": "rst_rl_49",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_50",
+       "q": "rst_n_t8",
+       "tap": 8,
+       "xy": [
+        17.76,
+        273.12
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "tap",
+       "name": "u_rrl_51",
+       "q": "rst_rl_51",
+       "tap": 10,
+       "xy": [
+        605.28,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_52",
+       "q": "rst_rl_52",
+       "tap": 10,
+       "xy": [
+        605.28,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_52",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_53",
+       "q": "rst_rl_53",
+       "tap": 10,
+       "xy": [
+        605.28,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_53",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_54",
+       "q": "rst_rl_54",
+       "tap": 10,
+       "xy": [
+        605.28,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_54",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_55",
+       "q": "rst_n_t10",
+       "tap": 10,
+       "xy": [
+        605.28,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_56",
+       "q": "rst_rl_56",
+       "tap": 20,
+       "xy": [
+        605.28,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_56",
+       "depth": 3,
+       "kind": "tap",
+       "name": "u_rrl_57",
+       "q": "rst_rl_57",
+       "tap": 20,
+       "xy": [
+        605.28,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_57",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_58",
+       "q": "rst_rl_58",
+       "tap": 20,
+       "xy": [
+        605.28,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_58",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_59",
+       "q": "rst_n_t20",
+       "tap": 20,
+       "xy": [
+        605.28,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_57",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_60",
+       "q": "rst_rl_60",
+       "tap": 24,
+       "xy": [
+        605.28,
+        976.416
+       ]
+      },
+      {
+       "d": "rst_rl_60",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_61",
+       "q": "rst_n_t24",
+       "tap": 24,
+       "xy": [
+        605.28,
+        976.416
+       ]
+      },
+      {
+       "d": "rst_rl_57",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_62",
+       "q": "rst_rl_62",
+       "tap": null,
+       "xy": [
+        272.15999999999997,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_62",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_63",
+       "q": "rst_n_t23",
+       "tap": 23,
+       "xy": [
+        230.112,
+        960.672
+       ]
+      },
+      {
+       "d": "rst_rl_57",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_64",
+       "q": "rst_rl_64",
+       "tap": null,
+       "xy": [
+        556.32,
+        971.296
+       ]
+      },
+      {
+       "d": "rst_rl_64",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_65",
+       "q": "rst_n_t31",
+       "tap": 31,
+       "xy": [
+        556.32,
+        1321.952
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_66",
+       "q": "rst_rl_66",
+       "tap": null,
+       "xy": [
+        605.28,
+        709.152
+       ]
+      },
+      {
+       "d": "rst_rl_66",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_67",
+       "q": "rst_rl_67",
+       "tap": null,
+       "xy": [
+        605.28,
+        709.152
+       ]
+      },
+      {
+       "d": "rst_rl_67",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_68",
+       "q": "rst_rl_68",
+       "tap": null,
+       "xy": [
+        605.28,
+        709.152
+       ]
+      },
+      {
+       "d": "rst_rl_68",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_69",
+       "q": "rst_n_t27",
+       "tap": 27,
+       "xy": [
+        605.28,
+        1064.352
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_70",
+       "q": "rst_rl_70",
+       "tap": null,
+       "xy": [
+        249.12,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_70",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_71",
+       "q": "rst_rl_71",
+       "tap": null,
+       "xy": [
+        249.12,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_71",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_72",
+       "q": "rst_rl_72",
+       "tap": null,
+       "xy": [
+        249.12,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_72",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_73",
+       "q": "rst_n_t14",
+       "tap": 14,
+       "xy": [
+        17.76,
+        478.752
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "wire",
+       "name": "u_rrl_74",
+       "q": "rst_rl_74",
+       "tap": null,
+       "xy": [
+        236.32,
+        353.952
+       ]
+      },
+      {
+       "d": "rst_rl_74",
+       "depth": 3,
+       "kind": "tap",
+       "name": "u_rrl_75",
+       "q": "rst_rl_75",
+       "tap": 0,
+       "xy": [
+        183.008,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_75",
+       "depth": 4,
+       "kind": "pad",
+       "name": "u_rrl_76",
+       "q": "rst_rl_76",
+       "tap": 0,
+       "xy": [
+        183.008,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_76",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_77",
+       "q": "rst_n_t0",
+       "tap": 0,
+       "xy": [
+        183.008,
+        669.6
+       ]
+      },
+      {
+       "d": "rst_rl_75",
+       "depth": 4,
+       "kind": "tap",
+       "name": "u_rrl_78",
+       "q": "rst_rl_78",
+       "tap": 25,
+       "xy": [
+        140.128,
+        985.248
+       ]
+      },
+      {
+       "d": "rst_rl_78",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_79",
+       "q": "rst_n_t25",
+       "tap": 25,
+       "xy": [
+        140.128,
+        985.248
+       ]
+      },
+      {
+       "d": "rst_rl_78",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_80",
+       "q": "rst_n_t33",
+       "tap": 33,
+       "xy": [
+        156.0,
+        1330.592
+       ]
+      },
+      {
+       "d": "rst_rl_51",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_81",
+       "q": "rst_rl_81",
+       "tap": null,
+       "xy": [
+        443.872,
+        569.0133333333333
+       ]
+      },
+      {
+       "d": "rst_rl_81",
+       "depth": 3,
+       "kind": "wire",
+       "name": "u_rrl_82",
+       "q": "rst_rl_82",
+       "tap": null,
+       "xy": [
+        443.872,
+        569.0133333333333
+       ]
+      },
+      {
+       "d": "rst_rl_82",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_83",
+       "q": "rst_rl_83",
+       "tap": null,
+       "xy": [
+        443.872,
+        945.4826666666665
+       ]
+      },
+      {
+       "d": "rst_rl_83",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_84",
+       "q": "rst_n_t30",
+       "tap": 30,
+       "xy": [
+        443.872,
+        1321.952
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_85",
+       "q": "rst_rl_85",
+       "tap": null,
+       "xy": [
+        384.48,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_85",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_86",
+       "q": "rst_rl_86",
+       "tap": null,
+       "xy": [
+        384.48,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_86",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_87",
+       "q": "rst_rl_87",
+       "tap": null,
+       "xy": [
+        384.48,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_87",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_88",
+       "q": "rst_rl_88",
+       "tap": null,
+       "xy": [
+        384.48,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_88",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_89",
+       "q": "rst_n_t32",
+       "tap": 32,
+       "xy": [
+        156.0,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_90",
+       "q": "rst_rl_90",
+       "tap": null,
+       "xy": [
+        323.10400000000004,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_90",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_91",
+       "q": "rst_rl_91",
+       "tap": null,
+       "xy": [
+        323.10400000000004,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_91",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_92",
+       "q": "rst_rl_92",
+       "tap": null,
+       "xy": [
+        323.10400000000004,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_92",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_93",
+       "q": "rst_rl_93",
+       "tap": null,
+       "xy": [
+        323.10400000000004,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_93",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_94",
+       "q": "rst_n_t1",
+       "tap": 1,
+       "xy": [
+        41.952,
+        17.312
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_95",
+       "q": "rst_rl_95",
+       "tap": null,
+       "xy": [
+        281.6,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_95",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_96",
+       "q": "rst_rl_96",
+       "tap": null,
+       "xy": [
+        281.6,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_96",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_97",
+       "q": "rst_rl_97",
+       "tap": null,
+       "xy": [
+        281.6,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_97",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_98",
+       "q": "rst_rl_98",
+       "tap": null,
+       "xy": [
+        281.6,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_98",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_99",
+       "q": "rst_n_t3",
+       "tap": 3,
+       "xy": [
+        17.76,
+        76.128
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_100",
+       "q": "rst_rl_100",
+       "tap": null,
+       "xy": [
+        605.28,
+        374.176
+       ]
+      },
+      {
+       "d": "rst_rl_100",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_101",
+       "q": "rst_rl_101",
+       "tap": null,
+       "xy": [
+        605.28,
+        374.176
+       ]
+      },
+      {
+       "d": "rst_rl_101",
+       "depth": 3,
+       "kind": "pad",
+       "name": "u_rrl_102",
+       "q": "rst_rl_102",
+       "tap": null,
+       "xy": [
+        605.28,
+        374.176
+       ]
+      },
+      {
+       "d": "rst_rl_102",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_103",
+       "q": "rst_rl_103",
+       "tap": null,
+       "xy": [
+        605.28,
+        374.176
+       ]
+      },
+      {
+       "d": "rst_rl_103",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_104",
+       "q": "rst_n_t21",
+       "tap": 21,
+       "xy": [
+        605.28,
+        747.424
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_105",
+       "q": "rst_rl_105",
+       "tap": null,
+       "xy": [
+        235.84000000000003,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_105",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_106",
+       "q": "rst_rl_106",
+       "tap": null,
+       "xy": [
+        235.84000000000003,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_106",
+       "depth": 3,
+       "kind": "wire",
+       "name": "u_rrl_107",
+       "q": "rst_rl_107",
+       "tap": null,
+       "xy": [
+        235.84000000000003,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_107",
+       "depth": 4,
+       "kind": "tap",
+       "name": "u_rrl_108",
+       "q": "rst_rl_108",
+       "tap": 5,
+       "xy": [
+        17.76,
+        167.648
+       ]
+      },
+      {
+       "d": "rst_rl_108",
+       "depth": 5,
+       "kind": "pad",
+       "name": "u_rrl_109",
+       "q": "rst_n_t5",
+       "tap": 5,
+       "xy": [
+        17.76,
+        167.648
+       ]
+      },
+      {
+       "d": "rst_rl_108",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_110",
+       "q": "rst_n_t11",
+       "tap": 11,
+       "xy": [
+        17.76,
+        378.528
+       ]
+      },
+      {
+       "d": "rst_rl_108",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_111",
+       "q": "rst_n_t34",
+       "tap": 34,
+       "xy": [
+        8.16,
+        502.176
+       ]
+      },
+      {
+       "d": "rst_root_n",
+       "depth": 1,
+       "kind": "pad",
+       "name": "u_rrl_112",
+       "q": "rst_rl_112",
+       "tap": null,
+       "xy": [
+        234.54933333333338,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_112",
+       "depth": 2,
+       "kind": "pad",
+       "name": "u_rrl_113",
+       "q": "rst_rl_113",
+       "tap": null,
+       "xy": [
+        234.54933333333338,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_113",
+       "depth": 3,
+       "kind": "wire",
+       "name": "u_rrl_114",
+       "q": "rst_rl_114",
+       "tap": null,
+       "xy": [
+        234.54933333333338,
+        8.608
+       ]
+      },
+      {
+       "d": "rst_rl_114",
+       "depth": 4,
+       "kind": "wire",
+       "name": "u_rrl_115",
+       "q": "rst_rl_115",
+       "tap": null,
+       "xy": [
+        138.72,
+        291.1893333333333
+       ]
+      },
+      {
+       "d": "rst_rl_115",
+       "depth": 5,
+       "kind": "tap",
+       "name": "u_rrl_116",
+       "q": "rst_n_t18",
+       "tap": 18,
+       "xy": [
+        138.72,
+        669.6
+       ]
+      }
+     ],
+     "root": [
+      612.96,
+      8.608
+     ],
+     "start": true,
+     "start_in": [
+      612.96,
+      10.272
+     ],
+     "start_role": "mission",
+     "start_tap": null,
+     "sync_stages": 2,
+     "tap_depth": {
+      "0": 3,
+      "1": 2,
+      "10": 1,
+      "11": 3,
+      "12": 3,
+      "13": 2,
+      "14": 3,
+      "15": 2,
+      "16": 4,
+      "17": 4,
+      "18": 3,
+      "19": 3,
+      "2": 1,
+      "20": 2,
+      "21": 2,
+      "22": 3,
+      "23": 4,
+      "24": 3,
+      "25": 4,
+      "26": 4,
+      "27": 3,
+      "28": 4,
+      "29": 5,
+      "3": 2,
+      "30": 4,
+      "31": 4,
+      "32": 2,
+      "33": 5,
+      "34": 3,
+      "4": 1,
+      "5": 2,
+      "6": 1,
+      "7": 1,
+      "8": 3,
+      "9": 2
+     },
+     "tap_offset_um": 0.0,
+     "tap_roles": {
+      "0": "mission",
+      "1": "mission",
+      "10": "mission",
+      "11": "mission",
+      "12": "mission",
+      "13": "mission",
+      "14": "mission",
+      "15": "mission",
+      "16": "mission",
+      "17": "mission",
+      "18": "mission",
+      "19": "mission",
+      "2": "mission",
+      "20": "mission",
+      "21": "mission",
+      "22": "mission",
+      "23": "mission",
+      "24": "mission",
+      "25": "mission",
+      "26": "mission",
+      "27": "mission",
+      "28": "mission",
+      "29": "mission",
+      "3": "mission",
+      "30": "mission",
+      "31": "mission",
+      "4": "mission",
+      "5": "mission",
+      "6": "mission",
+      "7": "mission",
+      "8": "mission",
+      "9": "mission"
+     },
+     "taps": [
+      "clk",
+      "clk_t1",
+      "clk_t2",
+      "clk_t3",
+      "clk_t4",
+      "clk_t5",
+      "clk_t6",
+      "clk_t7",
+      "clk_t8",
+      "clk_t9",
+      "clk_t10",
+      "clk_t11",
+      "clk_t12",
+      "clk_t13",
+      "clk_t14",
+      "clk_t15",
+      "clk_t16",
+      "clk_t17",
+      "clk_t18",
+      "clk_t19",
+      "clk_t20",
+      "clk_t21",
+      "clk_t22",
+      "clk_t23",
+      "clk_t24",
+      "clk_t25",
+      "clk_t26",
+      "clk_t27",
+      "clk_t28",
+      "clk_t29",
+      "clk_t30",
+      "clk_t31",
+      "o0",
+      "o1",
+      "o2"
+     ],
+     "topology": "taps",
+     "type": "slw_fw_v3"
+    },
+    "forwarded_clock_only_inputs": true,
+    "group_rects_um": {
+     "u_cland_collect_rst_n_t14": [
+      10.8,
+      476.208,
+      15.12,
+      480.528
+     ],
+     "u_cland_collect_rst_n_t3": [
+      10.8,
+      72.752,
+      15.12,
+      77.072
+     ],
+     "u_cland_rst_cws0_i": [
+      428.232,
+      1132.344,
+      432.552,
+      1136.664
+     ],
+     "u_cland_rst_st_wi": [
+      224.64,
+      600.216,
+      228.96,
+      604.536
+     ]
+    },
+    "physical_qualified": false,
+    "pins": [
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_cmd_wi",
+      "xy_um": [
+       2.144,
+       432.224
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_cmd_wi",
+      "xy_um": [
+       2.144,
+       440.864
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_cws0_i",
+      "xy_um": [
+       430.496,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_cws0_i",
+      "xy_um": [
+       439.136,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_dr_wi",
+      "xy_um": [
+       2.144,
+       258.144
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_dr_wi",
+      "xy_um": [
+       2.144,
+       266.784
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_hr_wi",
+      "xy_um": [
+       2.144,
+       482.336
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_hr_wi",
+      "xy_um": [
+       2.144,
+       490.976
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rd_wi",
+      "xy_um": [
+       2.144,
+       48.608
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rd_wi",
+      "xy_um": [
+       2.144,
+       57.248
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_re_wi",
+      "xy_um": [
+       2.144,
+       94.368
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_re_wi",
+      "xy_um": [
+       2.144,
+       103.008
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rl_wi",
+      "xy_um": [
+       2.144,
+       95.712
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rl_wi",
+      "xy_um": [
+       2.144,
+       104.352
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rr_wi",
+      "xy_um": [
+       2.144,
+       97.696
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rr_wi",
+      "xy_um": [
+       2.144,
+       106.336
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rsf_i",
+      "xy_um": [
+       570.912,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rsf_i",
+      "xy_um": [
+       579.552,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rsn_i",
+      "xy_um": [
+       56.8,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rsn_i",
+      "xy_um": [
+       65.44,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_rv_wi",
+      "xy_um": [
+       2.144,
+       99.168
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_rv_wi",
+      "xy_um": [
+       2.144,
+       107.808
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_st_wi",
+      "xy_um": [
+       2.144,
+       619.296
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_st_wi",
+      "xy_um": [
+       2.144,
+       627.936
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_treq_wi",
+      "xy_um": [
+       2.144,
+       523.36
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_treq_wi",
+      "xy_um": [
+       2.144,
+       532.0
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_x_ctl_i",
+      "xy_um": [
+       330.272,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_x_ctl_i",
+      "xy_um": [
+       338.912,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_x_st_a_fe_i",
+      "xy_um": [
+       591.2,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_in_x_st_a_fe_i",
+      "xy_um": [
+       599.84,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ag_wo",
+      "source_clock_port": "clk_t11",
+      "source_clock_tap": "clk_t11",
+      "xy_um": [
+       2.144,
+       400.672
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ag_wo",
+      "xy_um": [
+       2.144,
+       409.312
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ard_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       144.224
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ard_wo",
+      "xy_um": [
+       2.144,
+       152.864
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_arl_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       189.856
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_arl_wo",
+      "xy_um": [
+       2.144,
+       198.496
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_arm_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       191.136
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_arm_wo",
+      "xy_um": [
+       2.144,
+       199.776
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_art_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       195.04
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_art_wo",
+      "xy_um": [
+       2.144,
+       203.68
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_arv_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       198.944
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_arv_wo",
+      "xy_um": [
+       2.144,
+       207.584
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ccm_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       200.224
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ccm_wo",
+      "xy_um": [
+       2.144,
+       208.864
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_cct_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       204.128
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_cct_wo",
+      "xy_um": [
+       2.144,
+       212.768
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ccv_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       208.032
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ccv_wo",
+      "xy_um": [
+       2.144,
+       216.672
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ccw_wo",
+      "source_clock_port": "clk_t5",
+      "source_clock_tap": "clk_t5",
+      "xy_um": [
+       2.144,
+       210.592
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ccw_wo",
+      "xy_um": [
+       2.144,
+       219.232
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_cws0_o",
+      "source_clock_port": "clk_t2",
+      "source_clock_tap": "clk_t2",
+      "xy_um": [
+       481.056,
+       2.656
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_cws0_o",
+      "xy_um": [
+       489.696,
+       2.656
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_dd_wo",
+      "source_clock_port": "clk_t11",
+      "source_clock_tap": "clk_t11",
+      "xy_um": [
+       2.144,
+       351.456
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_dd_wo",
+      "xy_um": [
+       2.144,
+       360.096
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_rsf_o",
+      "source_clock_port": "clk_t29",
+      "source_clock_tap": "clk_t29",
+      "xy_um": [
+       140.192,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_rsf_o",
+      "xy_um": [
+       148.832,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_rsn_o",
+      "source_clock_port": "clk_t29",
+      "source_clock_tap": "clk_t29",
+      "xy_um": [
+       230.048,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_rsn_o",
+      "xy_um": [
+       238.688,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_ss_wo",
+      "source_clock_port": "clk_t11",
+      "source_clock_tap": "clk_t11",
+      "xy_um": [
+       2.144,
+       411.936
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_ss_wo",
+      "xy_um": [
+       2.144,
+       420.576
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_x_ctl_o",
+      "source_clock_port": "clk_t31",
+      "source_clock_tap": "clk_t31",
+      "xy_um": [
+       522.08,
+       1336.544
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_fstart_out_x_ctl_o",
+      "xy_um": [
+       530.72,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_rstart_in",
+      "xy_um": [
+       619.936,
+       669.6
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_up_ready",
+      "xy_um": [
+       160.48,
+       2.656
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_up_fault",
+      "xy_um": [
+       162.656,
+       2.656
+      ]
+     },
+     {
+      "dir": "out",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_out_cland_up",
+      "source_clock_port": "clk_t1",
+      "source_clock_tap": "clk_t1",
+      "xy_um": [
+       158.304,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_ready_0",
+      "xy_um": [
+       2.144,
+       506.528
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_fault_0",
+      "xy_um": [
+       2.144,
+       508.704
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_cland_dn_0",
+      "xy_um": [
+       2.144,
+       504.352
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_ready_1",
+      "xy_um": [
+       160.48,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_fault_1",
+      "xy_um": [
+       162.656,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_cland_dn_1",
+      "xy_um": [
+       158.304,
+       1336.544
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_ready_2",
+      "xy_um": [
+       617.12,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "ctl",
+      "layer": "M7",
+      "name": "cland_dn_fault_2",
+      "xy_um": [
+       619.296,
+       2.656
+      ]
+     },
+     {
+      "dir": "in",
+      "epoch": false,
+      "kind": "clock",
+      "layer": "M7",
+      "name": "fclk_in_cland_dn_2",
+      "xy_um": [
+       614.944,
+       2.656
+      ]
+     }
+    ],
+    "registered_monitor": true
+   },
+   "landing_local_resets": [
+    {
+     "consumers": [
+      "u_cland_fstart_ag_wo"
+     ],
+     "name": "start_0",
+     "raw": "rst_rl_107",
+     "xy_um": [
+      2.14,
+      409.31
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_ard_wo"
+     ],
+     "name": "start_1",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      152.86
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_arl_wo"
+     ],
+     "name": "start_2",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      198.5
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_arm_wo"
+     ],
+     "name": "start_3",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      199.78
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_art_wo"
+     ],
+     "name": "start_4",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      203.68
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_arv_wo"
+     ],
+     "name": "start_5",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      207.58
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_ccm_wo"
+     ],
+     "name": "start_6",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      208.86
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_cct_wo"
+     ],
+     "name": "start_7",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      212.77
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_ccv_wo"
+     ],
+     "name": "start_8",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      216.67
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_ccw_wo"
+     ],
+     "name": "start_9",
+     "raw": "rst_rl_71",
+     "xy_um": [
+      2.14,
+      219.23
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_cws0_o"
+     ],
+     "name": "start_10",
+     "raw": "rst_rl_3",
+     "xy_um": [
+      489.7,
+      2.66
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_dd_wo"
+     ],
+     "name": "start_11",
+     "raw": "rst_rl_73",
+     "xy_um": [
+      2.14,
+      360.1
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_rsf_o"
+     ],
+     "name": "start_12",
+     "raw": "rst_rl_125",
+     "xy_um": [
+      188.62,
+      1210.42
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_rsn_o"
+     ],
+     "name": "start_13",
+     "raw": "rst_rl_125",
+     "xy_um": [
+      238.69,
+      1336.54
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_ss_wo"
+     ],
+     "name": "start_14",
+     "raw": "rst_rl_107",
+     "xy_um": [
+      2.14,
+      420.58
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_fstart_x_ctl_o"
+     ],
+     "name": "start_15",
+     "raw": "rst_rl_143",
+     "xy_um": [
+      530.72,
+      1336.54
+     ]
+    },
+    {
+     "consumers": [
+      "u_cland_rstart_rx"
+     ],
+     "name": "start_16",
+     "raw": "rst_rl_55",
+     "xy_um": [
+      377.02,
+      547.51
+     ]
+    }
+   ],
+   "landing_output_qreg": [
+    "x_ctl_i"
+   ],
+   "landing_reader_start": {
+    "branches": {
+     "cmd_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_29",
+        "xy_um": [
+         259.72,
+         506.5
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_78",
+        "xy_um": [
+         151.55,
+         464.2
+        ]
+       }
+      ]
+     },
+     "cws0_i": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_237",
+        "xy_um": [
+         396.15,
+         815.86
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_237",
+        "xy_um": [
+         415.62,
+         1088.87
+        ]
+       }
+      ]
+     },
+     "dr_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         254.85,
+         441.65
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         130.0,
+         333.47
+        ]
+       }
+      ]
+     },
+     "hr_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_32",
+        "xy_um": [
+         277.0,
+         522.12
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_109",
+        "xy_um": [
+         173.0,
+         495.72
+        ]
+       }
+      ]
+     },
+     "rd_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         263.29,
+         395.73
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         147.42,
+         241.08
+        ]
+       }
+      ]
+     },
+     "re_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         266.19,
+         386.65
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         153.32,
+         222.83
+        ]
+       }
+      ]
+     },
+     "rl_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         266.13,
+         389.73
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         153.18,
+         229.01
+        ]
+       }
+      ]
+     },
+     "rr_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         266.26,
+         382.98
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         153.49,
+         215.47
+        ]
+       }
+      ]
+     },
+     "rsf_i": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_80",
+        "xy_um": [
+         443.85,
+         379.41
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_234",
+        "xy_um": [
+         512.11,
+         207.73
+        ]
+       }
+      ]
+     },
+     "rsn_i": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         264.08,
+         367.12
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_5",
+        "xy_um": [
+         149.22,
+         183.66
+        ]
+       }
+      ]
+     },
+     "rv_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         297.31,
+         389.95
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         215.91,
+         229.08
+        ]
+       }
+      ]
+     },
+     "st_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_32",
+        "xy_um": [
+         262.84,
+         579.28
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_118",
+        "xy_um": [
+         147.23,
+         612.13
+        ]
+       }
+      ]
+     },
+     "treq_wi": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_32",
+        "xy_um": [
+         303.57,
+         538.15
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_32",
+        "xy_um": [
+         225.69,
+         532.53
+        ]
+       }
+      ]
+     },
+     "x_ctl_i": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_137",
+        "xy_um": [
+         360.06,
+         819.17
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_125",
+        "xy_um": [
+         342.81,
+         1095.55
+        ]
+       }
+      ]
+     },
+     "x_st_a_fe_i": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_172",
+        "xy_um": [
+         448.6,
+         806.66
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_156",
+        "xy_um": [
+         521.27,
+         1069.72
+        ]
+       }
+      ]
+     }
+    },
+    "depth": 2,
+    "origin_rect_um": [
+     368.38,
+     538.87,
+     385.66,
+     556.15
+    ]
+   },
+   "landing_ring_wreg": {
+    "buses": [
+     "cmd_wi",
+     "cws0_i",
+     "dr_wi",
+     "hr_wi",
+     "rd_wi",
+     "re_wi",
+     "rl_wi",
+     "rr_wi",
+     "rsf_i",
+     "rsn_i",
+     "rv_wi",
+     "st_wi",
+     "treq_wi",
+     "x_ctl_i",
+     "x_st_a_fe_i"
+    ],
+    "dsrep": 1
+   },
+   "landing_writer_start": {
+    "branches": {
+     "ag_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_29",
+        "xy_um": [
+         254.5,
+         502.34
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_78",
+        "xy_um": [
+         128.32,
+         438.61
+        ]
+       }
+      ]
+     },
+     "ard_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_166",
+        "xy_um": [
+         253.69,
+         417.67
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.91,
+         285.27
+        ]
+       }
+      ]
+     },
+     "arl_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.79,
+         432.78
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.97,
+         315.64
+        ]
+       }
+      ]
+     },
+     "arm_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.79,
+         433.2
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.97,
+         316.49
+        ]
+       }
+      ]
+     },
+     "art_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.8,
+         434.49
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.97,
+         319.09
+        ]
+       }
+      ]
+     },
+     "arv_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.81,
+         435.79
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.98,
+         321.69
+        ]
+       }
+      ]
+     },
+     "ccm_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.81,
+         436.21
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.98,
+         322.54
+        ]
+       }
+      ]
+     },
+     "cct_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.82,
+         437.5
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.98,
+         325.13
+        ]
+       }
+      ]
+     },
+     "ccv_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.83,
+         438.79
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.99,
+         327.73
+        ]
+       }
+      ]
+     },
+     "ccw_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_102",
+        "xy_um": [
+         253.84,
+         439.64
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_75",
+        "xy_um": [
+         127.99,
+         329.44
+        ]
+       }
+      ]
+     },
+     "cws0_o": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_80",
+        "xy_um": [
+         414.01,
+         368.65
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_234",
+        "xy_um": [
+         451.85,
+         185.66
+        ]
+       }
+      ]
+     },
+     "dd_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_53",
+        "xy_um": [
+         254.28,
+         486.15
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_78",
+        "xy_um": [
+         128.21,
+         423.12
+        ]
+       }
+      ]
+     },
+     "rsf_o": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_137",
+        "xy_um": [
+         301.71,
+         807.94
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_125",
+        "xy_um": [
+         225.27,
+         1072.24
+        ]
+       }
+      ]
+     },
+     "rsn_o": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_137",
+        "xy_um": [
+         331.41,
+         807.69
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_125",
+        "xy_um": [
+         285.05,
+         1072.11
+        ]
+       }
+      ]
+     },
+     "ss_wo": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_29",
+        "xy_um": [
+         254.55,
+         506.04
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_78",
+        "xy_um": [
+         151.55,
+         463.31
+        ]
+       }
+      ]
+     },
+     "x_ctl_o": {
+      "stages": [
+       {
+        "raw_reset": "rst_rl_237",
+        "xy_um": [
+         427.71,
+         807.73
+        ]
+       },
+       {
+        "raw_reset": "rst_rl_172",
+        "xy_um": [
+         479.21,
+         1072.14
+        ]
+       }
+      ]
+     }
+    },
+    "depth": 3,
+    "reuse_relay_origin": true
+   },
+   "layer": "M9",
+   "reset_tree_anchor": {
+    "inputs": {
+     "ft_slots": "53340327b33738248b558f69a5588c412b40fd0a0a26f92f98dd430e75576ee6",
+     "sink_bins": "078c8ab1f17541429081cf9f019c6ef01f1fa5473a9cba78c9eb4416cd26c411",
+     "taps": "1cdccc6fefaf0e3c577bc51a59589c000fc9901694728859abc53d26f517bc63"
+    },
+    "relays": {
+     "rst_rl_102": {
+      "depth": 2,
+      "xy": [
+       314.848,
+       444.96
+      ]
+     },
+     "rst_rl_107": {
+      "depth": 4,
+      "xy": [
+       29.728,
+       427.68
+      ]
+     },
+     "rst_rl_109": {
+      "depth": 3,
+      "xy": [
+       98.848,
+       505.44
+      ]
+     },
+     "rst_rl_118": {
+      "depth": 3,
+      "xy": [
+       107.488,
+       583.2
+      ]
+     },
+     "rst_rl_125": {
+      "depth": 4,
+      "xy": [
+       228.448,
+       1084.32
+      ]
+     },
+     "rst_rl_137": {
+      "depth": 3,
+      "xy": [
+       314.848,
+       712.8
+      ]
+     },
+     "rst_rl_143": {
+      "depth": 4,
+      "xy": [
+       592.352,
+       1317.6
+      ]
+     },
+     "rst_rl_156": {
+      "depth": 3,
+      "xy": [
+       523.232,
+       954.752
+      ]
+     },
+     "rst_rl_166": {
+      "depth": 2,
+      "xy": [
+       226.784,
+       358.56
+      ]
+     },
+     "rst_rl_172": {
+      "depth": 4,
+      "xy": [
+       461.728,
+       950.069
+      ]
+     },
+     "rst_rl_234": {
+      "depth": 1,
+      "xy": [
+       418.528,
+       190.032
+      ]
+     },
+     "rst_rl_237": {
+      "depth": 4,
+      "xy": [
+       418.528,
+       941.744
+      ]
+     },
+     "rst_rl_29": {
+      "depth": 4,
+      "xy": [
+       314.848,
+       505.44
+      ]
+     },
+     "rst_rl_3": {
+      "depth": 4,
+      "xy": [
+       487.648,
+       17.312
+      ]
+     },
+     "rst_rl_32": {
+      "depth": 4,
+      "xy": [
+       306.208,
+       522.72
+      ]
+     },
+     "rst_rl_5": {
+      "depth": 4,
+      "xy": [
+       306.208,
+       159.84
+      ]
+     },
+     "rst_rl_53": {
+      "depth": 4,
+      "xy": [
+       314.848,
+       496.8
+      ]
+     },
+     "rst_rl_55": {
+      "depth": 4,
+      "xy": [
+       392.608,
+       574.56
+      ]
+     },
+     "rst_rl_71": {
+      "depth": 4,
+      "xy": [
+       29.728,
+       289.44
+      ]
+     },
+     "rst_rl_73": {
+      "depth": 4,
+      "xy": [
+       17.76,
+       349.92
+      ]
+     },
+     "rst_rl_75": {
+      "depth": 4,
+      "xy": [
+       107.488,
+       358.56
+      ]
+     },
+     "rst_rl_78": {
+      "depth": 4,
+      "xy": [
+       107.488,
+       462.24
+      ]
+     },
+     "rst_rl_80": {
+      "depth": 3,
+      "xy": [
+       366.688,
+       384.48
+      ]
+     }
+    },
+    "tol_um": 405.0
+   },
+   "sink_bins_file": "physical/die_plan/qwen_compute/tap_fwderive_slw_fw_v3_aefb8dfc/bins/slw_fw_v3.json",
+   "tap_chain_affinity": {
+    "max_group": 128,
+    "radius_um": 200.0
+   },
+   "tap_max_sinks": 1200,
+   "tap_mode": "density",
+   "tap_radius_um": 200.0,
+   "tap_target_sinks": 900,
+   "tap_um": [
+    311.04,
+    673.92
+   ],
+   "taps": [
+    {
+     "from_root_um": 337.0,
+     "insertion_ps": 223,
+     "insertion_tol_ps": 40,
+     "kind": "glue",
+     "name": "glue_00",
+     "xy": [
+      311.04,
+      336.96
+     ]
+    },
+    {
+     "from_root_um": 328.3,
+     "insertion_ps": 223,
+     "insertion_tol_ps": 40,
+     "kind": "glue",
+     "name": "glue_01",
+     "xy": [
+      311.04,
+      1002.24
+     ]
+    }
+   ]
+  },
+  "model": {
+   "max_load": 1037,
+   "max_reach_um": 169.127,
+   "sinks": 74789,
+   "taps": 127
+  }
+ }
+}

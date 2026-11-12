@@ -1,0 +1,21 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/qc-fw-forms/src/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s25.json",
+ "plan_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd",
+ "rows": [
+  {
+   "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+   "sinks": 59769,
+   "old_max_load_actual": null,
+   "old_mode": "density",
+   "old_cap": 1200,
+   "cap": 1200,
+   "target": 900,
+   "radius": 200.0,
+   "status": "OK",
+   "new_taps": 100,
+   "new_max_load": 1200,
+   "new_max_reach_um": 182.951,
+   "error": ""
+  }
+ ]
+}

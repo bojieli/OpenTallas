@@ -1,0 +1,7 @@
+# qwen_compute: station-direction lint 0 INVERTED chain(s) in 0 type(s) (station_lint.py; ADVISORY)
+# qwen_compute: 3 types, 0 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
+die	type	verdict	flag_regions	worst_region	dir	layer	p99_ratio	max_ratio	hot_bins	at_um	core_H	core_V	mem_H	mem_V	street_H	street_V	ring_H	ring_V	open_H	open_V	cells_per_um2	cells	macro_frac	mem_frac	model	need_free_M4	need_free_M5	provisional_children	fix	station_inverted
+qwen_compute	sle_fw_v3	ok	-	ring	V	M3	0.879	1.012	4	264.6,826.2							0.757	0.879	0.647	0.863	0.2046	170420	0.0	0.0	none	-	-	-	landing ring form (stacked / y-column ring, or split the landing)	0
+qwen_compute	slw_fw_v3	ok	-	ring	V	M3	0.677	0.757	0	124.2,156.6							0.656	0.677	0.323	0.455	0.2215	184496	0.0	0.0	none	-	-	-	landing ring form (stacked / y-column ring, or split the landing)	0
+qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	ok	-	ring	V	M3	0.606	0.629	0	113.4,307.8							0.591	0.606	0.308	0.439	0.2235	186179	0.0	0.0	none	-	-	-	landing ring form (stacked / y-column ring, or split the landing)	0
+rc=0

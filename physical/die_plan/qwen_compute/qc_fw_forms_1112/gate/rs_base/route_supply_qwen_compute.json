@@ -1,0 +1,723 @@
+{
+ "schema": "opentallas.route_supply.v1",
+ "advisory": true,
+ "plan": "/srv/opentallas-scratch2/claude/qc-fw-forms/src/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s25.json",
+ "die": "qwen_compute",
+ "cfg": {
+  "bin_um": 10.8,
+  "window": 3,
+  "core_ceiling": "M5",
+  "cell_fill": 0.25,
+  "ring_tracks_per_bit": 2.5,
+  "ring_um2_per_flop": 10.0,
+  "street_um": 60.0,
+  "face_um": 21.6,
+  "hot": 1.0,
+  "glue_um": 21.6,
+  "cell_um2": 0.1,
+  "detour_um": 97.2,
+  "margin_bins": 9,
+  "derate": {
+   "M2": 0.2914,
+   "M3": 0.2573,
+   "M4": 0.2568,
+   "M5": 0.2599,
+   "M6": 0.3118,
+   "M7": 0.3239
+  },
+  "pin_escape": false,
+  "station_spread": false,
+  "ft_core_internal": true,
+  "template_cap_obs_max": true,
+  "empty_conns_unchecked": true,
+  "station_face_dedupe": true,
+  "station_scan": null,
+  "fanout": true,
+  "grt_halving": "full",
+  "grt_edge_gcells": 2,
+  "grt_halving_types": {},
+  "signed_modules": null,
+  "core_fill": {},
+  "views": {
+   "qfd_tile_nk_a0c": {
+    "obs_top": "M7",
+    "coverage": 0.993,
+    "src": "signed tile LEF blocks M1-M7 over 99.3% of its area (COORD/QC-FAIL-22 11-10; the provisional contract view blocks M1-M5 only)"
+   }
+  },
+  "kit_views": {
+   "d2d_sram_1r1w_64x137_m1_r2c2_p192": {
+    "obs": {},
+    "size": [
+     57.912,
+     45.672
+    ],
+    "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 118
+   },
+   "ot_qfd_ucie_x64_phy": {
+    "obs": {
+     "M1": 1.0,
+     "M2": 1.0,
+     "M3": 1.0,
+     "M4": 1.0,
+     "M5": 0.9995
+    },
+    "size": [
+     777.6,
+     777.6
+    ],
+    "src": "epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_ucie/attempt_10/gen/coll_ucie/macros/ot_qfd_ucie_x64_phy.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0,
+      "M5": 0.0033
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0,
+      "M5": 0.0062
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0,
+      "M5": 0.0092
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0,
+      "M5": 0.0121
+     }
+    },
+    "pg_rects": 647
+   },
+   "ot_rom_4096x266_m8": {
+    "obs": {
+     "M1": 1.0,
+     "M2": 1.0,
+     "M3": 1.0,
+     "M4": 0.9988
+    },
+    "size": [
+     121.848,
+     62.952
+    ],
+    "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/sle_stm_v2__cl55be2264/attempt_16/gen/sle_stm_v2__cl55be2264/macros/ot_rom_4096x266_m8.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 163
+   },
+   "ot_rom_4096x72_m8": {
+    "obs": {
+     "M1": 1.0,
+     "M2": 1.0,
+     "M3": 1.0,
+     "M4": 0.9962
+    },
+    "size": [
+     38.04,
+     62.952
+    ],
+    "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/ot_rom_4096x72_m8.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 163
+   },
+   "ot_sram_1r1w2c_64x546_m1": {
+    "obs": {},
+    "size": [
+     178.632,
+     81.0
+    ],
+    "src": "epyc2:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/coll_s/attempt_19/gen/coll_s/macros/ot_sram_1r1w2c_64x546_m1.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 210
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "obs": {},
+    "size": [
+     94.824,
+     41.064
+    ],
+    "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 106
+   },
+   "ot_sram_1r1w_32x128_m1": {
+    "obs": {},
+    "size": [
+     51.408,
+     20.79
+    ],
+    "src": "epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/tt_ctlm/attempt_11/gen/tt_ctlm/macros/ot_sram_1r1w_32x128_m1.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 53
+   },
+   "ot_sram_1r1w_32x512_m1": {
+    "obs": {},
+    "size": [
+     167.4,
+     52.92
+    ],
+    "src": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/native59/attempt_9/gen/native59/macros/ot_sram_1r1w_32x512_m1.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 137
+   },
+   "ot_sram_1r1w_32x64_m1": {
+    "obs": {},
+    "size": [
+     31.968,
+     17.28
+    ],
+    "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_32x64_m1.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 44
+   },
+   "ot_sram_1r1w_64x512_m1_r2c2": {
+    "obs": {},
+    "size": [
+     171.288,
+     77.784
+    ],
+    "src": "epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/glue/attempt_9/gen/glue/macros/ot_sram_1r1w_64x512_m1_r2c2.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 202
+   },
+   "w": {
+    "obs": {},
+    "size": [
+     94.824,
+     41.064
+    ],
+    "src": "intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/efdb36e864/items/slw_st_a_v2__clf4365a62/attempt_14/gen/slw_st_a_v2__clf4365a62/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+    "edge_share": {
+     "1": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "2": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "3": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     },
+     "4": {
+      "M2": 1.0,
+      "M3": 1.0,
+      "M4": 1.0
+     }
+    },
+    "pg_rects": 106
+   }
+  }
+ },
+ "rows": [
+  {
+   "type": "sle_fw_v3",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "model": "none",
+   "bins": [
+    58,
+    124
+   ],
+   "conns_src": null,
+   "macros": 0,
+   "mem_macros": 0,
+   "provisional_children": [],
+   "macro_area_frac": 0.0,
+   "mem_area_frac": 0.0,
+   "glue_pins": 0,
+   "station_carried_pins": 0,
+   "core_pins": 0,
+   "unchecked_pins": 0,
+   "ft_bits": 2316,
+   "ft_core_internal_bits": 0,
+   "ring_bands_core_internal": 0,
+   "station_bits": 8531,
+   "ring_bits": 5185,
+   "wirelength_mm": 9026.1,
+   "worst": {
+    "region": "ring",
+    "dir": "V",
+    "p99": 0.879,
+    "max": 1.012,
+    "at_um": [
+     264.6,
+     826.2
+    ],
+    "layer": "M3",
+    "layer_share": {
+     "M3": 0.45,
+     "M5": 0.33,
+     "M7": 0.22
+    },
+    "hot_bins_region": 1
+   },
+   "hot_bins": 4,
+   "hot_area_um2": 467,
+   "porous": {},
+   "children": [],
+   "fix": "landing ring form (stacked / y-column ring, or split the landing)",
+   "regions": {
+    "face_H": {
+     "p99": 0.586,
+     "max": 0.647,
+     "hot_bins": 0,
+     "bins": 526
+    },
+    "face_V": {
+     "p99": 0.637,
+     "max": 0.673,
+     "hot_bins": 0,
+     "bins": 526
+    },
+    "open_H": {
+     "p99": 0.647,
+     "max": 0.765,
+     "hot_bins": 0,
+     "bins": 4672
+    },
+    "open_V": {
+     "p99": 0.863,
+     "max": 1.037,
+     "hot_bins": 3,
+     "bins": 4672
+    },
+    "ring_H": {
+     "p99": 0.757,
+     "max": 0.796,
+     "hot_bins": 0,
+     "bins": 1994
+    },
+    "ring_V": {
+     "p99": 0.879,
+     "max": 1.012,
+     "hot_bins": 1,
+     "bins": 1994
+    },
+    "dens_A": {
+     "p99": 0.2046,
+     "max": 0.2046,
+     "hot_bins": 0,
+     "bins": 1
+    }
+   },
+   "notes": [],
+   "obs_src": {},
+   "cells": 170420,
+   "cells_basis": "cells.py plan",
+   "soft_um2": 833089.5,
+   "verdict": "ok",
+   "flag_regions": [],
+   "station_inverted": [],
+   "station_nonmonotone": 0
+  },
+  {
+   "type": "slw_fw_v3",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "model": "none",
+   "bins": [
+    58,
+    124
+   ],
+   "conns_src": null,
+   "macros": 0,
+   "mem_macros": 0,
+   "provisional_children": [],
+   "macro_area_frac": 0.0,
+   "mem_area_frac": 0.0,
+   "glue_pins": 0,
+   "station_carried_pins": 0,
+   "core_pins": 0,
+   "unchecked_pins": 0,
+   "ft_bits": 1802,
+   "ft_core_internal_bits": 0,
+   "ring_bands_core_internal": 0,
+   "station_bits": 0,
+   "ring_bits": 5143,
+   "wirelength_mm": 2501.4,
+   "worst": {
+    "region": "ring",
+    "dir": "V",
+    "p99": 0.677,
+    "max": 0.757,
+    "at_um": [
+     124.2,
+     156.6
+    ],
+    "layer": "M3",
+    "layer_share": {
+     "M3": 0.45,
+     "M5": 0.33,
+     "M7": 0.22
+    },
+    "hot_bins_region": 0
+   },
+   "hot_bins": 0,
+   "hot_area_um2": 0,
+   "porous": {},
+   "children": [],
+   "fix": "landing ring form (stacked / y-column ring, or split the landing)",
+   "regions": {
+    "face_H": {
+     "p99": 0.396,
+     "max": 0.402,
+     "hot_bins": 0,
+     "bins": 459
+    },
+    "face_V": {
+     "p99": 0.455,
+     "max": 0.481,
+     "hot_bins": 0,
+     "bins": 459
+    },
+    "open_H": {
+     "p99": 0.323,
+     "max": 0.381,
+     "hot_bins": 0,
+     "bins": 4750
+    },
+    "open_V": {
+     "p99": 0.455,
+     "max": 0.514,
+     "hot_bins": 0,
+     "bins": 4750
+    },
+    "ring_H": {
+     "p99": 0.656,
+     "max": 0.679,
+     "hot_bins": 0,
+     "bins": 1983
+    },
+    "ring_V": {
+     "p99": 0.677,
+     "max": 0.757,
+     "hot_bins": 0,
+     "bins": 1983
+    },
+    "dens_A": {
+     "p99": 0.2215,
+     "max": 0.2215,
+     "hot_bins": 0,
+     "bins": 1
+    }
+   },
+   "notes": [],
+   "obs_src": {},
+   "cells": 184496,
+   "cells_basis": "measured synth slw_fw_v3",
+   "soft_um2": 833089.5,
+   "verdict": "ok",
+   "flag_regions": [],
+   "station_inverted": [],
+   "station_nonmonotone": 0
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+   "outline_um": [
+    622.08,
+    1339.2
+   ],
+   "model": "none",
+   "bins": [
+    58,
+    124
+   ],
+   "conns_src": null,
+   "macros": 0,
+   "mem_macros": 0,
+   "provisional_children": [],
+   "macro_area_frac": 0.0,
+   "mem_area_frac": 0.0,
+   "glue_pins": 0,
+   "station_carried_pins": 0,
+   "core_pins": 0,
+   "unchecked_pins": 0,
+   "ft_bits": 1802,
+   "ft_core_internal_bits": 0,
+   "ring_bands_core_internal": 0,
+   "station_bits": 0,
+   "ring_bits": 5701,
+   "wirelength_mm": 2499.0,
+   "worst": {
+    "region": "ring",
+    "dir": "V",
+    "p99": 0.606,
+    "max": 0.629,
+    "at_um": [
+     113.4,
+     307.8
+    ],
+    "layer": "M3",
+    "layer_share": {
+     "M3": 0.45,
+     "M5": 0.33,
+     "M7": 0.22
+    },
+    "hot_bins_region": 0
+   },
+   "hot_bins": 0,
+   "hot_area_um2": 0,
+   "porous": {},
+   "children": [],
+   "fix": "landing ring form (stacked / y-column ring, or split the landing)",
+   "regions": {
+    "face_H": {
+     "p99": 0.31,
+     "max": 0.316,
+     "hot_bins": 0,
+     "bins": 438
+    },
+    "face_V": {
+     "p99": 0.435,
+     "max": 0.468,
+     "hot_bins": 0,
+     "bins": 438
+    },
+    "open_H": {
+     "p99": 0.308,
+     "max": 0.338,
+     "hot_bins": 0,
+     "bins": 4286
+    },
+    "open_V": {
+     "p99": 0.439,
+     "max": 0.488,
+     "hot_bins": 0,
+     "bins": 4286
+    },
+    "ring_H": {
+     "p99": 0.591,
+     "max": 0.6,
+     "hot_bins": 0,
+     "bins": 2468
+    },
+    "ring_V": {
+     "p99": 0.606,
+     "max": 0.629,
+     "hot_bins": 0,
+     "bins": 2468
+    },
+    "dens_A": {
+     "p99": 0.2235,
+     "max": 0.2235,
+     "hot_bins": 0,
+     "bins": 1
+    }
+   },
+   "notes": [],
+   "obs_src": {},
+   "cells": 186179,
+   "cells_basis": "cells.py plan",
+   "soft_um2": 833089.5,
+   "verdict": "ok",
+   "flag_regions": [],
+   "station_inverted": [],
+   "station_nonmonotone": 0
+  }
+ ]
+}

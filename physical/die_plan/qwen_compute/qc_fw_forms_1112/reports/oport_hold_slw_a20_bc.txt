@@ -1,0 +1,13 @@
+output-port min violators 7431 buses 46
+x_ctl_p1_o               n= 537 worst= -58.22 clk_at_launch_med= 123.4 data_after_clk_med=  56.1 required= 227.5
+x_stm_o                  n= 550 worst= -57.52 clk_at_launch_med= 119.6 data_after_clk_med=  55.8 required= 227.5
+x_ctl_p2_o               n= 537 worst= -56.52 clk_at_launch_med= 129.4 data_after_clk_med=  55.9 required= 227.5
+x_ctl_o                  n= 537 worst= -55.36 clk_at_launch_med= 117.8 data_after_clk_med=  57.1 required= 227.5
+x_stm_p1_o               n= 549 worst= -54.64 clk_at_launch_med= 128.6 data_after_clk_med=  56.0 required= 227.5
+x_fe_p1_o                n= 540 worst= -53.35 clk_at_launch_med= 121.7 data_after_clk_med=  56.5 required= 227.5
+x_fe_p2_o                n= 539 worst= -53.15 clk_at_launch_med= 123.2 data_after_clk_med=  56.2 required= 227.5
+dd_wo                    n= 549 worst= -51.48 clk_at_launch_med= 122.8 data_after_clk_med=  57.0 required= 227.5
+cland_fstart_out_x_ctl_o n=   1 worst= -51.32 clk_at_launch_med= 116.3 data_after_clk_med=  59.9 required= 227.5
+x_fe_o                   n= 540 worst= -49.10 clk_at_launch_med= 129.1 data_after_clk_med=  56.7 required= 227.5
+rsf_o                    n= 515 worst= -47.00 clk_at_launch_med= 127.2 data_after_clk_med=  59.8 required= 227.5
+cws0_o                   n= 517 worst= -46.31 clk_at_launch_med= 128.0 data_after_clk_med=  60.0 required= 227.5

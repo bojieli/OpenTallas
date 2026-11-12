@@ -1,0 +1,47 @@
+{
+ "base_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd",
+ "sha256": "55f8d2f97e30056450672a9264cffad96134a0507d935cc46c75997d269fcfe2",
+ "sle_fw_v3": {
+  "ft_hold_hb4_dropped": {
+   "l9_eo_l9_wi": 2
+  },
+  "hold_hb4": {
+   "flt_stm_i": 2,
+   "x_ctl_p1_i": 1,
+   "x_sc_i": 2,
+   "x_stm_i": 1,
+   "x_stm_p1_i": 2
+  },
+  "stations": 24
+ },
+ "slw_fw_v1__clf51c11d8__clc7ddab13": {
+  "clock_keys": [
+   "sink_bins_file",
+   "tap_pair_affinity"
+  ],
+  "hold_hb4": {
+   "flt_stm_i": 2,
+   "x_ctl_p1_i": 2,
+   "x_fe_i": 2,
+   "x_fe_p1_i": 2,
+   "x_sc_i": 2,
+   "x_stm_i": 2,
+   "x_stm_p1_i": 2
+  },
+  "relay_sites": 6771,
+  "stations": 23
+ },
+ "slw_fw_v3": {
+  "hold_hb4": {
+   "flt_stm_i": 4,
+   "x_ctl_p1_i": 4,
+   "x_fe_i": 4,
+   "x_fe_p1_i": 4,
+   "x_sc_i": 4,
+   "x_stm_i": 4,
+   "x_stm_p1_i": 4
+  },
+  "relay_sites": 9042,
+  "stations": 22
+ }
+}

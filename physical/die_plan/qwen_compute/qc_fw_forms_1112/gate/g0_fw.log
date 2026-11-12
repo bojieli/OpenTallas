@@ -1,0 +1,52 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/check.py", line 2633, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/check.py", line 2599, in main
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
+              ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+                  full_cut=a.full_cut,
+                  ^^^^^^^^^^^^^^^^^^^^
+                  plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/check.py", line 2497, in run
+    cland = LC.check(P)
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/landing_contract.py", line 54, in check
+    st_sum,opened=_start_tree_check(P,st,pinmap,uses,errors,sidecar)
+                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/landing_contract.py", line 175, in _start_tree_check
+    reset_summary=RR.check_provider_root(P,st["reset_source"],st.get("provider"))
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_route.py", line 72, in check_provider_root
+    native=next((q for q in scalar_pins(P,tn) if q['name']==pin),None)
+                            ~~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_route.py", line 15, in scalar_pins
+    xy_um=[float(x),float(y)]) for n,x,y in RT.out_pins(P,tn)]
+                                            ~~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_tree.py", line 1514, in out_pins
+    sites = face_sites(P, tn)
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_tree.py", line 1275, in face_sites
+    taken = [(x, y) for _, x, y in _plan_taps(P, tn)]
+                                   ~~~~~~~~~~^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_tree.py", line 1012, in _plan_taps
+    return _taps(P, tn)
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/reset_tree.py", line 955, in _taps
+    sites = _S_TAP_GRID(P, tn)
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/schema.py", line 2256, in tap_grid
+    return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
+                                           ~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/taps.py", line 1117, in density_taps
+    pts = sink_sites(P, tn, control)
+  File "/srv/opentallas-scratch2/claude/qc-fw-forms/src/tools/die_plan/taps.py", line 304, in sink_sites
+    rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/qc-fw-forms/src/physical/die_plan/qwen_compute/tap_density_class_1106/bins/sle_fw_v1__clf58b4dfb.json'
+rc=1

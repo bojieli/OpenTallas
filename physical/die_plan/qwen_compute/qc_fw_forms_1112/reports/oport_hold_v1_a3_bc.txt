@@ -1,0 +1,13 @@
+output-port min violators 8000 buses 44
+x_ctl_p2_o               n= 537 worst= -84.01 clk_at_launch_med=  62.4 data_after_clk_med=  55.9 required= 197.5
+x_ctl_p1_o               n= 537 worst= -81.18 clk_at_launch_med=  89.5 data_after_clk_med=  56.1 required= 197.5
+st_wo                    n= 851 worst= -66.62 clk_at_launch_med=  81.4 data_after_clk_med=  57.0 required= 197.5
+x_fe_p1_o                n= 539 worst= -62.77 clk_at_launch_med=  87.9 data_after_clk_med=  56.3 required= 197.5
+rsn_o                    n= 515 worst= -59.21 clk_at_launch_med=  91.8 data_after_clk_med=  58.8 required= 197.5
+cland_fstart_out_st_wo   n=   1 worst= -57.38 clk_at_launch_med=  81.5 data_after_clk_med=  58.6 required= 197.5
+dd_wo                    n= 522 worst= -57.27 clk_at_launch_med=  91.9 data_after_clk_med=  56.7 required= 197.5
+rsf_o                    n= 511 worst= -55.58 clk_at_launch_med=  89.4 data_after_clk_med=  59.3 required= 197.5
+x_stm_p1_o               n= 549 worst= -55.53 clk_at_launch_med=  89.2 data_after_clk_med=  56.4 required= 197.5
+x_ctl_o                  n= 518 worst= -54.37 clk_at_launch_med=  87.9 data_after_clk_med=  60.4 required= 197.5
+x_stm_o                  n= 347 worst= -53.46 clk_at_launch_med=  92.2 data_after_clk_med=  56.4 required= 197.5
+x_fe_o                   n= 539 worst= -52.28 clk_at_launch_med=  94.8 data_after_clk_med=  56.8 required= 197.5
