@@ -5488,6 +5488,32 @@
         "minLength": 1
        }
       }
+     },
+     "soft_clones": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "physical_inst",
+        "base",
+        "master"
+       ],
+       "properties": {
+        "physical_inst": {
+         "type": "string",
+         "pattern": "^u_bound\\.[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "base": {
+         "type": "string",
+         "minLength": 1
+        },
+        "master": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      }
      }
     }
    }
