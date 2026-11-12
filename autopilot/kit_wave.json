@@ -32324,7 +32324,8 @@
     "q_b011": {
      "OT_KW42_PDNCOL": "20168ea1dfb8",
      "OT_KW43_FIX": "3b19164ed1",
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_b103": {
      "OT_KW42_PDNCOL": "20168ea1dfb8",
@@ -32378,13 +32379,16 @@
      "OT_POROUS_VIEWS": "all"
     },
     "q_b010": {
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_b010__physical_v1": {
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_b011__physical_v1": {
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_b012": {
      "OT_POROUS_VIEWS": "all"
@@ -32769,23 +32773,23 @@
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b011": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t21d/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t21d",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t21d.json"
      },
-     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "note": "KW-FIX-45 11-11 19:1x COORD 19:05: HBM d50a_d6d_positions plan f638067aaf83 (BIND_OK 0 errors, bind_report d3e4b28d31f8), full sign-off with edge_outline; DO_NOT_COUNT. KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b011__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t21d/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t21d",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t21d.json"
      },
-     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "note": "KW-FIX-45 11-11 19:1x COORD 19:05: HBM d50a_d6d_positions plan f638067aaf83 (BIND_OK 0 errors, bind_report d3e4b28d31f8), full sign-off with edge_outline; DO_NOT_COUNT. KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
@@ -33038,23 +33042,23 @@
      "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_b010": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t21d/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t21d",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t21d.json"
      },
-     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "note": "KW-FIX-45 11-11 19:1x COORD 19:05: HBM d50a_d6d_positions plan f638067aaf83 (BIND_OK 0 errors, bind_report d3e4b28d31f8), full sign-off with edge_outline; DO_NOT_COUNT. KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b010__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t21d/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t21d",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t21d.json"
      },
-     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "note": "KW-FIX-45 11-11 19:1x COORD 19:05: HBM d50a_d6d_positions plan f638067aaf83 (BIND_OK 0 errors, bind_report d3e4b28d31f8), full sign-off with edge_outline; DO_NOT_COUNT. KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
@@ -42058,10 +42062,6 @@
     "q_b001__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b002": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b002__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b010": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b010__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b011": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b011__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "vsN1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "vsN2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "vsN4": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
