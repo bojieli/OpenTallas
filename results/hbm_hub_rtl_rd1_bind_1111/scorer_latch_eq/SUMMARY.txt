@@ -1,0 +1,10 @@
+HBM-HUB-RTL-1 11-12 scorer W-glue loop hoist (COORD: structural fix, owner rule 11-11)
+rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv 73-79: the for loop runs on every evaluation (bv_r
+gates each term) instead of inside if(bv_r), so its variable j is assigned on all paths: no inferred latch.
+1. block EQ (wf_eq.ys, yosys SAT miter of the wf function, all inputs): SUCCESS; latches old 3 / new 0;
+   mutant (bv_r gate dropped on the loop, wf_mut.ys): FAIL as expected.
+2. die-level (die_elab_fix.sh): fresh t19 control elaboration on tip2 + this file, no prune step: 0 latches die-wide;
+   the scorer quarter module (cells 223 vs cached bind_e0 224, 0 latches both) is equivalent to the cached Nov-8 netlist
+   module: equiv_make/equiv_simple -seq 2/equiv_induct -seq 2 with async2sync, 51846 $equiv cells, 0 unproven
+   (scorer_eq.log). Mutant (one $logic_or at :77 -> $logic_and in the gate, scorer_eq_mut.ys): FAIL (rc 1, unprovable
+   at the score_fault_check input).
