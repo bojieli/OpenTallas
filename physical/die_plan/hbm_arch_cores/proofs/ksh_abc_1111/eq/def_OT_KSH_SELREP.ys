@@ -1,0 +1,19 @@
+read_verilog -sv -DOT_KSH_SELREP src/ot_hbm_svc_async_fifo.sv src/ot_hbm_svc_ring_h9b_ff.sv src/ref_orig.sv
+hierarchy -top ot_hbm_svc_vm_kshare_splitstrap -chparam KRL1 1
+proc; flatten; opt_clean
+rename ot_hbm_svc_vm_kshare_splitstrap gold
+design -stash gold
+read_verilog -sv -DOT_KSH_SELREP src/ot_hbm_svc_async_fifo.sv src/ot_hbm_svc_ring_h9b_ff.sv ksh.sv
+hierarchy -top ot_hbm_svc_vm_kshare_splitstrap -chparam KRL1 1
+proc; flatten; opt_clean
+rename ot_hbm_svc_vm_kshare_splitstrap gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+opt_clean
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

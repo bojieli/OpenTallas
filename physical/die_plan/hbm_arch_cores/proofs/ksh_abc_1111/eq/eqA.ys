@@ -1,0 +1,23 @@
+read_verilog -sv fragA_gold.sv
+hierarchy -top fragA
+
+proc; flatten; opt_clean; rename -hide w:* i:* o:* %u %d
+rename fragA gold
+design -stash gold
+read_verilog -sv fragA_gate.sv
+hierarchy -top fragA
+
+setattr -mod -unset keep_hierarchy ot_hbm_svc_skid_popg
+setattr -unset keep a:keep
+proc; flatten; opt_clean; opt_merge -share_all; opt_clean; rename -hide w:* i:* o:* %u %d
+rename fragA gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+opt_clean
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert

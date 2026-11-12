@@ -1,0 +1,23 @@
+read_verilog -sv ref.sv
+hierarchy -top ot_hbm_svc_pin_skid2
+chparam -set WIDTH 277 ot_hbm_svc_pin_skid2
+proc; flatten; opt_clean
+rename ot_hbm_svc_pin_skid2 gold
+design -stash gold
+read_verilog -sv srl_gate.sv
+hierarchy -top ot_hbm_svc_pin_skid2_srl
+chparam -set WIDTH 277 ot_hbm_svc_pin_skid2_srl
+setattr -mod -unset keep_hierarchy ot_hbm_svc_skid_popg
+setattr -unset keep a:keep
+proc; flatten; opt_clean; opt_merge -share_all; opt_clean
+rename ot_hbm_svc_pin_skid2_srl gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+opt_clean
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert

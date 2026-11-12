@@ -1,0 +1,47 @@
+CASE mutA seed 11 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k2 l1 cyc824
+CASE mutA seed 12 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k3 l3 cyc882
+CASE mutA seed 13 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k6 l1 cyc810
+CASE mutA seed 14 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k2 l0 cyc983
+CASE A seed 11 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=31356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6332 +2:1860 +3:0 :: LOCK cfg=A hbm_cycles=31356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE A seed 12 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=32582 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6311 +2:1881 +3:0 :: LOCK cfg=A hbm_cycles=32582 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE A seed 13 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=31819 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6347 +2:1845 +3:0 :: LOCK cfg=A hbm_cycles=31819 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE A seed 14 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=31081 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6301 +2:1891 +3:0 :: LOCK cfg=A hbm_cycles=31081 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE ABC seed 11 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=30300 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5693 +2:1667 +3:0 :: LOCK cfg=ABC hbm_cycles=30300 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B seed 11 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=31695 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7360 +1:0 +2:0 +3:0 :: LOCK cfg=B hbm_cycles=31695 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE ABC seed 12 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=32582 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6311 +2:1881 +3:0 :: LOCK cfg=ABC hbm_cycles=32582 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B seed 12 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=B hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE ABC seed 13 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=30955 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:42 +1:5679 +2:1681 +3:0 :: LOCK cfg=ABC hbm_cycles=30955 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B seed 13 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=31577 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:32 0:7360 +1:0 +2:0 +3:0 :: LOCK cfg=B hbm_cycles=31577 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE ABC seed 14 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=29705 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5264 +2:1520 +3:12 :: LOCK cfg=ABC hbm_cycles=29705 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B seed 14 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=30593 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:6784 +1:0 +2:20 +3:32 :: LOCK cfg=B hbm_cycles=30593 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B700 seed 11 expect pass got PASS rc=0 :: LOCK cfg=B700 hbm_cycles=31695 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7360 +1:0 +2:0 +3:0 :: LOCK cfg=B700 hbm_cycles=31695 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE C seed 11 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=31894 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=31894 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE mutC seed 11 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k0 cyc74
+CASE mutC seed 12 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k3 cyc103
+CASE mutC seed 13 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k0 cyc72
+CASE mutC seed 14 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k6 cyc71
+CASE B700 seed 12 expect pass got PASS rc=0 :: LOCK cfg=B700 hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=B700 hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE C seed 12 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B700 seed 13 expect pass got PASS rc=0 :: LOCK cfg=B700 hbm_cycles=31577 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:32 0:7360 +1:0 +2:0 +3:0 :: LOCK cfg=B700 hbm_cycles=31577 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE B700 seed 14 expect pass got PASS rc=0 :: LOCK cfg=B700 hbm_cycles=30593 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:6784 +1:0 +2:20 +3:32 :: LOCK cfg=B700 hbm_cycles=30593 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE C seed 13 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=32921 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=32921 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE C seed 14 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=31663 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=31663 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE default seed 11 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=31894 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=31894 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE default seed 12 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=29928 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE default seed 13 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=32921 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=32921 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE default seed 14 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=31663 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=31663 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE mutB seed 11 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc342
+CASE mutB seed 12 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc325
+CASE mutB seed 13 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc326
+CASE mutB seed 14 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc326
+
+gate: BP_A cycles 300499 windows 3000 beats 192036 gold_writes 192000 gate_writes 192000 tag_faults 97752 stall_cycles 62801 mismatches 0
+mut_A: BP_A cycles 300499 windows 3000 beats 192036 gold_writes 192000 gate_writes 192000 tag_faults 97752 stall_cycles 62801 mismatches 94218
+eqC:   Of those cells 837 are proven and 0 are unproven.
+eqC_mut:   Of those cells 283 are proven and 554 are unproven.
+eqAp:   Of those cells 283 are proven and 0 are unproven.
+eqA_mutp:   Of those cells 282 are proven and 1 are unproven.
+eqB:   Of those cells 192 are proven and 0 are unproven.
+eqB_mut:   Of those cells 180 are proven and 12 are unproven.
+default-EQ none:   Of those cells 25052 are proven and 0 are unproven.
+default-EQ OT_KSH_SELREP:   Of those cells 26506 are proven and 0 are unproven.
