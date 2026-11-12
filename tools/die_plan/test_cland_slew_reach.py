@@ -159,3 +159,26 @@ def test_reach_wreg_opt_out_narrow_and_non_strap_unchanged():
     _wide_band(p, 567)
     line = _ring_line(Landings(p, t).type_rtl("B", body))
     assert "WREG" not in line and line.endswith(", .DSREP(8)) u_cland_y (")      # non-strap: no K carrier, no WREG
+
+
+def test_explicit_reader_start_chain_gets_per_chunk_copies_no_k_change():
+    # CLAND-RING-LOCALITY (COORD whole-family scope): an explicit landing_reader_start chain's LAST stage takes the same
+    # per-chunk RSTREP copies (clock_landings.reader_reset_copies) without the die fanout knob; strap K unchanged
+    import clock_landings as CL
+    p, t = strap_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    p["partition_types"]["B"]["clock"]["landing_reader_start"] = dict(
+        depth=2, branches={"y": {"stages": [dict(xy_um=[3., 3.], raw_reset="cland_reset_y"),
+                                            dict(xy_um=[6., 3.], raw_reset="cland_reset_y")]}})
+    k0 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", body)
+    assert "ot_dp_landing_relay_rep #(.N(10)) u_cland_reader_start_y_1 (" in rtl, rtl
+    assert "ot_dp_landing_relay u_cland_reader_start_y_0 (" in rtl and ", .RSTREP(10)" in _ring_line(rtl)
+    assert lg.reset_placements["B"]["y"]["reader_start"]["ring_reset_copies"] == 10
+    assert CAB.reader_start_depth(p, "B") == 2 and not CL.reader_start_reach(p, "B")
+    assert CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"] == k0
+    assert CL.reader_reset_copies(p, "B", "y", 568) == 10 and CL.reader_reset_copies(p, "B", "y", 64) == 0
+    p["partition_types"]["B"]["clock"]["landing_reader_start_reach"] = False       # opt-out
+    assert "RSTREP" not in _ring_line(Landings(p, t).type_rtl("B", body))
