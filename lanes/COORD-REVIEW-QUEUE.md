@@ -47064,3 +47064,24 @@ qkd_kvs_ctl (1 type): the LEF the plan binds is 475.2x475.2 but the slot is 371.
   (4) TOK-VERIFY-1 01:58 claude/tok-verify-1-dsn-experts-1111@bc62f30f4e (ds_native per-die expert image + test): APPROVED for merge.
   (5) VISLAYOUT3-KVHEAD 02:08 ASK kv3_sys_SD_v1 SD-GROW: FORM A APPROVED under the owner's 11-12 pre-approval. Evidence: 1,049 PHY + 1,046 face pins on one 45-um E strip, ~430 V tracks for ~1,000+ bits, GRT 4,705 gcells >90%, and area is not the limit. Outline +103.68 um, die +0.94% (2.80 mm2). The unclaimed strip gets decap/fill. Form B is not needed. Build once the strict bind passes; DIE-KV-98 folds it into the next KV event. Keep the per-chunk reset copy as the parallel fallback.
   (6) VISLAYOUT3-KVHEAD hgi_v7 ft25 (paper strike, no V street holds 1,056 b): take the structural option. Move the head3 E column (head3_e1/e3/e5/e7) +77.76 to widen the 873-976 street to ~180 um, and re-site ft11. Outline growth is OK if needed. Paper it, then build. If the column move fails the paper check, hand ft25 to STREET-RULE-1 pass 2 / X-TIER-OTC.
+
+## RESULT die-proto-kv (DIE-PROTO-1, ADVISORY) 2026-11-12 10:09 UTC
+KV vF die prototype, plan dkv98/vF/plan_c.json (md5 b85b6484, my copy with pins/ made real). Run on intel1; peak 7.2 GB per GRT corner, about 20 min end to end.
+- Results: GitHub origin claude/die-proto-3-1111 @6c0fbc635eaa, results/die_proto_3_1111/kv/ (kv_vF_die.png, CHAIN.log).
+- Assembly: die_trial abstracts for 160 partitions (56 types), all stand-ins. 0 signed views are used; 67 views are missing, listed in sta/die_sta_related.json. Reset spine and ft crossings come from the plan.
+- Die GRT (signals M4-M7 at ADJ 0.75, clock M8/M9, TT/FF and grt-off): overflow 0 on all three. 178,935 nets, wirelength 282.6 m. Usage M4 4.23, M5 4.50, M6 4.66, M7 6.17, M8 1.77, M9 0.75 %.
+- Render (viewed): signal demand is only seam and ft crossings, densest on the centre hub band at y about 13 mm. No hotspot, which is consistent with overflow 0.
+- Clock caveat: the clock is NOT the plan form. The plan of record is a 32x71 M8/M9 mesh on a fishbone spine with insertion 250 ps (die.clock.mesh, sites r25). The prototype used die_trial's generic inv2 H-tree. The render shows taps at 5.9-6.7 ns with a north/south step of about 500 ps, so the STA below measures that generic tree, not KV.
+- Die STA (die_sta_related, nominal 12.24b, single region, so no landed class):
+  - TT intra setup +166.4 (0 neg).
+  - TT seam setup -35.4 (52 pairs).
+  - FF seam setup +61.7.
+  - Related-pair skew 508 / 710 ps.
+  - FF hold BLOCKED(kits): 0 of 3.15M pairs measured, because there is no signed view.
+  - Kit-contract violations 150,642 (window needed 467/668 ps vs 140/180).
+  - Verdict: FAIL. The cause is the clock form, not routing.
+- Failure classes:
+  - (1) Skew and kit-contract, caused by the generic tree. Owner: CLOCK-KV / DIE-KV-98. Fix: give me a vF mesh proof dir (die_clock_mesh.py build/mesh/stubsta -> mesh.json + tap arrivals) and I will rerun die_sta_related on it with the same GRT.
+  - (2) Hold UNMEASURED, BLOCKED(kits) on 67 views. Owner: KV kit lanes.
+  - (3) Congestion: none.
+  - (4) Missing pins: none after the pins/ symlink fix. Note for DIE-KV-98: plan_vF/pins links into kv-types-5, which is not mounted in containers, so the copied plan dir needs real files.
