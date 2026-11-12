@@ -110,6 +110,24 @@ def sh(host, cmd, timeout=120):
     return r.returncode, r.stdout, r.stderr
 
 
+def host_free_gb(host):
+    """lowest free GB over / and the scratch disks of a host (None when unreachable)"""
+    rc, out, _ = sh(host, 'df -BG --output=avail / /srv/opentallas-scratch* 2>/dev/null | tail -n +2', 30)
+    vals = [int(x.rstrip('G')) for x in out.split() if x.rstrip('G').isdigit()]
+    return min(vals) if rc == 0 and vals else None
+
+
+def order_queue(pend, free, floor_gb, cap, cap_starved):
+    """queued rows -> (rows to cut now, starved hosts).  Rows from hosts under the floor first (lowest free GB first, then
+    oldest queued), up to cap_starved; then the rest, oldest first, up to cap.  Unreachable hosts sort last."""
+    host = lambda r: r[0].split(':', 1)[0]
+    starved = {h for h, g in free.items() if g is not None and g < floor_gb}
+    key = lambda r: (free.get(host(r)) if free.get(host(r)) is not None else 1e9, r[3] if len(r) > 3 else '')
+    first = sorted((r for r in pend if host(r) in starved), key=key)[:cap_starved]
+    rest = sorted((r for r in pend if host(r) not in starved), key=lambda r: r[3] if len(r) > 3 else '')[:cap]
+    return first + rest, starved
+
+
 def drain(a):
     """cut + publish every queued DB not in the ledger (serially, a.max per call; ot-run admits each cut); one at a time"""
     import fcntl
@@ -127,8 +145,14 @@ def drain(a):
     except ValueError: led = set()
     q = pathlib.Path(a.queue)
     rows = [l.split('\t') for l in q.read_text().splitlines()] if q.exists() else []
-    todo = [r for r in rows if r[0] not in led][:a.max]
-    runtime = set(a.runtime_hosts.split(','))
+    pend = [r for r in rows if r[0] not in led]
+    # COORD 11-12: disk-starved hosts first.  Order by the source host's lowest free GB (root + scratch disks); hosts
+    # under the floor get a larger per-drive cap and are never cut in place (their DB is copied to the store host).
+    free = {h: host_free_gb(h) for h in sorted({r[0].split(':', 1)[0] for r in pend})}
+    todo, starved = order_queue(pend, free, a.floor_gb, a.max, a.max_starved)
+    if free: print('drain: host free GB ' + ' '.join('%s %s%s' % (h, g, '*' if h in starved else '') for h, g in sorted(free.items(), key=lambda x: x[1] if x[1] is not None else 1e9))
+                   + ' (* under %d GB: first, cap %d, cut on %s)' % (a.floor_gb, a.max_starved, a.store_host))
+    runtime = set(a.runtime_hosts.split(',')) - starved
     py, node_bin = a.work + '/rt/venv/bin/python', a.work + '/rt/node'
     for row in todo:
         label, design, stage = row[:3]; kind = row[4] if len(row) > 4 else 'newest'
@@ -168,8 +192,10 @@ def main():
     d.add_argument('--index', default=DX_INDEX, help='host:path or path'); d.add_argument('--store-index', default='')
     d.add_argument('--store-host', default=DX_STORE.split(':', 1)[0]); d.add_argument('--store', default=DX_STORE.split(':', 1)[-1])
     d.add_argument('--work', default=DX_WORK); d.add_argument('--repo-tools', default=DX_TOOLS, help='tools/ dir of a fleet_viz checkout on the store host')
-    d.add_argument('--runtime-hosts', default='epyc2,epyc7,epyc8,intel1', help='hosts with <work>/rt (venv + node) and <work>/code')
-    d.add_argument('--max', type=int, default=20)
+    d.add_argument('--runtime-hosts', default='epyc7,epyc8,intel1', help='hosts with <work>/rt (venv + node) and <work>/code')
+    d.add_argument('--max', type=int, default=20, help='DBs per drain from hosts at or above the floor')
+    d.add_argument('--max-starved', type=int, default=60, help='DBs per drain from hosts under the floor (cut on the store host)')
+    d.add_argument('--floor-gb', type=int, default=150, help='free-GB floor (OWNER 11-06: 150 GB on every host)')
     a = ap.parse_args()
     {'snapshot': snapshot, 'enqueue': enqueue, 'drain': drain, 'ledger-sync': ledger_sync}[a.cmd](a)
 

@@ -42,5 +42,15 @@ class HookTest(unittest.TestCase):
             self.assertIsNone(hold())                                  # no snapshot file -> gate off
 
 
+    def test_drain_order_starved_hosts_first(self):
+        q = lambda h, t: ['%s:/x/%s/6_final.odb' % (h, t), 'd', '6_final', t, 'newest']
+        pend = [q('epyc9', '01'), q('epyc2', '03'), q('epyc4', '05'), q('epyc4', '02'), q('epyc7', '00'), q('gone', '00')]
+        todo, starved = H.order_queue(pend, {'epyc9': 3000, 'epyc2': 61, 'epyc4': 58, 'epyc7': 275, 'gone': None}, 150, 2, 60)
+        self.assertEqual(starved, {'epyc2', 'epyc4'})
+        self.assertEqual([r[0].split(':')[0] + r[3] for r in todo], ['epyc402', 'epyc405', 'epyc203', 'epyc700', 'gone00'])
+        todo, _ = H.order_queue(pend, {'epyc2': 61, 'epyc4': 58}, 150, 0, 1)   # caps apply per class
+        self.assertEqual([r[0].split(':')[0] for r in todo], ['epyc4'])
+
+
 if __name__ == '__main__':
     unittest.main()
