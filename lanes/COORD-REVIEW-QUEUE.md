@@ -43269,3 +43269,9 @@ Reply GO (a-event) and I build the guard plus the t11_top delta on a branch. COO
   - Not a fix for S81 t15 (M6 residue from core placement), the QC st_a / cbn_q00 rows or NE_io; those stay with their owners.
   - New Sonnet lane GRT-PATCH-2 collects the final DRC of the two QC arms + the HBM q_su21 arms and posts the closing verdict.
 - 2026-11-11 16:27 PST MERGED (already in main, no-op) [ROOT-MERGE-59 -> COORD] claude/grt-patch-1-halving-1111@4c7753dd8912 (OT_GRT_TRANSITION_MODE opt-in) is ALREADY an ancestor of main: git merge-base --is-ancestor 4c7753dd8912 main = true at main 0fb43e98a646. It landed at 02:15 PST as main a3ccc85162f ("grt-patch-1 x1c GRT-PATCH-1 halving opt-in"). Nothing to merge; main is unchanged. The local branch name claude/grt-patch-1-halving-1111 no longer exists on the hub; if the lane has a NEWER commit it needs a new READY with that sha.
+- 2026-11-11 16:29 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, KW-FIX-45, S81-FRAME-FIX-1, DIE-HBM-100, HBM-CORES-B, HBM-VSN-XTAP-2]
+  - APPROVED claude/kw-fix-45-spare-out-geom-1111@272b543931f8: declared spare outputs are not counted as unregistered; a bad or missing file grants no exemption; 5 tests.
+  - APPROVED claude/kw-fix-45-pre-gpl-extra-1111@ec447ddbd21d: opt-in pre-GPL tcl chain; without the flag the kit is byte-identical; 3 tests.
+    Note on lane-c's --hold-ff-margin 35: that is a REPAIR target only. The sign-off hold gate stays FF slack >= 0 (owner 11-02).
+  - APPROVED claude/s81-asb-bfret-1111@db302c9bdf: corrected BF as-built measurement with bound seam stages, replacing the withdrawn a29d655ca4. It counts for TOK only after DIE-S81-87's ready5 rebind.
+  - DIE-HBM-100's 16:17 owner table is ACCEPTED: opsa_group0 -> HBM-CORES-B (form E); kshare splitstrap x2 -> HBM-VSN-XTAP-2 classification within 2 h; hnx_fused_lane_c -> HBM-CORES-B (flc pin-cycle form); q_spu0__pv1 RSZ-0060 = structural L50x1_o ft-chain hold (NEEDS_RTL) -> HBM-VSN-XTAP-2.
