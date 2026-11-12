@@ -12,3 +12,15 @@ rg_v4/ and am_v4/ are committed; coll replays (7.6 MB per VM_RT) stay at epyc9 /
 tools/hbm_layer_vehicle/test_coll_images.py: TEST_COLL_IMAGES PASS.
 coll_images reads VM_RT from a contract (hcollgi_SW); contract_vmrt4.json holds only that key; no coll_transport profile (GEN2 timing + VM_RT), as the unit test does.
 fused_lane_pin_cycles_rd1.tsv: FUSED lane pin cycle rows (S1b RR 11 now; S3 RR 12 when HBM-CORES-B RTL lands).
+
+## CORRECTION 11-12 (COMPILER-CAL-3 via DIE-HBM-100): row_gather images re-made for the 256-row v7 issuer (q3bc)
+The row_gather rows above (rg_v4 e3cdb5c165e5aed2, control b4e9d430e5edd819; kept as rg_v{4,3}_v6enc_INVALID_v7.sha256)
+are the 64-row issuer v6 encoding (loop id 63 on single-visit rows) and FAULT on the 256-row v7 issuer: invalid for q3bc.
+New, from claude/compiler-cal-iss2e-1112@1f95c36d14 (contains claude/compiler-cal-rd1-1111@225791101e, so --vm-rt / resp
+shift and enc_meta compose), git archive of tools/hbm_coll_static + static_uop_layout_v4.json:
+  row_gather_rows.py OUT --P 6|1 --vm-rt V --rows 256
+  - rg_v4 (rd1) sha of sha list 20801d68ac44e714; control rg_v3 d5eeced0747ef2e6. Same halt / row counts as before
+    (P6 4225 vs 4224, P1 1110 vs 1109). Loop ids dense: P6 16 ids (max 15), P1 11 (max 10); old max 63.
+  - --rows 64 output of the new compiler is byte-identical to the old images (base unchanged).
+argmax (--rows 256) re-made from the same compiler: am_v4 c1954ce59f1283fb / am_v3 e52fb3db0b4bff69, identical to the
+committed ones (unchanged). coll replays: not issuer programmes, unchanged.
