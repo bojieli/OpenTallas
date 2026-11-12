@@ -6,7 +6,7 @@
 // STRUCTURE
 //  ot_wbq_root (8 lanes, 8 macros, 8 lane FIFOs, 2 lane groups): fill and copy state run locally. The fill control comes straight from the
 //    parent pins, so the wd data needs no delay stages to line up with it: pin +1 face = the same cycle the flat block saw on +2 (wd_q).
-//  ot_wbq_sw__fcore: reservation and copy control, the kport_q wrapper (receipts, wa, wb_ready, window command), K ports.
+//  ot_wbq_sw: reservation and copy control, the kport_q wrapper (receipts, wa, wb_ready, window command), K ports.
 // LANE GROUPS: 4 consecutive ordinals share a PC, since PC = o[5:2]^o[9:6]^o[14:11] does not read o[1:0]. So a root offers 2 sectors per edge,
 //    one per group (lowest non-empty lane), and the K switch is 16 x 8:1 instead of 16 x 32:1. Steady rate: a row of 32 lanes is 8 groups on
 //    8 PCs, so on one row the flat block also drains 8 per edge. Across rows the flat block peaks at 16 per edge, this form stays at 8 per edge,
@@ -300,7 +300,7 @@ endmodule
 //  KMUT 5 = hvn ignores pop, 6 = addr slice read pointer one edge late, 7 = addr sel_q of PC 5 one edge late, 8 = root_ready never seen.
 // KMUT (bench only, HREG=3): 1 = room ignores the in-flight word (store overflow), 2 = sel_q slice 2 of PC 5 takes the grant one edge late,
 //  3 = head_d read pointer copy slice 1 stays one edge late, 4 = control sees the word on the edge it is stored (stale entry PC).
-module ot_wbq_sw__fcore #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0, parameter integer RSYNC=0, parameter integer SCOPY=0, parameter integer MREG=0, parameter integer DCHK=0)(
+module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0, parameter integer RSYNC=0, parameter integer SCOPY=0, parameter integer MREG=0, parameter integer DCHK=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -892,7 +892,7 @@ module ot_hbm_accel_cdc_fifo_fq #(parameter integer W = 32, parameter integer AW
     end
 endmodule
 
-// HBM-CORES-B 11-09 H13: per-PC copy of the g_f2 K-gate cone + its three flops (ot_wbq_sw__fcore MREG>=1).  keep_hierarchy so
+// HBM-CORES-B 11-09 H13: per-PC copy of the g_f2 K-gate cone + its three flops (ot_wbq_sw MREG>=1).  keep_hierarchy so
 // synthesis cannot merge the 16 identical copies back into one cone (opt_merge folds identical logic, keep on wires does not stop it).
 (* keep_hierarchy *)
 module ot_wbq_kg_leaf(input wire hbm_clk,input wire hrst,input wire ma0_c,input wire sa0_c,input wire setH,input wire kwd_any,
