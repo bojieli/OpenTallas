@@ -36,6 +36,8 @@ read from the bound sources of each consumer pin (default: no declaration -> X =
   xload RD_LAT (rr; per-bank vector: every element), n12 VM_RT_EXTRA reading banks directly.
   Any other consumer of a moved pin (a cut without parameters, e.g. hb_coll_q.__cut_vm behind a share) is a hook error:
   the bind fails rather than bind a torn read.  Diagnostic status pins (bank_status) are recorded only.
+  Strap pass-throughs (STRAP_PINS): QUANT LG rr_i -> hb_quant_q__quant_q_xp_ctl rl_cfg; the as-built netlist must tie
+  rl_cfg = 126 + X on a controller master that accepts it (ctl_r5 for 127+); else a hook error.
   Mixed X on one law (an rd1 and a non-rd1 bank in one LG pair / one share) is an error (loop pads are not modelled).
 Leaves that are netlist cuts without parameters (sfucore_q.__cut_ctl = the SFU VM bridge, sfucore_q.__cut_lane* = sp2
 lane RDX) cannot take a parameter: their required values are RECORDED (record.variant_values) for the parameterized
@@ -76,6 +78,15 @@ SHARE = SHARES[0]
 # re-elaborates the top with the new value).  (cut leaf regex, top instance group, parameter, value at X = 0)
 # hb_coll_q VM_RT 3 = the d44v COLL VM budget behind hcollrs_q (BANK_RT 7): t11_top hb_coll_NE/NW .VM_RT(3).
 CUT_PARAMS = [(r"(hb_coll_N[EW])\.__cut_\w+", 1, "VM_RT", 3)]
+# Pass-through readers whose client takes the latency as a declared position STRAP (a constant leaf input, not a
+# parameter): the bind cannot regenerate a strap, so an rd1 bind passes only when the as-built netlist already ties the
+# client strap to base + X and the client master accepts it.  (reader leaf regex, reader port, client leaf template on
+# the reader's groups, client strap port, value at X = 0, {master: max strap})
+# QUANT (DIE-HBM-100 ruling (B) 11-11): hb_quant_q__quant_qk_lg (ot_hgi_qdq_lg_*) rr_i -> rr_o is a register
+# pass-through into hb_quant_q__quant_q_xp_ctl rr_v; the controller read round trip RLI is its rl_cfg strap (t11_top 126 =
+# ctl_r4's range end).  RLI 127+ needs ot_hgi_qdq_transport_ctl_r5 (256-entry ring A, 8-bit rl_cfg, RLI 2..254).
+STRAP_PINS = [(r"hb_quant_(N[EW])__quant_N[EW]\d_lg", r"rr_i", "hb_quant_{0}__quant_{0}_xp_ctl", "rl_cfg", 126,
+               {"ot_hgi_qdq_transport_ctl_r4": 126, "ot_hgi_qdq_transport_ctl_r5": 254})]
 DIAG_PORT = r"(bank_status|b\d_status|status)"            # diagnostic: recorded, never priced
 LAW_PINS = [(r"su_N[EW]\d\.g_tap_r8b\.u_tap", r"near_rr"), (r"hb_idx__ctl", r"vm_rr"),
             (r"hb_vms_\w+", r"(bk|b\d)_pr")]
@@ -239,6 +250,36 @@ def cut_guard(ctx, leaf, xs, single):
     return None
 
 
+def strap_value(ctx, path, port):
+    """as-built constant on a declared strap input of leaf `path` (bind sink ("strap", "0"/"1") per bit) -> int or None"""
+    ci = next((n for n, c in enumerate(ctx.F.cells) if c.path == path), None)
+    if ci is None:
+        return None
+    bits = {i: d[1] for (c, pn, i), d in ctx.sinks.items() if c == ci and pn == port and d}
+    if not bits or any(bits.get(i) not in ("0", "1") for i in range(max(bits) + 1)) or \
+            any(ctx.sinks[(ci, port, i)][0] != "strap" for i in bits):
+        return None
+    return sum(1 << i for i, b in bits.items() if b == "1")
+
+
+def strap_guard(ctx, leaf, port, xs, single):
+    """None: not a strap pass-through; "": the as-built client strap already carries base + X; else the error"""
+    for rx, prx, tmpl, sport, base, cap in STRAP_PINS:
+        m = re.fullmatch(rx, leaf)
+        if not m or not re.fullmatch(prx, port):
+            continue
+        cl = tmpl.format(*m.groups())
+        x = single(f"{leaf} {port} (strap {cl}.{sport})", xs)
+        mod = next((c.module for c in ctx.F.cells if c.path == cl), None)
+        got = strap_value(ctx, cl, sport)
+        need = base + x
+        if got == need and need <= cap.get(mod, -1):
+            return ""
+        return (f"core pin cycles: {leaf}.{port} is a pass-through into {cl}.{sport} (strap, {mod}); the as-built strap "
+                f"must be {base} + {x} = {need} on a master that accepts it ({cap}), as-built {got}")
+    return None
+
+
 def pin_plan(ctx, px, clients, params):
     """-> (xr for derive, [core_pin_regen rows], {"leaf|port": X} record, errors)"""
     import core_pin_cycles as CPC
@@ -297,7 +338,9 @@ def pin_plan(ctx, px, clients, params):
                     share_x[s] = x
                 break
         else:
-            guard = cut_guard(ctx, s, xs, single)
+            guard = strap_guard(ctx, s, p, xs, single)
+            if guard is None:
+                guard = cut_guard(ctx, s, xs, single)
             if guard is not None:
                 if guard:
                     err.append(guard)
