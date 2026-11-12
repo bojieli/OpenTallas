@@ -29322,6 +29322,7 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": "KW-FIX-45 11-12 HBM-CORES-B/DIE-HBM-100: rd1 body (fcd9b8dde26f7876) has a bare initial begin ... $fatal end that face_shell yosys read_verilog -sv cannot resolve; hold until the rd1 main source carries the body with the block wrapped in ifndef SYNTHESIS (HBM-COMPOSE-2 / DIE-HBM-97 apply it and restate EQ + bind provenance)"
    },
    "gen_hosts": [
+    "epyc7",
     "epyc9",
     "epyc8"
    ],
@@ -42419,7 +42420,7 @@
  "note_kw24_stale": "KW-FIX-24 11-06 20:06 COORD 20:0x (3): S81 station rows stale on TAPWIN-PORT (I176 11-05 18:23) rebuilt on src_7281a (per-port SDC; ft_hop_lockup is not on main = OFF): 13 stations + t25 (bind) + leaf t22/t28; t14/t38 wait for ftcorr batch 1. Class sweep: type-kit timing FAIL rows started before I176 on HEAD (7) + KV (1); QC types ride the qcbatch re-bind (20:0x (2)). Hosts epyc5, intel2, epyc6 first (20:0x)",
  "note_kw24_genfix": "KW-FIX-24 20:2x: gen_hosts from a measured input check (plan, src bind.py, kit_rtl asbuilt/script, every bind.f source): KV whole only on epyc5/epyc6 (epyc4 lacks 60, intel2 60, intel1 53); S81 whole only on epyc5/epyc2 (kit_rtl script + codex-wave-bind asbuilt + wave_cg_frz plan); HEAD/QC/HBM whole on all 6",
  "restage_max_per_tick_prev_kw24": 60,
- "restage_max_per_tick": 30,
+ "restage_max_per_tick": 8,
  "note_kw24_norestage": "KW-FIX-24 20:4x RESTAGE ping-pong (49 moves 19-20 h, waiters moved every tick, never admitted): restage off (restage_max_per_tick 0) until claude/kw-fix-24-restagehyst-1106 (30-min min wait) merges; then restore restage_max_per_tick_prev_kw24",
  "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f",
  "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80.",
@@ -42717,7 +42718,7 @@
  "gen_disk_min_gb_prev_kw40": 100,
  "restage_max_per_tick_prev_kw40": 12,
  "restage_min_wait_s_prev_kw40": 1800,
- "restage_min_wait_s": 1800,
+ "restage_min_wait_s": 300,
  "note_kw40e6": "KW-FIX-40 2026-11-08 23:08 PST: COORD 23:06: waiters pinned to epyc4 are the launch limit; epyc5/epyc6 OK for new work (drain >=24 h away, +8 h): epyc5+epyc6 back in hosts/place_prefer/gen_hosts (s81 gen_hosts without epyc6: src_c303p_lgm not there), gen_disk_min_gb 100->65 (ot-run scratch floor 60), restage_max_per_tick 12->60, restage_min_wait_s 1800->300 to move unstarted waiters now. Revert keys *_prev_kw40 after the waiters drain.",
  "note_kw40rs": "KW-FIX-40 23:4x COORD 23:06/23:30: place waiters on full epyc4 on scratch3 paths cannot spill (target scratch3 = root disk, root floors); overlay 0fa4f36ff45 lets restage_waiters move them from mkdir to scratch2 elsewhere. Remove when the epyc4 queue is gone.",
  "hosts_prev_kw41e5": [
@@ -43109,10 +43110,14 @@
  "note_kw45_rebalance": "KW-FIX-45 11-12 COORD: epyc8 then epyc7 preferred for new place/route; epyc9 stays out until waiters < 10 (18 waiters at 80/96); epyc4 stays out until its scratch is above the 150 GB floor (55 GB at last check; add back then, EXPLORER-2 draining export holds).",
  "gen_overflow_hosts_prev_wb1": null,
  "gen_overflow_hosts": [
+  "epyc7",
   "epyc8"
  ],
  "wave_balance": {
   "enabled": true
  },
- "note_wb1": "WAVE-BALANCE-1 11-12 00:07 COORD approved c707e5f641a1: epyc8 added to gen_hosts of qwen_compute/hbm/s81_head (src staged, probe whole), gen_overflow_hosts ['epyc8'], wave_balance.enabled (waiter migration for KIT-WAVE autopilot jobs), submit guard gen_waiter_cap 20 default. Revert: gen_hosts <- gen_hosts_prev_wb1 per die, delete gen_overflow_hosts / wave_balance (or enabled false)."
+ "note_wb1": "WAVE-BALANCE-1 11-12 00:07 COORD approved c707e5f641a1: epyc8 added to gen_hosts of qwen_compute/hbm/s81_head (src staged, probe whole), gen_overflow_hosts ['epyc8'], wave_balance.enabled (waiter migration for KIT-WAVE autopilot jobs), submit guard gen_waiter_cap 20 default. Revert: gen_hosts <- gen_hosts_prev_wb1 per die, delete gen_overflow_hosts / wave_balance (or enabled false).",
+ "restage_max_per_tick_prev_wb1": 30,
+ "restage_min_wait_s_prev_wb1": 1800,
+ "note_wb1b": "WAVE-BALANCE-1 11-12 00:37 COORD: epyc7 FIRST in gen_hosts of hbm (src verified by the SRC probe: whole) and in gen_overflow_hosts; restage 8 per tick, min wait 300 s so unstarted worker waiters on epyc8/epyc9 move to epyc7. Revert: restage_*_prev_wb1, gen_hosts_prev_wb1."
 }
