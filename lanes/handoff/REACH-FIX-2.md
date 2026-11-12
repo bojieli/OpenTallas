@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 08:00 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 08:20 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,8 +8,8 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-1112, HEAD 310e03fb32 (pushed), clean.
-dadcdf9535 APPROVED by COORD (own merge train). 310e03fb32 = dieclock_routed.py (prep/pads/realize), READY pending.
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-1112, HEAD 7ed95e4f02 (pushed), clean.
+dadcdf9535 APPROVED by COORD (own merge train). 310e03fb32 + 7ed95e4f02 = dieclock_routed.py (prep/pads/realize); READY posted 08:20.
 Commits e603275bfb, 7d874717a0, e37db65694 (balance), dadcdf9535 (depth contract + dieclock_arrivals.py).
 Tests (epyc7, repo root): python3 -m pytest -p no:cacheprovider --basetemp=/srv/opentallas-scratch2/claude/reach-fix-1/pyt3
 tools/die_plan/test_reach_fix.py tools/die_plan/test_street_rule.py tools/die_plan/test_landing_raw_branches.py
@@ -17,10 +17,7 @@ tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 p
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
 
 ## 3 Running jobs
-- epyc9 ot-run: rt_loop.sh head / kv (REALIZE loop: die_clock tree no pads -> combo GRT TT+FF -> realize delay cells, 3
-  iters -> die STA). Logs /srv/opentallas-scratch2/claude/reach-fix-2/dp/{head,kv}/rz/LOOP.log; per-iteration GRT
-  dp/<die>/rz_it<i>/grt_{TT,FF}; final die STA dp/<die>/rz_final/sta.log. Client logs intel2 ~/reach-fix-2-logs/rz_*.ot.
-- Fix runs all finished and posted (KV vN baf06b45a41c, QC 339bb20fff25, S81 79e22ea61177).
+None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are their partial outputs.
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -40,15 +37,18 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. When both LOOP.log show DONE: read rz_final/sta.log (landed damage, contract violations, gate) and the RZ lines
-   (spread per iteration, cells). Rule: TT landed damage <= 416.5 and spread falling -> post RESULT + READY 310e03fb32
-   to COORD/DIE-PROTO-2 with the clock dirs dp/<die>/rz/clk3 (ctree.v, ctree_ck89.tcl) as the routed-gate input.
-   Spread not converging -> step-ps from measured (spread_in vs cells) and rerun rt_loop with more iterations; FF residue
-   (cell vs wire corner tracking) reported separately.
-2. Hourly STATE; keep this file current.
+1. HEAD realize pass 2 under NDR: epyc9: cd .../reach-fix-2/code/tools/die_plan; NDR=1 rt_grt.sh head KIT dp/head/rzn/clk1 ndr1
+   already done -> arr = intel1 .../ndr1/pd/arr_TT.txt (copy to epyc9); realize dp/head/rzn/clk1 ARR dp/head/rzn/clk2
+   (--step-ps 0 = measured); NDR=1 rt_grt.sh head KIT dp/head/rzn/clk2 ndr2 TT; pads --no-pads --route-ndr; replace
+   ctree.v with the realized netlist (module die_ctree); STA on intel1 (ndr1_sta.sh pattern). Rule: stop when TT spread
+   <= 30 ps over model or no gain; then dieclock_arrivals + dcsta.sh for the gate numbers, post.
+2. Same for KV (kit dp/kv/ref_vN_kit, run dp/dc/kv_vN, ref proof dp/kv/ref_vN_proof).
+3. Hourly STATE; keep this file current.
 ## 7 Open
-dadcdf9535 APPROVED. READY for 310e03fb32 after the realize result. ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
+dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
 ## 8 Gotchas
+- Routed gate must use NDR (rt_grt.sh NDR=1 + pads --route-ndr); 1x GRT RC alone adds ~2 ns spread on HEAD.
+- OpenROAD create_ndr here needs explicit {M8:0.08 M9:0.08}; '*:2*' fails.
 - NO pkill at all (COORD rule); kill exact PIDs only. ssh + background: (setsid nohup ... &).
 - ot-run refuses paths outside --dir unless --stage. epyc8 LOADCAP. epyc4 kw45/src_head_main_m8w1_7b84010b1c self-symlink.
 - die_clock tree.json node ids are strings: trial_tap_arrivals cannot read it -> use dieclock_arrivals.py.
