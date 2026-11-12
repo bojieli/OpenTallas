@@ -36,6 +36,10 @@ def main(argv=None):
     ap.add_argument("--iters", type=int, default=8)
     ap.add_argument("--stop-ps", type=float, default=5.0)
     ap.add_argument("--libdir")
+    ap.add_argument("--max-leaf-pad-um", type=float, default=1500.0,
+                    help="a leaf needing more wire than this is STRUCTURAL (refused, listed): fix its last mile, not pad it")
+    ap.add_argument("--max-residual-ps", type=float, default=300.0,
+                    help="refuse to equalise when the first-step tap spread exceeds this (pads would dominate insertion)")
     a, extra = ap.parse_known_args(argv)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -59,6 +63,15 @@ def main(argv=None):
                  leafpad_mm=round(sum(pad.values()) / 1000, 1))
         hist.append(h)
         print(json.dumps(h), flush=True)
+        if it == 0 and h["TT"]["spread"] > a.max_residual_ps:
+            slow = sorted(lm.items(), key=lambda kv: -kv[1])[:10]
+            h["refused"] = dict(reason=f"regional residual {h['TT']['spread']} ps > {a.max_residual_ps}: structural, not wire",
+                                slowest_leaves=[[k, round(v, 1)] for k, v in slow])
+            print(json.dumps(h["refused"]), flush=True)
+            break
+        if len(hist) > 1 and h["TT"]["spread"] >= hist[-2]["TT"]["spread"] - 0.5:
+            h["stop"] = "no gain"
+            break
         if h["TT"]["spread"] <= a.stop_ps or it == a.iters:
             break
         for k in defi:
@@ -69,9 +82,11 @@ def main(argv=None):
                     slope[k] = min(0.5, max(0.02, dt / dl))
         prev = (dict(lm), dict(pad))
         for k, dp in defi.items():
-            pad[k] = max(0.0, pad.get(k, 0.0) + 0.8 * dp / slope.get(k, 0.10))
-    (out / "regeq.json").write_text(json.dumps(hist, indent=1) + "\n")
-    return 0
+            pad[k] = min(a.max_leaf_pad_um, max(0.0, pad.get(k, 0.0) + 0.8 * dp / slope.get(k, 0.10)))
+    best = min(hist, key=lambda r: r["TT"]["spread"])
+    (out / "regeq.json").write_text(json.dumps(dict(best_it=best["it"], history=hist), indent=1) + "\n")
+    print("BEST it%d" % best["it"], json.dumps(best["TT"]))
+    return 0 if "refused" not in hist[-1] else 2
 
 
 if __name__ == "__main__":
