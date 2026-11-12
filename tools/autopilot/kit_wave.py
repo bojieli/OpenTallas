@@ -5886,12 +5886,46 @@ def visual_hold(cfg, rec):
     return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
 
 
+def visual_gate_t0(cfg):
+    """epoch of the visual gate (cfg visual_gate_since 'YYYY-MM-DD HH:MM' local; default 2026-11-12 04:25, COORD 11-12)"""
+    try:
+        return time.mktime(time.strptime(str(cfg.get("visual_gate_since") or "2026-11-12 04:25"), "%Y-%m-%d %H:%M"))
+    except ValueError:
+        return 0.0
+
+
+def stale_visual_why(cfg, rec, t0):
+    """'' for a reviewable WAIT-VISUAL row; else why it is stale: started before the gate, or its spec plan is not the
+    die's (or the item's) current plan"""
+    if float(rec.get("started") or 0) and float(rec.get("started") or 0) < t0:
+        return "placed before the visual gate"
+    d = ((cfg.get("dies") or {}).get(rec.get("die")) or {})
+    cur = (((d.get("item_inputs") or {}).get(rec.get("item")) or {}).get("plan")) or d.get("plan")
+    try:
+        sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+    if cur and sp.get("plan") and sp["plan"] != cur:
+        return f"built on plan {sp['plan']}, die plan is now {cur}"
+    return ""
+
+
 def visual_queue_publish(cfg, st):
     """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL / WAIT-FORM row (die type family attempt state render paths host), rewritten when it changes"""
     rows = []
+    t0 = visual_gate_t0(cfg)
     for rec in (st.get("items") or {}).values():
         h = str(rec.get("route_hold") or "")
-        if rec.get("status") == "ROUTE-HELD" and h.startswith(("WAIT-VISUAL", "WAIT-FORM")):
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+            why = stale_visual_why(cfg, rec, t0)
+            if why:
+                # KW-FIX-46 11-12 (GEOM-VIS-4 05:30): a WAIT-VISUAL row placed before the gate, or built on a plan that is no
+                # longer the die's, is not reviewed and never routes: it goes to WAIT-FORM (its route stays held, the type
+                # rebuilds on the current form) and leaves the queue
+                rec["route_hold"] = f"WAIT-FORM: stale for review ({why}); rebuild on the current form"
+                rec["updated"] = time.time()
+                continue
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
             k = rec.get("kit") or ""
             rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
                                    h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
