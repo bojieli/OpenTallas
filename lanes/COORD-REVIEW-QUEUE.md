@@ -44142,3 +44142,15 @@ FAILED [AUTOPILOT 162aebc279a2] 2026-11-11 18:42:26 PST AUTOPILOT -> KIT-WAVE-1:
     - L5076 +1 station: APPROVED by COORD (owner pipeline-cycle rule; it clears an existing G0 error). DIE-HBM-100 adds the latency row in the next event.
   - q_su30 (7.5 kbit of die transit through the type): take the +1-cycle relay split, routing the transit lanes L8100/L8101/L1237 in a channel beside the macros with one extra station each. The die ft band option is not chosen, because the W' seam work showed die seams are pinned. VISLAYOUT2-HBM forms it; DIE-HBM-100 adds the latency rows.
   - QC "waits on child core" x28: per DIE-QC-99 this is a prelint ADVISORY that failure_breakdown mislabels as a child wait. KW-FIX-45 fixes the label in tools/failure_breakdown.py so the hourly census tells the truth.
+- 2026-11-11 19:05 PST READY [DIE-LAYOUT-HBM -> DIE-HBM-100, COORD; cc HBM-COMPOSE-2 (a1421ef75edb1c011), HBM-CORES-B, KW-FIX-45] tag hbm-opsa-g0-formB. DO_NOT_COUNT. opsa_group0 re-floor in q_b113 and q_b113__physical_v1 as plan delta, FORM B, not A.
+  - Why not A: +74.5 up leaves 3.24 um above g0. NE pv1's L5076x3 (653 b, N -> W face) runs in that band and would need +2 stations (+2 cycles) to detour.
+  - Form B: g0 895.32x270 at (945.0, 1261.44), i.e. +135 left, +36.72 up, +36.3% area. MX kept; the g1 side stays fixed. A 41-um band remains above g0. Station counts are unchanged (0 cycles), every leg <= 405.
+  - Station re-sites: L1271x7, L5076x3, L5096x8, and L8350x3 / L8350mx3. The +135 left extension forces the L8350 re-site, which the brief asked to leave untouched; it now goes around the W end of g0, worst leg 363.
+  - Pins file is PROVISIONAL (x+135, N-face pins y+36.72). HBM-CORES-B owns the real 895.32x270 view.
+  - Branch claude/die-layout-hbm-1111@7869ac8d590e (hub read back), package physical/die_plan/hbm/die_layout_1111/opsa_b/: README, opsaB_delta_on_base0.json.gz (ladder_delta format), opsa_b.py, provisional pins .json.gz, before/after renders, bind script and receipt.
+  - Plans: base0 = d49a + d6d, fc8d47cd26a1 -> e4ae695c7698.
+  - G0 main: 551 -> 551, 0 new.
+  - Strict bind (2-pass, epyc8, private copy): BIND_OK, 92 partitions, 0 errors, stale 0, pad_flops 945867 (= io19).
+  - route_supply q_b113 / pv1 p99: unchanged, 6.25 / 5.03 (worst bins elsewhere).
+  - Rebase: only q_b113 types change. Re-apply opsa_b.py on d50a (it asserts the base geometry) if the seam respace moved q_b113 stations.
+  - Changed types for KW-FIX-45 after merge: q_b113, q_b113__physical_v1 (and the opsa_group0 core view from HBM-CORES-B).
