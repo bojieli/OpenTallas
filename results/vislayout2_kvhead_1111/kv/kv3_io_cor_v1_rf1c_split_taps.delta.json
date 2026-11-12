@@ -1,0 +1,206 @@
+{
+ "kv3_io_cor_v1": {
+  "added_taps_appended": [
+   {
+    "name": "clk_t43",
+    "xy": [
+     1212.3,
+     8.64
+    ],
+    "split_of": "clk_t3",
+    "placed_sinks": 579
+   },
+   {
+    "name": "clk_t44",
+    "xy": [
+     1230.66,
+     670.41
+    ],
+    "split_of": "clk_t5",
+    "placed_sinks": 375
+   },
+   {
+    "name": "clk_t45",
+    "xy": [
+     1230.66,
+     643.14
+    ],
+    "split_of": "clk_t5",
+    "placed_sinks": 375
+   },
+   {
+    "name": "clk_t46",
+    "xy": [
+     1180.44,
+     626.4
+    ],
+    "split_of": "clk_t5",
+    "placed_sinks": 374
+   },
+   {
+    "name": "clk_t47",
+    "xy": [
+     652.32,
+     393.12
+    ],
+    "split_of": "clk_t7",
+    "placed_sinks": 353
+   },
+   {
+    "name": "clk_t48",
+    "xy": [
+     468.18,
+     572.4
+    ],
+    "split_of": "clk_t9",
+    "placed_sinks": 383
+   },
+   {
+    "name": "clk_t49",
+    "xy": [
+     1215.54,
+     234.9
+    ],
+    "split_of": "clk_t11",
+    "placed_sinks": 415
+   },
+   {
+    "name": "clk_t50",
+    "xy": [
+     671.22,
+     562.14
+    ],
+    "split_of": "clk_t13",
+    "placed_sinks": 532
+   },
+   {
+    "name": "clk_t51",
+    "xy": [
+     301.86,
+     186.84
+    ],
+    "split_of": "clk_t15",
+    "placed_sinks": 567
+   },
+   {
+    "name": "clk_t52",
+    "xy": [
+     1101.6,
+     545.94
+    ],
+    "split_of": "clk_t18",
+    "placed_sinks": 445
+   },
+   {
+    "name": "clk_t53",
+    "xy": [
+     862.38,
+     367.74
+    ],
+    "split_of": "clk_t19",
+    "placed_sinks": 651
+   },
+   {
+    "name": "clk_t54",
+    "xy": [
+     912.06,
+     210.6
+    ],
+    "split_of": "clk_t20",
+    "placed_sinks": 610
+   },
+   {
+    "name": "clk_t55",
+    "xy": [
+     1238.76,
+     63.18
+    ],
+    "split_of": "clk_t21",
+    "placed_sinks": 593
+   },
+   {
+    "name": "clk_t56",
+    "xy": [
+     600.48,
+     8.64
+    ],
+    "split_of": "clk_t31",
+    "placed_sinks": 472
+   },
+   {
+    "name": "clk_t57",
+    "xy": [
+     1054.08,
+     362.34
+    ],
+    "split_of": "clk_t34",
+    "placed_sinks": 696
+   },
+   {
+    "name": "clk_t58",
+    "xy": [
+     1068.66,
+     307.53
+    ],
+    "split_of": "clk_t38",
+    "placed_sinks": 619
+   },
+   {
+    "name": "clk_t59",
+    "xy": [
+     652.32,
+     213.84
+    ],
+    "split_of": "clk_t39",
+    "placed_sinks": 506
+   },
+   {
+    "name": "clk_t60",
+    "xy": [
+     1230.66,
+     507.6
+    ],
+    "split_of": "clk_t41",
+    "placed_sinks": 376
+   },
+   {
+    "name": "clk_t61",
+    "xy": [
+     944.46,
+     642.6
+    ],
+    "split_of": "clk_t42",
+    "placed_sinks": 491
+   },
+   {
+    "name": "clk_t62",
+    "xy": [
+     902.34,
+     206.82
+    ],
+    "split_of": "clk_t54",
+    "placed_sinks": 558
+   },
+   {
+    "name": "clk_t63",
+    "xy": [
+     1034.64,
+     360.18
+    ],
+    "split_of": "clk_t57",
+    "placed_sinks": 449
+   },
+   {
+    "name": "clk_t64",
+    "xy": [
+     602.1,
+     208.98
+    ],
+    "split_of": "clk_t59",
+    "placed_sinks": 625
+   }
+  ],
+  "existing_taps": "unchanged",
+  "rule": "split placed nearest-tap load > 700 (pass 1) / 800 (pass 2) or reach > 280 um Manhattan; generator grid_explicit_taps PASS"
+ }
+}
