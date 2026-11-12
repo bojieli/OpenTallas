@@ -1583,6 +1583,25 @@ def atomic_clock_groups(path, module, clocks, taps):
         raise ValueError("ATOMIC_CLOCK empty manifest")
     return d, "\n".join(records) + "\n"
 
+def grt_nonport_hold_setup(kd, cfg):
+    """KW-FIX-45 11-11 (DIE-HBM-100, opt-in --grt-nonport-hold): tools/grt_nonport_hold.tcl (input-start hold exclusion during
+    the FF GRT repair only; TT setup and the final full-path sign-off are unchanged) sourced AFTER the kit's own
+    PRE_GLOBAL_ROUTE_TCL.  Writes /work/grt_pre_nonport.tcl (source <the effective PRE_GLOBAL_ROUTE_TCL>; source the hook) and
+    returns the config lines.  Not called without the flag, so a kit without it is byte-identical."""
+    kd = Path(kd)
+    base = None
+    for ln in cfg:
+        m = re.match(r"^(?:override\s+)?export\s+PRE_GLOBAL_ROUTE_TCL\s*:?=\s*(\S+)\s*$", ln)
+        if m:
+            base = m.group(1)
+    if base is None:
+        raise SystemExit("--grt-nonport-hold: the kit config sets no PRE_GLOBAL_ROUTE_TCL to chain")
+    shutil.copyfile(TOOL.parent / "grt_nonport_hold.tcl", kd / "grt_nonport_hold.tcl")
+    (kd / "grt_pre_nonport.tcl").write_text("# GENERATED (--grt-nonport-hold): the kit's PRE_GLOBAL_ROUTE_TCL, then the shared nonport hold adapter\n"
+                                            f"source {base}\nsource /work/grt_nonport_hold.tcl\n")
+    return ["override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_nonport.tcl", "export OT_GRT_NONPORT_HOLD = 1"]
+
+
 def pre_gpl_extra_stage(kd, src):
     """--pre-gpl-extra FILE (HBM-CORES-B 11-11, for KW-FIX-45 wave items): a kit-local PRE_GLOBAL_PLACE hook sourced
     AFTER the kit's own face_flops.tcl (e.g. hnx_fused_lane_c flc_wd_split.tcl: one private driver per macro data input).
@@ -1717,6 +1736,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "phys --max-wire-um.  Without it the kit is unchanged.")
     ap.add_argument("--dpl-legalizer", choices=["diamond", "default"], default="diamond",
                     help="detail-placement legalizer: diamond (default, matches the type kits) or default (ORFS negotiation, item opt-out)")
+    ap.add_argument("--grt-nonport-hold", action="store_true", help="opt-in: source tools/grt_nonport_hold.tcl after the kit PRE_GLOBAL_ROUTE_TCL (input-start hold excluded from the FF GRT repair only); absent = byte-identical kit")
     ap.add_argument("--pre-gpl-extra", default=None,
                     help="FILE: extra PRE_GLOBAL_PLACE hook sourced after the kit face_flops.tcl (copied into the kit, "
                          "recorded in freeze.json pre_gpl_extra); default none = kit unchanged")
@@ -2710,6 +2730,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         flow["cts_setup_tt"] = post_cts_setup_hook(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    if a.grt_nonport_hold:
+        cfg += grt_nonport_hold_setup(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
     # ROUTE-HOLD-PASS (DIE-HBM-97 11-10, COORD vecd-clkroot-r2 (a)): the declared in-flow routed-RCX hold pass is part of
