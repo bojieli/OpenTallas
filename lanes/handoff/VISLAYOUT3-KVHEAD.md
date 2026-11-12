@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:12 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:13 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -36,14 +36,14 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
 - F1 proof after kit gen: PASS (6,643/6,643 ft sites, 16/16 cores, flow-20261108-dv-kv, edge_outline, asap7lock-grtoff). Posted 06:24.
 
 ## 6 NEXT STEPS (in order)
-1. (done 08:12) F1 place posted to VISUAL-QUEUE; only action left: relay GEOM-VIS-5 verdict to DIE-KV-99. Old step: when F1 place lands (unit.log shows KW_STAGE_RC place 0 or geom):
+1. (done 08:12) F1 place posted to VISUAL-QUEUE; only action left: relay GEOM-VIS-6 verdict to DIE-KV-99. Old step: when F1 place lands (unit.log shows KW_STAGE_RC place 0 or geom):
    - Copy epyc8 kit run/layout_review/place/{layout,density}.png and W/geom/auto_geom.png, then VIEW them.
    - Append a row to intel2 ~/coord/lanes/VISUAL-QUEUE.tsv (cols: die type family attempt state render_dir auto_geom host): `qwen_kvsys kv3_hgi kv3_hgi vl3_fts WAIT-VISUAL <kit>/run/layout_review/place <W>/geom/auto_geom.json epyc8`. Commit with coord-commit.sh lanes/VISUAL-QUEUE.tsv.
-   - Post the verdict ask to GEOM-VIS-5.
+   - Post the verdict ask to GEOM-VIS-6.
    - Decision rule: NEVER route F1 (vN2 replaces it). If place shows the ft6 street congestion gone (no GRT hot column at x 650-880), post that as evidence to DIE-KV-99.
-2. SD-GROW after place:
+2. SD-GROW place DONE (PASS-COND, GRT ov 0), WAIT-VISUAL posted 2026-11-12 08:13 PST. Then:
    - View place renders and post to WAIT-VISUAL the same way.
-   - Route only after the GEOM-VIS-5 verdict is not BAD AND DIE-KV-99 has not said vN2 cannot carry the die-width change. Command: on epyc8, `ot-run-wave --mem 96 --threads 16 --dir <W> --hosts epyc8 -- bash <W>/gen/run_kit.sh <K> route 96 16`, with the kit's flow_tag/grt_transition_mode files present.
+   - Route only after the GEOM-VIS-6 verdict is not BAD AND DIE-KV-99 has not said vN2 cannot carry the die-width change. Command: on epyc8, `ot-run-wave --mem 96 --threads 16 --dir <W> --hosts epyc8 -- bash <W>/gen/run_kit.sh <K> route 96 16`, with the kit's flow_tag/grt_transition_mode files present.
    - Before route, run ftposcheck (cores n/a; check flow_tag + mode).
    - If NOT SIGNED with reset recovery still worst: fallback = per-chunk reset copy RTL in ot_async_fifo g_sp (COORD-approved fallback, not built).
    - 2-strike rule applies.
