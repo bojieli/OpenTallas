@@ -49,8 +49,8 @@
    "assumption": "opaque child: all inputs conservatively live"
   }
  ],
- "source_commit": "e5cc5a2dc5fbcd082ab433abadaf39cd48de0df5",
- "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created.",
+ "source_commit": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+ "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created. | DIE-KV-99/BIND-KV-S81 11-12: re-proved with the parameter H=16 (default of dsdv_svc_sx on main since 8d9b741c58) added to every dsdv_svc_sx instance so the recorded parameters equal the bind cell parameters (ProvenDead.allows). Dead ranges, sources, module_sha256 and methods are identical to the previous proof b77b058ea7d8 (36 declarations; only parameters gain H=16 on the 16 dsdv_svc_sx rows). PROVENANCE: source_commit c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415 was supplied by a rev-parse shim over a git-archive tree of that commit (766 manifest files byte-identical, manifest_src_gate PASS); the tree is dirty-with-declared-overlays: landed_sidecar_h2.json ec8fcf58edc2 (fixed rows dn_s_4N_L0_1/2), the proof file replaced by this run, and the added re-proof manifest asbuilt_f_s81p3_manifest.json from s81-dead-reprove-1111@2122a3c72d.",
  "declarations": [
   {
    "partition_type": "svc_hi_dsdv_svc_rs__t6",
@@ -63,7 +63,8 @@
     "FM_SO": "4'b1100",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -133,7 +134,8 @@
     "FM_SO": "4'b1100",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -207,7 +209,8 @@
     "FM_SO": "4'b0110",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -347,7 +350,8 @@
     "FM_SO": "4'b0001",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -413,7 +417,8 @@
     "FM_SO": "4'b0001",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -479,7 +484,8 @@
     "FM_SO": "4'b0100",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -565,7 +571,8 @@
     "FM_SO": "4'b0001",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -639,7 +646,8 @@
     "FM_SO": "4'b1001",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -705,7 +713,8 @@
     "FM_SO": "4'b1010",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -791,7 +800,8 @@
     "FM_SO": "4'b0000",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -857,7 +867,8 @@
     "FM_SO": "4'b1000",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -923,7 +934,8 @@
     "FM_SO": "4'b1100",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -1001,7 +1013,8 @@
     "FM_SO": "4'b1010",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -1087,7 +1100,8 @@
     "FM_SO": "4'b1100",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -1219,7 +1233,8 @@
     "FM_SO": "4'b0011",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
@@ -1285,7 +1300,8 @@
     "FM_SO": "4'b1010",
     "FX": "5",
     "MUT": "0",
-    "NR": "1"
+    "NR": "1",
+    "H": "16"
    },
    "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv",
    "module_sha256": "512b1db89298de94b14b9c7b391d3a4c51fe2923e9f9de98d2c52d0bc2e9f213",
