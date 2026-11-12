@@ -5633,7 +5633,20 @@
     "dsdv_slice_lepw_mus_LP__t2": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "serdes__t14": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
-    "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind."
+    "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind.",
+    "col_h10_r0_p1__t1__cl574cc59d": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h10_r0_p1__t1__cl911743eb": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h10_r0_p4__t1": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p1__t1": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p2__t1__cl0045af7b": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p2__t1__cl9f71e63d": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p3__t1__cl0cd90c0e": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p3__t1__cl31d0dc4b": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p3__t1__cl8ce97bcb": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p4__t1__cl8ef405e8": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p4__t1__clcb2fbfe8": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p5__t1": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it",
+    "col_h9_r0_p6__t1": "KW-FIX-45 11-12 COORD: col_h9/h10 r0 fail the param split on ready11r (per-instance LOGIC parameters differ); held until DIE-S81-87 sends ready11p BIND CLEAN, then relaunched on it"
    },
    "queue_src": "main@7b84010b1c6e",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -30417,7 +30430,8 @@
     "q_su11@1",
     "q_su11__physical_v1@1",
     "q_su10__physical_v1@5",
-    "q_su30@5"
+    "q_su30@5",
+    "hnx_fused_lane_c@1"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -33314,7 +33328,8 @@
      "OT_GEN_M8_GRANT": "1"
     },
     "hnx_fused_lane_c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_KW45_GEOMHOST": "geom runs on a host with the src tree (11-12)"
     },
     "hnx_rp3h_xs": {
      "OT_GEN_M8_GRANT": "1"
