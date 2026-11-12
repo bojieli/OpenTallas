@@ -510,6 +510,11 @@ def cmd_verify(a):
             return ["tied", s[1]]
         return [k]
 
+    # QC-NK-HOLD A+P: declared core-input pipeline cycles (bind.core_input_pipe): the as-built stage count of those
+    # sinks + D is the expected bound count (EQ with the cycle declared); every other sink is unchanged
+    _pf = out / "bind_core_input_pipe.json"
+    core_pipe = json.loads(_pf.read_text()) if _pf.is_file() else {}
+    cnt_pipe = 0
     reg_parts = {sv_id(p) for p in rep.get("registered_pins", {})}
     cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
@@ -527,6 +532,9 @@ def cmd_verify(a):
             for i, b in enumerate(bits):
                 key = f"{ap}.{pn}[{i}]"
                 want = sinks.get(key)
+                if want and want[0] == "pin" and core_pipe.get(f"{ap}.{pn}"):
+                    want = list(want[:2]) + [want[2] + int(core_pipe[f"{ap}.{pn}"])] + list(want[3:])
+                    cnt_pipe += 1
                 original=landing_verify.observer_input(c,pn,i) if landing_verify else None
                 s = G.source(original if original is not None else b)
                 got = gdesc(s)
@@ -579,6 +587,7 @@ def cmd_verify(a):
                     cnt["mismatched"] += 1
                     if len(mism) < 200:
                         mism.append((key, want, got))
+    cnt["pipe_declared"] = cnt_pipe   # sinks compared with a declared +D core-input pipe (bind_core_input_pipe.json)
     missing = sorted(set(names.values()) - seen)
     # lint: the bound RTL plus the full RTL closure of every leaf master (unchanged as-built sources)
     from bind import plan_base

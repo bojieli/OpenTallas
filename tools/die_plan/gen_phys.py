@@ -672,6 +672,26 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
 PORT_BUF_AT_PIN_LINE = "\n# PORT-BUF-AT-PIN: output-port drivers onto their pin face, then DPL\nsource /work/port_buf_at_pin.tcl\n"
 
 
+CORE_INPUT_PLACE_ANCHOR = "\n# QC-NK-HOLD A+P: core-input lockup latches + pipe registers FIRM at their hard-core pin\nsource /work/core_input_anchor.tcl\n"
+CORE_INPUT_PLACE_CHAIN = "\n# QC-NK-HOLD A+P: feeding register chains spread to the pipe register (macro-avoiding route)\nsource /work/core_input_chain.tcl\n"
+
+
+def core_input_place(raw, tn):
+    """QC-NK-HOLD 11-11 A+P placement hooks (OWNER 07:39 pipeline cycle, COORD 07:5x APPROVED): True when type tn gets
+    declared pipe registers before its core-input lockup latches (bind.core_input_pipe > 0 on any listed module).
+    Then core_input_anchor.tcl (end of face_flops.tcl, PRE_GLOBAL_PLACE) puts every u_lk_nk_ latch 2 um and its
+    u_pc_nk_ register 6 um outside the core pin it drives (FIRM, released for DPL), and core_input_chain.tcl
+    (PRE_RESIZE, after the kit's own PRE_RESIZE hook) spreads the zero-logic register chain feeding each pipe register (u_d/u_lpad/u_r8b_strap/
+    u_pd stages) evenly along a macro-avoiding Manhattan route from its head.  cbn_q11 pilots: unanchored A+P TT
+    worst -1681; anchored latch only reg->latch -787; anchored latch+reg -1131 at u_pc D (GPL bunched the 10-stage
+    u_d10 chain within 150 um of its head, 1350 um last hop) -> pilot10 (spread at PRE_RESIZE, a chain after a hard-core
+    output keeps its first stage at the pin) FF PASS -231.9, NK pins +8.2, TT -833.8 (base -824.1, NK-output class).
+    Form A alone (pipe 0) is unchanged."""
+    import bind as _B
+    cfg = ((raw or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return any(_B.core_input_pipe(raw, tn, m) > 0 for m in (cfg.get("modules") or {}))
+
+
 def write_partition_freeze(P, tn, kd, recs, *, private_clock_mesh=None):
     """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
     pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
@@ -4991,6 +5011,23 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "chain_even_cfg.tcl").write_text(chain_even_cfg(t["chain_even"]))
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + CHAIN_EVEN_HOOK + "\n")
+    if core_input_place(P.raw, tn):
+        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
+        with (kd / "face_flops.tcl").open("a") as f_:
+            f_.write(CORE_INPUT_PLACE_ANCHOR)
+        # the chain spread runs at PRE_RESIZE (after GPL, before repair_design buffers the new hops; pilot8 at
+        # PRE_DETAIL_PLACE left 485 ps BUFx3 stages): appended to the kit's PRE_RESIZE hook (the PLACE-NOCONVERGE gate
+        # runs first and may stop the run), or the hook itself when the kit has none
+        mk = (kd / "config.mk").read_text()
+        m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+        if m_ and (kd / m_.group(1)).is_file():
+            with (kd / m_.group(1)).open("a") as f_:
+                f_.write(CORE_INPUT_PLACE_CHAIN)
+        elif m_:
+            raise ValueError(f"core_input_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+        else:
+            (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
