@@ -5143,7 +5143,7 @@ def queue_class(j):
             return stage, "FAIL", "INFRA", f"{kind}: {why}"          # S81-OTHERFAIL-1: host OOM kill, not a verdict
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
-        if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
+        if kind in ("grt-overflow", "grt-no-progress", "drt-no-progress") or (fails & ROUTING_FAILS) or drc:
             return stage, "FAIL", "ROUTING", f"{kind}: drc {drc} {why}".strip()
         if kind in ("post-cts-hold", "hold-structural", "grt-timecap") or (fails & TIMING_FAILS) or any(
                 w is not None and w < 0 for w in (tt, ff)):
