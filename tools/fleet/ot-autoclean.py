@@ -1675,6 +1675,12 @@ class Job:
         n_del = 0
 
         def visit(p, depth):
+            try:
+                return visit1(p, depth)
+            except (OSError, subprocess.TimeoutExpired) as e:       # a path vanished / a find timed out: log and go on, never abort the run
+                self.rows.append([time.strftime("%F %T"), self.host, "d", "ERROR", ("visit: " + str(e))[:200], p, "<tree>", 0, 0])
+
+        def visit1(p, depth):
             nonlocal n_del
             try:
                 st = os.lstat(p)
@@ -2005,7 +2011,16 @@ class Job:
             except OSError:
                 say("ot-autoclean: another run holds the lock; exiting")
                 return 0
-            return self._run()
+            try:
+                return self._run()
+            finally:
+                if self.rows and not getattr(self, "_manifest_done", False):      # an aborted run still leaves its rows
+                    mdir = os.path.join(a.state, "manifests")
+                    os.makedirs(mdir, exist_ok=True)
+                    with open(os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}-partial.tsv"), "w") as fh:
+                        fh.write("time\thost\tclass\tverdict\treason\tpath\tfiles\tbytes\tmtime\n")
+                        for r in self.rows:
+                            fh.write("\t".join(str(x) for x in r) + "\n")
 
     def _run(self):
         a = self.a
@@ -2121,6 +2136,7 @@ class Job:
         mdir = os.path.join(a.state, "manifests")
         os.makedirs(mdir, exist_ok=True)
         mf = os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}.tsv")
+        self._manifest_done = True
         with open(mf, "w") as fh:
             fh.write("time\thost\tclass\tverdict\treason\tpath\tfiles\tbytes\tmtime\n")
             for r in self.rows:
@@ -2574,7 +2590,7 @@ class Driver:
                                            capture_output=True, text=True, timeout=120)
                         say(f"{h}: {(q.stdout or q.stderr).strip()[-200:]}")
                     for ln in out.splitlines():
-                        if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper")):
+                        if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper", "ot-autoclean:", "kit-wave keep")):
                             say(f"{h}: {ln}")
                     say(f"{h}: run rc {r.returncode}{' ' + r.stderr.strip()[-200:] if r.returncode else ''}")
                 if a.collect:
