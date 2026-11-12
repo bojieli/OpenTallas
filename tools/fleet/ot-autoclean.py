@@ -147,6 +147,7 @@ RESUME_S = 24 * 3600   # COORD 11-08: FAIL rows resume from their last valid sta
 XPATH_RE = re.compile(r"/kit-wave/([^/]+)/[^/]+/items/([^/]+)/attempt_(\d+)$")   # die, item, N (plan dir ignored)
 STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
 ACTIVE_STATUS = {"RUN", "RUNNING", "ROUTE-HELD", "RETRY-INFRA", "PENDING-DEP", "QUEUED", "WAIT-PARENT", "PASS"}
+STALE_Q_H = 12.0          # DISK-1111: terminal status + stale queue status older than this, with a later attempt, no longer holds
 TERMINAL_STATUS = {"FAIL", "CANCELLED", "SUPERSEDED", "WITHDRAWN"}
 ACTIVE_Q = {"RUNNING", "QUEUED", "WAIT-PARENT"}
 TERMINAL_Q = {"FAIL", "CANCELLED", "WITHDRAWN"}
@@ -481,6 +482,29 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
     """compact snapshot: attempts {"host:dir": {"active","signed","terminal":[..]}}, latest {"host:items/x": N},
     keep ["host:path"] (every path of an active record + its spec.json src/plan/queue_src)."""
     attempts, latest, keep, current_di = {}, {}, set(), {}
+    newest_att = {}                           # DISK-1111: newest attempt number per die|item|event path, for the stale-queue rule
+    now_s = time.time()
+    for rec in (state.get("items") or {}).values():
+        if isinstance(rec, dict):
+            hp0 = _host_path(rec.get("kit") or rec.get("evidence") or rec.get("geom_dir"))
+            m0 = ATTEMPT_RE.match(hp0[1]) if hp0 else None
+            if m0:
+                kk = f"{hp0[0]}:{m0.group(1)}"
+                newest_att[kk] = max(newest_att.get(kk, -1), int(m0.group(2)))
+
+    def stale_queue(rec, hp):
+        """status is already terminal (FAIL / CANCELLED / SUPERSEDED / WITHDRAWN) but q_status still says RUNNING / QUEUED /
+        WAIT-PARENT (a queue row nobody updated), the record is older than STALE_Q_H and a LATER attempt of the item exists:
+        it does not hold the attempt (203 CANCELLED/RUNNING rows kept old waves for ever).  The newest attempt, a young
+        record and any non-terminal status keep the old behaviour."""
+        if rec.get("status") not in TERMINAL_STATUS or rec.get("q_status") not in ACTIVE_Q or not hp:
+            return False
+        m1 = ATTEMPT_RE.match(hp[1])
+        try:
+            upd = float(rec.get("updated") or 0)
+        except (TypeError, ValueError):
+            return False
+        return bool(m1) and now_s - upd >= STALE_Q_H * 3600 and int(m1.group(2)) < newest_att.get(f"{hp[0]}:{m1.group(1)}", -1)
 
     def att(hp):
         m = ATTEMPT_RE.match(hp[1])
@@ -509,6 +533,8 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
                 att(hp)
         a = att(own) if own else None
         active, signed = rec_active(rec), rec_signed(rec)
+        if active and stale_queue(rec, own):
+            active = False
         xm = XPATH_RE.search(a.partition(":")[2]) if a else None
         if xm:                                    # the state's current attempt of die|item, whatever plan dir
             k = f"{xm.group(1)}|{xm.group(2)}"
@@ -982,9 +1008,26 @@ class Job:
             self.dx = dict(ledger=set(d.get("ledger") or []), paths=set(d.get("ledger_paths") or []), names=names,
                            stages=list(DX_STAGES))
 
+    def signed_near(self, unit):
+        """DISK-1111 (OWNER 11-12 "routing results should be exported only if it is signed"): the unit, something below it or
+        its enclosing kit holds a signed record (signoff.json / PROVENANCE.json read as SIGNED or LOCAL_PASS)."""
+        recs = [r for r in self.found.get("record", []) if r.startswith(unit + "/")]
+        a = unit
+        for _ in range(6):
+            for n in ("signoff/signoff.json", "signoff.json", "PROVENANCE.json"):
+                q = os.path.join(a, n)
+                if os.path.exists(q):
+                    recs.append(q)
+            a = os.path.dirname(a)
+            if a.count("/") < LANE_DEPTH:
+                break
+        return any(read_record(r)[0] for r in recs)
+
     def dx_hold(self, unit, kind="newest"):
         """DESIGN_EXPORT_1112: None, or why the unit is held until the design explorer has cut its routed ODB(s)"""
         if not self.dx or "/_ot_autoclean_ctl/" in unit + "/":   # the run's own control fixture is never a design
+            return None
+        if not self.signed_near(unit):                            # OWNER 11-12: only SIGNED routed DBs are exported; unsigned / failed need no cut
             return None
         best = {}
         for dp, dn, fn in os.walk(unit):
@@ -1158,7 +1201,7 @@ class Job:
         g = self.guard_hits(k)
         if g:
             return g
-        h = (self.localkeep_trim if getattr(self, "_trim_cls", "") in ("b", "c") else self.localkeep).hit(k)
+        h = getattr(self, "localkeep_trim", self.localkeep).hit(k)   # DISK-1111: a wave-root row (protect.d/kit_wave.txt) holds the root, not every finished attempt below it (class a per-attempt kit-wave state decides)
         if h:
             return "local keep: " + h
         h = self.queue.hit(k)
@@ -1184,13 +1227,27 @@ class Job:
             return "gitlocked " + g
         for a in [k] + ancestors(k):
             if os.path.exists(os.path.join(a, ".keep")):
+                if self.keep_expired(os.path.join(a, ".keep")):
+                    continue
                 if getattr(self, "_trim_cls", "") == "c" and a != k and self.old_keep_finished(k, a):
                     continue
                 return "keep " + a
         for kp in self.found["keep"]:
-            if kp.startswith(k + "/"):
+            if kp.startswith(k + "/") and not self.keep_expired(kp):
                 return "keep " + kp
         return None
+
+    def keep_expired(self, keep_file):
+        """DISK-1111 (OWNER 11-12 "old plans removed directly", COORD): --keep-expire-h H: a .keep file not touched for
+        H hours (default off, timers use 168 = 7 days) no longer holds; the protected lists, kit-wave state, live-job,
+        queue and realpath guards still apply to the same path."""
+        h = float(getattr(self.a, "keep_expire_h", 0) or 0)
+        if h <= 0:
+            return False
+        try:
+            return self.now - os.lstat(keep_file).st_mtime >= h * 3600
+        except OSError:
+            return False
 
     def _reg(self, p, min_bytes=0):
         try:
@@ -1913,6 +1970,15 @@ def list_signed_main(a):
     return 0
 
 
+def run_pool(fn, items, workers):
+    """DISK-1111: fn(item) for every item, up to `workers` at a time -> [(item-result...)] in input order"""
+    if workers <= 1:
+        return [fn(i) for i in items]
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        return list(ex.map(fn, items))
+
+
 def sha256(p):
     h = hashlib.sha256()
     with open(p, "rb") as fh:
@@ -2109,14 +2175,13 @@ class Driver:
         new = [u for u in todo if not u.get("archived")]
         say(f"{h}: signed units {len(todo)}, already archived {len(todo) - len(new)}, to archive {len(new)} "
             f"({sum(u['bytes'] for u in new) / 1e9:.2f} GB)")
-        ok_all = True
-        for u in new:
+        def one(u):
             files = [p for p, _, _ in u["files"]]
             dest = base + u["unit"]
             if not a.apply:
                 say(f"WOULD-ARCHIVE {h}:{u['unit']} files {len(files)} bytes {u['bytes']} -> {dest}")
                 rows.append([h, u["unit"], len(files), u["bytes"], dest, "-", "WOULD-ARCHIVE"])
-                continue
+                return True
             lst = "\n".join(files) + "\n"
             hs = self.r.host(h, f"nice -n 10 {self.py} hash", inp=lst, timeout=a.timeout)
             try:
@@ -2149,9 +2214,10 @@ class Driver:
             if verify.startswith("OK"):            # a verified copy, even when the marker cannot be written (read-only src tree)
                 self.store_ingest(h, src, base)
             act = "ARCHIVED" if ok else f"FAIL {msg}"
-            ok_all &= ok
             say(f"{act} {h}:{u['unit']} {verify}")
             rows.append([h, u["unit"], len(files), u["bytes"], dest, verify, act])
+            return ok
+        ok_all = all(run_pool(one, new, max(1, int(getattr(a, "archive_jobs", 1) or 1))))
         return ok_all
 
     def store_ingest(self, h, src, base):
@@ -2287,6 +2353,8 @@ def main(argv=None):
                    help="do not read protect.d/protected-dbs.txt (this job's own union) back as a keep source; a path stays "
                         "only while a real source names it; finished ot-run spill records (spill_pending/*.done) stop holding "
                         "paths, pending *.json records still hold (COORD 11-08)")
+    r.add_argument("--keep-expire-h", type=float, default=0.0,
+                   help="DISK-1111: a .keep file untouched for this many hours (168 = 7 days) no longer holds a unit; 0 = off")
     r.add_argument("--c-old-keep-h", type=float, default=0.0,
                    help="class c only: an ancestor .keep older than this many hours does not block the trim of a finished "
                         "or superseded kit (6_final.odb, signoff.json or a later attempt); 0 = off (COORD 11-08)")
@@ -2303,6 +2371,7 @@ def main(argv=None):
     kr.add_argument("--state-json", default=os.path.join(HOME, "coord/autopilot/kit_wave_state.json"))
     kr.add_argument("--stages-tsv", default=os.path.join(HOME, "coord/autopilot/kit_wave_stages.tsv"))
     dr = sub.add_parser("drive", help="localhost driver: snapshot -> push -> archive -> host runs -> collect")
+    dr.add_argument("--archive-jobs", type=int, default=4, help="DISK-1111: signed units archived in parallel per host (1 = old serial pace)")
     dr.add_argument("--hosts", default=",".join(HOSTS))
     dr.add_argument("--apply", action="store_true", help="really archive and pass --apply to the host runs")
     dr.add_argument("--no-archive", dest="archive", action="store_false")

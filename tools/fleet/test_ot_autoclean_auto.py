@@ -926,5 +926,119 @@ class SymlinkRootTest(unittest.TestCase):
             shutil.rmtree(d)
 
 
+class TestExpiry(Base):
+    """DISK-1111 11-12: a wave-root row, a stale queue status and an old .keep no longer hold a finished attempt for ever"""
+    attempt = TestClasses.attempt
+
+    def _home_with_wave_root(self, wave_root):
+        home = os.path.join(self.t, "home")
+        pd = os.path.join(home, ".local/state/wt-reaper/protect.d")
+        os.makedirs(pd)
+        with open(os.path.join(pd, "kit_wave.txt"), "w") as f:
+            f.write(wave_root + "\n")
+        return home
+
+    def test_wave_root_row_does_not_hold_class_a(self):
+        d = self.attempt("item_wr", 1)                       # <root>/kw-x/kit-wave/hbm/ev1/items/item_wr/attempt_1
+        wave_root = os.path.join(self.root, "kw-x/runs/hbm/kit-wave")
+        sup = os.path.join(wave_root, "hbm/ev1/items/item_s/attempt_1")
+        touch(os.path.join(sup, "gen/x/run/results/asap7/d/base/3_place.odb"))
+        touch(os.path.join(sup, "geom/auto_geom.json"))
+        age_tree(sup)
+        home = self._home_with_wave_root(wave_root)
+        self.kw = {"attempts": {"hx:" + sup: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {"hx:" + os.path.dirname(sup): 3}, "keep": []}
+        saved = ac.HOME
+        ac.HOME = home
+        try:
+            self.run_job("--classes", "a")
+        finally:
+            ac.HOME = saved
+        self.assertFalse(os.path.exists(sup), self.row(sup))          # superseded, below a wave-root row: deleted
+        self.assertEqual(self.row(sup)[3], "DELETED")
+
+    def test_wave_root_row_still_holds_itself(self):
+        wave_root = os.path.join(self.root, "kw-x/runs/hbm/kit-wave")
+        os.makedirs(wave_root)
+        home = self._home_with_wave_root(wave_root)
+        saved = ac.HOME
+        ac.HOME = home
+        try:
+            self.run_job("--classes", "a")
+        finally:
+            ac.HOME = saved
+        self.assertTrue(os.path.isdir(wave_root))
+
+    def _state(self, status, q, attempt, updated, item="i1"):
+        return {"kit": f"hx:/srv/s/claude/w/kit-wave/hbm/ev1/items/{item}/attempt_{attempt}/gen/k",
+                "status": status, "q_status": q, "attempt": attempt, "updated": updated}
+
+    def test_stale_queue_status_of_terminal_superseded_attempt_expires(self):
+        old = time.time() - 40 * 3600
+        st = {"items": {"hbm|i1|a": self._state("CANCELLED", "RUNNING", 1, old),
+                        "hbm|i1|b": self._state("FAIL", None, 2, old)}}
+        out = ac.reduce_kitwave(st, [])
+        a1 = out["attempts"]["hx:/srv/s/claude/w/kit-wave/hbm/ev1/items/i1/attempt_1"]
+        self.assertFalse(a1["active"], a1)
+        self.assertFalse([k for k in out["keep"] if "attempt_1" in k], out["keep"])
+
+    def test_stale_queue_status_newest_or_young_attempt_stays_active(self):
+        old, now = time.time() - 40 * 3600, time.time()
+        st = {"items": {"hbm|i1|a": self._state("CANCELLED", "RUNNING", 1, old),            # newest attempt: keep
+                        "hbm|i2|a": self._state("CANCELLED", "RUNNING", 1, now, "i2"),      # young: keep
+                        "hbm|i2|b": self._state("FAIL", None, 2, now, "i2")}}
+        out = ac.reduce_kitwave(st, [])
+        self.assertTrue(out["attempts"]["hx:/srv/s/claude/w/kit-wave/hbm/ev1/items/i1/attempt_1"]["active"])
+        self.assertTrue(out["attempts"]["hx:/srv/s/claude/w/kit-wave/hbm/ev1/items/i2/attempt_1"]["active"])
+
+    def test_running_status_never_expires(self):
+        old = time.time() - 400 * 3600
+        st = {"items": {"hbm|i1|a": self._state("RUNNING", "RUNNING", 1, old),
+                        "hbm|i1|b": self._state("FAIL", None, 2, old)}}
+        out = ac.reduce_kitwave(st, [])
+        self.assertTrue(out["attempts"]["hx:/srv/s/claude/w/kit-wave/hbm/ev1/items/i1/attempt_1"]["active"])
+
+    def test_keep_expires_after_n_hours_only_when_set(self):
+        d = self.attempt("item_kp", 1)
+        keep = os.path.join(d, ".keep")
+        touch(keep, 10, mtime=time.time() - 9 * 86400)
+        age_tree(d)
+        os.utime(keep, (time.time() - 9 * 86400,) * 2)
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {}, "keep": []}
+        self.run_job("--classes", "a")                        # default: .keep holds
+        self.assertTrue(os.path.isdir(d))
+        self.assertTrue(self.row(d)[4].startswith("keep"), self.row(d))
+        self.run_job("--classes", "a", "--keep-expire-h", "168")
+        self.assertFalse(os.path.exists(d), self.row(d))
+
+    def test_young_keep_still_holds_with_expiry_on(self):
+        d = self.attempt("item_ky", 1)
+        touch(os.path.join(d, ".keep"), 10, mtime=time.time() - 2 * 86400)
+        age_tree(d)
+        os.utime(os.path.join(d, ".keep"), (time.time() - 2 * 86400,) * 2)
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {}, "keep": []}
+        self.run_job("--classes", "a", "--keep-expire-h", "168")
+        self.assertTrue(os.path.isdir(d))
+
+    def test_archive_pool_runs_units_in_parallel(self):
+        import threading
+        seen, lock, peak = [], threading.Lock(), [0]
+        cur = [0]
+        def work(u):
+            with lock:
+                cur[0] += 1
+                peak[0] = max(peak[0], cur[0])
+            time.sleep(0.05)
+            with lock:
+                cur[0] -= 1
+            return u, True
+        res = ac.run_pool(work, list(range(8)), 4)
+        self.assertEqual(sorted(u for u, _ in res), list(range(8)))
+        self.assertGreater(peak[0], 1)
+        self.assertEqual(ac.run_pool(work, [1, 2], 1), [(1, True), (2, True)])
+
+
 if __name__ == "__main__":
     unittest.main()
