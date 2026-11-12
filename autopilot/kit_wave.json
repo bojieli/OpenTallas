@@ -6,7 +6,6 @@
  "hosts": [
   "epyc7",
   "epyc9",
-  "epyc4",
   "epyc2"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
@@ -43069,7 +43068,6 @@
  "place_prefer": [
   "epyc7",
   "epyc9",
-  "epyc4",
   "epyc2"
  ],
  "queue_fill": true,
@@ -43742,5 +43740,18 @@
  "place_prefer_base_prev_kw45_intel1_return": [
   "epyc2",
   "intel2"
- ]
+ ],
+ "hosts_prev_kw45_epyc4off": [
+  "epyc7",
+  "epyc9",
+  "epyc4",
+  "epyc2"
+ ],
+ "place_prefer_prev_kw45_epyc4off": [
+  "epyc7",
+  "epyc9",
+  "epyc4",
+  "epyc2"
+ ],
+ "note_kw45_epyc4off": "KW-FIX-45 2026-11-11 21:2x COORD: epyc4 root 98% / scratch2 ~57 GB falling: no new kit-wave launches or gens to epyc4 until DISK-1111 posts the cleanup result; running jobs stay. Revert: hosts/place_prefer <- *_prev_kw45_epyc4off."
 }
