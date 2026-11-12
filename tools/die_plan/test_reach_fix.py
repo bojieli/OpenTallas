@@ -403,3 +403,27 @@ def test_added_station_counted_in_fixed_cycles(tmp_path):
     # idempotent: a second pass adds nothing
     out2, ev2 = _fix(tmp_path, out, "fc2", "--classes", "4")
     assert out2.read_bytes() == out.read_bytes()
+
+
+def test_per_type_error_is_a_nonzero_exit_with_the_type_list(tmp_path, monkeypatch, capsys):
+    # FAIL-LOUD (COORD 11-12, DIE-KV-99): an unresolved pin table (pins/<x>.json missing) left 8 KV hg types unfixed
+    # with exit 0.  Any per-type error now exits 3 and lists the types on stderr, in check and in fix; outputs are
+    # still written so the event can be read
+    real = RF.type_row
+
+    def row(P, tn, *a, **k):
+        if tn == "mid":
+            raise FileNotFoundError("pins/qkd_astk_ex_s_hg1101.json")
+        return real(P, tn, *a, **k)
+    monkeypatch.setattr(RF, "type_row", row)
+    base = _write(tmp_path, EX)
+    chk = tmp_path / "c.json"
+    assert RF.main(["check", str(base), "--json", str(chk)]) == 3
+    err = capsys.readouterr().err
+    assert "REACH-FIX-FAIL check: 1 type(s)" in err and "mid: FileNotFoundError" in err and "hg1101" in err
+    out, ev = tmp_path / "o.json", tmp_path / "e.json"
+    assert RF.main(["fix", str(base), "--out-plan", str(out), "--event", str(ev)]) == 3
+    err = capsys.readouterr().err
+    assert "REACH-FIX-FAIL fix" in err and "mid:" in err and out.exists() and ev.exists()
+    monkeypatch.setattr(RF, "type_row", real)
+    assert RF.main(["check", str(base), "--json", str(chk)]) == 0

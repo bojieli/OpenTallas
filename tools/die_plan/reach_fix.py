@@ -1569,6 +1569,20 @@ def write_tap_table(path, rows, cap, radius):
     Path(path).write_text("\n".join(out) + "\n")
 
 
+def fail_loud(mode, errs, extra=None):
+    """FAIL-LOUD (COORD 11-12, DIE-KV-99: 8 KV hg types left unfixed on an unresolved pins/ table, exit 0): any per-type
+    error (export, pin table, fix job) or a broken bind rule is a non-zero exit with the type list on stderr."""
+    errs = sorted(errs.items())
+    if not errs and not extra:
+        return 0
+    msg = ["REACH-FIX-FAIL %s: %d type(s) with errors" % (mode, len(errs))]
+    msg += ["  %s: %s" % (t, str(e)[:300]) for t, e in errs]
+    if extra:
+        msg.append("  %s" % extra)
+    print("\n".join(msg), file=sys.stderr)
+    return 3
+
+
 def cmd_check(a):
     set_repo(a.repo)
     raw, sha = load_raw(a.plan)
@@ -1593,7 +1607,7 @@ def cmd_check(a):
     if a.tsv:
         Path(a.tsv).write_text("\n".join(lines) + "\n")
     print(json.dumps(dict(die=P.name, plan_sha256=sha[:12], **rec["summary"])))
-    return 0
+    return fail_loud("check", {r["type"]: r["error"] for r in rows if r.get("error")})
 
 
 def cmd_fix(a):
@@ -1667,7 +1681,12 @@ def cmd_fix(a):
                           landed_lanes=len(landed_done), fixed_cycles_lanes=len((fc or {}).get("lanes") or {}),
                           lane_cycles_added=(fc or {}).get("lane_cycles_added", 0),
                           rule_broken=(fc or {}).get("rule_broken", []))))
-    return 0
+    errs = {r["type"]: r["error"] for r in after_rows if r.get("error")}
+    for tn, rec, after, _tnew in res:
+        if after is None and (rec or {}).get("error"):
+            errs[tn] = "fix: " + rec["error"]
+    rb = (fc or {}).get("rule_broken")
+    return fail_loud("fix", errs, "bind native-station rule broken on lanes %s" % rb if rb else None)
 
 
 def main(argv=None):

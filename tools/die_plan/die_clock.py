@@ -962,7 +962,7 @@ def write_verilog(T, path):
         pins = [f".A({a})"] if a else []
         if y:
             pins.append(f".Y({y})")
-        L.append(f"  {BUF} {c} ({', '.join(pins)});")
+        L.append(f"  {T.cells[c].get('lib') or BUF} {c} ({', '.join(pins)});")     # lib: a placed delay cell (leafcell)
     L.append("endmodule")
     Path(path).write_text("\n".join(L) + "\n")
 
