@@ -1048,14 +1048,20 @@ class TestAggressive(Base):
     """OWNER 11-12 aggressive mode: only live jobs, referenced trees, unarchived signed units and protected lists stay"""
     attempt = TestClasses.attempt
 
-    def test_no_state_row_attempt_and_queue_hold_go(self):
+    def test_no_state_row_attempt_is_never_deleted(self):
+        """FLEET-2 11-12 RUN-DIR LOSS (reverses the 11-12 aggressive rule): an attempt with no kit-wave state row is kept in
+        EVERY mode; only a terminal / superseded row releases it (a queue path hold still lets a terminal aggressive attempt go)"""
         d = self.attempt("item_nr", 1)
         self.kw = {"attempts": {}, "latest": {}, "keep": []}
         self.qpaths = [d]
         self.run_job("--classes", "a")
-        self.assertTrue(os.path.isdir(d))                      # default: unknown / queue hold keeps it
+        self.assertTrue(os.path.isdir(d))
         self.run_job("--classes", "a", "--aggressive")
-        self.assertFalse(os.path.exists(d), self.row(d))
+        self.assertTrue(os.path.isdir(d), self.row(d))
+        self.assertEqual(self.row(d)[4], "kit-wave unknown")
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}}, "latest": {}, "keep": []}
+        self.run_job("--classes", "a", "--aggressive")
+        self.assertFalse(os.path.exists(d), self.row(d))     # a terminal row (with the queue path hold) still goes in aggressive
 
     def test_young_attempt_stays_for_grace_only(self):
         d = self.attempt("item_yg", 1)
