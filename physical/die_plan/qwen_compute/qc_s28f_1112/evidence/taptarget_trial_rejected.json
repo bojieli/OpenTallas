@@ -1,0 +1,138 @@
+{
+ "base_sha256": "0de51c4268424f16202aabc60b5327cfe5ed010d6ea6fb6be246206d72875d29",
+ "out_sha256": "41ab7090928488b98ca89fd04633806790f8688a00632c91a86e12e84d674827",
+ "types": {
+  "sle_fw_v2__cl69f5e854": {
+   "changed": [
+    "clock.tap_target_sinks 900 -> 800"
+   ],
+   "split_before": {
+    "taps": 85,
+    "max_load": 1245,
+    "over_cap": 1,
+    "max_dist": 146.4
+   },
+   "split_after": {
+    "taps": 114,
+    "max_load": 898,
+    "over_cap": 0,
+    "max_dist": 129.1
+   },
+   "remap": {
+    "clk_t11": [
+     "clk_t14",
+     0.0
+    ],
+    "clk_t17": [
+     "clk_t23",
+     0.0
+    ],
+    "clk_t21": [
+     "clk_t30",
+     8.64
+    ],
+    "clk_t23": [
+     "clk_t26",
+     34.56
+    ],
+    "clk_t3": [
+     "clk_t4",
+     8.64
+    ],
+    "clk_t32": [
+     "clk_t44",
+     0.0
+    ],
+    "clk_t34": [
+     "clk_t46",
+     0.0
+    ],
+    "clk_t4": [
+     "clk_t11",
+     8.64
+    ],
+    "clk_t6": [
+     "clk_t8",
+     0.0
+    ]
+   },
+   "max_tap_move_um": 34.56,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays_changed": 276
+  },
+  "sle_fw_v3": {
+   "changed": [
+    "clock.tap_target_sinks 900 -> 800"
+   ],
+   "split_before": {
+    "taps": 81,
+    "max_load": 1243,
+    "over_cap": 2,
+    "max_dist": 173.3
+   },
+   "split_after": {
+    "taps": 107,
+    "max_load": 1058,
+    "over_cap": 0,
+    "max_dist": 182.0
+   },
+   "remap": {
+    "clk_t16": [
+     "clk_t21",
+     0.0
+    ],
+    "clk_t20": [
+     "clk_t25",
+     8.64
+    ],
+    "clk_t22": [
+     "clk_t23",
+     25.92
+    ],
+    "clk_t3": [
+     "clk_t4",
+     0.0
+    ],
+    "clk_t33": [
+     "clk_t43",
+     0.0
+    ],
+    "clk_t35": [
+     "clk_t46",
+     0.0
+    ],
+    "clk_t4": [
+     "clk_t5",
+     0.0
+    ],
+    "clk_t8": [
+     "clk_t10",
+     0.0
+    ]
+   },
+   "max_tap_move_um": 25.92,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays_changed": 253
+  }
+ }
+}
