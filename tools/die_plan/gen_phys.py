@@ -1290,10 +1290,19 @@ def edge_cdc_sdc(P, tn):
 
 
 def edge_split_ports(P, tn):
-    if P.die.get("name") not in EDGE_SPLIT_DIES:
+    # REACH-FIX-1 11-12 (owner: reach fixed by script on every die): per-type opt-in clock.edge_split_ports [port, ...]
+    # takes the same split (groups <= OT_EDGE_SPLIT_MAX_SINKS / SPAN, repeater chain every OT_EDGE_SPLIT_SEG_UM 200 um
+    # from the port to each group root) on any die; a forwarded fclk_in_* port is split only when named there.  Types
+    # without the field and dies in EDGE_SPLIT_DIES are unchanged.
+    opt = list((P.types[tn].get("clock", {}) or {}).get("edge_split_ports") or [])
+    die_on = P.die.get("name") in EDGE_SPLIT_DIES
+    if not die_on and not opt:
         return []
-    return [n for n, _x, _y, m in edge_clock_pins(P, tn) if m == 1 and not n.startswith("fclk_in")
-            and not edge_source_latency(P, tn, n)]
+    pins = edge_clock_pins(P, tn)
+    out = [n for n, _x, _y, m in pins if m == 1 and not n.startswith("fclk_in")
+           and not edge_source_latency(P, tn, n) and (die_on or n in opt)]
+    out += [n for n, _x, _y, m in pins if m == 1 and n.startswith("fclk_in") and n in opt and n not in out]
+    return out
 
 
 # DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
