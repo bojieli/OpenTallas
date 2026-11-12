@@ -102,7 +102,11 @@ def _units(txt):
 def cmd_pads(a):
     run, out = Path(a.run), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    T, E, st = expanded(run)
+    if a.no_pads:      # routed tree only (realize flow): just the --route-ndr pricing, no wire pads
+        T = DC.load_tree(run)
+        E, st = DC.expand_pads(T, {})
+    else:
+        T, E, st = expanded(run)
     txt = Path(a.spef).read_text()
     rs, cs = _units(txt)
     # name map (*NAME_MAP) -> resolve '*123' tokens
@@ -126,7 +130,7 @@ def cmd_pads(a):
     for n in E.nets:
         for bi, (L, layer, load, geo) in enumerate(n["branches"]):
             # pad = electrical length - the placed Manhattan hop the router realises (snakes sit at their driver: 0)
-            p = float(L) - hop[(n["name"], bi)]
+            p = 0.0 if a.no_pads else float(L) - hop[(n["name"], bi)]
             if p > 0.5:
                 pin = load[5:] if load.startswith("port:") else load + ":A"
                 # the pad's per-um RC = its branch's (die_clock write_spef: layer_rc(layer, geo, leg level))
@@ -214,7 +218,10 @@ def cmd_pads(a):
         body = renum("RES", renum("CAP", body))
         outb.append(body)
     (out / "ctree.spef").write_text("".join(outb))
-    shutil.copy(run / "ctree.v", out / "ctree.v")
+    if a.no_pads:
+        DC.write_verilog(E, out / "ctree.v")          # the physical (no-snake) netlist the SPEF belongs to
+    else:
+        shutil.copy(run / "ctree.v", out / "ctree.v")
     shutil.copy(run / "tree.json", out / "tree.json")
     tot = sum(v[0] for v in padb.values())
     top = sorted(demand.items(), key=lambda kv: -kv[1])[:20]
@@ -223,7 +230,9 @@ def cmd_pads(a):
         top=[[l, x * 100, y * 100, round(v, 1)] for (l, x, y), v in top]), indent=1) + "\n")
     print(json.dumps(dict(mode="pads", branches=len(padb), patched=hit, pad_um=round(tot, 1),
                           max_gcell_pad_um=round(top[0][1], 1) if top else 0.0)))
-    return 0 if hit == len(padb) else 1
+    if not a.no_pads and hit != len(padb):
+        return 1
+    return 0
 
 
 CELL_RE = re.compile(r"^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$")
@@ -254,11 +263,24 @@ def cmd_realize(a):
             loads[A].append(i)
         if Y:
             drv[Y] = i
-    arr = {}
+    arr, narr = {}, {}
     for ln in Path(a.arr).read_text().splitlines():
         f = ln.split()
         if len(f) >= 3 and f[0] == "T":
             arr[f[1]] = float(f[2])
+        elif len(f) >= 3 and f[0] == "N":
+            narr[f[1]] = float(f[2])
+    gens = [int(m.group(1)) for m in (re.match(r"dlyg(\d+)_", c) for c in cells) if m]
+    gen = 1 + max(gens, default=0)
+    # step: the measured delay of one inserted cell (consecutive chain cells of earlier generations), else --step-ps
+    dd = []
+    for c in cells:
+        m = re.match(r"(dlyg\d+_\d+_)(\d+)$", c)
+        if m and int(m.group(2)) > 0:
+            q = m.group(1) + str(int(m.group(2)) - 1)
+            if c in narr and q in narr:
+                dd.append(narr[c] - narr[q])
+    step = sorted(dd)[len(dd) // 2] if dd and a.step_ps <= 0 else (a.step_ps if a.step_ps > 0 else 15.0)
     kids = defaultdict(list)          # inst -> [inst | port]
     for net, d in drv.items():
         kids[d] += [x for x in loads.get(net, []) if cells[x][2]]       # dummies (no Y) carry no tap
@@ -292,19 +314,19 @@ def cmd_realize(a):
         if len(ks) > 1:
             m = max(sub[k] for k in ks)
             for k in ks:
-                n = int(math.floor((m - sub[k]) / a.step_ps + 0.5))
+                n = int(math.floor((m - sub[k]) / step + 0.5))
                 if n >= 1:
                     ins.append((u, k, n))
         stack += [k for k in ks if not k.startswith("port:")]
     new_cells, edits, z = [], {}, 0
     for u, k, n in ins:
         net = cells[u][2]
-        names = ["dly%d_%d" % (z, j) for j in range(n)]
+        names = ["dlyg%d_%d_%d" % (gen, z, j) for j in range(n)]
         z += 1
         x, y = place.get(u, (0.0, 0.0))
         src_net = net
         if k.startswith("port:"):                       # u drives the port net itself: u -> chain -> port
-            src_net = "w_dlyin%d" % z
+            src_net = "w_dlyg%din%d" % (gen, z)
             edits[u] = (net, src_net)
         prev = src_net
         for j, nm in enumerate(names):
@@ -343,7 +365,7 @@ def cmd_realize(a):
     if (src / "tree.json").is_file():
         shutil.copy(src / "tree.json", out / "tree.json")
     t = [v_ for k_, v_ in arr.items() if k_ in ports]
-    rep = dict(mode="realize", arr=str(a.arr), step_ps=a.step_ps, cell=a.cell, taps=len(t),
+    rep = dict(mode="realize", arr=str(a.arr), generation=gen, step_ps=round(step, 2), step_measured=len(dd), cell=a.cell, taps=len(t),
                spread_in_ps=round(max(t) - min(t), 1) if t else None, branches=len(ins),
                delay_cells=len(new_cells), cells_before=len(cells))
     (out / "realize.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -362,7 +384,8 @@ def main(argv=None):
     p.add_argument("clkdir", help="clock dir of the routed run (ctree.v module ctree, ctree_ck89.tcl)")
     p.add_argument("arr", help="routed arrivals (combo arr_<C>.txt or die_clock sta arr)")
     p.add_argument("out")
-    p.add_argument("--step-ps", type=float, default=15.0, help="delay per inserted cell (measured; iterate)")
+    p.add_argument("--step-ps", type=float, default=0.0,
+                   help="delay per inserted cell; 0 (default) = measured on earlier generations' chains, else 15")
     p.add_argument("--cell", default="BUFx24_ASAP7_75t_R")
     p = sp.add_parser("pads")
     p.add_argument("run")
@@ -371,6 +394,7 @@ def main(argv=None):
     p.add_argument("--pad-rc", choices=("model", "1x"), default="model",
                    help="pad wire RC per um: model = die_clock's NDR branch RC (default; exact vs die_clock SPEF), "
                         "1x = ASAP7 setRC M8/M9 as the combo GRT estimate prices routed clock wire")
+    p.add_argument("--no-pads", action="store_true", help="no wire pads (physical tree netlist; with --route-ndr)")
     p.add_argument("--route-ndr", action="store_true",
                    help="scale the routed clock RC to die_clock's NDR width (2W2S R/2 C x1.1; 4W on long hops)")
     a = ap.parse_args(argv)
