@@ -1,0 +1,86 @@
+{
+ "note": "BUS-GEAR-2 11-12: relay flops from die rst_n to each ot_s81_xc_gear_tx rst_n leaf in die_b178_xg.v (ready12ng 77cad171 + gear, plan_xg faaabbe825b4). TX word edges at slice s = E1_s + 2k, E1_s = first TX edge sampling the released leaf, so their parity vs the die rst_n release edge = depth mod 2 (+ one die-wide constant).",
+ "tool": "results/arch/bus_gear_1112/tx_release.py",
+ "slices": {
+  "s_0N": {
+   "leaf": "rsleaf_rs_26_45_2_ck_ep_s_0N_S",
+   "depth": 76,
+   "parity": 0
+  },
+  "s_0S": {
+   "leaf": "rsleaf_rs_26_26_2_ck_ep_s_0S_S",
+   "depth": 51,
+   "parity": 1
+  },
+  "s_1N": {
+   "leaf": "rsleaf_rs_32_26_ck_sl_s_1N_C",
+   "depth": 50,
+   "parity": 0
+  },
+  "s_1S": {
+   "leaf": "rsleaf_rs_32_44_3_ck_sl_s_1S_C",
+   "depth": 73,
+   "parity": 1
+  },
+  "s_2N": {
+   "leaf": "rsleaf_rs_35_26_2_ck_sl_s_2N_C",
+   "depth": 54,
+   "parity": 0
+  },
+  "s_2S": {
+   "leaf": "rsleaf_rs_35_44_2_ck_sl_s_2S_C",
+   "depth": 73,
+   "parity": 1
+  },
+  "s_3N": {
+   "leaf": "rsleaf_rs_39_26_ck_b_s_3N",
+   "depth": 57,
+   "parity": 1
+  },
+  "s_3S": {
+   "leaf": "rsleaf_rs_39_44_3_ck_b_s_3S",
+   "depth": 77,
+   "parity": 1
+  },
+  "s_4N": {
+   "leaf": "rsleaf_rs_42_26_2_ck_sl_s_4N_C",
+   "depth": 57,
+   "parity": 1
+  },
+  "s_4S": {
+   "leaf": "rsleaf_rs_43_44_1_ck_sl_s_4S_C",
+   "depth": 76,
+   "parity": 0
+  },
+  "s_5N": {
+   "leaf": "rsleaf_rs_46_26_2_ck_sl_s_5N_C",
+   "depth": 52,
+   "parity": 0
+  },
+  "s_5S": {
+   "leaf": "rsleaf_rs_46_44_2_ck_sl_s_5S_C",
+   "depth": 73,
+   "parity": 1
+  },
+  "s_6N": {
+   "leaf": "rsleaf_rs_50_25_3_ck_sl_s_6N_C",
+   "depth": 47,
+   "parity": 1
+  },
+  "s_6S": {
+   "leaf": "rsleaf_rs_50_44_1_ck_sl_s_6S_C",
+   "depth": 72,
+   "parity": 0
+  },
+  "s_7N": {
+   "leaf": "rsleaf_rs_55_44_ck_ep_s_7N_S",
+   "depth": 74,
+   "parity": 0
+  },
+  "s_7S": {
+   "leaf": "rsleaf_rs_55_26_ck_ep_s_7S_S",
+   "depth": 52,
+   "parity": 0
+  }
+ }
+}
