@@ -1162,6 +1162,11 @@ RULES = [
     ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL src_skew",
      "kit source older than the queue lint (GEN_LINT src_skew): bump the wave src to the hub commit and re-GEN"),
     # KW-PROV-1 11-03: no routed abstract passed the plan-pin check and the plan has no contract for a child
+    # KW-FIX-45 11-12 (COORD 23:55, 8 KV rows): prov_view.py crashed on FileNotFoundError for a pins table of the plan's
+    # dkv98/vF tree that was a dangling symlink on the gen host (epyc8, epyc2).  A missing staged input is the host's, not
+    # a verdict on the view: INFRA (relaunched, the staging fixed), never PLAN.
+    ("INFRA", r"^prov_", r"prov_view\.py crashed on \S+: (?:FileNotFoundError|NotADirectoryError|PermissionError)",
+     "infra (prov_view input file not staged on the gen host)"),
     ("PLAN", r"^prov_", r"PROVISIONAL view FAIL|PROV_FAIL", "PROVISIONAL child view: no routed abstract / plan contract"),
     # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
     # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
