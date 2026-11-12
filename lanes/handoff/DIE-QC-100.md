@@ -88,3 +88,9 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - ist audit confirmed by CTLCAP reconcile (ctlcap/ist_reconcile.py, reconcile_c8t_kp.tsv): 144/144 cb pad drops, diff 0; figures QC 144, KV 120, HBM 10, S81 58. Stale-RTL types under kp: cb q00/q11 receivers, hc1, st_a v1/v2, 4 ctl. CTLCAP is writing ctlcap/stale_types_kp.tsv.
 - In flight: COLL-HOLD on the 5 hops over 405 (coll_n flt_o 472, fltv_o 470, rec_rx_s0 645; glue tt_pw 440, visibility_slot 449), stage L made a hard fail. CTLCAP on W5 PARAM_REGEN. RESID on 8 forwarded hops. BIND on the cm proof against the d2d head, merging 6a2b2c7e2d3 into wt/qc-s28-event by hand.
 - Next: LAND parts 1-2 on the final head -> snap_lattice -> resid_fix -> gates -> bind_fix.sh chain -> bus_groups, EQ, tap table (HF-1c cond b), die render -> event READY.
+
+## 5h. 17:0x
+- Chain head: zz_collmerge_kp_d2d_l405 dc9717d67087 (sidecar e292ebb838c1). No landing hop over 405 in coll_s/coll_n/coll_ucie/glue; max 403.2 (glue). 7 pins re-sourced to the nearest same-family tap, 0 cycles. Gates 0 new. The hard rule is in collhold/land_fix.py and coll_merge_apply stage L.
+- Re-source skew: fits at contract level (same tap group, insertion 250±40, kit window 30 ps, collhold/diag_ringmargin.py). WATCH: the ring-hold / clock-landing verify in the first s28 kits of coll_s, coll_n and glue confirms the built number.
+- Double-pad: the 15:1x withdrawal STANDS (COORD). CTLCAP is measuring one named lane per die: (a) stages, (b) table, (c) schedule consumer, delta, functional vs perf. I post one RESULT when it reports. W5 is paused until then.
+- d2d-related 6a2b2c7e2d3: COORD approved for merge.
