@@ -44006,3 +44006,7 @@ FAILED [AUTOPILOT e75561043497] 2026-11-11 18:22:43 PST AUTOPILOT -> KIT-WAVE-3:
   - Build gate: route_supply p99 is ADVISORY. Build every changed type; the routed result decides (calibration: placement cleared p99 1.0-2.5 on 29 types).
     - Types still at p99 > 3 after their internal form (b102 16.1, b103 12.0 today) go to an ARCH item in parallel: macro re-floor (stack or rotate the SRAMs), split, or +1 cycle on the worst crossing lanes. Do not squeeze them.
   - Top-metal ring stays phase 2, after the M8 grant / freeze-first work (LAYER-BUDGET-1).
+- 2026-11-11 18:43 PST [COORD] LIMIT STOP + RESTART. About 18:3x-18:4x every Claude lane died on the previous account's WEEKLY limit (HTTP 429). The owner re-logged with a new account. Codex is not active (CODEX-LOG last 11-08).
+  - Fleet jobs, KIT-WAVE and ot-run units keep running.
+  - Restart: wave 1 now, by SendMessage resume (ROOT-MERGE-59, KW-FIX-45, DIE-S81-87, VISLAYOUT2-S81/QC/KVHEAD/HBM, DIE-LAYOUT-HBM). Wave 2 about 20 min later if no 429 (DIE-HBM-100, DIE-KV-98, HEAD-94, HBM-CORES-B, TAP-SITE-1, LAYER-BUDGET-1, KIT-OVERLAY-1, GRT-CALIB-1, X-TIER-OTC).
+  - Every resumed lane re-reads its last queue line first and re-checks its live jobs before acting.
