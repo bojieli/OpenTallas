@@ -64,3 +64,9 @@ FT-HOP-M2 READY pending proof. Answered COORD (07:5x): CLAND dch = cland-slew-11
 - The wshim_rx link_i ring is cas (count-aligned), so LOCAL does not apply. The proof uses the plan field landing_ring_wreg {buses [link_i], dsrep 8, write_chunk 16}.
 - Tree: epyc4 /srv/opentallas-scratch2/claude/gen-class-1/tree (own blob:none sparse clone @aee2a3f4707, plus 7 head-93 prep links). Plan: gen-class-1/pd/rp16_wreg.json (pd/ siblings symlink head-95/pd).
 - Build: intel2 pid 732695, log ~/gc1log/wrx_wreg_route.log, kit epyc4 gen-class-1/proof/wrx_wreg/hd_spn_wshim_rx. Gate: SO SLEW_VIOL 0 TT/FF except the u_srl_17/u_rrl_17 hop (HEAD rp17).
+
+## later 11-12: read-side START class + t45 bind
+- eshim_rx rp17 (wreg on) is still 124/134. The violators are the u_sel copy INPUTS fed by cland_start broadcast (BUFx10 fo 94). The copies themselves are local (loc/esh/sel.out, trace3.out on epyc9). Proposed: a reader-START stage + RSTREP per-chunk rule. Awaiting COORD.
+- WREG reach default (ring_wreg_reach) is in the intel2 worktree, uncommitted, with tests. K-change lists: gen-class-1/wreg_list_{head,kv,qc}.txt (HEAD 54 buses / 20 types, KV 127 / 13, QC 0 on the sidecar pair, unverified).
+- t45: tree epyc8 gen-class-1/bsrc_t45 (cp -al plus a patched real copy), out_t45 BIND rc 0, ring has DSREP 8 LOCAL 1. Verify is re-running (verify_t45.sh, bind.f repointed). Next: kit-rtl/gen/place/GRT.
+- Running: wrx_wreg route (intel2 pid 732695), full suite log ~/gc1log/suite_wreg.log, verify intel2 pid 1403168.
