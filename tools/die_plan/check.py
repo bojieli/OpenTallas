@@ -706,7 +706,10 @@ def lane_geometry(P, lid):
             st = [point_at(seg, L * j / k) for j in range(k)]
         regs.extend(st)
         i0 = len(pts) - 1
-        xs.append(dict(part=part, slot=slot, len_um=round(L, 1), stations=k, m89=m89,
+        # form (d): a die-top in hop (previous bay -> this bay station 0) is judged by check_m89 (reach per hop);
+        # the slot station span counts only the route from this bay on (station 0 -> out)
+        m89_in = (abs(st[0][0] - pa[0]) + abs(st[0][1] - pa[1])) if (s.get("in_route") == "m89" and st) else 0.0
+        xs.append(dict(part=part, slot=slot, len_um=round(L, 1), m89_in_um=round(m89_in, 1), stations=k, m89=m89,
                        segs=(i0, i0 + len(seg) - 1)))
         pts.extend(seg[1:])
     regs.append(P.port_point(ln["ports"][-1]))
@@ -912,12 +915,12 @@ def check_hops(P, R, geo):
                 width = next(s["width"]+1 for s in P.types[key[0]]["ft_slots"] if s["name"]==key[1])
                 sp = max((sum(abs(a-b) for a,b in zip(centre(rows[j,b]),centre(rows[j+1,b]))) for b in range(width) for j in range(k-1)), default=0)
             else:
-                sp = x["len_um"] / max(1, x["stations"])
+                sp = (x["len_um"] - x.get("m89_in_um", 0.0)) / max(1, x["stations"])
                 sp = max(sp, first(*key)[0])
             if sp > smax + EPS:
                 detail = "exact per-bit internal hop" if key[1] in full else (
-                    "real normal input S0->S1" if first(*key)[0] > x['len_um']/max(1,x['stations'])
-                    else f"{x['len_um']:.0f}um route / {x['stations']} stations")
+                    "real normal input S0->S1" if first(*key)[0] > (x['len_um'] - x.get('m89_in_um', 0.0))/max(1,x['stations'])
+                    else f"{x['len_um'] - x.get('m89_in_um', 0.0):.0f}um route / {x['stations']} stations")
                 R.err("stations", f"type {key[0]} slot {key[1]}: {detail} = {sp:.0f} um > ft_station_max_um {smax:.0f}", type=key[0])
     worst.sort(reverse=True)
     result = []
