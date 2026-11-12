@@ -32738,6 +32738,97 @@
       "detailed_receipt": "detail_receipt.json",
       "detail_bloat_factor": 0
      }
+    ],
+    "ot_hnx_fused_host_program": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/fhp_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_argmax_static_sw_vm_r2": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/argmax_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_hc_root_static__hcp_sys1": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/hcpsys1_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hnx_fused_tnode": [
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/tnode_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_idx_rootctl_static_am": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/rootctl_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/h9b_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     }
+    ],
+    "ot_hbm_su_static_sfustore_hw": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/sfustore_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hgi_sm_xload_cl2_bfqg": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/bfqg_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_svc_vmdel_lane_n": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/vmdel_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
+     }
+    ],
+    "ot_hbm_idx_qctl_static": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/autopilot/closed/hbm/ot_hbm_idx_qctl_static__e96f241822/kit/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     },
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/autopilot/closed/hbm/ot_hbm_idx_qctl_static__e96f241822/kit/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     }
     ]
    },
    "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
