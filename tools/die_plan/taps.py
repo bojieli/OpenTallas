@@ -324,6 +324,7 @@ def sink_sites(P, tn, control=True):
     if ck.get("sink_bins_file"):
         # a placed netlist's inventory already holds the face / ft registers: the planned ones are not added again
         import json
+        from pathlib import Path
         _pp = getattr(P, "path", None)
         rows += json.loads(input_path(ck["sink_bins_file"], Path(_pp).parent if _pp else None).read_text())["bins"]
         out = []
