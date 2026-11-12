@@ -1113,5 +1113,42 @@ class TestAggressive(Base):
         self.assertTrue(os.path.exists(os.path.join(lane, "wt/f.bin")))   # a git checkout is the worktree reaper's
 
 
+class TestBindRefs(Base):
+    """COORD 11-12: autoclean emptied die-hbm-92-su/ab, which only bind.f of live HBM rows named"""
+    def test_bind_f_names_outside_dir_and_emergency_hold(self):
+        # live row's bind dir holds bind.f naming an outside source dir
+        bind = os.path.join(self.root, "wave-x/bind_p2")
+        src = os.path.join(self.root, "srcowner/shared_srcs/p37su1_sources")
+        touch(os.path.join(src, "a.sv"))
+        touch(os.path.join(src, "b.sv"))
+        with open(os.path.join(bind, "bind.f") if os.makedirs(bind, exist_ok=True) is None else "", "w") as f:
+            f.write(f"{src}/a.sv\n{src}/b.sv\n")
+        age_tree(bind)
+        age_tree(os.path.join(self.root, "srcowner"))
+        junk = os.path.join(self.root, "srcowner/old_scratch/x.bin")
+        touch(junk)
+        age_tree(os.path.dirname(junk))
+        # emergency pattern dir: die-hbm-9/ab and a src_ tree, nothing names them
+        ab = os.path.join(self.root, "die-hbm-9/ab/p37su9_sources/z.sv")
+        srct = os.path.join(self.root, "lane7/src_abc/tools/t.py")
+        touch(ab)
+        touch(srct)
+        other = os.path.join(self.root, "die-hbm-9/old/y.bin")
+        touch(other)
+        for q in (ab, srct, other):
+            age_tree(os.path.dirname(q))
+        age_tree(os.path.join(self.root, "die-hbm-9"))
+        age_tree(os.path.join(self.root, "lane7"))
+        self.kw = {"attempts": {}, "latest": {}, "keep": ["hx:" + bind]}
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        self.assertTrue(os.path.exists(os.path.join(src, "a.sv")), "bind.f named dir must stay")
+        self.assertTrue(os.path.exists(os.path.join(src, "b.sv")))
+        self.assertFalse(os.path.exists(junk), "unreferenced sibling goes")
+        self.assertTrue(os.path.exists(ab), "die-hbm-*/ab emergency hold")
+        self.assertTrue(os.path.exists(srct), "src_* emergency hold")
+        self.assertFalse(os.path.exists(other), "rest of the lane goes")
+        self.assertIn("bind/filelist/manifest files parsed", self.out)
+
+
 if __name__ == "__main__":
     unittest.main()

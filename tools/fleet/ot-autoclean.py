@@ -70,6 +70,9 @@ HOSTNAME_ALIAS = {"ubuntu": "localhost", "key-cardinal": "intel1", "tolerant-swi
 AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i ~/.ssh/agidock_ot ubuntu@155.103.253.53"
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
+# COORD 11-12 emergency hold (autoclean emptied die-hbm-92-su/ab on 3 hosts; live HBM binds named it): never deleted, any class
+EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)|/claude/[^/]+/src_[^/]+(?:/|$)")
+EMERGENCY_ANC_RE = re.compile(r"/claude/die-hbm-[^/]+/ab/|/claude/[^/]+/src_[^/]+/")
 GRACE_S = 2 * 3600          # --aggressive (OWNER 11-12): the only age wait, after a job ends
 D_SKIP_LANES = {"autopilot", "ot-jobs", "explorer-2-work", "explorer-2", "restore-head", "signed-keep", "_ot_autoclean_ctl", "hub-coord"}
 # LOCALHOST_1111: localhost holds lane and Codex trees outside the scratch roots (~/wt, ~/codex-*, ~/wt-codex-*,
@@ -960,6 +963,16 @@ def tree_info(d):
     return newest, size, hl
 
 
+_TI = {}
+
+
+def tree_info_c(d):
+    """tree_info cached for this run: the same tree was walked three times (eval, size, delete)"""
+    if d not in _TI:
+        _TI[d] = tree_info(d)
+    return _TI[d]
+
+
 # ------------------------------------------------------------------ the host job
 class Job:
     def __init__(self, a):
@@ -1007,6 +1020,7 @@ class Job:
                                   canon=self.paths.canon)
         else:
             self.kwkeep = PathSet()
+        self.add_bind_refs()
         self.dx, self.dx_sent = None, set()
         if getattr(a, "design_export", "on") != "off":
             dxf = os.path.join(snap, DX_FILE)
@@ -1014,6 +1028,56 @@ class Job:
             names = None if d.get("all") or d.get("names") is None else set(d["names"])
             self.dx = dict(ledger=set(d.get("ledger") or []), paths=set(d.get("ledger_paths") or []), names=names,
                            stages=list(DX_STAGES))
+
+    BIND_NAME_RE = re.compile(r"(^bind.*\.f$|\.f$|^manifest.*\.json$|^plan.*\.json$|^filelist.*|^spec\.json$|^config\.mk$|\.mk$|^cmd\.sh$|^run_kit\.sh$)")
+
+    def add_bind_refs(self):
+        """COORD 11-12 (autoclean emptied die-hbm-92-su/ab, named only by bind.f): parse every bind.f / filelist / manifest / plan /
+        spec of each kit-wave keep path (live or queued rows) and keep every path they name plus its parent dir"""
+        if not len(self.kwkeep):
+            return
+        files, seen = [], set()
+        for p in list(self.kwkeep.m):
+            if os.path.isfile(p):
+                files.append(p)
+            elif os.path.isdir(p):
+                stack, n = [(p, 0)], 0
+                while stack and n < 400:
+                    d, dep = stack.pop()
+                    try:
+                        ents = list(os.scandir(d))
+                    except OSError:
+                        continue
+                    for e in ents:
+                        try:
+                            if e.is_symlink():
+                                continue
+                            if e.is_dir(follow_symlinks=False):
+                                if dep < 3 and e.name not in HEAVY_DIRS and e.name not in ("results", "run", "logs", "objects", "reports"):
+                                    stack.append((e.path, dep + 1))
+                            elif self.BIND_NAME_RE.search(e.name):
+                                files.append(e.path)
+                                n += 1
+                        except OSError:
+                            pass
+        added = 0
+        for f in files:
+            if f in seen:
+                continue
+            seen.add(f)
+            try:
+                if os.path.getsize(f) > (8 << 20):
+                    continue
+                txt = rd(f)
+            except OSError:
+                continue
+            for q in text_paths(txt):
+                if os.path.exists(q):
+                    for r_ in {q, os.path.dirname(q)}:
+                        if r_.count("/") >= 4:
+                            self.kwkeep.add(r_, "bind/filelist ref from " + f)
+                            added += 1
+        say(f"kit-wave keep: {len(files)} bind/filelist/manifest files parsed, {added} referenced paths added")
 
     def signed_near(self, unit):
         """DISK-1111 (OWNER 11-12 "routing results should be exported only if it is signed"): the unit, something below it or
@@ -1200,6 +1264,9 @@ class Job:
         nt = never_touch(k)
         if nt:
             return nt
+        for q in (k, os.path.realpath(k)):
+            if EMERGENCY_HOLD_RE.search(q + "/"):
+                return "emergency hold (bind/src tree): " + q
         lane = self.lane(k)
         if lane.startswith(("tok-", "kv-fn-")) or "/tok-" in k or "/kv-fn-" in k:
             return "lane " + lane
@@ -1396,7 +1463,7 @@ class Job:
         for g in self.found["git"]:
             if g.startswith(d + "/"):
                 return "git inside " + g, []
-        newest, size, hl = tree_info(d)
+        newest, size, hl = tree_info_c(d)
         if self.now - newest < (GRACE_S if aggr else AGE_S):
             return "lt6h" if not aggr else "lt2h", []
         if hl and not aggr:                                          # aggressive: unlinking one name of a shared inode is safe
@@ -1442,13 +1509,45 @@ class Job:
                 return "SKIP", "recheck: " + w
         return None, None
 
+    def rm_tree(self, f):
+        """rm -rf --one-file-system of f; with --aggressive the grandchildren go in parallel (--rm-jobs, default 16): a
+        deep attempt tree is millions of small files and one rm walks them serially (the slow part of every run)"""
+        jobs = int(getattr(self.a, "rm_jobs", 1) or 1)
+        if jobs > 1 and os.path.isdir(f) and not os.path.islink(f):
+            try:
+                tg = []
+                for n in os.listdir(f):
+                    q = os.path.join(f, n)
+                    if os.path.isdir(q) and not os.path.islink(q):
+                        try:
+                            tg += [os.path.join(q, m) for m in os.listdir(q)] or [q]
+                        except OSError:
+                            tg.append(q)
+                    else:
+                        tg.append(q)
+                if len(tg) > 1:
+                    def one(q):
+                        return subprocess.run(["rm", "-rf", "--one-file-system", "--", q], capture_output=True, text=True, timeout=7200)
+                    errs = [x for x in run_pool(one, tg, jobs) if x.returncode]
+                    if errs:
+                        return errs[0]
+            except OSError:
+                pass
+        return subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True, timeout=7200)
+
     def delete(self, cls, files):
         freed = 0
         for f in files:
+            if EMERGENCY_HOLD_RE.search(os.path.realpath(f) + "/") or EMERGENCY_HOLD_RE.search(f + "/"):
+                raise OSError("emergency hold " + f)
+            try:                                              # per-delete journal: the manifest is written only when a run ends
+                with open(os.path.join(self.a.state, "deleted.log"), "a") as jf:  # noqa
+                    jf.write(f"{time.strftime('%F %T')}\t{cls}\t{f}\n")
+            except (OSError, AttributeError):
+                pass
             if cls == "a":
-                _, size, _ = tree_info(f)
-                r = subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True,
-                                   timeout=7200)
+                _, size, _ = tree_info_c(f)
+                r = self.rm_tree(f)
                 if r.returncode and "ermission denied" in r.stderr and getattr(self.a, "aggressive", False) \
                         and os.path.realpath(f) == f and not os.path.islink(f):
                     # root-owned files from docker jobs: the same path, already approved by every guard, removed as root
@@ -1469,7 +1568,7 @@ class Job:
         size = 0
         for f in files:
             try:
-                size += (tree_info(f)[1] if cls == "a" else os.lstat(f).st_blocks * 512)
+                size += (tree_info_c(f)[1] if cls == "a" else os.lstat(f).st_blocks * 512)
             except OSError:
                 pass
         verdict = "SKIP" if why else ("WOULD" if not self.a.apply else "DELETE")
@@ -1519,6 +1618,9 @@ class Job:
     def d_why(self, p, keep, anc):
         """None = deletable whole; 'recurse' = holds something kept, look inside; else the reason it stays"""
         c = self.paths.canon(p)
+        for q in (p, c, os.path.realpath(p)):
+            if EMERGENCY_HOLD_RE.search(q + "/"):
+                return "kept: emergency hold (bind/src tree)"
         if c in keep or p in keep:
             return "kept: referenced / signed / git / keep"
         for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep),
@@ -1535,7 +1637,15 @@ class Job:
             return "gitlocked " + g
         if c in anc or p in anc:
             return "recurse"
+        if os.path.isdir(p) and self.holds_emergency_below(p):
+            return "recurse"
         return None
+
+    def holds_emergency_below(self, p):
+        """a bind / src tree (die-hbm-*/ab, src_*) lies within 6 levels below p: p is never deleted whole"""
+        r = subprocess.run(["find", "-P", p, "-maxdepth", "6", "(", "-path", "*/claude/die-hbm-*/ab", "-o", "-name", "src_*", ")", "-print", "-quit"],
+                           capture_output=True, text=True, timeout=600)
+        return bool(r.stdout.strip())
 
     def prune_lane_trees(self, gone):
         a = self.a
@@ -1568,7 +1678,7 @@ class Job:
                 pass
             size = 0
             if why is None:
-                newest, size, _hl = tree_info(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
+                newest, size, _hl = tree_info_c(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
                 if self.now - newest < GRACE_S:
                     why = "lt2h"
             verdict = "SKIP" if why else ("WOULD" if not a.apply else "DELETE")
@@ -1870,6 +1980,7 @@ class Job:
 
     def _run(self):
         a = self.a
+        _TI.clear()
         off = [f for f in OFF_FILES if os.path.exists(f)]
         if off or os.environ.get("OT_AUTOCLEAN") == "0":
             say(f"ot-autoclean: OFF switch {off or 'OT_AUTOCLEAN=0'}; nothing done")
@@ -2493,6 +2604,7 @@ def main(argv=None):
     r.add_argument("--aggressive", action="store_true",
                    help="OWNER 11-12 aggressive mode: keep only live jobs, kit-wave-referenced trees, unarchived signed units and the protected lists; "
                         "2 h grace, no queue-name/path holds on terminal attempts, attempts without a state row go, class d prunes lane trees")
+    r.add_argument("--rm-jobs", type=int, default=16, help="parallel rm workers per deleted tree (1 = serial)")
     r.add_argument("--d-any-root", action="store_true", help=argparse.SUPPRESS)
     r.add_argument("--keep-expire-h", type=float, default=0.0,
                    help="DISK-1111: a .keep file untouched for this many hours (168 = 7 days) no longer holds a unit; 0 = off")
