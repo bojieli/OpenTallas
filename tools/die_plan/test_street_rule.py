@@ -227,3 +227,140 @@ def test_reticle_fit_reverts_growth():
              "violations_before": {"street": 1}, "violations_after": {}}]
     d, rev = SR.reticle_fit(P, Q, rows, log=lambda s: None)
     assert rev == ["A"] and not rows[0]["applied"] and Q["partition_types"]["A"]["outline_um"] == [400.0, 1000.0]
+
+
+class _FakeM:
+    def __init__(self, W, H, rects):
+        import numpy as np
+        self.W, self.H, self.n = W, H, len(rects)
+        self._o = [(x, y) for x, y, _, _ in rects]
+        self.dim = np.array([[w, h] for _, _, w, h in rects], float)
+
+    def core_origin(self, i):
+        return self._o[i]
+
+
+def test_add_ft_regs_inserts_stage_on_overlong_hop():
+    import copy
+    f = {"name": "ft0", "in_face": "W", "out_face": "E", "in_window_um": [130, 140], "out_window_um": [130, 140],
+         "stations": 1, "regs_um": [[300.0, 135.0]],
+         "bit_sites_um": [[[300.0, 134.73], [300.0, 135.27]]]}
+    t0 = {"outline_um": [604.8, 302.4], "ft_slots": [f]}
+    t1 = copy.deepcopy(t0)
+    t1["outline_um"] = [829.44, 302.4]
+    t1["ft_slots"][0]["regs_um"] = [[440.64, 135.0]]          # the street push stretched hop 0 to ~440 um
+    t1["ft_slots"][0]["bit_sites_um"] = [[[440.64, 134.73], [440.64, 135.27]]]
+    M = _FakeM(829.44, 302.4, [(100.0, 200.0, 50.0, 50.0)])
+    assert SR.ft_hop_check(t0, t1, 405.0)
+    add = SR.add_ft_regs(M, t0, t1, 405.0, 1)
+    assert add and add[0]["added"] == 1
+    f1 = t1["ft_slots"][0]
+    assert len(f1["regs_um"]) == 2 and f1["stations"] == 2 and len(f1["bit_sites_um"]) == 2
+    assert not SR.ft_hop_check_added(t0, t1, 405.0)
+    # the new stage's bit sites are the neighbour's pattern, translated
+    (x, y), sites = f1["regs_um"][0][:2], f1["bit_sites_um"][0]
+    assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
+
+
+def test_pass2_levers_reorder_and_xfeed():
+    cfg = dict(SR.DEFAULTS, pin_reorder=1)
+    a = core("a", 0, 0, 100, 100, {"E": face(20, 0, 100)}, has_conns=False)
+    b = core("b", 117.28, 0, 100, 100, {"W": face(20, 2.5, 102.5)}, has_conns=False)
+    assert SR.pair_rule(a, b, CFG)["kind"] == "street"          # misaligned pins: a street
+    r = SR.pair_rule(a, b, cfg)
+    assert r["pins"] == [0, 0] and r["pin_reorder"] == 20 and r["kind"] == "sliver"   # (b) reordered straight across
+    cfg2 = dict(SR.DEFAULTS, x_pin_factor=0.5)
+    a2 = core("a", 0, 0, 100, 100, {"E": face(1800, 0, 100)})
+    b2 = core("b", 140, 0, 100, 100, {"W": face(1800, 0, 100)})
+    assert SR.pair_rule(a2, b2, CFG)["need"] > SR.pair_rule(a2, b2, cfg2)["need"]   # (d) 2:1 x feed halves the need
+    assert SR.pair_rule(a2, b2, cfg2)["pins"] == [900, 900]
+
+
+def test_legalize_moves_sinks_with_cores(tmp_path):
+    """COORD 11-12 (HEAD-94 hd_lep0N): every off-core coordinate follows the moved cores -- sink sites, sink bins,
+    keepouts -- the sink total is unchanged and no sink ends inside a core."""
+    plan, P = _toy_plan(tmp_path)
+    t0 = P["partition_types"]["toy"]
+    x_b = t0["hard_cores"][1]["origin_um"][0]
+    # sites: in the old slot, just E of core b (b moves E onto it), on core a (rides with a)
+    t0["clock"]["sink_sites_um"] = [[60.48 + 100 + 7.0, 136.0, 2], [x_b + 104.0, 136.0, 3], [100.0, 120.0, 5]]
+    t0["clock"]["keepouts_um"] = [[x_b + 102.0, 90.0, x_b + 110.0, 180.0]]
+    # islands: inside core b, straddling b's W edge (centre on b), free in the slot row above the cores
+    isl = [[x_b + 10.0, 100.0, x_b + 30.0, 120.0], [x_b - 4.0, 140.0, x_b + 12.0, 150.0], [300.0, 250.0, 340.0, 270.0]]
+    t0["clock"]["die_islands_um"] = [list(r) for r in isl]
+    bins = [[x_b + 105.3, 135.0, 7], [x_b + 106.0, 140.0, 1], [100.0, 120.0, 11], [20.0, 20.0, 4], [500.0, 280.0, 6]]
+    bf = Path("physical/die_plan/toy/bins/toy.json")
+    (tmp_path / bf).parent.mkdir(parents=True)
+    (tmp_path / bf).write_text(json.dumps({"bin_um": 10.8, "bins": bins}))
+    t0["clock"]["sink_bins_file"] = str(bf)
+    plan.write_text(json.dumps(P))
+    _, tot0 = SR.sink_points(t0, tmp_path)
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    assert SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+                    "--event", str(ev), "--rs-halving", "off"]) == 0
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    t = json.loads(out.read_text())["partition_types"]["toy"]
+    b1 = t["hard_cores"][1]["origin_um"][0]
+    assert b1 > x_b + 1.0                                         # core b moved E (the street opened)
+    pts, tot1 = SR.sink_points(t, tmp_path)
+    assert tot1 == tot0                                           # sink total preserved (sites + merged bins)
+    # nothing new inside a core: only the sinks that sat on core a in the base (and ride with it) are on a core
+    assert sorted(SR.sinks_under_cores(t, tmp_path)) == sorted(SR.sinks_under_cores(t0, tmp_path)) == [[100.0, 120.0]] * 2
+    assert t["clock"]["sink_bins_file"] != str(bf)                # a new bins file, the base one untouched
+    assert json.loads((tmp_path / bf).read_text())["bins"] == bins
+    s = t["clock"]["sink_sites_um"]
+    assert s[1][0] >= b1 + 100.0 and s[1][2] == 3                 # E of b stays E of b, weight kept
+    assert s[2] == [100.0, 120.0, 5]                              # on core a (not moved): unchanged
+    k = t["clock"]["keepouts_um"][0]
+    assert k[0] >= b1 + 100.0 - 1e-6                              # the keepout E of b followed it
+    # COORD 11-12 (HEAD-94 hd_lep0N): rects move as whole boxes; islands on a moved core move with it
+    dx = b1 - x_b
+    i1 = t["clock"]["die_islands_um"]
+    assert [round(v, 3) for v in i1[0]] == [round(v, 3) for v in (isl[0][0] + dx, 100.0, isl[0][2] + dx, 120.0)]
+    assert [round(v, 3) for v in i1[1]] == [round(v, 3) for v in (isl[1][0] + dx, 140.0, isl[1][2] + dx, 150.0)]
+    assert abs((i1[2][2] - i1[2][0]) - 40.0) < 1e-6 and abs((i1[2][3] - i1[2][1]) - 20.0) < 1e-6
+
+    def rects(o, key=None):
+        if isinstance(o, dict):
+            for k_, v in o.items():
+                yield from rects(v, k_)
+        elif isinstance(o, list):
+            if len(o) == 4 and all(isinstance(v, (int, float)) for v in o) and key and (
+                    "rect" in key or key in ("keepouts_um", "die_islands_um")):
+                yield o
+            else:
+                for v in o:
+                    yield from rects(v, key)
+    for r in rects(t):
+        assert r[0] <= r[2] and r[1] <= r[3], r                   # every rect stays valid
+
+
+def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
+    """COORD 11-12 (HEAD-94 hd_lep0N): raw reset exports / landing pin sources / stage raw refs are re-selected on the
+    re-solved reset tree of a legalized type (mesh_resel rule)."""
+    import types as _t
+    trees = {
+        "base": dict(relays=[dict(name="r_a", q="qa", depth=2, role="raw", xy=[100.0, 50.0]),
+                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0])]),
+        "new": dict(relays=[dict(name="r_a2", q="qa2", depth=2, role="raw", xy=[130.0, 50.0]),
+                            dict(name="r_x", q="qx", depth=2, role="raw", xy=[400.0, 50.0]),
+                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0])]),
+    }
+    import schema
+    import reset_tree
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    t = {"reset_start_raw_exports": [dict(port="rst_o", instance="r_a", net="qa", xy_um=[100.0, 50.0])],
+         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")]},
+                   "landing_local_resets": [dict(raw="qa", xy_um=[100.0, 50.0]), dict(raw="qb", xy_um=[200.0, 50.0])]}}
+    P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"x": t}}
+    rec = SR.reset_resel(P, Q, ["x"], tmp_path / "plan.json")["x"]
+    assert "error" not in rec, rec
+    e = t["reset_start_raw_exports"][0]
+    assert (e["instance"], e["net"], e["xy_um"]) == ("r_a2", "qa2", [130.0, 50.0])     # same role+depth, nearest
+    pn = t["clock"]["landing_contract"]["pins"][0]
+    assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
+    lr = t["clock"]["landing_local_resets"]
+    assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept

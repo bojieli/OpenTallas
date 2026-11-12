@@ -1123,6 +1123,10 @@ SKIP_KEYS = {"buses", "ft_slots", "die_ft_bands", "internal_stations", "hard_cor
              "face_layers", "track_offset_um", "window_um", "in_window_um", "out_window_um"}
 
 
+# *_um 4-lists that are sizes / lengths, not [x0, y0, x1, y1] rects
+NONRECT_UM = {"legs_um", "cell_wh_um", "kit_core_margins_um", "bit_site_cell_um", "track_offset_um", "outline_um"}
+
+
 def walk_follow(x, fol, key=None):
     if isinstance(x, dict):
         for k, v in x.items():
@@ -1132,11 +1136,15 @@ def walk_follow(x, fol, key=None):
         return x
     if isinstance(x, list):
         if x and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in x):
-            if key and ("rect" in key) and len(x) == 4:
-                a, b = fol(x[:2]), fol(x[2:4])
-                if a and b:
-                    return [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
-                return x
+            if key and len(x) == 4 and ("rect" in key or (key.endswith("_um") and key not in NONRECT_UM)):
+                # a rect moves as a whole box with the core under its centre (both corners by the same dx, dy:
+                # COORD 11-12, HEAD-94 hd_lep0N die_islands_um inverted when only one corner followed)
+                c = [(x[0] + x[2]) / 2.0, (x[1] + x[3]) / 2.0]
+                q = fol(c)
+                if not q:
+                    return x
+                dx, dy = q[0] - c[0], q[1] - c[1]
+                return [round(x[0] + dx, 4), round(x[1] + dy, 4), round(x[2] + dx, 4), round(x[3] + dy, 4)]
             if len(x) >= 2 and key and (key.endswith("_um") or key in ("xy", "root", "outs")):
                 q = fol(x[:2])
                 return (q + list(x[2:])) if q else x
