@@ -1,4 +1,4 @@
-# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~10:0x PST)
+# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~13:1x PST)
 
 ## 1 Scope
 Generator / legalize / preflight CLASS fixes. APPROVED to merge (ROOT-MERGE-60): land-override-stale-1112@cef99b3203,
@@ -15,7 +15,15 @@ schema.py (ft_hop_maxwire_um), test_ft_hop_maxwire.py (5 pass). Ignore the untra
 Commit when the suite run (below) shows only pre-existing failures.
 
 ## 3 Running jobs
-- none (t45 GRT proof stopped after the selector count; wshim_tx proof finished and signed off).
+- CLAND-RING-LOCALITY proof 1 (HEAD wshim_rx, GRT->route->signoff): ot-run client intel2 pid 3314400, host epyc9, kit
+  epyc9:/srv/opentallas-scratch2/claude/gen-class-1/proof/wrx/hd_spn_wshim_rx (copy of HEAD-95 wshim_rx_main + new
+  ft_hop_maxwire.tcl), log intel2 ~/gc1log/wrx_cland.log. Gate: SO SLEW_VIOL 0 TT/FF (base 154/134).
+- proof 2 (S81 t45 fresh kit): kit_wave run-item, intel2 pid 3508038, spec+log intel2
+  /srv/opentallas-scratch2/claude/gen-class-1/kw_t45/{spec.json,unit.log} (AP_DIR=kw_t45/ap, NOT wave state); work epyc9
+  /srv/opentallas-scratch2/claude/gen-class-1/kw_t45_root/items/slice_station__t45/attempt_1; src tree epyc9
+  /srv/opentallas-scratch2/claude/gen-class-1/src_s81_cland_c4f3e873a1 (symlinks to bsrc4_r12ng + tools/rtl copies).
+  After place: run W/gen/run_kit.sh K grt; compare GRT slew/fanout vs base t45 (1158 TT pins).
+- probe data: epyc9 /srv/opentallas-scratch2/claude/gen-class-1/loc/wrx (cland_nets.tsv, cland_insts.tsv).
 ## 4 Watchers
 None.
 
@@ -28,6 +36,7 @@ None.
   buffers), NOT ft hops: a CLAND fanout class, report to COORD with the READY.
 
 ## 6 Next steps
+- Branch claude/cland-hop-maxwire-1112@c4f3e873a1 (CLAND-RING-LOCALITY A): READY after proofs. (B) plan option: band next to capture (HEAD-95 band rects).
 a. When wshim_tx signoff done: count TT/FF slew pins (signoff/tt/sta.log "SO SLEW_VIOL"); expect 125 -> ~5 (the 5
    non-ft relay nets); if ft hop violators remain -> report (then COORD decides on M4 guide floor).
 b. t45 GRT: confirm "OT_FT_MAXWIRE: 0 ft hop nets" or count, usage table vs base.

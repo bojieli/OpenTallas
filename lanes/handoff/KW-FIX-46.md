@@ -1,4 +1,4 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 11:56 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 12:50 PST)
 
 ## 0 State at 11:56 (supersedes older lines below)
 - LIVE runtime /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot = main 9c8ff818ef19 tools/autopilot + host-gap patch; kit_wave.py md5 acea0a8097c8. Deployed 11:43 under kit_wave.lock (COORD approved). Full pre-deploy backup: rt/tools/autopilot.bak-kw46-predeploy-1112 (roll back = rsync it back under the lock). Dry decision diff old vs new: 0 different of 9.
@@ -6,6 +6,8 @@
 - Branch claude/kw-fix-46-hostgap-1112 @ b8e6e2ed9a61 (pushed): collect-time INFRA auto-class (FLOW 'tool input file missing'/KIT_NOT_SELF_CONTAINED on a host in st[src_incomplete_last] -> INFRA, log KIT-WAVE HOST-GAP). Live already; needs ROOT-MERGE-60 merge.
 - ot-run: fleet/kw43-rootreal/ot-run rebased 09:32 = byte copy of main backend (backup ot-run.bak-kw46-rebase-1112). kw44-seal-ap/sealed-{wave,ap}.json sealed_backend -> fleet/isolate-1-kw46m-590d7d62e7/ot-run (backups *.json.bak-kw46-1112). DONE, nothing pending.
 - Fleet fill 11:5x: wave capacity is not the limit (inflight 8/300, queue_fill on). Picks are few because rows are held by rulings (QC/S81/KV WAIT-FORM, S81 STA-2204 FLOW no-retry x11, HBM WAIT-CHILD on ot_pdie_serdes_rx_bm3_rest). Posted to COORD 11:5x.
+- 12:19 LIVE form-wait fix: kit_wave.py md5 e80c38ab368f (backup kit_wave.py.bak-kw46-formwait-1112); branch claude/kw-fix-46-formwait-1112 @ 0b0d2b5425fb (hub) = hostgap + verdict_attempt_dir (WAIT-FORM finds the rated attempt in arm/sibling dirs). READY for ROOT-MERGE-60. Worktree /srv/opentallas-scratch2/claude/wt/kw-fix-46-wf. Open: q_su21@3 unit kw-hbm-qsu21-3-13699 runs the BAD form, stop only on COORD word.
+- 12:3x STA2204-1: main gp_noconverge_gate.tcl (md5 8739596e35f3) in bsrc4_r12ng on epyc8/epyc9/intel1 (was hardlinked, replaced by mv, .bak-kw46-sta2204-1112 kept); retry 6 S81 rows committed 824ed7ca091, all launched 12:47. Next: watch them through place 3_4.
 - Stopped per COORD 11:41. Next: ROOT-MERGE-60 merge of the hostgap branch; a class fix for s81 resize.tcl STA-2204 if COORD assigns it.
 
 ## 1 Scope

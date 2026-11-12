@@ -1,4 +1,4 @@
-# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 09:00 PST
+# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 13:00 PST
 
 ## 1 Scope
 Finish QC s28 compose as ONE event: s28a + s28 items (B,C,D,E,F,W) + HF-1c delta (claude/qc-s28-floorplan-1112@ea7be452d3, APPROVED w/ GEOM-VIS-3 conditions a/b/c) + REACH-FIX taps; G0 + strict bind; READY with sha + drawings. Types go to P&R only after a GEOM-VIS-5 verdict. Hourly STATE on lanes/COORD-REVIEW-QUEUE.md. QC: 2/120 types, 31/31 cores signed off.
@@ -46,6 +46,15 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - gates out/c7b: schema 0; G0 611 (= c6b, 0 NEW); G0C 1448 -> 762 (686 hard_cores gone, 0 net new). vs s28a_bc: G0 NEW 385 = LAND classes (332 START/monitor, 42 latency=42 gone, 9 geom, 2 faces)
 - Residual HF-1c-origin G0C (cl_ landing views 38, u_t ck M5 x 10, su_l0 internal_stations 3, core_faces 31) -> sub-lane QC-S28-RESID (qc-s28-hf1c/resid/)
 - Final chain order: c6b + LAND delta + RESID script -> snap_lattice (last) -> gates -> BIND (QC-S28-BIND, bind/) -> bus_groups/EQ/tap table/render -> READY
+
+
+## 5e 13:00 (after usage limit; COORD 12:4x orders)
+- ROUTES (COORD (1)): 7 GEOM-VIS-8 ISSUES-ACCEPT rows ENQUEUED 12:53 via intel2 /tmp/qc100_route_release.py (wave enqueue_pass under kit_wave.lock). Blocker was die-wide QC hold_items '*' (KW-FIX-46) skipping retry_enqueue + st_a family verdict line not parseable -> 6 per-row transcription lines in GEOM-REVIEW.md. '*' hold left in place. FIRM GRT WATCH sle_st_a_v2 + slw_st_a_v2__cl9f076a5c (E column > 0.9 -> stop).
+- sle_ctl 547k > 400k cap (COORD (2)): sub-lane QC-S28-CTLCAP (qc-s28-hf1c/ctlcap/): breakdown first, then split/re-form in s28.
+- Chain: ... zz_c7b_lat 3d1f6c30cec4 -> resid/resid_fix.py (+ sidecar resid/side_resid.json b41986f8d639) -> zz_c8_resid 0f0dbf06115f (G0 611, G0C 711). Final order: c8 + LAND delta -> snap_lattice -> resid_fix -> gates -> BIND scripts.
+- LAND died at limit (last 16:42 UTC, face pack worst 69 > 64); resumed on c8 (part 1 START/mon/geom, part 2 faces).
+- BIND at event tree fa7cad9b3a (wt/qc-s28-event); scripts bind/bind_fix.sh (r8 derive, fix_h_straps, reset_pad, reach_fix class 5).
+- 'other flow error' owner table re-posted 12:58 (with triage).
 
 ## 6 NEXT STEPS
 1. Collect the 4 sub-lane deltas (each guarded on 55d318eece08). Compose order: LAND -> TAPS -> ROUTE -> VISFORM (each apply script refuses on from-value conflict; resolve by hand, keep both intents).
