@@ -710,29 +710,53 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             dn = f"td{key[1]}_{f}"
             out = f"t_{sv(part)}__{port}"
             T.ports.append(("output", out))
-            # chain geometry: x run then y run along the real L, cells at proportional cuts, padded electrically
-            corner = (X, ly)
-            cuts = [(lx + (X - lx) * (k + 1) / kx, ly, "M8") for k in range(kx)]
-            cuts += [(X, ly + (Y - ly) * (k + 1) / ky, "M9") for k in range(ky)]
-            std = list(chain_std)
+            # chain geometry: x run then y run along the real L, cells at proportional cuts, padded electrically.
+            # pad=leg: the L orientation (x-first or y-first) with the shorter legalised chain is taken (a tap on a
+            # PHY macro: the x-first corner cell slid ~1 mm off the macro and the chain zig-zagged, KV vN 11-12)
+            def chain_geo(yfirst):
+                if yfirst:
+                    cn_ = (lx, Y)
+                    cu = [(lx, ly + (Y - ly) * (k + 1) / ky, "M9") for k in range(ky)]
+                    cu += [(lx + (X - lx) * (k + 1) / kx, Y, "M8") for k in range(kx)]
+                else:
+                    cn_ = (X, ly)
+                    cu = [(lx + (X - lx) * (k + 1) / kx, ly, "M8") for k in range(kx)]
+                    cu += [(X, ly + (Y - ly) * (k + 1) / ky, "M9") for k in range(ky)]
+                g_, pp = [], (lx, ly)
+                for k, (x, y, layer) in enumerate(cu):
+                    if k == len(cu) - 1:
+                        g_.append((X, Y, layer, abs(X - pp[0]) + abs(Y - pp[1])))
+                    else:
+                        first = (layer == "M9") if yfirst else (layer == "M8")
+                        a, b = ((lx, ly), cn_) if first else (cn_, (X, Y))
+                        xx, yy, side = _slide((x, y), a, b, K)
+                        g_.append((xx, yy, layer, abs(xx - pp[0]) + abs(yy - pp[1]) + side))
+                        pp = (xx, yy)
+                return g_
+            geo_x = chain_geo(False)
+            yf = False
+            if pad == "leg" and kx and ky:
+                geo_y = chain_geo(True)
+                yf = sum(g[3] for g in geo_y) < sum(g[3] for g in geo_x) - 1e-6
+            chain = geo_y if yf else geo_x
+            cuts = chain
+            std = ([Ly / ky] * ky + [Lx / kx] * kx) if yf else list(chain_std)
             if core_early == "pad" and early > 0:
                 std = early_chain(std, chain_layer, early)
-            prev, prevpt = dn, (lx, ly)
+            prev = dn
             cells = []
-            for k, (x, y, layer) in enumerate(cuts):
-                if k == len(cuts) - 1:
-                    geo = abs(X - prevpt[0]) + abs(Y - prevpt[1])
-                    nets.append(dict(name=out, drv=prev, branches=[(max(std[k], geo), layer, "port:" + out, geo)],
-                                     ck=k, cut=chain_std[k] - std[k], lf=key[1]))
+            for k, (xx, yy, layer, geo) in enumerate(chain):
+                cstd = std[k] if not yf else std[k]
+                cut = (chain_std[k] - std[k]) if not yf else 0.0
+                if k == len(chain) - 1:
+                    nets.append(dict(name=out, drv=prev, branches=[(max(cstd, geo), layer, "port:" + out, geo)],
+                                     ck=k, cut=cut, lf=key[1], tp=out))
                 else:
-                    a, b = ((lx, ly), corner) if layer == "M8" else (corner, (X, Y))
-                    xx, yy, side = _slide((x, y), a, b, K)
-                    geo = abs(xx - prevpt[0]) + abs(yy - prevpt[1]) + side
                     cn = T.cell(f"c_{sv(part)}__{port}_{k}", xx, yy, "chain", D + 2 + k)
-                    nets.append(dict(name=f"w_{cn}", drv=prev, branches=[(max(std[k], geo), layer, cn, geo)],
-                                     ck=k, cut=chain_std[k] - std[k], lf=key[1]))
+                    nets.append(dict(name=f"w_{cn}", drv=prev, branches=[(max(cstd, geo), layer, cn, geo)],
+                                     ck=k, cut=cut, lf=key[1], tp=out))
                     cells.append(cn)
-                    prev, prevpt = cn, (xx, yy)
+                    prev = cn
             if not cuts:
                 nets.append(dict(name=out, drv=prev, branches=[(STUB_UM, "M8", "port:" + out, 0.0)]))
             tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early,
@@ -746,14 +770,37 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
         if "ck" in n:
             cmax[n["ck"]] = max(cmax[n["ck"]], n["branches"][0][3])
             rmax[(n["lf"], n["ck"])] = max(rmax[(n["lf"], n["ck"])], n["branches"][0][3])
+    # pad=leg: every tap chain of a region is padded to the region's longest legalised chain (total), water-filled
+    # over its own segments (orientation-independent; replaces the per-index standard)
+    leg_chain = {}
+    if pad == "leg":
+        by_tp = defaultdict(list)
+        for n in nets:
+            if "ck" in n:
+                by_tp[n["tp"]].append(n)
+        rtot = defaultdict(float)
+        for tp, ns in by_tp.items():
+            rtot[ns[0]["lf"]] = max(rtot[ns[0]["lf"]], sum(max(x["branches"][0][3], 1.0) for x in ns))
+        for tp, ns in by_tp.items():
+            gs = [max(x["branches"][0][3], 1.0) for x in ns]
+            tgt = rtot[ns[0]["lf"]]
+            lo_, hi_ = 0.0, max(tgt, max(gs))
+            for _ in range(60):
+                h_ = (lo_ + hi_) / 2
+                if sum(max(g, h_) for g in gs) < tgt:
+                    lo_ = h_
+                else:
+                    hi_ = h_
+            for x, g in zip(ns, gs):
+                leg_chain[id(x)] = max(g, hi_)
     for n in nets:
         if "ck" in n:
             L, layer, load, geo = n["branches"][0]
             std_k = (max(chain_std[n["ck"]], cmax[n["ck"]]) if pad == "level" else
-                     max(rmax[(n["lf"], n["ck"])], 1.0) if pad == "leg" else max(geo, 1.0))
-            n["branches"][0] = (max(1.0, std_k - n.pop("cut")), layer, load, geo)
-            n.pop("ck")
-            n.pop("lf")
+                     leg_chain[id(n)] if pad == "leg" else max(geo, 1.0))
+            n["branches"][0] = (max(1.0, std_k - (0.0 if pad == "leg" else n["cut"])), layer, load, geo)
+            for k_ in ("ck", "cut", "lf", "tp"):
+                n.pop(k_, None)
     # a legalised hop still longer than 1.15 rep_um (a cut that had to slide far off a macro) gets a local repeater at
     # its free midpoint; the STA balance pads every other path up by that one stage (pad=sta only)
     split = 0
