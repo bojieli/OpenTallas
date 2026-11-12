@@ -118,3 +118,10 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - Result: PHY_NC a4 and PHY_NE a6 placed, geom PASS-COND. PHY_NC is in ROUTE-HOLD WAIT-FORM on the 01:20 BAD (same form; next step is the HBM-GEOM-2 phy_flip plan delta, DIE-HBM-101's call). PHY_NE's wave decision was still pending at 15:2x.
 - q_mcb_ne held (coord 67f9387f16f): 1.07M inst > 400k cap. Autopilot job 58ab1566e512 is DONE-CRASH with the OOM budget used; no resubmit.
 - Open class item (offered to COORD, not started): the visual verdict lookup is keyed by attempt number, so an attempt that reuses an old number inherits the old verdict.
+
+## 11-12 15:5x verdict binding (COORD APPROVED the class; READY, NOT live)
+- Branch claude/kw-fix-46-verdictform-1112@adc8613297c0, on main 614ab4a0dac, merges clean. A visual verdict binds to (row, attempt, form_fp); the binding table is autopilot/kit_wave_verdict_forms.json.
+- After it lands and deploys, 4 held rows move from WAIT-FORM to WAIT-VISUAL: hbm NE_iorly a1, NW_iorly a1, PHY_NC a4, s81 ot_s81sl_leaf__t38 a6. GEOM-VIS must review them.
+- Deploy only after ROOT-MERGE-60 lands it: stop the timer, back up kit_wave.py, swap, start the timer, as in /tmp/kw46_deploy_fr.sh.
+- Paired dry runs: /tmp/kw46_drytick.py uses private caches (COORD (d)).
+- Live kit_wave.py is still md5 b34e97d7404c (flowrepeat); flowrepeat is now in main.
