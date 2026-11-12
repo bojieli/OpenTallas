@@ -247,6 +247,27 @@ def ring_cycles(ca, pid):
     return n
 
 
+def output_qreg(plan, tn, bus):
+    """CLAND-QREG-1 (COORD 11-11, owner rule: a pipeline cycle, not a setup/hold trade): receiver type tn lists input
+    bus in partition_types[tn].clock.landing_output_qreg -> its landing ring (legacy ot_dp_clk_landing or count-aligned
+    _ca/_cas) gets QREG=1: one kept rclk register stage on q between the ring readout and the boundary flop.  The ring,
+    its window and ready/fault are unchanged; the crossing carries ONE more data cycle, counted once:
+      legacy ring: +1 on the row added_cycles / lane cycles here (the sidecar added_cycles must say so);
+      count-aligned ring (the HEAD FREG convention, n4_event "sched_lat +1, raw K unchanged"): the die event raises the
+      sidecar sched_lat AND logical K by 1 and marks the port "output_qreg": 1; count_align_bind ties the physical ring
+      K = logical K - 1 (the stage is outside the ring), so the window is unchanged and the cycle is in sched_lat.
+    A split copy "<base>__<suffix>" reads its base.  Absent = byte-same RTL."""
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    cfg = (typ.get("clock") or {}).get("landing_output_qreg")
+    if cfg is None:
+        return False
+    if (not isinstance(cfg, list) or any(not isinstance(b, str) for b in cfg) or len(cfg) != len(set(cfg))
+            or any(not re.fullmatch(r"[A-Za-z_]\w*", b) for b in cfg)):
+        raise LandingError(f"{tn}: landing_output_qreg must list unique landed input buses")
+    return bus in cfg
+
+
 def crossing_cycles(plan, ca, pid):
     """The plan selects hardware; its explicit capture is counted exactly once."""
     p = next(p for p in plan["ports"] if p["id"] == pid)
@@ -254,7 +275,8 @@ def crossing_cycles(plan, ca, pid):
     capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
     if ca_port(ca, pid) and capture:
         raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
-    return ca_cycles(ca, pid) + int(capture)
+    # CLAND-QREG-1: a count-aligned crossing carries its output stage inside sched_lat (see output_qreg)
+    return ca_cycles(ca, pid) + int(capture) + (0 if ca_port(ca, pid) else int(output_qreg(plan, tn, p["dst"]["bus"])))
 
 
 def ring_taps(plan, tn):
@@ -320,14 +342,15 @@ def network_lane_cycles(plan):
                 if capture:raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
                 out[owners[pid][0]] += int(mca["ports"][pid])
             else:
-                out[owners[pid][0]] += ring_cycles(mca, pid) + int(capture)
+                out[owners[pid][0]] += ring_cycles(mca, pid) + int(capture) + int(output_qreg(plan, tn, p["dst"]["bus"]))
             continue
         if ca and pid not in net["count_aligned_cycles"]:raise LandingError("count-aligned crossing has no planned latency "+pid)
         tn = next(q["type"] for q in plan["partitions"] if q["name"] == p["dst"]["part"])
         capture = legacy_input_freg(plan, tn, p["dst"]["bus"])
         if ca and capture:
             raise LandingError(f"{pid}: legacy input FREG and count-aligned form are exclusive")
-        out[owners[pid][0]] += int(net["count_aligned_cycles"][pid]) if ca else 3 + int(capture)
+        out[owners[pid][0]] += int(net["count_aligned_cycles"][pid]) if ca else \
+            3 + int(capture) + int(output_qreg(plan, tn, p["dst"]["bus"]))   # CLAND-QREG-1 (CA: inside sched_lat)
     if mixed:
         stale=sorted(set(net["count_aligned_cycles"])-seen)
         if stale:raise LandingError(f"count-aligned latency for {len(stale)} crossings with no landing edge: {stale[:3]}")
@@ -432,6 +455,10 @@ def requirements(plan, table):
         if not rca and legacy_input_freg(plan, parts[dp]["type"], db):
             status = 2 if (table.get("collector") or {}).get("monitor") in ("dataflow", "region") else 0
             pin_refs[-1].update(input_capture_cycles=1, input_capture_flops=int(p["width"]) + 1 + status)
+        if output_qreg(plan, parts[dp]["type"], db):
+            # CLAND-QREG-1: W output-stage flops (data only), +1 data cycle already in cyc (crossing_cycles)
+            pin_refs[-1].update(output_qreg_cycles=1,
+                                input_capture_flops=int(pin_refs[-1].get("input_capture_flops", 0)) + int(p["width"]))
     cohorts = defaultdict(dict)
     for pn, p in parts.items():
         mask = {k: sorted(v) for k, v in masks[pn].items()}
@@ -671,8 +698,13 @@ class Landings:
                 raise LandingError(f"{pid}: legacy FREG parameter must match its explicit plan selection")
             if capture:
                 rpar["FREG"] = 1
-            cycles = (ring_cycles(self.ca, pid) if self.ca and not rca else 3) + int(capture)
-            if capture and int(r.get("added_cycles", cycles)) != cycles:
+            qreg = output_qreg(plan, self.parts[dp]["type"], db)   # CLAND-QREG-1: +1 data cycle on q
+            if "QREG" in rpar and int(rpar["QREG"]) != int(qreg):
+                raise LandingError(f"{pid}: ring QREG parameter must match its explicit plan selection")
+            if qreg and not rca:
+                rpar["QREG"] = 1
+            cycles = (ring_cycles(self.ca, pid) if self.ca and not rca else 3) + int(capture) + int(qreg)
+            if (capture or qreg) and int(r.get("added_cycles", cycles)) != cycles:
                 raise LandingError(f"{pid}: legacy landing added_cycles must be {cycles}")
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=cycles,
                        module=rmod, ring_params=rpar, ring_ports=rports,
@@ -692,9 +724,12 @@ class Landings:
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
                 writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
+                if bool(qreg) != bool(c.get("output_qreg")):
+                    raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
+                                       "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
-                           ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth,
+                           ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth - int(qreg),
                            start_tree_port=bool(c["tree"]))
                 if reader_depth:
                     row.update(reader_start_depth=reader_depth, logical_ring_k=int(c["K"]),
@@ -704,6 +739,8 @@ class Landings:
                                boot_extra_cycles=reader_depth + writer_depth, steady_data_cycles_added=0)
             if capture:
                 row["input_capture_cycles"] = 1
+            if qreg:
+                row["output_qreg_cycles"] = 1
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -1376,6 +1413,9 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
+                if output_qreg(self.plan, key, b) or output_qreg(self.plan, tn, b):
+                    ring_mod = ring_mod[:-1] + ", .QREG(1))"   # CLAND-QREG-1: +1 data cycle (row output_qreg_cycles)
+                    self.reset_placements[tn][b].update(output_qreg=True, output_qreg_added_data_cycles=1)
                 if status_reg:
                     ring_mod = ring_mod[:-1] + ", .STATUS_REG(1))"
                     self.reset_placements[tn][b].update(status_reg=True, status_reg_added_data_cycles=0,

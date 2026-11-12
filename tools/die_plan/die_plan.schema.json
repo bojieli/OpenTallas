@@ -3056,6 +3056,15 @@
          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
         }
        },
+       "landing_output_qreg": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+       },
        "landing_status_input_stages": {
         "type": "object",
         "minProperties": 1,
