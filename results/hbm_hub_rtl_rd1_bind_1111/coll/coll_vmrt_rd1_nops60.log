@@ -1,0 +1,6 @@
+main_VM_RT3: COLL_VMRT PASS LAT3 VM_RT3 pairs164 lanes_padded_to_budget
+rd1_VM_RT4: COLL_VMRT PASS LAT4 VM_RT4 pairs164 lanes_padded_to_budget
+rd1_VM_RT3_plus0: COLL_VMRT FAIL MUT1 LAT4 VM_RT3 errors112 protocol_fault_edges89 got112 exp164
+rd1_VM_RT0: COLL_VMRT FAIL MUT2 LAT4 VM_RT0 errors92 protocol_fault_edges92 got92 exp164
+rd1_VM_RT5_plus2: COLL_VMRT FAIL MUT4 LAT4 VM_RT5 errors112 protocol_fault_edges88 got112 exp164
+DONE

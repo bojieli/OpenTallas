@@ -63,6 +63,11 @@ PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
                (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA"),
                (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT")]     # hcollgi_q behind hcollrs_q.b_rr
 SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
+# Readers inside a netlist cut whose fixed latency is a parameter of the as-built TOP instance above the cut: the bind
+# cannot regenerate it, so an rd1 bind passes only when the elaborated as-built already carries base + X (the plan event
+# re-elaborates the top with the new value).  (cut leaf regex, top instance group, parameter, value at X = 0)
+# hb_coll_q VM_RT 3 = the d44v COLL VM budget behind hcollrs_q (BANK_RT 7): t11_top hb_coll_NE/NW .VM_RT(3).
+CUT_PARAMS = [(r"(hb_coll_N[EW])\.__cut_\w+", 1, "VM_RT", 3)]
 DIAG_PORT = r"(bank_status|b\d_status|status)"            # diagnostic: recorded, never priced
 LAW_PINS = [(r"su_N[EW]\d\.g_tap_r8b\.u_tap", r"near_rr"), (r"hb_idx__ctl", r"vm_rr"),
             (r"hb_vms_\w+", r"(bk|b\d)_pr")]
@@ -196,6 +201,26 @@ def pin_cycles(ctx, rules):
     return out, clients
 
 
+def cut_guard(ctx, leaf, xs, single):
+    """None: not a guarded cut; "": the elaborated top parameter already carries base + X; else the error"""
+    for rx, grp, par, base in CUT_PARAMS:
+        m = re.fullmatch(rx, leaf)
+        if not m:
+            continue
+        top = m.group(grp)
+        x = single(f"{leaf} (cut, {top}.{par})", xs)
+        got = (getattr(ctx, "top_inst_params", None) or {}).get(top, {}).get(par)
+        try:
+            got = int(str(got).strip('"'))
+        except ValueError:
+            got = None
+        if got == base + x:
+            return ""
+        return (f"core pin cycles: {leaf} sits in a netlist cut of {top}; its {par} is set in the as-built top and must be "
+                f"{base} + {x} = {base + x}, elaborated {got} (re-elaborate the as-built with {top} .{par}({base + x}))")
+    return None
+
+
 def pin_plan(ctx, px, clients, params):
     """-> (xr for derive, [core_pin_regen rows], {"leaf|port": X} record, errors)"""
     import core_pin_cycles as CPC
@@ -251,6 +276,13 @@ def pin_plan(ctx, px, clients, params):
                     share_x[s] = x
                 break
         else:
+            guard = cut_guard(ctx, s, xs, single)
+            if guard is not None:
+                if guard:
+                    err.append(guard)
+                else:
+                    seen.add((s, p))
+                continue
             err.append(f"core pin cycles: {s}.{p} ({c.module if c else '?'}) reads a moved bank pin (+{sorted(xs)}) and "
                        "has no regenerable parameter (cut / unlisted reader)")
     rec = {f"{s}|{p}": max(xs) for (s, p), xs in px.items()}
