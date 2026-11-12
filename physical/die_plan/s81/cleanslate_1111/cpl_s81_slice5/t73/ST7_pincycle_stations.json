@@ -1,0 +1,286 @@
+{
+ "ot_s81sl_leaf__t73": {
+  "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d approved +1 pin cycles (COORD 08:43 (2)); applied after the positions composer (station counts change): pc.py",
+  "changed": [
+   {
+    "index": 96,
+    "conn": "bus:leafdn_i0",
+    "from_um": [
+     1085.55,
+     0.0
+    ],
+    "to_um": [
+     604.968,
+     509.838
+    ],
+    "regs_um": [
+     [
+      755.41,
+      0.0
+     ],
+     [
+      626.568,
+      179.698
+     ]
+    ],
+    "bits": 1,
+    "launch": "face bus leafdn_i0",
+    "capture": "u_lf.u_vs.s_v",
+    "note": "R3 inside cores (coordinator ruling 10-24 (a)): 757 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s) | S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site: 1 -> 2 FIRM stations"
+   },
+   {
+    "index": 97,
+    "conn": "bus:leafdn_i0",
+    "from_um": [
+     1085.55,
+     0.0
+    ],
+    "to_um": [
+     594.627,
+     509.826
+    ],
+    "regs_um": [
+     [
+      751.967,
+      0.0
+     ],
+     [
+      629.187,
+      176.243
+     ]
+    ],
+    "bits": 156,
+    "launch": "face bus leafdn_i0",
+    "capture": "u_lf.u_vs.s_d",
+    "note": "R3 inside cores (coordinator ruling 10-24 (a)): 767 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s) | S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site: 1 -> 2 FIRM stations"
+   },
+   {
+    "index": 98,
+    "conn": "bus:leafdn_i0",
+    "from_um": [
+     1085.55,
+     0.0
+    ],
+    "to_um": [
+     584.361,
+     509.815
+    ],
+    "regs_um": [
+     [
+      748.549,
+      0.0
+     ],
+     [
+      627.561,
+      172.814
+     ]
+    ],
+    "bits": 1,
+    "launch": "face bus leafdn_i0",
+    "capture": "u_lf.u_vs.g_v",
+    "note": "R3 inside cores (coordinator ruling 10-24 (a)): 778 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s) | S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site: 1 -> 2 FIRM stations"
+   },
+   {
+    "index": 99,
+    "conn": "bus:leafdn_i0",
+    "from_um": [
+     1085.55,
+     0.0
+    ],
+    "to_um": [
+     584.152,
+     509.827
+    ],
+    "regs_um": [
+     [
+      748.475,
+      0.0
+     ],
+     [
+      627.352,
+      172.752
+     ]
+    ],
+    "bits": 2,
+    "launch": "face bus leafdn_i0",
+    "capture": "u_lf.u_vs.g_c",
+    "note": "R3 inside cores (coordinator ruling 10-24 (a)): 778 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s) | S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site: 1 -> 2 FIRM stations"
+   },
+   {
+    "index": 100,
+    "conn": "bus:leafdn_i0",
+    "from_um": [
+     1085.55,
+     0.0
+    ],
+    "to_um": [
+     581.959,
+     509.827
+    ],
+    "regs_um": [
+     [
+      747.744,
+      0.0
+     ],
+     [
+      581.959,
+      124.501
+     ]
+    ],
+    "bits": 32,
+    "launch": "face bus leafdn_i0",
+    "capture": "u_lf.u_vs.g_d",
+    "note": "R3 inside cores (coordinator ruling 10-24 (a)): 780 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s) | S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site: 1 -> 2 FIRM stations"
+   }
+  ],
+  "added": [
+   {
+    "conn": "core:u_lf.u_vs.u|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     542.112
+    ],
+    "to_um": [
+     769.002,
+     109.562
+    ],
+    "regs_um": [
+     [
+      630.678,
+      252.355
+     ]
+    ],
+    "bits": 256,
+    "launch": "core:u_lf.u_vs.u",
+    "capture": "u_lf.u_vq.u",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.u_i|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     568.212
+    ],
+    "to_um": [
+     769.002,
+     167.38
+    ],
+    "regs_um": [
+     [
+      630.678,
+      294.314
+     ]
+    ],
+    "bits": 3,
+    "launch": "core:u_lf.u_vs.u_i",
+    "capture": "u_lf.u_vq.u_i",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.u_v|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     568.596
+    ],
+    "to_um": [
+     769.002,
+     168.276
+    ],
+    "regs_um": [
+     [
+      630.678,
+      294.954
+     ]
+    ],
+    "bits": 1,
+    "launch": "core:u_lf.u_vs.u_v",
+    "capture": "u_lf.u_vq.u_v",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.um_b|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     515.796
+    ],
+    "to_um": [
+     769.002,
+     51.348
+    ],
+    "regs_um": [
+     [
+      630.678,
+      210.09
+     ]
+    ],
+    "bits": 1,
+    "launch": "core:u_lf.u_vs.um_b",
+    "capture": "u_lf.u_vq.um_b",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.um_i|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     514.884
+    ],
+    "to_um": [
+     769.002,
+     49.296
+    ],
+    "regs_um": [
+     [
+      630.678,
+      208.608
+     ]
+    ],
+    "bits": 8,
+    "launch": "core:u_lf.u_vs.um_i",
+    "capture": "u_lf.u_vq.um_i",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.um_q|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     515.988
+    ],
+    "to_um": [
+     769.002,
+     51.732
+    ],
+    "regs_um": [
+     [
+      630.678,
+      210.378
+     ]
+    ],
+    "bits": 1,
+    "launch": "core:u_lf.u_vs.um_q",
+    "capture": "u_lf.u_vq.um_q",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   },
+   {
+    "conn": "core:u_lf.u_vs.um_v|core:u_lf.u_vq",
+    "from_um": [
+     622.038,
+     516.18
+    ],
+    "to_um": [
+     769.002,
+     52.212
+    ],
+    "regs_um": [
+     [
+      630.678,
+      210.714
+     ]
+    ],
+    "bits": 1,
+    "launch": "core:u_lf.u_vs.um_v",
+    "capture": "u_lf.u_vq.um_v",
+    "note": "S81-ARCH-RTL-2 a754fcbe5bd7f2b5d 11-11: approved +1 pin cycle (COORD 08:43 (2)); CPL-S81-SLICE-5 site (CS_U_D 1)"
+   }
+  ]
+ }
+}
