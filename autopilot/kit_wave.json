@@ -5282,7 +5282,8 @@
     "col_h9_r0_p4__t1__cl8ef405e8": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
     "col_h9_r0_p4__t1__clcb2fbfe8": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
     "col_h9_r0_p5__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p6__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c"
+    "col_h9_r0_p6__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
+    "dsdv_slice_c1x_C__t9": "DIE-S81-87 HOLD list (c1x_C t9): stays held (COORD S81 PAUSE LIFT); re-held by KW-FIX-45 after the VIS-SWEEP batch included it"
    },
    "queue_src": "main@c6c0f5cf65d2",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -19891,7 +19892,6 @@
     "ot_s81sl_leaf__t42",
     "slice_station__t36",
     "slice_station__t29__cl2e5c855a",
-    "dsdv_slice_c1x_C__t9",
     "slice_station__t6__cl0755c26e",
     "ot_s81sl_kv_leaf__t2",
     "slice_station__t43",
