@@ -15,8 +15,12 @@ run hbm_wdata_b4_h3   PASS W=288 BEATS=4 H=3 SW=40
 run s81_x_b2_h6       PASS W=1104 BEATS=2 H=6 SW=1
 run odd_w_b4_h1       PASS W=1103 BEATS=4 H=1 SW=3
 run idx_b2_h2         PASS W=2776 BEATS=2 H=2 SW=1
+run s81_x_b2_h6_og0   PASS W=1104 BEATS=2 H=6 SW=1 OGATE=0
+run s81_x_b2_h0_og0   PASS W=1104 BEATS=2 H=0 SW=1 OGATE=0
+run og0_w139_h2       PASS W=1103 BEATS=2 H=2 SW=1 OGATE=0
+run mut1_order_og0    FAIL W=1104 BEATS=2 H=2 SW=1 MUT=1 OGATE=0
 run mut1_order        FAIL W=288 BEATS=2 H=3 SW=40 MUT=1
 run mut1_order_b4     FAIL W=288 BEATS=4 H=3 SW=40 MUT=1
 run mut2_sideband     FAIL W=288 BEATS=2 H=3 SW=40 MUT=2
 run mut3_nofault      FAIL W=288 BEATS=2 H=3 SW=40 MUT=3
-[ $bad = 0 ] && echo "BENCH PASS (6 configs exact, 4 mutants caught)" || { echo "BENCH FAIL"; exit 1; }
+[ $bad = 0 ] && echo "BENCH PASS (9 configs exact, 5 mutants caught)" || { echo "BENCH FAIL"; exit 1; }

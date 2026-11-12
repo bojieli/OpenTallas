@@ -2,9 +2,10 @@
 // BUS-GEAR-1 bench: TX -> H registered stations -> RX against the unserialised reference (same bundle through one
 // register + H stations + BEATS-1 pad).  Phase 1: N random words with spacing >= BEATS (random gaps), random side-band
 // every cycle; every cycle checks v, d (on words) and s.  Phase 2: one word at spacing BEATS-1 -> fault_o must rise.
+// OGATE 0 (S81 x frame RX): beat 0 of d_o must be 0 on every non-word cycle.
 // Prints "RESULT PASS" / "RESULT FAIL <n>".  Mutants (MUT 1..3) must FAIL.
 module tb_ot_bus_gear;
-    parameter integer W = 288, BEATS = 2, H = 3, SW = 40, N = 4000, MUT = 0, SEED = 1;
+    parameter integer W = 288, BEATS = 2, H = 3, SW = 40, N = 4000, MUT = 0, SEED = 1, OGATE = 1;
     localparam integer BW = (W + BEATS - 1) / BEATS;
     localparam integer LAT = 1 + H + BEATS - 1;
     reg clk = 0, rst_n = 0;
@@ -22,7 +23,7 @@ module tb_ot_bus_gear;
         always @(posedge clk) begin bs[g] <= bs[g-1]; fs[g] <= fs[g-1]; ss[g] <= ss[g-1]; end
     end endgenerate
     wire v_o; wire [W-1:0] d_o; wire [SW-1:0] s_o;
-    ot_bus_gear_rx #(.W(W), .BEATS(BEATS), .SW(SW), .MUT(MUT)) u_rx (.clk(clk), .rst_n(rst_n), .b_i(bs[H]), .f_i(fs[H]),
+    ot_bus_gear_rx #(.W(W), .BEATS(BEATS), .SW(SW), .MUT(MUT), .OGATE(OGATE)) u_rx (.clk(clk), .rst_n(rst_n), .b_i(bs[H]), .f_i(fs[H]),
         .s_i(ss[H]), .v_o(v_o), .d_o(d_o), .s_o(s_o));
     // reference delay line
     reg rv [0:LAT]; reg [W-1:0] rd [0:LAT]; reg [SW-1:0] rs [0:LAT];
@@ -40,6 +41,10 @@ module tb_ot_bus_gear;
         if (rv[LAT-1] === 1'b1) begin
             seen = seen + 1;
             if (d_o !== rd[LAT-1]) begin err = err + 1; if (err < 5) $display("d mismatch cyc %0d", cyc); end
+        end else if (OGATE == 0 && d_o[BW-1:0] !== {BW{1'b0}}) begin   // OGATE 0: beat 0 is 0 on every non-word cycle
+            err = err + 1; if (err < 5) $display("OGATE0 beat0 not 0 on non-word cyc %0d", cyc);
+        end else if (OGATE != 0 && d_o !== {W{1'b0}}) begin
+            err = err + 1; if (err < 5) $display("d not 0 on non-word cyc %0d", cyc);
         end
         if (s_o !== rs[LAT-1]) begin err = err + 1; if (err < 5) $display("s mismatch cyc %0d", cyc); end
     end

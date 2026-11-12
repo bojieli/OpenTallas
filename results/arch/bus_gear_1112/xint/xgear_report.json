@@ -1,0 +1,156 @@
+{
+ "x_wire_decl_lines": 12409,
+ "pf_xo": 24,
+ "stations": 12409,
+ "frames": 72,
+ "slices": 16,
+ "slice_glue": [
+  {
+   "inst": "u_s_0S",
+   "groups": [
+    "x:0R02",
+    "x:0L02",
+    "x:0R01",
+    "x:0L01"
+   ]
+  },
+  {
+   "inst": "u_s_0N",
+   "groups": [
+    "x:0R12",
+    "x:0L12",
+    "x:0R10",
+    "x:0L10"
+   ]
+  },
+  {
+   "inst": "u_s_1S",
+   "groups": [
+    "nc:u_s_1S_xc_nc3312",
+    "x:1L02",
+    "nc:u_s_1S_xc_nc1104",
+    "x:1L01"
+   ]
+  },
+  {
+   "inst": "u_s_1N",
+   "groups": [
+    "nc:u_s_1N_xc_nc3312",
+    "x:1L12",
+    "nc:u_s_1N_xc_nc1104",
+    "x:1L10"
+   ]
+  },
+  {
+   "inst": "u_s_2S",
+   "groups": [
+    "x:2R02",
+    "x:2L02",
+    "x:2R01",
+    "x:2L01"
+   ]
+  },
+  {
+   "inst": "u_s_2N",
+   "groups": [
+    "x:2R12",
+    "x:2L12",
+    "x:2R10",
+    "x:2L10"
+   ]
+  },
+  {
+   "inst": "u_s_3S",
+   "groups": [
+    "nc:u_s_3S_xc_nc3312",
+    "x:3L02",
+    "nc:u_s_3S_xc_nc1104",
+    "x:3L01"
+   ]
+  },
+  {
+   "inst": "u_s_3N",
+   "groups": [
+    "nc:u_s_3N_xc_nc3312",
+    "x:3L12",
+    "nc:u_s_3N_xc_nc1104",
+    "x:3L10"
+   ]
+  },
+  {
+   "inst": "u_s_4S",
+   "groups": [
+    "x:4R02",
+    "nc:u_s_4S_xc_nc2208",
+    "x:4R01",
+    "nc:u_s_4S_xc_nc0"
+   ]
+  },
+  {
+   "inst": "u_s_4N",
+   "groups": [
+    "x:4R12",
+    "nc:u_s_4N_xc_nc2208",
+    "x:4R10",
+    "nc:u_s_4N_xc_nc0"
+   ]
+  },
+  {
+   "inst": "u_s_5S",
+   "groups": [
+    "x:5R02",
+    "x:5L02",
+    "x:5R01",
+    "x:5L01"
+   ]
+  },
+  {
+   "inst": "u_s_5N",
+   "groups": [
+    "x:5R12",
+    "x:5L12",
+    "x:5R10",
+    "x:5L10"
+   ]
+  },
+  {
+   "inst": "u_s_6S",
+   "groups": [
+    "x:6R02",
+    "nc:u_s_6S_xc_nc2208",
+    "x:6R01",
+    "nc:u_s_6S_xc_nc0"
+   ]
+  },
+  {
+   "inst": "u_s_6N",
+   "groups": [
+    "x:6R12",
+    "nc:u_s_6N_xc_nc2208",
+    "x:6R10",
+    "nc:u_s_6N_xc_nc0"
+   ]
+  },
+  {
+   "inst": "u_s_7S",
+   "groups": [
+    "x:7R02",
+    "x:7L02",
+    "x:7R01",
+    "x:7L01"
+   ]
+  },
+  {
+   "inst": "u_s_7N",
+   "groups": [
+    "x:7R12",
+    "x:7L12",
+    "x:7R10",
+    "x:7L10"
+   ]
+  }
+ ],
+ "lane_clocks": 192,
+ "frame_models": 4,
+ "asbuilt_in": "/srv/opentallas-scratch2/claude/bus-gear-1/xint/asbuilt_f_s87r12g_local.json"
+}

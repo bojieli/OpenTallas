@@ -69,6 +69,11 @@ module ot_bus_gear_rx #(
     parameter integer BEATS = 2,
     parameter integer SW = 1,           // side-band bits (delayed BEATS - 1 cycles to stay aligned with the word)
     parameter integer MUT = 0,
+    // OGATE 1 (default): d_o = 0 on non-word cycles.  OGATE 0 (BEATS 2 only, for a receiver whose pins must feed flops
+    // directly, face rule CP1-R10): the held beat is loaded only with the first-beat flag and cleared otherwise, d_o =
+    // {b_i, held} ungated, so d_o[BW-1:0] (beat 0) is 0 on every non-word cycle and the upper beat carries whatever is on
+    // the pins (a consumer marks words by bits in beat 0, e.g. the S81 crs4 bundle markers).
+    parameter integer OGATE = 1,
     localparam integer BW = (W + BEATS - 1) / BEATS
 ) (
     input  wire clk,
@@ -87,7 +92,11 @@ module ot_bus_gear_rx #(
     reg [BW*D-1:0] held;
     reg [D-1:0] fpipe;               // fpipe[k] = f_i delayed k+1 cycles
     generate
-        if (D == 1) begin : g_h1
+        if (D == 1 && OGATE == 0) begin : g_h1z
+            always @(posedge clk) held <= f_i ? b_i : {BW{1'b0}};
+            always @(posedge clk)
+                if (!rst_n) fpipe <= 1'b0; else fpipe <= f_i;
+        end else if (D == 1) begin : g_h1
             always @(posedge clk) held <= b_i;
             always @(posedge clk)
                 if (!rst_n) fpipe <= 1'b0; else fpipe <= f_i;
@@ -101,7 +110,8 @@ module ot_bus_gear_rx #(
     wire [WP-1:0] word = {b_i, held};
     /* verilator lint_on UNUSEDSIGNAL */
     assign v_o = fpipe[D-1];
-    assign d_o = v_o ? word[W-1:0] : {W{1'b0}};
+    assign d_o = (OGATE == 0) ? word[W-1:0] : (v_o ? word[W-1:0] : {W{1'b0}});
+    initial if (OGATE == 0 && BEATS != 2) $fatal(1, "ot_bus_gear_rx: OGATE 0 needs BEATS 2");
     generate
         if (DS == 0) begin : g_s0
             assign s_o = s_i;

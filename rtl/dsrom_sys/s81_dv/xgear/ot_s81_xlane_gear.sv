@@ -46,6 +46,7 @@ module ot_s81_xlane_gear_rx #(
     parameter integer NL = 4,
     parameter integer LW = 276,
     parameter integer MUT = 0,
+    parameter integer OGATE = 1,                      // 0 = ot_bus_gear_rx OGATE 0 (pins feed flops; beat 0 zero off-word)
     localparam integer BL = (LW + 1) / 2 + 1
 ) (
     input  wire [NL-1:0] xk,                          // lane k forwarded clock (the lane's last station clock)
@@ -57,7 +58,7 @@ module ot_s81_xlane_gear_rx #(
     genvar k;
     generate for (k = 0; k < NL; k = k + 1) begin : g_l
         /* verilator lint_off PINCONNECTEMPTY */   // no side-band on the x lanes
-        ot_bus_gear_rx #(.W(LW), .BEATS(2), .SW(1), .MUT(MUT)) u_rx (.clk(xk[k]), .rst_n(rst_n[k]),
+        ot_bus_gear_rx #(.W(LW), .BEATS(2), .SW(1), .MUT(MUT), .OGATE(OGATE)) u_rx (.clk(xk[k]), .rst_n(rst_n[k]),
             .b_i(xb_i[BL*k +: BL-1]), .f_i(xb_i[BL*k+BL-1]), .s_i(1'b0), .v_o(v_o[k]), .d_o(x_o[LW*k +: LW]), .s_o());
         /* verilator lint_on PINCONNECTEMPTY */
     end endgenerate
