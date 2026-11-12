@@ -1,0 +1,1186 @@
+{
+ "schema": "opentallas.plan_package.v1",
+ "plan": "plan_c.json",
+ "created": "2026-11-12T12:48:57+0000",
+ "source": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record",
+ "files": {
+  "README.md": {
+   "sha256": "4cba7f946b046ce866098010c653aea4c0c16cabfe4ef50f31f5dc5dfd35bc9b",
+   "bytes": 12335,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/README.md"
+  },
+  "adp_macrofit_1101/core_V1_place_geom.png": {
+   "sha256": "9a9ebdfb82705e74fa807b8f70605f2ea74583f1c05152b8bf5e2e05196a8c0c",
+   "bytes": 82134,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/adp_macrofit_1101/core_V1_place_geom.png"
+  },
+  "adp_macrofit_1101/core_V2_place_geom.png": {
+   "sha256": "65bcf9444b38c19befa48a17f6078f08ad27e8b51d156af9404bbb2508f8ea6f",
+   "bytes": 82961,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/adp_macrofit_1101/core_V2_place_geom.png"
+  },
+  "adp_macrofit_1101/hub_Wi_V1.png": {
+   "sha256": "57c215000355be88d25f6280427b3be64986b47fa1be43459bddb563d6cff915",
+   "bytes": 64927,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/adp_macrofit_1101/hub_Wi_V1.png"
+  },
+  "adp_macrofit_1101/report.json": {
+   "sha256": "6abb1b3e3769e9d8e8945a2c453ecfee7a4eeee73e15ad1e8e90e8d528fcc0f6",
+   "bytes": 5559,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/adp_macrofit_1101/report.json"
+  },
+  "asbuilt_vN.json": {
+   "sha256": "6cbb45f1ee5faf1104c080e08cb8d623b8d50e3b60fd642fa1f2deef171febf4",
+   "bytes": 204545,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json"
+  },
+  "cells_evidence.json": {
+   "sha256": "5134b1455916a0bf7d1737e50e625c560553bebd6c8793fd759f1ca300b73dc0",
+   "bytes": 8028,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cells_evidence.json"
+  },
+  "cland_ftsnap_1105/band_report.json": {
+   "sha256": "c5ee4dd28b5aa12e689427958ea65ab128ed0da169a69f97bf2c641173f77883",
+   "bytes": 1330,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_ftsnap_1105/band_report.json"
+  },
+  "cland_ftsnap_1105/run_event.sh": {
+   "sha256": "315f52cfd612bd2a1e371c569dde6016ead6c8b9149f04ab32ecaa0cd2181498",
+   "bytes": 1004,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_ftsnap_1105/run_event.sh"
+  },
+  "cland_ftsnap_1105/snap_ledger.json": {
+   "sha256": "6690c463dc75557912b8d56d278df3113abffb1f4b31224093d90f59270444ca",
+   "bytes": 1662,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_ftsnap_1105/snap_ledger.json"
+  },
+  "cland_sreg_1110/README.md": {
+   "sha256": "e29ee1317c7c2258d45e40b20ba6c14c930ddfc66527a13c31054a5114c995fc",
+   "bytes": 3721,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_sreg_1110/README.md"
+  },
+  "cland_sreg_1110/event.py": {
+   "sha256": "e2d53375d22e8a473e62a5ea1a1e0377d03639307c282935d61b72268703995b",
+   "bytes": 4089,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_sreg_1110/event.py"
+  },
+  "cland_sreg_1110/plan_c.sreg.md5": {
+   "sha256": "df6f583d05eaf1c5368fd7e841b997716ce6db0942460561c59a34df3d980d12",
+   "bytes": 238,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_sreg_1110/plan_c.sreg.md5"
+  },
+  "cland_sreg_1110/ringhold_event.py": {
+   "sha256": "d66e995d0945a17e4dd1e41a013364cb1e6d5950de32a44aa405b834eae2c670",
+   "bytes": 3727,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_sreg_1110/ringhold_event.py"
+  },
+  "cland_sreg_1110/test_event.py": {
+   "sha256": "aecc54532022894805e937ed15bb124fe3cf0c888557559841a3dc189da6296a",
+   "bytes": 1965,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/cland_sreg_1110/test_event.py"
+  },
+  "collector_reattach.json": {
+   "sha256": "1a493d531af5d36cd28be6ddfb4bdd61a5853987659fd0a1670e347f65919b31",
+   "bytes": 1300,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/collector_reattach.json"
+  },
+  "core_conns.json": {
+   "sha256": "93188196d118286165f12356649d8c8e593cde12a50905970bc241708bd4f332",
+   "bytes": 62488,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/core_conns.json"
+  },
+  "core_conns_from_bind.receipt.json": {
+   "sha256": "6f4b0dd04094c1ecf158ac71b5eed907fdfb3d9b06a9b0c8af618f86f939d8b9",
+   "bytes": 3876,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/core_conns_from_bind.receipt.json"
+  },
+  "core_conns_from_netlist.receipt.json": {
+   "sha256": "9a3a1393f1b438f5dc49aef8b251f463bb5b73ce70aaff334966d459d7e9d405",
+   "bytes": 2346,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/core_conns_from_netlist.receipt.json"
+  },
+  "densitytaps_1105/event.py": {
+   "sha256": "6c0dec974e8fda11c4d76d0b69373c5b5a4ee2591900bec5a47a4c86b5a0446a",
+   "bytes": 3604,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/event.py"
+  },
+  "densitytaps_1105/report_coll.json": {
+   "sha256": "eb0623502aef0215d3b4f4c0598d40a21051436f81af1de52a12669cac944a50",
+   "bytes": 5848,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/report_coll.json"
+  },
+  "densitytaps_1105/report_pv_coll.json": {
+   "sha256": "105e4102f8369323559302269fa79590f79b3128d415220f6ae55bc789866b8c",
+   "bytes": 23902,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/report_pv_coll.json"
+  },
+  "densitytaps_1105/report_pv_taps.json": {
+   "sha256": "16e886a59fe8198168d7189c27e271db525c282790678f756b42f53ea50ba9f9",
+   "bytes": 2818,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/report_pv_taps.json"
+  },
+  "densitytaps_1105/report_taps.json": {
+   "sha256": "fd981d00b1025c41a2ff67027a26300eb026521bb9ca24b17248404d2549f4ac",
+   "bytes": 1117,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/report_taps.json"
+  },
+  "eW_sidecar.json": {
+   "sha256": "39cabef34eb2a0740a523c2524d9a7331dbf2675ed3207c039465d45d4d9e716",
+   "bytes": 12352505,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+  },
+  "ftwreg_1104/event.py": {
+   "sha256": "8673d826833a448cc925f409389f4f3d8dc49a3e300b5943ed67524c9191a2a7",
+   "bytes": 797,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/ftwreg_1104/event.py"
+  },
+  "geom93_1031/added_taps.json": {
+   "sha256": "0d179ffcbeb505289f739acda8409624dcc598785e8f9a402803fcaf92d648a0",
+   "bytes": 6673,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93_1031/added_taps.json"
+  },
+  "geom93_1031/delta_geom93_coll.py": {
+   "sha256": "8956f66957d4473b354ff84e8053eceb5a0f45e936450b40c7e1487478aecc14",
+   "bytes": 11244,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93_1031/delta_geom93_coll.py"
+  },
+  "geom93_1031/delta_geom93_taps.py": {
+   "sha256": "c5b278d79a7df2c06a1ce6be267c354087ac0d10f4e18e342121b117567946b1",
+   "bytes": 4158,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93_1031/delta_geom93_taps.py"
+  },
+  "geom93_1031/report.json": {
+   "sha256": "6463337dc92f4d76c02bfd48316615929dc1997b7ebfe9e080e156c139783bce",
+   "bytes": 20477,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93_1031/report.json"
+  },
+  "geom93_1031/report_coll.json": {
+   "sha256": "7e8aaaa3154b51f0120728546e6026e1a5bdcf09d525d03446da41ff2ad255c8",
+   "bytes": 1608,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93_1031/report_coll.json"
+  },
+  "geom93b_1031/delta_geom93b_raw.py": {
+   "sha256": "d5144b59791d20969b83be0d67945828613dbd44db03b42d95d4ff75ee960a31",
+   "bytes": 1906,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93b_1031/delta_geom93b_raw.py"
+  },
+  "geom93b_1031/delta_geom93b_start.py": {
+   "sha256": "5b3bb17a5db73cb637f6b7c4544a1e0f8db04d79c60fb52564c64acaaa23a5c5",
+   "bytes": 8789,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93b_1031/delta_geom93b_start.py"
+  },
+  "geom93b_1031/raw_branches_gen.py": {
+   "sha256": "50190769a9dbfa7a33227ab59331b0151893666e26d613eee98ac440f81f645b",
+   "bytes": 4765,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93b_1031/raw_branches_gen.py"
+  },
+  "geom93b_1031/rawbr.json": {
+   "sha256": "73fe41be237bc6ca1e7b67a4cecc16a22223ce0b4d207703938702b82ffe0564",
+   "bytes": 19802,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93b_1031/rawbr.json"
+  },
+  "geom93b_1031/report.json": {
+   "sha256": "474843946534a459b1200918fac7c032fad1871afb6cc7921dcbbd563bf46ade",
+   "bytes": 7614,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom93b_1031/report.json"
+  },
+  "geom96_1031/added_taps.json": {
+   "sha256": "697bd4243f9f3e7801a5263b720681c39dc858fa18498cf1098338d1aeb61cff",
+   "bytes": 2091,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/added_taps.json"
+  },
+  "geom96_1031/cover_taps.py": {
+   "sha256": "fe8f270205a2469d84c8130c4aaacc60f42d48f66937a91cb527a7e062ed1da7",
+   "bytes": 4363,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/cover_taps.py"
+  },
+  "geom96_1031/delta_geom96_fit.py": {
+   "sha256": "0799de58527e8fab3645abaf4f310f76f4dac89c8d8e42f38f0f91fa0cf9c4d4",
+   "bytes": 1302,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/delta_geom96_fit.py"
+  },
+  "geom96_1031/delta_geom96_raw.py": {
+   "sha256": "2b5211bec0c90ac4f71aff8a1c8e1c14bba7e922e2514ce9b2763bad62543745",
+   "bytes": 1879,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/delta_geom96_raw.py"
+  },
+  "geom96_1031/delta_geom96_start.py": {
+   "sha256": "3afca97f99af2192c8cd710ff024ea8cb4d3f4d12abba866ec92582648b81309",
+   "bytes": 8795,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/delta_geom96_start.py"
+  },
+  "geom96_1031/delta_geom96_taps.py": {
+   "sha256": "f74f6e07f4ec2d2116b0bfd54b870511f0089845aea89bc65f28c95a464343e9",
+   "bytes": 4240,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/delta_geom96_taps.py"
+  },
+  "geom96_1031/raw_branches_gen.py": {
+   "sha256": "7473c6235d62f470a0a9e23aa64227930b83c1ab1333a11bfc783c61403f3373",
+   "bytes": 4738,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/raw_branches_gen.py"
+  },
+  "geom96_1031/rawbr.json": {
+   "sha256": "14e199659317df341d46746dc7cccf107a6ea82a3641f5191e86c3a7a483ff0f",
+   "bytes": 13690,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/rawbr.json"
+  },
+  "geom96_1031/report.json": {
+   "sha256": "44efcfb51ae0459fbe8845660ab42a067cd2b27b0464244e549e06c787dc34d0",
+   "bytes": 4193,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/report.json"
+  },
+  "geom96_1031/report_coll.json": {
+   "sha256": "186976008700d0efd8d4f5b2747b4e37dd6679e913317c000a276e921a995c7b",
+   "bytes": 904,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/report_coll.json"
+  },
+  "geom96_1031/report_taps.json": {
+   "sha256": "eccb3513e298c992cc19befa2a81d9712dc34523af022e45f35815d2d8ac34f7",
+   "bytes": 6611,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/geom96_1031/report_taps.json"
+  },
+  "hg_ex_vf_report.json": {
+   "sha256": "787366136844eeb24d3d0bb09f9e53e8b908a3010df34b0e0e1fc3046b8862ec",
+   "bytes": 16683,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hg_ex_vf_report.json"
+  },
+  "hubsys_1104/added_taps.json": {
+   "sha256": "c55d507c88ff40ac1d47bf9229c666a0df6dee844861b1e84a6db44f706753e2",
+   "bytes": 7988,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/added_taps.json"
+  },
+  "hubsys_1104/event.py": {
+   "sha256": "799850ed4a02a4987ba75d7cf3b19500852976ca5ce783cc28a2d84d7f2c076a",
+   "bytes": 5794,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/event.py"
+  },
+  "hubsys_1104/rawbr.json": {
+   "sha256": "e8fde7bbf4c0ff66c9e2c1904766897167ee4eac0bfafa2c8700ae768f58153c",
+   "bytes": 63970,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/rawbr.json"
+  },
+  "hubsys_1104/report.json": {
+   "sha256": "3c0fe9447427d338df9583bf7772ed6cb028ed192bf4bb71636c5fb9baefc7d7",
+   "bytes": 20381,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/report.json"
+  },
+  "hubsys_1104/report_coll.json": {
+   "sha256": "ff9d3e1f572826d5fba2e6ef4115afff880834635b1064976f1582e7e71b4dff",
+   "bytes": 3252,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/report_coll.json"
+  },
+  "hubsys_1104/report_taps.json": {
+   "sha256": "ee53644024d3305c9b0bc32dc6d7a1668acd49f031577adfc2c2e588587cfb7c",
+   "bytes": 284,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/hubsys_1104/report_taps.json"
+  },
+  "inputs/asbuilt_map_binder2.json": {
+   "sha256": "2c131fa262df0d5c19b8cb2b8cf7e330f22b9d4241867e810ee4000574da283f",
+   "bytes": 567131,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/inputs/asbuilt_map_binder2.json"
+  },
+  "inputs/bind9_asbuilt.json.gz": {
+   "sha256": "027d138fcb8e39a2e2befddc28ae4a44cf19a394677d18f0de1642696bfb6202",
+   "bytes": 46735303,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/inputs/bind9_asbuilt.json.gz",
+   "gunzip_sha256": "7fb18f588c1243acaed219c726c6423683df7f816687690b7b4f31d6a70797c5",
+   "gunzip_bytes": 261994306,
+   "note": "DIE-KV-99 11-12: gzip -9n of the cached elaboration (GitHub rejects files > 100 MB); bind.py reads OUT/asbuilt.json or OUT/asbuilt.json.gz, or stage it with: zcat inputs/bind9_asbuilt.json.gz > OUT/asbuilt.json"
+  },
+  "inputs/composition_heads_astk_pv_1103.json.gz": {
+   "sha256": "9cc4997e608ca45f3eb7e8954fa49dc7784bf1661b6b10314a541cbd1b0f4fc3",
+   "bytes": 6048459,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/inputs/composition_heads_astk_pv_1103.json.gz"
+  },
+  "inputs/pv_v_pads_b4.json": {
+   "sha256": "4e150d0856377bc841c32ab04d491af95eaff4ded36002ebca044682cd290bf8",
+   "bytes": 833080,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/inputs/pv_v_pads_b4.json"
+  },
+  "inputs/vport_w_pads_b5.json": {
+   "sha256": "de2c28dfed47186190299b5e41003e3106424922d6a9d2ba3a7225083e24fe58",
+   "bytes": 11423,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/inputs/vport_w_pads_b5.json"
+  },
+  "iocorwreg_1106/event.py": {
+   "sha256": "ae7c03c2e03b84acccd991470fb20c5b8cc2b0bd9d2aa73cdb175f7ac9e87b96",
+   "bytes": 1925,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocorwreg_1106/event.py"
+  },
+  "iocv1_1104/added_taps.json": {
+   "sha256": "815e0748cc80e6f4d212f9f410867788b95fe2a7bb48278cf1ef842c3c51171a",
+   "bytes": 2837,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/added_taps.json"
+  },
+  "iocv1_1104/event.py": {
+   "sha256": "417903dcb6bc7da1c7b850fa3df953fb27e83cfc0f90c7db2b0915891ebff7fe",
+   "bytes": 1256,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/event.py"
+  },
+  "iocv1_1104/rawbr.json": {
+   "sha256": "d8b195bf6274453cb286d145877249ba233a5e365202f38e091b6ffbcd7abb4f",
+   "bytes": 13149,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/rawbr.json"
+  },
+  "iocv1_1104/report.json": {
+   "sha256": "397a2ec68867b5429f23379726d6a2b5192e17990f2bc06b3aec6fdfd69e5233",
+   "bytes": 5259,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/report.json"
+  },
+  "iocv1_1104/report_coll.json": {
+   "sha256": "279381bd15e4e3246173ab455c565695055ab28080e692babe3c8d14e7ad1019",
+   "bytes": 973,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/report_coll.json"
+  },
+  "iocv1_1104/report_taps.json": {
+   "sha256": "973ca1bcf97e6f0b905ce939711bef57a6f3a424014a8033aec30188172fc5d8",
+   "bytes": 8316,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/iocv1_1104/report_taps.json"
+  },
+  "ioft_1101/delta_ioft_ft2_ring.py": {
+   "sha256": "32ca6b2e22eacfd89a1190477c165aa77a30f7d5153d28958c99e2dfc2cce2bc",
+   "bytes": 3076,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/ioft_1101/delta_ioft_ft2_ring.py"
+  },
+  "ioft_1101/report.json": {
+   "sha256": "e9db2bdd501d9f8a8e99224432ed00fccf19277b2d86e2ff273c5fc74dea6ec0",
+   "bytes": 2429,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/ioft_1101/report.json"
+  },
+  "kv1200_cut/README.md": {
+   "sha256": "0dfd2b5684275031cf5246f28730311826cad3ff1c3c41858c1d7b32d6363af8",
+   "bytes": 1607,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/README.md"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hg/delta_kv3_hg.json": {
+   "sha256": "3d32a037adf833f58c121b053d4ff31955cb6a37367c260ca022656f18fe7adf",
+   "bytes": 675,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hg/delta_kv3_hg.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hg/kv3_hg__intent.json": {
+   "sha256": "913d9cb30b6972959074b529a75526ff0196ede3a97067eb8ed4abdfd1e5a061",
+   "bytes": 20345,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hg/kv3_hg__intent.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hg/kv3_hg__intent.svg": {
+   "sha256": "f8da8ae69a8579d0fa6bde28e5e3f15fdd93cc696c60a427817058842be08906",
+   "bytes": 13125,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hg/kv3_hg__intent.svg"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_ft/delta_kv3_hgi_v6.json": {
+   "sha256": "3b3093b4d6aa59f70d7b11597e02639a249164ab6ac89516cb875e446b85470b",
+   "bytes": 226,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_ft/delta_kv3_hgi_v6.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_ft/kv3_hgi_v6__intent.json": {
+   "sha256": "c1d1096c03ad2cdc0aff659d1e1318f5f2bb320b54f9d0abb6c4c590a16470cd",
+   "bytes": 23930,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_ft/kv3_hgi_v6__intent.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_ft/kv3_hgi_v6__intent.svg": {
+   "sha256": "6908c0fb1584e399ff21d8ad75a029c5f3b1f6ecba65db30d64271d578c2c47b",
+   "bytes": 20927,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_ft/kv3_hgi_v6__intent.svg"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_light/delta_kv3_hgi.json": {
+   "sha256": "44d6840d3fba7e5f67c46512d2c421eeae9781e0ada278058b3a47600d5c7f6e",
+   "bytes": 416,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_light/delta_kv3_hgi.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_light/kv3_hgi__intent.json": {
+   "sha256": "a984e8834ad0a1f5da51092d9457e5ff19bb47585f737355cf24b24af6e8d060",
+   "bytes": 20164,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_light/kv3_hgi__intent.json"
+  },
+  "kv1200_cut/cleanslate_vtkvhead/hgi_light/kv3_hgi__intent.svg": {
+   "sha256": "2f3714f22a6cfe649bf04b7d5c7abf84ce8019fc37df42117d9b56038899f962",
+   "bytes": 12523,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/cleanslate_vtkvhead/hgi_light/kv3_hgi__intent.svg"
+  },
+  "kv1200_cut/evidence/compose_report.json": {
+   "sha256": "571f90135cf685e346bf953d79c1f8c0760135bf16b4d1005d5f93a401f07eff",
+   "bytes": 4103,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/evidence/compose_report.json"
+  },
+  "kv1200_cut/evidence/rb_1.json": {
+   "sha256": "3a6387675e9f408712afabe518c4296887c08f96475132d19a252fd37c1a364a",
+   "bytes": 7840,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/evidence/rb_1.json"
+  },
+  "kv1200_cut/evidence/rb_2.json": {
+   "sha256": "b8e26d6a225463c2ba1a75922ccde19aa34a16f05dd4a11296376f5b490536c8",
+   "bytes": 602,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/evidence/rb_2.json"
+  },
+  "kv1200_cut/evidence/station_lint.tsv": {
+   "sha256": "dfab7c96830c7a10620f3b59c747aabcc6573a6915d07a3d459b7da6eb911965",
+   "bytes": 10057,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/evidence/station_lint.tsv"
+  },
+  "kv1200_cut/scripts/apply_cs.py": {
+   "sha256": "65317a829a74ff367ceb92a8ffe3bbab5ce8ba7716682d2c2d51473a3abd5cf3",
+   "bytes": 480,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/apply_cs.py"
+  },
+  "kv1200_cut/scripts/compose_cut.py": {
+   "sha256": "a6d1dfca9ef4d8f64512f93155b1a9307de1647bb877251c4835760e3728fa1d",
+   "bytes": 7345,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/compose_cut.py"
+  },
+  "kv1200_cut/scripts/cut98.sh": {
+   "sha256": "8e99e9eae234da7480dcb06668c892212bcc13b482fd070cfbaf66748c8ea237",
+   "bytes": 1392,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/cut98.sh"
+  },
+  "kv1200_cut/scripts/eq_diff.py": {
+   "sha256": "bdfd7803d85251ccfbeeaa8cc53677c48015535f1d3fbd89c61242c03c23251e",
+   "bytes": 1499,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/eq_diff.py"
+  },
+  "kv1200_cut/scripts/ev/event.py": {
+   "sha256": "e2d53375d22e8a473e62a5ea1a1e0377d03639307c282935d61b72268703995b",
+   "bytes": 4089,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/ev/event.py"
+  },
+  "kv1200_cut/scripts/ev/phyrev_event.py": {
+   "sha256": "53cc781030da050d8c7f650c4931960e77ad3a2d2e7d8e2db09bbdc6a108fb79",
+   "bytes": 3580,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/ev/phyrev_event.py"
+  },
+  "kv1200_cut/scripts/ev/ringhold_event.py": {
+   "sha256": "d66e995d0945a17e4dd1e41a013364cb1e6d5950de32a44aa405b834eae2c670",
+   "bytes": 3727,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/ev/ringhold_event.py"
+  },
+  "kv1200_cut/scripts/g0_new.py": {
+   "sha256": "6e70c4e5e63762a2a8319dfaec5f05a4c5ed29e78f2b9d723ef092c10e88fd74",
+   "bytes": 570,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/g0_new.py"
+  },
+  "kv1200_cut/scripts/g0_slot.py": {
+   "sha256": "8c9067d898d7fbeca70cc5b753a08081add40155f565a30204f5d855451a9cbd",
+   "bytes": 827,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/g0_slot.py"
+  },
+  "kv1200_cut/scripts/rebase_delta.py": {
+   "sha256": "f83f7433080cb5a92db85ac85ef1d3186c43ad6242d8a924d306c30c2cbf0a5e",
+   "bytes": 1482,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/rebase_delta.py"
+  },
+  "kv1200_cut/scripts/run_cut.sh": {
+   "sha256": "961d294acbf848a4514b8ad20596d58d8a0276ba10d5dc2c864edfa03d7e312c",
+   "bytes": 2029,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/run_cut.sh"
+  },
+  "kv1200_cut/scripts/tapfix.py": {
+   "sha256": "06a67a49bb4f4720a5ed0b51620975f3cc9a0162a0774bdc7dc36911b4bec804",
+   "bytes": 823,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv1200_cut/scripts/tapfix.py"
+  },
+  "kv64_1103/band_need_measured.tsv": {
+   "sha256": "5649daee1c63d1313d81b267387ae55fe5bc4d83488242b1c70e398c5eefafe9",
+   "bytes": 209655,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv64_1103/band_need_measured.tsv"
+  },
+  "kv64_1103/delta_cland_need.py": {
+   "sha256": "175981e55d266a7d8a280ce31d4110eb08072977cdd94f55d32382bffc97452d",
+   "bytes": 7647,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv64_1103/delta_cland_need.py"
+  },
+  "kv64_1103/delta_cland_need_report.json": {
+   "sha256": "32fd402e6d7b6d5e1391847bd28fac225a75154e5f0917545fbfd6134c061122",
+   "bytes": 191954,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv64_1103/delta_cland_need_report.json"
+  },
+  "kv64_1103/measure_band_need.py": {
+   "sha256": "4b9df0511b173e26c01730ed5b73ee06d18f206ee5c12af1e997781ba0bb6851",
+   "bytes": 1422,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv64_1103/measure_band_need.py"
+  },
+  "kv65_1103/republish_hub_wi.py": {
+   "sha256": "5a62c7a5b1c86268fdae2a33240ed6fd6a3fe58445698a966dd48e6f7812ba37",
+   "bytes": 2932,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv65_1103/republish_hub_wi.py"
+  },
+  "kv65_1103/sd_delta.py": {
+   "sha256": "103264b7ee9fbe357a68ec4e0dff3ec01ff3ec523dfd019d313f23274647de42",
+   "bytes": 4239,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv65_1103/sd_delta.py"
+  },
+  "kv66_1104/e6_collapse.py": {
+   "sha256": "40a7bb78acce3b4689b11b5b3bbf3380cf78c4e8c141cb814366cc7fde9a1899",
+   "bytes": 2143,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv66_1104/e6_collapse.py"
+  },
+  "kv66_1104/pc_collapse.py": {
+   "sha256": "21e295bc76e9d49bfba0f820acb67635ee062a3fd5bddd6f3d31b4de9e259c34",
+   "bytes": 1848,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv66_1104/pc_collapse.py"
+  },
+  "kv66_1104/republish_pc.py": {
+   "sha256": "d9c6659b8807bdab0a2ecacb93f838204dee02872dc4105a06e734ffc7c23e50",
+   "bytes": 1900,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv66_1104/republish_pc.py"
+  },
+  "kv66_1104/ring_hold_form.py": {
+   "sha256": "02c58a259c9b7233ae4ee63c58215236be46e494ebd91ae981f2d55b434370c0",
+   "bytes": 900,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv66_1104/ring_hold_form.py"
+  },
+  "kv67_1104/core_splits.json": {
+   "sha256": "fc810935bb842ac689d069e92d3751d0f0ab91153bba8085d218f16d43bf97a7",
+   "bytes": 9842,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kv67_1104/core_splits.json"
+  },
+  "kvcls_1108/README.md": {
+   "sha256": "e9538c4f03e0277a9424c99cb8fd780108039e09ed71bad7bb9968dbce120480",
+   "bytes": 1100,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/README.md"
+  },
+  "kvcls_1108/compose_onto.py": {
+   "sha256": "e1976dade0ad9da80618a3c7650cd91454a41869e10f47d0526a86b1048dfc26",
+   "bytes": 2799,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/compose_onto.py"
+  },
+  "kvcls_1108/event.py": {
+   "sha256": "50472a68d074c479df1248eed1f4f4ef2119870f09d5a3b3cb5f8d2c6382674b",
+   "bytes": 2950,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/event.py"
+  },
+  "kvcls_1108/plan_c.kvcls.md5": {
+   "sha256": "9d21807997443ed476a19568a87a83f7a4bc85737fd798f35ca611d69598a8f0",
+   "bytes": 33,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/plan_c.kvcls.md5"
+  },
+  "kvcls_1108/plan_kvr8.md5": {
+   "sha256": "f3fac6dbec9e578a8f008a390bfc68c2bdd276503017dc6c1315ede382aee35c",
+   "bytes": 126,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/plan_kvr8.md5"
+  },
+  "kvcls_1108/report_c1.json": {
+   "sha256": "a4eeb54d202e991b82f57a61b7bad0335f4415916a9a8dc32eb9bc896959e4a0",
+   "bytes": 60416,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/kvcls_1108/report_c1.json"
+  },
+  "phy_pi_1108/bench/RESULT.txt": {
+   "sha256": "de619a838fcb901c40fd98cde9553291893d939cfbfe8a788768a86896c8245c",
+   "bytes": 1386,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/bench/RESULT.txt"
+  },
+  "phy_pi_1108/bench/gen_tb.py": {
+   "sha256": "84f25aca18b428812ee82eeb5eed03206dde18f841fa89a798a3deaef8bc174c",
+   "bytes": 6122,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/bench/gen_tb.py"
+  },
+  "phy_pi_1108/bench/make_rtl.py": {
+   "sha256": "c78eb5961c8998ffe08cba08a5688948f8cda7b46f96cce9ca36e8efdcc73fca",
+   "bytes": 3461,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/bench/make_rtl.py"
+  },
+  "phy_pi_1108/bench/phy_stub.sv": {
+   "sha256": "4c6d616df5b06c55f566bc8d5017b4b2998cfe5321ebab0d86eb23353cdd8961",
+   "bytes": 1575,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/bench/phy_stub.sv"
+  },
+  "phy_pi_1108/bench/run.sh": {
+   "sha256": "0c93e9916837f61a813fc431885633b4090e09d9f35608410fc3b714460c2bff",
+   "bytes": 1782,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/bench/run.sh"
+  },
+  "phy_pi_1108/event_report_phy.json": {
+   "sha256": "9572aef178523373b8c40f8c35517eb90424cc805fcbafb36ad4a916a133fedc",
+   "bytes": 29800,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/event_report_phy.json"
+  },
+  "phy_pi_1108/phy_pi_reform.py": {
+   "sha256": "5519c0fd299e8525fee0637af29ff7b1198f9cd223b4f96c5b67eb7f861078c3",
+   "bytes": 13062,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_pi_1108/phy_pi_reform.py"
+  },
+  "phy_reset_reach_1105/README.txt": {
+   "sha256": "a54ef9896a382b5a0787a565bd24072eac4f3a9a26d8d12a86e668e508568629",
+   "bytes": 508,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_reset_reach_1105/README.txt"
+  },
+  "phy_v1_reset_sites_1106/replay.py": {
+   "sha256": "ab566a525bac13df42a32f9c3e2bb3c70dad7ca21f7c826d471c3f977838156f",
+   "bytes": 1602,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phy_v1_reset_sites_1106/replay.py"
+  },
+  "phyrev_1111/README.md": {
+   "sha256": "3347dbba95e893e5329024d1c4ffc46c18fb8872b899f82464b494d06bd8f327",
+   "bytes": 637,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phyrev_1111/README.md"
+  },
+  "phyrev_1111/event.py": {
+   "sha256": "53cc781030da050d8c7f650c4931960e77ad3a2d2e7d8e2db09bbdc6a108fb79",
+   "bytes": 3580,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phyrev_1111/event.py"
+  },
+  "phyrev_1111/test_event.py": {
+   "sha256": "1a65971eba15de2ef1402d74a4b523c0fd62090add53d0ddb6e9f31d428ef116",
+   "bytes": 1563,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/phyrev_1111/test_event.py"
+  },
+  "pins/astk_index0.json": {
+   "sha256": "32a17f015ecdfe5051d62e53277dbf0538d180c66366a80ec4a12de83eeb1b5b",
+   "bytes": 174183,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/astk_index0.json"
+  },
+  "pins/kv3_head_eighth_e0_pins_fMX_r25_r26q4.json": {
+   "sha256": "bd911eea70cabe8bb87210529e69d2932a3b79be1caec203c29f68066eb915e2",
+   "bytes": 178964,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e0_pins_fMX_r25_r26q4.json"
+  },
+  "pins/kv3_head_eighth_e0_pins_r25_r26q4.json": {
+   "sha256": "9299af5ee4b66a8e158222de06353db62c4f2e180aeb47577dccf7d426bf7164",
+   "bytes": 181504,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e0_pins_r25_r26q4.json"
+  },
+  "pins/kv3_head_eighth_e1_pins_r26q3.json": {
+   "sha256": "c0ed5ab3b2492a2ed3a0f2dbc34e38244880efcc3c6df411c12c4e847edd5b26",
+   "bytes": 52473,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e1_pins_r26q3.json"
+  },
+  "pins/kv3_head_eighth_e2_pins_r26q4.json": {
+   "sha256": "022fbf6758625a78b25f73a1b272ba83da29867f3954a7c533dc2a93a60f4d52",
+   "bytes": 140585,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e2_pins_r26q4.json"
+  },
+  "pins/kv3_head_eighth_e2_pins_r26q4s.json": {
+   "sha256": "ee578a2521c950043293954340cb0283c840a9976a41a8d04f5e3992fa17a2c3",
+   "bytes": 140822,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e2_pins_r26q4s.json"
+  },
+  "pins/kv3_head_eighth_e5_pins_r26q3.json": {
+   "sha256": "ddf2518e759340f73757c3df2002f68c10e83770e6df94fad09d2f5b6af7dbdd",
+   "bytes": 53263,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e5_pins_r26q3.json"
+  },
+  "pins/kv3_head_eighth_e6_pins_fMX_r25_r26q4.json": {
+   "sha256": "1076255d66125562ee752bae381ca4626e5dc6684e6532be84874f5f3f2b8304",
+   "bytes": 141954,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e6_pins_fMX_r25_r26q4.json"
+  },
+  "pins/kv3_head_eighth_e6_pins_r25_r26q4.json": {
+   "sha256": "b37b6a8bb478da2799200eab4a8189a84f6fd6f9bf624c9a2dd456e5f0a2f4de",
+   "bytes": 140217,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_head_eighth_e6_pins_r25_r26q4.json"
+  },
+  "pins/kv3_pv_pair_pins_fMX_r26c_lc.json": {
+   "sha256": "2e92c226d0b3489aa3485ba60d8d8539fcf071ddd7a3835a5fbc462eb376b913",
+   "bytes": 144066,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_pv_pair_pins_fMX_r26c_lc.json"
+  },
+  "pins/kv3_pv_pair_pins_r26c_lc.json": {
+   "sha256": "e2ab19b05fbbc497dbf9ab3c1d22e71344d7f861c7126d186b274d8a2d9fb329",
+   "bytes": 147159,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kv3_pv_pair_pins_r26c_lc.json"
+  },
+  "pins/kvs_ctl_pins.json": {
+   "sha256": "df846e50f0e13513077f112868603ea7cdedd165c510c88886fd43e3325d52c4",
+   "bytes": 628311,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/kvs_ctl_pins.json"
+  },
+  "pins/pv_join_pins_fMX_r26q5c.json": {
+   "sha256": "9d707d92955090b7e5e53dcf2619fb93ac928bf659292a227db7ad3ef8e41fb3",
+   "bytes": 375102,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/pv_join_pins_fMX_r26q5c.json"
+  },
+  "pins/pv_join_pins_fR180_r26q5c.json": {
+   "sha256": "5ebb1b850396674a30f209573071613aed5fd5083b8c65598f254f9adcc6ea7f",
+   "bytes": 374097,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/pv_join_pins_fR180_r26q5c.json"
+  },
+  "pins/pv_join_pins_r26q5c.json": {
+   "sha256": "de688492fadfa0009cd9343073749369a2ecd22f3ca8bdcdcd3ec1248f3a00fe",
+   "bytes": 374969,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/pv_join_pins_r26q5c.json"
+  },
+  "pins/qkd_ahub_pins_r27.json": {
+   "sha256": "677256518871bc5d41105b6d8b1a65dedd607304dd7a8e875d038c08ea541cf6",
+   "bytes": 53459,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ahub_pins_r27.json"
+  },
+  "pins/qkd_ahub_pins_r27_track.json": {
+   "sha256": "ce43c9444a3defebc93d477caa0f4b5c922935045626ac88d43cc016af779c8d",
+   "bytes": 53468,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ahub_pins_r27_track.json"
+  },
+  "pins/qkd_astk_ex_s_hg1101.json": {
+   "sha256": "6b0ad54833ca8491b44c2fa7e657e4350abd680618a5496f6102a84bfe3ccace",
+   "bytes": 8391,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_astk_ex_s_hg1101.json"
+  },
+  "pins/qkd_ectlk_q0_pins_r25.json": {
+   "sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+   "bytes": 121635,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ectlk_q0_pins_r25.json"
+  },
+  "pins/qkd_ectlk_q1_pins_243.json": {
+   "sha256": "40ebdc6c2e70db7b18444f0d6711fe59de02a56b557635726d22a6b913db9a1e",
+   "bytes": 161828,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ectlk_q1_pins_243.json"
+  },
+  "pins/qkd_ectlk_q2_pins_243.json": {
+   "sha256": "b158ccd57827c2eb528dbd39c00781b60197dfc2292126ec8e838139fcf1d31c",
+   "bytes": 162721,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ectlk_q2_pins_243.json"
+  },
+  "pins/qkd_ectlk_q3_pins.json": {
+   "sha256": "38a73f518d6b6146d8feaf6655bf2c24488c670ddf37317fcf28fbacc731cd93",
+   "bytes": 162332,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_ectlk_q3_pins.json"
+  },
+  "pins/qkd_hr_cdc_ch_pins_r26q5.json": {
+   "sha256": "705a9485a52fa32d857fb0dc4a86fb00316cdf9676c914fda2e0e83aad529706",
+   "bytes": 107545,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_ch_pins_r26q5.json"
+  },
+  "pins/qkd_hr_cdc_ci_pins_r26q5.json": {
+   "sha256": "9b572a05fe8bebf7a7b09f974991678b2bb01bfa53e25bbb6d04d6e5385e3c16",
+   "bytes": 98024,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_ci_pins_r26q5.json"
+  },
+  "pins/qkd_hr_cdc_hi_pins_r26q5.json": {
+   "sha256": "184ea308528ba0f74c7fff6ec2e77b14849a6ce7d0dbdd3fd0a436235abe2846",
+   "bytes": 104642,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_hi_pins_r26q5.json"
+  },
+  "pins/qkd_hr_cdc_pc_pins_r26q9.json": {
+   "sha256": "35c9ddfa2f778dbc8d36450f181dcf95252bda44cbfe95cebc32fcb1ec9c58ac",
+   "bytes": 189999,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_cdc_pc_pins_r26q9.json"
+  },
+  "pins/qkd_hr_core_guard_pins_r26q5.json": {
+   "sha256": "981577ba98eed8b7740570aaef1fa0cbec1f5c3fc1f27f8bf038ac987ef32985",
+   "bytes": 115732,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_guard_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_order_pins_r26q5.json": {
+   "sha256": "c20c2d34af6130d0356d9792f4a54cabdf1e5db7e8cb7dff379f54ff74086932",
+   "bytes": 216163,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_order_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_peer_pins_r26q5.json": {
+   "sha256": "5eee9add2f9c55f0861316b772eaccd4c698a6e2fe9a2ab708c52d21beef00f1",
+   "bytes": 382871,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_peer_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_prompt_pins_r26q5.json": {
+   "sha256": "917c9f203548de6dea74f757d65ca35496caf5e139df60533f50524e6ee88c05",
+   "bytes": 501252,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_prompt_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_prompt_pins_r26q5_g255t.json": {
+   "sha256": "f8d2f09de695709cc121d39b6235dc3e230047f2c3c3d22a8e4701ea32b6de3c",
+   "bytes": 501741,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_prompt_pins_r26q5_g255t.json"
+  },
+  "pins/qkd_hr_core_queue_pins_r26q5.json": {
+   "sha256": "00c494b257a0f225f4fb25caea79850fac9c3f5f1f19a75bc427248b737620bd",
+   "bytes": 140049,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_queue_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_rx_pins_r26q5.json": {
+   "sha256": "b3c83a23fcbe7749c1589bce4fbe14d59a2a316da525cc41bbcedc3c54f7b9ef",
+   "bytes": 179746,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_rx_pins_r26q5.json"
+  },
+  "pins/qkd_hr_core_rx_pins_r26q5d.json": {
+   "sha256": "3fe5e2849cea713286c447a1c355152066c47e2056264892743457bfda2a7c14",
+   "bytes": 179891,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_rx_pins_r26q5d.json"
+  },
+  "pins/qkd_hr_core_tx_pins_r26q14.json": {
+   "sha256": "a3cd8ded74a7a5a1444bb090191cbb0921d4849634af75ff60cc68130c16ac18",
+   "bytes": 331072,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_core_tx_pins_r26q14.json"
+  },
+  "pins/qkd_hr_ingest_eng_pins_r26q5.json": {
+   "sha256": "ab30544e8f2d293bd9d0dda620048bebaccee94e87708d1be1ca002b48a31fdb",
+   "bytes": 118462,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_ingest_eng_pins_r26q5.json"
+  },
+  "pins/qkd_hr_phy_adp_pins_mfv1.json": {
+   "sha256": "733fcd759e0790dc688f3c344fc123ebdc978e7ea13f053ab2bea4829e6a31d4",
+   "bytes": 38300,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_phy_adp_pins_mfv1.json"
+  },
+  "pins/qkd_hr_phy_adp_pins_r26q9.json": {
+   "sha256": "4a36dc5a0033eab1fe0386053ca96eff2f282d08222c48637ba1a5d4a0c4e746",
+   "bytes": 46821,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_phy_adp_pins_r26q9.json"
+  },
+  "pins/qkd_hr_phy_pad_pins_r26q9.json": {
+   "sha256": "9a8a33e72a55cea5b5efe47fbccbc39002ca276f0ed39557edd8e37569b71c4f",
+   "bytes": 130540,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_hr_phy_pad_pins_r26q9.json"
+  },
+  "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25.json": {
+   "sha256": "38858e504f6955b58de1fa399a311a3cec3b018295dbf247a6cedc5ddb1aaec4",
+   "bytes": 254520,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_h_head_p_pins_fMY_r25.json"
+  },
+  "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1.json": {
+   "sha256": "39541028a06bfdbf92b0da4772511eeef389af99e1a3e128a0541d6a937c6340",
+   "bytes": 206204,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1.json"
+  },
+  "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json": {
+   "sha256": "1c21e86161cd8d34aff89e5d3855fa93b68f6cce3909f6565fde09bad1327223",
+   "bytes": 204098,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3c.json"
+  },
+  "pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json": {
+   "sha256": "fbb740c920d84e16fefa8f6b9983a191909f73025d384ef4a42e052c226cf7a0",
+   "bytes": 43622,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1_rf3f.json"
+  },
+  "pins/qkd_kvs_pc_pins_fMX_r27.json": {
+   "sha256": "c499977aa713ef8a44f83c8aa80cf9f055724c8cdcbf3bedd5e208da4a377a2b",
+   "bytes": 350073,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_fMX_r27.json"
+  },
+  "pins/qkd_kvs_pc_pins_fMX_r27_rf1.json": {
+   "sha256": "c99a2b118b592e0af8faf910e5b37c22d2680eac90968857f9801a45b36ba912",
+   "bytes": 283359,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_fMX_r27_rf1.json"
+  },
+  "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json": {
+   "sha256": "d4984b42613c1dd5d0ba3207c64a01fd34b4671c3df9287b053e3e5a1c8bbbc5",
+   "bytes": 281583,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3c.json"
+  },
+  "pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json": {
+   "sha256": "2b8356c4fca616b2dd8ce730c097139fd70d9924110f49c821efbff73699a793",
+   "bytes": 43593,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_fMX_r27_rf1_rf3f.json"
+  },
+  "pins/qkd_kvs_pc_pins_r27.json": {
+   "sha256": "4128d4b721bf6c0cf29be8b05bab6e5995de6b4318cac1ef1e832b4e253171fa",
+   "bytes": 349581,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_r27.json"
+  },
+  "pins/qkd_kvs_pc_pins_r27_rf1.json": {
+   "sha256": "aed472cdff1fa1237781ea7e8dc974fc2bb1ded7c7e2b3829e5a7a321e831552",
+   "bytes": 282860,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_r27_rf1.json"
+  },
+  "pins/qkd_kvs_pc_pins_r27_rf1_rf3c.json": {
+   "sha256": "bbe4be0b1f57cbca05d40e27b17d10544066bbbf3302a5d9ad5d48c2081475dc",
+   "bytes": 281746,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_r27_rf1_rf3c.json"
+  },
+  "pins/qkd_kvs_pc_pins_r27_rf1_rf3f.json": {
+   "sha256": "0daa6cd9eac8cc5eb7f846ae5f43b119708e43a214303989db077892030c8e1e",
+   "bytes": 42929,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/qkd_kvs_pc_pins_r27_rf1_rf3f.json"
+  },
+  "pins/rf_kv1/qkd_hr_cdc_ci_pins_rfkv1.json": {
+   "sha256": "7161e9ac2ae173c6d664b9f40f62d86a7e5c6452cc80f0a036b0a48572712845",
+   "bytes": 97357,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_ci_pins_rfkv1.json"
+  },
+  "pins/rf_kv1/qkd_hr_cdc_hi_pins_rfkv1.json": {
+   "sha256": "8330906431792c9913b5d1b096cb707e6da183022f4db521b83951afdafd4066",
+   "bytes": 104005,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_hi_pins_rfkv1.json"
+  },
+  "pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json": {
+   "sha256": "de848152c3af236ef5739e656dd4a6e6bc2e7e293b1da623e18fb09af5037037",
+   "bytes": 189077,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json"
+  },
+  "pins/rf_kv1/qkd_hr_core_guard_pins_rfkv1.json": {
+   "sha256": "4a17e9546d1f46faab25a405b6081b3e1a558be1817bbd98fd3747148ec7503c",
+   "bytes": 114891,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_core_guard_pins_rfkv1.json"
+  },
+  "pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json": {
+   "sha256": "d062f83ea7303bc3e3ddd99defb96b56739e1a7908b03c5be8401bbbdf865ab7",
+   "bytes": 139216,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json"
+  },
+  "plan_c.json": {
+   "sha256": "77533c398d4dfd61170f0e8029d6a2c5dbb11ba71a7910cadaf7c1e880ae9b5d",
+   "bytes": 43542886,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
+  },
+  "plan_c.original.json.gz": {
+   "sha256": "f352bf5136d882dc95812c84d42b6bb5d704cd9aeb626fb1e39b1e21b81b3d80",
+   "bytes": 2465560,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.original.json.gz"
+  },
+  "plan_c.rf1pc.json": {
+   "sha256": "79f9aef40d4e4fe6681e83d5bf4fc63e84df6c4fce7198fd819f208802cfc470",
+   "bytes": 37107602,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.rf1pc.json"
+  },
+  "plan_c.rf3s.json": {
+   "sha256": "5d2e65f37649b500c7c35f86a5ee0231656c19004e42cfb5d22c79d6ec6cf22d",
+   "bytes": 37125571,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.rf3s.json"
+  },
+  "prmslot_1106/README.md": {
+   "sha256": "c40cb4e70e72ced7c954a2e0dd4ce8edfab1ba66c5350da9dbc767f8e451d726",
+   "bytes": 2248,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/prmslot_1106/README.md"
+  },
+  "prmslot_1106/kit_repin_g255t.py": {
+   "sha256": "a19e742f60092e0c3c44af814e19b9a7b1d4b077223258969c3744fe104afc7a",
+   "bytes": 1787,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/prmslot_1106/kit_repin_g255t.py"
+  },
+  "prmslot_1106/prmslot_event.py": {
+   "sha256": "5c252b463b4799c13f66703cc1b0bb5e51a0a3585bac5f678749032b2428b7c9",
+   "bytes": 4887,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/prmslot_1106/prmslot_event.py"
+  },
+  "prmslot_1106/prmslot_wi.png": {
+   "sha256": "7fb32a67a7b17f9163dcda9c0b8c9bf95f02faf1544ab329b00a6a1774d53d3b",
+   "bytes": 88691,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/prmslot_1106/prmslot_wi.png"
+  },
+  "prmslot_1106/slot_render.py": {
+   "sha256": "1e465fac27f31bea6503e0bc207e42a5055b82989e3e5b1e850c476afb9cee62",
+   "bytes": 2797,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/prmslot_1106/slot_render.py"
+  },
+  "pvband_1105/event.py": {
+   "sha256": "44007cf4fb44fbf9181bc6b8373971def7cef96fdc0570fe4bc0b9241fdcd2f9",
+   "bytes": 1065,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvband_1105/event.py"
+  },
+  "pvband_1105/report_coll.json": {
+   "sha256": "401e5192067900e263e21974868e98630e186572da0e02b1bd3c91a57cee11d1",
+   "bytes": 860,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvband_1105/report_coll.json"
+  },
+  "pvpilot_1104/event.py": {
+   "sha256": "33f4822a01b8f7c09b5649d730517b52fd8e4abb09a707ca6adc577500224ac5",
+   "bytes": 2703,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvpilot_1104/event.py"
+  },
+  "pvpilot_1104/report_coll.json": {
+   "sha256": "d0f3aa80b20bc85fc2a44feabafad1821daba3663506734bee32ebb1b909b53f",
+   "bytes": 841,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvpilot_1104/report_coll.json"
+  },
+  "pvpilot_1104/report_taps.json": {
+   "sha256": "6776c72bd14ac13c822869abd04eb0a4534c62fd967ba8b49502c2f257fe523c",
+   "bytes": 169,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvpilot_1104/report_taps.json"
+  },
+  "r8_kv95_phy3.json": {
+   "sha256": "1659d386de1c2dc4cf4cb3806cecfe897dad28850dc73a7a3e63c7f98849898f",
+   "bytes": 2159291,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/r8_kv95_phy3.json"
+  },
+  "r8_no_dead_forwarded_clocks.json": {
+   "sha256": "cf30fc95f8047c8b9ba7c8067a497d6095304cb17c20784eb44ff66720420d78",
+   "bytes": 2159173,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/r8_no_dead_forwarded_clocks.json"
+  },
+  "relocation.json": {
+   "sha256": "60e75c804d0c72059d9f72861e66cfd408e5e1997838993f23a998cf3b3c24fe",
+   "bytes": 11485,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/relocation.json"
+  },
+  "relocation_check.txt": {
+   "sha256": "cd1068eb4e9a903846a14491d5e675b2bcbea397e15ac395ee169b7e214e8727",
+   "bytes": 416,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/relocation_check.txt"
+  },
+  "removed_clock_r8_members.json": {
+   "sha256": "551f9c7a3ef7b3f075124f2603564fb9d9437974f26cea046db5a624715baf51",
+   "bytes": 89186,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/removed_clock_r8_members.json"
+  },
+  "rf1pc_delta.json": {
+   "sha256": "d3d6a4980bec1f2b6578f7743e6bcb637ba19d2caf740dcd4a510ea2875d7030",
+   "bytes": 12013,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rf1pc_delta.json"
+  },
+  "rf3s_delta.json": {
+   "sha256": "58d37d07161db7b4041bf451494ac5262c62e25cb32225c54c4fdae8285ea07d",
+   "bytes": 19613,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rf3s_delta.json"
+  },
+  "rf3s_delta_1104.json": {
+   "sha256": "b0899a7a2cfd81083fd6b4b551ef09c1ea631ae51e1a784220abacea607b4d9e",
+   "bytes": 19570,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rf3s_delta_1104.json"
+  },
+  "rtobs_1102/census.json": {
+   "sha256": "1b032dc6db8f5796de3bc61c2aa8a74c81674bf79641dfd25f2b8ce5fbf40ae7",
+   "bytes": 1087,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rtobs_1102/census.json"
+  },
+  "rtobs_1102/census.py": {
+   "sha256": "b5c492e3e472404db6f7bc1773e30587bae8d906219aad2e9823b62a4475e992",
+   "bytes": 1443,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rtobs_1102/census.py"
+  },
+  "rtobs_1102/delta_rtobs.py": {
+   "sha256": "e7983e7bcc9e98356bafa71645e1ec9d50d3e83559326132150f19a689837e9b",
+   "bytes": 1197,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/rtobs_1102/delta_rtobs.py"
+  },
+  "sdcdc_1106/event.py": {
+   "sha256": "82468f399b3bbe6fe2c332f6f6ba09fe2a02905773d1c4246ae43c47740bad4d",
+   "bytes": 1226,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sdcdc_1106/event.py"
+  },
+  "sdfwd_1030/README.md": {
+   "sha256": "1945a9cba05e9b0b85053b628cf0f343ebd886c38072245715fb0db28ec17a6e",
+   "bytes": 1475,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sdfwd_1030/README.md"
+  },
+  "sdfwd_1030/mk_sdfwd.py": {
+   "sha256": "6ddd70aa08dfc0cb21dca1ca309e5fadcfb977b60c39624fb4dbcf3edf26b292",
+   "bytes": 1581,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sdfwd_1030/mk_sdfwd.py"
+  },
+  "sdpg_ledger.json": {
+   "sha256": "b4d557d3176951f6af6a7a54a5371f8706c54b78ea98f2f11067397989ee7293",
+   "bytes": 1304,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sdpg_ledger.json"
+  },
+  "sdwreg_1106/event.py": {
+   "sha256": "0047213dfad9348cf505f6f9806b283ca291869283a85940732604ef2ae0f012",
+   "bytes": 1029,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sdwreg_1106/event.py"
+  },
+  "sink_bins/kv3_hgi.json": {
+   "sha256": "44e820ffd9319738a39855bf19cf1e25b984bffc274fca4e58f2315820946644",
+   "bytes": 13497,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi.json"
+  },
+  "sink_bins/kv3_hgi_v3.json": {
+   "sha256": "aa4f2d5a442f52c3b37d20554ff2628cf2811c2ab4d4046c866f85b75ab733a5",
+   "bytes": 19850,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi_v3.json"
+  },
+  "sink_bins/kv3_hgi_v4.json": {
+   "sha256": "b9f8781f80d7dd88f03511ec38acccc2e0cd564c63c7141b0491c7fab7af630a",
+   "bytes": 18409,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi_v4.json"
+  },
+  "sink_bins/kv3_hgi_v5.json": {
+   "sha256": "72306edc79bec042dc9fc6cf645b166876d820da0e1cfcb170103339b1e314e4",
+   "bytes": 19751,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi_v5.json"
+  },
+  "sink_bins/kv3_hgi_v6.json": {
+   "sha256": "548d977cb3c4b9ef64b9e90763eb298cb1331df92b36cd5303369383a09518bf",
+   "bytes": 18456,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi_v6.json"
+  },
+  "sink_bins/kv3_hgi_v7.json": {
+   "sha256": "9cfff36baa18ceb0bb1ca86fd41f3dafaa85f89201c1fd1fc983a85ae648a5ca",
+   "bytes": 16480,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_hgi_v7.json"
+  },
+  "sink_bins/kv3_pv.json": {
+   "sha256": "394252ce5878f3eb0e0d41b61ce9827c7136e149286ffc1147914f2e58a019a0",
+   "bytes": 50147,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv.json"
+  },
+  "sink_bins/kv3_pv_v1.json": {
+   "sha256": "9d0697e4635157ef61643b7dc0db80648ca42544efa2d5c70a49f8dbb29ccf45",
+   "bytes": 103781,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v1.json"
+  },
+  "sink_bins/kv3_pv_v12.json": {
+   "sha256": "f3143426bc4901e3c2c1b071483c1d6eff5fbe114b96f31a5f1778a70e6539ef",
+   "bytes": 108287,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v12.json"
+  },
+  "sink_bins/kv3_pv_v1n.json": {
+   "sha256": "37003a8fdb49caf8feae23e9a5e564e7825f2cc302af296391aa2a474550627b",
+   "bytes": 103826,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v1n.json"
+  },
+  "sink_bins/kv3_pv_v2.json": {
+   "sha256": "223c609f6c23c130bdf737abf20d56c7d7a45bcf8618cd89d89245df8365f377",
+   "bytes": 89974,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v2.json"
+  },
+  "sink_bins/kv3_pv_v2n.json": {
+   "sha256": "33c213fbc0a1204a8cad8d54de440ebd425d1ee2cfd7653550b18470c53db8c7",
+   "bytes": 92040,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v2n.json"
+  },
+  "sink_bins/kv3_pv_v3.json": {
+   "sha256": "e4576f1f6b8df162a82e6c2730d47938ca5500d053b9d5fc268da78c3149008c",
+   "bytes": 130740,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v3.json"
+  },
+  "sink_bins/kv3_pv_v3n.json": {
+   "sha256": "f3c76a95be0f194f7a860917426b8612a70a292276359183face2c7c38a11403",
+   "bytes": 140289,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v3n.json"
+  },
+  "sink_bins/kv3_pv_v4.json": {
+   "sha256": "dd74bda3bde1b39e7186348e0aa97c87eaa4973eb240398efc9b155489655fe8",
+   "bytes": 98779,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v4.json"
+  },
+  "sink_bins/kv3_pv_v4n.json": {
+   "sha256": "74a6a2fa5cf24164158992be2a7bc83c87fb7c635b955b7ceabffc83f0144fd2",
+   "bytes": 111764,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v4n.json"
+  },
+  "sink_bins/kv3_pv_v5.json": {
+   "sha256": "a186196978b5f3508f70f4f8e33dd4f21bcee1b311c17c6f9aa84172dd17c020",
+   "bytes": 139980,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v5.json"
+  },
+  "sink_bins/kv3_pv_v5n.json": {
+   "sha256": "e42314ad27d17c28f8c53e41871c3522e3d748219724c5b4f816711bae2ed4e4",
+   "bytes": 137910,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v5n.json"
+  },
+  "sink_bins/kv3_pv_v6.json": {
+   "sha256": "d2770157c103031624cf3b3e98ff071d25f8f5fb8c0537211e13a8def4adc0ef",
+   "bytes": 76428,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v6.json"
+  },
+  "sink_bins/kv3_pv_v6n.json": {
+   "sha256": "c8e000a71a495a893dcc09836e3bfc0a8f12b44e6a6b90dc0c83a750fd77d20e",
+   "bytes": 73925,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v6n.json"
+  },
+  "sink_bins/kv3_pv_v7.json": {
+   "sha256": "b88f5f0c7f4a8cc43154d939cf88f8c91866003f2ca01744649e18ec82a9e40b",
+   "bytes": 105363,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v7.json"
+  },
+  "sink_bins/kv3_pv_v8.json": {
+   "sha256": "7015ce34bbb6fb115fc8cbacbb83a647bdf559ef38713e6fb402153011bffed1",
+   "bytes": 43803,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_pv_v8.json"
+  },
+  "sink_bins/kv3_sys_SD.json": {
+   "sha256": "5496ca7c765fde3aef3164db0ad080b0a3dd224fbfb4fdcb49ff9eb5c4f3da79",
+   "bytes": 5057,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_sys_SD.json"
+  },
+  "sink_bins/kv3_sys_SD_v1.json": {
+   "sha256": "7731bb4c83b8a953cc3d239605ff9e9325491b3c1a2e6bda4f72727efcbffef7",
+   "bytes": 6123,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/sink_bins/kv3_sys_SD_v1.json"
+  },
+  "slgland_1106/event.py": {
+   "sha256": "95814fcd2991a51c5458a433127eaada92599260222c3406f378e842d4330348",
+   "bytes": 3557,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/slgland_1106/event.py"
+  },
+  "source_boot_admission.json": {
+   "sha256": "dbdd19d41b121ead0f919ef4e24e9f0140eca6da90899303456718c44dbd5117",
+   "bytes": 1823,
+   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/source_boot_admission.json"
+  }
+ }
+}

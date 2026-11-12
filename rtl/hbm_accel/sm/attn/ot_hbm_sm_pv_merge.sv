@@ -14,8 +14,29 @@
 // give ((s0+s1)+(s2+s3)) = the pairwise node of the 16 chunks of the 128-token block, exactly the golden order.
 // Every illegal request (entry not finished, pending write, merge or publication active, port collision) is a sticky
 // fault; nothing waits.  MUT 4 = the fold reads entry b in place of a (b + b: bench negative control).
+//
+// RDREG (HBM-CORES-B 11-12, DIE-HBM-100 pv_merge event form; default 0 = unchanged): 1 registers the u_stack read
+// data at the macro output (st_q), so no logic hangs off the macro rd_out pins.  +1 edge on the stack read path:
+//   merge   the barrel issues each entry's read two turns ahead (bp+2 instead of bp+1); an entry's state changes
+//           only at its own turn, so the address is the same and every merge turn, pv_v / pv_y / pv_tag are
+//           cycle-identical to RDREG 0;
+//   publish request timing and every request rule are unchanged; pub_v / pub_data / pub_word / pub_out_slot /
+//           pub_tag are the RDREG 0 stream delayed by exactly one edge (first scalar 3 edges after the request);
+//   fold    the add issues at F+3 (was F+2) and the sum is written at F+3+ALAT; the folded entry stays pending one
+//           edge longer, so the first ev / publication / fold that touches it may come one edge later.
+// RDMUT (bench negative controls only, needs RDREG 1): 1 = merge read issued one turn ahead (stale stack data);
+// 2 = publication data word taken from an off-by-one word index; 3 = fold add issued at F+2 (operand not there).
+//
+// TREG (HBM-CORES-B 11-12, DIE-HBM-100 pv_merge event form F2 + RDREG + TREG; default 0 = unchanged): registered,
+// replicated turn decode.  The turn logic indexes the barrel entry r = bp (8:1 of e_busy / e_fl / e_k / e_c / e_n) and
+// drives 512-bit operand, write-data and pv_y selects; pvm_F2R (F2 + RDREG) failed TT setup -87 ps on 553 endpoints, every
+// one starting at bp.  An entry's state changes only at its own turn, so entry bp+1's decode taken one cycle early equals
+// entry bp's decode at its turn.  TREG 1 registers that decode (reset to the reset-state decode) in NG copies, one per
+// 512/NG-bit lane group next to the muxes it selects (keep), plus one control copy.  Only ev / tag_d (inputs of this cycle)
+// combine with the copies.  Cycle-identical: no pin-cycle change.  TRMUT 1 (negative control only): the copies take the
+// decode of entry bp (the current turn) instead of bp+1.
 module ot_hbm_sm_pv_merge #(
-    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0
+    parameter integer L=16, IL=8, TAGW=16, ALAT=7, LV=4, MUT=0, PUBLISH=0, RDREG=0, RDMUT=0, TREG=0, TRMUT=0
 )(
     input wire clk, rst_n,
     input wire ev,
@@ -40,12 +61,14 @@ module ot_hbm_sm_pv_merge #(
 );
     initial if (L!=16 || IL!=8 || ALAT!=7 || LV<1 || LV>8 || TAGW<6)
         $fatal(1,"PV merge requires16lanes,8slots,LAT7,LV1..8,TAGW>=6");
+    initial if((RDREG!=0 && RDREG!=1) || (RDMUT!=0 && RDREG!=1))$fatal(1,"RDREG 0/1; RDMUT needs RDREG 1");
+    initial if((TREG!=0 && TREG!=1) || (TRMUT!=0 && TREG!=1))$fatal(1,"TREG 0/1; TRMUT needs TREG 1");
     initial if(PUBLISH && LV>7)$fatal(1,"publication reserves unused stack level7");
     genvar l;
     wire publish_request=PUBLISH ? pub_start : 1'b0;
     wire fold_request=PUBLISH ? fold_start : 1'b0;
-    reg fd0,fd1;                                       // fold read of b, add issue
-    reg [2:0] fa0,fb0,fa1;
+    reg fd0,fd1,fd2;                                   // fold read of b, add issue (RDREG 1: fd2 issues)
+    reg [2:0] fa0,fb0,fa1,fa2;
     reg [511:0] fold_a_data;
     reg [ALAT:0] fw_v;                                 // fold sum in flight (bit k: issued k cycles ago)
     reg [2:0] fw_a [0:ALAT];
@@ -69,15 +92,26 @@ module ot_hbm_sm_pv_merge #(
     reg  [TAGW-1:0] e_tag [0:7];
     // events of this cycle (lane chunk sums of a PV beat)
     // stack read for entry nb, landing at its turn (next cycle)
-    wire [KW:0] rk = e_busy[nb] ? e_k[nb] : {(KW+1){1'b0}};
-    wire [5:0]  sr_a = {nb, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
-    wire [L*32-1:0] st_rd;
+    // RDREG 1: the read is issued two turns ahead (entry bp+2) and lands in st_q at the entry's turn
+    wire [2:0]  na = (RDREG == 1 && RDMUT != 1) ? bp + 3'd2 : nb;
+    wire [KW:0] rk = e_busy[na] ? e_k[na] : {(KW+1){1'b0}};
+    wire [5:0]  sr_a = {na, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
+    wire [L*32-1:0] st_rd;                            // macro rd_out
+    wire [L*32-1:0] st_q;                             // stack read data as used by the merge / fold / publication
     reg         sw_ce;
     reg  [5:0]  sw_a;
     reg  [L*32-1:0] sw_d;
     ot_sram_1r1w_64x512_m1_r2c2 u_stack (.clk(clk), .r_ce_in(1'b1), .r_addr_in(stack_read_addr), .rd_out(st_rd),
         .w_ce_in(stack_write_en), .w_addr_in(stack_write_addr), .wd_in(stack_write_data), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    generate if (RDREG == 1) begin : g_rdreg
+        reg [L*32-1:0] rq;                            // macro-output register: the only load on rd_out
+        always @(posedge clk) rq <= st_rd;
+        assign st_q = rq;
+    end else begin : g_rdnone
+        assign st_q = st_rd;
+    end endgenerate
+    wire fold_issue = (RDREG == 1 && RDMUT != 3) ? fd2 : fd1;  // fold add: both operands present
     // merge adder operands of this turn
     reg  [L*32-1:0] ma, mb;
     reg             mv;
@@ -91,7 +125,7 @@ module ot_hbm_sm_pv_merge #(
     always @(posedge clk) vreg <= my;
     // turn logic (combinational) for entry r = bp
     wire [2:0] r = bp;
-    assign finish=e_busy[r] && e_fl[r] && !(e_k[r]<LV) && !ev;
+    assign finish=td[NG][10] && td[NG][9] && !td[NG][8] && !ev;
     assign finish_slot=e_tag[r][2:0];
     assign stack_read_addr=publish_request ? {pub_slot,3'd7} : fold_request ? {((MUT==4) ? fold_b : fold_a),3'd7} : fd0 ? {fb0,3'd7} : sr_a;
     assign stack_write_en=sw_ce || (PUBLISH && finish) || fold_write;
@@ -101,22 +135,68 @@ module ot_hbm_sm_pv_merge #(
     wire       ev_first = tag_d[TAGW-2], ev_last = tag_d[TAGW-3];
     wire [7:0] ev_c = ev_first ? 8'd0 : e_n[r][7:0];
     reg        m_fault;
-    always @(*) begin
-        mv = 1'b0; ma = {L*32{1'b0}}; mb = {L*32{1'b0}};
-        sw_ce = 1'b0; sw_a = {r, 3'd0}; sw_d = sum;
-        if (fd1) begin mv = 1'b1; ma = fold_a_data; mb = st_rd; end
-        else if (ev) begin
-            if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
-            else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
-        end else if (e_busy[r] && !e_fl[r]) begin
-            if (e_c[r][e_k[r][2:0]]) begin mv = 1'b1; ma = st_rd; mb = vreg; end
-            else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vreg; end
-        end else if (e_busy[r] && e_fl[r] && e_k[r] < LV) begin
-            mv = 1'b1;
-            if (e_n[r][e_k[r][2:0]]) begin ma = st_rd; mb = (e_k[r] == 0) ? {L*32{1'b0}} : vreg; end
-            else begin ma = (e_k[r] == 0 || (MUT == 2 && e_k[r] == LV - 1)) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}}; end
+    // ---- turn decode of entry r = bp: live (TREG 0) or registered one cycle early from entry bp+1 (TREG 1) ----
+    // d = {busy, fl, k<LV, c[k], n[k], k==0, k==0||(MUT2 && k==LV-1), n[0], k[2:0]}
+    localparam integer NG = 4, GW = L*32/NG, DW = 11;
+    function automatic [DW-1:0] tdec(input integer x);
+        reg [KW:0] k;
+        begin
+            k = e_k[x];
+            tdec = {e_busy[x], e_fl[x], (k < LV), e_c[x][k[2:0]], e_n[x][k[2:0]], (k == 0),
+                    (k == 0 || (MUT == 2 && k == LV - 1)), e_n[x][0], k[2:0]};
         end
+    endfunction
+    localparam [DW-1:0] TDEC_RST = {1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 3'd0};  // every entry in reset
+    wire [DW-1:0] td_live = tdec(r);
+    wire [DW-1:0] td_next = tdec((TRMUT == 1) ? bp : nb);
+    wire [DW-1:0] td [0:NG];                          // [0..NG-1] lane-group copies, [NG] control copy
+    genvar gq;
+    generate for (gq = 0; gq <= NG; gq = gq + 1) begin : g_td
+        if (TREG == 1) begin : g_q
+            (* keep *) reg [DW-1:0] q;
+            always @(posedge clk or negedge rst_n) if (!rst_n) q <= TDEC_RST; else q <= td_next;
+            assign td[gq] = q;
+`ifdef FORMAL
+            always @(posedge clk) if (rst_n) assert (q == td_live);
+`endif
+        end else begin : g_l
+            assign td[gq] = td_live;
+        end
+    end endgenerate
+    // control copy
+    wire c_busy = td[NG][10], c_fl = td[NG][9], c_klt = td[NG][8], c_cb = td[NG][7], c_n0 = td[NG][3];
+    wire [2:0] c_k3 = td[NG][2:0];
+    always @(*) begin
+        mv = 1'b0; sw_ce = 1'b0; sw_a = {r, 3'd0};
+        if (fold_issue) mv = 1'b1;
+        else if (ev) begin
+            if (!ev_first && c_n0) mv = 1'b1;
+            else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; end
+        end else if (c_busy && !c_fl) begin
+            if (c_cb) mv = 1'b1;
+            else begin sw_ce = 1'b1; sw_a = {r, c_k3}; end
+        end else if (c_busy && c_fl && c_klt) mv = 1'b1;
     end
+    // lane-group data selects, each from its own copy
+    generate for (gq = 0; gq < NG; gq = gq + 1) begin : g_sel
+        wire g_busy = td[gq][10], g_fl = td[gq][9], g_klt = td[gq][8], g_cb = td[gq][7], g_nb = td[gq][6],
+             g_k0 = td[gq][5], g_kz = td[gq][4], g_n0 = td[gq][3];
+        reg [GW-1:0] a_g, b_g, d_g;
+        always @(*) begin
+            a_g = {GW{1'b0}}; b_g = {GW{1'b0}}; d_g = sum[gq*GW +: GW];
+            if (fold_issue) begin a_g = fold_a_data[gq*GW +: GW]; b_g = st_q[gq*GW +: GW]; end
+            else if (ev) begin
+                if (!ev_first && g_n0) begin a_g = st_q[gq*GW +: GW]; b_g = sum[gq*GW +: GW]; end
+            end else if (g_busy && !g_fl) begin
+                if (g_cb) begin a_g = st_q[gq*GW +: GW]; b_g = vreg[gq*GW +: GW]; end
+                else d_g = vreg[gq*GW +: GW];
+            end else if (g_busy && g_fl && g_klt) begin
+                if (g_nb) begin a_g = st_q[gq*GW +: GW]; b_g = g_k0 ? {GW{1'b0}} : vreg[gq*GW +: GW]; end
+                else begin a_g = g_kz ? {GW{1'b0}} : vreg[gq*GW +: GW]; b_g = {GW{1'b0}}; end
+            end
+        end
+        always @(*) begin ma[gq*GW +: GW] = a_g; mb[gq*GW +: GW] = b_g; sw_d[gq*GW +: GW] = d_g; end
+    end endgenerate
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -143,7 +223,10 @@ module ot_hbm_sm_pv_merge #(
             end
         end
     end
-    always @(posedge clk) if (e_busy[r] && e_fl[r] && !(e_k[r] < LV) && !ev) begin pv_y <= vreg; pv_tag <= e_tag[r]; end
+    generate for (gq = 0; gq < NG; gq = gq + 1) begin : g_pvy
+        always @(posedge clk) if (td[gq][10] && td[gq][9] && !td[gq][8] && !ev) pv_y[gq*GW +: GW] <= vreg[gq*GW +: GW];
+    end endgenerate
+    always @(posedge clk) if (finish) pv_tag <= e_tag[r];
     // The unused level7 stores one final512bit node for each logical slot.
     // Publication shares the existing1R1W macro after the merge is quiescent.
     // Macro read -> buffer capture -> first scalar is exactly2edges. Requests
@@ -153,10 +236,10 @@ module ot_hbm_sm_pv_merge #(
     reg fold_fault;
     integer fk;
     always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin fd0<=0;fd1<=0;fw_v<=0;fold_fault<=0;node_pending<=0;end
+        if(!rst_n)begin fd0<=0;fd1<=0;fd2<=0;fw_v<=0;fold_fault<=0;node_pending<=0;end
         else begin
-            fd0<=fold_request;fd1<=fd0;
-            fw_v<={fw_v[ALAT-1:0],fd1};
+            fd0<=fold_request;fd1<=fd0;fd2<=fd1;
+            fw_v<={fw_v[ALAT-1:0],fold_issue};
             if(fold_request)begin
                 fa0<=fold_a;fb0<=fold_b;
                 if(!node_valid[fold_a] || !node_valid[fold_b] || node_pending[fold_a] || node_pending[fold_b] ||
@@ -173,8 +256,9 @@ module ot_hbm_sm_pv_merge #(
             if(ev && (|node_pending))fold_fault<=1;
         end
     always @(posedge clk)begin
-        if(fd0)fold_a_data<=st_rd;
-        fw_a[0]<=fa1;
+        if((RDREG == 1) ? fd1 : fd0)fold_a_data<=st_q;
+        if(fd1)fa2<=fa1;
+        fw_a[0]<=(RDREG == 1) ? fa2 : fa1;
         for(fk=1;fk<=ALAT;fk=fk+1)fw_a[fk]<=fw_a[fk-1];
     end
     reg [TAGW-1:0] node_tag[0:7];
@@ -186,10 +270,9 @@ module ot_hbm_sm_pv_merge #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin
             node_valid<=0;pub_d0<=0;pub_d1<=0;pub_active<=0;pub_fault<=0;
-            pub_v<=0;word_next<=0;
+            word_next<=0;
         end else begin
             pub_d0<=publish_request;pub_d1<=pub_d0;
-            pub_v<=pub_d1 || pub_active;
             if(PUBLISH && ev && ev_first)node_valid[tag_d[2:0]]<=0;
             if(fold_request)node_valid[fold_b]<=0;      // b is consumed by the fold
             if(PUBLISH && finish)begin
@@ -202,14 +285,44 @@ module ot_hbm_sm_pv_merge #(
                    (pub_active && word_next!=14))pub_fault<=1;
             end
             if(ev && (pub_active || pub_d0 || pub_d1))pub_fault<=1;
-            if(pub_d0)begin pub_buffer<=st_rd;slot1<=slot0;tag1<=tag0;end
+            if(pub_d0)begin slot1<=slot0;tag1<=tag0;end
             if(pub_d1)begin
-                pub_data<=pub_buffer[((MUT==3)?32:0)+:32];pub_word<=0;pub_out_slot<=slot1;pub_tag<=tag1;
                 word_next<=1;pub_active<=1;
             end else if(pub_active)begin
-                pub_data<=pub_buffer[32*(word_next ^ ((MUT==3)?4'd1:4'd0))+:32];pub_word<=word_next;
                 if(word_next==15)begin pub_active<=0;word_next<=0;end
                 else word_next<=word_next+1;
+            end
+        end
+    // publication output stage: o_* is the request-time state the scalar is emitted from
+    wire o_d1,o_act;
+    wire [3:0] o_wn;
+    wire [2:0] o_slot;
+    wire [TAGW-1:0] o_tag;
+    generate if (RDREG == 1) begin : g_pubq
+        reg q_d1,q_act;
+        reg [3:0] q_wn;
+        reg [2:0] q_slot;
+        reg [TAGW-1:0] q_tag;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin q_d1<=0;q_act<=0;end
+            else begin q_d1<=pub_d1;q_act<=pub_active;end
+        always @(posedge clk)begin
+            q_wn<=(RDMUT == 2) ? word_next + 4'd1 : word_next;q_slot<=slot1;q_tag<=tag1;
+            if(pub_d1)pub_buffer<=st_q;
+        end
+        assign o_d1=q_d1; assign o_act=q_act; assign o_wn=q_wn; assign o_slot=q_slot; assign o_tag=q_tag;
+    end else begin : g_pubd
+        always @(posedge clk) if(pub_d0)pub_buffer<=st_q;
+        assign o_d1=pub_d1; assign o_act=pub_active; assign o_wn=word_next; assign o_slot=slot1; assign o_tag=tag1;
+    end endgenerate
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)pub_v<=0;
+        else begin
+            pub_v<=o_d1 || o_act;
+            if(o_d1)begin
+                pub_data<=pub_buffer[((MUT==3)?32:0)+:32];pub_word<=0;pub_out_slot<=o_slot;pub_tag<=o_tag;
+            end else if(o_act)begin
+                pub_data<=pub_buffer[32*(o_wn ^ ((MUT==3)?4'd1:4'd0))+:32];pub_word<=o_wn;
             end
         end
     assign fault = m_fault | pub_fault | fold_fault;

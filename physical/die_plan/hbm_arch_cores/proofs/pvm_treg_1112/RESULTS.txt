@@ -1,0 +1,25 @@
+ot_hbm_sm_pv_merge TREG (registered, replicated turn decode) - HBM-CORES-B 2026-11-12, DIE-HBM-100 form F2 + RDREG + TREG
+Cause: pvm_F2R (F2 + RDREG=1) TT setup -87.42 ps / 553 endpoints, every path starting at bp: the 8:1 turn decode of entry
+r = bp (e_busy/e_fl/e_k/e_c/e_n) broadcast unregistered to the 512-bit ma/mb/sw_d/pv_y selects.
+Form: TREG=1 registers the decode of entry bp+1 one cycle early into 4 lane-group copies (128 bits each) + 1 control copy
+(11 bits each, keep; ot_keep_regs hook keeps them unmerged).  Premise (RTL): bp <= bp+1 every cycle and every entry write,
+reset included, is indexed by r = bp, so entry bp+1 is unchanged in the cycle before its turn.  Cycle-identical, pin cycles +0.
+TREG=0 (default) is the old live decode.  TRMUT=1 is a negative control only (copies take entry bp, not bp+1).
+
+1. Invariant (inv_trmut0.ys, yosys sat k-induction from reset, outputs dropped so only the decode cone remains):
+   each of the 5 copies g_td[*].g_q.q == live decode of entry bp (5 FORMAL asserts).
+   TREG=1 TRMUT=0: Induction step proven: SUCCESS (k=2).                                                 PASS
+   TREG=1 TRMUT=1 (inv_trmut1.ys): model found for base case 10: FAIL.                                    negative control FAILS as required
+2. TREG=0 unchanged (eq_t0_r0.ys / eq_t0_r1.ys; gold = RDREG branch RTL 5ee32d7cc6, gate = this RTL TREG=0, PUBLISH 1,
+   identical fadd + SRAM stubs, equiv_simple/induct -seq 2, no equiv_struct):
+   RDREG=0: 7325 proven, 0 unproven.                                                                    PASS
+   RDREG=1: 7866 proven, 0 unproven.                                                                    PASS
+3. Lock-step (run_lockstep.sh, tb_hbm_sm_pv_rdreg vs reference RDREG0/TREG0; 3 seeds x 300k cycles; MODE0 legal stream,
+   MODE1 fault onset); lockstep_results.txt:
+   DUT RDREG1+TREG1 (event form): MODE0 0 mismatches x3 (~9.9k nodes, 4.6k pubs, 1.6k folds/seed), MODE1 0 x3      PASS
+   DUT RDREG0+TREG1: MODE0 0 x3, MODE1 0 x3                                                                         PASS
+   DUT RDREG0+TREG0 and RDREG1+TREG0 (baselines): 0 x3 each mode                                                    PASS
+   DUT RDREG1+TREG1+TRMUT1: MODE0 380k-381k mismatches, MODE1 10-973                                                negative control FAILS as required
+   Bench note: tb_hbm_sm_pv_rdreg compared publication one edge late for every DUT; the expected stream and first-word
+   latency now follow DREG (2+DREG).  A first run of the RDREG0 rows on the old bench mismatched for that reason only.
+Scratch logs: epyc2 /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_treg_fm, pvm_treg_ls, pvm_treg_ls2.

@@ -115,6 +115,26 @@ def ring_reset_copies(clock, w, depth, dsrep=1, read_chunk=0):
     return 1 + -(-nch // cpc)
 
 
+RING_SELECT_GROUP_BITS = 8
+RING_SELECT_MODULES = ("ot_dp_clk_landing", "ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas")
+
+
+def ring_reach_select_copies(w, read_chunk=0):
+    """CLAND-SLEW-1 (GEN-CLASS-1 11-12, HEAD hd_spn_wshim_rx drv FAIL: 265 A1 pins of u_ring.dch[2].u_dsel at
+    TT 418-433 ps vs 320; hd_ctl the same family).  Each 64-bit read chunk of a ring has ONE one-hot select register
+    (ot_meso_dsel di) driving the 64 AND-OR cells of its chunk; with more than one chunk the band packs every chunk's di
+    at the ring START bit (landing_placement cland_ctl_rekey), so the far chunks' select nets run from the START bit to
+    their bits (wshim dch[2]: di at y 866, its 64 loads at y 911-942) and their routed slew is not bounded by anything
+    the plan sees (repair_design estimated 0 violations at place and GRT).  Rule: a ring with more than one read chunk
+    (padded W > 64) keeps one select copy per RING_SELECT_GROUP_BITS (8) bits (DSREP 8, the existing kept same-D copies
+    ot_meso_dsel_sel, 0 cycles, q/ready/fault identical), and landing_placement keys every copy at its own 8-bit group
+    (cland_local_chunks read 8), so no select net has more than 8 loads or leaves its group, at any type width or bus
+    spread.  Single-chunk rings and bounded READ_CHUNK rings (their own dsrep) are unchanged: returns 1."""
+    if read_chunk or -(-int(w) // 64) * 64 <= 64:
+        return 1
+    return 64 // RING_SELECT_GROUP_BITS
+
+
 HARD_RING_BASES = ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas")
 RING_FANOUT_KNOBS = ("landing_ring_fanout_max", "landing_ring_write_chunk")   # die-wide, soft rings only
 
@@ -655,6 +675,19 @@ class Landings:
         self.plan_path = plan_path      # resolves plan-relative pin tables for tap_grid (added_taps -> reset_tree)
         self.ca_variants = ca_variants
         self.collector = table.get("collector")
+        if self.collector is not None:
+            # SIDECAR-COVERAGE (GEN-CLASS-1 11-12, DIE-S81-88 PSPLIT-SIDECAR-STALE): the sidecar is composed per plan
+            # (clock_landing_plan.compose writes one collector.types row per partition type); a sidecar of another
+            # plan (unsplit base vs psplit) lacks the split types and gen_rtl died on KeyError '<type>'.  Fail closed
+            # here, before any RTL is written, with the class name and the missing types.
+            ptypes = sorted({p["type"] for p in plan.get("partitions") or []})
+            have = self.collector.get("types") or {}
+            miss = [tn for tn in ptypes if tn not in have]
+            if miss:
+                raise LandingError(f"SIDECAR_STALE: clock-landing sidecar collector.types lacks {len(miss)} of "
+                                   f"{len(ptypes)} plan partition types ({', '.join(miss[:6])}"
+                                   f"{', ...' if len(miss) > 6 else ''}): the sidecar was composed for another plan; "
+                                   f"pass the sidecar composed with this plan (--clock-landing)")
         # monitor="region" (opt-in, DIE-HEAD-3): the dataflow monitor plus same-region status links (registered ctl
         # pins on the region clock, no ring) from clock_landing_plan.compose(monitor="region").
         self.region_monitor = bool(self.collector) and self.collector.get("monitor", "reset") == "region"
@@ -1489,9 +1522,19 @@ class Landings:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
                 if dsrep is not None and not cat.get("straps"):
                     raise LandingError(f"{tn}.{b}: landing_ring_dsrep needs the count-aligned strap form")
+                # (CLAND-SLEW-1 copies below need no strap: ot_dp_clk_landing_ca carries DSREP too)
+                if wreg and dsrep is not None and dsrep != wreg["dsrep"]:
+                    raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
+                # CLAND-SLEW-1: reach-based read-select copies on every soft ring (a signed hard child keeps its params)
+                reach_ds = 1 if hard is not None else ring_reach_select_copies(
+                    w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0))
+                if reach_ds > 1:
+                    self.reset_placements[tn][b]["ring_dsrep_reach"] = reach_ds
+                    if wreg and wreg["dsrep"] < reach_ds:
+                        wreg = dict(wreg, dsrep=reach_ds)
+                    elif not wreg and (dsrep or 1) < reach_ds:
+                        dsrep = reach_ds
                 if wreg:
-                    if dsrep is not None and dsrep != wreg["dsrep"]:
-                        raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
                     ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") else "") + (", .FREG(1))" if wreg["freg"] else ")")
@@ -1551,6 +1594,12 @@ class Landings:
                         rp.setdefault("WNEG", 1)
                     elif r["module"] in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
                         rp.setdefault("WFALL", 1)   # HEAD-RINGHOLD-1: per-row count-aligned ring, same writer edge
+                # CLAND-SLEW-1: the same reach-based read-select copies on a per-row ring (never lowered)
+                if r["module"] in RING_SELECT_MODULES and not rp.get("READ_CHUNK"):
+                    reach_ds = ring_reach_select_copies(w + 2 if self.dataflow else w)
+                    if reach_ds > int(rp.get("DSREP", 1)):
+                        rp["DSREP"] = reach_ds
+                        self.reset_placements.setdefault(tn, {}).setdefault(b, {})["ring_dsrep_reach"] = reach_ds
                 rpar = "".join(f", .{k}({v})" for k, v in sorted(rp.items()))
                 rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
                 ring_mod = r["module"] + " #(.W({w})" + rpar.replace("{", "{{").replace("}", "}}") + ")"

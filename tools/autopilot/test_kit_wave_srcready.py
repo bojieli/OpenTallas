@@ -32,13 +32,18 @@ def fake(table):
 
 
 def test_pruned_copy_dropped_and_logged():
+    # KW-FIX-45 11-12 (COORD): the REQUIRED list decides; a low file count alone no longer drops a host (extra files on the
+    # other host must not disqualify it); cfg src_count_check restores the old comparison with the largest copy
     c = cfg()
     bad = K.src_incomplete(FakeAP(), c, run=fake({"epyc5": (4000, 158, []), "intel1": (2600, 158,
                                                   ["/s/src/tools/die_plan/bind.py"]), "intel2": (4000, 2, [])}))
-    assert set(bad) == {"intel1", "intel2"}
-    assert "bind.py missing" in bad["intel1"]["qwen_kvsys"] and "2/158" in bad["intel2"]["qwen_kvsys"]
+    assert set(bad) == {"intel1"}
+    assert "bind.py missing" in bad["intel1"]["qwen_kvsys"]
     c["_src_incomplete"] = bad
-    assert K.gen_hosts(c, "qwen_kvsys") == ["epyc5"]
+    assert K.gen_hosts(c, "qwen_kvsys") == ["epyc5", "intel2"]
+    c2 = cfg(); c2["src_count_check"] = True
+    bad2 = K.src_incomplete(FakeAP(), c2, run=fake({"epyc5": (4000, 158, []), "intel2": (4000, 2, [])}))
+    assert "2/158" in bad2["intel2"]["qwen_kvsys"]
 
 
 def test_unreachable_never_dropped_and_whole_copies_kept():

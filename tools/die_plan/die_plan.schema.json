@@ -2084,6 +2084,23 @@
         "type": "integer",
         "minimum": 1
        },
+       "reach_fix_sinks": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "edge_split_ports": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
        "tap_target_sinks": {
         "type": "integer",
         "minimum": 1
@@ -5356,6 +5373,10 @@
      },
      "ft_spread": {
       "type": "boolean"
+     },
+     "ft_hop_maxwire_um": {
+      "type": "number",
+      "minimum": 0
      },
      "landing_base_type": {
       "type": "string"

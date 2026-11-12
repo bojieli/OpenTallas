@@ -659,6 +659,13 @@ SCHEMA = {
                         # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
                         "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # REACH-FIX-1 11-12 (reach_fix.py): the subset of sink_sites_um the tool added (kit flops the
+                        # tap planner does not list: landing rings, ring reads, relays), so its check counts them once
+                        "reach_fix_sinks": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
+                                                                      "items": {"type": "number"}}},
+                        # REACH-FIX-1 11-12: per-type opt-in of edge clock ports (incl. forwarded fclk_in_*) into
+                        # clock_edge_split.tcl on any die (gen_phys.edge_split_ports)
+                        "edge_split_ports": {"type": "array", "items": {"type": "string"}},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
                         # rule LC1 (10-25): density taps also cover the registered control pins (arst_n, start_i,
@@ -1314,6 +1321,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_spread"] = {"type": "boolean"}
+# FT-HOP-M2-WIRE 11-12 (GEN-CLASS-1): per-type repeater pitch of the ft-station hop nets (gen_phys FT_HOP_MAXWIRE_UM; 0 = off)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_hop_maxwire_um"] = {"type": "number", "minimum": 0}
 # Explicit source-synchronous data pads retain declared budgets on their actual PHY clock.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]["properties"]["pins"]["items"]["properties"]["data_inputs"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,

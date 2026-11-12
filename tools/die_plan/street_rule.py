@@ -283,6 +283,119 @@ def type_windows(t):
     return dict(out)
 
 
+FACE_ALONG = dict(N=0, S=0, E=1, W=1)     # along-face coordinate index (x on N/S, y on E/W)
+
+
+def face_anchor_cfg(fa, name):
+    """validated FIXED-FACE config of one type (legalize --face-anchor FILE: {type: cfg}); None = legacy (every window
+    keeps its local coordinate, the instance origin stays).  cfg keys:
+      grow          {"x": "E"|"W", "y": "N"|"S"}: the side the outline grows on (default E / N: origin kept).  W / S:
+                    every instance origin moves by -dW / -dH, so the E / N edge keeps its die position.
+      origin_shift_um [dx, dy]: an extra die-level move of every instance of the type (e.g. a pushed neighbour); 0, 0.
+      fixed_faces   faces that abut FIXED partitions: their windows (buses, ft slots, landing pins and bands of the
+                    face's buses, outline link ends) keep their DIE coordinate along the face.  Every other face abuts a
+                    moved (or no) partition and keeps its LOCAL windows."""
+    if fa is None:
+        return None
+    if not isinstance(fa, dict) or set(fa) - {"grow", "origin_shift_um", "fixed_faces"}:
+        raise ValueError("%s: face anchor needs only grow / origin_shift_um / fixed_faces" % name)
+    g = fa.get("grow") or {}
+    if not isinstance(g, dict) or g.get("x", "E") not in ("E", "W") or g.get("y", "N") not in ("N", "S") or set(g) - {"x", "y"}:
+        raise ValueError("%s: face anchor grow must be {x: E|W, y: N|S}" % name)
+    sh = fa.get("origin_shift_um", [0.0, 0.0])
+    if not isinstance(sh, list) or len(sh) != 2 or any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in sh):
+        raise ValueError("%s: face anchor origin_shift_um must be [dx, dy]" % name)
+    ff = fa.get("fixed_faces", [])
+    if not isinstance(ff, list) or any(f not in FACE_ALONG for f in ff):
+        raise ValueError("%s: face anchor fixed_faces must list N/S/E/W" % name)
+    return dict(grow=dict(x=g.get("x", "E"), y=g.get("y", "N")), origin_shift_um=[float(sh[0]), float(sh[1])],
+                fixed_faces=sorted(set(ff)))
+
+
+def _on_face(x, y, W, H, tol=8.64):
+    """outline faces within tol of a point (a landing pin sits a few um inside its face)."""
+    return [f for f, d in (("W", x), ("E", W - x), ("S", y), ("N", H - y)) if abs(d) <= tol]
+
+
+def face_anchor(tnew, M, WH0, WH1, fa, t0=None):
+    """FIXED-FACE (GEN-CLASS-1 11-12, HEAD-95 west growth): legalize grows the outline on E / N in LOCAL coordinates.
+    With fa (face_anchor_cfg) the instance origin moves by shift = origin_shift_um + (-dW if grow x W) / (-dH if grow
+    y S); a window on a FIXED face then moves by -shift along that face so its die coordinate (the fixed neighbour's
+    pins) is unchanged, while windows on every other face keep their local coordinates (their neighbours move with
+    the type).  Pins and bands on a fixed face take their BASE (t0) position + the shift (the free-space remap of
+    an interior stretch does not apply to a coordinate held by a fixed neighbour).  Moved on a fixed face: buses[].window_um, ft_slots in/out_window_um, landing_contract pins on the face,
+    the landing bands (rect_um / rects_um / ff_rect_um) of the face's buses, and the outline end points of M.L links on
+    the face.  Returns (record, errors); errors = a moved window outside the outline (the type is then not applied)."""
+    W0, H0 = WH0
+    W1, H1 = WH1
+    sx, sy = fa["origin_shift_um"]
+    if fa["grow"]["x"] == "W":
+        sx -= W1 - W0
+    if fa["grow"]["y"] == "S":
+        sy -= H1 - H0
+    d = (-sx, -sy)
+    rec = dict(origin_shift_um=[round(sx, 4), round(sy, 4)], fixed_faces=fa["fixed_faces"], moved=[])
+    errs = []
+    L = (W1, H1)
+    for face in fa["fixed_faces"]:
+        a = FACE_ALONG[face]
+        da = round(d[a], 4)
+        if not da:
+            continue
+        buses = set()
+        for b in tnew.get("buses") or []:
+            if b.get("face") == face and isinstance(b.get("window_um"), list):
+                b["window_um"] = [round(v + da, 4) for v in b["window_um"][:2]] + b["window_um"][2:]
+                buses.add(b.get("name"))
+                rec["moved"].append("bus %s" % b.get("name"))
+                if b["window_um"][0] < -EPS or b["window_um"][1] > L[a] + EPS:
+                    errs.append("bus %s window %s outside the %s face" % (b.get("name"), b["window_um"][:2], face))
+        for f in tnew.get("ft_slots") or []:
+            for fk, wk, sfx in (("in_face", "in_window_um", "_i"), ("out_face", "out_window_um", "_o")):
+                if f.get(fk) == face and isinstance(f.get(wk), list):
+                    f[wk] = [round(v + da, 4) for v in f[wk][:2]] + f[wk][2:]
+                    buses.add(f.get("name", "") + sfx)
+                    rec["moved"].append("ft %s.%s" % (f.get("name"), wk))
+                    if f[wk][0] < -EPS or f[wk][1] > L[a] + EPS:
+                        errs.append("ft %s %s outside the %s face" % (f.get("name"), wk, face))
+        lc = (tnew.get("clock") or {}).get("landing_contract") or {}
+        lc0 = ((t0 or tnew).get("clock") or {}).get("landing_contract") or {}
+        pins0 = lc0.get("pins") or []
+        for i, pin in enumerate(lc.get("pins") or []):
+            xy = pin.get("xy_um")
+            b0 = pins0[i].get("xy_um") if t0 is not None and i < len(pins0) else None
+            ref = b0 if isinstance(b0, list) and len(b0) == 2 else xy
+            if isinstance(xy, list) and len(xy) == 2 and face in _on_face(xy[0], xy[1], W1, H1):
+                xy[a] = round(ref[a] + da, 4)
+        bands0 = lc0.get("bands") or {}
+        for bus, band in (lc.get("bands") or {}).items():
+            if bus not in buses:
+                continue
+            if t0 is not None and bus in bands0:
+                band0 = copy.deepcopy(bands0[bus])
+                for k in ("rect_um", "ff_rect_um", "rects_um"):
+                    if k in band0:
+                        band[k] = band0[k]
+            for k in ("rect_um", "ff_rect_um"):
+                if isinstance(band.get(k), list) and len(band[k]) == 4:
+                    band[k][a] = round(band[k][a] + da, 4)
+                    band[k][a + 2] = round(band[k][a + 2] + da, 4)
+            for r in band.get("rects_um") or []:
+                r[a] = round(r[a] + da, 4)
+                r[a + 2] = round(r[a + 2] + da, 4)
+            rec["moved"].append("band %s" % bus)
+        for q, (ea, eb, wb, kind) in enumerate(M.L):
+            ends = []
+            for e in (ea, eb):
+                if e[0] is None and face in _on_face(e[1][0], e[1][1], W1, H1, tol=1.0):
+                    xy = list(e[1])
+                    xy[a] += da
+                    e = (None, tuple(xy))
+                ends.append(e)
+            M.L[q] = (ends[0], ends[1], wb, kind)
+    return rec, errs
+
+
 def core_models(M, partners):
     """core dicts for analyze() from a core_place.TypeModel at its current state."""
     cores = []
@@ -775,6 +888,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
     lmeta = link_meta(M, conns) if cfg["add_regs"] > 0 else {}
+    fanc = face_anchor_cfg((cfg.get("_face_anchor") or {}).get(name), name)
 
     def attempt(fixed_k, fix_ft=False):
         grow_ax = cfg.get("grow_axes", "xy")
@@ -833,6 +947,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                 ends.append(e)
             M.L[q] = (ends[0], ends[1], wb, kind)
         tnew["outline_um"] = [round(W, 4), round(H, 4)]
+        fa_rec, fa_err = None, []
+        if fanc is not None:
+            fa_rec, fa_err = face_anchor(tnew, M, (W0, H0), (W, H), fanc, t)
         added_st, added_ft = [], []
         if cfg["add_regs"] > 0:
             added_st = add_station_regs(M, tnew, srep.get("need_more_idx") or [], ccfg["reach"], int(cfg["add_regs"]))
@@ -897,9 +1014,11 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("band clearance short %d" % len(bshort))
         if gA > cfg["max_growth_pct"]:
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
+        if fa_err:
+            reasons.append("fixed-face windows %s" % fa_err[:3])
         ok = not reasons
         relaxed = relaxed_n
-        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
+        return dict(ok=ok, reasons=reasons, tnew=tnew, face_anchor=fa_rec, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
                     srep=srep, nov=nov, new_over=new_over, longer=longer, under=under, fthop=fthop, eqbad=eqbad,
                     acc=acc, items=items, blocked=blocked, relaxed=relaxed,
                     timing_over=[dict(kind=M.L[q][3], bits=M.L[q][2], len_um=round(M.llen(q), 1),
@@ -951,6 +1070,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                                           note="direct links already > 405 um in the base (registered elsewhere)"),
                points_under_base=under0, eq_violations=R_["eqbad"],
                items_moved=sum(1 for a_ in R_["acc"] if a_[0] or a_[1]), items=len(R_["items"]))
+    if R_.get("face_anchor") is not None:
+        row["face_anchor"] = R_["face_anchor"]
     log("  %s: %s viol %s -> %s  outline %.2fx%.2f -> %.2fx%.2f (+%.1f%%)  moved %d  %s" % (
         name, "APPLIED" if ok else "not applied", c0, c1, W0, H0, W, H, gA, moved, row["reason"]))
     return row, (tnew if ok else None)
@@ -1200,6 +1321,24 @@ def _start_relays(tr):
     return [r for r in rl if not st or r.get("role") in ("raw", "boot", "bootstrap_transport")]
 
 
+def _q_roles(tr):
+    """{net q: relay row with its emitted role} of a solved reset tree.  START trees (reset_tree.start_relays): a
+    consumer tap rst_n_t<i> of a mission type is GATED (reset AND run), its registered raw copy rr_t<i> is role raw
+    (emitted whenever the plan names it, reset_tree.start_raw_requests), plain tree relays rst_rl_* are raw.  Trees
+    without START: every relay is a plain registered relay (raw).  A re-select must keep the role: a gated relay where
+    a raw one was named fails gen-phys's reader-START check (HEAD-94 hd_st_n3_transit.u2_i, COORD 11-12)."""
+    if not tr.get("start"):
+        return {r["q"]: dict(r, role="raw") for r in tr.get("relays", [])}
+    import reset_tree as RT
+    out = {}
+    for r in RT.start_relays(tr):
+        out.setdefault(r["q"], r)
+        m = re.match(r"^rst_n_t(\d+)$", r["q"])
+        if m and r.get("role") == "gated":
+            out.setdefault("rr_t" + m.group(1), dict(r, name=r["name"] + "_r", q="rr_t" + m.group(1), role="raw"))
+    return out
+
+
 def reset_resel(P, Q, names, plan_path, near_um=25.0):
     """re-select the raw reset references of legalized types on their re-solved reset tree (COORD 11-12, HEAD-94
     hd_lep0N "raw reset source is not the recorded registered relay"; rule = HEAD mesh_resel.py / compose.py RAWSEL):
@@ -1210,6 +1349,14 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     import math
     import schema as SC
     import reset_tree as RT
+    def has(t):
+        ck = t.get("clock") or {}
+        return bool(t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or ck.get("landing_raw_branches")
+                    or (ck.get("landing_contract") or {}).get("collector_tree") or any(
+                        (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start")))
+    names = [n for n in names if has(Q["partition_types"][n])]
+    if not names:
+        return {}
     try:
         PA, PB = SC.Plan(P, Path(plan_path)), SC.Plan(Q, Path(plan_path))
     except Exception as e:  # noqa: BLE001
@@ -1218,13 +1365,17 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     for tn in names:
         t = Q["partition_types"][tn]
         ck = t.get("clock") or {}
-        has = t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or any(
-            (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start"))
-        if not has:
-            continue
         rec = dict(exports=[], raw=[], skipped=[])
         try:
             ta, tb = RT.for_type(PA, tn), RT.for_type(PB, tn)
+            lc = ck.get("landing_contract") or {}
+            if lc.get("collector_tree") is not None:
+                # the published collector_tree = the tree the bind re-solves (added_tap_recentre.republish rule); the
+                # collector sources / children are re-attached after this (collector_reattach.reattach_plan)
+                new = json.loads(json.dumps(tb))
+                if json.dumps(new, sort_keys=True) != json.dumps(lc["collector_tree"], sort_keys=True):
+                    rec["tree_republished"] = [len(lc["collector_tree"].get("relays") or []), len(new.get("relays") or [])]
+                    lc["collector_tree"] = new
             ra = {r["name"]: r for r in _start_relays(ta)}
             rb = _start_relays(tb)
             pins = {x["name"]: x for x in ((ck.get("landing_contract") or {}).get("pins") or [])}
@@ -1238,9 +1389,10 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     n = shared[e["instance"]]
                 else:
                     c = [r for r in rb if r.get("role") == o.get("role") and r.get("depth") == o.get("depth")
-                         and r["name"] not in used] or [r for r in rb if r.get("depth") == o.get("depth")]
+                         and r["name"] not in used] or [r for r in rb if r.get("role") == o.get("role")
+                                                         and r.get("depth") == o.get("depth")]
                     if not c:
-                        rec["skipped"].append(e.get("instance"))
+                        rec["skipped"].append("%s: no same-role relay" % e.get("instance"))
                         continue
                     n = min(c, key=lambda r: math.dist(r["xy"], e.get("xy_um") or o["xy"]))
                     used.add(n["name"])
@@ -1253,9 +1405,11 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 if (e["instance"], e.get("net")) != (n["name"], n["q"]):
                     rec["exports"].append([e.get("port"), e["instance"], n["name"]])
                 e["instance"], e["net"], e["xy_um"] = n["name"], n["q"], list(n["xy"])
-            ra_q = {r["q"]: r for r in ta.get("relays", [])}
-            rb_all = tb.get("relays", [])
-            rb_q = {r["q"]: r for r in rb_all}
+            ra_q = _q_roles(ta)
+            rb_q = _q_roles(tb)
+            rb_all = list(rb_q.values())
+            # tree edges (D-chain) only over the solved plain relays
+            rb_plain = tb.get("relays", [])
             refs = []
             for key in ("landing_reader_start", "landing_writer_start"):
                 for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
@@ -1263,19 +1417,58 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                         refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
             for i, lr in enumerate(ck.get("landing_local_resets") or []):
                 refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+            # landing_raw_branches: base + stage originals must be a D-chain of the re-solved tree (landing_raw_branches
+            # .py: "exactly one same-clk plain relay" per Q, each original's D = its parent): base -> nearest same-depth
+            # relay to the old base, then each stage -> the child of the previous node nearest the stage xy
+            kids = collections.defaultdict(list)
+            for r in rb_plain:
+                if r.get("d"):
+                    kids[r["d"]].append(r)
+            for bi, br in enumerate(ck.get("landing_raw_branches") or []):
+                ob = ra_q.get(br.get("base"))
+                if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
+                    nb = rb_q.get(br.get("base"))
+                else:
+                    cand = [r for r in rb_plain if r.get("depth") == ob.get("depth") and r.get("clk", "clk") == "clk"
+                            and (rb_q.get(r["q"]) or {}).get("role") == ob.get("role")]
+                    nb = min(cand, key=lambda r: math.dist(r["xy"], ob["xy"])) if cand else None
+                if nb is None:
+                    rec["skipped"].append("landing_raw_branches.%d.base" % bi)
+                    continue
+                chain, prev, ok = [], nb, True
+                for st in br.get("stages") or []:
+                    c = kids.get(prev["q"]) or []
+                    if not c:
+                        ok = False
+                        break
+                    keep = [r for r in c if r["q"] == st.get("original")]
+                    nxt = keep[0] if keep else min(c, key=lambda r: math.dist(r["xy"], st.get("xy_um") or r["xy"]))
+                    chain.append(nxt)
+                    prev = nxt
+                if not ok:
+                    rec["skipped"].append("landing_raw_branches.%d (%s): chain ends" % (bi, br.get("name")))
+                    continue
+                if br.get("base") != nb["q"] or [st.get("original") for st in br["stages"]] != [r["q"] for r in chain]:
+                    rec["raw"].append(["landing_raw_branches.%d" % bi, br.get("base"), nb["q"]])
+                br["base"] = nb["q"]
+                for st, r in zip(br["stages"], chain):
+                    st["original"] = r["q"]
             for tag, obj, fld in refs:
                 q = obj.get(fld)
                 o = ra_q.get(q)
                 if o is None:
                     continue
                 pt = obj.get("xy_um") or o["xy"]
-                cand = [r for r in rb_all if r.get("depth") == o.get("depth")]
+                same = [r for r in rb_all if r.get("depth") == o.get("depth") and r.get("role") == o.get("role")]
+                # same form first: a plain registered relay stays plain, a raw tap copy rr_t<i> stays a copy
+                cand = [r for r in same if r["q"].startswith("rr_t") == q.startswith("rr_t")] or same
                 if not cand:
-                    rec["skipped"].append(tag)
+                    rec["skipped"].append("%s: no same-role relay" % tag)
                     continue
                 n = min(cand, key=lambda r: math.dist(r["xy"], pt))
                 k = rb_q.get(q)
-                if k is not None and k.get("depth") == o.get("depth") and math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
+                if k is not None and k.get("depth") == o.get("depth") and k.get("role") == o.get("role") and \
+                        math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
                     continue
                 rec["raw"].append([tag, q, n["q"]])
                 obj[fld] = n["q"]
@@ -1394,11 +1587,12 @@ def _raster(M):
     return HR.Raster(M.W, M.H, rects)
 
 
-def add_station_regs(M, tnew, idx, reach, add_max):
+def add_station_regs(M, tnew, idx, reach, add_max, raster=None):
     """COORD 11-12 (cycles owner-pre-approved): a station that needs more registers after the move gets them, up to
-    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)]."""
+    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)].
+    raster: a hub_repack.Raster of the cores instead of M (REACH-FIX-1 calls it without a TypeModel)."""
     import hub_repack as HR
-    R = _raster(M)
+    R = raster if raster is not None else _raster(M)
     st = tnew.get("internal_stations") or []
     out = []
     for si in idx:
@@ -1481,11 +1675,14 @@ def add_link_stations(M, tnew, qs, meta, reach, add_max):
     return out
 
 
-def add_ft_regs(M, t0, tnew, reach, add_max):
+def add_ft_regs(M, t0, tnew, reach, add_max, raster=None, use_base=True, ends=None):
     """an ft hop stretched past reach by a widened street gets ceil(len / reach) - 1 (<= add_max) new register stages on
     its Manhattan path (bit-site pattern copied from the nearest stage, translated; never under a core). Returns the
-    added stages; hops it cannot fix are left (the type is then not applied)."""
-    R = _raster(M)
+    added stages; hops it cannot fix are left (the type is then not applied).
+    REACH-FIX-1: raster = a hub_repack.Raster instead of M; use_base=False splits EVERY hop > reach (not only the ones a
+    move stretched past their base length); ends = {slot index: (in pin xy, out pin xy)} replaces the face mid-points
+    (the real bit pins of gen_phys.type_pins)."""
+    R = raster if raster is not None else _raster(M)
     W, H = tnew["outline_um"]
     out = []
     for k, (f0, f) in enumerate(zip(t0.get("ft_slots") or [], tnew.get("ft_slots") or [])):
@@ -1496,13 +1693,15 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
         hops0 = ft_hops(dict(t0, ft_slots=[f0]))[0]
         a = RS.face_point(W, H, f.get("in_face", "W"), f.get("in_window_um"))
         b = RS.face_point(W, H, f.get("out_face", "E"), f.get("out_window_um"))
+        if ends and k in ends:
+            a, b = ends[k]
         j = 0
         changed = False
         while j <= len(regs):
             ch = [a] + [tuple(r[:2]) for r in regs] + [b]
             p, q = ch[j], ch[j + 1]
             L = abs(p[0] - q[0]) + abs(p[1] - q[1])
-            base = hops0[j] if j < len(hops0) else 0.0
+            base = hops0[j] if (use_base and j < len(hops0)) else 0.0
             if L <= max(base, reach) + 0.01:
                 j += 1
                 continue
@@ -1831,12 +2030,35 @@ def _one(n):
         return dict(type=n, changed=False, applied=False, reason="error %s: %s" % (type(e).__name__, e)), None
 
 
+def face_anchor_origins(Q, rows):
+    """FIXED-FACE: every R0 instance of an applied type with a face anchor moves by its origin_shift_um (the W / S
+    growth and the declared die move); a type with a non-R0 instance and a non-zero shift is not applied (its base
+    stays: rotated frames are not handled)."""
+    for r in rows:
+        fa = r.get("face_anchor")
+        if not r.get("applied") or not fa or not any(fa["origin_shift_um"]):
+            continue
+        insts = [p for p in Q.get("partitions") or [] if p.get("type") == r["type"]]
+        if any(p.get("orient", "R0") != "R0" for p in insts):
+            r["applied"] = False
+            r["reason"] = "fixed-face origin shift needs R0 instances"
+            continue
+        for p in insts:
+            p["origin_um"] = [round(p["origin_um"][0] + fa["origin_shift_um"][0], 4),
+                              round(p["origin_um"][1] + fa["origin_shift_um"][1], 4)]
+        fa["instances_moved"] = [p["name"] for p in insts]
+
+
 def cmd_legalize(a):
     repo, plan, P, sha, die, die_dir, rs_cfg, conns, names, cfg = setup(a)
     Q = copy.deepcopy(P)
     rows = []
     global _JOB
     cfg["_bins_dir"] = "physical/die_plan/%s/street_rule_bins" % die
+    if getattr(a, "face_anchor", None):
+        cfg["_face_anchor"] = json.loads(Path(a.face_anchor).read_text())
+        for n in cfg["_face_anchor"]:
+            face_anchor_cfg(cfg["_face_anchor"][n], n)
     _JOB = (P, die_dir, repo, conns, cfg, rs_cfg)
     if a.jobs > 1 and len(names) > 1:
         import multiprocessing as mp
@@ -1848,6 +2070,7 @@ def cmd_legalize(a):
         rows.append(row)
         if tn is not None:
             Q["partition_types"][n] = tn
+    face_anchor_origins(Q, rows)
     # export dry run of the clock taps (schema.tap_grid = what gen phys / kit_rtl derives; density taps re-derive
     # from the remapped sinks, every sink <= tap_radius_um): a type whose legalized form fails where its base passes
     # keeps its base form (COORD 11-12, HEAD-94 hd_lep0N "no legal clock tap within 200 um")
@@ -1900,14 +2123,16 @@ def cmd_legalize(a):
     # the taps feed the relay siting), same pass as the rect / bins / taps fix (COORD 11-12)
     still = [r["type"] for r in rows if r.get("applied")]
     if still and cfg.get("reset_resel", 1):
-        rr = reset_resel(P, Q, still, plan)
-        nch = 0
+        rr, rep, reverted = reset_contract(P, Q, still, plan)
         for r in rows:
-            if r["type"] in rr:
-                r["reset_resel"] = rr[r["type"]]
-                nch += len(rr[r["type"]].get("exports", [])) + len(rr[r["type"]].get("raw", []))
-        print("reset re-select: %d types with raw reset refs, %d refs re-selected, %d errors" % (
-            len(rr), nch, sum(1 for v in rr.values() if v.get("error"))), flush=True)
+            n = r["type"]
+            if n in rr:
+                r["reset_resel"] = rr[n]
+            if n in (rep.get("reattached") or {}):
+                r["collector_reattach"] = rep["reattached"][n]
+            if n in reverted:
+                r["applied"] = False
+                r["reason"] = "reset contract: %s" % reverted[n][:160]
     def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
@@ -1995,8 +2220,123 @@ def main(argv=None):
             s.add_argument("--rs-halving", choices=("full", "edge_outline", "none", "off"), default="edge_outline")
             s.add_argument("--rs-out")
             s.add_argument("--jobs", type=int, default=1)
+            s.add_argument("--face-anchor", help="JSON {type: {grow: {x: E|W, y: N|S}, origin_shift_um: [dx, dy], "
+                           "fixed_faces: [..]}}: faces abutting FIXED partitions keep die windows, others local")
+    s = sub.add_parser("sidecar", help="carry a legalized plan's republished collector trees + reattached sources into "
+                       "an asbuilt clock_landing_table sidecar (the strict bind reads sources from the sidecar)")
+    s.add_argument("base_plan")
+    s.add_argument("new_plan")
+    s.add_argument("sidecar_in")
+    s.add_argument("sidecar_out")
+    s = sub.add_parser("resetfix", help="run only the reset-contract step (re-select, collector_tree republish, source "
+                       "re-attach, revert on failure) on an already legalized plan")
+    s.add_argument("base_plan")
+    s.add_argument("new_plan")
+    s.add_argument("out_plan")
+    s.add_argument("--repo", default=".")
     a = ap.parse_args(argv)
+    if a.cmd == "resetfix":
+        return cmd_resetfix(a)
+    if a.cmd == "sidecar":
+        return cmd_sidecar(a)
     return cmd_check(a) if a.cmd == "check" else cmd_legalize(a)
+
+
+def reset_contract(P, Q, names, plan_path, rounds=4):
+    """reset contract of the moved / grown types, in place on Q: raw reset refs re-selected + published collector_tree
+    republished (reset_resel), collector sources / children re-attached (reattach_each).  A type whose re-select fails,
+    whose raw-branch chain ends, or whose sources find no same-depth relay within 405 um is reverted to its base form;
+    the reset wavefront is die-wide, so after a revert every other type restarts from its pre-step form and the step
+    repeats.  -> (rr, reattach report, {type: reason})"""
+    names = list(names)
+    snap = {n: copy.deepcopy(Q["partition_types"][n]) for n in names}
+    reverted = {}
+    for _ in range(rounds):
+        live = [n for n in names if n not in reverted]
+        for n in live:
+            Q["partition_types"][n] = copy.deepcopy(snap[n])
+        rr = reset_resel(P, Q, live, plan_path)
+        rep = reattach_each(P, Q)
+        bad = {n: str(rep["over"][n]) for n in rep.get("over") or {} if n in live}
+        for n, v in rr.items():
+            if v.get("error") or any("chain ends" in str(x) or "no same-role" in str(x) for x in v.get("skipped", [])):
+                bad.setdefault(n, str(v.get("error") or v.get("skipped")))
+        nch = sum(len(v.get("exports", [])) + len(v.get("raw", [])) for v in rr.values())
+        print("reset contract: %d types, %d refs re-selected, %d trees republished, %d collectors re-attached, "
+              "%d reverted" % (len(rr), nch, sum(1 for v in rr.values() if v.get("tree_republished")),
+                               len(rep.get("reattached") or {}), len(bad)), flush=True)
+        if not bad:
+            break
+        for n, why in bad.items():
+            reverted[n] = why
+            Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+    return rr, rep, reverted
+
+
+def reattach_each(P, Q, reach_um=405):
+    """collector_reattach.reattach_plan, one type at a time: a type whose sources find no same-depth relay within
+    reach lands in over[] (with the error) instead of aborting the whole plan"""
+    import collector_reattach as CRA
+    rep = {"reattached": {}, "over": {}}
+    for tn in sorted(Q.get("partition_types") or {}):
+        if CRA._lc(Q, tn) is None:
+            continue
+        sub_p = {"partition_types": {tn: P["partition_types"][tn]}} if tn in P.get("partition_types", {}) else {
+            "partition_types": {}}
+        sub_q = {"partition_types": {tn: Q["partition_types"][tn]}}
+        try:
+            r = CRA.reattach_plan(sub_p, sub_q, reach_um)
+        except ValueError as e:
+            rep["over"][tn] = [str(e)]
+            continue
+        rep["reattached"].update(r["reattached"])
+        rep["over"].update(r["over"])
+    return rep
+
+
+def cmd_resetfix(a):
+    P, _ = load_plan(Path(a.base_plan))
+    Q, _ = load_plan(Path(a.new_plan))
+    norm = lambda o: json.dumps(o, sort_keys=True)  # noqa: E731
+    moved = [n for n, t in Q["partition_types"].items()
+             if n in P["partition_types"] and norm(t) != norm(P["partition_types"][n])]
+    rr, rep, reverted = reset_contract(P, Q, moved, Path(a.base_plan))
+    txt = json.dumps(Q, indent=1) + "\n"
+    Path(a.out_plan).write_bytes(gzip.compress(txt.encode()) if a.out_plan.endswith(".gz") else txt.encode())
+    print(json.dumps(dict(changed_types=len(moved), reverted=reverted,
+                          sha256=hashlib.sha256(Path(a.out_plan).read_bytes()).hexdigest())))
+    return 0
+
+
+def cmd_sidecar(a):
+    """for every type whose landing collector_tree differs between BASE and NEW: the sidecar's collector.types[tn].tree
+    becomes NEW's tree (only where the sidecar copy equals BASE's, else refused), then the sources / children node/tap
+    are synced (collector_reattach.sync_sidecar).  Other types / keys unchanged."""
+    import collector_reattach as CRA
+    B, _ = load_plan(Path(a.base_plan))
+    N, _ = load_plan(Path(a.new_plan))
+    raw_side = Path(a.sidecar_in).read_bytes()
+    side = json.loads(gzip.decompress(raw_side) if a.sidecar_in.endswith(".gz") else raw_side)
+    st = ((side.get("collector") or {}).get("types") or {})
+    norm = lambda o: json.dumps(o, sort_keys=True)  # noqa: E731
+    changed, refused = [], []
+    for tn, t in N["partition_types"].items():
+        lc = ((t.get("clock") or {}).get("landing_contract") or {})
+        blc = (((B["partition_types"].get(tn) or {}).get("clock") or {}).get("landing_contract") or {})
+        if lc.get("collector_tree") is None or norm(lc["collector_tree"]) == norm(blc.get("collector_tree")):
+            continue
+        if tn not in st:
+            continue
+        if norm(st[tn].get("tree")) != norm(blc.get("collector_tree")):
+            refused.append(tn)
+            continue
+        st[tn]["tree"] = json.loads(json.dumps(lc["collector_tree"]))
+        changed.append(tn)
+    n = CRA.sync_sidecar(N, side, changed) if changed else {}
+    txt = json.dumps(side, separators=(",", ":"))
+    Path(a.sidecar_out).write_bytes(gzip.compress(txt.encode()) if a.sidecar_out.endswith(".gz") else txt.encode())
+    print(json.dumps(dict(trees_replaced=changed, sources_synced=n, refused_stale_sidecar=refused)))
+    return 1 if refused else 0
 
 
 if __name__ == "__main__":

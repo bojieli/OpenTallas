@@ -325,6 +325,37 @@ def channel_flows(P):
     return out
 
 
+def phy_core_station_exempt(P, ko, pts):
+    """COORD 11-12 (DIE-KV-99 ask a, APPROVED): a die lane station INSIDE a signed PHY hard core is that core's own
+    interior, which the core builds and signs itself, so it is not a die leg over a foreign core (street_die_leg).
+    Exempt only when the keepout is a die io rect of kind phy_macro whose part is a hard partition and the station
+    lies in no other keepout.  Hops from the PHY pins to the first station outside the core stay checked (lane hop
+    rules are unchanged), and clock legs / clock points are never exempt.  Returns (kept points, exempt points)."""
+    hard_phy = set()
+    for e in P.die.get("io") or []:
+        if str(e.get("kind")) != "phy_macro":
+            continue
+        part = P.parts.get(e.get("part"))
+        if part is not None and P.types.get(part.get("type"), {}).get("hard"):
+            hard_phy.add("io/" + str(e.get("name")))
+    if not hard_phy:
+        return pts, []
+
+    def _in(q, r):
+        return r[0] < q[0] < r[2] and r[1] < q[1] < r[3]
+
+    phy = [r for r in ko if str(r[4]) in hard_phy]
+    rest = [r for r in ko if str(r[4]) not in hard_phy]
+    kept, ex = [], []
+    for q in pts:
+        if (q[2] == "lane_station" and any(_in(q[1], r) for r in phy)
+                and not any(_in(q[1], r) for r in rest)):
+            ex.append(q)
+        else:
+            kept.append(q)
+    return kept, ex
+
+
 def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None, keep=None):
     """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
     (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
@@ -348,11 +379,13 @@ def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, p
             bits = 0
         flows.append((lid, bits, [tuple(q) for q in lpts]))
     flows += channel_flows(P)
+    pts, phy_exempt = phy_core_station_exempt(P, ko, pts)
     # HBM-STREETS-2 (COORD 10-27 18:52): per-street demand replaces the flat 34.56-um width; a plan may still pin the
     # legacy flat width with die.streets.mode = "flat"
     if str((P.die.get("streets") or {}).get("mode", "demand")) == "flat":
         flows = None
     A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl, flows=flows)
+    A["phy_core_exempt"] = [dict(name=q[0], xy=list(q[1])) for q in phy_exempt]
     if png:
         ST.render(A, ko, png, float(P.W), float(P.H), P.name)
     if keep is not None:
@@ -1105,23 +1138,28 @@ def track_density(P, names, frac):
     return sum(frac / P.layers[n]["pitch_um"] for n in names if n in P.layers)
 
 
-def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=()):
+def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=(), derate=()):
     """Exact free tracks on a cut: OBS union wins; bands replace the base share.
 
     blocked=[(lo,hi)], bands=[(lo,hi,share)] are intervals on ONE layer.
     Integrating all boundaries avoids double-counting overlapping OBS or bands.
+    derate=[(lo,hi,cov)] (CORE-OBS-COV 11-12): a core whose LEF OBS covers cov <= 0.5 of the layer; the
+    tracks there are scaled by (1 - max cov) on top of the share.
     """
     points={float(lo),float(hi)}
     for a,b in blocked:
         points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
     for a,b,_ in bands:
         points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
+    for a,b,_ in derate:
+        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
     points=sorted(points);tracks=0.0
     for a,b in zip(points,points[1:]):
         mid=(a+b)/2
         if b-a<=EPS or any(u<mid<v for u,v in blocked):continue
         shares=[share for u,v,share in bands if u<=mid<=v]
-        tracks+=(b-a)*(max(shares) if shares else frac)/pitch
+        dr=[cov for u,v,cov in derate if u<=mid<=v]
+        tracks+=(b-a)*(max(shares) if shares else frac)*(1.0-max(dr) if dr else 1.0)/pitch
     return tracks
 
 
@@ -1182,8 +1220,12 @@ def check_cuts(P, R, geo, full_cut="verdict"):
     # Same rectangles as the die-route capacity model: declared/routed core
     # obstructions (union), transformed through each instance orientation,
     # plus the explicitly reserved per-layer feedthrough bands.
-    from die_trial import die_core_rects, ft_band_rects
-    cores={L:die_core_rects(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
+    from die_trial import die_core_cover, ft_band_rects
+    # CORE-OBS-COV (COORD 11-12): a core blocks a layer only where its LEF OBS covers > 50%; below that the
+    # layer is free minus the OBS share (derate).  Declared obs_max and LEF-less cores block as before.
+    _cov={L:die_core_cover(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
+    cores={L:v[0] for L,v in _cov.items()}
+    partial={L:v[1] for L,v in _cov.items()}
     bands=ft_band_rects(P)
     B = P.budgets
     step = B["cut_step_um"]
@@ -1246,7 +1288,10 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                     reserved=[(*((br[2],br[4]) if orient=="vertical" else (br[1],br[3])),br[5])
                               for br in bands if br[0]==L and
                               ((br[1]+EPS<c<br[3]-EPS) if orient=="vertical" else (br[2]+EPS<c<br[4]-EPS))]
-                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved)
+                    derate=[(*((cr[1],cr[3]) if orient=="vertical" else (cr[0],cr[2])),cr[4])
+                            for cr in partial[L] if cr[4]>0 and
+                            ((cr[0]+EPS<c<cr[2]-EPS) if orient=="vertical" else (cr[1]+EPS<c<cr[3]-EPS))]
+                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved,derate)
                 parts_cap+=seg_cap
                 sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
                 if sb:

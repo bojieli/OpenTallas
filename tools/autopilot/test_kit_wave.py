@@ -18,7 +18,8 @@ def cfg(**die_over):
     d = {"enabled": True, "event": "event28w_c", "gate": dict(GATE), "plan": "/srv/p/plan_c.json", "gen_host": "intel1",
          "src": "/srv/wt/kw", "src_sha": "620077f42", "owner_lane": "DIE-KV-43"}
     d.update(die_over)
-    return {"enabled": True, "max_inflight": 40, "max_launch_per_tick": 6, "dies": {"qwen_kvsys": d}}
+    return {"enabled": True, "max_inflight": 40, "max_launch_per_tick": 6, "wait_visual": False,   # visual gate: own tests
+            "dies": {"qwen_kvsys": d}}
 
 
 OWN = """# OWNERS -- test

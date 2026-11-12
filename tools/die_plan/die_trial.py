@@ -138,6 +138,108 @@ def lef_top_layer(path):
     return _LEF_TOP[str(p)]
 
 
+_LEF_COVER = {}
+CORE_LAYER_BLOCK_COVER = 0.5   # CORE-OBS-COV (COORD 11-12): a core blocks a layer only where its LEF OBS covers > 50%
+
+
+def _union_area(rects):
+    """exact union area of axis-aligned rects: x sweep with an active set, merged y intervals per slab"""
+    rects = [r for r in rects if r[2] > r[0] and r[3] > r[1]]
+    if not rects:
+        return 0.0
+    ev = sorted([(r[0], 1, i) for i, r in enumerate(rects)] + [(r[2], 0, i) for i, r in enumerate(rects)])
+    active = set()
+    area = 0.0
+    px = ev[0][0]
+    k = 0
+    while k < len(ev):
+        x = ev[k][0]
+        if active and x > px:
+            tot, c0, c1 = 0.0, None, None
+            for a, b in sorted((rects[i][1], rects[i][3]) for i in active):
+                if c1 is None or a > c1:
+                    if c1 is not None:
+                        tot += c1 - c0
+                    c0, c1 = a, b
+                elif b > c1:
+                    c1 = b
+            tot += c1 - c0
+            area += tot * (x - px)
+        while k < len(ev) and ev[k][0] == x:
+            _, kind, i = ev[k]
+            (active.add if kind else active.discard)(i)
+            k += 1
+        px = x
+    return area
+
+
+def lef_layer_cover(path):
+    """{layer: OBS coverage in [0, 1]} of a single-macro LEF: union area of its OBS RECTs on that layer / SIZE area
+    (CORE-OBS-COV 11-12).  None if the file is missing or has no SIZE.  Pins are not counted (a pin is an access
+    point, not a blockage of the through-route tracks)."""
+    p = (ROOT / path) if path and not Path(path).is_absolute() else Path(path or "")
+    if not path or not p.is_file():
+        return None
+    key = str(p)
+    if key not in _LEF_COVER:
+        txt = p.read_text(errors="replace")
+        m = re.search(r"\bSIZE\s+([0-9.eE+-]+)\s+BY\s+([0-9.eE+-]+)", txt)
+        if not m or float(m.group(1)) * float(m.group(2)) <= 0:
+            _LEF_COVER[key] = None
+            return None
+        size = float(m.group(1)) * float(m.group(2))
+        rects = defaultdict(list)
+        o = re.search(r"(?m)^[ \t]*OBS\b(.*?)^[ \t]*END[ \t]*$", txt, re.S)
+        if o:
+            layer = None
+            for line in o.group(1).splitlines():
+                ml = re.match(r"\s*LAYER\s+(\S+)", line)
+                if ml:
+                    layer = ml.group(1)
+                    continue
+                mr = re.match(r"\s*RECT\s+(?:MASK\s+\d+\s+)?([-0-9.eE+]+)\s+([-0-9.eE+]+)\s+([-0-9.eE+]+)\s+([-0-9.eE+]+)", line)
+                if mr and layer:
+                    a, b, c, d = (float(v) for v in mr.groups())
+                    rects[layer].append((min(a, c), min(b, d), max(a, c), max(b, d)))
+        _LEF_COVER[key] = {L: min(1.0, _union_area(rs) / size) for L, rs in rects.items()}
+    return _LEF_COVER[key]
+
+
+def die_core_cover(P, L, grow=0.0, thresh=None):
+    """CORE-OBS-COV (COORD 11-12) capacity model for checkers: (blocked, partial) die-frame core rects on layer L.
+    Same cores, layer range and transforms as die_core_rects, but a core with a LEF view blocks L only when its LEF
+    OBS covers > thresh (default CORE_LAYER_BLOCK_COVER) of its area on L; with less it is `partial`
+    [(x0, y0, x1, y1, coverage)] (the layer is free minus that OBS share; coverage 0 = free).  A declared obs_max at or
+    above L still blocks, and a core without a readable LEF keeps the old solid model.  Physical outputs (abstracts,
+    kits) do not use this; die_core_rects is unchanged."""
+    thresh = CORE_LAYER_BLOCK_COVER if thresh is None else thresh
+    li = int(L[1:])
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    blocked, partial = [], []
+    for n, p in P.parts.items():
+        t = P.types[p["type"]]
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        o = p.get("orient", "R0")
+        cov_by = [lef_layer_cover(hc.get("lef")) for hc in (t.get("hard_cores", []) or [])
+                  if "origin_um" in hc and "outline_um" in hc]
+        decl = [hc.get("obs_max") for hc in (t.get("hard_cores", []) or []) if "origin_um" in hc and "outline_um" in hc]
+        for (x0, y0, x1, y1, tl, _, _), cov, om in zip(core_obs(t), cov_by, decl):
+            if li < 4 or li > min(int(tl[1:]), top):
+                continue
+            if o in ("MY", "R180"):
+                x0, x1 = w - x1, w - x0
+            if o in ("MX", "R180"):
+                y0, y1 = h - y1, h - y0
+            r = (ox + x0 - grow, oy + y0 - grow, ox + x1 + grow, oy + y1 + grow)
+            if (om and li <= int(om[1:])) or cov is None:
+                blocked.append(r)
+                continue
+            c = cov.get(L, 0.0)
+            (blocked if c > thresh else partial).append(r if c > thresh else (*r, c))
+    return blocked, partial
+
+
 def core_obs(t):
     """[(x0, y0, x1, y1, top_layer, module, has_view)] of a type's planned hard cores (ROM macros, closed leaves)."""
     out = []

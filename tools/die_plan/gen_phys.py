@@ -1290,10 +1290,19 @@ def edge_cdc_sdc(P, tn):
 
 
 def edge_split_ports(P, tn):
-    if P.die.get("name") not in EDGE_SPLIT_DIES:
+    # REACH-FIX-1 11-12 (owner: reach fixed by script on every die): per-type opt-in clock.edge_split_ports [port, ...]
+    # takes the same split (groups <= OT_EDGE_SPLIT_MAX_SINKS / SPAN, repeater chain every OT_EDGE_SPLIT_SEG_UM 200 um
+    # from the port to each group root) on any die; a forwarded fclk_in_* port is split only when named there.  Types
+    # without the field and dies in EDGE_SPLIT_DIES are unchanged.
+    opt = list((P.types[tn].get("clock", {}) or {}).get("edge_split_ports") or [])
+    die_on = P.die.get("name") in EDGE_SPLIT_DIES
+    if not die_on and not opt:
         return []
-    return [n for n, _x, _y, m in edge_clock_pins(P, tn) if m == 1 and not n.startswith("fclk_in")
-            and not edge_source_latency(P, tn, n)]
+    pins = edge_clock_pins(P, tn)
+    out = [n for n, _x, _y, m in pins if m == 1 and not n.startswith("fclk_in")
+           and not edge_source_latency(P, tn, n) and (die_on or n in opt)]
+    out += [n for n, _x, _y, m in pins if m == 1 and n.startswith("fclk_in") and n in opt and n not in out]
+    return out
 
 
 # DIE-HEAD-21 (opt-in plan clock.edge_clocks[].source_latency_ps): a source-forwarded edge clock (count-aligned ring
@@ -4860,6 +4869,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
+           # KW-FIX-45 11-12: OT_LEAF_AFF_ASYNC=1 in the gen env -> leaf_affinity.tcl also groups reset-release flops
+           # with the registers they release (async pins), one leaf per group; unset = unchanged
+           *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
            *(["export OT_TAP_REPORT_ONLY = 1"] if reg_spine_spec(P, tn) else []),
@@ -4946,6 +4958,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # station kits kept 2-27 max-slew pins on ~150 um single-driver M2/M3 segments the GRT estimate passed.
         cfg += [f"export OT_MAXWIRE_UM = {max_wire_um:g}"]
         shutil.copyfile(Path(__file__).with_name("grt_maxwire.tcl"), kd / "grt_maxwire.tcl")
+    # FT-HOP-M2-WIRE (GEN-CLASS-1 11-12, COORD plan (1)): every kit with ft slots gets a post-GRT repeater pitch on its
+    # ft-station hop nets only (ft_hop_maxwire.tcl; HEAD hd_spn_wshim_tx 120 sign-off slew pins = 200-um M2 hops).
+    # partition_types.<t>.ft_hop_maxwire_um overrides FT_HOP_MAXWIRE_UM (0 = off).  Buffers only, 0 cycles.
+    ftmw = t.get("ft_hop_maxwire_um", FT_HOP_MAXWIRE_UM)
+    if t.get("ft_slots") and ftmw:
+        cfg += [f"export OT_FT_MAXWIRE_UM = {float(ftmw):g}"]
+        shutil.copyfile(Path(__file__).with_name("ft_hop_maxwire.tcl"), kd / "ft_hop_maxwire.tcl")
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
@@ -6464,6 +6483,9 @@ def bound_parent_id_plan(raw, kit_rtl):
                 existing.setdefault(row["name"], row)
             target["id_straps"] = list(existing.values())
     return result
+
+
+FT_HOP_MAXWIRE_UM = 110.0   # FT-HOP-M2-WIRE: repeater pitch on ft-station hop nets (ft_hop_maxwire.tcl)
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,

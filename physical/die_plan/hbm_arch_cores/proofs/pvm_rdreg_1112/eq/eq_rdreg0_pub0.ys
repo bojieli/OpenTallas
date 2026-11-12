@@ -1,0 +1,20 @@
+read_verilog -sv -mem2reg -DSYNTHESIS -DOT_FP_DATA_NORST physical/die_plan/hbm_arch_cores/proofs/pvm_rdreg_1112/stub_fadd.v physical/die_plan/hbm_arch_cores/proofs/pvm_rdreg_1112/eq/sram_bb.v $GOLD_RTL
+chparam -set PUBLISH 0 ot_hbm_sm_pv_merge
+hierarchy -top ot_hbm_sm_pv_merge
+proc; flatten; delete u_stack; expose -input w:st_rd; expose w:stack_read_addr w:stack_write_en w:stack_write_addr w:stack_write_data; opt_clean; opt -purge; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_sm_pv_merge gold
+design -stash gold
+read_verilog -sv -mem2reg -DSYNTHESIS -DOT_FP_DATA_NORST physical/die_plan/hbm_arch_cores/proofs/pvm_rdreg_1112/stub_fadd.v physical/die_plan/hbm_arch_cores/proofs/pvm_rdreg_1112/eq/sram_bb.v $GATE_RTL
+chparam -set PUBLISH 0 ot_hbm_sm_pv_merge
+hierarchy -top ot_hbm_sm_pv_merge
+proc; flatten; delete u_stack; expose -input w:st_rd; expose w:stack_read_addr w:stack_write_en w:stack_write_addr w:stack_write_data; opt_clean; opt -purge; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_sm_pv_merge gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -undef -seq 3
+equiv_induct -undef -seq 3
+equiv_status
+equiv_status -assert

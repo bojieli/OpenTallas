@@ -47,6 +47,13 @@ FLOP_INSET_UM = 1.0
 GRT_ROW = re.compile(r"^\s*(M\d+|Total)\s+(\d+)\s+(\d+)\s+([\d.]+)%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)")
 
 
+
+def _tq(s):
+    """TCL-PUTS-QUOTE (GEN-CLASS-1 11-12, class of CLAND-PUTS-QUOTE 7fa736b945): a value written inside a generated Tcl
+    puts "..." is text, never code: escape [ ] $ \\ and the quote (an instance / port / net name with a bus index
+    [k] was command substitution)."""
+    return re.sub(r'([\[\]$"\\])', r'\\\1', str(s))
+
 def parse_grt(text):
     """last OpenROAD GRT congestion table + wirelength + pin access / error counts."""
     tables, cur = [], None
@@ -196,7 +203,7 @@ def die_probe(P, out, mem=64):
     for net, lst in taps.items():
         ds = sorted(abs(x - root[0]) + abs(y - root[1]) for _, (x, y) in lst)
         if ds:
-            tcl.append(f'puts "OT_REACH {net} max {ds[-1]:.1f} p90 {ds[int(0.9 * (len(ds) - 1))]:.1f} n {len(ds)}"')
+            tcl.append(f'puts "OT_REACH {_tq(net)} max {ds[-1]:.1f} p90 {ds[int(0.9 * (len(ds) - 1))]:.1f} n {len(ds)}"')
     tcl.append(grt_tail(f"{die_l[0]}-{die_l[-1]}", []))
     tcl.append('puts OT_DONE')
     (out / "probe.v").write_text("module die_probe ();\nendmodule\n")

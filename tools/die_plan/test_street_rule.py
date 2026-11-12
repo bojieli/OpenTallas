@@ -342,17 +342,23 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     import types as _t
     trees = {
         "base": dict(relays=[dict(name="r_a", q="qa", depth=2, role="raw", xy=[100.0, 50.0]),
-                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0])]),
+                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0]),
+                             dict(name="s1", q="s1", d="qa", depth=3, xy=[100.0, 90.0])]),
         "new": dict(relays=[dict(name="r_a2", q="qa2", depth=2, role="raw", xy=[130.0, 50.0]),
                             dict(name="r_x", q="qx", depth=2, role="raw", xy=[400.0, 50.0]),
-                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0])]),
+                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0]),
+                            dict(name="s1n", q="s1n", d="qa2", depth=3, xy=[130.0, 92.0]),
+                            dict(name="s1x", q="s1x", d="qx", depth=3, xy=[100.0, 90.0])]),
     }
     import schema
     import reset_tree
     monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
     monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
     t = {"reset_start_raw_exports": [dict(port="rst_o", instance="r_a", net="qa", xy_um=[100.0, 50.0])],
-         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")]},
+         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")],
+                                        "collector_tree": json.loads(json.dumps(trees["base"]))},
+                   "landing_raw_branches": [dict(name="o", base="qa", stages=[dict(original="s1", xy_um=[100.0, 90.0])],
+                                                 consumers=["origin"])],
                    "landing_local_resets": [dict(raw="qa", xy_um=[100.0, 50.0]), dict(raw="qb", xy_um=[200.0, 50.0])]}}
     P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
     Q = {"tag": "new", "partition_types": {"x": t}}
@@ -364,6 +370,53 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
     lr = t["clock"]["landing_local_resets"]
     assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept
+    # the published collector_tree is the re-solved one; raw branches follow it as a D-chain (not nearest-by-xy:
+    # s1x sits exactly at the old stage xy but hangs off another base)
+    assert t["clock"]["landing_contract"]["collector_tree"] == trees["new"] and rec["tree_republished"] == [3, 5]
+    br = t["clock"]["landing_raw_branches"][0]
+    assert br["base"] == "qa2" and br["stages"][0]["original"] == "s1n"
+
+
+def test_reset_resel_keeps_role_hd_st_n3_transit_u2_i(monkeypatch, tmp_path):
+    """COORD 11-12 (HEAD-94 hd_st_n3_transit.u2_i): a reader-START stage raw_reset names a REGISTERED raw relay; the
+    nearest same-depth relay of the re-solved tree is the gated consumer tap rst_n_t1 (reset AND run), which fails
+    gen-phys's reader-START check.  The re-select keeps the role: the nearest same-depth RAW relay (a plain rst_rl_*
+    or the raw copy rr_t<i> of a gated tap), never a gated one."""
+    import types as _t
+    import re as _re
+    R = lambda q, d, xy, dd: dict(name="u_" + q, q=q, d=dd, depth=d, kind="tap" if q.startswith("rst_n_t") else "relay",
+                                  xy=xy, tap=None)  # noqa: E731
+    trees = {
+        "base": dict(start=True, relays=[R("rst_rl_25", 3, [300.0, 400.0], "rst_rl_20"),
+                                         R("rst_n_t10", 3, [600.0, 400.0], "rst_rl_20"),
+                                         R("rst_n_t1", 3, [900.0, 900.0], "rst_rl_20")]),
+        # cores moved: rst_rl_25 gone, the gated tap rst_n_t1 now sits closest to the u2_i stage, rst_rl_26 farther
+        "new": dict(start=True, relays=[R("rst_n_t1", 3, [305.0, 402.0], "rst_rl_20"),
+                                        R("rst_rl_26", 3, [360.0, 470.0], "rst_rl_20"),
+                                        R("rst_n_t11", 3, [640.0, 420.0], "rst_rl_20")]),
+    }
+    import schema
+    import reset_tree
+
+    def start_relays(T):     # mission type: consumer taps gated, plain relays raw (reset_tree.start_relays roles)
+        return [dict(r, role="gated" if _re.match(r"rst_n_t\d+$", r["q"]) else "raw") for r in T["relays"]]
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    monkeypatch.setattr(reset_tree, "start_relays", start_relays)
+    st = [dict(xy_um=[300.0, 400.0], raw_reset="rst_rl_25"), dict(xy_um=[600.0, 400.0], raw_reset="rr_t10"),
+          dict(xy_um=[900.0, 900.0], raw_reset="rst_n_t1")]
+    t = {"clock": {"landing_reader_start": {"branches": {"u2_i": {"stages": st}}}}}
+    P = {"tag": "base", "partition_types": {"hd_st_n3_transit": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"hd_st_n3_transit": t}}
+    rec = SR.reset_resel(P, Q, ["hd_st_n3_transit"], tmp_path / "plan.json")["hd_st_n3_transit"]
+    assert "error" not in rec, rec
+    got = [x["raw_reset"] for x in st]
+    assert got[0] == "rst_rl_26"          # not the closer gated rst_n_t1
+    assert got[1] == "rr_t11"             # a raw copy stays a raw copy (of the nearest gated tap), never rst_n_t11
+    assert got[2] == "rst_n_t11"          # a gated reference stays gated (nearest gated tap to its stage)
+    roles = SR._q_roles(trees["new"])
+    assert all(roles[q]["role"] == SR._q_roles(trees["base"])[o]["role"]
+               for q, o in zip(got, ["rst_rl_25", "rr_t10", "rst_n_t1"]))
 
 
 def test_add_ft_regs_keeps_site_rows_aligned():
@@ -408,3 +461,56 @@ def test_sliver_rule_makes_slivers_streets(tmp_path):
     assert c.get("street", 0) == 1 and "sliver" not in c
     V, c = SR.analyze(400.0, 200.0, [a, b], [[0], [1]], CFG)
     assert c.get("sliver", 0) == 1 and "street" not in c
+
+
+def test_legalize_face_anchor_west_growth_fixed_east(tmp_path):
+    """FIXED-FACE (GEN-CLASS-1, HEAD-95): the type grows WEST; its E face abuts a FIXED partition and keeps die-x of
+    its N / S windows, ... here: the N face abuts a FIXED partition, the S face a moved one.  The instance origin moves
+    by -dW, the N window keeps its die x (local +dW), the S window keeps its local x; legacy (no anchor) unchanged."""
+    plan, P = _toy_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    t["outline_um"] = [8.64 + 100 + 15.12 + 100 + 8.64, 302.4]
+    t["hard_cores"][0]["origin_um"] = [8.64, 86.4]
+    t["hard_cores"][1]["origin_um"] = [8.64 + 100 + 15.12, 86.4]
+    t["ft_slots"] = []
+    t["clock"] = {"landing_contract": {"pins": [{"name": "fclk_in_n", "xy_um": [50.0, 300.0]},
+                                                {"name": "fclk_in_s", "xy_um": [50.0, 2.0]}],
+                                       "bands": {"n_i": {"rect_um": [40.0, 280.0, 60.0, 300.0]}}}}
+    t["buses"] = [{"name": "n_i", "face": "N", "window_um": [40.0, 60.0], "width": 8},
+                  {"name": "s_i", "face": "S", "window_um": [40.0, 60.0], "width": 8}]
+    P["die"]["outline_um"] = [2000.0, 302.4]
+    P["partitions"][0]["origin_um"] = [1000.0, 0.0]
+    plan.write_text(json.dumps(P))
+    fa = tmp_path / "fa.json"
+    fa.write_text(json.dumps({"toy": {"grow": {"x": "W"}, "fixed_faces": ["N"]}}))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off", "--face-anchor", str(fa)])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    dW = row["outline_after"][0] - row["outline_before"][0]
+    assert dW > 0
+    assert row["face_anchor"]["origin_shift_um"] == [round(-dW, 4), 0.0]
+    Q = json.loads(out.read_text())
+    q = Q["partition_types"]["toy"]
+    ox = Q["partitions"][0]["origin_um"][0]
+    assert abs(ox - (1000.0 - dW)) < 1e-6
+    bn = {b["name"]: b for b in q["buses"]}
+    # N (fixed neighbour): die x kept
+    assert abs(ox + bn["n_i"]["window_um"][0] - 1040.0) < 1e-6 and abs(ox + bn["n_i"]["window_um"][1] - 1060.0) < 1e-6
+    # S (moved neighbour): local x kept
+    assert bn["s_i"]["window_um"] == [40.0, 60.0]
+    lc = q["clock"]["landing_contract"]
+    assert abs(ox + lc["pins"][0]["xy_um"][0] - 1050.0) < 1e-6
+    assert abs(ox + lc["bands"]["n_i"]["rect_um"][0] - 1040.0) < 1e-6
+    # E edge keeps its die position
+    assert abs(ox + q["outline_um"][0] - (1000.0 + row["outline_before"][0])) < 1e-6
+
+
+def test_face_anchor_cfg_rejects_bad():
+    import pytest
+    assert SR.face_anchor_cfg(None, "x") is None
+    assert SR.face_anchor_cfg({}, "x") == dict(grow=dict(x="E", y="N"), origin_shift_um=[0.0, 0.0], fixed_faces=[])
+    for bad in ({"grow": {"x": "N"}}, {"fixed_faces": ["Q"]}, {"origin_shift_um": [1]}, {"other": 1}):
+        with pytest.raises(ValueError):
+            SR.face_anchor_cfg(bad, "x")
