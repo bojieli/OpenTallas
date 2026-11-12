@@ -34,7 +34,8 @@ class Gate(T.Base):
     def dxreq(self):
         return [ln.split("\t") for ln in self.out.splitlines() if ln.startswith("DXREQ\t")]
 
-    def test_every_routed_stage_held_until_published(self):
+    def test_unsigned_routed_db_is_deleted_without_export(self):
+        """OWNER 11-12: only SIGNED routed DBs are exported; an unsigned / failed / superseded attempt is deleted, no cut asked"""
         for stage in ROUTED:
             with self.subTest(stage=stage):
                 fin, odb = self.attempt("kv3_hgi", 1, stage)
@@ -42,42 +43,42 @@ class Gate(T.Base):
                 self.kw_for(fin, sup)
                 self.dx["ledger"] = []
                 self.run_job("--classes", "a")
-                for d, f in ((fin, odb), (sup, odb2)):
-                    self.assertTrue(os.path.exists(f), (stage, f))
-                    self.assertEqual(self.row(d)[3], "SKIP")
-                    self.assertIn("design-export pending", self.row(d)[4])
-                req = {r[1]: r for r in self.dxreq()}
-                self.assertEqual(req["hx:" + odb][2:], ["kv3_hgi", stage, "newest"])
-                self.assertEqual(req["hx:" + odb2][4], "superseded")
-                # cut published (ledger has both labels): the next run deletes
-                self.dx["ledger"] = ["hx:" + odb, "hx:" + odb2]
-                self.run_job("--classes", "a")
                 self.assertFalse(os.path.exists(fin))
                 self.assertFalse(os.path.exists(sup))
                 self.assertEqual(self.dxreq(), [])
 
-    def test_class_b_trim_waits_for_6_final_cut(self):
-        k, b = self.kit_b("lane/kitb")
-        self.run_job("--classes", "b")
-        for n in ("5_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb"):
-            self.assertTrue(os.path.exists(os.path.join(b, n)), n)
-        self.assertIn("design-export pending", self.row(b)[4])
-        self.dx["ledger_paths"] = [os.path.join(b, "6_final.odb")]
+    def sign(self, k):
+        T.touch(os.path.join(k, "signoff", "signoff.json"), 20)
+        with open(os.path.join(k, "signoff", "signoff.json"), "w") as f:
+            f.write('{"verdict": "SIGNED"}')
+        T.age_tree(os.path.join(k, "signoff"))
+
+    def test_signed_near_signed_vs_unsigned(self):
+        k, b = self.kit_b("lane/kitsg")
+        self.sign(k)
+        k2, b2 = self.kit_b("lane/kitun")
+        import types
+        fake = types.SimpleNamespace(found={"record": []})
+        self.assertTrue(ac.Job.signed_near(fake, b))
+        self.assertFalse(ac.Job.signed_near(fake, b2))
+
+    def test_class_b_trim_of_unsigned_kit_needs_no_cut(self):
+        k, b = self.kit_b("lane/kitu")
         self.run_job("--classes", "b")
         self.assertFalse(os.path.exists(os.path.join(b, "5_route.odb")))
-        self.assertTrue(os.path.exists(os.path.join(b, "6_final.odb")))
+        self.assertEqual(self.dxreq(), [])
 
-    def test_default_on_without_gate_file_holds_everything(self):
-        fin, odb = self.attempt("not_a_current_design", 1, "6_final")
-        sup, _ = self.attempt("not_a_current_design", 2, "3_place")   # no routed ODB beyond 3_place: free to go
-        self.kw_for(fin, sup)
+    def test_gate_down_does_not_hold_unsigned(self):
+        k2, b2 = self.kit_b("lane/kitu2")
         self.dx = None                     # gate file missing
-        self.run_job("--classes", "a")
-        self.assertTrue(os.path.exists(odb))
-        self.assertIn("design-export pending", self.row(fin)[4])
+        self.run_job("--classes", "b")
+        self.assertFalse(os.path.exists(os.path.join(b2, "5_route.odb")))
+        fin, odb = self.attempt("not_a_current_design", 1, "6_final")
+        sup, _ = self.attempt("not_a_current_design", 2, "3_place")
+        self.kw_for(fin, sup)
         self.dx = {"all": True, "ledger": []}   # the drive's HOLD ALL file (snapshot failed)
         self.run_job("--classes", "a")
-        self.assertTrue(os.path.exists(odb))
+        self.assertFalse(os.path.exists(fin))
 
     def test_names_limit_and_explicit_off(self):
         fin, odb = self.attempt("old_design", 1, "6_final")
