@@ -5153,7 +5153,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
         rec["restage_n"] = prev["restage_n"]
     st["items"][key] = rec
-    AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
+    # KW-FIX-46 11-12 (COORD: 'event e9eda32d41c' read as the old S81 plan after the ready12 switch): the event is the row
+    # identity key (work dir, item key), not the plan; the line names the plan file and its sha so the log is honest
+    _psha = str((d or {}).get("plan_sha256") or (d or {}).get("_plan_sha") or "")[:12] or "?"
+    AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event-key {sp['event']} "
+           f"plan {os.path.basename(str(sp.get('plan') or ''))}@{_psha} src {os.path.basename(str(sp.get('src') or ''))} unit {unit}")
     return rec
 
 
