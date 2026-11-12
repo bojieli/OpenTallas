@@ -1,0 +1,49 @@
+{
+ "schema": "hcoll.rows.argmax.v1",
+ "P": 6,
+ "mutant": null,
+ "vm_rt": 4,
+ "G": 96,
+ "II": 32,
+ "VB": 1024,
+ "VS": 32,
+ "OBASE": 1090519040,
+ "DSTRIDE": 64,
+ "layout_sha256": "1f7c747b17fc1142e655a2aebe03fd4e16b8c0af5830cddabdf101991c208dc1",
+ "parents": {
+  "d0q0": {
+   "P": 6,
+   "rows": 74,
+   "halt": 213,
+   "last_delivery": 212,
+   "II": 32,
+   "body_rows": 32,
+   "prologue": 20,
+   "epilogue": 20
+  },
+  "d0q1": {
+   "rows": 1,
+   "halt_only": true
+  },
+  "d1q0": {
+   "P": 6,
+   "rows": 74,
+   "halt": 213,
+   "last_delivery": 212,
+   "II": 32,
+   "body_rows": 32,
+   "prologue": 20,
+   "epilogue": 20
+  },
+  "d1q1": {
+   "rows": 1,
+   "halt_only": true
+  }
+ },
+ "rows": 256,
+ "npt": 3,
+ "start_reg": true,
+ "arg_source_publication_extra": 1,
+ "source_contract": "ot_hgi_coll_argmax_m_tp192_pr",
+ "source_adoption": "compiler_only_actual_native_caller_pending"
+}

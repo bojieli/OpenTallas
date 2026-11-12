@@ -1,0 +1,3 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hnx_fused_lane (u_mu_fused_0..15, q_hub_ne/nw)	lane	rr_v,rr_d	in	1	HBM-HUB-RTL-1 11-12 rd1 S1b: VM read return RR 10->11 (fvp BANK_RR 6->7 via hook SHARES; bound .RR(11)). Re-kit row only, NOT a bind input (the hook already derives RR from the shared bank read).
+ot_hnx_fused_lane (S3 form)	lane ctl	rr_v,rr_d	in	2	With HBM-CORES-B S3 RR-parameter RTL (READY pending): lane ctl RR 12 = rd1 +1 plus S3 +1, additive. Row applies when that RTL lands.

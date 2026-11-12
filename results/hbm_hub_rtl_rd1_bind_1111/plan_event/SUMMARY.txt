@@ -16,3 +16,9 @@ control vs canonical hbm-cut-1111/bind_t19 (cmp_ctl_vs_bind_t19.txt, LOOSE renum
   params), the repo splice leaves fvp_in__* die inputs and native_required pad straps (the closing step is not in the repo).
   (2)/(3) are cached-vs-manifest drift, not rd1; both binds are clean with them.
 Delta: d_rd1_coll_vmrt4_1111.json + asbuilt_keys_rd1.json (v2: dissolve_add, recipe, plan_type_change ctl_r4 -> ctl_r5).
+FINAL 11-12 (DIE-HBM-100: cached elaboration canonical): recipe + fused_close.py + cache_names.py (README.md).
+  rd1 90/420/0 (LC 38/0), control 90/420/0 (LC 23/0) (run_final_both.out).
+  control vs bind_t19: 76 equal (36 identical + 40 after renumbering), 8 = SU slot form (EQ proven) (cmp_final_ctl_vs_t19_loose.txt).
+  rd1 vs control: 72 identical + 12 with only rd1 values (cmp_final_rd1_vs_ctl.txt).
+  The earlier (2)/(3) above are superseded: (2) names only (cache_names), (3) closed by fused_close; see README finding A/B.
+  Delta keys v2 sha b6a8ea27 (recipe adds fused_close + cache_names).

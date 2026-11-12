@@ -1,0 +1,1048 @@
+{
+ "schema": "opentallas.hbm_coll_images.v1",
+ "lane": "VEH-FMT-COLL",
+ "fixtures": "results/rtl/hbm_ds_layer_tput_1018/fixtures/L14",
+ "layer": 14,
+ "R": 2,
+ "t_start": 40,
+ "nev": 6309,
+ "records": [
+  {
+   "k_layer": 7,
+   "tag": "engram.rows_gather.eg_rows",
+   "i": 58,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": -25.41,
+   "status": "emitted",
+   "F": 192,
+   "R": 2,
+   "stride": 192,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 6144,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 366,
+   "check_cyc": 382,
+   "model_span_fire_to_last_write": 186,
+   "launch_to_last_write": 229,
+   "calendar": {
+    "target": 96,
+    "loops": 325,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52018002000200006000142"
+   },
+   "collq_reservations": {
+    "reads": 192,
+    "writes": 576,
+    "first": 17,
+    "last": 186,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 6144,
+   "far_end_flits": 576,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r058",
+     "events": 1963,
+     "vm_preload": 192,
+     "cycles": 446,
+     "checks": 1351,
+     "replay_sha256": "cc45d91e2dc6c9dd8bed548cd921056cdcaad0176ca5b1883c455b5d2212394c"
+    }
+   ],
+   "slug": "engram_rows_gather_eg_rows"
+  },
+  {
+   "k_layer": 14,
+   "tag": "engram.kv_gather.eg_kv",
+   "i": 64,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": -0.66,
+   "status": "emitted",
+   "F": 800,
+   "R": 2,
+   "stride": 800,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 25600,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 822,
+   "check_cyc": 838,
+   "model_span_fire_to_last_write": 642,
+   "launch_to_last_write": 685,
+   "calendar": {
+    "target": 96,
+    "loops": 781,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52064002000200019000142"
+   },
+   "collq_reservations": {
+    "reads": 800,
+    "writes": 2400,
+    "first": 17,
+    "last": 642,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 25600,
+   "far_end_flits": 2400,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r064_p0",
+     "events": 5643,
+     "vm_preload": 800,
+     "cycles": 902,
+     "checks": 3207,
+     "replay_sha256": "2edc3dc2218e31a6dabeca0a4cefc93f61e2e27c98dc7a809d1eab9a9db9ea48"
+    },
+    {
+     "name": "ds_l14_coll_r064_p1",
+     "events": 4843,
+     "vm_preload": 800,
+     "cycles": 902,
+     "checks": 2407,
+     "replay_sha256": "f1d4bb764929406250cdd5025831d42a2c0b23e7ce78630a5866ff6b303c2805"
+    }
+   ],
+   "slug": "engram_kv_gather_eg_kv"
+  },
+  {
+   "k_layer": 22,
+   "tag": "hc_attn (mixes + Sinkhorn) gather",
+   "i": null,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": null,
+   "status": "unpriced",
+   "reasons": [
+    "record not in the priced layer (no i): not replayed"
+   ]
+  },
+  {
+   "k_layer": 24,
+   "tag": "x_projections_gather.iwr",
+   "i": 75,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 218.23,
+   "status": "emitted",
+   "F": 1,
+   "R": 2,
+   "stride": 8,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 32,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 224,
+   "check_cyc": 240,
+   "model_span_fire_to_last_write": 44,
+   "launch_to_last_write": 87,
+   "calendar": {
+    "target": 96,
+    "loops": 183,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52001002000200000080142"
+   },
+   "collq_reservations": {
+    "reads": 1,
+    "writes": 3,
+    "first": 17,
+    "last": 44,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 32,
+   "far_end_flits": 3,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r075",
+     "events": 44,
+     "vm_preload": 1,
+     "cycles": 304,
+     "checks": 14,
+     "replay_sha256": "a32737168bb8aef966eac3c258a072a9dfef1e5fce71cb566f226750311d08b5"
+    }
+   ],
+   "slug": "x_projections_gather_iwr"
+  },
+  {
+   "k_layer": 28,
+   "tag": "x_projections_gather.qa",
+   "i": 78,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 218.23,
+   "status": "emitted",
+   "F": 40,
+   "R": 2,
+   "stride": 40,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 1280,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 252,
+   "check_cyc": 268,
+   "model_span_fire_to_last_write": 72,
+   "launch_to_last_write": 115,
+   "calendar": {
+    "target": 96,
+    "loops": 211,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52005002000200001400142"
+   },
+   "collq_reservations": {
+    "reads": 40,
+    "writes": 120,
+    "first": 17,
+    "last": 72,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 1280,
+   "far_end_flits": 120,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r078",
+     "events": 443,
+     "vm_preload": 40,
+     "cycles": 332,
+     "checks": 287,
+     "replay_sha256": "68aabcfcf34d7407cf25d1ed6fdfbfdd89cdaeea47eaf7ba47c9056cdfbb0e3c"
+    }
+   ],
+   "slug": "x_projections_gather_qa"
+  },
+  {
+   "k_layer": 31,
+   "tag": "x_projections_gather.kvraw",
+   "i": 81,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 218.23,
+   "status": "emitted",
+   "F": 16,
+   "R": 2,
+   "stride": 16,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 512,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 234,
+   "check_cyc": 250,
+   "model_span_fire_to_last_write": 54,
+   "launch_to_last_write": 97,
+   "calendar": {
+    "target": 96,
+    "loops": 193,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52002002000200000800142"
+   },
+   "collq_reservations": {
+    "reads": 16,
+    "writes": 48,
+    "first": 17,
+    "last": 54,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 512,
+   "far_end_flits": 48,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r081",
+     "events": 203,
+     "vm_preload": 16,
+     "cycles": 314,
+     "checks": 119,
+     "replay_sha256": "829340c4442d9bb434d8a96fef010f70b76e011d8439da77ba9ccbf555524061"
+    }
+   ],
+   "slug": "x_projections_gather_kvraw"
+  },
+  {
+   "k_layer": 35,
+   "tag": "x_projections_gather.cmp",
+   "i": 84,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 218.23,
+   "status": "emitted",
+   "F": 32,
+   "R": 2,
+   "stride": 32,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 1024,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 246,
+   "check_cyc": 262,
+   "model_span_fire_to_last_write": 66,
+   "launch_to_last_write": 109,
+   "calendar": {
+    "target": 96,
+    "loops": 205,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52004002000200001000142"
+   },
+   "collq_reservations": {
+    "reads": 32,
+    "writes": 96,
+    "first": 17,
+    "last": 66,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 1024,
+   "far_end_flits": 96,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r084",
+     "events": 363,
+     "vm_preload": 32,
+     "cycles": 326,
+     "checks": 231,
+     "replay_sha256": "5d55c09377ad7d4948b58c232cabd774585906feddc0d07fde08bb53547c5205"
+    }
+   ],
+   "slug": "x_projections_gather_cmp"
+  },
+  {
+   "k_layer": 38,
+   "tag": "indexer.q_gather.iq",
+   "i": 97,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 845.5,
+   "status": "emitted",
+   "F": 128,
+   "R": 2,
+   "stride": 128,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 4096,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 318,
+   "check_cyc": 334,
+   "model_span_fire_to_last_write": 138,
+   "launch_to_last_write": 181,
+   "calendar": {
+    "target": 96,
+    "loops": 277,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52010002000200004000142"
+   },
+   "collq_reservations": {
+    "reads": 128,
+    "writes": 384,
+    "first": 17,
+    "last": 138,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 4096,
+   "far_end_flits": 384,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r097",
+     "events": 1323,
+     "vm_preload": 128,
+     "cycles": 398,
+     "checks": 903,
+     "replay_sha256": "846434a93fab65f81bbdb48bcdc3ca280629e8008bf2bbe33c04695dd007d343"
+    }
+   ],
+   "slug": "indexer_q_gather_iq"
+  },
+  {
+   "k_layer": 66,
+   "tag": "attn_out_gather.y",
+   "i": 137,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 763.11,
+   "status": "emitted",
+   "F": 160,
+   "R": 2,
+   "stride": 160,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 5120,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 342,
+   "check_cyc": 358,
+   "model_span_fire_to_last_write": 162,
+   "launch_to_last_write": 205,
+   "calendar": {
+    "target": 96,
+    "loops": 301,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52014002000200005000142"
+   },
+   "collq_reservations": {
+    "reads": 160,
+    "writes": 480,
+    "first": 17,
+    "last": 162,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 5120,
+   "far_end_flits": 480,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r137",
+     "events": 1643,
+     "vm_preload": 160,
+     "cycles": 422,
+     "checks": 1127,
+     "replay_sha256": "c379d6f48f7aaf4374bca98603146894eae80c0f927d0997d17229fe7f04daf5"
+    }
+   ],
+   "slug": "attn_out_gather_y"
+  },
+  {
+   "k_layer": 68,
+   "tag": "hc_ffn (mixes + Sinkhorn) gather",
+   "i": null,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": null,
+   "status": "unpriced",
+   "reasons": [
+    "record not in the priced layer (no i): not replayed"
+   ]
+  },
+  {
+   "k_layer": 75,
+   "tag": "router_gather.gsc",
+   "i": 146,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 786.52,
+   "status": "emitted",
+   "F": 12,
+   "R": 2,
+   "stride": 16,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 384,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 231,
+   "check_cyc": 247,
+   "model_span_fire_to_last_write": 51,
+   "launch_to_last_write": 94,
+   "calendar": {
+    "target": 96,
+    "loops": 190,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52002002000200000600142"
+   },
+   "collq_reservations": {
+    "reads": 12,
+    "writes": 36,
+    "first": 17,
+    "last": 51,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 384,
+   "far_end_flits": 36,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r146",
+     "events": 163,
+     "vm_preload": 12,
+     "cycles": 311,
+     "checks": 91,
+     "replay_sha256": "acf7bed9d78dade76afc28b545ef372f164086efc1b9083dd4da02502882013f"
+    }
+   ],
+   "slug": "router_gather_gsc"
+  },
+  {
+   "k_layer": 96,
+   "tag": "expert_intermediate_gather.s2",
+   "i": 174,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.31,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r174",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "96dccaae57637436b1913a0511ecc5b82c8eec2156eaed80d8b89ff9fbae274c"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s2"
+  },
+  {
+   "k_layer": 97,
+   "tag": "expert_intermediate_gather.s6",
+   "i": 180,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.32,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r180",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "1e6e5fb8a56593a9beafe60f75e43228ff2ce7b77e87385a09e987911158b9fe"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s6"
+  },
+  {
+   "k_layer": 99,
+   "tag": "expert_intermediate_gather.s1",
+   "i": 178,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.32,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r178",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "56cf0be64882bc3175fc06bd2b852761ccb7edf5e5550716a21d8e3ac92cfb09"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s1"
+  },
+  {
+   "k_layer": 100,
+   "tag": "expert_intermediate_gather.s4",
+   "i": 182,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.31,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r182",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "307101cee0d8b86cb3b9c79150461d266d48a04db4eaafffea37cf932032bb00"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s4"
+  },
+  {
+   "k_layer": 102,
+   "tag": "expert_intermediate_gather.s3",
+   "i": 175,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.32,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r175",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "d0b9a44b3fdac1b1032439c34122f3a57d93ed7da75fd8ffd8e1b1986914158a"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s3"
+  },
+  {
+   "k_layer": 104,
+   "tag": "expert_intermediate_gather.s0",
+   "i": 173,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.32,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r173",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "202c69fad4331fde7db6f7a19f3c0c57aefca52fc80ff09c9ebf914ee3ab8ec0"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s0"
+  },
+  {
+   "k_layer": 108,
+   "tag": "expert_intermediate_gather.s5",
+   "i": 187,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 147.32,
+   "status": "emitted",
+   "F": 72,
+   "R": 2,
+   "stride": 72,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 2304,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 276,
+   "check_cyc": 292,
+   "model_span_fire_to_last_write": 96,
+   "launch_to_last_write": 139,
+   "calendar": {
+    "target": 96,
+    "loops": 235,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52009002000200002400142"
+   },
+   "collq_reservations": {
+    "reads": 72,
+    "writes": 216,
+    "first": 17,
+    "last": 96,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 2304,
+   "far_end_flits": 216,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r187",
+     "events": 763,
+     "vm_preload": 72,
+     "cycles": 356,
+     "checks": 511,
+     "replay_sha256": "80ee9bc70b9ca4eb41ec90d00599988c442bc97eaccef9565e63dece1ef54de5"
+    }
+   ],
+   "slug": "expert_intermediate_gather_s5"
+  },
+  {
+   "k_layer": 114,
+   "tag": "ffn_out_gather.yf",
+   "i": 191,
+   "op": "COLL.ALL_GATHER",
+   "priced_cycles": 763.11,
+   "status": "emitted",
+   "F": 160,
+   "R": 2,
+   "stride": 160,
+   "src_sector": 256,
+   "dst_sector": 256,
+   "t_start": 40,
+   "vm_rt": 3,
+   "transport": null,
+   "n_words": 5120,
+   "launch_cyc": 136,
+   "L": 137,
+   "fire": 180,
+   "last_write": 342,
+   "check_cyc": 358,
+   "model_span_fire_to_last_write": 162,
+   "launch_to_last_write": 205,
+   "calendar": {
+    "target": 96,
+    "loops": 301,
+    "word": {
+     "rslot_v": "0xff",
+     "wslot_v": "0xff",
+     "rslot": "0x6db6db",
+     "wslot": "0x492492"
+    },
+    "configuration_writes": 1
+   },
+   "gq": {
+    "target": 176,
+    "row0_payload": "0x52014002000200005000142"
+   },
+   "collq_reservations": {
+    "reads": 160,
+    "writes": 480,
+    "first": 17,
+    "last": 162,
+    "rule": "read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)"
+   },
+   "words_checked": 5120,
+   "far_end_flits": 480,
+   "replays": [
+    {
+     "name": "ds_l14_coll_r191",
+     "events": 1643,
+     "vm_preload": 160,
+     "cycles": 422,
+     "checks": 1127,
+     "replay_sha256": "cdc7842ae8ab9efdc1bb6b7a066184e51ea6a4cf92779edfbc7d0e9d37dfcaa6"
+    }
+   ],
+   "slug": "ffn_out_gather_yf"
+  }
+ ],
+ "counts": {
+  "emitted": 17,
+  "unpriced": 2
+ }
+}
