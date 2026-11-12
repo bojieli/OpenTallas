@@ -393,27 +393,40 @@ def face_distance(t,bus,rect):
 
 
 def _compact_bank_boxes(xs,ys,bw,bh,w,h,margin,px,py,obstacles):
-    """LAND-RING-2 11-12 (CLAND-CLASS-1 profile: kv3_pv_v7 600 s, 99 % here, 7.5e8 genexpr calls): the compact-bank
-    candidate scan of _storage_band, same predicates, same order (x0 over xs, y0 over ys, set iteration order), so the
-    returned list is identical.  Speed-ups: the 405-um corner reach max(|x-px|+|y-py|) over the 4 corners equals
-    max|x-px| + max|y-py| (separable, exact in floats: addition is monotone), so each axis is computed once and the
-    y loop skips by its own term; the overlap test only scans obstacles that already overlap the box in x."""
+    """LAND-RING-2 11-12 (CLAND-CLASS-1 profile: kv3_pv_v7 > 2 h, 99 % in this scan): the compact-bank candidate scan
+    of _storage_band with the same predicates in the same order (x0 over xs, y0 over ys, set iteration order), so the
+    returned list is identical, vectorized over ys.  Exact in IEEE doubles because float + and max/min are monotone:
+    (1) the corner reach max_corners(|x-px|+|y-py|) == max|x-px| + max|y-py|;
+    (2) min(A,B) > max(C,D)+e  <=>  A>C+e and A>D+e and B>C+e and B>D+e, so a box [x0,x1]x[y0,y1] is blocked by an
+        obstacle o iff x1>o0+e, o2>x0+e, o2>o0+e, x1>x0+e and the same in y; per x0 the x-blocking obstacles are sorted
+        by o1+e and a prefix max of o3 answers "some o has o1+e < y1 and o3 > y0+e" for every y0 at once."""
+    import numpy as np
     R=405-2.16;out=[]
-    yl=[]
-    for y0 in ys:
-        if y0<margin or y0+bh>h-margin:continue
-        yl.append((y0,max(abs(y0-py),abs(y0+bh-py))))
+    yv=[y0 for y0 in ys if not (y0<margin or y0+bh>h-margin)]
+    if not yv:return out
+    Y0=np.array(yv,dtype=float);Y1=Y0+bh;Y0e=Y0+1e-6
+    DY=np.maximum(np.abs(Y0-py),np.abs(Y1-py))
+    ybox=Y1>Y0e
+    O=np.array(obstacles,dtype=float).reshape(-1,4)
+    O0e=O[:,0]+1e-6;O1e=O[:,1]+1e-6
+    ok=(O[:,2]>O0e)&(O[:,3]>O1e)
     for x0 in xs:
         x1=x0+bw
         if x0<margin or x1>w-margin:continue
         dx=max(abs(x0-px),abs(x1-px))
         if dx>R:continue
-        ox=[o for o in obstacles if min(x1,o[2])>max(x0,o[0])+1e-6]
-        for y0,dy in yl:
-            if dx+dy>R:continue
-            y1=y0+bh
-            if any(min(y1,o[3])>max(y0,o[1])+1e-6 for o in ox):continue
-            out.append([x0,y0,x1,y1])
+        keep=(dx+DY)<=R
+        if not keep.any():continue
+        if x1>x0+1e-6 and len(O):
+            m=ok&(x1>O0e)&(O[:,2]>x0+1e-6)
+            if m.any():
+                order=np.argsort(O1e[m],kind="stable")
+                a=O1e[m][order];pm=np.maximum.accumulate(O[m][order,3])
+                k=np.searchsorted(a,Y1,side="left")
+                blocked=(k>0)&(pm[np.maximum(k-1,0)]>Y0e)&ybox
+                keep&=~blocked
+        for i in np.flatnonzero(keep).tolist():
+            out.append([x0,yv[i],x1,yv[i]+bh])
     return out
 
 

@@ -25,13 +25,15 @@ def _reference(xs, ys, bw, bh, w, h, margin, px, py, obstacles):
 
 def test_identical_to_the_old_scan_on_random_floorplans():
     rnd = random.Random(1112)
-    for trial in range(60):
+    for trial in range(200):
         w, h = rnd.choice([(622.08, 1339.2), (1278.72, 1520.64), (400.0, 300.0)])
         margin = 17.28
         obstacles = []
         for _ in range(rnd.randint(0, 60)):
             x0, y0 = rnd.uniform(0, w), rnd.uniform(0, h)
             obstacles.append([x0, y0, x0 + rnd.uniform(1, 250), y0 + rnd.uniform(1, 250)])
+            if rnd.random() < 0.05:
+                obstacles.append([x0, y0, x0, y0 + 5.0])   # degenerate: never blocks
         px, py = rnd.uniform(0, w), rnd.choice([0.0, h, rnd.uniform(0, h)])
         for bw, bh in [(8.64, 84.24), (84.24, 8.64), (2.16 * rnd.randint(5, 40), 2.16 * rnd.randint(5, 40))]:
             xs = {margin, w - bw - margin, max(margin, min(w - bw - margin, px - bw / 2))}
