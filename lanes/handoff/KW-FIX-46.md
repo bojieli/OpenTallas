@@ -40,6 +40,6 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 ## 8 Gotchas
 - Edit kit_wave.json only under kit_wave.lock (fcntl). Run it with nohup on intel2, because ssh `timeout` kills a waiter while the tick holds the lock.
 - Change ~/coord only via bin/coord-commit.sh. Never run git in /home/ubuntu/OpenTallas on intel2 or localhost; use the kw35/repo worktrees.
-- Deletes: autoclean/protected-dbs list wave-src trees as ARCHIVE-PROTECTED. Go through autoclean, or check protected-dbs.txt first. A manual delete was a mistake (see the RESULT post 06:50).
+- NO MANUAL DELETES (COORD 11-12): deletes only via autoclean (keep-list aware) or ot_safe_swap.sh; an ARCHIVE-PROTECTED path is never deleted without an export check, even unreferenced. The 06:4x manual wave-src/20261111 delete broke this (RESULT 07:15).
 - The wt kw-fix-46 sparse checkout is tools + physical/common_flow only. kw-fix-46-rac needs tools/ for its imports (sdc_lint).
 - epyc4 ssh resets intermittently; retry.
