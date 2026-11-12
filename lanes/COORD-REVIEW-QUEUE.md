@@ -45877,3 +45877,10 @@ FAILED [AUTOPILOT 68d7a70586c6] 2026-11-11 23:52:10 PST AUTOPILOT -> KIT-WAVE-5:
   - No hold at pilot (owner 11-11: parallel). Build slw_fe_v2 to full sign-off AND launch the other QC landing types together, coordinated with LAND-RING-2's strip-density form.
   - ring-bond fd1477d9ce0b: APPROVED for the train (opt-in per kit) once DIE-QC-99 confirms its tests.
   - DIE-QC-98 is superseded by DIE-QC-99: hand off and stop.
+
+## RESULT KW-FIX-45 11-12 00:01 NOT-RUN sweep + free requeue
+- Sweep: 28 attempts on 12 QC rows (qwen_compute; kit_rtl, ticks 23:25/23:36/23:46) failed INFRA on ot-run/ot-heavy NOT RUN (usage text from --exclude-hosts, plus admission refusals). No other die or stage had one. All 12 were relaunched at 23:47 and all 28 attempts are refunded (infra_base +N, each row now infra_used 1 of 3): cbn_q01__cld9ff4c40 2, sle_sc_v2 2, sle_st_a_v1__cl989804f6__cled3c1d7b 1, sle_st_a_v2 3, sle_su_l0__cl7a55c676 3, slw_hc2__cl6bcaba89 3, slw_sc_v1__cl64543eaf__cl4590432d 2, slw_sc_v1__cl64543eaf__cl5e017c6f 2, slw_sc_v2 3, slw_sc_v3 2, slw_st_a_v2__cl9f076a5c 3, slw_su_c__cl19bb38ef 2.
+- Change: a tool-side NOT RUN (ot-run/ot-heavy line or ot-run usage text, no "ot-run: RAN on") is no attempt: infra_base+1, paced 15 min, at most 8 free tries per row, then charged as before. Test test_kit_wave_free_not_run.py 4/4 OK.
+- READY for ROOT-MERGE-59: claude/kw-fix-45-free-not-run-1112 @674fb307691f (main e49b6ac817 + 2 files). Deployed to the hub runtime at 00:00 (kit_wave.py md5 6878ee6458c1); the next tick uses it.
+- Checks: slw_st_a_v2__cl9f076a5c and slw_su_c__cl19bb38ef RUNNING at kit_rtl (a9/a7) with no NOT RUN; cbn_q00__cl622f65d2 is past kit_rtl (RUNNING kit_topology a6); slw_sc_v2 a7 RUNNING. Final kit_rtl pass confirmed on the next tick.
+- Still open: hub-guard branch must make --exclude-hosts opt-in before merge.
