@@ -1,0 +1,4 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+ot_hgi_sfu_opsb_group		sw_v,sw_addr,sw_mask,sw_d	port	1	HBM-CORES-B opsbg form E (DIE-HBM-100 ruling 11-11, recipe ot_hgi_sfu_opsb_group__gprotE, branch claude/hbm-cores-b-opsg-e-1111): every stage write +1 edge through kept per-consumer register copies (Form B folded in); EQ_CYCLE_SHIFTED vs OT_OPSG_E off with sw_* delayed one edge (yosys 17563/17563, lock-step 2x60000, 2 negative controls FAIL). Consumer: the stage-write issuer / compiler schedule -- a lane read of a word written by a stage write must now issue >= 2 edges after the write (was >= 1); write order and write-to-write spacing unchanged
+ot_hgi_sfu_opsb_group		rd	port	0	unchanged: read path (rq/rr/ra -> rd) keeps its edges; only the write-to-read distance above moves
+ot_hgi_sfu_opsb_group		flt	port	1	write-collision term +1 (follows the writes); read-check terms +0; group fault (not priced)
