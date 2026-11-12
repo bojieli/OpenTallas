@@ -35,5 +35,54 @@ class T(unittest.TestCase):
         self.assertTrue(any(r == "die_io.json" for r, _ in PP.verify(out)))
         ok, _ = PP.gate(os.path.join(out, "die_plan.json"), "require"); self.assertFalse(ok)
 
+class AbsPaths(unittest.TestCase):
+    def test_abs_path_value_fails_verify_and_package_rewrites(self):
+        with tempfile.TemporaryDirectory() as d:
+            other = os.path.join(d, "foreign.json"); open(other, "w").write('{"bins": []}')
+            lane = os.path.join(d, "lane"); os.makedirs(lane)
+            plan = os.path.join(lane, "die_plan.json")
+            json.dump({"partition_types": {"t": {"clock": {"sink_bins_file": other}}}}, open(plan, "w"))
+            ok, msg = PP.gate(plan, "require"); self.assertFalse(ok); self.assertIn("absolute path", msg)
+            out = os.path.join(d, "pkg"); PP.package(plan, out)
+            v = json.load(open(os.path.join(out, "die_plan.json")))["partition_types"]["t"]["clock"]["sink_bins_file"]
+            self.assertTrue(v.startswith("_ext/")); self.assertTrue(os.path.isfile(os.path.join(out, v)))
+            self.assertEqual(PP.verify(out), [])
+            ok, msg = PP.gate(os.path.join(out, "die_plan.json"), "require"); self.assertTrue(ok, msg)
+
+    def test_asbuilt_and_sidecar_abs_paths_fail_verify_gate_and_package(self):
+        with tempfile.TemporaryDirectory() as d:
+            lane = os.path.join(d, "lane"); os.makedirs(lane)
+            plan = os.path.join(lane, "die_plan.json"); json.dump({"partition_types": {}}, open(plan, "w"))
+            json.dump({"files": ["/srv/opentallas-scratch2/claude/other/pads.json"]}, open(os.path.join(lane, "asbuilt_x.json"), "w"))
+            import gzip
+            with gzip.open(os.path.join(lane, "pv_comp.json.gz"), "wt") as g:
+                json.dump({"map": {"a": "/home/ubuntu/lane/asbuilt_map.json"}}, g)
+            ok, msg = PP.gate(plan, "require"); self.assertFalse(ok)
+            self.assertIn("asbuilt_x.json", msg); self.assertIn("pv_comp.json.gz", msg)
+            with self.assertRaises(SystemExit): PP.package(plan, os.path.join(d, "pkg"))
+            # package-relative values pass
+            json.dump({"files": ["pads.json"]}, open(os.path.join(lane, "asbuilt_x.json"), "w"))
+            with gzip.open(os.path.join(lane, "pv_comp.json.gz"), "wt") as g:
+                json.dump({"map": {"a": "asbuilt_map.json"}}, g)
+            ok, msg = PP.gate(plan, "require"); self.assertTrue(ok, msg)
+            out = os.path.join(d, "pkg"); PP.package(plan, out); self.assertEqual(PP.verify(out), [])
+
+    def test_missing_abs_path_fails_package(self):
+        with tempfile.TemporaryDirectory() as d:
+            lane = os.path.join(d, "lane"); os.makedirs(lane)
+            plan = os.path.join(lane, "die_plan.json")
+            json.dump({"x": "/srv/nowhere/a/b.json"}, open(plan, "w"))
+            with self.assertRaises(SystemExit): PP.package(plan, os.path.join(d, "pkg"))
+
+    def test_taps_input_path_prefers_plan_folder(self):
+        import taps
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, "sink_bins")); open(os.path.join(d, "sink_bins", "t.json"), "w").write("{}")
+            rel = "physical/die_plan/x/plan_of_record/sink_bins/t.json"
+            self.assertEqual(str(taps.input_path(rel, d)), os.path.join(d, "sink_bins", "t.json"))
+            self.assertEqual(str(taps.input_path("/a/b/c.json", d)), "/a/b/c.json")
+            self.assertEqual(taps.input_path(rel, os.path.join(d, "none")), taps._root() / rel)
+
+
 if __name__ == "__main__":
     unittest.main()
