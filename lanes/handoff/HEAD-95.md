@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 06:58 PST (earlier queue posts 07:20/08:33/09:00 were mis-stamped, see 06:58 CORRECTION)
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 07:35 PST (earlier queue posts 07:20/08:33/09:00 were mis-stamped, see 06:58 CORRECTION)
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -11,22 +11,22 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 ## 3 Running jobs
 - wshim_rx DRV ECO: epyc4 ot-run unit oth-ubuntu-223592-1794492924, pass dir epyc4 /srv/opentallas-scratch3/claude/head-94/prd_wshim/pass_t10r (prd t10, OT_PRD_FROM=route, source kit prd_wshim/kit = pf_wshim fanout-cap route), log intel2 ~/head95log/prd_wshim_t10r.log; result = pass_t10r/prd_result.json then the kit GOAL=post sign-off (signoff.log in the final dir). Pass 1 done: TT slew 265 -> 3, FF 147 -> 1; pass 2 running (pass_t10r_p2).
-- wshim_tx DRV ECO: queued on epyc8 load gate since 06:30, pass dir epyc8 /srv/opentallas-scratch/claude/head-95/prd_wtx_t10r (SO dir epyc8 /srv/opentallas-scratch/claude/head-95/so), log intel2 ~/head95log/prd_wtx_t10r.log.
+- wshim_tx DRV ECO: CANCELLED 07:2x (COORD hold; never started). Its pass dir epyc8 /srv/opentallas-scratch/claude/head-95/prd_wtx_t10r is unused.
 - HEAD-94 routes (logs intel2 ~/head94log/*.log, run logs in kit run/logs/asap7/*/base/): lb_mesh_st, lb_mesh_eo (epyc7 scratch2/claude/head-94/lb_mesh_*), lbal_hd_mesh/_eo (epyc7 scratch2/claude/head-lep0n-bal/build/hd_mesh*/gen/hd_mesh, containers dpkit-hd_mesh-3631383/3632102), pf_ctl (epyc2 scratch2/claude/head-94/pf_ctl), meshk hd_mesh sign-off (epyc8 scratch2/claude/head-94/meshk). All in GRT repair at 06:40 PST.
 
 ## 4 Watchers
 None armed. Posting helper: localhost scratchpad h95/post.sh (scp a one-line post to intel2 + coord-commit).
 
 ## 5 Results not yet posted
-- re-pack v3 (pd/rp3_rf.json): gen PASS, G0 6 NEW (lep0N rst_start_raw_1..3 raw export mismatch), REACH-FIX c5 2. street_rule resetfix -> pd/rp4.json running (log localhost scratchpad h95/rp4.out); then G0 + gen on rp4.
+All posted as of 07:35 (queue: 06:58 CORRECTION, 07:35 RESULT). Candidate re-pack = pd/rp4.json (sha 134f8353fea7): G0 0 NEW errors vs k1, gen PASS, 208 new lattice/track WARNs. pd/rp5_final.json is a REVERTED copy of base (ignore).
 
 ## 6 NEXT STEPS
-1. epyc4: cd /srv/opentallas-scratch2/claude/head-95/pd && python3 -I ../repack_lep.py k1_plan.json rp3.json ; then in wt/head-95-rfsr: reach_fix.py fix pd/rp3.json --out-plan pd/rp3_rf.json --event ../rf_rp3_event.json --repo /srv/opentallas-scratch3/claude/head-94/wtM8 --types '^hd_lep0N$' ; then ../genchk.sh <rfsr> pd/rp3_rf.json pd/sidecar.json hd_lep0N. Rule: gen rc 0 -> step 2; a new blocked tap/macro error -> fix in repack_lep.py (class, not per point) and repeat.
-2. G0: in rfsr tree check.py pd/rp3_rf.json --out ../g0rf_rp3 --quiet; python3 -I g0diff.py g0rf_k1/g0_report.json g0rf_rp3/g0_report.json. Rule: 0 NEW -> step 3, else fix.
-3. Render (draw_lep.py) -> post to GEOM-VIS-5 for a form verdict; on GOOD/ISSUES-ACCEPT build the hd_lep0N kit (export/gen like HEAD-94 srx pipeline, epyc8/9 via ot-run) to place, WAIT-VISUAL, then route.
-4. wshim_tx ECO: if not admitted on epyc8 by 09:30, kill only that ot-run client on intel2 (pid in ps, args contain prd_wtx_t10r) and relaunch with --hosts epyc9 after copying the pass dir + so dir to epyc9.
-5. When wshim_tx (or its ECO) signs off: ask DIE-PROTO-2 for the seam hold re-measure (gate +10 ps, HB4 only, seam_groups off).
-6. wshim_rx ECO verdict: read prd_result.json + sign-off line, post RESULT. cland dch fan-in slew class belongs to CLAND lane / GEN-CLASS-1.
+1. Fix the lattice WARNs in localhost scratchpad h95/repack_lep.py (also on hub lanes/head-95-west-1112/). put() already writes origin on 8.64 + track_offset_um quantised to 0.432. Change: bottom tx row y = 509.76 (abut 0), top tx row physical y = 635.904 (top edge = 665.064, 0.216 under the pair). In the reset-tap relocation, use a clearance of 8.64 instead of 4.32. Rerun on epyc4: bash /srv/opentallas-scratch2/claude/head-95/rp_pipe.sh rp6. PASS rule: resetfix 'reverted' is empty, G0 NEW 0, WARN new 0, gen rc 0, street_rule street 0. If any check fails, fix the class in repack_lep.py and repeat.
+2. Render: python3 draw_lep.py k1_plan.json rp6_final.json out.png (localhost, matplotlib). Commit to lanes/head-95-west-1112/ and post for a GEOM-VIS-5 form verdict.
+3. On GOOD or ISSUES-ACCEPT: build the hd_lep0N kit from rp6_final (export/gen as HEAD-94's srx pipeline: srx_pd republish + kit_rtl; see epyc4 /srv/opentallas-scratch/claude/head-94/srx_rep*.log). Place on epyc8/9 via ot-run, then WAIT-VISUAL, then route.
+4. wshim_tx: NO ECO (COORD 07:2x). Rebuild from GEN-CLASS-1's FT-HOP-M2-WIRE READY branch. After sign-off, ask DIE-PROTO-2 for the seam hold re-measure (gate +10 ps, HB4 only, seam_groups off).
+5. wshim_rx ECO: when epyc4 pass_t10r_p2/prd_result.json and the final sign-off line exist, post the RESULT verdict. The cland dch fan-in class is for CLAND / GEN-CLASS-1.
+6. Post a STATE line hourly (next due 08:35 PST). Read the clock with `TZ=America/Los_Angeles date`; never estimate it.
 
 ## 7 Open asks
 - 07:20 RESULT: hd_st_turn fork vs fallback (COORD; I took fallback at 08:33).
