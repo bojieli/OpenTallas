@@ -1430,6 +1430,9 @@ def main():
         elif o == "--dir": d = a.pop(0)
         elif o == "--disk": disk = int(a.pop(0))
         elif o == "--hosts": hosts = a.pop(0).split(",")
+        elif o == "--exclude-hosts":      # KW-FIX-45 11-12: hosts this job must never run on (the kit-wave hub guard)
+            _ex = {h for h in a.pop(0).split(",") if h}
+            HOSTS[:] = [h for h in HOSTS if h not in _ex]
         elif o == "--pick": pick = True
         elif o == "--no-spill": spill = False
         elif o == "--job": job = a.pop(0)

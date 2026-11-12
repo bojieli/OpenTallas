@@ -60,11 +60,10 @@ class Clean(unittest.TestCase):
         calls = self.go(fail_stage="/w/gen/ intel1:")
         self.assertFalse([c for c in calls if "rm -rf /w/gen" in c and "mkdir" not in c])
 
-    def test_gen_on_hub_keeps_hub_copy(self):
-        calls = self.go(gen_host="intel2")
-        rm = [c for c in calls if "rm -rf /w/gen" in c and "mkdir" not in c]
-        self.assertEqual(len(rm), 1)
-        self.assertIn("epyc2", rm[0])
+    def test_gen_on_hub_is_refused_by_the_hub_guard(self):
+        # KW-FIX-45 11-12 (COORD ruling 4): a heavy stage never runs on the hub, so a hub gen host is refused (was: kept hub copy)
+        with self.assertRaises(RuntimeError):
+            self.go(gen_host="intel2")
 
 
 if __name__ == "__main__":

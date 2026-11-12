@@ -2902,9 +2902,21 @@ def near_count_hit(near, die, *names):
     return any((d, n) in near for n in names if n for d in (die, "*"))
 
 
+def hub_names(sp):
+    """KW-FIX-45 11-12 (COORD ruling 4, TAP-SITE-1: a place job ran on the hub): the hub and 'localhost' (ot-run's name for it)"""
+    return sorted({"localhost", str(sp.get("hub") or "")} - {""})
+
+
 def crit_args(sp):
     """ot-run admission flags of a NEAR-COUNT item (empty otherwise)"""
     return ["--priority", "die", "--crit"] if sp.get("crit") else []
+
+
+def heavy_args(sp):
+    """KW-FIX-45 11-12: ot-run flags of every heavy kit-wave stage: never the hub (--exclude-hosts) + crit_args"""
+    # 11-12: opt-in.  ot-run-lane-declare and ot-run-sealed (in front of ot-run on the hub) reject --exclude-hosts: usage text, NOT RUN
+    # (28 QC kit_rtl attempts 11-11 23:25-23:46).  Default off; the host lists and otrun()/place_async refusals keep the hub out.
+    return (["--exclude-hosts", ",".join(hub_names(sp))] if sp.get("ot_run_exclude_hosts") else []) + crit_args(sp)
 
 
 def _ssh(host, hub):
@@ -3147,9 +3159,11 @@ def run_item(spec_path):
         return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
 
     def otrun(mem, thr, d, cmd, hosts):                  # ot-run names the hub itself 'localhost'
-        hosts = ["localhost" if h == hub else h for h in hosts]
+        hosts = [h for h in hosts if h not in (hub, "localhost")]       # KW-FIX-45 11-12: a heavy stage never targets the hub
+        if not hosts:
+            raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         return [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
-            + crit_args(sp) + ["--", "bash", "-c", cmd]
+            + heavy_args(sp) + ["--", "bash", "-c", cmd]
 
     def fail(stage, txt, evidence=""):
         res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], errors=error_lines(txt), evidence=evidence or f"{G}:{W}")
@@ -3276,6 +3290,10 @@ def run_item(spec_path):
         """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
+        if G in ("localhost", hub):                  # KW-FIX-45 11-12 hub guard: the kit's gen host is the hub
+            msg = f"KW_PLACE_REFUSED: heavy stage place refuses to run on the hub ({G}); pick a fleet gen host (KW-FIX-45 hub guard)"
+            (out / "place.log").write_text(msg + "\n")
+            return 1, msg, None
         cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
         if sp.get("place_spill", True):
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
@@ -3286,7 +3304,7 @@ def run_item(spec_path):
             # own files follow at client end and G:K is the one physical /work, so route runs there.  Without a hand-off
             # the receipt appears on G at the client's end (KW_PLACE_RC wins).  Die option place_spill false = the old pin.
             argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
-                    + crit_args(sp) + ["--", "bash", "-c", cmd])
+                    + heavy_args(sp) + ["--", "bash", "-c", cmd])
         else:
             argv = otrun(m, t, K, cmd, [G])
         unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
