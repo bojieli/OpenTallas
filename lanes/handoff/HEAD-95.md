@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 12:02 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 14:46 PST
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -41,6 +41,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - wshim_rx: GEN-CLASS-1 LOCAL=1 ring form on claude/cland-hop-maxwire-1112@aee2a3f4707; recipe posted for their private rebind + sign-off. rp17 ITEM: wshim_rx reset relay hop u_srl_17/u_rrl_17 334 um (add relay or move site).
 
 - rp17 CANDIDATE epyc4 head-95/pd/rp17wr.json 3d2929bfcc2b = rp16 + windows (kitwin rloop3, 11 ports, max 16) + landing_ring_wreg on wshim_rx/eshim_rx. G0 0 NEW. Freeze adds SP3n2 (3ac13457f663) on its sign-off; reset hop needs REACH-FIX-2 per-type reset reach knob (asked) else rp18. After freeze: send path to REACH-FIX-2; re-sign ctl_n/eshim_rx/wshim_tx (window-only).
+
+- 2026-11-12 14:46: PLAN OF RECORD = rp17 FROZEN epyc4 head-95/pd/rp17.json 501a3ad70cc107d1 (copy on epyc9). Main worktree epyc4 wt/head-95-main now at 3b73826c4114. Jobs on rp17: hd_ctl_n re-sign epyc4 head-95/ctln_w17 (log ~/head95log/ctln_w17_resign.log); eshim_rx + wshim_tx full builds epyc9 head-95/k17_<type> (logs ~/head95log/k17_<type>_route.log); SP3n2 route epyc4; wshim_rx = GEN-CLASS-1 proof build. rp18 items: wshim_rx reset hop (needs REACH-FIX-2 per-type reset reach).
 
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
