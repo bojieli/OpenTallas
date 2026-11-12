@@ -321,7 +321,9 @@
     "kv3_hgi_v1__cl141fc26e@3",
     "kv3_hgi_v1__cl42bc8b12@3",
     "kv3_hgi_v7@9",
-    "kv3_hg_v1p5@7"
+    "kv3_hg_v1p5@7",
+    "kv3_pc__cl254f2e73@21",
+    "kv3_pc_v1__cl4ea58a5c@17"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -626,7 +628,9 @@
     "kv3_io_cor_v1@9": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_hg@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch.",
-    "kv3_hg_v3@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch."
+    "kv3_hg_v3@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch.",
+    "kv3_pc__cl254f2e73@21": "PDN-0006 class (blanket M6/M7 OBS on the pc core abstracts): prov_view_sources now lists the OBS-SYNC-1 exact M6/M7 detail views first (epyc9 obs-sync-1-a0c/kvview_stage, DRT-probed); relaunch picks them at prov_views",
+    "kv3_pc_v1__cl4ea58a5c@17": "PDN-0006 class (blanket M6/M7 OBS on the pc core abstracts): prov_view_sources now lists the OBS-SYNC-1 exact M6/M7 detail views first (epyc9 obs-sync-1-a0c/kvview_stage, DRT-probed); relaunch picks them at prov_views"
    },
    "only_items": [
     "kv3_astk",
