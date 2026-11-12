@@ -22,6 +22,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - PLAN OF RECORD now rp15 epyc4 head-95/pd/rp15.json sha 7931b5662082 (= rp14 + lep0N land SRAM g_t[0]/[1] y 4.32/47.52 core-inset fix (MPL-0034) + window floor). lep0N v3 kit epyc4 head-95/kit_lep0N_v3 -> epyc8 head-95/lep0N_v3 place, log ~/head95log/lep0N_v3_place.log; then render -> GEOM-VIS-6 -> route epyc8/9.
 - Kit-gen recipe sent to VISLAYOUT3-KVHEAD (a8e402dfc900a5ca8): gen.py phys + raw_patch.py (needed for port_bind), run_kit.sh place/route.
 
+- hd_mesh (M1 m1_final e9c3c429) + hd_spn_end (SP2 6ef4172a / SP3 44a11562) are owned by VISLAYOUT3-KVHEAD (a8e402dfc900a5ca8): kits placing on epyc9 vislayout3-kvhead/head/kit_*, renders go to GEOM-VIS-7. Do NOT build these here; after the GEOM-VIS-7 verdicts, merge their deltas onto rp15 (G0 + gen). Open check: hd_spn_end raw_patch gave 14 ports vs 19 declared; their port_bind decides it.
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
