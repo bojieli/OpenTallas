@@ -1,0 +1,12 @@
+HBM-CORES-B opsbg form E proofs 2026-11-12 00:39 UTC (epyc8 /srv/opentallas-scratch2/claude/hbm-cores-b/opsbg_E)
+gold = main 0fb43e98a646 ot_hgi_su_lgroup2_gp.sv (GP+ROT) with sw_v/sw_addr/sw_mask/sw_d delayed one edge; gate = this branch, -DOT_OPSG_E
+EQ_E rc=0 Of those cells 17563 are proven and 0 are unproven.
+EQ_NC1 rc=1 Found 8 unproven $equiv cells in module equiv:
+EQ_NC2 rc=1 Found 256 unproven $equiv cells in module equiv:
+SIM_RAND_E DONE rd_nonzero_cycles 59986 cycles 60000 mismatches 0 writes 79824 reads 210105 flt_cycles 59842 flt_rises 150
+SIM_QUIET_E DONE rd_nonzero_cycles 59978 cycles 60000 mismatches 0 writes 20198 reads 29975 flt_cycles 4514 flt_rises 25
+SIM_RAND_NC1 DONE rd_nonzero_cycles 59986 cycles 60000 mismatches 15150 writes 79824 reads 210105 flt_cycles 59842 flt_rises 150
+SIM_QUIET_NC1 DONE rd_nonzero_cycles 59978 cycles 60000 mismatches 58454 writes 20198 reads 29975 flt_cycles 4514 flt_rises 25
+SIM_RAND_NC2 DONE rd_nonzero_cycles 59986 cycles 60000 mismatches 21606 writes 79824 reads 210105 flt_cycles 59842 flt_rises 150
+SIM_QUIET_NC2 DONE rd_nonzero_cycles 59978 cycles 60000 mismatches 50094 writes 20198 reads 29975 flt_cycles 4514 flt_rises 25
+NC1 = bank 7 write valid one edge early; NC2 = lane 0 stage data one edge early (both must FAIL)
