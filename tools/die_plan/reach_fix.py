@@ -478,8 +478,9 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
         return rec
     # while taps are added the planner's own validation (cap / radius) must not stop the measurement: open both,
     # then set the target (or restore the type's own value) once the table is final
-    own = {k: ck.get(k) for k in ("tap_radius_um", "tap_max_sinks")}
+    own_lim = {k: ck.get(k) for k in ("tap_radius_um", "tap_max_sinks")}
     ck["tap_radius_um"], ck["tap_max_sinks"] = 1e6, 10 ** 9
+    mine = set()
     try:
         rec["legal_moves"] = _legalize_tap_table(plan_obj(Q, P.path), tn, ck, mode)
     except Exception as e:  # noqa: BLE001
@@ -564,13 +565,14 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
             tbl = ck.setdefault("taps", [])
             nloc = sum(1 for p in tbl if p.get("kind") != "core")
             for q in new:
-                tbl.append(dict(name="clk_t%d" % nloc, xy=list(q), note="REACH-FIX-1 added tap (class 1/2)"))
+                tbl.append(dict(name="clk_t%d" % nloc, xy=list(q)))
                 nloc += 1
         else:
             tbl = ck.setdefault("added_taps", [])
             n0 = len(S._grid_taps(PQ, tn))
             for q in new:
-                tbl.append(dict(name="clk_t%d" % (n0 + len(tbl)), xy=list(q), note="REACH-FIX-1 added tap (class 1/2)"))
+                tbl.append(dict(name="clk_t%d" % (n0 + len(tbl)), xy=list(q)))
+        mine.update((float(q[0]), float(q[1])) for q in new)   # schema: tap rows carry name/xy only; track ours here
         rec["changes"].append(["added_taps", rnd, [list(q) for q in new]])
         for _k in range(len(new)):
             err = _export_ok(Q, P.path, tn)
@@ -582,7 +584,8 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 rows_ = ck["taps"]
             else:
                 rows_ = ck["added_taps"]
-            idx = next((i for i, r in enumerate(rows_) if r.get("name") == drop and "REACH-FIX-1" in str(r.get("note"))), None)
+            idx = next((i for i, r in enumerate(rows_) if r.get("name") == drop
+                        and (float(r["xy"][0]), float(r["xy"][1])) in mine), None)
             if idx is None:
                 break
             rows_.pop(idx)
@@ -599,11 +602,11 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                     r["name"] = "clk_t%d" % (n0 + i)
             rec["changes"].append(["dropped_empty_tap", rnd, drop])
     # the type's own kit radius / cap follow the target when the export still loads with them
-    for key in own:
-        if own[key] is None:
+    for key in own_lim:
+        if own_lim[key] is None:
             ck.pop(key, None)
         else:
-            ck[key] = own[key]
+            ck[key] = own_lim[key]
     for key, v, f in (("tap_radius_um", radius, float), ("tap_max_sinks", cap, int)):
         old = ck.get(key)
         if old is not None and f(old) <= v:

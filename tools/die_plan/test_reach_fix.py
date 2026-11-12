@@ -56,6 +56,9 @@ def test_class2_tap_load_split(tmp_path):
     out, _ev = _fix(tmp_path, base, "f2")
     a = _rows(tmp_path, out)["mid"]
     assert a["c2"] == 0 and a["c2_max"] <= RF.CAP_SINKS and a["c1"] == 0, a
+    import schema as S
+    fixed = json.loads(out.read_text())
+    assert S.validate_structure(fixed) == []                         # only schema keys (no stray clock keys)
 
 
 def test_class4_signal_hop_gets_registers(tmp_path):
