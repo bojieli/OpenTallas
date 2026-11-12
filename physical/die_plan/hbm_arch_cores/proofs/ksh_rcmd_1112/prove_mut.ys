@@ -1,0 +1,6 @@
+read_verilog -formal -sv -DFORMAL /r/ot_reset_sync.sv /r/ot_hbm_svc_vm_kshare_splitstrap.sv
+hierarchy -top ot_hbm_svc_async_fifo_re -chparam WIDTH 2 -chparam DEPTH 4 -chparam MUT 1
+proc; flatten; opt_clean
+clk2fflogic
+opt_clean
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 24 -show-regs

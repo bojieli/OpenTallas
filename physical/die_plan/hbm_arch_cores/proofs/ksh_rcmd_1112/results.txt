@@ -1,0 +1,34 @@
+HBM-CORES-B 11-12 kshare RCMD proofs (DO_NOT_COUNT)
+RTL sha256[0:16] c89a4af78d35f75b
+
+SAT (yosys clk2fflogic, both clocks interleaved, sat -tempinduct, invariants empty_q==(rd_gray==wr_gray_r2) and rd_gray==gray(rd_bin)):
+  gate: Induction step proven: SUCCESS!
+  mut: SAT temporal induction proof finished - model found for base case: FAIL!
+  mut2: SAT temporal induction proof finished - model found for base case: FAIL!
+
+FIFO unit bench (run_fifo_re_bench.sh, repo tb_hbm_svc_async_fifo):
+  m0_d4_0: PASS HBM_FIFO depth=4 wr_period_ps=1024.000000 rd_period_ps=833.333334 checked=6540 resets_both_interfaces=pas
+  m0_d4_1: PASS HBM_FIFO depth=4 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6540 resets_both_interfaces=pas
+  m0_d8_0: PASS HBM_FIFO depth=8 wr_period_ps=1024.000000 rd_period_ps=833.333334 checked=6539 resets_both_interfaces=pas
+  m0_d8_1: PASS HBM_FIFO depth=8 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6530 resets_both_interfaces=pas
+  m1_d4_0: FATAL: /srv/opentallas-scratch2/claude/hbm-cores-b/rcmd_proof/unit/tb.sv:29: FIFO payload/order mismatch depth
+  m1_d4_1: PASS HBM_FIFO depth=4 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6540 resets_both_interfaces=pas
+  m1_d8_0: PASS HBM_FIFO depth=8 wr_period_ps=1024.000000 rd_period_ps=833.333334 checked=6539 resets_both_interfaces=pas
+  m1_d8_1: PASS HBM_FIFO depth=8 wr_period_ps=833.333334 rd_period_ps=1024.000000 checked=6530 resets_both_interfaces=pas
+
+System lock-step bench (run_lock_rcmd.sh = run_lock.sh + RABC/RP700/RDEF/mutR/mutR2, GN=1600; epyc8 ksh_rcmd_tb):
+  CASE RABC seed 31 expect pass got PASS rc=0 :: LOCK cfg=RABC hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5475 +2:1629 +3:0 :: LOCK cfg=RABC hbm_cycles=81848 mismatches=0 fill_fifo
+  CASE RABC seed 32 expect pass got PASS rc=0 :: LOCK cfg=RABC hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5828 +2:1750 +3:20 :: LOCK cfg=RABC hbm_cycles=80990 mismatches=0 fill_fif
+  CASE RDEF seed 31 expect pass got PASS rc=0 :: LOCK cfg=RDEF hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=RDEF hbm_cycles=80264 mismatches=0 fill_fifo_wr
+  CASE RDEF seed 32 expect pass got PASS rc=0 :: LOCK cfg=RDEF hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=RDEF hbm_cycles=81433 mismatches=0 fill_fifo_wr
+  CASE RP700 seed 31 expect pass got PASS rc=0 :: LOCK cfg=RP700 hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7104 +1:0 +2:0 +3:12 :: LOCK cfg=RP700 hbm_cycles=81120 mismatches=0 fill_fif
+  CASE RP700 seed 32 expect pass got PASS rc=0 :: LOCK cfg=RP700 hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7552 +1:37 +2:9 +3:0 :: LOCK cfg=RP700 hbm_cycles=80356 mismatches=0 fill_fif
+  CASE mutR2 seed 31 expect fail got FAIL rc=1 :: LOCK cfg=mutR2 hbm_cycles=82084 mismatches=832694 fill_fifo_writes=8192 wcmd_writes=56 ::  :: LOCK hbm outputs differ k6 cyc182
+  CASE mutR2 seed 32 expect fail got FAIL rc=1 :: LOCK cfg=mutR2 hbm_cycles=80356 mismatches=383697 fill_fifo_writes=8192 wcmd_writes=56 ::  :: LOCK hbm outputs differ k4 cyc182
+  ---
+  CASE mutR seed 31 expect fail got PASS rc=0 :: LOCK cfg=mutR hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=mutR hbm_cycles=80264 mismatches=0 fill_fifo_wr
+  CASE mutR seed 32 expect fail got PASS rc=0 :: LOCK cfg=mutR hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=mutR hbm_cycles=81433 mismatches=0 fill_fifo_wr
+
+mutR (MUT=1, unsafe) passes the system bench: every take_cmd/take_wb leaves NORM, so a pop never follows the last entry
+on the next edge and the late flag is unobservable in kshare. It is rejected by SAT and by the FIFO unit bench.
+mutR2 (MUT=2, cycle-late flag) fails the exact system lock (RDEF-style hbm outputs differ at cycle 182).
