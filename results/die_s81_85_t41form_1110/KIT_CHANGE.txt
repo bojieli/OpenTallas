@@ -42,3 +42,16 @@ Build: epyc8 via ot-run admission (hub listener pid 2478389): ot-run --mem 64 --
 Post-3_4 census (census_odb.tcl on 3_place.odb): 13 nets > 24 loads, all clock nets (clk, fclk_in_*; not yet typed
 CLOCK before CTS); 0 data/control/select/reset nets > 24.  3_4 repair_design: 1 slew violation, 1 buffer.
 Floorplan/resize logs: T41FORM set_max_fanout 24 and T41FORM_HPAD dont_touch 38528 present; native cells 204360 / 400000.
+
+CTS 11-11 10:30: FF structural hold gate PASS; post-CTS insertion gate PASS (TT mean 256.42 vs 250).
+GRT 11-11 22:09: 0 overflow all layers (8.82%); hold repair ws -52.79 (667) -> +0.02 with 668 HB4; maxwire +217072 buffers.
+DRT 11-12 03:31: 0 DRC after 32 iterations (iter5 964: S face 548 [202 with u_hp nets], N 348, core 68; all converged),
+       0 antenna, wire 13.86 m, 7.35 M vias, M8/M9 unused, 4 h 37 min.  Face cell density (density_faces.tcl, routed ODB,
+       20 um bins, 40 um bands): S max 0.426 (hp bins mean 0.248), E max 0.247 (hp), N 0.760, W 0.753, core 0.591; none > 0.90.
+LEC: EQUIVALENT (lec/lec.json, slang gold vs yosys netlist).
+Sign-off 11-12 05:23 (signoff_t41form.json, DO_NOT_COUNT measurement, host paths inside are informational only):
+       verdict NOT SIGNED.  TT setup PASS wns +98.09 ps.  DRV PASS (slew 0, cap 0, fanout 0; max 28 on a clock leaf).
+       FF hold FAIL wns -6.87 ps, tns -165.76, 60 endpoints: 58 output-port ends (ft5_o, cland_up_fault, cland_up_ready,
+       out_min 0 vs vclk) and 2 reg-reg (worst u_rrl_11 -> u_rrl_12 -1.76).  No input-port or vclk ft-slot violator: the
+       hold pads closed the original failing class.  io_hold_parent NEEDS_PARENT.  Insertion band PASS.
+       No relaunch/retry (owner of record DIE-S81-87); a one-iteration post-route hold ECO is the die owner's call.
