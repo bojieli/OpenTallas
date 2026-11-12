@@ -70,3 +70,15 @@ FT-HOP-M2 READY pending proof. Answered COORD (07:5x): CLAND dch = cland-slew-11
 - WREG reach default (ring_wreg_reach) is in the intel2 worktree, uncommitted, with tests. K-change lists: gen-class-1/wreg_list_{head,kv,qc}.txt (HEAD 54 buses / 20 types, KV 127 / 13, QC 0 on the sidecar pair, unverified).
 - t45: tree epyc8 gen-class-1/bsrc_t45 (cp -al plus a patched real copy), out_t45 BIND rc 0, ring has DSREP 8 LOCAL 1. Verify is re-running (verify_t45.sh, bind.f repointed). Next: kit-rtl/gen/place/GRT.
 - Running: wrx_wreg route (intel2 pid 732695), full suite log ~/gc1log/suite_wreg.log, verify intel2 pid 1403168.
+
+## 11-12 late: START relay rule (supersedes running-job lines above)
+- branch claude/cland-hop-maxwire-1112 @ 8838d5f6697: WREG reach default + reader_start_reach (one rule: generator,
+  count_align_bind.reader_start_depth, verify strap_k + reader_start) + verify mutant test. Full suite intel2
+  ~/gc1log/suite_all.log (ignore main-baseline fails: die_sta_related x2, flow_gen_1028, flow_hold_basis,
+  gen_phys_bump_ports, grt183_kit abi).
+- PROOF wshim_rx (WREG+START, plan rp16 no field): kit epyc4 gen-class-1/proof/wrx_rs, route+signoff ot-run client
+  intel2 pid 1695955, log ~/gc1log/wrx_rs_route.log. Gate SO slew 0 TT/FF. Old WREG-only run wrx_wreg (pid 732695) = baseline.
+- K lists: intel2 gen-class-1/kd_{head,kv,qc}.txt (kdelta_list.py TOOLS PLAN SIDECAR).
+- t45: verify re-run ot-run intel2 pid 1837479 (epyc8 verify_t45.log); bind_report extra_lib repointed to bsrc_t45
+  ot_dp_clk_landing.sv. Then kit_wave spec like kw_t45/spec.json with bind_out out_t45, src bsrc_t45 (epyc8), GRT.
+- Then: one READY (WREG-default + LOCAL + START relay + verify refusal + K lists).
