@@ -238,7 +238,7 @@ def test_out_relay_tap_copy_mutants_fail():
 # (landing_writer_start, reuse_relay_origin), same-cycle local reset copies (landing_local_resets), relay-partition
 # FSTART face flops (landing_relay_start_copy) and the strap K re-reference (count_align_bind.strap_ties).
 
-def _reader_vehicle(mutant=None):
+def _reader_vehicle(mutant=None,reach=False):
     """the 'ca' vehicle with B's ring reset through a 1-stage reader START chain and B's origin on a local copy"""
     g=globals();orig=g['Verification']
     class Hook(orig):
@@ -259,10 +259,12 @@ def _reader_vehicle(mutant=None):
             lr=cell('b.u_cland_lrst_s0','ot_dp_rrelay',{'clk':bclk,'d':br.ports['q'] if mutant!='lrst_d' else bt.ports['q']},['q'])
             bo.ports['rst_raw_n']=lr.ports['q']
             raw['partition_types']['B']['clock']=dict(
-                landing_reader_start=dict(depth=1,branches=dict(y=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]))),
+                **({} if reach else dict(landing_reader_start=dict(depth=1,branches=dict(y=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]))))),
                 landing_local_resets=[dict(name='s0',raw='rst_root_n' if mutant!='lrst_depth' else 'rst_n_t0',
                                            xy_um=[0,0],consumers=['u_cland_origin'])])
             super().__init__(F,G,raw,table,names,**kw)
+        def _reach_reader(self,pn):   # CLAND-RING-LOCALITY reach default for B (rule itself: test_cland_slew_reach)
+            return reach and self.parts[pn]['type']=='B'
     g['Verification']=Hook
     try:return vehicle('ca',reset_tree=_plan_tree)
     finally:g['Verification']=orig
@@ -270,6 +272,15 @@ def _reader_vehicle(mutant=None):
 
 def test_reader_start_chain_and_local_reset_copy_verified():
     assert _reader_vehicle()['errors']==[]
+
+
+def test_reach_default_reader_start_verified_on_ring_reset_and_mutants_fail():
+    # CLAND-RING-LOCALITY: no landing_reader_start; one stage on the ring's own reset node, d = the start
+    assert _reader_vehicle(reach=True)['errors']==[]
+    for m,frag in (('reader_d','u_cland_reader_start_y_0.d'),('reader_raw','u_cland_reader_start_y_0: raw reset'),
+                   ('reader_skip','u_cland_y.rst_n')):
+        errs=_reader_vehicle(m,reach=True)['errors']
+        assert any(frag in e for e in errs),(m,errs)
 
 
 def test_reader_start_chain_and_local_reset_mutants_fail():
