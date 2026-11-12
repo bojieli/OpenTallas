@@ -17,7 +17,7 @@ Classes (types are selected by family regex, never by name):
                clearance to the core W edge.  Collector / START / local-reset windows are re-cleared by the generator
                (landing_place._clear_of_hard_cores / _collector_window); reset_tree relays are re-built at bind
                (reset_anchor remap by site); neither is edited here.
-  FW-EFACE     (^(sle|slw)_(fw|st_a)_)  budgets.face_flop_ew_types[family] = {cpitch_sites 80, row_stride 3}: the E/W face
+  FW-EFACE     (^(sle|slw)_(fw|st_a|st_b)_; st_b = the W-face mirror, GEOM-VIS-5 GRT BAD 11-12)  budgets.face_flop_ew_types[family] = {cpitch_sites 80, row_stride 3}: the E/W face
                pin registers take a staggered comb band ~20 um deep (face_flops.tcl OT_FF_EW_CPITCH_SITES / OT_FF_EW_ROW_STRIDE)
                instead of the fixed 40-site (2.16 um) column pitch with +-2 rows.
   CTL-RING     (^sle_ctl_)  budgets.cland_strip_density_types[sle_ctl] = 1.0 and cland_strip_rows_types[sle_ctl] = 2
@@ -40,9 +40,9 @@ DELETE = "<DELETE>"
 ABSENT = "ABSENT"
 HALO = 2.16
 SC_RE = re.compile(r"^(sle|slw)_sc_")
-FW_RE = re.compile(r"^(sle|slw)_(fw|st_a)_")
+FW_RE = re.compile(r"^(sle|slw)_(fw|st_a|st_b)_")
 CTL_RE = re.compile(r"^sle_ctl_")
-FW_BASES = ("sle_fw", "slw_fw", "sle_st_a", "slw_st_a")
+FW_BASES = ("sle_fw", "slw_fw", "sle_st_a", "slw_st_a", "sle_st_b", "slw_st_b")
 FW_FORM = {"cpitch_sites": 80, "row_stride": 3}
 
 
