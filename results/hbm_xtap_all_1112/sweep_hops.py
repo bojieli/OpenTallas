@@ -18,7 +18,7 @@ import gen_phys as GP  # noqa: E402
 import gen_rtl  # noqa: E402
 
 raw = json.loads(Path(planp).read_text())
-P = S.Plan(raw)
+P = S.Plan(raw, path=planp)  # plan dir resolves hard-core pin tables (grid+explicit taps)
 rows = []
 summ = []
 cost = {}
