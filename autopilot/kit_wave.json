@@ -321,7 +321,9 @@
     "kv3_hgi_v1__cl141fc26e@3",
     "kv3_hgi_v1__cl42bc8b12@3",
     "kv3_hgi_v7@9",
-    "kv3_hg_v1p5@7"
+    "kv3_hg_v1p5@7",
+    "kv3_pc__cl254f2e73@21",
+    "kv3_pc_v1__cl4ea58a5c@17"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -626,7 +628,9 @@
     "kv3_io_cor_v1@9": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_sys_SD_v1@20": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch on src _rh (17002ccba5e) + plan_c ring_hold",
     "kv3_hg@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch.",
-    "kv3_hg_v3@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch."
+    "kv3_hg_v3@9": "KW-FIX-45 11-11: a9 gen failed 'macro lib kv3_head_eighth_e2_tt.lib: no ff view': the e2 view dir kv-plan-2/views_e2s/kv3_head_eighth_e2 (lef, tt.lib, ff.lib) was incomplete/absent on epyc8+epyc9 (the cut plan_c names it by absolute path); staged complete from epyc7 (sha-checked copy). Relaunch.",
+    "kv3_pc__cl254f2e73@21": "PDN-0006 class (blanket M6/M7 OBS on the pc core abstracts): prov_view_sources now lists the OBS-SYNC-1 exact M6/M7 detail views first (epyc9 obs-sync-1-a0c/kvview_stage, DRT-probed); relaunch picks them at prov_views",
+    "kv3_pc_v1__cl4ea58a5c@17": "PDN-0006 class (blanket M6/M7 OBS on the pc core abstracts): prov_view_sources now lists the OBS-SYNC-1 exact M6/M7 detail views first (epyc9 obs-sync-1-a0c/kvview_stage, DRT-probed); relaunch picks them at prov_views"
    },
    "only_items": [
     "kv3_astk",
@@ -1394,6 +1398,14 @@
     ],
     "qkd_kvs_pcc": [
      {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcc",
+      "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc",
       "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
@@ -1408,6 +1420,14 @@
      }
     ],
     "qkd_kvs_pcc_h_head_p": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcc_h_head_p",
+      "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
      {
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc_h_head_p",
@@ -1424,6 +1444,14 @@
     ],
     "qkd_kvs_pcf": [
      {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
       "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
@@ -1438,6 +1466,14 @@
      }
     ],
     "qkd_kvs_pcf_h_head_p": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf_h_head_p",
+      "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
      {
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf_h_head_p",
