@@ -1846,6 +1846,23 @@ def overlay_sha(path):
         return ""
 
 
+def retired_src_hit(cfg, paths):
+    """KW-FIX-46 11-12 (COORD: src28ap is a mixed tree after an rsync wrote through its links; RETIRE it): cfg src_retired
+    [dirs] are never a source for a new row.  The first path at or under a retired dir, else ''."""
+    for r in (cfg.get("src_retired") or []):
+        r = str(r).rstrip("/")
+        for q in paths:
+            q = str(q or "")
+            if r and (q == r or q.startswith(r + "/")):
+                return q
+    return ""
+
+
+def spec_retired(cfg, sp):
+    """the retired path a launch spec would read (src, plan, kit_rtl paths), else ''"""
+    return retired_src_hit(cfg, [sp.get("src"), sp.get("plan")] + abs_paths(sp.get("kit_rtl") or {}))
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -5079,6 +5096,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    _ret = spec_retired(cfg, sp)
+    if _ret:                    # KW-FIX-46: raised before any dir or unit exists; the caller logs LAUNCH-SKIP
+        raise ValueError(f"SRC_RETIRED: {_ret} is under cfg src_retired (do not use); repoint {die}/{r['item']} item_inputs")
     sp["start_delay_s"] = round(float(delay_s), 1)
     if arm:                                        # KW-FIX-44 GRTARM_1111: the halving-off arm of this row
         if arm.get("gen_host"):
