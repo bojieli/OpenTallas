@@ -108,10 +108,14 @@ def static_checks(cal, allow_below_floor=False):
         need('pipe_cfg_window_2P_ge_195_plus_cfg_lead', 2 * P >= 195 + cal['cfg_lead'], (P, cal['cfg_lead']))
         need('pipe_cfg_lead_ge_48', cal['cfg_lead'] >= 48)
         need('period_ge_measured_floor_126', P >= PIPE_FLOOR, P)   # check name kept (consumers); value = PIPE_FLOOR
+        if 'x_cadence_floor' in cal:
+            need('period_ge_x_cadence_floor', P >= cal['x_cadence_floor'], (P, cal['x_cadence_floor']))
         need('launch_spacing_eq_period', all(b['abs_launch'] - a['abs_launch'] == P for a, b in zip(per, per[1:])))
     else:
         need('period_ge_measured_floor_224', P >= SERIAL_FLOOR, P)
-    floor_names = {'period_ge_measured_floor_126', 'period_ge_measured_floor_224'}
+        if 'x_cadence_floor' in cal:
+            need('period_ge_x_cadence_floor', P >= cal['x_cadence_floor'], (P, cal['x_cadence_floor']))
+    floor_names = {'period_ge_measured_floor_126', 'period_ge_measured_floor_224', 'period_ge_x_cadence_floor'}
     hard = [b for b in bad if not (allow_below_floor and b[0] in floor_names)]
     if hard:
         raise CalendarFault(('wq_b calendar compile fault', hard))
@@ -122,8 +126,14 @@ def wqb_calendar(phase, stream, phases, slc=6, mode='pipeline', period=None, cfg
                  allow_below_floor=False):
     """the slice xs calendar of the wq_b field phases.  phase / stream = pq_phase0 / pq_stream words (2 phase words
     per phase).  Returns packed calendar rows, absolute is_d issuer words, per-phase records and the static checks."""
+    # TOK-VERIFY-2 11-12 (BUS-GEAR x feed 2:1): at x cadence 2 the floor / span are DERIVED from the measured cadence-1
+    # values (xs_calendar.cadence_floor); cadence 1 is byte-identical
+    cad = XC.x_cadence()
+    if mode in ('pipeline', 'serial'):
+        xfloor, d_max, d_last, _ = XC.cadence_floor(phase, stream, list(phases), slc,
+                                                   PIPE_PERIOD if mode == 'pipeline' else SERIAL_PERIOD, cad)
     if mode == 'pipeline':
-        period = PIPE_PERIOD if period is None else period
+        period = xfloor if period is None else period
         cfg_lead = PIPE_CFG_LEAD if cfg_lead is None else cfg_lead
         pipe = XC.compile_pipeline(phase, stream, list(phases), slc, period, cfg_lead=cfg_lead)
         packed = list(pipe['packed'])
@@ -136,7 +146,7 @@ def wqb_calendar(phase, stream, phases, slc=6, mode='pipeline', period=None, cfg
         segs = [(0, len(packed))]
         extra = dict(acc_gap=pipe['acc_gap'], retire_gap=pipe['retire_gap'], tags=pipe['tags'], cal_rows=pipe['cal_rows'])
     elif mode == 'serial':
-        period = SERIAL_PERIOD if period is None else period
+        period = xfloor if period is None else period
         packed, issuers, per, segs = [], {}, [], []
         for n, i in enumerate(phases):
             c = XC.compile_phase(phase, stream, i, slc)
@@ -165,15 +175,18 @@ def wqb_calendar(phase, stream, phases, slc=6, mode='pipeline', period=None, cfg
         raise ValueError(mode)
     cal = dict(mode=mode, period=period, cfg_lead=cfg_lead, packed=packed, issuers=issuers, phases=per, segments=segs,
                stream_words=len(stream), nphases=len(per), **extra)
+    if cad > 1:
+        cal.update(x_cadence=cad, x_cadence_floor=xfloor, x_stream_delta_max=d_max, x_stream_delta_last=d_last)
     cal['static'] = static_checks(cal, allow_below_floor=allow_below_floor)
-    cal['predicted_span'] = (len(per) - 1) * period + PHASE_SPAN
+    cal['predicted_span'] = (len(per) - 1) * period + PHASE_SPAN + (d_last if cad > 1 else 0)
     return cal
 
 
 def calendar_record(cal):
     """the JSON part of an emitted calendar (no packed words)"""
     keep = ('mode', 'period', 'cfg_lead', 'nphases', 'cal_rows', 'acc_gap', 'retire_gap', 'tags', 'epoch_period',
-            'stream_words', 'static', 'predicted_span')
+            'stream_words', 'static', 'predicted_span', 'x_cadence', 'x_cadence_floor', 'x_stream_delta_max',
+            'x_stream_delta_last')
     r = {k: cal[k] for k in keep if k in cal}
     r['phases'] = [{k: p[k] for k in ('phase', 'tag', 'abs_accept', 'abs_launch', 'abs_retire', 'abs_stream', 'nb',
                                       'stall_edges', 'calendar_base') if k in p} for p in cal['phases']]

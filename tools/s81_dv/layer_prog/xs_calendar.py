@@ -73,6 +73,20 @@ ACC = 20                      # accept row; cfg row ACC + 20
 OFF = 37
 
 
+def x_cadence():
+    """TOK-VERIFY-2 11-12 (BUS-GEAR S81 x feed 2:1): OT_XS_X_CADENCE = edges between two x stream words of a phase.
+    1 (default) = the ungeared measured release form, byte-identical programmes.  2 = the geared x / xo lanes of
+    rtl/dsrom_sys/s81_dv/xgear/ot_s81_xgear_die.sv (compiler contract: an x word leaves the slice only on an even edge
+    counted from the slice C reset release; odd edges are not sent): every stream word of a phase sits on
+    word-edge anchor + k * 2 (anchor = the phase's beat-0 edge), periods and op segment starts are multiples of 2, so
+    every word of the slice calendar keeps one parity."""
+    import os
+    c = int(os.environ.get('OT_XS_X_CADENCE', '1'))
+    if c not in (1, 2):
+        raise ValueError(('OT_XS_X_CADENCE must be 1 or 2', c))
+    return c
+
+
 def isd(**f):
     lay = dict(go=(0, 1), ph=(1, 10), np=(11, 3), xbase=(14, 19), xps=(33, 19), obase=(52, 19), ops=(71, 19),
                fmt=(90, 2), f_fault=(92, 1), prime=(93, 1), start=(94, 1), base=(95, 12), length=(107, 13),
@@ -102,18 +116,22 @@ def need_elems(w, fam):
     return ((u << 4) | (8 if sv & 2 else 0) | b) * 32 + 32
 
 
-def spine_offsets(words, fam, K, stall=True):
-    """beat i leaves the spine's beat register off_i edges after go's (off_0 = GO_TO_BEAT, + stalls)"""
+def spine_offsets(words, fam, K, stall=True, cad=1):
+    """beat i leaves the spine's beat register off_i edges after go's (off_0 = GO_TO_BEAT, + stalls).  cad > 1 (geared
+    x feed, x_cadence): beat i >= beat i-1 + cad and on the word-edge grid anchor + k * cad (anchor = beat 0's edge)"""
     go_bt = P0 + 1 + CFG_TO_GO
+    a0 = go_bt + GO_TO_BEAT
     L = LB if fam else LQ
     loads = -(-K // 64)
     out, prev = [], None
     for i, w in enumerate(words):
-        b = go_bt + GO_TO_BEAT if prev is None else prev + 1
+        b = a0 if prev is None else prev + cad
         n = need_elems(w, fam)
         if stall and n:
             assert n <= 64 * loads, ('beat needs x beyond K', i, n, K)
             b = max(b, P0 + L + -(-n // 64))
+        if cad > 1:
+            b = a0 + -(-(b - a0) // cad) * cad
         out.append(b - go_bt)
         prev = b
     return out
@@ -143,13 +161,15 @@ def q_command_lead(fam):
     return int(os.environ.get('OT_XS_Q_CPR', '0') == '1')
 
 
-def compile_phase(P, S, ph, slc, mutant=None):
-    """the xs programme of one field phase: calendar rows, is_d words, gather arrivals, predicted shift D"""
+def compile_phase(P, S, ph, slc, mutant=None, cad=None):
+    """the xs programme of one field phase: calendar rows, is_d words, gather arrivals, predicted shift D.
+    cad = x stream cadence (default x_cadence(), OT_XS_X_CADENCE)"""
     from pq_calendar import action_word
+    cad = x_cadence() if cad is None else cad
     pw = phase_word(P, ph)
     fam, K, nb, sbase = pw['bf'], pw['K'], pw['nb'], pw['sbase']
     words = S[sbase:sbase + nb]
-    offs = spine_offsets(words, fam, K, stall=mutant != 'nostall')
+    offs = spine_offsets(words, fam, K, stall=mutant != 'nostall', cad=cad)
     rows = {}
 
     def ev(t, **f):
@@ -201,11 +221,30 @@ def compile_phase(P, S, ph, slc, mutant=None):
                 x[0] = head[g0] + 1
     slack = min(head[g] - it for it, _, _, g in arr if g in head)
     D = ctl(tc) + CTL_TO_CC - CFG_WORD
-    stalls = offs[-1] - (GO_TO_BEAT + nb - 1)
-    return dict(rows=rows, packed=packed, iss=iss, arr=arr, D=D, ts=ts, tg=tg, tc=tc,
-                go_command_lead_edges=q_command_lead(fam), nbeat_x=nbeat, slack=slack,
-                stall_edges=stalls, off_load=off_load, fam=fam, K=K, nb=nb, sbase=sbase, cal_rows=len(tt),
-                end_iter=ctl(max(tt)) + 40)
+    stalls = offs[-1] - (GO_TO_BEAT + cad * (nb - 1))      # edges beyond the cadence grid (cad 1: the spine stalls)
+    out = dict(rows=rows, packed=packed, iss=iss, arr=arr, D=D, ts=ts, tg=tg, tc=tc,
+               go_command_lead_edges=q_command_lead(fam), nbeat_x=nbeat, slack=slack,
+               stall_edges=stalls, off_load=off_load, fam=fam, K=K, nb=nb, sbase=sbase, cal_rows=len(tt),
+               end_iter=ctl(max(tt)) + 40)
+    if cad > 1:
+        out['x_cadence'] = cad
+    return out
+
+
+def cadence_floor(P, S, phases, slc, floor, cad=None):
+    """TOK-VERIFY-2 11-12: DERIVED period floor of a field op at x cadence cad > 1, from its MEASURED cadence-1 floor.
+    Each phase's last x word moves by d = ts[-1](cad) - ts[-1](1) edges (its stream lengthens by the cadence grid minus
+    the spine stalls the grid absorbs).  The cadence-1 floor is set by the frame element walk of the stream + drain /
+    cfg load behind it, so the derived floor = floor + max d, rounded up to a multiple of cad; the op's span tail moves
+    by the last phase's d.  Derived, not measured: the geared frame-bench P sweep confirms or replaces it.
+    Returns (floor_c, d_max, d_last, d per phase)."""
+    cad = x_cadence() if cad is None else cad
+    if cad == 1:
+        return floor, 0, 0, [0] * len(phases)
+    d = [compile_phase(P, S, ph, slc, cad=cad)['ts'][-1] - compile_phase(P, S, ph, slc, cad=1)['ts'][-1]
+         for ph in phases]
+    f = floor + max(d)
+    return f + (-f % cad), max(d), d[-1], d
 
 
 def beats_of(w, fam):
@@ -241,6 +280,9 @@ def beats_of(w, fam):
 #   period >= 88 (replay) and 2 * period >= 195 + cfg_lead, cfg_lead >= 48   ->   period >= 122 at DRAIN 127.
 def compile_pipeline(P, S, phases, slc, period, cfg_lead=48, acc_gap=10, retire_gap=6, tags=(0, 2)):
     from pq_calendar import action_word
+    cad = x_cadence()
+    # geared x feed: phase n moves by n * period, so the word-edge parity of every phase holds only at period % cad == 0
+    assert period % cad == 0, ('period is not a multiple of the x cadence', period, cad)
     rows = {}
 
     def ev(t, **f):
@@ -292,8 +334,11 @@ def compile_pipeline(P, S, phases, slc, period, cfg_lead=48, acc_gap=10, retire_
     for i in its:
         assert len([j for j in its if j <= i < j + OFF + 2]) <= ND
     ctl = lambda t: TS + GO_LAT + t + OFF + XS_LAG          # noqa: E731
-    return dict(rows=rows, packed=packed, iss=iss, phases=per, cal_rows=len(tt), period=period, cfg_lead=cfg_lead,
-                acc_gap=acc_gap, retire_gap=retire_gap, tags=list(tags), end_iter=ctl(tend) + 40)
+    out = dict(rows=rows, packed=packed, iss=iss, phases=per, cal_rows=len(tt), period=period, cfg_lead=cfg_lead,
+               acc_gap=acc_gap, retire_gap=retire_gap, tags=list(tags), end_iter=ctl(tend) + 40)
+    if cad > 1:
+        out['x_cadence'] = cad
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ tag remap

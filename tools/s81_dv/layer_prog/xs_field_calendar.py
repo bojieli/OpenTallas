@@ -144,6 +144,11 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
     ROM words `phase` / stream ROM words `stream`).  Returns rows, segment-relative is_d words, per-phase records,
     static checks and the predicted span."""
     fam, floor, _fail, tail, _ev = floor_rec(op)
+    cad = XC.x_cadence()
+    floor_c1 = floor
+    # TOK-VERIFY-2 11-12 (BUS-GEAR x feed 2:1): at x cadence 2 the floor and the span tail are DERIVED from the measured
+    # cadence-1 record (xs_calendar.cadence_floor); cadence 1 leaves every value and file byte-identical
+    floor, d_max, d_last, d_ph = XC.cadence_floor(phase, stream, list(phases), slc, floor, cad)
     P = floor if period is None else period
     try:
         pipe = XC.compile_pipeline(phase, stream, list(phases), slc, P, cfg_lead=cfg_lead)
@@ -185,6 +190,13 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         cal['span_tail'] = tail
         cal['span_metric'] = 'spine_go0_to_last_frame_root_ret_edges'
         cal['span_evidence'] = f'results/rtl/s81_romopt_1020/a/{ROMOPT_DIR[rk]}/*/{op.split(".")[-1]}/check_P{P}.json'
+    if cad > 1:
+        tail += d_last
+        cal.update(span_tail=tail, x_cadence=cad, floor_c1_measured=floor_c1, x_stream_delta_max=d_max,
+                   x_stream_delta_last=d_last,
+                   x_cadence_floor_rule=('DERIVED: measured cadence-1 floor + max phase last-x-word delta, rounded up to '
+                                         'the cadence; tail + last phase delta (xs_calendar.cadence_floor); the geared '
+                                         'frame-bench P sweep confirms'))
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 
@@ -230,6 +242,7 @@ def layer_calendar(cals, starts=None, gap=0):
     Checks: segment windows disjoint and ordered (first accept > previous last retire), total rows <= 4096, is_d
     edges unique, delay line <= ND over the layer.  Returns the packed rows, absolute issuers and per-op windows."""
     order = [c for o in EXEC_ORDER for c in cals if c['op'] == o]
+    cad = XC.x_cadence()
     nrows = sum(len(c['packed']) for c in order)
     segmented = XO.on('OT_XS_CAL_SEGMENT')
     if nrows > 4096 and not segmented:      # ot_s81sl_xs pq_calendar ROM = one ot_rom_4096x72_m8 pair; is_d base field 12 b
@@ -244,6 +257,9 @@ def layer_calendar(cals, starts=None, gap=0):
             S = starts[c['op']]
         else:
             S = 0 if t_free is None else t_free - a0 + 1 + gap
+            S += -S % cad                 # geared x feed: a segment start keeps the word-edge parity (cad 1: no-op)
+        if S % cad:
+            bad.append(('op_start_off_x_cadence_grid', c['op'], S, cad))
         base = len(packed)
         packed.extend(c['packed'])
         for t, v in c['iss'].items():
@@ -313,7 +329,8 @@ def write_layer_images(lc, phase, stream, out):
 
 def record(cal):
     keep = ('op', 'fam', 'mode', 'period', 'cfg_lead', 'floor', 'nphases', 'cal_rows', 'stream_words', 'static',
-            'predicted_span', 'span_tail', 'span_metric', 'span_evidence')
+            'predicted_span', 'span_tail', 'span_metric', 'span_evidence', 'x_cadence', 'floor_c1_measured',
+            'x_stream_delta_max', 'x_stream_delta_last', 'x_cadence_floor_rule')
     r = {k: cal[k] for k in keep if k in cal}
     r['phases'] = [{k: p[k] for k in ('phase', 'tag', 'accept', 'cfg', 'launch', 'stream', 'retire', 'nb', 'stall_edges')}
                    for p in cal['phases']]
