@@ -31051,20 +31051,11 @@
     "q_spu0__physical_v1@5",
     "ot_hbm_sm_i8w_front@8",
     "ot_hbm_sm_pv_merge@6",
-    "PHY_NC@1",
-    "PHY_NE@1",
-    "PHY_NW@1",
     "q_spu0__physical_v1@6",
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@12",
     "ot_hbm_sm_pv_merge@7",
     "ot_hbm_sm_i8w_front@9",
-    "PHY_NC@2",
-    "PHY_NE@2",
-    "PHY_NW@2",
     "q_su20@4",
-    "PHY_NC@3",
-    "PHY_NE@3",
-    "PHY_NW@3",
     "ot_hbm_sm_pv_merge@8",
     "ot_hgi_sfu_opsa_group0@3",
     "ot_hgi_sfu_programme_store_r10@12",
@@ -31099,10 +31090,11 @@
     "q_spu1__physical_v1@9",
     "q_su30@10",
     "q_su30__physical_v1@11",
-    "PHY_NE@4",
     "q_b013__physical_v1@14",
     "q_spu1__physical_v1@10",
-    "q_su00@1"
+    "q_su00@1",
+    "PHY_NC@3",
+    "PHY_NE@5"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-101)",
@@ -31208,8 +31200,7 @@
     "q_b001": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
     "q_b001__physical_v1": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
     "ot_wbq_root_g0": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
-    "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
-    "PHY_NC": "KW-FIX-46 11-12 COORD URGENT: IFP-0002 repeat (floorplan.tcl, 91 IFP-0002 at place on a1 13:37, a2 13:57, a3 14:16; u_phy_Q 3188.16 um wide does not fit the 4.32-um inset core). Hold until the generator fix c87611d612d9 (phy-core-area, approved 11-11 21:27, never landed) is in the HBM src or the form changes"
+    "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept"
    },
    "gen_hosts": [
     "epyc7",
@@ -31518,7 +31509,9 @@
     "ot_svgr_top@6": "INFRA (COORD 11-11 05:5x, OPS-3): a6 FLOW tool error @place 'detail_place.tcl, 53 bad optional access' (11-09 DPL class); the core gen path lacked -use_diamond_legalizer. item_args now carries --orfs-var DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer. One fresh gen + one place, no attempt charge. Revert: remove this retry entry.",
     "ot_hbm_sm_pv_merge@8": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
     "ot_hgi_sfu_opsa_group0@3": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
-    "ot_hgi_sfu_programme_store_r10@12": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL"
+    "ot_hgi_sfu_programme_store_r10@12": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
+    "PHY_NC@3": "FLOW-FIX: c87611d612d9 (phy-core-area, main 850367dbc41c train 13; gen_phys.py swapped in src_hbm_main_9fc09952cd_q0g_p18 on epyc7/9/8/2, KW-FIX-46 11-12)",
+    "PHY_NE@5": "FLOW-FIX: c87611d612d9 (phy-core-area, main 850367dbc41c train 13; gen_phys.py swapped in src_hbm_main_9fc09952cd_q0g_p18 on epyc7/9/8/2, KW-FIX-46 11-12)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
