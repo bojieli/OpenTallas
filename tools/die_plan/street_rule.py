@@ -63,7 +63,8 @@ EPS = 1e-6
 DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, street_fill=0.6, abut_um=G,
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
-                reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1)
+                reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
+                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="")
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -134,11 +135,19 @@ def pair_rule(a, b, cfg):
     else:
         return None
     pa, pb = face_count(a, fa, lo, hi, b["inst"]), face_count(b, fb, lo, hi, a["inst"])
+    reorder = 0
     if not a.get("has_conns") and not b.get("has_conns") and pa and pb:
         # no core_conns for either core (native split seams): one-to-one aligned pin pairs cross the gap straight
         m = aligned_pairs(face_pos(a, fa, lo, hi), face_pos(b, fb, lo, hi))
+        if cfg.get("pin_reorder"):
+            # lever (b), owner 11-12: the two faces carry the same nets -> pin order matched so they go straight across
+            reorder = min(pa, pb) - m
+            m = min(pa, pb)
         pa, pb = pa - m, pb - m
-    r = dict(axis=axis, gap=round(gap, 4), pins=[pa, pb], faces=[fa, fb], span=round(hi - lo, 2))
+    if axis == "x" and cfg.get("x_pin_factor", 1.0) != 1.0:
+        # lever (d), owner 11-12: S81 BUS-GEAR (B) 2:1 x feed halves the facing E/W pins
+        pa, pb = int(-(-pa * cfg["x_pin_factor"] // 1)), int(-(-pb * cfg["x_pin_factor"] // 1))
+    r = dict(axis=axis, gap=round(gap, 4), pins=[pa, pb], faces=[fa, fb], span=round(hi - lo, 2), pin_reorder=reorder)
     if gap < cfg["abut_um"] - EPS:
         big = max(pa, pb) > cfg["wall_pins"] and min(pa, pb) >= cfg["pinface_min"]
         r.update(kind="wall" if big else "abut", need=cfg["wall_min_um"] if big else 0.0)
@@ -157,6 +166,8 @@ def outline_rule(c, W, H, cfg, windows=None):
         if gap < cfg["abut_um"] - EPS:
             continue
         p = face_count(c, face, lo, hi, windows=windows)
+        if face in "WE" and cfg.get("x_pin_factor", 1.0) != 1.0:
+            p = int(-(-p * cfg["x_pin_factor"] // 1))
         nd = need_um(p, cfg)
         if p < cfg["pinface_min"] and gap <= cfg["outline_margin_um"] + EPS:
             continue          # the plan's standard edge margin, no pins into it
@@ -539,6 +550,15 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
                 req = need_um(p, cfg)
             tail[k] = max(tail[k], oi + si + req)
             tail_rx[k] = max(tail_rx[k], oi + si + min(req, gap0))
+            # DIE-KV-98 11-12: clock landing storage bands need a macro-free strip off the bus face across the window
+            o0, o1 = (cores[i]["y"], cores[i]["y"] + cores[i]["h"]) if ax == 0 else (cores[i]["x"], cores[i]["x"] + cores[i]["w"])
+            for (bf, blo, bhi, clr) in cfg.get("_bands") or ():
+                if min(o1, bhi) - max(o0, blo) <= EPS:
+                    continue
+                if bf == ("W" if ax == 0 else "S"):
+                    src[k] = max(src[k], clr - oi)
+                elif bf == ("E" if ax == 0 else "N"):
+                    tail[k] = max(tail[k], oi + si + clr)
     for q, it in enumerate(items):
         lo_, hi_ = it.rect[ax], it.rect[2 + ax]
         src[M.m + q] = src_rx[M.m + q] = min(lo_, it.halo)
@@ -737,15 +757,18 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     row = dict(type=name, cores=M.n, clusters=M.m, outline_before=[W0, H0], violations_before=c0,
                worst_before=sorted(V0, key=lambda v: -(v["need"] - v["gap"]))[:6])
     hard = [v for v in V0 if v["kind"] in HARD and not v.get("same_cluster")]
-    if not hard:
+    cfg = dict(cfg, _bands=band_clear(cfg, name))
+    if not hard and not cfg["_bands"]:
         row.update(changed=False, applied=False, reason="clean")
         return row, None
     M.init_limits()
     len0 = [M.llen(q) for q in range(len(M.L))]
     nov0 = CP.overlaps(M)
-    under0 = len(points_under_cores(t))
+    under0 = len(points_under_cores(t)) + len(sinks_under_cores(t, repo))
     L_base = list(M.L)
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
+
+    lmeta = link_meta(M, conns) if cfg["add_regs"] > 0 else {}
 
     def attempt(fixed_k, fix_ft=False):
         grow_ax = cfg.get("grow_axes", "xy")
@@ -789,6 +812,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
         for q, it in enumerate(items):
             if acc[q][0] or acc[q][1]:
                 it.apply(acc[q][0], acc[q][1])
+        # every other off-core coordinate (sink sites / bins, die islands, keepouts, relays, landing pins, reset
+        # taps, ...) follows the stretch of its row / column band; nothing is left inside a moved core (COORD 11-12)
+        free_remap(t, tnew, M, (W0, H0), (W, H), cfg, repo)
         # link end points on the E / N outline (type bus windows, faces) follow the outline growth
         for q, (ea, eb, wb, kind) in enumerate(M.L):
             ends = []
@@ -801,16 +827,46 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                 ends.append(e)
             M.L[q] = (ends[0], ends[1], wb, kind)
         tnew["outline_um"] = [round(W, 4), round(H, 4)]
+        added_st, added_ft = [], []
+        if cfg["add_regs"] > 0:
+            added_st = add_station_regs(M, tnew, srep.get("need_more_idx") or [], ccfg["reach"], int(cfg["add_regs"]))
+            fixed_si = {d["station"] for d in added_st}
+            srep = dict(srep, need_more_idx=[i for i in srep.get("need_more_idx") or [] if i not in fixed_si])
+            srep["need_more_regs"] = len(srep["need_more_idx"])
+            added_ft = add_ft_regs(M, t, tnew, cfg["reach_limit_um"], int(cfg["add_regs"]))
         V1, c1 = analyze(W, H, core_models(M, partners), M.CL, cfg, windows)
         nov = CP.overlaps(M)
         reach_ = cfg["reach_limit_um"]
         new_over = [q for q in range(len(M.L)) if M.L[q][3] != "station" and M.llen(q) > reach_ + 0.01 and len0[q] <= reach_ + 0.01]
         longer = [(M.llen(q) - len0[q]) for q in range(len(M.L)) if M.L[q][3] != "station" and len0[q] > reach_ + 0.01
                   and M.llen(q) > len0[q] + 0.01]
+        added_ln = []
+        if cfg["add_regs"] > 0 and new_over:
+            added_ln = add_link_stations(M, tnew, new_over, lmeta, ccfg["reach"], int(cfg["add_regs"]))
+            done_q = {d["link"] for d in added_ln}
+            new_over = [q for q in new_over if q not in done_q]
         tviol = len(new_over)
-        under = points_under_cores(tnew)
-        fthop = ft_hop_check(t, tnew, cfg["reach_limit_um"])
-        eqbad = eq_struct(t, tnew)
+        under = points_under_cores(tnew) + [("sink", p) for p in sinks_under_cores(tnew, repo)]
+        fthop = ft_hop_check_added(t, tnew, cfg["reach_limit_um"]) if added_ft else ft_hop_check(t, tnew, cfg["reach_limit_um"])
+        t_eq = t
+        if added_st or added_ft or added_ln:
+            # the added stages are the only allowed structural change: compare against the base with those lists
+            t_eq = copy.deepcopy(t)
+            for d in added_st:
+                t_eq["internal_stations"][d["station"]]["regs_um"] = tnew["internal_stations"][d["station"]]["regs_um"]
+            for k in {d["slot"] for d in added_ft}:
+                for key in ("regs_um", "bit_sites_um", "stations"):
+                    if key in tnew["ft_slots"][k]:
+                        t_eq["ft_slots"][k][key] = tnew["ft_slots"][k][key]
+        if added_ln:
+            n0 = len(t.get("internal_stations") or [])
+            t_eq.setdefault("internal_stations", []).extend(copy.deepcopy(tnew["internal_stations"][n0:]))
+        bf1 = (tnew.get("clock") or {}).get("sink_bins_file")
+        if bf1 != (t.get("clock") or {}).get("sink_bins_file"):
+            # the remapped sink bins file (same sinks, moved with the cores) is an allowed change
+            t_eq = copy.deepcopy(t_eq) if t_eq is t else t_eq
+            t_eq["clock"]["sink_bins_file"] = bf1
+        eqbad = eq_struct(t_eq, tnew)
         moved = sum(1 for i in range(M.n) if tuple(M.core_origin(i)) != tuple(M.org0[i]))
         gW, gH = 100.0 * (W / W0 - 1), 100.0 * (H / H0 - 1)
         gA = 100.0 * (W * H / (W0 * H0) - 1)
@@ -830,11 +886,14 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("eq %s" % eqbad[:3])
         if blocked:
             reasons.append("fixed cores pushed %s" % sorted(set(blocked))[:4])
+        bshort = band_short(M, cfg["_bands"])
+        if bshort:
+            reasons.append("band clearance short %d" % len(bshort))
         if gA > cfg["max_growth_pct"]:
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
         ok = not reasons
         relaxed = relaxed_n
-        return dict(ok=ok, reasons=reasons, tnew=tnew, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
+        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
                     srep=srep, nov=nov, new_over=new_over, longer=longer, under=under, fthop=fthop, eqbad=eqbad,
                     acc=acc, items=items, blocked=blocked, relaxed=relaxed,
                     timing_over=[dict(kind=M.L[q][3], bits=M.L[q][2], len_um=round(M.llen(q), 1),
@@ -870,7 +929,11 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     ok, reasons, tnew, W, H = R_["ok"], R_["reasons"], R_["tnew"], R_["W"], R_["H"]
     gW, gH, gA, c1, left, moved = R_["gW"], R_["gH"], R_["gA"], R_["c1"], R_["left"], R_["moved"]
     row.update(changed=True, applied=ok, attempts=att + 1, pinned=[M.inst[M.CL[k][0]] for k in sorted(pinned)],
-               ft_fixed=fix_ft,
+               band_short=band_short(M, cfg["_bands"]), bands=cfg["_bands"],
+               ft_fixed=fix_ft, cycles_added=dict(stations=R_["added_st"], ft=R_["added_ft"], new_link_stations=R_["added_ln"],
+                                                  total=sum(d["regs_after"] - d["regs_before"] for d in R_["added_st"])
+                                                  + sum(d["added"] for d in R_["added_ft"])
+                                                  + sum(d["regs"] for d in R_["added_ln"])),
                streets_relaxed_at_pins=R_["relaxed"],
                reason="; ".join(reasons) or ("clean" if not left else "residual %d" % len(left)),
                outline_after=[W, H], growth_pct=dict(W=round(gW, 2), H=round(gH, 2), area=round(gA, 2)),
@@ -885,6 +948,351 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     log("  %s: %s viol %s -> %s  outline %.2fx%.2f -> %.2fx%.2f (+%.1f%%)  moved %d  %s" % (
         name, "APPLIED" if ok else "not applied", c0, c1, W0, H0, W, H, gA, moved, row["reason"]))
     return row, (tnew if ok else None)
+
+
+# ------------------------------------------------------------------------------------------ free-space remap
+# keys whose *_um / xy lists are sizes or lengths, not points (never remapped)
+SIZE_KEYS = {"cell_wh_um", "bit_site_cell_um", "kit_core_margins_um", "legs_um", "track_offset_um", "outline_um",
+             "resized_from_um", "resited_from_um"}
+SINK_BIN_UM = 10.8
+
+
+def _band_map(v, lo, hi, knots, L0, L1):
+    """monotone piecewise-linear old -> new coordinate along one axis from the (old, new) edges of the cores whose
+    span on the other axis covers [lo, hi] (falls back to all cores) plus the outline ends 0 -> 0, L0 -> L1."""
+    ks = [(o, n) for (a, b, o, n) in knots if a < hi + 1e-6 and b > lo - 1e-6] or [(o, n) for (_, _, o, n) in knots]
+    pts = sorted(set([(0.0, 0.0), (float(L0), float(L1))] + ks))
+    mono = []
+    for o, n in pts:
+        if mono and (o <= mono[-1][0] + 1e-9 or n < mono[-1][1] - 1e-9):
+            continue
+        mono.append((o, n))
+    if v <= mono[0][0]:
+        return v + (mono[0][1] - mono[0][0])
+    for (o0, n0), (o1, n1) in zip(mono, mono[1:]):
+        if v <= o1:
+            return n0 + (v - o0) * (n1 - n0) / (o1 - o0)
+    return v + (mono[-1][1] - mono[-1][0])
+
+
+def _push_out(x, y, rects, W, H, margin=0.54):
+    """a point strictly inside a core box moves to the nearest face of that box (+ margin), inside the outline."""
+    for _ in range(4):
+        hit = [r for r in rects if r[0] + 1e-6 < x < r[2] - 1e-6 and r[1] + 1e-6 < y < r[3] - 1e-6]
+        if not hit:
+            break
+        x0, y0, x1, y1 = hit[0]
+        c = sorted([(x - x0, x0 - margin, y), (x1 - x, x1 + margin, y), (y - y0, x, y0 - margin), (y1 - y, x, y1 + margin)])
+        for _, nx, ny in c:
+            if 0 <= nx <= W and 0 <= ny <= H:
+                x, y = nx, ny
+                break
+    return x, y
+
+
+def make_free_map(R0, R1, WH0, WH1):
+    """f(x, y) -> new (x, y) for an off-core point: x by the x edges of the cores in its y band, y likewise."""
+    kx = [(r0[1], r0[3], r0[0], r1[0]) for r0, r1 in zip(R0, R1)] + [(r0[1], r0[3], r0[2], r1[2]) for r0, r1 in zip(R0, R1)]
+    ky = [(r0[0], r0[2], r0[1], r1[1]) for r0, r1 in zip(R0, R1)] + [(r0[0], r0[2], r0[3], r1[3]) for r0, r1 in zip(R0, R1)]
+    W1, H1 = WH1
+
+    def f(x, y):
+        nx = _band_map(x, y, y, kx, WH0[0], WH1[0])
+        ny = _band_map(y, x, x, ky, WH0[1], WH1[1])
+        nx, ny = _push_out(nx, ny, R1, W1, H1)
+        return [round(min(max(nx, 0.0), W1), 4), round(min(max(ny, 0.0), H1), 4)]
+    return f
+
+
+def _inside(p, rects):
+    return any(r[0] + 1e-6 < p[0] < r[2] - 1e-6 and r[1] + 1e-6 < p[1] < r[3] - 1e-6 for r in rects)
+
+
+def _remap_walk(x0, x1, f, R0, key=None):
+    """x0: base value, x1: the legalized copy. Leaves the legalizer already moved (core-riding points, items) keep
+    their value; unchanged off-core points / rects are remapped with f."""
+    if isinstance(x0, dict) and isinstance(x1, dict):
+        for k in x1:
+            if k in CP.SKIP_KEYS or k in SIZE_KEYS or k not in x0:
+                continue
+            x1[k] = _remap_walk(x0[k], x1[k], f, R0, k)
+        return x1
+    if isinstance(x0, list) and isinstance(x1, list):
+        if x1 and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in x1):
+            if x1 != x0 or not key:
+                return x1
+            if len(x1) == 4 and key not in ("xy", "root", "outs", "start_in"):   # rect (rect_um, keepouts, islands)
+                # a whole box: both corners by the displacement of its centre (never one corner alone)
+                c = ((x1[0] + x1[2]) / 2.0, (x1[1] + x1[3]) / 2.0)
+                if _inside(c, R0):
+                    return x1                   # rides with its core (core_place.walk_follow)
+                q = f(*c)
+                dx, dy = q[0] - c[0], q[1] - c[1]
+                return [round(x1[0] + dx, 4), round(x1[1] + dy, 4), round(x1[2] + dx, 4), round(x1[3] + dy, 4)]
+            if len(x1) >= 2 and (key.endswith("_um") or key in ("xy", "root", "outs", "start_in")):
+                if _inside(x1, R0):
+                    return x1
+                return f(*x1[:2]) + list(x1[2:])
+            return x1
+        if len(x0) == len(x1):
+            return [_remap_walk(a, b, f, R0, key) for a, b in zip(x0, x1)]
+    return x1
+
+
+def remap_bins(rows, fol_core, f, R0, R1, b=SINK_BIN_UM):
+    """sink bins [[x, y, n]]: a bin inside an old core box rides with that core, a glue bin follows the free map
+    (pushed out of a moved core), then bins sharing a b-um cell merge.  The sink total is unchanged."""
+    acc = collections.OrderedDict()
+    for r in rows:
+        x, y = float(r[0]), float(r[1])
+        n = float(r[2]) if len(r) > 2 else 1.0
+        q = fol_core([x, y]) if _inside((x, y), R0) else None
+        nx, ny = q if q else f(x, y)          # f pushes a glue bin out of a moved core; a riding bin stays on it
+        key = (int(nx // b), int(ny // b), bool(q))
+        e = acc.setdefault(key, [0.0, 0.0, 0.0])
+        e[0] += nx * n
+        e[1] += ny * n
+        e[2] += n
+    out = []
+    for (i, j, ride), (sx, sy, n) in acc.items():
+        cx, cy = (i + 0.5) * b, (j + 0.5) * b
+        if ride or _inside((cx, cy), R1):   # a riding bin, or a glue cell centre on a core: the weighted mean
+            cx, cy = sx / n, sy / n
+        out.append([round(cx, 3), round(cy, 3), int(n) if float(n).is_integer() else round(n, 6)])
+    return out
+
+
+def free_remap(t0, tnew, M, WH0, WH1, cfg, repo):
+    R0, R1 = _core_rects(t0), _core_rects(tnew)
+    f = make_free_map(R0, R1, WH0, WH1)
+    for k in list(tnew):
+        if k in CP.SKIP_KEYS or k in SIZE_KEYS or k not in t0:
+            continue
+        tnew[k] = _remap_walk(t0[k], tnew[k], f, R0, k)
+    ck = tnew.get("clock") or {}
+    bf = ck.get("sink_bins_file")
+    if bf and cfg.get("_bins_dir"):
+        src = Path(repo) / bf
+        js = json.loads(src.read_text())
+        rows = remap_bins(js.get("bins") or [], CP.follow_fn(M), f, R0, R1, float(js.get("bin_um") or SINK_BIN_UM))
+        if rows != js.get("bins"):
+            nj = dict(js, bins=rows, source=bf, note="STREET-RULE-1 legalize: bins follow moved cores / stretched bands")
+            txt = json.dumps(nj, separators=(",", ":")) + "\n"
+            h = hashlib.sha256(txt.encode()).hexdigest()[:10]
+            rel = Path(cfg["_bins_dir"]) / ("%s__%s.json" % (Path(bf).stem, h))
+            (Path(repo) / rel).parent.mkdir(parents=True, exist_ok=True)
+            (Path(repo) / rel).write_text(txt)
+            ck["sink_bins_file"] = str(rel)
+
+
+def tap_check(Q, names, plan_path):
+    """{type: error} of schema.tap_grid on plan dict Q (the taps gen phys exports)."""
+    import schema as SC
+    try:
+        PQ = SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001  (a plan that does not load fails every type)
+        return {n: "plan load: %s" % e for n in names}
+    bad = {}
+    for n in names:
+        try:
+            SC.tap_grid(PQ, n)
+        except Exception as e:  # noqa: BLE001
+            import traceback
+            tb = traceback.extract_tb(e.__traceback__)[-1]
+            bad[n] = "%s: %s [%s:%d]" % (type(e).__name__, str(e)[:260], Path(tb.filename).name, tb.lineno)
+    return bad
+
+
+def _tap_legalize_table(PQ, tn, table, fixed_pts, extra_boxes=()):
+    """move every illegal tap of `table` (in order) to the nearest legal site (outline - clear, halo-grown placement
+    boxes, keepouts, TAP_CLEAR spacing to fixed_pts and to the taps before it).  Returns [(name, old, new)]."""
+    import schema as SC
+    from placement_obstacles import placement_boxes
+    t = PQ.types[tn]
+    w, h = map(float, t["outline_um"])
+    clear = SC.TAP_CLEAR_UM
+    eps = 1e-8
+    boxes = list(placement_boxes(t, halo=clear).values()) + list(extra_boxes)
+    taken = list(fixed_pts)
+
+    def ok(x, y):
+        return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+                and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+                and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+    moves = []
+    for e in table:
+        x, y = map(float, e["xy"])
+        if not ok(x, y):
+            best = None
+            st = 0.54
+            for r in range(1, 400):
+                ring = [(x + i * st, y + (r - abs(i)) * st * sg) for i in range(-r, r + 1) for sg in (1, -1)]
+                ring = [(round(a, 4), round(b, 4)) for a, b in ring if ok(a, b)]
+                if ring:
+                    best = min(ring, key=lambda q: (abs(q[0] - x) + abs(q[1] - y), q))
+                    break
+            if best is None:
+                continue
+            moves.append((e["name"], [x, y], list(best)))
+            e["xy"] = list(best)
+            x, y = best
+        taken.append((x, y))
+    return moves
+
+
+def tap_repair(Q, names, plan_path, log=print):
+    """re-derive the clock taps of legalized types that fail the export tap rule (COORD 11-12):
+    grid+explicit -- renumber clock.added_taps after the (outline-dependent) R4 grid, move illegal added taps to the
+    nearest legal site, then added_tap_recentre.fix_type (minimal move of a failing tap, else ONE added light tap,
+    reset contract guarded); explicit -- legal-site move + fix_type; density / grid -- derived at export from the
+    remapped sinks (nothing stored to fix).  Returns {type: record}."""
+    import schema as SC
+    import added_tap_recentre as ATR
+    try:
+        PQ = SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001
+        return {n: dict(error="plan load: %s" % e) for n in names}
+    out = {}
+    for n in names:
+        ck = (Q["partition_types"][n].get("clock") or {})
+        mode = ck.get("tap_mode")
+        rec = dict(mode=mode, renamed=0, legal_moves=[])
+        try:
+            if mode == "grid+explicit" and ck.get("added_taps"):
+                grid = SC._grid_taps(PQ, n)
+                for i, e in enumerate(ck["added_taps"]):
+                    nm = "clk_t%d" % (len(grid) + i)
+                    if e.get("name") != nm:
+                        e["name"] = nm
+                        rec["renamed"] += 1
+                rec["legal_moves"] = _tap_legalize_table(PQ, n, ck["added_taps"], [(x, y) for _, x, y in grid])
+            elif mode == "explicit" and ck.get("taps"):
+                tbl = [p for p in ck["taps"] if p.get("kind") != "core"]
+                clear = SC.TAP_CLEAR_UM
+                ko = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in ck.get("keepouts_um", [])]
+                rec["legal_moves"] = _tap_legalize_table(PQ, n, tbl, [(x, y) for _, x, y, _ in SC.core_taps(PQ, n)], ko)
+            ATR.S_reset_cache(PQ)
+            if mode in ("grid+explicit", "explicit"):
+                r = ATR.fix_type(PQ, Q, n, 0.054, 8, add=True)
+                rec.update(moves=r.get("moves"), unfixable=r.get("unfixable"), after=r.get("after"))
+            else:
+                SC.tap_grid(PQ, n)
+                rec["after"] = None
+        except Exception as e:  # noqa: BLE001
+            import traceback
+            rec["after"] = "%s: %s" % (type(e).__name__, str(e)[:300])
+            rec["where"] = traceback.format_exc().strip().splitlines()[-3:]
+        ATR.S_reset_cache(PQ)
+        out[n] = rec
+    return out
+
+
+def _start_relays(tr):
+    st = bool(tr.get("start"))
+    import reset_tree as RT
+    rl = RT.start_relays(tr) if st else tr.get("relays", [])
+    return [r for r in rl if not st or r.get("role") in ("raw", "boot", "bootstrap_transport")]
+
+
+def reset_resel(P, Q, names, plan_path, near_um=25.0):
+    """re-select the raw reset references of legalized types on their re-solved reset tree (COORD 11-12, HEAD-94
+    hd_lep0N "raw reset source is not the recorded registered relay"; rule = HEAD mesh_resel.py / compose.py RAWSEL):
+    every reset_start_raw_exports entry -> the new start relay of the same role + depth nearest its old xy (entries
+    sharing an old instance share the new one), its landing_contract pin source follows (pin offset kept); every
+    landing_{reader,writer}_start stage raw_reset and landing_local_resets raw keeps its Q if that relay survives at
+    the same depth within near_um of the best, else the nearest relay of that depth.  Returns {type: record}."""
+    import math
+    import schema as SC
+    import reset_tree as RT
+    try:
+        PA, PB = SC.Plan(P, Path(plan_path)), SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001
+        return {n: dict(error="plan load: %s" % e) for n in names}
+    out = {}
+    for tn in names:
+        t = Q["partition_types"][tn]
+        ck = t.get("clock") or {}
+        has = t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or any(
+            (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start"))
+        if not has:
+            continue
+        rec = dict(exports=[], raw=[], skipped=[])
+        try:
+            ta, tb = RT.for_type(PA, tn), RT.for_type(PB, tn)
+            ra = {r["name"]: r for r in _start_relays(ta)}
+            rb = _start_relays(tb)
+            pins = {x["name"]: x for x in ((ck.get("landing_contract") or {}).get("pins") or [])}
+            shared, used = {}, set()
+            for e in t.get("reset_start_raw_exports") or []:
+                o = ra.get(e.get("instance"))
+                if o is None:
+                    rec["skipped"].append(e.get("instance"))
+                    continue
+                if e["instance"] in shared:
+                    n = shared[e["instance"]]
+                else:
+                    c = [r for r in rb if r.get("role") == o.get("role") and r.get("depth") == o.get("depth")
+                         and r["name"] not in used] or [r for r in rb if r.get("depth") == o.get("depth")]
+                    if not c:
+                        rec["skipped"].append(e.get("instance"))
+                        continue
+                    n = min(c, key=lambda r: math.dist(r["xy"], e.get("xy_um") or o["xy"]))
+                    used.add(n["name"])
+                    shared[e["instance"]] = n
+                pn = pins.get(e.get("port"))
+                if pn is not None and e.get("xy_um") and pn.get("xy_um"):
+                    off = [pn["xy_um"][0] - e["xy_um"][0], pn["xy_um"][1] - e["xy_um"][1]]
+                    pn["source_instance"], pn["source_copy_from_net"] = n["name"], n["q"]
+                    pn["xy_um"] = [round(n["xy"][0] + off[0], 4), round(n["xy"][1] + off[1], 4)]
+                if (e["instance"], e.get("net")) != (n["name"], n["q"]):
+                    rec["exports"].append([e.get("port"), e["instance"], n["name"]])
+                e["instance"], e["net"], e["xy_um"] = n["name"], n["q"], list(n["xy"])
+            ra_q = {r["q"]: r for r in ta.get("relays", [])}
+            rb_all = tb.get("relays", [])
+            rb_q = {r["q"]: r for r in rb_all}
+            refs = []
+            for key in ("landing_reader_start", "landing_writer_start"):
+                for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
+                    for i, st in enumerate(br.get("stages", [])):
+                        refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
+            for i, lr in enumerate(ck.get("landing_local_resets") or []):
+                refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+            for tag, obj, fld in refs:
+                q = obj.get(fld)
+                o = ra_q.get(q)
+                if o is None:
+                    continue
+                pt = obj.get("xy_um") or o["xy"]
+                cand = [r for r in rb_all if r.get("depth") == o.get("depth")]
+                if not cand:
+                    rec["skipped"].append(tag)
+                    continue
+                n = min(cand, key=lambda r: math.dist(r["xy"], pt))
+                k = rb_q.get(q)
+                if k is not None and k.get("depth") == o.get("depth") and math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
+                    continue
+                rec["raw"].append([tag, q, n["q"]])
+                obj[fld] = n["q"]
+        except Exception as e:  # noqa: BLE001
+            rec["error"] = "%s: %s" % (type(e).__name__, str(e)[:300])
+        out[tn] = rec
+    return out
+
+
+def sinks_under_cores(t, repo=None):
+    R = _core_rects(t)
+    pts, _ = sink_points(t, repo)
+    return [p[:2] for p in pts if _inside(p, R)]
+
+
+def sink_points(t, repo=None):
+    """(sites, total weight, bins total) of clock.sink_sites_um + clock.sink_bins_file (test / check helper)."""
+    ck = t.get("clock") or {}
+    sites = [list(r) for r in ck.get("sink_sites_um") or []]
+    bins = []
+    if ck.get("sink_bins_file") and repo:
+        bins = json.loads((Path(repo) / ck["sink_bins_file"]).read_text()).get("bins") or []
+    return sites + [list(r) for r in bins], sum(float(r[2]) if len(r) > 2 else 1.0 for r in sites + bins)
 
 
 def _core_rects(t):
@@ -938,6 +1346,234 @@ def ft_hop_check(t0, t1, reach=405.0):
         for j, (a, b) in enumerate(zip(h0, h1)):
             if b > max(a, reach) + 0.01:
                 bad.append(dict(slot=k, hop=j, before=round(a, 1), after=round(b, 1)))
+    return bad
+
+
+_BANDS = {}
+
+
+def band_clear(cfg, name):
+    """[(face, lo, hi, clearance um)] for a type from cfg band_file ({type: [[face, lo, hi, clearance]]})."""
+    f = cfg.get("band_file") or ""
+    if not f:
+        return []
+    if f not in _BANDS:
+        _BANDS[f] = json.loads(Path(f).read_text())
+    return [tuple(x) for x in _BANDS[f].get(name, [])]
+
+
+def band_short(M, bands):
+    """bands whose macro-free strip is not clear: some core overlapping the window is closer than the clearance."""
+    bad = []
+    for (bf, lo, hi, clr) in bands:
+        for i in range(M.n):
+            x0, y0 = M.core_origin(i)
+            w, h = M.dim[i]
+            if M.core_orient(i) in ("R90", "R270", "MXR90", "MYR90"):
+                w, h = h, w
+            o0, o1 = (y0, y0 + h) if bf in "WE" else (x0, x0 + w)
+            if min(o1, hi) - max(o0, lo) <= EPS:
+                continue
+            d = {"W": x0, "E": M.W - x0 - w, "S": y0, "N": M.H - y0 - h}[bf]
+            if d < clr - EPS:
+                bad.append(dict(face=bf, lo=lo, hi=hi, need=clr, have=round(d, 2), core=M.inst[i]))
+                break
+    return bad
+
+
+def _raster(M):
+    import hub_repack as HR
+    rects = [(M.core_origin(i)[0], M.core_origin(i)[1], M.core_origin(i)[0] + M.dim[i, 0],
+              M.core_origin(i)[1] + M.dim[i, 1]) for i in range(M.n)]
+    return HR.Raster(M.W, M.H, rects)
+
+
+def add_station_regs(M, tnew, idx, reach, add_max):
+    """COORD 11-12 (cycles owner-pre-approved): a station that needs more registers after the move gets them, up to
+    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)]."""
+    import hub_repack as HR
+    R = _raster(M)
+    st = tnew.get("internal_stations") or []
+    out = []
+    for si in idx:
+        s = st[si]
+        n0 = len(s.get("regs_um") or [])
+        r = HR.route_station(R, tuple(s["from_um"]), tuple(s["to_um"]), n0, reach)
+        if r is None or len(r["regs"]) <= n0 or len(r["regs"]) > n0 + add_max:
+            continue
+        s["regs_um"] = [list(q) for q in r["regs"]]
+        s["note"] = (s.get("note", "") + " | STREET-RULE-1 street widened the path to %s um: %d -> %d regs (+%d cycle(s), "
+                     "owner pre-approved)" % (r["length_um"], n0, len(r["regs"]), len(r["regs"]) - n0))
+        out.append(dict(station=si, conn=s.get("conn"), launch=s.get("launch"), capture=s.get("capture"),
+                        regs_before=n0, regs_after=len(r["regs"]), length_um=r["length_um"]))
+    return out
+
+
+def link_meta(M, conns):
+    """{link index q: (inst, bus, dest, bits)} for the core_conns links of M.L (same walk as TypeModel._links)."""
+    out = {}
+    W, H = M.W, M.H
+    cc_key = next((k for k in (M.name, re.sub(r"__cl[0-9a-f]{8}.*$", "", M.name), re.sub(r"__.*$", "", M.name))
+                   if conns.get(k)), None)
+    cc = conns.get(cc_key) if cc_key else None
+    if not cc:
+        return out
+    bus_pt = {bu["name"]: 1 for bu in M.t.get("buses", []) or [] if bu.get("face")}
+    q = 0
+    st_pairs = set()
+    for s_ in M.t.get("internal_stations", []) or []:
+        la = str(s_.get("launch", ""))
+        if la.startswith("core:"):
+            A, _, bus_ = la[5:].rpartition(".")
+            st_pairs.add((A, bus_, str(s_.get("capture", ""))))
+            st_pairs.add((A, bus_, str(s_.get("capture", "")).rsplit(".", 1)[0]))
+    for inst, ports in cc.items():
+        if inst not in M.idx:
+            continue
+        i = M.idx[inst]
+        for bus, dl in (ports or {}).items():
+            pg = M.lpins[i].get(bus)
+            if not pg or not dl:
+                continue
+            for d in dl:
+                k, _, val = str(d).partition(":")
+                if k == "core":
+                    if val not in M.idx and val.rpartition(".")[0] in M.idx:
+                        val = val.rpartition(".")[0]
+                    if val not in M.idx or (inst, bus, val) in st_pairs:
+                        continue
+                elif not ((k == "bus" and val in bus_pt) or (k == "face" and val in "NSEW")):
+                    continue
+                out[q] = (inst, bus, str(d), int(pg[0]))
+                q += 1
+    del W, H
+    return out
+
+
+def add_link_stations(M, tnew, qs, meta, reach, add_max):
+    """lever (a) for direct links: a core / bus / face link a widened street pushed past reach gets a new internal
+    station with the fewest registers (<= add_max) that bring every hop under reach."""
+    import hub_repack as HR
+    R = _raster(M)
+    out = []
+    for q in qs:
+        if q not in meta:
+            continue
+        inst, bus, dest, bits = meta[q]
+        a_, b_ = M.pt(M.L[q][0]), M.pt(M.L[q][1])
+        r = HR.route_station(R, tuple(a_), tuple(b_), 0, reach)
+        if r is None or not r["regs"] or len(r["regs"]) > add_max:
+            continue
+        tnew.setdefault("internal_stations", []).append(dict(
+            conn=dest, from_um=[round(a_[0], 4), round(a_[1], 4)], to_um=[round(b_[0], 4), round(b_[1], 4)],
+            regs_um=[list(p) for p in r["regs"]], launch="core:%s.%s" % (inst, bus),
+            capture=dest[5:] if dest.startswith("core:") else dest, bits=bits,
+            note="STREET-RULE-1 pass 2: link %s um > reach after the street, +%d cycle(s) (owner pre-approved 11-12)"
+                 % (r["length_um"], len(r["regs"]))))
+        out.append(dict(link=q, launch="core:%s.%s" % (inst, bus), dest=dest, bits=bits, regs=len(r["regs"]),
+                        length_um=r["length_um"]))
+    return out
+
+
+def add_ft_regs(M, t0, tnew, reach, add_max):
+    """an ft hop stretched past reach by a widened street gets ceil(len / reach) - 1 (<= add_max) new register stages on
+    its Manhattan path (bit-site pattern copied from the nearest stage, translated; never under a core). Returns the
+    added stages; hops it cannot fix are left (the type is then not applied)."""
+    R = _raster(M)
+    W, H = tnew["outline_um"]
+    out = []
+    for k, (f0, f) in enumerate(zip(t0.get("ft_slots") or [], tnew.get("ft_slots") or [])):
+        regs = [list(r) for r in (f.get("regs_um") or [])]
+        sites = f.get("bit_sites_um")
+        if not regs or not isinstance(regs[0], list):
+            continue
+        hops0 = ft_hops(dict(t0, ft_slots=[f0]))[0]
+        a = RS.face_point(W, H, f.get("in_face", "W"), f.get("in_window_um"))
+        b = RS.face_point(W, H, f.get("out_face", "E"), f.get("out_window_um"))
+        j = 0
+        changed = False
+        while j <= len(regs):
+            ch = [a] + [tuple(r[:2]) for r in regs] + [b]
+            p, q = ch[j], ch[j + 1]
+            L = abs(p[0] - q[0]) + abs(p[1] - q[1])
+            base = hops0[j] if j < len(hops0) else 0.0
+            if L <= max(base, reach) + 0.01:
+                j += 1
+                continue
+            n = int(-(-L // reach)) - 1
+            if n < 1 or n > add_max:
+                j += 1
+                continue
+            # per-bit sites: row i - off belongs to regs[i] (off = 1 when station 0 at the in pin has no row, the
+            # usual form; 0 when every stage has one).  A new stage needs a site row, so the pattern source is the
+            # nearest stage that has one (COORD 11-12: an added stage without its row broke taps.planned_sinks)
+            off = (len(regs) - len(sites)) if isinstance(sites, list) and sites else None
+            if off is not None and off not in (0, 1):
+                j += 1
+                continue
+            ref = min(max(j, off or 0), len(regs) - 1)          # nearest existing stage with a site row
+            if off is not None and j < off:
+                j += 1
+                continue
+            new = []
+            for m in range(1, n + 1):
+                d = L * m / (n + 1)
+                dx = min(d, abs(q[0] - p[0]))
+                x = p[0] + (dx if q[0] >= p[0] else -dx)
+                y = p[1] + (d - dx if q[1] >= p[1] else -(d - dx))
+                x, y = round(round(x / G) * G, 4), round(round(y / G) * G, 4)
+                ok = None
+                for r_ in range(0, 30):
+                    for ddx, ddy in ((0, 0),) if r_ == 0 else ((r_, 0), (-r_, 0), (0, r_), (0, -r_)):
+                        xx, yy = x + ddx * G, y + ddy * G
+                        if not (0 <= xx <= W and 0 <= yy <= H) or not R.free(xx, yy):
+                            continue
+                        if off is not None:
+                            rx, ry = regs[ref][:2]
+                            pat = [[round(sx - rx + xx, 4), round(sy - ry + yy, 4)] for sx, sy in sites[ref - off]]
+                            if not all(R.free(*pp) for pp in pat):
+                                continue
+                        else:
+                            pat = None
+                        ok = (xx, yy, pat)
+                        break
+                    if ok:
+                        break
+                if not ok:
+                    new = None
+                    break
+                new.append(ok)
+            if not new:
+                j += 1
+                continue
+            for m, (xx, yy, pat) in enumerate(new):
+                regs.insert(j + m, [xx, yy] + list(regs[ref][2:]))
+                if pat is not None:
+                    sites.insert(j + m - off, pat)
+            out.append(dict(slot=k, name=f.get("name"), hop=j, len_um=round(L, 1), added=len(new)))
+            changed = True
+            j += len(new) + 1
+        if changed:
+            f["regs_um"] = regs
+            if isinstance(f.get("stations"), int):
+                f["stations"] = len(regs)
+    return out
+
+
+def ft_hop_check_added(t0, t1, reach=405.0):
+    """after added ft stages the hop lists differ in length: each new hop must be <= reach or <= the longest base hop
+    of its slot."""
+    bad = []
+    for k, (h0, h1) in enumerate(zip(ft_hops(t0), ft_hops(t1))):
+        if len(h0) == len(h1):
+            for j, (a, b) in enumerate(zip(h0, h1)):
+                if b > max(a, reach) + 0.01:
+                    bad.append(dict(slot=k, hop=j, before=round(a, 1), after=round(b, 1)))
+        else:
+            lim = max([reach] + h0)
+            for j, b in enumerate(h1):
+                if b > lim + 0.01:
+                    bad.append(dict(slot=k, hop=j, before=None, after=round(b, 1)))
     return bad
 
 
@@ -1194,6 +1830,7 @@ def cmd_legalize(a):
     Q = copy.deepcopy(P)
     rows = []
     global _JOB
+    cfg["_bins_dir"] = "physical/die_plan/%s/street_rule_bins" % die
     _JOB = (P, die_dir, repo, conns, cfg, rs_cfg)
     if a.jobs > 1 and len(names) > 1:
         import multiprocessing as mp
@@ -1205,6 +1842,66 @@ def cmd_legalize(a):
         rows.append(row)
         if tn is not None:
             Q["partition_types"][n] = tn
+    # export dry run of the clock taps (schema.tap_grid = what gen phys / kit_rtl derives; density taps re-derive
+    # from the remapped sinks, every sink <= tap_radius_um): a type whose legalized form fails where its base passes
+    # keeps its base form (COORD 11-12, HEAD-94 hd_lep0N "no legal clock tap within 200 um")
+    applied = [r["type"] for r in rows if r.get("applied")]
+    if applied and cfg.get("tap_check", 1):
+        bad1 = tap_check(Q, applied, plan)
+        if bad1:
+            # re-derive the taps of the failing types, then re-check every applied type (a child type's taps can
+            # fail a parent's export)
+            n1 = len(bad1)
+            for rnd in range(3):
+                # a parent's check reads its child types: repeat until no type improves (children fixed first)
+                rep = tap_repair(Q, sorted(bad1), plan)
+                for r in rows:
+                    if r["type"] in rep:
+                        r["tap_repair"] = rep[r["type"]]
+                prev = len(bad1)
+                bad1 = tap_check(Q, applied, plan)
+                if not bad1 or len(bad1) >= prev:
+                    break
+            print("tap repair: %d failing -> %d after re-derivation" % (n1, len(bad1)), flush=True)
+        bad0 = tap_check(P, sorted(bad1), plan) if bad1 else {}
+        for it in range(3):
+            rev = [n for n in bad1 if n not in bad0]
+            for r in rows:
+                n = r["type"]
+                if n in bad1:
+                    r["tap_check"] = dict(after=bad1[n], base=bad0.get(n))
+                    if n not in bad0:
+                        r["applied"] = False
+                        r["reason"] = "clock taps: %s" % bad1[n][:160]
+                        Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+                elif n in applied:
+                    r["tap_check"] = "ok"
+            if not rev:
+                break
+            # a reverted child can change a parent's export: re-check the types still applied
+            still = [r["type"] for r in rows if r.get("applied")]
+            b2 = tap_check(Q, still, plan) if still else {}
+            b0 = tap_check(P, sorted(set(b2) - set(bad0)), plan) if b2 else {}
+            bad1, bad0 = b2, dict(bad0, **b0)
+            if not [n for n in bad1 if n not in bad0]:
+                for r in rows:
+                    if r.get("applied"):
+                        r["tap_check"] = "ok" if r["type"] not in bad1 else dict(after=bad1[r["type"]], base=bad0.get(r["type"]))
+                break
+        print("tap check: %d applied, %d fail after (%d also fail in base) -> %d reverted" % (
+            len(applied), len(bad1), len(bad0), len([n for n in bad1 if n not in bad0])), flush=True)
+    # raw reset references follow the re-solved reset trees of every type still applied (after the tap re-derivation:
+    # the taps feed the relay siting), same pass as the rect / bins / taps fix (COORD 11-12)
+    still = [r["type"] for r in rows if r.get("applied")]
+    if still and cfg.get("reset_resel", 1):
+        rr = reset_resel(P, Q, still, plan)
+        nch = 0
+        for r in rows:
+            if r["type"] in rr:
+                r["reset_resel"] = rr[r["type"]]
+                nch += len(rr[r["type"]].get("exports", [])) + len(rr[r["type"]].get("raw", []))
+        print("reset re-select: %d types with raw reset refs, %d refs re-selected, %d errors" % (
+            len(rr), nch, sum(1 for v in rr.values() if v.get("error"))), flush=True)
     def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
@@ -1221,7 +1918,10 @@ def cmd_legalize(a):
         if a.rs_halving != "off" and grown:
             outdir = Path(a.rs_out or Path(a.out_plan).parent / "rs")
             rb = CP.rs_rows(plan, die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "before")
-            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "after")
+            # the output plan usually sits outside the base plan dir: the base dir is a ref dir so route_supply reads the
+            # same core_conns / pin sidecars as the "before" run (without it the "after" demand was near zero, COORD 11-12)
+            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, grown, list(a.ref_dirs) + [str(Path(plan).resolve().parent)],
+                            a.rs_halving, outdir / "after")
             for r in rows:
                 if r["type"] in grown:
                     rs_ = r["route_supply"] = [CP.rs_summary(rb.get(r["type"])), CP.rs_summary(ra.get(r["type"]))]
@@ -1243,7 +1943,10 @@ def cmd_legalize(a):
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
                plan_output_sha256=out_sha, die=die, cfg=cfg, die_estimate=die_est,
                summary=dict(types=len(rows), violating=sum(1 for r in rows if r.get("changed")),
-                            applied=len(grown)), rows=rows)
+                            applied=len(grown),
+                            cycles_added=sum((r.get("cycles_added") or {}).get("total", 0) for r in rows if r.get("applied")),
+                            types_with_cycles_added=sorted(r["type"] for r in rows if r.get("applied")
+                                                           and (r.get("cycles_added") or {}).get("total"))), rows=rows)
     if a.event:
         Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     hdr = ["type", "applied", "W0", "H0", "W1", "H1", "growth_area_pct", "moved", "viol_before", "viol_after",
