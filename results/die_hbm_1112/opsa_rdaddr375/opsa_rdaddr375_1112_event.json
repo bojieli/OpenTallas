@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hbm_plan_event.v1",
+ "event": "opsa_rdaddr375_1112",
+ "lane": "HBM-CORES-C (DIE-HBM-101 approved)",
+ "date": "2026-11-12",
+ "precedent": "opsbpins_1109 (ot_hgi_sfu_opsb_output lwa[375..383])",
+ "kind": "pin table drop of proven-unread input bits",
+ "modules": [
+  "ot_hgi_sfu_opsa_group0",
+  "ot_hgi_sfu_opsa_group1"
+ ],
+ "instances": "q_b113 and q_b113__physical_v1: u_sfucore_Q_opstore_a__g0 and __g1 (physical u_sfucore_Q_opstore_a.u_fcore.u_core.u_g0/u_g1)",
+ "order": "after opsa_b.py / opsa_g0_lattice.py (group0 table ..._lat.json); this event only drops rows",
+ "pins_removed": [
+  "rd_addr[375]",
+  "rd_addr[376]",
+  "rd_addr[377]",
+  "rd_addr[378]",
+  "rd_addr[379]",
+  "rd_addr[380]",
+  "rd_addr[381]",
+  "rd_addr[382]",
+  "rd_addr[383]"
+ ],
+ "removed_rows": "M4, E face, x = outline width - 0.072 (895.248 on group0), y 225.768..226.536; every other row identical, same order",
+ "tables": {
+  "group0": {
+   "old_sha256": "97e951d80305631bb2bea426e6cb4fd92d8462ea8206812184f3c0879f81772f",
+   "new": "ot_hgi_sfu_opsa_group0__895.344x270__d51opsaB_lat__rdaddr375.json",
+   "new_sha256": "aeeff381f1dd9732ecc239271d3b50d6c8a728fe5cb4dcdd1609deb1c2646821",
+   "rows": [
+    3173,
+    3164
+   ]
+  },
+  "group1": {
+   "old": "ot_hgi_sfu_opsa_group1__760.32x233.28__d44v_split.json (sha256 70392119ec3c...)",
+   "new": "ot_hgi_sfu_opsa_group1__760.32x233.28__d44v_split__rdaddr375.json",
+   "new_sha256": "88d4c340b629b82d6352cb881c4abe1f2c5ea8e63763f7a8c74bc4c37f9d7706",
+   "rows": [
+    3173,
+    3164
+   ]
+  }
+ },
+ "evidence": {
+  "core_side_group0": "kit epyc9 /srv/opentallas-scratch2/claude/hbm-cores-c/opsa_fix/kit/ot_hgi_sfu_opsa_group0_97e951d80305 face_shell.json dropped = rd_addr[375..383]; rtl/ot_hgi_sfu_opsa_group0__fshell.sv declares input [374:0] rd_addr, u_bin_rd_addr W=375, and drives the core port .rd_addr({9'd0, rd_addr__fq})",
+  "core_side_group1": "kit1 .../opsa_fix/kit1/ot_hgi_sfu_opsa_group1_70392119ec3c face_shell.json dropped = the same 9 bits; fshell input [374:0] rd_addr, u_bin_rd_addr W=375 (static: generator analysis on the t39w group1 view, generation exit 0, 3164 pins)",
+  "parent_side": "NOT checked in this commit. The groups are physical sub-instances (u_g0/u_g1) of u_sfucore_Q_opstore_a in bind native_internal_stations/q_b113; the opsbpins_1109 precedent needed no tie: the core input is tied inside the face shell, and the parent nets keep whatever other loads they have. I did not trace the parent drivers of rd_addr[383:375] in the group instances.",
+  "no_tie_step": "approval text said tie to 0 at the bound partition; the precedent has no such step (the shell ties), so none is added"
+ },
+ "not_changed": "outline, origin, orient, clock taps, core_macros, ft_slots, stations, partitions, ports, lanes, every other type"
+}
