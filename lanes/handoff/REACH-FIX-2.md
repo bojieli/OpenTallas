@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 09:00 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 12:40 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -17,7 +17,8 @@ tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 p
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
 
 ## 3 Running jobs
-- intel1 ot-run kvreg.sh: KV vN dieclock_regeq (same flags as HEAD) -> .../reach-fix-2/kvleg/b/ (b.log; KV_DONE at end).
+- epyc4 ot-run sp3p.sh (TAP-CAP proof): kit gen (HEAD-95 recipe) of plan_sp3n2/plan_rf.json -> reach-fix-2/kit_sp3n2, place, geom dump
+  -> geom_sp3n2/geom.tsv, capsim.py nearest loads; log epyc4 reach-fix-2/kit_sp3n2.log (SP3P_DONE at end). NOTHING on intel1 (FLEET-2).
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -29,6 +30,9 @@ Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, di
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 12:40 TAP-CAP (b) (370eac82bd): class 2 on the nearest split + anchor sinks; SP3 placed sinks 1225 -> 964 (plan 3ac13457f663).
+- 0c2348e9e2 regeq caps (the 324 GB SPEF in s4/best/it6 was my diverged scratch run; I removed it).
+- HEAD regeq with long-hop + L choice (a8006d1570): 14.1 ps TT, 3899 insertion; KV refused (393 ps regional residual, PHY last mile).
 - 2026-11-12 09:00 HEAD STEP 1 CONVERGED (posted): dieclock_regeq (d19e52b867) on intel1 s4/b2/it2: tap spread 2.4 TT / 4.2 FF, insertion 3953 TT,
   0 balance cells, pad 5.29 m; die STA dp/head/leg (epyc9; REF regions = die-proto-3/head/fix2/proof, NOT fix2_bal which has 1 region):
   landed dmg 2.01/3.17, margin 414.6/413.4 PASS; intra setup 647.05; FF contract 34 need 2.42. OCV5 worst landed 391 TT.
@@ -47,10 +51,9 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. KV: read kvleg/b.log; copy it<N> (tree.json arr_TT/FF.txt) to epyc9 dp/dc/kv_leg; dp/legsta.sh pattern with REF = DIE-PROTO-2 KV region proof
-   (find the one with regions > 1, e.g. /srv/opentallas-scratch2/claude/die-proto-3/kv/*/proof) and dcsta.sh kv leg PLAN; post.
-2. Step 2 (proposed, waiting on COORD): routed check of the leg tree: rt_grt.sh NDR with 8W on levels 1-10 and 4W, plus the pads (dieclock_routed pads --route-ndr).
-3. Hourly STATE; keep this file current.
+1. Read epyc4 reach-fix-2/kit_sp3n2.log: the capsim line nearest_max must be <= 1000; post RESULT to COORD + HEAD-95 + GEOM-VIS-7.
+2. DIE-S81-88 12:29 FINDING: an added station must bump lanes[].fixed_cycles (reach_fix class 4).
+3. KV last mile (PHY leaves) before KV regeq; HEAD step 2 routed check waits on COORD.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
