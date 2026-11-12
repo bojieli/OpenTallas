@@ -96,6 +96,20 @@ def transform(raw, spec):
     spec_by = {}         # (type, new end bus) -> spec entry
     chains = {}          # (type, slot) -> [bay slot names]
     landing = {}
+    # endpoint BUS ends (X-TIER-OTC 11-12, leaf up/dn lanes): a lane that ends on a partition's own bus (not an ft slot)
+    # takes AREA PINS there: {"type", "bus", "bay_um", "entry_layer"?}; its face / window go, the port becomes m89
+    for e in spec.get("buses", []):
+        t = T.get(e["type"])
+        if t is None:
+            raise FormError(f"unknown type {e['type']}")
+        b_ = next((x for x in t.get("buses", []) if x["name"] == e["bus"]), None)
+        if b_ is None:
+            raise FormError(f"type {e['type']}: no bus {e['bus']}")
+        b_["route"] = "m89"
+        b_["bay_um"] = [round(float(v), 4) for v in e["bay_um"]]
+        b_["entry_layer"] = e.get("entry_layer", "M7")
+        for f in ("face", "window_um", "layers", "segments", "order"):
+            b_.pop(f, None)
     for e in spec["slots"]:
         tn, sn = e["type"], e["slot"]
         t = T.get(tn)
