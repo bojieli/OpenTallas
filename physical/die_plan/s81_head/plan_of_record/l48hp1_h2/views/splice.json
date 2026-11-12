@@ -2,18 +2,29 @@
  "base": "/srv/opentallas-scratch2/claude/head-92/h2/kit/ot_s81hd_he_epc_kit/views/ot_s81hd_he_epc.lef",
  "base_sha256": "06a5ea77d5354d47d2ef4ed825580ab2e95e431733f8cfdabb38524b545fd719",
  "detail": "detail_b1.lef",
- "out": "ot_s81hd_he_epc.lef",
- "out_sha256": "4ccb218430234ecf3ee3e9b4d4a0593fc3a2692008ead01d72f1d5f9fa850c40",
+ "out": "ot_s81hd_he_epc_pc.lef",
+ "out_sha256": "749af4baf9cb24ecdb3bdcf45e4dd66cd452b50e7069507756775f3b0660b04c",
  "layers_detailed": [
   "M6",
   "M7"
  ],
  "rects": {
-  "M6": 20487,
-  "M7": 8698
+  "M6": 20397,
+  "M7": 8326
  },
- "pin_clear_um": null,
- "pin_clear": null,
+ "pin_clear_um": 0.048,
+ "pin_clear": {
+  "M6": {
+   "rects_cut": 730,
+   "overlap_own_pin": 683,
+   "um2_cut": 1.8719
+  },
+  "M7": {
+   "rects_cut": 547,
+   "overlap_own_pin": 547,
+   "um2_cut": 0.9816
+  }
+ },
  "pg_pin_layers": {
   "VDD": [
    "M5"
