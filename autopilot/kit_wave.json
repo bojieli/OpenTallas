@@ -20812,15 +20812,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s25.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s26.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_m8w1_7b84010b1c",
-   "src_sha": "3097b80b2254",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd",
+   "src_sha": "9fc09952cdc4",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s25fix",
-    "note": "KW-FIX-45 11-11 21:4x COORD: QC s25 plan_qc99_s25 e4820bd9d97c (branch qc-event-s25-1111@4e2764d237d8), DIE-QC-99 clean strict bind rc 0 (377/1921/0; bind_report 527b89d4da1c, epyc9 qc-event-s25/gate/bind_plan_qc99_s25 copied), sidecar_pv 9f6e6f721b61 + r8_sw2 571c5b26bb1f in the tree runtime; src_qc_s25_4e2764d237 = git archive of the branch head + 31b4aa482459 + 054e07a4c17b + grtm-qc 482a760a76; rows count only after EQ passes (bind_verify read-set issue pre-existing) | 22:3x DIE-QC-99/COORD: re-bound from the branch RTL: bind_out = qcbind/out_s25fix (copy of gate/bind_plan_qc99_s25_fix, report f4fd87fda891; bind.f lists gate/src_s25fix rtl (byte-identical to src_qc_s25_4e2764d237/rtl) + gate/bind_plan_qc99_s25_fix/rtl (symlinked to the copy on epyc8) + 39 as-built srcs under qc-transport-fix-4/src_sw2; includes the mem9 master); supersedes out_s25 (stale gate/src_s25 rtl/common without QREG)",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs26in/bind_plan_qc99_s26_v2",
+    "note": "KW-FIX-45 11-12 QC s26 plan_qc99_s26 779178a990b5 (qc-event-s26-1111@ca28bc4738dd on main 9fc09952cdc4), DIE-QC-99 strict bind rc 0 (377 parts/1921 crossings/0 err), bind_plan_qc99_s26_v2",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
    "gen_args": [
@@ -20829,7 +20829,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar_pv.json"
+    "/srv/opentallas-scratch2/claude/kw45/qcs26in/sidecar_pv_s26.json"
    ],
    "kinds": [
     "type"
@@ -20845,7 +20845,7 @@
    ],
    "pilot_max": 12,
    "place_mem_gb": 48,
-   "die_max_inflight": 60,
+   "die_max_inflight": 120,
    "owner_lane": "QC die owner (DIE-QC-99)",
    "lane": "KIT-WAVE-12",
    "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 53 rows | KW-FIX-18 19:4x: tag flow-20261106-m-qc 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-l-qc e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-k-qc 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-j-qc 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:1x: tag flow-20261106-i-qc 556ee1c5557 (dplfb + leafslew) -> src kw11/src_556; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-h-qc 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
@@ -21489,7 +21489,7 @@
     "slw_st_a_v2__cl9f076a5c@8",
     "slw_su_c__cl19bb38ef@6"
    ],
-   "queue_src": "claude/qc-event-s25-1111@4e2764d237d8",
+   "queue_src": "main@9fc09952cdc4",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -22161,31 +22161,55 @@
    ],
    "cancel_superseded": true,
    "only_items": [
+    "cbf_q01",
+    "cbf_q01_s2",
+    "cbf_q11",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q01__clab6e67f2",
+    "cbn_q01__cld9ff4c40",
+    "cbn_q01__cldd6ea846",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200",
+    "coll_core",
+    "coll_ft__cl78c7b300",
+    "coll_ft__cla4a25d77",
     "coll_ftc",
     "coll_ftm",
     "coll_ftn",
     "coll_n",
+    "coll_s",
+    "coll_ucie",
+    "glue",
+    "native59",
+    "sle_ctl__cl372cea1c",
+    "sle_ctl__cl503337ff",
+    "sle_ctl__cl67434795",
+    "sle_ctl__cla4f6f12f",
+    "sle_fe_v1__cl1cbb7497",
+    "sle_fe_v1__cl8210183c",
     "sle_fe_v2",
+    "sle_fe_v3",
     "sle_fw_v1__cl9d029624",
+    "sle_fw_v1__clf58b4dfb",
+    "sle_fw_v2__cl6740750e",
+    "sle_fw_v2__cl69f5e854",
+    "sle_fw_v3",
+    "sle_hc0__cl05696ed1",
     "sle_hc0__cl929603c0__cl38badc56",
+    "sle_hc0__cl929603c0__cl4baa7c9c",
     "sle_hc1__cl22c1ff36",
     "sle_hc1__cl7d360508",
     "sle_hc2__cl9c4c4509__cl3edce1b8",
     "sle_hc2__cl9c4c4509__clf60c5152",
     "sle_hc2__clcc5e3e61",
-    "slw_fw_v1__cl51d45468",
-    "slw_fw_v1__clf51c11d8__cl592e3d37",
-    "slw_fw_v1__clf51c11d8__clc7ddab13",
-    "slw_st_a_v2__cl9f076a5c",
-    "slw_fw_v3",
-    "sle_su_l0__cl7a55c676",
-    "sle_su_l0__cl086d85ba",
-    "slw_su_l0__cl76fb247e",
-    "slw_su_l0__cl1a1c1f8f",
-    "slw_su_l0__cl1e5219ea",
-    "sle_ctl__cl503337ff",
-    "sle_ctl__cla4f6f12f",
-    "sle_fe_v1__cl1cbb7497",
+    "sle_sc_v1__cl115da35f",
+    "sle_sc_v1__cl7479a5ec",
+    "sle_sc_v2",
+    "sle_sc_v3",
     "sle_st_a_v1__cl67389ecd",
     "sle_st_a_v1__cl989804f6__cl18eece69",
     "sle_st_a_v1__cl989804f6__cled3c1d7b",
@@ -22196,71 +22220,104 @@
     "sle_st_b_v2__clfde1249e",
     "sle_stm_v1__cl27746664",
     "sle_stm_v1__clbe630b9c",
+    "sle_stm_v2__cl55be2264",
+    "sle_stm_v2__cl7b3062fa",
+    "sle_stm_v3",
+    "sle_su_c",
+    "sle_su_l0__cl086d85ba",
+    "sle_su_l0__cl7a55c676",
+    "sle_su_l1__cl5ea486db",
+    "sle_su_l1__clc6d66f5b",
+    "slw_fe_v1__cl95cd1d0c",
     "slw_fe_v1__clfe325744__cl08d14f0d",
+    "slw_fe_v1__clfe325744__cldb4efe33",
+    "slw_fe_v2__cle312294d",
+    "slw_fe_v2__clf110fab2",
+    "slw_fw_v1__cl51d45468",
+    "slw_fw_v1__clf51c11d8__cl592e3d37",
+    "slw_fw_v1__clf51c11d8__clc7ddab13",
+    "slw_fw_v2__cl8537f156",
+    "slw_fw_v2__cl8f84514c",
+    "slw_fw_v3",
+    "slw_hc0__cl1bc59e1c",
+    "slw_hc0__cl4f54b7a3",
     "slw_hc1__cl3449ea95",
     "slw_hc1__cl68f9248e__cl144ee7b3",
     "slw_hc1__cl68f9248e__cle683a076",
     "slw_hc2__cl6bcaba89",
+    "slw_hc2__cla3497502__cl16607c7a",
     "slw_hc2__cla3497502__cldc737267",
     "slw_hc3__clccfc3e6b",
-    "slw_hc3__cld86a7ad4",
-    "cbn_q01__clab6e67f2",
-    "cbn_q01__cld9ff4c40",
-    "cbn_q01__cldd6ea846",
-    "cbf_q01",
-    "slw_sc_v3",
-    "slw_sc_v2",
-    "sle_su_c",
-    "sle_sc_v2",
-    "slw_su_c__cl92142dac",
-    "slw_su_c__cl19bb38ef",
     "slw_sc_v1__cl63e5a7a2",
-    "slw_sc_v1__cl64543eaf__cl5e017c6f",
     "slw_sc_v1__cl64543eaf__cl4590432d",
-    "cbf_q01_s2",
-    "cbf_q11",
-    "cbn_q00__cl622f65d2",
-    "cbn_q00__cld7bf7197",
-    "cbn_q00__cldbcda913",
-    "cbn_q11__cl49ae4555",
-    "cbn_q11__cl5cc92dfe",
-    "cbx_q10__cl89936551",
-    "cbx_q10__cl94a12200"
+    "slw_sc_v1__cl64543eaf__cl5e017c6f",
+    "slw_sc_v2",
+    "slw_sc_v3",
+    "slw_st_a_v1__clb036e152",
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+    "slw_st_a_v2__cl9f076a5c",
+    "slw_st_a_v2__clf4365a62",
+    "slw_st_b_v1__cl6357f1cc__pv6ace3e48",
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc",
+    "slw_st_b_v1__cle6023ec2",
+    "slw_st_b_v2__pva66d0f22",
+    "slw_st_b_v2__pvc2ec5bfb",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9",
+    "slw_stm_v1__cle34a73c3",
+    "slw_stm_v2__cl1ca9c415",
+    "slw_stm_v2__cl9beb65e6",
+    "slw_stm_v3",
+    "slw_su_c__cl19bb38ef",
+    "slw_su_c__cl92142dac",
+    "slw_su_l0__cl1a1c1f8f",
+    "slw_su_l0__cl1e5219ea",
+    "slw_su_l0__cl76fb247e",
+    "slw_su_l1__cla2a78701",
+    "slw_su_l1__clcc9d0155",
+    "tt_ctlm"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
     "coll_ftm": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fw_v3": {
      "OT_CONS_KIT": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_ctl__cl67434795": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_a_v1__cl989804f6__cl18eece69": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbf_q11": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_c__cl92142dac": {
      "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbf_q00__cl1b5a6458": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -22269,7 +22326,8 @@
     },
     "sle_fw_v2__cl6740750e": {
      "OT_GRT_ALLOW_CONGESTION": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_su_l0__cl086d85ba": {
      "OT_CONS_KIT": "1",
@@ -22277,67 +22335,79 @@
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_CONS_MAX_LAYER": "M7",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_su_l0__cl7a55c676": {
      "OT_CONS_KIT": "1",
      "OT_CONS_MAX_LAYER": "M7",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_su_l1__cl5ea486db": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_CONS_MAX_LAYER": "M7",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_l0__cl1a1c1f8f": {
      "OT_CONS_KIT": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_l0__cl1e5219ea": {
      "OT_CONS_KIT": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_l0__cl76fb247e": {
      "OT_CONS_KIT": "1",
      "OT_CONS_MAX_LAYER": "M7",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q11__cl49ae4555": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbx_q10__cl89936551": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW43_FIX": "pvschema-0409748de8de",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fe_v2__clf110fab2": {
      "OT_CONS_KIT": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_sc_v2": {
      "OT_CONS_KIT": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_sc_v3": {
      "OT_CONS_KIT": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_sc_v2": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -22348,28 +22418,33 @@
     "coll_ftn": {
      "OT_CONS_KIT": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_ft__cl78c7b300": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "aa8acb1988e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_ft__cla4a25d77": {
      "OT_CONS_KIT": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "glue": {
      "OT_FSM_NONE_WIRES": "st",
      "OT_KW43_FIX": "64db1baf83bf",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_s": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CGROW": "7562053a286e",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v1__clfc5867a6": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -22377,41 +22452,48 @@
     },
     "sle_fw_v1__clf58b4dfb": {
      "OT_GRT_ALLOW_CONGESTION": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v1__cl51d45468": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v1__clf51c11d8__cl592e3d37": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q00__cl622f65d2": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q00__cldbcda913": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_l1__clcc9d0155": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_l1__cla2a78701": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbf_q00__cl870de686": {
      "OT_KW41_CLAND": "aa8acb1988e",
@@ -22420,69 +22502,82 @@
     "cbn_q00__cld7bf7197": {
      "OT_KW41_CLAND": "aa8acb1988e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q01__cldd6ea846": {
      "OT_KW41_CLAND": "aa8acb1988e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fe_v1__clfe325744__cldb4efe33": {
      "OT_KW41_CLAND": "aa8acb1988e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q01__clab6e67f2": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q11__cl5cc92dfe": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v1__cl05fc43f7__cl389df4e9": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbn_q01__cld9ff4c40": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_sc_v1__cl7479a5ec": {
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v2__cl8f84514c": {
      "OT_KW41_CLAND": "aa8acb1988e",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_su_l1__clc6d66f5b": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_stm_v2__cl55be2264": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbx_q10__cl94a12200": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW43_FIX": "pvnlck-b1de436a870a",
      "OT_KW44_LEF_OVERRIDE": "qfd_tile_nl_a0c-c0a1da19",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v2__cl1ca9c415": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CGROW": "7562053a286e",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbf_q00_s2": {
      "OT_KW41_CLAND": "0b305f2395",
@@ -22493,17 +22588,20 @@
     "sle_stm_v2__cl7b3062fa": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v3": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW42_CGROW": "7562053a286e",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_ctl__cla4f6f12f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -22514,65 +22612,80 @@
     "sle_sc_v1__cl115da35f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_su_c__cl19bb38ef": {
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_su_c": {
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v1__clb036e152": {
      "OT_KW43_FIX": "pvschema-0409748de8de",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_ftc": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_n": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fe_v2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fw_v1__cl9d029624": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc0__cl929603c0__cl38badc56": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc1__cl22c1ff36": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc1__cl7d360508": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc2__cl9c4c4509__cl3edce1b8": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc2__cl9c4c4509__clf60c5152": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc2__clcc5e3e61": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v1__clf51c11d8__clc7ddab13": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v2__cl9f076a5c": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -22581,79 +22694,98 @@
     },
     "slw_fw_v3": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_ctl__cl503337ff": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fe_v1__cl1cbb7497": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_a_v1__cl67389ecd": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_a_v1__cl989804f6__cled3c1d7b": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_a_v2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_b_v1__pv0e7b1dcc": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_b_v1__pvc5a85fd4": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_b_v2__cl14c98df5": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_b_v2__clfde1249e": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_stm_v1__cl27746664": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_stm_v1__clbe630b9c": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fe_v1__clfe325744__cl08d14f0d": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc1__cl3449ea95": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc1__cl68f9248e__cl144ee7b3": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc1__cl68f9248e__cle683a076": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc2__cl6bcaba89": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc2__cla3497502__cldc737267": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc3__clccfc3e6b": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc3__cld86a7ad4": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -22661,32 +22793,40 @@
     },
     "cbf_q01": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_sc_v3": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_sc_v1__cl63e5a7a2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_sc_v1__cl64543eaf__cl5e017c6f": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "cbf_q01_s2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_core": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_ucie": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "native59": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "phy_serdes": {
      "OT_GEN_M8_GRANT": "1"
@@ -22698,85 +22838,109 @@
      "OT_GEN_M8_GRANT": "1"
     },
     "sle_ctl__cl372cea1c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fe_v1__cl8210183c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fe_v3": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_fw_v2__cl69f5e854": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc0__cl05696ed1": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_hc0__cl929603c0__cl4baa7c9c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_st_b_v1": {
      "OT_GEN_M8_GRANT": "1"
     },
     "sle_stm_v3": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fe_v1__cl95cd1d0c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fe_v2__cle312294d": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v2__cl8537f156": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc0__cl1bc59e1c": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc0__cl4f54b7a3": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_hc2__cla3497502__cl16607c7a": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_a_v2__clf4365a62": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_b_v1__cl6357f1cc": {
      "OT_GEN_M8_GRANT": "1"
     },
     "slw_st_b_v1__cl6357f1cc__pv6ace3e48": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_b_v1__cle6023ec2": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_b_v2": {
      "OT_GEN_M8_GRANT": "1"
     },
     "slw_st_b_v2__pva66d0f22": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_st_b_v2__pvc2ec5bfb": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v1__cle34a73c3": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_stm_v2__cl9beb65e6": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "tt_ctlm": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -25293,26 +25457,7 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {
-    "sle_ctl__cla4f6f12f": {
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
-     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
-     "queue_src": "claude/land-ring-2-1111@188d464c712b",
-     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
-    },
-    "slw_st_a_v2__cl9f076a5c": {
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
-     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
-     "queue_src": "claude/land-ring-2-1111@188d464c712b",
-     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
-    },
-    "slw_sc_v2": {
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
-     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
-     "queue_src": "claude/land-ring-2-1111@188d464c712b",
-     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
-    }
-   },
+   "item_inputs": {},
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
